@@ -1,0 +1,26 @@
+{
+  "name": "sm-commons",
+  "version": "0.0.1",
+  "description": "A set of common utilities for slice machine libraries",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prismicio/sm-commons.git"
+  },
+  "keywords": [
+    "Prismic",
+    "slices"
+  ],
+  "author": "Hugo Villain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prismicio/sm-commons/issues"
+  },
+  "homepage": "https://github.com/prismicio/sm-commons#readme",
+  "dependencies": {
+    "expect.js": "^0.3.1"
+  }
+}
