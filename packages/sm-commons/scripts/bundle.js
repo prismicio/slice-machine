@@ -21,6 +21,12 @@ const SM_CONFIG_FILE = 'sm.config.json'
 
 console.log('path to lib : ', process.cwd())
 
+
+/** Step 0: check that library version is not deprecated. Otherwise, ask for an update
+ * 
+ * 
+ */
+
 actions.readSmConfig(path.join(process.cwd(), SM_CONFIG_FILE));
 // fs.writeFileSync(path.join(process.cwd(), 'slices.json'), example, 'utf8')
 
