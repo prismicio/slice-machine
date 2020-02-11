@@ -1,6 +1,6 @@
 {
   "name": "sm-commons-example",
-  "version": "0.0.0",
+  "version": "null-alpha.14+90058b6",
   "description": "A set of common utilities for slice machine libraries",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,6 @@
   "homepage": "https://github.com/prismicio/sm-commons#readme",
   "dependencies": {
     "expect.js": "^0.3.1"
-  }
+  },
+  "gitHead": "90058b6f8fb38ccd90201c3b24126ccf7d044e9d"
 }
