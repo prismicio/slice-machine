@@ -16,34 +16,50 @@
  * - exit 0
  */
 
-const path = require('path');
-const actions = require("../actions");
+const path = require('path')
+const consola = require('consola')
+
+const actions = require('../methods/actions')
+const createCommunication = require('../methods/communication')
+
 const SM_CONFIG_FILE = 'sm.config.json'
 
-console.log('path to lib : ', process.cwd())
-
+const API_ENDPOINT = 'http://community-slices.com/api'
+// const API_ENDPOINT = "http://localhost:3000/api";
 
 /** Step 0: check that library version is not deprecated. Otherwise, ask for an update
  * 
  * 
  */
 
-const smConfig = actions.readSmConfig(path.join(process.cwd(), SM_CONFIG_FILE));
+// console.log("your path to lib : ", pathToLib);
 
-const pathToLib = path.join(process.cwd(), smConfig.pathToLibrary || './');
+// console.log("path to slices : ", path.join(pathToLib, smConfig.slicesFolder || 'slices'))
 
-const pathToSlices = path.join(pathToLib, smConfig.slicesFolder || "slices");
 
-console.log("your path to lib : ", pathToLib);
+async function main() {
+  try {
+    const communication = createCommunication({ apiEndpoint: API_ENDPOINT });
 
-console.log("path to slices : ", path.join(pathToLib, smConfig.slicesFolder || 'slices'))
+    const version = await communication.versionIsValid();
 
-test.pathExists(pathToLib, `Given path to library "${pathToLib}" does not exist`);
+    const config = actions.readConfig(path.join(process.cwd(), SM_CONFIG_FILE));
+    const pathToLib = actions.pathToLib(config);
+    const pathToSlices = actions.pathToSlices(config, pathToLib);
 
-test.pathExists(
-  pathToLib,
-  `Given path to slices "${pathToSlices}" does not exist`
-);
+    const slices = actions.fetchSliceDefinitions(pathToSlices);
 
-// This is meant to break on pre-commit during development
-process.exit(-1)
+    actions.writeSmFile(JSON.stringify(slices));
+
+    consola.success(
+      '[SliceMachine] Successfully created file "sm.json". You should commit it with your library changes!'
+    );
+    process.exit(0);
+  } catch (e) {
+    consola.error('[SliceMachine] Commit aborted. An error occured while bundling your slice library')
+    console.log(`[full error] ${e}\n`)
+    process.exit(-1);
+  }
+}
+
+main()
