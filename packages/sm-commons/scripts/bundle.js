@@ -16,6 +16,7 @@
  * - exit 0
  */
 
+const path = require('path');
 const actions = require("../actions");
 const SM_CONFIG_FILE = 'sm.config.json'
 
