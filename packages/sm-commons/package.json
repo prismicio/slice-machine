@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
   "dependencies": {
+    "consola": "^2.11.3",
     "expect.js": "^0.3.1"
   },
   "gitHead": "2d1d8484c7cb173a1c88bebc3a0a7ca2545e6e1e"

@@ -28,8 +28,22 @@ console.log('path to lib : ', process.cwd())
  * 
  */
 
-actions.readSmConfig(path.join(process.cwd(), SM_CONFIG_FILE));
-// fs.writeFileSync(path.join(process.cwd(), 'slices.json'), example, 'utf8')
+const smConfig = actions.readSmConfig(path.join(process.cwd(), SM_CONFIG_FILE));
 
-// This is meant to break on pre-commit
+const pathToLib = path.join(process.cwd(), smConfig.pathToLibrary || './');
+
+const pathToSlices = path.join(pathToLib, smConfig.slicesFolder || "slices");
+
+console.log("your path to lib : ", pathToLib);
+
+console.log("path to slices : ", path.join(pathToLib, smConfig.slicesFolder || 'slices'))
+
+test.pathExists(pathToLib, `Given path to library "${pathToLib}" does not exist`);
+
+test.pathExists(
+  pathToLib,
+  `Given path to slices "${pathToSlices}" does not exist`
+);
+
+// This is meant to break on pre-commit during development
 process.exit(-1)
