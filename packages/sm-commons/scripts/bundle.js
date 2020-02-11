@@ -16,7 +16,7 @@
  * - exit 0
  */
 
- const actions = require("../actions");
+const actions = require("../actions");
 const SM_CONFIG_FILE = 'sm.config.json'
 
 console.log('path to lib : ', process.cwd())

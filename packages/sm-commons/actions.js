@@ -1,8 +1,7 @@
 const fs = require('fs')
-
 const tests = require('./tests')
 
-export const readSmConfig = (path) => {
+function readSmConfig(path) {
   try {
     const file = JSON.parse(fs.readFileSync(path))
     tests.smConfig(file)
@@ -11,4 +10,8 @@ export const readSmConfig = (path) => {
     console.error(e)
   }
 
+}
+
+module.exports = {
+  readSmConfig
 }
