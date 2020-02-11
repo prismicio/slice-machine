@@ -1,5 +1,5 @@
 {
-  "name": "sm-commons-example",
+  "name": "sm-commons",
   "version": "0.0.3",
   "description": "A set of common utilities for slice machine libraries",
   "main": "index.js",
@@ -23,5 +23,5 @@
   "dependencies": {
     "expect.js": "^0.3.1"
   },
-  "gitHead": "c56fa42d9bcebab91f776e4ca95d29730cc1fb4f"
+  "gitHead": "2d1d8484c7cb173a1c88bebc3a0a7ca2545e6e1e"
 }
