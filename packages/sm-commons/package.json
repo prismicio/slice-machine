@@ -1,6 +1,6 @@
 {
   "name": "sm-commons-example",
-  "version": "null-alpha.14+90058b6",
+  "version": "0.0.1",
   "description": "A set of common utilities for slice machine libraries",
   "main": "index.js",
   "scripts": {
