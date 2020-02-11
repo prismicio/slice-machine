@@ -37,7 +37,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package
-        run: npm install; ./node_modules/.bin/lerna publish -y --force-publish=* --no-push --no-git-tag-version --dist-tag alpha
+        run: npm install; ./node_modules/.bin/lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
