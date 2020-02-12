@@ -29,26 +29,33 @@ const API_ENDPOINT = 'http://community-slices.herokuapp.com/api'
 
 async function main() {
   try {
-    const communication = createCommunication({ apiEndpoint: API_ENDPOINT });
+    const communication = createCommunication({ apiEndpoint: API_ENDPOINT })
 
-    const version = await communication.versionIsValid();
+    await communication.versionIsValid()
 
-    const config = actions.readConfig(path.join(process.cwd(), SM_CONFIG_FILE));
-    const pathToLib = actions.pathToLib(config);
-    const pathToSlices = actions.pathToSlices(config, pathToLib);
+    const config = actions.readConfig(path.join(process.cwd(), SM_CONFIG_FILE))
+    const pathToLib = actions.pathToLib(config)
+    const pathToSlices = actions.pathToSlices(config, pathToLib)
 
-    const slices = actions.fetchSliceDefinitions(pathToSlices);
+    const slices = actions.fetchSliceDefinitions(pathToSlices)
 
-    actions.writeSmFile(JSON.stringify(slices));
+    const sm = {
+      libraryName: config.libraryName,
+      framework: config.framework,
+      gitUrl: config.gitUrl,
+      slices
+    }
+
+    actions.writeSmFile(JSON.stringify(sm))
 
     consola.success(
       '[SliceMachine] Successfully created file "sm.json". You should commit it with your library changes!'
-    );
-    process.exit(0);
+    )
+    process.exit(0)
   } catch (e) {
     consola.error('[SliceMachine] Commit aborted. An error occured while bundling your slice library')
     console.log(`[full error] ${e}\n`)
-    process.exit(-1);
+    process.exit(-1)
   }
 }
 
