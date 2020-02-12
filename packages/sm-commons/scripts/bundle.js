@@ -24,18 +24,8 @@ const createCommunication = require('../methods/communication')
 
 const SM_CONFIG_FILE = 'sm.config.json'
 
-const API_ENDPOINT = 'http://community-slices.com/api'
-// const API_ENDPOINT = "http://localhost:3000/api";
-
-/** Step 0: check that library version is not deprecated. Otherwise, ask for an update
- * 
- * 
- */
-
-// console.log("your path to lib : ", pathToLib);
-
-// console.log("path to slices : ", path.join(pathToLib, smConfig.slicesFolder || 'slices'))
-
+const API_ENDPOINT = 'http://community-slices.herokuapp.com/api'
+// const API_ENDPOINT = "http://localhost:3000/api"
 
 async function main() {
   try {
