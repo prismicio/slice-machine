@@ -1,6 +1,8 @@
 const fs = require('fs')
 const path = require('path')
 const consola = require('consola')
+const validateNpmPackage = require('validate-npm-package')
+
 const tests = require('./tests')
 const misc = require('./misc')
 
@@ -28,6 +30,37 @@ function readConfig(p) {
   } catch(e) {
     consola.error('[slice-machine/readConfig] Error while reading config.')
     consola.error(e)
+  }
+}
+
+function readJsonPackage(p) {
+  try {
+    const package = tests.isJSON(
+      tests.pathExists(
+        p,
+        `package.json was not found. Did you run bundle from root of your repository? Path: ${p}`,
+        true
+      )
+    );
+
+    const r = validateNpmPackage(package)
+    // prevents a possible... bug with field... 'bugs' of package.json
+    if (r.errors.filter(e => e.indexOf('bugs') === -1).length) {
+      throw r.errors
+    }
+    return {
+      package,
+      packageName: package.name
+    }
+  } catch(e) {
+    consola.error("[slice-machine/readJsonPackage] Error while parsing package.json");
+    if (Array.isArray(e)) {
+      consola.error('These errors were generated: ')
+      e.forEach((err) => console.log(`- ${err}`))
+      throw new Error()
+    }
+    consola.error(e);
+    throw new Error()
   }
 }
 
@@ -70,5 +103,6 @@ module.exports = {
   pathToLib,
   pathToSlices,
   readConfig,
+  readJsonPackage,
   writeSmFile
 };

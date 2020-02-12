@@ -8,6 +8,7 @@
     "lerna": "^3.16.4"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "validate-npm-package": "^1.0.5"
   }
 }

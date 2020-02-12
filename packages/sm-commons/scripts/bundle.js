@@ -39,11 +39,12 @@ async function main() {
 
     const slices = actions.fetchSliceDefinitions(pathToSlices)
 
-    /** validate package with atlassian/validate-npm-package */
-    const package = require('../package.json')
+    const { package, packageName } = actions.readJsonPackage(
+      path.join(process.cwd(), "package.json")
+    )
 
     const sm = {
-      packageName: package.name,
+      packageName,
       libraryName: config.libraryName,
       framework: config.framework,
       gitUrl: config.gitUrl,

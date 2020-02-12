@@ -80,6 +80,7 @@ module.exports = {
   isSliceFolder,
   pathExists,
   smConfig,
+  isJSON,
   testModel,
   pathHasType
 };
