@@ -1,0 +1,8 @@
+[
+	{
+		"id": "page",
+		"name": "Page",
+		"repeatable": true,
+		"value": "page.json"
+	}
+]

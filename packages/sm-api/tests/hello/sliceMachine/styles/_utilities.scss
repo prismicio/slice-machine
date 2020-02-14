@@ -1,0 +1,15 @@
+[hidden] {
+  display: none;
+}
+
+/* Visually hide any element (mostly text) accessibly.
+   Support includes IE9+ */
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}

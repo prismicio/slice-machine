@@ -1,0 +1,46 @@
+/********************************************************************************************************** \
+ *
+ * This stylesheet is here for the SVG charts embedded as <object>s
+ * External SVGs need to have Web fonts defined or referenced (external stylesheet) either inside them
+ *
+ **********************************************************************************************************/
+
+@font-face {
+  font-family: "Lato";
+  src:
+    url("../fonts/lato-bold-webfont.woff2") format("woff2"),
+    url("../fonts/lato-bold-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lato";
+  src:
+    url("../fonts/lato-regular-webfont.woff2") format("woff2"),
+    url("../fonts/lato-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif Pro";
+  src:
+    url("../fonts/sourceserifpro-regular-webfont.woff2") format("woff2"),
+    url("../fonts/sourceserifpro-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif Pro";
+  src:
+    url("../fonts/sourceserifpro-bold-webfont.woff2") format("woff2"),
+    url("../fonts/sourceserifpro-bold-webfont.woff") format("woff");
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+}

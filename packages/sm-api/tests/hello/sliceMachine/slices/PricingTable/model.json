@@ -1,0 +1,76 @@
+{
+	"type": "Slice",
+	"fieldset": "Pricing Table",
+	"description": "Display a list of pricing plans",
+	"icon": "attach_money",
+	"display": "grid",
+	"non-repeat": {
+		"eyebrow_headline": {
+			"type": "StructuredText",
+			"config": {
+				"single": "paragraph",
+				"label": "Eyebrow Headline",
+				"placeholder": "Pricing plans"
+			}
+		},
+		"title": {
+			"type": "StructuredText",
+			"config": {
+				"single": "heading2",
+				"label": "Title",
+				"placeholder": "Choose the plan"
+			}
+		},
+		"description": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph, strong, em, hyperlink",
+				"allowTargetBlank": true,
+				"label": "Description",
+				"placeholder": "Choose the version that works for you ..."
+			}
+		}
+	},
+	"repeat": {
+		"plan_title": {
+			"type": "StructuredText",
+			"config": {
+				"single": "heading3",
+				"label": "Plan title",
+				"placeholder": "Simple, Gold, Premium..."
+			}
+		},
+		"price_option": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "heading4",
+				"label": "Price Option",
+				"placeholder": "Free, $19, Contact us..."
+			}
+		},
+		"features": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "list-item",
+				"label": "Features",
+				"placeholder": "A list of features using bullet list"
+			}
+		},
+		"call_to_action": {
+			"type": "Link",
+			"config": {
+				"allowTargetBlank": true,
+				"label": "Call To Action",
+				"placeholder": "Link to Signup / More info..."
+			}
+		},
+		"call_to_action_text": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph",
+				"label": "Call To Action Text",
+				"placeholder": "Start your free trial"
+			}
+		}
+	}
+}

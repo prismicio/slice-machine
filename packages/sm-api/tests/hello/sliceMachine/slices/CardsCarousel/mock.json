@@ -1,0 +1,275 @@
+{
+	"slice_type": "cards_carousel",
+	"slice_label": "large_images",
+	"items": [
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/b4aeb1e2-e9c1-43ab-82ab-0d0519f9c3cd_float.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading3",
+					"text": "Title 1",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Content hello",
+					"spans": []
+				}
+			],
+			"additional_info": [
+				{
+					"type": "paragraph",
+					"text": "",
+					"spans": []
+				}
+			]
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/032aad44-343c-4ad6-b694-57bb9322ce88_clumsy.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading3",
+					"text": "Title 2",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "lalala",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/7e9ead9f-accf-418b-9c5c-654f162d95ee_groovy.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading1",
+					"text": "Title 3",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "content 1",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/f55cf641-b6d3-41f2-86f3-368a16b5decf_meditating.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading1",
+					"text": "Title 4",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Hello",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/bd0f784c-1039-44b8-8b73-f4978019d21b_dog-jump.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading1",
+					"text": "Title 5",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Hello",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/da71d741-4bf5-4b11-9b96-b97458c41ff0_dancing.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading1",
+					"text": "Title 6",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Saloud",
+					"spans": []
+				}
+			],
+			"additional_info": [
+				{
+					"type": "paragraph",
+					"text": "Additional info",
+					"spans": []
+				}
+			]
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/c2d957c2-cef3-4e55-ab52-4b5af1917f2f_ballet.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading3",
+					"text": "Title 7",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Bi1 ou cmt?",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/360d18f5-87f1-49f1-b749-17d7657e824a_chilling.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading3",
+					"text": "Title 8",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "Some content again",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 2048,
+					"height": 1536
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/c828478d-36eb-46b6-a96d-328c128059cb_ice-cream.png?auto=compress,format"
+			},
+			"title": [
+				{
+					"type": "heading3",
+					"text": "Title 9",
+					"spans": []
+				}
+			],
+			"content": [
+				{
+					"type": "paragraph",
+					"text": "This is it!",
+					"spans": []
+				}
+			],
+			"additional_info": []
+		}
+	],
+	"primary": {
+		"eyebrow_headline": [
+			{
+				"type": "paragraph",
+				"text": "The Carousel",
+				"spans": []
+			}
+		],
+		"title": [
+			{
+				"type": "heading2",
+				"text": "It’s more than a budget manager",
+				"spans": []
+			}
+		],
+		"description": [
+			{
+				"type": "paragraph",
+				"text": "This carousel moves by one card at a time when the next and previous arrows are clicked.",
+				"spans": []
+			}
+		]
+	}
+}

@@ -1,0 +1,16 @@
+{
+    "title": "FAQ section",
+    "description": "Display an  accordion FAQ, with optional image",
+    "contributors": [
+        "https://github.com/SaraSoueidan",
+        "https://github.com/hypervillain/"
+    ],
+    "sandboxUrl": "",
+    "components": ["ps-accordion"],
+    "tags": [
+        "Essentials",
+        "Landing pages"
+    ],
+    "collection": "prismic-essentials",
+    "dependencies": []
+}

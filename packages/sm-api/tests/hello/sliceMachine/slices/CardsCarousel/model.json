@@ -1,0 +1,69 @@
+{
+	"type": "Slice",
+	"fieldset": "Cards Carousel",
+	"description": "A carousel with text + image cards",
+	"icon": "image",
+	"display": "list",
+	"non-repeat": {
+		"eyebrow_headline": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+				"allowTargetBlank": true,
+				"label": "Eyebrow headline"
+			}
+		},
+		"title": {
+			"type": "StructuredText",
+			"config": {
+				"single": "heading1, heading2, heading3, heading4, heading5, heading6",
+				"label": "Title"
+			}
+		},
+		"description": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+				"allowTargetBlank": true,
+				"label": "Description"
+			}
+		}
+	},
+	"repeat": {
+		"image": {
+			"type": "Image",
+			"config": {
+				"constraint": {
+					"width": null,
+					"height": null
+				},
+				"thumbnails": [],
+				"label": "Image"
+			}
+		},
+		"title": {
+			"type": "StructuredText",
+			"config": {
+				"single": "heading3",
+				"label": "Title"
+			}
+		},
+		"content": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+				"allowTargetBlank": true,
+				"label": "Content"
+			}
+		},
+		"additional_info": {
+			"type": "StructuredText",
+			"config": {
+				"multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+				"allowTargetBlank": true,
+				"label": "Additional Info",
+				"placeholder": "eg. name of person in testimonial"
+			}
+		}
+	}
+}

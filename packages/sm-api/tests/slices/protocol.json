@@ -1,0 +1,69 @@
+{
+    "frameworkName": "Nuxt",
+    "customTypesToMerge": [
+        "page"
+    ],
+    "pathToMergedSlices": "slices.json",
+    "prismicConfig": "prismic.config.js",
+    "examplesFolder": "pages",
+    "firstCommand": "npm run dev",
+    "projectTests": [
+        {
+            "arg": "-f",
+            "path": "nuxt.config.js",
+            "reason": "No `nuxt.config.js` file found"
+        },
+        {
+            "arg": "-d",
+            "path": "pages",
+            "reason": "No `pages` folder found"
+        }
+    ],
+    "bootstraper": [
+        "npx",
+        [
+            "create-nuxt-app"
+        ]
+    ],
+    "actions": [
+        {
+            "zipPath": "pages/_uid.vue",
+            "overwrite": false,
+            "bootstrapped": true,
+            "template": true
+        },
+        {
+            "zipPath": "pages/index.vue",
+            "overwrite": false,
+            "bootstrapped": true,
+            "template": true
+        },
+        {
+            "zipPath": "custom_types/",
+            "overwrite": false,
+            "bootstrapped": true
+        },
+        {
+            "type": "delete",
+            "zipPath": "custom_types/"
+        },
+        {
+            "type": "delete",
+            "zipPath": "pages/"
+        },
+        {
+            "type": "delete",
+            "zipPath": "plugins/"
+        }
+    ],
+    "dependencies": [
+        "prismic-javascript",
+        "prismic-vue",
+        "@nuxtjs/prismic"
+    ],
+    "devDependencies": [
+        "node-sass",
+        "sass-loader"
+    ],
+    "additionalDisplay": "##    ## ######## ##     ## ########     ######  ######## ######## ########   ######  \n###   ## ##        ##   ##     ##       ##    ##    ##    ##       ##     ## ##    ## \n####  ## ##         ## ##      ##       ##          ##    ##       ##     ## ##       \n## ## ## ######      ###       ##        ######     ##    ######   ########   ######  \n##  #### ##         ## ##      ##             ##    ##    ##       ##              ## \n##   ### ##        ##   ##     ##       ##    ##    ##    ##       ##        ##    ## \n##    ## ######## ##     ##    ##        ######     ##    ######## ##         ######  \n\nWe've configured mostly everything,\nnow in your project files add the following settings to your `nuxt.config.js` file.\n\nIn the 'head' section of the `nuxt.config.js` file add the follwing scripts:\nscript: [\n  { src: 'https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList' },\n  { src: 'https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js' }\n],\n\nThen you can add the follwing css path and module settings for perfect Prismic & Nuxt harmony:\ncss: ['@/sliceMachine/styles/styles.scss'],\n\nmodules: [\n  ['@nuxtjs/prismic', {\n    endpoint: `https://{{ prismicDomain }}.cdn.prismic.io/api/v2`,\n    linkResolver(doc) {\n      if (doc.uid === 'page') {\n        return doc.uid === 'homepage' ? '/' : `/${doc.uid}`\n      }\n      return '/'\n    },\n    routes: [\n      '/:uid',\n      '/',\n    ]\n  }]\n],\n\nAfter you've done this, launch your project by running:\n`cd {{ projectName }} && npm run dev`\n"
+}

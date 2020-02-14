@@ -1,0 +1,8 @@
+export { default as CallToAction } from './CallToAction'
+export { default as CardsCarousel } from './CardsCarousel'
+export { default as CustomerLogos } from './CustomerLogos'
+export { default as FaqSection } from './FaqSection'
+export { default as ImagesSlider } from './ImagesSlider'
+export { default as PricingTable } from './PricingTable'
+export { default as TestimonialsSlider } from './TestimonialsSlider'
+export { default as VideoHighlights } from './VideoHighlights'

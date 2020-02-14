@@ -1,0 +1,109 @@
+{
+	"slice_type": "testimonials_slider",
+	"slice_label": null,
+	"items": [
+		{
+			"image": {
+				"dimensions": {
+					"width": 400,
+					"height": 400
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/342cc816-3eeb-403c-a63b-79a678921258_OTg3ODQuanBn.jpg?auto=compress,format&rect=0,0,512,512&w=400&h=400"
+			},
+			"testimonial": [
+				{
+					"type": "paragraph",
+					"text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words",
+					"spans": []
+				}
+			],
+			"person": "John Doe",
+			"title": "Software eng. at Prismic"
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 400,
+					"height": 400
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/b3f9c02d-40f9-41b0-b0b7-4b05bcad0556_Mjk0MDIuanBn.jpg?auto=compress,format&rect=0,0,512,512&w=400&h=400"
+			},
+			"testimonial": [
+				{
+					"type": "paragraph",
+					"text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words",
+					"spans": []
+				}
+			],
+			"person": "Janine Doe",
+			"title": "Software eng. at Prismic"
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 400,
+					"height": 400
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/e273a2ed-45c1-4c61-8183-c7ff6fea8445_XzA4MDY2NzIuanBn.jpg?auto=compress,format&rect=0,0,512,512&w=400&h=400"
+			},
+			"testimonial": [
+				{
+					"type": "paragraph",
+					"text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words",
+					"spans": []
+				}
+			],
+			"person": "Josiane Doe",
+			"title": "Software eng. at Prismic"
+		},
+		{
+			"image": {
+				"dimensions": {
+					"width": 400,
+					"height": 400
+				},
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/883af32f-539a-415f-9429-241195543d1b_OTk2NjQuanBn.jpg?auto=compress,format&rect=0,0,512,512&w=400&h=400"
+			},
+			"testimonial": [
+				{
+					"type": "paragraph",
+					"text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words",
+					"spans": []
+				}
+			],
+			"person": "Jasmine Doe",
+			"title": "Software eng. at Prismic"
+		}
+	],
+	"primary": {
+		"eyebrow_headline": [
+			{
+				"type": "paragraph",
+				"text": "The Carousel",
+				"spans": []
+			}
+		],
+		"title": [
+			{
+				"type": "heading1",
+				"text": "It’s more than a budget manager",
+				"spans": []
+			}
+		],
+		"description": [
+			{
+				"type": "paragraph",
+				"text": "This carousel moves by one card at a time when the next and previous arrows are clicked?",
+				"spans": []
+			}
+		]
+	}
+}

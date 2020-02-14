@@ -1,0 +1,74 @@
+{
+	"slice_type": "video_highlights",
+	"slice_label": null,
+	"items": [
+		{
+			"video_title": "Single Page Apps - Fat frontend or fat backend, not both",
+			"video_src": {
+				"type": "video",
+				"thumbnail_height": 360,
+				"provider_url": "https://www.youtube.com/",
+				"thumbnail_url": "https://i.ytimg.com/vi/gYm9Q6J5gp8/hqdefault.jpg",
+				"html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/gYm9Q6J5gp8?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>",
+				"provider_name": "YouTube",
+				"version": "1.0",
+				"title": "Single Page Apps - Fat frontend or fat backend, not both",
+				"author_name": "Prismic",
+				"height": 270,
+				"author_url": "https://www.youtube.com/channel/UCJq6AEgtWeZt7ziQ-fLKOeA",
+				"thumbnail_width": 480,
+				"width": 480,
+				"embed_url": "https://www.youtube.com/watch?v=gYm9Q6J5gp8"
+			}
+		},
+		{
+			"video_title": "Journey to JavaScript development",
+			"video_src": {
+				"thumbnail_height": 360,
+				"thumbnail_url": "https://i.ytimg.com/vi/62C-E6WL0_A/hqdefault.jpg",
+				"width": 480,
+				"provider_url": "https://www.youtube.com/",
+				"type": "video",
+				"author_name": "Prismic",
+				"height": 270,
+				"version": "1.0",
+				"thumbnail_width": 480,
+				"title": "Journey to JavaScript development",
+				"author_url": "https://www.youtube.com/channel/UCJq6AEgtWeZt7ziQ-fLKOeA",
+				"provider_name": "YouTube",
+				"html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/62C-E6WL0_A?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>",
+				"embed_url": "https://www.youtube.com/watch?v=62C-E6WL0_A"
+			}
+		},
+		{
+			"video_title": "So many frameworks out there?",
+			"video_src": {
+				"version": "1.0",
+				"author_name": "Prismic",
+				"html": "<iframe width=\"480\" height=\"270\" src=\"https://www.youtube.com/embed/ZAz5_lp_3SI?feature=oembed\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>",
+				"title": "So many frameworks out there! What should you do?",
+				"author_url": "https://www.youtube.com/channel/UCJq6AEgtWeZt7ziQ-fLKOeA",
+				"thumbnail_width": 480,
+				"thumbnail_height": 360,
+				"provider_url": "https://www.youtube.com/",
+				"type": "video",
+				"provider_name": "YouTube",
+				"width": 480,
+				"thumbnail_url": "https://i.ytimg.com/vi/ZAz5_lp_3SI/hqdefault.jpg",
+				"height": 270,
+				"embed_url": "https://www.youtube.com/watch?v=ZAz5_lp_3SI"
+			}
+		}
+	],
+	"primary": {
+		"eyebrow_headline": "Feature",
+		"title": [{ "type": "heading2", "text": "Video Highlights", "spans": [] }],
+		"description": [
+			{
+				"type": "paragraph",
+				"text": "These are some awesome videos that teach you how to use Prismic Slices to quickly create a great Web site.",
+				"spans": []
+			}
+		]
+	}
+}

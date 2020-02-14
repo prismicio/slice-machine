@@ -1,0 +1,68 @@
+/********************************* \
+ *
+ * Common styles for:
+ * Alternate | List
+ * Alternate | Grid
+ * Alternate | Image + Text
+ *
+ *********************************/
+
+.ps-alternate__ctas {
+  display: flex;
+  flex-direction: column;
+
+  @media all and (min-width: 40rem) {
+    flex-direction: row;
+  }
+}
+
+.ps-alternate .ps-button {
+  flex: 1;
+  margin-top: var(--h-padding);
+
+  @media all and (min-width: 40rem) {
+    margin-right: var(--h-padding);
+    margin-top: 0;
+  }
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.ps-alternate__module {
+  margin-bottom: var(--v-margin);
+}
+
+.ps-alternate__module__title {
+  font-size: 1rem;
+  margin-top: 1em;
+}
+
+@media all and (min-width: 40rem) {
+  @supports (display: grid) {
+    .ps-alternate--list {
+      .ps-alternate__module {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-column-gap: var(--h-padding);
+      }
+
+      .ps-alternate__module__title {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .ps-alternate--grid {
+    .ps-alternate__module {
+      display: inline-block;
+      width: calc(50% - var(--h-padding));
+      margin-right: var(--h-padding);
+
+      &:nth-of-type(even) {
+        margin-right: 0;
+      }
+    }
+  }
+}

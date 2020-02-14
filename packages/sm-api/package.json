@@ -1,0 +1,28 @@
+{
+  "name": "sm-api",
+  "version": "1.0.0",
+  "description": "Slice Machine API",
+  "scripts": {
+    "build": "rm -rf common && mkdir common && echo '{}' > ./common/index.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hugo Villain",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.4.14",
+    "cross-fetch": "^3.0.4",
+    "jszip": "^3.2.2",
+    "jszip-utils": "^0.1.0",
+    "lodash.get": "^4.4.2",
+    "lodash.merge": "^4.6.2",
+    "lodash.set": "^4.3.2",
+    "mongodb": "^3.5.2",
+    "mustache": "^4.0.0",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "tmp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@now/node": "^1.4.1"
+  }
+}

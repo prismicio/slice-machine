@@ -1,0 +1,73 @@
+:root {
+  --primary-hue: 167;
+  --secondary-hue: 30;
+  --color--primary: hsl(var(--primary-hue), 66%, 31%);
+  --color--primary--dark: hsl(var(--primary-hue), 68%, 27%);
+  --color--primary--darker: hsl(var(--primary-hue), 75%, 21%);
+  --color--secondary: hsl(var(--secondary-hue), 27%, 94%);
+  --color-grey-0: hsl(0, 0%, 0%);
+  --color-grey-20: hsl(0, 0%, 20%);
+  --color-grey-90: hsl(0, 0%, 90%);
+  --color-grey-53: hsl(0, 0%, 53%);
+  --color-text-grey: var(--color-grey-53);
+
+
+  /* default font family is the static Inter font */
+  --font-family: "Inter", Arial, sans-serif;
+
+  /* in supporting browsers, the variable Inter font is used */
+  @supports (font-variation-settings: normal) {
+    --font-family: "Inter var", Arial, sans-serif;
+  }
+
+  --scrollbar: 0;
+
+  /* this variable is set using JS. See CS Utilities documentation for details */
+  --h-padding: 2rem; // horizontal padding for the slice relative to the page borders; 30px default when font size is base 16
+  --c-padding: 1.25rem; // component-level padding
+  --c-margin: 1rem; // component-level padding
+  --v-margin: 2.5rem; // vertical component-level external margin (margin between two components)
+  --v-space: 8vw; // vertical space within sections
+
+  @media all and (max-width: 640px) {
+    --h-padding: 1.25rem;
+  }
+
+  --focus-outline: 3px solid currentColor;
+
+
+
+  /******************************************************************************************************* \
+    *
+    * Repsonsive Typography
+    * Two scales: one for small screens, one for large screens
+    * And scaling the text between two viewport sizes
+    * See https://www.smashingmagazine.com/2016/05/fluid-typography/ & accompanying Codepens for details
+    *
+    ********************************************************************************************************/
+
+  --scale--small: 1.125; // modular scale on small screens
+  --scale--large: 1.25; // modular scale on large screens
+
+  // calculate the modular scale (unitless)
+  --text-min-4xl: calc(1 * var(--scale--small) * var(--scale--small) * var(--scale--small) * var(--scale--small) * var(--scale--small));
+  --text-max-4xl: calc(1 * var(--scale--large) * var(--scale--large) * var(--scale--large) * var(--scale--large) * var(--scale--large));
+  --text-min-3xl: calc(1 * var(--scale--small) * var(--scale--small) * var(--scale--small) * var(--scale--small));
+  --text-max-3xl: calc(1 * var(--scale--large) * var(--scale--large) * var(--scale--large) * var(--scale--large));
+  --text-min-2xl: calc(1 * var(--scale--small) * var(--scale--small) * var(--scale--small));
+  --text-max-2xl: calc(1 * var(--scale--large) * var(--scale--large) * var(--scale--large));
+  --text-min-xl: calc(1 * var(--scale--small) * var(--scale--small));
+  --text-max-xl: calc(1 * var(--scale--large) * var(--scale--large));
+  --text-min-l: calc(1 * var(--scale--small));
+  --text-max-l: calc(1 * var(--scale--large));
+  --text-min-small: calc(1 / var(--scale--small));
+  --text-max-small: calc(1 / var(--scale--large));
+
+  // --text--small ~= 0.875rem; // 14px;
+  // --text--base ~= 1rem; // 16px;
+  // --text--large ~= 1.125rem; // 18px;
+  // --text--xl ~= 1.25rem; // 20px;
+  // --text--2xl ~= 1.375rem; // 22px;
+  // --text--3xl ~= 1.5rem; // 24px;
+  // --text--4xl ~= calc(1.6rem + 1.2vw); //52px
+}

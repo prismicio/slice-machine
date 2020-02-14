@@ -1,0 +1,51 @@
+{
+	"type": "Slice",
+	"fieldset": "Customer logos",
+	"description": "Display a list of your customers logos",
+	"icon": "person",
+	"display": "list",
+	"non-repeat": {
+		"eyebrow_headline": {
+			"type": "StructuredText",
+			"config": {
+				"single": "heading2",
+				"label": "Eyebrow Headline",
+				"placeholder": "Trusted by"
+			}
+		},
+		"call_to_action": {
+			"type": "StructuredText",
+			"config": {
+				"single": "paragraph",
+				"label": "Call To Action",
+				"placeholder": "View customer stories"
+			}
+		},
+		"call_to_action_link": {
+			"type": "Link",
+			"config": {
+				"allowTargetBlank": true,
+				"label": "Call to Action Link",
+				"placeholder": "Could be a signup link, or a link to customer stories"
+			}
+		}
+	},
+	"repeat": {
+		"logo": {
+			"type": "Image",
+			"config": {
+				"constraint": {},
+				"thumbnails": [],
+				"label": "Logo"
+			}
+		},
+		"link": {
+			"type": "Link",
+			"config": {
+				"allowTargetBlank": true,
+				"label": "link",
+				"placeholder": "Could be a link to use case, press article, signup..."
+			}
+		}
+	}
+}

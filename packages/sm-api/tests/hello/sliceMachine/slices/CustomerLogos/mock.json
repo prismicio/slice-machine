@@ -1,0 +1,64 @@
+{
+	"slice_type": "customer_logos",
+	"slice_label": null,
+	"items": [
+		{
+			"logo": {
+				"dimensions": { "width": 144, "height": 38 },
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/95a608cd-8d3c-40c1-a554-0bec1b89eda5_logo-3.svg?auto=compress,format"
+			},
+			"link": { "link_type": "Any" }
+		},
+		{
+			"logo": {
+				"dimensions": { "width": 116, "height": 19 },
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/b62a8629-f7f1-4d2e-885a-bd7c6bcff201_logo-2.svg?auto=compress,format"
+			},
+			"link": { "link_type": "Any" }
+		},
+		{
+			"logo": {
+				"dimensions": { "width": 137, "height": 23 },
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/23461395-458d-41f5-be25-bac37a4ff53e_logo-6.svg?auto=compress,format"
+			},
+			"link": { "link_type": "Any" }
+		},
+		{
+			"logo": {
+				"dimensions": { "width": 92, "height": 30 },
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/4360a72b-bfe4-4144-911c-597146f72c00_logo-5.svg?auto=compress,format"
+			},
+			"link": { "link_type": "Any" }
+		},
+		{
+			"logo": {
+				"dimensions": { "width": 92, "height": 25 },
+				"alt": null,
+				"copyright": null,
+				"url": "https://images.prismic.io/slicesexamples/846576e2-c93c-40dd-8aaa-b97f4e99e7aa_logo-1.svg?auto=compress,format"
+			},
+			"link": { "link_type": "Any" }
+		}
+	],
+	"primary": {
+		"eyebrow_headline": [
+			{ "type": "heading2", "text": "Trusted by", "spans": [] }
+		],
+		"call_to_action": [
+			{ "type": "paragraph", "text": "View customer stories", "spans": [] }
+		],
+		"call_to_action_link": {
+			"link_type": "Web",
+			"url": "https://prismic.io",
+			"target": "_blank"
+		}
+	}
+}

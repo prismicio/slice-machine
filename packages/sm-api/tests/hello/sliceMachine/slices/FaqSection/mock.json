@@ -1,0 +1,85 @@
+{
+	"slice_type": "faq_section",
+	"slice_label": null,
+	"items": [
+		{
+			"title": [{ "type": "heading3", "text": "Test tracking", "spans": [] }],
+			"text": [
+				{
+					"type": "paragraph",
+					"text": "Only use them when the content is appropriate. If the panels are too long, the user will end up scrolling too much (esp. on mobile), which negates the whole purpose of using an accordion. For very long panels, using links to separate pages is preferred.",
+					"spans": []
+				},
+				{
+					"type": "paragraph",
+					"text": "If you use accordions to replace page steps such as checkout form steps, make sure you stop the default browser BACK button behavior so that the BACK button would move up a step in the accordion, because this is the behavior that most users expect, as tests show.",
+					"spans": []
+				}
+			]
+		},
+		{
+			"title": [
+				{ "type": "heading3", "text": "What's a headless CMS?", "spans": [] }
+			],
+			"text": [
+				{
+					"type": "paragraph",
+					"text": "The default markup is enhanced using JavaScript so that the buttons are added to the headings. The buttons should NOT be in the headings by default. The markup should always consider what the component or content would look like if no Javascript is enabled and therefore the accordion is not functional. The content is most likely going to be all visible — either as a series of panels with headings or a definition list, depending on the type of content.",
+					"spans": []
+				}
+			]
+		},
+		{
+			"title": [
+				{
+					"type": "heading3",
+					"text": "What so special about you?",
+					"spans": []
+				}
+			],
+			"text": [
+				{
+					"type": "paragraph",
+					"text": "The buttons need to specify which panels they control usingaria-controls, and they need to reflect the state of the panel (collapsed/expanded) usingaria-expanded=\"true/false\". The panel itself also should havearia-hiddenset to true or false if it is hidden or shown, respectively.",
+					"spans": []
+				},
+				{
+					"type": "paragraph",
+					"text": "The accordion needs to be able to trap keyboard focus when the user is IN the accordion and uses the arrow keys to traverse the items in it. Tabbing out of the accordion must be enabled.",
+					"spans": []
+				}
+			]
+		},
+		{
+			"title": [
+				{ "type": "heading3", "text": "Are you that different?", "spans": [] }
+			],
+			"text": [
+				{
+					"type": "paragraph",
+					"text": "You can allow one or more panels to be always collapsed or expanded. You can also set a panel to be open by default (e.g. the first one). All this functionality can be tied to the markup using data attributes as flags.",
+					"spans": []
+				}
+			]
+		}
+	],
+	"primary": {
+		"eyebrow_headline": [{ "type": "paragraph", "text": "FAQ", "spans": [] }],
+		"title": [
+			{ "type": "heading2", "text": "Answers to common questions", "spans": [] }
+		],
+		"description": [
+			{
+				"type": "paragraph",
+				"text": "Learn about Prismic by reading questions and answers. It’s almost like talking to a human – and maybe even better.",
+				"spans": []
+			}
+		],
+		"optional_image": {
+			"dimensions": { "width": 2048, "height": 1536 },
+			"alt": null,
+			"copyright": null,
+			"url": "https://images.prismic.io/slicesexamples/b4aeb1e2-e9c1-43ab-82ab-0d0519f9c3cd_float.png?auto=compress,format"
+		}
+	}
+}
