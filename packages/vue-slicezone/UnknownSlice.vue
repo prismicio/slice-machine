@@ -11,7 +11,7 @@
 		</div>
 		<div class="container">
 			<p class="paragraph">
-				Make sure you created a '{{ pascalize(slice.slice_type) }}' component
+				Make sure you have created a '{{ pascalize(slice.slice_type) }}' component
 				inside `sliceMachine/slices`. If not: create one! Also, check the
 				console to check the payload received and the docs for more information.
 			</p>
