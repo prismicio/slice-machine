@@ -8,7 +8,7 @@ Default, current URL: http://sm-api.now.sh/api
  
  ---
 
-### list libraries
+## list libraries
 
   Returns a json Array of all slice machine libraries
 
@@ -46,7 +46,7 @@ Default, current URL: http://sm-api.now.sh/api
     .then(res => res.json())
   ```
 
-### fetch library
+## fetch library
 
   Returns a slice machine library (library name, Git url, slice definitions...), by library name
 
@@ -80,7 +80,7 @@ Default, current URL: http://sm-api.now.sh/api
     .then(res => res.json())
   ```
 
-### fetch slice definitions
+## fetch slice definitions
 
  Same as `/library` but only returns a non-empty array of slice definitions
 
@@ -89,7 +89,7 @@ Default, current URL: http://sm-api.now.sh/api
   * **Code:** 200 
     **Content:** `[{ "slice_type": "my_slice", "type": "Slice", ... }]`
 
-### Bootstrap a project
+## Bootstrap a project
 
 Generates a ZIP file used to "bootstrap" a working Prismic + framework (Nuxt or Next) + SliceMachine project. It sequentially downloads the library you selected, gets Prismic custom types and merges them to the library's slice definitions then builds all the files related to the framework you asked (pages, Prismic config) and instructions (dependencies to download, etc.),
 
