@@ -1,7 +1,7 @@
 {
   "name": "sm-api",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.13",
   "description": "Slice Machine API",
   "scripts": {
     "build": "rm -rf common && mkdir common && echo '{}' > ./common/index.json",
