@@ -1,0 +1,24 @@
+{
+  "name": "vue-slicezone",
+  "version": "0.0.1",
+  "description": "A component that maps other components to Prismic slices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prismicio/sm-commons.git"
+  },
+  "keywords": [
+    "Vuejs",
+    "Prismic",
+    "slices"
+  ],
+  "author": "Hugo Villain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prismicio/sm-commons/issues"
+  },
+  "homepage": "https://github.com/prismicio/sm-commons#readme"
+}
