@@ -1,5 +1,6 @@
 {
   "name": "sm-api",
+  "private": true,
   "version": "1.0.0",
   "description": "Slice Machine API",
   "scripts": {
