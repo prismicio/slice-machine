@@ -21,7 +21,7 @@
 <script>
 import { pascalize } from './utils'
 export default {
-	name: 'UnknownSlice',
+	name: 'NotFound',
 	props: {
 		slice: {
 			type: Object,

@@ -1,4 +1,4 @@
-const UnknownSlice = {
+const NotFound = {
   props: {
     slice: {
       type: Object,
@@ -47,15 +47,15 @@ export default {
       default: "div",
       description: "Wrapper tag (div, section, main...)"
     },
-    UnknownSlice: {
+    NotFound: {
       required: false,
       default() {
-        return UnknownSlice;
+        return NotFound;
       }
     }
   },
   computed: {
-    computedImports: ({ components, resolver, slices, UnknownSlice }) => {
+    computedImports: ({ components, resolver, slices, NotFound }) => {
       const invert = p =>
         new Promise((resolve, reject) => p.then(reject, resolve));
       const firstOf = ps => invert(Promise.all(ps.map(invert)));
@@ -65,7 +65,7 @@ export default {
           ? () => components[names[i]]
           : resolver({ sliceName: names[i], index: i });
         const resolvedArr = Array.isArray(resolved) ? resolved : [resolved];
-        return firstOf(resolvedArr).catch(() => import(() => UnknownSlice));
+        return firstOf(resolvedArr).catch(() => import(() => NotFound));
       });
     },
     computedSlices: ({ slices, computedImports }) => {

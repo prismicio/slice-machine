@@ -1,5 +1,8 @@
 const camelizeRE = /-(\w)/g;
 export const pascalize = str => {
+  if (!str) {
+    return ''
+  }
   str = str.replace(/_/g, "-").replace(camelizeRE, (_, c) => {
     return c ? c.toUpperCase() : "";
   });
