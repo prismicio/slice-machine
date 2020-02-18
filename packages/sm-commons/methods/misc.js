@@ -28,8 +28,9 @@ function pascalize(str) {
 };
 
 const hyphenateRE = /\B([A-Z])/g;
-function hyphenate(str) {
-  return str.replace(hyphenateRE, "-$1").toLowerCase();
+function hyphenate(str, kebab) {
+  const s =  str.replace(hyphenateRE, "-$1").toLowerCase();
+  return kebab ? s.replace(/-/g, "_") : s
 }
 
 module.exports = {
