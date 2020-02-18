@@ -5,6 +5,7 @@ const validateNpmPackage = require('validate-npm-package')
 
 const tests = require('./tests')
 const misc = require('./misc')
+const { SLICE_TYPE_KEY } = require('./consts')
 
 function pathToLib(config) {
   const p = path.join(process.cwd(), config.pathToLibrary || './');
@@ -64,6 +65,11 @@ function readJsonPackage(p) {
   }
 }
 
+function getSliceType(sliceName) {
+  tests.isSliceName(sliceName)
+  return misc.hyphenate(sliceName)
+}
+
 function fetchSliceDefinitions(p) {
   try {
 
@@ -75,8 +81,15 @@ function fetchSliceDefinitions(p) {
 
     const slices = []
     folders.forEach((p) => {
+      const sliceName = p.split("/").pop()
+
       tests.isSliceFolder(p)
-      const model = JSON.parse(misc.readFile(path.join(p, 'model.json')))
+
+      const model = {
+        ...JSON.parse(misc.readFile(path.join(p, "model.json"))),
+        [SLICE_TYPE_KEY]: getSliceType(sliceName).replace(/-/g, "_")
+      };
+
       slices.push(model)
     })
 

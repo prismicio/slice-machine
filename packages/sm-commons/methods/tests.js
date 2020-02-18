@@ -3,6 +3,8 @@ const path = require('path')
 const consola = require('consola')
 const expect = require('expect.js')
 
+const { pascalize } = require('./misc')
+
 function pathExists(p, error, read) {
   try {
     if (fs.existsSync(p)) {
@@ -55,6 +57,22 @@ function testModel(model) {
   expect(model).to.have.property('non-repeat')
 }
 
+function isSliceName(sliceName) {
+  let str = ''
+  sliceName.split('').forEach((l) => {
+    if (l === l.toUpperCase()) {
+      return str += `-${l}`
+    }
+    str += l
+  })
+  
+  if (pascalize(str).localeCompare(sliceName)) {
+    throw new Error(
+      `folder ${sliceName} is not PascalCased. Therefore, slice type cannot be infered.\nPlease change it before committing your library definition`
+    );
+  }
+}
+
 function isSliceFolder(p) {
   try {
     pathExists(path.join(p, "preview.png"))
@@ -81,6 +99,7 @@ module.exports = {
   pathExists,
   smConfig,
   isJSON,
+  isSliceName,
   testModel,
   pathHasType
 };
