@@ -3,6 +3,21 @@
 A component that matches front-end components with Prismic slices.
 Pretty much a work in progress, README coming soon.
 
+### Configuration
+
+Depending on where you use the SliceZone, you may have to configure your app to transpile it from es6.
+Example with Nuxt config:
+
+```javascript
+
+// in nuxt.config.js
+
+build: {
+  transpile: ['vue-slicezone']
+}
+
+````
+
 Usage:
 
 ```vue

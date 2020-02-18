@@ -1,8 +1,22 @@
+const camelizeRE = /-(\w)/g;
+const pascalize = str => {
+  if (!str) {
+    return "";
+  }
+  str = str.replace(/_/g, "-").replace(camelizeRE, (_, c) => {
+    return c ? c.toUpperCase() : "";
+  });
+  return str[0].toUpperCase() + str.slice(1);
+};
+
 const NotFound = {
   props: {
     slice: {
       type: Object,
-      required: true
+      required: true,
+      default() {
+        return {}
+      }
     }
   },
   render(h) {
@@ -18,10 +32,9 @@ const NotFound = {
         ]
       );
     }
+    return h("div");
   }
 };
-
-import { pascalize } from './utils'
 
 export default {
   name: "SliceZone",
@@ -31,6 +44,11 @@ export default {
       default() {
         return {};
       }
+    },
+    debug: {
+      required: false,
+      type: Boolean,
+      default: false
     },
     slices: {
       required: true
@@ -48,6 +66,7 @@ export default {
       description: "Wrapper tag (div, section, main...)"
     },
     NotFound: {
+      type: Function,
       required: false,
       default() {
         return NotFound;
@@ -55,17 +74,30 @@ export default {
     }
   },
   computed: {
-    computedImports: ({ components, resolver, slices, NotFound }) => {
+    computedImports: ({ components, resolver, slices, NotFound, debug }) => {
       const invert = p =>
         new Promise((resolve, reject) => p.then(reject, resolve));
       const firstOf = ps => invert(Promise.all(ps.map(invert)));
       const names = slices.map(e => pascalize(e.slice_type));
+
+      const resolve = payload => {
+        if (!resolver) {
+          const err =
+            'SliceZone expects a "resolver" function to properly index components';
+          if (process.env.NODE_ENV === "development" && !debug) {
+            throw new Error(err);
+          }
+          return Promise.resolve(NotFound);
+        }
+        return resolver(payload);
+      };
+
       return (slices || []).map((_, i) => () => {
         const resolved = components[names[i]]
-          ? () => components[names[i]]
-          : resolver({ sliceName: names[i], index: i });
+          ? Promise.resolve(components[names[i]])
+          : resolve({ sliceName: names[i], index: i });
         const resolvedArr = Array.isArray(resolved) ? resolved : [resolved];
-        return firstOf(resolvedArr).catch(() => import(() => NotFound));
+        return firstOf(resolvedArr).catch(() => NotFound);
       });
     },
     computedSlices: ({ slices, computedImports }) => {
