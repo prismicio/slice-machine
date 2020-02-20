@@ -130,7 +130,7 @@ module.exports = async (req, res) => {
     })();
 
     (function handleScaffolder(){
-      const Scaffolder = require(`../bootstrap/nuxt`)
+      const Scaffolder = require(`../bootstrap/${framework}`);
       const scaffolder = Scaffolder();
       scaffolder.createFiles(
         ({ name, f }) => console.log(name, f) || fZip.file(name, f)

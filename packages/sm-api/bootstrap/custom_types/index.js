@@ -15,7 +15,7 @@ module.exports = {
     };
     return {
       cts: customTypes(index, cts),
-      toBeMerged: ['page'],
+      toBeMerged: ['page'], // change this
       files: {
         'index.json': index,
         'page.json': cts.page
