@@ -44,10 +44,8 @@ async function main() {
     )
 
     const sm = {
+      ...config,
       packageName,
-      libraryName: config.libraryName,
-      framework: config.framework,
-      gitUrl: config.gitUrl,
       package,
       slices
     }
