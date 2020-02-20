@@ -4,8 +4,9 @@ const consola = require('consola')
 const validateNpmPackage = require('validate-npm-package')
 
 const tests = require('./tests')
-const misc = require('./misc')
-const { SLICE_TYPE_KEY } = require('./consts')
+
+const strUtils = require('../utils/str')
+const fsUtils = require('../utils/fs')
 
 function pathToLib(config) {
   const p = path.join(process.cwd(), config.pathToLibrary || './');
@@ -67,30 +68,28 @@ function readJsonPackage(p) {
 
 function getSliceType(sliceName) {
   tests.isSliceName(sliceName)
-  return misc.hyphenate(sliceName)
+  return strUtils.hyphenate(sliceName, /* kebab */ true)
 }
 
 function fetchSliceDefinitions(p) {
   try {
 
-    const folders = misc.getDirectories(p)
+    const folders = fsUtils.getDirectories(p)
 
     if (!folders.length) {
       throw new Error('[Reason] Slices folder is empty.')
     }
 
-    const slices = []
+    const slices = {}
     folders.forEach((p) => {
       const sliceName = p.split("/").pop()
 
       tests.isSliceFolder(p)
 
-      const model = {
-        ...JSON.parse(misc.readFile(path.join(p, "model.json"))),
-        [SLICE_TYPE_KEY]: getSliceType(sliceName).replace(/-/g, "_")
-      };
+      slices[getSliceType(sliceName)] = JSON.parse(
+        fsUtils.readFile(path.join(p, "model.json"))
+      );
 
-      slices.push(model)
     })
 
     return slices

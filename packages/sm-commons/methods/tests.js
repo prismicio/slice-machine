@@ -3,7 +3,7 @@ const path = require('path')
 const consola = require('consola')
 const expect = require('expect.js')
 
-const { pascalize } = require('./misc')
+const { pascalize } = require('../utils/str');
 
 function pathExists(p, error, read) {
   try {
