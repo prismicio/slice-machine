@@ -10,9 +10,7 @@ const {
 
 const fetchLibrary = require("../library").fetchLibrary;
 
-const {
-  parsePackagePathname
-} = require('./package')
+const { parsePackagePathname } = require('./package')
 
 async function fetchJson(url) {
   const response = await fetch(url);

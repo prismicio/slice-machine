@@ -16,8 +16,8 @@ function expectLibrary(sm) {
   expect(slices).to.be.an("object");
   Object.values(slices).forEach((value) => {
     expectSliceModel(value)
-    expect(value).to.have.property("meta")
-    expectMeta(value.meta)
+    // expect(value).to.have.property("meta")
+    // expectMeta(value.meta)
   })
 
   /**

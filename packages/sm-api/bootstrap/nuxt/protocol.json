@@ -41,6 +41,6 @@
 			"zipPath": "pages/"
 		}
 	],
-	"dependencies": ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic"],
+	"dependencies": ["prismic-javascript", "prismic-vue", "vue-slicezone", "@nuxtjs/prismic"],
 	"devDependencies": ["node-sass", "sass-loader"]
 }

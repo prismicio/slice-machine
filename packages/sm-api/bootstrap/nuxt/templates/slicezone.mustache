@@ -1,0 +1,53 @@
+<template>
+  <slice-zone
+    :slices="slices"
+    :resolver="resolver"
+    :wrapper="wrapper"
+    :debug="debug"
+    :onboarding="onboarding"
+  />
+</template>
+<script>
+import SliceZone from 'vue-slicezone/SliceZone'
+
+export default {
+  components: {
+    SliceZone
+  },
+  props: {
+    components: {
+      required: false,
+      default() {
+        return {};
+      }
+    },
+    onboarding: {
+      required: false,
+      type: Boolean,
+      default: false
+    },
+    debug: {
+      required: false,
+      type: Boolean,
+      default: false
+    },
+    slices: {
+      required: true
+    },
+    wrapper: {
+      required: false,
+      type: String,
+      default: "div",
+      description: "Wrapper tag (div, section, main...)"
+    }
+  },
+  methods: {
+    resolver({ sliceName }) {
+      return [
+        import(`[[[ pathToSlices ]]]${sliceName}/index.vue`),
+        import(`[[[ pathToSlices ]]]${sliceName}.vue`)
+      ]
+    }
+  }
+}
+</script>

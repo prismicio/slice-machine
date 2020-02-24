@@ -35,6 +35,15 @@ module.exports = () => {
           sliceMachinePath: "@/sliceMachine"
         }
       )
+    },
+    {
+      name: "sliceMachine/sliceZone.vue",
+      f: Mustache.render(
+        fs.readFileSync(path.join(__dirname, "templates/slicezone.mustache"), "utf8"),
+        {
+          pathToSlices: './slices'
+        }
+      )
     }
   ];
 	return {

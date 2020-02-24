@@ -24,8 +24,7 @@ const createCommunication = require('../methods/communication')
 
 const SM_CONFIG_FILE = 'sm.config.json'
 
-const API_ENDPOINT = 'http://community-slices.herokuapp.com/api'
-// const API_ENDPOINT = "http://localhost:3000/api"
+const API_ENDPOINT = "https://sm-api.now.sh/api";
 
 async function main() {
   try {

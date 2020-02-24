@@ -78,7 +78,7 @@ export default {
       const invert = p =>
         new Promise((resolve, reject) => p.then(reject, resolve));
       const firstOf = ps => invert(Promise.all(ps.map(invert)));
-      const names = slices.map(e => pascalize(e.slice_type));
+      const names = (slices || []).map(e => pascalize(e.slice_type));
 
       const resolve = payload => {
         if (!resolver) {
