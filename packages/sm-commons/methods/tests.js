@@ -5,6 +5,8 @@ const expect = require('expect.js')
 
 const { pascalize } = require('../utils/str');
 
+const { expectSliceModel, expectMeta } = require("../expect");
+
 function pathExists(p, error, read) {
   try {
     if (fs.existsSync(p)) {
@@ -35,28 +37,6 @@ function pathHasType(p, type, error) {
   return true
 }
 
-function smConfig(config) {
-  expect(config).to.have.property('libraryName')
-  expect(config).to.have.property('gitUrl')
-  expect(config).to.have.property('framework')
-}
-
-function testMeta(meta) {
-  expect(meta).to.be.an('object')
-  expect(meta).to.have.property('title')
-  expect(meta).to.have.property('description')
-}
-
-function testModel(model) {
-  expect(model).to.be.an('object')
-  expect(model).to.have.property('type', 'Slice')
-  expect(model).to.have.property('fieldset')
-  expect(model).to.have.property('description')
-  expect(model).to.have.property('icon')
-  expect(model).to.have.property('display')
-  expect(model).to.have.property('non-repeat')
-}
-
 function isSliceName(sliceName) {
   let str = ''
   sliceName.split('').forEach((l) => {
@@ -76,7 +56,7 @@ function isSliceName(sliceName) {
 function isSliceFolder(p) {
   try {
     pathExists(path.join(p, "preview.png"))
-    const meta = isJSON(pathExists(path.join(p, 'meta.json'), 'File "meta.json" does not exist.', true))
+    // const meta = isJSON(pathExists(path.join(p, 'meta.json'), 'File "meta.json" does not exist.', true))
     const model = isJSON(
       pathExists(
         path.join(p, "model.json"),
@@ -85,8 +65,13 @@ function isSliceFolder(p) {
       )
     )
 
-    testModel(model)
-    testMeta(meta)
+    expectSliceModel(model);
+    // expectMeta(meta)
+
+    return {
+      // meta,
+      model,
+    };
 
   } catch(e) {
     consola.error(`slice-machine/isSliceFolder] Error while parsing slice folder, at path "${path}"`)
@@ -97,9 +82,7 @@ function isSliceFolder(p) {
 module.exports = {
   isSliceFolder,
   pathExists,
-  smConfig,
   isJSON,
   isSliceName,
-  testModel,
   pathHasType
 };

@@ -48,6 +48,3 @@ function createCommunication({ apiEndpoint }) {
 }
 
 module.exports = createCommunication;
-// const url = handleUrl(endpoint, params);
-// const tmpZipFile = tmp.tmpNameSync();
-

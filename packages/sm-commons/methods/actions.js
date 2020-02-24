@@ -5,6 +5,8 @@ const validateNpmPackage = require('validate-npm-package')
 
 const tests = require('./tests')
 
+const { expectConfig } = require('../expect')
+
 const strUtils = require('../utils/str')
 const fsUtils = require('../utils/fs')
 
@@ -27,7 +29,7 @@ function pathToSlices(config, toLib) {
 function readConfig(p) {
   try {
     const file = JSON.parse(fs.readFileSync(p))
-    tests.smConfig(file)
+    expectConfig(file);
     return file
   } catch(e) {
     consola.error('[slice-machine/readConfig] Error while reading config.')
@@ -84,12 +86,9 @@ function fetchSliceDefinitions(p) {
     folders.forEach((p) => {
       const sliceName = p.split("/").pop()
 
-      tests.isSliceFolder(p)
+      const { model } = tests.isSliceFolder(p)
 
-      slices[getSliceType(sliceName)] = JSON.parse(
-        fsUtils.readFile(path.join(p, "model.json"))
-      );
-
+      slices[getSliceType(sliceName)] = model
     })
 
     return slices

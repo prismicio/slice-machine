@@ -1,5 +1,3 @@
-const fs = require('fs')
-const path = require('path')
 const set = require("lodash.set");
 const get = require("lodash.get");
 const merge = require("lodash.merge");
