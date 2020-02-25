@@ -19,12 +19,15 @@ const SM_FOLDER_NAME = "sliceMachine";
 
 const REGISTRY_URL = "https://unpkg.com/";
 
+const MONGO_ERRORS_COLLECTION = "errors";
 const MONGO_LIBRARIES_COLLECTION = "libraries";
+
 
 module.exports = {
   libraries,
   defaultLibraries,
   githubRepositories,
+  MONGO_ERRORS_COLLECTION,
   MONGO_LIBRARIES_COLLECTION,
   REGISTRY_URL,
   SM_CONFIG_FILE,

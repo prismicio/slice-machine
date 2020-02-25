@@ -9,6 +9,7 @@
   "author": "Hugo Villain",
   "license": "ISC",
   "dependencies": {
+    "@slack/web-api": "^5.7.0",
     "adm-zip": "^0.4.14",
     "cross-fetch": "^3.0.4",
     "jszip": "^3.2.2",
@@ -20,7 +21,7 @@
     "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.2",
-    "sm-commons": "0.0.15-alpha.5",
+    "sm-commons": "0.0.15",
     "tmp": "^0.1.0"
   },
   "devDependencies": {

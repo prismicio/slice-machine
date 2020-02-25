@@ -4,12 +4,13 @@ const connectToDatabase = require("../../common/connect");
 
 const {
   libraries,
+  MONGO_ERRORS_COLLECTION,
   MONGO_LIBRARIES_COLLECTION,
   REGISTRY_URL,
   SM_FILE
 } = require("../../common/consts");
 
-const fetchLibrary = require("../library").fetchLibrary;
+const postMessage = require("./slack").postMessage;
 
 const { parsePackagePathname } = require('./package')
 
@@ -24,6 +25,7 @@ async function fetchJson(url) {
 module.exports = async (_, res) => {
   const npmPackages = Object.keys(libraries);
   npmPackages.forEach(async packageName => {
+    const db = await connectToDatabase(process.env.MONGODB_URI);
     try {
       const { packageSpec } = parsePackagePathname(packageName);
       const packageSmUrl = `${REGISTRY_URL}${packageSpec}/${SM_FILE}`;
@@ -31,7 +33,7 @@ module.exports = async (_, res) => {
       const sm = await fetchJson(packageSmUrl);
       
       expectLibrary(sm);
-      const db = await connectToDatabase(process.env.MONGODB_URI);
+      throw new Error('hey!')
       const collection = await db.collection(MONGO_LIBRARIES_COLLECTION);
 
       await collection.updateOne(
@@ -43,8 +45,29 @@ module.exports = async (_, res) => {
       );
       return res.status(200).send('');
     } catch(e) {
-      console.error(e)
-      return res.status(500).send(e)
+      const collection = await db.collection(MONGO_ERRORS_COLLECTION);
+      const latest = await collection.findOne({ packageName });
+      const err = `An error occured while fetching package definition "${packageName}".\n\n[Full error] ${e}`;
+      if (latest && latest.last_updated) {
+        const diff =
+          new Date().getTime() - new Date(latest.last_updated).getTime();
+
+        const every = 60000 * 20;
+
+        if (diff < every) {
+          return res.status(500).send(err);
+        }
+        
+      }
+      await postMessage(err);
+      await collection.updateOne(
+        { packageName },
+        { $set: { packageName, last_updated: new Date(), err } },
+        {
+          upsert: true
+        }
+      );
+      return res.status(500).send(err);
     }
   });
 };
