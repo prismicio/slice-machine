@@ -4,7 +4,6 @@
   "version": "0.0.14",
   "description": "Slice Machine API",
   "scripts": {
-    "build": "rm -rf common && mkdir common && echo '{}' > ./common/index.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hugo Villain",
@@ -21,6 +20,7 @@
     "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.2",
+    "sm-commons": "0.0.15-alpha.5",
     "tmp": "^0.1.0"
   },
   "devDependencies": {

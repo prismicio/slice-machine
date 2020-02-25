@@ -1,5 +1,7 @@
 const connectToDatabase = require("../common/connect");
 
+const handleStripKeys = require("../common").handleStripKeys;
+
 async function fetchLibrary(packageName) {
   const db = await connectToDatabase(process.env.MONGODB_URI)
   const collection = await db.collection("libraries")
@@ -8,7 +10,9 @@ async function fetchLibrary(packageName) {
 }
 
 const mod = module.exports = async (req, res) => {
-  const { query: { lib, library } } = req
+  const {
+    query: { lib, library, strip, preserveDefaults }
+  } = req;
 
   const packageName = lib || library;
 
@@ -20,9 +24,19 @@ const mod = module.exports = async (req, res) => {
       );
   }
 
+  const keysToStrip = handleStripKeys(strip, preserveDefaults);
+
+
   const sm = await fetchLibrary(packageName)
 
-  res.send(sm);
+  if (sm) {
+    keysToStrip.forEach(key => {
+      delete sm[key];
+    })
+    return res.send(sm);
+  }
+  return res.status(404).send({})
+  
 };
 
 mod.fetchLibrary = fetchLibrary

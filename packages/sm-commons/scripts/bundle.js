@@ -20,6 +20,7 @@ const path = require('path')
 const consola = require('consola')
 
 const actions = require('../methods/actions')
+const expectLibrary = require("../expect").expectLibrary;
 const createCommunication = require('../methods/communication')
 
 const SM_CONFIG_FILE = 'sm.config.json'
@@ -48,6 +49,8 @@ async function main() {
       package,
       slices
     }
+
+    expectLibrary(sm)
 
     actions.writeSmFile(JSON.stringify(sm))
 

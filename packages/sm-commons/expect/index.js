@@ -4,12 +4,8 @@ const expect = require("expect.js");
 function expectLibrary(sm) {
   expect(sm).to.be.an("object");
 
-  expect(sm).to.have.property("fieldset");
-  expect(sm).to.have.property("description");
-  expect(sm).to.have.property("icon");
-  expect(sm).to.have.property("display");
-  expect(sm).to.have.property("non-repeat");
-
+  expect(sm).to.have.property("packageName");
+  expect(sm).to.have.property("package");
   expect(sm).to.have.property("slices");
 
   const slices = sm.slices;

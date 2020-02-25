@@ -4,16 +4,16 @@ const githubRepositories = {
 
 const libraries = {
   "vue-essential-slices": {
-    git: 'prismicio/vue-essential-slices',
-    framework: 'nuxt'
+    git: "prismicio/vue-essential-slices",
+    framework: "nuxt"
   }
 };
 
 const defaultLibraries = {
-  nuxt: 'vue-essential-slices'
-}
+  nuxt: "vue-essential-slices"
+};
 
-const SM_CONFIG_FILE = 'sm.config.json'
+const SM_CONFIG_FILE = "sm.config.json";
 const SM_FILE = "sm.json";
 const SM_FOLDER_NAME = "sliceMachine";
 

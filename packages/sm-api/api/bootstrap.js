@@ -16,7 +16,7 @@ const {
 } = require("../common/consts");
 
 const fetchLibrary = require("./library").fetchLibrary;
-const operations = require('../common/operations');
+const mergeCts = require("../common").mergeCustomTypesWithSlices;
 
 function handleUrl(endpoint, params = {}) {
   const url = new URL(endpoint);
@@ -118,11 +118,8 @@ module.exports = async (req, res) => {
         files,
       } = require("../bootstrap/custom_types/")[projectType]();
 
-      const mergedCt = operations.mergeCustomTypesWithSlices(
-        cts,
-        smLibrary.slices,
-        toBeMerged
-      );
+      const mergedCt = mergeCts(cts, smLibrary.slices, toBeMerged);
+
       fZip.file("slices.json", JSON.stringify(mergedCt));
       Object.entries(files).map(([fileName, content]) => {
         fZip.file(`custom_types/${fileName}`, JSON.stringify(content));

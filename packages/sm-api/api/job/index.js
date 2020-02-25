@@ -1,4 +1,5 @@
 const fetch = require("node-fetch");
+const expectLibrary = require("sm-commons/expect").expectLibrary;
 const connectToDatabase = require("../../common/connect");
 
 const {
@@ -20,7 +21,7 @@ async function fetchJson(url) {
   return await response.json();
 }
 
-module.exports = async (req, res) => {
+module.exports = async (_, res) => {
   const npmPackages = Object.keys(libraries);
   npmPackages.forEach(async packageName => {
     try {
@@ -29,6 +30,7 @@ module.exports = async (req, res) => {
 
       const sm = await fetchJson(packageSmUrl);
       
+      expectLibrary(sm);
       const db = await connectToDatabase(process.env.MONGODB_URI);
       const collection = await db.collection(MONGO_LIBRARIES_COLLECTION);
 

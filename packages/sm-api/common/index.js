@@ -12,16 +12,40 @@ function mergeCustomTypesWithSlices(ct, slices, customTypesToMerge) {
   return ct.map(elem => {
     if (customTypesToMerge.includes(elem.id)) {
       // get existing slices
-      const currSlices = get(elem, `value.${elem.name}.body.config.choices`, {})
+      const currSlices = get(
+        elem,
+        `value.${elem.name}.body.config.choices`,
+        {}
+      );
       // merge them with new slices (removes duplicates)
-      const merged = merge(currSlices, slices)
+      const merged = merge(currSlices, slices);
       // return updated custom type
-      return set(elem, `value.${elem.name}.body.config.choices`, merged)
+      return set(elem, `value.${elem.name}.body.config.choices`, merged);
     }
-    return elem
-  })
+    return elem;
+  });
+}
+
+/**
+ * 
+ * @param {String} strip comma-separated string, eg. package,framework,gitUrl
+ * @param {Boolean|String} preserveDefaults does not add default strip keys to returned array
+ * @return {Array} Array of keys to delete
+ */
+
+ const trimKeys = ["_id", "package"];
+
+function handleStripKeys(strip, preserveDefaults) {
+  const defaultTrimKeys = preserveDefaults ? [] : trimKeys
+  return strip
+    ? strip
+        .trim()
+        .split(",")
+        .concat(defaultTrimKeys)
+    : defaultTrimKeys;
 }
 
 module.exports = {
+  handleStripKeys,
   mergeCustomTypesWithSlices
 };
