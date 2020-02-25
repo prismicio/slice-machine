@@ -37,7 +37,7 @@ export default {
       }
   },
   methods: {
-    resolver({ sliceName }) => {
+    resolver({ sliceName }) {
       return [
         import(`path/to/slices/${sliceName}/index.vue`),
         import(`node/mo/dule/${sliceName}.vue`)
