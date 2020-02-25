@@ -33,7 +33,6 @@ module.exports = async (_, res) => {
       const sm = await fetchJson(packageSmUrl);
       
       expectLibrary(sm);
-      throw new Error('hey!')
       const collection = await db.collection(MONGO_LIBRARIES_COLLECTION);
 
       await collection.updateOne(
