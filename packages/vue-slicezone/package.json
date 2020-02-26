@@ -21,5 +21,8 @@
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
-  "gitHead": "58f9c3a4bd3fc23cf5270639829bfebeaa23bdd4"
+  "gitHead": "58f9c3a4bd3fc23cf5270639829bfebeaa23bdd4",
+  "dependencies": {
+    "sm-commons": "0.0.15"
+  }
 }

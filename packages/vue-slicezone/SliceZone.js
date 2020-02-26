@@ -1,13 +1,14 @@
-const camelizeRE = /-(\w)/g;
-const pascalize = str => {
-  if (!str) {
-    return "";
-  }
-  str = str.replace(/_/g, "-").replace(camelizeRE, (_, c) => {
-    return c ? c.toUpperCase() : "";
-  });
-  return str[0].toUpperCase() + str.slice(1);
-};
+import { pascalize } from 'sm-commons/utils'
+
+const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
+const firstOf = ps => invert(Promise.all(ps.map(invert)));
+
+const toArr = elem => (Array.isArray(elem) ? elem : [elem]);
+const isPromise = elem =>
+  elem instanceof Promise ||
+  (elem instanceof Array && elem.every(e => e instanceof Promise));
+
+const promisify = elem => (isPromise(elem) ? elem : Promise.resolve(elem));
 
 const NotFound = {
   props: {
@@ -15,7 +16,7 @@ const NotFound = {
       type: Object,
       required: true,
       default() {
-        return {}
+        return {};
       }
     }
   },
@@ -75,9 +76,6 @@ export default {
   },
   computed: {
     computedImports: ({ components, resolver, slices, NotFound, debug }) => {
-      const invert = p =>
-        new Promise((resolve, reject) => p.then(reject, resolve));
-      const firstOf = ps => invert(Promise.all(ps.map(invert)));
       const names = (slices || []).map(e => pascalize(e.slice_type));
 
       const resolve = payload => {
@@ -87,17 +85,18 @@ export default {
           if (process.env.NODE_ENV === "development" && !debug) {
             throw new Error(err);
           }
-          return Promise.resolve(NotFound);
+          return null;
         }
         return resolver(payload);
       };
 
       return (slices || []).map((_, i) => () => {
-        const resolved = components[names[i]]
-          ? Promise.resolve(components[names[i]])
-          : resolve({ sliceName: names[i], index: i });
-        const resolvedArr = Array.isArray(resolved) ? resolved : [resolved];
-        return firstOf(resolvedArr).catch(() => NotFound);
+        const promises = toArr(
+          promisify(
+            components[names[i]] || resolve({ sliceName: names[i], index: i })
+          )
+        );
+        return firstOf(promises).catch(() => NotFound);
       });
     },
     computedSlices: ({ slices, computedImports }) => {

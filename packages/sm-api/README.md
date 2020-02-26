@@ -8,6 +8,11 @@ Default, current URL: http://sm-api.now.sh/api
  
  ---
 
+ ## Environment variables
+ The API expects variables
+ - MONGODB_URI: uri to a Mongo Atlas cluster
+ - SLACK_MESAGE_URI:  see "sm-operations" channel configuration for details
+
 ## list libraries
 
   Returns a json Array of all slice machine libraries
