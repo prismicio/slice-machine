@@ -1,4 +1,4 @@
-import { pascalize } from 'sm-commons/utils'
+import { pascalize } from "sm-commons/utils/str";
 
 const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
 const firstOf = ps => invert(Promise.all(ps.map(invert)));
