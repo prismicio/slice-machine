@@ -14,7 +14,7 @@ module.exports = {
       page: require("./landing/page.json")
     };
     return {
-      cts: customTypes(index, cts),
+      cts: customTypes(index, Object.assign({}, cts)),
       toBeMerged: ['page'], // change this
       files: {
         'index.json': index,

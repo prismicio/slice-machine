@@ -76,12 +76,12 @@ module.exports = async (req, res) => {
 
     zip.extractAllTo(tmpath);
 
-    const config = JSON.parse(
-      fs.readFileSync(
-        path.join(tmpath, `${packageName}-master`, SM_CONFIG_FILE),
-        "utf8"
-      )
-    );
+    // const config = JSON.parse(
+    //   fs.readFileSync(
+    //     path.join(tmpath, `${packageName}-master`, SM_CONFIG_FILE),
+    //     "utf8"
+    //   )
+    // );
 
     // const pathToLibrary = path.join(
     //   tmpath,
@@ -89,27 +89,28 @@ module.exports = async (req, res) => {
     //   config.pathToLibrary || '.'
     // );
 
-    const relativePathToLib = path.join(
-      `${packageName}-master`,
-      config.pathToLibrary || "."
-    );
+    // const relativePathToLib = path.join(
+    //   `${packageName}-master`,
+    //   config.pathToLibrary || "."
+    // );
 
     /** Copy library (eg. src) to folder "sliceMachine" */
-    zip.getEntries().forEach(function(entry) {
-      const entryName = entry.entryName;
-      if (entryName.indexOf(relativePathToLib) === 0) {
-        const relativePath = entryName.split(relativePathToLib).pop();
-        if (relativePath !== "/") {
-          fZip.file(
-            path.join(SM_FOLDER_NAME, relativePath),
-            zip.readAsText(entry)
-          );
-        }
-      }
-    });
+    // zip.getEntries().forEach(function(entry) {
+    //   const entryName = entry.entryName;
+    //   if (entryName.indexOf(relativePathToLib) === 0) {
+    //     const relativePath = entryName.split(relativePathToLib).pop();
+    //     if (relativePath !== "/") {
+    //       fZip.file(
+    //         path.join(SM_FOLDER_NAME, relativePath),
+    //         zip.readAsText(entry)
+    //       );
+    //     }
+    //   }
+    // });
+
+    const smLibrary = await fetchLibrary(packageName);
 
     await (async function handleCustomTypes(){
-      const smLibrary = await fetchLibrary(packageName);
 
       // protect this
       const {
@@ -118,9 +119,12 @@ module.exports = async (req, res) => {
         files,
       } = require("../bootstrap/custom_types/")[projectType]();
 
-      const mergedCt = mergeCts(cts, smLibrary.slices, toBeMerged);
+      const mergedCustomTypes = mergeCts([...cts], smLibrary.slices, toBeMerged);
 
-      fZip.file("slices.json", JSON.stringify(mergedCt));
+      fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
+
+      /** Bug: files seem to be overwritten by mergeCts.
+       *  Here, they contain a non-empty "choices" value */
       Object.entries(files).map(([fileName, content]) => {
         fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
       })
@@ -129,11 +133,26 @@ module.exports = async (req, res) => {
     (function handleScaffolder(){
       const Scaffolder = require(`../bootstrap/${framework}`);
       const scaffolder = Scaffolder();
-      scaffolder.createFiles(
-        ({ name, f }) => console.log(name, f) || fZip.file(name, f)
-      );
-      fZip.file("info.json", JSON.stringify(scaffolder.info));
-    })()
+      scaffolder.files.forEach(({ name, f }) => fZip.file(name, f))
+      const manifest = {
+        ...scaffolder.manifest,
+        devDependencies: [
+          ...scaffolder.manifest.devDependencies,
+          ...smLibrary.devDependencies
+        ],
+        dependencies: [
+          ...scaffolder.manifest.dependencies,
+          ...smLibrary.dependencies,
+          packageName /** IMPORTANT */
+        ],
+      }
+      fZip.file("manifest.json", JSON.stringify(manifest));
+    })();
+
+    fZip.file("sm.json", JSON.stringify({
+      libraries: [packageName],
+      endpoint: 'https: //your-repo-name.prismic.io/api/v2'
+    }));
 
     fZip
       .generateNodeStream({

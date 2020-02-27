@@ -10,7 +10,7 @@ const merge = require("lodash.merge");
  */
 function mergeCustomTypesWithSlices(ct, slices, customTypesToMerge) {
   return ct.map(elem => {
-    if (customTypesToMerge.includes(elem.id)) {
+    if (customTypesToMerge.indexOf(elem.id) === 0) {
       // get existing slices
       const currSlices = get(
         elem,
