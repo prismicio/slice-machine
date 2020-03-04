@@ -9,15 +9,16 @@
 We've configured mostly everything,
 now in your project files add the following settings to your `nuxt.config.js` file.
 
+[[#hasHeadInfo]]
 In the 'head' section of the `nuxt.config.js` file add the follwing scripts:
-script: [
-  { src: 'https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList' },
-  { src: 'https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js' }
-],
+[[ &css ]]
+[[ &script ]]
+[[/hasHeadInfo]]
 
+[[#isBootstrap]]
 modules: [
   ['@nuxtjs/prismic', {
-    endpoint: `https://{{ prismicDomain }}.cdn.prismic.io/api/v2`,
+    endpoint: '{{{ apiEndpoint }}}',
     linkResolver(doc) {
       if (doc.uid === 'page') {
         return doc.uid === 'homepage' ? '/' : `/${doc.uid}`
@@ -30,6 +31,6 @@ modules: [
     ]
   }]
 ],
-
+[[/isBootstrap]]
 After you've done this, launch your project by running:
 `cd {{ projectName }} && npm run dev`

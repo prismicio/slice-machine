@@ -1,6 +1,9 @@
 const connectToDatabase = require("../common/connect");
 
 const handleStripKeys = require("../common").handleStripKeys;
+const {
+  defaultStripKeys
+} = require('../common/consts')
 
 async function fetchLibrary(packageName) {
   const db = await connectToDatabase(process.env.MONGODB_URI)
@@ -24,7 +27,7 @@ const mod = module.exports = async (req, res) => {
       );
   }
 
-  const keysToStrip = handleStripKeys(strip, preserveDefaults);
+  const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 
 
   const sm = await fetchLibrary(packageName)

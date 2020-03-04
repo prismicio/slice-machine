@@ -1,8 +1,12 @@
 <template>
-  <slice-zone :slices="page.data.body" />
+  <slice-zone
+    :resolver="resolver"
+    :slices="page ? page.data.body : []"
+  />
 </template>
 <script>
-import { SliceZone } from '[[ &sliceMachinePath ]]'
+import * as Slices from '[[ packageName ]]'
+import SliceZone from 'vue-slicezone/SliceZone'
 
 export default {
   components: {
@@ -31,6 +35,11 @@ export default {
     } catch (e) {
       console.error(e);
       error({ statusCode: 404, message: `Document not found. Make sure you created a document of type '[[customType]]' with uid '${uid}' in your Prismic repository` })
+    }
+  },
+  methods: {
+    resolver({ sliceName }) {
+      return Slices[sliceName]
     }
   }
 }

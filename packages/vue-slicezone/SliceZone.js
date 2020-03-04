@@ -1,4 +1,5 @@
 import { pascalize } from "sm-commons/utils/str";
+import EmptyState from "./EmptyState";
 
 const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
 const firstOf = ps => invert(Promise.all(ps.map(invert)));
@@ -52,10 +53,22 @@ export default {
       default: false
     },
     slices: {
-      required: true
+      required: false
+    },
+    type: {
+      required: false,
+      type: String
+    },
+    uid: {
+      required: false,
+      type: String
+    },
+    pathToDocs: {
+      required: false,
+      type: String
     },
     resolver: {
-      required: true,
+      required: false,
       type: Function,
       description:
         "Resolver takes slice information and returns a dynamic import"
@@ -122,6 +135,18 @@ export default {
       scopedSlots[sliceName][sliceSlot || "default"] = this.$scopedSlots[name];
     }
 
+    if (!this.computedSlices || !this.computedSlices.length) {
+      return h(
+        EmptyState,
+        {
+          props: {
+             uid: this.uid,
+             type: this.type,
+             pathToDocs: this.pathToDocs
+          }
+        }
+      )
+    }
     return h(
       this.wrapper,
       {},

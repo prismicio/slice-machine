@@ -33,9 +33,7 @@ function mergeCustomTypesWithSlices(ct, slices, customTypesToMerge) {
  * @return {Array} Array of keys to delete
  */
 
- const trimKeys = ["_id", "package"];
-
-function handleStripKeys(strip, preserveDefaults) {
+function handleStripKeys(strip, trimKeys, preserveDefaults) {
   const defaultTrimKeys = preserveDefaults ? [] : trimKeys
   return strip
     ? strip

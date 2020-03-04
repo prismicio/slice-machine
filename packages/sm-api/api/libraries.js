@@ -1,13 +1,14 @@
 const connectToDatabase = require('../common/connect')
 
 const handleStripKeys = require("../common").handleStripKeys;
+const { defaultStripKeys } = require('../common/consts')
 
 module.exports = async (req, res) => {
   const {
     query: { framework, strip, preserveDefaults }
   } = req;
 
-  const keysToStrip = handleStripKeys(strip, preserveDefaults);
+  const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 
   const db = await connectToDatabase(process.env.MONGODB_URI)
   const collection = await db.collection("libraries")

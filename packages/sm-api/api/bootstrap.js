@@ -132,7 +132,7 @@ module.exports = async (req, res) => {
 
     (function handleScaffolder(){
       const Scaffolder = require(`../bootstrap/${framework}`);
-      const scaffolder = Scaffolder();
+      const scaffolder = Scaffolder({ packageName, ...smLibrary, isBootstrap: true });
       scaffolder.files.forEach(({ name, f }) => fZip.file(name, f))
       const manifest = {
         ...scaffolder.manifest,
@@ -145,14 +145,12 @@ module.exports = async (req, res) => {
           ...smLibrary.dependencies,
           packageName /** IMPORTANT */
         ],
-      }
+        libraries: [packageName],
+        css: smLibrary.css || [],
+        script: smLibrary.script || []
+      };
       fZip.file("manifest.json", JSON.stringify(manifest));
     })();
-
-    fZip.file("sm.json", JSON.stringify({
-      libraries: [packageName],
-      endpoint: 'https: //your-repo-name.prismic.io/api/v2'
-    }));
 
     fZip
       .generateNodeStream({

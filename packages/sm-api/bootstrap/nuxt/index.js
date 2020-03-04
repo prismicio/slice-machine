@@ -2,9 +2,26 @@ const fs = require('fs')
 const path = require('path')
 const Mustache = require('mustache')
 
+const { defaultLibraries } = require('../../common/consts')
+
 Mustache.tags = ['[[', ']]']
 
-module.exports = () => {
+// Test this and move it elsewhere
+function createArrayString(identifier, array) {
+  return `${identifier}: [
+    ${array.map((e) => {
+      if (typeof e === "string") {
+        return `'${e}'`
+      }
+      if (typeof e === "object") {
+        return JSON.stringify(e)
+      }
+    })}
+]`;
+}
+
+const nuxtDefaultPackage = defaultLibraries.nuxt
+module.exports = (maybeProps) => {
   const files = [
     // {
     //   name: "prismic.config.js",
@@ -33,7 +50,7 @@ module.exports = () => {
         fs.readFileSync(path.join(__dirname, "templates/uid.mustache"), "utf8"),
         {
           customType: "page",
-          sliceMachinePath: "@/sliceMachine"
+          packageName: maybeProps ? maybeProps.packageName : null
         }
       )
     },
@@ -47,26 +64,40 @@ module.exports = () => {
     //   )
     // }
   ];
+
+  console.log('hasHeadInfo', maybeProps && (maybeProps.css.length || maybeProps.script.length))
 	return {
     files,
     manifest: {
       frameworkName: "Nuxt",
+      defaultLibrary: nuxtDefaultPackage,
       firstCommand: "npm run dev",
-      // projectTests: [
-      //   {
-      //     arg: "-f",
-      //     path: "nuxt.config.js",
-      //     reason: "No `nuxt.config.js` file found"
-      //   },
-      //   {
-      //     arg: "-d",
-      //     path: "pages",
-      //     reason: "No `pages` folder found"
-      //   }
-      // ],
+      projectTests: [
+        {
+          arg: "-f",
+          path: "nuxt.config.js",
+          reason: "No `nuxt.config.js` file found"
+        },
+        {
+          arg: "-d",
+          path: "pages",
+          reason: "No `pages` folder found"
+        }
+      ],
+      prompts: [
+        { type: 'folder', path: 'custom_types', strategies: ['bootstrap', 'init'] },
+        { type: 'folder', path: 'pages', strategies: ['bootstrap'] }
+      ],
       recap: Mustache.render(
         fs.readFileSync(path.join(__dirname, "info.mustache"), "utf8"),
-        {}
+        {
+          ...(maybeProps ? {
+            css: createArrayString('css', maybeProps.css),
+            script: createArrayString('script', maybeProps.script)
+          } : null),
+          isBootstrap: maybeProps && maybeProps.isBootstrap,
+          hasHeadInfo: maybeProps && (maybeProps.css.length || maybeProps.script.length )
+        }
       ),
       bootstraper: ["npx", ["create-nuxt-app"]],
       dependencies: ["@nuxtjs/prismic", "vue-slicezone"],
