@@ -88,7 +88,7 @@ module.exports = (maybeProps) => {
       ],
       prompts: [
         { type: 'folder', path: 'custom_types', strategies: ['bootstrap', 'init'] },
-        { type: 'folder', path: 'pages', strategies: ['bootstrap'] }
+        // { type: 'folder', path: 'pages', strategies: ['bootstrap'] }
       ],
       recap: Mustache.render(
         fs.readFileSync(path.join(__dirname, "info.mustache"), "utf8"),
