@@ -2,9 +2,10 @@ const handleStripKeys = require("../common").handleStripKeys;
 const {
   defaultStripKeys,
   SUPPORTED_FRAMEWORKS
-} = require("../common/consts")
+} = require("../common/consts");
+const cors = require("../common/cors");
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
   const {
     query: {
       strip,
@@ -27,4 +28,4 @@ module.exports = async (req, res) => {
     })
   })
   res.send(resolved)
-}
+});

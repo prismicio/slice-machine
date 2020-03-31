@@ -69,7 +69,9 @@ module.exports = (maybeProps) => {
 	return {
     files,
     manifest: {
+      framework: 'nuxt',
       frameworkName: "Nuxt",
+      configPath: "nuxt.config.js",
       defaultLibrary: nuxtDefaultPackage,
       firstCommand: "npm run dev",
       projectTests: [
@@ -100,8 +102,9 @@ module.exports = (maybeProps) => {
         }
       ),
       bootstraper: ["npx", ["create-nuxt-app"]],
-      dependencies: ["@nuxtjs/prismic", "vue-slicezone"],
+      dependencies: ["@nuxtjs/prismic", "vue-slicezone", "prismic-javascript"],
       devDependencies: [],
+      libraries: ["vue-slicezone"]
     }
   };
 }

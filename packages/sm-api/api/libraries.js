@@ -1,9 +1,10 @@
 const connectToDatabase = require('../common/connect')
 
 const handleStripKeys = require("../common").handleStripKeys;
-const { defaultStripKeys } = require('../common/consts')
+const { defaultStripKeys } = require('../common/consts');
+const cors = require("../common/cors");
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
   const {
     query: { framework, strip, preserveDefaults }
   } = req;
@@ -22,4 +23,4 @@ module.exports = async (req, res) => {
     })
   })
   res.send(libraries)
-}
+});

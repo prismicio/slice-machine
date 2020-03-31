@@ -31,3 +31,5 @@ coverage/
 .eslintcache
 unpubTest
 my-test-project
+
+.now

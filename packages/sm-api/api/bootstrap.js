@@ -6,6 +6,7 @@ const AdmZip = require("adm-zip");
 const JsZip = require("jszip");
 const util = require("util");
 const streamPipeline = util.promisify(require("stream").pipeline);
+const cors = require("../common/cors");
 
 const {
   libraries,
@@ -34,7 +35,7 @@ async function download(endpoint, params) {
   return tmpZipFile;
 }
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
   try {
     const {
       query: { lib, library, projectType = "landing", framework = "nuxt" }
@@ -145,7 +146,7 @@ module.exports = async (req, res) => {
           ...smLibrary.dependencies,
           packageName /** IMPORTANT */
         ],
-        libraries: [packageName],
+        libraries: (scaffolder.manifest.libraries || []).concat([packageName]),
         css: smLibrary.css || [],
         script: smLibrary.script || []
       };
@@ -161,4 +162,5 @@ module.exports = async (req, res) => {
   } catch (e) {
     console.error(e);
   }
-}
+});
+

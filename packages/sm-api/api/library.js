@@ -1,6 +1,8 @@
 const connectToDatabase = require("../common/connect");
 
 const handleStripKeys = require("../common").handleStripKeys;
+const cors = require("../common/cors");
+
 const {
   defaultStripKeys
 } = require('../common/consts')
@@ -12,7 +14,7 @@ async function fetchLibrary(packageName) {
   return sm
 }
 
-const mod = module.exports = async (req, res) => {
+const mod = module.exports = cors(async (req, res) => {
   const {
     query: { lib, library, strip, preserveDefaults }
   } = req;
@@ -35,11 +37,11 @@ const mod = module.exports = async (req, res) => {
   if (sm) {
     keysToStrip.forEach(key => {
       delete sm[key];
-    })
+    });
     return res.send(sm);
   }
   return res.status(404).send({})
-  
-};
+
+});
 
 mod.fetchLibrary = fetchLibrary

@@ -1,5 +1,6 @@
 const fetch = require("node-fetch")
-const connectToDatabase = require('../common/connect')
+const connectToDatabase = require('../common/connect');
+const cors = require("../common/cors");
 
 const SM_CONFIG_FILE = "sm.json";
 
@@ -7,7 +8,7 @@ const githubWhiteList = {
   "prismicio/vue-essential-slices": true
 };
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
   const body = req.body || {}
   if (!body.ref || !body.head_commit || !body.repository) {
     return res.status(400).send('')
@@ -49,4 +50,5 @@ module.exports = async (req, res) => {
     }
   }
   res.status(200).send('')
-}
+});
+
