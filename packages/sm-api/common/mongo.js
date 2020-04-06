@@ -3,13 +3,7 @@ const MongoClient = require("mongodb").MongoClient;
 
 const URI = process.env.MONGODB_URI;
 const databaseName = url.parse(URI).pathname.substr(1);
-
-function opCollection(libraryName) {
-  const client = await acquireClient();
-  const db = client.db(databaseName);
-  const coll = db.collection(libraryName)
-  return query(coll);
-}
+let cachedClient;
 
 function acquireClient() {
   return cachedClient || (() => {
@@ -25,6 +19,12 @@ function acquireClient() {
 async function acquireDb() {
   const client = await acquireClient();
   return client.db(databaseName);
+}
+
+async function opCollection(libraryName) {
+  const db = await acquireDb();
+  const coll = db.collection(libraryName)
+  return query(coll);
 }
 
 export default {
