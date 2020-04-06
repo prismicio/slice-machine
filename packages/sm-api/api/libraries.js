@@ -9,11 +9,11 @@ module.exports = cors(async (req, res) => {
   } = req;
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
-  const libraries = await Mongo.collections.libraries(coll => {
-    coll.find({
+  const libraries = await Mongo.collections.libraries(async coll => (
+    await coll.find({
       ...(framework ? { framework } : {})
     }).toArray()
-  })
+  ));
 
   libraries.forEach((library) => {
     keysToStrip.forEach((key) => {

@@ -32,15 +32,15 @@ module.exports = async (_, res) => {
       expectLibrary(sm);
 
 
-      await Mongo.collections.libraries(coll => {
+      await Mongo.collections.libraries(coll => (
         coll.updateOne(
           { packageName: packageName },
           { $set: sm },
           {
             upsert: true
           }
-        );
-      });
+        )
+      ));
       return res.status(200).send('');
     } catch(e) {
       const latest = await Mongo.collections.errors(coll => {
@@ -59,15 +59,15 @@ module.exports = async (_, res) => {
 
       }
       await postMessage(err);
-      await Mongo.collections.libraries(coll => {
+      await Mongo.collections.libraries(coll => (
         coll.updateOne(
           { packageName },
           { $set: { packageName, last_updated: new Date(), err } },
           {
             upsert: true
           }
-        );
-      });
+        )
+      ));
       return res.status(500).send(err);
     }
   });

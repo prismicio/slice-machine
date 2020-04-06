@@ -7,9 +7,9 @@ const {
 } = require('../common/consts')
 
 function fetchLibrary(packageName) {
-  return Mongo.collections.libraries(coll => {
+  return Mongo.collections.libraries(coll => (
     coll.findOne({ packageName })
-  });
+  ));
 }
 
 const mod = module.exports = cors(async (req, res) => {

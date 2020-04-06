@@ -35,11 +35,11 @@ module.exports = cors(async (req, res) => {
       const response = await fetch(smFileUrl);
       const sm = JSON.parse(await response.text());
 
-      await Mongo.collections.libraries(coll => {
+      await Mongo.collections.libraries(coll => (
         coll.updateOne({ packageName: sm.packageName }, { $set: sm }, {
           upsert: true
-        });
-      });
+        })
+      ));
 
       return res.send(sm);
     } catch(e) {

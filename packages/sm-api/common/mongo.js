@@ -21,18 +21,18 @@ async function acquireDb() {
   return client.db(databaseName);
 }
 
-async function opCollection(libraryName) {
+async function queryOnCollection(libraryName, query) {
   const db = await acquireDb();
   const coll = db.collection(libraryName)
   return query(coll);
 }
 
-export default {
+module.exports = {
   client: acquireClient,
   db: acquireDb,
   collections: {
-    libraries: (query) => opCollection(Collections.libraries)(query),
-    errors: (query) => opCollection(Collections.errors)(query)
+    libraries: (query) => queryOnCollection(Collections.libraries, query),
+    errors: (query) => queryOnCollection(Collections.errors, query)
   }
 };
 
