@@ -1,17 +1,15 @@
-const connectToDatabase = require("../common/connect");
-
 const handleStripKeys = require("../common").handleStripKeys;
 const cors = require("../common/cors");
+const Mongo = require('../common/mongo');
 
 const {
   defaultStripKeys
 } = require('../common/consts')
 
-async function fetchLibrary(packageName) {
-  const db = await connectToDatabase(process.env.MONGODB_URI)
-  const collection = await db.collection("libraries")
-  const sm = await collection.findOne({ packageName })
-  return sm
+function fetchLibrary(packageName) {
+  return Mongo.collections.libraries(coll => {
+    coll.findOne({ packageName })
+  });
 }
 
 const mod = module.exports = cors(async (req, res) => {

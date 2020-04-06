@@ -1,6 +1,6 @@
 const fetch = require("node-fetch")
-const connectToDatabase = require('../common/connect');
 const cors = require("../common/cors");
+const Mongo = require('../common/mongo');
 
 const SM_CONFIG_FILE = "sm.json";
 
@@ -35,13 +35,11 @@ module.exports = cors(async (req, res) => {
       const response = await fetch(smFileUrl);
       const sm = JSON.parse(await response.text());
 
-      const db = await connectToDatabase(process.env.MONGODB_URI);
-
-      const collection = await db.collection("libraries");
-
-      await collection.updateOne({ packageName: sm.packageName }, { $set: sm }, {
-        upsert: true
-      })
+      await Mongo.collections.libraries(coll => {
+        coll.updateOne({ packageName: sm.packageName }, { $set: sm }, {
+          upsert: true
+        });
+      });
 
       return res.send(sm);
     } catch(e) {
