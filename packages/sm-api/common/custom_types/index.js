@@ -68,13 +68,5 @@ module.exports = {
       page: require("./landing/page.json")
     }
     return format(index, cts, slices, ['page'])
-  },
-  multi: function (slices) {
-    const index = require("./multi/index.json")
-    const cts = {
-      page: require("./multi/page.json"),
-      homepage: require("./multi/homepage.json")
-    };
-    return format(index, cts, slices, ['page', 'homepage'])
   }
 }

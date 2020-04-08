@@ -21,7 +21,7 @@ module.exports = cors(async (req, res) => {
   }))
 
   const resolved = (await Promise.all(frameworks))
-    .map(({ f, framework }) => ({ ...f, framework }))
+    .map(({ f, framework }) => ({ manifest: f, framework }))
   resolved.forEach((framework) => {
     keysToStrip.forEach((key) => {
       delete framework[key]

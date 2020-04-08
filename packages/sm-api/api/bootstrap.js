@@ -45,7 +45,7 @@ module.exports = cors(async (req, res) => {
         lib,
         library,
         framework = "nuxt",
-        projectType = "multi",
+        projectType = "landing",
       }
     } = req;
 
@@ -60,6 +60,12 @@ module.exports = cors(async (req, res) => {
     const scaffolder = require(`../bootstrap/${framework}`);
     const packageName = lib || library || scaffolder.defaultLibrary;
 
+    console.log({
+       defaultLib: scaffolder.defaultLibrary,
+       packageName,
+       lib,
+       library
+    })
     if (!packageName) {
       return res
         .status(400)
@@ -72,7 +78,7 @@ module.exports = cors(async (req, res) => {
       return res
         .status(400)
         .send(
-          'Invalid query parameter "lib": library does not exist or is not a Slice Machine library.`'
+          'Invalid query parameter "library": library does not exist or is not a Slice Machine library.`'
         );
     }
 
@@ -98,7 +104,6 @@ module.exports = cors(async (req, res) => {
 
     const { cts: mergedCustomTypes, files } = require("../common/custom_types/")[projectType](smLibrary.slices);
 
-    console.log(mergedCustomTypes)
     fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
 
     Object.entries(files).map(([fileName, content]) => {
@@ -108,9 +113,10 @@ module.exports = cors(async (req, res) => {
     const manifest = mergeManifests(scaffolder, smLibrary);
     const recapFile = require(`../bootstrap/${framework}/recap.mustache`)
     fZip.file(
-      "manifest.json",
+      "boot.json",
       JSON.stringify({
         manifest,
+        library: smLibrary,
         recap: Mustache.render(recapFile, smLibrary)
       })
     )
