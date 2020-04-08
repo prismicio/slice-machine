@@ -1,0 +1,11 @@
+{
+  "MyHomepage": {
+    "a_third_sz": {
+      "type": "Slices",
+      "fieldset": "Slice zone",
+      "config": {
+        "choices": {}
+      }
+    }
+  }
+}

@@ -15,7 +15,6 @@ const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 const { libraries, githubRepositories } = require("../common/consts");
 
 const mergeManifests = require("../common/manifest").merge
-const mergeCtsWithSlices = require("../common/cts").mergeWithSlices
 
 const { fetchLibrary } = require("./library");
 
@@ -46,7 +45,7 @@ module.exports = cors(async (req, res) => {
         lib,
         library,
         framework = "nuxt",
-        projectType = "landing",
+        projectType = "multi",
       }
     } = req;
 
@@ -97,8 +96,9 @@ module.exports = cors(async (req, res) => {
 
     const smLibrary = await fetchLibrary(packageName);
 
-    const { cts, toBeMerged, files } = require("../common/custom_types/")[projectType]();
-    const mergedCustomTypes = mergeCtsWithSlices([...cts], smLibrary.slices, toBeMerged);
+    const { cts: mergedCustomTypes, files } = require("../common/custom_types/")[projectType](smLibrary.slices);
+
+    console.log(mergedCustomTypes)
     fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
 
     Object.entries(files).map(([fileName, content]) => {
