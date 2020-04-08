@@ -60,12 +60,6 @@ module.exports = cors(async (req, res) => {
     const scaffolder = require(`../bootstrap/${framework}`);
     const packageName = lib || library || scaffolder.defaultLibrary;
 
-    console.log({
-       defaultLib: scaffolder.defaultLibrary,
-       packageName,
-       lib,
-       library
-    })
     if (!packageName) {
       return res
         .status(400)
