@@ -44,6 +44,5 @@ function handleStripKeys(strip, trimKeys, preserveDefaults) {
 }
 
 module.exports = {
-  handleStripKeys,
-  mergeCustomTypesWithSlices
+  handleStripKeys
 };

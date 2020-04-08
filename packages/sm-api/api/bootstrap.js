@@ -1,23 +1,27 @@
 const fs = require("fs");
-const path = require("path");
 const tmp = require("tmp");
 const fetch = require("node-fetch");
 const AdmZip = require("adm-zip");
 const JsZip = require("jszip");
 const util = require("util");
+
+const Mustache = require('mustache');
 const streamPipeline = util.promisify(require("stream").pipeline);
+
 const cors = require("../common/cors");
 
-const {
-  libraries,
-  defaultLibraries,
-  githubRepositories,
-  SM_CONFIG_FILE,
-  SM_FOLDER_NAME
-} = require("../common/consts");
+const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 
-const fetchLibrary = require("./library").fetchLibrary;
-const mergeCts = require("../common").mergeCustomTypesWithSlices;
+const { libraries, githubRepositories } = require("../common/consts");
+
+const mergeManifests = require("../common/manifest").merge
+const mergeCtsWithSlices = require("../common/cts").mergeWithSlices
+
+const { fetchLibrary } = require("./library");
+
+require.extensions['.mustache'] = function (module, filename) {
+  module.exports = fs.readFileSync(filename, 'utf8');
+};
 
 function handleUrl(endpoint, params = {}) {
   const url = new URL(endpoint);
@@ -38,10 +42,24 @@ async function download(endpoint, params) {
 module.exports = cors(async (req, res) => {
   try {
     const {
-      query: { lib, library, projectType = "landing", framework = "nuxt" }
+      query: {
+        lib,
+        library,
+        framework = "nuxt",
+        projectType = "landing",
+      }
     } = req;
 
-    const packageName = lib || library || defaultLibraries[framework];
+    if (SUPPORTED_FRAMEWORKS.indexOf(framework) === -1) {
+      return res
+        .status(400)
+        .send(
+          `Framework "${framework}" is not supported. Please use one of: ${SUPPORTED_FRAMEWORKS}`
+        );
+    }
+
+    const scaffolder = require(`../bootstrap/${framework}`);
+    const packageName = lib || library || scaffolder.defaultLibrary;
 
     if (!packageName) {
       return res
@@ -77,81 +95,25 @@ module.exports = cors(async (req, res) => {
 
     zip.extractAllTo(tmpath);
 
-    // const config = JSON.parse(
-    //   fs.readFileSync(
-    //     path.join(tmpath, `${packageName}-master`, SM_CONFIG_FILE),
-    //     "utf8"
-    //   )
-    // );
-
-    // const pathToLibrary = path.join(
-    //   tmpath,
-    //   `${packageName}-master`,
-    //   config.pathToLibrary || '.'
-    // );
-
-    // const relativePathToLib = path.join(
-    //   `${packageName}-master`,
-    //   config.pathToLibrary || "."
-    // );
-
-    /** Copy library (eg. src) to folder "sliceMachine" */
-    // zip.getEntries().forEach(function(entry) {
-    //   const entryName = entry.entryName;
-    //   if (entryName.indexOf(relativePathToLib) === 0) {
-    //     const relativePath = entryName.split(relativePathToLib).pop();
-    //     if (relativePath !== "/") {
-    //       fZip.file(
-    //         path.join(SM_FOLDER_NAME, relativePath),
-    //         zip.readAsText(entry)
-    //       );
-    //     }
-    //   }
-    // });
-
     const smLibrary = await fetchLibrary(packageName);
 
-    await (async function handleCustomTypes(){
+    const { cts, toBeMerged, files } = require("../common/custom_types/")[projectType]();
+    const mergedCustomTypes = mergeCtsWithSlices([...cts], smLibrary.slices, toBeMerged);
+    fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
 
-      // protect this
-      const {
-        cts,
-        toBeMerged,
-        files,
-      } = require("../bootstrap/custom_types/")[projectType]();
+    Object.entries(files).map(([fileName, content]) => {
+      fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
+    })
 
-      const mergedCustomTypes = mergeCts([...cts], smLibrary.slices, toBeMerged);
-
-      fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
-
-      /** Bug: files seem to be overwritten by mergeCts.
-       *  Here, they contain a non-empty "choices" value */
-      Object.entries(files).map(([fileName, content]) => {
-        fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
+    const manifest = mergeManifests(scaffolder, smLibrary);
+    const recapFile = require(`../bootstrap/${framework}/recap.mustache`)
+    fZip.file(
+      "manifest.json",
+      JSON.stringify({
+        manifest,
+        recap: Mustache.render(recapFile, smLibrary)
       })
-    })();
-
-    (function handleScaffolder(){
-      const Scaffolder = require(`../bootstrap/${framework}`);
-      const scaffolder = Scaffolder({ packageName, ...smLibrary, isBootstrap: true });
-      scaffolder.files.forEach(({ name, f }) => fZip.file(name, f))
-      const manifest = {
-        ...scaffolder.manifest,
-        devDependencies: [
-          ...scaffolder.manifest.devDependencies,
-          ...smLibrary.devDependencies
-        ],
-        dependencies: [
-          ...scaffolder.manifest.dependencies,
-          ...smLibrary.dependencies,
-          packageName /** IMPORTANT */
-        ],
-        libraries: (scaffolder.manifest.libraries || []).concat([packageName]),
-        css: smLibrary.css || [],
-        script: smLibrary.script || []
-      };
-      fZip.file("manifest.json", JSON.stringify(manifest));
-    })();
+    )
 
     fZip
       .generateNodeStream({
