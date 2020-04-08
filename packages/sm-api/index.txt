@@ -1,0 +1,3 @@
+The Slices API holds information regarding SliceMachine libraries. Its role is to serve different parts of the project (website, writing room, CLI) with slice definitions and bootstrapped files.
+
+Also, it's fairly new and subject to changes ✌️
