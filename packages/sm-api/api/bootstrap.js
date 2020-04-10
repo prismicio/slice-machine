@@ -96,7 +96,7 @@ module.exports = cors(async (req, res) => {
 
     const smLibrary = await fetchLibrary(packageName);
 
-    const { cts: mergedCustomTypes, files } = require("../common/custom_types/")[projectType](smLibrary.slices);
+    const { cts: mergedCustomTypes, files, routes } = require("../common/custom_types/")[projectType](smLibrary.slices);
 
     fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
 
@@ -110,6 +110,7 @@ module.exports = cors(async (req, res) => {
       "boot.json",
       JSON.stringify({
         manifest,
+        routes,
         library: smLibrary,
         recap: Mustache.render(recapFile, smLibrary)
       })

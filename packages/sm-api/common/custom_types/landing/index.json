@@ -3,6 +3,10 @@
 		"id": "page",
 		"name": "Page",
 		"repeatable": true,
-		"value": "page.json"
+		"value": "page.json",
+		"route": {
+			"type": "page",
+			"path": "/:uid"
+		}
 	}
 ]

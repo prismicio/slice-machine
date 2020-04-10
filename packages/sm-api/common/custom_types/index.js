@@ -48,6 +48,7 @@ function customTypes(index, cts) {
 
 function format(index, cts, slices, keysToMerge) {
   return {
+    routes: index.map(ct => ct.route),
     cts: mergeWithSlices(
       customTypes(index, cts),
       slices,
@@ -63,10 +64,10 @@ function format(index, cts, slices, keysToMerge) {
 
 module.exports = {
   landing: function(slices) {
-    const index = require("./landing/index.json")
-    const cts = {
-      page: require("./landing/page.json")
-    }
+    const index = require("./landing/index.json");
+    const cts = index.reduce((acc, ct) => (Object.assign({}, acc, {
+      [ct.id]: require(`./landing/${ct.value}`)
+    })), {});
     return format(index, cts, slices, ['page'])
   }
 }

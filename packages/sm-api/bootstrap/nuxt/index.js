@@ -25,4 +25,13 @@ module.exports = {
   libraries: ["vue-slicezone"],
   bootstraper: ["npx", ["create-nuxt-app"]],
   dependencies: ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic", "vue-slicezone"],
+  module: [
+    '@nuxtjs/prismic',
+    {
+      endpoint: '{{{ apiEndpoint }}}',
+      apiOptions: {
+        routes: '{{{ routes }}}'
+      }
+    }
+  ]
 }
