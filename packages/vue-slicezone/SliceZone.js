@@ -55,14 +55,6 @@ export default {
     slices: {
       required: false
     },
-    type: {
-      required: false,
-      type: String
-    },
-    uid: {
-      required: false,
-      type: String
-    },
     pathToDocs: {
       required: false,
       type: String
@@ -147,6 +139,8 @@ export default {
         }
       )
     }
+
+    console.log('SliceZone')
     return h(
       this.wrapper,
       {},
