@@ -63,7 +63,7 @@ export default {
       ? ['getByUID', [this.type, this.uid]]
       : ['getSingle', [this.type]]
     const res = await this.$prismic.api[caller[0]](...caller[1])
-    this.slices = res.data[this.body]
+    this.slices = res ? res.data[this.body] : []
   }
 }
 </script>
