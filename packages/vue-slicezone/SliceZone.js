@@ -140,7 +140,6 @@ export default {
       )
     }
 
-    console.log('SliceZone')
     return h(
       this.wrapper,
       {},

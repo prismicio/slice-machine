@@ -47,6 +47,8 @@ export default {
   padding: 44px;
   border: 1px dashed #333;
   margin: 1em auto;
+  background: #FFF;
+  color: #111;
   text-align: center;
 }
 
@@ -57,6 +59,7 @@ export default {
   display: block;
 }
 .empty-img {
+  margin: 0 auto;
   max-width: 200px;
 }
 .title {
