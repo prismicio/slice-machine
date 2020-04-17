@@ -16,12 +16,12 @@ module.exports = cors(async (req, res) => {
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.framework, preserveDefaults);
 
   const frameworks = SUPPORTED_FRAMEWORKS.map(async (framework) => ({
-    f: require(`../bootstrap/${framework}`),
+    scaffolder: require(`../bootstrap/${framework}`),
     framework
   }))
 
   const resolved = (await Promise.all(frameworks))
-    .map(({ f, framework }) => ({ manifest: f, framework }))
+    .map(({ scaffolder, framework }) => ({ manifest: scaffolder.build(), framework }))
   resolved.forEach((framework) => {
     keysToStrip.forEach((key) => {
       delete framework[key]

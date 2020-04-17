@@ -11,10 +11,6 @@ const libraries = {
 
 const SUPPORTED_FRAMEWORKS = ['nuxt']
 
-const defaultLibraries = {
-  nuxt: "vue-essential-slices"
-};
-
 const SM_CONFIG_FILE = "sm.config.json";
 const SM_FILE = "sm.json";
 const SM_FOLDER_NAME = "sliceMachine";
@@ -29,7 +25,6 @@ const defaultStripKeys = {
 module.exports = {
   libraries,
   defaultStripKeys,
-  defaultLibraries,
   githubRepositories,
   SUPPORTED_FRAMEWORKS,
   REGISTRY_URL,

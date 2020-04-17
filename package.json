@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.0",
+    "tmp": "^0.1.0",
     "validate-npm-package": "^1.0.5"
   }
 }
