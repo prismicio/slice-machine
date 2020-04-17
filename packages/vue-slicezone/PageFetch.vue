@@ -59,11 +59,16 @@ export default {
     }
   },
   async fetch() {
-    const caller = multiQueryTypes.indexOf(this.queryType) !== -1
-      ? ['getByUID', [this.type, this.uid]]
-      : ['getSingle', [this.type]]
-    const res = await this.$prismic.api[caller[0]](...caller[1])
-    this.slices = res ? res.data[this.body] : []
+    try {
+      const caller = multiQueryTypes.indexOf(this.queryType) !== -1
+        ? ['getByUID', [this.type, this.uid]]
+        : ['getSingle', [this.type]]
+      const res = await this.$prismic.api[caller[0]](...caller[1])
+      this.slices = res ? res.data[this.body] : []
+    } catch(e) {
+      console.error('[SliceZone/fetch]', e)
+      this.slices = []
+    }
   }
 }
 </script>
