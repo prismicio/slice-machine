@@ -5,14 +5,12 @@ const cors = require("../common/cors");
 
 const fetchLibrary = require('./library').fetchLibrary
 
-const { defaultLibraries } = require('../common/consts')
-
 module.exports = cors(async (req, res) => {
   const {
     query: { lib, library, framework = 'nuxt' }
   } = req;
-
-  const packageName = lib || library || defaultLibraries[framework];
+  const defaultLibrary = require(`../bootstrap/${framework}`).defaultLibrary;
+  const packageName = lib || library || defaultLibrary;
 
   if (!packageName) {
     return res

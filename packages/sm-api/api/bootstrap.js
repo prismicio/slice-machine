@@ -14,8 +14,6 @@ const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 
 const { libraries, githubRepositories } = require("../common/consts");
 
-const mergeManifests = require("../common/manifest").merge
-
 const { fetchLibrary } = require("./library");
 
 require.extensions['.mustache'] = function (module, filename) {
@@ -104,13 +102,12 @@ module.exports = cors(async (req, res) => {
       fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
     })
 
-    const manifest = mergeManifests(scaffolder, smLibrary);
+    const manifest = scaffolder.build(smLibrary, routes);
     const recapFile = require(`../bootstrap/${framework}/recap.mustache`)
     fZip.file(
       "boot.json",
       JSON.stringify({
         manifest,
-        routes,
         library: smLibrary,
         recap: Mustache.render(recapFile, smLibrary)
       })
