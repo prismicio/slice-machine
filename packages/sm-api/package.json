@@ -1,7 +1,7 @@
 {
   "name": "sm-api",
   "private": true,
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Slice Machine API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,7 +21,7 @@
     "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.2",
-    "sm-commons": "0.0.15",
+    "sm-commons": "^0.0.16",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
