@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
@@ -8,9 +8,8 @@
   },
   "dependencies": {
     "consola": "^2.11.3",
-    "sm-commons": "0.0.19"
+    "sm-commons": "^0.0.20"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "jest"
   },

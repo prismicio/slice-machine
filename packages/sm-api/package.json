@@ -1,7 +1,7 @@
 {
   "name": "sm-api",
   "private": true,
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Slice Machine API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
