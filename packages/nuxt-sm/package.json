@@ -1,46 +1,32 @@
 {
-  "name": "@nuxtjs/prismic",
-  "version": "1.2.0",
-  "description": "Add Prismic to your NuxtJS project",
+  "name": "nuxt-sm",
+  "version": "0.0.1",
+  "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
-  "scripts": {
-    "test": "npm run lint && npm run unit",
-    "unit": "jest",
-    "lint": "eslint src"
+  "directories": {
+    "test": "tests"
   },
-  "keywords": [
-    "prismic",
-    "nuxt",
-    "vue",
-    "cms"
-  ],
-  "contributors": [
-    "James Pegg <jamescpegg@gmail.com>",
-    "Sebastien Chopin (@Atinux)"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nuxt-community/prismic-module.git"
-  },
-  "bugs": {
-    "url": "https://github.com/nuxt-community/prismic-module/issues"
-  },
-  "homepage": "https://prismic-nuxt.js.org",
   "dependencies": {
-    "@prismicio/vue": "^2.0.2",
     "consola": "^2.11.3",
-    "prismic-dom": "^2.2.3",
-    "prismic-javascript": "^2.7.1",
     "sm-commons": "0.0.19"
   },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
-    "jest": "^25.3.0"
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
   },
-  "engines": {
-    "node": ">= 8.0.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prismicio/sm-commons.git"
+  },
+  "keywords": [
+    "Nuxt",
+    "Prismic",
+    "SliceMachine"
+  ],
+  "author": "Hugo Villain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prismicio/sm-commons/issues"
+  },
+  "homepage": "https://github.com/prismicio/sm-commons#readme"
 }
