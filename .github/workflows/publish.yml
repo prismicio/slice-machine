@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - master
-  # release:
-  #   types: [published]
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - name: checkout
         uses: actions/checkout@v1
@@ -37,7 +35,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package
-        run: npm install; ./node_modules/.bin/lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha
+        run: yarn --frozen-lockfile && yarn run publish:alpha
         env:
           GH_TOKEN: ${{ secrets.GITHUB_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
