@@ -1,10 +1,10 @@
 {
   "name": "sm-commons",
-  "version": "0.0.16",
+  "version": "0.0.19",
   "description": "A set of common utilities for slice machine libraries",
   "main": "scripts/bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/prismicio/sm-commons#readme",
   "dependencies": {
     "consola": "^2.11.3",
+    "deepmerge": "^4.2.2",
     "expect.js": "^0.3.1",
     "validate-npm-package": "^1.0.5"
   },

@@ -1,6 +1,6 @@
 {
   "name": "vue-slicezone",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,5 @@
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
   "gitHead": "58f9c3a4bd3fc23cf5270639829bfebeaa23bdd4",
-  "dependencies": {
-    "sm-commons": "^0.0.16"
-  }
+  "dependencies": {}
 }

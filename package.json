@@ -7,7 +7,7 @@
     "dev": "lerna run dev --parallel",
     "test": "jest",
     "::build": "yarn test && lerna run build --stream --parallel",
-    "::publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
+    "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && yarn build && lerna publish && yarn run changeset"
   },
@@ -15,6 +15,7 @@
     "lerna": "^3.16.4"
   },
   "dependencies": {
+    "jest": "^25.5.1",
     "node-fetch": "^2.6.0",
     "tmp": "^0.1.0",
     "validate-npm-package": "^1.0.5"
