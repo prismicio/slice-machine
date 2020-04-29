@@ -55,7 +55,7 @@ async function main() {
     actions.writeSmFile(JSON.stringify(sm))
 
     consola.success(
-      '[SliceMachine] Successfully created file "sm.json". You should commit it with your library changes!'
+      '[SliceMachine] Successfully created file "sm.json".\nYou should commit it with your library changes!'
     )
     process.exit(0)
   } catch (e) {

@@ -2,7 +2,14 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "publish:ci": "lerna publish --yes"
+    "::postinstall": "manypkg check",
+    "bootstrap": "lerna bootstrap",
+    "dev": "lerna run dev --parallel",
+    "test": "jest",
+    "::build": "yarn test && lerna run build --stream --parallel",
+    "::publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
+    "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
+    "::release": "manypkg check && yarn build && lerna publish && yarn run changeset"
   },
   "devDependencies": {
     "lerna": "^3.16.4"

@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const consola = require('consola')
-const expect = require('expect.js')
 
 const { pascalize } = require('../utils/str');
 
