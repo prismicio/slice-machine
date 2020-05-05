@@ -1,4 +1,5 @@
 import { pascalize } from "sm-commons/utils/str";
+import NotFoundView from "./NotFound"
 import EmptyState from "./EmptyState";
 
 const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
@@ -10,33 +11,6 @@ const isPromise = elem =>
   (elem instanceof Array && elem.every(e => e instanceof Promise));
 
 const promisify = elem => (isPromise(elem) ? elem : Promise.resolve(elem));
-
-const NotFound = {
-  props: {
-    slice: {
-      type: Object,
-      required: true,
-      default() {
-        return {};
-      }
-    }
-  },
-  render(h) {
-    if (process.env.NODE_ENV === "development") {
-      return h(
-        "div",
-        {
-          style: "border: 1px solid #111"
-        },
-        [
-          h("h3", `Unknown slice "${pascalize(this.slice.slice_type)}"`),
-          h("p", JSON.stringify(this.slice))
-        ]
-      );
-    }
-    return h("div");
-  }
-};
 
 export default {
   name: "SliceZone",
@@ -75,7 +49,7 @@ export default {
       type: Function,
       required: false,
       default() {
-        return NotFound;
+        return NotFoundView;
       }
     }
   },
@@ -101,7 +75,7 @@ export default {
             components[names[i]] || resolve({ sliceName: names[i], index: i })
           )
         );
-        return firstOf(promises).catch(() => NotFound);
+        return firstOf(promises).catch(NotFound);
       });
     },
     computedSlices: ({ slices, computedImports }) => {

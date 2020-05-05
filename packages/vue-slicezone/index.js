@@ -3,19 +3,18 @@ import SliceZone from './SliceZone'
 
 export default {
   name: 'SliceZone',
-  functional: true,
-  render(h, context) {
+  render(h) {
     const {
-      props: {
-        slices,
-        type,
-        uid,
-      }
-    } = context
+      slices,
+      type,
+      uid,
+      resolver: maybeResolver
+    } = this.$attrs
 
+    const resolver = maybeResolver || this.$sliceMachine.resolver
     if (!slices && type && uid) {
-      return h(PageFetch, context)
+      return h(PageFetch, { props: { ...this.$attrs, resolver }})
     }
-    return h(SliceZone, context)
+    return h(SliceZone, { props: { ...this.$attrs, resolver }})
   }
 }

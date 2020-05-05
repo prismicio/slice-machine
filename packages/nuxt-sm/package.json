@@ -8,7 +8,11 @@
   },
   "dependencies": {
     "consola": "^2.11.3",
-    "sm-commons": "^0.0.20"
+    "jest": "^25.5.4",
+    "sm-commons": "0.0.20"
+  },
+  "devDependencies": {
+    "vue-essential-slices": "0.0.7"
   },
   "scripts": {
     "test": "jest"
