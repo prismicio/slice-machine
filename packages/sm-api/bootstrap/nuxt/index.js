@@ -26,11 +26,11 @@ module.exports = {
       strategies: ['bootstrap', 'init']
     }, ],
     devDependencies: [],
-    // what gets transpiled
-    libraries: ["vue-slicezone"],
+    libraries: ["vue-essential-slices"],
     bootstraper: ["npx", ["create-nuxt-app"]],
-    dependencies: ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic", "vue-slicezone"],
-    module: [
+    transpile: ["vue-slicezone"],
+    dependencies: ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic", "vue-slicezone", "nuxt-sm"],
+    modules: [[
       '@nuxtjs/prismic',
       {
         endpoint: '{{{ apiEndpoint }}}',
@@ -38,6 +38,6 @@ module.exports = {
           routes
         }
       }
-    ]
+    ], ['nuxt-sm']]
   }, library))
 }
