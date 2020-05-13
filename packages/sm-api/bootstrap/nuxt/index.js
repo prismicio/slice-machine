@@ -26,7 +26,7 @@ module.exports = {
       strategies: ['bootstrap', 'init']
     }, ],
     devDependencies: [],
-    libraries: ["vue-essential-slices"],
+    libraries: [],
     bootstraper: ["npx", ["create-nuxt-app"]],
     transpile: ["vue-slicezone", "nuxt-sm"],
     dependencies: ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic", "vue-slicezone", "nuxt-sm"],
