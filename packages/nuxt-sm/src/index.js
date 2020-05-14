@@ -1,4 +1,5 @@
 const fs = require('fs')
+const slash = require('slash')
 const path = require('path')
 const logger = require('./logger')
 const { getInfoFromPath: getLibraryInfo } = require('sm-commons/methods/lib')
@@ -15,13 +16,15 @@ async function handleLibraryPath(libPath) {
     return logger.warn(`[nuxt-sm] path to library "${pathToSlices}" does not exist. Skipping.`)
   }
 
-  let p = pathToSlices
-  if (!isLocal) {
-    const split = pathToSlices.split(libPath)
-    p = path.join(libPath, split[split.length - 1])
-  }
+  const p = slash((() => {
+    if (!isLocal) {
+      const split = pathToSlices.split(libPath)
+      return path.join(libPath, split[split.length - 1])
+    }
+    return pathToSlices
+  })());
   return `import(\`${p}/\${sliceName}.vue\`), import(\`${p}/\${sliceName}/index.vue\`), import(\`${p}/\${sliceName}/index.js\`), import(\`${p}/\${sliceName}/\${sliceName}.vue\`)`;
-  // fails on: import(\`${p}/\${sliceName}/\${sliceName}.js\`)` because of index.stories.js?
+  // fails on: import(\`${path}/\${sliceName}/\${sliceName}.js\`)` because of index.stories.js?
 }
 
 async function install(moduleOptions) {
@@ -55,11 +58,12 @@ async function install(moduleOptions) {
   if (!Array.isArray(libraries) || !libraries.length) {
     return logger.error('[nuxt-sm] expects a "libraries" option to be a non-empty array')
   }
-  
+
   const importPathString = (await Promise.all(
     libraries.map(async lib => await handleLibraryPath(lib))
   )).filter(e => e)
   const imports = `[ ${importPathString} ]`
+
   // , import('vue-slicezone/NotFound.vue')
 
   this.addPlugin({

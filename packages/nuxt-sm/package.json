@@ -9,6 +9,7 @@
   "dependencies": {
     "consola": "^2.11.3",
     "jest": "^25.5.4",
+    "slash": "^3.0.0",
     "sm-commons": "0.0.20"
   },
   "devDependencies": {
