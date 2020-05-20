@@ -1,4 +1,5 @@
 import { pascalize } from "sm-commons/utils/str";
+import { formatThemeProps } from './theme'
 import NotFoundView from "./NotFound"
 import EmptyState from "./EmptyState";
 
@@ -51,7 +52,14 @@ export default {
       default() {
         return NotFoundView;
       }
-    }
+    },
+    theme: {
+      type: [Object, Function],
+      required: false,
+      default() {
+        return {}
+      }
+    },
   },
   computed: {
     computedImports: ({ components, resolver, slices, NotFound, debug }) => {
@@ -78,11 +86,18 @@ export default {
         return firstOf(promises).catch(NotFound);
       });
     },
-    computedSlices: ({ slices, computedImports }) => {
+    computedSlices: ({ slices, theme, computedImports }) => {
       return (slices || []).map((slice, i) => ({
         import: computedImports[i],
         data: {
-          props: { slice },
+          props: {
+            theme: formatThemeProps(theme, {
+              i,
+              slice,
+              sliceName: pascalize(slice.slice_type),
+            }),
+            slice
+          },
           key: slice.id
         },
         name: pascalize(slice.slice_type)
