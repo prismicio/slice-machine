@@ -26,8 +26,6 @@ export const formatThemeProps = (theme, args = {}) => {
     return theme
   })()
   
-  const res = caller(validateThemeProps(themeProps, args), args)
-  console.log({ res })
-  return res
+  return caller(validateThemeProps(themeProps, args), args)
 
 }
