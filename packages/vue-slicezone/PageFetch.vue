@@ -31,6 +31,17 @@ export default {
       type: String,
       required: false
     },
+    lang: {
+      type: String,
+      required: false
+    },
+    params: {
+      type: Object,
+      required: false,
+      default() {
+        return null
+      }
+    },
     queryType: {
       type: String,
       default: 'multi',
@@ -58,11 +69,16 @@ export default {
       slices: [],
     }
   },
+  computed: {
+    apiParams({ params, lang }) {
+      return params || { lang }
+    }
+  },
   async fetch() {
     try {
       const caller = multiQueryTypes.indexOf(this.queryType) !== -1
-        ? ['getByUID', [this.type, this.uid]]
-        : ['getSingle', [this.type]]
+        ? ['getByUID', [this.type, this.uid, this.apiParams]]
+        : ['getSingle', [this.type, this.apiParams]]
       const res = await this.$prismic.api[caller[0]](...caller[1])
       this.slices = res ? res.data[this.body] : []
     } catch(e) {
