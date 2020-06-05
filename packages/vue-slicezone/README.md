@@ -121,9 +121,7 @@ If you just need to pass a lang, to the API, pass the prop directly:
 Instead of passing a resolver to the SliceZone, we offer a `nuxt-sm` module that lists and scans your components folder and creates a custom resolver out of them. Your SliceZone then acts as a large "bucket" of components that would get rendered solely based on how they match Prismic slices.
 
 **How it scans**
-`nuxt-sm` looks for a key `libraries` inside the `sm.json` file at the root of your project. It then scans each folder, whether it's local or in node_modules, and registers it. This is similar to how `prismic sm --ls` command works:
-
-
+`nuxt-sm` looks for a key `libraries` inside the `sm.json` file at the root of your project. It then scans each folder, whether it's local or in node_modules, and registers it. This is similar to how `prismic sm --ls` command works.
 
 Order matters. If 2 slices have the same name, the first one found is used. This lets you progressively enhance your app, by replacing a default component with your own.
 
@@ -156,3 +154,74 @@ methods: {
     },
   }
 ````
+
+## Theme
+
+Inspired by [`theme-ui`](https://theme-ui.com), the SliceZone supports passing a theme object or function to rendered slices. We think it's super handy for developers/designers to enforce ceertain design rules on specific pages, or if they're working with external libraries.
+
+### theme object
+If you wanted your contact page to use a b&w theme, you could pass an object like this one:
+
+```javascript
+<template>
+    <slice-zone type="page" uid="contact" :theme="theme" />
+</template>
+<script>
+const theme = {
+    color: '#FFF',
+    wrapper: {
+        style: 'background: #111'
+    }
+}
+export default {
+    data() {
+        return {
+            theme
+        }
+    }
+}
+</script>
+````
+👆 How this is used depends on your implementation. See [vue-essential-slices](https://vue-essential-slices.netlify.com/) for a real world example.
+
+### scoped theme
+
+To scope theme values to specific components, use their name as key. None of the root values would be used in that case. If you need to share some properties, spread them multiple times.
+```javascript
+const theme = {
+    color: '#111',
+    CallToAction: {
+        color: '#FFF'
+    }
+}
+````
+
+### as function
+
+Alternatively , you can pass a function as theme...
+
+```javascript
+const theme = ({ sliceName, i }) => i % 2 ? { color: '#111' } : { color: 'pink' }
+````
+...including in a scoped theme:
+```javascript
+const theme = {
+    CallToAction: ({ sliceName, i }) => i % 2 ? { color: '#111' } : { color: 'pink' }
+}
+````
+
+### Named slots
+
+The SliceZone takes advantage of Vue named slots. To use them, prefix them with the name of your component. For example, if your HeroAction components defines a `header` slot, you can access it this way in the SliceZone:
+```vue
+<template>
+    <slice-zone type="page" uid="contact" :theme="theme" :slices="page.data.body">
+        <template v-slot:HeroAction.header="primary">
+            <header>
+                <h1>Header {{ primary.someContent }}</h1>
+            </header>
+        </template>
+    </slice-zone
+</template>
+````
+Usually, slice components would bind `primary` or `items` to the slot, for you to use in your template. Note that we're passing `slices` here, as named slots does not work yet with auto-fetching content.
