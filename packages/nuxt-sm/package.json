@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
@@ -10,7 +10,7 @@
     "consola": "^2.11.3",
     "jest": "^25.5.4",
     "slash": "^3.0.0",
-    "sm-commons": "0.0.20"
+    "sm-commons": "^0.0.21"
   },
   "devDependencies": {
     "vue-essential-slices": "0.0.7"
