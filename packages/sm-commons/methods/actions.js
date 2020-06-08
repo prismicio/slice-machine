@@ -70,7 +70,7 @@ function readJsonPackage(p) {
 
 function getSliceType(sliceName) {
   tests.isSliceName(sliceName)
-  return strUtils.hyphenate(sliceName, /* kebab */ true)
+  return strUtils.snakelize(sliceName)
 }
 
 function fetchSliceDefinitions(p) {
