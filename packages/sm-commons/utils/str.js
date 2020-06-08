@@ -10,12 +10,16 @@ function pascalize(str) {
 }
 
 const hyphenateRE = /\B([A-Z])/g;
-function hyphenate(str, kebab) {
-  const s = str.replace(hyphenateRE, "-$1").toLowerCase();
-  return kebab ? s.replace(/-/g, "_") : s;
+function hyphenate(str) {
+  return str.replace(hyphenateRE, "-$1").toLowerCase();
+}
+
+function snakelize(str) {
+  return hyphenate(str).replace(/-/g, '_');
 }
 
 module.exports = {
   pascalize,
-  hyphenate
+  hyphenate,
+  snakelize
 };
