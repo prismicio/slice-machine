@@ -32,5 +32,6 @@
   "bugs": {
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
-  "homepage": "https://github.com/prismicio/sm-commons#readme"
+  "homepage": "https://github.com/prismicio/sm-commons#readme",
+  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1"
 }
