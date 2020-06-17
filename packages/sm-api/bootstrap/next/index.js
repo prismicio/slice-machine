@@ -7,7 +7,7 @@ const _app = require('./files/_app.mustache'),
 const _document = require('./files/_document.mustache'),
 const nextConfig = require('./files/next.config.mustache'),
 const prismic = require('./files/prismic.mustache'),
-const smResolver = require('./files/sm=resolver.mustache')
+const smResolver = require('./files/sm-resolver.mustache')
 
 module.exports = {
   defaultLibrary,
@@ -39,7 +39,7 @@ module.exports = {
     }, {
       name: 'prismic.js',
       path: './',
-      content: Mustache.render(prismic, routes)
+      content: Mustache.render(prismic, JSON.stringify(routes))
     }, {
       name: 'sm-resolver.js',
       path: './',

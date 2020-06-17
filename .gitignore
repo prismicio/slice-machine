@@ -33,3 +33,6 @@ unpubTest
 my-test-project
 
 .now
+.vercel
+
+.env
