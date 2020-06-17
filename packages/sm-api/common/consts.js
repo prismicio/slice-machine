@@ -3,8 +3,8 @@ const libraries = {
     git: "prismicio/vue-essential-slices",
     framework: "nuxt"
   },
-  "react-essential-slices": {
-    git: "prismicio/react-essential-slices",
+  "essential-slices": {
+    git: "prismicio/essential-slices",
     framework: "next"
   }
 };

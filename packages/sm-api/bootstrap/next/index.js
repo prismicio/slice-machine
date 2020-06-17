@@ -1,7 +1,7 @@
 const Mustache = require('mustache');
 const merge = require("../../common/manifest").merge
 
-const defaultLibrary = 'react-essential-slices';
+const defaultLibrary = 'essential-slices';
 
 const _app = require('./files/_app.mustache'),
 const _document = require('./files/_document.mustache'),
@@ -14,7 +14,6 @@ module.exports = {
   build: (library = defaultLibrary, routes = null) => (merge({
     framework: 'next',
     frameworkName: "Next",
-    configPath: "next.config.js",
     firstCommand: "npm run dev",
     projectTests: [
       {
@@ -36,7 +35,7 @@ module.exports = {
     }, {
       name: 'next.config.js',
       path: './',
-      content: Mustache.render(nextConfig)
+      content: Mustache.render(nextConfig, { library })
     }, {
       name: 'prismic.js',
       path: './',
@@ -47,11 +46,4 @@ module.exports = {
       content: Mustache.render(smResolver)
     }],
   }, library))
-}
-
-JSON.stringify(routes)
-[{
-  type: 'page',
-  path: '/:uid',
-  href: '/[uid]'
-}]
+};
