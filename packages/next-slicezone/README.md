@@ -7,13 +7,12 @@ RFC: https://github.com/prismicio/slice-machine/issues/7
 
 ## Status
 
-[x] fetch content from getStaticProps
-[x] fetch dynamic paths from Prismic endpoint
+* [x] fetch content from getStaticProps
+* [x] fetch dynamic paths from Prismic endpoint
 [ ] Handle dynamic imports
-[x] handle previews
-[x] Create registry
-[ ] format theme
-[x] pass custom resolver
+* [x] handle previews
+* [x] Create registry
+* [x] pass custom resolver
 
 ## Usage
 
