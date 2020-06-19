@@ -3,11 +3,11 @@ const merge = require("../../common/manifest").merge
 
 const defaultLibrary = 'essential-slices';
 
-const _app = require('./files/_app.mustache'),
-const _document = require('./files/_document.mustache'),
-const nextConfig = require('./files/next.config.mustache'),
-const prismic = require('./files/prismic.mustache'),
-const smResolver = require('./files/sm-resolver.mustache')
+const _app = require('./files/_app.mustache');
+const _document = require('./files/_document.mustache');
+const nextConfig = require('./files/next.config.mustache');
+const prismic = require('./files/prismic.mustache');
+const smResolver = require('./files/sm-resolver.mustache');
 
 module.exports = {
   defaultLibrary,
