@@ -1,9 +1,10 @@
+const fs = require('fs')
 const path = require('path')
 
 const { SM_CONFIG_FILE } = require('sm-commons/consts')
 
 /** from relative path */
-function getInfoFromPath(fs, libPath, startPath) {
+function getInfoFromPath(libPath, startPath) {
   const isLocal = ['@/', '~', '/'].find((e) => libPath.indexOf(e) === 0) !== undefined
   const pathToLib = path.join(
     startPath || process.cwd(),

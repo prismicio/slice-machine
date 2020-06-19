@@ -161,7 +161,6 @@ const Page = ({ uid, registry, slices }) =>  (
 )
 
 export const getStaticProps = useGetStaticProps({
-  fs,
   client,
   type: 'page',
   uid: ({ params }) => params.uid

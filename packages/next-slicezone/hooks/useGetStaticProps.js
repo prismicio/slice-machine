@@ -6,7 +6,6 @@ export const useGetStaticProps = ({
   lang,
   params,
   client,
-  fs,
   body = 'body',
   type = 'page',
   queryType = 'repeat',
@@ -19,7 +18,7 @@ export const useGetStaticProps = ({
     params = {}
   }) {
 
-    const registry = await createRegistry(fs)
+    const registry = await createRegistry()
 
     const { ref = null } = previewData
     const resolvedUid = typeof uid === 'function' ? uid({ params, previewData, preview }) : (uid || null)

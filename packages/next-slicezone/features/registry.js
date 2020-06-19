@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import slash from 'slash'
 
@@ -23,7 +24,7 @@ function matchPossiblePaths(files, componentName) {
   return files.find(e => possiblePaths.indexOf(e) > -1)
 }
 
-function getFileInfoFromPath(fs, slicePath, componentName) {
+function getFileInfoFromPath(slicePath, componentName) {
   const isDirectory = fs.lstatSync(slicePath).isDirectory()
   if (!isDirectory) {
     return { ...splitExtension(slicePath), isDirectory: false }
@@ -37,9 +38,9 @@ function getFileInfoFromPath(fs, slicePath, componentName) {
   throw new Error(`[nuxt-sm] Could not find module file for component "${componentName}" at path "${slicePath}"`)
 }
 
-function getComponentInfo(fs, slicePath) {
+function getComponentInfo(slicePath) {
   const name = getComponentName(slicePath)
-  const { fileName, extension, isDirectory } = getFileInfoFromPath(fs, slicePath, name)
+  const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, name)
   return {
     name,
     fileName,
@@ -58,12 +59,12 @@ function splitExtension(str) {
   }
 }
 
-async function handleLibraryPath(fs, libPath) {
+async function handleLibraryPath(libPath) {
   const {
     isLocal,
     pathExists,
     pathToSlices,
-  } = await getLibraryInfo(fs, libPath)
+  } = await getLibraryInfo(libPath)
 
   if (!pathExists) {
     console.warn(`[next-slicezone] path to library "${pathToSlices}" does not exist. Skipping.`)
@@ -83,7 +84,7 @@ async function handleLibraryPath(fs, libPath) {
 
   return pathsToComponents.reduce(
     (acc, curr) => {
-      const { name: sliceName, fileName, extension, isDirectory } = getComponentInfo(fs, curr)
+      const { name: sliceName, fileName, extension, isDirectory } = getComponentInfo(curr)
       return {
         ...acc,
         [sliceName]: {
@@ -99,7 +100,7 @@ async function handleLibraryPath(fs, libPath) {
   );
 }
 
-export async function registry(fs) {
+export async function registry() {
   const pathToSmFile = path.posix.join(process.cwd(), SM_FILE)
   const { libraries } = fs.existsSync(pathToSmFile) ? JSON.parse(fs.readFileSync(pathToSmFile)) : {}
 
@@ -111,7 +112,7 @@ export async function registry(fs) {
     return console.error('[next-slicezone] expects "libraries" option to be a non-empty array')
   }
 
-  const registries = await Promise.all(libraries.map(async lib => await handleLibraryPath(fs, lib)))
+  const registries = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
   const registry = registries.reduce((acc, curr) => ({ ...curr, ...acc }), {})
   createFile(registry)
   return registry
