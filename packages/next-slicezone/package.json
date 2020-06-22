@@ -25,5 +25,9 @@
   "dependencies": {
     "slash": "^3.0.0",
     "sm-commons": "^0.0.21"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
