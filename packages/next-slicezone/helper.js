@@ -23,6 +23,7 @@ function getInfoFromPath(libPath, startPath) {
     config.pathToLibrary || '.',
     config.slicesFolder || (isLocal ? '.' : 'slices')
   )
+
   return {
     config,
     isLocal,

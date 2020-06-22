@@ -100,7 +100,7 @@ async function handleLibraryPath(libPath) {
   );
 }
 
-export async function registry() {
+export async function registry(writeFile = false) {
   const pathToSmFile = path.posix.join(process.cwd(), SM_FILE)
   const { libraries } = fs.existsSync(pathToSmFile) ? JSON.parse(fs.readFileSync(pathToSmFile)) : {}
 
@@ -114,6 +114,8 @@ export async function registry() {
 
   const registries = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
   const registry = registries.reduce((acc, curr) => ({ ...curr, ...acc }), {})
-  createFile(registry)
+  if (writeFile) {
+    createFile(registry)
+  }
   return registry
 }

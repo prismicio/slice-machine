@@ -19,7 +19,7 @@ export default ({ registry = {}, theme, slices, resolver = () => null }) => {
       return null
     }
 
-    const Component = typeof maybeRegister === 'object' ? resolver(maybeRegister) : maybeRegister
+    const Component = typeof maybeRegister === 'object' ? resolver({ ...maybeRegister, slice, i }) : maybeRegister
     if (Component) {
       return <Component key={`slice-${i + 1}`} slice={slice} theme={theme} i={i} />
     }
