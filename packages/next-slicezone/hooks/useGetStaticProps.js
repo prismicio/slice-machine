@@ -34,7 +34,7 @@ export const useGetStaticProps = ({
         props: {
           ...doc,
           error: null,
-          slices: doc.data[body],
+          slices: doc ? doc.data[body] : [],
           registry
         }
       }

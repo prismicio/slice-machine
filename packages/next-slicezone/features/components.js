@@ -34,7 +34,7 @@ async function handleLibraryPath(libPath) {
 
   if (!pathExists) {
     console.warn(`[next-slicezone] path to library "${pathToSlices}" does not exist. Skipping.`)
-    return {}
+    return null
   }
 
   const from = isLocal ? libPath.slice(2) : libPath
@@ -63,7 +63,7 @@ export const createResolver = async () => {
 
   const librariesInfo = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
   
-  const declaration = createDeclaration(librariesInfo)
+  const declaration = createDeclaration(librariesInfo.filter(e => e))
 
   const body = createBody()
 
