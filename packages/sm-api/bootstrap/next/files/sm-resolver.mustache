@@ -1,6 +1,5 @@
 import React from 'react'
 
-export default ({ sliceName }) => {
- console.log(`[next-slicezone] Resolver for ${sliceName} is loading`)
- return () => <p>Loading...</p>
+export default ({ i }) => {
+  return () => i ? <div /> : <p>Your SliceZone is loading... You might need to reload this page.</p>
 }
