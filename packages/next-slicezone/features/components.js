@@ -8,8 +8,15 @@ import { pascalize } from 'sm-commons/utils/str'
 
 const ALL_KEY = '__allSlices'
 
+const createImport = ({ isLocal, name, pathToSlices, from }) => {
+  if (isLocal) {
+    return `import * as ${name} from '${pathToSlices}'\n`
+  }
+  return `import { Slices as ${name} } from '${from}'\n`
+}
+
 const createDeclaration = (libs) => {
-  const imports = libs.reduce((acc, { name, pathToSlices }) => `${acc}import * as ${name} from '${pathToSlices}'\n`, '')
+  const imports = libs.reduce((acc, lib) => `${acc}${createImport(lib)}`, '')
   const spread = `const ${ALL_KEY} = { ${libs.reverse().reduce((acc, { name }) => `${acc} ...${name},`, '')} }`
   return `${imports}\n${spread}\n`
 }
