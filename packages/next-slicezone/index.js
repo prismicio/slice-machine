@@ -1,11 +1,13 @@
 import React from 'react'
 
 import { pascalize } from 'sm-commons/utils/str'
+import EmptyState from './EmptyState'
 
-const Empty = () => <p>Your SliceZone is empty!</p>
-export default ({ registry = {}, slices, resolver = () => null }) => {
+export default ({ registry = {}, slices, endpoint, resolver = () => null }) => {
   if (!slices || !slices.length) {
-    return process.env.NODE_ENV !== 'production' ? <Empty /> : null
+    return process.env.NODE_ENV !== 'production'
+      ? < EmptyState endpoint={endpoint} />
+      : null
   }
 
   return slices.map((slice, i) => {

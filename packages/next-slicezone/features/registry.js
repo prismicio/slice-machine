@@ -4,7 +4,6 @@ import slash from 'slash'
 
 import { SM_FILE } from 'sm-commons/consts'
 import { getInfoFromPath as getLibraryInfo } from '../helper'
-import { create as createFile } from './resolver';
 
 function getComponentName(slicePath) {
   const split = slicePath.split('/');
@@ -114,8 +113,6 @@ export async function registry(writeFile = false) {
 
   const registries = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
   const registry = registries.reduce((acc, curr) => ({ ...curr, ...acc }), {})
-  if (writeFile) {
-    createFile(registry)
-  }
+  
   return registry
 }

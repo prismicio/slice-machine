@@ -35,7 +35,8 @@ export const useGetStaticProps = ({
           ...doc,
           error: null,
           slices: doc ? doc.data[body] : [],
-          registry
+          registry,
+          endpoint: client.api.url
         }
       }
 
