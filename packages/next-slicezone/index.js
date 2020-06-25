@@ -14,7 +14,7 @@ export default ({ registry = {}, slices, resolver = () => null }) => {
 
     if (!maybeRegister) {
       if (process.env.NODE_ENV !== 'production') {
-        console.error(`No component was registered for slice of type "${slice_type}"`)
+        console.error(`No component was registered for slice of type "${slice.slice_type}"`)
       }
       return null
     }
