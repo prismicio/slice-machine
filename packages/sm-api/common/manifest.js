@@ -10,15 +10,15 @@ function merge(manifest, library) {
   return {
     ...manifest,
       devDependencies: [
-        ...manifest.devDependencies,
+        ...(manifest.devDependencies || []),
         ...devDependencies
       ],
       dependencies: [
-        ...manifest.dependencies,
+        ...(manifest.dependencies || []),
         ...dependencies,
         packageName
       ],
-      libraries: [...manifest.libraries, packageName],
+      libraries: [...(manifest.libraries || []), packageName],
       css: [...(manifest.css || []), ...css],
       script: [...(manifest.script || []), ...script],
   }

@@ -12,7 +12,7 @@ const cors = require("../common/cors");
 
 const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 
-const { libraries, githubRepositories } = require("../common/consts");
+const { libraries } = require("../common/consts");
 
 const { fetchLibrary } = require("./library");
 
@@ -66,6 +66,7 @@ module.exports = cors(async (req, res) => {
         );
     }
 
+    const verifiedLibrary = libraries[packageName]
     if (!libraries[packageName]) {
       return res
         .status(400)
@@ -74,17 +75,8 @@ module.exports = cors(async (req, res) => {
         );
     }
 
-    const githubRepository = githubRepositories[packageName];
-    if (!githubRepository) {
-      return res
-        .status(500)
-        .send(
-          "Unexpected error: We could not find the Git repository of given library. This is probably a bug and should be reported!`"
-        );
-    }
-
     const tmpZipFile = await download(
-      `https://codeload.github.com/${githubRepository}/zip/master`
+      `https://codeload.github.com/${verifiedLibrary.git}/zip/master`
     );
     const fZip = JsZip();
     const zip = new AdmZip(tmpZipFile);
