@@ -56,7 +56,7 @@ module.exports = cors(async (req, res) => {
     }
 
     const scaffolder = require(`../bootstrap/${framework}`);
-    const packageName = lib || library || scaffolder.defaultLibrary;
+    const packageName = lib || library || scaffolder.defaultLibrary.packageName;
 
     if (!packageName) {
       return res
