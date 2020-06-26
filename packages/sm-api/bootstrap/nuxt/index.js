@@ -1,6 +1,6 @@
 const merge = require("../../common/manifest").merge
 
-const defaultLibrary = 'vue-essential-slices';
+const defaultLibrary = { packageName: 'vue-essential-slices' };
 
 module.exports = {
   defaultLibrary,

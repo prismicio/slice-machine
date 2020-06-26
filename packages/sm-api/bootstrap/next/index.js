@@ -1,17 +1,19 @@
+const fs = require('fs')
+const path = require('path')
 const Mustache = require('mustache');
 const merge = require("../../common/manifest").merge
 
-const defaultLibrary = 'essential-slices'
+const defaultLibrary = { packageName: 'essential-slices' }
 
-const _app = require('./files/_app.mustache');
-const _document = require('./files/_document.mustache');
-const nextConfig = require('./files/next.config.mustache');
-const prismic = require('./files/prismic.mustache');
-const smResolver = require('./files/sm-resolver.mustache');
+const _app = fs.readFileSync(path.join(__dirname, './files/_app.mustache'), 'utf-8');
+const _document = fs.readFileSync(path.join(__dirname, './files/_document.mustache'), 'utf-8');
+const nextConfig = fs.readFileSync(path.join(__dirname, './files/next.config.mustache'), 'utf-8');
+const prismic = fs.readFileSync(path.join(__dirname, './files/prismic.mustache'), 'utf-8');
+const smResolver = fs.readFileSync(path.join(__dirname, './files/sm-resolver.mustache'), 'utf-8');
 
 module.exports = {
   defaultLibrary,
-  build: (library, routes = null) => (merge({
+  build: (library = defaultLibrary, routes = null) => (merge({
     framework: 'next',
     frameworkName: "Next",
     firstCommand: "npm run dev",
@@ -27,7 +29,7 @@ module.exports = {
     files: [{
       name: '_app.js',
       path: './pages',
-      content: Mustache.render(_app, library || { packageName: defaultLibrary })
+      content: Mustache.render(_app, library)
     }, {
       name: '_document.js',
       path: './pages',
@@ -35,7 +37,7 @@ module.exports = {
     }, {
       name: 'next.config.js',
       path: './',
-      content: Mustache.render(nextConfig, library || { packageName: defaultLibrary })
+      content: Mustache.render(nextConfig, library)
     }, {
       name: 'prismic.js',
       path: './',
