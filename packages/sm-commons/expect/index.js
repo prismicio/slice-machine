@@ -1,6 +1,6 @@
 const expect = require("expect.js");
 
-/** test LIBRARY model ([PATH_TO_LIB || '.']/sm.json file) */
+/** test LIBRARY model ([PATH_TO_LIB || '.']/SM_FILE file) */
 function expectLibrary(sm) {
   expect(sm).to.be.an("object");
 
@@ -12,13 +12,11 @@ function expectLibrary(sm) {
   expect(slices).to.be.an("object");
   Object.values(slices).forEach((value) => {
     expectSliceModel(value)
-    // expect(value).to.have.property("meta")
-    // expectMeta(value.meta)
   })
 
   /**
-   * because we spread sm.config in sm.json,
-   * we can test sm.json as sm.config
+   * because we spread sm.config in SM_FILE,
+   * we can test SM_FILE as sm.config
    */
   expectConfig(sm)
 
@@ -42,17 +40,8 @@ function expectSliceModel(model) {
   expect(model).to.have.property("non-repeat");
 }
 
-/** test SLICE metadata file (SLICE_NAME/meta.json) */
-function expectMeta(meta) {
-  expect(meta).to.be.an("object");
-  expect(meta).to.have.property("title");
-  expect(meta).to.have.property("description");
-}
-
-
 module.exports = {
   expectConfig,
   expectLibrary,
-  expectMeta,
   expectSliceModel,
 };

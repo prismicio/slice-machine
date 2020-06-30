@@ -10,6 +10,8 @@ const { expectConfig } = require('../expect')
 const strUtils = require('../utils/str')
 const fsUtils = require('../utils/fs')
 
+const { SM_FILE } = require('../consts')
+
 function pathToLib(config) {
   const p = path.join(process.cwd(), config.pathToLibrary || './');
   tests.pathHasType(p, 'file', `Given path to library "${p}" does not exist`)
@@ -103,7 +105,7 @@ function fetchSliceDefinitions(p) {
 
 function writeSmFile(slices) {
   try {
-    fs.writeFileSync(path.join(process.cwd(), 'sm.json'), slices)
+    fs.writeFileSync(path.join(process.cwd(), SM_FILE), slices)
   } catch (e) {
     throw new Error(`[SliceMachine/writeFile] An unexpected error occured while write file "sm.json" to ${process.cwd()}`)
   }
