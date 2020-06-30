@@ -66,53 +66,24 @@ module.exports = cors(async (req, res) => {
         );
     }
 
-    const verifiedLibrary = libraries[packageName]
-    if (!libraries[packageName]) {
-      return res
-        .status(400)
-        .send(
-          'Invalid query parameter "library": library does not exist or is not a Slice Machine library.`'
-        );
-    }
-
-    const tmpZipFile = await download(
-      `https://codeload.github.com/${verifiedLibrary.git}/zip/master`
-    );
-    const fZip = JsZip();
-    const zip = new AdmZip(tmpZipFile);
-    const tmpath = tmp.tmpNameSync();
-
-    zip.extractAllTo(tmpath);
-
     const smLibrary = await fetchLibrary(packageName);
 
-    const { cts: mergedCustomTypes, files, routes } = require("../common/custom_types/")[projectType](smLibrary.slices);
-
-    fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
-
-    Object.entries(files).map(([fileName, content]) => {
-      fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
-    })
+    const { customTypes, slices, keysToMerge, routes } = require("../common/custom_types/")[projectType](smLibrary.slices);
 
     const manifest = scaffolder.build(smLibrary, routes);
     const recapFile = require(`../bootstrap/${framework}/recap.mustache`)
-    fZip.file(
-      "boot.json",
-      JSON.stringify({
-        manifest,
-        library: smLibrary,
-        recap: Mustache.render(recapFile, smLibrary)
-      })
-    )
 
-    fZip
-      .generateNodeStream({
-        type: "nodebuffer",
-        streamFiles: true
-      })
-      .pipe(res);
+    return res.send(JSON.stringify({
+      manifest,
+      library: smLibrary,
+      recap: Mustache.render(recapFile, smLibrary),
+      customTypes,
+      slices,
+      keysToMerge,
+    }))
   } catch (e) {
     console.error(e);
+    res.status(500).send({ error: e })
   }
 });
 
