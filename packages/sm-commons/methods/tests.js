@@ -4,7 +4,7 @@ const consola = require('consola')
 
 const { pascalize } = require('../utils/str');
 
-const { expectSliceModel } = require("../expect");
+const { expectSliceModel, expectMeta } = require("../expect");
 
 function pathExists(p, error, read) {
   try {
@@ -65,8 +65,10 @@ function isSliceFolder(p) {
     )
 
     expectSliceModel(model);
+    // expectMeta(meta)
 
     return {
+      // meta,
       model,
     };
 

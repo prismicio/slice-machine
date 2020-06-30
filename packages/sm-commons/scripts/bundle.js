@@ -21,13 +21,17 @@ const consola = require('consola')
 
 const actions = require('../methods/actions')
 const expectLibrary = require("../expect").expectLibrary;
-const { versionIsValid } = require('../methods/communication')
+const createCommunication = require('../methods/communication')
 
-const { SM_CONFIG_FILE, SM_FILE } = require('../consts')
+const SM_CONFIG_FILE = 'sm.config.json'
+
+const API_ENDPOINT = "https://sm-api.now.sh/api";
 
 async function main() {
   try {
-    await versionIsValid()
+    const communication = createCommunication({ apiEndpoint: API_ENDPOINT })
+
+    await communication.versionIsValid()
 
     const config = actions.readConfig(path.join(process.cwd(), SM_CONFIG_FILE))
     const pathToLib = actions.pathToLib(config)
@@ -51,7 +55,7 @@ async function main() {
     actions.writeSmFile(JSON.stringify(sm))
 
     consola.success(
-      `[SliceMachine] Successfully created file "${SM_FILE}".\nYou should commit it with your library changes!`
+      '[SliceMachine] Successfully created file "sm.json".\nYou should commit it with your library changes!'
     )
     process.exit(0)
   } catch (e) {
