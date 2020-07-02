@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import getConfig from "next/config";
+import { listComponentsByLibrary } from '../lib/listComponents'
 
 import { getInfoFromPath as getLibraryInfo } from 'sm-commons/methods/lib'
 
-const Home = ({ config, components }) => (
+const Home = ({ config, libs }) => (
   <div className="container">
     <Head>
       <title>Create Next App</title>
@@ -19,7 +20,7 @@ const Home = ({ config, components }) => (
         Get started by editing <code>pages/index.js</code>
       </p>
       <code>
-        { components ? JSON.stringify(components) : null}
+        { libs ? JSON.stringify(libs) : null}
       </code>
     </main>
   </div>
@@ -41,10 +42,10 @@ async function handleLib(libPath) {
 Home.getInitialProps = async (appContext) => {
   const { publicRuntimeConfig: config } = getConfig();
 
-  const libs = await Promise.all(config.slices.map(async (lib) => handleLib(lib)))
+  const libs = await listComponentsByLibrary(config.slices)
 
   return {
-    components: libs.filter(e => e.isLocal)
+    libs
   }
 };
 
