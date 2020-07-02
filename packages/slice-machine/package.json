@@ -1,0 +1,19 @@
+{
+  "name": "slice-machine",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "bin": {
+    "start-slice-machine": "./scripts/start.js"
+  },
+  "dependencies": {
+    "next": "9.4.4",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "sm-commons": "^0.0.22"
+  }
+}
