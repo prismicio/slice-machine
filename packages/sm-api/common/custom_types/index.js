@@ -37,14 +37,6 @@ function mergeWithSlices(ct, slices, customTypesToMerge) {
   });
 }
 
-function customTypes(index, cts) {
-  return index.map((ct) => {
-    return {
-      ...ct,
-      value: cts[ct.id] ? cts[ct.id] : {}
-    };
-  });
-};
 
 function format(index, customTypes, slices, keysToMerge) {
   return {
@@ -63,9 +55,16 @@ function format(index, customTypes, slices, keysToMerge) {
 module.exports = {
   landing: function(slices) {
     const index = require("./landing/index.json");
-    const customTypes = index.reduce((acc, ct) => ([...acc, {
-      ...ct,
-      value: require(`./landing/${ct.value}`)
+    const customTypes = index.reduce((acc, {
+      id,
+      name,
+      repeatable,
+      value
+    }) => ([...acc, {
+      id,
+      name,
+      repeatable,
+      value: require(`./landing/${value}`)
     }]), []);
     return format(index, customTypes, slices, ['page'])
   }
