@@ -63,9 +63,10 @@ function format(index, customTypes, slices, keysToMerge) {
 module.exports = {
   landing: function(slices) {
     const index = require("./landing/index.json");
-    const customTypes = index.reduce((acc, ct) => (Object.assign({}, acc, {
-      [ct.id]: require(`./landing/${ct.value}`)
-    })), {});
+    const customTypes = index.reduce((acc, ct) => ([...acc, {
+      ...ct,
+      value: require(`./landing/${ct.value}`)
+    }]), []);
     return format(index, customTypes, slices, ['page'])
   }
 }
