@@ -46,26 +46,28 @@ function customTypes(index, cts) {
   });
 };
 
-function format(index, customTypes, slices, keysToMerge) {
+function format(index, cts, slices, keysToMerge) {
   return {
     routes: index.map(ct => ct.route),
-    customTypes,
-    slices,
-    keysToMerge,
-    files: Object.entries(customTypes)
+    cts: mergeWithSlices(
+      customTypes(index, cts),
+      slices,
+      keysToMerge
+    ),
+    files: Object.entries(cts)
       .reduce((acc, [fileName, content]) => ({
-      ...acc,
-      [fileName]: content
-    }))
+        ...acc,
+        [fileName]: content
+      }))
   }
 }
 
 module.exports = {
-  landing: function(slices) {
+  landing: function (slices) {
     const index = require("./landing/index.json");
-    const customTypes = index.reduce((acc, ct) => (Object.assign({}, acc, {
+    const cts = index.reduce((acc, ct) => (Object.assign({}, acc, {
       [ct.id]: require(`./landing/${ct.value}`)
     })), {});
-    return format(index, customTypes, slices, ['page'])
+    return format(index, cts, slices, ['page'])
   }
 }
