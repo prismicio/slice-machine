@@ -1,17 +1,32 @@
 import App from 'next/app'
 import getConfig from 'next/config'
+import theme from '../src/theme'
+import { ThemeProvider } from 'theme-ui'
 
-function MyApp({ Component, pageProps, config }) {
-  return <Component {...pageProps} config={config} />
-}
+import useSwr from 'swr'
 
-MyApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext);
-  const { publicRuntimeConfig } = getConfig()
-  return {
-    ...appProps,
-    config: publicRuntimeConfig
-  }
+import LibProvider, { LibContext } from '../src/lib-context'
+
+const fetcher = (url) => fetch(url).then((res) => res.json())
+
+// import { listComponentsByLibrary } from '../lib/listComponents'
+
+function MyApp({
+  Component,
+  pageProps,
+}) {
+  const { data: libraries, error } = useSwr('/api/components', fetcher)
+
+  if (error) return <div>Failed to load slices</div>
+  if (!libraries) return <div></div>;
+
+  return (
+    <ThemeProvider theme={theme}>
+      <LibProvider value={libraries}>
+        <Component {...pageProps} />
+      </LibProvider>
+    </ThemeProvider>
+  );
 }
 
 export default MyApp

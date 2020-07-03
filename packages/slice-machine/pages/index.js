@@ -1,52 +1,40 @@
+import { useContext } from 'react'
 import Head from 'next/head'
 import getConfig from "next/config";
-import { listComponentsByLibrary } from '../lib/listComponents'
 
-import { getInfoFromPath as getLibraryInfo } from 'sm-commons/methods/lib'
+import {
+  Link,
+} from 'theme-ui'
 
-const Home = ({ config, libs }) => (
-  <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+import Container from '../components/Container'
+import ListLibraries from '../components/ListLibraries'
+import { LibContext } from '../src/lib-context';
+import lib from 'sm-commons/methods/lib';
 
-    <main>
-      <h1 className="title">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
+const { publicRuntimeConfig: config } = getConfig();
 
-      <p className="description">
-        Get started by editing <code>pages/index.js</code>
-      </p>
-      <code>
-        { libs ? JSON.stringify(libs) : null}
-      </code>
-    </main>
-  </div>
-)
 
-async function handleLib(libPath) {
-  const {
-    isLocal,
-    pathExists,
-    pathToSlices,
-  } = await getLibraryInfo(libPath)
-  return {
-    isLocal,
-    pathExists,
-    pathToSlices,
-  }
+const Index = () => {
+  const libraries = useContext(LibContext)
+  return (
+    <Container>
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main>
+        <h1 className="title">
+          Welcome to SliceMachine
+        </h1>
+
+        <p className="description">
+          API explorer: <Link href={config.apiEndpoint}>{config.apiEndpoint}</Link>
+        </p>
+        <ListLibraries libraries={libraries} />
+      </main>
+    </Container>
+  )
 }
 
-Home.getInitialProps = async (appContext) => {
-  const { publicRuntimeConfig: config } = getConfig();
-
-  const libs = await listComponentsByLibrary(config.slices)
-
-  return {
-    libs
-  }
-};
-
-export default Home
+export default Index

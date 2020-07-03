@@ -8,12 +8,16 @@
     "start": "next start"
   },
   "bin": {
-    "start-slice-machine": "./scripts/start.js"
+    "start-slicemachine": "./scripts/start.js"
   },
   "dependencies": {
+    "base64-img": "^1.0.4",
+    "formidable-serverless": "^1.0.3",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "sm-commons": "^0.0.22"
+    "sm-commons": "^0.0.22",
+    "swr": "^0.2.3",
+    "theme-ui": "^0.3.1"
   }
 }
