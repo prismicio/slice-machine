@@ -1,5 +1,3 @@
-import App from 'next/app'
-import getConfig from 'next/config'
 import theme from '../src/theme'
 import { ThemeProvider } from 'theme-ui'
 
@@ -8,8 +6,6 @@ import useSwr from 'swr'
 import LibProvider, { LibContext } from '../src/lib-context'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
-
-// import { listComponentsByLibrary } from '../lib/listComponents'
 
 function MyApp({
   Component,

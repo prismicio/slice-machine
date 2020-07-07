@@ -9,7 +9,6 @@ import {
 import Container from '../components/Container'
 import ListLibraries from '../components/ListLibraries'
 import { LibContext } from '../src/lib-context';
-import lib from 'sm-commons/methods/lib';
 
 const { publicRuntimeConfig: config } = getConfig();
 

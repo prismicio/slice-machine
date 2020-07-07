@@ -11,9 +11,12 @@
     "start-slicemachine": "./scripts/start.js"
   },
   "dependencies": {
+    "@khanacademy/react-multi-select": "^0.3.3",
     "base64-img": "^1.0.4",
     "formidable-serverless": "^1.0.3",
+    "formik": "^2.1.4",
     "next": "9.4.4",
+    "random-sentence": "^1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "sm-commons": "^0.0.22",

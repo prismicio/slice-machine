@@ -143,6 +143,16 @@ export default () => ({
       "maxWidth": "100%"
     }
   },
+  alerts: {
+    primary: {
+      color: 'background',
+      bg: 'primary',
+    },
+    muted: {
+      color: 'text',
+      bg: 'muted',
+    },
+  },
   "prism": {
     ".comment,.prolog,.doctype,.cdata,.punctuation,.operator,.entity,.url": {
       "color": "gray"
