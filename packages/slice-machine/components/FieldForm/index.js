@@ -1,7 +1,11 @@
-import { Field, useField } from 'formik'
+import {
+  Field,
+  useField,
+} from 'formik'
+
 import MultiSelect from '@khanacademy/react-multi-select'
 
-import { FormTypes } from '../../lib/mocker/FormHelpers'
+import * as FormTypes from '../../lib/forms/types'
 
 import {
   Box,
@@ -13,38 +17,42 @@ import { Fragment } from 'react'
 
 export default ({ fieldName, formField }) => {
   const [field, meta, helpers] = useField(fieldName);
-  console.log({
-    field,
-    meta,
-    helpers
-  })
   return (
     <Box mt={2}>
-      {formField.type === FormTypes.STRING && (
+      {formField.type === FormTypes.INPUT && (
         <Fragment>
-          <Label>{fieldName}</Label>
+          <Label>{formField.label || fieldName}</Label>
           <Field
             name={fieldName}
-            placeholder={formField.placeholder || formField.label}
-            type={formField.type === "string" ? "text" : ""}
-            as={Input}
+            id={fieldName}
+            type="text"
+            placeholder={formField.placeholder || formField.label || fieldName}
+            validate={formField.validate}
+            component={Input}
+            {...field}
           />
         </Fragment>
       )}
       {formField.type === FormTypes.CHECKBOX && (
         <Label>
-          <Field as={Checkbox} type="checkbox" name={fieldName} />
+          <Field
+            component={Checkbox}
+            type="checkbox"
+            name={fieldName}
+            onChange={() => helpers.setValue(!meta.value)}
+            checked={meta.value}
+          />
           {formField.label}
         </Label>
       )}
       {formField.type === FormTypes.SELECT && (
         <Fragment>
-          <Label>{fieldName}</Label>
+          <Label>{formField.label || fieldName}</Label>
           <MultiSelect
             options={formField.options}
             selected={meta.value}
-            // onSelectedChanged={(selected) => this.setState({ selected })}
-            // onChange={(selected) => setFieldValue(fieldName)}
+            onSelectedChanged={(selected) => helpers.setValue(selected)}
+            {...field}
           />
         </Fragment>
       )}

@@ -1,6 +1,7 @@
 import randomSentence from 'random-sentence'
 
-import { CheckBox, Select, DefaultFields } from "../FormHelpers";
+import { CheckBox, Select } from '../forms/fields'
+import { DefaultFields } from "../forms/defaults";
 
 /**
  * {
@@ -25,6 +26,11 @@ const fromUser = (mock) => {
 const create = (maybeMock) => maybeMock
   ? fromUser(maybeMock)
   : _create(randomSentence({ min: "10", max: "120" }))
+
+const Meta = {
+  title: 'Rich Text',
+  description: 'A rich text field with formatting options'
+}
 
 
 const options = [{
@@ -66,5 +72,6 @@ const FormFields = {
 export default {
   create,
   fromUser,
-  FormFields
+  FormFields,
+  Meta
 }

@@ -1,5 +1,5 @@
 import getConfig from "next/config";
-import * as Widgets from './widgets'
+import * as Widgets from '../widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
 

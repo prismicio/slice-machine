@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import getConfig from "next/config";
 
-import mocker from '../../lib/mocker'
+import mock from '../../lib/mock'
 
 const { publicRuntimeConfig: config } = getConfig()
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const modelPath = path.join(rootPath, 'model.json')
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
-  fs.writeFileSync(mockPath, JSON.stringify(mocker(sliceName, model)), 'utf-8')
+  fs.writeFileSync(mockPath, JSON.stringify(mock(sliceName, model)), 'utf-8')
 
   return res.status(200).send({ done: true })
 }

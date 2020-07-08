@@ -1,7 +1,10 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { LibContext } from "../../src/lib-context";
 import getConfig from 'next/config'
 import ImagePreview from "../../components/ImagePreview";
+
+import { createInitialValues } from "../../lib/forms";
+import * as Widgets from '../../lib/widgets'
 
 import FlexEditor from "../../components/FlexEditor"
 
@@ -99,6 +102,34 @@ const SliceEditor = ({ query }) => {
           }}
           rows={10}
         />
+        {
+          Object.entries(Widgets).map(([name, widget]) => {
+            const { Meta, FormFields } = widget
+            if (Meta) {
+              return (
+                <Box my={2} bg="muted">
+                  <Heading>{Meta.title}</Heading>
+                  <Text as="p">{Meta.description}</Text>
+                  <Button onClick={e => {
+                    if (canParse(model)) {
+                      console.log(model, typeof model)
+                      setModel(JSON.stringify({
+                        ...model,
+                        primary: {
+                          ...model.primary,
+                          myAwesomeField: Object.assign(createInitialValues(FormFields))
+                        }
+                      }))
+                      return
+                    }
+                    console.log('CANNOT PARSE MODEL')
+                  }}>Add</Button>
+                </Box>
+              )
+            }
+            return null
+          })
+        }
         <Button
           disabled={!canParse(model)}
           bg={!canParse(model) ? 'text' : 'primary'}
