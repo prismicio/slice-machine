@@ -18,7 +18,7 @@ import {
   createValidationSchema
 } from '../../lib/forms'
 
-import FieldForm from '../../components/FieldForm'
+import WidgetFormField from '../../lib/builder/components/WidgetFormField'
 import Container from "../../components/Container";
 
 const SliceEditor = ({ query }) => {
@@ -49,7 +49,7 @@ const SliceEditor = ({ query }) => {
           {({ errors, touched, isSubmitting, values }) => console.log({ values, errors }) || (
               <Form>
                 {Object.entries(FormFields).map(([key, field]) => (
-                  <FieldForm key={key} fieldName={key} formField={field} />
+                  <WidgetFormField key={key} fieldName={key} formField={field} />
                 ))}
                 <Button mt={2} type="submit" disabled={isSubmitting}>
                   Submit

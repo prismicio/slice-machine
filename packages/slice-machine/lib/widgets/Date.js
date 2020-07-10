@@ -8,8 +8,8 @@ import Timestamp from './Timestamp'
   }
 } */
 
-const create = (maybeMock) => maybeMock || Timestamp.create().toISOString().split('T')[0] // ?
+const createMock = (maybeMock) => maybeMock || Timestamp.createMock().toISOString().split('T')[0] // ?
 
 export default {
-  create
+  createMock
 }

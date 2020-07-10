@@ -6,8 +6,8 @@
                 }
               } */
 
-const create = (maybeMock) => maybeMock || Math.floor(Math.random() * 9999)
+const createMock = (maybeMock) => maybeMock || Math.floor(Math.random() * 9999)
 
 export default {
-  create
+  createMock
 }

@@ -17,28 +17,28 @@
     }
   } */
 
-const _create = (src, { width= 900, height= 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
+const _createMock = (src, { width= 900, height= 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
   dimensions: { width, height },
   alt: 'Placeholder image',
   copyright: null,
   url: src || `https://via.placeholder.com/${width}x${height}`,
   ...thumbnails.reduce((acc, e) => ({
     ...acc,
-    [e.name]: _create(src, { width: e.width, height: e.height })
+    [e.name]: _createMock(src, { width: e.width, height: e.height })
   }), [])
 })
 
-const defaultValue = _create()
+const defaultValue = _createMock()
 
 const fromUser = (...args) =>
   typeof mock === 'object' ?
   mock :
-  _create(...args)
+  _createMock(...args)
 
-const create = (maybeMock, model) => maybeMock ? fromUser(mock) : _create(null, model.constraint, model.thumbnails)
+const createMock = (maybeMock, model) => maybeMock ? fromUser(mock) : _createMock(null, model.constraint, model.thumbnails)
 
 export default {
-  create,
+  createMock,
   defaultValue,
   fromUser
 }

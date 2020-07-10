@@ -1,49 +1,53 @@
-import { Box, Image, Input, Text, Label, Button } from 'theme-ui'
+import path from 'path'
+import { mutate } from 'swr'
+import { useState } from 'react'
+import getConfig from 'next/config'
+import {
+  Box,
+  Image,
+  Spinner,
+  Text,
+  Alert,
+  Close,
+  Button
+} from 'theme-ui'
 
- const onChange = (e, componentInfo) => {
-   const files = Array.from(e.target.files)
-   const errs = []
-
-   const formData = new FormData()
-   const types = ['image/png', 'image/jpeg', 'image/gif']
-
-   const file = files[0]
-   if (types.every(type => file.type !== type)) {
-     errs.push(`'${file.type}' is not a supported format`)
-   }
-
-   if (file.size > 150000) {
-     errs.push(`'${file.name}' is too large, please pick a smaller file`)
-   }
-
-   formData.append('file', file)
-   if (errs.length) {
-     return console.error(errs)
-   }
-   formData.append('componentInfo', JSON.stringify(componentInfo))
-   fetch(`/api/upload-preview`, {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw res
-      }
-      return res.json()
-    })
-    .then(images => {
-      console.log({ images })
-    })
-    .catch(err => {
-      console.error({ err, here: true })
-    })
- }
+const { publicRuntimeConfig: config } = getConfig();
 
 export default ({
-  previewUrl,
+  storybookUrl,
   componentInfo,
   ...rest
 }) => {
+
+  const { sliceName, from, previewUrl } = componentInfo
+  const [data, setData] = useState({
+    loading: false,
+    done: false,
+    error: null,
+  });
+
+  const generatePreview = async () => {
+    setData({
+      loading: true,
+      done: false,
+      error: null
+    })
+    fetch(`/api/generate-preview?sliceName=${sliceName}&from=${from}&url=${storybookUrl}`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+
+      },
+    }).then((res) => {
+      setData({ loading: false, done: true, error: null })
+      mutate('/api/components')
+    }).catch(err => {
+      console.error(err)
+      setData({ loading: false, done: false, error: err })
+    })
+  }
 
  return (
    <Box sx={{ border: t => `1px solid ${t.colors.primary}`, p: 4 }}>
@@ -54,22 +58,32 @@ export default ({
           <Text>No preview!</Text>
         )
      }
-     <Button
-      as={Label}
-      htmlFor="file"
-      sx={{ cursor: 'pointer' }}
-      aria-label="Upload preview"
-    >
-        Choose file to upload
-      </Button>
-     <Input
-      type="file"
-      accept="image/png, image/jpeg"
-      id="file"
-      name="file"
-      sx={{ display: 'none' }}
-      onChange={e => onChange(e, componentInfo)}
-    />
+     <Button onClick={generatePreview}>
+       Generate Preview
+     </Button>
+     { data.loading ? <Spinner /> :null}
+     {
+          data.error ? (
+            <Alert
+              mt={2}
+              variant="muted"
+            >
+              Could not generate preview. See console for full error.
+              <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
+            </Alert>
+          ) : null
+        }
+         {
+          data.done ? (
+            <Alert
+              mt={2}
+              variant="muted"
+            >
+              Preview was generated!
+              <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
+            </Alert>
+          ) : null
+        }
    </Box>
  )
 }

@@ -1,6 +1,6 @@
 import getConfig from "next/config";
 
-import { listComponentsByLibrary } from '../../lib/listComponents'
+import { listComponentsByLibrary } from '../../lib/queries/listComponents'
 
 const { publicRuntimeConfig: config } = getConfig()
 

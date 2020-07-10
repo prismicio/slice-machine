@@ -41,7 +41,6 @@ export const createValidationSchema = (FormFields) => {
       let validator = Yup[yupType]()
       Object.entries(validate).filter(e => e[1]).forEach(([func, args]) => {
         if (args && validator[func]) {
-          console.log(func)
           validator = validator[func](...args)
           return
         }

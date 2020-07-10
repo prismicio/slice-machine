@@ -8,8 +8,8 @@
     }
   } */
 
-const create = (maybeMock) => maybeMock || Math.random() < 0.50 ? true : false
+const createMock = (maybeMock) => maybeMock || Math.random() < 0.50 ? true : false
 
 export default {
-  create
+  createMock
 }

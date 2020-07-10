@@ -1,3 +1,5 @@
+import { Fragment } from 'react'
+
 import {
   Field,
   useField,
@@ -5,7 +7,7 @@ import {
 
 import MultiSelect from '@khanacademy/react-multi-select'
 
-import * as FormTypes from '../../lib/forms/types'
+import * as FormTypes from '../../../forms/types'
 
 import {
   Box,
@@ -13,9 +15,14 @@ import {
   Input,
   Checkbox
 } from 'theme-ui'
-import { Fragment } from 'react'
 
-export default ({ fieldName, formField }) => {
+const WidgetFormField = ({ 
+  fieldName,
+  formField,
+  fieldType,
+  Model,
+  initialValues
+}) => {
   const [field, meta, helpers] = useField(fieldName);
   return (
     <Box mt={2}>
@@ -27,8 +34,18 @@ export default ({ fieldName, formField }) => {
             id={fieldName}
             type="text"
             placeholder={formField.placeholder || formField.label || fieldName}
-            validate={formField.validate}
-            component={Input}
+            {
+              ...(formField.fieldLevelValidation ? {
+                validate: (value) => formField.fieldLevelValidation({
+                  value,
+                  Model,
+                  fieldName,
+                  fieldType,
+                  initialValues
+                })
+              } : null)
+            }
+            as={Input}
             {...field}
           />
         </Fragment>
@@ -36,7 +53,7 @@ export default ({ fieldName, formField }) => {
       {formField.type === FormTypes.CHECKBOX && (
         <Label>
           <Field
-            component={Checkbox}
+            as={Checkbox}
             type="checkbox"
             name={fieldName}
             onChange={() => helpers.setValue(!meta.value)}
@@ -59,3 +76,5 @@ export default ({ fieldName, formField }) => {
     </Box>
   ); 
 }
+
+export default WidgetFormField

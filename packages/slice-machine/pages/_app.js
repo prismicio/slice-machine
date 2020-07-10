@@ -3,7 +3,7 @@ import { ThemeProvider } from 'theme-ui'
 
 import useSwr from 'swr'
 
-import LibProvider, { LibContext } from '../src/lib-context'
+import LibProvider from '../src/lib-context'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 

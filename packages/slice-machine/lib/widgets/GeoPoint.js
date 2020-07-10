@@ -4,8 +4,8 @@
                   "label" : "geopoints"
                 } */
 
-const create = () => ``
+const createMock = () => ``
 
 export default {
-  create
+  createMock
 }

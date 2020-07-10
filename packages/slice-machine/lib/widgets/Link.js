@@ -44,9 +44,9 @@
   }
   */
 
-const create = (maybeMock) =>
+const createMock = (maybeMock) =>
   maybeMock || ({ link_type: "Web", url: "https://slicemachine.dev" })
 
 export default {
-  create
+  createMock
 }

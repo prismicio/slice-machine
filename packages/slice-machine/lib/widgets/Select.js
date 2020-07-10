@@ -9,10 +9,10 @@
     }
 */
 
-const _create = (config) => config.options[Math.floor(Math.random() * config.options.length)]
+const _createMock = (config) => config.options[Math.floor(Math.random() * config.options.length)]
 
-const create = (maybeMock, config) => maybeMock || _create(config)
+const createMock = (maybeMock, config) => maybeMock || _createMock(config)
 
 export default {
-  create
+  createMock
 }

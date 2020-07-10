@@ -1,5 +1,6 @@
 import randomSentence from 'random-sentence'
 
+import { createInitialValues } from '../forms'
 import { CheckBox, Select } from '../forms/fields'
 import { DefaultFields } from "../forms/defaults";
 
@@ -13,25 +14,24 @@ import { DefaultFields } from "../forms/defaults";
   } 
 */
 
-const _create = (str) => [{
+const _createMock = (str) => [{
   type: 'paragraph',
   "text": str,
   spans: []
 }]
 
 const fromUser = (mock) => {
-  return typeof mock === 'object' ? mock : _create(mock)
+  return typeof mock === 'object' ? mock : _createMock(mock)
 }
 
-const create = (maybeMock) => maybeMock
+const createMock = (maybeMock) => maybeMock
   ? fromUser(maybeMock)
-  : _create(randomSentence({ min: "10", max: "120" }))
+  : _createMock(randomSentence({ min: "10", max: "120" }))
 
 const Meta = {
   title: 'Rich Text',
   description: 'A rich text field with formatting options'
 }
-
 
 const options = [{
   value: 'p',
@@ -64,14 +64,22 @@ const options = [{
 
 const FormFields = {
   ...DefaultFields,
-  multi: CheckBox('Allow multiple paragraphs'),
+  allowMultiLine: CheckBox('Allow multiple paragraphs'),
   allowTargetBlank: CheckBox('Allow target blank for links'),
   accepts: Select('Allowed elements', options)
 }
 
+const create = (apiId) => ({
+  ...createInitialValues(FormFields),
+  accepts: options.map(e => e.value),
+  id: apiId
+})
+
 export default {
   create,
+  createMock,
   fromUser,
   FormFields,
-  Meta
+  Meta,
+  type: 'StructuredText'
 }

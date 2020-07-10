@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "bin": {
     "start-slicemachine": "./scripts/start.js"
@@ -16,12 +17,17 @@
     "formidable-serverless": "^1.0.3",
     "formik": "^2.1.4",
     "next": "9.4.4",
+    "puppeteer": "^5.0.0",
     "random-sentence": "^1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-modal": "^3.11.2",
     "sm-commons": "^0.0.22",
     "swr": "^0.2.3",
     "theme-ui": "^0.3.1",
     "yup": "^0.29.1"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0"
   }
 }

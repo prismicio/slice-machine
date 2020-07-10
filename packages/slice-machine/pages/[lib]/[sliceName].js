@@ -1,10 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext, useState, Fragment } from "react";
 import { LibContext } from "../../src/lib-context";
 import getConfig from 'next/config'
 import ImagePreview from "../../components/ImagePreview";
 
-import { createInitialValues } from "../../lib/forms";
 import * as Widgets from '../../lib/widgets'
+
+import Builder from '../../lib/builder'
+import createModel from '../../lib/model'
 
 import FlexEditor from "../../components/FlexEditor"
 
@@ -23,15 +25,6 @@ import {
 const iframeSrc = (component, variation = 'default-slice') =>
   `${config.storybook}/iframe.html?id=${component.sliceName.toLowerCase()}--${variation}&viewMode=story`
 
-const canParse = (str) => {
-  try {
-    const json = JSON.parse(str)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
 const SliceEditor = ({ query }) => {
   const libraries = useContext(LibContext)
 
@@ -47,20 +40,22 @@ const SliceEditor = ({ query }) => {
     return <div>Component not found</div>
   }
 
-  const { sliceName, from, previewUrl, model: initialModel } = component
-  const [model, setModel] = useState(JSON.stringify(initialModel, null, 2));
+  const { sliceName, from, model: initialModel } = component
+  const Model = createModel(initialModel)
+
   const [data, setData] = useState({
     loading: false,
     done: false,
     error: null
   })
-  const updateModel = async (component, model) => {
+
+  const updateModel = async (component) => {
     setData({
       loading: true,
       done: false,
       error: null
     })
-    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${model}`, {
+    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${JSON.stringify(Model.get())}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -75,65 +70,29 @@ const SliceEditor = ({ query }) => {
     })
   }
 
+  const storybookUrl = iframeSrc(component);
   return (
+    <Fragment>
     <FlexEditor SideBar={() => (
       <Box mt={2}>
         <Heading mb={2}>Storybook Preview</Heading>
-        <iframe src={iframeSrc(component)} style={{ border: 'none', width: '100%', height: '100vh' }} />
+        <iframe src={storybookUrl} style={{ border: 'none', width: '100%', height: '100vh' }} />
       </Box>
     )}>
       <Heading as="h2">{sliceName}</Heading>
       <Text as="p">in <b>{from}</b></Text>
       <Box mt={0}>
         <Heading mb={2}>Prismic Preview</Heading>
-        <ImagePreview componentInfo={component} previewUrl={previewUrl}/>
-      </Box>
-      <Box mt={4}>
-        <Heading mb={2}>JSON model</Heading>
-        <Input
-          as="textarea"
-          value={canParse(model) ? JSON.parse(JSON.stringify(model, null, 2)) : model}
-          onChange={e => {
-            const { value } = e.target
-            if (canParse(value)) {
-              return setModel(JSON.stringify(JSON.parse(value), null, 2));
-            }
-            setModel(value)
-          }}
-          rows={10}
+        <ImagePreview
+          storybookUrl={storybookUrl}
+          componentInfo={component}
         />
-        {
-          Object.entries(Widgets).map(([name, widget]) => {
-            const { Meta, FormFields } = widget
-            if (Meta) {
-              return (
-                <Box my={2} bg="muted">
-                  <Heading>{Meta.title}</Heading>
-                  <Text as="p">{Meta.description}</Text>
-                  <Button onClick={e => {
-                    if (canParse(model)) {
-                      console.log(model, typeof model)
-                      setModel(JSON.stringify({
-                        ...model,
-                        primary: {
-                          ...model.primary,
-                          myAwesomeField: Object.assign(createInitialValues(FormFields))
-                        }
-                      }))
-                      return
-                    }
-                    console.log('CANNOT PARSE MODEL')
-                  }}>Add</Button>
-                </Box>
-              )
-            }
-            return null
-          })
-        }
+      </Box>
+    </FlexEditor>
+    <Builder Model={Model} />
+    <Box mb={4} ml={6}>
         <Button
-          disabled={!canParse(model)}
-          bg={!canParse(model) ? 'text' : 'primary'}
-          onClick={() => updateModel(component, model)}
+          onClick={() => updateModel(component)}
         >
           Update
         </Button>
@@ -160,7 +119,7 @@ const SliceEditor = ({ query }) => {
           ) : null
         }
       </Box>
-    </FlexEditor>
+    </Fragment>
   )
 }
 

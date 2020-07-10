@@ -1,5 +1,5 @@
 import getConfig from "next/config";
-import * as Widgets from '../widgets'
+import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
 
@@ -24,7 +24,7 @@ const handleFields = (fields = [], sliceName) => {
     if (widget) {
       return {
         ...acc,
-        [key]: widget.create(maybeMock, value.config || {})
+        [key]: widget.createMock(maybeMock, value.config || {})
       }
     }
     console.warn(`[slice-machine] Could not create mock for type "${value.type}": not supported yet.`)
