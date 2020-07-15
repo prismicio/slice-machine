@@ -1,19 +1,5 @@
-<template>
-  <div>
-    <div v-if="$fetchState && ($fetchState.pending || $fetchState.error)">
-      <div v-if="$fetchState.error">
-        <p>An error occured while fetching content: <span style="color:tomato">{{$fetchState.error}}</span></p>
-      </div>
-      <div v-else></div>
-    </div>
-    <div v-else>
-      <slice-zone v-bind="$props" :slices="slices" />
-    </div>
-  </div>
-</template>
-
-<script>
 import SliceZone from './SliceZone'
+import FetchState from './FetchState'
 
 const multiQueryTypes = ['repeat', 'repeatable', 'multi']
 
@@ -27,35 +13,9 @@ export default {
       type: String,
       required: true
     },
-    uid: {
-      type: String,
-      required: false
-    },
-    lang: {
-      type: String,
-      required: false
-    },
-    params: {
-      type: Object,
-      required: false,
-      default() {
-        return null
-      }
-    },
-    queryType: {
-      type: String,
-      default: 'multi',
-      validator(value) {
-        return [...multiQueryTypes, 'single'].indexOf(value) !== -1
-      }
-    },
-    body: {
-      type: String,
-      required: false,
-      default: 'body'
-    },
+    // Add props from SliceZone except "type" and "slices" ones
     ...(Object.entries(SliceZone.props)).reduce((acc, [key, value]) => {
-      if (['slices'].indexOf(key) === -1) {
+      if (['type', 'slices'].indexOf(key) === -1) {
         return {
           ...acc,
           [key]: value
@@ -85,6 +45,15 @@ export default {
       console.error('[SliceZone/fetch]', e)
       this.slices = []
     }
+  },
+  render(h) {
+    if (this.$fetchState && (this.$fetchState.pending || this.$fetchState.error)) {
+      return h(FetchState, { props: { error: this.$fetchState.error }})
+    } else {
+      return h(SliceZone, {
+        scopedSlots: this.$scopedSlots,
+        props: { ...this.$props, slices: this.slices }
+      })
+    }
   }
 }
-</script>

@@ -13,9 +13,42 @@ const isPromise = elem =>
 
 const promisify = elem => (isPromise(elem) ? elem : Promise.resolve(elem));
 
+const multiQueryTypes = ['repeat', 'repeatable', 'multi']
+
 export default {
   name: "SliceZone",
   props: {
+    type: {
+      type: String,
+      required: false
+    },
+    uid: {
+      type: String,
+      required: false
+    },
+    lang: {
+      type: String,
+      required: false
+    },
+    params: {
+      type: Object,
+      required: false,
+      default() {
+        return null
+      }
+    },
+    queryType: {
+      type: String,
+      default: 'multi',
+      validator(value) {
+        return [...multiQueryTypes, 'single'].indexOf(value) !== -1
+      }
+    },
+    body: {
+      type: String,
+      required: false,
+      default: 'body'
+    },
     components: {
       required: false,
       default() {
@@ -121,9 +154,9 @@ export default {
         EmptyState,
         {
           props: {
-             uid: this.uid,
-             type: this.type,
-             pathToDocs: this.pathToDocs
+            uid: this.uid,
+            type: this.type,
+            pathToDocs: this.pathToDocs
           }
         }
       )
