@@ -8,6 +8,8 @@ labels: bug
 
 - Prismic CLI version (know it by running `prismic --version`): <!-- vX.X.X -->
 
+<!-- Feel free to include any other environment-related information here (framework used, other modules version, etc.) -->
+
 ### Reproduction
 
 <!-- Define a way to reproduce said bug -->
@@ -20,6 +22,6 @@ labels: bug
 
 <!-- Define the buggy behavior -->
 
-### Any additionnal information
+### Any additional information
 
 <!-- Any other useful information: suggestions, potential workarounds, etc. -->
