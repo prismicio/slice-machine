@@ -1,5 +1,24 @@
+const fieldsToArray = (fields) =>
+  Object.entries(fields)
+  .reduce((acc, [key, value]) => ([
+    ...acc,
+    {
+      key,
+      value
+    }
+  ]), [])
+
 const createModel = (initialJSONValues) => {
   let model = initialJSONValues
+
+  const items = model.repeat ? fieldsToArray(model.repeat) : []
+  const primary = model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
+
+  console.log({
+    model,
+    primary,
+    items
+  })
 
   const set = {
     primary(key, value) {
