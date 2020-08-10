@@ -8,69 +8,83 @@ const fieldsToArray = (fields) =>
     }
   ]), [])
 
+const arrayToFields = (arr) => arr.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+
+const formatModel = (model, primary, items) => ({
+  ...model,
+  'non-repeat': arrayToFields(primary),
+  repeat: arrayToFields(items),
+})
+
 const createModel = (initialJSONValues) => {
   let model = initialJSONValues
 
-  const items = model.repeat ? fieldsToArray(model.repeat) : []
-  const primary = model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
-
-  console.log({
-    model,
-    primary,
-    items
-  })
-
-  const set = {
-    primary(key, value) {
-      model['non-repeat'][key] = value
-    },
-    items(key, value) {
-      model['repeat'][key] = value
-    },
+  const zones = {
+    items: model.repeat ? fieldsToArray(model.repeat) : [],
+    primary: model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
   }
-  return {
-    getOrCreate(field) {
-      if (!model[field]) {
-        model[field] = {}
-      }
-      return model[field]
-    },
 
-    delete: {
-      at: {
-        primary(key) {
-          delete model['non-repeat'][key]
-        },
-        items(key) {
-          delete model['repeat'][key]
-        }
+  const _reorder = (zone) => (start, end) => {
+    const result = Array.from(zones[zone])
+    const [removed] = result.splice(start, 1);
+    result.splice(end, 0, removed);
+    zones[zone] = result
+    return zones[zone]
+  }
+
+  const _replace = (zone) => (key, newKey, value) => {
+    const i = zones[zone].findIndex(e => e.key === key)
+    if (i !== -1) {
+      zones[zone][i] = {
+        key: newKey,
+        value
       }
+      return zones[zone][i]
+    }
+    return null
+  }
+
+  const _delete = (zone) => (key) => {
+    const i = zones[zone].findIndex(e => e.key === key)
+    if (i !== -1) {
+      zones[zone].splice(i, 1)
+    }
+    return zones[zone]
+  }
+
+  const _add = (zone) => (key, value) => {
+    const newItem = { key, value }
+    zones[zone].push(newItem)
+    return newItem
+  }
+
+  return {
+    replace: {
+      primary: _replace('primary'),
+      items: _replace('items'),
     },
-    append: {
-      to: {
-        primary(type, key, config, log = true) {
-          if (log) {
-            console.log('append to primary: ', { newValue: config, key })
-          }
-          set.primary(key, { type, config })
-        },
-        items(type, key, config, log = false) {
-          if (log) {
-            console.log('append to items: ', { newValue: config, key })
-          }
-          set.items(key, { type, config })
-        }
-      }
+    delete: {
+      primary: _delete('primary'),
+      items: _delete('items'),
+    },
+    add: {
+      primary: _add('primary'),
+      items: _add('items'),
+    },
+    reorder: {
+      primary: _reorder('primary'),
+      items: _reorder('items'),
     },
     primary() {
-      return this.getOrCreate('non-repeat')
+      return zones.primary
     },
     items() {
-      return this.getOrCreate('repeat')
+      return zones.items
     },
-    toJson: () => JSON.stringify(model),
-    get: () => model,
-    value: model
+    get: () => ({
+      value: formatModel(model, zones.primary, zones.items),
+      touched: false
+    }),
   }
 }
 

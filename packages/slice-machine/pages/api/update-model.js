@@ -15,6 +15,7 @@ export default async function handler(req, res) {
   const modelPath = path.join(rootPath, 'model.json')
 
   const mockedSlice = mock(sliceName, model)
+
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 

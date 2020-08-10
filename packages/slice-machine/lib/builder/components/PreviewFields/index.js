@@ -39,10 +39,12 @@ const PreviewFields = ({ Model }) => {
   }
   const onSaveNewField = ({ id, fieldType }) => {
     const widget = Widgets[fieldType]
-    Model.append.to[newFieldData.zone](
-      fieldType,
+    Model.add[newFieldData.zone](
       id,
-      widget.create(id)
+      {
+        type: fieldType,
+        config: widget.create(id)
+      }
     )
     setNewFieldData(null)
   }
@@ -53,6 +55,7 @@ const PreviewFields = ({ Model }) => {
         enterEditMode={(field) => enterEditMode('primary', field)}
         title="Primary fields"
         fields={primary}
+        modelFieldName="primary"
         Model={Model}
         newField={
           newFieldData
@@ -70,6 +73,7 @@ const PreviewFields = ({ Model }) => {
       <FieldsList
         enterEditMode={(field) => enterEditMode('items', field)}
         title="Repeatable fields"
+        modelFieldName="items"
         fields={items}
         Model={Model}
         newField={

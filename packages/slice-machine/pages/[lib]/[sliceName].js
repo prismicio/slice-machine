@@ -55,7 +55,7 @@ const SliceEditor = ({ query }) => {
       done: false,
       error: null
     })
-    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${JSON.stringify(Model.get())}`, {
+    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${JSON.stringify(Model.get().value)}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',

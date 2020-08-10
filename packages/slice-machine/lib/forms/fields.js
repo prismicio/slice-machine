@@ -27,7 +27,8 @@ export const Input = (
     max: defaultMax,
     required: defaultRequired
   },
-  fieldLevelValidation
+  fieldLevelValidation,
+  defaultValue
 ) => {
    const { min, max, required, matches } = conditions || {}
   return {
@@ -39,6 +40,7 @@ export const Input = (
       max: max === true ? defaultMax : max,
       matches,
     },
+    defaultValue,
     fieldLevelValidation,
     yupType: 'string',
   }

@@ -2,8 +2,8 @@ import * as Yup from 'yup';
 import * as FormTypes from './types'
 
 const handleDefaultValue = (field) => {
-  if (field.default !== undefined) {
-    return field.default
+  if (field.defaultValue !== undefined) {
+    return field.defaultValue
   }
   if (field.type === FormTypes.CHECKBOX) {
     return true

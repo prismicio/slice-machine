@@ -14,25 +14,6 @@ import { DefaultFields } from "../forms/defaults";
   } 
 */
 
-const _createMock = (str) => [{
-  type: 'paragraph',
-  "text": str,
-  spans: []
-}]
-
-const fromUser = (mock) => {
-  return typeof mock === 'object' ? mock : _createMock(mock)
-}
-
-const createMock = (maybeMock) => maybeMock
-  ? fromUser(maybeMock)
-  : _createMock(randomSentence({ min: "10", max: "120" }))
-
-const Meta = {
-  title: 'Rich Text',
-  description: 'A rich text field with formatting options'
-}
-
 const options = [{
   value: 'p',
   label: 'P'
@@ -62,6 +43,26 @@ const options = [{
   label: 'RTL'
 }]
 
+
+const _createMock = (str) => [{
+  type: 'paragraph',
+  "text": str,
+  spans: []
+}]
+
+const fromUser = (mock) => {
+  return typeof mock === 'object' ? mock : _createMock(mock)
+}
+
+const createMock = (maybeMock) => maybeMock
+  ? fromUser(maybeMock)
+  : _createMock(randomSentence({ min: "10", max: "120" }))
+
+const Meta = {
+  title: 'Rich Text',
+  description: 'A rich text field with formatting options'
+}
+
 const FormFields = {
   ...DefaultFields,
   allowMultiLine: CheckBox('Allow multiple paragraphs'),
@@ -78,8 +79,6 @@ const create = (apiId) => ({
 export default {
   create,
   createMock,
-  fromUser,
   FormFields,
   Meta,
-  type: 'StructuredText'
 }

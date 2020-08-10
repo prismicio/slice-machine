@@ -24,8 +24,11 @@ const Meta = {
   description: 'Text content'
 }
 
+const FormFields = DefaultFields
+
 export default {
   create,
   createMock,
-  Meta
+  Meta,
+  FormFields
 }

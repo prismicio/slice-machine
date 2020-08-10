@@ -62,7 +62,7 @@ const NewField = ({
                 name="id"
                 placeholder="myField"
                 type="text"
-                validate = {
+                validate={
                   (value) => validateId({
                     value,
                     Model,

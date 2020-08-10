@@ -37,9 +37,24 @@ const WidgetForm = ({
         validateOnChange
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, formikBag) => {
+        onSubmit={(values, _) => {
           const { id: apiId,  ...rest } = values
-          onUpdateField(apiId, rest)
+          const withDefaultValues = Object.entries(rest).reduce((acc, [key, value]) => {
+            if (typeof value !== Boolean && !value) {
+              const maybeDefaultValue = FormFields[key].defaultValue
+              if (maybeDefaultValue) {
+                return {
+                  ...acc,
+                  [key]: maybeDefaultValue
+                }
+              }
+            }
+            return {
+              ...acc,
+              [key]: value
+            }
+          }, {})
+          onUpdateField(apiId, withDefaultValues)
         }}
       >
         {({ errors, touched, isSubmitting }) => (

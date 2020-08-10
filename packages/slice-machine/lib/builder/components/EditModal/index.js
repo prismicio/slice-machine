@@ -45,11 +45,7 @@ const EditModal = ({
         fieldType={fieldType}
         initialModelValues={initialModelValues}
         onUpdateField={(key, value) => {
-          if (key !== apiId) {
-            Model.delete.at.primary(apiId)
-            // Model.replace(apiId).at.primary(initialModelValues.type, key, value)
-          }
-          Model.append.to[fieldType](initialModelValues.type, key, value)
+          Model.replace[fieldType](apiId, key, { config: value, type: initialModelValues.type })
           close()
         }}
       />
