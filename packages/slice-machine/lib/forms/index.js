@@ -17,6 +17,16 @@ const handleDefaultValue = (field) => {
   return
 }
 
+export const createValidationArgs = (args, defaultArgs) => {
+  if (Array.isArray(args)) {
+    return args
+  }
+  if (typeof args === 'boolean' && args) {
+    return defaultArgs
+  }
+  return null
+}
+
 export const createInitialValues = (FormFields) => {
   return Object.entries(FormFields).reduce((acc, [key, val]) => {
     const value = handleDefaultValue(val)
@@ -33,15 +43,21 @@ export const createInitialValues = (FormFields) => {
 
 export const createValidationSchema = (FormFields) => {
   return Yup.object().shape(
-    Object.entries(FormFields).reduce((acc, [key, formField]) => {
+    Object.entries(FormFields).filter(e => e).reduce((acc, [key, formField]) => {
       const { validate, yupType } = formField
       if (!validate) {
         return acc
       }
+      if (typeof validate === 'function') {
+        return {
+          ...acc,
+          [key]: validate(key, formField)
+        }
+      }
       let validator = Yup[yupType]()
-      Object.entries(validate).filter(e => e[1]).forEach(([func, args]) => {
+      Object.entries(validate).filter(e => e && e[1]).forEach(([func, args]) => {
         if (args && validator[func]) {
-          validator = validator[func](...args)
+          validator = validator[func](...(Array.isArray(args) ? args : [args]))
           return
         }
         console.warn(`Invalid Yup validator for field "${key}"`)

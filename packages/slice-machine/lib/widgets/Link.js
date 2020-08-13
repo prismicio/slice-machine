@@ -22,13 +22,13 @@
   */
 
   /**{
-                "type" : "Link",
-                "config" : {
-                  "select" : "media",
-                  "label" : "tomedia",
-                  "placeholder" : "qsdqsdqsd"
-                }
-              } */
+    "type" : "Link",
+    "config" : {
+      "select" : "media",
+      "label" : "tomedia",
+      "placeholder" : "qsdqsdqsd"
+    }
+  } */
 
 
  /** should handle content relationship and media

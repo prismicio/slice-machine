@@ -1,8 +1,14 @@
+import * as yup from 'yup'
 import randomSentence from 'random-sentence'
 
-import { createInitialValues } from '../forms'
+import {
+  createInitialValues,
+  createValidationSchema
+} from '../forms'
+
+import { removeProp } from '../utils'
 import { CheckBox, Select } from '../forms/fields'
-import { DefaultFields } from "../forms/defaults";
+import { DefaultFields } from '../forms/defaults'
 
 /**
  * {
@@ -11,8 +17,10 @@ import { DefaultFields } from "../forms/defaults";
       "label": "Title",
       "single": "heading1, heading2, heading3, heading4, heading5, heading6"
     }
-  } 
+  }
 */
+
+const TYPE_NAME = 'StructuredText'
 
 const options = [{
   value: 'p',
@@ -42,7 +50,6 @@ const options = [{
   value: 'rtl',
   label: 'RTL'
 }]
-
 
 const _createMock = (str) => [{
   type: 'paragraph',
@@ -76,9 +83,16 @@ const create = (apiId) => ({
   id: apiId
 })
 
+const schema = yup.object().shape({
+  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  config: createValidationSchema(removeProp(FormFields, 'id'))
+})
+
 export default {
   create,
   createMock,
   FormFields,
   Meta,
+  schema,
+  TYPE_NAME
 }

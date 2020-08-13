@@ -1,3 +1,4 @@
+const path = require('path')
 const userConfig = require('./conf.json')
 
 module.exports = {
@@ -10,6 +11,8 @@ module.exports = {
         fs: 'empty'
       }
     }
+
+    config.resolve.alias['components'] = path.join(__dirname, 'components')
 
     return config
   }

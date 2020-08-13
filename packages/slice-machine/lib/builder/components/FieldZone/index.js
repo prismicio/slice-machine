@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import {
   Box,
+  Button,
   Flex,
   Text,
   Heading,
@@ -74,49 +75,42 @@ const DraggableItem = ({ item, index, deleteItem, enterEditMode }) => {
   );
 }
 
-const FieldsList = ({
+const FieldZone = ({
   fields,
   title,
   enterEditMode,
+  enterSelectMode,
   modelFieldName,
   newField,
   Model,
-  onSaveNewField
+  onDragEnd,
+  onSaveNewField,
+  onDeleteItem
 }) => {
-  const [state, setState] = useState({ items: fields })
+  // const [state, setState] = useState({ items: fields })
 
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return
-    }
-    setState({
-      items: Model.reorder[modelFieldName](
-        result.source.index,
-        result.destination.index
-      )
-    })
+  const _onDragEnd = (result) => {
+    onDragEnd(result, modelFieldName)
   }
 
-  const deleteItem = (key) => {
-    setState({
-      items: Model.delete[modelFieldName](key),
-    })
+  const _onDeleteItem = (key) => {
+    onDeleteItem(key, modelFieldName)
   }
 
   return (
     <Box>
       <Heading>{title}</Heading>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={_onDragEnd}>
         <Droppable droppableId={modelFieldName}>
           {(provided) => (
             <ul ref={provided.innerRef} {...provided.droppableProps}>
-              {state.items.map((item, index) => (
+              {fields.map((item, index) => (
                 <DraggableItem
                   item={item}
                   key={item.key}
                   index={index}
                   enterEditMode={enterEditMode}
-                  deleteItem={deleteItem}
+                  deleteItem={_onDeleteItem}
                 />
               ))}
               {provided.placeholder}
@@ -127,10 +121,50 @@ const FieldsList = ({
           )}
         </Droppable>
       </DragDropContext>
+      <Button
+        mb={4}
+        onClick={() => enterSelectMode(modelFieldName)}
+      >
+        Add
+      </Button>
     </Box>
-  );
-  
-  
+  )
 }
 
-export default FieldsList
+export const NonRepeatZone = ({
+  enterEditMode,
+  newFieldData,
+  ...rest
+}) => (
+  <FieldZone
+    enterEditMode={(field) => enterEditMode('primary', field)}
+    title="Primary fields"
+    modelFieldName="primary"
+    newField = {
+      newFieldData &&
+      newFieldData.zone === 'primary' &&
+      newFieldData
+    }
+    {...rest}
+  />
+)
+
+export const RepeatZone = ({
+  enterEditMode,
+  newFieldData,
+  ...rest
+}) => (
+  <FieldZone
+    enterEditMode={(field) => enterEditMode('items', field)}
+    title="Repeatable fields"
+    modelFieldName="items"
+    newField={
+      newFieldData &&
+      newFieldData.zone === 'items' &&
+      newFieldData
+    }
+    {...rest}
+  />
+)
+
+export default FieldZone

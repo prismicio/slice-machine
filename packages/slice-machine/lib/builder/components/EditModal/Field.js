@@ -7,6 +7,8 @@ import {
 
 import MultiSelect from '@khanacademy/react-multi-select'
 
+import { FormFieldCheckbox } from 'components/FormFields'
+
 import * as FormTypes from '../../../forms/types'
 
 import {
@@ -24,8 +26,18 @@ const WidgetFormField = ({
   initialValues
 }) => {
   const [field, meta, helpers] = useField(fieldName);
+  const MaybeCustomComponent = formField.component
   return (
     <Box mt={2}>
+      {MaybeCustomComponent && (
+        <MaybeCustomComponent
+          meta={meta}
+          field={field}
+          helpers={helpers}
+          fieldName={fieldName}
+          formField={formField}
+        />
+      )}
       {formField.type === FormTypes.INPUT && (
         <Fragment>
           <Label>{formField.label || fieldName}</Label>
@@ -51,16 +63,13 @@ const WidgetFormField = ({
         </Fragment>
       )}
       {formField.type === FormTypes.CHECKBOX && (
-        <Label>
-          <Field
-            as={Checkbox}
-            type="checkbox"
-            name={fieldName}
-            onChange={() => helpers.setValue(!meta.value)}
-            checked={meta.value}
-          />
-          {formField.label}
-        </Label>
+        <FormFieldCheckbox
+          meta={meta}
+          label={formField.label}
+          fieldName={fieldName}
+          onChange={value => helpers.setValue(value)}
+        
+        />
       )}
       {formField.type === FormTypes.SELECT && (
         <Fragment>

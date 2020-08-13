@@ -1,3 +1,5 @@
+import * as yup from 'yup'
+
 /** {
     "type" : "Boolean",
     "config" : {
@@ -8,9 +10,12 @@
     }
   } */
 
-import { createInitialValues } from '../forms'
+import { removeProp } from '../utils'
+import { createInitialValues, createValidationSchema } from '../forms'
 import { DefaultFields } from "../forms/defaults"
 import { Input, CheckBox } from "../forms/fields"
+
+const TYPE_NAME = 'Boolean'
 
 const createMock = (maybeMock) => maybeMock || Math.random() < 0.50 ? true : false
 
@@ -31,9 +36,15 @@ const create = (apiId) => ({
   id: apiId
 })
 
+const schema = yup.object().shape({
+  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  config: createValidationSchema(removeProp(FormFields, 'id'))
+});
+
 export default {
   createMock,
   create,
   Meta,
+  schema,
   FormFields
 }

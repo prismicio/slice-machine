@@ -1,25 +1,24 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+
+import { ModelContext } from "../../../../src/model-context"
 
 import {
   Box,
-  Button,
-  Close,
-  Flex,
-  Heading
 } from 'theme-ui'
-import FieldsList from '../FieldsList'
+
+import { NonRepeatZone, RepeatZone } from '../FieldZone'
 
 import * as Widgets from '../../../widgets'
 
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
 
-const PreviewFields = ({ Model }) => {
+const PreviewFields = () => {
+  const { primary, items, isTouched, ...Model } = useContext(ModelContext)
+
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
   const [newFieldData, setNewFieldData] = useState(null)
-  const primary = Model.primary()
-  const items = Model.items()
 
   const enterEditMode = (fieldType, field) => {
     setEditModalData({ isOpen: true, fieldType, field })
@@ -30,6 +29,7 @@ const PreviewFields = ({ Model }) => {
 
   const closeEditModal = () => setEditModalData({ isOpen: false })
   const closeSelectModal = () => setSelectModalData({ isOpen: false })
+
   const onSelectFieldType = (zone, fieldType) => {
     setNewFieldData({
       zone,
@@ -39,55 +39,53 @@ const PreviewFields = ({ Model }) => {
   }
   const onSaveNewField = ({ id, fieldType }) => {
     const widget = Widgets[fieldType]
-    Model.add[newFieldData.zone](
+    Model.hydrate(Model.add[newFieldData.zone](
       id,
       {
         type: fieldType,
         config: widget.create(id)
       }
-    )
+    ))
     setNewFieldData(null)
+  }
+
+  const onDragEnd = (result, modelFieldName) => {
+    if (!result.destination) {
+      return
+    }
+    Model.hydrate(Model.reorder[modelFieldName](
+      result.source.index,
+      result.destination.index
+    ))
+  }
+
+  const onDeleteItem = (key, modelFieldName) => {
+    Model.hydrate(Model.delete[modelFieldName](key))
   }
 
   return (
     <Box>
-      <FieldsList
-        enterEditMode={(field) => enterEditMode('primary', field)}
-        title="Primary fields"
+      <p>is touched: {isTouched ? 'true' : 'false' }</p>
+      <NonRepeatZone
+        enterEditMode={enterEditMode}
+        enterSelectMode={enterSelectMode}
         fields={primary}
-        modelFieldName="primary"
         Model={Model}
-        newField={
-          newFieldData
-          && newFieldData.zone === 'primary'
-          && newFieldData
-        }
+        newFieldData={newFieldData}
         onSaveNewField={onSaveNewField}
+        onDragEnd={onDragEnd}
+        onDeleteItem={onDeleteItem}
       />
-      <Button
-        mb={4}
-        onClick={() => enterSelectMode('primary')}
-      >
-        Add
-      </Button>
-      <FieldsList
-        enterEditMode={(field) => enterEditMode('items', field)}
-        title="Repeatable fields"
-        modelFieldName="items"
+      <RepeatZone
+        enterEditMode={enterEditMode}
+        enterSelectMode={enterSelectMode}
         fields={items}
         Model={Model}
-        newField={
-          newFieldData &&
-          newFieldData.zone === 'items' &&
-          newFieldData
-        }
+        newFieldData={newFieldData}
+        onSaveNewField={onSaveNewField}
+        onDragEnd={onDragEnd}
+        onDeleteItem={onDeleteItem}
       />
-      <Button
-        mb={4}
-        onClick={() => enterSelectMode('items')}
-      >
-        Add
-      </Button>
       <EditModal
         data={editModalData}
         close={closeEditModal}

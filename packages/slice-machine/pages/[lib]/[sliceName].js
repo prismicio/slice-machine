@@ -1,14 +1,9 @@
 import { useContext, useState, Fragment } from "react";
 import { LibContext } from "../../src/lib-context";
+import ModelProvider from "../../src/model-context";
 import getConfig from 'next/config'
-import ImagePreview from "../../components/ImagePreview";
-
-import * as Widgets from '../../lib/widgets'
 
 import Builder from '../../lib/builder'
-import createModel from '../../lib/model'
-
-import FlexEditor from "../../components/FlexEditor"
 
 const { publicRuntimeConfig: config } = getConfig();
 
@@ -41,7 +36,6 @@ const SliceEditor = ({ query }) => {
   }
 
   const { sliceName, from, model: initialModel } = component
-  const Model = createModel(initialModel)
 
   const [data, setData] = useState({
     loading: false,
@@ -49,13 +43,14 @@ const SliceEditor = ({ query }) => {
     error: null
   })
 
-  const updateModel = async (component) => {
+  const updateModel = async (component, Model) => {
+    const { value } = Model.get()
     setData({
       loading: true,
       done: false,
       error: null
     })
-    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${JSON.stringify(Model.get().value)}`, {
+    fetch(`/api/update-model?sliceName=${component.sliceName}&from=${component.from}&model=${JSON.stringify(value)}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -63,6 +58,7 @@ const SliceEditor = ({ query }) => {
 
       },
     }).then((res) => {
+      Model.resetInitialModel(value)
       setData({ loading: false, done: true, error: null })
     }).catch(err => {
       console.error(err)
@@ -72,54 +68,67 @@ const SliceEditor = ({ query }) => {
 
   const storybookUrl = iframeSrc(component);
   return (
-    <Fragment>
-    <FlexEditor SideBar={() => (
-      <Box mt={2}>
-        <Heading mb={2}>Storybook Preview</Heading>
-        <iframe src={storybookUrl} style={{ border: 'none', width: '100%', height: '100vh' }} />
-      </Box>
-    )}>
-      <Heading as="h2">{sliceName}</Heading>
-      <Text as="p">in <b>{from}</b></Text>
-      <Box mt={0}>
-        <Heading mb={2}>Prismic Preview</Heading>
-        <ImagePreview
-          storybookUrl={storybookUrl}
-          componentInfo={component}
-        />
-      </Box>
-    </FlexEditor>
-    <Builder Model={Model} />
-    <Box mb={4} ml={6}>
+    <ModelProvider initialModel={initialModel}>
+      {(Model) => (
+        <Fragment>
+        {/* <FlexEditor SideBar={() => (
+          <Box mt={2}>
+            <Heading mb={2}>Storybook Preview</Heading>
+            <iframe src={storybookUrl} style={{ border: 'none', width: '100%', height: '100vh' }} />
+          </Box>
+        )}>
+          <Heading as="h2">{sliceName}</Heading>
+          <Text as="p">in <b>{from}</b></Text>
+          <Box mt={0}>
+            <Heading mb={2}>Prismic Preview</Heading>
+            <ImagePreview
+              storybookUrl={storybookUrl}
+              componentInfo={component}
+            />
+          </Box>
+        </FlexEditor> */}
         <Button
-          onClick={() => updateModel(component)}
+          disabled={!Model.isTouched}
+          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '84px' }}
+          onClick={() => Model.hydrate(Model.resetInitialModel(initialModel))}
         >
-          Update
+          Reset
         </Button>
-        {
-          data.error ? (
-            <Alert
-              mt={2}
-              variant="muted"
-            >
-              Could not update model. See console for full error.
-              <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
-            </Alert>
-          ) : null
-        }
-         {
-          data.done ? (
-            <Alert
-              mt={2}
-              variant="muted"
-            >
-              Correctly updated! Mocks have been generated succesfully
-              <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
-            </Alert>
-          ) : null
-        }
-      </Box>
-    </Fragment>
+        <Button
+          onClick={() => updateModel(component, Model)}
+          disabled={!Model.isTouched}
+          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '24px' }}
+        >
+          Save model
+        </Button>
+        <Builder />
+        <Box mb={4} ml={6}>
+            {
+              data.error ? (
+                <Alert
+                  mt={2}
+                  variant="muted"
+                >
+                  Could not update model. See console for full error.
+                  <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
+                </Alert>
+              ) : null
+            }
+            {
+              data.done ? (
+                <Alert
+                  mt={2}
+                  variant="muted"
+                >
+                  Correctly updated! Mocks have been generated succesfully
+                  <Close ml='auto' mr={-2} onClick={() => setData({ ...data, error: null, done: false })} />
+                </Alert>
+              ) : null
+            }
+          </Box>
+        </Fragment>
+      )}
+    </ModelProvider>
   )
 }
 

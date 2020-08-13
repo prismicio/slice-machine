@@ -1,3 +1,5 @@
+import * as yup from 'yup'
+
 /**
 * {
      "type": "Text",
@@ -8,8 +10,14 @@
   }
  */
 
+
+import { removeProp } from '../utils'
 import { DefaultFields } from "../forms/defaults"
-import { createInitialValues } from "../forms"
+import { createInitialValues, createValidationSchema } from "../forms"
+
+const TYPE_NAME = 'Text'
+
+const FormFields = DefaultFields
 
 const createMock = (maybeMock, { label, placeholder }) =>
   maybeMock || `A text of type "${label}" that conveys ${placeholder}`
@@ -19,16 +27,21 @@ const create = (apiId) => ({
   id: apiId
 })
 
+const schema = yup.object().shape({
+  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  config: createValidationSchema(removeProp(FormFields, 'id'))
+});
+
 const Meta = {
   title: 'Key Text',
   description: 'Text content'
 }
 
-const FormFields = DefaultFields
-
 export default {
   create,
   createMock,
   Meta,
+  schema,
+  TYPE_NAME,
   FormFields
 }

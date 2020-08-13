@@ -1,10 +1,16 @@
 import * as FormTypes from './types'
 
+import { createValidationArgs } from './'
+
 export const CheckBox = (label, required = true, defaultValue = true) => ({
   type: FormTypes.CHECKBOX,
+  validate: {
+    required: createValidationArgs(required, defaultRequired),
+  },
   required,
   label,
-  default: defaultValue
+  default: defaultValue,
+  yupType: 'boolean',
 })
 
 export const Select = (label, options, required = true, multi = true, defaultSelected = true) => ({
@@ -13,7 +19,8 @@ export const Select = (label, options, required = true, multi = true, defaultSel
   label,
   options,
   multi,
-  defaultSelected
+  defaultSelected,
+  yupType: 'array',
 })
 
 const defaultMin = [3, 'String is too short. Min: 3']
@@ -35,9 +42,9 @@ export const Input = (
     type: FormTypes.INPUT,
     label,
     validate: {
-      required: required === true ? defaultRequired : required,
-      min: min === true ? defaultMin : min,
-      max: max === true ? defaultMax : max,
+      required: createValidationArgs(required, defaultRequired),
+      min: createValidationArgs(min, defaultMin),
+      max: createValidationArgs(max, defaultMax),
       matches,
     },
     defaultValue,

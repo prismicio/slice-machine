@@ -1,3 +1,5 @@
+import equal from 'fast-deep-equal'
+
 const fieldsToArray = (fields) =>
   Object.entries(fields)
   .reduce((acc, [key, value]) => ([
@@ -16,13 +18,23 @@ const formatModel = (model, primary, items) => ({
   repeat: arrayToFields(items),
 })
 
-const createModel = (initialJSONValues) => {
-  let model = initialJSONValues
+const createZones = (model) => ({
+  items: model.repeat ? fieldsToArray(model.repeat) : [],
+  primary: model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
+})
 
-  const zones = {
-    items: model.repeat ? fieldsToArray(model.repeat) : [],
-    primary: model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
+const deepEqual = (model, primary, items) => {
+  const modelZones = createZones(model)
+  if (primary.find((e, i) => !equal(modelZones.primary[i], e))
+    || items.find((e, i) => !equal(modelZones.items[i], e))) {
+    return false
   }
+  return true
+}
+
+const createModel = (intialValues) => {
+  let model = intialValues
+  let zones = createZones(model)
 
   const _reorder = (zone) => (start, end) => {
     const result = Array.from(zones[zone])
@@ -59,6 +71,10 @@ const createModel = (initialJSONValues) => {
   }
 
   return {
+    resetInitialModel: (newInitialValues) => {
+      model = newInitialValues
+      zones = createZones(newInitialValues)
+    },
     replace: {
       primary: _replace('primary'),
       items: _replace('items'),
@@ -75,16 +91,13 @@ const createModel = (initialJSONValues) => {
       primary: _reorder('primary'),
       items: _reorder('items'),
     },
-    primary() {
-      return zones.primary
+    get: () => {
+      return {
+        ...zones,
+        value: formatModel(model, zones.primary, zones.items),
+        isTouched: !deepEqual(model, zones.primary, zones.items),
+      }
     },
-    items() {
-      return zones.items
-    },
-    get: () => ({
-      value: formatModel(model, zones.primary, zones.items),
-      touched: false
-    }),
   }
 }
 
