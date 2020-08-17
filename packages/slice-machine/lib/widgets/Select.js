@@ -1,16 +1,11 @@
 import * as yup from 'yup'
+import { FormFieldCheckboxControl } from '../../components/FormFields'
 
-import { useFormikContext } from 'formik'
+import { createValidationSchema } from '../forms'
 
-import {
-  createInitialValues,
-  createValidationSchema
-} from '../forms'
-
-import { removeProp } from '../utils'
+import { removeProp, createDefaultWidgetValues } from '../utils'
 import { DefaultFields } from '../forms/defaults'
-import { FormFieldArray } from 'components/FormFields'
-import { FormFieldCheckbox } from '../../components/FormFields'
+import { FormFieldArray } from '../../components/FormFields'
 
 /**
  * {
@@ -23,7 +18,10 @@ import { FormFieldCheckbox } from '../../components/FormFields'
     }
 */
 
-const TYPE_NAME = 'Select'
+const {
+  create,
+  TYPE_NAME,
+} = createDefaultWidgetValues('Select')
 
 const _createMock = (config) => config.options[Math.floor(Math.random() * config.options.length)]
 
@@ -58,32 +56,29 @@ const FormFields = {
   default_value: {
     yupType: 'string',
     defaultValue: '',
-    validate: (...args) => console.log({ args }),
-    component: ({ field, meta, helpers }) => {
-      const { values: { options }} = useFormikContext()
-      console.log({ field, meta, helpers, options })
-      return (
-        <FormFieldCheckbox
-          meta={meta}
-          onChange={(value) => {
-            if (value && options.length) {
-              helpers.setValue(options[0])
-            }
-          }}
-          label={`use first value as default ${options.length ? `("${options[0]}")` : ''}`}
-        />
-      )
-    }
+    validate: function() {
+      return yup.string().test({
+        name: 'default_value',
+        message: 'Default value is not part of field "options" in Select',
+        test: function(value) {
+          return value === undefined
+            || (this.parent && this.parent.options && this.parent.options.find(e => e === value))
+        }
+      })
+    },
+    component: (props) => (
+      <FormFieldCheckboxControl
+        {...props}
+        fieldName="options"
+        setControlFromField={(options) => options.length && options[0]}
+        label={(options) => `use first value as default ${options.length ? `("${options[0]}")` : ''}`}
+      />
+    )
   }
 }
 
-const create = (apiId) => ({
-  ...createInitialValues(FormFields),
-  id: apiId
-})
-
 const schema = yup.object().shape({
-  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  type: yup.string().matches(/^Select$/, { excludeEmptyString: true }).required(),
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 

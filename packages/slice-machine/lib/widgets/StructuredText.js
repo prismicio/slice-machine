@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react'
 import * as yup from 'yup'
+import { useFormikContext } from 'formik'
 import randomSentence from 'random-sentence'
 
 import {
@@ -9,6 +11,8 @@ import {
 import { removeProp } from '../utils'
 import { CheckBox, Select } from '../forms/fields'
 import { DefaultFields } from '../forms/defaults'
+
+import { FormFieldCheckbox } from '../../components/FormFields'
 
 /**
  * {
@@ -72,9 +76,48 @@ const Meta = {
 
 const FormFields = {
   ...DefaultFields,
-  allowMultiLine: CheckBox('Allow multiple paragraphs'),
+  // allowMultiLine: CheckBox('Allow multiple paragraphs'),
   allowTargetBlank: CheckBox('Allow target blank for links'),
-  accepts: Select('Allowed elements', options)
+  accepts: Select('Allowed elements', options),
+  allowMultiLine: {
+    yupType: 'string',
+    defaultValue: false,
+    component: (props) => {
+      const { values: { accepts, ...values }, setFieldValue, registerField, unregisterField } = useFormikContext()
+      const fieldNames = ['single', 'multi']
+      const [isChecked, setIsChecked] = useState(values.single ? false : true)
+      const [fieldName, setFieldName] = useState(fieldNames[0])
+
+      // console.log(rest)
+
+      useEffect(() => {
+        setFieldValue(fieldName, accepts.join(','))
+        return () => {
+          registerField("example", true)
+          unregisterField("allowMultiLine")
+          unregisterField("accepts")
+          console.log('delete accepts!')
+        }
+      }, [])
+
+      useEffect(() => {
+        const prevFieldName = fieldName
+        const newFieldName = fieldNames[1 - fieldNames.findIndex(e => e === prevFieldName)]
+        setFieldValue(prevFieldName, undefined)
+        setFieldValue(newFieldName, accepts.join(','))
+        setFieldName(newFieldName)
+      }, [isChecked, accepts])
+
+      return (
+        <FormFieldCheckbox
+          {...props}
+          meta={{ value: isChecked }}
+          label="Allow multiple paragraphs"
+          onChange={setIsChecked}
+        />
+      )
+    }
+  }
 }
 
 const create = (apiId) => ({
@@ -84,7 +127,7 @@ const create = (apiId) => ({
 })
 
 const schema = yup.object().shape({
-  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  type: yup.string().matches(/^StructuredText$/, { excludeEmptyString: true }).required(),
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 

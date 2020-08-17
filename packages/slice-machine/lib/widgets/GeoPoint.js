@@ -1,11 +1,26 @@
-/** : {
-                "type" : "GeoPoint",
-                "config" : {
-                  "label" : "geopoints"
-                } */
+import { createDefaultWidgetValues } from '../utils'
 
-const createMock = () => ``
+/** : {
+  "type" : "GeoPoint",
+  "config" : {
+    "label" : "geopoints"
+  }
+} */
+
+const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('GeoPoint')
+
+const createMock = (maybeMock) => maybeMock || ``
+
+const Meta = {
+  title: 'GeoPoint',
+  description: '...'
+}
 
 export default {
-  createMock
+  createMock,
+  create,
+  FormFields,
+  TYPE_NAME,
+  schema,
+  Meta
 }

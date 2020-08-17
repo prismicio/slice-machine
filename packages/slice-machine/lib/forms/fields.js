@@ -9,17 +9,17 @@ export const CheckBox = (label, required = true, defaultValue = true) => ({
   },
   required,
   label,
-  default: defaultValue,
+  defaultValue,
   yupType: 'boolean',
 })
 
-export const Select = (label, options, required = true, multi = true, defaultSelected = true) => ({
+export const Select = (label, options, required = true, multi = true, defaultValue = true) => ({
   type: FormTypes.SELECT,
   required,
   label,
   options,
   multi,
-  defaultSelected,
+  defaultValue,
   yupType: 'array',
 })
 

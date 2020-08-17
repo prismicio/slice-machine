@@ -1,13 +1,27 @@
-/**  {
-                "type" : "Embed",
-                "config" : {
-                  "label" : "embed",
-                  "placeholder" : "dddd"
-                }
-              } */
+import { createDefaultWidgetValues } from '../utils'
 
-const createMock = () => ``
+/**  {
+  "type" : "Embed",
+  "config" : {
+    "label" : "embed",
+    "placeholder" : "dddd"
+  }
+} */
+
+const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Embed')
+
+const createMock = (maybeMock) => ``
+
+const Meta = {
+  title: 'Embed',
+  description: '...'
+}
 
 export default {
-  createMock
+  createMock,
+  create,
+  FormFields,
+  TYPE_NAME,
+  schema,
+  Meta
 }

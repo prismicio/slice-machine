@@ -14,7 +14,7 @@ const handleDefaultValue = (field) => {
   if (field.type === FormTypes.SELECT) {
     return [];
   }
-  return
+  return undefined
 }
 
 export const createValidationArgs = (args, defaultArgs) => {
@@ -66,5 +66,5 @@ export const createValidationSchema = (FormFields) => {
         ...acc,
         [key]: validator
       }
-  }, {}))
+  }, {})).required().default(undefined)
 }

@@ -87,8 +87,6 @@ const FieldZone = ({
   onSaveNewField,
   onDeleteItem
 }) => {
-  // const [state, setState] = useState({ items: fields })
-
   const _onDragEnd = (result) => {
     onDragEnd(result, modelFieldName)
   }

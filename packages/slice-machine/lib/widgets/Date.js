@@ -1,4 +1,5 @@
 import Timestamp from './Timestamp'
+import { createDefaultWidgetValues } from '../utils'
 
 /** {
   "type" : "Date",
@@ -8,8 +9,20 @@ import Timestamp from './Timestamp'
   }
 } */
 
-const createMock = (maybeMock) => maybeMock || Timestamp.createMock().toISOString().split('T')[0] // ?
+const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Date')
+
+const createMock = (maybeMock) => maybeMock || Timestamp.createMock().toISOString().split('T')[0]
+
+const Meta = {
+  title: 'Date',
+  description: '...'
+}
 
 export default {
-  createMock
+  createMock,
+  create,
+  FormFields,
+  TYPE_NAME,
+  schema,
+  Meta
 }

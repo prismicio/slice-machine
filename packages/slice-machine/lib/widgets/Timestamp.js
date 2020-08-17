@@ -28,7 +28,7 @@ const create = (apiId) => ({
 })
 
 const schema = yup.object().shape({
-  type: yup.string().matches(TYPE_NAME, { excludeEmptyString: true }).required(),
+  type: yup.string().matches(/^Timestamp$/, { excludeEmptyString: true }).required(),
   config: createValidationSchema(removeProp(FormFields, 'id'))
 });
 
