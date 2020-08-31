@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import getConfig from "next/config";
+import atob from 'atob'
+import getConfig from 'next/config'
 
 import mock from '../../lib/mock'
 
@@ -8,7 +9,7 @@ const { publicRuntimeConfig: config } = getConfig()
 
 export default async function handler(req, res) {
   const { sliceName, from, model: strModel } = req.query
-  const model = JSON.parse(strModel)
+  const model = JSON.parse(atob(strModel))
 
   const rootPath = path.join(config.cwd, from, sliceName)
   const mockPath = path.join(rootPath, 'mock.json')

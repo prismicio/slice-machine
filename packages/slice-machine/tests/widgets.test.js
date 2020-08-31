@@ -12,7 +12,7 @@ test.each(WidgetsTable)('%s: can create mock', (name, widget) => {
 test.each(WidgetsTable)('%s: schema validates configuration', (name, widget) => {
   const { schema } = widget
   const tests = require(`./__mockData__/widgets/${name}`)
-  Object.entries(tests).forEach(([testName, t]) => {
+  Object.entries(tests).forEach(([, t]) => {
     const { err, res } = (() => {
       try {
         const res = schema.validateSync(t)
@@ -25,14 +25,6 @@ test.each(WidgetsTable)('%s: schema validates configuration', (name, widget) => 
     if (err) {
       expect(t.__pass).toBe(false)
     } else {
-      if (name === 'Select' && !t.__pass) {
-        console.log({
-          err,
-          res,
-          name,
-          testName
-        })
-      }
       expect(t.__pass).toBe(true)
     }
   })

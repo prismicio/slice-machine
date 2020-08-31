@@ -1,3 +1,4 @@
+import { MdDateRange } from 'react-icons/md'
 import Timestamp from './Timestamp'
 import { createDefaultWidgetValues } from '../utils'
 
@@ -14,6 +15,7 @@ const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Dat
 const createMock = (maybeMock) => maybeMock || Timestamp.createMock().toISOString().split('T')[0]
 
 const Meta = {
+  icon: MdDateRange,
   title: 'Date',
   description: '...'
 }

@@ -15,7 +15,6 @@ import {
   Box,
   Label,
   Input,
-  Checkbox
 } from 'theme-ui'
 
 const WidgetFormField = ({ 
@@ -28,8 +27,17 @@ const WidgetFormField = ({
   const [field, meta, helpers] = useField(fieldName);
   const MaybeCustomComponent = formField.component
   return (
-    <Box mt={2}>
-      {MaybeCustomComponent && (
+    <Box
+      sx={{
+        mt: 2,
+        alignItems: 'center',
+        ...(formField.type === FormTypes.CHECKBOX ? {
+          display: 'flex',
+          height: '130%'
+        } : null)
+      }}
+    >
+      {MaybeCustomComponent ? (
         <MaybeCustomComponent
           meta={meta}
           field={field}
@@ -37,10 +45,11 @@ const WidgetFormField = ({
           fieldName={fieldName}
           formField={formField}
         />
-      )}
-      {formField.type === FormTypes.INPUT && (
+      ) : (
         <Fragment>
-          <Label>{formField.label || fieldName}</Label>
+          {formField.type === FormTypes.INPUT && (
+        <Fragment>
+          <Label variant="label.primary">{formField.label || fieldName}</Label>
           <Field
             name={fieldName}
             id={fieldName}
@@ -80,6 +89,8 @@ const WidgetFormField = ({
             onSelectedChanged={(selected) => helpers.setValue(selected)}
             {...field}
           />
+        </Fragment>
+      )}
         </Fragment>
       )}
     </Box>

@@ -1,3 +1,4 @@
+import { MdColorLens } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../utils'
 
 /** {
@@ -10,6 +11,7 @@ import { createDefaultWidgetValues } from '../utils'
 
 
 const Meta = {
+  icon: MdColorLens,
   title: 'Color',
   description: '...'
 }

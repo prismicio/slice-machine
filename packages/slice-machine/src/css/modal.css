@@ -1,0 +1,11 @@
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.ReactModal__Content {
+  padding: 0 !important;
+  bottom: auto !important;
+  top: 15% !important;
+  max-width: 900px;
+  margin: auto;
+}

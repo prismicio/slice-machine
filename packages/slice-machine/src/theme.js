@@ -1,13 +1,17 @@
 export default () => ({
   "colors": {
     "text": "hsl(10, 20%, 20%)",
-    "background": "hsl(10, 10%, 98%)",
-    "primary": "hsl(10, 80%, 50%)",
+    "background": "#F5F6F9",
+    primary: "#5263BA",
     "secondary": "hsl(10, 60%, 50%)",
     "highlight": "hsl(10, 40%, 90%)",
     "purple": "hsl(250, 60%, 30%)",
-    "muted": "hsl(10, 20%, 94%)",
-    "gray": "hsl(10, 20%, 50%)"
+    muted: "#F8F9FA",
+    icons: "#9ca3a9",
+    gray: "#F8F9FA",
+    borders: '#DEE1E5',
+    deep: '#0E2150',
+    deep1: '#A0ADE7'
   },
   "fonts": {
     "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
@@ -27,7 +31,8 @@ export default () => ({
   ],
   "fontWeights": {
     "body": 400,
-    "heading": 700,
+    "heading": 500,
+    "label": 600,
     "display": 900
   },
   "lineHeights": {
@@ -51,7 +56,76 @@ export default () => ({
       "mt": 3
     }
   },
+  widgetIcons: {
+    color: '#5263BA',
+    marginRight: '8px',
+    borderRadius: '4px',
+    padding: '4px',
+    border: '1px solid #DEE1E5',
+  },
+  sizes: {
+    sidebar: 340,
+  },
+  text: {
+    small: {
+      fontWeight: '500',
+      fontSize: 2
+    }
+  },
+  buttons:  {
+    disabled: {
+      bg: 'borders',
+      color: 'rgba(1, 1, 1, .6)',
+      cursor: 'not-allowed'
+    }
+  },
+  cards: {
+    large: {
+      py: 2,
+      bg: 'gray',
+      borderRadius: 4,
+      boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)',
+    }
+  },
+  forms: {
+    input: {
+      borderColor: 'borders',
+    },
+    label: {
+      primary: {
+        mb: 1,
+        fontWeight: 'label'
+      },
+      border: {
+        mb: 1,
+        fontWeight: 'label',
+        py: 2,
+        px: 1,
+        borderRadius: '3px',
+        border: t => `1px solid ${t.colors.borders}`
+      }
+    }
+  },
   "styles": {
+    navLink: {
+      color: '#FFF',
+      '&:hover': {
+        color: '#FFF'
+      }
+    },
+    deepNavLink: {
+      color: 'deep1'
+    },
+    listItem: {
+      bg: '#FFF',
+      border: t => `1px solid #DEE1E5`,
+      borderRadius: '2px',
+      my: 3,
+      justifyContent: 'space-between',
+      // '&:first-child': {
+      //   mt: 4
+      // }
+    },
     "Container": {
       "p": 3,
       "maxWidth": 1024
@@ -84,11 +158,12 @@ export default () => ({
       "variant": "textStyles.heading",
       "fontSize": 1
     },
-    "a": {
-      "color": "primary",
-      "&:hover": {
-        "color": "secondary"
-      }
+    ul:  {
+      p: 0,
+      m: 0
+    },
+    li: {
+      listStyle: 'none'
     },
     "pre": {
       "variant": "prism",

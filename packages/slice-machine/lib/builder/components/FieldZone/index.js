@@ -1,79 +1,20 @@
-import { useState, Fragment } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Fragment } from 'react'
+import { useThemeUI } from 'theme-ui'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import ReactTooltip from 'react-tooltip'
+
+import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 
 import {
-  Box,
   Button,
   Flex,
-  Text,
   Heading,
-  Badge,
-  IconButton as ThemeIconButton
 } from 'theme-ui'
 
-import {
-  FaEdit,
-  FaTrashAlt,
-  FaBars
-} from "react-icons/fa";
+import Card from 'components/Card'
 
-import NewField from './NewField'
-
-const IconButton = ({ onClick, label, Icon, ...rest }) => (
-  <ThemeIconButton
-    onClick={onClick}
-    aria-label={label}
-    {...rest}
-  >
-    <Icon />
-  </ThemeIconButton>
-);
-
-const DraggableItem = ({ item, index, deleteItem, enterEditMode }) => {
-  const { key } = item
-  const { type, config: { label } } = item.value
-  return (
-    <Draggable draggableId={key} index={index}>
-      {(provided) => (
-        <Flex
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          as="li"
-          p={3}
-          sx={{
-            border: "1px solid #F1F1F1",
-            justifyContent: "space-between",
-          }}
-        >
-          <IconButton
-            {...provided.dragHandleProps}
-            label="Reorder slice field (drag and drop)"
-            Icon={FaBars}
-          />
-          <Text>
-            {label || key} (id: {key})
-          </Text>
-          <Box>
-            <IconButton
-              Icon={FaEdit}
-              label="Edit slice field"
-              sx={{ cursor: 'pointer' }}
-              onClick={() => enterEditMode([key, item.value])}
-            />
-            <IconButton
-              Icon={FaTrashAlt}
-              label="Delete slice field"
-              sx={{ cursor: 'pointer' }}
-              onClick={() => deleteItem(key)}
-              ml={2}
-            />
-            <Badge ml={2}>{type}</Badge>
-          </Box>
-        </Flex>
-      )}
-    </Draggable>
-  );
-}
+import ListItem  from './components/ListItem'
+import NewField from './components/NewField'
 
 const FieldZone = ({
   fields,
@@ -83,10 +24,13 @@ const FieldZone = ({
   modelFieldName,
   newField,
   Model,
+  dataTip,
   onDragEnd,
   onSaveNewField,
   onDeleteItem
 }) => {
+  const { theme } = useThemeUI()
+
   const _onDragEnd = (result) => {
     onDragEnd(result, modelFieldName)
   }
@@ -96,36 +40,73 @@ const FieldZone = ({
   }
 
   return (
-    <Box>
-      <Heading>{title}</Heading>
-      <DragDropContext onDragEnd={_onDragEnd}>
-        <Droppable droppableId={modelFieldName}>
-          {(provided) => (
-            <ul ref={provided.innerRef} {...provided.droppableProps}>
-              {fields.map((item, index) => (
-                <DraggableItem
-                  item={item}
-                  key={item.key}
-                  index={index}
-                  enterEditMode={enterEditMode}
-                  deleteItem={_onDeleteItem}
-                />
-              ))}
-              {provided.placeholder}
-              {newField && (
-                <NewField {...newField} Model={Model} onSave={onSaveNewField} />
+    <Card
+      bg="gray"
+      bodySx={{ p: 2 }}
+      footerSx={{ px: 4, py: 3, display: 'flex', justifyContent: 'flex-end'}}
+      Header={({ radius }) => (
+        <Flex
+          sx={{
+            p: 3,
+            bg: '#FFF',
+            alignItems: 'center',
+            borderTopLeftRadius: radius,
+            borderTopRightRadius: radius,
+            borderBottom: t => `1px solid ${t.colors.borders}`
+          }}
+        >
+          <ReactTooltip type="light" multiline border borderColor={theme.colors.borders} />
+          <Heading as="h5" mr={2}>{title}</Heading>
+          <FaRegQuestionCircle
+            color={theme.colors.icons}
+            data-tip={dataTip}
+            style={{ position: 'relative', top: '1px' }}
+          />
+        </Flex>
+      )}
+      Body={() => (
+        <Fragment>
+          <DragDropContext onDragEnd={_onDragEnd}>
+            <Droppable droppableId={modelFieldName}>
+              {(provided) => (
+                <ul ref={provided.innerRef} {...provided.droppableProps}>
+                  {fields.map((item, index) => (
+                    <ListItem
+                      item={item}
+                      key={item.key}
+                      index={index}
+                      modelFieldName={modelFieldName}
+                      enterEditMode={enterEditMode}
+                      deleteItem={_onDeleteItem}
+                    />
+                  ))}
+                  {provided.placeholder}
+                  {newField && (
+                    <NewField {...newField} Model={Model} onSave={onSaveNewField} />
+                  )}
+                </ul>
               )}
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
-      <Button
-        mb={4}
-        onClick={() => enterSelectMode(modelFieldName)}
-      >
-        Add
-      </Button>
-    </Box>
+            </Droppable>
+          </DragDropContext>
+        </Fragment>
+      )}
+      Footer={() => (
+        <Button
+          onClick={() => enterSelectMode(modelFieldName)}
+          sx={{
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '54px',
+            width: '54px',
+            cursor: 'pointer'
+          }}
+        >
+          <FaPlus color="#FFF" size={16} />
+        </Button>
+      )}
+    />
   )
 }
 
@@ -136,13 +117,14 @@ export const NonRepeatZone = ({
 }) => (
   <FieldZone
     enterEditMode={(field) => enterEditMode('primary', field)}
-    title="Primary fields"
+    title="Non-repeatable zone"
     modelFieldName="primary"
     newField = {
       newFieldData &&
       newFieldData.zone === 'primary' &&
       newFieldData
     }
+    dataTip="It is a long established fact that a reader will<br/> be distracted by the readable content of a page<br/> when looking at its layout."
     {...rest}
   />
 )
@@ -154,13 +136,15 @@ export const RepeatZone = ({
 }) => (
   <FieldZone
     enterEditMode={(field) => enterEditMode('items', field)}
-    title="Repeatable fields"
+    title="Repeatable zone"
     modelFieldName="items"
     newField={
       newFieldData &&
       newFieldData.zone === 'items' &&
       newFieldData
     }
+    newFieldData
+    dataTip="It is a long established fact that a reader will<br/> be distracted by the readable content of a page<br/> when looking at its layout."
     {...rest}
   />
 )

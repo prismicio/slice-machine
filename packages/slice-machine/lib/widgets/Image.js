@@ -1,3 +1,4 @@
+import { BsImage } from 'react-icons/bs'
 /** 
  * {
     "type": "Image",
@@ -36,6 +37,10 @@ const fromUser = (...args) =>
   _createMock(...args)
 
 const createMock = (maybeMock, model) => maybeMock ? fromUser(mock) : _createMock(null, model.constraint, model.thumbnails)
+
+const Meta = {
+  icon: BsImage
+}
 
 export default {
   createMock,

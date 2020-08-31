@@ -3,8 +3,8 @@ import createModel from '../lib/model'
 
 export const ModelContext = React.createContext([])
 
-export default ({ children, initialModel, }) => {
-  const [Model, setModel] = useState(createModel(initialModel))
+export default ({ children, initialModel, info }) => {
+  const [Model, setModel] = useState(createModel(initialModel, info))
   
   const hydrate = (fn) => {
     if (fn && typeof fn === 'function') {
@@ -13,7 +13,11 @@ export default ({ children, initialModel, }) => {
     setModel({ ...Model, ...Model.get() })
   }
 
-  const value = { ...Model, ...Model.get(), hydrate }
+  const value = {
+    ...Model,
+    ...Model.get(),
+    hydrate,
+  }
   return (
     <ModelContext.Provider value={value}>
       { typeof children === 'function' ? children(value) : children }

@@ -1,3 +1,5 @@
+import  { BsLink } from 'react-icons/bs'
+
 /**
 * {
      "type": "Link",
@@ -47,6 +49,11 @@
 const createMock = (maybeMock) =>
   maybeMock || ({ link_type: "Web", url: "https://slicemachine.dev" })
 
+const Meta = {
+  icon: BsLink
+}
+
 export default {
-  createMock
+  createMock,
+  Meta
 }

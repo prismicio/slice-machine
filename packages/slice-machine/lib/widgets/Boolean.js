@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import { BsToggleOn } from 'react-icons/bs'
 
 /** {
     "type" : "Boolean",
@@ -20,6 +21,7 @@ const TYPE_NAME = 'Boolean'
 const createMock = (maybeMock) => maybeMock || Math.random() < 0.50 ? true : false
 
 const Meta = {
+  icon: BsToggleOn,
   title: 'Boolean',
   description: 'An input that is either true or false'
 }

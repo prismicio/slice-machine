@@ -1,3 +1,4 @@
+import { MdPlace } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../utils'
 
 /** : {
@@ -12,6 +13,7 @@ const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Geo
 const createMock = (maybeMock) => maybeMock || ``
 
 const Meta = {
+  icon: MdPlace,
   title: 'GeoPoint',
   description: '...'
 }

@@ -9,7 +9,7 @@ const FormFieldCheckbox = ({
   ...rest
 }) => {
   return (
-    <Label {...rest}>
+    <Label variant="label.border" {...rest}>
       <Field
         as={Checkbox}
         type="checkbox"

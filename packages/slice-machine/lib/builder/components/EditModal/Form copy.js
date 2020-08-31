@@ -1,5 +1,5 @@
-import { Formik } from 'formik'
-import { Box } from 'theme-ui'
+import { Formik, Form } from 'formik'
+import { Box, Button } from 'theme-ui'
 
 import * as Widgets from '../../../widgets'
 
@@ -8,13 +8,19 @@ import {
   createValidationSchema
 } from "../../../forms";
 
-import { memo } from 'react';
+import WidgetFormField from './Field'
+
+import { Flex, Col } from './Flex'
+import { useEffect, memo } from 'react';
 
 const WidgetForm = ({
   apiId,
+  formId,
   initialModelValues,
   onUpdateField,
-  children,
+  fieldType,
+  onChange = () => {},
+  Model
 }) => {
 
   const { type } = initialModelValues
@@ -56,7 +62,31 @@ const WidgetForm = ({
           onUpdateField(apiId, withDefaultValues)
         }}
       >
-        {props => children({ ...props, FormFields, initialValues })}
+        {({ errors, values: { label, id }, touched, isSubmitting }) => {
+          useEffect(() => {
+            onChange({ label, id })
+          }, [label, id])
+          return (
+            <Form id={formId}>
+              <Flex>
+                {
+                  Object.entries(FormFields).map(([key, field]) => (
+                    <Col key={key}>
+                      <WidgetFormField
+                        fieldName={key}
+                        fieldType={fieldType}
+                        formField={field}
+                        Model={Model}
+                        initialValues={initialValues}
+                      />
+                    </Col>
+                  ))
+                }
+              </Flex>
+              <code>{JSON.stringify(errors)}</code>
+            </Form>
+          )}
+        }
       </Formik>
     </Box>
   )

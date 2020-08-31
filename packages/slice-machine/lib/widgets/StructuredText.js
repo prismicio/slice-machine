@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react'
+import { MdTextFields } from 'react-icons/md'
+import { Fragment, useState, useEffect } from 'react'
 import * as yup from 'yup'
 import { useFormikContext } from 'formik'
 import randomSentence from 'random-sentence'
+
+import MultiSelect from '@khanacademy/react-multi-select'
+
+import { Label } from 'theme-ui'
 
 import {
   createInitialValues,
@@ -9,7 +14,7 @@ import {
 } from '../forms'
 
 import { removeProp } from '../utils'
-import { CheckBox, Select } from '../forms/fields'
+import { CheckBox } from '../forms/fields'
 import { DefaultFields } from '../forms/defaults'
 
 import { FormFieldCheckbox } from '../../components/FormFields'
@@ -55,6 +60,8 @@ const options = [{
   label: 'RTL'
 }]
 
+const optionValues = options.map(e => e.value)
+
 const _createMock = (str) => [{
   type: 'paragraph',
   "text": str,
@@ -70,15 +77,97 @@ const createMock = (maybeMock) => maybeMock
   : _createMock(randomSentence({ min: "10", max: "120" }))
 
 const Meta = {
+  icon: MdTextFields,
   title: 'Rich Text',
   description: 'A rich text field with formatting options'
 }
 
+const _createInitialOptions = (str) => {
+  const arr = str.split(',')
+  return options.reduce((acc, { value }) => {
+    if (arr.includes(value)) {
+      return [...acc, value]
+    }
+    return acc
+  }, [])
+}
 const FormFields = {
   ...DefaultFields,
   // allowMultiLine: CheckBox('Allow multiple paragraphs'),
   allowTargetBlank: CheckBox('Allow target blank for links'),
-  accepts: Select('Allowed elements', options),
+  // accepts: Select('Allowed elements', options),
+  accepts: {
+    component: ({ field, helpers }) => {
+      const { values: { single, multi } } = useFormikContext()
+      const initialOptions = single ? _createInitialOptions(single)
+        : (multi && _createInitialOptions(multi))
+        || optionValues
+      const [state, setState] = useState({ options: initialOptions })
+
+      useEffect(() => {
+        helpers.setValue(state.options)
+      }, [state.options])
+      return (
+        <Fragment>
+          <Label>Accepts</Label>
+          <MultiSelect
+            options={options}
+            selected={state.options}
+            onSelectedChanged={(selected) => console.log({ selected }) || setState({ options: selected })}
+            {...field}
+          />
+        </Fragment>
+      )
+    }
+  },
+  single: {
+    yupType: 'string',
+    component: ({ field, helpers }) => {
+      const { values: { accepts, allowMultiLine }, registerField, unregisterField } = useFormikContext()
+      
+      console.log(field.value)
+      useEffect(() => {
+        if (allowMultiLine) {
+          helpers.setValue(undefined)
+          unregisterField('single')
+        } else {
+          helpers.setValue(accepts.join(','))
+        }
+      }, [])
+
+      useEffect(() => {
+        helpers.setValue(accepts.join(','))
+        if (allowMultiLine) {
+          unregisterField('single')
+        } else {
+          registerField('single', accepts.join(','))
+        }
+      }, [allowMultiLine, accepts])
+      return null
+    }
+  },
+  multi: {
+    yupType: 'string',
+    component: ({ field, helpers }) => {
+      const { values: { accepts, allowMultiLine }, registerField } = useFormikContext()
+      useEffect(() => {
+        helpers.setValue(accepts.join(','))
+        if (!allowMultiLine) {
+          helpers.setValue(undefined)
+        }
+      }, [])
+
+      useEffect(() => {
+        helpers.setValue(accepts.join(','))
+        if (!allowMultiLine) {
+          helpers.setValue(undefined)
+        } else {
+          registerField('multi', accepts.join(','))
+        }
+      }, [allowMultiLine, accepts])
+      return null
+    }
+  },
   allowMultiLine: {
     yupType: 'string',
     defaultValue: false,
@@ -90,30 +179,30 @@ const FormFields = {
 
       // console.log(rest)
 
-      useEffect(() => {
-        setFieldValue(fieldName, accepts.join(','))
-        return () => {
-          registerField("example", true)
-          unregisterField("allowMultiLine")
-          unregisterField("accepts")
-          console.log('delete accepts!')
-        }
-      }, [])
+      // useEffect(() => {
+      //   setFieldValue(fieldName, accepts.join(','))
+      //   return () => {
+      //     registerField("example", true)
+      //     unregisterField("allowMultiLine")
+      //     unregisterField("accepts")
+      //     console.log('delete accepts!')
+      //   }
+      // }, [])
 
-      useEffect(() => {
-        const prevFieldName = fieldName
-        const newFieldName = fieldNames[1 - fieldNames.findIndex(e => e === prevFieldName)]
-        setFieldValue(prevFieldName, undefined)
-        setFieldValue(newFieldName, accepts.join(','))
-        setFieldName(newFieldName)
-      }, [isChecked, accepts])
+      // useEffect(() => {
+      //   const prevFieldName = fieldName
+      //   const newFieldName = fieldNames[1 - fieldNames.findIndex(e => e === prevFieldName)]
+      //   setFieldValue(prevFieldName, undefined)
+      //   setFieldValue(newFieldName, accepts.join(','))
+      //   setFieldName(newFieldName)
+      // }, [isChecked, accepts])
 
       return (
         <FormFieldCheckbox
           {...props}
-          meta={{ value: isChecked }}
+          // meta={{ value: isChecked }}
           label="Allow multiple paragraphs"
-          onChange={setIsChecked}
+          onChange={(v) => props.helpers.setValue(v)}
         />
       )
     }

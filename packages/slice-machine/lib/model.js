@@ -32,7 +32,13 @@ const deepEqual = (model, primary, items) => {
   return true
 }
 
-const createModel = (intialValues) => {
+const getMetadata = (model) =>
+  Object.entries(model).reduce((acc, [key, value]) => ({
+    ...acc,
+    ...(['fieldset', 'description'].includes(key) ? ({ [key]: value }) : {})
+  }), {})
+
+const createModel = (intialValues, info) => {
   let model = intialValues
   let zones = createZones(model)
 
@@ -94,6 +100,8 @@ const createModel = (intialValues) => {
     get: () => {
       return {
         ...zones,
+        info,
+        meta: getMetadata(model),
         value: formatModel(model, zones.primary, zones.items),
         isTouched: !deepEqual(model, zones.primary, zones.items),
       }

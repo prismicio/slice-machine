@@ -68,7 +68,7 @@ const SliceEditor = ({ query }) => {
 
   const storybookUrl = iframeSrc(component);
   return (
-    <ModelProvider initialModel={initialModel}>
+    <ModelProvider initialModel={initialModel} info={component}>
       {(Model) => (
         <Fragment>
         {/* <FlexEditor SideBar={() => (
@@ -87,9 +87,9 @@ const SliceEditor = ({ query }) => {
             />
           </Box>
         </FlexEditor> */}
-        <Button
+        {/* <Button
           disabled={!Model.isTouched}
-          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '84px' }}
+          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '124px' }}
           onClick={() => Model.hydrate(Model.resetInitialModel(initialModel))}
         >
           Reset
@@ -97,10 +97,10 @@ const SliceEditor = ({ query }) => {
         <Button
           onClick={() => updateModel(component, Model)}
           disabled={!Model.isTouched}
-          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '24px' }}
+          sx={{ bg: Model.isTouched ? 'primary' : 'grey', position: 'fixed', right: '24px', top: '64px' }}
         >
           Save model
-        </Button>
+        </Button> */}
         <Builder />
         <Box mb={4} ml={6}>
             {

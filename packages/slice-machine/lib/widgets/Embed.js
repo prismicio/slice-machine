@@ -1,3 +1,4 @@
+import { FiCode } from 'react-icons/fi'
 import { createDefaultWidgetValues } from '../utils'
 
 /**  {
@@ -10,9 +11,10 @@ import { createDefaultWidgetValues } from '../utils'
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Embed')
 
-const createMock = (maybeMock) => ``
+const createMock = (maybeMock) => maybeMock || ``
 
 const Meta = {
+  icon: FiCode,
   title: 'Embed',
   description: '...'
 }

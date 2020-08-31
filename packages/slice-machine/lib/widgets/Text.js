@@ -1,3 +1,4 @@
+import { MdTitle } from 'react-icons/md'
 import * as yup from 'yup'
 
 /**
@@ -33,6 +34,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
+  icon: MdTitle,
   title: 'Key Text',
   description: 'Text content'
 }

@@ -1,10 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, Fragment } from 'react'
 
-import { ModelContext } from "../../../../src/model-context"
+import { ModelContext } from "src/model-context"
+
+import Card from 'components/Card'
 
 import {
+  Flex,
   Box,
+  Text,
+  Heading
 } from 'theme-ui'
+
+import {
+  FaRegClock,
+  FaRegArrowAltCircleRight
+} from 'react-icons/fa'
 
 import { NonRepeatZone, RepeatZone } from '../FieldZone'
 
@@ -13,8 +23,66 @@ import * as Widgets from '../../../widgets'
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
 
+const RADIUS = '6px'
+
+const TouchedIcon = () => (
+  <Flex
+    sx={{
+      ml: 2,
+      top: '1px',
+      position: 'relative',
+      color: 'grey',
+      alignItems: 'center'
+    }}
+  >
+    Touched
+    <FaRegClock style={{ marginLeft: '6px'}} />
+  </Flex>
+)
+
+const Header = ({ title, isTouched, radius }) => (
+  <Flex
+    sx={{
+      px: 4,
+      py: 3,
+      bg: '#FFF',
+      alignItems: 'center',
+      borderTopLeftRadius: radius,
+      borderTopRightRadius: radius,
+      borderBottom: t => `1px solid ${t.colors.borders}`
+    }}
+  >
+    <Heading as="h4">
+      {title}
+    </Heading>
+    { isTouched ? <TouchedIcon /> : null}
+  </Flex>
+)
+
+const SubHeader = () => (
+  <Flex
+    as="a"
+    href="/example"
+    target="_blank"
+    sx={{
+      px: 4,
+      py: 2,
+      bg: 'gray',
+      alignItems: 'center',
+      cursor: 'pointer',
+      textDecoration: 'none',
+      borderBottom: t => `1px solid ${t.colors.borders}`
+    }}
+  >
+    <Text as="p" sx={{ color: 'black', display: 'flex', alignItems: 'center' }}>
+      <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
+    </Text>
+  </Flex>
+)
+
 const PreviewFields = () => {
-  const { primary, items, isTouched, ...Model } = useContext(ModelContext)
+  const { meta: { fieldset }, primary, items, isTouched, ...Model } = useContext(ModelContext)
+
 
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
@@ -64,40 +132,53 @@ const PreviewFields = () => {
   }
 
   return (
-    <Box>
-      <p>is touched: {isTouched ? 'true' : 'false' }</p>
-      <NonRepeatZone
-        enterEditMode={enterEditMode}
-        enterSelectMode={enterSelectMode}
-        fields={primary}
-        Model={Model}
-        newFieldData={newFieldData}
-        onSaveNewField={onSaveNewField}
-        onDragEnd={onDragEnd}
-        onDeleteItem={onDeleteItem}
+    <Fragment>
+      <Card
+        bg="#FFF"
+        Header={(props) => <Header title={fieldset} isTouched={isTouched} {...props} /> }
+        SubHeader={(props) => <SubHeader {...props} /> }
+        Body={() => (
+          <Fragment>
+            <NonRepeatZone
+              enterEditMode={enterEditMode}
+              enterSelectMode={enterSelectMode}
+              fields={primary}
+              Model={Model}
+              newFieldData={newFieldData}
+              onSaveNewField={onSaveNewField}
+              onDragEnd={onDragEnd}
+              onDeleteItem={onDeleteItem}
+            />
+            <Box my={3} sx={{ height: '1px', width: '1px'}} />
+            <RepeatZone
+              enterEditMode={enterEditMode}
+              enterSelectMode={enterSelectMode}
+              fields={items}
+              Model={Model}
+              newFieldData={newFieldData}
+              onSaveNewField={onSaveNewField}
+              onDragEnd={onDragEnd}
+              onDeleteItem={onDeleteItem}
+            />
+          </Fragment>
+        )}
       />
-      <RepeatZone
-        enterEditMode={enterEditMode}
-        enterSelectMode={enterSelectMode}
-        fields={items}
-        Model={Model}
-        newFieldData={newFieldData}
-        onSaveNewField={onSaveNewField}
-        onDragEnd={onDragEnd}
-        onDeleteItem={onDeleteItem}
-      />
-      <EditModal
-        data={editModalData}
-        close={closeEditModal}
-        Model={Model}
-      />
+      {
+        editModalData && editModalData.isOpen ? (
+          <EditModal
+            data={editModalData}
+            close={closeEditModal}
+            Model={Model}
+          />
+        ) : null
+      }
       <SelectFieldTypeModal
         data={selectModalData}
         close={closeSelectModal}
         onSelect={onSelectFieldType}
       />
-    </Box>
-  );
+    </Fragment>
+  )
 }
 
 export default PreviewFields

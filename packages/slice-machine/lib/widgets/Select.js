@@ -1,7 +1,10 @@
 import * as yup from 'yup'
+import { MdDns } from 'react-icons/md'
 import { FormFieldCheckboxControl } from '../../components/FormFields'
 
 import { createValidationSchema } from '../forms'
+
+import { CHECKBOX } from '../forms/types'
 
 import { removeProp, createDefaultWidgetValues } from '../utils'
 import { DefaultFields } from '../forms/defaults'
@@ -28,32 +31,15 @@ const _createMock = (config) => config.options[Math.floor(Math.random() * config
 const createMock = (maybeMock, config) => maybeMock || _createMock(config)
 
 const Meta = {
+  icon: MdDns,
   title: 'Select',
   description: 'A rich text field with formatting options'
 }
 
 const FormFields = {
   ...DefaultFields,
-  options: {
-    yupType: 'array',
-    defaultValue: ['', ''],
-    validate: {
-      required: ['Select requires a minimum of 2 options'],
-      min: [2, 'Choose between 2 and 6 options'],
-      max: [6, 'Choose between 2 and 6 options']
-    },
-    component: (props) => {
-      return (
-        <FormFieldArray
-          label="Options"
-          inputPlaceholder="Select option (eg. 'image_left')"
-          buttonLabel="+ Add option"
-          {...props}
-        />
-      )
-    }
-  },
   default_value: {
+    type: CHECKBOX,
     yupType: 'string',
     defaultValue: '',
     validate: function() {
@@ -74,7 +60,26 @@ const FormFields = {
         label={(options) => `use first value as default ${options.length ? `("${options[0]}")` : ''}`}
       />
     )
-  }
+  },
+  options: {
+    yupType: 'array',
+    defaultValue: ['', ''],
+    validate: {
+      required: ['Select requires a minimum of 2 options'],
+      min: [2, 'Choose between 2 and 6 options'],
+      max: [6, 'Choose between 2 and 6 options']
+    },
+    component: (props) => {
+      return (
+        <FormFieldArray
+          label="Options"
+          inputPlaceholder="Select option (eg. 'image_left')"
+          buttonLabel="+ Add option"
+          {...props}
+        />
+      )
+    }
+  },
 }
 
 const schema = yup.object().shape({

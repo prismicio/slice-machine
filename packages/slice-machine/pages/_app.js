@@ -1,9 +1,13 @@
 import theme from '../src/theme'
-import { ThemeProvider } from 'theme-ui'
+import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import useSwr from 'swr'
 
 import LibProvider from '../src/lib-context'
+
+import 'rc-drawer/assets/index.css'
+import 'lib/builder/layout/Drawer/index.css'
+import 'src/css/modal.css'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
@@ -18,9 +22,11 @@ function MyApp({
 
   return (
     <ThemeProvider theme={theme}>
-      <LibProvider value={libraries}>
-        <Component {...pageProps} />
-      </LibProvider>
+      <BaseStyles>
+        <LibProvider value={libraries}>
+          <Component {...pageProps} />
+        </LibProvider>
+      </BaseStyles>
     </ThemeProvider>
   );
 }

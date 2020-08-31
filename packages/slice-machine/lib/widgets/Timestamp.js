@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import { MdDateRange } from 'react-icons/md'
 
 /** {
     "type" : "Timestamp",
@@ -33,6 +34,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
+  icon: MdDateRange,
   title: 'Timestamp',
   description: 'A calendar date picker with time'
 }
@@ -41,5 +43,6 @@ export default {
   createMock,
   create,
   schema,
+  FormFields,
   Meta
 }
