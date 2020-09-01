@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Form } from 'formik'
 import Modal from 'react-modal'
 
@@ -10,13 +9,12 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import { Flex as FlexGrid, Col } from './Flex'
-
-import WidgetForm from './Form'
-import WidgetFormField from './Field'
+import { Flex as FlexGrid, Col } from 'components/Flex'
 import Card from 'components/Card'
 import ItemHeader from 'components/ItemHeader'
 
+import WidgetForm from './Form'
+import WidgetFormField from './Field'
 
 import * as Widgets from 'lib/widgets'
 
@@ -37,11 +35,6 @@ const EditModal = ({
   } = data
 
   const { Meta: { icon: WidgetIcon } } = Widgets[initialModelValues.type]
-
-  // const [state, setState] = useState({
-  //   label: initialModelValues.config.label || apiId,
-  //   id: apiId
-  // })
 
   return (
     <Modal
@@ -67,12 +60,14 @@ const EditModal = ({
           close()
         }}
       >
-        {({ errors, values: { label, id }, touched, isSubmitting, FormFields, initialValues }) => {
+        {(props) => {
+          const { values: { label, id }, isSubmitting, initialValues, FormFields, CustomForm } = props
           return (
             <Form id={FORM_ID}>
               <Card
                 borderFooter
                 footerSx={{ p: 3 }}
+                bodySx={{ pt: 2, pb: 4, px: 4 }}
                 sx={{ border: 'none' }}
                 Header={({ radius }) => (
                   <Flex
@@ -117,21 +112,25 @@ const EditModal = ({
                   </Flex>
                 )}
               >
-                <FlexGrid>
-                  {
-                    Object.entries(FormFields).map(([key, field]) => (
-                      <Col key={key}>
-                        <WidgetFormField
-                          fieldName={key}
-                          fieldType={fieldType}
-                          formField={field}
-                          Model={Model}
-                          initialValues={initialValues}
-                        />
-                      </Col>
-                    ))
-                  }
-                </FlexGrid>
+                {
+                  CustomForm ? <CustomForm {...props} Model={Model} fieldType={fieldType} /> : (
+                    <FlexGrid>
+                      {
+                        Object.entries(FormFields).map(([key, field]) => (
+                          <Col key={key}>
+                            <WidgetFormField
+                              fieldName={key}
+                              fieldType={fieldType}
+                              formField={field}
+                              Model={Model}
+                              initialValues={initialValues}
+                            />
+                          </Col>
+                        ))
+                      }
+                    </FlexGrid>
+                  )
+                }
               </Card>
             </Form>
           )}

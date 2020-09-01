@@ -48,7 +48,7 @@ const NewField = ({
       validationSchema={validationSchema}
       initialValues={initialValues}
      >
-       {({ values, errors }) => console.log(errors) || (
+       {({ values, errors }) => (
         <Form>
           <Flex
             as="li"

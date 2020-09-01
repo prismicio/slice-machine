@@ -3,42 +3,55 @@ export const valid = {
   type: "StructuredText",
   config: {
     label: "Title",
-    allowMultiLine: false,
+    single: "p",
     allowTargetBlank: 1,
-    accepts: ["heading1, heading2, heading3, heading4, heading5, heading6"]
   }
 }
 
-export const wrongType = {
-  __pass: false,
-  type: "StructuredText2",
+export const multi = {
+  __pass: true,
+  type: "StructuredText",
   config: {
     label: "Title",
-    allowMultiLine: true,
-    allowTargetBlank: 1,
-    accepts: ["heading1, heading2, heading3, heading4, heading5, heading6"]
-  }
-}
-
-export const wrongOption = {
-  __pass: false,
-  type: "StructuredText2",
-  config: {
-    label: "Title",
-    allowMultiLine: false,
     allowTargetBlank: true,
-    accepts: ["wrong"]
+    multi: 'p,h1,h2'
   }
 }
 
-export const wrongTargetType = {
+export const undefOptions = {
+  __pass: false,
+  type: "StructuredText",
+  config: {
+    label: "Title",
+    allowTargetBlank: true,
+  }
+}
+
+export const emptyOptions = {
+  __pass: false,
+  type: "StructuredText",
+  config: {
+    label: "Title",
+    allowTargetBlank: true,
+    multi: ''
+  }
+}
+
+export const wrongOptionType = {
+  __pass: false,
+  type: "StructuredText2",
+  config: {
+    multi: ["p", "h1"]
+  }
+}
+
+export const wrongOptions = {
   __pass: false,
   type: "StructuredText2",
   config: {
     label: "Title",
-    allowMultiLine: true,
-    allowTargetBlank: 1,
-    accepts: ["heading1, heading2, heading3, heading4, heading5, heading6"]
+    single: "p,z"
+
   }
 }
 

@@ -49,7 +49,7 @@ const WidgetFormField = ({
         <Fragment>
           {formField.type === FormTypes.INPUT && (
         <Fragment>
-          <Label variant="label.primary">{formField.label || fieldName}</Label>
+          <Label variant="label.primary" htmlFor={fieldName}>{formField.label || fieldName}</Label>
           <Field
             name={fieldName}
             id={fieldName}

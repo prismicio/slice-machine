@@ -18,7 +18,7 @@ const WidgetForm = ({
 }) => {
 
   const { type } = initialModelValues
-  const { FormFields } = Widgets[type]
+  const { FormFields, Form: CustomForm } = Widgets[type]
   if (!FormFields) {
     return (<div>{type} not supported yet</div>)
   }
@@ -56,7 +56,12 @@ const WidgetForm = ({
           onUpdateField(apiId, withDefaultValues)
         }}
       >
-        {props => children({ ...props, FormFields, initialValues })}
+        {props => children({
+          ...props,
+          FormFields,
+          initialValues,
+          CustomForm
+        })}
       </Formik>
     </Box>
   )

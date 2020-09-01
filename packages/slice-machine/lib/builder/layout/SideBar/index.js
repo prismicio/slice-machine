@@ -32,14 +32,14 @@ const SideBar = ({
       }}
       as="aside"
       >
-      <Box mb={3}>
+      {/* <Box mb={3}>
         <Heading as="h2">
           {title}
         </Heading>
         <Text as="p">
           { description }
         </Text>
-      </Box>
+      </Box> */}
       <Box
       >
         <Card sx={{ border: '1px solid #F1F1F1', bg: '#FFF'}}>

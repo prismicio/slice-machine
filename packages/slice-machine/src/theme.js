@@ -77,6 +77,26 @@ export default () => ({
       bg: 'borders',
       color: 'rgba(1, 1, 1, .6)',
       cursor: 'not-allowed'
+    },
+    selectIcon: {
+      '&:focus, &:active': {
+        outline: 'none',
+      }
+    },
+    secondary: {
+      background: '#F9FAFB',
+      color: 'text',
+      border: ({ colors }) => `1px solid ${colors.borders}`
+    },
+    textButton: {
+      border: 'none',
+      color: 'primary',
+      background: 'transparent',
+      p: '8px',
+      position: 'relative',
+      top: '1px',
+      ml: 1,
+      cursor: 'pointer'
     }
   },
   cards: {

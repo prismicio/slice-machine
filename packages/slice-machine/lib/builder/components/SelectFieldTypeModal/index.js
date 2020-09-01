@@ -6,7 +6,10 @@ import {
   Heading
 } from 'theme-ui'
 
-import * as Widgets from '../../../widgets'
+import Card from 'components/Card'
+import { Flex as FlexGrid, Col } from 'components/Flex'
+
+import * as Widgets from 'lib/widgets'
 import FieldTypeCard from './FieldTypeCard'
 
 Modal.setAppElement("#__next");
@@ -27,7 +30,52 @@ const SelectFieldTypeModal = ({
       onRequestClose={close}
       contentLabel="Widget Form Modal"
     >
-      <Flex
+       <Card
+        borderFooter
+        footerSx={{ p: 3 }}
+        bodySx={{ pt: 2, pb: 4, px: 4 }}
+        sx={{ border: 'none' }}
+        Header={({ radius }) => (
+          <Flex
+            sx={{
+              p: 3,
+              pl: 4,
+              bg: '#FFF',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderTopLeftRadius: radius,
+              borderTopRightRadius: radius,
+              borderBottom: t => `1px solid ${t.colors.borders}`
+            }}
+          >
+            <Heading>Add a new field</Heading>
+            <Close onClick={close} />
+          </Flex>
+        )}
+      >
+        <FlexGrid>
+          {
+            Object.entries(Widgets).map(([type, widget]) => {
+              const {
+                Meta,
+              } = widget
+              if (Meta) { // prov
+                return (
+                  <Col>
+                    <FieldTypeCard 
+                      key={type}
+                      {...Meta} 
+                      onSelect={() => onSelect(zone, type) && close()}
+                    />
+                  </Col>
+                )
+              }
+              return null
+            })
+          }
+        </FlexGrid>
+      </Card>
+      {/* <Flex
         sx={{
           borderBottom: "1px solid #F1F1F1",
           justifyContent: "space-between",
@@ -36,24 +84,7 @@ const SelectFieldTypeModal = ({
       >
         <Heading>Select a field type</Heading>
         <Close onClick={close} />
-      </Flex>
-      {
-        Object.entries(Widgets).map(([type, widget]) => {
-          const {
-            Meta,
-          } = widget
-          if (Meta) { // prov
-            return (
-              <FieldTypeCard 
-                key={type}
-                {...Meta} 
-                onSelect={() => onSelect(zone, type) && close()}
-              />
-            )
-          }
-          return null
-        })
-}
+      </Flex> */}
     </Modal>
   )
 }
