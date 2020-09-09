@@ -1,6 +1,5 @@
-import React, { useContext, useState, Fragment } from 'react'
-
-import { ModelContext } from "src/model-context"
+import React, { useState, Fragment } from 'react'
+import getConfig from 'next/config'
 
 import Card from 'components/Card'
 
@@ -23,7 +22,8 @@ import * as Widgets from '../../../widgets'
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
 
-const RADIUS = '6px'
+const { publicRuntimeConfig: config } = getConfig()
+
 
 const TouchedIcon = () => (
   <Flex
@@ -59,10 +59,10 @@ const Header = ({ title, isTouched, radius }) => (
   </Flex>
 )
 
-const SubHeader = () => (
+const SubHeader = ({ storybookUrl }) => (
   <Flex
     as="a"
-    href="/example"
+    href={storybookUrl}
     target="_blank"
     sx={{
       px: 4,
@@ -80,9 +80,12 @@ const SubHeader = () => (
   </Flex>
 )
 
-const PreviewFields = () => {
-  const { meta: { fieldset }, primary, items, isTouched, ...Model } = useContext(ModelContext)
-
+const PreviewFields = ({
+  Model,
+  variation,
+  storybookUrl
+}) => {
+  const { isTouched } = Model
 
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
@@ -101,13 +104,14 @@ const PreviewFields = () => {
   const onSelectFieldType = (zone, fieldType) => {
     setNewFieldData({
       zone,
-      fieldType
+      fieldType,
+      variation
     })
     setSelectModalData({ isOpen: false })
   }
   const onSaveNewField = ({ id, fieldType }) => {
     const widget = Widgets[fieldType]
-    Model.hydrate(Model.add[newFieldData.zone](
+    Model.hydrate(variation.add[newFieldData.zone](
       id,
       {
         type: fieldType,
@@ -121,28 +125,28 @@ const PreviewFields = () => {
     if (!result.destination) {
       return
     }
-    Model.hydrate(Model.reorder[modelFieldName](
+    Model.hydrate(variation.reorder[modelFieldName](
       result.source.index,
       result.destination.index
     ))
   }
 
   const onDeleteItem = (key, modelFieldName) => {
-    Model.hydrate(Model.delete[modelFieldName](key))
+    Model.hydrate(variation.delete[modelFieldName](key))
   }
 
   return (
     <Fragment>
       <Card
         bg="#FFF"
-        Header={(props) => <Header title={fieldset} isTouched={isTouched} {...props} /> }
-        SubHeader={(props) => <SubHeader {...props} /> }
+        Header={(props) => <Header title={variation.description} isTouched={isTouched} {...props} /> }
+        SubHeader={(props) => <SubHeader {...props} storybookUrl={storybookUrl} /> }
         Body={() => (
           <Fragment>
             <NonRepeatZone
               enterEditMode={enterEditMode}
               enterSelectMode={enterSelectMode}
-              fields={primary}
+              fields={variation.primary}
               Model={Model}
               newFieldData={newFieldData}
               onSaveNewField={onSaveNewField}
@@ -153,7 +157,7 @@ const PreviewFields = () => {
             <RepeatZone
               enterEditMode={enterEditMode}
               enterSelectMode={enterSelectMode}
-              fields={items}
+              fields={variation.items}
               Model={Model}
               newFieldData={newFieldData}
               onSaveNewField={onSaveNewField}
@@ -169,6 +173,7 @@ const PreviewFields = () => {
             data={editModalData}
             close={closeEditModal}
             Model={Model}
+            variation={variation}
           />
         ) : null
       }

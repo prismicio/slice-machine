@@ -58,12 +58,12 @@ const SelectFieldTypeModal = ({
             Object.entries(Widgets).map(([type, widget]) => {
               const {
                 Meta,
+                create
               } = widget
-              if (Meta) { // prov
+              if (Meta && create) { // prov
                 return (
-                  <Col>
+                  <Col key={type}>
                     <FieldTypeCard 
-                      key={type}
                       {...Meta} 
                       onSelect={() => onSelect(zone, type) && close()}
                     />

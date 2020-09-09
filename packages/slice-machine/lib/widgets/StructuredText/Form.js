@@ -5,11 +5,11 @@ import { DefaultFields } from 'lib/forms/defaults'
 
 import options, { optionValues } from './options'
 
-import WidgetFormField from 'lib/builder/components/EditModal/Field'
+import WidgetFormField from 'lib/builder/modules/EditModal/Field'
 
-import { Button, Label, Checkbox, Flex } from 'theme-ui'
+import { Text, Button, Label, Checkbox, Flex, Box } from 'theme-ui'
 import { Col, Flex as FlexGrid } from 'components/Flex'
-import IconButton from 'lib/../components/IconButton'
+import IconButton from 'components/IconButton'
 
 const isAllSet = (curr) => !optionValues.find(e => !curr.includes(e))
 
@@ -28,8 +28,10 @@ const FormFields = {
   allowTargetBlank: CheckBoxConstructor('Allow target blank for links')
 }
 
+const accessors = ['single', 'multi']
+
 const Form = (props) => {
-  const { initialValues, values: formValues, Model, fieldType, setFieldValue } = props
+  const { initialValues, values: formValues, errors, Model, variation, fieldType, setFieldValue, } = props
   const { single, multi } = formValues
   const initialOptions = single ? _createInitialOptions(single)
     : (multi && _createInitialOptions(multi))
@@ -39,10 +41,12 @@ const Form = (props) => {
   const [acceptOptions, setAcceptOptions] = useState(initialOptions)
 
   useEffect(() => {
-    const accessors = ['single', 'multi']
     const fieldNameIndex = isMulti ? 1 : 0
     setFieldValue(accessors[fieldNameIndex], acceptOptions.join(','))
-    setFieldValue(accessors[1 - fieldNameIndex], undefined)
+    setTimeout(() => { // prevent tests from failing for both values
+      setFieldValue(accessors[1 - fieldNameIndex], undefined)
+    }, 100)
+
   }, [isMulti, acceptOptions])
 
   return (
@@ -55,6 +59,7 @@ const Form = (props) => {
               fieldType={fieldType}
               formField={field}
               Model={Model}
+              variation={variation}
               initialValues={initialValues}
             />
           </Col>
@@ -70,7 +75,7 @@ const Form = (props) => {
             alignItems: 'center',
           }}
         >
-          Accept
+          Accept*
           <Button
             type="button"
             variant="buttons.textButton"
@@ -111,6 +116,13 @@ const Form = (props) => {
             />
           ))
         }
+        {
+          errors[accessors[isMulti ? 1 : 0]] ? (
+            <Box sx={{ position: 'absolute' }}>
+              <Text as="span" variant="text.labelError" pl={0}>{errors[accessors[isMulti ? 1 : 0]]}</Text>
+            </Box>
+          ) : null
+        }
       </Col>
       <Col>
         <Flex
@@ -139,9 +151,10 @@ keys.forEach((key, index) => {
   FormFields[key] = {
     validate: () => yup.string().test({
       name: key,
-      message: `"${key}" must contain more than one, existing option`,
+      message: `Options cannot be empty`,
       test: function() {
         if (this.parent[keys[1 - index]] && typeof this.parent[keys[1 - index]] === 'string') {
+          // if other key is set
           return true
         }
         if (typeof this.parent[key] !== 'string') {
@@ -151,6 +164,7 @@ keys.forEach((key, index) => {
           (!this.parent[key] || !this.parent[key].length)
           && (!this.parent[keys[1 - index]] || !this.parent[keys[1 - index]].length)
         ) {
+          // if both keys are undefined
           return false
         }
         const arr = this.parent[key].split(',')

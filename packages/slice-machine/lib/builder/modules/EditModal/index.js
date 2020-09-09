@@ -1,4 +1,3 @@
-import { Form } from 'formik'
 import Modal from 'react-modal'
 
 import {
@@ -25,7 +24,8 @@ const FORM_ID = 'edit-modal-form'
 const EditModal = ({
   close,
   data,
-  Model
+  Model, 
+  variation
 }) => {
   const { theme } = useThemeUI()
   const {
@@ -51,7 +51,7 @@ const EditModal = ({
         initialModelValues={initialModelValues}
         onUpdateField={(key, value) => {
           Model.hydrate(
-            Model.replace[fieldType](
+            variation.replace[fieldType](
               apiId,
               key,
               { config: value, type: initialModelValues.type }
@@ -61,9 +61,16 @@ const EditModal = ({
         }}
       >
         {(props) => {
-          const { values: { label, id }, isSubmitting, initialValues, FormFields, CustomForm } = props
+          const {
+            values: { label, id },
+            errors,
+            isValid,
+            isSubmitting,
+            initialValues,
+            FormFields,
+            CustomForm
+          } = props
           return (
-            <Form id={FORM_ID}>
               <Card
                 borderFooter
                 footerSx={{ p: 3 }}
@@ -88,7 +95,7 @@ const EditModal = ({
                       sliceProperty={`slice.${fieldType}.${id}`}
                       WidgetIcon={WidgetIcon}
                     />
-                    <Close onClick={close} />
+                    <Close onClick={close} type="button" />
                   </Flex>
                 )}
                 Footer={(
@@ -105,7 +112,7 @@ const EditModal = ({
                     <Button
                       form={FORM_ID}
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={!isValid && isSubmitting}
                     >
                       Save
                     </Button>
@@ -113,7 +120,7 @@ const EditModal = ({
                 )}
               >
                 {
-                  CustomForm ? <CustomForm {...props} Model={Model} fieldType={fieldType} /> : (
+                  CustomForm ? <CustomForm {...props} Model={Model} variation={variation} fieldType={fieldType} /> : (
                     <FlexGrid>
                       {
                         Object.entries(FormFields).map(([key, field]) => (
@@ -122,7 +129,8 @@ const EditModal = ({
                               fieldName={key}
                               fieldType={fieldType}
                               formField={field}
-                              Model={Model}
+                              variation={variation}
+                              errors={errors}
                               initialValues={initialValues}
                             />
                           </Col>
@@ -132,7 +140,6 @@ const EditModal = ({
                   )
                 }
               </Card>
-            </Form>
           )}
         }
       </WidgetForm>

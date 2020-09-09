@@ -1,4 +1,4 @@
-import { Formik } from 'formik'
+import { Formik, Form } from 'formik'
 import { Box } from 'theme-ui'
 
 import * as Widgets from '../../../widgets'
@@ -12,6 +12,7 @@ import { memo } from 'react';
 
 const WidgetForm = ({
   apiId,
+  formId,
   initialModelValues,
   onUpdateField,
   children,
@@ -56,12 +57,18 @@ const WidgetForm = ({
           onUpdateField(apiId, withDefaultValues)
         }}
       >
-        {props => children({
-          ...props,
-          FormFields,
-          initialValues,
-          CustomForm
-        })}
+          {props => (
+            <Form id={formId}>
+              {
+                children({
+                  ...props,
+                  FormFields,
+                  initialValues,
+                  CustomForm
+                })
+              }
+            </Form>
+          )}
       </Formik>
     </Box>
   )

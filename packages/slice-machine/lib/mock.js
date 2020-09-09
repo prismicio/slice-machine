@@ -7,7 +7,8 @@ const { publicRuntimeConfig: config } = getConfig();
 
 const { mocks = {} } = config
 
-const createEmptyMock = (sliceName) => ({
+const createEmptyMock = (sliceName, variation) => ({
+  ...variation,
   slice_type: snakelize(sliceName),
   items: [],
   primary: {}
@@ -34,22 +35,26 @@ const handleFields = (fields = [], sliceName) => {
 
 export default (sliceName, model) => {
 
-  const items = []
-  const mock = createEmptyMock(sliceName)
-  mock.primary = handleFields(
-    Object.entries(model['non-repeat']),
-    sliceName
-  )
+  const variations = model.variations.map(variation => {
+    const mock = createEmptyMock(sliceName, variation)
+    mock.primary = handleFields(
+      Object.entries(variation.primary),
+      sliceName
+    )
 
-  const repeat = Object.entries(model['repeat'])
-  if (repeat.length === 0) {
+    const repeat = Object.entries(variation.items)
+    if (repeat.length === 0) {
+      return mock
+    }
+
+    const items = []
+    for (let i = 0; i < Math.floor(Math.random() * 6) + 1; i++) {
+      items.push(handleFields(repeat, sliceName))
+    }
+    mock.items = items
     return mock
-  }
 
-  for (let i = 0; i < Math.floor(Math.random() * 6) + 1; i++) {
-    items.push(handleFields(repeat, sliceName))
-  }
-  mock.items = items
-
-  return mock
+  })
+  
+  return variations
 }

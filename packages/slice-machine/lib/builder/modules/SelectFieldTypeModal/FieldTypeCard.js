@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text, Button, useThemeUI } from 'theme-ui'
+import { Box, Flex, Heading, Text, useThemeUI } from 'theme-ui'
 
 const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
   const { theme } = useThemeUI()
@@ -6,7 +6,7 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
     <Flex
       sx={{
         p: 2,
-        my: 3,
+        my: 2,
         alignItems: 'center',
         cursor: 'pointer',
         border: ({ colors }) => `1px solid ${colors.borders}`,
@@ -25,8 +25,8 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         }
         size={36}
       />
-      <Box>
-        <Heading as="h5">{title}</Heading>
+      <Box ml={1}>
+        <Heading as="h4">{title}</Heading>
         <Text as="p">{description}</Text>
       </Box>
     </Flex>

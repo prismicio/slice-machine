@@ -7,6 +7,7 @@ import {
 
 const Drawer = ({
   isOpen,
+  push,
   onClose
 }) => {
   return (
@@ -23,6 +24,7 @@ const Drawer = ({
         }}
       >
         <Text as="p"><b>Save to Prismic</b></Text>
+        <button onClick={push}>push</button>
       </Box>
       <Box p={4}>
         content here

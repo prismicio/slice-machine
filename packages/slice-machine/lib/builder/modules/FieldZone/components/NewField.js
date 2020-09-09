@@ -17,7 +17,7 @@ const NewField = ({
   fieldType,
   zone,
   onSave,
-  Model
+  variation
 }) => {
 
   const fieldRef = useRef(null)
@@ -79,7 +79,7 @@ const NewField = ({
                   validate={
                     (value) => validateId({
                       value,
-                      Model,
+                      variation,
                       fieldName: 'id',
                       fieldType: zone,
                       initialValues: { id: null }

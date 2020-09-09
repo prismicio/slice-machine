@@ -2,12 +2,14 @@ import fs from 'fs'
 import path from 'path'
 import slash from 'slash'
 
+import migrate from '../migrate'
 import { getInfoFromPath as getLibraryInfo } from 'sm-commons/methods/lib'
 import { getComponentInfo } from './component'
-import getConfig from "next/config";
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig: config } = getConfig()
 
 async function handleLibraryPath(libPath) {
-  const { publicRuntimeConfig: config } = getConfig();
   const {
     isLocal,
     pathExists,
@@ -33,7 +35,10 @@ async function handleLibraryPath(libPath) {
   const allComponents = pathsToComponents.reduce(
     (acc, curr) => {
       const componentInfo = getComponentInfo(curr)
+      const { model: maybeSliceModel } = componentInfo
+      const { model, migrated } = migrate(maybeSliceModel, componentInfo)
       if (!componentInfo) {
+        console.error('!component: ', curr)
         return acc
       }
       return [
@@ -41,7 +46,9 @@ async function handleLibraryPath(libPath) {
         {
           from,
           pathToSlice,
-          ...componentInfo
+          ...componentInfo,
+          model,
+          migrated
         }
       ]
     }, []
@@ -50,6 +57,5 @@ async function handleLibraryPath(libPath) {
 }
 
 export async function listComponentsByLibrary(libraries) {
-  const registries = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
-  return registries
+  return await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
 }

@@ -1,6 +1,6 @@
 import { Flex, Text } from 'theme-ui'
 
-import IconButton from '../IconButton'
+import IconButton from 'components/IconButton'
 import { FaBars } from 'react-icons/fa'
 
 const ItemHeader = ({

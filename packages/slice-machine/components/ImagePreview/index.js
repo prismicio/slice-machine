@@ -1,4 +1,3 @@
-import path from 'path'
 import { mutate } from 'swr'
 import { useState } from 'react'
 import getConfig from 'next/config'

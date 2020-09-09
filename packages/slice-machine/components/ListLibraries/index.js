@@ -5,6 +5,7 @@ import getConfig from "next/config";
 import {
   Link,
   Flex,
+  Badge,
   Box,
   Button
 } from 'theme-ui'
@@ -26,7 +27,7 @@ export default ({ libraries }) => (
           <h3>{lib}</h3>
           <Box as="ul" p={0} mb={2}>
             {
-              components.map((component, i) => (
+              components.map((component) => console.log({ component }) || (
                 <Flex
                   p={2}
                   as="li"
@@ -39,6 +40,9 @@ export default ({ libraries }) => (
                 >
                   {component.sliceName}
                   <div>
+                    { component.isModified ? <Badge mr={2}>Modified</Badge> : null}
+                    { component.isNew ? <Badge mr={2}>New</Badge> : null}
+                    { !component.isValid ? <Badge mr={2}>Has errors!</Badge> : null}
                     <Button target="_blank" href={previewUrl(component)} as={Link}>Preview</Button>
                     <NextLink passHref {...editLinkProps(component)}>
                       <Button ml={2} as={Link}>edit</Button>

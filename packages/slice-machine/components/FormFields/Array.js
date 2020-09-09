@@ -1,19 +1,46 @@
-import { Fragment } from 'react'
+import { Fragment, useRef, useEffect, useState } from 'react'
 
 import { FieldArray } from 'formik'
 
-import { Label, Flex, Input, Button } from 'theme-ui'
+import { Text, Label, Flex, Input, Button } from 'theme-ui'
 
 const FormFieldArray = ({
   field,
+  meta,
   fieldName,
   label,
+  focusOnNewEntry = true,
   inputPlaceholder,
   buttonLabel
 }) => {
+  const [prevLen, setPrevLen] = useState(meta.value.length)
+  const refs = useRef(new Array(meta.value.length))
+
+  useEffect(() => {
+    refs.current = refs.current.slice(0, meta.value.length)
+  }, [meta.value.length])
+
+  useEffect(() => {
+    const len = refs.current.length
+    if (focusOnNewEntry && len > prevLen) {
+      refs.current[len - 1].focus()
+    }
+    setPrevLen(len)
+  }, [refs.current.length])
+
   return (
     <Fragment>
-      <Label htmlFor={fieldName}>{label}</Label>
+      <Label
+        variant="label.primary"
+        htmlFor={fieldName}
+      >
+        {label}
+        {
+        meta.touched && meta.error ? (
+          <Text as="span" variant="text.labelError">{meta.error}</Text>
+        ) : null
+      }
+      </Label>
       <FieldArray
         name={fieldName}
         id={fieldName}
@@ -27,6 +54,7 @@ const FormFieldArray = ({
                     placeholder={inputPlaceholder}
                     name={`${fieldName}.${i}`}
                     value={opt}
+                    ref={el => refs.current[i] = el} 
                     onChange={({ target: { value }}) => arrayHelpers.replace(i, value)}
                   />
                     <Button

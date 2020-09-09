@@ -1,109 +1,128 @@
 import equal from 'fast-deep-equal'
 
-const fieldsToArray = (fields) =>
-  Object.entries(fields)
-  .reduce((acc, [key, value]) => ([
-    ...acc,
-    {
+const FieldHelpers = {
+  toArray: (fields) =>
+    Object.entries(fields)
+    .reduce((acc, [key, value]) => ([
+      ...acc,
+      {
+        key,
+        value
+      }
+    ]), []),
+  fromArray: (arr) => arr.reduce((acc, {
       key,
       value
-    }
-  ]), [])
+    }) => ({
+      ...acc,
+      [key]: value
+    }), {})
+}
 
-const arrayToFields = (arr) => arr.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
-
-const formatModel = (model, primary, items) => ({
+const formatModel = (model, variations) => ({
   ...model,
-  'non-repeat': arrayToFields(primary),
-  repeat: arrayToFields(items),
+  variations: variations.map(variation => ({
+    ...variation,
+    primary: FieldHelpers.fromArray(variation.primary),
+    items: FieldHelpers.fromArray(variation.items),
+  }))
 })
 
-const createZones = (model) => ({
-  items: model.repeat ? fieldsToArray(model.repeat) : [],
-  primary: model['non-repeat'] ? fieldsToArray(model['non-repeat']) : []
-})
+const createVariations = ({ variations }) => variations.map(variation => ({
+  ...variation,
+  items: variation.items ? FieldHelpers.toArray(variation.items) : [],
+  primary: variation.primary ? FieldHelpers.toArray(variation.primary) : [],
+}))
 
-const deepEqual = (model, primary, items) => {
-  const modelZones = createZones(model)
-  if (primary.find((e, i) => !equal(modelZones.primary[i], e))
-    || items.find((e, i) => !equal(modelZones.items[i], e))) {
-    return false
-  }
-  return true
+const deepEqual = (model, variations) => {
+  const modelVariations = createVariations(model)
+  const isEqual = modelVariations.every((modelVariation, i) => equal(modelVariation, variations[i]))
+  return isEqual
 }
 
 const getMetadata = (model) =>
   Object.entries(model).reduce((acc, [key, value]) => ({
     ...acc,
-    ...(['fieldset', 'description'].includes(key) ? ({ [key]: value }) : {})
+    ...(['id', 'type', 'name', 'description'].includes(key) ? ({ [key]: value }) : {})
   }), {})
 
-const createModel = (intialValues, info) => {
+const createModel = (intialValues, initialInfo) => {
+  let info = initialInfo
   let model = intialValues
-  let zones = createZones(model)
+  let variations = createVariations(intialValues)
 
-  const _reorder = (zone) => (start, end) => {
-    const result = Array.from(zones[zone])
+  const _reorder = (variation, zone) => (start, end) => {
+    const result = Array.from(variation[zone])
     const [removed] = result.splice(start, 1);
     result.splice(end, 0, removed);
-    zones[zone] = result
-    return zones[zone]
+    variation[zone] = result
+    return variation[zone]
   }
 
-  const _replace = (zone) => (key, newKey, value) => {
-    const i = zones[zone].findIndex(e => e.key === key)
+  const _replace = (variation, zone) => (key, newKey, value) => {
+    const i = variation[zone].findIndex(e => e.key === key)
     if (i !== -1) {
-      zones[zone][i] = {
+      variation[zone][i] = {
         key: newKey,
         value
       }
-      return zones[zone][i]
+      return variation[zone][i]
     }
     return null
   }
 
-  const _delete = (zone) => (key) => {
-    const i = zones[zone].findIndex(e => e.key === key)
+  const _delete = (variation, zone) => (key) => {
+    const i = variation[zone].findIndex(e => e.key === key)
     if (i !== -1) {
-      zones[zone].splice(i, 1)
+      variation[zone].splice(i, 1)
     }
-    return zones[zone]
+    return variation[zone]
   }
 
-  const _add = (zone) => (key, value) => {
+  const _add = (variation, zone) => (key, value) => {
     const newItem = { key, value }
-    zones[zone].push(newItem)
+    variation[zone].push(newItem)
     return newItem
   }
 
   return {
-    resetInitialModel: (newInitialValues) => {
+    resetInitialModel: (newInitialValues, newInfo) => {
       model = newInitialValues
-      zones = createZones(newInitialValues)
-    },
-    replace: {
-      primary: _replace('primary'),
-      items: _replace('items'),
-    },
-    delete: {
-      primary: _delete('primary'),
-      items: _delete('items'),
-    },
-    add: {
-      primary: _add('primary'),
-      items: _add('items'),
-    },
-    reorder: {
-      primary: _reorder('primary'),
-      items: _reorder('items'),
+      info = { ...info, ...newInfo }
+      variations = createVariations(newInitialValues)
     },
     get: () => {
       return {
-        ...zones,
         info,
+        variations,
+        variation(id) {
+          const variation = id ? variations.find(e => e.id === id) : variations[0]
+          if (!variation) {
+            return null
+          }
+          return {
+            ...variation,
+            add: {
+              primary: _add(variation, 'primary'),
+              items: _add(variation, 'items'),
+            },
+            reorder: {
+              primary: _reorder(variation, 'primary'),
+              items: _reorder(variation, 'items'),
+            },
+            replace: {
+              primary: _replace(variation, 'primary'),
+              items: _replace(variation, 'items'),
+            },
+            delete: {
+              primary: _delete(variation, 'primary'),
+              items: _delete(variation, 'items'),
+            },
+          }
+        },
         meta: getMetadata(model),
-        value: formatModel(model, zones.primary, zones.items),
-        isTouched: !deepEqual(model, zones.primary, zones.items),
+        value: formatModel(model, variations),
+        isTouched: !deepEqual(model, variations),
       }
     },
   }

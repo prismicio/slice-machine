@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import theme from '../src/theme'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
@@ -15,16 +16,26 @@ function MyApp({
   Component,
   pageProps,
 }) {
+  const router = useRouter()
   const { data: libraries, error } = useSwr('/api/components', fetcher)
 
   if (error) return <div>Failed to load slices</div>
   if (!libraries) return <div></div>;
 
+  const migrations = libraries.reduce((acc, [name, slices]) => {
+    const toMigrate = slices.filter(e => e.migrated)
+    return [...acc, ...toMigrate]
+  }, [])
+
+  if (migrations.length && router.asPath !== "/migration") {
+    router.replace("/migration")
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <BaseStyles>
         <LibProvider value={libraries}>
-          <Component {...pageProps} />
+          <Component {...pageProps} migrations={migrations} />
         </LibProvider>
       </BaseStyles>
     </ThemeProvider>

@@ -6,8 +6,8 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import IconButton from 'components/IconButton'
 import Li from 'components/Li'
+import IconButton from 'components/IconButton'
 import ItemHeader from 'components/ItemHeader'
 
 import * as widgets from 'lib/widgets'

@@ -1,7 +1,8 @@
 export default () => ({
   "colors": {
-    "text": "hsl(10, 20%, 20%)",
-    "background": "#F5F6F9",
+    text: "hsl(10, 20%, 20%)",
+    textClear: "#667586",
+    background: "#F5F6F9",
     primary: "#5263BA",
     "secondary": "hsl(10, 60%, 50%)",
     "highlight": "hsl(10, 40%, 90%)",
@@ -11,7 +12,8 @@ export default () => ({
     gray: "#F8F9FA",
     borders: '#DEE1E5',
     deep: '#0E2150',
-    deep1: '#A0ADE7'
+    deep1: '#A0ADE7',
+    error: 'tomato'
   },
   "fonts": {
     "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
@@ -67,9 +69,20 @@ export default () => ({
     sidebar: 340,
   },
   text: {
+    xs: {
+      fontWeight: '400',
+      color: 'textClear',
+      fontSize: 1
+    },
     small: {
       fontWeight: '500',
       fontSize: 2
+    },
+    labelError: {
+      color: 'error',
+      fontSize: 2,
+      margin: 0,
+      pl: 2
     }
   },
   buttons:  {

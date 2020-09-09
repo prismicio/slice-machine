@@ -23,7 +23,6 @@ const FieldZone = ({
   enterSelectMode,
   modelFieldName,
   newField,
-  Model,
   dataTip,
   onDragEnd,
   onSaveNewField,
@@ -82,7 +81,7 @@ const FieldZone = ({
                   ))}
                   {provided.placeholder}
                   {newField && (
-                    <NewField {...newField} Model={Model} onSave={onSaveNewField} />
+                    <NewField {...newField} onSave={onSaveNewField} />
                   )}
                 </ul>
               )}
@@ -119,7 +118,7 @@ export const NonRepeatZone = ({
     enterEditMode={(field) => enterEditMode('primary', field)}
     title="Non-repeatable zone"
     modelFieldName="primary"
-    newField = {
+    newField={
       newFieldData &&
       newFieldData.zone === 'primary' &&
       newFieldData

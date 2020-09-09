@@ -8,16 +8,20 @@ const { argv } = require("yargs");
 
 const { SM_FILE } = require('sm-commons/consts')
 
+const execOpts = {
+  cwd: __dirname,
+};
+
 main()
 async function main() {
   try {
     console.log(`[slice-machine] Preparing...`);
     const config = handleConfig()
     const port = argv.p || argv.port || config.port || "8080";
-    fs.writeFileSync(path.join(__dirname, '..', 'conf.json'), JSON.stringify({ ...config, cwd: process.cwd() }))
+    fs.writeFileSync(path.join(__dirname, 'conf.json'), JSON.stringify({ ...config, cwd: process.cwd() }))
 
-    await exec(`${__dirname}/../node_modules/.bin/next build ${__dirname}/..`);
-    exec(`${__dirname}/../node_modules/.bin/next start ${__dirname}/.. --port ${port}`);
+    await exec(`./node_modules/.bin/next build`, execOpts);
+    exec(`./node_modules/.bin/next start --port ${port}`, execOpts);
     console.log(`[slice-machine] Running at http://localhost:${port}`);
 
   } catch (err) {
