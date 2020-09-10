@@ -16,7 +16,7 @@ const createMock = (maybeMock) => maybeMock || Math.floor(Math.random() * 9999)
 const Meta = {
   icon: AiOutlineFieldNumber,
   title: 'Number',
-  description: '...'
+  description: 'Numbers'
 }
 
 export default {

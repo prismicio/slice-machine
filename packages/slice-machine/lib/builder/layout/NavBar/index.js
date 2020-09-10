@@ -5,23 +5,14 @@ import { LibContext } from 'src/lib-context'
 import Link from 'next/link'
 
 import {
-  Button,
-  Box,
   Text,
   Select,
   Flex,
   Link as ThemeLink,
-  Spinner
 } from 'theme-ui'
-
-import AfterSave from './AfterSave'
 
 const NavBar = ({
   from,
-  isTouched,
-  onSave,
-  data,
-  setData
 }) => {
 
   const router = useRouter()
@@ -65,18 +56,6 @@ const NavBar = ({
           ))
         }
       </Select>
-
-      <Box sx={{ mx: 'auto' }} />
-      <AfterSave data={data} setData={setData} />
-      <Button
-        onClick={() => isTouched && onSave()}
-        variant={isTouched ? 'primary' : 'disabled'}
-        mr={4}
-        pl={data.loading ? 1 : 3 }
-        sx={{ display: 'flex', alignItems: 'center' }}
-      >
-        { data.loading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } Save Model
-      </Button>
     </Flex>
   )
 }

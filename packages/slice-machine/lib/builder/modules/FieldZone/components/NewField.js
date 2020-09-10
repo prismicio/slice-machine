@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { Input, Flex, Text, Button, Box, Label } from 'theme-ui'
+import { Input, Flex, Text, Button, Label } from 'theme-ui'
 
 import {
   DefaultFields,
@@ -12,6 +12,9 @@ import {
 } from 'lib/forms'
 
 import * as Widgets from 'lib/widgets'
+
+
+import ErrorTooltip from './ErrorTooltip'
 
 const NewField = ({
   fieldType,
@@ -26,7 +29,6 @@ const NewField = ({
     console.error(`Widget of type "${fieldType}" not found. This is a problem on our side!`)
     return <div>Unexpected error. Contact us for more info.</div>
   }
-  const { Meta, schema } = widget
   const FormFields = {
     id: DefaultFields.id
   }
@@ -71,7 +73,9 @@ const NewField = ({
                   alignItems: "center",
                 }}
               >
-                <Text as="p" sx={{ mr: 3 }}>id:</Text>
+                <Text as="p" sx={{ mr: 3, minWidth: '56px' }}>
+                field id
+                </Text>
                 <Field
                   name="id"
                   placeholder="myField"
@@ -88,20 +92,14 @@ const NewField = ({
                   as={Input}
                   innerRef={fieldRef}
                   sx={{ 
-                    border: errors.id ? `1px solid purple` : 'initial',
+                    border: ({ colors }) => errors.id ? `1px solid tomato` : `1px solid ${colors.primary}`,
                     '&:focus': {
                       border: errors.id ? `1px solid tomato` : '1px solid yellow'
                     }
                   }}
                 />
+                <ErrorTooltip errors={errors} />
               </Label>
-              {
-                errors.id ? (
-                  <Box>
-                    <Text as="p" sx={{ color: 'tomato' }}>{errors.id}</Text>
-                 </Box>
-                ) : null
-              }
             </Flex>
             <Button type="submit">Add</Button>
           </Flex>

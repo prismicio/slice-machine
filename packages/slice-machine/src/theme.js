@@ -13,7 +13,8 @@ export default () => ({
     borders: '#DEE1E5',
     deep: '#0E2150',
     deep1: '#A0ADE7',
-    error: 'tomato'
+    error: '#F45A5B',
+    success: '#2CB28A'
   },
   "fonts": {
     "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
@@ -110,6 +111,22 @@ export default () => ({
       top: '1px',
       ml: 1,
       cursor: 'pointer'
+    }
+  },
+  success: {
+    done: {
+      position: 'absolute',
+      top: '57px',
+      width: '100%',
+      p: 2,
+      bg: 'success'
+    },
+    error: {
+      position: 'absolute',
+      top: '57px',
+      width: '100%',
+      p: 2,
+      bg: 'error'
     }
   },
   cards: {

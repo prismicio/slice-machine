@@ -15,7 +15,7 @@ const createMock = (maybeMock) => maybeMock || ``
 const Meta = {
   icon: MdPlace,
   title: 'GeoPoint',
-  description: '...'
+  description: 'A field for storing geo-coordinates'
 }
 
 export default {

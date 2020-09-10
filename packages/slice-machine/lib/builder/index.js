@@ -6,7 +6,12 @@ import {
   Box,
 } from 'theme-ui'
 
-import { Drawer, NavBar, FlexEditor, SideBar } from './layout'
+import {
+  NavBar,
+  FlexEditor,
+  SideBar,
+  Success
+} from './layout'
 
 import PreviewFields from './modules/PreviewFields'
 
@@ -28,8 +33,7 @@ const createStorybookUrls = (componentInfo, variation = 'default-slice') => ({
 })
 
 const Builder = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
+  const [displaySuccess, setDisplaySuccess] = useState(false)
   const Model = useContext(ModelContext)
   const {
     info,
@@ -43,16 +47,13 @@ const Builder = () => {
     loading: false,
     done: false,
     error: null,
-    pushState: info.isNew || info.isModified
   })
-
-  console.log({ pushState: data.pushState })
 
   const variation = Model.get().variation()
 
   const { screenshotUrl, storybookUrl } = createStorybookUrls(info, variation.id)
 
-  const onSave = () => {
+  const onSave = async () => {
     setData({ loading: true, done: false, error: null })
     fetch(createOnSaveUrl({
       ...info,
@@ -66,13 +67,16 @@ const Builder = () => {
 
       },
     }).then(async (res) => {
+      console.log('res here', res.status)
       const newInfo = await res.json()
       hydrate(resetInitialModel(value, newInfo))
       mutate('/api/components')
-      setData({ loading: false, done: true, error: null })
-    }).catch(err => {
-      console.error(err)
-      setData({ loading: false, done: false, error: err })
+      setData({
+        loading: false,
+        done: true,
+        error: null,
+        message: 'Model & mocks have been generated succesfully!'
+      })
     })
   }
 
@@ -82,9 +86,20 @@ const Builder = () => {
     }
   }, [isTouched])
 
-  const onPush = () => setIsOpen(true)
+  // activate/deactivate Success message
+  useEffect(() => {
+    if (data.done || data.error) {
+      setDisplaySuccess(true)
+      setTimeout(() => {
+        setDisplaySuccess(false)
+      }, 2500)
+    } else {
+      setDisplaySuccess(false)
+    }
+  }, [data])
 
-  const push = () => {
+  
+  const onPush = () => {
     fetch(`/api/push?sliceName=${info.sliceName}&from=${info.from}&create=${info.isNew}`, {
       method: 'GET',
       headers: {
@@ -93,11 +108,25 @@ const Builder = () => {
 
       },
     }).then(async res => {
+      if (res.status > 209) {
+        const json = await res.json()
+        return setData({
+          loading: false,
+          done: true,
+          error: json.err,
+          message: 'An unexpected error occured while pushing slice to Prismic'
+        })
+      }
       const newInfo = await res.json()
       hydrate(resetInitialModel(value, newInfo))
       mutate('/api/components')
+      setData({
+        loading: false,
+        done: true,
+        error: null,
+        message: 'Model was correctly saved to Prismic!'
+      })
     })
-    .catch(console.log)
   }
 
   return (
@@ -108,6 +137,7 @@ const Builder = () => {
         data={data}
         setData={setData}
       />
+      <Success data={data} display={displaySuccess} />
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={() => (
@@ -116,6 +146,7 @@ const Builder = () => {
             info={info}
             onPush={onPush}
             onSave={onSave}
+            data={data}
             previewUrl={info.previewUrl}
             storybookUrl={storybookUrl}
           />
@@ -125,11 +156,10 @@ const Builder = () => {
           <PreviewFields Model={Model} variation={variation} storybookUrl={storybookUrl} />
         </Box>
       </FlexEditor>
-      <Drawer
+      {/* <Drawer
         isOpen={isOpen}
-        push={push}
         onClose={() => setIsOpen(false)}
-      />
+      /> */}
       {/* {
         data.done ? (
           <SuccessModal previewUrl={info.previewUrl} />

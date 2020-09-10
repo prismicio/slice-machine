@@ -16,7 +16,7 @@ const createMock = (maybeMock) => maybeMock || ``
 const Meta = {
   icon: FiCode,
   title: 'Embed',
-  description: '...'
+  description: 'Embed videos, songs, tweets, slides, …'
 }
 
 export default {

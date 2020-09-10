@@ -4,7 +4,8 @@ import {
   Heading,
   Text,
   Button,
-  Image
+  Image,
+  Spinner
 } from 'theme-ui'
 
 import Card from 'components/Card'
@@ -36,23 +37,7 @@ const Li = ({ Icon, title, description, bodySx, ...rest }) => (
   </Flex>
 );
 
-/**
- * 
- <Button
-        onClick={() => isTouched && onSave()}
-        variant={isTouched ? 'primary' : 'disabled'}
-        mr={4}
-        pl={data.loading ? 1 : 3 }
-        sx={{ display: 'flex', alignItems: 'center' }}
-      >
-        { data.loading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } Save Model
-      </Button>
- */
-const FooterButton = ({ info, isTouched, onSave, onPush }) => {
-  console.log({
-    disabled: !isTouched && !info.isNew && !info.isModified,
-    info
-  })
+const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
   const text = (() => {
     if (info.isNew && !isTouched) {
       return 'Update custom types in Prismic'
@@ -65,29 +50,33 @@ const FooterButton = ({ info, isTouched, onSave, onPush }) => {
   
   const onClick = isTouched ? onSave : onPush
 
-  const editable = !info.isNew || (!isTouched && !info.isModified)
+  const editable = info.isNew || isTouched || info.isModified
 
   return (
-    <Button
+    <Flex
+      as={Button}
       sx={{
         width: '100%',
         borderTopRightRadius: '0',
         borderTopLeftRadius: '0',
         cursor: 'pointer',
-        p: 3
+        p: 3,
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
       variant={editable ? 'primary' : 'disabled'}
       disabled={!editable}
       onClick={editable ? onClick : null}
     >
-      {text}
-    </Button>
+       { loading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } {text}
+    </Flex>
   )
 
 }
 
 const SideBar = ({
   info,
+  data,
   isTouched,
   onSave,
   onPush,
@@ -107,7 +96,15 @@ const SideBar = ({
         bg="#FFF"
         bodySx={{ p: 0 }}
         footerSx={{ p: 0 }}
-        Footer={() => <FooterButton info={info} isTouched={isTouched} onSave={onSave} onPush={onPush} />}
+        Footer={() => (
+          <FooterButton
+            info={info}
+            isTouched={isTouched}
+            onSave={onSave}
+            onPush={onPush}
+            loading={data.loading}
+          />
+        )}
       >
         <Image src={previewUrl} />
           <ul>

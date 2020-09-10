@@ -13,7 +13,7 @@ import { createDefaultWidgetValues } from '../utils'
 const Meta = {
   icon: MdColorLens,
   title: 'Color',
-  description: '...'
+  description: 'A color picker'
 }
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Color')

@@ -25,9 +25,16 @@ export const getLibrairiesWithFlags = async () => {
   }
   const remoteSlices = await res.json()
   const libraries = await getLibrairies()
-  const withFlags = libraries.map(([sliceName, localSlices]) => {
-    return [sliceName, localSlices.map(localSlice => {
+  const withFlags = libraries.map(([lib, localSlices]) => {
+    return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
+      if (localSlice.sliceName === 'PascalCased2') {
+        console.log({
+          local: JSON.stringify(localSlice.model.variations),
+          online: JSON.stringify(sliceFound.variations),
+          eq: Boolean(sliceFound && !equal(localSlice.model.variations, sliceFound.variations))
+        })
+      }
       const flagged = {
         ...localSlice,
         isNew: Boolean(!sliceFound),

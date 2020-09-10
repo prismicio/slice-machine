@@ -35,12 +35,11 @@ async function handleLibraryPath(libPath) {
   const allComponents = pathsToComponents.reduce(
     (acc, curr) => {
       const componentInfo = getComponentInfo(curr)
-      const { model: maybeSliceModel } = componentInfo
-      const { model, migrated } = migrate(maybeSliceModel, componentInfo)
       if (!componentInfo) {
-        console.error('!component: ', curr)
         return acc
       }
+      const { model: maybeSliceModel } = componentInfo
+      const { model, migrated } = migrate(maybeSliceModel, componentInfo)
       return [
         ...acc,
         {

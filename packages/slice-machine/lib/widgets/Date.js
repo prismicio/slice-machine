@@ -17,7 +17,7 @@ const createMock = (maybeMock) => maybeMock || Timestamp.createMock().toISOStrin
 const Meta = {
   icon: MdDateRange,
   title: 'Date',
-  description: '...'
+  description: 'A calendar date picker'
 }
 
 export default {

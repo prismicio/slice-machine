@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const { url, from, sliceName } = req.query
     const page = await browser.newPage()
     await page.goto(url);
-    await delay(1500)
+    await delay(600)
     await page.screenshot({ path: path.join(config.cwd, from, sliceName, 'preview.png') });
   } catch (e) {
     console.log(e);
