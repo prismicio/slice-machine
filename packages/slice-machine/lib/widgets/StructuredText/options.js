@@ -3,36 +3,38 @@ import { FaParagraph } from 'react-icons/fa'
 const Icon = (v) => ({ size }) => 
    <span style={{ fontSize: size }}>{v}</span>
 
+// strong, em, hyperlink, image, embed, list-item, o-list -item, rtl
+
 const options = [{
-  value: 'p',
+  value: 'paragraph',
   label: 'P',
   icon: Icon('p'),
 }, {
-  value: 'pre',
+  value: 'preformatted',
   label: 'PRE',
   icon: Icon('pre'),
 }, {
-  value: 'h1',
+  value: 'heading1',
   label: 'H1',
   icon: Icon('h1'),
 }, {
-  value: 'h2',
+  value: 'heading2',
   label: 'H2',
   icon: Icon('h2'),
 }, {
-  value: 'h3',
+  value: 'heading3',
   label: 'H3',
   icon: Icon('h3'),
 }, {
-  value: 'h4',
+  value: 'heading4',
   label: 'H4',
   icon: Icon('h4'),
 }, {
-  value: 'h5',
+  value: 'heading5',
   label: 'H5',
   icon: Icon('h5'),
 }, {
-  value: 'h6',
+  value: 'heading6',
   label: 'H6',
   icon: Icon('h6'),
 }, {

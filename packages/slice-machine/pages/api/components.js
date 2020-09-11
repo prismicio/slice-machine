@@ -28,18 +28,11 @@ export const getLibrairiesWithFlags = async () => {
   const withFlags = libraries.map(([lib, localSlices]) => {
     return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
-      if (localSlice.sliceName === 'PascalCased2') {
-        console.log({
-          local: JSON.stringify(localSlice.model.variations),
-          online: JSON.stringify(sliceFound.variations),
-          eq: Boolean(sliceFound && !equal(localSlice.model.variations, sliceFound.variations))
-        })
-      }
       const flagged = {
         ...localSlice,
         isNew: Boolean(!sliceFound),
         // check everything once description is added to online model
-        isModified: Boolean(sliceFound && !equal(localSlice.model.variations, sliceFound.variations)),
+        isModified: sliceFound && !equal(localSlice.model.variations, sliceFound.variations) ? true : false,
       }
       try {
         sliceSchema.validateSync(flagged)

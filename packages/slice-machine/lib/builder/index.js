@@ -67,7 +67,6 @@ const Builder = () => {
 
       },
     }).then(async (res) => {
-      console.log('res here', res.status)
       const newInfo = await res.json()
       hydrate(resetInitialModel(value, newInfo))
       mutate('/api/components')
@@ -100,7 +99,8 @@ const Builder = () => {
 
   
   const onPush = () => {
-    fetch(`/api/push?sliceName=${info.sliceName}&from=${info.from}&create=${info.isNew}`, {
+    setData({ loading: true, done: false, error: null })
+    fetch(`/api/push?sliceName=${info.sliceName}&from=${info.from}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
