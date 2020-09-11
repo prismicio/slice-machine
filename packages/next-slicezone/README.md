@@ -130,7 +130,7 @@ This guide assumes you have a running 9.3+ Next.js project, configured to use Pr
 
 #### 1/ Create an `sm.json` file at the root of your Next app
 ```bash
-{ "librairies": ["~/slices"] }
+{ "libraries": ["~/slices"] }
 ```
 👆 This will help the SliceZone locate your slices.
 
