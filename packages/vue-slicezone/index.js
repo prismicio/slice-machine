@@ -8,22 +8,23 @@ export default {
       slices,
       type,
       uid,
+      queryType,
       resolver: maybeResolver
     } = this.$attrs
 
     const resolver = maybeResolver || this.$sliceMachine.resolver
-    if (!slices && type && uid) {
+    if (!slices && type && (uid || queryType === 'single')) {
       return h(PageFetch, {
         props: {
           ...this.$attrs,
           resolver,
-          scopedSlots: this.$scopedSlots,
+          scopedSlots: this.$scopedSlots
         }
       })
     }
     return h(SliceZone, {
       scopedSlots: this.$scopedSlots,
-      props: { ...this.$attrs, resolver }}
-    )
+      props: { ...this.$attrs, resolver }
+    })
   }
 }
