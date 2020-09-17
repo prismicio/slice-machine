@@ -23,10 +23,11 @@ export default {
       type,
       uid,
       slices,
+      queryType,
       resolver: maybeResolver
     } = this
 
-    const component = (!slices && type && uid) ? PageFetch : SliceZone
+    const component = (!slices && type && (uid || queryType === 'single')) ? PageFetch : SliceZone
     return h(component, {
       scopedSlots: this.$scopedSlots,
       props: {
