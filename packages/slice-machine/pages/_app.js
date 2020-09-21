@@ -21,7 +21,12 @@ function MyApp({
 
   if (error) return <div>Failed to load slices</div>
   if (!libraries) return <div></div>;
-
+  console.log({
+    libraries
+  })
+  if (libraries.err) {
+    return (<div>An error happened while fetching libraries (${libraries.err.status})</div>)
+  }
   const migrations = libraries.reduce((acc, [name, slices]) => {
     const toMigrate = slices.filter(e => e.migrated)
     return [...acc, ...toMigrate]

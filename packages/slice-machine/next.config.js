@@ -1,15 +1,9 @@
 const path = require('path')
-// const userConfig = require('./conf.json')
+const userConfig = require('../../sm.json')
 
-const p = '../../../examples/sm-ui-next/.slicemachine/config.json'
-const userConfig = require(p)
-console.log({ userConfig })
-
+console.log(process.env.NODE_ENV)
 module.exports = {
-  publicRuntimeConfig: {
-    ...userConfig,
-    cwd: path.resolve('../../../examples/sm-ui-next')
-  },
+  publicRuntimeConfig: userConfig,
   webpack: (config, {
     isServer
   }) => {

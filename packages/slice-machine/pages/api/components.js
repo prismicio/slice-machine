@@ -21,7 +21,7 @@ export const getLibrairies = async () => {
 export const getLibrairiesWithFlags = async () => {
   const res = await client.get()
   if (res.status !== 200) {
-    return { err: res }
+    return { err: res, status: res.status }
   }
   const remoteSlices = await res.json()
   const libraries = await getLibrairies()
@@ -54,5 +54,6 @@ export const getLibrairiesWithFlags = async () => {
 }
 export default async function handler(req, res) {
   const librairies = await getLibrairiesWithFlags()
+  console.log('here', librairies)
   return res.status(200).json(librairies)
 }
