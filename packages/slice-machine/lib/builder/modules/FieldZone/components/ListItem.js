@@ -3,6 +3,7 @@ import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
 
 import {
   Flex,
+  Text,
   useThemeUI
 } from 'theme-ui'
 
@@ -24,10 +25,15 @@ const ListItem = ({
   modelFieldName
 }) => {
   const { key } = item
+  const { theme } = useThemeUI()
   const { config: { label }, type } = item.value
+  if (!widgets[type].Meta) {
+    return (
+      <Li><Text>Field type "{type}" not supported</Text></Li>
+    )
+  }
   const { Meta: { icon: WidgetIcon } } = widgets[type]
 
-  const { theme } = useThemeUI()
   return (
     <Draggable draggableId={key} index={index}>
       {(provided) => (

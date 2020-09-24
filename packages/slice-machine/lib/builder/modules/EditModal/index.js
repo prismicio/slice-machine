@@ -34,6 +34,10 @@ const EditModal = ({
     field: [apiId, initialModelValues]
   } = data
 
+  console.log({
+    wisget: Widgets[initialModelValues.type],
+    Meta: Widgets[initialModelValues.type].Meta
+  })
   const { Meta: { icon: WidgetIcon } } = Widgets[initialModelValues.type]
 
   return (

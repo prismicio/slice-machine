@@ -2,42 +2,80 @@
   "id": "call_to_action",
   "type": "SharedSlice",
   "name": "CallToAction",
-  "description": "MySlice Template",
+  "description": "AlternateGrid",
   "variations": [
     {
       "id": "default-slice",
       "name": "Default slice",
       "docURL": "...",
-      "version": "sktwi83ykfdt588n",
-      "description": "MySlice Template",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "AlternateGrid",
       "primary": {
+        "image_side": {
+          "type": "Select",
+          "config": {
+            "options": [
+              "left",
+              "right"
+            ],
+            "default_value": "left",
+            "label": "Image side"
+          }
+        },
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
         "title": {
           "type": "StructuredText",
           "config": {
-            "single": "heading1",
-            "label": "Title",
-            "placeholder": "This is where it all begins..."
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "title"
           }
         },
-        "embed": {
-          "type": "Embed",
+        "description": {
+          "type": "StructuredText",
           "config": {
-            "label": "",
-            "id": "embed",
-            "placeholder": ""
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        },
+        "optional_image": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional image"
           }
         }
       },
       "items": {
-        "boolean": {
-          "type": "Boolean",
+        "optional_icon": {
+          "type": "Image",
           "config": {
-            "label": "",
-            "id": "boolean",
-            "placeholder": "",
-            "placeholder_false": "false",
-            "placeholder_true": "true",
-            "default_value": true
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional Icon"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading3",
+            "label": "title"
           }
         }
       }

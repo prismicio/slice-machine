@@ -92,14 +92,14 @@ const Form = (props) => {
           </Button>
         </Label>
         {
-          options.map(opt => (
+          options.map(opt => console.log({ opt }) || (
             <IconButton
               fitButton
               useActive
-              key={opt.value}
-              label={opt.label}
-              size={20}
-              Icon={opt.icon}
+              // key={opt.value}
+              // label={opt.label}
+              // size={20}
+              // Icon={console.log(opt) || opt.icon}
               sx={{
                 p: '20px',
                 mb: 2,

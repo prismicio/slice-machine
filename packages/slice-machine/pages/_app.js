@@ -32,11 +32,6 @@ function MyApp({
   }
   const { libraries = [], config, errors = {} } = data
   
-  console.log({ libraries })
-  // if (!libraries) return <div>No libraries. Create one!</div>;
-  // if (libraries.err) {
-  //   return (<div>An error happened while fetching remote slices ({libraries.status})</div>)
-  // }
   const migrations = libraries.reduce((acc, [_, slices]) => {
     const toMigrate = slices.filter(e => e.migrated)
     return [...acc, ...toMigrate]
@@ -52,8 +47,8 @@ function MyApp({
         <ConfigProvider value={config}>
           <LibProvider value={libraries}>
             {
-              Object.keys(data.errors).length ? (
-                <ConfigErrors errors ={data.errors} />
+              Object.keys(errors).length ? (
+                <ConfigErrors errors ={errors} />
               ) : (
                 <Fragment>
                   {

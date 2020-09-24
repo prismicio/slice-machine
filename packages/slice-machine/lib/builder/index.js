@@ -22,7 +22,7 @@ const createOnSaveUrl = ({
   value,
   screenshotUrl
 }) =>
-  `/api/update-model?sliceName=${sliceName}&from=${from}&model=${btoa(JSON.stringify(value))}&screenshotUrl=${screenshotUrl}`
+  `/api/update?sliceName=${sliceName}&from=${from}&model=${btoa(JSON.stringify(value))}&screenshotUrl=${screenshotUrl}`
 
 const createStorybookUrls = (storybook, componentInfo, variation = 'default-slice') => ({
   screenshotUrl: `${storybook}/iframe.html?id=${componentInfo.sliceName.toLowerCase()}--${variation}&viewMode=story`,

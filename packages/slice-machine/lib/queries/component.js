@@ -64,7 +64,6 @@ function getFileInfoFromPath(slicePath, componentName) {
 export function getComponentInfo(slicePath) {
   const sliceName = getComponentName(slicePath)
   if (!sliceName || !sliceName.length) {
-    console.error(`[slice-machine] Could not parse slice at path "${slicePath}"`)
     return null
   }
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)

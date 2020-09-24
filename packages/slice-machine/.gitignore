@@ -8,11 +8,10 @@
 # testing
 /coverage
 
-/out/
 
 # production
 /build
-
+/out
 .next
 
 # misc

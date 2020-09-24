@@ -1,6 +1,3 @@
-import path from 'path'
-import { optionValues } from './widgets/StructuredText/options'
-
 const API_URL = 'http://localhost:4000/dev/slices/'
 
 const createFetcher = (repo, dbId) => (body, action = '', method = 'get') => {
