@@ -1,8 +1,8 @@
 import { Flex } from 'theme-ui'
 import { forwardRef } from 'react'
 
-const Li = forwardRef(({ children, sx = {}, ...rest }, ref) => (
-  <Flex
+const Li = forwardRef(({ children, Component = Flex, sx = {}, ...rest }, ref) => (
+  <Component
     as="li"
     sx={{
       p: 3,
@@ -15,7 +15,7 @@ const Li = forwardRef(({ children, sx = {}, ...rest }, ref) => (
     {...rest}
   >
     { children }
-  </Flex>
+  </Component>
 ))
 
 export default Li

@@ -156,7 +156,11 @@ export default () => ({
       }
     }
   },
-  "styles": {
+  styles: {
+    spinner: {
+      bg: 'primary',
+      color: 'primary'
+    },
     navLink: {
       color: '#FFF',
       '&:hover': {

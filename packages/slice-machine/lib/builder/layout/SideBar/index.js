@@ -39,13 +39,10 @@ const Li = ({ Icon, title, description, bodySx, ...rest }) => (
 
 const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
   const text = (() => {
-    if (info.isNew && !isTouched) {
-      return 'Update custom types in Prismic'
-    }
     if (isTouched) {
       return 'Save model to filesystem'
     }
-    return 'Update custom types in Prismic'
+    return 'Push Slice to Prismic'
   })()
   
   const onClick = isTouched ? onSave : onPush
@@ -64,7 +61,7 @@ const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
         alignItems: 'center',
         justifyContent: 'center'
       }}
-      variant={editable ? 'primary' : 'disabled'}
+      variant={editable ? 'buttons.primary' : 'buttons.disabled'}
       disabled={!editable}
       onClick={editable ? onClick : null}
     >

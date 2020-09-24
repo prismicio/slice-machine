@@ -1,0 +1,42 @@
+{
+  "id": "call_to_action3",
+  "type": "SharedSlice",
+  "name": "CallToAction3",
+  "description": "MySlice Template",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "embed": {
+          "type": "Embed",
+          "config": {
+            "label": "",
+            "id": "embed",
+            "placeholder": ""
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "lll": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "lll",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

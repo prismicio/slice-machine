@@ -1,8 +1,8 @@
 import path from 'path'
 import puppeteer from 'puppeteer'
-import getConfig from "next/config"
+import UserConfig from 'lib/config'
 
-const { publicRuntimeConfig: config } = getConfig()
+const { config } = UserConfig
 
 function delay(time) {
   return new Promise(function (resolve) {

@@ -1,7 +1,7 @@
 import uniqid from 'uniqid'
 
 const migrate = (model, info) => {
-  const { type, fieldset, 'non-repeat': nonRepeat, repeat } = model
+  const { type, fieldset, 'non-repeat': nonRepeat = {}, repeat = {} } = model
   if (type !== 'Slice') {
     return { model, migrated: false }
   }

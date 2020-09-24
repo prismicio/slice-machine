@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
-import getConfig from 'next/config'
+import { getConfig } from 'lib/config'
 import initClient from 'lib/client'
 
 import { snakelize } from 'sm-commons/utils/str'
 import { getSlices } from './slices'
 
-const { publicRuntimeConfig: config } = getConfig()
-const client = initClient('shared', config.dbId)
+const { config } = getConfig()
+const client = initClient(config.repo, config.dbId)
 
 const onError = (r, response) => response.status(r.status).send({ message: 'An error occured while pushing slice to Prismic', err: r })
 

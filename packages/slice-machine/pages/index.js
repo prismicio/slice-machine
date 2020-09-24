@@ -1,13 +1,9 @@
 import { useContext } from 'react'
 import Head from 'next/head'
-import getConfig from "next/config";
 
 import Container from '../components/Container'
 import ListLibraries from '../components/ListLibraries'
-import { LibContext } from '../src/lib-context';
-
-const { publicRuntimeConfig: config } = getConfig();
-
+import { LibContext } from '../src/lib-context'
 
 const Index = () => {
   const libraries = useContext(LibContext)
@@ -17,9 +13,16 @@ const Index = () => {
         <title>SliceMachine UI</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main>
-        <ListLibraries libraries={libraries} />
+        {
+          libraries.length ? (
+            <ListLibraries libraries={libraries} />
+          ) : (
+            <div>
+              No library found. <a target="_blank" href="https://prismic.io">Create one!</a>
+            </div>
+          )
+        }
       </main>
     </Container>
   )

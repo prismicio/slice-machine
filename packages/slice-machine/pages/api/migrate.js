@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
-import getConfig from 'next/config'
-import { getLibrairiesWithFlags } from './components'
+import { getConfig } from 'lib/config'
+import { getLibrariesWithFlags } from './libraries'
 import initClient from 'lib/client'
 
-const { publicRuntimeConfig: config } = getConfig()
-const client = initClient('shared', config.dbId)
+const { config } = getConfig()
+const client = initClient(config.repo, config.dbId)
 
 async function migrate(slices, index = 0) {
   if (!slices[index]) {
@@ -17,11 +17,11 @@ async function migrate(slices, index = 0) {
     sliceName,
     from
   } = slices[index]
-  if (isNew) {
-    await client.insert(model)
-  } else {
-    await client.update(model)
-  }
+  // if (isNew) {
+  //   await client.insert(model)
+  // } else {
+  //   await client.update(model)
+  // }
   const rootPath = path.join(config.cwd, from, sliceName)
   const modelPath = path.join(rootPath, 'model.json')
 
@@ -30,7 +30,7 @@ async function migrate(slices, index = 0) {
 }
 
 export default async function handler(req, res) {
-  const libraries = await getLibrairiesWithFlags()
+  const libraries = await getLibrariesWithFlags()
   const migrations = libraries.reduce((acc, [, slices]) => {
     const toMigrate = slices.filter(e => e.migrated)
     return [...acc, ...toMigrate]

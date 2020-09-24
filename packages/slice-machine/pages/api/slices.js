@@ -1,8 +1,8 @@
-import getConfig from 'next/config'
+import { getConfig } from 'lib/config'
 import initClient from 'lib/client'
 
-const { publicRuntimeConfig: config } = getConfig()
-const client = initClient('shared', config.dbId)
+const { config } = getConfig()
+const client = initClient(config.repo, config.dbId)
 
 export const getSlices = async() => {
   const res = await client.get()

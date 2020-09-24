@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react'
-import getConfig from 'next/config'
 
 import Card from 'components/Card'
 
@@ -21,9 +20,6 @@ import * as Widgets from '../../../widgets'
 
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
-
-const { publicRuntimeConfig: config } = getConfig()
-
 
 const TouchedIcon = () => (
   <Flex

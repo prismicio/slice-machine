@@ -1,6 +1,5 @@
-import { Fragment } from "react";
+import { Fragment } from 'react'
 import Link from 'next/link'
-import getConfig from "next/config";
 
 import { Flex, Col } from '../Flex'
 import Card from './Card'
@@ -9,9 +8,6 @@ const editLinkProps = ({ from, sliceName }) => ({
   href: '/[lib]/[sliceName]',
   as: `/${from}/${sliceName}`
 })
-
-const { publicRuntimeConfig: config } = getConfig();
-
 
 export default ({ libraries }) => (
   <Fragment>

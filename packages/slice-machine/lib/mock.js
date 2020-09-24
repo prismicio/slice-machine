@@ -1,10 +1,9 @@
-import getConfig from "next/config";
+import { getConfig } from 'lib/config'
 import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
 
-const { publicRuntimeConfig: config } = getConfig();
-
+const { config } = getConfig()
 const { mocks = {} } = config
 
 const createEmptyMock = (sliceName, variation) => ({

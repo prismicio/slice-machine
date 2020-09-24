@@ -1,25 +1,38 @@
 import equal from 'fast-deep-equal'
-import getConfig from "next/config";
-
 import { listComponentsByLibrary } from 'lib/queries/listComponents'
 
 import initClient from 'lib/client'
 import {
   slice as sliceSchema,
-  libraries as librariesSchema
 } from 'lib/schemas'
 
 import { pascalize } from 'sm-commons/utils/str'
 
-const { publicRuntimeConfig: config } = getConfig()
-const client = initClient('shared', config.dbId)
+import { getConfig } from 'lib/config'
 
-export const getLibrairies = async () => {
-  return await listComponentsByLibrary(config.libraries || []);
+const { config, errors } = getConfig()
+const client = initClient(config.repo, config.dbId)
+
+function timeout(ms, promise) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve({ status: 200, json() { return [] }})
+    }, ms)
+    promise.then((res) => {
+      if (res.status > 209) {
+        return resolve({ status: 200, json() { return [] }})
+      }
+      resolve(res)
+    })
+  })
 }
 
-export const getLibrairiesWithFlags = async () => {
-  const res = await client.get()
+export const getLibrairies = async () => {
+  return await listComponentsByLibrary(config, config.libraries || []);
+}
+
+export const getLibrariesWithFlags = async () => {
+  const res = await timeout(2000, client.get())
   if (res.status !== 200) {
     return { err: res, status: res.status }
   }
@@ -34,6 +47,7 @@ export const getLibrairiesWithFlags = async () => {
         // check everything once description is added to online model
         isModified: sliceFound && !equal(localSlice.model.variations, sliceFound.variations) ? true : false,
       }
+
       try {
         sliceSchema.validateSync(flagged)
         return {
@@ -53,7 +67,13 @@ export const getLibrairiesWithFlags = async () => {
   return withFlags
 }
 export default async function handler(req, res) {
-  const librairies = await getLibrairiesWithFlags()
-  console.log('here', librairies)
-  return res.status(200).json(librairies)
+  if (Object.keys(errors).length) {
+    return res.status(200).json({ errors, config })
+  }
+  const libraries = await getLibrariesWithFlags()
+  return res.status(200).json({
+    libraries,
+    config,
+    errors
+  })
 }

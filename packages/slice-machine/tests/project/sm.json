@@ -1,0 +1,6 @@
+{
+  "libraries": ["@/slices", "vue-essential-slices"],
+  "apiEndpoint": "http://shared.wroom.test/api/v2",
+  "storybook": "http://localhost:6006",
+  "dbId": "shared-fbf7c688-45f9-4a28-b06e-e98f749dc6bd_3"
+}

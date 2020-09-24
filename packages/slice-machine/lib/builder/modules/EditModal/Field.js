@@ -4,7 +4,7 @@ import {
   useField,
 } from 'formik'
 
-import MultiSelect from '@khanacademy/react-multi-select'
+// import MultiSelect from '@khanacademy/react-multi-select'
 
 import { FormFieldCheckbox, FormFieldInput } from 'components/FormFields'
 
@@ -69,12 +69,12 @@ const WidgetFormField = ({
           {formField.type === FormTypes.SELECT && (
             <Fragment>
               <Label>{formField.label || fieldName}</Label>
-              <MultiSelect
+              {/* <MultiSelect
                 options={formField.options}
                 selected={meta.value}
                 onSelectedChanged={(selected) => helpers.setValue(selected)}
                 {...field}
-              />
+              /> */}
             </Fragment>
           )}
         </Fragment>

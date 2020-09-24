@@ -4,11 +4,11 @@ import atob from 'atob'
 import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
 
-import getConfig from 'next/config'
+import { getConfig } from 'lib/config'
 
 import mock from 'lib/mock'
 
-const { publicRuntimeConfig: config } = getConfig()
+const { config } = getConfig()
 
 function delay(time) {
   return new Promise(function (resolve) {
@@ -38,18 +38,13 @@ const fetchStorybookUrl = async (storybookUrl) => {
 export default async function handler(req, res) {
   const { sliceName, from, model: strModel, screenshotUrl } = req.query
 
-  console.log({
-    screenshotUrl
-  })
   const model = JSON.parse(atob(strModel))
 
-  // const fetchreq = await fetchStorybookUrl(screenshotUrl)
-  // console.log(fetchreq.status)
   try {
     await fetchStorybookUrl(screenshotUrl)
   } catch(e) {
     console.error(e)
-    return res.status(400).send({ reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' })
+    return res.status(400).send({ err: res, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' })
   }
 
   const rootPath = path.join(config.cwd, from, sliceName)

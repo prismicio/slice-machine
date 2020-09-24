@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import base64Img from "base64-img";
 
+import { pascalize } from 'sm-commons/utils/str'
+
 /** take a path to slice and return its name  */
 function getComponentName(slicePath) {
   const split = slicePath.split('/');
@@ -66,17 +68,24 @@ export function getComponentInfo(slicePath) {
     return null
   }
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
+  const modelValues = fromJsonFile(slicePath, 'model.json', 'model')
 
   const previewUrl = path.join(slicePath, 'preview.png')
   const hasPreview = has(previewUrl)
+
+  const nameConflict =
+    sliceName !== pascalize(modelValues.model.id)
+    ? { sliceName, id: modelValues.model.id }
+    : null
   return {
     sliceName,
     fileName,
     isDirectory,
     extension,
-    ...fromJsonFile(slicePath, 'model.json', 'model'),
+    ...modelValues, // { model, hasModel }
     ...fromJsonFile(slicePath, 'mock.json', 'mock'),
     hasPreview,
+    nameConflict,
     previewUrl: hasPreview ? base64Img.base64Sync(previewUrl) : null
   }
 }

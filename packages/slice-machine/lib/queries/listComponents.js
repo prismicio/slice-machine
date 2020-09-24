@@ -5,20 +5,20 @@ import slash from 'slash'
 import migrate from '../migrate'
 import { getInfoFromPath as getLibraryInfo } from 'sm-commons/methods/lib'
 import { getComponentInfo } from './component'
-import getConfig from 'next/config'
 
-const { publicRuntimeConfig: config } = getConfig()
-
-async function handleLibraryPath(libPath) {
+async function handleLibraryPath(config, libPath) {
   const {
     isLocal,
     pathExists,
     pathToSlices,
   } = await getLibraryInfo(libPath, config.cwd)
 
+  if (!isLocal) {
+    return null
+  }
   if (!pathExists) {
-    console.warn(`[next-slicezone] path to library "${pathToSlices}" does not exist. Skipping.`)
-    return {}
+    console.warn(`Path to library "${pathToSlices}" does not exist. Skipping.`)
+    return null
   }
 
   // library identifier
@@ -55,6 +55,7 @@ async function handleLibraryPath(libPath) {
   return [from, allComponents]
 }
 
-export async function listComponentsByLibrary(libraries) {
-  return await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
+export async function listComponentsByLibrary(config, libraries) {
+  const payload = await Promise.all(libraries.map(async lib => await handleLibraryPath(config, lib)))
+  return payload.filter(e => e)
 }

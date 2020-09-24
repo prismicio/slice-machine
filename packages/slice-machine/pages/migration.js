@@ -18,7 +18,7 @@ const Migration = ({ migrations }) => {
 
       },
     }).then(() => {
-      mutate('/api/components')
+      mutate('/api/libraries')
     }).catch(err => {
       console.error(err)
     })
