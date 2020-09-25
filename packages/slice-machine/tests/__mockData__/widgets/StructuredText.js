@@ -3,7 +3,7 @@ export const valid = {
   type: "StructuredText",
   config: {
     label: "Title",
-    single: "p",
+    single: "paragraph",
     allowTargetBlank: 1,
   }
 }
@@ -14,7 +14,7 @@ export const multi = {
   config: {
     label: "Title",
     allowTargetBlank: true,
-    multi: 'p,h1,h2'
+    multi: 'paragraph,heading1,heading2'
   }
 }
 
@@ -41,7 +41,7 @@ export const wrongOptionType = {
   __pass: false,
   type: "StructuredText2",
   config: {
-    multi: ["p", "h1"]
+    multi: ["paragraph", "heading1"]
   }
 }
 

@@ -1,9 +1,5 @@
-import { FaParagraph } from 'react-icons/fa'
-
 const Icon = (v) => ({ size }) => 
    <span style={{ fontSize: size }}>{v}</span>
-
-// strong, em, hyperlink, image, embed, list-item, o-list -item, rtl
 
 const options = [{
   value: 'paragraph',

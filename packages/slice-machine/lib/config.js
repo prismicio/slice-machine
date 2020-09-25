@@ -14,7 +14,6 @@ const validate = (config) => {
     }
   }
   if (!config.storybook) {
-    console.log({ here: 'storybook' })
     errors.storybook = {
       message: 'Excepts a property "storybook" which points to local Storybook.',
       example: 'http://localhost:8888',

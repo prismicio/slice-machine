@@ -26,7 +26,6 @@ export const libraries = yup.array().min(1).of(
     name: 'example text',
     message: '${path} is not right',
     test: function(value) {
-      console.log({ value, this: this.parent })
       return true
     }
   })

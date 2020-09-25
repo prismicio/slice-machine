@@ -23,14 +23,11 @@ export default async function handler(req, res) {
   const model = fs.readFileSync(modelPath, 'utf-8')
   if (slices.find(e => e.id === snakelize(sliceName))) {
     const r = await client.update(model)
-    console.log(r.status, ' status in update')
     if (r.status > 209) {
       return onError(r, res)
     }
   } else {
-    console.log(model)
     const r = await client.insert(model)
-    console.log(r.status, ' status in insert')
     if (r.status !== 209) {
       return onError(r, res)
     }

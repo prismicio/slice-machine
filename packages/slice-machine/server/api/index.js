@@ -18,7 +18,6 @@ router.use('/migrate', async function (_, res) {
 router.use('/update', async function (req, res) {
   const payload = await update(req)
   if (payload.err) {
-    console.log('here!', payload.err)
     return res.status(400).json(payload)
   }
   return res.status(200).json(payload)

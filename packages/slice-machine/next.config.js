@@ -1,8 +1,6 @@
 const path = require('path')
 const withCustomBabelConfigFile = require('next-plugin-custom-babel-config');
 
-console.log(__dirname, path.resolve(path.join(__dirname, 'node_modules', 'react')))
-
 module.exports = withCustomBabelConfigFile({
   babelConfigFile: path.resolve("./babel.config.js"),
   env: {
