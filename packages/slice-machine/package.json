@@ -7,7 +7,7 @@
     "dev": "next dev",
     "prepublishOnly": "next build && next export",
     "serve": "node -r esm ./server/index.js",
-    "dev-server": "PORT=9999 CWD=./tests/project node -r esm ./server/index.js",
+    "dev-server": "PORT=9999 CWD=./tests/project nodemon -r esm ./server/index.js",
     "build": "next build",
     "export": "next export",
     "start": "next start",
@@ -49,6 +49,7 @@
     "yup": "^0.29.1"
   },
   "devDependencies": {
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4"
   }
 }

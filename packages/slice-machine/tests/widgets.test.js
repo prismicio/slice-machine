@@ -23,12 +23,6 @@ test.each(WidgetsTable)('%s: schema validates configuration', (name, widget) => 
     })()
     
     if (err) {
-      if (name === 'StructuredText' && t.__pass === true) {
-        console.log({
-          err,
-          testName
-        })
-      }
       expect(t.__pass).toBe(false)
     } else {
       expect(t.__pass).toBe(true)

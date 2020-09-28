@@ -8,10 +8,10 @@ export default async function handler(req, res) {
     } : {})
   }).then(async response => {
     const payload = await response.json()
-    console.log({ response, payload })
-    res.status(response.status).json(payload)
+    console.error(`[slicemachine-dev] Payload at route "${req.url}": ${payload}`)
+    res.status(response.status || 200).json(payload)
   }).catch(async err => {
-    console.log({ err })
-    res.status(err.status).json(err)
+    console.error(`[slicemachine-dev] Error at route "${req.url}": ${err}`)
+    res.status(err.status || 400).json(err)
   })
 }

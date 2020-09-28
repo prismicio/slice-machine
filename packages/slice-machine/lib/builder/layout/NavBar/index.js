@@ -47,7 +47,7 @@ const NavBar = ({
       </Text>
       <Select
         sx={{ ml: 2, variant: 'styles.navLink', pl: 2, pr: 4, py: 0, bg: 'rgba(255, 255, 255, .4)', border: 'none' }}
-        onChange={e => router.push(`/${from}/${e.target.value}`)}
+        onChange={e => location.href = `/${from}/${e.target.value}`}
         defaultValue={router.query.sliceName}
       >
         {
