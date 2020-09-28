@@ -44,7 +44,9 @@ export const getConfig = () => {
     config: {
       cwd,
       ...userConfig,
-      repo: parsedRepo.labels ? parsedRepo.labels[0] : parsedRepo.subDomains[0]
+      ...(parsedRepo.labels || parsedRepo.subDomains ? {
+        repo: parsedRepo.labels ? parsedRepo.labels[0] : parsedRepo.subDomains[0]
+      } : {})
     }
   }
 }

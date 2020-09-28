@@ -1,3 +1,4 @@
+import { snakelize } from 'sm-commons/utils/str'
 import uniqid from 'uniqid'
 
 const migrate = (model, info) => {
@@ -6,7 +7,7 @@ const migrate = (model, info) => {
     return { model, migrated: false }
   }
   const newModel = {
-    id: info.mock.slice_type,
+    id: snakelize(info.sliceName),
     type: 'SharedSlice',
     name: info.sliceName,
     description: fieldset,

@@ -23,4 +23,8 @@ router.use('/update', async function (req, res) {
   return res.status(200).json(payload)
 })
 
+router.use('*', async function (req, res) {
+  return res.status(404).json({ err: 'not-found', reason: `Could not find route "${req.url}"`})
+})
+
 module.exports = router
