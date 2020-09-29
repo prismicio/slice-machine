@@ -4,7 +4,9 @@
   "version": "0.0.23",
   "description": "Slice Machine API",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "serverless offline",
+    "package": "serverless package"
   },
   "author": "Hugo Villain",
   "license": "ISC",
@@ -21,10 +23,12 @@
     "mustache": "^4.0.0",
     "node-fetch": "^2.6.0",
     "request": "^2.88.2",
+    "serverless-req-res": "^1.5.1",
     "sm-commons": "^0.0.16",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
-    "@now/node": "^1.4.1"
+    "@now/node": "^1.4.1",
+    "serverless-offline": "^6.8.0"
   }
 }
