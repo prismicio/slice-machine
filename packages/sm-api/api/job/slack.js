@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 
 async function main(text) {
-  const rawResponse = await fetch(process.env.SLACK_MESAGE_URI, {
+  const rawResponse = await fetch(process.env.SLACK_MESSAGE_URI, {
     method: "POST",
     headers: {
       Accept: "application/json",
