@@ -5,7 +5,7 @@ const {
 } = require("../common/consts");
 const cors = require("../common/cors");
 
-module.exports = cors(async (req, res) => {
+module.exports = async (req, res) => {
   const {
     query: {
       strip,
@@ -28,4 +28,4 @@ module.exports = cors(async (req, res) => {
     })
   })
   res.send(resolved)
-});
+};

@@ -20,7 +20,7 @@ async function fetchLibraries({ framework, list }) {
   return await cursor.toArray()
 }
 
-module.exports = cors(async (req, res) => {
+module.exports = async (req, res) => {
   const {
     query: {
       framework,
@@ -45,4 +45,4 @@ module.exports = cors(async (req, res) => {
 
   res.send(libraries)
 
-});
+};

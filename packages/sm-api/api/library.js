@@ -8,7 +8,7 @@ function fetchLibrary(packageName) {
   return Mongo.collections.libraries((coll) => coll.findOne({ packageName }));
 }
 
-const mod = (module.exports = cors(async (req, res) => {
+const mod = (module.exports = async (req, res) => {
   const {
     query: { lib, library, strip, preserveDefaults },
   } = req;
@@ -38,6 +38,6 @@ const mod = (module.exports = cors(async (req, res) => {
     return res.send(sm);
   }
   return res.status(404).send({});
-}));
+});
 
 mod.fetchLibrary = fetchLibrary;

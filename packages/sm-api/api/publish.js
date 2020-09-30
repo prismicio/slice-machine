@@ -8,7 +8,7 @@ const githubWhiteList = {
   "prismicio/vue-essential-slices": true
 };
 
-module.exports = cors(async (req, res) => {
+module.exports = async (req, res) => {
   const body = req.body || {}
   if (!body.ref || !body.head_commit || !body.repository) {
     return res.status(400).send('')
@@ -41,12 +41,12 @@ module.exports = cors(async (req, res) => {
         })
       ));
 
-      return res.send(sm);
+      return res.json(sm);
     } catch(e) {
       // send this via email
       console.error(e);
     }
   }
   res.status(200).send('')
-});
+};
 

@@ -5,7 +5,7 @@ const cors = require("../common/cors");
 
 const fetchLibrary = require('./library').fetchLibrary
 
-module.exports = cors(async (req, res) => {
+module.exports = async (req, res) => {
   const {
     query: { lib, library, framework = 'nuxt' }
   } = req;
@@ -22,6 +22,6 @@ module.exports = cors(async (req, res) => {
 
   const sm = await fetchLibrary(packageName);
 
-  res.send(sm.slices);
-});
+  res.json(sm.slices);
+};
 

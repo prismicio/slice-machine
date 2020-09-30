@@ -9,7 +9,7 @@ const Mustache = require('mustache');
 const streamPipeline = util.promisify(require("stream").pipeline);
 
 const cors = require("../common/cors");
-
+ 
 const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 
 const { libraries } = require("../common/consts");
@@ -36,7 +36,7 @@ async function download(endpoint, params) {
   return tmpZipFile;
 }
 
-module.exports = cors(async (req, res) => {
+module.exports = async (req, res) => {
   try {
     const {
       query: {
@@ -114,5 +114,5 @@ module.exports = cors(async (req, res) => {
   } catch (e) {
     console.error(e);
   }
-});
+};
 
