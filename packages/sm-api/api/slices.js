@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
     query: { lib, library, framework = 'nuxt' }
   } = req;
   const defaultLibrary = require(`../bootstrap/${framework}`).defaultLibrary;
-  const packageName = lib || library || defaultLibrary;
+  const packageName = lib || library || defaultLibrary.packageName;
 
   if (!packageName) {
     return res
