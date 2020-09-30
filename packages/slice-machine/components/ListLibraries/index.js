@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { Flex, Col } from '../Flex'
 import Card from './Card'
 
-const editLinkProps = ({ from, sliceName }) => ({
+const editLinkProps = ({ href, sliceName }) => ({
   href: '/[lib]/[sliceName]',
-  as: `/${from}/${sliceName}`
+  as: `/${href}/${sliceName}`
 })
 
 export default ({ libraries }) => (

@@ -44,6 +44,7 @@ async function handleLibraryPath(config, libPath) {
         ...acc,
         {
           from,
+          href: from.replace(/\//g, "--"),
           pathToSlice,
           ...componentInfo,
           model,

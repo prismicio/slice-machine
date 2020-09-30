@@ -6,7 +6,7 @@ import { pascalize } from 'sm-commons/utils/str'
 
 /** take a path to slice and return its name  */
 function getComponentName(slicePath) {
-  const split = slicePath.split('/');
+  const split = slicePath.split(path.sep);
   const pop = split.pop();
   if (pop.indexOf('index.') === 0) {
     return split.pop();

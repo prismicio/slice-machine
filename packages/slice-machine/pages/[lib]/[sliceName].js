@@ -9,7 +9,7 @@ const SliceEditor = () => {
   const router = useRouter()
   const libraries = useContext(LibContext)
 
-  const lib = libraries.find(e => e[0] === router.query.lib)
+  const lib = libraries.find(e => e[0] === router.query.lib.replace(/--/g, "/"))
 
   if (!lib) {
     return <div>Library not found</div>

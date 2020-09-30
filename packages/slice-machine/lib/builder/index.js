@@ -140,6 +140,7 @@ const Builder = () => {
     <Box>
       <NavBar
         from={info.from}
+        href={info.href}
         onSave={onSave}
         data={data}
         setData={setData}
