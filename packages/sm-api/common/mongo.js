@@ -1,8 +1,6 @@
 const url = require("url");
 const MongoClient = require("mongodb").MongoClient;
 
-const URI = process.env.MONGODB_URI;
-const databaseName = url.parse(URI).pathname.substr(1);
 let cachedClient;
 
 function acquireClient() {
@@ -17,6 +15,9 @@ function acquireClient() {
 }
 
 async function acquireDb() {
+  const URI = process.env.MONGODB_URI;
+  const databaseName = url.parse(URI).pathname.substr(1);
+  
   const client = await acquireClient();
   return client.db(databaseName);
 }
