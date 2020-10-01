@@ -4,7 +4,7 @@
   "version": "0.0.23",
   "description": "Slice Machine API",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "serverless offline",
     "package": "serverless package"
   },
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@now/node": "^1.4.1",
+    "jest": "^26.4.2",
     "serverless-dotenv-plugin": "^3.0.0",
     "serverless-offline": "^6.8.0"
   }
