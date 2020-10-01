@@ -1,15 +1,38 @@
+const fetch = require("node-fetch");
 const handleStripKeys = require("../common").handleStripKeys;
-const Mongo = require("../common/mongo");
+const expectLibrary = require("sm-commons/expect").expectLibrary;
 
-const { defaultStripKeys } = require("../common/consts");
+const { parsePackagePathname } = require('../common/package')
 
-function fetchLibrary(packageName) {
-  return Mongo.collections.libraries((coll) => coll.findOne({ packageName }));
+const {
+  SM_FILE,
+  REGISTRY_URL,
+  defaultStripKeys,
+} = require('../common/consts')
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (response.status !== 200) {
+    throw new Error(`[api/job] Unable to fetch "${url}"`);
+  }
+  return await response.json();
+}
+
+async function fetchLibrary(packageName, expect = true) {
+  const { packageSpec } = parsePackagePathname(packageName);
+  const packageSmUrl = `${REGISTRY_URL}${packageSpec}/${SM_FILE}`;
+
+  const sm = await fetchJson(packageSmUrl);
+
+  if (expect) {
+    expectLibrary(sm);
+  }
+  return sm
 }
 
 const mod = (module.exports = async (req, res) => {
   const {
-    query: { lib, library, strip, preserveDefaults },
+    query: { lib, library, strip, preserveDefaults }
   } = req;
 
   const packageName = lib || library;
@@ -22,16 +45,12 @@ const mod = (module.exports = async (req, res) => {
       );
   }
 
-  const keysToStrip = handleStripKeys(
-    strip,
-    defaultStripKeys.library,
-    preserveDefaults
-  );
+  const sm = await fetchLibrary(packageName)
 
-  const sm = await fetchLibrary(packageName);
+  const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 
   if (sm) {
-    keysToStrip.forEach((key) => {
+    keysToStrip.forEach(key => {
       delete sm[key];
     });
     return res.json(sm);
@@ -40,4 +59,4 @@ const mod = (module.exports = async (req, res) => {
   return res.json(404, {});
 });
 
-mod.fetchLibrary = fetchLibrary;
+mod.fetchLibrary = fetchLibrary
