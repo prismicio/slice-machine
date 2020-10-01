@@ -12,9 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@slack/web-api": "^5.7.0",
-    "adm-zip": "^0.4.14",
     "cross-fetch": "^3.0.4",
-    "jszip": "^3.2.2",
     "jszip-utils": "^0.1.0",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.2",

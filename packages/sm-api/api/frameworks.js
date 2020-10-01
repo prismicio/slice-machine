@@ -3,7 +3,6 @@ const {
   defaultStripKeys,
   SUPPORTED_FRAMEWORKS
 } = require("../common/consts");
-const cors = require("../common/cors");
 
 module.exports = async (req, res) => {
   const {

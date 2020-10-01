@@ -1,7 +1,3 @@
-const fs = require('fs');
-const request = require("request");
-const tmp = require('tmp');
-
 const fetchLibrary = require('./library').fetchLibrary
 
 module.exports = async (req, res) => {

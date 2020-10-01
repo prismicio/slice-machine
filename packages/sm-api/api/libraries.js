@@ -1,7 +1,6 @@
 const Mongo = require('../common/mongo');
 const handleStripKeys = require("../common").handleStripKeys;
 const { defaultStripKeys } = require('../common/consts');
-const cors = require("../common/cors");
 
 async function fetchLibraries({ framework, list }) {
   const search = {
