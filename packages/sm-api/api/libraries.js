@@ -1,8 +1,8 @@
 const Mongo = require('../common/mongo');
 const handleStripKeys = require("../common").handleStripKeys;
 const { defaultStripKeys } = require('../common/consts');
-
-async function fetchLibraries({ framework, list }) {
+ 
+async function fetchLibraries({ framework, list }) { 
   const search = {
     ...(framework ? {
       framework
@@ -45,3 +45,5 @@ module.exports = async (req, res) => {
   res.json(libraries)
 
 };
+
+module.exports.fetchLibraries = fetchLibraries;
