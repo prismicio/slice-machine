@@ -1,4 +1,4 @@
-const current = "0.0.15-alpha.4";
+const { version } = require('../package.json');
 const deprecatedUnder = "0.0.14";
 
-module.exports = (req, res) => res.json({ current, deprecatedUnder });
+module.exports = (req, res) => res.json({ current: version, deprecatedUnder });
