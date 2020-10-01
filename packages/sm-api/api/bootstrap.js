@@ -105,12 +105,21 @@ module.exports = async (req, res) => {
       })
     )
 
-    fZip
-      .generateNodeStream({
+    const buf = [];
+    fZip.generateNodeStream({
         type: "nodebuffer",
-        streamFiles: true
-      })
-      .pipe(res);
+        // streamFiles: true,
+        compression: "DEFLATE",
+        platform: process.platform,
+    }).on('data', (d) => {
+      buf.push(d)
+    }).on('end', () => {
+      const data = Buffer.concat(buf).toString();
+      res.headers("Content-type", "application/zip")
+      res.send(200, data)
+    }).on('error', (err) => {
+      throw err;
+    });
   } catch (e) {
     console.error(e);
   }

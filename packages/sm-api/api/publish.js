@@ -1,5 +1,4 @@
 const fetch = require("node-fetch")
-const cors = require("../common/cors");
 const Mongo = require('../common/mongo');
 
 const SM_CONFIG_FILE = "sm.json";
@@ -11,17 +10,20 @@ const githubWhiteList = {
 module.exports = async (req, res) => {
   const body = req.body || {}
   if (!body.ref || !body.head_commit || !body.repository) {
-    return res.status(400).send('')
+    // res.error ?
+    return res.send(400, '')
   }
 
   const repoName = body.repository.full_name
   if (!githubWhiteList[repoName]) {
-    return res.status(403).send('')
+    // res.error ?
+    return res.send(403, '')
   }
 
   const branch = body.ref.split("/").pop()
   if (branch !== "master") {
-    return res.status(200).send('')
+    // res.end() ?
+    return res.send(200, '')
   }
 
   const smFile =
@@ -47,6 +49,7 @@ module.exports = async (req, res) => {
       console.error(e);
     }
   }
-  res.status(200).send('')
+  // res.end() ?
+  res.send(200, '')
 };
 

@@ -1,5 +1,4 @@
 const handleStripKeys = require("../common").handleStripKeys;
-const cors = require("../common/cors");
 const Mongo = require("../common/mongo");
 
 const { defaultStripKeys } = require("../common/consts");
@@ -16,9 +15,9 @@ const mod = (module.exports = async (req, res) => {
   const packageName = lib || library;
 
   if (!packageName) {
+    // res.error ?
     return res
-      .status(400)
-      .send(
+      .send(400,
         'Endpoint expects query "lib" to be defined.\nExample request: `/api/library?lib=my-lib`'
       );
   }
@@ -35,9 +34,10 @@ const mod = (module.exports = async (req, res) => {
     keysToStrip.forEach((key) => {
       delete sm[key];
     });
-    return res.send(sm);
+    return res.json(sm);
   }
-  return res.status(404).send({});
+  // res.error ?
+  return res.json(404, {});
 });
 
 mod.fetchLibrary = fetchLibrary;

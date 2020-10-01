@@ -1,7 +1,6 @@
 const fs = require('fs');
 const request = require("request");
 const tmp = require('tmp');
-const cors = require("../common/cors");
 
 const fetchLibrary = require('./library').fetchLibrary
 
@@ -13,9 +12,9 @@ module.exports = async (req, res) => {
   const packageName = lib || library || defaultLibrary.packageName;
 
   if (!packageName) {
+    // res.error ?
     return res
-      .status(400)
-      .send(
+      .send(400,
         'Endpoint expects query parameter "lib" to be defined.\nExample request: `/api/library?lib=my-lib`'
       );
   }

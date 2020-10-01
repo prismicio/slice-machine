@@ -58,7 +58,7 @@ function format(index, cts, slices, keysToMerge) {
       .reduce((acc, [fileName, content]) => ({
         ...acc,
         [fileName]: content
-      }))
+      }), {})
   }
 }
 
@@ -71,3 +71,4 @@ module.exports = {
     return format(index, cts, slices, ['page'])
   }
 }
+ 

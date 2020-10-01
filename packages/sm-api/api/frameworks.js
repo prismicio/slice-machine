@@ -27,5 +27,5 @@ module.exports = async (req, res) => {
       delete framework[key]
     })
   })
-  res.send(resolved)
+  res.json(resolved)
 };

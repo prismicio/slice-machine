@@ -43,6 +43,6 @@ module.exports = async (req, res) => {
     })
   })
 
-  res.send(libraries)
+  res.json(libraries)
 
 };
