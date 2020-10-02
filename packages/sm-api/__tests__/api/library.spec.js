@@ -1,4 +1,3 @@
-const { library } = require('../../api');
 const response = require('../../__stubs__/library-fetch-vue-essential-slices.json');
 
 describe('library', () => {
@@ -12,6 +11,8 @@ describe('library', () => {
     });
 
     const event = { queryStringParameters: { lib: 'vue-essential-slices' } };
+
+    const { library } = require('../../api');
 
     const result = await library(event);
     const body = JSON.parse(result.body);

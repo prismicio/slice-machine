@@ -10,6 +10,13 @@ describe('slices', () => {
         }),
       },
     }));
+
+    jest.mock('node-fetch');
+    const fetch = require('node-fetch');
+    fetch.mockResolvedValue({
+      status: 200,
+      json: jest.fn().mockResolvedValue(require('../../__stubs__/vue-essential-slices@0.2.0-sm.json'))
+    })
     
     const { slices } = require('../../api');
 
