@@ -4,7 +4,7 @@ const MongoClient = require("mongodb").MongoClient;
 let cachedClient = null;
 
 function acquireClient() {
-  
+
   if(cachedClient) return Promise.resolve(cachedClient);
   
   return MongoClient.connect(process.env.MONGODB_URI, {
@@ -12,6 +12,9 @@ function acquireClient() {
     useUnifiedTopology: true
   }).then((db) => {
     cachedClient = db;
+    cachedClient.on('close', () => {
+      cachedClient = null;
+    });    
     return cachedClient;
   });
 }
