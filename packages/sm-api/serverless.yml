@@ -13,6 +13,13 @@ plugins:
   - serverless-offline
 
 functions:
+  test: 
+    handler: handler.test
+    events: 
+      - http:
+          path: test
+          method: get
+          
   bootstrap: 
     handler: handler.bootstrap
     events: 

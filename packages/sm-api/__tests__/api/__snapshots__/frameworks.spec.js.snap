@@ -1,100 +1,97 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`frameworks should work 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      Array [
-        Object {
-          "framework": "nuxt",
-          "manifest": Object {
-            "bootstraper": Array [
-              "npx",
-              Array [
-                "create-nuxt-app",
-              ],
-            ],
-            "configPath": "nuxt.config.js",
-            "css": Array [],
-            "dependencies": Array [
-              "prismic-javascript",
-              "@prismicio/vue",
-              "@nuxtjs/prismic",
-              "vue-slicezone",
-              "nuxt-sm",
-              "vue-essential-slices",
-            ],
-            "devDependencies": Array [],
-            "firstCommand": "npm run dev",
-            "framework": "nuxt",
-            "frameworkName": "Nuxt",
-            "libraries": Array [
-              "vue-essential-slices",
-            ],
-            "modules": Array [
-              Array [
-                "@nuxtjs/prismic",
-                Object {
-                  "apiOptions": Object {
-                    "routes": null,
-                  },
-                  "endpoint": "{{{ apiEndpoint }}}",
-                },
-              ],
-              Array [
-                "nuxt-sm",
-              ],
-            ],
-            "projectTests": Array [
-              Object {
-                "arg": "-f",
-                "path": "nuxt.config.js",
-                "reason": "No \`nuxt.config.js\` file found",
-              },
-              Object {
-                "arg": "-d",
-                "path": "pages",
-                "reason": "No \`pages\` folder found",
-              },
-            ],
-            "prompts": Array [
-              Object {
-                "path": "custom_types",
-                "strategies": Array [
-                  "bootstrap",
-                  "init",
-                ],
-                "type": "folder",
-              },
-            ],
-            "script": Array [],
-            "transpile": Array [
-              "vue-slicezone",
-              "nuxt-sm",
-            ],
+Array [
+  Object {
+    "framework": "nuxt",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-nuxt-app",
+        ],
+      ],
+      "configPath": "nuxt.config.js",
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "@prismicio/vue",
+        "@nuxtjs/prismic",
+        "vue-slicezone",
+        "nuxt-sm",
+        "vue-essential-slices",
+      ],
+      "devDependencies": Array [],
+      "firstCommand": "npm run dev",
+      "framework": "nuxt",
+      "frameworkName": "Nuxt",
+      "libraries": Array [
+        "vue-essential-slices",
+      ],
+      "modules": Array [
+        Array [
+          "@nuxtjs/prismic",
+          Object {
+            "apiOptions": Object {
+              "routes": null,
+            },
+            "endpoint": "{{{ apiEndpoint }}}",
           },
+        ],
+        Array [
+          "nuxt-sm",
+        ],
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-f",
+          "path": "nuxt.config.js",
+          "reason": "No \`nuxt.config.js\` file found",
         },
         Object {
-          "framework": "next",
-          "manifest": Object {
-            "bootstraper": Array [
-              "npx",
-              Array [
-                "create-react-app",
-              ],
-            ],
-            "css": Array [],
-            "dependencies": Array [
-              "prismic-javascript",
-              "prismic-reactjs",
-              "next-slicezone",
-              "next-transpile-modules",
-              "essential-slices",
-            ],
-            "devDependencies": Array [],
-            "files": Array [
-              Object {
-                "content": "// pages/_app.js
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "prompts": Array [
+        Object {
+          "path": "custom_types",
+          "strategies": Array [
+            "bootstrap",
+            "init",
+          ],
+          "type": "folder",
+        },
+      ],
+      "script": Array [],
+      "transpile": Array [
+        "vue-slicezone",
+        "nuxt-sm",
+      ],
+    },
+  },
+  Object {
+    "framework": "next",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-react-app",
+        ],
+      ],
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "prismic-reactjs",
+        "next-slicezone",
+        "next-transpile-modules",
+        "essential-slices",
+      ],
+      "devDependencies": Array [],
+      "files": Array [
+        Object {
+          "content": "// pages/_app.js
 import React from 'react'
 import NextApp from 'next/app'
 
@@ -114,11 +111,11 @@ export default class App extends NextApp {
     )
   }
 }",
-                "name": "_app.js",
-                "path": "./pages",
-              },
-              Object {
-                "content": "// pages/_document.js
+          "name": "_app.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "// pages/_document.js
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { InitializeColorMode } from 'theme-ui'
 
@@ -144,18 +141,18 @@ export default class extends Document {
     )
   }
 }",
-                "name": "_document.js",
-                "path": "./pages",
-              },
-              Object {
-                "content": "const withTM = require('next-transpile-modules')(['next-slicezone']);
+          "name": "_document.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "const withTM = require('next-transpile-modules')(['next-slicezone']);
 
 module.exports = withTM();",
-                "name": "next.config.js",
-                "path": "./",
-              },
-              Object {
-                "content": "/** Example file */
+          "name": "next.config.js",
+          "path": "./",
+        },
+        Object {
+          "content": "/** Example file */
 
 import Prismic from 'prismic-javascript'
 import Link from 'next/link'
@@ -207,43 +204,34 @@ export const Router = {
 export const Client = (req = null, options = {}) => (
   Prismic.client(apiEndpoint, Object.assign({ routes: Router.routes }, options))
 )",
-                "name": "prismic.js",
-                "path": "./",
-              },
-              Object {
-                "content": "import React from 'react'
+          "name": "prismic.js",
+          "path": "./",
+        },
+        Object {
+          "content": "import React from 'react'
 
 export default ({ i }) => {
   return () => i ? <div /> : <p>Your SliceZone is loading... You might need to reload this page.</p>
 }",
-                "name": "sm-resolver.js",
-                "path": "./",
-              },
-            ],
-            "firstCommand": "npm run dev",
-            "framework": "next",
-            "frameworkName": "Next",
-            "libraries": Array [
-              "essential-slices",
-            ],
-            "projectTests": Array [
-              Object {
-                "arg": "-d",
-                "path": "pages",
-                "reason": "No \`pages\` folder found",
-              },
-            ],
-            "script": Array [],
-          },
+          "name": "sm-resolver.js",
+          "path": "./",
         },
       ],
-    ],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
+      "firstCommand": "npm run dev",
+      "framework": "next",
+      "frameworkName": "Next",
+      "libraries": Array [
+        "essential-slices",
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "script": Array [],
     },
-  ],
-}
+  },
+]
 `;

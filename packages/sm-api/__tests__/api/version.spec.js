@@ -1,15 +1,15 @@
 
 describe('version', () => {
-  it('should work', () => {
+  it('should work', async () => {
     const pkg = require('../../package.json');
-    const req = {};
-    const res = { json: jest.fn() };
     
     const { version } = require('../../api');
 
-    version(req, res);
+    const result = await version();
 
-    expect(res.json).toBeCalled();
-    expect(res.json.mock.calls[0][0].current).toEqual(pkg.version);
+    expect(result.statusCode).toBe(200);
+
+    const body = JSON.parse(result.body)
+    expect(body.current).toEqual(pkg.version);
   })
 }); 

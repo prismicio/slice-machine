@@ -12,15 +12,17 @@ describe('libraries', () => {
 
     const { libraries } = require('../../api');
 
-    const req = { query: { /* framework, strip, list, preserveDefaults */ } };
-    const res = { json: jest.fn() };
+    const event = { queryStringParameters: { /* framework, strip, list, preserveDefaults */ } };
 
     
 
-    await libraries(req, res);
+    const result = await libraries(event);
+    const body = JSON.parse(result.body)
 
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
+    expect(result.statusCode).toBe(200);
+    expect(result.headers['Access-Control-Allow-Origin']).toBe('*');
+    expect(body).toMatchSnapshot()
+    
 
     jest.unmock('../../common/mongo');
 

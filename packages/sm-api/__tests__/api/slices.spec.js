@@ -1,11 +1,8 @@
 
 describe('slices', () => {
   it('should work', async () => {
-    const req = { query: { /* lib, library, framework = 'nuxt' */ } };
-    const res = {
-      send: jest.fn(),
-      json: jest.fn(),
-    };
+    const event = { queryStringParameters: { /* lib, library, framework = 'nuxt' */ } };
+
     jest.mock('../../common/mongo', () => ({
       collections: {
         libraries: () => ({
@@ -16,10 +13,12 @@ describe('slices', () => {
     
     const { slices } = require('../../api');
 
-    await slices(req, res);
+    const result = await slices(event);
 
-    expect(res.send).not.toBeCalled();
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
+    const body = JSON.parse(result.body)
+
+    expect(result.statusCode).toBe(200);
+    expect(result.headers["Access-Control-Allow-Origin"]).toBe("*");
+    expect(body).toMatchSnapshot();
   })
 });

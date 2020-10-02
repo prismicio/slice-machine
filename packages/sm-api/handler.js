@@ -1,12 +1,15 @@
 'use strict';
-var reqRes = require('serverless-req-res');
 const api = require('./api');
 
+// maybe inject mongo here?
+
 // https://www.npmjs.com/package/serverless-req-res
-module.exports.bootstrap = reqRes(api.bootstrap).cors(true).run;
-module.exports.frameworks = reqRes(api.frameworks).cors(true).run;
-module.exports.libraries = reqRes(api.libraries).cors(true).run;
-module.exports.library = reqRes(api.library).cors(true).run;
-module.exports.publish = reqRes(api.publish).cors(true).run;
-module.exports.slices = reqRes(api.slices).cors(true).run;
-module.exports.version = reqRes(api.version).cors(true).run;
+module.exports.bootstrap = api.bootstrap
+module.exports.frameworks = api.frameworks
+module.exports.libraries = api.libraries
+module.exports.library = api.library
+module.exports.publish = api.publish
+module.exports.slices = api.slices
+module.exports.version = api.version
+
+module.exports.test = async (event) => console.log(event);

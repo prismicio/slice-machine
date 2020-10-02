@@ -30,19 +30,20 @@ async function fetchLibrary(packageName, expect = true) {
   return sm
 }
 
-const mod = (module.exports = async (req, res) => {
+const mod = (module.exports = async (event) => {
   const {
-    query: { lib, library, strip, preserveDefaults }
-  } = req;
+    queryStringParameters: { lib, library, strip, preserveDefaults } = {}
+  } = event;
 
   const packageName = lib || library;
 
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
+
   if (!packageName) {
-    // res.error ?
-    return res
-      .send(400,
-        'Endpoint expects query "lib" to be defined.\nExample request: `/api/library?lib=my-lib`'
-      );
+
+    const message = 'Endpoint expects query "lib" to be defined.\nExample request: `/api/library?lib=my-lib`';
+
+    return { statusCode: 400, headers, body: JSON.stringify({ error: true, message })}
   }
 
   const sm = await fetchLibrary(packageName)
@@ -53,10 +54,12 @@ const mod = (module.exports = async (req, res) => {
     keysToStrip.forEach(key => {
       delete sm[key];
     });
-    return res.json(sm);
+
+    return { statusCode: 200, headers, body: JSON.stringify(sm)}
   }
-  // res.error ?
-  return res.json(404, {});
+  
+  const message = `${packageName} : not found`;
+  return { statusCode: 404, headers, body: JSON.stringify({ error: true, message }) };
 });
 
 mod.fetchLibrary = fetchLibrary

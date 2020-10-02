@@ -2,12 +2,14 @@ const { frameworks } = require('../../api');
 
 describe('frameworks', () => {
   it('should work', async () => {
-    const req = { query: {} };
-    const res = { json : jest.fn() };
+    const event = {};
 
-    await frameworks(req, res);
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
+    const result = await frameworks(event);
+    const body = JSON.parse(result.body)
+
+    expect(result.statusCode).toBe(200);
+    expect(result.headers['Access-Control-Allow-Origin']).toBe('*');
+    expect(body).toMatchSnapshot()
   });
 
   // to-do: try different input params

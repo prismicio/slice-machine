@@ -3,12 +3,7 @@ const response = require('../../__stubs__/library-fetch-vue-essential-slices.jso
 
 describe('bootstrap', () => {
   it('should work', async () => {
-    const req = { query: {}};
-    const res = {
-      json: jest.fn(),
-      send: jest.fn(),
-      error: jest.fn(),
-    };
+    const event = { queryStringParameters: {}};
 
     jest.mock('node-fetch');
     const fetch = require('node-fetch');
@@ -19,12 +14,13 @@ describe('bootstrap', () => {
 
     global.console.error = jest.fn();
 
-    await bootstrap(req, res);
+    const result = await bootstrap(event);
+
+    const body = JSON.parse(result.body)
     
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
-    expect(res.error).not.toBeCalled();
-    expect(res.send).not.toBeCalled();
+    expect(result.statusCode).toBe(200);
+    expect(body).toMatchSnapshot();
+    expect(result.headers['Access-Control-Allow-Origin']).toBe('*');
     expect(global.console.error).not.toBeCalled();
     
     jest.unmock('node-fetch');

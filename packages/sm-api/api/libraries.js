@@ -19,15 +19,15 @@ async function fetchLibraries({ framework, list }) {
   return await cursor.toArray()
 }
 
-module.exports = async (req, res) => {
+module.exports = async (event) => {
   const {
-    query: {
+    queryStringParameters: {
       framework,
       strip,
       list,
       preserveDefaults
-    }
-  } = req;
+    } = {},
+  } = event;
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 
@@ -41,8 +41,9 @@ module.exports = async (req, res) => {
       delete library[key]
     })
   })
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
 
-  res.json(libraries)
+  return { statusCode: 200, headers, body: JSON.stringify(libraries) };
 
 };
 

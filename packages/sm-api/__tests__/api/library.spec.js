@@ -11,17 +11,14 @@ describe('library', () => {
       json: jest.fn().mockResolvedValue(response)
     });
 
-    const req = { query: { lib: 'vue-essential-slices' } };
-    const res = {
-      json: jest.fn(),
-      send: jest.fn(),
-      error: jest.fn(),
-    };
+    const event = { queryStringParameters: { lib: 'vue-essential-slices' } };
 
-    await library(req, res);
-    expect(res.error).not.toBeCalled();
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
+    const result = await library(event);
+    const body = JSON.parse(result.body);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.headers["Access-Control-Allow-Origin"]).toBe("*");
+    expect(body).toMatchSnapshot();
 
     jest.unmock('node-fetch');
   });

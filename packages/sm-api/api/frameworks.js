@@ -4,13 +4,13 @@ const {
   SUPPORTED_FRAMEWORKS
 } = require("../common/consts");
 
-module.exports = async (req, res) => {
+module.exports = async (event) => {
   const {
-    query: {
+    queryStringParameters: {
       strip,
       preserveDefaults
-    }
-  } = req;
+    } = {},
+  } = event;
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.framework, preserveDefaults);
 
@@ -26,5 +26,8 @@ module.exports = async (req, res) => {
       delete framework[key]
     })
   })
-  res.json(resolved)
+
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
+
+  return { statusCode: 200, headers, body: JSON.stringify(resolved) };
 };

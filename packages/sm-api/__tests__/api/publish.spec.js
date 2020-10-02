@@ -1,7 +1,7 @@
 
 describe('publish', () => {
   it('should work', async () => {
-    const req = {
+    const event = {
       body: {
         ref: "qwerty/master",
         repository: {
@@ -13,11 +13,6 @@ describe('publish', () => {
         }
       }
     };
-
-    const res = {
-      json: jest.fn(),
-      send: jest.fn(),
-    }
 
     jest.mock('node-fetch');
     const fetch = require('node-fetch');
@@ -38,11 +33,12 @@ describe('publish', () => {
 
     const { publish } = require('../../api');
 
-    await publish(req, res);
-    expect(res.send).not.toBeCalled();
-    expect(res.json).toBeCalled();
-    expect(res.json).toMatchSnapshot();
+    const result = await publish(event);
+    const body = JSON.parse(result.body);
 
+    expect(result.statusCode).toBe(200);   
+    expect(result.headers["Access-Control-Allow-Origin"]).toBe("*");
+    expect(result.body).toMatchSnapshot();
     expect(global.console.error).not.toBeCalled();
 
   })

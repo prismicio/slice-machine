@@ -8,26 +8,31 @@ const { fetchLibrary } = require("./library");
 const { resolve } = require('path');
 
 
-module.exports = async (req, res) => {
+module.exports = async (event) => {
+  
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
+
   try {
     const {
-      query: {
+      queryStringParameters: {
         lib,
         library,
         framework = "nuxt",
         projectType = "landing",
-      }
-    } = req;
+      } = {},
+    } = event;
 
     if (SUPPORTED_FRAMEWORKS.indexOf(framework) === -1) {
-      return res.send(400, `Framework "${framework}" is not supported. Please use one of: ${SUPPORTED_FRAMEWORKS}`);
+      const message = `Framework "${framework}" is not supported. Please use one of: ${SUPPORTED_FRAMEWORKS}`;
+      return { statusCode: 400, headers, body: JSON.stringify({ error: true, message }) };
     }
 
     const scaffolder = require(`../bootstrap/${framework}`);
     const packageName = lib || library || scaffolder.defaultLibrary.packageName;
 
     if (!packageName) {
-      return res.send(400, 'Endpoint expects query parameter "lib" to be defined.\nExample request: `/api/library?lib=my-lib`');
+      const message = 'Endpoint expects query parameter "lib" to be defined.\nExample request: `/api/library?lib=my-lib`';
+      return { statusCode: 400, headers, body: JSON.stringify({ error: true, message }) }
     }
 
     const smLibrary = await fetchLibrary(packageName);
@@ -39,17 +44,20 @@ module.exports = async (req, res) => {
     const pathToTash = resolve(__dirname, '../', "bootstrap", framework, 'recap.mustache');
     const recapFile = fs.readFileSync(pathToTash, 'utf8');
 
-    return res.json({
+    const body = JSON.stringify({
       manifest,
       library: smLibrary,
       recap: Mustache.render(recapFile, smLibrary),
       customTypes,
       slices,
       keysToMerge,
-    });
+    })
+
+    return { statusCode: 200, headers, body };
   } catch (e) {
     console.error(e);
-    res.error(e);
+
+    return { statusCode: 500, headers, body: JSON.stringify({ error: true, message: e.message }) }
   }
 };
 

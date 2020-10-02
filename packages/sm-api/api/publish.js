@@ -7,23 +7,29 @@ const githubWhiteList = {
   "prismicio/vue-essential-slices": true
 };
 
-module.exports = async (req, res) => {
-  const body = req.body || {}
+module.exports = async (event) => {
+  const body = event.body || {}
+  const headers =  { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST','Content-Type': 'application/json'};
+
   if (!body.ref || !body.head_commit || !body.repository) {
     // res.error ?
-    return res.send(400, '')
+    const message = `missing parameters:${!body.ref && " ref"}${!body.head_commit && " head_commit"}${!body.repository && " repository"}`
+    return { statusCode: 400, headers, body: JSON.stringify({ error: true, message })}
   }
 
   const repoName = body.repository.full_name
   if (!githubWhiteList[repoName]) {
     // res.error ?
-    return res.send(403, '')
+    const message = `Unauthorised repository ${repoName}`;
+    return { statusCode: 403, headers, body: JSON.stringify({ error: true, message })}
   }
 
   const branch = body.ref.split("/").pop()
   if (branch !== "master") {
     // res.end() ?
-    return res.send(200, '')
+    const message = `ref should be master branch`;
+
+    return { statusCode: 200, headers, body: JSON.stringify({ error: true, message }) }
   }
 
   const smFile =
@@ -44,13 +50,14 @@ module.exports = async (req, res) => {
         })
       ));
 
-      return res.json(sm);
+      return { statusCode: 200, headers, body:JSON.stringify(sm) };
     } catch(e) {
       // send this via email
       console.error(e);
+      return e;
     }
   }
-  // res.end() ?
-  res.send(200, '')
+  // should we do a 200 here?
+  return { statusCode: 400, headers, body: JSON.stringify({ error: true, message: `${SM_CONFIG_FILE} not found in head_commit`}) }
 };
 
