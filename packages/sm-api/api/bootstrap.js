@@ -12,15 +12,9 @@ module.exports = async (event) => {
   
   const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
 
+  const { lib, library, framework = "nuxt", projectType = "landing" } = event.queryStringParameters || {};
+  
   try {
-    const {
-      queryStringParameters: {
-        lib,
-        library,
-        framework = "nuxt",
-        projectType = "landing",
-      } = {},
-    } = event;
 
     if (SUPPORTED_FRAMEWORKS.indexOf(framework) === -1) {
       const message = `Framework "${framework}" is not supported. Please use one of: ${SUPPORTED_FRAMEWORKS}`;

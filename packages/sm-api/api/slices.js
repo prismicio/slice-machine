@@ -1,9 +1,8 @@
 const fetchLibrary = require('./library').fetchLibrary
 
 module.exports = async (event) => {
-  const {
-    queryStringParameters: { lib, library, framework = 'nuxt' } = {},
-  } = event;
+  const { lib, library, framework = 'nuxt'} = event.queryStringParameters || {};
+  
   const defaultLibrary = require(`../bootstrap/${framework}`).defaultLibrary;
   const packageName = lib || library || defaultLibrary.packageName;
 

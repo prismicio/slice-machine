@@ -23,14 +23,9 @@ async function fetchLibraries({ framework, list }) {
 }
 
 module.exports = async (event) => {
-  const {
-    queryStringParameters: {
-      framework,
-      strip,
-      list,
-      preserveDefaults
-    } = {},
-  } = event;
+  const { framework, strip, list, preserveDefaults } = event.queryStringParameters || {};
+
+
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 

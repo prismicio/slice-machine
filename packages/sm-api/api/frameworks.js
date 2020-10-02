@@ -5,12 +5,7 @@ const {
 } = require("../common/consts");
 
 module.exports = async (event) => {
-  const {
-    queryStringParameters: {
-      strip,
-      preserveDefaults
-    } = {},
-  } = event;
+  const { strip, preserveDefaults } = event.queryStringParameters || {};
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.framework, preserveDefaults);
 

@@ -31,9 +31,7 @@ async function fetchLibrary(packageName, expect = true) {
 }
 
 const mod = (module.exports = async (event) => {
-  const {
-    queryStringParameters: { lib, library, strip, preserveDefaults } = {}
-  } = event;
+  const { lib, library, strip, preserveDefaults } = event.queryStringParameters || {};
 
   const packageName = lib || library;
 

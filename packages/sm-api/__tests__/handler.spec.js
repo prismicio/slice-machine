@@ -48,6 +48,7 @@ describe("handler.libraries", () => {
     expect(result.statusCode).toBe(200);
     expect(result.headers['Access-Control-Allow-Origin']).toBe('*');
     expect(body).toMatchSnapshot()
+
   });
 });
 
@@ -68,7 +69,7 @@ describe("handler.library", () => {
 
 describe("handler.publish", () => {
   // memory leak
-  xit('should work', async () => {
+  it('should work', async () => {
     const event = {
       body: {
         ref: "qwerty/master",
