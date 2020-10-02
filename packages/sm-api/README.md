@@ -147,12 +147,3 @@ Generates a ZIP file used to "bootstrap" a working Prismic + framework (Nuxt or 
 
 👆 Note that if you ended up reading this, you're early. Being early is awesome but it's not the most comfortable situation to be in. If you encounter difficulty, let me know in the issues ✌️
 
-
-### Test endpoints
-+ [x] `curl http://localhost:3000/dev/version`
-+ [x] `curl http://localhost:3000/dev/slices`
-+ [x] `curl -v -X POST http://localhost:3000/dev/publish -d '{ "ref": "qwerty/master", "repository": {"full_name": "prismicio/vue-essential-slices"}, "head_commit": { "modified": ["sm.json"], "added": []}}'`
-+ [x] `curl http://localhost:3000/dev/libraries`
-+ [x] `curl http://localhost:3000/dev/library?lib=vue-essential-slices`
-+ [x] `curl http://localhost:3000/dev/frameworks` note: the code returned uses windows style new lines `\r\n`
-+ [x] `curl http://localhost:3000/dev/bootstrap`
