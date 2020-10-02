@@ -12,9 +12,6 @@ function acquireClient() {
     useUnifiedTopology: true
   }).then((db) => {
     cachedClient = db;
-    cachedClient.on('close', () => {
-      cachedClient = null;
-    });    
     return cachedClient;
   });
 }
