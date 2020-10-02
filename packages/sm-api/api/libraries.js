@@ -13,10 +13,13 @@ async function fetchLibraries({ framework, list }) {
       }
     } : null)
   }
-  const cursor = await Mongo.collections.libraries(coll => (
-    coll.find(search)
-  ));
-  return await cursor.toArray()
+
+  /* Memory leak here */
+  const cursor = await Mongo.collections.libraries(coll => coll.find(search));
+  return await cursor.toArray();
+  
+  // can get rid of the warning udring the tests with this
+  // return Promise.resolve(require('../__stubs__/libraries-mongo-libraries.json'))
 }
 
 module.exports = async (event) => {
