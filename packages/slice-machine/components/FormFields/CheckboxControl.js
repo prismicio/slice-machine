@@ -8,7 +8,6 @@ const CheckboxControl = ({
   meta,
   helpers,
   fieldName,
-  emptyVal = '',
   label,
   defaultValue,
   onChange,

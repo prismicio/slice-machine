@@ -1,10 +1,6 @@
 import { Fragment } from 'react'
 
-import {
-  useField,
-} from 'formik'
-
-// import MultiSelect from '@khanacademy/react-multi-select'
+import { useField } from 'formik'
 
 import { FormFieldCheckbox, FormFieldInput } from 'components/FormFields'
 

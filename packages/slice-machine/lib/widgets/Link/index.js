@@ -1,4 +1,9 @@
+import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
+import {
+  createInitialValues,
+  createValidationSchema
+} from 'lib/forms'
 
 /**
 * {
@@ -46,14 +51,26 @@ import  { BsLink } from 'react-icons/bs'
   }
   */
 
+const create = (apiId) => ({
+  ...createInitialValues(FormFields),
+  allowTargetBlank: true,
+  id: apiId
+})
+
 const createMock = (maybeMock) =>
   maybeMock || ({ link_type: "Web", url: "https://slicemachine.dev" })
 
 const Meta = {
-  icon: BsLink
+  icon: BsLink,
+  title: 'Link',
+  description: 'A link to web, media or Prismic document'
 }
 
 export default {
   createMock,
-  Meta
+  Meta,
+  FormFields,
+  Form,
+  create
+
 }

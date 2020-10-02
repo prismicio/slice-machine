@@ -86,6 +86,19 @@ export default () => ({
       pl: 2
     }
   },
+  badges: {
+    'circle-right': {
+      top: '-8px',
+      right: '-8px',
+      height: '24px',
+      width: '24px',
+      display: 'flex',
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '50%'
+    }
+  },
   buttons:  {
     disabled: {
       bg: 'borders',
@@ -130,6 +143,12 @@ export default () => ({
     }
   },
   cards: {
+    primary: {
+      bg: '#FFF',
+      border: '1px solid',
+      borderRadius: 4,
+      borderColor: 'borders',
+    },
     large: {
       py: 2,
       bg: 'gray',
@@ -138,6 +157,11 @@ export default () => ({
     }
   },
   forms: {
+    disabled: {
+      bg: 'muted',
+      cursor: 'not-allowed',
+      pointerEvents: 'none'
+    },
     input: {
       borderColor: 'borders',
     },

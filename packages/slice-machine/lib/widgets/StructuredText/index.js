@@ -1,7 +1,7 @@
+import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import { optionValues } from './options'
 import { MdTextFields } from 'react-icons/md'
-import * as yup from 'yup'
 import randomSentence from 'random-sentence'
 
 import {

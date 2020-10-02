@@ -7,7 +7,7 @@
     "dev": "next dev",
     "prepublishOnly": "next build && next export",
     "serve": "node -r esm ./server/index.js",
-    "dev-server": "PORT=9999 CWD=./tests/project nodemon -r esm ./server/index.js",
+    "dev-server": "PORT=9999 CWD=./tests/project nodemon -r esm ./server/index.js --watch /server",
     "build": "next build",
     "export": "next export",
     "start": "next start",

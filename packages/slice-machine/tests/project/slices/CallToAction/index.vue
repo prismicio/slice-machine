@@ -1,6 +1,7 @@
 <template>
   <section class="section">
     <prismic-rich-text :field="slice.primary.title" />
+    <img :src="slice.primary.image.square.url" />
   </section>
 </template>
 <script>

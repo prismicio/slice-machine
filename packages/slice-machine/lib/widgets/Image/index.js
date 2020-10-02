@@ -1,4 +1,14 @@
+import * as yup from 'yup'
+import Form, { FormFields } from './Form'
 import { BsImage } from 'react-icons/bs'
+
+import {
+  createInitialValues,
+  createValidationSchema
+} from 'lib/forms'
+
+import { removeProp } from '../../utils'
+
 /** 
  * {
     "type": "Image",
@@ -18,7 +28,7 @@ import { BsImage } from 'react-icons/bs'
     }
   } */
 
-const _createMock = (src, { width= 900, height= 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
+const _createMock = (src, { width = 900, height = 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
   dimensions: { width, height },
   alt: 'Placeholder image',
   copyright: null,
@@ -38,12 +48,33 @@ const fromUser = (...args) =>
 
 const createMock = (maybeMock, model) => maybeMock ? fromUser(mock) : _createMock(null, model.constraint, model.thumbnails)
 
+const create = (apiId) => ({
+  ...createInitialValues(FormFields),
+  constraint: {},
+  thumbnails: [],
+  id: apiId
+})
+
+const schema = yup.object().shape({
+  type: yup.string().matches(/^Image$/, {
+    excludeEmptyString: true
+  }).required(),
+  config: createValidationSchema(removeProp(FormFields, 'id')),
+})
+
 const Meta = {
-  icon: BsImage
+  icon: BsImage,
+  title: 'Image',
+  description: 'A responsive image field with constraints'
 }
 
 export default {
+  Meta,
+  Form,
+  schema,
+  create,
   createMock,
+  FormFields,
   defaultValue,
   fromUser
 }

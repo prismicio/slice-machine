@@ -30,13 +30,6 @@
             "label": "Eyebrow headline"
           }
         },
-        "title": {
-          "type": "StructuredText",
-          "config": {
-            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
-            "label": "title"
-          }
-        },
         "description": {
           "type": "StructuredText",
           "config": {
@@ -45,13 +38,26 @@
             "label": "description"
           }
         },
-        "optional_image": {
-          "type": "Image",
+        "title": {
+          "type": "StructuredText",
           "config": {
-            "constraint": {},
-            "thumbnails": [],
-            "label": "Optional image"
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "title"
           }
+        },
+        "image": {
+          "config": {
+            "label": "Some label",
+            "constraint": {},
+            "thumbnails": [
+              {
+                "name": "square",
+                "width": 400,
+                "height": 400
+              }
+            ]
+          },
+          "type": "Image"
         }
       },
       "items": {
