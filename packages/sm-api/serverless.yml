@@ -34,13 +34,6 @@ functions:
           path: frameworks
           method: get
 
-  job: 
-    handler: handler.job
-    events: 
-      - http:
-          path: job   
-          method: get
-
   libraries:
     handler: handler.libraries
     events:
