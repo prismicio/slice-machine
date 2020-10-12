@@ -7,7 +7,8 @@
     "test": "jest",
     "test:debug": "node --expose-gc ./node_modules/.bin/jest --runInBand --logHeapUsage --detectOpenHandles --forceExit", 
     "start": "serverless offline",
-    "package": "serverless package"
+    "package": "serverless package",
+    "deploy": "serverless deploy"
   },
   "author": "Hugo Villain",
   "license": "ISC",
