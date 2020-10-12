@@ -62,8 +62,6 @@ describe("handler.library", () => {
     expect(result.statusCode).toBe(200);
     expect(result.headers["Access-Control-Allow-Origin"]).toBe("*");
     expect(body).toMatchSnapshot();
-
-    jest.unmock('node-fetch');
   });
 });
 
