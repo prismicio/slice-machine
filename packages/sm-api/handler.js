@@ -11,5 +11,3 @@ module.exports.library = api.library
 module.exports.publish = api.publish
 module.exports.slices = api.slices
 module.exports.version = api.version
-
-module.exports.test = async (event) => console.log(event);
