@@ -8,7 +8,9 @@ const githubWhiteList = {
 };
 
 module.exports = async (event) => {
-  const body = event.body || {}
+  const bodyMaybeString = event.body || ""
+  const body = (typeof(bodyMaybeString) === typeof("")) ? JSON.parse(bodyMaybeString) : bodyMaybeString;
+
   const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST','Content-Type': 'application/json'};
 
   if (!body.ref || !body.head_commit || !body.repository) {
