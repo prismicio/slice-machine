@@ -36,7 +36,8 @@ export const useGetStaticProps = ({
           error: null,
           slices: doc ? doc.data[body] : [],
           registry
-        }
+        },
+        revalidate: 1,
       }
 
     } catch(e) {
