@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "postinstall": "node postinstall",
     "prepublishOnly": "next build && next export",
     "serve": "node -r esm ./server/index.js",
     "dev-server": "PORT=9999 CWD=./tests/project nodemon -r esm ./server/index.js --watch /server",

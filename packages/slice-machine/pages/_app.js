@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { useRouter } from 'next/router'
 import theme from '../src/theme'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
@@ -9,27 +9,39 @@ import LibProvider from '../src/lib-context'
 import ConfigProvider from '../src/config-context'
 
 import LoadingPage from 'components/LoadingPage'
+import AuthInstructions from 'components/AuthInstructions'
 import ConfigErrors from 'components/ConfigErrors'
 
 import 'rc-drawer/assets/index.css'
 import 'lib/builder/layout/Drawer/index.css'
 import 'src/css/modal.css'
 
+const AUTH_BLOCKING = false
+
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
 const LibError = () => <div>No libraries. Create one!</div>
+
+function DisplayLibs({
+  libraries,
+  children
+}) {
+  return !libraries.length || libraries.err ? <LibError /> : children
+}
 
 function MyApp({
   Component,
   pageProps,
 }) {
   const router = useRouter()
+  const { data: authData } = useSwr('/api/auth', fetcher)
   const { data, error } = useSwr('/api/libraries', fetcher)
   
-  if (error) return <div>Failed to load slices</div>
-  if (!data) {
+  if (!authData || !data) {
     return <LoadingPage />
   }
+  
+  if (error) return <div>Failed to load slices</div>
   const { libraries = [], config, errors = {} } = data
   
   const migrations = libraries.reduce((acc, [_, slices]) => {
@@ -41,22 +53,20 @@ function MyApp({
     router.replace("/migration")
   }
 
+
+
   return (
     <ThemeProvider theme={theme}>
       <BaseStyles>
         <ConfigProvider value={config}>
           <LibProvider value={libraries}>
             {
-              Object.keys(errors).length ? (
-                <ConfigErrors errors ={errors} />
-              ) : (
+              !authData.isAuth && AUTH_BLOCKING ? <AuthInstructions /> : (
                 <Fragment>
                   {
-                    !libraries.length || libraries.err ? (
-                      <LibError />
-                    ) : (
-                      <Component {...pageProps} migrations={migrations} />
-                    )
+                    Object.keys(errors).length ? (
+                      <ConfigErrors errors ={errors} />
+                    ) : <DisplayLibs libraries={libraries}><Component {...pageProps} migrations={migrations} /></DisplayLibs>
                   }
                 </Fragment>
               )

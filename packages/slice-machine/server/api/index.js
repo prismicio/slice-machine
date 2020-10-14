@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const push = require('./push').default
+const auth = require('./auth').default
 const update = require('./update').default
 const migrate = require('./migrate').default
 const getLibraries = require('./libraries').default
@@ -13,6 +14,15 @@ router.use('/libraries', async function (_, res) {
 
 router.use('/migrate', async function (_, res) {
   const payload = await migrate()
+  return res.status(200).json(payload)
+})
+
+router.use('/auth', async function (req, res) {
+  const payload = await auth(req)
+  // console.log({ payload:JSON.stringify(payload) })
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
   return res.status(200).json(payload)
 })
 
