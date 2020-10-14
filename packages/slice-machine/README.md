@@ -1,30 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
+# SliceMachine Slices Builder
 
-## Getting Started
+This package is meant to be installed as development dependency of any SliceMachine project. It should work with both Nuxt and Next projects.
 
-First, run the development server:
+To help development, folder `tests/project` contains an up-to-date SliceMachine project.
+To run the builder locally:
 
 ```bash
-npm run dev
-# or
+yarn install;
+yarn run dev-server # points to tests/project and starts server
+# then in another shell window:
 yarn dev
-```
+````
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Stack:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/zeit/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on ZEIT Now
-
-The easiest way to deploy your Next.js app is to use the [ZEIT Now Platform](https://zeit.co/) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Next.js (UI)
+- Express (Server)
+- Theme-ui ( see `src/theme.js`)
+- Formik (forms)

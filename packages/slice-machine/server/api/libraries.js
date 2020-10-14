@@ -55,7 +55,7 @@ export const getLibrariesWithFlags = async () => {
           isValid: true
         }
       } catch (e) {
-        console.error(e)
+        // console.error(e)
         return {
           ...flagged,
           isValid: false,

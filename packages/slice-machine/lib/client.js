@@ -15,9 +15,6 @@ const createFetcher = (repo, dbId) => (body, action = '', method = 'get') => {
 }
 
 const initClient = (repo, dbId) => {
-  if (!repo || !dbId) {
-    console.error('!repo or dbId')
-  }
   const fetcher = createFetcher(repo, dbId)
   return {
     async get() {

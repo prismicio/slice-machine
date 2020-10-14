@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.0.25",
+  "version": "0.0.28",
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -12,12 +12,14 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "slicemachine": "start-slicemachine --port 9999"
   },
   "bin": {
     "start-slicemachine": "./start.js"
   },
   "dependencies": {
+    "@babel/plugin-transform-typescript": "^7.11.0",
     "@babel/register": "^7.11.5",
     "@reach/menu-button": "^0.10.5",
     "@svgr/webpack": "^5.4.0",
@@ -47,6 +49,7 @@
     "swr": "^0.2.3",
     "theme-ui": "^0.3.1",
     "uniqid": "^5.2.0",
+    "yargs": "^16.0.3",
     "yup": "^0.29.1"
   },
   "devDependencies": {
