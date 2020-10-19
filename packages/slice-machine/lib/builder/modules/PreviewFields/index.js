@@ -70,7 +70,7 @@ const SubHeader = ({ storybookUrl }) => (
       borderBottom: t => `1px solid ${t.colors.borders}`
     }}
   >
-    <Text as="p" sx={{ color: 'black', display: 'flex', alignItems: 'center' }}>
+    <Text as="p" sx={{ color: 'textClear', display: 'flex', alignItems: 'center' }}>
       <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
     </Text>
   </Flex>

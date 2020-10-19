@@ -5,7 +5,10 @@
 .ReactModal__Content {
   padding: 0 !important;
   bottom: auto !important;
-  top: 8% !important;
+  top: 15% !important;
   max-width: 900px;
   margin: auto;
+}
+.ReactModal__Overlay{
+	background-color: rgba(7,16,39,.6)!important;
 }

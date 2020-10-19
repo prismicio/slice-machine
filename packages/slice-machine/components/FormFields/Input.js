@@ -2,7 +2,7 @@ import { Field } from 'formik'
 import { Box, Label, Input, Text } from 'theme-ui'
 
 const FormFieldInput = ({
-  sx = {},
+  sx={},
   variant,
   variation,
   field,
@@ -11,7 +11,7 @@ const FormFieldInput = ({
   fieldName,
   fieldType,
   initialValues
-}) => (
+}) => console.log(variant) || (
   <Box sx={sx}>
     <Label
       variant="label.primary"
@@ -24,7 +24,7 @@ const FormFieldInput = ({
         ) : null
       }
     </Label>
-    <Field
+    <Input
       name={fieldName}
       id={fieldName}
       type="text"
@@ -40,8 +40,6 @@ const FormFieldInput = ({
           })
         } : null)
       }
-      variant={variant}
-      as={Input}
       {...field}
     />
   </Box>

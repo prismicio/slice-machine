@@ -1,16 +1,16 @@
 export default () => ({
   "colors": {
-    text: "hsl(10, 20%, 20%)",
-    textClear: "#667586",
+    text: "#222222",
+    textClear: "#667587",
     background: "#F5F6F9",
-    primary: "#5263BA",
+    primary: "#5163BA",
     "secondary": "hsl(10, 60%, 50%)",
     "highlight": "hsl(10, 40%, 90%)",
     "purple": "hsl(250, 60%, 30%)",
     muted: "#F8F9FA",
-    icons: "#9ca3a9",
+    icons: "#8091A5",
     gray: "#F8F9FA",
-    borders: '#DEE1E5',
+    borders: '#C9D0D8',
     deep: '#0E2150',
     deep1: '#A0ADE7',
     error: '#F45A5B',
@@ -35,7 +35,7 @@ export default () => ({
   "fontWeights": {
     "body": 400,
     "heading": 500,
-    "label": 600,
+    "label": 500,
     "display": 900
   },
   "lineHeights": {
@@ -60,11 +60,12 @@ export default () => ({
     }
   },
   widgetIcons: {
-    color: '#5263BA',
+    color: '#5163BA',
     marginRight: '8px',
     borderRadius: '4px',
     padding: '4px',
-    border: '1px solid #DEE1E5',
+    background: '#F7F8F9',
+    border: '2px solid #5163BA',
   },
   sizes: {
     sidebar: 340,
@@ -81,7 +82,8 @@ export default () => ({
     },
     labelError: {
       color: 'error',
-      fontSize: 2,
+      fontWeight: 'body',
+      fontSize: 1,
       margin: 0,
       pl: 2
     }
@@ -100,20 +102,63 @@ export default () => ({
     }
   },
   buttons:  {
+    primary: {
+      color: 'white',
+      fontSize: '1',
+      fontWeight: 'body',
+      bg: '#6577CF',
+      border: '1px solid',
+      borderColor: '#4759B3',
+      '&:hover': {
+        bg: 'primary',
+        cursor: 'pointer',
+      },
+      '&:focus': {
+        bg: '#4759B4',
+        borderColor: '#1E2D77',
+        outline: 'none',
+      },
+      '&:active': {
+        boxShadow: 'inset 0 0 0 1px #1E2D77',
+        outline: 'none',
+      }
+    },
     disabled: {
       bg: 'borders',
+      fontSize: '1',
       color: 'rgba(1, 1, 1, .6)',
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
+      '&:focus': {
+        outline: 'none',
+      }
     },
     selectIcon: {
+      '&:hover': {
+        cursor: 'pointer',
+      },
       '&:focus, &:active': {
         outline: 'none',
       }
     },
     secondary: {
       background: '#F9FAFB',
-      color: 'text',
-      border: ({ colors }) => `1px solid ${colors.borders}`
+      fontWeight: 'body',
+      fontSize: '1',
+      color: 'textClear',
+      border: ({ colors }) => `1px solid ${colors.borders}`,
+      '&:hover': {
+        bg: '#F5F6F9',
+        cursor: 'pointer',
+      },
+      '&:focus': {
+        bg: '#F0F3F5',
+        borderColor: '#C9D0D8',
+        outline: 'none',
+      },
+      '&:active': {
+        boxShadow: 'inset 0 0 0 1px #8091A5',
+        outline: 'none',
+      }
     },
     textButton: {
       border: 'none',
@@ -123,7 +168,32 @@ export default () => ({
       position: 'relative',
       top: '1px',
       ml: 1,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      '&:focus': {
+        outline: 'none',
+      }
+    },
+    close: {
+      color: 'icons',
+      '&:hover': {
+        bg: '#F9FAFB',
+        border: '1px solid',
+        borderColor: '#C9D0D8',
+        cursor: 'pointer'
+      },
+      '&:focus': {
+        outline: 'none',
+      }
+    },
+    icon: {
+      '&:hover': {
+        bg: '#F9FAFB',
+        border: '1px solid',
+        borderColor: '#C9D0D8',
+      },
+      '&:focus': {
+        outline: 'none',
+      }
     }
   },
   success: {
@@ -162,18 +232,36 @@ export default () => ({
       cursor: 'not-allowed',
       pointerEvents: 'none'
     },
+    checkbox: {
+      color: 'icons'
+    },
     input: {
+      fontSize: 1,
       borderColor: 'borders',
+      '&::placeholder': {
+        color: 'icons',
+      },
+      '&:hover': {
+        borderColor: '#A6ACB2',
+      },
+      '&:focus, &:active': {
+        outline: 'none',
+        borderColor: '#3B41BD',
+        boxShadow: '0 0 0 3px #EBEBFF, inset 0 1px 2px rgba(102, 113, 123, 0.2)',
+      }
     },
     label: {
       primary: {
         mb: 1,
+        fontSize: 1,
         fontWeight: 'label'
       },
       border: {
+        fontSize: 1,
         mb: 1,
-        fontWeight: 'label',
-        py: 2,
+        fontWeight: 'body',
+        pt: '7px',
+        pb: '6px',
         px: 1,
         borderRadius: '3px',
         border: t => `1px solid ${t.colors.borders}`

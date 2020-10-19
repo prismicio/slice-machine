@@ -51,7 +51,7 @@ const FormFields = {
         <FormFieldArray
           label="Options"
           inputPlaceholder="Select option (eg. 'image_left')"
-          buttonLabel="+ Add option"
+          buttonLabel="Add option"
           {...props}
         />
       )

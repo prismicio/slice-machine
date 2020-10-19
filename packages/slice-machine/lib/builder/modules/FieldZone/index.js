@@ -54,7 +54,7 @@ const FieldZone = ({
             borderBottom: t => `1px solid ${t.colors.borders}`
           }}
         >
-          <ReactTooltip type="light" multiline border borderColor={theme.colors.borders} />
+          <ReactTooltip type="dark" multiline />
           <Heading as="h5" mr={2}>{title}</Heading>
           <FaRegQuestionCircle
             color={theme.colors.icons}
