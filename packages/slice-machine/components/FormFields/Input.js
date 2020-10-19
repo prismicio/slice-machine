@@ -11,7 +11,7 @@ const FormFieldInput = ({
   fieldName,
   fieldType,
   initialValues
-}) => console.log(variant) || (
+}) => (
   <Box sx={sx}>
     <Label
       variant="label.primary"
