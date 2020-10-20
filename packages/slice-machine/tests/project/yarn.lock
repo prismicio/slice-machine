@@ -12883,6 +12883,11 @@ vue-loader@^15.9.3:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-slicezone@^0.0.28:
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/vue-slicezone/-/vue-slicezone-0.0.28.tgz#811b2d6ac3ad2b342406352450f30f8e05e974b8"
+  integrity sha512-HXjGOVCGsKOYsnwn8OSKlPQVipMaZ6dR+jMiR5jeacMlnGrYux+VGSL6OTOvyv7C7z236hcvcqwtLx3S8aFxPQ==
+
 vue-style-loader@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"

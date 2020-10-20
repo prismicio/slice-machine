@@ -31,7 +31,7 @@ const TouchedIcon = () => (
       alignItems: 'center'
     }}
   >
-    Touched
+    Unsaved changes
     <FaRegClock style={{ marginLeft: '6px'}} />
   </Flex>
 )

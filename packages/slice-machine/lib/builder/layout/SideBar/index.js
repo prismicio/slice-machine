@@ -113,7 +113,7 @@ const SideBar = ({
               href={storybookUrl}
               target="_blank"
             />
-            <Li
+            {/* <Li
               title="Generate a sample page"
               description="See your component in the context of a page"
               Icon={Storybook}
@@ -122,7 +122,7 @@ const SideBar = ({
               title="Used in 4 custom types"
               description="View these 4 custom types"
               Icon={Prismic}
-            />
+            /> */}
           </ul>
       </Card>
     </Box>

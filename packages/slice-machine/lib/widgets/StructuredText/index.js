@@ -23,19 +23,25 @@ import { removeProp } from '../../utils'
 
 const TYPE_NAME = 'StructuredText'
 
-const _createMock = (str) => [{
-  type: 'paragraph',
-  "text": str,
-  spans: []
-}]
-
-const fromUser = (mock) => {
-  return typeof mock === 'object' ? mock : _createMock(mock)
+const _createMock = (config) => {
+  return [{
+    type: 'paragraph',
+    text: 'here',
+    spans: []
+  }]
 }
 
-const createMock = (maybeMock) => maybeMock
+const fromUser = (mock) => {
+  return typeof mock === 'object' ? mock : [{
+    type: 'paragraph',
+    text: mock,
+    spans: []
+  }]
+}
+
+const createMock = (maybeMock, config) => maybeMock
   ? fromUser(maybeMock)
-  : _createMock(randomSentence({ min: "10", max: "120" }))
+  : _createMock(config)
 
 const Meta = {
   icon: MdTextFields,

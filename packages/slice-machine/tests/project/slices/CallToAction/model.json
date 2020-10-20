@@ -2,89 +2,27 @@
   "id": "call_to_action",
   "type": "SharedSlice",
   "name": "CallToAction",
-  "description": "AlternateGrid",
+  "description": "MySlice Template",
   "variations": [
     {
       "id": "default-slice",
       "name": "Default slice",
       "docURL": "...",
-      "version": "sktwi1xtmkfgx8626",
-      "description": "AlternateGrid",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
       "primary": {
-        "image_side": {
-          "type": "Select",
-          "config": {
-            "options": [
-              "left",
-              "right"
-            ],
-            "default_value": "left",
-            "label": "Image side"
-          }
-        },
-        "eyebrow_headline": {
+        "desc": {
           "type": "StructuredText",
           "config": {
-            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "label": "",
+            "id": "desc",
+            "placeholder": "",
             "allowTargetBlank": true,
-            "label": "Eyebrow headline"
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,rtl"
           }
-        },
-        "description": {
-          "type": "StructuredText",
-          "config": {
-            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
-            "allowTargetBlank": true,
-            "label": "description"
-          }
-        },
-        "title": {
-          "type": "StructuredText",
-          "config": {
-            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
-            "label": "title"
-          }
-        },
-        "image": {
-          "config": {
-            "label": "Some label",
-            "constraint": {},
-            "thumbnails": [
-              {
-                "name": "square",
-                "width": 400,
-                "height": 400
-              }
-            ]
-          },
-          "type": "Image"
         }
       },
-      "items": {
-        "optional_icon": {
-          "type": "Image",
-          "config": {
-            "constraint": {},
-            "thumbnails": [],
-            "label": "Optional Icon"
-          }
-        },
-        "description": {
-          "type": "StructuredText",
-          "config": {
-            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
-            "allowTargetBlank": true,
-            "label": "description"
-          }
-        },
-        "title": {
-          "type": "StructuredText",
-          "config": {
-            "single": "heading3",
-            "label": "title"
-          }
-        }
-      }
+      "items": {}
     }
   ]
 }
