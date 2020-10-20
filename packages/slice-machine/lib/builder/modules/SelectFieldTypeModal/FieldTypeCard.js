@@ -31,7 +31,7 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         size={36}
       />
       <Box ml={1}>
-        <Heading as="h4"><b>{title}</b></Heading>
+        <Heading as="h4" sx={{ fontSize: 1 }} ><b>{title}</b></Heading>
         <Text as="p" variant="xs">{description}</Text>
       </Box>
     </Flex>

@@ -24,7 +24,7 @@ const FORM_ID = 'edit-modal-form'
 const EditModal = ({
   close,
   data,
-  Model, 
+  Model,
   variation
 }) => {
   const { theme } = useThemeUI()

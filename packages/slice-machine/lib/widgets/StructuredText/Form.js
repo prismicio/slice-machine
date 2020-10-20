@@ -36,7 +36,7 @@ const Form = (props) => {
   const initialOptions = single ? _createInitialOptions(single)
     : (multi && _createInitialOptions(multi))
     || optionValues
-  
+
   const [isMulti, setIsMulti] = useState(single ? false : true)
   const [acceptOptions, setAcceptOptions] = useState(initialOptions)
 
@@ -98,12 +98,12 @@ const Form = (props) => {
               useActive
               key={opt.value}
               label={opt.label}
-              size={20}
+              size={14}
               Icon={opt.icon}
               sx={{
-                p: '20px',
+                p: '16px',
                 mb: 2,
-                mr: 3,
+                mr: 2,
                 variant: 'buttons.selectIcon',
               }}
               active={acceptOptions.find(e => e === opt.value)}
@@ -129,7 +129,7 @@ const Form = (props) => {
           sx={{
             mt: 2,
             alignItems: 'center',
-            height: '110%'
+            height: '100%'
           }}
         >
           <Label variant="label.border">
@@ -138,7 +138,7 @@ const Form = (props) => {
               defaultChecked={isMulti}
               onChange={() =>  setIsMulti(!isMulti)}
             />
-            👈 Allow multiple paragraphs
+            Allow multiple paragraphs
           </Label>
         </Flex>
       </Col>

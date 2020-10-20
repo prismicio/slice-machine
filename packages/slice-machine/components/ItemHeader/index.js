@@ -25,12 +25,10 @@ const ItemHeader = ({
     <Text
       as="p"
       sx={{
-        bg: "muted",
-        py: 1,
-        px: 2,
-        border: `1px solid ${theme.colors.borders}`,
-        borderRadius: "4px",
-        fontSize: "16px",
+        py: 0,
+        px: 1,
+        fontWeight: "label",
+        fontSize: "15px",
       }}
     >
       { text }
@@ -38,8 +36,9 @@ const ItemHeader = ({
     <Text
       as="p"
       sx={{
-        fontSize: "16px",
-        ml: 2,
+        fontSize: "14px",
+        ml: 1,
+        color: 'textClear',
       }}
     >
       { sliceProperty }

@@ -3,13 +3,13 @@ import { IconButton as ThemeIconButton }from 'theme-ui'
 const defaultActiveSx = (a, e) => {
   if (e) {
     return {
-     border: ({ colors }) => `2px solid ${colors.error}`
+     border: ({ colors }) => `1px solid ${colors.error}`
     }
   }
   return a ? {
-    border: ({ colors }) => `2px solid ${colors.primary}`
+    border: ({ colors }) => `1px solid ${colors.primary}`
   } : {
-    border: ({ colors }) => `2px solid ${colors.borders}`
+    border: ({ colors }) => `1px solid ${colors.borders}`
   }
 }
 

@@ -54,13 +54,14 @@ const FormFieldArray = ({
                     placeholder={inputPlaceholder}
                     name={`${fieldName}.${i}`}
                     value={opt}
-                    ref={el => refs.current[i] = el} 
+                    ref={el => refs.current[i] = el}
                     onChange={({ target: { value }}) => arrayHelpers.replace(i, value)}
                   />
                     <Button
                       xs
                       ml={2}
                       type="button"
+                      variant="secondary"
                       onClick={() => arrayHelpers.remove(i)}
                     >
                       -
@@ -69,7 +70,6 @@ const FormFieldArray = ({
               )
               )) : null}
               <Button
-                variant="small"
                 type="button"
                 onClick={() => arrayHelpers.insert(field.value.length, '')}
               >

@@ -1,4 +1,4 @@
-const Icon = (v) => ({ size }) => 
+const Icon = (v) => ({ size }) =>
    <span style={{ fontSize: size }}>{v}</span>
 
 const options = [{
