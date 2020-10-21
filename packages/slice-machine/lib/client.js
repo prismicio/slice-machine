@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000/dev/slices/'
+const API_URL = 'http://localhost:4401/dev/slices/'
 
 const createFetcher = (repo, dbId) => (body, action = '', method = 'get') => {
   const headers = {

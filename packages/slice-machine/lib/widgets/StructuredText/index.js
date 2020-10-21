@@ -26,7 +26,7 @@ const TYPE_NAME = 'StructuredText'
 const _createMock = (config) => {
   return [{
     type: 'paragraph',
-    text: 'here',
+    text: randomSentence({ min: "10", max: "120" }),
     spans: []
   }]
 }

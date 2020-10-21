@@ -3,37 +3,13 @@ import path from 'path'
 import atob from 'atob'
 import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
+import { fetchStorybookUrl, generatePreview } from './common/utils'
 
 import { getConfig } from '../../lib/config'
 
 import mock from '../../lib/mock'
 
 const { config } = getConfig()
-
-function delay(time) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, time);
-  });
-}
-
-async function generatePreview({ screenshotUrl, pathToFile }) {
-  const browser = await puppeteer.launch();
-  try {
-    const page = await browser.newPage()
-    await page.goto(screenshotUrl);
-    await delay(600)
-    await page.screenshot({ path: pathToFile });
-  } catch (e) {
-    return e
-  } finally {
-    await browser.close();
-    return null
-  }
-}
-
-const fetchStorybookUrl = async (storybookUrl) => {
-  return fetch(storybookUrl)
-}
 
 export default async function handler(req) {
   const { sliceName, from, model: strModel, screenshotUrl } = req.query
@@ -56,13 +32,19 @@ export default async function handler(req) {
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 
   const pathToFile = path.join(config.cwd, from, sliceName, 'preview.png')
-  const err = await generatePreview({ screenshotUrl, sliceName, from, pathToFile })
-  if (err) {
-    console.log('Uncaught error was returned from generate preview')
+  const browser = await puppeteer.launch()
+  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
+  if (maybeErr) {
+    return {
+      err: maybeErr,
+      reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!'
+    }
   }
 
+  const screenshot = base64Img.base64Sync(pathToFile)
+
   return {
-    previewUrl: base64Img.base64Sync(pathToFile),
+    previewUrl: screenshot,
     isModified: true
   }
 }

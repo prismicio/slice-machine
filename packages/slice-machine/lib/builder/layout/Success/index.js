@@ -1,8 +1,6 @@
 import { Box, Heading } from 'theme-ui'
 
 const Success = ({ data, display = false }) => {
-
-  const text = data.done ? data.message : data.error
   return display ? (
      <Box
         variant={`success.${data.error ? 'error' : 'done'}`}
@@ -10,7 +8,7 @@ const Success = ({ data, display = false }) => {
       >
         <Box sx={{ display: 'inline' }}>
           <Heading as="h5" sx={{ color: '#FFF', textAlign: 'center' }}>
-            { text }
+            { data.message }
           </Heading>
         </Box>
       </Box>

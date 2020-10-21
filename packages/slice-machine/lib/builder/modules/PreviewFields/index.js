@@ -55,26 +55,26 @@ const Header = ({ title, isTouched, radius }) => (
   </Flex>
 )
 
-const SubHeader = ({ storybookUrl }) => (
-  <Flex
-    as="a"
-    href={storybookUrl}
-    target="_blank"
-    sx={{
-      px: 4,
-      py: 2,
-      bg: 'gray',
-      alignItems: 'center',
-      cursor: 'pointer',
-      textDecoration: 'none',
-      borderBottom: t => `1px solid ${t.colors.borders}`
-    }}
-  >
-    <Text as="p" sx={{ color: 'textClear', display: 'flex', alignItems: 'center' }}>
-      <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
-    </Text>
-  </Flex>
-)
+// const SubHeader = ({ storybookUrl }) => (
+//   <Flex
+//     as="a"
+//     href={storybookUrl}
+//     target="_blank"
+//     sx={{
+//       px: 4,
+//       py: 2,
+//       bg: 'gray',
+//       alignItems: 'center',
+//       cursor: 'pointer',
+//       textDecoration: 'none',
+//       borderBottom: t => `1px solid ${t.colors.borders}`
+//     }}
+//   >
+//     <Text as="p" sx={{ color: 'textClear', display: 'flex', alignItems: 'center' }}>
+//       <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
+//     </Text>
+//   </Flex>
+// )
 
 const PreviewFields = ({
   Model,
@@ -136,7 +136,7 @@ const PreviewFields = ({
       <Card
         bg="#FFF"
         Header={(props) => <Header title={variation.description} isTouched={isTouched} {...props} /> }
-        SubHeader={(props) => <SubHeader {...props} storybookUrl={storybookUrl} /> }
+        // SubHeader={(props) => <SubHeader {...props} storybookUrl={storybookUrl} /> }
         Body={() => (
           <Fragment>
             <NonRepeatZone

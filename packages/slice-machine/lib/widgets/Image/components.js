@@ -54,8 +54,13 @@ export const ConstraintForm = ({
     return null
   }
   const requiredChar = required ? '*' : ''
-  const [field, meta] = useField(prefix)
-  console.log(prefix, { field, meta })
+  const [field, meta, helpers] = useField(prefix)
+
+  const createSetField = (key) => (e) => {
+    helpers.setTouched(true)
+    helpers.setValue({ ...field.value, [key]: e.target.value })
+  }
+  
   return (
     <Fragment>
       <FormFieldInput
@@ -66,8 +71,8 @@ export const ConstraintForm = ({
         }}
         formField={{ label: `Name${requiredChar}`, placeholder: 'main' }}
         field={prefix === "constraint"
-          ? { value: "main", readOnly: true }
-          : {}
+          ? { value: "main", readOnly: true, }
+          : { onChange: createSetField('name') }
         }
         variant={prefix === "constraint" ? 'disabled' : 'primary'}
         sx={{ mb: 3 }}
@@ -79,7 +84,7 @@ export const ConstraintForm = ({
           error: meta.error && meta.error.width
         }}
         formField={{ label: `Width (px)${requiredChar}`, placeholder: ' ' }}
-        field={{ type: 'number' }}
+        field={{ type: 'number', onChange: createSetField('width') }}
         sx={{ mb: 3 }}
       />
       <FormFieldInput
@@ -89,7 +94,7 @@ export const ConstraintForm = ({
           error: meta.error && meta.error.height
         }}
         formField={{ label: `Height (px)${requiredChar}`, placeholder: ' ' }}
-        field={{ type: 'number' }}
+        field={{ type: 'number', onChange: createSetField('height') }}
       />
     </Fragment>
   )

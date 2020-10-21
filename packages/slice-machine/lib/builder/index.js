@@ -3,9 +3,7 @@ import { useState, useContext, useEffect } from 'react'
 import { ModelContext } from 'src/model-context'
 import { ConfigContext } from 'src/config-context'
 
-import {
-  Box,
-} from 'theme-ui'
+import { Box } from 'theme-ui'
 
 import {
   NavBar,
@@ -38,10 +36,12 @@ const Builder = () => {
     isTouched,
     value,
     hydrate,
+    appendInfo,
     resetInitialModel,
   } = Model
 
   const [data, setData] = useState({
+    imageLoading: false,
     loading: false,
     done: false,
     error: null,
@@ -94,10 +94,11 @@ const Builder = () => {
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done || data.error) {
+    if (data.done) {
       setDisplaySuccess(true)
       setTimeout(() => {
         setDisplaySuccess(false)
+        setData({ ...data, done: false })
       }, 2500)
     } else {
       setDisplaySuccess(false)
@@ -136,6 +137,38 @@ const Builder = () => {
     })
   }
 
+  const onScreenshot = () => {
+    setData({
+      ...data,
+      imageLoading: true,
+    })
+    fetch(`/api/screenshot?sliceName=${info.sliceName}&from=${info.from}&screenshotUrl=${screenshotUrl}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({ sliceName, from, screenshotUrl })
+    })
+    .then(async res => {
+      const json = await res.json()
+      if (res.status > 209) {
+        return setData({
+          imageLoading: false,
+          done: true,
+          error: json.err,
+          message: json.reason
+        })
+      }
+      setData({
+        imageLoading: false,
+        done: true,
+        error: null,
+        message: 'New screenshot added!'
+      })
+      hydrate(appendInfo(json))
+    })
+  }
+
   return (
     <Box>
       <NavBar
@@ -157,6 +190,9 @@ const Builder = () => {
             data={data}
             previewUrl={info.previewUrl}
             storybookUrl={storybookUrl}
+            onScreenshot={onScreenshot}
+            imageLoading={data.imageLoading}
+            screenshotUrl={screenshotUrl}
           />
         )}
       >

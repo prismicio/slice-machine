@@ -27,17 +27,17 @@ function timeout(ms, promise) {
   })
 }
 
-export const getLibrairies = async () => {
+export const getLibrairies = async (config) => {
   return await listComponentsByLibrary(config, config.libraries || []);
 }
 
-export const getLibrariesWithFlags = async () => {
+export const getLibrariesWithFlags = async (config) => {
   const res = await timeout(2000, client.get())
   if (res.status !== 200) {
     return { err: res, status: res.status }
   }
   const remoteSlices = await res.json()
-  const libraries = await getLibrairies()
+  const libraries = await getLibrairies(config)
   const withFlags = libraries.map(([lib, localSlices]) => {
     return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
@@ -67,7 +67,8 @@ export const getLibrariesWithFlags = async () => {
   return withFlags
 }
 export default async function handler() {
-  const libraries = await getLibrariesWithFlags()
+  const { config } = getConfig()
+  const libraries = await getLibrariesWithFlags(config)
   return {
     libraries,
     config,

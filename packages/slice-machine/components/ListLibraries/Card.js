@@ -1,4 +1,4 @@
-import { Badge, Text, Card as Themecard, Image, Box, Heading } from 'theme-ui'
+import { Badge, Text, Card as Themecard, Image, Box, Heading, Flex } from 'theme-ui'
 import { forwardRef, Fragment } from 'react'
 
 import ReactTooltip from 'react-tooltip'
@@ -50,7 +50,9 @@ const Card = forwardRef(({
       mb: 3
     }}
   >
-    <Image src={previewUrl} />
+    <Flex sx={{ bg: '#F1F1F1', height: '220px', alignItems: 'center', justifyContent: 'center' }}>
+      <Image src={previewUrl} />
+    </Flex>
     <Box p={3}>
       <Heading as="h4">{sliceName}</Heading>
       {model && model.variations ? <Text>{textVariation(model.variations)}</Text> : null}
