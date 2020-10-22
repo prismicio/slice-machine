@@ -27,7 +27,7 @@ async function handleLibraryPath(config, libPath) {
   // all paths to components found in slices folder
   const pathsToComponents = fs.readdirSync(slash(pathToSlices))
     .map(curr => path.join(pathToSlices, curr))
-    .filter(e => e.split('/').pop() !== 'index.js')
+    .filter(e => e.split(path.sep).pop() !== 'index.js')
 
   // relative path to slice folder, to be appended with sliceName
   const pathToSlice = `${isLocal ? './' : ''}${from}${pathToSlices.split(from).slice(1).join('')}`
