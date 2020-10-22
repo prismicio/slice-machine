@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
+import { Box } from 'theme-ui'
 
 import { Flex, Col } from '../Flex'
 import Card from './Card'
@@ -14,8 +15,16 @@ export default ({ libraries }) => (
     {
       libraries && libraries.map(([lib, components]) => (
         <div key={lib}>
-          <h2>{lib}</h2>
-          <Flex as="ul" p={0} mb={3}>
+          <Box
+            as="h2"
+            sx={{
+              pb:3,
+            }}>
+            {lib}
+          </Box>
+          <hr />
+
+          <Flex as="section" p={0} pt={4} mb={3}>
             {
               components.map((component) => (
                 <Col cols={components.length > 2 ? 3 : 2} key={component.sliceName}>

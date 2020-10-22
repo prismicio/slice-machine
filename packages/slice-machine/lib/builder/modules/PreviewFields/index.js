@@ -41,7 +41,7 @@ const Header = ({ title, isTouched, radius }) => (
     sx={{
       px: 4,
       py: 3,
-      bg: '#FFF',
+      bg: 'headSection',
       alignItems: 'center',
       borderTopLeftRadius: radius,
       borderTopRightRadius: radius,
@@ -133,36 +133,30 @@ const PreviewFields = ({
 
   return (
     <Fragment>
-      <Card
-        bg="#FFF"
-        Header={(props) => <Header title={variation.description} isTouched={isTouched} {...props} /> }
-        SubHeader={(props) => <SubHeader {...props} storybookUrl={storybookUrl} /> }
-        Body={() => (
-          <Fragment>
-            <NonRepeatZone
-              enterEditMode={enterEditMode}
-              enterSelectMode={enterSelectMode}
-              fields={variation.primary}
-              Model={Model}
-              newFieldData={newFieldData}
-              onSaveNewField={onSaveNewField}
-              onDragEnd={onDragEnd}
-              onDeleteItem={onDeleteItem}
-            />
-            <Box my={3} sx={{ height: '1px', width: '1px'}} />
-            <RepeatZone
-              enterEditMode={enterEditMode}
-              enterSelectMode={enterSelectMode}
-              fields={variation.items}
-              Model={Model}
-              newFieldData={newFieldData}
-              onSaveNewField={onSaveNewField}
-              onDragEnd={onDragEnd}
-              onDeleteItem={onDeleteItem}
-            />
-          </Fragment>
-        )}
-      />
+
+      <Fragment>
+        <NonRepeatZone
+          enterEditMode={enterEditMode}
+          enterSelectMode={enterSelectMode}
+          fields={variation.primary}
+          Model={Model}
+          newFieldData={newFieldData}
+          onSaveNewField={onSaveNewField}
+          onDragEnd={onDragEnd}
+          onDeleteItem={onDeleteItem}
+        />
+        <Box my={3} sx={{ height: '1px', width: '1px'}} />
+        <RepeatZone
+          enterEditMode={enterEditMode}
+          enterSelectMode={enterSelectMode}
+          fields={variation.items}
+          Model={Model}
+          newFieldData={newFieldData}
+          onSaveNewField={onSaveNewField}
+          onDragEnd={onDragEnd}
+          onDeleteItem={onDeleteItem}
+        />
+      </Fragment>
       {
         editModalData && editModalData.isOpen ? (
           <EditModal

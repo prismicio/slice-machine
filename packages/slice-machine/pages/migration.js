@@ -46,7 +46,7 @@ const Migration = ({ migrations }) => {
             sx={{
               p: 3,
               pl: 4,
-              bg: '#FFF',
+              bg: '#fff',
               alignItems: 'center',
               justifyContent: 'space-between',
               borderTopLeftRadius: radius,

@@ -40,7 +40,7 @@ const SelectFieldTypeModal = ({
             sx={{
               p: 3,
               pl: 4,
-              bg: '#FFF',
+              bg: 'headSection',
               alignItems: 'center',
               justifyContent: 'space-between',
               borderTopLeftRadius: radius,
@@ -63,8 +63,8 @@ const SelectFieldTypeModal = ({
               if (Meta && create) { // prov
                 return (
                   <Col key={type}>
-                    <FieldTypeCard 
-                      {...Meta} 
+                    <FieldTypeCard
+                      {...Meta}
                       onSelect={() => onSelect(zone, type) && close()}
                     />
                   </Col>

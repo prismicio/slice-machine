@@ -1,24 +1,32 @@
+import React from 'react'
 import { useContext, Fragment } from 'react'
 import Head from 'next/head'
 
 import Container from '../components/Container'
 import ListLibraries from '../components/ListLibraries'
 import { LibContext } from '../src/lib-context'
+import { useColorMode } from 'theme-ui'
 
 import Link from 'next/link'
 
+import IconButton from 'components/IconButton'
+import { VscColorMode } from "react-icons/vsc";
+
 import {
+  Box,
   Text,
   Select,
   Flex,
+  useThemeUI,
   Link as ThemeLink,
 } from 'theme-ui'
 
 const Index = () => {
+  const { theme } = useThemeUI()
   const libraries = useContext(LibContext)
+  const [colorMode, setColorMode] = useColorMode()
   return (
     <Fragment>
-
       <Flex
         as="header"
         sx={{
@@ -42,6 +50,14 @@ const Index = () => {
             </Text>
           </ThemeLink>
         </Link>
+        <Box
+      sx={{ mx: 'auto' }} />
+      <IconButton
+        Icon={VscColorMode}
+        label="Color Mode"
+        sx={{ cursor: "pointer", color: theme.colors.icons }}
+        onClick={e => { setColorMode(colorMode === 'default' ? 'dark' : 'default')}}
+      />
       </Flex>
 
       <Container>

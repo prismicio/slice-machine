@@ -7,13 +7,15 @@ export default ({ children, SideBar, sx, ...rest }) => (
     sx={{
       display: 'flex',
       flexWrap: 'wrap',
-      maxWidth: '1224px',
-      margin: '0 auto',
+      maxWidth: 1224,
+      mx: 'auto',
+      px: 3,
+      py: 4,
       ...sx
     }}
     {...rest}
   >
-    <SideBar />
+
     <Box
       as="main"
       sx={{
@@ -23,5 +25,6 @@ export default ({ children, SideBar, sx, ...rest }) => (
       }}>
       {children}
     </Box>
+    <SideBar />
   </Flex>
 )

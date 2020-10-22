@@ -47,7 +47,7 @@ const FieldZone = ({
         <Flex
           sx={{
             p: 3,
-            bg: '#FFF',
+            bg: 'headSection',
             alignItems: 'center',
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,

@@ -73,7 +73,7 @@ const EditModal = ({
           return (
               <Card
                 borderFooter
-                footerSx={{ p: 3 }}
+                footerSx={{ p: 0}}
                 bodySx={{ pt: 2, pb: 4, px: 4 }}
                 sx={{ border: 'none' }}
                 Header={({ radius }) => (
@@ -81,7 +81,7 @@ const EditModal = ({
                     sx={{
                       p: 3,
                       pl: 4,
-                      bg: '#FFF',
+                      bg: 'headSection',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       borderTopLeftRadius: radius,
@@ -99,7 +99,7 @@ const EditModal = ({
                   </Flex>
                 )}
                 Footer={(
-                  <Flex sx={{ alignItems: 'space-between' }}>
+                  <Flex sx={{ alignItems: 'space-between', bg: 'headSection', p: 3}}>
                     <Box sx={{ ml: 'auto' }} />
                     <Button
                       mr={2}

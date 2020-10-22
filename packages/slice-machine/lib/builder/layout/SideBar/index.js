@@ -13,14 +13,12 @@ import Card from 'components/Card'
 import Prismic from './icons/prismic.svg'
 import Storybook from './icons/storybook.svg'
 
-const borderBottom = '1px solid #F7F7F7'
-
 const Li = ({ Icon, title, description, bodySx, ...rest }) => (
   <Flex
     as="li"
     sx={{
       p: 3,
-      borderBottom,
+      borderBottom: theme => `1px solid ${theme.colors.borders}`,
       alignItems: "center",
       textDecoration: 'none',
       color: 'inherit'
@@ -44,7 +42,7 @@ const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
     }
     return 'Push Slice to Prismic'
   })()
-  
+
   const onClick = isTouched ? onSave : onPush
 
   const editable = info.isNew || isTouched || info.isModified
@@ -90,7 +88,7 @@ const SideBar = ({
       }}
     >
       <Card
-        bg="#FFF"
+        bg="headSection"
         bodySx={{ p: 0 }}
         footerSx={{ p: 0 }}
         Footer={() => (
@@ -146,7 +144,7 @@ export default SideBar
         <Text as="p">
           { description }
         </Text>
-      </Box> 
+      </Box>
 } <
 Box
   >

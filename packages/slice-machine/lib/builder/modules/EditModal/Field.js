@@ -11,7 +11,7 @@ import {
   Label,
 } from 'theme-ui'
 
-const WidgetFormField = ({ 
+const WidgetFormField = ({
   fieldName,
   formField,
   fieldType,
@@ -59,7 +59,7 @@ const WidgetFormField = ({
               label={formField.label}
               fieldName={fieldName}
               onChange={value => helpers.setValue(value)}
-            
+
             />
           )}
           {formField.type === FormTypes.SELECT && (
@@ -76,7 +76,7 @@ const WidgetFormField = ({
         </Fragment>
       )}
     </Box>
-  ); 
+  );
 }
 
 export default WidgetFormField

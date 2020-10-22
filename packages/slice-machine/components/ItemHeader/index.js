@@ -20,7 +20,14 @@ const ItemHeader = ({
     />
     <WidgetIcon
       size={28}
-      style={theme.widgetIcons}
+      style={{
+        color: theme.colors.primary,
+        marginRight: '8px',
+        borderRadius: '4px',
+        padding: '4px',
+        border: '2px solid',
+        borderColor: theme.colors.primary,
+      }}
     />
     <Text
       as="p"
