@@ -2,7 +2,7 @@ import os from 'os'
 import fs from 'fs'
 import path from 'path'
 
-const AUTH_KEY = "MY_COOL_KEY"
+const AUTH_KEY = "prismic-auth"
 
 // https://gist.github.com/rendro/525bbbf85e84fa9042c2
 const parseCookies = (cookies) => cookies.split(';')
@@ -34,14 +34,12 @@ export const getCookies = () => {
 export const auth = () => {
   const { cookies, ...r } = getCookies()
   if (!cookies) {
-    return r
+    console.error(r.reason)
+    return null
   }
   const parsed = parseCookies(cookies)
   if (parsed[AUTH_KEY]) {
-    return {
-      isAuth: true,
-      token: parsed[AUTH_KEY]
-    }
+    return parsed[AUTH_KEY]
   }
-  return { isAuth: false, reason: `key "${AUTH_KEY}" was not found in ~/.prismic. Are you logged in to Prismic?` }
+  return null
 }

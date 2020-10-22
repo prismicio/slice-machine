@@ -19,7 +19,7 @@ const FormFieldInput = ({
     >
       {formField.label || fieldName}
       {
-        meta.touched && meta.error ? console.log({ errr: meta.error }) || (
+        meta.touched && meta.error ? (
           <Text as="span" variant="text.labelError">{meta.error}</Text>
         ) : null
       }

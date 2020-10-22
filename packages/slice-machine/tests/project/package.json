@@ -22,11 +22,12 @@
     "@prismicio/vue": "^2.0.7",
     "prismic-dom": "^2.2.3",
     "prismic-javascript": "^3.0.2",
-    "vue": "^2.6.12"
+    "vue": "^2.6.12",
+    "vue-slicezone": "^0.0.28"
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "slicemachine": "start-slicemachine",
+    "slicemachine": "start-slicemachine -p 9001",
     "build-storybook": "build-storybook"
   }
 }

@@ -20,6 +20,20 @@
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,rtl"
           }
+        },
+        "image": {
+          "config": {
+            "label": "Label!",
+            "constraint": {},
+            "thumbnails": [
+              {
+                "name": "square",
+                "width": 500,
+                "height": 500
+              }
+            ]
+          },
+          "type": "Image"
         }
       },
       "items": {}

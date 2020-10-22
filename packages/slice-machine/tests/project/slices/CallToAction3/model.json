@@ -27,13 +27,12 @@
             "placeholder": "This is where it all begins..."
           }
         },
-        "lll": {
-          "type": "Number",
+        "llapiId": {
           "config": {
             "label": "",
-            "id": "lll",
             "placeholder": ""
-          }
+          },
+          "type": "Number"
         }
       },
       "items": {}

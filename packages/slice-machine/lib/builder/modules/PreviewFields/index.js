@@ -1,17 +1,13 @@
 import React, { useState, Fragment } from 'react'
 
-import Card from 'components/Card'
-
 import {
   Flex,
   Box,
-  Text,
   Heading
 } from 'theme-ui'
 
 import {
   FaRegClock,
-  FaRegArrowAltCircleRight
 } from 'react-icons/fa'
 
 import { NonRepeatZone, RepeatZone } from '../FieldZone'
@@ -31,7 +27,7 @@ const TouchedIcon = () => (
       alignItems: 'center'
     }}
   >
-    Touched
+    Unsaved changes
     <FaRegClock style={{ marginLeft: '6px'}} />
   </Flex>
 )
@@ -52,27 +48,6 @@ const Header = ({ title, isTouched, radius }) => (
       {title}
     </Heading>
     { isTouched ? <TouchedIcon /> : null}
-  </Flex>
-)
-
-const SubHeader = ({ storybookUrl }) => (
-  <Flex
-    as="a"
-    href={storybookUrl}
-    target="_blank"
-    sx={{
-      px: 4,
-      py: 2,
-      bg: 'gray',
-      alignItems: 'center',
-      cursor: 'pointer',
-      textDecoration: 'none',
-      borderBottom: t => `1px solid ${t.colors.borders}`
-    }}
-  >
-    <Text as="p" sx={{ color: 'textClear', display: 'flex', alignItems: 'center' }}>
-      <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
-    </Text>
   </Flex>
 )
 
@@ -131,9 +106,10 @@ const PreviewFields = ({
     Model.hydrate(variation.delete[modelFieldName](key))
   }
 
+  const onCancelNewField = () => setNewFieldData(null)
+
   return (
     <Fragment>
-
       <Fragment>
         <NonRepeatZone
           enterEditMode={enterEditMode}
@@ -141,6 +117,7 @@ const PreviewFields = ({
           fields={variation.primary}
           Model={Model}
           newFieldData={newFieldData}
+          onCancelNewField={onCancelNewField}
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}
@@ -152,6 +129,7 @@ const PreviewFields = ({
           fields={variation.items}
           Model={Model}
           newFieldData={newFieldData}
+          onCancelNewField={onCancelNewField}
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}

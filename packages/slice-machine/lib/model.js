@@ -91,6 +91,9 @@ const createModel = (intialValues, initialInfo) => {
       info = { ...info, ...newInfo }
       variations = createVariations(newInitialValues)
     },
+    appendInfo: (newInfo) => {
+      info = { ...info, ...newInfo }
+    },
     get: () => {
       return {
         info,

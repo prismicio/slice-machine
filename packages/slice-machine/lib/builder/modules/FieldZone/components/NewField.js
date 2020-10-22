@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { Input, Flex, Text, Button, Label } from 'theme-ui'
+import { Box, Input, Flex, Text, Button, Label, useThemeUI } from 'theme-ui'
 
 import {
   DefaultFields,
@@ -20,10 +20,12 @@ const NewField = ({
   fieldType,
   zone,
   onSave,
-  variation
+  variation,
+  onCancelNewField,
 }) => {
 
   const fieldRef = useRef(null)
+  const { theme } = useThemeUI()
   const widget = Widgets[fieldType]
   if (!widget) {
     console.error(`Widget of type "${fieldType}" not found. This is a problem on our side!`)
@@ -32,6 +34,9 @@ const NewField = ({
   const FormFields = {
     id: DefaultFields.id
   }
+
+  const { Meta: { icon: WidgetIcon } } = widget
+
   const initialValues = {
     ...createInitialValues(FormFields),
     fieldType
@@ -67,6 +72,16 @@ const NewField = ({
                 alignItems: "center",
               }}
             >
+              <WidgetIcon
+                style={{
+                  ...theme.widgetIcons,
+                  borderRadius: '3px',
+                  background: '#EAEBFF',
+                  border: '2px solid',
+                  marginLeft: 'calc(32px + 4px)'
+                }}
+                size={28}
+              />
               <Label
                 sx={{
                   display: 'flex',
@@ -101,7 +116,10 @@ const NewField = ({
                 <ErrorTooltip errors={errors} />
               </Label>
             </Flex>
-            <Button type="submit">Add</Button>
+            <Box>
+              <Button onClick={onCancelNewField} variant="secondary" type="button">Cancel</Button>
+              <Button sx={{ ml: 2 }} type="submit">Add</Button>
+            </Box>
           </Flex>
         </Form>
        )}
