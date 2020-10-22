@@ -51,7 +51,7 @@ const Card = forwardRef(({
     }}
   >
     <Flex sx={{ bg: '#F1F1F1', height: '220px', alignItems: 'center', justifyContent: 'center' }}>
-      <Image src={previewUrl} />
+      <Image src={previewUrl} sx={{ maxHeight: '100%' }} />
     </Flex>
     <Box p={3}>
       <Heading as="h4">{sliceName}</Heading>

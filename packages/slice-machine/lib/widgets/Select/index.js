@@ -1,9 +1,12 @@
 import * as yup from 'yup'
 import { MdDns } from 'react-icons/md'
 
-import { createValidationSchema } from 'lib/forms'
+import {
+  createInitialValues,
+  createValidationSchema
+} from 'lib/forms'
 
-import { removeProp, createDefaultWidgetValues } from 'lib/utils'
+import { removeProp } from 'lib/utils'
 
 import FormFields from './FormFields'
 
@@ -18,10 +21,12 @@ import FormFields from './FormFields'
     }
 */
 
-const {
-  create,
-  TYPE_NAME,
-} = createDefaultWidgetValues('Select')
+const TYPE_NAME = 'Select'
+
+const create = (apiId) => ({
+  ...createInitialValues(FormFields),
+  id: apiId
+})
 
 const _createMock = (config) => config.options[Math.floor(Math.random() * config.options.length)]
 

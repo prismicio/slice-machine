@@ -27,7 +27,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "slicemachine": "start-slicemachine",
+    "slicemachine": "start-slicemachine -p 9001",
     "build-storybook": "build-storybook"
   }
 }

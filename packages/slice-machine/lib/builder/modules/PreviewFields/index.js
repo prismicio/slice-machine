@@ -131,6 +131,8 @@ const PreviewFields = ({
     Model.hydrate(variation.delete[modelFieldName](key))
   }
 
+  const onCancelNewField = () => setNewFieldData(null)
+
   return (
     <Fragment>
       <Card
@@ -145,6 +147,7 @@ const PreviewFields = ({
               fields={variation.primary}
               Model={Model}
               newFieldData={newFieldData}
+              onCancelNewField={onCancelNewField}
               onSaveNewField={onSaveNewField}
               onDragEnd={onDragEnd}
               onDeleteItem={onDeleteItem}
@@ -156,6 +159,7 @@ const PreviewFields = ({
               fields={variation.items}
               Model={Model}
               newFieldData={newFieldData}
+              onCancelNewField={onCancelNewField}
               onSaveNewField={onSaveNewField}
               onDragEnd={onDragEnd}
               onDeleteItem={onDeleteItem}

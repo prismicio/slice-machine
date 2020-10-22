@@ -25,6 +25,7 @@ const FieldZone = ({
   newField,
   dataTip,
   onDragEnd,
+  onCancelNewField,
   onSaveNewField,
   onDeleteItem
 }) => {
@@ -81,7 +82,7 @@ const FieldZone = ({
                   ))}
                   {provided.placeholder}
                   {newField && (
-                    <NewField {...newField} onSave={onSaveNewField} />
+                    <NewField {...newField} onCancelNewField={onCancelNewField} onSave={onSaveNewField} />
                   )}
                 </ul>
               )}

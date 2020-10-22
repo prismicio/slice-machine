@@ -11,7 +11,7 @@ import { pascalize } from 'sm-commons/utils/str'
 import { getConfig } from '../../lib/config'
 
 const { config, errors } = getConfig()
-const client = initClient(config.repo, config.dbId)
+const client = initClient(config.repo, config.auth)
 
 function timeout(ms, promise) {
   return new Promise(function (resolve) {
@@ -32,11 +32,13 @@ export const getLibrairies = async (config) => {
 }
 
 export const getLibrariesWithFlags = async (config) => {
-  const res = await timeout(2000, client.get())
+  const res = await client.get()
   if (res.status !== 200) {
-    return { err: res, status: res.status }
+    console.log('here', res)
+    return { err: res, reason: 'Could not fetch remote slices', status: res.status }
   }
   const remoteSlices = await res.json()
+
   const libraries = await getLibrairies(config)
   const withFlags = libraries.map(([lib, localSlices]) => {
     return [lib, localSlices.map(localSlice => {
@@ -58,6 +60,7 @@ export const getLibrariesWithFlags = async (config) => {
         // console.error(e)
         return {
           ...flagged,
+          status: 200,
           isValid: false,
           reason: e
         }
@@ -69,6 +72,9 @@ export const getLibrariesWithFlags = async (config) => {
 export default async function handler() {
   const { config } = getConfig()
   const libraries = await getLibrariesWithFlags(config)
+  if (libraries.err) {
+    return { err: libraries }
+  }
   return {
     libraries,
     config,

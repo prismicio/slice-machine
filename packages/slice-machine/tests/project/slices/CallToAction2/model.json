@@ -23,13 +23,13 @@
         },
         "image": {
           "config": {
-            "label": "",
+            "label": "Label!",
             "constraint": {},
             "thumbnails": [
               {
                 "name": "square",
-                "width": "500",
-                "height": "500"
+                "width": 500,
+                "height": 500
               }
             ]
           },

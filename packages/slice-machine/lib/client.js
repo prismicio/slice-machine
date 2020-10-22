@@ -1,9 +1,9 @@
 const API_URL = 'http://localhost:4401/dev/slices/'
 
-const createFetcher = (repo, dbId) => (body, action = '', method = 'get') => {
+const createFetcher = (repo, auth) => (body, action = '', method = 'get') => {
   const headers = {
     REPOSITORY: repo,
-    DBID: dbId
+    Authorization: `Bearer ${auth}`
   }
   return fetch(new URL(action, API_URL), {
     headers,
@@ -14,8 +14,11 @@ const createFetcher = (repo, dbId) => (body, action = '', method = 'get') => {
   })
 }
 
-const initClient = (repo, dbId) => {
-  const fetcher = createFetcher(repo, dbId)
+const initClient = (repo, auth) => {
+  if (!auth) {
+    throw new Error('Could not instantiate API client: token not found.')
+  }
+  const fetcher = createFetcher(repo, auth)
   return {
     async get() {
       return await fetcher()

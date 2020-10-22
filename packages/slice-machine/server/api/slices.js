@@ -2,7 +2,7 @@ import { getConfig } from '../../lib/config'
 import initClient from '../../lib/client'
 
 const { config } = getConfig()
-const client = initClient(config.repo, config.dbId)
+const client = initClient(config.repo, config.auth)
 
 export const getSlices = async() => {
   const res = await client.get()

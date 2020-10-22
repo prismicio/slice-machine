@@ -28,11 +28,16 @@ import { removeProp } from '../../utils'
     }
   } */
 
+
+  /**
+   * https://source.unsplash.com/random/800x600
+   */
+
 const _createMock = (src, { width = 900, height = 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
   dimensions: { width, height },
   alt: 'Placeholder image',
   copyright: null,
-  url: src || `https://via.placeholder.com/${width}x${height}`,
+  url: src || `https://source.unsplash.com/random/${width}x${height}`,
   ...thumbnails.reduce((acc, e) => ({
     ...acc,
     [e.name]: _createMock(src, { width: e.width, height: e.height })

@@ -69,8 +69,8 @@ export function getComponentInfo(slicePath) {
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
   const modelValues = fromJsonFile(slicePath, 'model.json', 'model')
 
-  const previewUrl = path.join(slicePath, 'preview.png')
-  const hasPreview = has(previewUrl)
+  const pathToImageFile = path.join(slicePath, 'preview.png')
+  const hasPreview = has(pathToImageFile)
 
   const nameConflict =
     sliceName !== pascalize(modelValues.model.id)
@@ -85,6 +85,6 @@ export function getComponentInfo(slicePath) {
     ...fromJsonFile(slicePath, 'mock.json', 'mock'),
     hasPreview,
     nameConflict,
-    previewUrl: hasPreview ? base64Img.base64Sync(previewUrl) : null
+    previewUrl: hasPreview ? base64Img.base64Sync(pathToImageFile) : null
   }
 }
