@@ -13,22 +13,22 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         border: ({ colors }) => `1px solid ${colors.borders}`,
         '&:hover': {
           border: ({ colors }) => `1px solid ${colors.primary}`,
-          boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)'
+          boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2)'
         }
       }}
       onClick={onSelect}
     >
       <WidgetIcon
         label={`Select field of type "${title}"`}
-        style = {
-          {
-            ...theme.widgetIcons,
-            borderRadius: '3px',
-            background: '#EAEBFF',
-            border: '2px solid'
-          }
-        }
-        size={36}
+        style={{
+          color: theme.colors.primary,
+          marginRight: '8px',
+          borderRadius: '4px',
+          padding: '5px',
+          border: '2px solid',
+          borderColor: theme.colors.primary,
+        }}
+        size={32}
       />
       <Box ml={1}>
         <Heading as="h4" sx={{ fontSize: 1 }} ><b>{title}</b></Heading>

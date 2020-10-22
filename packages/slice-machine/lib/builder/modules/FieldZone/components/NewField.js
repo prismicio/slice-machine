@@ -70,15 +70,18 @@ const NewField = ({
             <Flex
               sx={{
                 alignItems: "center",
+                marginLeft: 'calc(32px + 4px)',
+                width: '50%'
               }}
             >
               <WidgetIcon
                 style={{
-                  ...theme.widgetIcons,
-                  borderRadius: '3px',
-                  background: '#EAEBFF',
+                  color: theme.colors.primary,
+                  marginRight: '12px',
+                  borderRadius: '4px',
                   border: '2px solid',
-                  marginLeft: 'calc(32px + 4px)'
+                  borderColor: theme.colors.primary,
+                  width: '30px' // display bug
                 }}
                 size={28}
               />

@@ -1,11 +1,5 @@
 import {
   Box,
-  Flex,
-  Heading,
-  Text,
-  Button,
-  Image,
-  Spinner
 } from 'theme-ui'
 
 import Card from 'components/Card'
@@ -36,7 +30,7 @@ const SideBar = ({
       }}
     >
       <Card
-        bg="#FFF"
+        bg="headSection"
         bodySx={{ p: 0 }}
         footerSx={{ p: 0 }}
         Footer={() => (
@@ -59,16 +53,6 @@ const SideBar = ({
             href={storybookUrl}
             target="_blank"
           />
-          {/* <Li
-            title="Generate a sample page"
-            description="See your component in the context of a page"
-            Icon={Storybook}
-          />
-          <Li
-            title="Used in 4 custom types"
-            description="View these 4 custom types"
-            Icon={Prismic}
-          /> */}
         </ul>
       </Card>
     </Box>

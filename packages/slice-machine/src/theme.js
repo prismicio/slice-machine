@@ -1,20 +1,38 @@
+import { darken, lighten } from '@theme-ui/color'
+
 export default () => ({
   "colors": {
-    text: "#222222",
+    text: "#1D2230",
     textClear: "#667587",
     background: "#F5F6F9",
     primary: "#5163BA",
-    "secondary": "hsl(10, 60%, 50%)",
+    secondary: "#F9FAFB",
     "highlight": "hsl(10, 40%, 90%)",
     "purple": "hsl(250, 60%, 30%)",
-    muted: "#F8F9FA",
+    muted: "#F9F9FB",
     icons: "#8091A5",
     gray: "#F8F9FA",
     borders: '#C9D0D8',
     deep: '#0E2150',
     deep1: '#A0ADE7',
-    error: '#F45A5B',
-    success: '#2CB28A'
+    error: '#E55737',
+    success: '#3AB97A',
+    headSection: '#fff',
+
+    modes: {
+      dark: {
+        text: "#fff",
+        textClear: "#6E707B",
+        background: "#202022",
+        primary: '#4E54D7',
+        secondary: "#28282C",
+        icons: "#5D5D71",
+        gray: "#1D1D1F",
+        borders: '#3A3A46',
+        deep: '#28282C',
+        headSection: '#28282C',
+      }
+    }
   },
   "fonts": {
     "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
@@ -59,14 +77,6 @@ export default () => ({
       "mt": 3
     }
   },
-  widgetIcons: {
-    color: '#5163BA',
-    marginRight: '8px',
-    borderRadius: '4px',
-    padding: '4px',
-    background: '#F7F8F9',
-    border: '2px solid #5163BA',
-  },
   sizes: {
     sidebar: 340,
   },
@@ -99,27 +109,55 @@ export default () => ({
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '50%'
-    }
+    },
+    outline: {
+      color: 'primary',
+      fontSize: '14px',
+      fontWeight: '500',
+      bg: 'headSection',
+      border: '1px solid',
+      borderColor: 'borders',
+    },
   },
   buttons:  {
     primary: {
       color: 'white',
       fontSize: '1',
       fontWeight: 'body',
-      bg: '#6577CF',
+      bg: 'primary',
       border: '1px solid',
-      borderColor: '#4759B3',
+      borderColor: darken('primary', 0.1),
       '&:hover': {
-        bg: 'primary',
+        bg: darken('primary', 0.05),
         cursor: 'pointer',
       },
       '&:focus': {
-        bg: '#4759B4',
-        borderColor: '#1E2D77',
+        bg: darken('primary', 0.1),
+        borderColor: darken('primary', 0.15),
         outline: 'none',
       },
       '&:active': {
-        boxShadow: 'inset 0 0 0 1px #1E2D77',
+        bg: darken('primary', 0.2),
+        outline: 'none',
+      }
+    },
+    secondary: {
+      bg: 'secondary',
+      fontWeight: 'body',
+      fontSize: '1',
+      color: 'textClear',
+      border: ({ colors }) => `1px solid ${colors.borders}`,
+      '&:hover': {
+        bg: darken('secondary', 0.02),
+        cursor: 'pointer',
+      },
+      '&:focus': {
+        bg: darken('secondary', 0.05),
+        borderColor: darken('secondary', 0.15),
+        outline: 'none',
+      },
+      '&:active': {
+        bg: darken('secondary', 0.06),
         outline: 'none',
       }
     },
@@ -140,26 +178,6 @@ export default () => ({
         outline: 'none',
       }
     },
-    secondary: {
-      background: '#F9FAFB',
-      fontWeight: 'body',
-      fontSize: '1',
-      color: 'textClear',
-      border: ({ colors }) => `1px solid ${colors.borders}`,
-      '&:hover': {
-        bg: '#F5F6F9',
-        cursor: 'pointer',
-      },
-      '&:focus': {
-        bg: '#F0F3F5',
-        borderColor: '#C9D0D8',
-        outline: 'none',
-      },
-      '&:active': {
-        boxShadow: 'inset 0 0 0 1px #8091A5',
-        outline: 'none',
-      }
-    },
     textButton: {
       border: 'none',
       color: 'primary',
@@ -176,9 +194,7 @@ export default () => ({
     close: {
       color: 'icons',
       '&:hover': {
-        bg: '#F9FAFB',
-        border: '1px solid',
-        borderColor: '#C9D0D8',
+        bg: 'rgba(0,0,0,0.08)',
         cursor: 'pointer'
       },
       '&:focus': {
@@ -187,9 +203,7 @@ export default () => ({
     },
     icon: {
       '&:hover': {
-        bg: '#F9FAFB',
-        border: '1px solid',
-        borderColor: '#C9D0D8',
+        bg: 'rgba(0,0,0,0.08)',
       },
       '&:focus': {
         outline: 'none',
@@ -214,7 +228,7 @@ export default () => ({
   },
   cards: {
     primary: {
-      bg: '#FFF',
+      bg: 'gray',
       border: '1px solid',
       borderRadius: 4,
       borderColor: 'borders',
@@ -242,12 +256,12 @@ export default () => ({
         color: 'icons',
       },
       '&:hover': {
-        borderColor: '#A6ACB2',
+        borderColor: darken('borders', 0.07),
       },
       '&:focus, &:active': {
         outline: 'none',
-        borderColor: '#3B41BD',
-        boxShadow: '0 0 0 3px #EBEBFF, inset 0 1px 2px rgba(102, 113, 123, 0.2)',
+        borderColor: 'primary',
+        boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2), inset 0 1px 2px rgba(102, 113, 123, 0.2)',
       }
     },
     label: {
@@ -270,8 +284,7 @@ export default () => ({
   },
   styles: {
     spinner: {
-      bg: 'primary',
-      color: 'primary'
+      color: 'red',
     },
     navLink: {
       color: '#FFF',
@@ -283,9 +296,9 @@ export default () => ({
       color: 'deep1'
     },
     listItem: {
-      bg: '#FFF',
-      border: t => `1px solid #DEE1E5`,
-      borderRadius: '2px',
+      bg: 'headSection',
+      border: t => `1px solid ${t.colors.borders}`,
+      borderRadius: '3px',
       my: 3,
       justifyContent: 'space-between',
       // '&:first-child': {
@@ -345,12 +358,12 @@ export default () => ({
     },
     "code": {
       "fontFamily": "monospace",
-      "color": "secondary",
+      "color": "error",
       "fontSize": 1
     },
     "inlineCode": {
       "fontFamily": "monospace",
-      "color": "secondary",
+      "color": "error",
       "bg": "muted"
     },
     "table": {
@@ -378,7 +391,7 @@ export default () => ({
     "hr": {
       "border": 0,
       "borderBottom": "1px solid",
-      "borderColor": "muted"
+      "borderColor": "borders"
     },
     "img": {
       "maxWidth": "100%"
@@ -408,7 +421,7 @@ export default () => ({
       "color": "primary"
     },
     ".selector,.attr-name,.string,.char,.builtin,.inserted": {
-      "color": "secondary"
+      "color": "error"
     }
   }
 })

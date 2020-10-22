@@ -5,7 +5,8 @@ const Li = ({ Icon, title, description, bodySx, ...rest }) => (
     as="li"
     sx={{
       p: 3,
-      borderBottom: '1px solid #F7F7F7',
+      borderBottom: '1px solid',
+      borderColor: 'borders',
       alignItems: "center",
       textDecoration: 'none',
       color: 'inherit'

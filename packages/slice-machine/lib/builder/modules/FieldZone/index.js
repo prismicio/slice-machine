@@ -16,6 +16,15 @@ import Card from 'components/Card'
 import ListItem  from './components/ListItem'
 import NewField from './components/NewField'
 
+const dataTipText = `
+  Each slice has a “non repeatable zone” and a<br/>
+  “repeatable zone”. The non-repeatable zone<br/>
+  is for fields that should appear once, like a<br/>
+  section title. The repeatable zone is for a group<br/>
+  of fields that you want to be able to repeat an<br/>
+  indeterminate number of times, like FAQs.
+`
+
 const FieldZone = ({
   fields,
   title,
@@ -48,14 +57,14 @@ const FieldZone = ({
         <Flex
           sx={{
             p: 3,
-            bg: '#FFF',
+            bg: 'headSection',
             alignItems: 'center',
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
             borderBottom: t => `1px solid ${t.colors.borders}`
           }}
         >
-          <ReactTooltip type="dark" multiline />
+          <ReactTooltip type="dark" multiline place="right" />
           <Heading as="h5" mr={2}>{title}</Heading>
           <FaRegQuestionCircle
             color={theme.colors.icons}
@@ -124,7 +133,7 @@ export const NonRepeatZone = ({
       newFieldData.zone === 'primary' &&
       newFieldData
     }
-    dataTip="It is a long established fact that a reader will<br/> be distracted by the readable content of a page<br/> when looking at its layout."
+    dataTip={dataTipText}
     {...rest}
   />
 )
@@ -144,7 +153,7 @@ export const RepeatZone = ({
       newFieldData
     }
     newFieldData
-    dataTip="It is a long established fact that a reader will<br/> be distracted by the readable content of a page<br/> when looking at its layout."
+    dataTip={dataTipText}
     {...rest}
   />
 )

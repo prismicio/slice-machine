@@ -1,17 +1,13 @@
 import React, { useState, Fragment } from 'react'
 
-import Card from 'components/Card'
-
 import {
   Flex,
   Box,
-  Text,
   Heading
 } from 'theme-ui'
 
 import {
   FaRegClock,
-  FaRegArrowAltCircleRight
 } from 'react-icons/fa'
 
 import { NonRepeatZone, RepeatZone } from '../FieldZone'
@@ -41,7 +37,7 @@ const Header = ({ title, isTouched, radius }) => (
     sx={{
       px: 4,
       py: 3,
-      bg: '#FFF',
+      bg: 'headSection',
       alignItems: 'center',
       borderTopLeftRadius: radius,
       borderTopRightRadius: radius,
@@ -54,27 +50,6 @@ const Header = ({ title, isTouched, radius }) => (
     { isTouched ? <TouchedIcon /> : null}
   </Flex>
 )
-
-// const SubHeader = ({ storybookUrl }) => (
-//   <Flex
-//     as="a"
-//     href={storybookUrl}
-//     target="_blank"
-//     sx={{
-//       px: 4,
-//       py: 2,
-//       bg: 'gray',
-//       alignItems: 'center',
-//       cursor: 'pointer',
-//       textDecoration: 'none',
-//       borderBottom: t => `1px solid ${t.colors.borders}`
-//     }}
-//   >
-//     <Text as="p" sx={{ color: 'textClear', display: 'flex', alignItems: 'center' }}>
-//       <FaRegArrowAltCircleRight /> <Text as="span" sx={{ ml: 2 }}>Preview component</Text>
-//     </Text>
-//   </Flex>
-// )
 
 const PreviewFields = ({
   Model,
@@ -135,38 +110,31 @@ const PreviewFields = ({
 
   return (
     <Fragment>
-      <Card
-        bg="#FFF"
-        Header={(props) => <Header title={variation.description} isTouched={isTouched} {...props} /> }
-        // SubHeader={(props) => <SubHeader {...props} storybookUrl={storybookUrl} /> }
-        Body={() => (
-          <Fragment>
-            <NonRepeatZone
-              enterEditMode={enterEditMode}
-              enterSelectMode={enterSelectMode}
-              fields={variation.primary}
-              Model={Model}
-              newFieldData={newFieldData}
-              onCancelNewField={onCancelNewField}
-              onSaveNewField={onSaveNewField}
-              onDragEnd={onDragEnd}
-              onDeleteItem={onDeleteItem}
-            />
-            <Box my={3} sx={{ height: '1px', width: '1px'}} />
-            <RepeatZone
-              enterEditMode={enterEditMode}
-              enterSelectMode={enterSelectMode}
-              fields={variation.items}
-              Model={Model}
-              newFieldData={newFieldData}
-              onCancelNewField={onCancelNewField}
-              onSaveNewField={onSaveNewField}
-              onDragEnd={onDragEnd}
-              onDeleteItem={onDeleteItem}
-            />
-          </Fragment>
-        )}
-      />
+      <Fragment>
+        <NonRepeatZone
+          enterEditMode={enterEditMode}
+          enterSelectMode={enterSelectMode}
+          fields={variation.primary}
+          Model={Model}
+          newFieldData={newFieldData}
+          onCancelNewField={onCancelNewField}
+          onSaveNewField={onSaveNewField}
+          onDragEnd={onDragEnd}
+          onDeleteItem={onDeleteItem}
+        />
+        <Box my={3} sx={{ height: '1px', width: '1px'}} />
+        <RepeatZone
+          enterEditMode={enterEditMode}
+          enterSelectMode={enterSelectMode}
+          fields={variation.items}
+          Model={Model}
+          newFieldData={newFieldData}
+          onCancelNewField={onCancelNewField}
+          onSaveNewField={onSaveNewField}
+          onDragEnd={onDragEnd}
+          onDeleteItem={onDeleteItem}
+        />
+      </Fragment>
       {
         editModalData && editModalData.isOpen ? (
           <EditModal

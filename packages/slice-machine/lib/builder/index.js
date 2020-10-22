@@ -3,7 +3,10 @@ import { useState, useContext, useEffect } from 'react'
 import { ModelContext } from 'src/model-context'
 import { ConfigContext } from 'src/config-context'
 
-import { Box } from 'theme-ui'
+import {
+  Box,
+  Flex,
+} from 'theme-ui'
 
 import {
   NavBar,
@@ -105,7 +108,7 @@ const Builder = () => {
     }
   }, [data])
 
-  
+
   const onPush = () => {
     setData({ loading: true, done: false, error: null })
     fetch(`/api/push?sliceName=${info.sliceName}&from=${info.from}`, {
@@ -178,7 +181,35 @@ const Builder = () => {
         data={data}
         setData={setData}
       />
+
+      <Flex
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          margin: '0 auto',
+          maxWidth: 1224,
+          mx: 'auto',
+          px: 3,
+          pt: 4,
+        }}
+      >
+
+        <Box as="section" sx={{
+          flexGrow: 99999,
+          flexBasis: 0,
+          minWidth: 320,
+        }}>
+
+          <Box as="h2" sx={{ pb:3}}>
+            {info.sliceName}
+          </Box>
+          <hr />
+
+        </Box>
+      </Flex>
+
       <Success data={data} display={displaySuccess} />
+
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={() => (
@@ -196,7 +227,7 @@ const Builder = () => {
           />
         )}
       >
-        <Box ml={4}>
+        <Box>
           <PreviewFields Model={Model} variation={variation} storybookUrl={storybookUrl} />
         </Box>
       </FlexEditor>
