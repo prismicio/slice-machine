@@ -34,10 +34,10 @@ export const getLibrairies = async (config) => {
 export const getLibrariesWithFlags = async (config) => {
   const res = await client.get()
   if (res.status !== 200) {
-    console.log('here', res)
-    return { err: res, reason: 'Could not fetch remote slices', status: res.status }
+    console.error('Could not fetch remote slices. Continuing...')
+    // return { err: res, reason: 'Could not fetch remote slices', status: res.status }
   }
-  const remoteSlices = await res.json()
+  const remoteSlices = res.status !== 200 ? [] : await res.json()
 
   const libraries = await getLibrairies(config)
   const withFlags = libraries.map(([lib, localSlices]) => {

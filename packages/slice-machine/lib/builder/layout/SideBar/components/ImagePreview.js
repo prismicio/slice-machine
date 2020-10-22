@@ -11,8 +11,13 @@ const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: src ? '220px': '120px',
-        bg: '#f1f1f1'
+        height: '290px',
+        overflow: 'hidden',
+        backgroundImage: "url(/pattern.png)",
+        backgroundColor: 'headSection',
+        backgroundRepeat: 'repeat',
+        backgroundSize: '15px',
+        boxShadow: '0 10px 10px rgba(0, 0, 0, 0.05)',
       }}
       onMouseEnter={() => handleMouseHover(true)}
       onMouseLeave={() => handleMouseHover(false)}

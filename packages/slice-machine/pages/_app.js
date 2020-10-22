@@ -9,6 +9,7 @@ import LibProvider from '../src/lib-context'
 import ConfigProvider from '../src/config-context'
 
 import LoadingPage from 'components/LoadingPage'
+import FullPage from 'components/FullPage'
 import AuthInstructions from 'components/AuthInstructions'
 import ConfigErrors from 'components/ConfigErrors'
 
@@ -20,13 +21,29 @@ const AUTH_BLOCKING = true
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
-const LibError = () => <div>No libraries. Create one!</div>
+const LibError = () => (
+  <FullPage>
+    <div>
+      <h2>No library found</h2>
+      <p style={{ lineHeight: '30px', fontSize: '18px'}}>
+        Possible reasons: your dis not define local libraries in your <pre style={preStyle}>sm.json</pre> file, eg. <pre style={preStyle}>{`{ "libraries": ["@/slices"] }`}</pre><br/>
+        Once it's done, run <pre style={preStyle}>prismic sm --create-slice</pre>. You should now see your library on this page.
+      </p>
+    </div>
+  </FullPage>
+)
 
 function DisplayLibs({
   libraries,
   children
 }) {
   return !libraries.length || libraries.err ? <LibError /> : children
+}
+
+const preStyle = {
+  display: 'inline',
+  background: '#F1F1F1',
+  padding: '2px'
 }
 
 function MyApp({
@@ -41,11 +58,23 @@ function MyApp({
     return <LoadingPage />
   }
   
-  console.log({ data })
-  if (data.err) return <div>{data.err.reason}. Code: {data.err.status}</div>
+  if (data.err) return (
+    <FullPage>
+      <div>
+        <h2>{data.err.reason}</h2>
+        <p style={{ lineHeight: '30px', fontSize: '18px'}}>
+          Possible reasons: your <pre style={preStyle}>sm.json</pre> file does not contain a valid <pre style={preStyle}>apiEndpoint</pre> value.<br/>
+          Try login to Prismic via the CLI (<pre style={preStyle}>prismic login</pre>) and that <br/><pre style={preStyle}>~/.prismic</pre> contains a <pre style={preStyle}>prismic-auth</pre> cookie.
+        </p>
+      </div>
+    </FullPage>
+  )
   const { libraries = [], config, errors = {} } = data
   
-  console.log({ libraries })
+  console.log('------ SliceMachine log ------')
+  console.log('Loaded libraries: ', { libraries })
+  console.log('Loaded config: ', { config, configErrors: errors })
+  console.log('------ End of log ------')
   const migrations = libraries.reduce((acc, [_, slices]) => {
     const toMigrate = slices.filter(e => e.migrated)
     return [...acc, ...toMigrate]

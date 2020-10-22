@@ -10,7 +10,6 @@ const getLibraries = require('./libraries').default
 
 router.use('/libraries', async function (_, res) {
   const payload = await getLibraries()
-  console.log({ payload })
   if (payload.err) {
     return res.status(payload.err.status).json(payload)
   }

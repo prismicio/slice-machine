@@ -51,7 +51,7 @@ const Card = forwardRef(({
         backgroundColor: 'headSection',
         backgroundRepeat: 'repeat',
         backgroundSize: '15px',
-        backgroundImage: "url(https://images.prismic.io/testtrere/d14932cf-083b-4f60-b492-b77a65e2c393_bg-pattern.png)",
+        backgroundImage: "url(/pattern.png)",
         height: '290px',
         overflow: 'hidden',
         display: 'flex',
