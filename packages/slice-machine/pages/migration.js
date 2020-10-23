@@ -37,7 +37,7 @@ const Migration = ({ migrations }) => {
       </Box>
       <Card
         borderFooter
-        bg="#FFF"
+        bg="gray"
         footerSx={{ p: 2 }}
         bodySx={{ pt: 2, pb: 2, px: 4, bg: 'gray' }}
         sx={{ maxWidth: '600px', mt: 4, margin: '4em auto' }}
@@ -46,7 +46,7 @@ const Migration = ({ migrations }) => {
             sx={{
               p: 3,
               pl: 4,
-              bg: '#fff',
+              bg: 'headSection',
               alignItems: 'center',
               justifyContent: 'space-between',
               borderTopLeftRadius: radius,

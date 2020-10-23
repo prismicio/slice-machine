@@ -349,8 +349,8 @@ export default () => ({
       "fontFamily": "monospace",
       "fontSize": 1,
       "p": 3,
-      "color": "text",
-      "bg": "muted",
+      "color": "textClear",
+      "bg": "headSection",
       "overflow": "auto",
       "code": {
         "color": "inherit"

@@ -7,7 +7,7 @@ const AuthInstructions = () => (
   <FullPage>
     <Card
       borderFooter
-      bg="#FFF"
+      bg="gray"
       bodySx={{ p: 3 }}
       sx={{ maxWidth: '600px', mt: -4 }}
       Header={({ radius }) => (
@@ -15,7 +15,7 @@ const AuthInstructions = () => (
           sx={{
             p: 3,
             pl: 4,
-            bg: '#FFF',
+            bg: 'headSection',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderTopLeftRadius: radius,

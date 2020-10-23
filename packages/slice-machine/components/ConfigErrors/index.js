@@ -12,7 +12,7 @@ const ConfigErrors = ({ errors }) => (
     </Box>
     <Card
       borderFooter
-      bg="#FFF"
+      bg="gray"
       footerSx={{ p: 2 }}
       bodySx={{ pt: 2, pb: 2, px: 2, bg: 'gray' }}
       sx={{ maxWidth: '600px', mt: 4, margin: '4em auto' }}
@@ -21,7 +21,7 @@ const ConfigErrors = ({ errors }) => (
           sx={{
             p: 3,
             pl: 4,
-            bg: '#FFF',
+            bg: 'headSection',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderTopLeftRadius: radius,
