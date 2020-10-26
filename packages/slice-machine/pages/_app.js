@@ -17,7 +17,7 @@ import 'rc-drawer/assets/index.css'
 import 'lib/builder/layout/Drawer/index.css'
 import 'src/css/modal.css'
 
-const AUTH_BLOCKING = true
+const AUTH_BLOCKING = false
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
@@ -26,7 +26,7 @@ const LibError = () => (
     <div>
       <h2>No library found</h2>
       <p style={{ lineHeight: '30px', fontSize: '18px'}}>
-        Possible reasons: your dis not define local libraries in your <pre style={preStyle}>sm.json</pre> file, eg. <pre style={preStyle}>{`{ "libraries": ["@/slices"] }`}</pre><br/>
+        Possible reasons: you did not define local libraries in your <pre style={preStyle}>sm.json</pre> file, eg. <pre style={preStyle}>{`{ "libraries": ["@/slices"] }`}</pre><br/>
         Once it's done, run <pre style={preStyle}>prismic sm --create-slice</pre>. You should now see your library on this page.
       </p>
     </div>

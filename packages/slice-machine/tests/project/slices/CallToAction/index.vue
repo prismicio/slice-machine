@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <prismic-rich-text :field="slice.primary.title" />
-    <img :src="slice.primary.image.square.url" />
+    <img :src="slice.primary.image.url" />
   </section>
 </template>
 <script>

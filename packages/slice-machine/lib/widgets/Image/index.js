@@ -9,6 +9,8 @@ import {
 
 import { removeProp } from '../../utils'
 
+import { createMock, fromUser } from './mock'
+
 /** 
  * {
     "type": "Image",
@@ -32,26 +34,6 @@ import { removeProp } from '../../utils'
   /**
    * https://source.unsplash.com/random/800x600
    */
-
-const _createMock = (src, { width = 900, height = 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
-  dimensions: { width, height },
-  alt: 'Placeholder image',
-  copyright: null,
-  url: src || `https://source.unsplash.com/random/${width}x${height}`,
-  ...thumbnails.reduce((acc, e) => ({
-    ...acc,
-    [e.name]: _createMock(src, { width: e.width, height: e.height })
-  }), [])
-})
-
-const defaultValue = _createMock()
-
-const fromUser = (...args) =>
-  typeof mock === 'object' ?
-  mock :
-  _createMock(...args)
-
-const createMock = (maybeMock, model) => maybeMock ? fromUser(mock) : _createMock(null, model.constraint, model.thumbnails)
 
 const create = (apiId) => ({
   ...createInitialValues(FormFields),
@@ -80,6 +62,5 @@ export default {
   create,
   createMock,
   FormFields,
-  defaultValue,
   fromUser
 }

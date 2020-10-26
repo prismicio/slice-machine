@@ -1,8 +1,8 @@
-const API_URL = 'http://localhost:4401/dev/slices/'
+const API_URL = 'https://4b7a9w5244.execute-api.us-east-1.amazonaws.com/stage/slices/'
 
 const createFetcher = (repo, auth) => (body, action = '', method = 'get') => {
   const headers = {
-    REPOSITORY: repo,
+    repository: repo,
     Authorization: `Bearer ${auth}`
   }
   return fetch(new URL(action, API_URL), {

@@ -11,6 +11,23 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "image": {
+          "config": {
+            "label": "My cool label",
+            "constraint": {
+              "width": 600,
+              "height": 600
+            },
+            "thumbnails": [
+              {
+                "name": "square",
+                "width": 800,
+                "height": 800
+              }
+            ]
+          },
+          "type": "Image"
+        },
         "title": {
           "config": {
             "label": "My cool title",
@@ -19,20 +36,6 @@
             "single": "heading1,heading2,heading3,heading4,heading5,heading6"
           },
           "type": "StructuredText"
-        },
-        "image": {
-          "config": {
-            "label": "My cool label",
-            "constraint": {},
-            "thumbnails": [
-              {
-                "name": "square",
-                "width": 250,
-                "height": 250
-              }
-            ]
-          },
-          "type": "Image"
         },
         "dsqd": {
           "config": {

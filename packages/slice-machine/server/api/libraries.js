@@ -11,27 +11,25 @@ import { pascalize } from 'sm-commons/utils/str'
 import { getConfig } from '../../lib/config'
 
 const { config, errors } = getConfig()
-const client = initClient(config.repo, config.auth)
-
-function timeout(ms, promise) {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      resolve({ status: 200, json() { return [] }})
-    }, ms)
-    promise.then((res) => {
-      if (res.status > 209) {
-        return resolve({ status: 200, json() { return [] }})
-      }
-      resolve(res)
-    })
-  })
-}
 
 export const getLibrairies = async (config) => {
   return await listComponentsByLibrary(config, config.libraries || []);
 }
 
 export const getLibrariesWithFlags = async (config) => {
+  let client
+  try {
+    client = initClient(config.repo, config.auth)
+  } catch(e) {
+    console.error('[api/slices] An error occured while fetching slices. Note that when stable, this should break!')
+    client = {
+      get() {
+        return {
+          status: 500
+        }
+      }
+    }
+  }
   const res = await client.get()
   if (res.status !== 200) {
     console.error('Could not fetch remote slices. Continuing...')
