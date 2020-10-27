@@ -145,9 +145,10 @@ export default class extends Document {
           "path": "./pages",
         },
         Object {
-          "content": "const withTM = require('next-transpile-modules')(['next-slicezone']);
+          "content": "const withTM = require('next-transpile-modules')(['next-slicezone', 'essential-slices']);
 
-module.exports = withTM();",
+module.exports = withTM();
+",
           "name": "next.config.js",
           "path": "./",
         },
