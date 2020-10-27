@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const slash = require('slash')
 
 const { SM_CONFIG_FILE } = require('sm-commons/consts')
 
@@ -28,8 +29,8 @@ function getInfoFromPath(libPath, startPath) {
     config,
     isLocal,
     pathExists,
-    pathToLib,
-    pathToSlices,
+    pathToLib: slash(pathToLib),
+    pathToSlices: slash(pathToSlices),
   }
 }
 
