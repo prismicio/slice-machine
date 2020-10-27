@@ -11,8 +11,8 @@ Default, current URL: http://sm-api.now.sh/api
  ## Environment variables
  The API expects variables
  - MONGODB_URI: uri to a Mongo Atlas cluster
- - SLACK_MESAGE_URI:  see "sm-operations" channel configuration for details
-
+ - SLACK_MESSAGE_URI:  see "sm-operations" channel configuration for details
+ 
 ## list libraries
 
   Returns a json Array of all slice machine libraries
@@ -146,3 +146,4 @@ Generates a ZIP file used to "bootstrap" a working Prismic + framework (Nuxt or 
   ```
 
 👆 Note that if you ended up reading this, you're early. Being early is awesome but it's not the most comfortable situation to be in. If you encounter difficulty, let me know in the issues ✌️
+

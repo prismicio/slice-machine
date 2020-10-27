@@ -1,0 +1,5098 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`handler.bootstrap should work 1`] = `
+Object {
+  "customTypes": Array [
+    Object {
+      "id": "page",
+      "name": "Page",
+      "repeatable": true,
+      "value": Object {
+        "Page": Object {
+          "body": Object {
+            "config": Object {
+              "choices": Object {},
+            },
+            "fieldset": "Slice zone",
+            "type": "Slices",
+          },
+          "uid": Object {
+            "config": Object {
+              "label": "UID",
+              "placeholder": "unique-identifier-eg-homepage",
+            },
+            "type": "UID",
+          },
+        },
+        "SEO Metadata": Object {
+          "meta_description": Object {
+            "config": Object {
+              "label": "Meta Description",
+              "placeholder": "The description that will appear in search engine",
+            },
+            "type": "Text",
+          },
+          "meta_title": Object {
+            "config": Object {
+              "label": "Meta Title",
+              "placeholder": "My title for Search Engine",
+            },
+            "type": "Text",
+          },
+          "social_cards": Object {
+            "config": Object {
+              "fields": Object {
+                "social_card_description": Object {
+                  "config": Object {
+                    "label": "Social card description",
+                  },
+                  "type": "Text",
+                },
+                "social_card_image": Object {
+                  "config": Object {
+                    "constraint": Object {},
+                    "label": "Social Card Image",
+                    "thumbnails": Array [],
+                  },
+                  "type": "Image",
+                },
+                "social_card_title": Object {
+                  "config": Object {
+                    "label": "Social Card TItle",
+                  },
+                  "type": "Text",
+                },
+              },
+              "label": "Social Cards - Facebook & Twitter",
+            },
+            "type": "Group",
+          },
+        },
+      },
+    },
+  ],
+  "keysToMerge": Array [
+    "page",
+  ],
+  "library": Object {
+    "css": Array [
+      "vue-essential-slices/src/styles/styles.scss",
+    ],
+    "dependencies": Array [],
+    "devDependencies": Array [
+      "node-sass",
+      "sass-loader",
+    ],
+    "framework": "nuxt",
+    "gitUrl": "//github.com/prismicio/vue-essential-slices",
+    "libraryName": "Vue essentials",
+    "package": Object {
+      "author": "",
+      "bugs": Object {
+        "url": "https://github.com/prismicio/vue-essential-slices/issues",
+      },
+      "dependencies": Object {},
+      "description": "A set of professionally made, accessible Vue components, linked to a (Prismic) backend",
+      "devDependencies": Object {
+        "@babel/core": "^7.9.6",
+        "@prismicio/vue": "^2.0.2",
+        "@storybook/addon-actions": "^5.3.18",
+        "@storybook/addon-docs": "^5.3.19",
+        "@storybook/addon-knobs": "^5.3.18",
+        "@storybook/addon-links": "^5.3.18",
+        "@storybook/addons": "^5.3.18",
+        "@storybook/source-loader": "^5.3.19",
+        "@storybook/vue": "^5.3.18",
+        "@vue/babel-preset-app": "^4.2.3",
+        "@vue/component-compiler-utils": "^3.1.1",
+        "babel-loader": "^8.0.6",
+        "babel-preset-vue": "^2.0.2",
+        "node-sass": "^4.14.1",
+        "pre-commit": "^1.2.2",
+        "prismic-dom": "^2.1.0",
+        "prismic-javascript": "^2.1.5",
+        "sass-loader": "^8.0.2",
+        "sm-commons": "^0.0.22",
+        "vue": "^2.6.11",
+        "vue-hot-reload-api": "^2.3.4",
+        "vue-loader": "^15.9.2",
+        "vue-slicezone": "^0.0.25",
+        "vue-template-compiler": "^2.6.11",
+      },
+      "homepage": "https://github.com/prismicio/vue-essential-slices#readme",
+      "keywords": Array [
+        "Nuxtjs",
+        "Vuejs",
+        "Prismic",
+        "slices",
+      ],
+      "license": "GPL-3.0-or-later",
+      "main": "src/index.js",
+      "name": "vue-essential-slices",
+      "pre-commit": Array [
+        "bundle",
+      ],
+      "repository": Object {
+        "type": "git",
+        "url": "git+https://github.com/prismicio/vue-essential-slices.git",
+      },
+      "scripts": Object {
+        "build-storybook": "build-storybook",
+        "bundle": "node ./node_modules/sm-commons/scripts/bundle",
+        "dev": "start-storybook",
+        "prepack": "yarn bundle",
+        "storybook": "start-storybook -p 6006",
+        "test": "echo \\"Error: no test specified\\" && exit 1",
+      },
+      "version": "0.2.0",
+    },
+    "packageName": "vue-essential-slices",
+    "pathToLibrary": "src",
+    "script": Array [
+      Object {
+        "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList",
+      },
+      Object {
+        "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js",
+      },
+    ],
+    "slices": Object {
+      "alternate_grid": Object {
+        "description": "A predesigned Text Grid with Image left or right",
+        "display": "list",
+        "fieldset": "AlternateGrid",
+        "icon": "wrap_text",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image_side": Object {
+            "config": Object {
+              "default_value": "left",
+              "label": "Image side",
+              "options": Array [
+                "left",
+                "right",
+              ],
+            },
+            "type": "Select",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "optional_icon": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional Icon",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "call_to_action": Object {
+        "description": "A predesigned 'Call to action' for section for your site",
+        "display": "list",
+        "fieldset": "Call to action",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "icon_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Icon Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {},
+        "type": "Slice",
+      },
+      "cards_carousel": Object {
+        "description": "A carousel with text + image cards",
+        "display": "list",
+        "fieldset": "Cards Carousel",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "additional_info": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Additional Info",
+              "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+              "placeholder": "eg. name of person in testimonial",
+            },
+            "type": "StructuredText",
+          },
+          "content": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Content",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "customer_logos": Object {
+        "description": "Display a list of your customers logos",
+        "display": "list",
+        "fieldset": "Customer logos",
+        "icon": "person",
+        "non-repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "label": "Call To Action",
+              "placeholder": "View customer stories",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "call_to_action_link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call to Action Link",
+              "placeholder": "Could be a signup link, or a link to customer stories",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Trusted by",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "link",
+              "placeholder": "Could be a link to use case, press article, signup...",
+            },
+            "type": "Link",
+          },
+          "logo": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Logo",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "faq_section": Object {
+        "description": "List of common questions + answers",
+        "display": "list",
+        "fieldset": "FAQ",
+        "icon": "question_answer",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Title",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "text": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Text",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+              "placeholder": "The answer to the question",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Which browsers do you support?",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "feature_testimonials": Object {
+        "description": "Testimonial proving the value of a specific feature",
+        "display": "list",
+        "fieldset": "Feature Testimonials",
+        "icon": "ondemand_video",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "These are some awesome tutorials from our awesome clients ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "feature_illustration": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Feature Illustration",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Our testimonial",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "client_logo": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": 100,
+                "width": 100,
+              },
+              "label": "Client logo",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "name": Object {
+            "config": Object {
+              "label": "Name",
+              "placeholder": "John McJohn",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "profile_pic": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": 80,
+                "width": 80,
+              },
+              "label": "Profile Pic",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "quote": Object {
+            "config": Object {
+              "label": "Quote",
+              "multi": "paragraph",
+              "placeholder": "Lorem ipsum dolor sit amet, ....",
+            },
+            "type": "StructuredText",
+          },
+          "role_position": Object {
+            "config": Object {
+              "label": "Role position",
+              "placeholder": "Creative Director",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "images_slider": Object {
+        "description": "A slider of full-width images + description",
+        "display": "list",
+        "fieldset": "Images Slider",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Full Width Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "pricing_table": Object {
+        "description": "Display a list of pricing plans",
+        "display": "grid",
+        "fieldset": "Pricing Table",
+        "icon": "attach_money",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "Choose the version that works for you ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Pricing plans",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Choose the plan",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call To Action",
+              "placeholder": "Link to Signup / More info...",
+            },
+            "type": "Link",
+          },
+          "call_to_action_text": Object {
+            "config": Object {
+              "label": "Call To Action Text",
+              "multi": "paragraph",
+              "placeholder": "Start your free trial",
+            },
+            "type": "StructuredText",
+          },
+          "features": Object {
+            "config": Object {
+              "label": "Features",
+              "multi": "list-item",
+              "placeholder": "A list of features using bullet list",
+            },
+            "type": "StructuredText",
+          },
+          "plan_title": Object {
+            "config": Object {
+              "label": "Plan title",
+              "placeholder": "Simple, Gold, Premium...",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+          "price_option": Object {
+            "config": Object {
+              "label": "Price Option",
+              "multi": "heading4",
+              "placeholder": "Free, $19, Contact us...",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "testimonials_slider": Object {
+        "description": "A predesigned Slider with rich testimonial",
+        "display": "list",
+        "fieldset": "Testimonials Slider",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "person": Object {
+            "config": Object {
+              "label": "person",
+              "placeholder": "Their full name",
+            },
+            "type": "Text",
+          },
+          "testimonial": Object {
+            "config": Object {
+              "label": "testimonial",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Their title",
+            },
+            "type": "Text",
+          },
+        },
+        "type": "Slice",
+      },
+      "video_highlights": Object {
+        "description": "Highlights of your video channel",
+        "display": "list",
+        "fieldset": "Video Highlights",
+        "icon": "ondemand_video",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "These are some awesome videos ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Video Highlights",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "video_src": Object {
+            "config": Object {
+              "label": "Video src",
+            },
+            "type": "Embed",
+          },
+          "video_title": Object {
+            "config": Object {
+              "label": "Video title",
+              "multi": "paragraph, strong",
+              "placeholder": "My awesome video",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+    },
+  },
+  "manifest": Object {
+    "bootstraper": Array [
+      "npx",
+      Array [
+        "create-nuxt-app",
+      ],
+    ],
+    "configPath": "nuxt.config.js",
+    "css": Array [
+      "vue-essential-slices/src/styles/styles.scss",
+    ],
+    "dependencies": Array [
+      "prismic-javascript",
+      "@prismicio/vue",
+      "@nuxtjs/prismic",
+      "vue-slicezone",
+      "nuxt-sm",
+      "vue-essential-slices",
+    ],
+    "devDependencies": Array [
+      "node-sass",
+      "sass-loader",
+    ],
+    "firstCommand": "npm run dev",
+    "framework": "nuxt",
+    "frameworkName": "Nuxt",
+    "libraries": Array [
+      "vue-essential-slices",
+    ],
+    "modules": Array [
+      Array [
+        "@nuxtjs/prismic",
+        Object {
+          "apiOptions": Object {
+            "routes": Array [
+              Object {
+                "path": "/:uid",
+                "type": "page",
+              },
+            ],
+          },
+          "endpoint": "{{{ apiEndpoint }}}",
+        },
+      ],
+      Array [
+        "nuxt-sm",
+      ],
+    ],
+    "projectTests": Array [
+      Object {
+        "arg": "-f",
+        "path": "nuxt.config.js",
+        "reason": "No \`nuxt.config.js\` file found",
+      },
+      Object {
+        "arg": "-d",
+        "path": "pages",
+        "reason": "No \`pages\` folder found",
+      },
+    ],
+    "prompts": Array [
+      Object {
+        "path": "custom_types",
+        "strategies": Array [
+          "bootstrap",
+          "init",
+        ],
+        "type": "folder",
+      },
+    ],
+    "script": Array [
+      Object {
+        "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList",
+      },
+      Object {
+        "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js",
+      },
+    ],
+    "transpile": Array [
+      "vue-slicezone",
+      "nuxt-sm",
+    ],
+  },
+  "recap": "##    ## ######## ##     ## ########     ######  ######## ######## ########   ######  
+###   ## ##        ##   ##     ##       ##    ##    ##    ##       ##     ## ##    ## 
+####  ## ##         ## ##      ##       ##          ##    ##       ##     ## ##       
+## ## ## ######      ###       ##        ######     ##    ######   ########   ######  
+##  #### ##         ## ##      ##             ##    ##    ##       ##              ## 
+##   ### ##        ##   ##     ##       ##    ##    ##    ##       ##        ##    ## 
+##    ## ######## ##     ##    ##        ######     ##    ######## ##         ######  
+
+We've configured your Nuxt project!
+Now you can go to documentation and do your first API call.
+
+Project info:
+
+- Your API endpoint
+
+
+- vue-essential-slices README:
+//github.com/prismicio/vue-essential-slices
+
+- SliceMachine docs:
+http://slicemachine.dev ",
+  "slices": Object {
+    "alternate_grid": Object {
+      "description": "A predesigned Text Grid with Image left or right",
+      "display": "list",
+      "fieldset": "AlternateGrid",
+      "icon": "wrap_text",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image_side": Object {
+          "config": Object {
+            "default_value": "left",
+            "label": "Image side",
+            "options": Array [
+              "left",
+              "right",
+            ],
+          },
+          "type": "Select",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "optional_icon": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional Icon",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "call_to_action": Object {
+      "description": "A predesigned 'Call to action' for section for your site",
+      "display": "list",
+      "fieldset": "Call to action",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "icon_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Icon Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {},
+      "type": "Slice",
+    },
+    "cards_carousel": Object {
+      "description": "A carousel with text + image cards",
+      "display": "list",
+      "fieldset": "Cards Carousel",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "additional_info": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Additional Info",
+            "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "placeholder": "eg. name of person in testimonial",
+          },
+          "type": "StructuredText",
+        },
+        "content": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Content",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "customer_logos": Object {
+      "description": "Display a list of your customers logos",
+      "display": "list",
+      "fieldset": "Customer logos",
+      "icon": "person",
+      "non-repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "label": "Call To Action",
+            "placeholder": "View customer stories",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "call_to_action_link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call to Action Link",
+            "placeholder": "Could be a signup link, or a link to customer stories",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Trusted by",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "link",
+            "placeholder": "Could be a link to use case, press article, signup...",
+          },
+          "type": "Link",
+        },
+        "logo": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "faq_section": Object {
+      "description": "List of common questions + answers",
+      "display": "list",
+      "fieldset": "FAQ",
+      "icon": "question_answer",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Title",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "text": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Text",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+            "placeholder": "The answer to the question",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Which browsers do you support?",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "feature_testimonials": Object {
+      "description": "Testimonial proving the value of a specific feature",
+      "display": "list",
+      "fieldset": "Feature Testimonials",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome tutorials from our awesome clients ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "feature_illustration": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Feature Illustration",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Our testimonial",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "client_logo": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 100,
+              "width": 100,
+            },
+            "label": "Client logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "name": Object {
+          "config": Object {
+            "label": "Name",
+            "placeholder": "John McJohn",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "profile_pic": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 80,
+              "width": 80,
+            },
+            "label": "Profile Pic",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "quote": Object {
+          "config": Object {
+            "label": "Quote",
+            "multi": "paragraph",
+            "placeholder": "Lorem ipsum dolor sit amet, ....",
+          },
+          "type": "StructuredText",
+        },
+        "role_position": Object {
+          "config": Object {
+            "label": "Role position",
+            "placeholder": "Creative Director",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "images_slider": Object {
+      "description": "A slider of full-width images + description",
+      "display": "list",
+      "fieldset": "Images Slider",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Full Width Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "pricing_table": Object {
+      "description": "Display a list of pricing plans",
+      "display": "grid",
+      "fieldset": "Pricing Table",
+      "icon": "attach_money",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "Choose the version that works for you ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Pricing plans",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Choose the plan",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call To Action",
+            "placeholder": "Link to Signup / More info...",
+          },
+          "type": "Link",
+        },
+        "call_to_action_text": Object {
+          "config": Object {
+            "label": "Call To Action Text",
+            "multi": "paragraph",
+            "placeholder": "Start your free trial",
+          },
+          "type": "StructuredText",
+        },
+        "features": Object {
+          "config": Object {
+            "label": "Features",
+            "multi": "list-item",
+            "placeholder": "A list of features using bullet list",
+          },
+          "type": "StructuredText",
+        },
+        "plan_title": Object {
+          "config": Object {
+            "label": "Plan title",
+            "placeholder": "Simple, Gold, Premium...",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+        "price_option": Object {
+          "config": Object {
+            "label": "Price Option",
+            "multi": "heading4",
+            "placeholder": "Free, $19, Contact us...",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "testimonials_slider": Object {
+      "description": "A predesigned Slider with rich testimonial",
+      "display": "list",
+      "fieldset": "Testimonials Slider",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "person": Object {
+          "config": Object {
+            "label": "person",
+            "placeholder": "Their full name",
+          },
+          "type": "Text",
+        },
+        "testimonial": Object {
+          "config": Object {
+            "label": "testimonial",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Their title",
+          },
+          "type": "Text",
+        },
+      },
+      "type": "Slice",
+    },
+    "video_highlights": Object {
+      "description": "Highlights of your video channel",
+      "display": "list",
+      "fieldset": "Video Highlights",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome videos ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Video Highlights",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "video_src": Object {
+          "config": Object {
+            "label": "Video src",
+          },
+          "type": "Embed",
+        },
+        "video_title": Object {
+          "config": Object {
+            "label": "Video title",
+            "multi": "paragraph, strong",
+            "placeholder": "My awesome video",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+  },
+}
+`;
+
+exports[`handler.frameworks should work 1`] = `
+Array [
+  Object {
+    "framework": "nuxt",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-nuxt-app",
+        ],
+      ],
+      "configPath": "nuxt.config.js",
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "@prismicio/vue",
+        "@nuxtjs/prismic",
+        "vue-slicezone",
+        "nuxt-sm",
+        "vue-essential-slices",
+      ],
+      "devDependencies": Array [],
+      "firstCommand": "npm run dev",
+      "framework": "nuxt",
+      "frameworkName": "Nuxt",
+      "libraries": Array [
+        "vue-essential-slices",
+      ],
+      "modules": Array [
+        Array [
+          "@nuxtjs/prismic",
+          Object {
+            "apiOptions": Object {
+              "routes": null,
+            },
+            "endpoint": "{{{ apiEndpoint }}}",
+          },
+        ],
+        Array [
+          "nuxt-sm",
+        ],
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-f",
+          "path": "nuxt.config.js",
+          "reason": "No \`nuxt.config.js\` file found",
+        },
+        Object {
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "prompts": Array [
+        Object {
+          "path": "custom_types",
+          "strategies": Array [
+            "bootstrap",
+            "init",
+          ],
+          "type": "folder",
+        },
+      ],
+      "script": Array [],
+      "transpile": Array [
+        "vue-slicezone",
+        "nuxt-sm",
+      ],
+    },
+  },
+  Object {
+    "framework": "next",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-react-app",
+        ],
+      ],
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "prismic-reactjs",
+        "next-slicezone",
+        "next-transpile-modules",
+        "essential-slices",
+      ],
+      "devDependencies": Array [],
+      "files": Array [
+        Object {
+          "content": "// pages/_app.js
+import React from 'react'
+import NextApp from 'next/app'
+
+import { theme } from 'essential-slices'
+
+import { ThemeProvider, BaseStyles } from 'theme-ui'
+
+export default class App extends NextApp {
+  render() {
+    const { Component, pageProps } = this.props
+    return (
+      <ThemeProvider theme={theme}>
+        <BaseStyles>
+          <Component {...pageProps} />
+        </BaseStyles>
+      </ThemeProvider>
+    )
+  }
+}",
+          "name": "_app.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "// pages/_document.js
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { InitializeColorMode } from 'theme-ui'
+
+import { createResolver } from 'next-slicezone/resolver'
+
+export default class extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    await createResolver()
+    return { ...initialProps }
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body>
+          <InitializeColorMode />
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
+}",
+          "name": "_document.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "const withTM = require('next-transpile-modules')(['next-slicezone']);
+
+module.exports = withTM();",
+          "name": "next.config.js",
+          "path": "./",
+        },
+        Object {
+          "content": "/** Example file */
+
+import Prismic from 'prismic-javascript'
+import Link from 'next/link'
+
+import smConfig from './sm.json'
+
+export const apiEndpoint = smConfig.apiEndpoint
+
+// -- Access Token if the repository is not public
+// Generate a token in your dashboard and configure it here if your repository is private
+export const accessToken = ''
+
+// -- Link resolution rules
+// Manages the url links to internal Prismic documents
+export const linkResolver = (doc) => {
+  if (doc.type === 'post') {
+    return \`/blog/\${doc.uid}\`
+  }
+  return '/'
+}
+
+// Additional helper function for Next/Link components
+export const hrefResolver = (doc) => {
+  if (doc.type === 'post') {
+    return '/blog/[uid]'
+  }
+  return '/'
+}
+
+export const customLink = (type, element, content, children, index) => (
+  <Link
+    key={index}
+    href={hrefResolver(element.data)}
+    as={linkResolver(element.data)}
+  >
+    <a>{content}</a>
+  </Link>
+)
+
+export const Router = {
+  routes: null,
+
+  href: (type) => {
+    const route = Router.routes.find(r => r.type === type);
+    return route && route.href;
+  }
+};
+
+export const Client = (req = null, options = {}) => (
+  Prismic.client(apiEndpoint, Object.assign({ routes: Router.routes }, options))
+)",
+          "name": "prismic.js",
+          "path": "./",
+        },
+        Object {
+          "content": "import React from 'react'
+
+export default ({ i }) => {
+  return () => i ? <div /> : <p>Your SliceZone is loading... You might need to reload this page.</p>
+}",
+          "name": "sm-resolver.js",
+          "path": "./",
+        },
+      ],
+      "firstCommand": "npm run dev",
+      "framework": "next",
+      "frameworkName": "Next",
+      "libraries": Array [
+        "essential-slices",
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "script": Array [],
+    },
+  },
+]
+`;
+
+exports[`handler.libraries should work 1`] = `
+Array [
+  Object {
+    "css": Array [
+      "vue-essential-slices/src/styles/styles.scss",
+    ],
+    "dependencies": Array [],
+    "devDependencies": Array [
+      "node-sass",
+      "sass-loader",
+    ],
+    "framework": "nuxt",
+    "gitUrl": "//github.com/prismicio/vue-essential-slices",
+    "libraryName": "Vue essentials",
+    "packageName": "vue-essential-slices",
+    "pathToLibrary": "src",
+    "script": Array [
+      Object {
+        "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList",
+      },
+      Object {
+        "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js",
+      },
+    ],
+    "slices": Object {
+      "alternate_grid": Object {
+        "description": "A predesigned Text Grid with Image left or right",
+        "display": "list",
+        "fieldset": "AlternateGrid",
+        "icon": "wrap_text",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image_side": Object {
+            "config": Object {
+              "default_value": "left",
+              "label": "Image side",
+              "options": Array [
+                "left",
+                "right",
+              ],
+            },
+            "type": "Select",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "optional_icon": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional Icon",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "call_to_action": Object {
+        "description": "A predesigned 'Call to action' for section for your site",
+        "display": "list",
+        "fieldset": "Call to action",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "icon_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Icon Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {},
+        "type": "Slice",
+      },
+      "cards_carousel": Object {
+        "description": "A carousel with text + image cards",
+        "display": "list",
+        "fieldset": "Cards Carousel",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "additional_info": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Additional Info",
+              "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+              "placeholder": "eg. name of person in testimonial",
+            },
+            "type": "StructuredText",
+          },
+          "content": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Content",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "customer_logos": Object {
+        "description": "Display a list of your customers logos",
+        "display": "list",
+        "fieldset": "Customer logos",
+        "icon": "person",
+        "non-repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "label": "Call To Action",
+              "placeholder": "View customer stories",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "call_to_action_link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call to Action Link",
+              "placeholder": "Could be a signup link, or a link to customer stories",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Trusted by",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "link",
+              "placeholder": "Could be a link to use case, press article, signup...",
+            },
+            "type": "Link",
+          },
+          "logo": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Logo",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "faq_section": Object {
+        "description": "List of common questions + answers",
+        "display": "list",
+        "fieldset": "FAQ",
+        "icon": "question_answer",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Title",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "text": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Text",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+              "placeholder": "The answer to the question",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Which browsers do you support?",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "feature_testimonials": Object {
+        "description": "Testimonial proving the value of a specific feature",
+        "display": "list",
+        "fieldset": "Feature Testimonials",
+        "icon": "ondemand_video",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "These are some awesome tutorials from our awesome clients ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "feature_illustration": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Feature Illustration",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Our testimonial",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "client_logo": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": 100,
+                "width": 100,
+              },
+              "label": "Client logo",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "name": Object {
+            "config": Object {
+              "label": "Name",
+              "placeholder": "John McJohn",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "profile_pic": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": 80,
+                "width": 80,
+              },
+              "label": "Profile Pic",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "quote": Object {
+            "config": Object {
+              "label": "Quote",
+              "multi": "paragraph",
+              "placeholder": "Lorem ipsum dolor sit amet, ....",
+            },
+            "type": "StructuredText",
+          },
+          "role_position": Object {
+            "config": Object {
+              "label": "Role position",
+              "placeholder": "Creative Director",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "images_slider": Object {
+        "description": "A slider of full-width images + description",
+        "display": "list",
+        "fieldset": "Images Slider",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Full Width Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "pricing_table": Object {
+        "description": "Display a list of pricing plans",
+        "display": "grid",
+        "fieldset": "Pricing Table",
+        "icon": "attach_money",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "Choose the version that works for you ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Pricing plans",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Choose the plan",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call To Action",
+              "placeholder": "Link to Signup / More info...",
+            },
+            "type": "Link",
+          },
+          "call_to_action_text": Object {
+            "config": Object {
+              "label": "Call To Action Text",
+              "multi": "paragraph",
+              "placeholder": "Start your free trial",
+            },
+            "type": "StructuredText",
+          },
+          "features": Object {
+            "config": Object {
+              "label": "Features",
+              "multi": "list-item",
+              "placeholder": "A list of features using bullet list",
+            },
+            "type": "StructuredText",
+          },
+          "plan_title": Object {
+            "config": Object {
+              "label": "Plan title",
+              "placeholder": "Simple, Gold, Premium...",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+          "price_option": Object {
+            "config": Object {
+              "label": "Price Option",
+              "multi": "heading4",
+              "placeholder": "Free, $19, Contact us...",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "testimonials_slider": Object {
+        "description": "A predesigned Slider with rich testimonial",
+        "display": "list",
+        "fieldset": "Testimonials Slider",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "person": Object {
+            "config": Object {
+              "label": "person",
+              "placeholder": "Their full name",
+            },
+            "type": "Text",
+          },
+          "testimonial": Object {
+            "config": Object {
+              "label": "testimonial",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Their title",
+            },
+            "type": "Text",
+          },
+        },
+        "type": "Slice",
+      },
+      "video_highlights": Object {
+        "description": "Highlights of your video channel",
+        "display": "list",
+        "fieldset": "Video Highlights",
+        "icon": "ondemand_video",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "These are some awesome videos ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Video Highlights",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "video_src": Object {
+            "config": Object {
+              "label": "Video src",
+            },
+            "type": "Embed",
+          },
+          "video_title": Object {
+            "config": Object {
+              "label": "Video title",
+              "multi": "paragraph, strong",
+              "placeholder": "My awesome video",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+    },
+  },
+  Object {
+    "css": Array [
+      "essential-slices/src/components/Slider/slick.css",
+    ],
+    "dependencies": Array [
+      "react-slick",
+      "theme-ui",
+    ],
+    "devDependencies": Array [],
+    "framework": "next",
+    "gitUrl": "//github.com/prismicio/essential-slices",
+    "libraryName": "React essentials",
+    "packageName": "essential-slices",
+    "pathToLibrary": "src",
+    "slices": Object {
+      "alternate_grid": Object {
+        "description": "A predesigned Text Grid with Image left or right",
+        "display": "list",
+        "fieldset": "AlternateGrid",
+        "icon": "wrap_text",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image_side": Object {
+            "config": Object {
+              "default_value": "left",
+              "label": "Image side",
+              "options": Array [
+                "left",
+                "right",
+              ],
+            },
+            "type": "Select",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "description",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "optional_icon": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional Icon",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "call_to_action": Object {
+        "description": "A predesigned 'Call to action' for section for your site",
+        "display": "list",
+        "fieldset": "Call to action",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "icon_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Icon Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {},
+        "type": "Slice",
+      },
+      "cards_carousel": Object {
+        "description": "A carousel with text + image cards",
+        "display": "list",
+        "fieldset": "Cards Carousel",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "additional_info": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Additional Info",
+              "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+              "placeholder": "eg. name of person in testimonial",
+            },
+            "type": "StructuredText",
+          },
+          "content": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Content",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "customer_logos": Object {
+        "description": "Display a list of your customers logos",
+        "display": "list",
+        "fieldset": "Customer logos",
+        "icon": "person",
+        "non-repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "label": "Call To Action",
+              "placeholder": "View customer stories",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "call_to_action_link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call to Action Link",
+              "placeholder": "Could be a signup link, or a link to customer stories",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Trusted by",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "link": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "link",
+              "placeholder": "Could be a link to use case, press article, signup...",
+            },
+            "type": "Link",
+          },
+          "logo": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Logo",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "faq_section": Object {
+        "description": "List of common questions + answers",
+        "display": "list",
+        "fieldset": "FAQ",
+        "icon": "question_answer",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "optional_image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "Optional image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Title",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "text": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Text",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+              "placeholder": "The answer to the question",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Which browsers do you support?",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "images_slider": Object {
+        "description": "A slider of full-width images + description",
+        "display": "list",
+        "fieldset": "Images Slider",
+        "icon": "image",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "image": Object {
+            "config": Object {
+              "constraint": Object {
+                "height": null,
+                "width": null,
+              },
+              "label": "Full Width Image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+        },
+        "type": "Slice",
+      },
+      "pricing_table": Object {
+        "description": "Display a list of pricing plans",
+        "display": "grid",
+        "fieldset": "Pricing Table",
+        "icon": "attach_money",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "Choose the version that works for you ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow Headline",
+              "placeholder": "Pricing plans",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Choose the plan",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "call_to_action": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Call To Action",
+              "placeholder": "Link to Signup / More info...",
+            },
+            "type": "Link",
+          },
+          "call_to_action_text": Object {
+            "config": Object {
+              "label": "Call To Action Text",
+              "multi": "paragraph",
+              "placeholder": "Start your free trial",
+            },
+            "type": "StructuredText",
+          },
+          "features": Object {
+            "config": Object {
+              "label": "Features",
+              "multi": "list-item",
+              "placeholder": "A list of features using bullet list",
+            },
+            "type": "StructuredText",
+          },
+          "plan_title": Object {
+            "config": Object {
+              "label": "Plan title",
+              "placeholder": "Simple, Gold, Premium...",
+              "single": "heading3",
+            },
+            "type": "StructuredText",
+          },
+          "price_option": Object {
+            "config": Object {
+              "label": "Price Option",
+              "multi": "heading4",
+              "placeholder": "Free, $19, Contact us...",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+      "testimonials_slider": Object {
+        "description": "A predesigned Slider with rich testimonial",
+        "display": "list",
+        "fieldset": "Testimonials Slider",
+        "icon": "notifications_active",
+        "non-repeat": Object {
+          "button_label": Object {
+            "config": Object {
+              "label": "Button Label",
+              "placeholder": "Text for button",
+            },
+            "type": "Text",
+          },
+          "button_link": Object {
+            "config": Object {
+              "label": "Button Link",
+            },
+            "type": "Link",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Eyebrow headline",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "paragraph": Object {
+            "config": Object {
+              "label": "Paragraph",
+              "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "image": Object {
+            "config": Object {
+              "constraint": Object {},
+              "label": "image",
+              "thumbnails": Array [],
+            },
+            "type": "Image",
+          },
+          "person": Object {
+            "config": Object {
+              "label": "person",
+              "placeholder": "Their full name",
+            },
+            "type": "Text",
+          },
+          "testimonial": Object {
+            "config": Object {
+              "label": "testimonial",
+              "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "title",
+              "placeholder": "Their title",
+            },
+            "type": "Text",
+          },
+        },
+        "type": "Slice",
+      },
+      "video_highlights": Object {
+        "description": "Highlights of your video channel",
+        "display": "list",
+        "fieldset": "Video Highlights",
+        "icon": "ondemand_video",
+        "non-repeat": Object {
+          "description": Object {
+            "config": Object {
+              "allowTargetBlank": true,
+              "label": "Description",
+              "multi": "paragraph, strong, em, hyperlink",
+              "placeholder": "These are some awesome videos ...",
+            },
+            "type": "StructuredText",
+          },
+          "eyebrow_headline": Object {
+            "config": Object {
+              "label": "Eyebrow headline",
+              "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "Video Highlights",
+              "single": "heading2",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "repeat": Object {
+          "video_src": Object {
+            "config": Object {
+              "label": "Video src",
+            },
+            "type": "Embed",
+          },
+          "video_title": Object {
+            "config": Object {
+              "label": "Video title",
+              "multi": "paragraph, strong",
+              "placeholder": "My awesome video",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "type": "Slice",
+      },
+    },
+  },
+]
+`;
+
+exports[`handler.library should work 1`] = `
+Object {
+  "css": Array [
+    "vue-essential-slices/src/styles/styles.scss",
+  ],
+  "dependencies": Array [],
+  "devDependencies": Array [
+    "node-sass",
+    "sass-loader",
+  ],
+  "framework": "nuxt",
+  "gitUrl": "//github.com/prismicio/vue-essential-slices",
+  "libraryName": "Vue essentials",
+  "packageName": "vue-essential-slices",
+  "pathToLibrary": "src",
+  "script": Array [
+    Object {
+      "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList",
+    },
+    Object {
+      "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js",
+    },
+  ],
+  "slices": Object {
+    "alternate_grid": Object {
+      "description": "A predesigned Text Grid with Image left or right",
+      "display": "list",
+      "fieldset": "AlternateGrid",
+      "icon": "wrap_text",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image_side": Object {
+          "config": Object {
+            "default_value": "left",
+            "label": "Image side",
+            "options": Array [
+              "left",
+              "right",
+            ],
+          },
+          "type": "Select",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "optional_icon": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional Icon",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "call_to_action": Object {
+      "description": "A predesigned 'Call to action' for section for your site",
+      "display": "list",
+      "fieldset": "Call to action",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "icon_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Icon Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {},
+      "type": "Slice",
+    },
+    "cards_carousel": Object {
+      "description": "A carousel with text + image cards",
+      "display": "list",
+      "fieldset": "Cards Carousel",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "additional_info": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Additional Info",
+            "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "placeholder": "eg. name of person in testimonial",
+          },
+          "type": "StructuredText",
+        },
+        "content": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Content",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "customer_logos": Object {
+      "description": "Display a list of your customers logos",
+      "display": "list",
+      "fieldset": "Customer logos",
+      "icon": "person",
+      "non-repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "label": "Call To Action",
+            "placeholder": "View customer stories",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "call_to_action_link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call to Action Link",
+            "placeholder": "Could be a signup link, or a link to customer stories",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Trusted by",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "link",
+            "placeholder": "Could be a link to use case, press article, signup...",
+          },
+          "type": "Link",
+        },
+        "logo": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "faq_section": Object {
+      "description": "List of common questions + answers",
+      "display": "list",
+      "fieldset": "FAQ",
+      "icon": "question_answer",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Title",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "text": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Text",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+            "placeholder": "The answer to the question",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Which browsers do you support?",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "feature_testimonials": Object {
+      "description": "Testimonial proving the value of a specific feature",
+      "display": "list",
+      "fieldset": "Feature Testimonials",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome tutorials from our awesome clients ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "feature_illustration": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Feature Illustration",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Our testimonial",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "client_logo": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 100,
+              "width": 100,
+            },
+            "label": "Client logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "name": Object {
+          "config": Object {
+            "label": "Name",
+            "placeholder": "John McJohn",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "profile_pic": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 80,
+              "width": 80,
+            },
+            "label": "Profile Pic",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "quote": Object {
+          "config": Object {
+            "label": "Quote",
+            "multi": "paragraph",
+            "placeholder": "Lorem ipsum dolor sit amet, ....",
+          },
+          "type": "StructuredText",
+        },
+        "role_position": Object {
+          "config": Object {
+            "label": "Role position",
+            "placeholder": "Creative Director",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "images_slider": Object {
+      "description": "A slider of full-width images + description",
+      "display": "list",
+      "fieldset": "Images Slider",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Full Width Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "pricing_table": Object {
+      "description": "Display a list of pricing plans",
+      "display": "grid",
+      "fieldset": "Pricing Table",
+      "icon": "attach_money",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "Choose the version that works for you ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Pricing plans",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Choose the plan",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call To Action",
+            "placeholder": "Link to Signup / More info...",
+          },
+          "type": "Link",
+        },
+        "call_to_action_text": Object {
+          "config": Object {
+            "label": "Call To Action Text",
+            "multi": "paragraph",
+            "placeholder": "Start your free trial",
+          },
+          "type": "StructuredText",
+        },
+        "features": Object {
+          "config": Object {
+            "label": "Features",
+            "multi": "list-item",
+            "placeholder": "A list of features using bullet list",
+          },
+          "type": "StructuredText",
+        },
+        "plan_title": Object {
+          "config": Object {
+            "label": "Plan title",
+            "placeholder": "Simple, Gold, Premium...",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+        "price_option": Object {
+          "config": Object {
+            "label": "Price Option",
+            "multi": "heading4",
+            "placeholder": "Free, $19, Contact us...",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "testimonials_slider": Object {
+      "description": "A predesigned Slider with rich testimonial",
+      "display": "list",
+      "fieldset": "Testimonials Slider",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "person": Object {
+          "config": Object {
+            "label": "person",
+            "placeholder": "Their full name",
+          },
+          "type": "Text",
+        },
+        "testimonial": Object {
+          "config": Object {
+            "label": "testimonial",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Their title",
+          },
+          "type": "Text",
+        },
+      },
+      "type": "Slice",
+    },
+    "video_highlights": Object {
+      "description": "Highlights of your video channel",
+      "display": "list",
+      "fieldset": "Video Highlights",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome videos ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Video Highlights",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "video_src": Object {
+          "config": Object {
+            "label": "Video src",
+          },
+          "type": "Embed",
+        },
+        "video_title": Object {
+          "config": Object {
+            "label": "Video title",
+            "multi": "paragraph, strong",
+            "placeholder": "My awesome video",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+  },
+}
+`;
+
+exports[`handler.publish should work 1`] = `
+Object {
+  "css": Array [
+    "vue-essential-slices/src/styles/styles.scss",
+  ],
+  "dependencies": Array [],
+  "devDependencies": Array [
+    "node-sass",
+    "sass-loader",
+  ],
+  "framework": "nuxt",
+  "gitUrl": "//github.com/prismicio/vue-essential-slices",
+  "libraryName": "Vue essentials",
+  "package": Object {
+    "author": "",
+    "bugs": Object {
+      "url": "https://github.com/prismicio/vue-essential-slices/issues",
+    },
+    "dependencies": Object {},
+    "description": "A set of professionally made, accessible Vue components, linked to a (Prismic) backend",
+    "devDependencies": Object {
+      "@babel/core": "^7.9.6",
+      "@prismicio/vue": "^2.0.2",
+      "@storybook/addon-actions": "^5.3.18",
+      "@storybook/addon-docs": "^5.3.19",
+      "@storybook/addon-knobs": "^5.3.18",
+      "@storybook/addon-links": "^5.3.18",
+      "@storybook/addons": "^5.3.18",
+      "@storybook/source-loader": "^5.3.19",
+      "@storybook/vue": "^5.3.18",
+      "@vue/babel-preset-app": "^4.2.3",
+      "@vue/component-compiler-utils": "^3.1.1",
+      "babel-loader": "^8.0.6",
+      "babel-preset-vue": "^2.0.2",
+      "node-sass": "^4.14.1",
+      "pre-commit": "^1.2.2",
+      "prismic-dom": "^2.1.0",
+      "prismic-javascript": "^2.1.5",
+      "sass-loader": "^8.0.2",
+      "sm-commons": "^0.0.22",
+      "vue": "^2.6.11",
+      "vue-hot-reload-api": "^2.3.4",
+      "vue-loader": "^15.9.2",
+      "vue-slicezone": "^0.0.25",
+      "vue-template-compiler": "^2.6.11",
+    },
+    "homepage": "https://github.com/prismicio/vue-essential-slices#readme",
+    "keywords": Array [
+      "Nuxtjs",
+      "Vuejs",
+      "Prismic",
+      "slices",
+    ],
+    "license": "GPL-3.0-or-later",
+    "main": "src/index.js",
+    "name": "vue-essential-slices",
+    "pre-commit": Array [
+      "bundle",
+    ],
+    "repository": Object {
+      "type": "git",
+      "url": "git+https://github.com/prismicio/vue-essential-slices.git",
+    },
+    "scripts": Object {
+      "build-storybook": "build-storybook",
+      "bundle": "node ./node_modules/sm-commons/scripts/bundle",
+      "dev": "start-storybook",
+      "prepack": "yarn bundle",
+      "storybook": "start-storybook -p 6006",
+      "test": "echo \\"Error: no test specified\\" && exit 1",
+    },
+    "version": "0.2.0",
+  },
+  "packageName": "vue-essential-slices",
+  "pathToLibrary": "src",
+  "script": Array [
+    Object {
+      "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList",
+    },
+    Object {
+      "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js",
+    },
+  ],
+  "slices": Object {
+    "alternate_grid": Object {
+      "description": "A predesigned Text Grid with Image left or right",
+      "display": "list",
+      "fieldset": "AlternateGrid",
+      "icon": "wrap_text",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image_side": Object {
+          "config": Object {
+            "default_value": "left",
+            "label": "Image side",
+            "options": Array [
+              "left",
+              "right",
+            ],
+          },
+          "type": "Select",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "description",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "optional_icon": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional Icon",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "call_to_action": Object {
+      "description": "A predesigned 'Call to action' for section for your site",
+      "display": "list",
+      "fieldset": "Call to action",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "icon_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Icon Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {},
+      "type": "Slice",
+    },
+    "cards_carousel": Object {
+      "description": "A carousel with text + image cards",
+      "display": "list",
+      "fieldset": "Cards Carousel",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "additional_info": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Additional Info",
+            "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "placeholder": "eg. name of person in testimonial",
+          },
+          "type": "StructuredText",
+        },
+        "content": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Content",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "customer_logos": Object {
+      "description": "Display a list of your customers logos",
+      "display": "list",
+      "fieldset": "Customer logos",
+      "icon": "person",
+      "non-repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "label": "Call To Action",
+            "placeholder": "View customer stories",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "call_to_action_link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call to Action Link",
+            "placeholder": "Could be a signup link, or a link to customer stories",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Trusted by",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "link": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "link",
+            "placeholder": "Could be a link to use case, press article, signup...",
+          },
+          "type": "Link",
+        },
+        "logo": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "faq_section": Object {
+      "description": "List of common questions + answers",
+      "display": "list",
+      "fieldset": "FAQ",
+      "icon": "question_answer",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "optional_image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Optional image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Title",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "text": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Text",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+            "placeholder": "The answer to the question",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Which browsers do you support?",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "feature_testimonials": Object {
+      "description": "Testimonial proving the value of a specific feature",
+      "display": "list",
+      "fieldset": "Feature Testimonials",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome tutorials from our awesome clients ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "feature_illustration": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "Feature Illustration",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Our testimonial",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "client_logo": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 100,
+              "width": 100,
+            },
+            "label": "Client logo",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "name": Object {
+          "config": Object {
+            "label": "Name",
+            "placeholder": "John McJohn",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "profile_pic": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": 80,
+              "width": 80,
+            },
+            "label": "Profile Pic",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "quote": Object {
+          "config": Object {
+            "label": "Quote",
+            "multi": "paragraph",
+            "placeholder": "Lorem ipsum dolor sit amet, ....",
+          },
+          "type": "StructuredText",
+        },
+        "role_position": Object {
+          "config": Object {
+            "label": "Role position",
+            "placeholder": "Creative Director",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "images_slider": Object {
+      "description": "A slider of full-width images + description",
+      "display": "list",
+      "fieldset": "Images Slider",
+      "icon": "image",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "image": Object {
+          "config": Object {
+            "constraint": Object {
+              "height": null,
+              "width": null,
+            },
+            "label": "Full Width Image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+      },
+      "type": "Slice",
+    },
+    "pricing_table": Object {
+      "description": "Display a list of pricing plans",
+      "display": "grid",
+      "fieldset": "Pricing Table",
+      "icon": "attach_money",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "Choose the version that works for you ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow Headline",
+            "placeholder": "Pricing plans",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Choose the plan",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "call_to_action": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Call To Action",
+            "placeholder": "Link to Signup / More info...",
+          },
+          "type": "Link",
+        },
+        "call_to_action_text": Object {
+          "config": Object {
+            "label": "Call To Action Text",
+            "multi": "paragraph",
+            "placeholder": "Start your free trial",
+          },
+          "type": "StructuredText",
+        },
+        "features": Object {
+          "config": Object {
+            "label": "Features",
+            "multi": "list-item",
+            "placeholder": "A list of features using bullet list",
+          },
+          "type": "StructuredText",
+        },
+        "plan_title": Object {
+          "config": Object {
+            "label": "Plan title",
+            "placeholder": "Simple, Gold, Premium...",
+            "single": "heading3",
+          },
+          "type": "StructuredText",
+        },
+        "price_option": Object {
+          "config": Object {
+            "label": "Price Option",
+            "multi": "heading4",
+            "placeholder": "Free, $19, Contact us...",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+    "testimonials_slider": Object {
+      "description": "A predesigned Slider with rich testimonial",
+      "display": "list",
+      "fieldset": "Testimonials Slider",
+      "icon": "notifications_active",
+      "non-repeat": Object {
+        "button_label": Object {
+          "config": Object {
+            "label": "Button Label",
+            "placeholder": "Text for button",
+          },
+          "type": "Text",
+        },
+        "button_link": Object {
+          "config": Object {
+            "label": "Button Link",
+          },
+          "type": "Link",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "paragraph": Object {
+          "config": Object {
+            "label": "Paragraph",
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "image": Object {
+          "config": Object {
+            "constraint": Object {},
+            "label": "image",
+            "thumbnails": Array [],
+          },
+          "type": "Image",
+        },
+        "person": Object {
+          "config": Object {
+            "label": "person",
+            "placeholder": "Their full name",
+          },
+          "type": "Text",
+        },
+        "testimonial": Object {
+          "config": Object {
+            "label": "testimonial",
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "title",
+            "placeholder": "Their title",
+          },
+          "type": "Text",
+        },
+      },
+      "type": "Slice",
+    },
+    "video_highlights": Object {
+      "description": "Highlights of your video channel",
+      "display": "list",
+      "fieldset": "Video Highlights",
+      "icon": "ondemand_video",
+      "non-repeat": Object {
+        "description": Object {
+          "config": Object {
+            "allowTargetBlank": true,
+            "label": "Description",
+            "multi": "paragraph, strong, em, hyperlink",
+            "placeholder": "These are some awesome videos ...",
+          },
+          "type": "StructuredText",
+        },
+        "eyebrow_headline": Object {
+          "config": Object {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph",
+          },
+          "type": "StructuredText",
+        },
+        "title": Object {
+          "config": Object {
+            "label": "Title",
+            "placeholder": "Video Highlights",
+            "single": "heading2",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "repeat": Object {
+        "video_src": Object {
+          "config": Object {
+            "label": "Video src",
+          },
+          "type": "Embed",
+        },
+        "video_title": Object {
+          "config": Object {
+            "label": "Video title",
+            "multi": "paragraph, strong",
+            "placeholder": "My awesome video",
+          },
+          "type": "StructuredText",
+        },
+      },
+      "type": "Slice",
+    },
+  },
+}
+`;
+
+exports[`handler.slices should return nuxt slices 1`] = `
+Object {
+  "alternate_grid": Object {
+    "description": "A predesigned Text Grid with Image left or right",
+    "display": "list",
+    "fieldset": "AlternateGrid",
+    "icon": "wrap_text",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "description",
+          "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Eyebrow headline",
+          "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "image_side": Object {
+        "config": Object {
+          "default_value": "left",
+          "label": "Image side",
+          "options": Array [
+            "left",
+            "right",
+          ],
+        },
+        "type": "Select",
+      },
+      "optional_image": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Optional image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "title",
+          "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "description",
+          "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "optional_icon": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Optional Icon",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "title",
+          "single": "heading3",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+  "call_to_action": Object {
+    "description": "A predesigned 'Call to action' for section for your site",
+    "display": "list",
+    "fieldset": "Call to action",
+    "icon": "notifications_active",
+    "non-repeat": Object {
+      "button_label": Object {
+        "config": Object {
+          "label": "Button Label",
+          "placeholder": "Text for button",
+        },
+        "type": "Text",
+      },
+      "button_link": Object {
+        "config": Object {
+          "label": "Button Link",
+        },
+        "type": "Link",
+      },
+      "icon_image": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Icon Image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "paragraph": Object {
+        "config": Object {
+          "label": "Paragraph",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {},
+    "type": "Slice",
+  },
+  "cards_carousel": Object {
+    "description": "A carousel with text + image cards",
+    "display": "list",
+    "fieldset": "Cards Carousel",
+    "icon": "image",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Eyebrow headline",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "additional_info": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Additional Info",
+          "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+          "placeholder": "eg. name of person in testimonial",
+        },
+        "type": "StructuredText",
+      },
+      "content": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Content",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "image": Object {
+        "config": Object {
+          "constraint": Object {
+            "height": null,
+            "width": null,
+          },
+          "label": "Image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "single": "heading3",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+  "customer_logos": Object {
+    "description": "Display a list of your customers logos",
+    "display": "list",
+    "fieldset": "Customer logos",
+    "icon": "person",
+    "non-repeat": Object {
+      "call_to_action": Object {
+        "config": Object {
+          "label": "Call To Action",
+          "placeholder": "View customer stories",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "call_to_action_link": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Call to Action Link",
+          "placeholder": "Could be a signup link, or a link to customer stories",
+        },
+        "type": "Link",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "label": "Eyebrow Headline",
+          "placeholder": "Trusted by",
+          "single": "heading2",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "link": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "link",
+          "placeholder": "Could be a link to use case, press article, signup...",
+        },
+        "type": "Link",
+      },
+      "logo": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Logo",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+    },
+    "type": "Slice",
+  },
+  "faq_section": Object {
+    "description": "List of common questions + answers",
+    "display": "list",
+    "fieldset": "FAQ",
+    "icon": "question_answer",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, strong, em, hyperlink",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "label": "Eyebrow headline",
+          "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "optional_image": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Optional image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "title",
+          "placeholder": "Title",
+          "single": "heading2",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "text": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Text",
+          "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+          "placeholder": "The answer to the question",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "placeholder": "Which browsers do you support?",
+          "single": "heading3",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+  "feature_testimonials": Object {
+    "description": "Testimonial proving the value of a specific feature",
+    "display": "list",
+    "fieldset": "Feature Testimonials",
+    "icon": "ondemand_video",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, strong, em, hyperlink",
+          "placeholder": "These are some awesome tutorials from our awesome clients ...",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "label": "Eyebrow headline",
+          "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "feature_illustration": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "Feature Illustration",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "placeholder": "Our testimonial",
+          "single": "heading2",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "client_logo": Object {
+        "config": Object {
+          "constraint": Object {
+            "height": 100,
+            "width": 100,
+          },
+          "label": "Client logo",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "name": Object {
+        "config": Object {
+          "label": "Name",
+          "placeholder": "John McJohn",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "profile_pic": Object {
+        "config": Object {
+          "constraint": Object {
+            "height": 80,
+            "width": 80,
+          },
+          "label": "Profile Pic",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "quote": Object {
+        "config": Object {
+          "label": "Quote",
+          "multi": "paragraph",
+          "placeholder": "Lorem ipsum dolor sit amet, ....",
+        },
+        "type": "StructuredText",
+      },
+      "role_position": Object {
+        "config": Object {
+          "label": "Role position",
+          "placeholder": "Creative Director",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+  "images_slider": Object {
+    "description": "A slider of full-width images + description",
+    "display": "list",
+    "fieldset": "Images Slider",
+    "icon": "image",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Eyebrow headline",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "image": Object {
+        "config": Object {
+          "constraint": Object {
+            "height": null,
+            "width": null,
+          },
+          "label": "Full Width Image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+    },
+    "type": "Slice",
+  },
+  "pricing_table": Object {
+    "description": "Display a list of pricing plans",
+    "display": "grid",
+    "fieldset": "Pricing Table",
+    "icon": "attach_money",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, strong, em, hyperlink",
+          "placeholder": "Choose the version that works for you ...",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "label": "Eyebrow Headline",
+          "placeholder": "Pricing plans",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "placeholder": "Choose the plan",
+          "single": "heading2",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "call_to_action": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Call To Action",
+          "placeholder": "Link to Signup / More info...",
+        },
+        "type": "Link",
+      },
+      "call_to_action_text": Object {
+        "config": Object {
+          "label": "Call To Action Text",
+          "multi": "paragraph",
+          "placeholder": "Start your free trial",
+        },
+        "type": "StructuredText",
+      },
+      "features": Object {
+        "config": Object {
+          "label": "Features",
+          "multi": "list-item",
+          "placeholder": "A list of features using bullet list",
+        },
+        "type": "StructuredText",
+      },
+      "plan_title": Object {
+        "config": Object {
+          "label": "Plan title",
+          "placeholder": "Simple, Gold, Premium...",
+          "single": "heading3",
+        },
+        "type": "StructuredText",
+      },
+      "price_option": Object {
+        "config": Object {
+          "label": "Price Option",
+          "multi": "heading4",
+          "placeholder": "Free, $19, Contact us...",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+  "testimonials_slider": Object {
+    "description": "A predesigned Slider with rich testimonial",
+    "display": "list",
+    "fieldset": "Testimonials Slider",
+    "icon": "notifications_active",
+    "non-repeat": Object {
+      "button_label": Object {
+        "config": Object {
+          "label": "Button Label",
+          "placeholder": "Text for button",
+        },
+        "type": "Text",
+      },
+      "button_link": Object {
+        "config": Object {
+          "label": "Button Link",
+        },
+        "type": "Link",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Eyebrow headline",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "paragraph": Object {
+        "config": Object {
+          "label": "Paragraph",
+          "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "image": Object {
+        "config": Object {
+          "constraint": Object {},
+          "label": "image",
+          "thumbnails": Array [],
+        },
+        "type": "Image",
+      },
+      "person": Object {
+        "config": Object {
+          "label": "person",
+          "placeholder": "Their full name",
+        },
+        "type": "Text",
+      },
+      "testimonial": Object {
+        "config": Object {
+          "label": "testimonial",
+          "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "title",
+          "placeholder": "Their title",
+        },
+        "type": "Text",
+      },
+    },
+    "type": "Slice",
+  },
+  "video_highlights": Object {
+    "description": "Highlights of your video channel",
+    "display": "list",
+    "fieldset": "Video Highlights",
+    "icon": "ondemand_video",
+    "non-repeat": Object {
+      "description": Object {
+        "config": Object {
+          "allowTargetBlank": true,
+          "label": "Description",
+          "multi": "paragraph, strong, em, hyperlink",
+          "placeholder": "These are some awesome videos ...",
+        },
+        "type": "StructuredText",
+      },
+      "eyebrow_headline": Object {
+        "config": Object {
+          "label": "Eyebrow headline",
+          "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+          "single": "paragraph",
+        },
+        "type": "StructuredText",
+      },
+      "title": Object {
+        "config": Object {
+          "label": "Title",
+          "placeholder": "Video Highlights",
+          "single": "heading2",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "repeat": Object {
+      "video_src": Object {
+        "config": Object {
+          "label": "Video src",
+        },
+        "type": "Embed",
+      },
+      "video_title": Object {
+        "config": Object {
+          "label": "Video title",
+          "multi": "paragraph, strong",
+          "placeholder": "My awesome video",
+        },
+        "type": "StructuredText",
+      },
+    },
+    "type": "Slice",
+  },
+}
+`;
