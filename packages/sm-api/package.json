@@ -5,7 +5,7 @@
   "description": "Slice Machine API",
   "scripts": {
     "test": "jest",
-    "test:debug": "node --expose-gc ./node_modules/.bin/jest --runInBand --logHeapUsage --detectOpenHandles --forceExit", 
+    "test:debug": "node --expose-gc ./node_modules/.bin/jest --runInBand --logHeapUsage --detectOpenHandles --forceExit",
     "start": "serverless offline",
     "package": "serverless package",
     "deploy": "serverless deploy"
