@@ -9,7 +9,7 @@ const registryLine = ([componentName, value]) => {
 const createFile = (registry) =>
   `
 import dynamic from 'next/dynamic';
-export default ({ sliceName }) => {
+export default function resolver({ sliceName }) {
  const component = (sliceName) => ({
   ${Object.entries(registry).map(registryLine).join('\n\t')}
  })[sliceName]

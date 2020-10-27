@@ -7,7 +7,7 @@ import { getInfoFromPath as getLibraryInfo } from '../helper'
 import { create as createFile } from './resolver';
 
 function getComponentName(slicePath) {
-  const split = slicePath.split('/');
+  const split = slicePath.split(path.sep);
   const pop = split.pop();
   if (pop.indexOf('index.') === 0) {
     return split.pop();
@@ -51,7 +51,7 @@ function getComponentInfo(slicePath) {
 }
 
 function splitExtension(str) {
-  const fullName = str.split('/').pop()
+  const fullName = str.split(path.sep).pop()
   const [fileName, extension] = fullName.split('.')
   return {
     fileName,
@@ -74,7 +74,7 @@ async function handleLibraryPath(libPath) {
   // all paths to components found in slices folder
   const pathsToComponents = fs.readdirSync(slash(pathToSlices))
     .map(curr => path.join(pathToSlices, curr))
-    .filter(e => e.split('/').pop() !== 'index.js')
+    .filter(e => e.split(path.sep).pop() !== 'index.js')
 
   // library identifier
   const from = isLocal ? libPath.slice(2) : libPath
