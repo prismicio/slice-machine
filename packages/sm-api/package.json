@@ -1,7 +1,7 @@
 {
   "name": "sm-api",
   "private": true,
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Slice Machine API",
   "scripts": {
     "test": "jest",
