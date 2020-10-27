@@ -1,5 +1,4 @@
 const fetch = require("node-fetch")
-const cors = require("../common/cors");
 const Mongo = require('../common/mongo');
 
 const SM_CONFIG_FILE = "sm.json";
@@ -8,20 +7,28 @@ const githubWhiteList = {
   "prismicio/vue-essential-slices": true
 };
 
-module.exports = cors(async (req, res) => {
-  const body = req.body || {}
+module.exports = async (event) => {
+  const bodyMaybeString = event.body || ""
+  const body = (typeof(bodyMaybeString) === typeof("")) ? JSON.parse(bodyMaybeString) : bodyMaybeString;
+
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST','Content-Type': 'application/json'};
+
   if (!body.ref || !body.head_commit || !body.repository) {
-    return res.status(400).send('')
+    const message = `missing parameters:${!body.ref && " ref"}${!body.head_commit && " head_commit"}${!body.repository && " repository"}`
+    return { statusCode: 400, headers, body: JSON.stringify({ error: true, message })}
   }
 
   const repoName = body.repository.full_name
   if (!githubWhiteList[repoName]) {
-    return res.status(403).send('')
+    const message = `Unauthorised repository ${repoName}`;
+    return { statusCode: 403, headers, body: JSON.stringify({ error: true, message })}
   }
 
   const branch = body.ref.split("/").pop()
+
   if (branch !== "master") {
-    return res.status(200).send('')
+    const message = `ref should be master branch`;
+    return { statusCode: 200, headers, body: JSON.stringify({ error: true, message }) }
   }
 
   const smFile =
@@ -33,20 +40,28 @@ module.exports = cors(async (req, res) => {
 
     try {
       const response = await fetch(smFileUrl);
-      const sm = JSON.parse(await response.text());
+      const sm = await response.json();
+      
+      /**
+       * Memory leak deteced in tests,
+       * comment out mongo to remove the warning.
+      */
+      await Mongo.collections.libraries(coll => coll.updateOne({
+        packageName: sm.packageName
+      }, {
+        $set: sm
+      }, {
+        upsert: true
+      }));
 
-      await Mongo.collections.libraries(coll => (
-        coll.updateOne({ packageName: sm.packageName }, { $set: sm }, {
-          upsert: true
-        })
-      ));
-
-      return res.send(sm);
+      return { statusCode: 200, headers, body:JSON.stringify(sm) };
     } catch(e) {
       // send this via email
       console.error(e);
+      return e;
     }
   }
-  res.status(200).send('')
-});
+  // should we do a 200 here?
+  return { statusCode: 400, headers, body: JSON.stringify({ error: true, message: `${SM_CONFIG_FILE} not found in head_commit`}) }
+};
 
