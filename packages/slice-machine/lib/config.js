@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { auth } from './auth'
+import { auth, getCookies } from './auth'
 import { parseDomain, fromUrl } from 'parse-domain'
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
@@ -48,7 +48,8 @@ export const getConfig = () => {
       ...(parsedRepo.labels || parsedRepo.subDomains ? {
         repo: parsedRepo.labels ? parsedRepo.labels[0] : parsedRepo.subDomains[0]
       } : {}),
-      auth: auth()
+      auth: auth(),
+      base: getCookies().base
     }
   }
 }

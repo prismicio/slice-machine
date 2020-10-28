@@ -27,7 +27,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "slicemachine": "start-slicemachine -p 9001",
+    "slicemachine": "yarn --cwd ../.. run dev-server",
     "build-storybook": "build-storybook"
   }
 }

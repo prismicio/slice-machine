@@ -24,8 +24,8 @@ export const getCookies = () => {
   const home = os.homedir()
   try {
     const prismic = path.join(home, '.prismic')
-    const { cookies } = JSON.parse(fs.readFileSync(prismic, 'utf-8'))
-    return { cookies }
+    const { cookies, base } = JSON.parse(fs.readFileSync(prismic, 'utf-8'))
+    return { cookies, base }
   } catch(e) {
     return { err: e, reason: 'Could not parse cookies at ~/.prismic. Are you logged in to Prismic?' }
   }

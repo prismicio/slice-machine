@@ -11,6 +11,15 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "title": {
+          "config": {
+            "label": "My cool title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+          },
+          "type": "StructuredText"
+        },
         "image": {
           "config": {
             "label": "My cool label",
@@ -27,15 +36,6 @@
             ]
           },
           "type": "Image"
-        },
-        "title": {
-          "config": {
-            "label": "My cool title",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
-          },
-          "type": "StructuredText"
         },
         "dsqd": {
           "config": {
