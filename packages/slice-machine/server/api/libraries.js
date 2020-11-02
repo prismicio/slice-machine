@@ -1,50 +1,28 @@
 import equal from 'fast-deep-equal'
 import { listComponentsByLibrary } from '../../lib/queries/listComponents'
 
-import initClient from '../../lib/client'
 import {
   slice as sliceSchema,
 } from '../../lib/schemas'
 
 import { pascalize } from 'sm-commons/utils/str'
 
-import { getConfig } from '../../lib/config'
-
-const { config, errors } = getConfig()
-
-export const getLibrairies = async (config) => {
-  return await listComponentsByLibrary(config, config.libraries || []);
+export const getLibrairies = async (env) => {
+  return await listComponentsByLibrary(env, env.libraries || []);
 }
 
-export const getLibrariesWithFlags = async (config) => {
-  let client
-  try {
-    client = initClient(config.repo, config.auth)
-  } catch(e) {
-    console.error('[api/slices] An error occured while fetching slices. Note that when stable, this should break!')
-    client = {
-      get() {
-        return {
-          status: 500
-        }
-      }
-    }
-  }
-  const res = await client.get()
-  if (res.status !== 200) {
-    console.error('Could not fetch remote slices. Continuing...')
-    // return { err: res, reason: 'Could not fetch remote slices', status: res.status }
-  }
-  const remoteSlices = res.status !== 200 ? [] : await res.json()
+export const getLibrariesWithFlags = async (env) => {
+  const res = await env.client.get()
+  const remoteSlices = await res.json()
 
-  const libraries = await getLibrairies(config)
+  const libraries = await listComponentsByLibrary(env)
   const withFlags = libraries.map(([lib, localSlices]) => {
     return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
       const flagged = {
         ...localSlice,
         isNew: Boolean(!sliceFound),
-        // check everything once description is added to online model
+        // check everything once online model matches fs model
         isModified: sliceFound && !equal(localSlice.model.variations, sliceFound.variations) ? true : false,
       }
 
@@ -67,15 +45,12 @@ export const getLibrariesWithFlags = async (config) => {
   })
   return withFlags
 }
-export default async function handler() {
-  const { config } = getConfig()
-  const libraries = await getLibrariesWithFlags(config)
+export default async function handler(env) {
+  const libraries = await getLibrariesWithFlags(env)
   if (libraries.err) {
     return { err: libraries }
   }
   return {
-    libraries,
-    config,
-    errors
+    libraries
   }
 }

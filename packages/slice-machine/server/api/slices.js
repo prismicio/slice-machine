@@ -1,11 +1,8 @@
-import { getConfig } from '../../lib/config'
 import initClient from '../../lib/client'
 
-const { config } = getConfig()
-
-export const getSlices = async() => {
+export const getSlices = async(env) => {
   try {
-    const client = initClient(config.repo, config.auth)
+    const client = initClient(env.repo, env.auth)
     const res = await client.get()
     if (res.status !== 200) {
       return { err: res, slices: [] }

@@ -1,10 +1,7 @@
-import { getConfig } from 'lib/config'
+import { getEnv } from './env'
 import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
-
-const { config } = getConfig()
-const { mocks = {} } = config
 
 const createEmptyMock = (sliceName, variation) => ({
   ...variation,
@@ -13,13 +10,13 @@ const createEmptyMock = (sliceName, variation) => ({
   primary: {}
 })
 
-const handleFields = (fields = [], sliceName) => {
+const handleFields = (fields = [], sliceName, userDefinedMocks) => {
   return fields.reduce((acc, [key, value]) => {
     const widget = Widgets[value.type]
 
-    const maybeMock = mocks[sliceName] && mocks[sliceName][key] 
-    ? mocks[sliceName][key]
-    : mocks[value.type]
+    const maybeMock = userDefinedMocks[sliceName] && userDefinedMocks[sliceName][key] 
+    ? userDefinedMocks[sliceName][key]
+    : userDefinedMocks[value.type]
 
     if (widget) {
       return {
@@ -34,11 +31,14 @@ const handleFields = (fields = [], sliceName) => {
 
 export default (sliceName, model) => {
 
+  const { env: { mocks = {} } } = getEnv()
+
   const variations = model.variations.map(variation => {
     const mock = createEmptyMock(sliceName, variation)
     mock.primary = handleFields(
       Object.entries(variation.primary),
-      sliceName
+      sliceName,
+      mocks
     )
 
     const repeat = Object.entries(variation.items)
@@ -48,7 +48,7 @@ export default (sliceName, model) => {
 
     const items = []
     for (let i = 0; i < Math.floor(Math.random() * 6) + 1; i++) {
-      items.push(handleFields(repeat, sliceName))
+      items.push(handleFields(repeat, sliceName, mocks))
     }
     mock.items = items
     return mock

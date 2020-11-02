@@ -5,13 +5,12 @@ import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 
-import { getConfig } from '../../lib/config'
+import { getEnv } from '../../lib/env'
 
 import mock from '../../lib/mock'
 
-const { config } = getConfig()
-
 export default async function handler(req) {
+  const { env } = getEnv()
   const { sliceName, from, model: strModel, screenshotUrl } = req.query
 
   const model = JSON.parse(atob(strModel))
@@ -22,7 +21,7 @@ export default async function handler(req) {
     return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
   }
 
-  const rootPath = path.join(config.cwd, from, sliceName)
+  const rootPath = path.join(env.cwd, from, sliceName)
   const mockPath = path.join(rootPath, 'mocks.json')
   const modelPath = path.join(rootPath, 'model.json')
 
@@ -31,7 +30,7 @@ export default async function handler(req) {
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 
-  const pathToFile = path.join(config.cwd, from, sliceName, 'preview.png')
+  const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {

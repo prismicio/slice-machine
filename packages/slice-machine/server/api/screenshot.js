@@ -1,14 +1,13 @@
 import path from 'path'
-import { getConfig } from '../../lib/config'
+import { getEnv } from '../../lib/env'
 import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 
 import { generatePreview } from './common/utils'
 
-const { config } = getConfig()
-
 export default async function handler({ from, sliceName, screenshotUrl }) {
-  const pathToFile = path.join(config.cwd, from, sliceName, 'preview.png')
+  const { env } = getEnv()
+  const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {

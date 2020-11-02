@@ -6,12 +6,12 @@ import migrate from '../migrate'
 import { getInfoFromPath as getLibraryInfo } from 'sm-commons/methods/lib'
 import { getComponentInfo } from './component'
 
-async function handleLibraryPath(config, libPath) {
+async function handleLibraryPath(env, libPath) {
   const {
     isLocal,
     pathExists,
     pathToSlices,
-  } = await getLibraryInfo(libPath, config.cwd)
+  } = await getLibraryInfo(libPath, env.cwd)
 
   if (!isLocal) {
     return null
@@ -39,7 +39,7 @@ async function handleLibraryPath(config, libPath) {
         return acc
       }
       const { model: maybeSliceModel } = componentInfo
-      const { model, migrated } = migrate(maybeSliceModel, componentInfo)
+      const { model, migrated } = migrate(maybeSliceModel, { ...componentInfo, from }, env)
       return [
         ...acc,
         {
@@ -56,7 +56,7 @@ async function handleLibraryPath(config, libPath) {
   return [from, allComponents]
 }
 
-export async function listComponentsByLibrary(config, libraries) {
-  const payload = await Promise.all(libraries.map(async lib => await handleLibraryPath(config, lib)))
+export async function listComponentsByLibrary(env) {
+  const payload = await Promise.all(env.libraries.map(async lib => await handleLibraryPath(env, lib)))
   return payload.filter(e => e)
 }

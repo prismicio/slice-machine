@@ -1,4 +1,4 @@
-import { getConfig } from './config'
+import fakeApi from './fake'
 
 const STAGE = 'https://4b7a9w5244.execute-api.us-east-1.amazonaws.com/stage/slices/'
 const PROD = 'https://silo2hqf53.execute-api.us-east-1.amazonaws.com/prod/slices/'
@@ -24,12 +24,11 @@ const createFetcher = (apiUrl, repo, auth) => (body, action = '', method = 'get'
   })
 }
 
-const initClient = (repo, auth) => {
-  if (!auth) { // get this from config instead
-    throw new Error('Could not instantiate API client: token not found.')
+const initClient = (base, repo, auth) => {
+  if (!auth) {
+    return fakeApi()
   }
-  const { config } = getConfig()
-  const apiUrl = createApiUrl(config.base)
+  const apiUrl = createApiUrl(base)
   const fetcher = createFetcher(apiUrl, repo, auth)
   return {
     async get() {

@@ -20,26 +20,32 @@ const parseCookies = (cookies) => cookies.split(';')
     }
   }, {})
 
-export const getCookies = () => {
+export const auth = (cookies = '') => {
+  const parsed = parseCookies(cookies)
+  if (parsed[AUTH_KEY]) {
+    return parsed[AUTH_KEY]
+  }
+  return null
+}
+
+export const parsePrismicFile = () => {
   const home = os.homedir()
   try {
     const prismic = path.join(home, '.prismic')
     const { cookies, base } = JSON.parse(fs.readFileSync(prismic, 'utf-8'))
     return { cookies, base }
   } catch(e) {
-    return { err: e, reason: 'Could not parse cookies at ~/.prismic. Are you logged in to Prismic?' }
+    return { err: e, reason: 'Could not parse file at ~/.prismic. Are you logged in to Prismic?' }
   }
 }
 
-export const auth = () => {
-  const { cookies, ...r } = getCookies()
-  if (!cookies) {
-    console.error(r.reason)
-    return null
+export const getPrismicData = () => {
+  const { cookies, base, err, reason } = parsePrismicFile()
+  if (err) {
+    return { auth: { err, reason } }
   }
-  const parsed = parseCookies(cookies)
-  if (parsed[AUTH_KEY]) {
-    return parsed[AUTH_KEY]
+  return {
+    base,
+    auth: auth(cookies),
   }
-  return null
 }
