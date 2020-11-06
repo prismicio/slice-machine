@@ -10,14 +10,14 @@ const validate = (config) => {
   const errors = {}
   if (!config.apiEndpoint) {
     errors.apiEndpoint = {
-      message: 'Excepts a property "apiEndpoint" which points to your Prismic api/v2 url',
+      message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',
       example: 'http://my-project.prismic.io/api/v2',
       run: 'npx prismic-cli sm --setup'
     }
   }
   if (!config.storybook) {
     errors.storybook = {
-      message: 'Excepts a property "storybook" which points to local Storybook.',
+      message: 'Expects a property "storybook" which points to local Storybook.',
       example: 'http://localhost:8888',
       run: 'npx prismic-cli sm --add-storybook'
     }

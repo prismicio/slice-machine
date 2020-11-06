@@ -9,7 +9,6 @@ import {
 } from 'theme-ui'
 
 import {
-  NavBar,
   FlexEditor,
   SideBar,
   Success
@@ -30,10 +29,10 @@ const createStorybookUrls = (storybook, componentInfo, variation = 'default-slic
   storybookUrl: `${storybook}/?path=/story/${componentInfo.sliceName.toLowerCase()}--${variation}`
 })
 
-const Builder = () => {
+const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
   const Model = useContext(ModelContext)
-  const { storybook } = useContext(ConfigContext)
+  const { env: { storybook }, warnings  } = useContext(ConfigContext)
   const {
     info,
     isTouched,
@@ -174,14 +173,6 @@ const Builder = () => {
 
   return (
     <Box>
-      <NavBar
-        from={info.from}
-        href={info.href}
-        onSave={onSave}
-        data={data}
-        setData={setData}
-      />
-
       <Flex
         sx={{
           display: 'flex',
@@ -219,6 +210,8 @@ const Builder = () => {
             onPush={onPush}
             onSave={onSave}
             data={data}
+            warnings={warnings}
+            openPanel={openPanel}
             previewUrl={info.previewUrl}
             storybookUrl={storybookUrl}
             onScreenshot={onScreenshot}
@@ -228,7 +221,7 @@ const Builder = () => {
         )}
       >
         <Box>
-          <PreviewFields Model={Model} variation={variation} storybookUrl={storybookUrl} />
+          <PreviewFields Model={Model} variation={variation} />
         </Box>
       </FlexEditor>
       {/* <Drawer

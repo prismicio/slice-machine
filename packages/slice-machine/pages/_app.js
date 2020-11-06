@@ -1,17 +1,20 @@
-import { Fragment, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import theme from '../src/theme'
+import { useEffect, useState } from 'react'
+import Drawer from 'rc-drawer'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import useSwr from 'swr'
 
-import LibProvider from '../src/lib-context'
-import ConfigProvider from '../src/config-context'
+import theme from 'src/theme'
+import LibProvider from 'src/lib-context'
+import ConfigProvider from 'src/config-context'
+import { ModelHandler } from 'src/model-context'
 
 import LoadingPage from 'components/LoadingPage'
-import FullPage from 'components/FullPage'
-import AuthInstructions from 'components/AuthInstructions'
 import ConfigErrors from 'components/ConfigErrors'
+import NavBar from 'components/NavBar/WithRouter'
+import Warnings from 'components/Warnings'
+
+import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 
 import 'rc-drawer/assets/index.css'
 import 'lib/builder/layout/Drawer/index.css'
@@ -19,127 +22,88 @@ import 'src/css/modal.css'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
-const LibError = () => (
-  <FullPage>
-    <div>
-      <h2>No library found</h2>
-      <p style={{ lineHeight: '30px', fontSize: '18px'}}>
-        Possible reasons: you did not define local libraries in your <pre style={preStyle}>sm.json</pre> file, eg. <pre style={preStyle}>{`{ "libraries": ["@/slices"] }`}</pre><br/>
-        Once it's done, run <pre style={preStyle}>prismic sm --create-slice</pre>. You should now see your library on this page.
-      </p>
-    </div>
-  </FullPage>
-)
-
-const FetchError = ({ err }) => (
-  <FullPage>
-    <div>
-      <h2>{err.reason}</h2>
-      <p style={{ lineHeight: '30px', fontSize: '18px'}}>
-        Possible reasons: your <pre style={preStyle}>sm.json</pre> file does not contain a valid <pre style={preStyle}>apiEndpoint</pre> value.<br/>
-        Try login to Prismic via the CLI (<pre style={preStyle}>prismic login</pre>) and that <br/><pre style={preStyle}>~/.prismic</pre> contains a <pre style={preStyle}>prismic-auth</pre> cookie.
-      </p>
-    </div>
-  </FullPage>
-)
-
-function DisplayLibs({
-  libraries,
-  children
-}) {
-  return !libraries.length || libraries.err ? <LibError /> : children
-}
-
-function parseMigrations(data) {
-  if (!data || !data.libraries) {
-    return null
-  }
-  return data.libraries.reduce((acc, [_, slices]) => {
-    const toMigrate = slices.filter(e => e.migrated)
-    return [...acc, ...toMigrate]
-  }, [])
-}
-
-const preStyle = {
-  display: 'inline',
-  background: '#F1F1F1',
-  padding: '2px'
-}
-
-const states = {
-  LOADING: 'LOADING',
-  ERR: 'ERR'
-}
 const RenderStates = {
   Loading: () => <LoadingPage />,
-  FetchError: ({ err }) => <FetchError err={err} />,
-  ConfigError: ({ configErrors }) => <ConfigErrors errors={configErrors} />,
-  Migrate: ({ migrations }) => <div>Migrate me!</div>
+  Default: ({ Component, ...rest }) => <Component {...rest} />,
+  FetchError,
+  LibError: FetchError,
+  NoLibraryConfigured,
+  ConfigError: ({ configErrors }) => <ConfigErrors errors={configErrors} />
 }
 
-function MyApp({
-  Component,
-  pageProps,
-}) {
-  const router = useRouter()
-  const [status, setStatus] = useState(states.LOADING)
-  const [state, setState] = useState({ Renderer: RenderStates.Loading, payload: null })
-  // const { data: authData } = useSwr('/api/auth', fetcher)
-  // const { data } = useSwr('/api/libraries', fetcher)
-  // const [displayAuth, setDisplayAuth] = useState(false)
+function MyApp({ Component, pageProps }) {
+  const { data } = useSwr('/api/state', fetcher)
+  const [drawerState, setDrawerState] = useState({ open: false })
+  const [state, setRenderer] = useState({ Renderer: RenderStates.Loading, payload: null })
 
-  const { data, error } = useSwr('/api/state', fetcher)
-
-  const migrations = parseMigrations(data)
+  const openPanel = (priority) => console.log({ priority }) || setDrawerState({ open: true, priority })
 
   useEffect(() => {
     if (!data) {
       return
     }
-    if (data.err) {
+    else if (data.err) {
       setRenderer({ Renderer: RenderStates.FetchError, payload: data })
     }
-    // if (Object.keys(configErrors)) {
-    //   setStatus(states.CONFIG_ERRORS)
-    // }
-    // if (migrations && migrations.length) {
-    //   setStatus(states.MIGRATE)
-    // }
+    else if (!data.libraries.length) {
+      setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
+    }
+    else if (data.libraries.err) {
+      setRenderer({ Renderer: RenderStates.LibError, payload: { err: data.libraries.err } })
+    }
+    else if (data) {
+      setRenderer({ Renderer: RenderStates.Default, payload: { ...data } })
+      const { libraries, env, configErrors, warnings } = data
+      console.log('------ SliceMachine log ------')
+      console.log('Loaded libraries: ', { libraries })
+      console.log('Loaded env: ', { env, configErrors })
+      console.log('Warnings: ', { warnings })
+      console.log('------ End of log ------')
+    }
+  }, [data])
 
-  }, [data, migrations])
-
-  // console.log({ error })
-
-  // const { libraries = [], env, configErrors = {} } = data
-  // //  useEffect(() => {
-
-  // // }, [env])
-
-  
-  console.log({ data })
-  // console.log('------ SliceMachine log ------')
-  // console.log('Loaded libraries: ', { libraries })
-  // console.log('Loaded env: ', { env, configErrors })
-  // console.log('------ End of log ------')
+  useEffect(() => {
+    if (!data) {
+      return
+    }
+    if (!data.auth) {
+      console.log('You"re not logged in')
+    }
+    if (data.configErrors && Object.keys(data.configErrors).length) {
+      console.log('You have config errors')
+    }
+  }, [])
 
   const { Renderer, payload } = state
-  return <Renderer {...payload }/>
 
-  // return (
-  //   <ThemeProvider theme={theme}>
-  //     <BaseStyles>
-  //       <ConfigProvider value={env}>
-  //         <LibProvider value={libraries}>
-  //           {
-  //             Object.keys(configErrors).length ? (
-  //               <ConfigErrors errors={configErrors} />
-  //             ) : <DisplayLibs libraries={libraries}><Component {...pageProps} migrations={migrations} /></DisplayLibs>
-  //           }
-  //         </LibProvider>
-  //       </ConfigProvider>
-  //     </BaseStyles>
-  //   </ThemeProvider>
-  // );
+  return (
+    <ThemeProvider theme={theme}>
+      <BaseStyles>
+        {
+          !data ? <Renderer {...payload }/> : (
+            <ConfigProvider value={data}>
+              <LibProvider value={data.libraries}>
+                <ModelHandler libraries={data.libraries}>
+                  <NavBar
+                    warnings={3}
+                    openPanel={() => openPanel()}
+                  />
+                  <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                  <Drawer
+                    placement="right"
+                    open={drawerState.open}
+                    onClose={() => setDrawerState({ open: false })}
+                  >
+                    <Warnings priority={drawerState.priority} list={data.warnings} configErrors={data.configErrors} />
+                  </Drawer>
+                </ModelHandler>
+              </LibProvider>
+            </ConfigProvider>
+          )
+        }
+      </BaseStyles>
+    </ThemeProvider>
+  );
 }
 
 export default MyApp

@@ -1,17 +1,17 @@
 import { darken, lighten } from '@theme-ui/color'
 
 export default () => ({
-  "colors": {
-    text: "#1D2230",
-    textClear: "#667587",
-    background: "#F5F6F9",
-    primary: "#5163BA",
-    secondary: "#F9FAFB",
-    "highlight": "hsl(10, 40%, 90%)",
-    "purple": "hsl(250, 60%, 30%)",
-    muted: "#F9F9FB",
-    icons: "#8091A5",
-    gray: "#F8F9FA",
+  colors: {
+    text: '#1D2230',
+    textClear: '#667587',
+    background: '#F5F6F9',
+    primary: '#5163BA',
+    secondary: '#F9FAFB',
+    highlight: 'hsl(10, 40%, 90%)',
+    purple: 'hsl(250, 60%, 30%)',
+    muted: '#F9F9FB',
+    icons: '#8091A5',
+    gray: '#F8F9FA',
     borders: '#C9D0D8',
     deep: '#0E2150',
     deep1: '#A0ADE7',
@@ -96,9 +96,30 @@ export default () => ({
       fontSize: 1,
       margin: 0,
       pl: 2
+    },
+    pre: {
+      variant: "prism",
+      fontFamily: "monospace",
+      fontSize: 1,
+      p: 2,
+      my: 1,
+      color: "text",
+      bg: "borders",
+      overflow: "auto",
+      code: {
+        color: "inherit"
+      }
     }
   },
   badges: {
+    circle: {
+      borderRadius: '50%',
+      fontSize: '10px'
+    },
+    primary: {
+      color: 'text',
+      bg: 'primary',
+    },
     'circle-right': {
       top: '-8px',
       right: '-8px',
@@ -283,9 +304,6 @@ export default () => ({
     }
   },
   styles: {
-    spinner: {
-      color: 'red',
-    },
     navLink: {
       color: '#FFF',
       '&:hover': {
@@ -300,101 +318,100 @@ export default () => ({
       border: t => `1px solid ${t.colors.borders}`,
       borderRadius: '3px',
       my: 3,
+      listStyleType: 'none',
       justifyContent: 'space-between',
-      // '&:first-child': {
-      //   mt: 4
-      // }
     },
-    "Container": {
-      "p": 3,
-      "maxWidth": 1024
+    Container: {
+      p: 3,
+      maxWidth: 1024
     },
-    "root": {
-      "fontFamily": "body",
-      "lineHeight": "body",
-      "fontWeight": "body"
+    root: {
+      fontFamily: "body",
+      lineHeight: "body",
+      fontWeight: "body"
     },
-    "h1": {
-      "variant": "textStyles.display"
+    h1: {
+      variant: "textStyles.display"
     },
-    "h2": {
-      "variant": "textStyles.heading",
-      "fontSize": 5
+    h2: {
+      variant: "textStyles.heading",
+      fontSize: 5
     },
-    "h3": {
-      "variant": "textStyles.heading",
-      "fontSize": 4
+    h3: {
+      variant: "textStyles.heading",
+      fontSize: 4
     },
-    "h4": {
-      "variant": "textStyles.heading",
-      "fontSize": 3
+    h4: {
+      variant: "textStyles.heading",
+      fontSize: 3
     },
-    "h5": {
-      "variant": "textStyles.heading",
-      "fontSize": 2
+    h5: {
+      variant: "textStyles.heading",
+      fontSize: 2
     },
-    "h6": {
-      "variant": "textStyles.heading",
-      "fontSize": 1
+    h6: {
+      variant: "textStyles.heading",
+      fontSize: 1
     },
     ul:  {
       p: 0,
       m: 0
     },
     li: {
-      listStyle: 'none'
+      listStyleType: 'none'
     },
-    "pre": {
-      "variant": "prism",
-      "fontFamily": "monospace",
-      "fontSize": 1,
-      "p": 3,
-      "color": "textClear",
-      "bg": "headSection",
-      "overflow": "auto",
-      "code": {
-        "color": "inherit"
+    pre: {
+      variant: "prism",
+      display: 'inline',
+      fontFamily: "monospace",
+      fontSize: 1,
+      p: 2,
+      color: "textClear",
+      bg: "borders",
+      overflow: "auto",
+      code: {
+        color: "inherit"
       }
     },
-    "code": {
-      "fontFamily": "monospace",
-      "color": "error",
-      "fontSize": 1
+    code: {
+      fontFamily: "monospace",
+      color: "error",
+      fontSize: 1
     },
-    "inlineCode": {
-      "fontFamily": "monospace",
-      "color": "error",
-      "bg": "muted"
+    inlineCode: {
+      fontFamily: "monospace",
+      color: "error",
+      bg: "muted"
     },
-    "table": {
-      "width": "100%",
-      "my": 4,
-      "borderCollapse": "separate",
-      "borderSpacing": 0,
-      "th,td": {
-        "textAlign": "left",
-        "py": "4px",
-        "pr": "4px",
-        "pl": 0,
-        "borderColor": "muted",
-        "borderBottomStyle": "solid"
+    table: {
+      width: "100%",
+      my: 4,
+      borderCollapse: "separate",
+      borderSpacing: 0,
+      'th,td': {
+        textAlign: "left",
+        py: "4px",
+        pr: "4px",
+        pl: 0,
+        borderColor: "muted",
+        borderBottomStyle: "solid"
       }
     },
-    "th": {
-      "verticalAlign": "bottom",
-      "borderBottomWidth": "2px"
+    th: {
+      verticalAlign: "bottom",
+      borderBottomWidth: "2px"
     },
-    "td": {
-      "verticalAlign": "top",
-      "borderBottomWidth": "1px"
+    td: {
+      verticalAlign: "top",
+      borderBottomWidth: "1px"
     },
-    "hr": {
-      "border": 0,
-      "borderBottom": "1px solid",
-      "borderColor": "borders"
+    hr: {
+      border: 0,
+      borderBottom: "1px solid",
+      borderColor: "borders"
     },
-    "img": {
-      "maxWidth": "100%"
+    img: {
+      maxWidth: "100%"
     }
   },
   alerts: {

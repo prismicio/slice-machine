@@ -5,9 +5,11 @@ import {
 import Card from 'components/Card'
 
 import Storybook from './icons/storybook.svg'
+import StorybookGrey from './icons/storybookGrey.svg'
 import Li from './components/Li'
 import ImagePreview from './components/ImagePreview'
 import FooterButton from './components/FooterButton'
+import { storybookWarningStates, warningTwoLiners } from 'src/consts'
 
 const SideBar = ({
   info,
@@ -15,12 +17,15 @@ const SideBar = ({
   isTouched,
   onSave,
   onPush,
+  warnings,
+  openPanel,
   storybookUrl,
   imageLoading,
   onScreenshot,
   previewUrl
 }) => {
 
+  const maybeStorybookError = warnings.find(e => storybookWarningStates.includes(e))
   return (
     <Box
       sx={{
@@ -45,14 +50,27 @@ const SideBar = ({
       >
         <ImagePreview imageLoading={imageLoading} src={previewUrl} onScreenshot={onScreenshot} />
         <ul>
-          <Li
-            title="Open in Storybook"
-            description="Work locally with your component"
-            Icon={Storybook}
-            as="a"
-            href={storybookUrl}
-            target="_blank"
-          />
+          {
+            maybeStorybookError ? (
+              <Li
+                title={warningTwoLiners[maybeStorybookError][0]}
+                hasError
+                description={warningTwoLiners[maybeStorybookError][1]}
+                Icon={StorybookGrey}
+                onClick={() => openPanel(maybeStorybookError)}
+                sx={{ cursor: 'pointer' }}
+              />
+            ) : (
+              <Li
+                title="Open in Storybook"
+                description="Work locally with your component"
+                Icon={Storybook}
+                as="a"
+                href={storybookUrl}
+                target="_blank"
+              />
+            )
+          }
         </ul>
       </Card>
     </Box>
