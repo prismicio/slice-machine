@@ -42,14 +42,14 @@ function MyApp({ Component, pageProps }) {
     if (!data) {
       return
     }
-    else if (data.err) {
+    else if (data.clientError) {
       setRenderer({ Renderer: RenderStates.FetchError, payload: data })
     }
     else if (!data.libraries.length) {
       setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
     }
-    else if (data.libraries.err) {
-      setRenderer({ Renderer: RenderStates.LibError, payload: { err: data.libraries.err } })
+    else if (!data.libraries) {
+      setRenderer({ Renderer: RenderStates.LibError, payload: data })
     }
     else if (data) {
       setRenderer({ Renderer: RenderStates.Default, payload: { ...data } })
@@ -62,18 +62,6 @@ function MyApp({ Component, pageProps }) {
     }
   }, [data])
 
-  useEffect(() => {
-    if (!data) {
-      return
-    }
-    if (!data.auth) {
-      console.log('You"re not logged in')
-    }
-    if (data.configErrors && Object.keys(data.configErrors).length) {
-      console.log('You have config errors')
-    }
-  }, [])
-
   const { Renderer, payload } = state
 
   return (
@@ -82,22 +70,28 @@ function MyApp({ Component, pageProps }) {
         {
           !data ? <Renderer {...payload }/> : (
             <ConfigProvider value={data}>
-              <LibProvider value={data.libraries}>
-                <ModelHandler libraries={data.libraries}>
-                  <NavBar
-                    warnings={data.warnings.length}
-                    openPanel={() => openPanel()}
-                  />
-                  <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
-                  <Drawer
-                    placement="right"
-                    open={drawerState.open}
-                    onClose={() => setDrawerState({ open: false })}
-                  >
-                    <Warnings priority={drawerState.priority} list={data.warnings} configErrors={data.configErrors} />
-                  </Drawer>
-                </ModelHandler>
-              </LibProvider>
+              {
+                !data.libraries
+                  ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                  : (
+                    <LibProvider value={data.libraries}>
+                      <ModelHandler libraries={data.libraries}>
+                        <NavBar
+                          warnings={data.warnings.length}
+                          openPanel={() => openPanel()}
+                        />
+                        <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                        <Drawer
+                          placement="right"
+                          open={drawerState.open}
+                          onClose={() => setDrawerState({ open: false })}
+                        >
+                          <Warnings priority={drawerState.priority} list={data.warnings} configErrors={data.configErrors} />
+                        </Drawer>
+                      </ModelHandler>
+                    </LibProvider>
+                  )
+              }
             </ConfigProvider>
           )
         }

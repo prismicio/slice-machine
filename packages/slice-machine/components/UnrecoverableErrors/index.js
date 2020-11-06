@@ -1,9 +1,9 @@
 import FullPage from 'components/FullPage'
 
-export const FetchError = ({ err }) => (
+export const FetchError = ({ clientError }) => (
   <FullPage>
     <div>
-      <h2>{err.reason}</h2>
+      <h2>{clientError.reason}</h2>
       <p style={{ lineHeight: '30px', fontSize: '18px'}}>
         Possible reasons: your <pre>sm.json</pre> file does not contain a valid <pre>apiEndpoint</pre> value.<br/>
         Try to login to Prismic via the CLI (<pre>prismic login</pre>) and that <br/><pre>~/.prismic</pre> contains a <pre>prismic-auth</pre> cookie.

@@ -13,6 +13,10 @@ export const getLibrairies = async (env) => {
 
 export const getLibrariesWithFlags = async (env) => {
   const res = await env.client.get()
+  if (res.status > 209) {
+    console.error('[client/get] Unable to query slices: ', res.statusText)
+    return { err: { status: res.status, statusText: res.statusText, reason: 'Could not fetch remote slices' } }
+  }
   const remoteSlices = await res.json()
 
   const libraries = await listComponentsByLibrary(env)
@@ -48,7 +52,7 @@ export const getLibrariesWithFlags = async (env) => {
 export default async function handler(env) {
   const libraries = await getLibrariesWithFlags(env)
   if (libraries.err) {
-    return { err: libraries }
+    return { err: libraries.err }
   }
   return {
     libraries

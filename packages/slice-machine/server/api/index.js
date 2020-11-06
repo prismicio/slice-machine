@@ -9,15 +9,14 @@ const state = require('./state').default
 
 router.use('/state', async function (_, res) {
   const payload = await state()
-  if (payload.err) {
-    return res.status(payload.err.status).json(payload)
+  if (payload.clientError) {
+    return res.status(payload.clientError.status).json(payload)
   }
   return res.status(200).json(payload)
 })
 
 router.use('/auth', async function (req, res) {
   const payload = await auth(req)
-  // console.log({ payload:JSON.stringify(payload) })
   if (payload.err) {
     return res.status(400).json(payload)
   }
