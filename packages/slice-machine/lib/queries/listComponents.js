@@ -57,6 +57,6 @@ async function handleLibraryPath(env, libPath) {
 }
 
 export async function listComponentsByLibrary(env) {
-  const payload = await Promise.all(env.libraries.map(async lib => await handleLibraryPath(env, lib)))
+  const payload = await Promise.all((env.libraries || []).map(async lib => await handleLibraryPath(env, lib)))
   return payload.filter(e => e)
 }

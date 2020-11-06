@@ -3,7 +3,7 @@ import { Flex } from 'theme-ui'
 const FullPage = ({ children }) => (
   <Flex
     sx={{
-      height: '100vh',
+      height: 'calc(100vh - 57px)',
       width: '100vw',
       alignItems: 'center',
       justifyContent: 'center'
