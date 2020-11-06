@@ -143,7 +143,7 @@ export default () => ({
   buttons:  {
     primary: {
       color: 'white',
-      fontSize: '1',
+      fontSize: 1,
       fontWeight: 'body',
       bg: 'primary',
       border: '1px solid',

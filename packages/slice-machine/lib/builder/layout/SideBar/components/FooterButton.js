@@ -22,7 +22,7 @@ const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
         cursor: 'pointer',
         p: 3,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
       variant={editable ? 'buttons.primary' : 'buttons.disabled'}
       disabled={!editable}

@@ -5,7 +5,6 @@ import Head from 'next/head'
 import Container from 'components/Container'
 import ListLibraries from 'components/ListLibraries'
 import { LibContext } from 'src/lib-context'
-import { useColorMode } from 'theme-ui'
 
 const Index = () => {
   const libraries = useContext(LibContext)

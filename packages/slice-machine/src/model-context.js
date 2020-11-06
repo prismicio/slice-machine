@@ -19,6 +19,7 @@ export default function ModelProvider({ children, initialModel, info }) {
     ...Model.get(),
     hydrate,
   }
+
   return (
     <ModelContext.Provider value={value}>
       { typeof children === 'function' ? children(value) : children }

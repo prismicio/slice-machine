@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }) {
   const [drawerState, setDrawerState] = useState({ open: false })
   const [state, setRenderer] = useState({ Renderer: RenderStates.Loading, payload: null })
 
-  const openPanel = (priority) => console.log({ priority }) || setDrawerState({ open: true, priority })
+  const openPanel = (priority) => setDrawerState({ open: true, priority })
 
   useEffect(() => {
     if (!data) {
@@ -85,7 +85,7 @@ function MyApp({ Component, pageProps }) {
               <LibProvider value={data.libraries}>
                 <ModelHandler libraries={data.libraries}>
                   <NavBar
-                    warnings={3}
+                    warnings={data.warnings.length}
                     openPanel={() => openPanel()}
                   />
                   <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
