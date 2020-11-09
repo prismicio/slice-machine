@@ -16,15 +16,7 @@ const Index = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
-          {
-            libraries.length ? (
-              <ListLibraries libraries={libraries} />
-            ) : (
-              <div>
-                No library found. <a target="_blank" href="https://prismic.io">Create one!</a>
-              </div>
-            )
-          }
+          <ListLibraries libraries={libraries || []} />
         </main>
       </Container>
     </Fragment>

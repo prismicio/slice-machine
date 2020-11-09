@@ -1,6 +1,5 @@
 import { Fragment } from 'react'
-import Link from 'next/link'
-import { Badge, Flex, Box, useThemeUI, useColorMode } from 'theme-ui'
+import { Button, Badge, Flex, Box, useThemeUI, useColorMode } from 'theme-ui'
 
 import IconButton from '../IconButton'
 
@@ -19,7 +18,12 @@ const Warnings = ({ theme, warnings, onClick }) => (
   </Fragment>
 )
 
-const NavBar = ({ as = 'header', sx = {}, children, warnings = 0, openPanel }) => {
+const Chromatic = ({ env }) => env.chromatic ? [
+  <Button as="a" href={env.chromatic.storybook} target="_blank" mr={1}>Online Storybbok</Button>,
+  <Button as="a" href={env.chromatic.library} target="_blank" mr={1}>Chromatic preview</Button>
+] : null
+
+const NavBar = ({ as = 'header', sx = {}, children, env, warnings, openPanel }) => {
   const { theme } = useThemeUI()
   const [colorMode, setColorMode] = useColorMode()
 
@@ -37,9 +41,10 @@ const NavBar = ({ as = 'header', sx = {}, children, warnings = 0, openPanel }) =
     >
       { children }
       <Box sx={{ mx: 'auto' }} />
+      <Chromatic env={env} />
       {
-        warnings > 0 ? (
-          <Warnings theme={theme} warnings={warnings} onClick={openPanel} />
+        warnings && warnings.length ? (
+          <Warnings theme={theme} warnings={warnings.length} onClick={openPanel} />
         ) : null
       }
       <IconButton

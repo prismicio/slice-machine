@@ -42,15 +42,15 @@ function MyApp({ Component, pageProps }) {
     if (!data) {
       return
     }
-    else if (data.clientError) {
-      setRenderer({ Renderer: RenderStates.FetchError, payload: data })
-    }
-    else if (!data.libraries.length) {
-      setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
-    }
-    else if (!data.libraries) {
-      setRenderer({ Renderer: RenderStates.LibError, payload: data })
-    }
+    // else if (data.clientError) {
+    //   setRenderer({ Renderer: RenderStates.FetchError, payload: data })
+    // }
+    // else if (!data.libraries) {
+    //   setRenderer({ Renderer: RenderStates.LibError, payload: data })
+    // }
+    // else if (!data.libraries.length) {
+    //   setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
+    // }
     else if (data) {
       setRenderer({ Renderer: RenderStates.Default, payload: { ...data } })
       const { libraries, env, configErrors, warnings } = data
@@ -77,7 +77,8 @@ function MyApp({ Component, pageProps }) {
                     <LibProvider value={data.libraries}>
                       <ModelHandler libraries={data.libraries}>
                         <NavBar
-                          warnings={data.warnings.length}
+                          env={data.env}
+                          warnings={data.warnings}
                           openPanel={() => openPanel()}
                         />
                         <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />

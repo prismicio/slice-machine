@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { exec } from 'child_process'
 import { getPrismicData } from './auth'
 import { parseDomain, fromUrl } from 'parse-domain'
 import initClient from './client'
@@ -36,23 +37,59 @@ const validate = (config) => {
   return errors
 }
 
-export const getEnv = () => {
+const extractRepo = (parsedRepo) => {
+  if (parsedRepo.labels) {
+    return parsedRepo.labels[0]
+  }
+  if (parsedRepo.subDomains) {
+    return parsedRepo.subDomains[0]
+  }
+}
+
+const handleBranch = () => {
+  return new Promise(resolve => {
+    exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
+      if (err) {
+        console.log({ err })
+        resolve({ err })
+      }
+      console.log({ branch: stdout.trim() })
+      resolve({ branch: stdout.trim() })
+    })
+  })
+}
+
+const createChromaticUrls = ({ branch, appId, err }) => {
+  if (err) {
+    return null
+  }
+  return {
+    storybook: `https://${branch}--${appId}.chromatic.com`,
+    library: `https://chromatic.com/library?appId=${appId}&branch=${branch}`
+  }
+}
+
+export const getEnv = async () => {
   const userConfigTxt = fs.readFileSync(path.join(cwd, 'sm.json'), 'utf8')
   const userConfig = JSON.parse(userConfigTxt)
   const maybeErrors = validate(userConfig)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
+  const repo = extractRepo(parsedRepo)
   const { auth, base } = getPrismicData()
+
+  const branchInfo = await handleBranch()
+  const chromatic = createChromaticUrls({ ...branchInfo, appId: '5f5b34f06f304800225c4e17' })
+
   return {
     errors: maybeErrors,
     env: {
       cwd,
       ...userConfig,
-      ...(parsedRepo.labels || parsedRepo.subDomains ? {
-        repo: parsedRepo.labels ? parsedRepo.labels[0] : parsedRepo.subDomains[0]
-      } : {}),
+      repo,
       auth,
       base,
-      client: initClient(base, parsedRepo, auth)
+      chromatic,
+      client: initClient(base, repo, auth)
     }
   }
 }

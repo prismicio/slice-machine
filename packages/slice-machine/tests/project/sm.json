@@ -1,5 +1,5 @@
 {
   "libraries": ["@/slices", "vue-essential-slices"],
-  "apiEndpoint": "http://test-sm-lucie.wroom.test/api/v2",
+  "apiEndpoint": "http://my-nextjs-website-from-theme.prismic.io/api/v2",
   "storybook": "http://localhost:6006"
 }
