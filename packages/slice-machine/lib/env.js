@@ -53,7 +53,6 @@ const handleBranch = () => {
         console.log({ err })
         resolve({ err })
       }
-      console.log({ branch: stdout.trim() })
       resolve({ branch: stdout.trim() })
     })
   })
@@ -75,7 +74,7 @@ export const getEnv = async () => {
   const maybeErrors = validate(userConfig)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)
-  const { auth, base } = getPrismicData()
+  const { auth, base, ...prismicData } = getPrismicData()
 
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: '5f5b34f06f304800225c4e17' })
@@ -88,6 +87,7 @@ export const getEnv = async () => {
       repo,
       auth,
       base,
+      ...prismicData,
       chromatic,
       client: initClient(base, repo, auth)
     }

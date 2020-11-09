@@ -42,15 +42,15 @@ function MyApp({ Component, pageProps }) {
     if (!data) {
       return
     }
-    // else if (data.clientError) {
-    //   setRenderer({ Renderer: RenderStates.FetchError, payload: data })
-    // }
-    // else if (!data.libraries) {
-    //   setRenderer({ Renderer: RenderStates.LibError, payload: data })
-    // }
-    // else if (!data.libraries.length) {
-    //   setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
-    // }
+    else if (data.clientError) {
+      setRenderer({ Renderer: RenderStates.FetchError, payload: data })
+    }
+    else if (!data.libraries) {
+      setRenderer({ Renderer: RenderStates.LibError, payload: data })
+    }
+    else if (!data.libraries.length) {
+      setRenderer({ Renderer: RenderStates.NoLibraryConfigured, payload: { env: data.env } })
+    }
     else if (data) {
       setRenderer({ Renderer: RenderStates.Default, payload: { ...data } })
       const { libraries, env, configErrors, warnings } = data

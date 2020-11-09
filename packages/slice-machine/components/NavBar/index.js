@@ -19,7 +19,7 @@ const Warnings = ({ theme, warnings, onClick }) => (
 )
 
 const Chromatic = ({ env }) => env.chromatic ? [
-  <Button as="a" href={env.chromatic.storybook} target="_blank" mr={1}>Online Storybbok</Button>,
+  <Button as="a" href={env.chromatic.storybook} target="_blank" mr={1}>Online Storybook</Button>,
   <Button as="a" href={env.chromatic.library} target="_blank" mr={1}>Chromatic preview</Button>
 ] : null
 
