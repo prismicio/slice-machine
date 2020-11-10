@@ -1,5 +1,7 @@
 import { Draggable } from 'react-beautiful-dnd'
 import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
+import { useContext } from 'react';
+import { ConfigContext } from '../../../../../src/config-context';
 
 import {
   Flex,
@@ -17,16 +19,51 @@ import * as widgets from 'lib/widgets'
 import { MdSettings } from "react-icons/md";
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
+
+const toPrismicVueComponentName = (type) => {
+  switch(type) {
+    case "StructuredText": return 'prismic-rich-text';
+    case "Link": return "prismic-link";
+    case "Image": return "prismic-image";
+    case "Embed": return "prismic-embed";
+    // other types / missing components
+    case "Select":
+    case "GeoPoint":
+    case "Text": 
+    case "TimeStamp": 
+    case "Number": 
+    case "Boolean": 
+    case "Color":
+    case "Group":
+    case "UID":
+    case "Date":    
+    // any-more?
+    default: return ""; // what should be a sane default?
+  } 
+}
+
+const toVue = (item, modelFieldName, key) => {
+  const component = toPrismicVueComponentName(item.value.type);
+
+  return component ? `<${component} :field=slice.${modelFieldName}.${key} />` : `slice.${modelFieldName}.${key}`;
+}
+
 const ListItem = ({
   item,
   index,
   deleteItem,
   enterEditMode,
-  modelFieldName
+  modelFieldName,
 }) => {
   const { key } = item
   const { theme } = useThemeUI()
   const { config: { label }, type } = item.value
+  const { env: { framework } } = useContext(ConfigContext);
+
+  const isVue = framework === 'nuxt' || framework === 'vue' ;
+
+  const sliceProperty = isVue ? toVue(item, modelFieldName, key) : `slice.${modelFieldName}.${key}`;
+
   if (!widgets[type].Meta) {
     return (
       <Li><Text>Field type "{type}" not supported</Text></Li>
@@ -40,11 +77,12 @@ const ListItem = ({
         <Li
           ref={provided.innerRef}
           {...provided.draggableProps}
-        >
-          <ItemHeader
+        > 
+          {/* here */}
+          <ItemHeader 
             theme={theme}
             text={label || key}
-            sliceProperty={`slice.${modelFieldName}.${key}`}
+            sliceProperty={sliceProperty}
             iconButtonProps={provided.dragHandleProps}
             WidgetIcon={WidgetIcon}
           />
