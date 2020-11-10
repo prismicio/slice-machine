@@ -7,6 +7,20 @@ import initClient from './client'
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
 
+const getFramework = () => {
+  const pkgFilePath = path.resolve(cwd, 'package.json');
+  const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath);
+
+  const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+
+  const nuxt = deps['nuxt'] && 'nuxt';
+  const next = deps['next'] && 'next';
+  const vue = deps['vue'] && 'vue';
+  const react = deps['react'] && 'react';
+  // const svelte = deps['svelte'] && 'svelte';
+  return nuxt || next || vue || react || 'vanillajs';
+}
+
 const validate = (config) => {
   const errors = {}
   if (!config.apiEndpoint) {
@@ -89,7 +103,8 @@ export const getEnv = async () => {
       base,
       ...prismicData,
       chromatic,
-      client: initClient(base, repo, auth)
+      client: initClient(base, repo, auth),
+      framework: getFramework(),
     }
   }
 }
