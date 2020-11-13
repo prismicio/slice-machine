@@ -1,4 +1,25 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { MdTranslate } from 'react-icons/md';
+
+const Tooltip = ({ open, mouse, ...rest}) => {
+  const width = 100
+  const style = {
+    visibility: open ? 'visible' : 'hidden',
+    opacity: open ? 0.8 : 0,
+    transform: `translate(${mouse.x - (width/2)}px, ${mouse.y - 40}px)`,
+    width: width + 'px',
+    backgroundColor: '#555',
+    color: '#fff',
+    textAlign: 'center',
+    padding: '5px 0',
+    borderRadius: '6px',
+    position: 'absolute',
+    zIndex: 1,
+    transition: 'opacity 0.3s',
+    ...rest.style,
+  };
+  return (<div style={style} {...rest} />);
+}
 
 const CodeBlock = (props) => {
   const style = {
@@ -15,13 +36,50 @@ const CodeBlock = (props) => {
     cursor: 'pointer',
   };
   const ref = useRef(null);
+  const [showTip, toggleTip] = useState(false);
+  const DEFAULT_MSG = "Click to Copy";
+  const [msg, changeMessage] = useState(DEFAULT_MSG);
+  const [coords, setCoords] = useState({x: 0, y: 0 });
 
   const copy = (event) => {
+    console.log(event);
     const text = ref.current.textContent
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).then(() => {
+      changeMessage("Copied :D")
+      setTimeout(() => changeMessage(DEFAULT_MSG), 2000);
+    });
+  };
+
+  const handleMouseEnter = (event) => {
+    const { left, top } = ref.current.getBoundingClientRect();
+    const { clientX, clientY } = event;
+    setCoords({ x: clientX - left, y: clientY - top })
+    changeMessage(DEFAULT_MSG)
+    toggleTip(true);
+  };
+
+  const handleMouseMove = (event) => {
+    const {left, top } = ref.current.getBoundingClientRect();
+    const { clientX, clientY } = event;
+    setCoords({ x: clientX - left, y: clientY - top })
   }
 
-  return (<code style={style} ref={ref} {...props} onClick={copy} title="click to copy" />);
+  return (<div
+    style={{ position: 'relative' }}
+    onClick={copy}
+    onMouseEnter={handleMouseEnter}
+    onMouseMove={handleMouseMove}
+    onMouseLeave={() => {
+      toggleTip(false)
+      changeMessage(DEFAULT_MSG);
+    }}>
+    <Tooltip open={showTip} mouse={coords}>{msg}</Tooltip>
+    <code 
+      style={style}
+      ref={ref}
+      {...props}
+    />
+  </div>);
 }
 
 const Blue = (props) => (<span style={{ color: '#3B41BD'}} {...props} />);
@@ -63,11 +121,9 @@ const formatedDefaultVue = (modelFieldName, key) => (<CodeBlock>
 </CodeBlock>);
 
 const formatedDefaultReact = (modelFieldName, key) => (<CodeBlock>
-  <Blue>{'<span>'}</Blue>
-  <Orange>{'{'}</Orange>
+  {'{() => '}
   <Green>{`slice.${modelFieldName}.${key}`}</Green>
-  <Orange>{'}'}</Orange>
-  <Blue>{'</span>'}</Blue>
+  {'}'}
 </CodeBlock>)
 
 const toVue = (item, modelFieldName, key) => {
@@ -77,11 +133,11 @@ const toVue = (item, modelFieldName, key) => {
 
 const toPrismicReactLink = (modelFieldName, key) => {
   return <CodeBlock>
-    {'{'}
+    {'{() => '}
     <Blue>Prismic.Link.url(</Blue>
     <Green>{`slice.${modelFieldName}.${key}`}</Green>
     <Blue>)</Blue>
-    {"}"}
+    {'}'}
   </CodeBlock>
 }
 
@@ -97,7 +153,7 @@ const toPrismicReactRichText = (modelFieldName, key) => (<CodeBlock>
 </CodeBlock>);
 
 const toPrismicReactDate = (modelFieldName, key) => (<CodeBlock>
-  {'{'}
+  {'{() => '}
   <Blue>Prismic.Date(</Blue>
   <Green>{`slice.${modelFieldName}.${key}`}</Green>
   <Blue>)</Blue>
