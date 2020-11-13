@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Prism from 'prismjs';
 
 const CodeBlock = (props) => {
   const style = {
@@ -21,12 +22,8 @@ const CodeBlock = (props) => {
     navigator.clipboard.writeText(text);
   }
 
-  return (<code style={style} ref={ref} {...props} onClick={copy} title="click to copy" />);
+  return (<code style={style} ref={ref} onClick={copy} title="click to copy" {...props} />);
 }
-
-const Blue = (props) => (<span style={{ color: '#3B41BD'}} {...props} />);
-const Orange = (props) => (<span style={{ color: '#EA6D46'}} {...props} />);
-const Green = (props) => (<span style={{ color: '#3AB97A'}} {...props} />); 
 
 const toPrismicVueComponentName = (type) => {
   switch(type) {
@@ -43,75 +40,50 @@ const toPrismicVueComponentName = (type) => {
   } 
 }
 
-const formatedVue = (component, modelFieldName, key) => (<CodeBlock>
-  &lt;
-  <Blue>{component}</Blue>
-  {' '}
-  <Orange>:field</Orange>
-  =
-  <Green>&quot;slice.{modelFieldName}.{key}&quot;</Green>
-  {' '}
-  /&gt;
-</CodeBlock>);
+const formatedVue = (component, modelFieldName, key) => (
+  `<${component} :field="slice.${modelFieldName}.${key}" />`
+);
 
-const formatedDefaultVue = (modelFieldName, key) => (<CodeBlock>
-  <Blue>{'<span>'}</Blue>
-  <Orange>{'{{'}</Orange>
-  <Green>{`slice.${modelFieldName}.${key}`}</Green>
-  <Orange>{'}}'}</Orange>
-  <Blue>{'</span>'}</Blue>
-</CodeBlock>);
+const formatedDefaultVue = (modelFieldName, key) => (
+  `<span>{{slice.${modelFieldName}.${key}}}</span>`
+);
 
-const formatedDefaultReact = (modelFieldName, key) => (<CodeBlock>
-  <Blue>{'<span>'}</Blue>
-  <Orange>{'{'}</Orange>
-  <Green>{`slice.${modelFieldName}.${key}`}</Green>
-  <Orange>{'}'}</Orange>
-  <Blue>{'</span>'}</Blue>
-</CodeBlock>)
+const formatedDefaultReact = (modelFieldName, key) => (
+  `<span>{slice.${modelFieldName}.${key}}</span>`
+)
 
 const toVue = (item, modelFieldName, key) => {
   const component = toPrismicVueComponentName(item.value.type);
-  return component ? formatedVue(component, modelFieldName, key) : formatedDefaultVue(modelFieldName, key);
+  const code = component ? formatedVue(component, modelFieldName, key) : formatedDefaultVue(modelFieldName, key);
+
+  return (<CodeBlock dangerouslySetInnerHTML={{__html: Prism.highlight(code, Prism.languages.markup, 'markup') }} />);
 }
 
-const toPrismicReactLink = (modelFieldName, key) => {
-  return <CodeBlock>
-    {'{'}
-    <Blue>Prismic.Link.url(</Blue>
-    <Green>{`slice.${modelFieldName}.${key}`}</Green>
-    <Blue>)</Blue>
-    {"}"}
-  </CodeBlock>
-}
+const toPrismicReactLink = (modelFieldName, key) => (
 
-const toPrismicReactRichText = (modelFieldName, key) => (<CodeBlock>
-  &lt;
-  <Blue>Prismic.RichText</Blue>
-  {' '}
-  <Orange>render</Orange>
-  =
-  <Green>{`{slice.${modelFieldName}.${key}}`}</Green>
-  {' '}
-  /&gt;
-</CodeBlock>);
+  Prism.highlight(`() => Prismic.Link.url(slice.${modelFieldName}.${key})`, Prism.languages.js, 'js')
+)
 
-const toPrismicReactDate = (modelFieldName, key) => (<CodeBlock>
-  {'{'}
-  <Blue>Prismic.Date(</Blue>
-  <Green>{`slice.${modelFieldName}.${key}`}</Green>
-  <Blue>)</Blue>
-  {"}"}
-</CodeBlock>);
+const toPrismicReactRichText = (modelFieldName, key) => (
+  Prism.highlight(`<Prismic.RichText render={slice.${modelFieldName}.${key}} />`, Prism.languages.jsx, 'jsx')
+);
 
+const toPrismicReactDate = (modelFieldName, key) => (
+  Prism.highlight(`() => Prismic.Date(slice.${modelFieldName}.${key})`, Prism.languages.js, 'js')
+)
 
-const toReact  = (item, modelFieldName, key) => {
+const toReactComponent = (item, modelFieldName, key) => {
   switch(item.value.type) {
     case "Link": return toPrismicReactLink(modelFieldName, key);
     case "StructuredText": return toPrismicReactRichText(modelFieldName, key)
     case "Date": return toPrismicReactDate(modelFieldName, key)
     default: return formatedDefaultReact(modelFieldName, key);
   }
+}
+
+const toReact = (item, modelFieldName, key) => {
+  const code = toReactComponent(item, modelFieldName, key);
+  return (<CodeBlock dangerouslySetInnerHTML={{__html: code }} />);
 }
 
 const hint = (framework, item, modelFieldName, key) => { 

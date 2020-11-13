@@ -19,6 +19,7 @@ import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 import 'rc-drawer/assets/index.css'
 import 'lib/builder/layout/Drawer/index.css'
 import 'src/css/modal.css'
+import 'prismjs/themes/prism.css'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
