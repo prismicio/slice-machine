@@ -6,7 +6,6 @@ import { ConfigContext } from '../../../../../src/config-context';
 import {
   Flex,
   Text,
-  theme,
   useThemeUI
 } from 'theme-ui'
 
@@ -19,34 +18,7 @@ import * as widgets from 'lib/widgets'
 import { MdSettings } from "react-icons/md";
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-
-const toPrismicVueComponentName = (type) => {
-  switch(type) {
-    case "StructuredText": return 'prismic-rich-text';
-    case "Link": return "prismic-link";
-    case "Image": return "prismic-image";
-    case "Embed": return "prismic-embed";
-    // other types / missing components
-    case "Select":
-    case "GeoPoint":
-    case "Text": 
-    case "TimeStamp": 
-    case "Number": 
-    case "Boolean": 
-    case "Color":
-    case "Group":
-    case "UID":
-    case "Date":    
-    // any-more?
-    default: return ""; // what should be a sane default?
-  } 
-}
-
-const toVue = (item, modelFieldName, key) => {
-  const component = toPrismicVueComponentName(item.value.type);
-
-  return component ? `<${component} :field=slice.${modelFieldName}.${key} />` : `slice.${modelFieldName}.${key}`;
-}
+import hint from './Hints';
 
 const ListItem = ({
   item,
@@ -60,9 +32,7 @@ const ListItem = ({
   const { config: { label }, type } = item.value
   const { env: { framework } } = useContext(ConfigContext);
 
-  const isVue = framework === 'nuxt' || framework === 'vue' ;
-
-  const sliceProperty = isVue ? toVue(item, modelFieldName, key) : `slice.${modelFieldName}.${key}`;
+  const sliceProperty = hint(framework, item, modelFieldName, key);
 
   if (!widgets[type].Meta) {
     return (
