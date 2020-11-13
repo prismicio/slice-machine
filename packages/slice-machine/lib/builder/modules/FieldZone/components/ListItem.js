@@ -26,15 +26,11 @@ const ListItem = ({
   deleteItem,
   enterEditMode,
   modelFieldName,
-  Model,
 }) => {
   const { key } = item
   const { theme } = useThemeUI()
   const { config: { label }, type } = item.value
-  // const { env: { framework } } = useContext(ConfigContext);
-
-  const framework = Model.info.extension;
-
+  const { env: { framework } } = useContext(ConfigContext);
 
   const sliceProperty = hint(framework, item, modelFieldName, key);
 

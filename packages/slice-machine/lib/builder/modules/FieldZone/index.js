@@ -36,8 +36,7 @@ const FieldZone = ({
   onDragEnd,
   onCancelNewField,
   onSaveNewField,
-  onDeleteItem,
-  Model,
+  onDeleteItem
 }) => {
   const { theme } = useThemeUI()
 
@@ -88,14 +87,8 @@ const FieldZone = ({
                       modelFieldName={modelFieldName}
                       enterEditMode={enterEditMode}
                       deleteItem={_onDeleteItem}
-                      Model={Model}
                     />
                   ))}
-                  <ListItem item={{ key: 'any-key', value: {type: "Text", config: { label: ""} } }} Model={{ info: { extension: 'react' }}} modelFieldName="any" />
-                  <ListItem item={{ key: 'date-key', value: {type: "Date", config: { label: ""} } }}  Model={{ info: { extension: 'react', value: {type: "Text", config: { label: ""} } }}} modelFieldName="date" />
-                  <ListItem item={{ key: 'link-key', value: {type: "Link", config: { label: ""} } }}  Model={{ info: { extension: 'react' }}} modelFieldName="link" />
-                  <ListItem item={{ key: 'richtext-key', value: {type: "StructuredText", config: { label: ""} }}}  Model={{ info: { extension: 'react' }}} modelFieldName="richtext" />
-
                   {provided.placeholder}
                   {newField && (
                     <NewField {...newField} onCancelNewField={onCancelNewField} onSave={onSaveNewField} />
