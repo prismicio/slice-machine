@@ -27,10 +27,13 @@ const EMPTY_THUMBNAIL = {
 }
 
 const thumbText = ({ width, height } = {}, allowAuto) => {
-  if (!width || !height) {
-    return allowAuto ? 'auto' : '...'
+  if (allowAuto && !width && !height) {
+    return 'auto'
   }
-  return `${width}x${height}`
+  if (width || height) {
+    return `${width ? width : 'auto'}x${height ? height : 'auto'}`
+  }
+  return '...'
 }
 
 const Form = (props) => {
@@ -140,17 +143,25 @@ const Form = (props) => {
 
 FormFields.constraint = {
   validate: () => yup.object().defined().shape({
-    width: yup.number(),
-    height: yup.number(),
+    width: yup.number().nullable(),
+    height: yup.number().nullable(),
   })
 }
 
 FormFields.thumbnails = {
   validate: () => yup.array().defined().of(
-    yup.object().shape({
-      name: yup.string().required('field is required'),
-      width: yup.number().required('field is required'),
-      height: yup.number().required('field is required'),
+    yup.object().test({
+      name: 'Thumbnails',
+      message: 'Must set name and width or height at minimum',
+      test: function(value) {
+        if (!value.name) {
+          return false
+        }
+        if (!value.width && !value.height) {
+          return false
+        }
+        return true
+      }
     })
   )
 }

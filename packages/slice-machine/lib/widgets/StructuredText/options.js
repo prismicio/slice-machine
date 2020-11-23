@@ -1,3 +1,6 @@
+import { FiLink2, FiImage, FiCode, FiList } from 'react-icons/fi'
+import { BsListOl } from 'react-icons/bs'
+
 const Icon = (v) => ({ size }) =>
    <span style={{ fontSize: size }}>{v}</span>
 
@@ -34,8 +37,36 @@ const options = [{
   label: 'H6',
   icon: Icon('h6'),
 }, {
+  value: 'strong',
+  label: 'Strong',
+  icon: Icon(<b>b</b>),
+}, {
+  value: 'em',
+  label: 'em',
+  icon: Icon(<em style={{ fontFamily: 'serif' }}>I</em>),
+}, {
+  value: 'hyperlink',
+  label: 'hyperlink',
+  icon: Icon(<FiLink2/>),
+}, {
+  value: 'image',
+  label: 'image',
+  icon: Icon(<FiImage />),
+}, {
+  value: 'embed',
+  label: 'embed',
+  icon: Icon(<FiCode />),
+}, {
+  value: 'list',
+  label: 'list',
+  icon: Icon(<FiList />),
+}, {
+  value: 'o',
+  label: 'o',
+  icon: Icon(<BsListOl />),
+}, {
   value: 'rtl',
-  label: 'RTL',
+  label: 'rtl',
   icon: Icon('rtl'),
 }]
 

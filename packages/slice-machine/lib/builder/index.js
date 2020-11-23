@@ -2,10 +2,14 @@ import { mutate } from 'swr'
 import { useState, useContext, useEffect } from 'react'
 import { ModelContext } from 'src/model-context'
 import { ConfigContext } from 'src/config-context'
+import { useIsMounted } from 'react-tidy'
+
+import Header from './layout/Header'
 
 import {
   Box,
   Flex,
+  Button
 } from 'theme-ui'
 
 import {
@@ -32,7 +36,7 @@ const createStorybookUrls = (storybook, componentInfo, variation = 'default-slic
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
   const Model = useContext(ModelContext)
-  const { env: { storybook }, warnings  } = useContext(ConfigContext)
+  const { env: { storybook }, warnings } = useContext(ConfigContext)
   const {
     info,
     isTouched,
@@ -42,6 +46,7 @@ const Builder = ({ openPanel }) => {
     resetInitialModel,
   } = Model
 
+  const isMounted = useIsMounted()
   const [data, setData] = useState({
     imageLoading: false,
     loading: false,
@@ -78,7 +83,7 @@ const Builder = ({ openPanel }) => {
       }
       const newInfo = await res.json()
       hydrate(resetInitialModel(value, newInfo))
-      mutate('/api/components')
+      mutate('/api/state')
       setData({
         loading: false,
         done: true,
@@ -90,7 +95,9 @@ const Builder = ({ openPanel }) => {
 
   useEffect(() => {
     if (isTouched) {
-      setData({ loading: false, done: false, error: null })
+      if (isMounted) {
+        setData({ loading: false, done: false, error: null })
+      }
     }
   }, [isTouched])
 
@@ -99,11 +106,15 @@ const Builder = ({ openPanel }) => {
     if (data.done) {
       setDisplaySuccess(true)
       setTimeout(() => {
-        setDisplaySuccess(false)
-        setData({ ...data, done: false })
+        if (isMounted) {
+          setDisplaySuccess(false)
+          setData({ ...data, done: false })
+        }
       }, 2500)
     } else {
-      setDisplaySuccess(false)
+      if (isMounted) {
+        setDisplaySuccess(false)
+      }
     }
   }, [data])
 
@@ -129,7 +140,7 @@ const Builder = ({ openPanel }) => {
       }
       const newInfo = await res.json()
       hydrate(resetInitialModel(value, newInfo))
-      mutate('/api/components')
+      mutate('/api/state')
       setData({
         loading: false,
         done: true,
@@ -167,37 +178,14 @@ const Builder = ({ openPanel }) => {
         error: null,
         message: 'New screenshot added!'
       })
+      mutate('/api/state')
       hydrate(appendInfo(json))
     })
   }
 
   return (
     <Box>
-      <Flex
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          margin: '0 auto',
-          maxWidth: 1224,
-          mx: 'auto',
-          px: 3,
-          pt: 4,
-        }}
-      >
-
-        <Box as="section" sx={{
-          flexGrow: 99999,
-          flexBasis: 0,
-          minWidth: 320,
-        }}>
-
-          <Box as="h2" sx={{ pb:3}}>
-            {info.sliceName}
-          </Box>
-          <hr />
-
-        </Box>
-      </Flex>
+      <Header info={info} Model={Model} />
 
       <Success data={data} display={displaySuccess} />
 
@@ -224,15 +212,6 @@ const Builder = ({ openPanel }) => {
           <PreviewFields Model={Model} variation={variation} />
         </Box>
       </FlexEditor>
-      {/* <Drawer
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      /> */}
-      {/* {
-        data.done ? (
-          <SuccessModal previewUrl={info.previewUrl} />
-        ) : null
-      } */}
     </Box>
   )
 }

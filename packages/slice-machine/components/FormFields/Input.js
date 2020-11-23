@@ -1,9 +1,7 @@
-import { Field } from 'formik'
 import { Box, Label, Input, Text } from 'theme-ui'
 
 const FormFieldInput = ({
-  sx={},
-  variant,
+  sx = {},
   variation,
   field,
   meta = {},

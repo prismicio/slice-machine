@@ -30,3 +30,5 @@ app.use('/:lib/:sliceName', async function sliceRoute(_, res) {
 
 const port = process.env.PORT || 9000
 app.listen(port, () => console.log(`Now running on http://localhost:${port} !`));
+
+process.on('SIGINT', () => { console.log("\nServer killed manually. Exiting..."); process.exit(); });

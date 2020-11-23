@@ -29,7 +29,7 @@ const createOrUpdate = async ({
 
 export default async function handler(query) {
   const { sliceName, from } = query
-  const { env } = getEnv()
+  const { env } = await getEnv()
   const client = initClient(env.repo, env.auth)
 
   const { slices, err } = await getSlices()

@@ -21,6 +21,7 @@ export const slice = yup.object().shape({
   sliceName: yup.string().required(),
 }).required()
 
+/** This is not running at the moment */
 export const libraries = yup.array().min(1).of(
   yup.array().test({
     name: 'example text',

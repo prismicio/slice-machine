@@ -2,7 +2,6 @@ import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
 import {
   createInitialValues,
-  createValidationSchema
 } from 'lib/forms'
 
 /**
@@ -71,6 +70,6 @@ export default {
   Meta,
   FormFields,
   Form,
-  create
-
+  create,
+  TYPE_NAME: 'Link'
 }

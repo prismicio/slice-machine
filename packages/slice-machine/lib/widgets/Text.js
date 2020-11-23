@@ -12,7 +12,7 @@ import * as yup from 'yup'
  */
 
 
-import { removeProp } from '../utils'
+import { removeProp, createDefaultHandleMockContentFunction } from '../utils'
 import { DefaultFields } from "../forms/defaults"
 import { createInitialValues, createValidationSchema } from "../forms"
 
@@ -20,8 +20,9 @@ const TYPE_NAME = 'Text'
 
 const FormFields = DefaultFields
 
-const createMock = (maybeMock, { label, placeholder }) =>
-  maybeMock || `A text of type "${label}" that conveys ${placeholder}`
+const createMock = ({ label, placeholder }) => `A text of type "${label}" that conveys ${placeholder}`
+
+const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const create = (apiId) => ({
   ...createInitialValues(DefaultFields),
@@ -42,6 +43,7 @@ const Meta = {
 export default {
   create,
   createMock,
+  handleMockContent,
   Meta,
   schema,
   TYPE_NAME,

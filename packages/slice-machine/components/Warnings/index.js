@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, useThemeUI } from 'theme-ui'
 import { AiFillWarning } from 'react-icons/ai'
-import NotConnected from './NotConnected'
+import { NewVersionAvailable, ClientError, NotConnected } from './Errors'
 import { StorybookNotInstalled, StorybookNotRunning, StorybookNotInManifest } from './Storybook'
 import ConfigErrors from '../ConfigErrors'
 
@@ -11,6 +11,8 @@ const Renderers = {
   [warningStates.STORYBOOK_NOT_IN_MANIFEST]: StorybookNotInManifest,
   [warningStates.STORYBOOK_NOT_INSTALLED]: StorybookNotInstalled,
   [warningStates.STORYBOOK_NOT_RUNNING]: StorybookNotRunning,
+  [warningStates.CLIENT_ERROR]: ClientError,
+  [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable
 }
 
 const Warnings = ({ list, configErrors, priority }) => {
@@ -33,10 +35,11 @@ const Warnings = ({ list, configErrors, priority }) => {
       </Flex>
       <Box p={3} sx={{ overflow: 'auto' }}>
         {
-          orderedList.map(type => {
-            const Component = Renderers[type]
-            console.log({ Component, type })
-            return <Component key={type} />
+          orderedList.map(typeOrTuple => {
+            const [type, payload] = Array.isArray(typeOrTuple) ? typeOrTuple : [typeOrTuple, null]
+            const [errorName, errorType] = type.split(':')
+            const Component = Renderers[errorName]
+            return <Component key={type} errorType={errorType} {...payload} />
           })
         }
         {

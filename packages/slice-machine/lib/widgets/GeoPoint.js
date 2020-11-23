@@ -1,5 +1,5 @@
 import { MdPlace } from 'react-icons/md'
-import { createDefaultWidgetValues } from '../utils'
+import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } from '../utils'
 
 /** : {
   "type" : "GeoPoint",
@@ -10,7 +10,9 @@ import { createDefaultWidgetValues } from '../utils'
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('GeoPoint')
 
-const createMock = (maybeMock) => maybeMock || ``
+const createMock = () => ``
+
+const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const Meta = {
   icon: MdPlace,
@@ -21,6 +23,7 @@ const Meta = {
 export default {
   createMock,
   create,
+  handleMockContent,
   FormFields,
   TYPE_NAME,
   schema,

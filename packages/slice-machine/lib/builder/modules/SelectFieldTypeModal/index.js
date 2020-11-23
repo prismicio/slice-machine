@@ -14,6 +14,20 @@ import FieldTypeCard from './FieldTypeCard'
 
 Modal.setAppElement("#__next");
 
+const CardsOrder = [
+  `${Widgets.StructuredText.TYPE_NAME}`,
+  `${Widgets.Image.TYPE_NAME}`,
+  `${Widgets.Link.TYPE_NAME}`,
+  `${Widgets.Select.TYPE_NAME}`,
+  `${Widgets.Boolean.TYPE_NAME}`,
+  `${Widgets.Date.TYPE_NAME}`,
+  `${Widgets.Timestamp.TYPE_NAME}`,
+  `${Widgets.Embed.TYPE_NAME}`,
+  `${Widgets.Number.TYPE_NAME}`,
+  `${Widgets.GeoPoint.TYPE_NAME}`,
+  `${Widgets.Text.TYPE_NAME}`,
+]
+
 const SelectFieldTypeModal = ({
   data,
   close,
@@ -55,36 +69,21 @@ const SelectFieldTypeModal = ({
       >
         <FlexGrid>
           {
-            Object.entries(Widgets).map(([type, widget]) => {
-              const {
-                Meta,
-                create
-              } = widget
-              if (Meta && create) { // prov
-                return (
-                  <Col key={type}>
+            CardsOrder.map((typeName) => {
+              const widget = Widgets[typeName]
+              const { Meta } = widget
+              return (
+                  <Col key={typeName}>
                     <FieldTypeCard
                       {...Meta}
-                      onSelect={() => onSelect(zone, type) && close()}
+                      onSelect={() => onSelect(zone, typeName) && close()}
                     />
                   </Col>
                 )
-              }
-              return null
             })
           }
         </FlexGrid>
       </Card>
-      {/* <Flex
-        sx={{
-          borderBottom: "1px solid #F1F1F1",
-          justifyContent: "space-between",
-        }}
-        mb={4}
-      >
-        <Heading>Select a field type</Heading>
-        <Close onClick={close} />
-      </Flex> */}
     </Modal>
   )
 }

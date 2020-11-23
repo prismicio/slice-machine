@@ -10,7 +10,7 @@ import { MdDateRange } from 'react-icons/md'
   } */
 
 
-import { removeProp } from '../utils'
+import { removeProp, createDefaultHandleMockContentFunction } from '../utils'
 import { DefaultFields } from "../forms/defaults"
 import { createInitialValues, createValidationSchema } from '../forms'
 
@@ -21,7 +21,9 @@ const FormFields = DefaultFields
 const randomDate = (start = new Date(2012, 0, 1), end = new Date()) =>
   new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 
-const createMock = (maybeMock) => maybeMock || randomDate()
+const createMock = () => randomDate()
+
+const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const create = (apiId) => ({
   ...createInitialValues(DefaultFields),
@@ -41,8 +43,10 @@ const Meta = {
 
 export default {
   createMock,
+  handleMockContent,
   create,
   schema,
   FormFields,
+  TYPE_NAME,
   Meta
 }

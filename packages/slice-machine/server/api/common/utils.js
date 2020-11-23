@@ -7,6 +7,10 @@ export const generatePreview = async ({ browser, screenshotUrl, pathToFile }) =>
     const page = await browser.newPage()
     await page.goto(screenshotUrl)
     await delay(600)
+    await page.setViewport({
+      width: 1200,
+      height: 800,
+    })
     await page.waitForSelector('#root')
     const element = await page.$('#root');
     await element.screenshot({ path: pathToFile })

@@ -26,8 +26,8 @@ const ListItem = ({
 }) => {
   const { key } = item
   const { theme } = useThemeUI()
-  const { config: { label }, type } = item.value
-  if (!widgets[type].Meta) {
+  const { config, type } = item.value
+  if (!widgets[type] || !widgets[type].Meta) {
     return (
       <Li><Text>Field type "{type}" not supported</Text></Li>
     )
@@ -43,7 +43,7 @@ const ListItem = ({
         >
           <ItemHeader
             theme={theme}
-            text={label || key}
+            text={config.label || key}
             sliceProperty={`slice.${modelFieldName}.${key}`}
             iconButtonProps={provided.dragHandleProps}
             WidgetIcon={WidgetIcon}

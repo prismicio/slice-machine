@@ -11,14 +11,8 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "title": {
-          "config": {
-            "label": "My cool title",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
-          },
-          "type": "StructuredText"
+        "unsup": {
+          "type": "Unknown"
         },
         "image": {
           "config": {
@@ -37,97 +31,104 @@
           },
           "type": "Image"
         },
-        "dsqd": {
+        "ownContent": {
           "config": {
             "label": "",
             "placeholder": "",
-            "options": [
-              "left",
-              "rght"
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          },
+          "type": "StructuredText"
+        },
+        "title": {
+          "config": {
+            "label": "My cool title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+          },
+          "type": "StructuredText"
+        },
+        "text": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          },
+          "type": "StructuredText"
+        },
+        "multi": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,heading2"
+          },
+          "type": "StructuredText"
+        },
+        "ownContent2": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading5"
+          },
+          "type": "StructuredText"
+        },
+        "ownContent3": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading3"
+          },
+          "type": "StructuredText"
+        },
+        "image2": {
+          "config": {
+            "label": "",
+            "constraint": {},
+            "thumbnails": [
+              {
+                "name": "square",
+                "width": 300,
+                "height": 300
+              }
             ]
           },
-          "type": "Select"
+          "type": "Image"
         },
-        "ffff": {
-          "type": "GeoPoint",
+        "bool": {
+          "type": "Boolean",
           "config": {
             "label": "",
-            "id": "ffff",
-            "placeholder": ""
-          }
-        },
-        "fffff": {
-          "type": "Link",
-          "config": {
-            "label": "",
-            "id": "fffff",
+            "id": "bool",
             "placeholder": "",
-            "allowTargetBlank": true
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": true
           }
         },
-        "gfddgdfg": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "id": "gfddgdfg",
-            "placeholder": ""
-          }
-        },
-        "hhgfhfgh": {
-          "type": "Embed",
-          "config": {
-            "label": "",
-            "id": "hhgfhfgh",
-            "placeholder": ""
-          }
-        },
-        "fghhhfgh": {
+        "image3": {
           "type": "Image",
           "config": {
-            "id": "fghhhfgh",
+            "id": "image3",
             "label": "",
             "constraint": {},
             "thumbnails": []
           }
         },
-        "hfgfgh": {
-          "type": "Number",
+        "color": {
+          "type": "Color",
           "config": {
             "label": "",
-            "id": "hfgfgh",
-            "placeholder": ""
-          }
-        },
-        "ghjhghjghj": {
-          "type": "StructuredText",
-          "config": {
-            "label": "",
-            "id": "ghjhghjghj",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,rtl"
-          }
-        },
-        "hbjnkdddd": {
-          "type": "Timestamp",
-          "config": {
-            "label": "",
-            "id": "hbjnkdddd",
+            "id": "color",
             "placeholder": ""
           }
         }
       },
-      "items": {
-        "fsdkdsf": {
-          "type": "Image",
-          "config": {
-            "id": "fsdkdsf",
-            "label": "",
-            "constraint": {},
-            "thumbnails": []
-          }
-        }
-      }
+      "items": {}
     }
   ]
 }

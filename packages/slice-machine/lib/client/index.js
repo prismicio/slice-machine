@@ -15,7 +15,6 @@ const createFetcher = (apiUrl, repo, auth) => (body, action = '', method = 'get'
     repository: repo,
     Authorization: `Bearer ${auth}`
   }
-  console.log({ apiUrl, repo, auth })
   return fetch(new URL(action, apiUrl), {
     headers,
     method,

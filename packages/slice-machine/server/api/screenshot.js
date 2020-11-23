@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer'
 import { generatePreview } from './common/utils'
 
 export default async function handler({ from, sliceName, screenshotUrl }) {
-  const { env } = getEnv()
+  const { env } = await getEnv()
   const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
@@ -16,5 +16,4 @@ export default async function handler({ from, sliceName, screenshotUrl }) {
   }
   await browser.close()
   return { previewUrl: base64Img.base64Sync(pathToFile) }
-  return 
 }

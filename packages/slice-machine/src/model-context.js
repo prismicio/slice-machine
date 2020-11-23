@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useIsMounted } from 'react-tidy'
+
 import createModel from '../lib/model'
 
 export const ModelContext = React.createContext([])
 
 export default function ModelProvider({ children, initialModel, info }) {
+  const isMounted = useIsMounted()
   const [Model, setModel] = useState(createModel(initialModel, info))
   
   const hydrate = (fn) => {
     if (fn && typeof fn === 'function') {
       fn()
     }
-    setModel({ ...Model, ...Model.get() })
+    if (isMounted) {
+      setModel({ ...Model, ...Model.get() })
+    }
   }
 
   const value = {

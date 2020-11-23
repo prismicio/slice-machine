@@ -27,3 +27,13 @@ export const createDefaultWidgetValues = (TYPE_NAME) => ({
     id: apiId
   })
 })
+
+export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, expectedType = 'string') => {
+  return function handleMockContent(mockContent, config) {
+    if (typeof mockContent !== expectedType) {
+      console.error(`Mocks for type "${TYPE_NAME}" expect their "content" property to be of type "${expectedType}". Received: ${typeof mockContent}.`)
+      return widget.createMock(config)
+    }
+    return mockContent
+  }
+}

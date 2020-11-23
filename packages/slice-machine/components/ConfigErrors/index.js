@@ -26,12 +26,12 @@ const ConfigErrors = ({ errors }) => (
     )}
   >
     {
-      Object.entries(errors).map(([key, value]) => console.log(Object.entries(errors)) || (
+      Object.entries(errors).map(([key, value]) => (
         <Li Component={Box} key={key}>
           <Text>- <b>{key}</b></Text>
           <Text>{value.message}</Text>
           {
-            value.run ? <Text mt={1}>Try running: <Text as="pre" variant="pre">{value.run}</Text></Text> : null
+            value.run ? <Text mt={1}>Try running: <Text variant="pre">{value.run}</Text></Text> : null
           }
           {
             value.do ? <Text mt={1}>Todo: {value.do}</Text> : null

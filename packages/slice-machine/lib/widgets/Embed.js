@@ -1,5 +1,5 @@
 import { FiCode } from 'react-icons/fi'
-import { createDefaultWidgetValues } from '../utils'
+import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } from '../utils'
 
 /**  {
   "type" : "Embed",
@@ -11,7 +11,9 @@ import { createDefaultWidgetValues } from '../utils'
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Embed')
 
-const createMock = (maybeMock) => maybeMock || ``
+const createMock = () => `https://www.youtube.com/watch?v=7SgFFT1Bv78&ab_channel=Prismic`
+
+const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const Meta = {
   icon: FiCode,
@@ -22,6 +24,7 @@ const Meta = {
 export default {
   createMock,
   create,
+  handleMockContent,
   FormFields,
   TYPE_NAME,
   schema,

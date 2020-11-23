@@ -1,11 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 import { exec } from 'child_process'
-import { getPrismicData } from './auth'
 import { parseDomain, fromUrl } from 'parse-domain'
-import initClient from './client'
+
+import { getPrismicData } from '../auth'
+import initClient from '../client'
+import createComparator from './semver'
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
+
+const compareNpmVersions = createComparator()
 
 const validate = (config) => {
   const errors = {}
@@ -14,13 +18,6 @@ const validate = (config) => {
       message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',
       example: 'http://my-project.prismic.io/api/v2',
       run: 'npx prismic-cli sm --setup'
-    }
-  }
-  if (!config.storybook) {
-    errors.storybook = {
-      message: 'Expects a property "storybook" which points to local Storybook.',
-      example: 'http://localhost:8888',
-      run: 'npx prismic-cli sm --add-storybook'
     }
   }
   try {
@@ -50,7 +47,7 @@ const handleBranch = () => {
   return new Promise(resolve => {
     exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
       if (err) {
-        console.log({ err })
+        console.log('[info] could not get git branch')
         resolve({ err })
       }
       resolve({ branch: stdout.trim() })
@@ -59,7 +56,7 @@ const handleBranch = () => {
 }
 
 const createChromaticUrls = ({ branch, appId, err }) => {
-  if (err) {
+  if (err || !branch || !appId) {
     return null
   }
   return {
@@ -77,7 +74,9 @@ export const getEnv = async () => {
   const { auth, base, ...prismicData } = getPrismicData()
 
   const branchInfo = await handleBranch()
-  const chromatic = createChromaticUrls({ ...branchInfo, appId: '5f5b34f06f304800225c4e17' })
+  const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
+
+  const updateAvailable = await compareNpmVersions({ cwd })
 
   return {
     errors: maybeErrors,
@@ -89,6 +88,7 @@ export const getEnv = async () => {
       base,
       ...prismicData,
       chromatic,
+      updateAvailable,
       client: initClient(base, repo, auth)
     }
   }

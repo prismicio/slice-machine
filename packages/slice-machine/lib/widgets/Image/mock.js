@@ -61,20 +61,38 @@ const images = [
   'https://images.prismic.io/important-sm-images/26830a3b-29e9-4cd2-84ca-c7313bd92d00_3Ip5Hox_Cro.jpg',
 ]
 
-const _createMock = (src, { width = 900, height = 500 } = { width: 900, height: 500 }, thumbnails = []) => ({
-  dimensions: { width, height },
-  alt: 'Placeholder image',
-  copyright: null,
-  url: src || `${images[Math.floor(Math.random() * images.length)]}?w=${width}&h=${height}`,
-  ...thumbnails.reduce((acc, e) => ({
-    ...acc,
-    [e.name]: _createMock(src, { width: e.width, height: e.height })
-  }), [])
-})
+const createImageArray = ({ src, thumbs = [] }, constraint = {}, thumbnails = []) => {
+  const { width = 900, height = 500 } = constraint
+  return {
+    dimensions: { width, height },
+    alt: 'Placeholder image',
+    copyright: null,
+    url: src || `${images[Math.floor(Math.random() * images.length)]}?w=${width}&h=${height}&fit=crop`,
+    ...thumbnails.reduce((acc, e, i) => ({
+      ...acc,
+      [e.name]: createImageArray({ src: thumbs[i] || src }, { width: e.width, height: e.height })
+    }), [])
+  }
+}
 
-export const fromUser = (...args) =>
-  typeof mock === 'object' ?
-  mock :
-  _createMock(...args)
+export const handleMockContent = (mockContent, { constraint, thumbnails }) => {
+  if (!Array.isArray(mockContent)) {
+    const args = [
+      { src: typeof mockContent === 'string' ? mockContent : mockContent.src || mockContent.url },
+      mockContent.constraint || constraint,
+      mockContent.thumbnails || thumbnails
+    ]
+    return createImageArray(...args)
+  }
+  const args = [
+      {
+        src: mockContent[0],
+        thumbs: mockContent.slice(1)
+      },
+      constraint,
+      thumbnails
+    ]
+    return createImageArray(...args)
+}
 
-export const createMock = (maybeMock, model) => maybeMock ? fromUser(mock) : _createMock(null, model.constraint, model.thumbnails)
+export const createMock = (model) => createImageArray({ src: null }, model.constraint, model.thumbnails)

@@ -9,7 +9,7 @@ import {
 
 import { removeProp } from '../../utils'
 
-import { createMock, fromUser } from './mock'
+import { createMock, handleMockContent } from './mock'
 
 /** 
  * {
@@ -29,11 +29,6 @@ import { createMock, fromUser } from './mock'
       "label": "Icon Image"
     }
   } */
-
-
-  /**
-   * https://source.unsplash.com/random/800x600
-   */
 
 const create = (apiId) => ({
   ...createInitialValues(FormFields),
@@ -60,7 +55,8 @@ export default {
   Form,
   schema,
   create,
+  handleMockContent,
   createMock,
   FormFields,
-  fromUser
+  TYPE_NAME: 'Image'
 }

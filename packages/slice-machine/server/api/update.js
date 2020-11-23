@@ -10,7 +10,7 @@ import { getEnv } from '../../lib/env'
 import mock from '../../lib/mock'
 
 export default async function handler(req) {
-  const { env } = getEnv()
+  const { env } = await getEnv()
   const { sliceName, from, model: strModel, screenshotUrl } = req.query
 
   const model = JSON.parse(atob(strModel))
@@ -25,13 +25,13 @@ export default async function handler(req) {
   const mockPath = path.join(rootPath, 'mocks.json')
   const modelPath = path.join(rootPath, 'model.json')
 
-  const mockedSlice = mock(sliceName, model)
+  const mockedSlice = await mock(sliceName, model)
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 
   const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {
     return {

@@ -1,5 +1,5 @@
 import { MdColorLens } from 'react-icons/md'
-import { createDefaultWidgetValues } from '../utils'
+import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } from '../utils'
 
 /** {
   "type" : "Color",
@@ -7,8 +7,6 @@ import { createDefaultWidgetValues } from '../utils'
     "label" : "color"
   }
 } */
-
-
 
 const Meta = {
   icon: MdColorLens,
@@ -18,10 +16,13 @@ const Meta = {
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Color')
 
-const createMock = (maybeMock) => maybeMock || `#${Math.floor(Math.random()*16777215).toString(16)}`
+const createMock = () => `#${Math.floor(Math.random()*16777215).toString(16)}`
+
+const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 export default {
   createMock,
+  handleMockContent,
   create,
   FormFields,
   TYPE_NAME,
