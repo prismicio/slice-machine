@@ -36,7 +36,8 @@ const FieldZone = ({
   onDragEnd,
   onCancelNewField,
   onSaveNewField,
-  onDeleteItem
+  onDeleteItem,
+  showHints,
 }) => {
   const { theme } = useThemeUI()
 
@@ -61,7 +62,8 @@ const FieldZone = ({
             alignItems: 'center',
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
-            borderBottom: t => `1px solid ${t.colors.borders}`
+            borderBottom: t => `1px solid ${t.colors.borders}`,
+            borderTop: t => `1px solid ${t.colors.borders}`
           }}
         >
           <ReactTooltip type="dark" multiline place="right" />
@@ -87,6 +89,7 @@ const FieldZone = ({
                       modelFieldName={modelFieldName}
                       enterEditMode={enterEditMode}
                       deleteItem={_onDeleteItem}
+                      showHints={showHints}
                     />
                   ))}
                   {provided.placeholder}

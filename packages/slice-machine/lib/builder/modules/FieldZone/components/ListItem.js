@@ -26,13 +26,14 @@ const ListItem = ({
   deleteItem,
   enterEditMode,
   modelFieldName,
+  showHints,
 }) => {
   const { key } = item
   const { theme } = useThemeUI()
   const { config: { label }, type } = item.value
   const { env: { framework } } = useContext(ConfigContext);
 
-  const sliceProperty = hint(framework, item, modelFieldName, key);
+  const sliceProperty = showHints ? hint(framework, item, modelFieldName, key) : `slice.${modelFieldName}.${key}`
 
   if (!widgets[type].Meta) {
     return (

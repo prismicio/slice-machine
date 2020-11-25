@@ -2,7 +2,8 @@ import { mutate } from 'swr'
 import { useState, useContext, useEffect } from 'react'
 import { ModelContext } from 'src/model-context'
 import { ConfigContext } from 'src/config-context'
-
+import { Label, Checkbox, Text } from 'theme-ui';
+ 
 import {
   Box,
   Flex,
@@ -170,6 +171,9 @@ const Builder = ({ openPanel }) => {
       hydrate(appendInfo(json))
     })
   }
+  const DEFAULT_CHECKED = false;
+  const [showHints, setShowHints] = useState(DEFAULT_CHECKED);
+  const onToggleHints = () => setShowHints(!showHints);
 
   return (
     <Box>
@@ -200,7 +204,6 @@ const Builder = ({ openPanel }) => {
       </Flex>
 
       <Success data={data} display={displaySuccess} />
-
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={() => (
@@ -220,9 +223,32 @@ const Builder = ({ openPanel }) => {
           />
         )}
       >
-        <Box>
-          <PreviewFields Model={Model} variation={variation} />
+
+        <Box sx={{ padding: '0px 24px', border: t => `1px solid ${t.colors.borders}`}}>
+          <Box sx={{
+            // display: 'block',
+            width: '100%',
+            padding: '18px 10px',
+            margin: 0,
+            justifyContent: 'flex-end'
+          }}>
+              <Label variant="hint" sx={{ justifyContent: 'flex-end', padding: '8px' }}>
+                Show how to render field
+                <Checkbox
+                  sx={{ margin: '0 8px' }}
+                  defaultChecked={DEFAULT_CHECKED}
+                  onChange={onToggleHints}
+                />
+              </Label>
+          </Box>
+        
+          <PreviewFields
+            Model={Model}
+            variation={variation}
+            showHints={showHints}
+          />
         </Box>
+
       </FlexEditor>
       {/* <Drawer
         isOpen={isOpen}

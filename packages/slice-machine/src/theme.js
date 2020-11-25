@@ -25,7 +25,8 @@ export default () => ({
       orange: '#EA6D46',
       green: '#3AB97A',
     },
-    link: 'primary',
+    link: '#5163BA',
+    choggleBox: '#5163BA',
 
     modes: {
       dark: {
@@ -47,6 +48,7 @@ export default () => ({
           green: '#3AB97A',
         },
         link: '#A9A9C6',
+        choggleBox: "#fff",
       }
     }
   },
@@ -301,6 +303,10 @@ export default () => ({
         boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2), inset 0 1px 2px rgba(102, 113, 123, 0.2)',
       }
     },
+    hint: {
+      fontSize: 1,
+      color: t => t.colors.choggleBox,
+    },
     label: {
       primary: {
         mb: 1,
@@ -316,7 +322,7 @@ export default () => ({
         px: 1,
         borderRadius: '3px',
         border: t => `1px solid ${t.colors.borders}`
-      }
+      },
     }
   },
   links: {
@@ -324,6 +330,7 @@ export default () => ({
       fontSize: 1,
       color: t => t.colors.link,
       margin: '0 4px', 
+      display: 'inline-block',
     }
   },
   styles: {

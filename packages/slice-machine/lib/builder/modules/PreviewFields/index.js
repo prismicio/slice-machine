@@ -3,7 +3,9 @@ import React, { useState, Fragment } from 'react'
 import {
   Flex,
   Box,
-  Heading
+  Heading,
+  Checkbox,
+  Text,
 } from 'theme-ui'
 
 import {
@@ -54,7 +56,8 @@ const Header = ({ title, isTouched, radius }) => (
 const PreviewFields = ({
   Model,
   variation,
-  storybookUrl
+  storybookUrl,
+  showHints,
 }) => {
   const { isTouched } = Model
 
@@ -121,6 +124,7 @@ const PreviewFields = ({
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}
+          showHints={showHints}
         />
         <Box my={3} sx={{ height: '1px', width: '1px'}} />
         <RepeatZone
@@ -133,6 +137,7 @@ const PreviewFields = ({
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}
+          showHints={showHints}
         />
       </Fragment>
       {
