@@ -18,6 +18,14 @@ export default () => ({
     error: '#E55737',
     success: '#3AB97A',
     headSection: '#fff',
+    code: {
+      border: '#DFE1E5',
+      blue: '#3B41BD',
+      gray: '#667587',
+      orange: '#EA6D46',
+      green: '#3AB97A',
+    },
+    link: 'primary',
 
     modes: {
       dark: {
@@ -31,6 +39,14 @@ export default () => ({
         borders: '#3A3A46',
         deep: '#28282C',
         headSection: '#28282C',
+        code: {
+          border: '#5D5D6F',
+          blue: '#3B41BD',
+          gray: '#667587',
+          orange: '#EA6D46',
+          green: '#3AB97A',
+        },
+        link: '#A9A9C6',
       }
     }
   },
@@ -109,7 +125,7 @@ export default () => ({
       code: {
         color: "inherit"
       }
-    }
+    },
   },
   badges: {
     circle: {
@@ -303,6 +319,13 @@ export default () => ({
       }
     }
   },
+  links: {
+    hint: {
+      fontSize: 1,
+      color: t => t.colors.link,
+      margin: '0 4px', 
+    }
+  },
   styles: {
     navLink: {
       color: '#FFF',
@@ -360,7 +383,57 @@ export default () => ({
     li: {
       listStyleType: 'none'
     },
-    pre: {
+    code: {
+      display: "inline-block",
+      // position: 'relative',
+      backgroundColor: t => t.colors.gray,
+      border: t => `1px solid ${t.colors.code.border}`, // light #DFE1E5 // dark #5D5D6F
+      borderRadius: '3px',
+      boxSizing: 'border-box',
+      fontSize:'13px',
+      margin: '0 8px',
+    },
+    hint: {
+      display: "block",
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      //fontSize: '13px',
+    },
+    ".prism-code": {
+      margin: '1px 3px',
+      '.tag': {
+        color: t => t.colors.code.blue,
+      },
+      '.punctuation, .attr-value.punctuation': {
+        color: t => t.colors.code.gray, // dark-gray
+      },
+      '.attr-name': {
+        color: t => t.colors.code.orange,
+      },
+      '.attr-value, .property-access': { // add .plain to highligh vue. 
+        color: t => t.colors.code.green, // green
+      },
+    },
+    ".prism-code.language-jsx": {
+      '.language-javascript.punctuation, .language-javascript.script-punctuation.punctuation': {
+        color: t => t.colors.code.gray, 
+      },
+      '.language-javascript, .plain': {
+        color: t => t.colors.code.green
+      },
+    },
+    ".prism-code.language-javascript": {
+      ".punctuation": {
+        color: t => t.colors.code.gray
+      },
+      ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access": {
+        color: t => t.colors.code.blue // blue
+      },
+      ".property-access, .plain": {
+        color: t => t.colors.code.green, // green
+      }
+    },
+    /* pre: {
       variant: "prism",
       display: 'inline',
       fontFamily: "monospace",
@@ -377,7 +450,7 @@ export default () => ({
       fontFamily: "monospace",
       color: "error",
       fontSize: 1
-    },
+    }, */
     inlineCode: {
       fontFamily: "monospace",
       color: "error",
@@ -440,5 +513,5 @@ export default () => ({
     ".selector,.attr-name,.string,.char,.builtin,.inserted": {
       "color": "error"
     }
-  }
+  },
 })
