@@ -17,5 +17,6 @@ export const warningTwoLiners = {
   STORYBOOK_NOT_IN_MANIFEST: ['Storybook not found in manifest', 'Run `yarn run storybook` from your terminal'],
   STORYBOOK_NOT_INSTALLED: ['Storybook is not installed', 'Run `yarn run storybook`'],
   STORYBOOK_NOT_RUNNING: ['Storybook is not running', 'Run `yarn run storybook` from your terminal'],
-
 }
+
+export const defaultSliceId = 'default-slice'

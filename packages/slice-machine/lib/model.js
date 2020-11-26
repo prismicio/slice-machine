@@ -49,6 +49,7 @@ const getMetadata = (model) =>
 const createModel = (intialValues, initialInfo) => {
   let info = initialInfo
   let model = intialValues
+  let meta = getMetadata(model)
   let variations = createVariations(intialValues)
 
   const _reorder = (variation, zone) => (start, end) => {
@@ -91,6 +92,9 @@ const createModel = (intialValues, initialInfo) => {
       info = { ...info, ...newInfo }
       variations = createVariations(newInitialValues)
     },
+    updateMeta: (newMeta) => {
+      info.meta = { ...info.meta, ...newMeta }
+    },
     appendInfo: (newInfo) => {
       info = { ...info, ...newInfo }
     },
@@ -123,7 +127,7 @@ const createModel = (intialValues, initialInfo) => {
             },
           }
         },
-        meta: getMetadata(model),
+        meta,
         value: formatModel(model, variations),
         isTouched: !deepEqual(model, variations),
       }

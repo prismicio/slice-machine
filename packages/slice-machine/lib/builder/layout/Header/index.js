@@ -31,10 +31,9 @@ const Header = ({ info, Model }) => {
             <Box as="h2" sx={{ pb:3}}>
               {info.sliceName}
             </Box>
-            <Box>
-              <Button sx={{ height: 'fit-content', fontSize: 2, mr: 2 }}>Regen mocks</Button>
+            {/* <Box>
               <Button onClick={() => setShowMeta(true)} sx={{ height: 'fit-content', fontSize: 2 }}>MetaData</Button>
-            </Box>
+            </Box> */}
           </Flex>
           <hr />
 

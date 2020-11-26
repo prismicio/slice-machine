@@ -48,7 +48,12 @@ const SideBar = ({
           />
         )}
       >
-        <ImagePreview imageLoading={imageLoading} src={previewUrl} onScreenshot={onScreenshot} />
+        <ImagePreview
+          src={previewUrl}
+          isCustomPreview={info.isCustomPreview}
+          imageLoading={imageLoading}
+          onScreenshot={onScreenshot}
+        />
         <ul>
           {
             maybeStorybookError ? (

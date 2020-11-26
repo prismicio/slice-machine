@@ -37,3 +37,7 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, expect
     return mockContent
   }
 }
+
+export const createScreenshotUrl = ({ storybook, sliceName, variation }) => {
+  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${variation}&viewMode=story`
+}

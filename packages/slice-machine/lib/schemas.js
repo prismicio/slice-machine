@@ -6,7 +6,6 @@ export const slice = yup.object().shape({
   from: yup.string().required(),
   hasMock: yup.boolean().required(),
   hasModel: yup.boolean().required(),
-  hasPreview: yup.boolean().required(),
   isDirectory: yup.boolean().required(),
   isModified: yup.boolean().required(),
   isNew: yup.boolean().required(),

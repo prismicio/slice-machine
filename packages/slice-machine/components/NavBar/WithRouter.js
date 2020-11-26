@@ -42,7 +42,7 @@ const InBuilder = ({ router, ...props }) => {
       <Select
         sx={{ ml: 2, variant: 'styles.navLink', pl: 2, pr: 4, py: 0, bg: 'rgba(255, 255, 255, .1  )', border: 'none' }}
         onChange={e => location.href = `/${info.href}/${e.target.value}`}
-        defaultValue={router.query.sliceName}
+        defaultValue={info.sliceName}
       >
         {
           slices.map(e => (

@@ -4,6 +4,15 @@ import base64Img from "base64-img";
 
 import { pascalize } from 'sm-commons/utils/str'
 
+import { getPathToScreenshot } from './screenshot'
+
+function getMeta(model) {
+  return Object.entries(model).reduce((acc, [key, value]) => ({
+    ...acc,
+    ...(['id', 'description'].includes(key) ? ({ [key]: value }) : {})
+  }), {})
+}
+
 /** take a path to slice and return its name  */
 function getComponentName(slicePath) {
   const split = slicePath.split(path.sep);
@@ -61,30 +70,33 @@ function getFileInfoFromPath(slicePath, componentName) {
   throw new Error(`[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`)
 }
 
-export function getComponentInfo(slicePath) {
+export function getComponentInfo(slicePath, { cwd, from }) {
   const sliceName = getComponentName(slicePath)
   if (!sliceName || !sliceName.length) {
     return null
   }
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
-  const modelValues = fromJsonFile(slicePath, 'model.json', 'model')
+  const { model, ...otherModelValues } =  fromJsonFile(slicePath, 'model.json', 'model')
 
-  const pathToImageFile = path.join(slicePath, 'preview.png')
-  const hasPreview = has(pathToImageFile)
+  const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
+  const hasPreview = !!pathToScreenshotFile
 
   const nameConflict =
-    sliceName !== pascalize(modelValues.model.id)
-    ? { sliceName, id: modelValues.model.id }
+    sliceName !== pascalize(model.id)
+    ? { sliceName, id: model.id }
     : null
+
   return {
     sliceName,
     fileName,
     isDirectory,
     extension,
-    ...modelValues, // { model, hasModel }
+    model,
+    ...getMeta(model),
+    ...otherModelValues, // { hasModel }
     ...fromJsonFile(slicePath, 'mock.json', 'mock'),
-    hasPreview,
     nameConflict,
-    previewUrl: hasPreview ? base64Img.base64Sync(pathToImageFile) : null
+    isCustomPreview,
+    previewUrl: hasPreview ? base64Img.base64Sync(pathToScreenshotFile) : null
   }
 }

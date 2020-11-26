@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { Flex, Image, Button, Text, Spinner } from 'theme-ui'
 
-const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
+const ImagePreview = ({ src, onScreenshot, isCustomPreview, imageLoading }) => {
   const [display, setDisplay] = useState(false)
   const handleMouseHover = (state) => setDisplay(state)
 
@@ -37,7 +37,15 @@ const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
           >
             {
               display ? (
-                <Button onClick={onScreenshot}>Take screenshot</Button>
+                <Fragment>
+                  {
+                    isCustomPreview ? (
+                      <Text as="h3">Uses Custom Preview</Text>
+                    ) : (
+                      <Button onClick={onScreenshot}>Take screenshot</Button>
+                    )
+                  }
+                </Fragment>
               ) : <Spinner />
             }
           </Flex>

@@ -24,12 +24,10 @@ const createOnSaveUrl = ({
   sliceName,
   from,
   value,
-  screenshotUrl
 }) =>
-  `/api/update?sliceName=${sliceName}&from=${from}&model=${btoa(JSON.stringify(value))}&screenshotUrl=${screenshotUrl}`
+  `/api/update?sliceName=${sliceName}&from=${from}&model=${btoa(JSON.stringify(value))}`
 
 const createStorybookUrls = (storybook, componentInfo, variation = 'default-slice') => ({
-  screenshotUrl: `${storybook}/iframe.html?id=${componentInfo.sliceName.toLowerCase()}--${variation}&viewMode=story`,
   storybookUrl: `${storybook}/?path=/story/${componentInfo.sliceName.toLowerCase()}--${variation}`
 })
 
@@ -56,20 +54,18 @@ const Builder = ({ openPanel }) => {
 
   const variation = Model.get().variation()
 
-  const { screenshotUrl, storybookUrl } = createStorybookUrls(storybook, info, variation.id)
+  const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
 
   const onSave = async () => {
     setData({ loading: true, done: false, error: null })
     fetch(createOnSaveUrl({
       ...info,
       value,
-      screenshotUrl
     }), {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-
       },
     }).then(async (res) => {
       if (res.status > 209) {
@@ -155,12 +151,11 @@ const Builder = ({ openPanel }) => {
       ...data,
       imageLoading: true,
     })
-    fetch(`/api/screenshot?sliceName=${info.sliceName}&from=${info.from}&screenshotUrl=${screenshotUrl}`, {
+    fetch(`/api/screenshot?sliceName=${info.sliceName}&from=${info.from}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      // body: JSON.stringify({ sliceName, from, screenshotUrl })
     })
     .then(async res => {
       const json = await res.json()
@@ -204,7 +199,6 @@ const Builder = ({ openPanel }) => {
             storybookUrl={storybookUrl}
             onScreenshot={onScreenshot}
             imageLoading={data.imageLoading}
-            screenshotUrl={screenshotUrl}
           />
         )}
       >

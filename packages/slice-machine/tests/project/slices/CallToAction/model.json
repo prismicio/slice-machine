@@ -14,6 +14,15 @@
         "unsup": {
           "type": "Unknown"
         },
+        "ownContent": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          },
+          "type": "StructuredText"
+        },
         "image": {
           "config": {
             "label": "My cool label",
@@ -30,15 +39,6 @@
             ]
           },
           "type": "Image"
-        },
-        "ownContent": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
         },
         "title": {
           "config": {

@@ -4,16 +4,19 @@ import atob from 'atob'
 import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
+import { createScreenshotUrl } from '../../lib/utils'
+import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
 
 import { getEnv } from '../../lib/env'
-
 import mock from '../../lib/mock'
 
 export default async function handler(req) {
   const { env } = await getEnv()
-  const { sliceName, from, model: strModel, screenshotUrl } = req.query
+  const { sliceName, from, model: strModel } = req.query
 
   const model = JSON.parse(atob(strModel))
+
+  const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
 
   try {
     await fetchStorybookUrl(screenshotUrl)
@@ -30,7 +33,9 @@ export default async function handler(req) {
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 
-  const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
+  const screenshotArgs = { cwd: env.cwd, from, sliceName }
+  const { isCustom } = getPathToScreenshot(screenshotArgs)
+  const pathToFile = createPathToScreenshot(screenshotArgs)
   const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {
@@ -43,7 +48,9 @@ export default async function handler(req) {
   const screenshot = base64Img.base64Sync(pathToFile)
 
   return {
-    previewUrl: screenshot,
+    ...!isCustom ? {
+      previewUrl: screenshot,
+    } : null,
     isModified: true
   }
 }

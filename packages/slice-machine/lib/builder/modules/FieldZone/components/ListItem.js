@@ -4,7 +4,6 @@ import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
 import {
   Flex,
   Text,
-  theme,
   useThemeUI
 } from 'theme-ui'
 

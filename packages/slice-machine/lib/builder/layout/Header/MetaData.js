@@ -35,15 +35,14 @@ const InputBox = ({ name, label, placeholder }) => (
 const MetaDataModal = ({
   close,
   isOpen,
-  data,
   Model,
-  variation,
 }) => {
  
-  console.log({ Model: Model.meta })
+  console.log({ info: Model.info.name, infoFul: Model.info })
 
   const onUpdateField = (value) => {
-    console.log({ value })
+    console.log({ value, Model })
+    Model.hydrate(() => Model.appendInfo(value))
     close()
   }
 
@@ -56,7 +55,7 @@ const MetaDataModal = ({
     >
       <Formik
         validateOnChange
-        initialValues={Model.meta}
+        initialValues={Model.info.meta}
         onSubmit={(values, _) => {
           onUpdateField(values)
         }}
@@ -95,7 +94,7 @@ const MetaDataModal = ({
                 <FlexGrid>
                   <Col>
                     <InputBox
-                      name="name"
+                      name="sliceName"
                       label="Slice Name"
                       placeholder="Name of your slice"
                     />

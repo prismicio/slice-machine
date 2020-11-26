@@ -11,7 +11,7 @@ async function handleLibraryPath(env, libPath) {
     isLocal,
     pathExists,
     pathToSlices,
-  } = await getLibraryInfo(libPath, env.cwd)
+  } = getLibraryInfo(libPath, env.cwd)
 
   if (!isLocal) {
     return null
@@ -34,7 +34,7 @@ async function handleLibraryPath(env, libPath) {
 
   const allComponents = pathsToComponents.reduce(
     (acc, curr) => {
-      const componentInfo = getComponentInfo(curr)
+      const componentInfo = getComponentInfo(curr, { ...env, from })
       if (!componentInfo) {
         return acc
       }
