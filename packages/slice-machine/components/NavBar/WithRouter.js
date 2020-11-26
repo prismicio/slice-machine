@@ -1,11 +1,12 @@
 import Link from 'next/link'
-import { useContext } from 'react'
+import { Fragment, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { Link as ThemeLink, Text, Select } from 'theme-ui'
 
 import { ModelContext } from 'src/model-context'
 import { LibContext } from 'src/lib-context'
 import NavBar from './'
+import { VersionBadge } from './components'
 
 const INDEX = 'INDEX'
 const LIB = 'LIB'
@@ -58,20 +59,23 @@ const WithRouter = (props) => {
   const route = Routes[router.route] || INDEX
   return route === INDEX ? (
     <NavBar {...props}>
-      <Link href="/index" as="/" passHref>
-        <ThemeLink
-          to='/'
-          sx={{
-            variant: 'styles.navLink',
-            p: 2,
-            cursor: 'pointer',
-            textDecoration: 'none'
-          }}>
-          <Text as="h4" sx={{ m: 0 }}>
-            🍕 Slice Machine
-          </Text>
-        </ThemeLink>
-      </Link>
+      <Fragment>
+        <Link href="/index" as="/" passHref>
+          <ThemeLink
+            to='/'
+            sx={{
+              variant: 'styles.navLink',
+              p: 2,
+              cursor: 'pointer',
+              textDecoration: 'none'
+            }}>
+            <Text as="h4" sx={{ m: 0 }}>
+              🍕 Slice Machine
+            </Text>
+          </ThemeLink>
+        </Link>
+        <VersionBadge version={props.env.currentVersion} />
+      </Fragment>
     </NavBar>
   ) : (
     <InBuilder router={router} {...props} />

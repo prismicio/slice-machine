@@ -20,3 +20,4 @@ export const warningTwoLiners = {
 }
 
 export const defaultSliceId = 'default-slice'
+export const changelogPath = 'changelog/versions'

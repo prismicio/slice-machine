@@ -11,7 +11,6 @@ main()
 async function main() {
   console.info('\nSliceMachine nows supports both default and custom previews (screenshots)!')
   console.info('Default screenshots are now stored in a special .slicemachine folder.')
-  console.info('To use custom previews, simply keep storing them in your component folder.')
   const { yes } = await shouldIRun('Would you like me to move current previews to .slicemachine?')
   if (yes) {
     const cwd = require.main.paths[0].split('node_modules')[0]
@@ -38,8 +37,8 @@ async function main() {
             })
           }
         })
-        fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: '0.0.39' }, null, 2))
-        return console.info('Done!')
+        fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: '0.0.40' }, null, 2))
+        return console.info('Done. Read the full log at /changelog for more info!')
       } catch(e) {
         console.log(e)
       }

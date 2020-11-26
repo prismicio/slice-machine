@@ -41,10 +41,10 @@ const compare = (manifest, onlinePackage, { cwd }) => {
 }
 
 export default function createComparator() {
-  let updateAvailable
+  let comparison
   return async ({ cwd }) => {
-    if (updateAvailable !== undefined) {
-      return updateAvailable
+    if (comparison !== undefined) {
+      return comparison
     }
     const manifest = (() => {
       try {
@@ -58,11 +58,14 @@ export default function createComparator() {
     }
     })()
     if (!manifest) {
-      updateAvailable = { err: new Error('Could not parse package version') }
-      return updateAvailable
+      comparison = { err: new Error('Could not parse package version') }
+      return comparison
     }
     const onlinePackage = await fetchJsonPackage(manifest.name)
-    updateAvailable = compare(manifest, onlinePackage, { cwd })
-    return updateAvailable
+    comparison = {
+      currentVersion: manifest.version,
+      updateAvailable: compare(manifest, onlinePackage, { cwd }),
+    }
+    return comparison
   }
 }

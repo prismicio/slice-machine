@@ -7,7 +7,7 @@ main()
 function handleChangelog() {
   try {
     const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
-    const pathToScript = path.join(__dirname, 'changelog/scripts', `${version}.js`)
+    const pathToScript = path.join(__dirname, 'changelog/versions', version.split('-')[0], 'index.js')
     if (fs.existsSync(pathToScript)) {
       require(pathToScript)
     }

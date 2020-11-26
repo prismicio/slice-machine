@@ -1,8 +1,9 @@
+import App from 'next/app'
 import { useEffect, useState } from 'react'
-import Drawer from 'rc-drawer'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import useSwr from 'swr'
+import Drawer from 'rc-drawer'
 
 import theme from 'src/theme'
 import LibProvider from 'src/lib-context'
@@ -25,7 +26,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json())
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
-  Default: ({ Component, ...rest }) => <Component {...rest} />,
+  Default: ({ Component, pageProps, ...rest }) => <Component {...pageProps} {...rest} />,
   FetchError,
   LibError: FetchError,
   NoLibraryConfigured,
@@ -103,7 +104,11 @@ function MyApp({ Component, pageProps }) {
         }
       </BaseStyles>
     </ThemeProvider>
-  );
+  )
+}
+
+MyApp.getInitialProps = async (appContext) => {
+  return await App.getInitialProps(appContext)
 }
 
 export default MyApp

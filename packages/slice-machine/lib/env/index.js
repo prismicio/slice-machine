@@ -76,7 +76,7 @@ export const getEnv = async () => {
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
 
-  const updateAvailable = await compareNpmVersions({ cwd })
+  const { updateAvailable, currentVersion } = await compareNpmVersions({ cwd })
 
   return {
     errors: maybeErrors,
@@ -88,6 +88,7 @@ export const getEnv = async () => {
       base,
       ...prismicData,
       chromatic,
+      currentVersion,
       updateAvailable,
       client: initClient(base, repo, auth)
     }

@@ -1,0 +1,12 @@
+### New Feature
+
+SliceMachine now supports custom screenshots for your components.
+To enable the feature, simply add a `preview.(png|jpg)` to each of your components folders.
+
+When saving slices to file system, a screenshot will still be taken and stored in `.slicemachine/assets`.
+When pushing slices to Prismic, the builder will select the screenshot by favouring the custom preview file first,
+then the automatic screenshot
+
+#### Also
+
+We added more options to RichText and fixed a bug in the validation of Image widgets.
