@@ -20,6 +20,6 @@ labels: bug
 
 <!-- Define the buggy behavior -->
 
-### Any additionnal information
+### Any additional information
 
 <!-- Any other useful information: suggestions, potential workarounds, etc. -->
