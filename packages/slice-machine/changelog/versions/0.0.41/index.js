@@ -2,9 +2,9 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 const slash = require('slash')
-const { shouldIRun } = require('../common')
+const { shouldIRun } = require('../../common')
 const { getInfoFromPath } = require('sm-commons/methods/lib')
-const { createPathToScreenshot } = require('../../lib/queries/screenshot')
+const { createPathToScreenshot } = require('../../../lib/queries/screenshot')
 
 main()
 
@@ -37,7 +37,7 @@ async function main() {
             })
           }
         })
-        fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: '0.0.40' }, null, 2))
+        fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latestMigration: '0.0.41' }, null, 2))
         return console.info('Done. Read the full log at /changelog for more info!')
       } catch(e) {
         console.log(e)

@@ -16,6 +16,7 @@ export default function fakeClient() {
       }
     },
     insert: mutate,
-    update: mutate
+    update: mutate,
+    getPresignedUrl: mutate
   }
 }

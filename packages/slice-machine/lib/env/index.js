@@ -90,7 +90,7 @@ export const getEnv = async () => {
       chromatic,
       currentVersion,
       updateAvailable,
-      client: initClient(base, repo, auth)
+      client: initClient({ base, repo, auth })
     }
   }
 }

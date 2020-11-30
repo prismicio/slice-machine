@@ -2,7 +2,7 @@ import initClient from '../../lib/client'
 
 export const getSlices = async(env) => {
   try {
-    const client = initClient(env.repo, env.auth)
+    const client = initClient(env)
     const res = await client.get()
     if (res.status !== 200) {
       return { err: res, slices: [] }

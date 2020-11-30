@@ -53,6 +53,7 @@ const SideBar = ({
           isCustomPreview={info.isCustomPreview}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
+          preventScreenshot={!!maybeStorybookError}
         />
         <ul>
           {
