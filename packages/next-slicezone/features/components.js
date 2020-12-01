@@ -9,7 +9,12 @@ import { pascalize } from 'sm-commons/utils/str'
 const ALL_KEY = '__allSlices'
 
 const createDeclaration = (libs) => {
-  const imports = libs.reduce((acc, { name, pathToSlices }) => `${acc}import * as ${name} from '${pathToSlices}'\n`, '')
+  const imports = libs.reduce((acc, { name, from, isLocal }) => {
+    if (isLocal) {
+      return `${acc}import * as ${name} from './${from}'\n`
+    }
+    return `${acc}import { Slices as ${name} } from '${isLocal ? `${from}` : from}'\n`
+  }, '')
   const spread = `const ${ALL_KEY} = { ${libs.reverse().reduce((acc, { name }) => `${acc} ...${name},`, '')} }`
   return `${imports}\n${spread}\n`
 }
@@ -20,7 +25,7 @@ const createBody = () =>
 	return process.env.NODE_ENV !== 'production' ? <p>component "{sliceName}" not found.</p> : <div />
 }
 
-export default ({ sliceName, i }) => {
+export default function Register({ sliceName }) {
 	return ${ALL_KEY}[sliceName] ? ${ALL_KEY}[sliceName] : () => <NotFound sliceName={sliceName} />
 }
 `
@@ -30,6 +35,7 @@ async function handleLibraryPath(libPath) {
     isLocal,
     pathExists,
     pathToSlices,
+    pathToLib,
   } = await getLibraryInfo(libPath)
 
   if (!pathExists) {
@@ -45,6 +51,7 @@ async function handleLibraryPath(libPath) {
     isLocal,
     from,
     name: pascalize(from),
+    pathToLib,
     pathToSlices: endPathToSlices
   }
 }
