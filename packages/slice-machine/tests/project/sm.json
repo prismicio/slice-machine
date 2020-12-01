@@ -6,5 +6,5 @@
   "apiEndpoint": "http://my-nextjs-website-from-theme.prismic.io/api/v2",
   "storybook": "http://localhost:6006",
   "chromaticAppId": "5f5b34f06f304800225c4e17",
-  "_latest": "0.0.39"
+  "_latest": "0.0.42"
 }

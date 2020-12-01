@@ -4,9 +4,8 @@ import base64Img from 'base64-img'
 import { snakelize } from 'sm-commons/utils/str'
 
 import { getEnv } from '../../lib/env'
-import initClient from '../../lib/client'
 
-import { getSlices } from './slices'
+import { createPathToScreenshot } from '../../lib/queries/screenshot'
 
 const onError = (r, message = 'An error occured while pushing slice to Prismic') => ({
   err: r,
@@ -27,12 +26,25 @@ const createOrUpdate = async ({
   }
 }
 
+const getSlices = async(client) => {
+  try {
+    const res = await client.get()
+    if (res.status !== 200) {
+      return { err: res, slices: [] }
+    }
+    const slices = await res.json()
+    return { err: null, slices }
+  } catch(e) {
+    console.log({ e })
+    console.error('[api/slices] An error occured while fetching slices. Note that when stable, this should break!')
+    return { slices: [] }
+  }
+}
+
 export default async function handler(query) {
   const { sliceName, from } = query
   const { env } = await getEnv()
-  const client = initClient(env)
-
-  const { slices, err } = await getSlices()
+  const { slices, err } = await getSlices(env.client)
   if (err) {
     return onError(err, 'Could not fetch remote slices')
   }
@@ -42,13 +54,24 @@ export default async function handler(query) {
 
   try {
       const jsonModel = JSON.parse(model)
-      const pathToImageFile = path.join(env.cwd, from, sliceName, 'preview.png')
+      const pathToImageFile = createPathToScreenshot({ cwd: env.cwd, from, sliceName })
+      // const aclResponse = await (await env.client.images.createAcl()).json()
+      // if (aclResponse.error) {
+      //   const msg = 'An error occured while creating ACL - please contact support'
+      //   console.error(msg)
+      //   console.error(`Full error: ${JSON.stringify(aclResponse)}`)
+      //   return onError(e, msg)
+      // }
+      // const { values: { url: S3Url, fields: S3Fields } } = aclResponse
+
+
+      // return { isModified: false, isNew: false }
       const imageUrl = base64Img.base64Sync(pathToImageFile)
       const res = await createOrUpdate({
         slices,
         sliceName,
         model: { ...jsonModel, imageUrl },
-        client
+        client: env.client
       })
       if (res.status > 209) {
         const message = await res.text()

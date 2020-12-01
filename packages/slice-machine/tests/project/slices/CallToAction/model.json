@@ -11,9 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "unsup": {
-          "type": "Unknown"
-        },
         "ownContent": {
           "config": {
             "label": "",
