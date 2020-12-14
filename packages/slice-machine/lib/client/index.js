@@ -1,16 +1,16 @@
 import path from 'path'
 import { maybeJsonFile } from '../utils'
 import fakeApi from './fake'
+import upload from './upload'
 
-const authTok = ''
 const SharedSlicesApi = {
-  STAGE: 'https://4b7a9w5244.execute-api.us-east-1.amazonaws.com/stage/slices/',
+  STAGE: 'https://customtypes.wroom.io/slices/',
   PROD: 'https://silo2hqf53.execute-api.us-east-1.amazonaws.com/prod/slices/'
 }
 
 const AclProviderApi = {
-  STAGE: 'http://localhost:4403/dev/',
-  PROD: 'http://localhost:4403/dev/'
+  STAGE: 'https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/',
+  PROD: 'https://gxm7zszu1f.execute-api.us-east-1.amazonaws.com/prod/'
 }
 
 const createApiUrl = (base, { STAGE, PROD }) => {
@@ -49,7 +49,7 @@ const initClient = ({ cwd, base, repo, auth }) => {
   const devConfig = cwd ? maybeJsonFile(path.join(cwd, 'sm.dev.json')) : {}
   
   const apiFetcher = intiFetcher(base, SharedSlicesApi, devConfig.sharedSlicesApi, repo, auth)
-  const aclFetcher = intiFetcher(base, AclProviderApi, devConfig.aclProviderApi, 'repotest', authTok)
+  const aclFetcher = intiFetcher(base, AclProviderApi, devConfig.aclProviderApi, repo, auth)
 
   return {
     async get() {
@@ -62,14 +62,14 @@ const initClient = ({ cwd, base, repo, auth }) => {
       return await apiFetcher(body, 'update', 'post')
     },
     images: {
-      async createAcl(body) {
-        return await aclFetcher(body, 'create', 'get')
+      async createAcl() {
+        return await aclFetcher(null, 'create', 'get')
       },
       async deleteFolder(body) {
         return await aclFetcher(body, 'delete-folder', 'post')
       },
-      async post(url, formData) {
-
+      async post(params) {
+        return upload(params)
       }
     }
   }

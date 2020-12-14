@@ -1,5 +1,6 @@
 import { MdTitle } from 'react-icons/md'
 import * as yup from 'yup'
+import { createMock, handleMockContent } from './mock'
 
 /**
 * {
@@ -12,17 +13,13 @@ import * as yup from 'yup'
  */
 
 
-import { removeProp, createDefaultHandleMockContentFunction } from '../utils'
-import { DefaultFields } from "../forms/defaults"
-import { createInitialValues, createValidationSchema } from "../forms"
+import { removeProp } from '../../utils'
+import { DefaultFields } from "../../forms/defaults"
+import { createInitialValues, createValidationSchema } from "../../forms"
 
 const TYPE_NAME = 'Text'
 
 const FormFields = DefaultFields
-
-const createMock = ({ label, placeholder }) => `A text of type "${label}" that conveys ${placeholder}`
-
-const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const create = (apiId) => ({
   ...createInitialValues(DefaultFields),

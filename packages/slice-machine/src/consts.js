@@ -21,3 +21,4 @@ export const warningTwoLiners = {
 
 export const defaultSliceId = 'default-slice'
 export const changelogPath = 'changelog/versions'
+export const s3DefaultPrefix = 'shared-slices'

@@ -57,11 +57,11 @@ const options = [{
   label: 'embed',
   icon: Icon(<FiCode />),
 }, {
-  value: 'list',
+  value: 'list-item',
   label: 'list',
   icon: Icon(<FiList />),
 }, {
-  value: 'o',
+  value: 'o-list-item',
   label: 'o',
   icon: Icon(<BsListOl />),
 }, {

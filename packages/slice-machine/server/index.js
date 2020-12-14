@@ -24,6 +24,10 @@ app.use('/migration', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, 'migration.html'));
 })
 
+app.use('/changelog', async function sliceRoute(_, res) {
+  return res.sendFile(path.join(out, 'changelog.html'));
+})
+
 app.use('/:lib/:sliceName', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, '[lib]/[sliceName].html'));
 })

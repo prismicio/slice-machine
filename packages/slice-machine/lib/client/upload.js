@@ -1,24 +1,24 @@
 import fs from 'fs'
-import fetch from 'node-fetch'
+import FormData from 'form-data'
+import mime from 'mime'
 
-async function upload({ url, fields, key, filename }) {
-  const options = {
-    method: 'POST',
-    url,
-    formData: {
-      ...fields,
-      key,
-      file: {
-        value: fs.createReadStream(FP),
-        options: {
-          filename,
-          contentType: null
-        }
-      }
-    },
-    headers: {},
-  }
-  return fetch(options)
+function upload({ url, fields, key, filename, pathToFile }) {
+  const form = new FormData()
+  Object.entries(fields).forEach(([key, value]) => {
+    form.append(key, value)
+  })
+  form.append('key', key)
+  form.append('Content-Type', mime.getType(filename.split('.').pop()))
+  form.append('file', fs.createReadStream(pathToFile), {
+    filename,
+    contentType: null,
+    knownLength: fs.statSync(pathToFile).size,
+  })
+  return new Promise((resolve) => {
+    form.submit(url, function(_, res) {
+      resolve(res.statusCode)
+    })
+  })
 }
 
 export default upload

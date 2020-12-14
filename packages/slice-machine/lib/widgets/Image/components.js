@@ -59,7 +59,10 @@ export const ConstraintForm = ({
   const createSetField = (key, fn = v => v) => (e) => {
     helpers.setTouched(true)
     const cast = fn(e.target.value)
-    helpers.setValue({ ...field.value, [key]: isNaN(cast) ? null : cast })
+    const value = e.target.type === 'number'
+      ? isNaN(cast) ? null : cast
+      : cast
+    helpers.setValue({ ...field.value, [key]: value })
   }
   
   return (

@@ -1,5 +1,6 @@
 import { AiOutlineFieldNumber } from 'react-icons/ai'
-import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } from '../utils'
+import { createDefaultWidgetValues } from '../../utils'
+import { createMock, handleMockContent } from './mock'
 
 /** {
     "type" : "Number",
@@ -10,10 +11,6 @@ import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } fr
   } */
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Number')
-
-const createMock = () => Math.floor(Math.random() * 9999)
-
-const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME, 'number')
 
 const Meta = {
   icon: AiOutlineFieldNumber,

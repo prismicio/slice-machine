@@ -45,11 +45,12 @@ export default async function handler(req) {
     }
   }
 
-  const screenshot = base64Img.base64Sync(pathToFile)
+  const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
 
   return {
     ...!isCustom ? {
       previewUrl: screenshot,
+      hasPreview: screenshot !== null
     } : null,
     isModified: true
   }

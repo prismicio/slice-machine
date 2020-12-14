@@ -37,8 +37,6 @@ const MetaDataModal = ({
   isOpen,
   Model,
 }) => {
- 
-  console.log({ info: Model.info.name, infoFul: Model.info })
 
   const onUpdateField = (value) => {
     console.log({ value, Model })

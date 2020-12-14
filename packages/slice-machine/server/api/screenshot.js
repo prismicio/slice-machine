@@ -1,4 +1,3 @@
-import path from 'path'
 import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 

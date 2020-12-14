@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 import { BsToggleOn } from 'react-icons/bs'
+import { createMock, handleMockContent } from './mock'
 
 /** {
     "type" : "Boolean",
@@ -11,14 +12,12 @@ import { BsToggleOn } from 'react-icons/bs'
     }
   } */
 
-import { removeProp, createDefaultHandleMockContentFunction } from '../utils'
-import { createInitialValues, createValidationSchema } from '../forms'
-import { DefaultFields } from "../forms/defaults"
-import { Input, CheckBox } from "../forms/fields"
+import { removeProp } from '../../utils'
+import { createInitialValues, createValidationSchema } from '../../forms'
+import { DefaultFields } from "../../forms/defaults"
+import { Input, CheckBox } from "../../forms/fields"
 
 const TYPE_NAME = 'Boolean'
-
-const createMock = () => Math.random() < 0.50 ? true : false
 
 const Meta = {
   icon: BsToggleOn,
@@ -42,8 +41,6 @@ const schema = yup.object().shape({
   type: yup.string().matches(/^Boolean$/, { excludeEmptyString: true }).required(),
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
-
-const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME, 'boolean')
 
 export default {
   TYPE_NAME,

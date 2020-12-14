@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { getEnv } from './env'
+import { getEnv } from '../env'
 import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'

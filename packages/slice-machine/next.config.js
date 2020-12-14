@@ -5,7 +5,7 @@ const withCustomBabelConfigFile = require('next-plugin-custom-babel-config');
 
 module.exports = withPlugins([
   [withCustomBabelConfigFile, {
-    babelConfigFile: path.resolve("./babel.config.js"),
+    babelConfigFile: path.resolve("./babel.next.config.js"),
     env: {
       // overriden by start script
       CWD: path.resolve("./tests/project"),

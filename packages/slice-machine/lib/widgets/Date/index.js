@@ -1,6 +1,6 @@
 import { MdDateRange } from 'react-icons/md'
-import Timestamp from './Timestamp'
-import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } from '../utils'
+import { createDefaultWidgetValues } from '../../utils'
+import { createMock, handleMockContent } from './mock'
 
 /** {
   "type" : "Date",
@@ -11,10 +11,6 @@ import { createDefaultWidgetValues, createDefaultHandleMockContentFunction } fr
 } */
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Date')
-
-const createMock = () => Timestamp.createMock().toISOString().split('T')[0]
-
-const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, TYPE_NAME)
 
 const Meta = {
   icon: MdDateRange,
