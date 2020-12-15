@@ -1,5 +1,5 @@
-import PageFetch from './PageFetch'
-import SliceZone from './SliceZone'
+import PageFetch from './features/PageFetch'
+import SliceZone from './features/SliceZone'
 
 export default {
   name: 'SliceZone',
