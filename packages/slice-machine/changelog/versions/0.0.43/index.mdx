@@ -1,6 +1,21 @@
-### Bug fix
+### Bug fixes
+
+#### Upload images to S3
+
+Users reported 423 errors in their Prismic repository after pushing their slices.
+This was due to us storing images as base64 in slice JSON models. We've switched to S3
+to securely store them.
+
+If you already pushed slices, note that you will have to push them again.
+A `push all` command is on our roadmap already.
+
+#### React dependencies
 
 Some users reported conflicts between the builder dependencies and their (React) project,
-causing `Invaid hook calls` errors. We moved most of these dependencies to `dev`.
+causing `Invalid hook calls` errors. We moved most of these dependencies to `dev`.
 
 This should make both downloading and publishing the package a bit faster too ✌️
+
+#### RichText options
+
+Fixed `RichText` field options for ordered and unordered lists.

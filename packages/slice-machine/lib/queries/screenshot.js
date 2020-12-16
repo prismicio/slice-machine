@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
-const FORMATS = ['png', 'jpg']
+const { acceptedImagesTypes } = require('../../src/consts')
 
 function createPathToScreenshot({ cwd, from, sliceName }) {
   return path.join(cwd, '.slicemachine/assets', from, sliceName, 'preview.png')
@@ -10,7 +10,7 @@ function createPathToScreenshot({ cwd, from, sliceName }) {
 
 function getPathToScreenshot({ cwd, from, sliceName }) {
   const slicePath = path.join(cwd, from, sliceName)
-  const exists = glob.sync(`${slicePath}/preview.@(${FORMATS.join('|')})`)
+  const exists = glob.sync(`${slicePath}/preview.@(${acceptedImagesTypes.join('|')})`)
   if (exists.length) {
     return {
       path: exists[0],

@@ -11,6 +11,15 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "ownContent": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          },
+          "type": "StructuredText"
+        },
         "image": {
           "config": {
             "label": "My cool label",
@@ -27,15 +36,6 @@
             ]
           },
           "type": "Image"
-        },
-        "ownContent": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
         },
         "title": {
           "config": {
@@ -73,15 +73,6 @@
           },
           "type": "StructuredText"
         },
-        "ownContent3": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading3"
-          },
-          "type": "StructuredText"
-        },
         "image2": {
           "config": {
             "label": "",
@@ -95,6 +86,15 @@
             ]
           },
           "type": "Image"
+        },
+        "ownContent3": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading3"
+          },
+          "type": "StructuredText"
         },
         "bool": {
           "type": "Boolean",

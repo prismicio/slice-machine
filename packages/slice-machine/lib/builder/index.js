@@ -1,15 +1,16 @@
 import { mutate } from 'swr'
 import { useState, useContext, useEffect } from 'react'
+import { useIsMounted } from 'react-tidy'
+
 import { ModelContext } from 'src/model-context'
 import { ConfigContext } from 'src/config-context'
-import { useIsMounted } from 'react-tidy'
+
+import { fetchApi } from './fetch'
 
 import Header from './layout/Header'
 
 import {
   Box,
-  Flex,
-  Button
 } from 'theme-ui'
 
 import {
@@ -56,39 +57,6 @@ const Builder = ({ openPanel }) => {
 
   const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
 
-  const onSave = async () => {
-    setData({ loading: true, done: false, error: null })
-    fetch(createOnSaveUrl({
-      ...info,
-      value,
-    }), {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(async (res) => {
-      if (res.status > 209) {
-        const json = await res.json()
-        return setData({
-          loading: false,
-          done: true,
-          error: json.err,
-          message: json.reason
-        })
-      }
-      const newInfo = await res.json()
-      hydrate(resetInitialModel(value, newInfo))
-      mutate('/api/state')
-      setData({
-        loading: false,
-        done: true,
-        error: null,
-        message: 'Model & mocks have been generated succesfully!'
-      })
-    })
-  }
-
   useEffect(() => {
     if (isTouched) {
       if (isMounted) {
@@ -114,104 +82,64 @@ const Builder = ({ openPanel }) => {
     }
   }, [data])
 
-
-  const onPush = () => {
-    setData({ loading: true, done: false, error: null })
-    fetch(`/api/push?sliceName=${info.sliceName}&from=${info.from}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-
-      },
-    }).then(async res => {
-      if (res.status > 209) {
-        const json = await res.json()
-        return setData({
-          loading: false,
-          done: true,
-          error: json.err,
-          message: 'An unexpected error occured while pushing slice to Prismic'
-        })
+  const onSave = async () => {
+    fetchApi({
+      url: createOnSaveUrl({
+        ...info,
+        value,
+      }),
+      setData,
+      successMessage: 'Model & mocks have been generated succesfully!',
+      onSuccess(json) {
+        hydrate(resetInitialModel(value, json))
+        mutate('/api/state')
       }
-      const newInfo = await res.json()
-      hydrate(resetInitialModel(value, newInfo))
-      mutate('/api/state')
-      setData({
-        loading: false,
-        done: true,
-        error: null,
-        message: 'Model was correctly saved to Prismic!'
-      })
     })
   }
 
-  const onScreenshot = () => {
-    setData({
-      ...data,
-      imageLoading: true,
-    })
-    fetch(`/api/screenshot?sliceName=${info.sliceName}&from=${info.from}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(async res => {
-      const json = await res.json()
-      if (res.status > 209) {
-        return setData({
-          imageLoading: false,
-          done: true,
-          error: json.err,
-          message: json.reason
-        })
+  const onPush = async () => {
+    fetchApi({
+      url: `/api/push?sliceName=${info.sliceName}&from=${info.from}`,
+      setData,
+      successMessage: 'Model was correctly saved to Prismic!',
+      onSuccess(json) {
+        hydrate(resetInitialModel(value, json))
+        mutate('/api/state')
       }
-      setData({
-        imageLoading: false,
-        done: true,
-        error: null,
-        message: 'New screenshot added!'
-      })
-      mutate('/api/state')
-      hydrate(appendInfo(json))
     })
   }
 
-  const onCustomScreenshot = (base64Img) => {
-    setData({
-      ...data,
-      imageLoading: true,
-    })
-    fetch(`/api/custom-screenshot`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sliceName: info.sliceName,
-        from: info.from,
-        img: base64Img
-      })
-    })
-    .then(async res => {
-      const json = await res.json()
-      if (res.status > 209) {
-        return setData({
-          imageLoading: false,
-          done: true,
-          error: json.err,
-          message: json.reason
-        })
+  const onScreenshot = async () => {
+    fetchApi({
+      url: `/api/screenshot?sliceName=${info.sliceName}&from=${info.from}`,
+      setData,
+      setDataParams: [{ imageLoading: true }, { imageLoading: false }],
+      successMessage: 'New screenshot added!',
+      onSuccess(json) {
+        hydrate(appendInfo(json))
+        mutate('/api/state')
       }
-      setData({
-        imageLoading: false,
-        done: true,
-        error: null,
-        message: 'New screenshot added!'
-      })
-      mutate('/api/state')
-      hydrate(appendInfo(json))
+    })
+  }
+
+  const onCustomScreenshot = async (base64Img) => {
+    fetchApi({
+      url: '/api/custom-screenshot',
+      setData,
+      fetchparams: {
+        method: 'POST',
+        body: JSON.stringify({
+          sliceName: info.sliceName,
+          from: info.from,
+          img: base64Img
+        })
+      },
+      setDataParams: [{ imageLoading: true }, { imageLoading: false }],
+      successMessage: 'New screenshot added!',
+      onSuccess(json) {
+        hydrate(appendInfo(json))
+        mutate('/api/state')
+      }
     })
   }
 
