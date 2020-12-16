@@ -2,7 +2,8 @@ const baseServer = 'http://localhost:9999'
 
 export default async function handler(req, res) {
   return fetch(`${baseServer}${req.url}`, {
-    method:req.method,
+    method: req.method,
+    headers: req.headers,
     ...(req.method === 'POST' ? {
       body: JSON.stringify(req.body)
     } : {})

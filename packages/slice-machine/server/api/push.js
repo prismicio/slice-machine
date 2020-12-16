@@ -36,9 +36,7 @@ const getSlices = async(client) => {
     const slices = await res.json()
     return { err: null, slices }
   } catch(e) {
-    console.log({ e })
-    console.error('[api/slices] An error occured while fetching slices. Note that when stable, this should break!')
-    return { slices: [] }
+    return { slices: [], err: e }
   }
 }
 
@@ -47,6 +45,7 @@ export default async function handler(query) {
   const { env } = await getEnv()
   const { slices, err } = await getSlices(env.client)
   if (err) {
+    console.error('[api/slices] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
     return onError(err, 'Could not fetch remote slices')
   }
   const rootPath = path.join(env.cwd, from, sliceName)

@@ -21,7 +21,7 @@ const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
     return maybeFieldMock.content
   }
   const { handleMockConfig } = widget
-  if (handleMockConfig) {
+  if (maybeFieldMock.config && handleMockConfig) {
     return handleMockConfig(maybeFieldMock.config || {}, config)
   }
   // console.warn(`[slice-machine] "config" property for field type "${widget.TYPE_NAME}" is not yet supported.`)

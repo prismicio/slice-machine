@@ -4,6 +4,7 @@ const router = express.Router()
 const push = require('./push').default
 const update = require('./update').default
 const screenshot = require('./screenshot').default
+const customScreenshot = require('./custom-screenshot').default
 const state = require('./state').default
 
 router.use('/state', async function (_, res) {
@@ -16,6 +17,14 @@ router.use('/state', async function (_, res) {
 
 router.use('/screenshot', async function (req, res) {
   const payload = await screenshot(req.query)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
+router.use('/custom-screenshot', async function (req, res) {
+  const payload = await customScreenshot(req.body)
   if (payload.err) {
     return res.status(400).json(payload)
   }

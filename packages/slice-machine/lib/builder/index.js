@@ -178,6 +178,43 @@ const Builder = ({ openPanel }) => {
     })
   }
 
+  const onCustomScreenshot = (base64Img) => {
+    setData({
+      ...data,
+      imageLoading: true,
+    })
+    fetch(`/api/custom-screenshot`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sliceName: info.sliceName,
+        from: info.from,
+        img: base64Img
+      })
+    })
+    .then(async res => {
+      const json = await res.json()
+      if (res.status > 209) {
+        return setData({
+          imageLoading: false,
+          done: true,
+          error: json.err,
+          message: json.reason
+        })
+      }
+      setData({
+        imageLoading: false,
+        done: true,
+        error: null,
+        message: 'New screenshot added!'
+      })
+      mutate('/api/state')
+      hydrate(appendInfo(json))
+    })
+  }
+
   return (
     <Box>
       <Header info={info} Model={Model} />
@@ -198,6 +235,7 @@ const Builder = ({ openPanel }) => {
             previewUrl={info.previewUrl}
             storybookUrl={storybookUrl}
             onScreenshot={onScreenshot}
+            onHandleFile={onCustomScreenshot}
             imageLoading={data.imageLoading}
           />
         )}

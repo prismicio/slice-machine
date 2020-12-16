@@ -1,9 +1,31 @@
-import { useState, Fragment } from 'react'
-import { Flex, Image, Button, Text, Spinner } from 'theme-ui'
+import { useEffect, useState, useRef, Fragment } from 'react'
+import { Label, Flex, Image, Button, Text, Spinner } from 'theme-ui'
+import { acceptedImagesTypes } from 'src/consts'
 
-const ImagePreview = ({ src, onScreenshot, isCustomPreview, imageLoading, preventScreenshot }) => {
+const ImagePreview = ({
+  src,
+  onScreenshot,
+  isCustomPreview,
+  imageLoading,
+  onHandleFile,
+  preventScreenshot
+}) => {
+  const inputFile = useRef(null)
   const [display, setDisplay] = useState(false)
+  const [preserveDisplay, setPreserveDisplay] = useState(false)
   const handleMouseHover = (state) => setDisplay(state)
+
+  const handleFile = () => {
+    if (inputFile.current && inputFile.current.files) {
+      const reader = new FileReader()
+      reader.onload = function(ev) {
+        onHandleFile(ev.target.result)
+      }
+      reader.readAsDataURL(inputFile.current.files[0])
+    }
+  }
+
+  useEffect(() => setPreserveDisplay(false), [src])
 
   return (
     <Flex
@@ -23,7 +45,7 @@ const ImagePreview = ({ src, onScreenshot, isCustomPreview, imageLoading, preven
       onMouseLeave={() => handleMouseHover(false)}
     >
       {
-        (display || imageLoading) ? (
+        (display || preserveDisplay || imageLoading) ? (
           <Flex
             sx={{
               width: '100%',
@@ -36,20 +58,27 @@ const ImagePreview = ({ src, onScreenshot, isCustomPreview, imageLoading, preven
             }}
           >
             {
-              display ? (
+              display || preserveDisplay ? (
                 <Fragment>
-                  {
-                    isCustomPreview ? (
-                      <Text sx={{ color: '#FFF' }} as="h3">Uses Custom Preview</Text>
-                    ) : (
-                      <Fragment>
-                        { preventScreenshot
-                          ? <Text sx={{ color: '#FFF' }} as="h3">Storybook not running</Text>
-                          : <Button onClick={onScreenshot}>Take screenshot</Button>
-                        }
-                      </Fragment>
-                    )
-                  }
+                  <Flex sx={{ flexDirection: 'column' }}>
+                        <Button sx={{ mb: 3 }} variant={preventScreenshot ? 'disabled' : 'primary'} disabled={preventScreenshot} onClick={onScreenshot}>Take screenshot</Button>
+                        <Label
+                          htmlFor="input-file"
+                          variant="buttons.primary"
+                          sx={{ p: 2, borderRadius: '4px' }}
+                        >
+                          Custom screenshot
+                        </Label>
+                        <input
+                          onClick={() => setPreserveDisplay(true)}
+                          id="input-file"
+                          type="file"
+                          ref={inputFile}
+                          style={{ display: 'none' }}
+                          accept={acceptedImagesTypes.map(type => `image/${type}`).join(',')}
+                          onChange={() => handleFile(inputFile)}
+                        />
+                      </Flex>
                 </Fragment>
               ) : <Spinner />
             }

@@ -91,7 +91,7 @@ export const createMock = (config) => {
     return 'paragraph'
   })()
 
-  console.log({ config, field, isHeading: isHeading(field) })
+  const lorem = new LoremIpsum()
 
   return [{
     type: mainType,

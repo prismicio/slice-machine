@@ -70,7 +70,7 @@ const WithRouter = (props) => {
               textDecoration: 'none'
             }}>
             <Text as="h4" sx={{ m: 0 }}>
-              🍕 Slice Machine
+              Slice Machine
             </Text>
           </ThemeLink>
         </Link>

@@ -12,7 +12,7 @@ import serveStatic from 'serve-static'
 const api = require('./api')
 
 const app = express()
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '10mb', extended: true }))
 
 const out = path.join(__dirname, '..', 'out')
 

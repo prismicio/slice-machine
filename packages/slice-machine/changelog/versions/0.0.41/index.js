@@ -11,17 +11,16 @@ module.exports = {
     const smFolder = path.join(cwd, '.slicemachine')
     return !(fs.existsSync(smFolder))
   },
-  main: async function main(ignorePrompt = false) {
+  main: async function main(ignorePrompt, { cwd, pathToSmFile }) {
     const { yes } = ignorePrompt ? { yes: true } : await (async () => {
       console.info('\nSliceMachine nows supports both default and custom previews (screenshots)!')
       console.info('Default screenshots are now stored in a special .slicemachine folder.')
-      await shouldIRun('Would you like me to move current previews to .slicemachine?')
+      return shouldIRun('Would you like me to move current previews to .slicemachine folder?')
     })()
     if (yes) {
-      const cwd = require.main.paths[0].split('node_modules')[0]
-      const pathToSmFile = cwd + 'sm.json'
       if (fs.existsSync(pathToSmFile, 'utf8')) {
         try {
+          fs.mkdirSync(path.join(cwd, '.slicemachine', 'assets'))
           const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'));
           (json.libraries || []).forEach((lib) => {
             const {
