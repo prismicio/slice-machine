@@ -74,7 +74,7 @@ const Builder = ({ openPanel }) => {
           setDisplaySuccess(false)
           setData({ ...data, done: false })
         }
-      }, 2500)
+      }, 3500)
     } else {
       if (isMounted) {
         setDisplaySuccess(false)

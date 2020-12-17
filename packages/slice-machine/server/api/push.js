@@ -11,7 +11,7 @@ import { s3DefaultPrefix } from '../../src/consts'
 const onError = (r, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),
   status: r && r.status ? r.status : 500,
-  message,
+  reason: message,
 })
 
 const createOrUpdate = async ({
@@ -46,7 +46,7 @@ export default async function handler(query) {
   const { slices, err } = await getSlices(env.client)
   if (err) {
     console.error('[api/slices] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
-    return onError(err, 'Could not fetch remote slices')
+    return onError(err, `Error ${err.status}: Could not fetch remote slices`)
   }
   const rootPath = path.join(env.cwd, from, sliceName)
   const modelPath = path.join(rootPath, 'model.json')
