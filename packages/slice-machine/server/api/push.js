@@ -45,7 +45,7 @@ export default async function handler(query) {
   const { env } = await getEnv()
   const { slices, err } = await getSlices(env.client)
   if (err) {
-    console.error('[api/slices] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
+    console.error('[push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
     return onError(err, `Error ${err.status}: Could not fetch remote slices`)
   }
   const rootPath = path.join(env.cwd, from, sliceName)
@@ -57,7 +57,7 @@ export default async function handler(query) {
       const { path: pathToImageFile } = getPathToScreenshot({ cwd: env.cwd, from, sliceName })
 
       if (!pathToImageFile) {
-        const msg = 'Screenshot not found. Please check that file exists in slice folder or in .slicemachine assets'
+        const msg = '[push] Screenshot not found. Please check that file exists in slice folder or in .slicemachine assets'
         console.log(msg)
         return {
           err: new Error(msg),
@@ -66,14 +66,18 @@ export default async function handler(query) {
         }
       }
 
-      const deleteRes = await env.client.images.deleteFolder({ sliceName: snakelize(sliceName) })
-
-      if (deleteRes.status > 209) {
-        const msg = 'An error occured while purging slice folder - please contact support'
-        console.error(msg)
-        return onError(deleteRes, msg)
+      if (slices.find(e => e.id === snakelize(sliceName))) {
+        console.log('\n[push]: purging images folder')
+        const deleteRes = await env.client.images.deleteFolder({ sliceName: snakelize(sliceName) })
+        if (deleteRes.status > 209) {
+          const msg = '[push] An error occured while purging slice folder - please contact support'
+          console.error(msg)
+          return onError(deleteRes, msg)
+        }
       }
 
+
+      console.log('[push]: uploading preview image')
       const aclResponse = await (await env.client.images.createAcl()).json()
       const maybeErrorMessage = aclResponse.error || aclResponse.Message || aclResponse.message
       if (maybeErrorMessage) {
@@ -82,7 +86,7 @@ export default async function handler(query) {
         console.error(`Full error: ${JSON.stringify(aclResponse)}`)
         return onError(aclResponse, msg)
       }
-      const { values: { url, fields }, bucketEndpoint } = aclResponse
+      const { values: { url, fields }, imgixEndpoint, } = aclResponse
 
       const filename = path.basename(pathToImageFile)
       const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(sliceName)}/${filename}`
@@ -94,15 +98,16 @@ export default async function handler(query) {
         pathToFile: pathToImageFile,
       })
 
-      const s3ImageUrl = `${bucketEndpoint}${key}`
+      const s3ImageUrl = `${imgixEndpoint}/${key}`
 
       if (postStatus !== 204) {
-        const msg = 'An error occured while uploading files - please contact support'
+        const msg = '[push] An error occured while uploading files - please contact support'
         console.error(msg)
         console.error(`Error code: "${postStatus}"`)
         return onError(null, msg)
       }
 
+      console.log('[push]: pushing slice model to Prismic')
       const res = await createOrUpdate({
         slices,
         sliceName,
@@ -114,6 +119,7 @@ export default async function handler(query) {
         console.error(`[push] Unexpected error returned. Server message: ${message}`)
         return onError(res)
       }
+      console.log('[push] done!')
       return {
         isModified: false,
         isNew: false,

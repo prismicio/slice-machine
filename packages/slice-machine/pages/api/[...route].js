@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     method: req.method,
     headers: req.headers,
     ...(req.method === 'POST' ? {
-      body: JSON.stringify(req.body)
+      body: req.body
     } : {})
   }).then(async response => {
     const payload = await response.json()
@@ -14,4 +14,12 @@ export default async function handler(req, res) {
     console.error(`[slicemachine-dev] Error at route "${req.url}": ${err}`)
     res.status(err.status || 400).json(err)
   })
+}
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '64mb',
+    },
+  },
 }

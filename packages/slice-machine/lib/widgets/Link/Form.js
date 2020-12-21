@@ -1,13 +1,8 @@
-import * as yup from 'yup'
-import { useEffect, useState, Fragment } from 'react'
 import { DefaultFields } from 'lib/forms/defaults'
 
 
 import WidgetFormField from 'lib/builder/modules/EditModal/Field'
 
-import { FieldArray } from 'formik'
-
-import { Label, Card, Flex } from 'theme-ui'
 import { Col, Flex as FlexGrid } from 'components/Flex'
 
 const FormFields = { ...DefaultFields }

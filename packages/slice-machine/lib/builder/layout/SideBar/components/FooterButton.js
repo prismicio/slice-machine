@@ -24,9 +24,9 @@ const FooterButton = ({ info, isTouched, onSave, onPush, loading }) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}
-      variant={editable ? 'buttons.primary' : 'buttons.disabled'}
-      disabled={!editable}
-      onClick={editable ? onClick : null}
+      // variant={editable ? 'buttons.primary' : 'buttons.disabled'}
+      // disabled={!editable}
+      onClick={onClick}
     >
        { loading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } {text}
     </Flex>

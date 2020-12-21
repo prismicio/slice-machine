@@ -117,28 +117,27 @@ const Builder = ({ openPanel }) => {
       successMessage: 'New screenshot added!',
       onSuccess(json) {
         hydrate(appendInfo(json))
-        mutate('/api/state')
       }
     })
   }
 
-  const onCustomScreenshot = async (base64Img) => {
+  const onCustomScreenshot = async (file) => {
+    const form = new FormData()
+    Object.entries({ sliceName: info.sliceName, from: info.from })
+      .forEach(([key, value]) => form.append(key, value))
+    form.append('file', file)
     fetchApi({
       url: '/api/custom-screenshot',
       setData,
       fetchparams: {
         method: 'POST',
-        body: JSON.stringify({
-          sliceName: info.sliceName,
-          from: info.from,
-          img: base64Img
-        })
+        body: form,
+        headers: {}
       },
       setDataParams: [{ imageLoading: true }, { imageLoading: false }],
       successMessage: 'New screenshot added!',
       onSuccess(json) {
         hydrate(appendInfo(json))
-        mutate('/api/state')
       }
     })
   }

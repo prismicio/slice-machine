@@ -11,14 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "embed": {
-          "type": "Embed",
-          "config": {
-            "label": "",
-            "id": "embed",
-            "placeholder": ""
-          }
-        },
         "title": {
           "config": {
             "label": "Title",
@@ -27,6 +19,14 @@
             "single": "heading2"
           },
           "type": "StructuredText"
+        },
+        "embed": {
+          "type": "Embed",
+          "config": {
+            "label": "",
+            "id": "embed",
+            "placeholder": ""
+          }
         },
         "llapiId": {
           "config": {

@@ -10,7 +10,7 @@ const SharedSlicesApi = {
 
 const AclProviderApi = {
   STAGE: 'https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/',
-  PROD: 'https://gxm7zszu1f.execute-api.us-east-1.amazonaws.com/prod/'
+  PROD: 'https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/'
 }
 
 const createApiUrl = (base, { STAGE, PROD }) => {

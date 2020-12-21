@@ -24,7 +24,7 @@ router.use('/screenshot', async function (req, res) {
 })
 
 router.use('/custom-screenshot', async function (req, res) {
-  const payload = await customScreenshot(req.body)
+  const payload = await customScreenshot(req.files.file, req.body)
   if (payload.err) {
     return res.status(400).json(payload)
   }

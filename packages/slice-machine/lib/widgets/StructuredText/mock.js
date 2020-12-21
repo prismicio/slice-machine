@@ -84,14 +84,13 @@ export const createMock = (config) => {
       return split[0]
     }
     const maybeHeading = split.find(e => e.indexOf('heading') === 0)
-    console.log({ maybeHeading })
     if (maybeHeading) {
       return maybeHeading
     }
     return 'paragraph'
   })()
 
-  const lorem = new LoremIpsum()
+  const lorem = new LoremIpsum(defaults)
 
   return [{
     type: mainType,

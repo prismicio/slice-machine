@@ -19,6 +19,7 @@ export default async function handler(req) {
   const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
 
   try {
+    console.log('\n[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
   } catch(e) {
     return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
@@ -28,6 +29,7 @@ export default async function handler(req) {
   const mockPath = path.join(rootPath, 'mocks.json')
   const modelPath = path.join(rootPath, 'model.json')
 
+  console.log('[update]: generating mocks')
   const mockedSlice = await mock(sliceName, model)
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
@@ -36,6 +38,7 @@ export default async function handler(req) {
   const screenshotArgs = { cwd: env.cwd, from, sliceName }
   const { isCustom } = getPathToScreenshot(screenshotArgs)
   const pathToFile = createPathToScreenshot(screenshotArgs)
+  console.log('[update]: generating screenshot preview')
   const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {
@@ -47,6 +50,7 @@ export default async function handler(req) {
 
   const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
 
+  console.log('[update]: done!')
   return {
     ...!isCustom ? {
       previewUrl: screenshot,

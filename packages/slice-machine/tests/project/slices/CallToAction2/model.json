@@ -11,29 +11,25 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "xvsdfsdf": {
-          "type": "Boolean",
+        "fgdfg": {
+          "type": "Number",
           "config": {
             "label": "",
-            "id": "xvsdfsdf",
-            "placeholder": "",
-            "placeholder_false": "false",
-            "placeholder_true": "true",
-            "default_value": true
-          }
-        },
-        "desc": {
-          "type": "StructuredText",
-          "config": {
-            "label": "",
-            "id": "desc",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,rtl"
+            "id": "fgdfg",
+            "placeholder": ""
           }
         }
       },
-      "items": {}
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "fghj",
+            "placeholder": ""
+          }
+        }
+      }
     }
   ]
 }

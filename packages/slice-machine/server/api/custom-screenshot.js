@@ -5,7 +5,7 @@ import base64Img from 'base64-img'
 import { getPathToScreenshot } from '../../lib/queries/screenshot'
 import { getEnv } from '../../lib/env'
 
-export default async function handler({ from, sliceName, img }) {
+export default async function handler(file, { from, sliceName, img }) {
   const { env } = await getEnv()
 
   const { path: filePath, isCustom } = getPathToScreenshot({ cwd: env.cwd, from, sliceName })
@@ -14,8 +14,8 @@ export default async function handler({ from, sliceName, img }) {
     fs.unlinkSync(filePath)
   }
 
-  const pathToFile = path.join(env.cwd, from, sliceName)
-  base64Img.imgSync(img, pathToFile, 'preview')
+  const dest = path.join(env.cwd, from, sliceName, `preview.${file.type.split('/')[1]}`)
+  fs.renameSync(file.path, dest)
 
-  return { previewUrl: img }
+  return { previewUrl: base64Img.base64Sync(dest), isTouched: true }
 }

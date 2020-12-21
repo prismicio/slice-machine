@@ -3,19 +3,25 @@ global.fetch = require("node-fetch");
 
 console.log('Launching server')
 
-
+import os from 'os'
 import path from 'path'
 import express from 'express'
 import bodyParser from 'body-parser'
 import serveStatic from 'serve-static'
+import formData from 'express-form-data'
 
 const api = require('./api')
 
 const app = express()
-app.use(bodyParser.json({ limit: '10mb', extended: true }))
+app.use(bodyParser.json({ limit: '64mb', extended: true }))
 
 const out = path.join(__dirname, '..', 'out')
 
+const formDataOptions = {
+  uploadDir: os.tmpdir()
+}
+
+app.use(formData.parse(formDataOptions))
 app.use(serveStatic(out))
 
 app.use('/api', api)

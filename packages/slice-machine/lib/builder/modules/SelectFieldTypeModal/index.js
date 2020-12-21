@@ -25,6 +25,7 @@ const CardsOrder = [
   `${Widgets.Embed.TYPE_NAME}`,
   `${Widgets.Number.TYPE_NAME}`,
   `${Widgets.GeoPoint.TYPE_NAME}`,
+  `${Widgets.Color.TYPE_NAME}`,
   `${Widgets.Text.TYPE_NAME}`,
 ]
 
