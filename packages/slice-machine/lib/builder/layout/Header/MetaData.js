@@ -39,7 +39,6 @@ const MetaDataModal = ({
 }) => {
 
   const onUpdateField = (value) => {
-    console.log({ value, Model })
     Model.hydrate(() => Model.appendInfo(value))
     close()
   }

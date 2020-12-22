@@ -5,45 +5,14 @@ import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
 
+import { handleFields } from './handlers'
+
 const createEmptyMock = (sliceName, variation) => ({
   ...variation,
   slice_type: snakelize(sliceName),
   items: [],
   primary: {}
 })
-
-const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
-  if (maybeFieldMock.content) {
-    const { handleMockContent } = widget
-    if (handleMockContent) {
-      return handleMockContent(maybeFieldMock.content, config)
-    }
-    return maybeFieldMock.content
-  }
-  const { handleMockConfig } = widget
-  if (maybeFieldMock.config && handleMockConfig) {
-    return handleMockConfig(maybeFieldMock.config || {}, config)
-  }
-  // console.warn(`[slice-machine] "config" property for field type "${widget.TYPE_NAME}" is not yet supported.`)
-  return widget.createMock ? widget.createMock(config || {}) : null
-}
-
-const handleFields = (fields = [], mocks) => {
-  return fields.reduce((acc, [key, value]) => {
-    const widget = Widgets[value.type]
-    const maybeFieldMock = mocks[key]
-
-    if (widget) {
-      const mock = handleFieldMock(widget, maybeFieldMock, value.config)
-      return {
-        ...acc,
-        [key]: mock
-      }
-    }
-    console.warn(`[slice-machine] Could not create mock for type "${value.type}": not supported.`)
-    return acc
-  }, {})
-}
 
 const getConfig = (cwd) => {
   const pathToMocks = path.join(cwd, '.slicemachine/mocks.json')
@@ -60,7 +29,8 @@ export default async (sliceName, model) => {
 
   const variations = model.variations.map(variation => {
     const mock = createEmptyMock(sliceName, variation)
-    mock.primary = handleFields(
+    const handler = handleFields(Widgets)
+    mock.primary = handler(
       Object.entries(variation.primary),
       config[sliceName] || {}
     )
@@ -75,7 +45,7 @@ export default async (sliceName, model) => {
     }
 
     for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-      items.push(handleFields(repeat, config[sliceName] || {}))
+      items.push(handler(repeat, config[sliceName] || {}))
     }
     mock.items = items
     return mock

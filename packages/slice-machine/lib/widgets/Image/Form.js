@@ -157,7 +157,7 @@ FormFields.thumbnails = {
         if (!value.name) {
           return false
         }
-        if (!value.width && !value.height) {
+        if (!value.width && !value.height || typeof value.width !== 'number' || typeof value.height !== 'number') {
           return false
         }
         return true

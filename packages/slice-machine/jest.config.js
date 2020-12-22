@@ -3,6 +3,9 @@ const { defaults } = require('jest-config');
 module.exports = {
   ...defaults,
   verbose: true,
+  transform: {
+    '\\.js$': ['babel-jest', { configFile: './babel.next.config.js' }]
+  },
   coverageThreshold: {
     './lib/widgets': {
       branches: 100,

@@ -25,8 +25,9 @@ const FormFields = {
     component: (props) => (
       <FormFieldCheckboxControl
         {...props}
-        fieldName="options"
-        setControlFromField={(options) => options.length && options[0]}
+        controllerField="options"
+        defaultValue={props.field.value}
+        setControlFromField={(options, isChecked) => isChecked ? options.length && options[0] : undefined}
         label={(options) => `use first value as default ${options.length ? `("${options[0]}")` : ''}`}
       />
     )

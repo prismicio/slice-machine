@@ -47,7 +47,6 @@ const handleBranch = () => {
   return new Promise(resolve => {
     exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
       if (err) {
-        console.log('[info] could not get git branch')
         resolve({ err })
       }
       resolve({ branch: stdout.trim() })
