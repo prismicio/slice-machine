@@ -3,7 +3,7 @@ import React from 'react'
 import { pascalize } from 'sm-commons/utils/str'
 
 const Empty = () => <p>Your SliceZone is empty!</p>
-export default function SliceZone({ registry = {}, slices, resolver = () => null }) {
+export default function SliceZone({ registry = {}, slices, data, resolver = () => null }) {
   if (!slices || !slices.length) {
     return process.env.NODE_ENV !== 'production' ? <Empty /> : null
   }
@@ -21,7 +21,7 @@ export default function SliceZone({ registry = {}, slices, resolver = () => null
 
     const Component = typeof maybeRegister === 'object' ? resolver({ ...maybeRegister, slice, i }) : maybeRegister
     if (Component) {
-      return <Component key={`slice-${i + 1}`} slice={slice}  i={i} />
+      return <Component key={`slice-${i + 1}`} slice={slice}  i={i} docData={data} />
     }
     return null
   })
