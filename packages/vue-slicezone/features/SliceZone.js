@@ -13,11 +13,6 @@ const isPromise = elem =>
 
 const promisify = elem => (isPromise(elem) ? elem : Promise.resolve(elem));
 
-const handleSliceProps = (sliceProps) =>
-  1 === 2
-  ? sliceProps()
-  : sliceProps
-
 export default {
   name: "SliceZone",
   props: {
