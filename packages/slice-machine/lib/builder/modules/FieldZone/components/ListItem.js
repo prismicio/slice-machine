@@ -35,7 +35,7 @@ const ListItem = ({
 
   const sliceProperty = showHints ? hint(framework, item, modelFieldName, key) : `slice.${modelFieldName}.${key}`
 
-  if (!widgets[type].Meta) {
+  if (!widgets[type] || !widgets[type].Meta) {
     return (
       <Li><Text>Field type "{type}" not supported</Text></Li>
     )
@@ -52,8 +52,13 @@ const ListItem = ({
           {/* here */}
           <ItemHeader 
             theme={theme}
+<<<<<<< HEAD
             text={label || key}
             sliceProperty={sliceProperty}
+=======
+            text={config.label || key}
+            sliceProperty={`slice.${modelFieldName}.${key}`}
+>>>>>>> slice-machine-ui
             iconButtonProps={provided.dragHandleProps}
             WidgetIcon={WidgetIcon}
           />

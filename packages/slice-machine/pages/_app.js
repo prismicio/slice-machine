@@ -1,8 +1,9 @@
+import App from 'next/app'
 import { useEffect, useState } from 'react'
-import Drawer from 'rc-drawer'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import useSwr from 'swr'
+import Drawer from 'rc-drawer'
 
 import theme from 'src/theme'
 import LibProvider from 'src/lib-context'
@@ -16,6 +17,7 @@ import Warnings from 'components/Warnings'
 
 import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 
+import 'react-tabs/style/react-tabs.css'
 import 'rc-drawer/assets/index.css'
 import 'lib/builder/layout/Drawer/index.css'
 import 'src/css/modal.css'
@@ -24,7 +26,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json())
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
-  Default: ({ Component, ...rest }) => <Component {...rest} />,
+  Default: ({ Component, pageProps, ...rest }) => <Component {...pageProps} {...rest} />,
   FetchError,
   LibError: FetchError,
   NoLibraryConfigured,
@@ -36,15 +38,15 @@ function MyApp({ Component, pageProps }) {
   const [drawerState, setDrawerState] = useState({ open: false })
   const [state, setRenderer] = useState({ Renderer: RenderStates.Loading, payload: null })
 
-  const openPanel = (priority) => setDrawerState({ open: true, priority })
+  const openPanel = (priority) => setDrawerState({ ...drawerState, open: true, ...priority ? { priority } : null })
 
   useEffect(() => {
     if (!data) {
       return
     }
-    else if (data.clientError) {
-      setRenderer({ Renderer: RenderStates.FetchError, payload: data })
-    }
+    // else if (data.clientError) {
+    //   setRenderer({ Renderer: RenderStates.FetchError, payload: data })
+    // }
     else if (!data.libraries) {
       setRenderer({ Renderer: RenderStates.LibError, payload: data })
     }
@@ -85,9 +87,13 @@ function MyApp({ Component, pageProps }) {
                         <Drawer
                           placement="right"
                           open={drawerState.open}
-                          onClose={() => setDrawerState({ open: false })}
+                          onClose={() => setDrawerState({ ...drawerState, open: false })}
                         >
-                          <Warnings priority={drawerState.priority} list={data.warnings} configErrors={data.configErrors} />
+                          <Warnings
+                            priority={drawerState.priority}
+                            list={data.warnings}
+                            configErrors={data.configErrors}
+                          />
                         </Drawer>
                       </ModelHandler>
                     </LibProvider>
@@ -98,7 +104,11 @@ function MyApp({ Component, pageProps }) {
         }
       </BaseStyles>
     </ThemeProvider>
-  );
+  )
+}
+
+MyApp.getInitialProps = async (appContext) => {
+  return await App.getInitialProps(appContext)
 }
 
 export default MyApp

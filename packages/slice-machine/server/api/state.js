@@ -16,7 +16,7 @@ const hasStorybookScript = (cwd) => {
   }
 }
 
-const createWarnings = async ({ env, configErrors }) => {
+const createWarnings = async ({ env, configErrors, clientError }) => {
   const hasScript = hasStorybookScript(env.cwd)
   let storybookIsRunning = await (async () => {
     try {
@@ -40,14 +40,16 @@ const createWarnings = async ({ env, configErrors }) => {
     return []
   })()
   return [
+    ...env.updateAvailable && env.updateAvailable.next ? [[warningStates.NEW_VERSION_AVAILABLE, env.updateAvailable]] : [],
     ...!env.auth ? [warningStates.NOT_CONNECTED] : [],
+    ... clientError ? [`${warningStates.CLIENT_ERROR}:${clientError.reason.toUpperCase()}`] : [],
     ...storybookState,
   ]
 }
 
 export default async function handler() {
   const { env, errors: configErrors } = await getEnv()
-  const { libraries, err: clientError } = await fetchLibs(env)
-  const warnings = await createWarnings({ env, configErrors })
+  const { libraries, clientError } = await fetchLibs(env)
+  const warnings = await createWarnings({ env, configErrors, clientError })
   return { libraries, clientError, configErrors, env, warnings }
 }

@@ -24,13 +24,10 @@ export const StorybookNotInstalled = () => (
       )}
     >
       <Text as="p">
-        In order to push your slices to your Shared Slices bucket,
-        you will need to be connected to Prismic.
-        If you haven't already created a project, please <b>run the setup command</b> first:
-        <Text as="pre" variant="pre">prismic sm --setup</Text>
+        In order to save the screenshots of your components, Storybook needs to be running.
+        It seems Storybook is not configured in yur project. Please <b>run this command</b> first:
+        <Text variant="pre">prismic sm --add-storybook</Text>
         <Text mt={1}>👆 This needs to be done inside a valid Next/Nuxt project.</Text>
-        <Text mt={3}><b>Otherwise, simply run:</b></Text>
-        <Text as="pre" mt={1}>prismic login</Text>
       </Text>
     </Card>
 )
@@ -57,13 +54,12 @@ export const StorybookNotRunning = () => (
       )}
     >
       <Text as="p">
-        In order to push your slices to your Shared Slices bucket,
-        you will need to be connected to Prismic.
-        If you haven't already created a project, please <b>run the setup command</b> first:
-        <Text as="pre" variant="pre">prismic sm --setup</Text>
+        In order to save the screenshots of your components, Storybook needs to be running.
+        If you configured it already, simply type
+        <Text variant="pre">yarn run storybook</Text>
+        <Text mt={2}>If you haven't configured it yet, try running</Text>
+        <Text variant="pre">prismic sm --add-storybook</Text>
         <Text mt={1}>👆 This needs to be done inside a valid Next/Nuxt project.</Text>
-        <Text mt={3}><b>Otherwise, simply run:</b></Text>
-        <Text as="pre" mt={1}>prismic login</Text>
       </Text>
     </Card>
 )
@@ -90,13 +86,10 @@ export const StorybookNotInManifest = () => (
       )}
     >
       <Text as="p">
-        In order to push your slices to your Shared Slices bucket,
-        you will need to be connected to Prismic.
-        If you haven't already created a project, please <b>run the setup command</b> first:
-        <Text as="pre" variant="pre">prismic sm --setup</Text>
-        <Text mt={1}>👆 This needs to be done inside a valid Next/Nuxt project.</Text>
-        <Text mt={3}><b>Otherwise, simply run:</b></Text>
-        <Text as="pre" mt={1}>prismic login</Text>
+        In order to save the screenshots of your components, Storybook needs to be running.
+        For that, the builder needs to know which port of localhost, Storybook uses. Add this property
+        to your sm.json file:
+        <Text variant="pre">{`"storybook": "http://localhost:[port]"`}</Text>
       </Text>
     </Card>
 )

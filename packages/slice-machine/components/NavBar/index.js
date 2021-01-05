@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import { Button, Badge, Flex, Box, useThemeUI, useColorMode } from 'theme-ui'
 
 import IconButton from '../IconButton'
@@ -6,7 +6,7 @@ import IconButton from '../IconButton'
 import { VscColorMode } from 'react-icons/vsc'
 import { AiOutlineWarning } from 'react-icons/ai'
 
-const Warnings = ({ theme, warnings, onClick }) => (
+const WarningsIcon = ({ theme, warnings, onClick }) => (
   <Fragment>
     <IconButton
         Icon={AiOutlineWarning}
@@ -19,13 +19,15 @@ const Warnings = ({ theme, warnings, onClick }) => (
 )
 
 const Chromatic = ({ env }) => env.chromatic ? [
-  <Button as="a" href={env.chromatic.storybook} target="_blank" mr={1}>Online Storybook</Button>,
-  <Button as="a" href={env.chromatic.library} target="_blank" mr={1}>Chromatic preview</Button>
+  <Button key="chromatic-link-1" as="a" href={env.chromatic.storybook} target="_blank" mr={1}>Online Storybook</Button>,
+  <Button key="chromatic-link-2" as="a" href={env.chromatic.library} target="_blank" mr={1}>Chromatic preview</Button>
 ] : null
 
 const NavBar = ({ as = 'header', sx = {}, children, env, warnings, openPanel }) => {
   const { theme } = useThemeUI()
   const [colorMode, setColorMode] = useColorMode()
+
+  const memoedWarnings = useMemo(() => warnings, [warnings])
 
   return (
     <Flex
@@ -43,8 +45,8 @@ const NavBar = ({ as = 'header', sx = {}, children, env, warnings, openPanel }) 
       <Box sx={{ mx: 'auto' }} />
       <Chromatic env={env} />
       {
-        warnings && warnings.length ? (
-          <Warnings theme={theme} warnings={warnings.length} onClick={openPanel} />
+        memoedWarnings && memoedWarnings.length ? (
+          <WarningsIcon theme={theme} warnings={memoedWarnings.length} onClick={openPanel} />
         ) : null
       }
       <IconButton

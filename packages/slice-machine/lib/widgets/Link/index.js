@@ -1,9 +1,8 @@
 import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
-import {
-  createInitialValues,
-  createValidationSchema
-} from 'lib/forms'
+import { createInitialValues } from 'lib/forms'
+
+import { createMock } from './mock'
 
 /**
 * {
@@ -57,9 +56,6 @@ const create = (apiId) => ({
   id: apiId
 })
 
-const createMock = (maybeMock) =>
-  maybeMock || ({ link_type: "Web", url: "https://slicemachine.dev" })
-
 const Meta = {
   icon: BsLink,
   title: 'Link',
@@ -71,6 +67,6 @@ export default {
   Meta,
   FormFields,
   Form,
-  create
-
+  create,
+  TYPE_NAME: 'Link'
 }

@@ -88,8 +88,14 @@ const Card = forwardRef(({
           <Fragment>
             <ReactTooltip type="light" multiline border borderColor={'tomato'} />
             <Badge
-              mr={2}
+              ml={2}
+              mt='3px'
+              pt='2px'
+              pb='3px'
+              px='8px'
               bg="error"
+              variant='outline'
+              sx={{ color: '#FFF' }}
               data-place="bottom"
               data-tip={
                 `Slice name "${nameConflict.sliceName}" can't be transformed<br/> to snake case "${nameConflict.id}". Please update one of these values manually!`

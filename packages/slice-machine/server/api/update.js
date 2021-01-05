@@ -4,18 +4,22 @@ import atob from 'atob'
 import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
+import { createScreenshotUrl } from '../../lib/utils'
+import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
 
 import { getEnv } from '../../lib/env'
-
 import mock from '../../lib/mock'
 
 export default async function handler(req) {
-  const { env } = getEnv()
-  const { sliceName, from, model: strModel, screenshotUrl } = req.query
+  const { env } = await getEnv()
+  const { sliceName, from, model: strModel } = req.query
 
   const model = JSON.parse(atob(strModel))
 
+  const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
+
   try {
+    console.log('\n[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
   } catch(e) {
     return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
@@ -25,13 +29,17 @@ export default async function handler(req) {
   const mockPath = path.join(rootPath, 'mocks.json')
   const modelPath = path.join(rootPath, 'model.json')
 
-  const mockedSlice = mock(sliceName, model)
+  console.log('[update]: generating mocks')
+  const mockedSlice = await mock(sliceName, model)
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
 
-  const pathToFile = path.join(env.cwd, from, sliceName, 'preview.png')
-  const browser = await puppeteer.launch()
+  const screenshotArgs = { cwd: env.cwd, from, sliceName }
+  const { isCustom } = getPathToScreenshot(screenshotArgs)
+  const pathToFile = createPathToScreenshot(screenshotArgs)
+  console.log('[update]: generating screenshot preview')
+  const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {
     return {
@@ -40,10 +48,14 @@ export default async function handler(req) {
     }
   }
 
-  const screenshot = base64Img.base64Sync(pathToFile)
+  const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
 
+  console.log('[update]: done!')
   return {
-    previewUrl: screenshot,
+    ...!isCustom ? {
+      previewUrl: screenshot,
+      hasPreview: screenshot !== null
+    } : null,
     isModified: true
   }
 }

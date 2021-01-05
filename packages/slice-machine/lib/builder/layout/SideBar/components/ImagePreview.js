@@ -1,11 +1,34 @@
-import { useState } from 'react'
-import { Flex, Image, Button, Text, Spinner } from 'theme-ui'
+import { useState, useRef, Fragment } from 'react'
+import { Label, Flex, Image, Button, Text, Spinner } from 'theme-ui'
+import { acceptedImagesTypes } from 'src/consts'
 
-const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
+const ImagePreview = ({
+  src,
+  onScreenshot,
+  isCustomPreview,
+  imageLoading,
+  onHandleFile,
+  preventScreenshot
+}) => {
+  const inputFile = useRef(null)
   const [display, setDisplay] = useState(false)
   const handleMouseHover = (state) => setDisplay(state)
 
+  const handleFile = (file) => {
+    onHandleFile(file)
+    inputFile.current.value = ''
+  }
+
   return (
+    <div>
+      <input
+        id="input-file"
+        type="file"
+        ref={inputFile}
+        style={{ display: 'none' }}
+        accept={acceptedImagesTypes.map(type => `image/${type}`).join(',')}
+        onChange={(e) => handleFile(e.target.files[0])}
+      />
     <Flex
       sx={{
         position: 'relative',
@@ -22,6 +45,7 @@ const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
       onMouseEnter={() => handleMouseHover(true)}
       onMouseLeave={() => handleMouseHover(false)}
     >
+      
       {
         (display || imageLoading) ? (
           <Flex
@@ -37,7 +61,18 @@ const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
           >
             {
               display ? (
-                <Button onClick={onScreenshot}>Take screenshot</Button>
+                <Fragment>
+                  <Flex sx={{ flexDirection: 'column' }}>
+                    <Button sx={{ mb: 3 }} variant={preventScreenshot ? 'disabled' : 'primary'} disabled={preventScreenshot} onClick={onScreenshot}>Take screenshot</Button>
+                    <Label
+                      htmlFor="input-file"
+                      variant="buttons.primary"
+                      sx={{ p: 2, borderRadius: '4px' }}
+                    >
+                      Custom screenshot
+                    </Label>
+                  </Flex>
+                </Fragment>
               ) : <Spinner />
             }
           </Flex>
@@ -47,6 +82,7 @@ const ImagePreview = ({ src, onScreenshot, imageLoading }) => {
         src ? <Image src={src} alt="Preview image" /> : <Text>Could not load image.</Text>
       }
     </Flex>
+    </div>
   )
 }
 

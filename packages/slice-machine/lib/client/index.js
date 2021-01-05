@@ -1,9 +1,19 @@
+import path from 'path'
+import { maybeJsonFile } from '../utils'
 import fakeApi from './fake'
+import upload from './upload'
 
-const STAGE = 'https://4b7a9w5244.execute-api.us-east-1.amazonaws.com/stage/slices/'
-const PROD = 'https://silo2hqf53.execute-api.us-east-1.amazonaws.com/prod/slices/'
+const SharedSlicesApi = {
+  STAGE: 'https://customtypes.wroom.io/slices/',
+  PROD: 'https://silo2hqf53.execute-api.us-east-1.amazonaws.com/prod/slices/'
+}
 
-const createApiUrl = (base) => {
+const AclProviderApi = {
+  STAGE: 'https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/',
+  PROD: 'https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/'
+}
+
+const createApiUrl = (base, { STAGE, PROD }) => {
   if (base && base.includes('wroom.io')) {
     return STAGE
   }
@@ -15,7 +25,6 @@ const createFetcher = (apiUrl, repo, auth) => (body, action = '', method = 'get'
     repository: repo,
     Authorization: `Bearer ${auth}`
   }
-  console.log({ apiUrl, repo, auth })
   return fetch(new URL(action, apiUrl), {
     headers,
     method,
@@ -25,21 +34,43 @@ const createFetcher = (apiUrl, repo, auth) => (body, action = '', method = 'get'
   })
 }
 
-const initClient = (base, repo, auth) => {
+const intiFetcher = (base, ApiUrls, devConfigArgs, repo, auth) => {
+  const apiUrl = createApiUrl(base, ApiUrls)
+  return createFetcher(
+    ...devConfigArgs
+      ? devConfigArgs
+      : [apiUrl, repo, auth])
+}
+
+const initClient = ({ cwd, base, repo, auth }) => {
   if (!auth) {
     return fakeApi()
   }
-  const apiUrl = createApiUrl(base)
-  const fetcher = createFetcher(apiUrl, repo, auth)
+  const devConfig = cwd ? maybeJsonFile(path.join(cwd, 'sm.dev.json')) : {}
+  
+  const apiFetcher = intiFetcher(base, SharedSlicesApi, devConfig.sharedSlicesApi, repo, auth)
+  const aclFetcher = intiFetcher(base, AclProviderApi, devConfig.aclProviderApi, repo, auth)
+
   return {
     async get() {
-      return await fetcher()
+      return await apiFetcher()
     },
     async insert(body) {
-      return await fetcher(body, 'insert', 'post')
+      return await apiFetcher(body, 'insert', 'post')
     },
     async update(body) {
-      return await fetcher(body, 'update', 'post')
+      return await apiFetcher(body, 'update', 'post')
+    },
+    images: {
+      async createAcl() {
+        return await aclFetcher(null, 'create', 'get')
+      },
+      async deleteFolder(body) {
+        return await aclFetcher(body, 'delete-folder', 'post')
+      },
+      async post(params) {
+        return upload(params)
+      }
     }
   }
 }

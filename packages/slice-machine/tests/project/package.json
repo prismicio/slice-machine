@@ -28,7 +28,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "slicemachine": "yarn --cwd ../.. run dev-server",
+    "slicemachine": "node ../../start.js --port 9999",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic --exit-zero-on-changes --no-interactive"
   }

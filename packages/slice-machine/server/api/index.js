@@ -2,11 +2,10 @@ const express = require('express')
 const router = express.Router()
 
 const push = require('./push').default
-const auth = require('./auth').default
 const update = require('./update').default
 const screenshot = require('./screenshot').default
+const customScreenshot = require('./custom-screenshot').default
 const state = require('./state').default
-const branch = require('./branch').default
 
 router.use('/state', async function (_, res) {
   const payload = await state()
@@ -16,25 +15,16 @@ router.use('/state', async function (_, res) {
   return res.status(200).json(payload)
 })
 
-router.use('/branch', async function (_, res) {
-  const payload = await state()
-  if (payload.err) {
-    return res.status(400).json(payload)
-  }
-  return res.status(200).json(payload)
-})
-
-
-router.use('/auth', async function (req, res) {
-  const payload = await auth(req)
-  if (payload.err) {
-    return res.status(400).json(payload)
-  }
-  return res.status(200).json(payload)
-})
-
 router.use('/screenshot', async function (req, res) {
   const payload = await screenshot(req.query)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
+router.use('/custom-screenshot', async function (req, res) {
+  const payload = await customScreenshot(req.files.file, req.body)
   if (payload.err) {
     return res.status(400).json(payload)
   }

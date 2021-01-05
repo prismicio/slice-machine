@@ -1,6 +1,4 @@
-import {
-  Box,
-} from 'theme-ui'
+import { Box } from 'theme-ui'
 
 import Card from 'components/Card'
 
@@ -22,6 +20,7 @@ const SideBar = ({
   storybookUrl,
   imageLoading,
   onScreenshot,
+  onHandleFile,
   previewUrl
 }) => {
 
@@ -48,7 +47,14 @@ const SideBar = ({
           />
         )}
       >
-        <ImagePreview imageLoading={imageLoading} src={previewUrl} onScreenshot={onScreenshot} />
+        <ImagePreview
+          src={previewUrl}
+          isCustomPreview={info.isCustomPreview}
+          imageLoading={imageLoading}
+          onScreenshot={onScreenshot}
+          onHandleFile={onHandleFile}
+          preventScreenshot={!!maybeStorybookError}
+        />
         <ul>
           {
             maybeStorybookError ? (

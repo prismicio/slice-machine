@@ -9,6 +9,7 @@ import {
 import { removeProp } from 'lib/utils'
 
 import FormFields from './FormFields'
+import { createMock } from './mock'
 
 /**
  * {
@@ -27,10 +28,6 @@ const create = (apiId) => ({
   ...createInitialValues(FormFields),
   id: apiId
 })
-
-const _createMock = (config) => config.options[Math.floor(Math.random() * config.options.length)]
-
-const createMock = (maybeMock, config) => maybeMock || _createMock(config)
 
 const Meta = {
   icon: MdDns,

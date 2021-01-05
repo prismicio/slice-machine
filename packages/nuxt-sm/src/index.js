@@ -28,6 +28,7 @@ async function handleLibraryPath(libPath) {
 }
 
 async function install(moduleOptions) {
+  console.log('NUXT_SM')
   const options = {
     ...moduleOptions,
     ...(this.options.prismic || {}),
