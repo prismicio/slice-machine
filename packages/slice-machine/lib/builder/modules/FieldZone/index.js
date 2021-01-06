@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import { useThemeUI } from 'theme-ui'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import ReactTooltip from 'react-tooltip'
 
 import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 
@@ -12,18 +11,18 @@ import {
 } from 'theme-ui'
 
 import Card from 'components/Card'
+import Tooltip from 'components/Tooltip'
 
 import ListItem  from './components/ListItem'
 import NewField from './components/NewField'
 
-const dataTipText = `
-  Each slice has a “non repeatable zone” and a<br/>
-  “repeatable zone”. The non-repeatable zone<br/>
-  is for fields that should appear once, like a<br/>
-  section title. The repeatable zone is for a group<br/>
-  of fields that you want to be able to repeat an<br/>
-  indeterminate number of times, like FAQs.
+const dataTipText = ` The non-repeatable zone
+  is for fields<br/> that should appear once, like a<br/>
+  section title.
 `
+const dataTipText2 = `The repeatable zone is for a group<br/>
+  of fields that you want to be able to repeat an<br/>
+  indeterminate number of times, like FAQs`
 
 const FieldZone = ({
   fields,
@@ -63,12 +62,12 @@ const FieldZone = ({
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
             borderBottom: t => `1px solid ${t.colors.borders}`,
-            borderTop: t => `1px solid ${t.colors.borders}`
           }}
         >
-          <ReactTooltip type="dark" multiline place="right" />
+          <Tooltip id="question-circle" />
           <Heading as="h5" mr={2}>{title}</Heading>
           <FaRegQuestionCircle
+            data-for="question-circle"
             color={theme.colors.icons}
             data-tip={dataTip}
             style={{ position: 'relative', top: '1px' }}
@@ -156,7 +155,7 @@ export const RepeatZone = ({
       newFieldData
     }
     newFieldData
-    dataTip={dataTipText}
+    dataTip={dataTipText2}
     {...rest}
   />
 )

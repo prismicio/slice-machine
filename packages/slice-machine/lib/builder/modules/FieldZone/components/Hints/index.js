@@ -1,11 +1,22 @@
-import toReact from './toReact';
-import toVue from './toVue';
+import * as Renderers from './Renderers'
 
+import { SupportedFrameworks } from 'src/consts'
 
-const hint = (framework, item, modelFieldName, key) => { 
-  const isVue = framework === 'nuxt' || framework === 'vue' ;
-  // const isReact = framework === 'react' || framework === 'next';
-  return isVue ? toVue(item, modelFieldName, key) : toReact(item, modelFieldName, key);
+const FrameworkRenderers = {
+  [SupportedFrameworks.nuxt]: Renderers.nuxt,
+  [SupportedFrameworks.next]: Renderers.next,
+  [SupportedFrameworks.vue]: Renderers.vue,
+  [SupportedFrameworks.react]: Renderers.react,
+  vanillajs: Renderers.vanillajs
 }
 
-export default hint;
+const Hint = ({ framework, show, ...rest }) => { 
+  if (FrameworkRenderers[framework]) {
+    const Render = FrameworkRenderers[framework]
+    return <div style={{ display: show ? 'initial' : 'none' }}><Render {...rest } /></div>
+  }
+  console.error(`Framework "${framework}" not supported`)
+  return null
+}
+
+export default Hint;

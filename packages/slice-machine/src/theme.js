@@ -1,4 +1,4 @@
-import { darken, lighten } from '@theme-ui/color'
+import { darken } from '@theme-ui/color'
 
 export default () => ({
   colors: {
@@ -52,12 +52,12 @@ export default () => ({
       }
     }
   },
-  "fonts": {
-    "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
-    "heading": "inherit",
-    "monospace": "Menlo, monospace"
+  fonts: {
+    body: "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
+    heading: "inherit",
+    monospace: "Menlo, monospace"
   },
-  "fontSizes": [
+  fontSizes: [
     12,
     14,
     16,
@@ -68,31 +68,31 @@ export default () => ({
     64,
     72
   ],
-  "fontWeights": {
-    "body": 400,
-    "heading": 500,
-    "label": 500,
-    "display": 900
+  fontWeights: {
+    body: 400,
+    heading: 500,
+    label: 500,
+    display: 900
   },
-  "lineHeights": {
-    "body": 1.5,
-    "heading": 1.25
+  lineHeights: {
+    body: 1.5,
+    heading: 1.25
   },
-  "textStyles": {
-    "heading": {
-      "fontFamily": "heading",
-      "fontWeight": "heading",
-      "lineHeight": "heading"
+  textStyles: {
+    heading: {
+      fontFamily: "heading",
+      fontWeight: "heading",
+      lineHeight: "heading"
     },
-    "display": {
-      "variant": "textStyles.heading",
-      "fontSize": [
+    display: {
+      variant: "textStyles.heading",
+      fontSize: [
         5,
         6
       ],
-      "fontWeight": "display",
-      "letterSpacing": "-0.03em",
-      "mt": 3
+      fontWeight: "display",
+      letterSpacing: "-0.03em",
+      mt: 3
     }
   },
   sizes: {
@@ -221,13 +221,14 @@ export default () => ({
       border: 'none',
       color: 'primary',
       background: 'transparent',
-      p: '8px',
+      p: 1,
       position: 'relative',
       top: '1px',
       ml: 1,
       cursor: 'pointer',
-      '&:focus': {
-        outline: 'none',
+      '&:hover': {
+        background: 'rgba(0,0,0,0.06) !important',
+        borderRadius: '3px'
       }
     },
     close: {
@@ -330,6 +331,8 @@ export default () => ({
       fontSize: 1,
       color: t => t.colors.link,
       margin: '0 4px', 
+      textDecoration: 'none',
+      cursor: 'pointer',
       display: 'inline-block',
     }
   },
@@ -391,8 +394,7 @@ export default () => ({
       listStyleType: 'none'
     },
     code: {
-      display: "inline-block",
-      // position: 'relative',
+      display: 'inline-block',
       backgroundColor: t => t.colors.gray,
       border: t => `1px solid ${t.colors.code.border}`, // light #DFE1E5 // dark #5D5D6F
       borderRadius: '3px',
@@ -404,7 +406,6 @@ export default () => ({
       display: "block",
       fontStyle: 'normal',
       fontWeight: 'normal',
-      //fontSize: '13px',
     },
     ".prism-code": {
       margin: '1px 3px',
@@ -440,24 +441,6 @@ export default () => ({
         color: t => t.colors.code.green, // green
       }
     },
-    /* pre: {
-      variant: "prism",
-      display: 'inline',
-      fontFamily: "monospace",
-      fontSize: 1,
-      p: 2,
-      color: "textClear",
-      bg: "borders",
-      overflow: "auto",
-      code: {
-        color: "inherit"
-      }
-    },
-    code: {
-      fontFamily: "monospace",
-      color: "error",
-      fontSize: 1
-    }, */
     inlineCode: {
       fontFamily: "monospace",
       color: "error",

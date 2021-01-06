@@ -7,20 +7,19 @@ import { getPrismicData } from '../auth'
 import initClient from '../client'
 import createComparator from './semver'
 
+import { SupportedFrameworks } from '../../src/consts'
+
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
 
 const getFramework = () => {
-  const pkgFilePath = path.resolve(cwd, 'package.json');
-  const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath);
+  const pkgFilePath = path.resolve(cwd, 'package.json')
+  const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath)
 
-  const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+  const deps = { ...peerDependencies, ...devDependencies, ...dependencies }
 
-  const nuxt = deps['nuxt'] && 'nuxt';
-  const next = deps['next'] && 'next';
-  const vue = deps['vue'] && 'vue';
-  const react = deps['react'] && 'react';
-  // const svelte = deps['svelte'] && 'svelte';
-  return nuxt || next || vue || react || 'vanillajs';
+  const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value] !== null)
+
+  return frameworkEntry?.length ? frameworkEntry[0] : 'vanillajs'
 }
 const compareNpmVersions = createComparator()
 

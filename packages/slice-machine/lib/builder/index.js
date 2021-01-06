@@ -172,30 +172,20 @@ const Builder = ({ openPanel }) => {
         )}
       >
 
-        <Box sx={{ padding: '0px 24px', border: t => `1px solid ${t.colors.borders}`}}>
-          <Box sx={{
-            // display: 'block',
-            width: '100%',
-            padding: '18px 10px',
-            margin: 0,
-            justifyContent: 'flex-end'
-          }}>
-              <Label variant="hint" sx={{ justifyContent: 'flex-end', padding: '8px' }}>
-                Show how to render field
-                <Checkbox
-                  sx={{ margin: '0 8px' }}
-                  defaultChecked={DEFAULT_CHECKED}
-                  onChange={onToggleHints}
-                />
-              </Label>
-          </Box>
+        <Label variant="hint" sx={{ justifyContent: 'flex-end', py: 2, px: 0 }}>
+          Show code widgets
+          <Checkbox
+            sx={{ margin: '0 8px' }}
+            defaultChecked={DEFAULT_CHECKED}
+            onChange={onToggleHints}
+          />
+        </Label>
         
           <PreviewFields
             Model={Model}
             variation={variation}
             showHints={showHints}
           />
-        </Box>
 
       </FlexEditor>
     </Box>

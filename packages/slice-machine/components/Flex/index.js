@@ -1,11 +1,12 @@
 import { Box } from 'theme-ui'
 
-export const Flex = ({ children, ...rest }) => (
+export const Flex = ({ children, sx, ...rest }) => (
   <Box
     sx={{
       display: ['block', 'block', 'flex'],
       flexWrap: 'wrap',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      ...sx
     }}
     {...rest}
   >

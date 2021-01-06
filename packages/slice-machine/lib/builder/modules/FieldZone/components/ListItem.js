@@ -1,9 +1,11 @@
+import { Fragment } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
-import { useContext } from 'react';
-import { ConfigContext } from '../../../../../src/config-context';
+import { useContext } from 'react'
+import { ConfigContext } from 'src/config-context'
 
 import {
+  Box,
   Flex,
   Text,
   useThemeUI
@@ -15,10 +17,10 @@ import ItemHeader from 'components/ItemHeader'
 
 import * as widgets from 'lib/widgets'
 
-import { MdSettings } from "react-icons/md";
+import { MdSettings } from 'react-icons/md'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-import hint from './Hints';
+import Hint from './Hints'
 
 const ListItem = ({
   item,
@@ -31,9 +33,7 @@ const ListItem = ({
   const { key } = item
   const { theme } = useThemeUI()
   const { config: { label }, type } = item.value
-  const { env: { framework } } = useContext(ConfigContext);
-
-  const sliceProperty = showHints ? hint(framework, item, modelFieldName, key) : `slice.${modelFieldName}.${key}`
+  const { env: { framework } } = useContext(ConfigContext)
 
   if (!widgets[type] || !widgets[type].Meta) {
     return (
@@ -42,64 +42,74 @@ const ListItem = ({
   }
   const { Meta: { icon: WidgetIcon } } = widgets[type]
 
+  const sliceFieldName = modelFieldName === 'items'
+    ? `slice.items[x].${key}`
+    : `slice.${modelFieldName}.${key}`
+
   return (
     <Draggable draggableId={key} index={index}>
       {(provided) => (
-        <Li
+        <Fragment>
+          <Li
           ref={provided.innerRef}
           {...provided.draggableProps}
-        > 
-          {/* here */}
-          <ItemHeader 
-            theme={theme}
-<<<<<<< HEAD
-            text={label || key}
-            sliceProperty={sliceProperty}
-=======
-            text={config.label || key}
-            sliceProperty={`slice.${modelFieldName}.${key}`}
->>>>>>> slice-machine-ui
-            iconButtonProps={provided.dragHandleProps}
-            WidgetIcon={WidgetIcon}
-          />
-          <Flex sx={{ alignItems: "center" }}>
-            <IconButton
-              Icon={MdSettings}
-              label="Edit slice field"
-              sx={{ cursor: "pointer", color: theme.colors.icons }}
-              onClick={() => enterEditMode([key, item.value], modelFieldName, index)}
+          Component={Box}
+          sx={{ p: 0 }}
+        >
+          <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
+            <ItemHeader 
+              theme={theme}
+              text={label || key}
+              sliceFieldName={sliceFieldName}
+              iconButtonProps={provided.dragHandleProps}
+              WidgetIcon={WidgetIcon}
             />
-            <Menu>
-              <MenuButton className="sliceMenuButton"
-                style={{
-                  padding: "0",
-                  cursor: "pointer",
-                  width: "32px",
-                  height: "32px",
-                  border: "none",
-                  background: "transparent",
-                  outline: "0",
-                }}
-              >
-                <BsThreeDotsVertical size={20} color={theme.colors.icons} />
-              </MenuButton>
-              <MenuList style={{
-                background: theme.colors.gray,
-                border: '1px solid',
-                borderRadius: '3px',
-                borderColor: theme.colors.borders,
-                outline: '0'
-              }}>
-                <MenuItem
-                  style={{ padding: "6px", cursor: "pointer" }}
-                  onSelect={() => deleteItem(key)}
+            <Flex sx={{ alignItems: "center" }}>
+              <IconButton
+                Icon={MdSettings}
+                label="Edit slice field"
+                sx={{ cursor: "pointer", color: theme.colors.icons }}
+                onClick={() => enterEditMode([key, item.value], modelFieldName, index)}
+              />
+              <Menu>
+                <MenuButton className="sliceMenuButton"
+                  style={{
+                    padding: "0",
+                    cursor: "pointer",
+                    width: "32px",
+                    height: "32px",
+                    border: "none",
+                    background: "transparent",
+                    outline: "0",
+                  }}
                 >
-                  Delete field
-                </MenuItem>
-              </MenuList>
-            </Menu>
+                  <BsThreeDotsVertical size={20} color={theme.colors.icons} />
+                </MenuButton>
+                <MenuList style={{
+                  background: theme.colors.gray,
+                  border: '1px solid',
+                  borderRadius: '3px',
+                  borderColor: theme.colors.borders,
+                  outline: '0'
+                }}>
+                  <MenuItem
+                    style={{ padding: "6px", cursor: "pointer" }}
+                    onSelect={() => deleteItem(key)}
+                  >
+                    Delete field
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
           </Flex>
+          <Hint
+            show={showHints}
+            modelFieldName={modelFieldName}
+            framework={framework}
+            item={item}
+          />
         </Li>
+        </Fragment>
       )}
     </Draggable>
   );

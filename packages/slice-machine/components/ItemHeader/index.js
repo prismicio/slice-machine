@@ -5,7 +5,7 @@ import { FaBars } from 'react-icons/fa'
 
 const ItemHeader = ({
   text,
-  sliceProperty,
+  sliceFieldName,
   theme,
   WidgetIcon,
   iconButtonProps = {}
@@ -43,12 +43,13 @@ const ItemHeader = ({
     <Text
       as="p"
       sx={{
+        display: ['none', 'none', 'initial'],
         fontSize: "14px",
         ml: 1,
         color: 'textClear',
       }}
     >
-      { sliceProperty }
+      { sliceFieldName }
     </Text>
   </Flex>
 )
