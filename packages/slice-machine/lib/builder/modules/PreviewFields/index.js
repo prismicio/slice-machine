@@ -1,14 +1,8 @@
 import React, { useState, Fragment } from 'react'
 
 import {
-  Flex,
   Box,
-  Heading
 } from 'theme-ui'
-
-import {
-  FaRegClock,
-} from 'react-icons/fa'
 
 import { NonRepeatZone, RepeatZone } from '../FieldZone'
 
@@ -17,47 +11,11 @@ import * as Widgets from '../../../widgets'
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
 
-const TouchedIcon = () => (
-  <Flex
-    sx={{
-      ml: 2,
-      top: '1px',
-      position: 'relative',
-      color: 'grey',
-      alignItems: 'center'
-    }}
-  >
-    Unsaved changes
-    <FaRegClock style={{ marginLeft: '6px'}} />
-  </Flex>
-)
-
-const Header = ({ title, isTouched, radius }) => (
-  <Flex
-    sx={{
-      px: 4,
-      py: 3,
-      bg: 'headSection',
-      alignItems: 'center',
-      borderTopLeftRadius: radius,
-      borderTopRightRadius: radius,
-      borderBottom: t => `1px solid ${t.colors.borders}`
-    }}
-  >
-    <Heading as="h4">
-      {title}
-    </Heading>
-    { isTouched ? <TouchedIcon /> : null}
-  </Flex>
-)
-
 const PreviewFields = ({
   Model,
   variation,
-  storybookUrl
+  showHints,
 }) => {
-  const { isTouched } = Model
-
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
   const [newFieldData, setNewFieldData] = useState(null)
@@ -121,6 +79,7 @@ const PreviewFields = ({
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}
+          showHints={showHints}
         />
         <Box my={3} sx={{ height: '1px', width: '1px'}} />
         <RepeatZone
@@ -133,6 +92,7 @@ const PreviewFields = ({
           onSaveNewField={onSaveNewField}
           onDragEnd={onDragEnd}
           onDeleteItem={onDeleteItem}
+          showHints={showHints}
         />
       </Fragment>
       {

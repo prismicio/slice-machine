@@ -11,6 +11,8 @@ import Header from './layout/Header'
 
 import {
   Box,
+  Label,
+  Checkbox
 } from 'theme-ui'
 
 import {
@@ -141,13 +143,15 @@ const Builder = ({ openPanel }) => {
       }
     })
   }
+  const DEFAULT_CHECKED = false;
+  const [showHints, setShowHints] = useState(DEFAULT_CHECKED);
+  const onToggleHints = () => setShowHints(!showHints);
 
   return (
     <Box>
       <Header info={info} Model={Model} />
 
       <Success data={data} display={displaySuccess} />
-
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={() => (
@@ -167,9 +171,22 @@ const Builder = ({ openPanel }) => {
           />
         )}
       >
-        <Box>
-          <PreviewFields Model={Model} variation={variation} />
-        </Box>
+
+        <Label variant="hint" sx={{ justifyContent: 'flex-end', py: 2, px: 0 }}>
+          Show code widgets
+          <Checkbox
+            sx={{ margin: '0 8px' }}
+            defaultChecked={DEFAULT_CHECKED}
+            onChange={onToggleHints}
+          />
+        </Label>
+        
+          <PreviewFields
+            Model={Model}
+            variation={variation}
+            showHints={showHints}
+          />
+
       </FlexEditor>
     </Box>
   )

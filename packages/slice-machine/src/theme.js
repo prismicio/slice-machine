@@ -1,4 +1,4 @@
-import { darken, lighten } from '@theme-ui/color'
+import { darken } from '@theme-ui/color'
 
 export default () => ({
   colors: {
@@ -18,6 +18,15 @@ export default () => ({
     error: '#E55737',
     success: '#3AB97A',
     headSection: '#fff',
+    code: {
+      border: '#DFE1E5',
+      blue: '#3B41BD',
+      gray: '#667587',
+      orange: '#EA6D46',
+      green: '#3AB97A',
+    },
+    link: '#5163BA',
+    choggleBox: '#5163BA',
 
     modes: {
       dark: {
@@ -31,15 +40,24 @@ export default () => ({
         borders: '#3A3A46',
         deep: '#28282C',
         headSection: '#28282C',
+        code: {
+          border: '#5D5D6F',
+          blue: '#3B41BD',
+          gray: '#667587',
+          orange: '#EA6D46',
+          green: '#3AB97A',
+        },
+        link: '#A9A9C6',
+        choggleBox: "#fff",
       }
     }
   },
-  "fonts": {
-    "body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
-    "heading": "inherit",
-    "monospace": "Menlo, monospace"
+  fonts: {
+    body: "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", sans-serif",
+    heading: "inherit",
+    monospace: "Menlo, monospace"
   },
-  "fontSizes": [
+  fontSizes: [
     12,
     14,
     16,
@@ -50,31 +68,31 @@ export default () => ({
     64,
     72
   ],
-  "fontWeights": {
-    "body": 400,
-    "heading": 500,
-    "label": 500,
-    "display": 900
+  fontWeights: {
+    body: 400,
+    heading: 500,
+    label: 500,
+    display: 900
   },
-  "lineHeights": {
-    "body": 1.5,
-    "heading": 1.25
+  lineHeights: {
+    body: 1.5,
+    heading: 1.25
   },
-  "textStyles": {
-    "heading": {
-      "fontFamily": "heading",
-      "fontWeight": "heading",
-      "lineHeight": "heading"
+  textStyles: {
+    heading: {
+      fontFamily: "heading",
+      fontWeight: "heading",
+      lineHeight: "heading"
     },
-    "display": {
-      "variant": "textStyles.heading",
-      "fontSize": [
+    display: {
+      variant: "textStyles.heading",
+      fontSize: [
         5,
         6
       ],
-      "fontWeight": "display",
-      "letterSpacing": "-0.03em",
-      "mt": 3
+      fontWeight: "display",
+      letterSpacing: "-0.03em",
+      mt: 3
     }
   },
   sizes: {
@@ -109,7 +127,7 @@ export default () => ({
       code: {
         color: "inherit"
       }
-    }
+    },
   },
   badges: {
     circle: {
@@ -203,13 +221,14 @@ export default () => ({
       border: 'none',
       color: 'primary',
       background: 'transparent',
-      p: '8px',
+      p: 1,
       position: 'relative',
       top: '1px',
       ml: 1,
       cursor: 'pointer',
-      '&:focus': {
-        outline: 'none',
+      '&:hover': {
+        background: 'rgba(0,0,0,0.06) !important',
+        borderRadius: '3px'
       }
     },
     close: {
@@ -285,6 +304,10 @@ export default () => ({
         boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2), inset 0 1px 2px rgba(102, 113, 123, 0.2)',
       }
     },
+    hint: {
+      fontSize: 1,
+      color: t => t.colors.choggleBox,
+    },
     label: {
       primary: {
         mb: 1,
@@ -300,7 +323,17 @@ export default () => ({
         px: 1,
         borderRadius: '3px',
         border: t => `1px solid ${t.colors.borders}`
-      }
+      },
+    }
+  },
+  links: {
+    hint: {
+      fontSize: 1,
+      color: t => t.colors.link,
+      margin: '0 4px', 
+      textDecoration: 'none',
+      cursor: 'pointer',
+      display: 'inline-block',
     }
   },
   styles: {
@@ -360,23 +393,53 @@ export default () => ({
     li: {
       listStyleType: 'none'
     },
-    pre: {
-      variant: "prism",
-      display: 'inline',
-      fontFamily: "monospace",
-      fontSize: 1,
-      p: 2,
-      color: "textClear",
-      bg: "borders",
-      overflow: "auto",
-      code: {
-        color: "inherit"
-      }
-    },
     code: {
-      fontFamily: "monospace",
-      color: "error",
-      fontSize: 1
+      display: 'inline-block',
+      backgroundColor: t => t.colors.gray,
+      border: t => `1px solid ${t.colors.code.border}`, // light #DFE1E5 // dark #5D5D6F
+      borderRadius: '3px',
+      boxSizing: 'border-box',
+      fontSize:'13px',
+      margin: '0 8px',
+    },
+    hint: {
+      display: "block",
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+    },
+    ".prism-code": {
+      margin: '1px 3px',
+      '.tag': {
+        color: t => t.colors.code.blue,
+      },
+      '.punctuation, .attr-value.punctuation': {
+        color: t => t.colors.code.gray, // dark-gray
+      },
+      '.attr-name': {
+        color: t => t.colors.code.orange,
+      },
+      '.attr-value, .property-access': { // add .plain to highligh vue. 
+        color: t => t.colors.code.green, // green
+      },
+    },
+    ".prism-code.language-jsx": {
+      '.language-javascript.punctuation, .language-javascript.script-punctuation.punctuation': {
+        color: t => t.colors.code.gray, 
+      },
+      '.language-javascript, .plain': {
+        color: t => t.colors.code.green
+      },
+    },
+    ".prism-code.language-javascript": {
+      ".punctuation": {
+        color: t => t.colors.code.gray
+      },
+      ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access": {
+        color: t => t.colors.code.blue // blue
+      },
+      ".property-access, .plain": {
+        color: t => t.colors.code.green, // green
+      }
     },
     inlineCode: {
       fontFamily: "monospace",
@@ -440,5 +503,5 @@ export default () => ({
     ".selector,.attr-name,.string,.char,.builtin,.inserted": {
       "color": "error"
     }
-  }
+  },
 })

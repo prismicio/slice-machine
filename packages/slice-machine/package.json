@@ -16,12 +16,17 @@
     "slicemachine": "start-slicemachine --port 9999"
   },
   "bin": {
-    "start-slicemachine": "./start.js"
+    "start-slicemachine": "start.js"
   },
   "dependencies": {
     "@babel/register": "^7.11.5",
+    "@reach/menu-button": "^0.10.5",
+    "@svgr/webpack": "^5.4.0",
+    "@theme-ui/color": "^0.3.1",
+    "@theme-ui/prism": "^0.3.4",
     "atob": "^2.1.2",
     "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-prismjs": "^2.0.1",
     "base64-img": "^1.0.4",
     "body-parser": "^1.19.0",
     "esm": "^3.2.25",

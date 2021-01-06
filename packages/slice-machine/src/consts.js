@@ -24,3 +24,10 @@ export const changelogPath = 'changelog/versions'
 export const s3DefaultPrefix = 'shared-slices'
 
 export const acceptedImagesTypes = ['png', 'jpg', 'jpeg']
+
+export const SupportedFrameworks = {
+  nuxt: 'nuxt',
+  next: 'next',
+  vue: 'vue',
+  react: 'react'
+}
