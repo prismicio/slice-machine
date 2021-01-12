@@ -22,6 +22,7 @@ import {
 } from './layout'
 
 import PreviewFields from './modules/PreviewFields'
+import MockModal from './modules/MockModal'
 
 const createOnSaveUrl = ({
   sliceName,
@@ -58,6 +59,8 @@ const Builder = ({ openPanel }) => {
   const variation = Model.get().variation()
 
   const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
+
+  console.log({ variation, Model })
 
   useEffect(() => {
     if (isTouched) {
@@ -188,6 +191,15 @@ const Builder = ({ openPanel }) => {
           />
 
       </FlexEditor>
+      {
+        false ? (
+          <MockModal
+            close={console.log}
+            variation={variation}
+            Model={Model}
+          />
+        ) : null
+      }
     </Box>
   )
 }

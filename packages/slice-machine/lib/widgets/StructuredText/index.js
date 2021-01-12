@@ -1,9 +1,11 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
+
 import { optionValues } from './options'
 import { MdTextFields } from 'react-icons/md'
 
-import { handleMockConfig, handleMockContent, createMock } from './mock'
+import { handleMockConfig, handleMockContent, createMock } from './Mock'
+import { MockConfigForm, MockContentForm } from './Mock/Forms'
 
 import {
   createInitialValues,
@@ -50,5 +52,7 @@ export default {
   Meta,
   schema,
   TYPE_NAME,
-  Form
+  Form,
+  MockConfigForm,
+  MockContentForm
 }

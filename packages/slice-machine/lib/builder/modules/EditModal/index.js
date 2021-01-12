@@ -8,9 +8,9 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import { Flex as FlexGrid, Col } from 'components/Flex'
-import Card from 'components/Card'
+import Card from 'components/Card/WithTabs'
 import ItemHeader from 'components/ItemHeader'
+import { Flex as FlexGrid, Col } from 'components/Flex'
 
 import WidgetForm from './Form'
 import WidgetFormField from './Field'
@@ -34,7 +34,21 @@ const EditModal = ({
     field: [apiId, initialModelValues]
   } = data
 
-  const { Meta: { icon: WidgetIcon } } = Widgets[initialModelValues.type]
+  const { Meta: { icon: WidgetIcon }, MockConfigForm } = Widgets[initialModelValues.type]
+
+  const { initialMockConfig } = Model
+
+  const initialModelValuesWithConfig = {
+    ...initialModelValues,
+    mockConfig: initialMockConfig[apiId]?.config || {}
+  }
+
+  const onMockConfigUpdate = ({ updatedKey, updatedValue, mockConfigValue, setFieldValue }) => {
+    setFieldValue('mockConfig', {
+      ...mockConfigValue,
+      [updatedKey]: updatedValue
+    })
+  }
 
   return (
     <Modal
@@ -42,19 +56,24 @@ const EditModal = ({
       shouldCloseOnOverlayClick
       onRequestClose={close}
       contentLabel="Widget Form Modal"
+      style={{
+        overlay: {
+          overflow: 'auto',
+        },
+      }}
     >
       <WidgetForm
         apiId={apiId}
         Model={Model}
         formId={FORM_ID}
         fieldType={fieldType}
-        initialModelValues={initialModelValues}
+        initialModelValues={initialModelValuesWithConfig}
         onUpdateField={(key, value) => {
           Model.hydrate(
             variation.replace[fieldType](
               apiId,
               key,
-              { config: value, type: initialModelValues.type }
+              { config: value, type: initialModelValuesWithConfig.type }
             )
           )
           close()
@@ -62,20 +81,21 @@ const EditModal = ({
       >
         {(props) => {
           const {
-            values: { label, id },
+            values: { label, id, mockConfig, ...restValues },
             errors,
             isValid,
             isSubmitting,
             initialValues,
             FormFields,
-            CustomForm
+            CustomForm,
+
+            setFieldValue
           } = props
           return (
               <Card
                 borderFooter
-                footerSx={{ p: 0}}
-                bodySx={{ pt: 2, pb: 4, px: 4 }}
-                sx={{ border: 'none' }}
+                footerSx={{ p: 0, mb: 5 }}
+                tabs={['Field Model', 'Mock config']}
                 Header={({ radius }) => (
                   <Flex
                     sx={{
@@ -139,6 +159,22 @@ const EditModal = ({
                     </FlexGrid>
                   )
                 }
+                <Box>
+                  { MockConfigForm ? (
+                    <MockConfigForm
+                      widgetConfig={restValues}
+                      mockConfig={mockConfig}
+                      onUpdate={(updatedKey, updatedValue) => {
+                        onMockConfigUpdate({
+                          updatedKey,
+                          updatedValue,
+                          currentMockConfigValue: mockConfig,
+                          setFieldValue
+                        })
+                      }}
+                    />
+                  ) : <p>Not ready</p>}
+                </Box>
               </Card>
           )}
         }

@@ -46,7 +46,7 @@ const getMetadata = (model) =>
     ...(['id', 'type', 'name', 'description'].includes(key) ? ({ [key]: value }) : {})
   }), {})
 
-const createModel = (intialValues, initialInfo) => {
+const createModel = (intialValues, initialInfo, initialMockConfig) => {
   let info = initialInfo
   let model = intialValues
   let meta = getMetadata(model)
@@ -102,6 +102,7 @@ const createModel = (intialValues, initialInfo) => {
       return {
         info,
         variations,
+        initialMockConfig,
         variation(id) {
           const variation = id ? variations.find(e => e.id === id) : variations[0]
           if (!variation) {

@@ -14,7 +14,7 @@ const createEmptyMock = (sliceName, variation) => ({
   primary: {}
 })
 
-const getConfig = (cwd) => {
+export const getConfig = (cwd) => {
   const pathToMocks = path.join(cwd, '.slicemachine/mocks.json')
   if (fs.existsSync(pathToMocks)) {
     return JSON.parse(fs.readFileSync(pathToMocks))

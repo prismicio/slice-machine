@@ -7,7 +7,7 @@ import * as Image from '../widgets/Image/mock'
 import * as Link from '../widgets/Link/mock'
 import * as Number from '../widgets/Number/mock'
 import * as Select from '../widgets/Select/mock'
-import * as StructuredText from '../widgets/StructuredText/mock'
+import * as StructuredText from '../widgets/StructuredText/Mock'
 import * as Text from '../widgets/Text/mock'
 import * as Timestamp from '../widgets/Timestamp/mock'
 

@@ -5,6 +5,7 @@ export default () => ({
     text: '#1D2230',
     textClear: '#667587',
     background: '#F5F6F9',
+    backgroundClear: '#FFF',
     primary: '#5163BA',
     secondary: '#F9FAFB',
     highlight: 'hsl(10, 40%, 90%)',
@@ -33,6 +34,7 @@ export default () => ({
         text: "#fff",
         textClear: "#6E707B",
         background: "#202022",
+        backgroundClear: '#28282C',
         primary: '#4E54D7',
         secondary: "#28282C",
         icons: "#5D5D71",
@@ -288,6 +290,12 @@ export default () => ({
     },
     checkbox: {
       color: 'icons'
+    },
+    radio: {
+      color: 'borders',
+      '&:checked': {
+        color: 'purple'
+      }
     },
     input: {
       fontSize: 1,

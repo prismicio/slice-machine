@@ -30,7 +30,7 @@ const FormFields = {
 
 const accessors = ['single', 'multi']
 
-const Form = (props) => {
+const WidgetForm = (props) => {
   const { initialValues, values: formValues, errors, Model, variation, fieldType, setFieldValue, } = props
   const { single, multi } = formValues
   const initialOptions = single ? _createInitialOptions(single)
@@ -179,4 +179,4 @@ keys.forEach((key, index) => {
 
 export { FormFields }
 
-export default Form
+export default WidgetForm

@@ -1,0 +1,16 @@
+{
+  "CallToAction": {
+    "ownContent": {
+      "config": {
+        "sentencesPerParagraph": {
+          "min": 12,
+          "max": 44
+        },
+        "patternType": "PARAGRAPH_WITH_HEADING"
+      }
+    },
+    "bool": {
+      "content": true
+    }
+  }
+}

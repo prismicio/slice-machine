@@ -1,7 +1,7 @@
 import faker from 'faker'
 import { LoremIpsum } from "lorem-ipsum"
 
-const defaults = {
+export const Defaults = {
   blocks: {
     min: 1,
     max: 3
@@ -18,11 +18,25 @@ const defaults = {
 
 const isHeading = (type) => type.indexOf('heading') === 0
 
-const patterns = {
+export const Patterns = {
   PARAGRAPH: () => ['paragraph'],
   HEADING: (options) => [options.find(isHeading) || 'heading2'],
   PARAGRAPH_WITH_HEADING: (options) => [options.find(isHeading) || 'heading2', 'paragraph'],
   _: (options) => [options.find(isHeading) || 'paragraph']
+}
+
+export const PatternRequirements = {
+  PARAGRAPH: (options) => options.some(e => e === 'paragraph'),
+  HEADING: (options) => options.some(isHeading),
+  PARAGRAPH_WITH_HEADING: (options) => options.some(isHeading) && options.some(e => e === 'paragraph'),
+  _: (options) => true
+}
+
+export const PatternLabels = {
+  PARAGRAPH: 'Paragraph',
+  HEADING: 'Heading',
+  PARAGRAPH_WITH_HEADING: 'Paragraph with Heading',
+  _: 'One of Paragraph or Heading'
 }
 
 const createMockFromConfig = (blocksLen, pattern, config) => {
@@ -48,15 +62,15 @@ const createMockFromConfig = (blocksLen, pattern, config) => {
 }
 
 export const handleMockConfig = (mockConfig, fieldConfig) => {
-  const { blocks, ...config } = Object.assign(defaults, mockConfig)
+  const { blocks, ...config } = Object.assign(Defaults, mockConfig)
   const blocksLen = fieldConfig.multi
     ? Math.floor(Math.random() * (blocks.max - blocks.min + 1)) + blocks.min
     : 1
   const options = (fieldConfig.multi || fieldConfig.single).split(',')
   const pattern = mockConfig.pattern
-    || patterns[mockConfig.patternType]
-    ? patterns[mockConfig.patternType](options)
-    : patterns._(options)
+    || Patterns[mockConfig.patternType]
+    ? Patterns[mockConfig.patternType](options)
+    : Patterns._(options)
 
   const content = createMockFromConfig(blocksLen, pattern, config)
   return content
@@ -90,7 +104,7 @@ export const createMock = (config) => {
     return 'paragraph'
   })()
 
-  const lorem = new LoremIpsum(defaults)
+  const lorem = new LoremIpsum(Defaults)
 
   return [{
     type: mainType,

@@ -6,9 +6,9 @@ import createModel from '../lib/model'
 
 export const ModelContext = React.createContext([])
 
-export default function ModelProvider({ children, initialModel, info }) {
+export default function ModelProvider({ children, initialModel, initialMockConfig, info }) {
   const isMounted = useIsMounted()
-  const [Model, setModel] = useState(createModel(initialModel, info))
+  const [Model, setModel] = useState(createModel(initialModel, info, initialMockConfig))
   
   const hydrate = (fn) => {
     if (fn && typeof fn === 'function') {
@@ -32,7 +32,7 @@ export default function ModelProvider({ children, initialModel, info }) {
   )
 }
 
-export const ModelHandler = ({ libraries, children }) => {
+export const ModelHandler = ({ libraries, env, children }) => {
   const router = useRouter()
   if (!router.query || !router.query.lib) {
     return children
@@ -50,10 +50,12 @@ export const ModelHandler = ({ libraries, children }) => {
     return null
   }
 
+  const initialMockConfig = env.mockConfig[router.query.sliceName]
+
   const { model: initialModel } = component
 
   return (
-    <ModelProvider initialModel={initialModel} info={component}>
+    <ModelProvider initialModel={initialModel} initialMockConfig={initialMockConfig} info={component}>
       { children }
     </ModelProvider>
   )

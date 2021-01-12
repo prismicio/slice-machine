@@ -2,12 +2,13 @@
 const fs = require('fs')
 const path = require('path')
 const spawn = require('child_process').spawn
+const migrate = require('./changelog/migrate')
 
 const { argv } = require('yargs')
 
 async function handleChangelog(params) {
   try {
-    await require(path.join(__dirname, 'changelog/migrate.js'))(false, params)
+    await migrate(false, params)
   } catch(e) {
     console.error('An error occured while migrating file system. Continuing...')
     console.error(`Full error: ${e}`)

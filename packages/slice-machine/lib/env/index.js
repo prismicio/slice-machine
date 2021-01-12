@@ -7,6 +7,8 @@ import { getPrismicData } from '../auth'
 import initClient from '../client'
 import createComparator from './semver'
 
+import { getConfig as getMockConfig } from '../mock'
+
 import { SupportedFrameworks } from '../../src/consts'
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
@@ -19,8 +21,9 @@ const getFramework = () => {
 
   const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value] !== null)
 
-  return frameworkEntry?.length ? frameworkEntry[0] : 'vanillajs'
+  return frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : 'vanillajs'
 }
+
 const compareNpmVersions = createComparator()
 
 const validate = (config) => {
@@ -89,6 +92,8 @@ export const getEnv = async () => {
 
   const { updateAvailable, currentVersion } = await compareNpmVersions({ cwd })
 
+  const mockConfig = getMockConfig(cwd)
+
   return {
     errors: maybeErrors,
     env: {
@@ -101,6 +106,7 @@ export const getEnv = async () => {
       chromatic,
       currentVersion,
       updateAvailable,
+      mockConfig,
       framework: getFramework(),
       client: initClient({ cwd, base, repo, auth })
     }

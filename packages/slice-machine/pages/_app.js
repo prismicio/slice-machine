@@ -77,7 +77,7 @@ function MyApp({ Component, pageProps }) {
                   ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                   : (
                     <LibProvider value={data.libraries}>
-                      <ModelHandler libraries={data.libraries}>
+                      <ModelHandler env={data.env} libraries={data.libraries}>
                         <NavBar
                           env={data.env}
                           warnings={data.warnings}

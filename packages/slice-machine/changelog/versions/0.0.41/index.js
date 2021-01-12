@@ -4,7 +4,6 @@ const glob = require('glob')
 const slash = require('slash')
 const { shouldIRun } = require('../../common')
 const { getInfoFromPath } = require('sm-commons/methods/lib')
-const { createPathToScreenshot } = require('../../../lib/queries/screenshot')
 
 module.exports = {
   test: function test({ cwd }) {
@@ -20,7 +19,7 @@ module.exports = {
     if (yes) {
       if (fs.existsSync(pathToSmFile, 'utf8')) {
         try {
-          fs.mkdirSync(path.join(cwd, '.slicemachine', 'assets'))
+          fs.mkdirSync(path.join(cwd, '.slicemachine', 'assets'), { recursive: true })
           const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'));
           (json.libraries || []).forEach((lib) => {
             const {
@@ -34,7 +33,7 @@ module.exports = {
                 const split = match.split(path.posix.sep)
                 const sliceName = split[split.length - 2]
                 if (sliceName) {
-                  const pathToNewFile = createPathToScreenshot({ cwd, from: split[split.length - 3], sliceName })
+                  const pathToNewFile = path.join(cwd, '.slicemachine/assets', split[split.length - 3], sliceName, 'preview.png')
                   fs.mkdirSync(path.dirname(pathToNewFile), { recursive: true })
                   fs.renameSync(match, pathToNewFile)
                 }
