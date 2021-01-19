@@ -1,16 +1,34 @@
 {
   "CallToAction": {
-    "ownContent": {
-      "config": {
-        "sentencesPerParagraph": {
-          "min": 12,
-          "max": 44
-        },
-        "patternType": "PARAGRAPH_WITH_HEADING"
+    "primary": {
+      "title2": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 4
+        }
+      },
+      "title": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 3
+        }
       }
-    },
-    "bool": {
-      "content": true
+    }
+  },
+  "StrcututedTexts": {
+    "primary": {
+      "title": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 2
+        }
+      },
+      "description": {
+        "config": {
+          "patternType": "PARAGRAPH_WITH_HEADING",
+          "blocks": 6
+        }
+      }
     }
   }
 }

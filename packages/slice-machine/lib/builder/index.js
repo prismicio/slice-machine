@@ -41,9 +41,10 @@ const Builder = ({ openPanel }) => {
   const { env: { storybook }, warnings } = useContext(ConfigContext)
   const {
     info,
-    isTouched,
     value,
     hydrate,
+    isTouched,
+    mockConfig,
     appendInfo,
     resetInitialModel,
   } = Model
@@ -59,8 +60,6 @@ const Builder = ({ openPanel }) => {
   const variation = Model.get().variation()
 
   const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
-
-  console.log({ variation, Model })
 
   useEffect(() => {
     if (isTouched) {
@@ -79,7 +78,7 @@ const Builder = ({ openPanel }) => {
           setDisplaySuccess(false)
           setData({ ...data, done: false })
         }
-      }, 3500)
+      }, 6500)
     } else {
       if (isMounted) {
         setDisplaySuccess(false)
@@ -87,16 +86,30 @@ const Builder = ({ openPanel }) => {
     }
   }, [data])
 
+  const onCloseSuccess = () => {
+    if (isMounted) {
+      setDisplaySuccess(false)
+      setData({ ...data, done: false })
+    }
+  }
+
+
   const onSave = async () => {
     fetchApi({
-      url: createOnSaveUrl({
-        ...info,
-        value,
-      }),
+      url: '/api/update',
+      fetchparams: {
+        method: 'POST',
+        body: JSON.stringify({
+          sliceName: info.sliceName,
+          from: info.from,
+          model: value,
+          mockConfig
+        })
+      },
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
       onSuccess(json) {
-        hydrate(resetInitialModel(value, json))
+        hydrate(() => resetInitialModel(value, json, mockConfig))
         mutate('/api/state')
       }
     })
@@ -108,7 +121,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
       onSuccess(json) {
-        hydrate(resetInitialModel(value, json))
+        hydrate(() => resetInitialModel(value, json, mockConfig))
         mutate('/api/state')
       }
     })
@@ -154,7 +167,11 @@ const Builder = ({ openPanel }) => {
     <Box>
       <Header info={info} Model={Model} />
 
-      <Success data={data} display={displaySuccess} />
+      <Success
+        data={data}
+        onClose={onCloseSuccess}
+        display={displaySuccess}
+      />
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={() => (

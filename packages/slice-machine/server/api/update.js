@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import atob from 'atob'
 import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
@@ -9,12 +8,12 @@ import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/s
 
 import { getEnv } from '../../lib/env'
 import mock from '../../lib/mock'
+import { insert as insertMockConfig } from '../../lib/mock/fs'
 
 export default async function handler(req) {
+  console.log({ body: req.body })
   const { env } = await getEnv()
-  const { sliceName, from, model: strModel } = req.query
-
-  const model = JSON.parse(atob(strModel))
+  const { sliceName, from, model, mockConfig } = req.body
 
   const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
 
@@ -25,12 +24,15 @@ export default async function handler(req) {
     return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
   }
 
+  const updatedMockConfig = insertMockConfig(env.cwd, { key: sliceName, value: mockConfig })
+
   const rootPath = path.join(env.cwd, from, sliceName)
   const mockPath = path.join(rootPath, 'mocks.json')
   const modelPath = path.join(rootPath, 'model.json')
 
   console.log('[update]: generating mocks')
-  const mockedSlice = await mock(sliceName, model)
+  
+  const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
   fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')

@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     method: req.method,
     headers: req.headers,
     ...(req.method === 'POST' ? {
-      body: req.body
+      body: JSON.stringify(req.body)
     } : {})
   }).then(async response => {
     const payload = await response.json()

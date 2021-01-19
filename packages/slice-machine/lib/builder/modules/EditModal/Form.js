@@ -1,35 +1,17 @@
+import { memo } from 'react'
 import { Formik, Form } from 'formik'
 import { Box } from 'theme-ui'
 
-import * as Widgets from '../../../widgets'
-
-import {
-  createInitialValues,
-  createValidationSchema
-} from "../../../forms";
-
-import { memo } from 'react';
+import { MockConfigKey } from 'src/consts'
 
 const WidgetForm = ({
-  apiId,
   formId,
-  initialModelValues,
-  onUpdateField,
+  initialValues,
+  validationSchema,
+  onSave,
+  FormFields,
   children,
 }) => {
-
-  const { type } = initialModelValues
-  const { FormFields, Form: CustomForm } = Widgets[type]
-  if (!FormFields) {
-    return (<div>{type} not supported yet</div>)
-  }
-
-  const initialValues = {
-    ...createInitialValues(FormFields),
-    ...initialModelValues.config,
-    id: apiId
-  }
-  const validationSchema = createValidationSchema(FormFields)
 
   return (
     <Box>
@@ -38,7 +20,7 @@ const WidgetForm = ({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, _) => {
-          const { id: apiId,  ...rest } = values
+          const { id: apiId, [MockConfigKey]: mockConfigObject, ...rest } = values
           const withDefaultValues = Object.entries(rest).reduce((acc, [key, value]) => {
             if (typeof value !== Boolean && !value) {
               const maybeDefaultValue = FormFields[key].defaultValue
@@ -54,7 +36,7 @@ const WidgetForm = ({
               [key]: value
             }
           }, {})
-          onUpdateField(apiId, withDefaultValues)
+          onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject)
         }}
       >
           {props => (
@@ -62,9 +44,7 @@ const WidgetForm = ({
               {
                 children({
                   ...props,
-                  FormFields,
                   initialValues,
-                  CustomForm
                 })
               }
             </Form>

@@ -2,30 +2,56 @@ import { useState } from 'react'
 import { Flex, Box, Label, Radio, Heading, Input, Text, useThemeUI } from 'theme-ui'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 
-import { Defaults, Patterns, PatternRequirements, PatternLabels } from './'
+import { Defaults, Patterns } from './'
 
-export const PatternCard = ({ patternKey, isAllowed, pattern, onUpdate }) => {
-
+export const PatternCard = ({ patternKey, isAllowed, currentKey, pattern, onUpdate }) => {
   return (
     <Label
       sx={{
-        p: 2,
-        my: 2,
         border: '1px solid',
         borderRadius: '3px',
-        borderColor: 'borders'
+        borderColor: 'borders',
+        display: 'block',
+        position: 'relative',
+        opacity: isAllowed ? '1' : '.4',
+        bg: 'headSection',
+        mb: 2
       }}
     >
-      <Radio
-        name="pattern"
-        value={patternKey}
-        disabled={!isAllowed}
-        onChange={() => onUpdate(patternKey, false)}
-        // checked={value === patternKey ? 'true' : 'false'}
-        // defaultChecked={(value === patternKey)}
-      />
-      { PatternLabels[patternKey] } { isAllowed ? '' : '(disabled)'}
+      <Flex sx={{ p: 2, }}>
+        <Radio
+          name="pattern"
+          value={patternKey}
+          disabled={!isAllowed}
+          onChange={() => onUpdate(patternKey, false)}
+          checked={currentKey === patternKey}
+        />
+        { Patterns[patternKey].title }
+      </Flex>
+      {
+        currentKey === patternKey ? (
+          <Box sx={{ p: 2, mt: 0, }}>
+            <Text as="p">{ Patterns[patternKey].description }</Text>
+          </Box>
+        ) : null
+      }
     </Label>
+  )
+}
+
+export const NumberOfBlocks = ({ currentValue, onUpdate }) => {
+  const _onUpdate = (e) => {
+    const { target: { value }} = e
+    const val = parseInt(value)
+    if (val) {
+      onUpdate(val)
+    }
+  }
+  return (
+    <Box>
+      <Heading as="h4" mb={2}>Number of repetitions</Heading>
+      <Input sx={{ maxWidth: '440px', bg: 'headSection' }} type="number" onChange={_onUpdate} value={currentValue} />
+    </Box>
   )
 }
 
@@ -40,6 +66,7 @@ const PreTab = ({ content }) => (
       alignItems: 'center',
       bg: 'borders',
       px: 1,
+      fontSize: 1,
     }}
   >
     { content }
@@ -67,8 +94,9 @@ export const HandleMinMax = ({ title, value, moreInfo, onUpdate }) => {
             value={value.min} 
             sx={{
               bg: 'backgroundClear',
+              p: 1,
               pl: '48px',
-              fontSize: 2,
+              fontSize: 1,
               ml: 2
             }}
           />
@@ -81,8 +109,9 @@ export const HandleMinMax = ({ title, value, moreInfo, onUpdate }) => {
             value={value.max} 
             sx={{
               bg: 'backgroundClear',
+              p: 1,
               pl: '48px',
-              fontSize: 2,
+              fontSize: 1,
               ml: 2
             }}
           />

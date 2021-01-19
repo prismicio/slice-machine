@@ -4,8 +4,8 @@ import Form, { FormFields } from './Form'
 import { optionValues } from './options'
 import { MdTextFields } from 'react-icons/md'
 
-import { handleMockConfig, handleMockContent, createMock } from './Mock'
-import { MockConfigForm, MockContentForm } from './Mock/Forms'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 import {
   createInitialValues,
@@ -45,7 +45,6 @@ const schema = yup.object().shape({
 
 export default {
   create,
-  createMock,
   handleMockConfig,
   handleMockContent,
   FormFields,
@@ -54,5 +53,4 @@ export default {
   TYPE_NAME,
   Form,
   MockConfigForm,
-  MockContentForm
 }

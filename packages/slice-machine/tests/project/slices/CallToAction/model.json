@@ -11,12 +11,12 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "ownContent": {
+        "title": {
           "config": {
-            "label": "",
+            "label": "My cool title",
             "placeholder": "",
             "allowTargetBlank": true,
-            "single": "paragraph"
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
           },
           "type": "StructuredText"
         },
@@ -37,12 +37,13 @@
           },
           "type": "Image"
         },
-        "title": {
+        "ownContent": {
           "config": {
-            "label": "My cool title",
+            "label": "",
             "placeholder": "",
             "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+            "type": "StructuredText",
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           },
           "type": "StructuredText"
         },

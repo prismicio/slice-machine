@@ -17,7 +17,7 @@ import ItemHeader from 'components/ItemHeader'
 
 import * as widgets from 'lib/widgets'
 
-import { MdSettings } from 'react-icons/md'
+import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
 import Hint from './Hints'
@@ -66,7 +66,8 @@ const ListItem = ({
             />
             <Flex sx={{ alignItems: "center" }}>
               <IconButton
-                Icon={MdSettings}
+                size={22}
+                Icon={AiOutlineEdit}
                 label="Edit slice field"
                 sx={{ cursor: "pointer", color: theme.colors.icons }}
                 onClick={() => enterEditMode([key, item.value], modelFieldName, index)}

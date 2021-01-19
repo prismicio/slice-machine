@@ -1,4 +1,4 @@
-import { Children, useState } from 'react'
+import { Children, useState, memo } from 'react'
 import { Box } from 'theme-ui'
 import { Tabs, TabPanel } from 'react-tabs'
 import { CustomTab as Tab, CustomTabList as TabList } from './components'
@@ -46,4 +46,4 @@ const WithTabs = ({
   )
 }
 
-export default WithTabs
+export default memo(WithTabs)

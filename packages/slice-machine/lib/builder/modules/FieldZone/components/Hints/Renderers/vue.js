@@ -6,7 +6,7 @@ import CodeBlock from '../CodeBlock'
 
 const wrapRepeatable = (code) =>
 `
-<div v-for="(items, i) in slice.items" :key="\`slice-item-\${i}\`">    
+<div v-for="(item, i) in slice.items" :key="\`slice-item-\${i}\`">    
   ${code}
 </div>
 `
@@ -20,7 +20,7 @@ const codeByWidgetType = {
   [Widgets.Link.TYPE_NAME]: createCodeFromTag('prismic-link'),
   [Widgets.Select.TYPE_NAME]: createDefaultField(),
   [Widgets.Boolean.TYPE_NAME]: (fieldText) => `<span> {{ ${fieldText} ? 'true' : 'false' }}</span>`,
-  [Widgets.Date.TYPE_NAME]: (fieldText) => `<span> {{ PrismicDom.Date(${fieldText}) }}</span>`,
+  [Widgets.Date.TYPE_NAME]: (fieldText) => `<span> {{ ${fieldText} }}</span>`,
   [Widgets.Timestamp.TYPE_NAME]: createDefaultField(),
   [Widgets.Embed.TYPE_NAME]: createCodeFromTag('prismic-embed'),
   [Widgets.Number.TYPE_NAME]: createDefaultField(),

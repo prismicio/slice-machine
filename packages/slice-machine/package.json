@@ -29,6 +29,7 @@
     "babel-plugin-prismjs": "^2.0.1",
     "base64-img": "^1.0.4",
     "body-parser": "^1.19.0",
+    "deepmerge": "^4.2.2",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-form-data": "^2.0.14",

@@ -1,3 +1,4 @@
+import { Field } from 'formik'
 import { Box, Label, Input, Text } from 'theme-ui'
 
 const FormFieldInput = ({
@@ -22,7 +23,7 @@ const FormFieldInput = ({
         ) : null
       }
     </Label>
-    <Input
+    <Field
       name={fieldName}
       id={fieldName}
       type="text"
@@ -39,6 +40,7 @@ const FormFieldInput = ({
         } : null)
       }
       {...field}
+      as={Input}
     />
   </Box>
 )

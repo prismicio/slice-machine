@@ -1,6 +1,6 @@
-import { Box, Heading } from 'theme-ui'
+import { Box, Heading, Close } from 'theme-ui'
 
-const Success = ({ data, display = false }) => {
+const Success = ({ data, onClose, display = false }) => {
   return display ? (
      <Box
         variant={`success.${data.error ? 'error' : 'done'}`}
@@ -11,6 +11,15 @@ const Success = ({ data, display = false }) => {
             { data.message }
           </Heading>
         </Box>
+        <Close
+          onClick={onClose}
+          sx={{ 
+            position: 'absolute',
+            right: '22px',
+            top: '2px',
+            color: '#FFF'
+          }}
+        />
       </Box>
     ): null
 }

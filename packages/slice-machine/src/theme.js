@@ -211,6 +211,13 @@ export default () => ({
         outline: 'none',
       }
     },
+    transparent: {
+      background: 'transparent',
+      border: 'none',
+      p: 1,
+      color: 'primary',
+      cursor: 'pointer'
+    },
     selectIcon: {
       '&:hover': {
         cursor: 'pointer',
@@ -365,6 +372,13 @@ export default () => ({
     Container: {
       p: 3,
       maxWidth: 1024
+    },
+    disabledBox: {
+      position: 'absolute',
+      zIndex: '1',
+      height: '100%',
+      width: '100%',
+      background: 'rgba(0, 0, 0, .1)'
     },
     root: {
       fontFamily: "body",

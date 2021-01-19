@@ -1,6 +1,3 @@
-import fs from 'fs'
-import path from 'path'
-import { getEnv } from '../env'
 import * as Widgets from './widgets'
 
 import { snakelize } from 'sm-commons/utils/str'
@@ -14,25 +11,13 @@ const createEmptyMock = (sliceName, variation) => ({
   primary: {}
 })
 
-export const getConfig = (cwd) => {
-  const pathToMocks = path.join(cwd, '.slicemachine/mocks.json')
-  if (fs.existsSync(pathToMocks)) {
-    return JSON.parse(fs.readFileSync(pathToMocks))
-  }
-  return {}
-}
-
-export default async (sliceName, model) => {
-
-  const { env: { cwd } } = await getEnv()
-  const config = getConfig(cwd)
-
+export default async (sliceName, model, mockConfig) => {
   const variations = model.variations.map(variation => {
     const mock = createEmptyMock(sliceName, variation)
     const handler = handleFields(Widgets)
     mock.primary = handler(
       Object.entries(variation.primary),
-      config[sliceName] || {}
+      mockConfig ? mockConfig.primary || {} : {}
     )
 
     const items = []
@@ -45,7 +30,7 @@ export default async (sliceName, model) => {
     }
 
     for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-      items.push(handler(repeat, config[sliceName] || {}))
+      items.push(handler(repeat, mockConfig ?  mockConfig.items || {} : {}))
     }
     mock.items = items
     return mock

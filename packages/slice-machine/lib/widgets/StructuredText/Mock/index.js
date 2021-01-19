@@ -1,5 +1,7 @@
 import faker from 'faker'
-import { LoremIpsum } from "lorem-ipsum"
+import { LoremIpsum } from 'lorem-ipsum'
+
+const isHeading = (type) => type.indexOf('heading') === 0
 
 export const Defaults = {
   blocks: {
@@ -16,27 +18,38 @@ export const Defaults = {
   }
 }
 
-const isHeading = (type) => type.indexOf('heading') === 0
+export const initialValues = {
+  config: {
+    patternType: '_',
+    blocks: 1
+  }
+}
 
 export const Patterns = {
-  PARAGRAPH: () => ['paragraph'],
-  HEADING: (options) => [options.find(isHeading) || 'heading2'],
-  PARAGRAPH_WITH_HEADING: (options) => [options.find(isHeading) || 'heading2', 'paragraph'],
-  _: (options) => [options.find(isHeading) || 'paragraph']
-}
-
-export const PatternRequirements = {
-  PARAGRAPH: (options) => options.some(e => e === 'paragraph'),
-  HEADING: (options) => options.some(isHeading),
-  PARAGRAPH_WITH_HEADING: (options) => options.some(isHeading) && options.some(e => e === 'paragraph'),
-  _: (options) => true
-}
-
-export const PatternLabels = {
-  PARAGRAPH: 'Paragraph',
-  HEADING: 'Heading',
-  PARAGRAPH_WITH_HEADING: 'Paragraph with Heading',
-  _: 'One of Paragraph or Heading'
+  PARAGRAPH: {
+    title: 'Paragraph',
+    test: (options) => options.some(e => e === 'paragraph'),
+    value: () => ['paragraph'],
+    description: 'A single paragraph with a variant number of words.'
+  },
+  HEADING: {
+    title: 'Heading',
+    test: (options) => options.some(isHeading),
+    value: (options) => [options.find(isHeading) || 'heading2'],
+    description: 'A single heading (h1 to h6) with a variant number of words.'
+  },
+  PARAGRAPH_WITH_HEADING: {
+    title: 'Paragraph with Heading',
+    test: (options) => options.some(isHeading) && options.some(e => e === 'paragraph'),
+    value: (options) => [options.find(isHeading) || 'heading2', 'paragraph'],
+    description: 'A combination of heading (h1 to h6) with a single paragraph.'
+  },
+  _: {
+    title: 'Paragraph or Heading',
+    test: () => true,
+    value: (options) => [options.find(isHeading) || 'paragraph'],
+    description: 'One element random, that could be paragraph or heading'
+  },
 }
 
 const createMockFromConfig = (blocksLen, pattern, config) => {
@@ -62,17 +75,12 @@ const createMockFromConfig = (blocksLen, pattern, config) => {
 }
 
 export const handleMockConfig = (mockConfig, fieldConfig) => {
-  const { blocks, ...config } = Object.assign(Defaults, mockConfig)
-  const blocksLen = fieldConfig.multi
-    ? Math.floor(Math.random() * (blocks.max - blocks.min + 1)) + blocks.min
-    : 1
-  const options = (fieldConfig.multi || fieldConfig.single).split(',')
-  const pattern = mockConfig.pattern
-    || Patterns[mockConfig.patternType]
-    ? Patterns[mockConfig.patternType](options)
-    : Patterns._(options)
+  const mockConfigValues = Object.assign(initialValues.config, mockConfig)
 
-  const content = createMockFromConfig(blocksLen, pattern, config)
+  const options = (fieldConfig.multi || fieldConfig.single).split(',')
+  const pattern = Patterns[mockConfigValues.patternType].value(options)
+
+  const content = createMockFromConfig(mockConfigValues.blocks, pattern, Defaults)
   return content
 }
 
@@ -86,29 +94,5 @@ export const handleMockContent = (mockContent, fieldConfig) => {
     spans: [],
     text: '...',
     ...(typeof mockContent === 'object' ? mockContent : { text: mockContent })
-  }]
-}
-
-/** Deprecate this at some point */
-export const createMock = (config) => {
-  const field = config.single || config.multi || 'paragraph'
-  const mainType = (() => {
-    const split = field.split(',')
-    if (split.length === 1) {
-      return split[0]
-    }
-    const maybeHeading = split.find(e => e.indexOf('heading') === 0)
-    if (maybeHeading) {
-      return maybeHeading
-    }
-    return 'paragraph'
-  })()
-
-  const lorem = new LoremIpsum(Defaults)
-
-  return [{
-    type: mainType,
-    text: isHeading(field) ? faker.company.bs() :  lorem.generateParagraphs(Math.floor(Math.random() * 3) + 1),
-    spans: []
   }]
 }

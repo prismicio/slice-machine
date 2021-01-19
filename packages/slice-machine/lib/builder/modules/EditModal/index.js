@@ -1,4 +1,5 @@
 import Modal from 'react-modal'
+import deepMerge from 'deepmerge'
 
 import {
   Box,
@@ -8,6 +9,12 @@ import {
   useThemeUI
 } from 'theme-ui'
 
+import * as Widgets from 'lib/widgets'
+
+import { createInitialValues, createValidationSchema } from 'lib/forms'
+
+import { MockConfigKey } from 'src/consts'
+
 import Card from 'components/Card/WithTabs'
 import ItemHeader from 'components/ItemHeader'
 import { Flex as FlexGrid, Col } from 'components/Flex'
@@ -15,11 +22,14 @@ import { Flex as FlexGrid, Col } from 'components/Flex'
 import WidgetForm from './Form'
 import WidgetFormField from './Field'
 
-import * as Widgets from 'lib/widgets'
-
 Modal.setAppElement("#__next");
 
 const FORM_ID = 'edit-modal-form'
+
+const removeKeys = (obj, keys) =>
+  Object.entries(obj)
+    .filter(([key]) => keys.indexOf(key) === -1)
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 
 const EditModal = ({
   close,
@@ -27,32 +37,34 @@ const EditModal = ({
   Model,
   variation
 }) => {
+
   const { theme } = useThemeUI()
+  
+  const { mockConfig: initialMockConfig } = Model
+  const { fieldType, field: [apiId, initialModelValues] } = data
   const {
-    isOpen,
-    fieldType,
-    field: [apiId, initialModelValues]
-  } = data
+    Meta: { icon: WidgetIcon },
+    FormFields,
+    MockConfigForm,
+    Form: CustomForm
+  } = Widgets[initialModelValues.type]
 
-  const { Meta: { icon: WidgetIcon }, MockConfigForm } = Widgets[initialModelValues.type]
-
-  const { initialMockConfig } = Model
-
-  const initialModelValuesWithConfig = {
-    ...initialModelValues,
-    mockConfig: initialMockConfig[apiId]?.config || {}
+  if (!FormFields) {
+    return (<div>{type} not supported yet</div>)
   }
 
-  const onMockConfigUpdate = ({ updatedKey, updatedValue, mockConfigValue, setFieldValue }) => {
-    setFieldValue('mockConfig', {
-      ...mockConfigValue,
-      [updatedKey]: updatedValue
-    })
+  const initialValues = {
+    ...createInitialValues(FormFields),
+    ...removeKeys(initialModelValues, ['config']),
+    [MockConfigKey]: deepMerge(MockConfigForm.initialValues, initialMockConfig?.[fieldType]?.[apiId] || {}),
+    id: apiId,
   }
+
+  const validationSchema = createValidationSchema(FormFields)
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen
       shouldCloseOnOverlayClick
       onRequestClose={close}
       contentLabel="Widget Form Modal"
@@ -67,27 +79,38 @@ const EditModal = ({
         Model={Model}
         formId={FORM_ID}
         fieldType={fieldType}
-        initialModelValues={initialModelValuesWithConfig}
-        onUpdateField={(key, value) => {
-          Model.hydrate(
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        FormFields={FormFields}
+        onSave={({ newKey, value }, mockValue) => {
+          Model.hydrate(() => {
+            Model.updateMockConfig({
+              prevId: apiId,
+              newId: newKey,
+              fieldType,
+              value: mockValue
+            })
             variation.replace[fieldType](
               apiId,
-              key,
-              { config: value, type: initialModelValuesWithConfig.type }
+              newKey,
+              { config: value, type: initialModelValues.type }
             )
-          )
+          })
           close()
         }}
       >
         {(props) => {
           const {
-            values: { label, id, mockConfig, ...restValues },
+            values: {
+              id,
+              label,
+              [MockConfigKey]: mockConfigObject,
+              ...restValues
+            },
             errors,
             isValid,
             isSubmitting,
             initialValues,
-            FormFields,
-            CustomForm,
 
             setFieldValue
           } = props
@@ -162,16 +185,17 @@ const EditModal = ({
                 <Box>
                   { MockConfigForm ? (
                     <MockConfigForm
-                      widgetConfig={restValues}
-                      mockConfig={mockConfig}
-                      onUpdate={(updatedKey, updatedValue) => {
-                        onMockConfigUpdate({
-                          updatedKey,
-                          updatedValue,
-                          currentMockConfigValue: mockConfig,
-                          setFieldValue
-                        })
-                      }}
+                      // widgetConfig={restValues}
+                      // mockConfig={mockConfigObject}
+                      // onUpdate={({ key: updatedKey, value: updatedValue, updateType }) => {
+                      //   onMockConfigUpdate({
+                      //     updateType,
+                      //     updatedKey,
+                      //     updatedValue,
+                      //     currentMockConfigValue: mockConfigObject,
+                      //     setFieldValue
+                      //   })
+                      // }}
                     />
                   ) : <p>Not ready</p>}
                 </Box>

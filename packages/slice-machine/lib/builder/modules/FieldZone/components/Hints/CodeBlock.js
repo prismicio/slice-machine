@@ -31,8 +31,7 @@ const CodeBlock = ({ docs, ...props }) => {
       setTimeout(() => {
         setIsCopied(false)
        }, 1200)
-      
-    });
+    })
   }
 
   return (

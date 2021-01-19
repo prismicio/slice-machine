@@ -96,7 +96,7 @@ const PreviewFields = ({
         />
       </Fragment>
       {
-        editModalData && editModalData.isOpen ? (
+        editModalData?.isOpen ? (
           <EditModal
             data={editModalData}
             close={closeEditModal}

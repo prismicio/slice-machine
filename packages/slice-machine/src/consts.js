@@ -31,3 +31,5 @@ export const SupportedFrameworks = {
   vue: 'vue',
   react: 'react'
 }
+
+export const MockConfigKey = 'mockConfig'
