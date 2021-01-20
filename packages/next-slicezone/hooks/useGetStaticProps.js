@@ -1,5 +1,4 @@
 import { query } from '../features/query'
-import { registry as createRegistry } from '../features/registry'
 
 export const useGetStaticProps = ({
   uid,
@@ -18,8 +17,6 @@ export const useGetStaticProps = ({
     params = {}
   }) {
 
-    const registry = await createRegistry()
-
     const { ref = null } = previewData
     const resolvedUid = typeof uid === 'function' ? uid({ params, previewData, preview }) : (uid || null)
     try {
@@ -35,7 +32,6 @@ export const useGetStaticProps = ({
           ...doc,
           error: null,
           slices: doc ? doc.data[body] : [],
-          registry
         }
       }
 
@@ -49,7 +45,7 @@ export const useGetStaticProps = ({
           error: e.toString(),
           uid: resolvedUid,
           slices: [],
-          registry: null
+          // registry: null
         }
       }
     }

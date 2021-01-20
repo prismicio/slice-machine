@@ -1,7 +1,7 @@
-# SliceZone (wip)
+# Next SliceZone (wip)
 
 A component that matches front-end components with Prismic slices.
-Pretty much a work in progress, README coming 
+Pretty much a work in progress ✌️
 
 RFC: https://github.com/prismicio/slice-machine/issues/7
 
@@ -16,40 +16,59 @@ RFC: https://github.com/prismicio/slice-machine/issues/7
 
 ## Usage
 
-To display the right content, the SliceZone takes as parameters,
+To display the right content, the SliceZone takes as parameters
 props passed at build time by `useGetStaticProps`. Notably:
 
 - `slices`, the array data components fetched from Prismic
-- `registry`, an object that maps Prismic slice keys to components
-- `theme`, an arbitrary object passed as props to all slices
+- `theme`, an arbitrary object passed as prop to all slices
 - `resolver`, a function that resolves calls to components from the SliceZone
 
-⚠️ Resolver being aw wip, you will have to create it manually for a short amount of time:
+The resolver function can be generated for you and should be everytime you make a change to your slices structure (rename, add, delete a slice, add a library...). To do this, create a `pages/_document` file and add the `createResolver` method to its `getInitialProps` method:
+
+#### Example _document file
 
 ```javascript
-import dynamic from 'next/dynamic'
-const resolver = ({ from, sliceName }) =>
-    dynamic(() => import(`../slices/${sliceName}.js`))
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { createResolver } from 'next-slicezone/resolver'
 
-const Page = ({ theme, registry, slices }) => (
-    <SliceZone resolver={resolver} registry={registry} theme={theme} slices={slices} />
-)
+export default class extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    /* In development, generate an sm-resolver.js file
+    that will map slices to components */
+    if (process.env.NODE_ENV === 'development') {
+      await createResolver()
+    }
+    return { ...initialProps }
+  }
 
-export const useGetStaticProps(...)
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
+}
 
-export default Page
 ````
+
+⚠️ If you don't already have a resolver file and import it in your page components,
+you might encounter an error that should disappear on complete reload of the page.
 
 ## Hooks
 
-The SliceZone exports 2 hooks to hep Next.js statically export SliceMachine pages.
+The SliceZone exports 2 hooks to help Next.js statically export SliceMachine pages.
 
 ### useGetStaticProps
 
 `useGetStaticProps` can be used in every page using the SliceZone.
 It's responsible for:
 - fetching content from Prismic
-- creating your project components registry
 - returning a pre-written Next `getStaticProps`
 
 #### example
@@ -57,9 +76,10 @@ It's responsible for:
 
 ````javascript
 import { useGetStaticProps, useGetStaticPaths } from 'next-slicezone/hooks'
+import resolver from '../sm-resolver'
 
-const Page = ({ uid, registry, slices }) => (
-    <SliceZone resolver={resolver} registry={registry} slices={slices} />
+const Page = ({ uid, slices }) => (
+    <SliceZone resolver={resolver} slices={slices} />
 )
 
 export const getStaticProps = useGetStaticProps({
@@ -67,6 +87,8 @@ export const getStaticProps = useGetStaticProps({
   type: 'page', // query document of type "page"
   uid: ({ params }) => params.uid // pass a function to `uid` to resolve dynamic content
 })
+
+export default Page
 ````
 
 #### Properties
@@ -146,16 +168,14 @@ yarn add next-slicezone
 import SliceZone from 'next-slicezone'
 import { useGetStaticProps, useGetStaticPaths } from 'next-slicezone/hooks'
 
-// you want to do this somewhere else
+// you may want to do this somewhere else
 const client = Prismic.client(apiEndpoint)
 
-// interim
-const resolver = ({ sliceName }) => dynamic(() => import(`../slices/${sliceName}.js`))
+import resolver from '../sm-resolver'
 
-const Page = ({ uid, registry, slices }) =>  (
+const Page = ({ uid, slices }) =>  (
     <SliceZone
         resolver={resolver}
-        registry={registry}
         slices={slices}
     />
 )
