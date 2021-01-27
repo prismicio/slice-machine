@@ -151,12 +151,6 @@ const createModel = (intialValues, initialInfo, initialMockConfig) => {
         meta,
         value: formatModel(model, variations),
         isTouched: !deepEqual(model, variations) || !equal(initialMockConfig, mockConfig)
-        // isTouched: (() => {
-        //   console.log(this.mockConfig)
-        //   // console.log(initialMockConfig, mockConfig)
-        //   // console.log(equal(initialMockConfig, mockConfig) ? 'are equal' : 'are NOT equal')
-        //   return !deepEqual(model, variations) || !equal(initialMockConfig, mockConfig)
-        // })()
       }
     },
   }

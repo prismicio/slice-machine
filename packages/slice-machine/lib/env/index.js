@@ -19,7 +19,7 @@ const getFramework = () => {
 
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies }
 
-  const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value] !== null)
+  const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value])
 
   return frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : 'vanillajs'
 }
