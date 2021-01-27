@@ -1,5 +1,5 @@
-import { Timestamp } from '../../mock/widgets'
-import { createDefaultHandleMockContentFunction } from '../../utils'
+import { Timestamp } from '../../../mock/widgets'
+import { createDefaultHandleMockContentFunction } from '../../../utils'
 
 export const createMock = () => Timestamp.createMock().split('T')[0]
 

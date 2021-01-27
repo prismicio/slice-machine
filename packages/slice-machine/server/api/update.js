@@ -11,7 +11,6 @@ import mock from '../../lib/mock'
 import { insert as insertMockConfig } from '../../lib/mock/fs'
 
 export default async function handler(req) {
-  console.log({ body: req.body })
   const { env } = await getEnv()
   const { sliceName, from, model, mockConfig } = req.body
 
@@ -35,7 +34,7 @@ export default async function handler(req) {
   const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
 
   fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
-  fs.writeFileSync(mockPath, JSON.stringify(mockedSlice), 'utf-8')
+  fs.writeFileSync(mockPath, JSON.stringify(mockedSlice, null, 2), 'utf-8')
 
   const screenshotArgs = { cwd: env.cwd, from, sliceName }
   const { isCustom } = getPathToScreenshot(screenshotArgs)

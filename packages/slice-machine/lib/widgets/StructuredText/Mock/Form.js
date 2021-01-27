@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Textarea, Flex, Box, IconButton, Button, Radio, Heading, Input, Text, useThemeUI } from 'theme-ui'
-import { FaRegQuestionCircle, FaRegTrashAlt } from 'react-icons/fa'
+import { Box, Heading, Text, useThemeUI } from 'theme-ui'
+import { FaRegQuestionCircle } from 'react-icons/fa'
 import { useFormikContext } from 'formik'
 
 import { initialValues, Patterns } from './'
@@ -14,15 +14,12 @@ import { MockConfigKey } from 'src/consts'
 const HandlePatternTypes = ({
   options,
   currentKey,
-  currentValue,
   onUpdate,
   onUpdateBlocks,
   blocksValue
 }) => {
   const { theme } = useThemeUI()
   const [displayMore, setDisplayMore] = useState(false)
-
-  const isCustom = currentKey === 'CUSTOM'
 
   const PatternsWithStatus = Object.entries(Patterns).map(([key, pattern]) => ({
     patternKey: key,
@@ -94,27 +91,6 @@ const HandlePatternTypes = ({
   )
 }
 
-export const HandleContent = ({ currentValue, onUpdate }) => {
-
-  return (
-    <Box my={3}>
-      <Heading as="h3" mb={3}>
-        Or Use Content
-      </Heading>
-      <Flex sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text as="p" mb={2}>Paste a RichText here 👇</Text>
-        <IconButton type="button" variant="transparent">
-          <FaRegTrashAlt size="20px" />
-        </IconButton>
-      </Flex>
-      <Textarea
-        rows={4}
-        placeholder='[{ "type": "paragraph", "content": "..." }]'
-      />
-    </Box>
-  )
-}
-
 const Form = () => {
   const { values, setFieldValue, ...context } = useFormikContext()
   const options = (values.single || values.multi).split(',')
@@ -148,37 +124,14 @@ const Form = () => {
 
   return (
     <Box>
-      {/* <HandleMinMax
-        title="Sentences Per Paragraph"
-        value={configValues.sentencesPerParagraph}
-        onUpdate={onUpdateWithKey('sentencesPerParagraph')}
-        moreInfo="👆 Average number of sentences generated for each paragraph"
-      />
-      <HandleMinMax
-        title="Words Per Sentence"
-        value={configValues.wordsPerSentence}
-        onUpdate={onUpdateWithKey('wordsPerSentence')}
-        moreInfo="👆 Average number of words generated for each sentence"
-      />
-      <HandleMinMax
-        title="Number of Blocks"
-        value={configValues.blocks}
-        onUpdate={onUpdateWithKey('blocks')}
-        moreInfo="👆 Average number of times the pattern will be applied"
-      /> */}
       <HandlePatternTypes
         options={options}
-        currentKey={configValues.pattern ? 'CUSTOM' : configValues.patternType || '_'}
+        currentKey={configValues.patternType || '_'}
         onUpdate={onSetPattern}
         onUpdateBlocks={onSetBlocks}
         blocksValue={configValues.blocks || 1}
-        currentValue={
-          configValues.patternType === 'CUSTOM'
-          ? configValues.patternValue
-          : Patterns[configValues.patternType || '_'].value(options)
-        }
+        currentValue={Patterns[configValues.patternType || '_'].value(options)}
       />
-      {/* <HandleContent currentValue="Lalala" /> */}
     </Box>
   )
 }

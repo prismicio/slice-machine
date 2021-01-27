@@ -6,12 +6,11 @@ const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
       if (res) {
         return res
       }
-      console.warn(`[mock] contenv value is unsupported for field "${widget.TYPE_NAME || `dev log ${config}`}"`)
+      console.warn(`[mock] content value is unsupported for field "${widget.TYPE_NAME || `dev log ${config}`}"`)
     }
   }
   const { handleMockConfig } = widget
   if (handleMockConfig) {
-    console.log('handle maybeFieldMock.config', maybeFieldMock.config)
     return handleMockConfig(maybeFieldMock ? maybeFieldMock.config  || {} : {}, config)
   }
   console.warn(`[slice-machine] "config" property for field type "${widget.TYPE_NAME}" is not yet supported.`)
@@ -25,8 +24,6 @@ export const handleFields = (Widgets) => (fields = [], mocks = {}) => {
   return fields.reduce((acc, [key, value]) => {
     const widget = Widgets[value.type]
     const maybeFieldMock = mocks[key]
-
-    console.log({ widget, maybeFieldMock })
 
     if (widget) {
       const mock = handleFieldMock(widget, maybeFieldMock, value.config)

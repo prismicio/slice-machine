@@ -1,6 +1,7 @@
 import { MdColorLens } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../utils'
-import { createMock, handleMockContent } from './mock'
+import { handleMockContent, handleMockConfig } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
   "type" : "Color",
@@ -18,9 +19,10 @@ const Meta = {
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Color')
 
 export default {
-  createMock,
   handleMockContent,
+  handleMockConfig,
   create,
+  MockConfigForm,
   FormFields,
   TYPE_NAME,
   schema,

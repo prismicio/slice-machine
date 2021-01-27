@@ -56,7 +56,8 @@ const EditModal = ({
   const initialValues = {
     ...createInitialValues(FormFields),
     ...removeKeys(initialModelValues, ['config']),
-    [MockConfigKey]: deepMerge(MockConfigForm.initialValues, initialMockConfig?.[fieldType]?.[apiId] || {}),
+    ...initialModelValues.config,
+    [MockConfigKey]: deepMerge(MockConfigForm?.initialValues || {}, initialMockConfig?.[fieldType]?.[apiId] || {}),
     id: apiId,
   }
 
@@ -104,15 +105,11 @@ const EditModal = ({
             values: {
               id,
               label,
-              [MockConfigKey]: mockConfigObject,
-              ...restValues
             },
             errors,
             isValid,
             isSubmitting,
             initialValues,
-
-            setFieldValue
           } = props
           return (
               <Card
@@ -184,19 +181,7 @@ const EditModal = ({
                 }
                 <Box>
                   { MockConfigForm ? (
-                    <MockConfigForm
-                      // widgetConfig={restValues}
-                      // mockConfig={mockConfigObject}
-                      // onUpdate={({ key: updatedKey, value: updatedValue, updateType }) => {
-                      //   onMockConfigUpdate({
-                      //     updateType,
-                      //     updatedKey,
-                      //     updatedValue,
-                      //     currentMockConfigValue: mockConfigObject,
-                      //     setFieldValue
-                      //   })
-                      // }}
-                    />
+                    <MockConfigForm />
                   ) : <p>Not ready</p>}
                 </Box>
               </Card>

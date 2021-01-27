@@ -1,6 +1,7 @@
 import * as yup from 'yup'
 import { BsToggleOn } from 'react-icons/bs'
-import { createMock, handleMockContent } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
     "type" : "Boolean",
@@ -45,7 +46,8 @@ const schema = yup.object().shape({
 export default {
   TYPE_NAME,
   handleMockContent,
-  createMock,
+  handleMockConfig,
+  MockConfigForm,
   create,
   Meta,
   schema,

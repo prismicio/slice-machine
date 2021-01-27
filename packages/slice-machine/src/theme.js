@@ -373,6 +373,17 @@ export default () => ({
       p: 3,
       maxWidth: 1024
     },
+    fixedHeader: {
+      position: 'fixed',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height: '48px',
+      width: '100%',
+      bg: 'background',
+      p: 2,
+      top: '0',
+      left: '0'
+    },
     disabledBox: {
       position: 'absolute',
       zIndex: '1',

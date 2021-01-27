@@ -1,0 +1,62 @@
+[
+  {
+    "id": "default-slice",
+    "name": "Default slice",
+    "docURL": "...",
+    "version": "sktwi1xtmkfgx8626",
+    "description": "WithMocks",
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Cultivate sexy web-readiness",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Voluptate ipsum velit in cillum eu dolore commodo quis eiusmod. Voluptate pariatur nostrud cillum ipsum cillum dolore non nisi mollit incididunt nisi ut aliqua id. Aliqua labore est commodo sit.",
+          "spans": []
+        }
+      ],
+      "image": {
+        "dimensions": {
+          "width": 300,
+          "height": 300
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.prismic.io/important-sm-images/8eb81fa6-3408-4f2a-a856-8319ca2b6f8c_YbGMa1Jz1yY.jpg?w=300&h=300&fit=crop"
+      },
+      "color": "#f47373",
+      "keyText": "Cool Content String",
+      "bool": true
+    },
+    "items": [
+      {
+        "lll": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.prismic.io/important-sm-images/90501dd7-8c50-43d4-a20a-f001a60e6ac1_j_HYcjKUZrk.jpg?w=900&h=500&fit=crop"
+        }
+      },
+      {
+        "lll": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.prismic.io/important-sm-images/dc35ef90-3f97-49a5-a22a-3fb86373dfef_Ka9WMJqV8E8.jpg?w=900&h=500&fit=crop"
+        }
+      }
+    ],
+    "slice_type": "with_mocks"
+  }
+]

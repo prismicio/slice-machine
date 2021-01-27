@@ -1,5 +1,5 @@
 import { createDefaultHandleMockContentFunction } from '../../utils'
 
-export const createMock = () => Math.floor(Math.random() * 9999)
+export const handleMockConfig = () => Math.floor(Math.random() * 9999)
 
-export const handleMockContent = createDefaultHandleMockContentFunction({ createMock }, 'Number', 'number')
+export const handleMockContent = createDefaultHandleMockContentFunction({ handleMockConfig }, 'Number', v => typeof v === 'number')

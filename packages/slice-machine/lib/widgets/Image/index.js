@@ -9,7 +9,8 @@ import {
 
 import { removeProp } from '../../utils'
 
-import { createMock, handleMockContent } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** 
  * {
@@ -55,8 +56,9 @@ export default {
   Form,
   schema,
   create,
+  handleMockConfig,
   handleMockContent,
-  createMock,
+  MockConfigForm,
   FormFields,
   TYPE_NAME: 'Image'
 }

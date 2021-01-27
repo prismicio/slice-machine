@@ -1,6 +1,7 @@
-import { MdTitle } from 'react-icons/md'
 import * as yup from 'yup'
-import { createMock, handleMockContent } from './mock'
+import { MdTitle } from 'react-icons/md'
+import { MockConfigForm } from './Mock/Form'
+import { handleMockConfig, handleMockContent } from './Mock'
 
 /**
 * {
@@ -39,7 +40,8 @@ const Meta = {
 
 export default {
   create,
-  createMock,
+  MockConfigForm,
+  handleMockConfig,
   handleMockContent,
   Meta,
   schema,

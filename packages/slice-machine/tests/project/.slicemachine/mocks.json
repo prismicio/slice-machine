@@ -12,6 +12,12 @@
           "patternType": "PARAGRAPH",
           "blocks": 3
         }
+      },
+      "image": {
+        "content": "https://images.unsplash.com/photo-1515916801730-e39c78b31b10"
+      },
+      "color": {
+        "content": "#ba68c8"
       }
     }
   },
@@ -20,14 +26,45 @@
       "title": {
         "config": {
           "patternType": "HEADING",
-          "blocks": 2
+          "blocks": 1
         }
       },
       "description": {
         "config": {
-          "patternType": "PARAGRAPH_WITH_HEADING",
-          "blocks": 6
+          "patternType": "PARAGRAPH",
+          "blocks": 4
         }
+      },
+      "image": {
+        "content": "https://images.prismic.io/important-sm-images/02c0841a-df5d-4967-8480-d3a758596191_-PyYwZf0SP0.jpg"
+      }
+    }
+  },
+  "WithMocks": {
+    "primary": {
+      "title": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 1
+        }
+      },
+      "description": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 1
+        }
+      },
+      "image": {
+        "content": "https://images.prismic.io/important-sm-images/8eb81fa6-3408-4f2a-a856-8319ca2b6f8c_YbGMa1Jz1yY.jpg"
+      },
+      "color": {
+        "content": "#f47373"
+      },
+      "keyText": {
+        "content": "Cool Content String"
+      },
+      "bool": {
+        "content": false
       }
     }
   }

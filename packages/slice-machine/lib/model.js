@@ -137,8 +137,14 @@ const createModel = (intialValues, initialInfo, initialMockConfig) => {
               items: _replace(variation, 'items'),
             },
             delete: {
-              primary: _delete(variation, 'primary'),
-              items: _delete(variation, 'items'),
+              primary(key) {
+                _delete(variation, 'primary')(key)
+                delete mockConfig.primary[key]
+              },
+              items(key) {
+                _delete(variation, 'items')(key)
+                delete mockConfig.items[key]
+              }
             },
           }
         },

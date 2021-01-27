@@ -23,6 +23,7 @@
         "image": {
           "config": {
             "label": "My cool label",
+            "type": "Image",
             "constraint": {
               "width": 600,
               "height": 600
@@ -98,15 +99,15 @@
           "type": "StructuredText"
         },
         "bool": {
-          "type": "Boolean",
           "config": {
             "label": "",
-            "id": "bool",
             "placeholder": "",
             "placeholder_false": "false",
             "placeholder_true": "true",
-            "default_value": true
-          }
+            "default_value": true,
+            "type": "Boolean"
+          },
+          "type": "Boolean"
         },
         "image3": {
           "type": "Image",
@@ -118,12 +119,12 @@
           }
         },
         "color": {
-          "type": "Color",
           "config": {
             "label": "",
-            "id": "color",
-            "placeholder": ""
-          }
+            "placeholder": "",
+            "type": "Color"
+          },
+          "type": "Color"
         }
       },
       "items": {

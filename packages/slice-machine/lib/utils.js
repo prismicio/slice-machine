@@ -29,11 +29,11 @@ export const createDefaultWidgetValues = (TYPE_NAME) => ({
   })
 })
 
-export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, expectedType = 'string') => {
+export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkFn) => {
   return function handleMockContent(mockContent, config) {
-    if (typeof mockContent !== expectedType) {
-      console.error(`Mocks for type "${TYPE_NAME}" expect their "content" property to be of type "${expectedType}". Received: ${typeof mockContent}.`)
-      return widget.createMock(config)
+    if (!checkFn(mockContent)) {
+      console.error(`Type check for type "${TYPE_NAME}" failed. Using default mock configuration`)
+      return widget.handleMockConfig(null, config)
     }
     return mockContent
   }

@@ -1,6 +1,6 @@
 import { MdDateRange } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../utils'
-import { createMock, handleMockContent } from './mock'
+import { createMock, handleMockContent } from './Mock'
 
 /** {
   "type" : "Date",
