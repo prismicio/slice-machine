@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 import { MdDateRange } from 'react-icons/md'
-import { createMock, handleMockContent } from './mock'
+import { createMock, handleMockContent } from './Mock'
 
 /** {
     "type" : "Timestamp",

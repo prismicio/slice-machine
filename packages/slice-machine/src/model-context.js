@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import equal from 'fast-deep-equal'
 import { useRouter } from 'next/router'
 import { useIsMounted } from 'react-tidy'
 
@@ -9,6 +10,12 @@ export const ModelContext = React.createContext([])
 export default function ModelProvider({ children, initialModel, initialMockConfig, info }) {
   const isMounted = useIsMounted()
   const [Model, setModel] = useState(createModel(initialModel, info, initialMockConfig))
+
+  useEffect(() => {
+    if (equal(Model.get().mockConfig, initialMockConfig)) {
+      setModel(createModel(initialModel, info, initialMockConfig))
+    }
+  }, [initialMockConfig])
   
   const hydrate = (fn) => {
     if (fn && typeof fn === 'function') {
