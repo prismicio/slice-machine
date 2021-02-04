@@ -4,7 +4,13 @@ import { Tab } from 'react-tabs'
 export const CustomTabList = ({ children, ...otherProps }) => (
   <Box
     as="ul"
-    sx={{ p: 0, m: 0, borderBottom: t => `1px solid ${t.colors.borders}`, position: 'relative' }}
+    sx={{
+      p: 0,
+      m: 0,
+      px: theme => `calc(${theme.space[3]}px + 8px)`,
+      bg: 'headSection',
+      position: 'relative'
+    }}
     {...otherProps}
   >
     {children}
@@ -26,9 +32,12 @@ export const CustomTab = ({ children, ...otherProps }) => {
         border: 'none',
         borderRadius: '0',
         ...otherProps.selected ? {
+          borderBottom: `3px solid ${theme.colors.primary}`,
           color: theme.colors.text,
           backgroundColor: theme.colors.headSection
-        } : null
+        } : {
+          borderBottom: '3px solid transparent'
+        }
       }}
     >
       {children}

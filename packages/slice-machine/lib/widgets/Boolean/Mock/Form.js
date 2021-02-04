@@ -1,30 +1,42 @@
-import { Box, Heading, Select, Label } from 'theme-ui'
+import { Box, Text, Select, Label } from 'theme-ui'
 import { useFormikContext } from 'formik'
 
 import { initialValues } from './'
 
 import { MockConfigKey } from 'src/consts'
 
+const RAND = 'RANDOM'
+
 const Form = () => {
   const { values, setFieldValue } = useFormikContext()
-
-  const contentValue = values[MockConfigKey]?.content !== null ? values[MockConfigKey].content : null
+  const contentValue = values[MockConfigKey]?.content
   
   const onSelect = (e) => {
+    if (e.target.value === RAND) {
+      return setFieldValue(MockConfigKey, {})
+    }
     setFieldValue(MockConfigKey, {
-      content: e.target.value === 'true'
+      content: e.target.value === (values.placeholder_true || 'true')
     })
   }
 
+  const value = (() => {
+    if (contentValue != null) {
+      return contentValue === true
+        ? values.placeholder_true || 'true'
+        : values.placeholder_false || 'false'
+    }
+    return RAND
+  })()
+
   return (
     <Box>
-      <Label sx={{ display: 'block' }}>
-        <Heading as="h3" mb={2} sx={{ display: 'block' }}>
-          Boolean value
-        </Heading>
-        <Select onChange={onSelect} value={contentValue !== null ? contentValue.toString() : 'true'}>
-          <option>true</option>
-          <option>false</option>
+      <Label variant="label.primary" sx={{ display: 'block', maxWidth: '400px' }}>
+        <Text as="p" mb={1}>Boolean value</Text>
+        <Select onChange={onSelect} value={value}>
+          <option value={RAND}>Random</option>
+          <option>{values.placeholder_true || 'true'}</option>
+          <option>{values.placeholder_false || 'false'}</option>
         </Select>
       </Label>
     </Box>

@@ -31,7 +31,7 @@ export const createDefaultWidgetValues = (TYPE_NAME) => ({
 
 export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkFn) => {
   return function handleMockContent(mockContent, config) {
-    if (!checkFn(mockContent)) {
+    if (!checkFn(mockContent, config)) {
       console.error(`Type check for type "${TYPE_NAME}" failed. Using default mock configuration`)
       return widget.handleMockConfig(null, config)
     }

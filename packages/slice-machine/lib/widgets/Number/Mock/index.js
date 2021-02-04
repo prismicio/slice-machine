@@ -1,4 +1,6 @@
-import { createDefaultHandleMockContentFunction } from '../../utils'
+import { createDefaultHandleMockContentFunction } from '../../../utils'
+
+export const initialValues = null
 
 export const handleMockConfig = () => Math.floor(Math.random() * 9999)
 

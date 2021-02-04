@@ -1,8 +1,6 @@
 import { createDefaultHandleMockContentFunction } from '../../../utils'
 
-export const initialValues = {
-  content: '#ffffff'
-}
+export const initialValues = null
 
 export const handleMockConfig = () => {
   return `#${Math.floor(Math.random()*16777215).toString(16)}`

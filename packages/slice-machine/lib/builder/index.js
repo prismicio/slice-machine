@@ -193,7 +193,7 @@ const Builder = ({ openPanel }) => {
       >
 
         <Label variant="hint" sx={{ justifyContent: 'flex-end', py: 2, px: 0 }}>
-          Show code widgets
+          Show code snippets
           <Checkbox
             sx={{ margin: '0 8px' }}
             defaultChecked={DEFAULT_CHECKED}

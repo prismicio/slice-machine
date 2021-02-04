@@ -1,10 +1,8 @@
-import { useState } from 'react'
-import { Flex, Box, Label, Radio, Heading, Input, Text, useThemeUI } from 'theme-ui'
-import { FaRegQuestionCircle } from 'react-icons/fa'
+import { Flex, Box, Label, Radio, Input, Text } from 'theme-ui'
 
-import { Defaults, Patterns } from './'
+import { Patterns } from './'
 
-export const PatternCard = ({ patternKey, isAllowed, currentKey, pattern, onUpdate }) => {
+export const PatternCard = ({ patternKey, isAllowed, currentKey, onUpdate }) => {
   return (
     <Label
       sx={{
@@ -14,8 +12,9 @@ export const PatternCard = ({ patternKey, isAllowed, currentKey, pattern, onUpda
         display: 'block',
         position: 'relative',
         opacity: isAllowed ? '1' : '.4',
+        cursor: isAllowed ? 'pointer' : 'not-allowed',
         bg: 'headSection',
-        mb: 2
+        mb: 3
       }}
     >
       <Flex sx={{ p: 2, }}>
@@ -28,13 +27,9 @@ export const PatternCard = ({ patternKey, isAllowed, currentKey, pattern, onUpda
         />
         { Patterns[patternKey].title }
       </Flex>
-      {
-        currentKey === patternKey ? (
-          <Box sx={{ p: 2, mt: 0, }}>
-            <Text as="p">{ Patterns[patternKey].description }</Text>
-          </Box>
-        ) : null
-      }
+      <Box sx={{ p: 2, pt: 0, mt: 0, }}>
+        <Text sx={{ as: 'p', fontSize: 1 }}>{ Patterns[patternKey].description }</Text>
+      </Box>
     </Label>
   )
 }
@@ -49,7 +44,9 @@ export const NumberOfBlocks = ({ currentValue, onUpdate }) => {
   }
   return (
     <Box>
-      <Heading as="h4" mb={2}>Number of repetitions</Heading>
+      <Label variant="label.primary">
+        Block repetitions
+      </Label>
       <Input sx={{ maxWidth: '440px', bg: 'headSection' }} type="number" onChange={_onUpdate} value={currentValue} />
     </Box>
   )

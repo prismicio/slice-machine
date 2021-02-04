@@ -5,6 +5,7 @@ const push = require('./push').default
 const update = require('./update').default
 const screenshot = require('./screenshot').default
 const customScreenshot = require('./custom-screenshot').default
+const parseOembed = require('./parse-oembed').default
 const state = require('./state').default
 
 router.use('/state', async function (_, res) {
@@ -33,6 +34,14 @@ router.use('/custom-screenshot', async function (req, res) {
 
 router.use('/update', async function (req, res) {
   const payload = await update(req)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
+router.use('/parse-oembed', async function (req, res) {
+  const payload = await parseOembed(req.body.url)
   if (payload.err) {
     return res.status(400).json(payload)
   }

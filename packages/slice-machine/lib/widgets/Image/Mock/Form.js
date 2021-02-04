@@ -1,18 +1,21 @@
-import { Fragment, useState } from 'react'
-import { Box, Heading, Text, useThemeUI, Button, Flex, Label, Input } from 'theme-ui'
+import { useState } from 'react'
+import { Box, Label, Text, useThemeUI, Input } from 'theme-ui'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 import { useFormikContext } from 'formik'
 
-import { initialValues, images } from './'
+import { initialValues } from './'
 
+import Tooltip from 'components/Tooltip'
 import WindowPortal from 'components/WindowPortal'
-import { Flex as FlexGrid, Col } from 'components/Flex'
+import InputDeleteIcon from 'components/InputDeleteIcon'
 
 import { MockConfigKey } from 'src/consts'
 
 import * as dataset from './dataset'
 
 import { ImagesListCards, ImagesList } from './components'
+
+const dataTip = 'In order for Prismic to properly display images,<br/>they need to be provided by Imgix.'
 
 const ImageSelection = ({ value, onUpdate }) => {
   const [imagesSet, setImagesSet] = useState({ images: null, name: null })
@@ -29,6 +32,9 @@ const ImageSelection = ({ value, onUpdate }) => {
 
   return (
     <Box>
+      <Label variant="label.primary" mt={3} mb={2} htmlFor="contentValue">
+        <Text as="span">Presets</Text>
+      </Label>
       <ImagesListCards onSelect={onSelect} />
       {
         imagesSet.images ? (
@@ -41,18 +47,18 @@ const ImageSelection = ({ value, onUpdate }) => {
   )
 }
 
-const InputSrc = ({ value, onUpdate }) => {
+const InputSrc = ({ value, onUpdate, onReset }) => {
   const { theme } = useThemeUI()
-  const [displayMore, setDisplayMore] = useState(false)
-
   return (
     <Box>
-      <Heading as="h3" mb={0}>
-        Prismic or Unsplash url
+      <Label variant="label.primary" mt={3} mb={2} htmlFor="contentValue">
+        <Text as="span">Prismic or Unsplash url</Text>
+        <Tooltip id="image-mock" />
         <FaRegQuestionCircle
-          data-for="question-circle"
           color={theme.colors.icons}
-          onClick={() => setDisplayMore(!displayMore)}
+          data-for="image-mock"
+          data-multiline="true"
+          data-tip={dataTip}
           style={{
             position: 'relative',
             cursor: 'pointer',
@@ -61,32 +67,15 @@ const InputSrc = ({ value, onUpdate }) => {
             marginLeft: '8px'
           }}
         />
-      </Heading>
-      {
-        displayMore ? (
-          <Box
-            variant="plain"
-            sx={{
-              p: 2,
-              my: 2,
-              border: '1px solid',
-              borderColor: 'borders',
-              bg: 'headSection'
-            }}
-          >
-            <Heading as="h4">More info</Heading>
-            <Text as="p" mt={1} mb={1}>
-              In order for Prismic to properly display images, they need to be provided by Imgix.
-            </Text>
-          </Box>
-        ) : null
-      }
-      <Input
-        sx={{ mt: 2, bg: 'headSection' }}
-        value={value}
-        placeholder="https://images.prismic.io/..."
-        onChange={e => onUpdate(e.target.value)}
-      />
+      </Label>
+      <Box sx={{ position: 'relative' }}>
+        <Input
+          value={value || ''}
+          placeholder="https://images.prismic.io/..."
+          onChange={e => onUpdate(e.target.value)}
+        />
+        <InputDeleteIcon sx={{ top: '4px' }} onClick={onReset}/>
+      </Box>
     </Box>
   )
 }
@@ -103,9 +92,13 @@ const Form = () => {
     })
   }
 
+  const onReset = () => {
+    setFieldValue(MockConfigKey, {})
+  }
+
   return (
     <Box>
-      <InputSrc value={contentValue} onUpdate={onUpdate} />
+      <InputSrc value={contentValue} onUpdate={onUpdate} onReset={onReset} />
       <Box mt={3}>
         <ImageSelection value={contentValue} onUpdate={onUpdate} />
       </Box>

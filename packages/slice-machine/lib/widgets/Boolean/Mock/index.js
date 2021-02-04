@@ -1,13 +1,8 @@
 import { createDefaultHandleMockContentFunction } from '../../../utils'
 
-export const initialValues = {
-  content: true
-}
+export const initialValues = null
 
-export const handleMockConfig = (_, config) => {
-  if (config && config.default_value !== null) {
-    return config.default_value
-  }
+export const handleMockConfig = () => {
   return Math.random() < 0.50 ? true : false
 }
 

@@ -17,15 +17,15 @@ const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldT
 const codeByWidgetType = {
   [Widgets.StructuredText.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
   [Widgets.Image.TYPE_NAME]: createCodeFromTag('prismic-image'),
-  [Widgets.Link.TYPE_NAME]: createCodeFromTag('prismic-link'),
+  [Widgets.Link.TYPE_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
   [Widgets.Select.TYPE_NAME]: createDefaultField(),
-  [Widgets.Boolean.TYPE_NAME]: (fieldText) => `<span> {{ ${fieldText} ? 'true' : 'false' }}</span>`,
-  [Widgets.Date.TYPE_NAME]: (fieldText) => `<span> {{ ${fieldText} }}</span>`,
+  [Widgets.Boolean.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} ? 'true' : 'false' }}</span>`,
+  [Widgets.Date.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.Timestamp.TYPE_NAME]: createDefaultField(),
   [Widgets.Embed.TYPE_NAME]: createCodeFromTag('prismic-embed'),
   [Widgets.Number.TYPE_NAME]: createDefaultField(),
   [Widgets.GeoPoint.TYPE_NAME]: createDefaultField(),
-  [Widgets.Color.TYPE_NAME]: (fieldText) => `<span :style="color:${fieldText}">Some Text</span>`,
+  [Widgets.Color.TYPE_NAME]: (fieldText) => `<span :style="\`color: \${${fieldText}}\`">Some Text</span>`,
   [Widgets.Text.TYPE_NAME]: createDefaultField(),
 }
 

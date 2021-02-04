@@ -1,6 +1,7 @@
 import { AiOutlineFieldNumber } from 'react-icons/ai'
 import { createDefaultWidgetValues } from '../../utils'
-import { handleMockConfig, handleMockContent } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
     "type" : "Number",
@@ -20,6 +21,7 @@ const Meta = {
 
 export default {
   create,
+  MockConfigForm,
   handleMockConfig,
   handleMockContent,
   FormFields,

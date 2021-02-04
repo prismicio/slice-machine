@@ -1,6 +1,7 @@
 import { MdPlace } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../utils'
-import { createMock, handleMockContent } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** : {
   "type" : "GeoPoint",
@@ -18,9 +19,10 @@ const Meta = {
 }
 
 export default {
-  createMock,
   create,
+  handleMockConfig,
   handleMockContent,
+  MockConfigForm,
   FormFields,
   TYPE_NAME,
   schema,

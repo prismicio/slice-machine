@@ -1,6 +1,7 @@
 import { FiCode } from 'react-icons/fi'
 import { createDefaultWidgetValues } from '../../utils'
-import { createMock, handleMockContent } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /**  {
   "type" : "Embed",
@@ -19,8 +20,9 @@ const Meta = {
 }
 
 export default {
-  createMock,
   create,
+  handleMockConfig,
+  MockConfigForm,
   handleMockContent,
   FormFields,
   TYPE_NAME,

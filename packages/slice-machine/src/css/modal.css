@@ -24,6 +24,10 @@ body {
 	backdrop-filter: blur(3px);
 }
 
-.ReactModal__Overlay.overflow {
-  /* overflow: auto; */
+.ReactModal__Content--after-open {
+  min-height: 60vh;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
 }

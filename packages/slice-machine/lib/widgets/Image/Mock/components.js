@@ -1,6 +1,8 @@
-import { Fragment, useState } from 'react'
-import { Box, Flex, Heading, useThemeUI, Card } from 'theme-ui'
+import { Fragment } from 'react'
+import { useThemeUI } from 'theme-ui'
 import { Flex as FlexGrid, Col } from 'components/Flex'
+
+import PreviewCard from 'components/Card/Preview'
 
 import * as dataset from './dataset'
 
@@ -35,35 +37,12 @@ const RenderCol = ({ elements, cols, onSelect }) => (
   <Col cols={cols}>
     {
       elements.map(([key, value]) => (
-        <Card
+        <PreviewCard
           key={key}
-          variant="primary"
+          title={key}
+          imageUrl={`${value[0].raw}&q=20&w=120`}
           onClick={() => onSelect(key)}
-          sx={{
-            mb: 2,
-            cursor: 'pointer',
-            '&:hover': {
-              border: ({ colors }) => `1px solid ${colors.primary}`,
-              boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2)'
-            }
-          }}
-        >
-          <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-            <Heading as="h3">{key}</Heading>
-            <Box
-              sx={{
-                width: '44px',
-                height: '44px',
-                backgroundImage: `url("${value[0].raw}&q=20&w=120")`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-            </Box>
-          </Flex>
-        </Card>
+        />
       ))
     }
   </Col>
@@ -78,7 +57,7 @@ export const ImagesListCards = ({ onSelect }) => {
   ]
 
   return (
-    <FlexGrid mt={3} px={2} sx={{ display: 'flex' }}>
+    <FlexGrid mt={3} px={0} sx={{ display: 'flex' }}>
       <RenderCol onSelect={onSelect} cols={3} elements={Cols[0]} />
       <RenderCol onSelect={onSelect} cols={3} elements={Cols[1]} />
       <RenderCol onSelect={onSelect} cols={3} elements={Cols[2]} />

@@ -33,8 +33,7 @@ const WithTabs = ({
         {Children.map(children, (Child, i) => (
           <Box
             sx={{
-              p: 3,
-              pl: 4,
+              p: theme => `calc(${theme.space[3]}px + 8px)`,
               display: i === currentIndex ? 'block' : 'none'
             }}
           >

@@ -3,6 +3,7 @@ import deepMerge from 'deepmerge'
 
 import {
   Box,
+  Alert,
   Close,
   Flex,
   Button,
@@ -85,12 +86,16 @@ const EditModal = ({
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
           Model.hydrate(() => {
-            Model.updateMockConfig({
-              prevId: apiId,
-              newId: newKey,
-              fieldType,
-              value: mockValue
-            })
+            if (mockValue && Object.keys(mockValue).length) {
+              Model.updateMockConfig({
+                prevId: apiId,
+                newId: newKey,
+                fieldType,
+                value: mockValue
+              })
+            } else {
+              variation.deleteMock[fieldType](apiId)
+            }
             variation.replace[fieldType](
               apiId,
               newKey,
@@ -120,13 +125,11 @@ const EditModal = ({
                   <Flex
                     sx={{
                       p: 3,
-                      pl: 4,
                       bg: 'headSection',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       borderTopLeftRadius: radius,
                       borderTopRightRadius: radius,
-                      borderBottom: t => `1px solid ${t.colors.borders}`
                     }}
                   >
                     <ItemHeader
@@ -181,7 +184,16 @@ const EditModal = ({
                 }
                 <Box>
                   { MockConfigForm ? (
-                    <MockConfigForm />
+                    <Box>
+                      {
+                        fieldType === 'items' ? (
+                          <Alert mb={3} variant="highlight">
+                            Note: setting mock content for repeatable fields will set all items to the same value!
+                          </Alert>
+                        ) : null
+                      }
+                      <MockConfigForm initialValues={initialValues} />
+                    </Box>
                   ) : <p>Not ready</p>}
                 </Box>
               </Card>

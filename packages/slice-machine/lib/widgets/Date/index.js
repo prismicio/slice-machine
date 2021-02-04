@@ -1,6 +1,7 @@
 import { MdDateRange } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../utils'
-import { createMock, handleMockContent } from './Mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
   "type" : "Date",
@@ -19,8 +20,9 @@ const Meta = {
 }
 
 export default {
-  createMock,
+  handleMockConfig,
   handleMockContent,
+  MockConfigForm,
   create,
   FormFields,
   TYPE_NAME,

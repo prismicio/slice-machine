@@ -2,7 +2,8 @@ import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
 import { createInitialValues } from 'lib/forms'
 
-import { createMock } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /**
 * {
@@ -63,7 +64,9 @@ const Meta = {
 }
 
 export default {
-  createMock,
+  handleMockConfig,
+  handleMockContent,
+  MockConfigForm,
   Meta,
   FormFields,
   Form,

@@ -1,8 +1,6 @@
 import { Computer } from './dataset'
 
-export const initialValues = {
-  content: null
-}
+export const initialValues = null
 
 const createImageArray = ({ src: intialSrc }, constraint = {}, thumbnails = []) => {
   const { width = 900, height = 500 } = constraint

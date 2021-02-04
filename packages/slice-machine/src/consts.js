@@ -14,8 +14,8 @@ export const storybookWarningStates = [
 
 export const warningTwoLiners = {
   NOT_CONNECTED: ['You\'re not connected', 'Run `prismic login` to connect'],
-  STORYBOOK_NOT_IN_MANIFEST: ['Storybook not found in manifest', 'Run `yarn run storybook` from your terminal'],
-  STORYBOOK_NOT_INSTALLED: ['Storybook is not installed', 'Run `yarn run storybook`'],
+  STORYBOOK_NOT_IN_MANIFEST: ['Storybook not found in manifest', 'Add storybook property to sm.json'],
+  STORYBOOK_NOT_INSTALLED: ['Storybook is not installed', 'Run Prismic CLI `sm --add-storybook` command'],
   STORYBOOK_NOT_RUNNING: ['Storybook is not running', 'Run `yarn run storybook` from your terminal'],
 }
 

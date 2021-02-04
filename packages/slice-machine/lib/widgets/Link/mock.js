@@ -1,1 +1,0 @@
-export const createMock = (config) => ({ link_type: "Web", url: "https://slicemachine.dev" })

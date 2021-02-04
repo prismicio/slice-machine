@@ -1,6 +1,7 @@
 import * as yup from 'yup'
 import { MdDateRange } from 'react-icons/md'
-import { createMock, handleMockContent } from './Mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
     "type" : "Timestamp",
@@ -36,8 +37,9 @@ const Meta = {
 }
 
 export default {
-  createMock,
+  handleMockConfig,
   handleMockContent,
+  MockConfigForm,
   create,
   schema,
   FormFields,

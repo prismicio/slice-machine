@@ -9,7 +9,8 @@ import {
 import { removeProp } from 'lib/utils'
 
 import FormFields from './FormFields'
-import { createMock } from './mock'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /**
  * {
@@ -42,7 +43,9 @@ const schema = yup.object().shape({
 
 export default {
   FormFields,
-  createMock,
+  handleMockConfig,
+  handleMockContent,
+  MockConfigForm,
   create,
   schema,
   Meta,

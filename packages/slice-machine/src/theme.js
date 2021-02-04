@@ -1,6 +1,6 @@
 import { darken } from '@theme-ui/color'
 
-export default () => ({
+const Theme = () => ({
   colors: {
     text: '#1D2230',
     textClear: '#667587',
@@ -160,6 +160,11 @@ export default () => ({
       borderColor: 'borders',
     },
   },
+  alerts: {
+    highlight: {
+      background: 'highlight'
+    }
+  },
   buttons:  {
     primary: {
       color: 'white',
@@ -306,6 +311,7 @@ export default () => ({
     },
     input: {
       fontSize: 1,
+      bg: 'headSection',
       borderColor: 'borders',
       '&::placeholder': {
         color: 'icons',
@@ -325,9 +331,15 @@ export default () => ({
     },
     label: {
       primary: {
-        mb: 1,
+        mb: 2,
         fontSize: 1,
-        fontWeight: 'label'
+        fontWeight: 'label',
+        position: 'relative',
+        '& > span': {
+          mb: 1,
+          display: 'inline-block',
+          fontWeight: 'label',
+        }
       },
       border: {
         fontSize: 1,
@@ -409,7 +421,7 @@ export default () => ({
     },
     h4: {
       variant: "textStyles.heading",
-      fontSize: 3
+      fontSize: 3,
     },
     h5: {
       variant: "textStyles.heading",
@@ -538,3 +550,5 @@ export default () => ({
     }
   },
 })
+
+export default Theme

@@ -22,8 +22,10 @@ const WindowPortal = ({ children, onClose }) => {
 
   const _onClose = () => {
     if (win) {
-      win.close()
-      onClose()
+      setTimeout(() => {
+        win.close()
+        onClose()
+      }, 100) // quick-fix safari
     }
   }
 

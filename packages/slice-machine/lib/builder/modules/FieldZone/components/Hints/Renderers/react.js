@@ -25,6 +25,7 @@ const handleLinkCode = (fieldText, useKey) =>
 
 const handleEmbedCode = (fieldText, useKey) =>
 `
+// you might want to use a lib here (eg. react-oembed-container)
 <div ${useKey ? appendKey(fieldText) : ''} dangerouslySetInnerHTML={{ __html: ${fieldText} }} />
 `
 

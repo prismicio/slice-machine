@@ -48,21 +48,21 @@
           },
           "type": "Image"
         },
-        "text": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
-        },
         "multi": {
           "config": {
             "label": "",
             "placeholder": "",
             "allowTargetBlank": true,
             "multi": "paragraph,heading2"
+          },
+          "type": "StructuredText"
+        },
+        "text": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph"
           },
           "type": "StructuredText"
         },
