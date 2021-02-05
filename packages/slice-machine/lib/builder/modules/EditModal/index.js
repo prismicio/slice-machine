@@ -91,7 +91,9 @@ const EditModal = ({
                 prevId: apiId,
                 newId: newKey,
                 fieldType,
-                value: mockValue
+                value: MockConfigForm.onSave
+                  ? MockConfigForm.onSave(mockValue, value)
+                  : mockValue
               })
             } else {
               variation.deleteMock[fieldType](apiId)

@@ -4,6 +4,8 @@ import { handleMockConfig as generateImageMock } from '../../Image/Mock'
 
 const isHeading = (type) => type.indexOf('heading') === 0
 
+export const DEFAULT_PATTERN_KEY = 'PARAGRAPH'
+
 export const LoremDefaultConfig = {
   sentencesPerParagraph: {
     min: 1,
@@ -28,13 +30,13 @@ export const Patterns = {
   HEADING: {
     title: 'Section Title',
     test: (options) => options.some(isHeading),
-    value: (options) => [options.find(isHeading)],
+    value: (options) => [options.find(isHeading) || 'heading1'],
     description: 'A single heading (h1 to h6) with a variant number of words.'
   },
   STORY: {
     title: 'Story',
     test: (options) => options.some(isHeading) && options.some(e => e === 'paragraph'),
-    value: (options) => [options.find(isHeading), ...optionalType(options, 'image'), 'paragraph'],
+    value: (options) => [options.find(isHeading) || 'heading1', ...optionalType(options, 'image'), 'paragraph'],
     description: 'Content with headings, texts and optional images'
   }
 }
@@ -50,7 +52,6 @@ const handleText = (contentType, loremConfig) => {
 }
 
 const createMockFromConfig = (blocksLen, pattern, loremConfig) => {
-  
   const content = Array(blocksLen).fill().map(() => {
     return pattern.map(contentType => {
       if (isTextType(contentType)) {
@@ -76,7 +77,7 @@ export const handleMockConfig = (mockConfig, fieldConfig) => {
   const mockConfigValues = Object.assign(initialValues.config, mockConfig)
 
   const options = (fieldConfig.multi || fieldConfig.single).split(',')
-  const patternObj = Patterns[mockConfigValues.patternType] || Patterns['PARAGRAPH']
+  const patternObj = Patterns[mockConfigValues.patternType] || Patterns[DEFAULT_PATTERN_KEY]
   const pattern = patternObj.value(options)
 
   return createMockFromConfig(mockConfigValues.blocks, pattern, LoremDefaultConfig)
@@ -97,7 +98,7 @@ export const handleMockContent = (mockContent, fieldConfig) => {
 
 export const initialValues = {
   config: {
-    patternType: 'PARAGRAPH',
+    patternType: DEFAULT_PATTERN_KEY,
     blocks: 1
   }
 }

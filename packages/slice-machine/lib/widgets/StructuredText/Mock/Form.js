@@ -2,7 +2,11 @@ import { Label, Box, useThemeUI } from 'theme-ui'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 import { useFormikContext } from 'formik'
 
-import { initialValues, Patterns } from './'
+import {
+  initialValues,
+  Patterns,
+  DEFAULT_PATTERN_KEY
+} from './'
 
 import { NumberOfBlocks, PatternCard } from './components'
 
@@ -103,14 +107,44 @@ const Form = () => {
     <Box>
       <HandlePatternTypes
         options={options}
-        currentKey={configValues.patternType || 'PARAGRAPH'}
+        currentKey={configValues.patternType || DEFAULT_PATTERN_KEY}
         onUpdate={onSetPattern}
         onUpdateBlocks={onSetBlocks}
         blocksValue={configValues.blocks || 1}
-        currentValue={Patterns[configValues.patternType || 'PARAGRAPH'].value(options)}
+        currentValue={Patterns[configValues.patternType || DEFAULT_PATTERN_KEY].value(options)}
       />
     </Box>
   )
+}
+
+const findValidPattern = (config) => {
+  const patternEntry = Object.entries(Patterns).find(([, pat]) => pat.test(config))
+  if (patternEntry) {
+    return patternEntry[0]
+  }
+  return DEFAULT_PATTERN_KEY
+}
+Form.onSave = (mockValue, values) => {
+  if (!mockValue?.config?.patternType) {
+    return mockValue
+  }
+  const { patternType } = mockValue.config
+  const patternObj = Patterns[patternType]
+  if (!patternObj) {
+    return initialValues
+  }
+  const options = (values.single || values.multi).split(',')
+  const isValidPatternType = patternObj.test(options)
+  if (isValidPatternType) {
+    return mockValue
+  }
+  return {
+    ...mockValue,
+    config: {
+      ...mockValue.config,
+      patternType: findValidPattern(options)
+    }
+  }
 }
 
 Form.initialValues = initialValues
