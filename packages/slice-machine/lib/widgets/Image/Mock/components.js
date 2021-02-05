@@ -6,19 +6,6 @@ import PreviewCard from 'components/Card/Preview'
 
 import * as dataset from './dataset'
 
-// const ImageInput = ({ src, onChange, selected }) => (
-//   <Input
-//     sx={{
-//       p: 0,
-//       mb: 2,
-//       border: selected ? '5px solid rgba(81, 99, 186, 1)' : '5px solid transparent'
-//     }}
-//     onClick={onChange}
-//     type="image"
-//     src={src}
-//   />
-// )
-
 const ImageInput = ({ src, onChange, selected }) => (
   <input
     style={{
@@ -66,7 +53,6 @@ export const ImagesListCards = ({ onSelect }) => {
 }
 
 export const ImagesList = ({ listName, images, value, onChange }) => {
-  // const [filter, setFilter] = useState(null)
   const { theme } = useThemeUI()
 
   return (

@@ -69,7 +69,7 @@ const HandlePatternTypes = ({
 }
 
 const Form = () => {
-  const { values, setFieldValue, ...context } = useFormikContext()
+  const { values, setFieldValue } = useFormikContext()
   const options = (values.single || values.multi).split(',')
 
   const configValues = values[MockConfigKey]?.config || {}

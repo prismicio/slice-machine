@@ -97,7 +97,7 @@ export const handleMockContent = (mockContent, fieldConfig) => {
 
 export const initialValues = {
   config: {
-    patternType: Patterns.PARAGRAPH,
+    patternType: 'PARAGRAPH',
     blocks: 1
   }
 }
