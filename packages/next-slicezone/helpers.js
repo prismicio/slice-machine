@@ -1,11 +1,32 @@
-const fs = require('fs')
-const path = require('path')
-const slash = require('slash')
+import fs from 'fs'
+import path from 'path'
+import slash from 'slash'
 
-const { SM_CONFIG_FILE } = require('sm-commons/consts')
+import { SM_CONFIG_FILE } from 'sm-commons/consts'
+
+export function splitExtension(str) {
+  const fullName = str.split(path.sep).pop()
+  const [fileName, extension] = fullName.split('.')
+  return {
+    fileName,
+    extension,
+  }
+}
+
+export function getComponentName(slicePath) {
+  const split = slicePath.split(path.sep);
+  const pop = split.pop();
+  if (pop.indexOf('index.') === 0) {
+    return split.pop();
+  }
+  if (pop.indexOf(split[split.length - 1]) === 0) {
+    return slicePath.pop();
+  }
+  return pop.split('.')[0];
+}
 
 /** from relative path */
-function getInfoFromPath(libPath, startPath) {
+export function getInfoFromPath(libPath, startPath) {
   const isLocal = ['@/', '~', '/'].find((e) => libPath.indexOf(e) === 0) !== undefined
   const pathToLib = path.join(
     startPath || process.cwd(),
@@ -32,8 +53,4 @@ function getInfoFromPath(libPath, startPath) {
     pathToLib: slash(pathToLib),
     pathToSlices: slash(pathToSlices),
   }
-}
-
-module.exports = {
-  getInfoFromPath
 }

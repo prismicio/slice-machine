@@ -1,1 +1,4 @@
-export * from './features/components'
+/** Called Client Side */
+import { createResolver } from './features/resolver'
+
+export { createResolver }
