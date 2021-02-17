@@ -1,0 +1,238 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`frameworks should work 1`] = `
+Array [
+  Object {
+    "framework": "nuxt",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-nuxt-app",
+        ],
+      ],
+      "configPath": "nuxt.config.js",
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "@prismicio/vue",
+        "@nuxtjs/prismic",
+        "vue-slicezone",
+        "nuxt-sm",
+        "vue-essential-slices",
+      ],
+      "devDependencies": Array [],
+      "firstCommand": "npm run dev",
+      "framework": "nuxt",
+      "frameworkName": "Nuxt",
+      "libraries": Array [
+        "vue-essential-slices",
+      ],
+      "modules": Array [
+        Array [
+          "@nuxtjs/prismic",
+          Object {
+            "apiOptions": Object {
+              "routes": null,
+            },
+            "endpoint": "{{{ apiEndpoint }}}",
+          },
+        ],
+        Array [
+          "nuxt-sm",
+        ],
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-f",
+          "path": "nuxt.config.js",
+          "reason": "No \`nuxt.config.js\` file found",
+        },
+        Object {
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "prompts": Array [
+        Object {
+          "path": "custom_types",
+          "strategies": Array [
+            "bootstrap",
+            "init",
+          ],
+          "type": "folder",
+        },
+      ],
+      "script": Array [],
+      "transpile": Array [
+        "vue-slicezone",
+        "nuxt-sm",
+      ],
+    },
+  },
+  Object {
+    "framework": "next",
+    "manifest": Object {
+      "bootstraper": Array [
+        "npx",
+        Array [
+          "create-react-app",
+        ],
+      ],
+      "css": Array [],
+      "dependencies": Array [
+        "prismic-javascript",
+        "prismic-reactjs",
+        "next-slicezone",
+        "next-transpile-modules",
+        "essential-slices",
+      ],
+      "devDependencies": Array [],
+      "files": Array [
+        Object {
+          "content": "// pages/_app.js
+import React from 'react'
+import NextApp from 'next/app'
+
+import { theme } from 'essential-slices'
+
+import { ThemeProvider, BaseStyles } from 'theme-ui'
+
+export default class App extends NextApp {
+  render() {
+    const { Component, pageProps } = this.props
+    return (
+      <ThemeProvider theme={theme}>
+        <BaseStyles>
+          <Component {...pageProps} />
+        </BaseStyles>
+      </ThemeProvider>
+    )
+  }
+}",
+          "name": "_app.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "// pages/_document.js
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { InitializeColorMode } from 'theme-ui'
+
+import { createResolver } from 'next-slicezone/resolver'
+
+export default class extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    await createResolver()
+    return { ...initialProps }
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body>
+          <InitializeColorMode />
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
+}",
+          "name": "_document.js",
+          "path": "./pages",
+        },
+        Object {
+          "content": "const withTM = require('next-transpile-modules')(['next-slicezone', 'essential-slices']);
+
+module.exports = withTM();
+",
+          "name": "next.config.js",
+          "path": "./",
+        },
+        Object {
+          "content": "/** Example file */
+
+import Prismic from 'prismic-javascript'
+import Link from 'next/link'
+
+import smConfig from './sm.json'
+
+export const apiEndpoint = smConfig.apiEndpoint
+
+// -- Access Token if the repository is not public
+// Generate a token in your dashboard and configure it here if your repository is private
+export const accessToken = ''
+
+// -- Link resolution rules
+// Manages the url links to internal Prismic documents
+export const linkResolver = (doc) => {
+  if (doc.type === 'post') {
+    return \`/blog/\${doc.uid}\`
+  }
+  return '/'
+}
+
+// Additional helper function for Next/Link components
+export const hrefResolver = (doc) => {
+  if (doc.type === 'post') {
+    return '/blog/[uid]'
+  }
+  return '/'
+}
+
+export const customLink = (type, element, content, children, index) => (
+  <Link
+    key={index}
+    href={hrefResolver(element.data)}
+    as={linkResolver(element.data)}
+  >
+    <a>{content}</a>
+  </Link>
+)
+
+export const Router = {
+  routes: null,
+
+  href: (type) => {
+    const route = Router.routes.find(r => r.type === type);
+    return route && route.href;
+  }
+};
+
+export const Client = (req = null, options = {}) => (
+  Prismic.client(apiEndpoint, Object.assign({ routes: Router.routes }, options))
+)",
+          "name": "prismic.js",
+          "path": "./",
+        },
+        Object {
+          "content": "import React from 'react'
+
+export default ({ i }) => {
+  return () => i ? <div /> : <p>Your SliceZone is loading... You might need to reload this page.</p>
+}",
+          "name": "sm-resolver.js",
+          "path": "./",
+        },
+      ],
+      "firstCommand": "npm run dev",
+      "framework": "next",
+      "frameworkName": "Next",
+      "libraries": Array [
+        "essential-slices",
+      ],
+      "projectTests": Array [
+        Object {
+          "arg": "-d",
+          "path": "pages",
+          "reason": "No \`pages\` folder found",
+        },
+      ],
+      "script": Array [],
+    },
+  },
+]
+`;

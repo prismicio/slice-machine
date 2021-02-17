@@ -1,7 +1,7 @@
 import { pascalize } from "sm-commons/utils/str";
 import { formatThemeProps } from './theme'
-import NotFoundView from "./NotFound"
-import EmptyState from "./EmptyState";
+import NotFoundView from "../components/NotFound"
+import EmptyState from "../components/EmptyState";
 
 const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
 const firstOf = ps => invert(Promise.all(ps.map(invert)));
@@ -93,6 +93,13 @@ export default {
         return {}
       }
     },
+    sliceProps: {
+      type: [Object, Function],
+      required: false,
+      default() {
+        return {}
+      }
+    }
   },
   computed: {
     computedImports: ({ components, resolver, slices, NotFound, debug }) => {
@@ -119,22 +126,26 @@ export default {
         return firstOf(promises).catch(NotFound);
       });
     },
-    computedSlices: ({ slices, theme, computedImports }) => {
-      return (slices || []).map((slice, i) => ({
-        import: computedImports[i],
-        data: {
-          props: {
-            theme: formatThemeProps(theme, {
-              i,
+    computedSlices: ({ slices, theme, sliceProps, computedImports }) => {
+      return (slices || []).map((slice, i) => {
+        const params = {
+          i,
+          slice,
+          sliceName: pascalize(slice.slice_type),
+        }
+        return {
+          import: computedImports[i],
+          data: {
+            props: {
               slice,
-              sliceName: pascalize(slice.slice_type),
-            }),
-            slice
+              theme: formatThemeProps(theme, params),
+              ...typeof sliceProps === 'function' ? sliceProps(params) : sliceProps,
+            },
+            key: slice.id
           },
-          key: slice.id
-        },
-        name: pascalize(slice.slice_type)
-      }));
+          name: pascalize(slice.slice_type)
+        }
+      });
     }
   },
   render(h) {
