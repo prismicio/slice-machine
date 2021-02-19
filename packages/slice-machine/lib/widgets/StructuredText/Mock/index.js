@@ -41,6 +41,14 @@ export const Patterns = {
   }
 }
 
+const findMatchingPattern = (options) => {
+  const PatternEntry = Object.entries(Patterns).find(([key, patt]) => patt.test(options))
+  if (PatternEntry && PatternEntry.length) {
+    return PatternEntry[1]
+  }
+  return Patterns[DEFAULT_PATTERN_KEY]
+}
+
 const isTextType = (type) => type === 'paragraph' || isHeading(type)
 const handleText = (contentType, loremConfig) => {
   const lorem = new LoremIpsum(loremConfig)
@@ -73,13 +81,12 @@ const createMockFromConfig = (blocksLen, pattern, loremConfig) => {
   return content.flat()
 }
 
-export const handleMockConfig = (mockConfig, fieldConfig) => {
-  const mockConfigValues = Object.assign(initialValues.config, mockConfig)
-
+export const handleMockConfig = (mockConfigValues, fieldConfig) => {
   const options = (fieldConfig.multi || fieldConfig.single).split(',')
-  const patternObj = Patterns[mockConfigValues.patternType] || Patterns[DEFAULT_PATTERN_KEY]
-  const pattern = patternObj.value(options)
+  const patternType = mockConfigValues ? mockConfigValues.patternType : null
+  const patternObj = Patterns[patternType] || findMatchingPattern(options)
 
+  const pattern = patternObj.value(options)
   return createMockFromConfig(mockConfigValues.blocks, pattern, LoremDefaultConfig)
 }
 

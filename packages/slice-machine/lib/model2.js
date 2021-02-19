@@ -1,3 +1,4 @@
+import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
 
 const FieldHelpers = {
@@ -46,6 +47,8 @@ const getMetadata = (model) =>
     ...(['id', 'type', 'name', 'description'].includes(key) ? ({ [key]: value }) : {})
   }), {})
 
+
+
 const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) => {
   let info = initialInfo
   let model = intialValues
@@ -53,7 +56,7 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
   let variations = createVariations(intialValues)
   let mockConfig = initialMockConfig || {}
 
-  console.log('update model')
+  console.log('update model2')
 
   // const response = await fetch(info.previewUrl)
   // const { base } = await (async () => {
@@ -185,4 +188,26 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
   }
 }
 
+function reducer(state, action) {
+  console.log(action)
+  return state
+}
+
+export const useModelReducer = (intialValues, remoteSlice, initialInfo, initialMockConfig) => {
+  const variations = createVariations(intialValues)
+  const model = createModel(intialValues, remoteSlice, initialInfo, initialMockConfig)
+  return useReducer(reducer, {
+    ...model,
+    reorder({ dispatch }, id, modelFieldName, source, destination) {
+      dispatch({
+        type: 'reorder',
+        payload: { id, modelFieldName, source, destination }
+      })
+    },
+    variations
+  })
+}
+
+
 export default createModel
+

@@ -23,7 +23,7 @@ const WidgetForm = ({
           const { id: apiId, [MockConfigKey]: mockConfigObject, ...rest } = values
           const withDefaultValues = Object.entries(rest).reduce((acc, [key, value]) => {
             if (typeof value !== Boolean && !value) {
-              const maybeDefaultValue = FormFields[key].defaultValue
+              const maybeDefaultValue = FormFields[key]?.defaultValue
               if (maybeDefaultValue !== undefined) {
                 return {
                   ...acc,
@@ -36,6 +36,7 @@ const WidgetForm = ({
               [key]: value
             }
           }, {})
+          console.log({ rest, withDefaultValues })
           onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject)
         }}
       >

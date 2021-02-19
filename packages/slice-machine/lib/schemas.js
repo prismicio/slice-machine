@@ -16,6 +16,7 @@ export const slice = yup.object().shape({
     variations: yup.array().required()
   }).required(),
   pathToSlice: yup.string().required(),
+  hasPreview: yup.boolean().required(),
   previewUrl: yup.string().required(),
   sliceName: yup.string().required(),
 }).required()

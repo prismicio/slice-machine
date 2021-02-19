@@ -20,6 +20,7 @@ function getPathToScreenshot({ cwd, from, sliceName }) {
   const defaultPath = createPathToScreenshot({ cwd, from, sliceName })
   return {
     path: fs.existsSync(defaultPath) ? defaultPath : null,
+    defaultPath,
     isCustom: false
   }
 }

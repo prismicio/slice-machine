@@ -1,10 +1,23 @@
 import { Box, Heading, Close } from 'theme-ui'
 
+const Variants = {
+  error: 'error',
+  done: 'success',
+  warning: 'warning',
+}
+
 const Success = ({ data, onClose, display = false }) => {
+  const variant = (() => {
+    if (data.error) {
+      return Variants.error
+    }
+    return data.warning ? Variants.warning : Variants.done
+  })()
+
   return display ? (
      <Box
-        variant={`success.${data.error ? 'error' : 'done'}`}
-        sx={{ position: 'absolute', top: '48px' }}
+        variant="styles.success"
+        sx={{ position: 'absolute', top: '48px', bg: variant }}
       >
         <Box sx={{ display: 'inline' }}>
           <Heading as="h5" sx={{ color: '#FFF', textAlign: 'center' }}>

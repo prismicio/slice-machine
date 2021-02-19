@@ -12,6 +12,7 @@ import {
 
 import * as Widgets from 'lib/widgets'
 
+import { removeKeys } from 'lib/utils'
 import { createInitialValues, createValidationSchema } from 'lib/forms'
 
 import { MockConfigKey } from 'src/consts'
@@ -26,11 +27,6 @@ import WidgetFormField from './Field'
 Modal.setAppElement("#__next");
 
 const FORM_ID = 'edit-modal-form'
-
-const removeKeys = (obj, keys) =>
-  Object.entries(obj)
-    .filter(([key]) => keys.indexOf(key) === -1)
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 
 const EditModal = ({
   close,
@@ -56,7 +52,6 @@ const EditModal = ({
 
   const initialValues = {
     ...createInitialValues(FormFields),
-    ...removeKeys(initialModelValues, ['config']),
     ...initialModelValues.config,
     [MockConfigKey]: deepMerge(MockConfigForm?.initialValues || {}, initialMockConfig?.[fieldType]?.[apiId] || {}),
     id: apiId,
@@ -101,7 +96,8 @@ const EditModal = ({
             variation.replace[fieldType](
               apiId,
               newKey,
-              { config: value, type: initialModelValues.type }
+              // some models have been wrongly saved with id and type
+              { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type }
             )
           })
           close()

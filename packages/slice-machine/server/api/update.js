@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import puppeteer from 'puppeteer'
-import base64Img from 'base64-img'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../lib/utils'
 import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
@@ -10,18 +9,36 @@ import { getEnv } from '../../lib/env'
 import mock from '../../lib/mock'
 import { insert as insertMockConfig } from '../../lib/mock/fs'
 
+const SB_WARNING = 'Model was saved but screenshot could not be generated.'
+
+const testStorybookPreview = async ({ screenshotUrl }) => {
+  try {
+    console.log('[update]: checking Storybook url')
+    await fetchStorybookUrl(screenshotUrl)
+  } catch (e) {
+    return {
+      warning: 'Could not connect to Storybook. Model was saved.'
+    }
+  }
+  return {}
+}
+
+const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
+  const { warning } = testStorybookPreview({ screenshotUrl })
+  if (warning) {
+    return warning
+  }
+  console.log('[update]: generating screenshot preview')
+  const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
+  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
+  return warning || maybeErr ? 'Model was saved but screenshot could not be generated.' : null
+}
+
 export default async function handler(req) {
   const { env } = await getEnv()
   const { sliceName, from, model, mockConfig } = req.body
 
   const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
-
-  try {
-    console.log('\n[update]: checking Storybook url')
-    await fetchStorybookUrl(screenshotUrl)
-  } catch(e) {
-    return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
-  }
 
   const updatedMockConfig = insertMockConfig(env.cwd, { key: sliceName, value: mockConfig })
 
@@ -39,23 +56,22 @@ export default async function handler(req) {
   const screenshotArgs = { cwd: env.cwd, from, sliceName }
   const { isCustom } = getPathToScreenshot(screenshotArgs)
   const pathToFile = createPathToScreenshot(screenshotArgs)
-  console.log('[update]: generating screenshot preview')
-  const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
-  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
-  if (maybeErr) {
-    return {
-      err: maybeErr,
-      reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!'
-    }
+  const maybeWarning = await handleStorybookPreview({ screenshotUrl, pathToFile })
+
+  if (maybeWarning) {
+    console.log(`[update]: ${maybeWarning}`)
   }
 
-  const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
+  const screenshot = pathToFile ? `/api/__preview?q=${encodeURIComponent(pathToFile)}` : null
 
   console.log('[update]: done!')
   return {
     ...!isCustom ? {
       previewUrl: screenshot,
       hasPreview: screenshot !== null
+    } : null,
+    ...maybeWarning ? {
+      warning: maybeWarning,
     } : null,
     isModified: true
   }

@@ -27,7 +27,8 @@ const Meta = {
 }
 
 const FormFields = {
-  ...DefaultFields,
+  id: DefaultFields.id,
+  label: DefaultFields.label,
   placeholder_false: Input('False Placeholder', { required: false }, null, 'false'),
   placeholder_true: Input('True Placeholder', { required: false }, null, 'true'),
   default_value: CheckBox('Default to true'),

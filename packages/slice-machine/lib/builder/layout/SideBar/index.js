@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Box } from 'theme-ui'
 
 import Card from 'components/Card'
@@ -9,9 +10,12 @@ import ImagePreview from './components/ImagePreview'
 import FooterButton from './components/FooterButton'
 import { storybookWarningStates, warningTwoLiners } from 'src/consts'
 
+const MemoizedImagePreview = memo(ImagePreview)
+
 const SideBar = ({
   info,
   data,
+  isModified,
   isTouched,
   onSave,
   onPush,
@@ -23,8 +27,8 @@ const SideBar = ({
   onHandleFile,
   previewUrl
 }) => {
-
   const maybeStorybookError = warnings.find(e => storybookWarningStates.includes(e))
+
   return (
     <Box
       sx={{
@@ -40,6 +44,7 @@ const SideBar = ({
         Footer={() => (
           <FooterButton
             info={info}
+            isModified={isModified}
             isTouched={isTouched}
             onSave={onSave}
             onPush={onPush}
@@ -47,7 +52,7 @@ const SideBar = ({
           />
         )}
       >
-        <ImagePreview
+        <MemoizedImagePreview
           src={previewUrl}
           isCustomPreview={info.isCustomPreview}
           imageLoading={imageLoading}

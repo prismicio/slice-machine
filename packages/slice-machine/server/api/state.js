@@ -49,7 +49,7 @@ const createWarnings = async ({ env, configErrors, clientError }) => {
 
 export default async function handler() {
   const { env, errors: configErrors } = await getEnv()
-  const { libraries, clientError } = await fetchLibs(env)
+  const { libraries, remoteSlices, clientError } = await fetchLibs(env)
   const warnings = await createWarnings({ env, configErrors, clientError })
-  return { libraries, clientError, configErrors, env, warnings }
+  return { libraries, remoteSlices, clientError, configErrors, env, warnings }
 }
