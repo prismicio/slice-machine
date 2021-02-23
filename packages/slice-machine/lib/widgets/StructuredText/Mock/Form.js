@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Label, Box, useThemeUI } from 'theme-ui'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 import { useFormikContext } from 'formik'
@@ -77,6 +78,17 @@ const Form = () => {
   const options = (values.single || values.multi).split(',')
 
   const configValues = values[MockConfigKey]?.config || {}
+
+  useEffect(() => {
+    const { mockConfig: { config: { patternType } } } = values
+    if (patternType && !Patterns[patternType].test(options)) {
+      onUpdate({
+        key: 'patternType',
+        updateType: 'config',
+        value: findValidPattern(options)
+      })
+    }
+  })
   
   const onUpdate = ({
     updateType,

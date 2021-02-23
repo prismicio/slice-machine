@@ -56,8 +56,7 @@ const EditModal = ({
 
   const initialValues = {
     ...createInitialValues(FormFields),
-    ...removeKeys(initialModelValues, ['config']),
-    ...initialModelValues.config,
+    ...removeKeys(initialModelValues.config, ['type']),
     [MockConfigKey]: deepMerge(MockConfigForm?.initialValues || {}, initialMockConfig?.[fieldType]?.[apiId] || {}),
     id: apiId,
   }

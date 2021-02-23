@@ -16,7 +16,6 @@
             "label": "",
             "placeholder": "",
             "allowTargetBlank": true,
-            "type": "StructuredText",
             "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           },
           "type": "StructuredText"
@@ -104,8 +103,7 @@
             "placeholder": "",
             "placeholder_false": "false",
             "placeholder_true": "true",
-            "default_value": true,
-            "type": "Boolean"
+            "default_value": true
           },
           "type": "Boolean"
         },
@@ -136,6 +134,15 @@
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "sdf": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "id": "sdf",
+            "placeholder": "",
+            "allowTargetBlank": true
           }
         }
       }
