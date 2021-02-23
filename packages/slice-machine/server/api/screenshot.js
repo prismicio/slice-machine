@@ -1,4 +1,3 @@
-import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 
 import { getEnv } from '../../lib/env'
@@ -24,5 +23,5 @@ export default async function handler({ from, sliceName }) {
     return { err: maybeErr, reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!' }
   }
   await browser.close()
-  return { ...!isCustom ? { previewUrl: base64Img.base64Sync(pathToFile) } : null }
+  return { ...!isCustom ? { previewUrl: `/api/__preview?q=${encodeURIComponent(pathToFile)}` } : null }
 }

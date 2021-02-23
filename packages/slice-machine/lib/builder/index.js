@@ -24,13 +24,6 @@ import {
 import PreviewFields from './modules/PreviewFields'
 import MockModal from './modules/MockModal'
 
-const createOnSaveUrl = ({
-  sliceName,
-  from,
-  value,
-}) =>
-  `/api/update?sliceName=${sliceName}&from=${from}&model=${btoa(JSON.stringify(value))}`
-
 const createStorybookUrls = (storybook, componentInfo, variation = 'default-slice') => ({
   storybookUrl: `${storybook}/?path=/story/${componentInfo.sliceName.toLowerCase()}--${variation}`
 })
@@ -44,6 +37,7 @@ const Builder = ({ openPanel }) => {
     value,
     hydrate,
     isTouched,
+    isModified,
     mockConfig,
     appendInfo,
     resetInitialModel,
@@ -57,7 +51,7 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const variation = Model.get().variation()
+  const variation = Model.variation()
 
   const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
 
@@ -174,13 +168,13 @@ const Builder = ({ openPanel }) => {
       />
       <FlexEditor
         sx={{ py: 4 }}
-        SideBar={() => (
-          <SideBar
-            isTouched={isTouched}
+        SideBar={<SideBar
+            data={data}
             info={info}
             onPush={onPush}
             onSave={onSave}
-            data={data}
+            isTouched={isTouched}
+            isModified={isModified}
             warnings={warnings}
             openPanel={openPanel}
             previewUrl={info.previewUrl}
@@ -188,8 +182,7 @@ const Builder = ({ openPanel }) => {
             onScreenshot={onScreenshot}
             onHandleFile={onCustomScreenshot}
             imageLoading={data.imageLoading}
-          />
-        )}
+          />}
       >
 
         <Label variant="hint" sx={{ justifyContent: 'flex-end', py: 2, px: 0 }}>

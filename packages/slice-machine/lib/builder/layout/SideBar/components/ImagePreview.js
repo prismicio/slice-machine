@@ -1,16 +1,22 @@
-import { useState, useRef, Fragment } from 'react'
+import { memo, useState, useRef, useEffect, Fragment } from 'react'
+import { useIsMounted } from 'react-tidy'
 import { Label, Flex, Image, Button, Text, Spinner } from 'theme-ui'
 import { acceptedImagesTypes } from 'src/consts'
+
+const MemoedImage = memo(({ src }) => (
+  <Image src={src} alt="Preview image" /> 
+))
 
 const ImagePreview = ({
   src,
   onScreenshot,
-  isCustomPreview,
   imageLoading,
   onHandleFile,
   preventScreenshot
 }) => {
   const inputFile = useRef(null)
+  const isMounted = useIsMounted()
+  const [baseData, setBaseData] = useState(null)
   const [display, setDisplay] = useState(false)
   const handleMouseHover = (state) => setDisplay(state)
 
@@ -18,6 +24,27 @@ const ImagePreview = ({
     onHandleFile(file)
     inputFile.current.value = ''
   }
+
+  useEffect(() => {
+    const fetchBase = async() => {
+      const response = await fetch(src)
+      const { base } = await (async () => {
+        try {
+          return await response.json()
+        } catch(e) {
+          return {}
+        }
+      })();
+      if (base !== baseData && isMounted) {
+        setBaseData(base)
+      }
+    }
+    fetchBase()
+  })
+
+  // useEffect(() => {
+  //   setBaseData(ref.current)
+  // }, [ref])
 
   return (
     <div>
@@ -79,7 +106,7 @@ const ImagePreview = ({
         ) : null
       }
       {
-        src ? <Image src={src} alt="Preview image" /> : <Text>Could not load image.</Text>
+        baseData ? <MemoedImage src={baseData} />  : <Text>Could not load image.</Text>
       }
     </Flex>
     </div>

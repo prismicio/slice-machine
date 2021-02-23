@@ -34,7 +34,7 @@ export default ({ libraries }) => (
             }}
           >
             {
-              components.map((component) => (
+              components.map((component) => console.log(component) || (
                 <Link key={`${component.from}-${component.id}`} {...editLinkProps(component)} passHref>
                   <Card {...component} />
                 </Link>

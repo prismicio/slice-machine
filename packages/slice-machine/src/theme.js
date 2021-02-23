@@ -219,7 +219,6 @@ const Theme = () => ({
         bg: 'borders',
         borderColor: 'transparent',
         outline: 'none',
-        
       },
       '&:hover': {
         bg: 'borders',
@@ -290,6 +289,13 @@ const Theme = () => ({
       width: '100%',
       p: 2,
       bg: 'error'
+    },
+    warning: {
+      position: 'absolute',
+      top: '57px',
+      width: '100%',
+      p: 2,
+      bg: 'warning'
     }
   },
   cards: {

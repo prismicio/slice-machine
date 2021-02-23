@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import base64Img from "base64-img";
+import uniqid from 'uniqid'
 
 import { pascalize } from 'sm-commons/utils/str'
 
@@ -78,7 +78,7 @@ export function getComponentInfo(slicePath, { cwd, from }) {
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
   const { model, ...otherModelValues } =  fromJsonFile(slicePath, 'model.json', 'model')
 
-  const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
+  const { path: pathToScreenshotFile, defaultPath, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
   const hasPreview = !!pathToScreenshotFile
 
   const nameConflict =
@@ -97,6 +97,7 @@ export function getComponentInfo(slicePath, { cwd, from }) {
     ...fromJsonFile(slicePath, 'mock.json', 'mock'),
     nameConflict,
     isCustomPreview,
-    previewUrl: hasPreview ? base64Img.base64Sync(pathToScreenshotFile) : null
+    hasPreview,
+    previewUrl: `/api/__preview?q=${encodeURIComponent(pathToScreenshotFile || defaultPath)}`
   }
 }

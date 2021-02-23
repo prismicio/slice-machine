@@ -43,7 +43,7 @@ export const getLibrariesWithFlags = async (env) => {
           isValid: true
         }
       } catch (e) {
-        // console.error(e)
+        console.error(e)
         return {
           ...flagged,
           status: 200,
@@ -53,7 +53,7 @@ export const getLibrariesWithFlags = async (env) => {
       }
     })]
   })
-  return { clientError, libraries: withFlags }
+  return { clientError, libraries: withFlags, remoteSlices }
 }
 export default async function handler(env) {
   const libraries = await getLibrariesWithFlags(env)

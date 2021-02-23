@@ -1,1 +1,30 @@
-[{"id":"default-slice","name":"Default slice","docURL":"...","version":"sktwi83ykfdt588n","description":"MySlice Template","primary":{"fgdfg":3646},"items":[{"fghj":5498},{"fghj":2470},{"fghj":5951}],"slice_type":"call_to_action2"}]
+[
+  {
+    "id": "default-slice",
+    "name": "Default slice",
+    "docURL": "...",
+    "version": "sktwi83ykfdt588n",
+    "description": "MySlice Template",
+    "primary": {
+      "fgdfg": 9838
+    },
+    "items": [
+      {
+        "fghj": 6388
+      },
+      {
+        "fghj": 1624
+      },
+      {
+        "fghj": 991
+      },
+      {
+        "fghj": 2221
+      },
+      {
+        "fghj": 5155
+      }
+    ],
+    "slice_type": "call_to_action2"
+  }
+]

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import puppeteer from 'puppeteer'
 import base64Img from 'base64-img'
+import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../lib/utils'
 import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
@@ -31,7 +31,6 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
   const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   return warning || maybeErr ? 'Model was saved but screenshot could not be generated.' : null
-l
 }
 
  export default async function handler(req) {

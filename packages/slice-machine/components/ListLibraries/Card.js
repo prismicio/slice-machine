@@ -1,25 +1,56 @@
-import { Badge, Text, Card as Themecard, Image, Box, Heading, Flex } from 'theme-ui'
-import { forwardRef, Fragment } from 'react'
+import { Badge, Text, Card as Themecard, Box, Heading, Flex } from 'theme-ui'
+import { forwardRef, useState, useEffect, Fragment } from 'react'
 
 import ReactTooltip from 'react-tooltip'
 
 const textVariation = (variations) => `${variations.length} variation${variations.length > 1 ? 's' : ''}`
 
 const StateBadge = ({
-  isModified,
   isNew,
-  isValid
+  isValid,
+  isModified,
+  hasPreview,
+  sliceName,
+  previewUrl,
 }) => {
-  if (!isValid) {
-    return <Badge mt='3px' pt='2px' pb='3px' px='8px' variant='outline'>Contains errors</Badge>
-  }
-  if (isModified) {
-    return <Badge mt='3px' pt='2px' pb='3px' px='8px' variant='outline'>Modified</Badge>
-  }
-  if (isNew) {
-    return <Badge mt='3px' pt='2px' pb='3px' px='8px' variant='outline'>New</Badge>
-  }
-  return <Badge mt='3px' pt='2px' pb='3px' px='8px' variant='outline'>Synced</Badge>
+  const [imageFailed, setimageFailed] = useState(false)
+
+  // useEffect(() => {
+  //   console.log('test image', sliceName)
+  //   const tester = new Image()
+  //   tester.addEventListener('error', () => {
+  //     console.log('image failed ', sliceName, previewUrl)
+  //     setimageFailed(true)
+  //   })
+  //   tester.src = previewUrl
+  // })
+
+  const state = (() => {
+    if (imageFailed) {
+      return 'Preview missing'
+    }
+    if (!isValid) {
+      return 'Contains errors'
+    }
+    if (isNew) {
+      return 'New'
+    }
+    if (isModified) {
+      return 'Local Update'
+    }
+    return 'Synced'
+  })();
+  return (
+    <Badge
+      mt="3px"
+      pt="2px"
+      pb="3px"
+      px="8px"
+      variant="outline"
+    >
+      {state}
+    </Badge>
+  )
 }
 
 const Card = forwardRef(({
@@ -30,86 +61,98 @@ const Card = forwardRef(({
   isNew,
   isValid,
   nameConflict,
+  hasPreview,
   ...props
-}, ref) => (
-  <Themecard
-    {...props}
-    tabindex="0"
-    role="button"
-    aria-pressed="false"
-    ref={ref}
-    sx={{
-      bg: 'transparent',
-      cursor: 'pointer',
-      borderRadius: '0',
-      border: 'none',
-      mb: 3
-    }}
-  >
-    <Box
+}, ref) => {
+  const previewPlainUrl = `${previewUrl}&plain=true`
+
+  return (
+    <Themecard
+      {...props}
+      tabindex="0"
+      role="button"
+      aria-pressed="false"
+      ref={ref}
       sx={{
-        backgroundColor: 'headSection',
-        backgroundRepeat: 'repeat',
-        backgroundSize: '15px',
-        backgroundImage: "url(/pattern.png)",
-        height: '290px',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '6px',
-        border: ({ colors }) => `1px solid ${colors.borders}`,
-        boxShadow: '0 10px 10px rgba(0, 0, 0, 0.05)'
+        bg: 'transparent',
+        cursor: 'pointer',
+        borderRadius: '0',
+        border: 'none',
+        mb: 3
       }}
     >
       <Box
         sx={{
-          width: '100%',
-          height: '100%',
-          backgroundSize: 'contain',
-          backgroundPosition: '50%',
-          backgroundRepeat: 'no-repeat',
-          backgroundImage: "url(" + `${previewUrl}` + ")",
+          backgroundColor: 'headSection',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '15px',
+          backgroundImage: "url(/pattern.png)",
+          height: '290px',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '6px',
+          border: ({ colors }) => `1px solid ${colors.borders}`,
+          boxShadow: '0 10px 10px rgba(0, 0, 0, 0.05)'
         }}
       >
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            backgroundSize: 'contain',
+            backgroundPosition: '50%',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: "url(" + `${previewPlainUrl}` + ")",
+          }}
+        >
+        </Box>
       </Box>
-    </Box>
 
-    <Flex>
-    <Box py={2} sx={{ flex: '1 1 auto' }}>
-      <Heading as="h6" my={2}>{sliceName}</Heading>
-      {model && model.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(model.variations)}</Text> : null}
-    </Box>
+      <Flex>
+      <Box py={2} sx={{ flex: '1 1 auto' }}>
+        <Heading as="h6" my={2}>{sliceName}</Heading>
+        {model && model.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(model.variations)}</Text> : null}
+      </Box>
 
-    <Box py={2}>
-      <StateBadge isModified={isModified} isNew={isNew} isValid={isValid} />
-      {
-        nameConflict ? (
-          <Fragment>
-            <ReactTooltip type="light" multiline border borderColor={'tomato'} />
-            <Badge
-              ml={2}
-              mt='3px'
-              pt='2px'
-              pb='3px'
-              px='8px'
-              bg="error"
-              variant='outline'
-              sx={{ color: '#FFF' }}
-              data-place="bottom"
-              data-tip={
-                `Slice name "${nameConflict.sliceName}" can't be transformed<br/> to snake case "${nameConflict.id}". Please update one of these values manually!`
-              }
-            >
-              Name conflict
-            </Badge>
-          </Fragment>
-        ) : null
-      }
-    </Box>
-    </Flex>
+      <Box py={2}>
+        <StateBadge
+          sliceName={sliceName}
+          hasPreview={hasPreview}
+          previewUrl={previewPlainUrl}
+          isModified={isModified}
+          isNew={isNew}
+          isValid={isValid}
+        />
+        {
+          nameConflict ? (
+            <Fragment>
+              <ReactTooltip type="light" multiline border borderColor={'tomato'} />
+              <Badge
+                ml={2}
+                mt='3px'
+                pt='2px'
+                pb='3px'
+                px='8px'
+                bg="error"
+                variant='outline'
+                sx={{ color: '#FFF' }}
+                data-place="bottom"
+                data-tip={
+                  `Slice name "${nameConflict.sliceName}" can't be transformed<br/> to snake case "${nameConflict.id}". Please update one of these values manually!`
+                }
+              >
+                Name conflict
+              </Badge>
+            </Fragment>
+          ) : null
+        }
+      </Box>
+      </Flex>
 
-  </Themecard>
-))
+    </Themecard>
+  )
+})
 
 export default Card

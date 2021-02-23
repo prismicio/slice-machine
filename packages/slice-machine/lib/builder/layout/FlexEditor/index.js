@@ -1,7 +1,5 @@
 import { Flex, Box } from 'theme-ui'
 
-import Container from 'components/Container'
-
 export default ({ children, SideBar, sx, ...rest }) => (
   <Flex
     sx={{
@@ -25,6 +23,6 @@ export default ({ children, SideBar, sx, ...rest }) => (
       }}>
       {children}
     </Box>
-    <SideBar />
+    {SideBar}
   </Flex>
 )

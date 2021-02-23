@@ -14,7 +14,6 @@
         "image": {
           "config": {
             "label": "My cool label",
-            "type": "Image",
             "constraint": {
               "width": 600,
               "height": 600
@@ -56,15 +55,6 @@
           },
           "type": "StructuredText"
         },
-        "text": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
-        },
         "ownContent2": {
           "config": {
             "label": "",
@@ -88,6 +78,12 @@
           },
           "type": "Image"
         },
+        "color": {
+          "config": {
+            "label": ""
+          },
+          "type": "Color"
+        },
         "ownContent3": {
           "config": {
             "label": "",
@@ -100,7 +96,6 @@
         "bool": {
           "config": {
             "label": "",
-            "placeholder": "",
             "placeholder_false": "false",
             "placeholder_true": "true",
             "default_value": true
@@ -110,19 +105,10 @@
         "image3": {
           "type": "Image",
           "config": {
-            "id": "image3",
             "label": "",
             "constraint": {},
             "thumbnails": []
           }
-        },
-        "color": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Color"
-          },
-          "type": "Color"
         }
       },
       "items": {
@@ -130,7 +116,6 @@
           "type": "StructuredText",
           "config": {
             "label": "",
-            "id": "dfgdfdg",
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"

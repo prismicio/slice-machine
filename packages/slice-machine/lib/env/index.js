@@ -108,6 +108,7 @@ export const getEnv = async () => {
       updateAvailable,
       mockConfig,
       framework: getFramework(),
+      baseUrl: `http://localhost:${process.env.PORT}`,
       client: initClient({ cwd, base, repo, auth })
     }
   }

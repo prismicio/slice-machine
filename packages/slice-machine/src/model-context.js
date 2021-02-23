@@ -3,33 +3,35 @@ import equal from 'fast-deep-equal'
 import { useRouter } from 'next/router'
 import { useIsMounted } from 'react-tidy'
 
-import createModel from '../lib/model'
+import { useModelReducer } from '../lib/model2'
 
 export const ModelContext = React.createContext([])
 
-export default function ModelProvider({ children, initialModel, initialMockConfig, info }) {
+export default function ModelProvider({ children, initialModel, remoteSlice, initialMockConfig, info }) {
   const isMounted = useIsMounted()
-  const [Model, setModel] = useState(createModel(initialModel, info, initialMockConfig))
+  const [Model, dispatch] = useModelReducer(initialModel, remoteSlice, info, initialMockConfig)
+  // const [Model, setModel] = useState(createModel(initialModel, remoteSlice, info, initialMockConfig))
 
-  useEffect(() => {
-    if (equal(Model.get().mockConfig, initialMockConfig)) {
-      setModel(createModel(initialModel, info, initialMockConfig))
-    }
-  }, [initialMockConfig])
+  // useEffect(() => {
+  //   if (equal(Model.get().mockConfig, initialMockConfig)) {
+  //     setModel(createModel(initialModel, remoteSlice, info, initialMockConfig))
+  //   }
+  // }, [initialMockConfig])
   
   const hydrate = (fn) => {
     if (fn && typeof fn === 'function') {
-      fn()
+      const res = fn()
+      console.log({ res })
     }
     if (isMounted) {
-      setModel({ ...Model, ...Model.get() })
+      setModel({ ...Model, })
     }
   }
 
   const value = {
     ...Model,
-    ...Model.get(),
     hydrate,
+    dispatch
   }
 
   return (
@@ -39,7 +41,7 @@ export default function ModelProvider({ children, initialModel, initialMockConfi
   )
 }
 
-export const ModelHandler = ({ libraries, env, children }) => {
+export const ModelHandler = ({ libraries, remoteSlices, env, children }) => {
   const router = useRouter()
   if (!router.query || !router.query.lib) {
     return children
@@ -50,19 +52,24 @@ export const ModelHandler = ({ libraries, env, children }) => {
     return null
   }
 
-  const component = lib[1].find(e => e.sliceName === router.query.sliceName)
+  const slice = lib[1].find(e => e.sliceName === router.query.sliceName)
 
-  if (!component) {
+  if (!slice) {
     router.replace('/')
     return null
   }
 
   const initialMockConfig = env.mockConfig[router.query.sliceName]
 
-  const { model: initialModel } = component
+  const { model: initialModel, id: sliceId } = slice
 
   return (
-    <ModelProvider initialModel={initialModel} initialMockConfig={initialMockConfig} info={component}>
+    <ModelProvider
+      initialModel={initialModel}
+      remoteSlice={remoteSlices.find(e => e.id === sliceId)}
+      initialMockConfig={initialMockConfig}
+      info={slice}
+    >
       { children }
     </ModelProvider>
   )

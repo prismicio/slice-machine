@@ -11,6 +11,8 @@ import * as Widgets from '../../../widgets'
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'
 
+import { removeKeys } from 'lib/utils'
+
 const PreviewFields = ({
   Model,
   variation,
@@ -40,11 +42,11 @@ const PreviewFields = ({
   }
   const onSaveNewField = ({ id, fieldType }) => {
     const widget = Widgets[fieldType]
-    Model.hydrate(variation.add[newFieldData.zone](
+    Model.hydrate(() => variation.add[newFieldData.zone](
       id,
       {
         type: fieldType,
-        config: widget.create(id)
+        config: removeKeys(widget.create(id), ['id'])
       }
     ))
     setNewFieldData(null)
@@ -54,14 +56,31 @@ const PreviewFields = ({
     if (!result.destination) {
       return
     }
-    Model.hydrate(variation.reorder[modelFieldName](
+    Model.reorder(
+      { dispatch: Model.dispatch },
+      variation.id,
+      modelFieldName,
       result.source.index,
       result.destination.index
-    ))
+    )
+
+    // Model.dispatch({
+    //   type: 'reorder',
+    //   payload: {
+    //     id: variation.id,
+    //     modelFieldName,
+    //     source: result.source.index,
+    //     destination: result.destination.index
+    //   }
+    // })
+    // Model.hydrate(() => variation.reorder[modelFieldName](
+    //   result.source.index,
+    //   result.destination.index
+    // ))
   }
 
   const onDeleteItem = (key, modelFieldName) => {
-    Model.hydrate(variation.delete[modelFieldName](key))
+    Model.hydrate(() => variation.delete[modelFieldName](key))
   }
 
   const onCancelNewField = () => setNewFieldData(null)

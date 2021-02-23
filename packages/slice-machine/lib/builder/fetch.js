@@ -16,8 +16,7 @@ export const fetchApi = ({
     ...fetchparams
   }).then(async (res) => {
     const jsonResponse = await res.json()
-    const { err, reason, warning, json,  } = jsonResponse
-
+    const { err, reason, warning, json } = jsonResponse
     if (res.status > 209) {
       return setData({
         loading: false,

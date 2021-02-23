@@ -22,6 +22,7 @@ function getPathToScreenshot({ cwd, from, sliceName }) {
   return {
     exists: false,
     path: fs.existsSync(defaultPath) ? defaultPath : null,
+    defaultPath,
     isCustom: false
   }
 }

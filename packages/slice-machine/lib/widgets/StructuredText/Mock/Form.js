@@ -138,6 +138,7 @@ const findValidPattern = (config) => {
   }
   return DEFAULT_PATTERN_KEY
 }
+
 Form.onSave = (mockValue, values) => {
   if (!mockValue?.config?.patternType) {
     return mockValue
