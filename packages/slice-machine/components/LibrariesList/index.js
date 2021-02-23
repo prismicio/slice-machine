@@ -11,7 +11,7 @@ const editLinkProps = ({ href, sliceName }) => ({
 export default ({ libraries }) => (
   <Fragment>
     {
-      libraries && libraries.map(([lib, components]) => (
+      libraries && libraries.map(([lib, slices]) => (
         <div key={lib}>
           <Box
             as="h2"
@@ -34,9 +34,9 @@ export default ({ libraries }) => (
             }}
           >
             {
-              components.map((component) => console.log(component) || (
-                <Link key={`${component.from}-${component.id}`} {...editLinkProps(component)} passHref>
-                  <Card {...component} />
+              slices.map(([slice]) => (
+                <Link key={`${slice.from}-${slice.id}`} {...editLinkProps(slice)} passHref>
+                  <Card {...slice} />
                 </Link>
               ))
             }

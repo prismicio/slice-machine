@@ -52,7 +52,7 @@ const MetaDataModal = ({
     >
       <Formik
         validateOnChange
-        initialValues={Model.info.meta}
+        initialValues={Model.meta}
         onSubmit={(values, _) => {
           onUpdateField(values)
         }}

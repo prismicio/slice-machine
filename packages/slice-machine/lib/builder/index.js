@@ -2,12 +2,10 @@ import { mutate } from 'swr'
 import { useState, useContext, useEffect } from 'react'
 import { useIsMounted } from 'react-tidy'
 
-import { ModelContext } from 'src/model-context'
+import { SliceContext } from 'src/store/slice'
 import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'
-
-import Header from './layout/Header'
 
 import {
   Box,
@@ -18,22 +16,25 @@ import {
 import {
   FlexEditor,
   SideBar,
+  Header,
   Success
 } from './layout'
 
 import PreviewFields from './modules/PreviewFields'
 import MockModal from './modules/MockModal'
 
-const createStorybookUrls = (storybook, componentInfo, variation = 'default-slice') => ({
-  storybookUrl: `${storybook}/?path=/story/${componentInfo.sliceName.toLowerCase()}--${variation}`
+const createStorybookUrls = (storybookBaseUrl, sliceName, variation = 'default-slice') => ({
+  storybookUrl: `${storybookBaseUrl}/?path=/story/${sliceName.toLowerCase()}--${variation}`
 })
 
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
-  const Model = useContext(ModelContext)
-  const { env: { storybook }, warnings } = useContext(ConfigContext)
+  const { Model, store } = useContext(SliceContext)
+  const { env: { storybook: storybookBaseUrl }, warnings } = useContext(ConfigContext)
   const {
-    info,
+    from,
+    sliceName,
+    previewUrl,
     value,
     hydrate,
     isTouched,
@@ -51,9 +52,9 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const variation = Model.variation()
+  const variation = Model.variations[0]
 
-  const { storybookUrl } = createStorybookUrls(storybook, info, variation.id)
+  const { storybookUrl } = createStorybookUrls(storybookBaseUrl, sliceName, variation.id)
 
   useEffect(() => {
     if (isTouched) {
@@ -94,8 +95,8 @@ const Builder = ({ openPanel }) => {
       fetchparams: {
         method: 'POST',
         body: JSON.stringify({
-          sliceName: info.sliceName,
-          from: info.from,
+          sliceName: sliceName,
+          from: from,
           model: value,
           mockConfig
         })
@@ -111,7 +112,7 @@ const Builder = ({ openPanel }) => {
 
   const onPush = async () => {
     fetchApi({
-      url: `/api/push?sliceName=${info.sliceName}&from=${info.from}`,
+      url: `/api/push?sliceName=${sliceName}&from=${from}`,
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
       onSuccess(json) {
@@ -123,7 +124,7 @@ const Builder = ({ openPanel }) => {
 
   const onScreenshot = async () => {
     fetchApi({
-      url: `/api/screenshot?sliceName=${info.sliceName}&from=${info.from}`,
+      url: `/api/screenshot?sliceName=${sliceName}&from=${from}`,
       setData,
       setDataParams: [{ imageLoading: true }, { imageLoading: false }],
       successMessage: 'New screenshot added!',
@@ -135,7 +136,7 @@ const Builder = ({ openPanel }) => {
 
   const onCustomScreenshot = async (file) => {
     const form = new FormData()
-    Object.entries({ sliceName: info.sliceName, from: info.from })
+    Object.entries({ sliceName: sliceName, from: from })
       .forEach(([key, value]) => form.append(key, value))
     form.append('file', file)
     fetchApi({
@@ -159,7 +160,7 @@ const Builder = ({ openPanel }) => {
 
   return (
     <Box>
-      <Header info={info} Model={Model} />
+      <Header Model={Model} />
 
       <Success
         data={data}
@@ -170,14 +171,12 @@ const Builder = ({ openPanel }) => {
         sx={{ py: 4 }}
         SideBar={<SideBar
             data={data}
-            info={info}
+            Model={Model}
             onPush={onPush}
             onSave={onSave}
-            isTouched={isTouched}
-            isModified={isModified}
             warnings={warnings}
             openPanel={openPanel}
-            previewUrl={info.previewUrl}
+            previewUrl={previewUrl}
             storybookUrl={storybookUrl}
             onScreenshot={onScreenshot}
             onHandleFile={onCustomScreenshot}
@@ -196,6 +195,7 @@ const Builder = ({ openPanel }) => {
         
           <PreviewFields
             Model={Model}
+            store={store}
             variation={variation}
             showHints={showHints}
           />

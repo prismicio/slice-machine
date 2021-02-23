@@ -1,4 +1,7 @@
+import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
+
+import Store from './store'
 
 const FieldHelpers = {
   toArray: (fields) =>
@@ -46,6 +49,8 @@ const getMetadata = (model) =>
     ...(['id', 'type', 'name', 'description'].includes(key) ? ({ [key]: value }) : {})
   }), {})
 
+
+
 const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) => {
   let info = initialInfo
   let model = intialValues
@@ -53,7 +58,7 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
   let variations = createVariations(intialValues)
   let mockConfig = initialMockConfig || {}
 
-  console.log('update model')
+  console.log('update model2')
 
   const _reorder = (variation, zone) => (start, end) => {
     const result = Array.from(variation[zone])
@@ -150,30 +155,18 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
             items(key) {
               delete mockConfig.items[key]
             },
-            deleteMock: {
-              primary(key) {
-                if (mockConfig && mockConfig.primary) {
-                  delete mockConfig.primary[key]
-                }
-              },
-              items(key) {
-                if (mockConfig && mockConfig.items) {
-                  delete mockConfig.items[key]
-                }
-              },
+          },
+          delete: {
+            primary(key) {
+              _delete(variation, 'primary')(key)
+              if (mockConfig && mockConfig.primary) {
+                delete mockConfig.primary[key]
+              }
             },
-            delete: {
-              primary(key) {
-                _delete(variation, 'primary')(key)
-                if (mockConfig && mockConfig.primary) {
-                  delete mockConfig.primary[key]
-                }
-              },
-              items(key) {
-                _delete(variation, 'items')(key)
-                if (mockConfig && mockConfig.items) {
-                  delete mockConfig.items[key]
-                }
+            items(key) {
+              _delete(variation, 'items')(key)
+              if (mockConfig && mockConfig.items) {
+                delete mockConfig.items[key]
               }
             }
           },
@@ -186,4 +179,22 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
   }
 }
 
+export const useModelReducer = ({ slice, remoteSlice, mockConfig }) => {
+  const { model, ...rest } = slice
+  const variations = createVariations(model)
+  // const model = createModel(intialValues, remoteSlice, initialInfo, initialMockConfig)
+
+  console.log('new reducer created')
+  const[state, dispatch] = useReducer(Store.reducer(variations), {
+    model,
+    ...rest,
+    variations
+  })
+
+  const store = new Store(dispatch)
+  return [state, store]
+}
+
+
 export default createModel
+

@@ -15,6 +15,7 @@ import { removeKeys } from 'lib/utils'
 
 const PreviewFields = ({
   Model,
+  store,
   variation,
   showHints,
 }) => {
@@ -80,7 +81,8 @@ const PreviewFields = ({
   }
 
   const onDeleteItem = (key, modelFieldName) => {
-    Model.hydrate(() => variation.delete[modelFieldName](key))
+    store.deleteItemInVariation(variation.id, modelFieldName, key)
+    //Model.hydrate(() => variation.delete[modelFieldName](key))
   }
 
   const onCancelNewField = () => setNewFieldData(null)

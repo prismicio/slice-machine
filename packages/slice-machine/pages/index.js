@@ -3,11 +3,11 @@ import { useContext, Fragment } from 'react'
 import Head from 'next/head'
 
 import Container from 'components/Container'
-import ListLibraries from 'components/ListLibraries'
-import { LibContext } from 'src/lib-context'
+import LibrariesList from 'components/LibrariesList'
+import { StoreContext } from 'src/store/context'
 
 const Index = () => {
-  const libraries = useContext(LibContext)
+  const libraries = useContext(StoreContext)
 
   return (
     <Fragment>
@@ -17,7 +17,7 @@ const Index = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
-          <ListLibraries libraries={libraries || []} />
+          <LibrariesList libraries={libraries || []} />
         </main>
       </Container>
     </Fragment>

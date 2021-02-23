@@ -13,6 +13,12 @@ const StateBadge = ({
   sliceName,
   previewUrl,
 }) => {
+
+  if (sliceName === 'CallToAction3') {
+    console.log({
+      previewUrl
+    })
+  }
   const [imageFailed, setimageFailed] = useState(false)
 
   // useEffect(() => {
@@ -26,7 +32,7 @@ const StateBadge = ({
   // })
 
   const state = (() => {
-    if (imageFailed) {
+    if (!previewUrl) {
       return 'Preview missing'
     }
     if (!isValid) {

@@ -13,20 +13,25 @@ import { storybookWarningStates, warningTwoLiners } from 'src/consts'
 const MemoizedImagePreview = memo(ImagePreview)
 
 const SideBar = ({
-  info,
+  Model,
   data,
-  isModified,
-  isTouched,
   onSave,
   onPush,
   warnings,
   openPanel,
-  storybookUrl,
   imageLoading,
   onScreenshot,
   onHandleFile,
-  previewUrl
+  storybookUrl,
 }) => {
+  const {
+    isCustomPreview,
+    previewUrl,
+    isModified,
+    isTouched,
+    isNew
+  } = Model
+
   const maybeStorybookError = warnings.find(e => storybookWarningStates.includes(e))
 
   return (
@@ -43,9 +48,9 @@ const SideBar = ({
         footerSx={{ p: 0 }}
         Footer={() => (
           <FooterButton
-            info={info}
             isModified={isModified}
             isTouched={isTouched}
+            isNew={isNew}
             onSave={onSave}
             onPush={onPush}
             loading={data.loading}
@@ -54,7 +59,7 @@ const SideBar = ({
       >
         <MemoizedImagePreview
           src={previewUrl}
-          isCustomPreview={info.isCustomPreview}
+          isCustomPreview={isCustomPreview}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}

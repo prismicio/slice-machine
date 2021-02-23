@@ -7,7 +7,7 @@ import {
 
 import MetaData from './MetaData'
 
-const Header = ({ info, Model }) => {
+const Header = ({ Model }) => {
   const [showMeta, setShowMeta] = useState(false)
   return (
     <Flex
@@ -29,7 +29,7 @@ const Header = ({ info, Model }) => {
         }}>
           <Flex sx={{ justifyContent: 'space-between'}}>
             <Box as="h2" sx={{ pb:3}}>
-              {info.sliceName}
+              {Model.sliceName}
             </Box>
             {/* <Box>
               <Button onClick={() => setShowMeta(true)} sx={{ height: 'fit-content', fontSize: 2 }}>MetaData</Button>

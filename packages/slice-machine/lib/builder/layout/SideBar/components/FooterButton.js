@@ -1,8 +1,8 @@
 import { Button, Flex, Spinner } from 'theme-ui'
 
-const FooterButton = ({ info, isTouched, isModified, onSave, onPush, loading }) => {
+const FooterButton = ({ isNew, isTouched, isModified, onSave, onPush, loading }) => {
   const onClick = isTouched ? onSave : onPush
-  const editable = info.isNew || isTouched || isModified
+  const editable = isNew || isTouched || isModified
 
   const text = (() => {
     if (isTouched) {

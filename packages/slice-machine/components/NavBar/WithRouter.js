@@ -3,8 +3,8 @@ import { Fragment, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { Link as ThemeLink, Text, Select } from 'theme-ui'
 
-import { ModelContext } from 'src/model-context'
-import { LibContext } from 'src/lib-context'
+import { SliceContext } from 'src/store/slice'
+import { StoreContext } from 'src/store/context'
 import NavBar from './'
 import { VersionBadge } from './components'
 
@@ -17,11 +17,11 @@ const Routes = {
 }
 
 const InBuilder = ({ router, ...props }) => {
-  const Model = useContext(ModelContext)
-  const { info } = Model
-  const slices = useContext(LibContext).find(e => e[0] === info.from)[1]
+  const router = useRouter()
+  const { Model } = useContext(SliceContext)
+  const slices = useContext(StoreContext).find(e => e[0] === Model.from)[1]
   return (
-    <NavBar {...props} {...info}>
+    <NavBar {...props} {...Model}>
       <Link href="/index" as="/" passHref>
         <ThemeLink
           to='/'
@@ -32,7 +32,7 @@ const InBuilder = ({ router, ...props }) => {
             textDecoration: 'none'
           }}>
           <Text as="h4" sx={{ m: 0 }}>
-            { info.from } library
+            { Model.from } library
           </Text>
         </ThemeLink>
       </Link>
@@ -42,12 +42,12 @@ const InBuilder = ({ router, ...props }) => {
       </Text>
       <Select
         sx={{ ml: 2, variant: 'styles.navLink', pl: 2, pr: 4, py: 0, bg: 'rgba(255, 255, 255, .1  )', border: 'none' }}
-        onChange={e => location.href = `/${info.href}/${e.target.value}`}
-        defaultValue={info.sliceName}
+        onChange={e => location.href = `/${Model.href}/${e.target.value}`}
+        defaultValue={Model.sliceName}
       >
         {
-          slices.map(e => (
-            <option key={e.sliceName}>{e.sliceName}</option>
+          slices.map((e) => (
+            <option key={e.slice.sliceName}>{e.slice.sliceName}</option>
           ))
         }
       </Select>

@@ -1,14 +1,15 @@
-import App from 'next/app'
-import { memo, useRef, useEffect, useState } from 'react'
-import { ThemeProvider, BaseStyles } from 'theme-ui'
-
+import { useCallback, useRef, useEffect, useState } from 'react'
 import useSwr from 'swr'
-import Drawer from 'rc-drawer'
+import App from 'next/app'
 
 import theme from 'src/theme'
-import LibProvider from 'src/lib-context'
+import { ThemeProvider, BaseStyles } from 'theme-ui'
+
+import StoreProvider from 'src/store/context'
+import { SliceHandler } from 'src/store/slice'
 import ConfigProvider from 'src/config-context'
-import { ModelHandler } from 'src/model-context'
+
+import Drawer from 'rc-drawer'
 
 import LoadingPage from 'components/LoadingPage'
 import ConfigErrors from 'components/ConfigErrors'
@@ -118,7 +119,10 @@ function MyApp({ Component, pageProps }) {
   const [drawerState, setDrawerState] = useState({ open: false })
   const [state, setRenderer] = useState({ Renderer: RenderStates.Loading, payload: null })
 
-  const openPanel = memo((priority) => setDrawerState({ ...drawerState, open: true, ...priority ? { priority } : null }))
+  const openPanel = useCallback(
+    (priority) => setDrawerState({ ...drawerState, open: true, ...priority ? { priority } : null }),
+    []
+  )
 
   useEffect(() => {
     if (!data) {
@@ -153,24 +157,14 @@ function MyApp({ Component, pageProps }) {
                 !payload || !payload.libraries
                   ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                   : (
-                      <LibProvider value={data.libraries}>
-                        <ModelHandler env={data.env} {...payload}>
+                      <StoreProvider value={payload}>
+                        <SliceHandler {...payload}>
                           <NavBar
                             env={data.env}
                             warnings={data.warnings}
                             openPanel={() => openPanel()}
                           />
-                          <ReactFnCompPropsChecker
-                            childrenProps={{
-                              Component,
-                              pageProps,
-                              ...payload,
-                              openPanel
-                            }}
-                          >
-                            {props=>(<Renderer{...props}/>)}
-                          </ReactFnCompPropsChecker>
-                          {/* <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} /> */}
+                          <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                           <Drawer
                             placement="right"
                             open={drawerState.open}
@@ -182,8 +176,8 @@ function MyApp({ Component, pageProps }) {
                               configErrors={data.configErrors}
                             />
                           </Drawer>
-                        </ModelHandler>
-                      </LibProvider>
+                        </SliceHandler>
+                      </StoreProvider>
                   )
               }
             </ConfigProvider>
