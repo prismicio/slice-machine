@@ -11,24 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "ownContent": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          },
-          "type": "StructuredText"
-        },
-        "title": {
-          "config": {
-            "label": "My cool title",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
-          },
-          "type": "StructuredText"
-        },
         "image": {
           "config": {
             "label": "My cool label",
@@ -46,6 +28,24 @@
             ]
           },
           "type": "Image"
+        },
+        "ownContent": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "title": {
+          "config": {
+            "label": "My cool title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+          },
+          "type": "StructuredText"
         },
         "multi": {
           "config": {

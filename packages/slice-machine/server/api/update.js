@@ -10,8 +10,6 @@ import { getEnv } from '../../lib/env'
 import mock from '../../lib/mock'
 import { insert as insertMockConfig } from '../../lib/mock/fs'
 
-const SB_WARNING = 'Model was saved but screenshot could not be generated.'
-
 const testStorybookPreview = async ({ screenshotUrl }) => {
   try {
     console.log('[update]: checking Storybook url')
@@ -62,9 +60,6 @@ l
       from,
       sliceName
     }
-    const {
-      isCustom
-    } = getPathToScreenshot(screenshotArgs)
     const pathToFile = createPathToScreenshot(screenshotArgs)
     console.log('[update]: generating screenshot preview')
 
@@ -74,7 +69,9 @@ l
       console.log(`[update]: ${maybeWarning}`)
     }
 
-    const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
+    const { exists, isCustom } = getPathToScreenshot(screenshotArgs)
+
+    const screenshot = exists && pathToFile ? base64Img.base64Sync(pathToFile) : null
 
     console.log('[update]: done!')
     return {

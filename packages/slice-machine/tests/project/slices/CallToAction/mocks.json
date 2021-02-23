@@ -6,30 +6,6 @@
     "version": "sktwi83ykfdt588n",
     "description": "MySlice Template",
     "primary": {
-      "ownContent": [
-        {
-          "type": "paragraph",
-          "text": "Mollit eu in id velit dolore. Minim ex consequat eiusmod. Esse cupidatat magna officia excepteur id veniam nulla sit.",
-          "spans": []
-        }
-      ],
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Incubate proactive channels",
-          "spans": []
-        },
-        {
-          "type": "heading1",
-          "text": "Revolutionize world-class experiences",
-          "spans": []
-        },
-        {
-          "type": "heading1",
-          "text": "Recontextualize frictionless e-business",
-          "spans": []
-        }
-      ],
       "image": {
         "dimensions": {
           "width": 600,
@@ -48,54 +24,78 @@
           "url": "https://images.unsplash.com/photo-1495476479092-6ece1898a101?w=800&h=800&fit=crop"
         }
       },
+      "ownContent": [
+        {
+          "type": "paragraph",
+          "text": "Exercitation qui nulla duis mollit ullamco cillum. Cupidatat occaecat tempor culpa eu labore ad consequat magna do aliqua veniam qui. Aute ullamco mollit eu pariatur esse adipisicing dolor sint adipisicing ut cupidatat adipisicing fugiat reprehenderit.",
+          "spans": []
+        }
+      ],
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Embrace cross-platform e-markets",
+          "spans": []
+        },
+        {
+          "type": "heading1",
+          "text": "Brand integrated synergies",
+          "spans": []
+        },
+        {
+          "type": "heading1",
+          "text": "Expedite integrated e-commerce",
+          "spans": []
+        }
+      ],
       "multi": [
         {
           "type": "heading2",
-          "text": "Strategize seamless methodologies",
+          "text": "Utilize plug-and-play e-markets",
           "spans": []
         },
         {
           "type": "heading2",
-          "text": "Benchmark robust schemas",
+          "text": "Disintermediate value-added eyeballs",
           "spans": []
         },
         {
           "type": "heading2",
-          "text": "Visualize end-to-end e-business",
+          "text": "Unleash synergistic networks",
           "spans": []
         }
       ],
       "text": [
         {
           "type": "heading1",
-          "text": "Exploit 24/7 e-markets",
+          "text": "Envisioneer cross-media vortals",
           "spans": []
         },
         {
           "type": "heading1",
-          "text": "Iterate distributed e-services",
+          "text": "Whiteboard wireless e-markets",
           "spans": []
         },
         {
           "type": "heading1",
-          "text": "Incentivize mission-critical eyeballs",
+          "text": "Extend ubiquitous partnerships",
           "spans": []
         }
       ],
       "ownContent2": [
         {
           "type": "heading5",
-          "text": "Facilitate B2C platforms",
+          "text": "Target web-enabled initiatives",
           "spans": []
         },
         {
           "type": "heading5",
-          "text": "Whiteboard scalable functionalities",
+          "text": "Grow sexy convergence",
           "spans": []
         },
         {
           "type": "heading5",
-          "text": "Orchestrate proactive e-tailers",
+          "text": "Reintermediate enterprise architectures",
           "spans": []
         }
       ],
@@ -106,7 +106,7 @@
         },
         "alt": "Placeholder image",
         "copyright": null,
-        "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=900&h=500&fit=crop",
+        "url": "https://images.unsplash.com/photo-1560457079-9a6532ccb118?w=900&h=500&fit=crop",
         "square": {
           "dimensions": {
             "width": 300,
@@ -114,23 +114,23 @@
           },
           "alt": "Placeholder image",
           "copyright": null,
-          "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=300&h=300&fit=crop"
+          "url": "https://images.unsplash.com/photo-1560457079-9a6532ccb118?w=300&h=300&fit=crop"
         }
       },
       "ownContent3": [
         {
           "type": "heading3",
-          "text": "Syndicate real-time platforms",
+          "text": "Reinvent scalable e-business",
           "spans": []
         },
         {
           "type": "heading3",
-          "text": "Whiteboard 24/7 relationships",
+          "text": "Target real-time models",
           "spans": []
         },
         {
           "type": "heading3",
-          "text": "Maximize dot-com e-services",
+          "text": "Strategize intuitive vortals",
           "spans": []
         }
       ],
@@ -142,7 +142,7 @@
         },
         "alt": "Placeholder image",
         "copyright": null,
-        "url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=900&h=500&fit=crop"
+        "url": "https://images.unsplash.com/photo-1589321599763-d66926c29613?w=900&h=500&fit=crop"
       },
       "color": "#ba68c8"
     },
@@ -151,17 +151,17 @@
         "dfgdfdg": [
           {
             "type": "heading1",
-            "text": "Reinvent extensible methodologies",
+            "text": "Incentivize B2C communities",
             "spans": []
           },
           {
             "type": "heading1",
-            "text": "Innovate visionary systems",
+            "text": "Drive integrated functionalities",
             "spans": []
           },
           {
             "type": "heading1",
-            "text": "Integrate cross-platform convergence",
+            "text": "Expedite global deliverables",
             "spans": []
           }
         ],
@@ -174,92 +174,23 @@
         "dfgdfdg": [
           {
             "type": "heading1",
-            "text": "Harness leading-edge e-markets",
+            "text": "Exploit world-class e-commerce",
             "spans": []
           },
           {
             "type": "heading1",
-            "text": "Orchestrate 24/7 portals",
+            "text": "Deploy front-end architectures",
             "spans": []
           },
           {
             "type": "heading1",
-            "text": "Target front-end portals",
-            "spans": []
-          }
-        ],
-        "sdf": {
-          "link_type": "Web",
-          "url": "http://twitter.com"
-        }
-      },
-      {
-        "dfgdfdg": [
-          {
-            "type": "heading1",
-            "text": "Embrace one-to-one models",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Grow interactive methodologies",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Seize ubiquitous metrics",
-            "spans": []
-          }
-        ],
-        "sdf": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        }
-      },
-      {
-        "dfgdfdg": [
-          {
-            "type": "heading1",
-            "text": "Mesh granular mindshare",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Mesh B2B users",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Reinvent synergistic web services",
+            "text": "Morph sticky platforms",
             "spans": []
           }
         ],
         "sdf": {
           "link_type": "Web",
           "url": "https://slicemachine.dev"
-        }
-      },
-      {
-        "dfgdfdg": [
-          {
-            "type": "heading1",
-            "text": "Benchmark leading-edge solutions",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Mesh dynamic synergies",
-            "spans": []
-          },
-          {
-            "type": "heading1",
-            "text": "Synthesize innovative partnerships",
-            "spans": []
-          }
-        ],
-        "sdf": {
-          "link_type": "Web",
-          "url": "http://google.com"
         }
       }
     ],

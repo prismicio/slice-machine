@@ -17,13 +17,7 @@ export const fetchApi = ({
   }).then(async (res) => {
     const jsonResponse = await res.json()
     const { err, reason, warning, json,  } = jsonResponse
-    console.log({
-      err,
-      reason,
-      warning,
-      json,
-      status: res.status
-    })
+
     if (res.status > 209) {
       return setData({
         loading: false,
