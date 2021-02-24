@@ -1,35 +1,4 @@
 {
-  "CallToAction": {
-    "primary": {
-      "title2": {
-        "config": {
-          "patternType": "HEADING",
-          "blocks": 4
-        }
-      },
-      "title": {
-        "config": {
-          "patternType": "HEADING",
-          "blocks": 3
-        }
-      },
-      "image": {
-        "content": "https://images.unsplash.com/photo-1495476479092-6ece1898a101"
-      },
-      "color": {
-        "content": "#ba68c8"
-      },
-      "ownContent": {
-        "config": {
-          "patternType": "PARAGRAPH",
-          "blocks": 1
-        }
-      },
-      "bool": {
-        "content": true
-      }
-    }
-  },
   "StrcututedTexts": {
     "primary": {
       "dfghj": {

@@ -36,7 +36,6 @@ const WidgetForm = ({
               [key]: value
             }
           }, {})
-          console.log({ rest, withDefaultValues })
           onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject)
         }}
       >

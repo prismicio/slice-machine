@@ -29,10 +29,18 @@ export const getLibrariesWithFlags = async (env) => {
   const withFlags = libraries.map(([lib, localSlices]) => {
     return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
+
+      const status = (() => {
+        if (Boolean(!sliceFound)) {
+          return 'NEW_SLICE'
+        }
+        return !equal(localSlice.model.variations, sliceFound.variations) ? 'MODIFIED' : 'SYNCED'
+      })()
       const flagged = {
         ...localSlice,
         isNew: Boolean(!sliceFound),
         // check everything once online model matches fs model
+        status,
         isModified: sliceFound && !equal(localSlice.model.variations, sliceFound.variations) ? true : false,
       }
 
@@ -43,7 +51,7 @@ export const getLibrariesWithFlags = async (env) => {
           isValid: true
         }
       } catch (e) {
-        console.error(e)
+        // console.error(e)
         return {
           ...flagged,
           status: 200,

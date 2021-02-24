@@ -14,9 +14,11 @@ const StateBadge = ({
   previewUrl,
 }) => {
 
-  if (sliceName === 'CallToAction3') {
+
+
+  if (sliceName === 'CallToAction') {
     console.log({
-      previewUrl
+      
     })
   }
   const [imageFailed, setimageFailed] = useState(false)
@@ -68,6 +70,7 @@ const Card = forwardRef(({
   isValid,
   nameConflict,
   hasPreview,
+  __isHere,
   ...props
 }, ref) => {
   const previewPlainUrl = `${previewUrl}&plain=true`
@@ -131,6 +134,9 @@ const Card = forwardRef(({
           isNew={isNew}
           isValid={isValid}
         />
+        {
+          __isHere ? 'is here' : 'is not here'
+        }
         {
           nameConflict ? (
             <Fragment>

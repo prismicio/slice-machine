@@ -45,8 +45,8 @@ const InBuilder = ({ router, ...props }) => {
         defaultValue={Model.sliceName}
       >
         {
-          slices.map((e) => (
-            <option key={e.slice.sliceName}>{e.slice.sliceName}</option>
+          slices.map(([e]) => (
+            <option key={e.sliceName}>{e.sliceName}</option>
           ))
         }
       </Select>

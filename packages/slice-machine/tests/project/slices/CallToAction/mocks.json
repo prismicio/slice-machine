@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "id": "default-slice",
+    "name": "Default slice",
+    "docURL": "...",
+    "version": "sktwi83ykfdt588n",
+    "description": "MySlice Template",
+    "primary": {},
+    "items": [
+      {
+        "dfgdfdg": [
+          {
+            "type": "paragraph",
+            "text": "Qui est elit nisi proident elit velit eiusmod officia sunt esse veniam nostrud.",
+            "spans": []
+          }
+        ],
+        "sdf": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      },
+      {
+        "dfgdfdg": [
+          {
+            "type": "paragraph",
+            "text": "Ea eiusmod sunt in excepteur ullamco deserunt cillum excepteur eu.",
+            "spans": []
+          }
+        ],
+        "sdf": {
+          "link_type": "Web",
+          "url": "http://twitter.com"
+        }
+      },
+      {
+        "dfgdfdg": [
+          {
+            "type": "paragraph",
+            "text": "Nostrud veniam do duis anim duis laborum aute nostrud laborum ipsum.",
+            "spans": []
+          }
+        ],
+        "sdf": {
+          "link_type": "Web",
+          "url": "https://prismic.io"
+        }
+      }
+    ],
+    "slice_type": "call_to_action"
+  }
+]

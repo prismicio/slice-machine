@@ -15,8 +15,6 @@ const ImagePreview = ({
   preventScreenshot
 }) => {
   const inputFile = useRef(null)
-  const isMounted = useIsMounted()
-  const [baseData, setBaseData] = useState(null)
   const [display, setDisplay] = useState(false)
   const handleMouseHover = (state) => setDisplay(state)
 
@@ -25,22 +23,7 @@ const ImagePreview = ({
     inputFile.current.value = ''
   }
 
-  useEffect(() => {
-    const fetchBase = async() => {
-      const response = await fetch(src)
-      const { base } = await (async () => {
-        try {
-          return await response.json()
-        } catch(e) {
-          return {}
-        }
-      })();
-      if (base !== baseData && isMounted) {
-        setBaseData(base)
-      }
-    }
-    fetchBase()
-  })
+  console.log(`http://localhost:9999${src}`, decodeURIComponent(src.split('uniq=')[1]))
 
   // useEffect(() => {
   //   setBaseData(ref.current)
@@ -106,7 +89,7 @@ const ImagePreview = ({
         ) : null
       }
       {
-        baseData ? <MemoedImage src={baseData} />  : <Text>Could not load image.</Text>
+        src ? <Image src={`http://localhost:9999${src}`} />  : <Text>Could not load image.</Text>
       }
     </Flex>
     </div>

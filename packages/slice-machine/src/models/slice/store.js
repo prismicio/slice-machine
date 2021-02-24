@@ -13,9 +13,21 @@ export default class SliceStore {
     this.dispatch({ type: "ActionType.Decrement" })
   }
 
-  variation(id) {
+  reset = () => {
+    this.dispatch({ type: "reset" })
+  }
+
+  save = () => {
+    this.dispatch({ type: 'save' })
+  }
+
+  onScreenshot = (previewUrl) => {
+    this.dispatch({ type: 'on-screenshot', payload: previewUrl })
+  }
+
+  variation = (id) => {
     return {
-      removeWidget(modelFieldName, key) {
+      removeWidget: (modelFieldName, key) => {
         this.dispatch({ type: VariationActions.RemoveWidget, payload: { id, modelFieldName, key } })
       }
     }

@@ -7,6 +7,8 @@ import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'
 
+import { formatModel } from 'src/models/helpers'
+
 import {
   Box,
   Label,
@@ -29,7 +31,7 @@ const createStorybookUrls = (storybookBaseUrl, sliceName, variation = 'default-s
 
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
-  const { Model, store } = useContext(SliceContext)
+  const { Model, store } = useContext(SliceContext)
   const { env: { storybook: storybookBaseUrl }, warnings } = useContext(ConfigContext)
   const {
     from,
@@ -41,6 +43,8 @@ const Builder = ({ openPanel }) => {
     isModified,
     mockConfig,
     appendInfo,
+    jsonModel,
+    variations,
     resetInitialModel,
   } = Model
 
@@ -52,9 +56,12 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const variation = Model.variations[0]
+  const variation = variations[0]
 
   const { storybookUrl } = createStorybookUrls(storybookBaseUrl, sliceName, variation.id)
+
+
+  console.log('previewUrl: ', previewUrl)
 
   useEffect(() => {
     if (isTouched) {
@@ -66,7 +73,7 @@ const Builder = ({ openPanel }) => {
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done) {
+    if (data.done && isMounted) {
       setDisplaySuccess(true)
       setTimeout(() => {
         if (isMounted) {
@@ -80,6 +87,10 @@ const Builder = ({ openPanel }) => {
       }
     }
   }, [data])
+
+  useEffect(() => {
+    return () => console.log('UNMOUNT')//store.reset()
+  }, [])
 
   const onCloseSuccess = () => {
     if (isMounted) {
@@ -97,14 +108,15 @@ const Builder = ({ openPanel }) => {
         body: JSON.stringify({
           sliceName: sliceName,
           from: from,
-          model: value,
+          model: formatModel(jsonModel, variations),
           mockConfig
         })
       },
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
       onSuccess(json) {
-        hydrate(() => resetInitialModel(value, json, mockConfig))
+        // console.log({ json })
+        // // hydrate(() => resetInitialModel(value, json, mockConfig))
         mutate('/api/state')
       }
     })
@@ -116,7 +128,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
       onSuccess(json) {
-        hydrate(() => resetInitialModel(value, json, mockConfig))
+        // hydrate(() => resetInitialModel(value, json, mockConfig))
         mutate('/api/state')
       }
     })
@@ -128,8 +140,11 @@ const Builder = ({ openPanel }) => {
       setData,
       setDataParams: [{ imageLoading: true }, { imageLoading: false }],
       successMessage: 'New screenshot added!',
-      onSuccess(json) {
-        hydrate(appendInfo(json))
+      onSuccess({ previewUrl }) {
+        // console.log({ previewUrl })
+        store.onScreenshot(previewUrl)
+        // mutate('/api/state', { ...Model, previewUrl })
+        // hydrate(appendInfo(json))
       }
     })
   }
@@ -167,6 +182,14 @@ const Builder = ({ openPanel }) => {
         onClose={onCloseSuccess}
         display={displaySuccess}
       />
+      <button onClick={store.reset}>reset</button>
+      <button onClick={store.save}>Save state</button>
+      <br/>
+      Status: { Model.status }
+      <br/>
+      {
+        isTouched ? 'isTouched': 'isNotTouched'
+      }<br/>
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={<SideBar

@@ -22,6 +22,11 @@ export default async function handler({ from, sliceName }) {
     console.log('Uncaught error was returned from generate preview')
     return { err: maybeErr, reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!' }
   }
+
+  console.log({
+    isCustom,
+    pathToFile
+  })
   await browser.close()
-  return { ...!isCustom ? { previewUrl: `/api/__preview?q=${encodeURIComponent(pathToFile)}` } : null }
+  return { previewUrl: `/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}` }
 }

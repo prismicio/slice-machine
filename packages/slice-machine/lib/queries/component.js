@@ -98,6 +98,6 @@ export function getComponentInfo(slicePath, { cwd, from }) {
     nameConflict,
     isCustomPreview,
     hasPreview,
-    previewUrl: hasPreview ? `/api/__preview?q=${encodeURIComponent(pathToScreenshotFile || defaultPath)}` : null
+    previewUrl: hasPreview ? `/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : null
   }
 }

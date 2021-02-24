@@ -19,7 +19,7 @@ const FieldHelpers = {
     }), {})
 }
 
-const formatModel = (model, variations) => ({
+export const formatModel = (model, variations) => ({
   ...model,
   variations: variations.map(variation => ({
     ...variation,

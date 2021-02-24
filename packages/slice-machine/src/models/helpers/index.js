@@ -1,6 +1,6 @@
 import equal from 'fast-deep-equal'
 
-const FieldHelpers = {
+export const FieldHelpers = {
   toArray: (fields) =>
     Object.entries(fields)
     .reduce((acc, [key, value]) => ([
@@ -19,7 +19,7 @@ const FieldHelpers = {
     }), {})
 }
 
-const formatModel = (model, variations) => ({
+export const formatModel = (model, variations) => ({
   ...model,
   variations: variations.map(variation => ({
     ...variation,
@@ -28,7 +28,7 @@ const formatModel = (model, variations) => ({
   }))
 })
 
-const createVariations = ({ variations }) => variations.map(variation => ({
+export const createVariations = ({ variations }) => variations.map(variation => ({
   ...variation,
   items: variation.items ? FieldHelpers.toArray(variation.items) : [],
   primary: variation.primary ? FieldHelpers.toArray(variation.primary) : [],

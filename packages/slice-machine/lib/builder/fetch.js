@@ -34,6 +34,6 @@ export const fetchApi = ({
       message: warning || successMessage || message,
       ...setDataParams[1] ? setDataParams[1] : []
     })
-    onSuccess(json)
+    onSuccess(jsonResponse)
   })
 }

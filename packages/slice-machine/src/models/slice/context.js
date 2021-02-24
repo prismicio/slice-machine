@@ -1,27 +1,39 @@
-import React from 'react'
+import React, { useState, useReducer } from 'react'
 import { useRouter } from 'next/router'
 
-import {LibrariesContext } from '../libraries/context'
+import { LibrariesContext } from '../libraries/context'
 import { useContext } from 'react'
+import { createVariations } from '../helpers'
+import Store from './store'
+import { reducer } from './reducer'
+
 
 export const SliceContext = React.createContext([])
 
-function useModelReducer({ slice }) {
+
+/**
+ * remoteSlicesState
+ * fsSlicesState
+ */
+
+export function useModelReducer({ slice, remoteSlice }) {
   const { model, ...rest } = slice
+
   const variations = createVariations(model)
-  const[state, dispatch] = useReducer(Store.reducer(variations), {
-    model,
+  const [state, dispatch] = useReducer(reducer(remoteSlice), {
+    jsonModel: model,
     ...rest,
-    variations
+    variations,
+    defaultVariations: variations
   })
 
   const store = new Store(dispatch)
+
   return [state, store]
 }
 
 export default function SliceProvider({ children, value }) {
-  console.log({ value })
-  const [Model, store] = useModelReducer(value)
+  const [Model, store] = value
   return (
     <SliceContext.Provider value={{ Model, store }}>
       { typeof children === 'function' ? children(value) : children }
@@ -42,7 +54,7 @@ export const SliceHandler = ({ env, children }) => {
     return null
   }
 
-  const slice = lib[1].find(({ slice }) => slice.sliceName === router.query.sliceName)
+  const slice = lib[1].find(([{ sliceName }]) => sliceName === router.query.sliceName)
 
   if (!slice) {
     router.replace('/')
