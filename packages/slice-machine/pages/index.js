@@ -4,10 +4,10 @@ import Head from 'next/head'
 
 import Container from 'components/Container'
 import LibrariesList from 'components/LibrariesList'
-import { StoreContext } from 'src/store/context'
+import { LibrariesContext } from 'src/models/libraries/context'
 
 const Index = () => {
-  const libraries = useContext(StoreContext)
+  const libraries = useContext(LibrariesContext)
 
   return (
     <Fragment>

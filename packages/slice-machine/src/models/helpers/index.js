@@ -1,7 +1,4 @@
-import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
-
-import Store from './store'
 
 const FieldHelpers = {
   toArray: (fields) =>
@@ -177,22 +174,6 @@ const createModel = (intialValues, remoteSlice, initialInfo, initialMockConfig) 
       isModified: remoteSlice && remoteSlice.variations ? !deepEqual(remoteSlice, variations) : false,
       isTouched: !deepEqual(model, variations) || !equal(initialMockConfig, mockConfig)
   }
-}
-
-export const useModelReducer = ({ slice, remoteSlice, mockConfig }) => {
-  const { model, ...rest } = slice
-  const variations = createVariations(model)
-  // const model = createModel(intialValues, remoteSlice, initialInfo, initialMockConfig)
-
-  console.log('new reducer created')
-  const[state, dispatch] = useReducer(Store.reducer(variations), {
-    model,
-    ...rest,
-    variations
-  })
-
-  const store = new Store(dispatch)
-  return [state, store]
 }
 
 

@@ -5,8 +5,8 @@ import App from 'next/app'
 import theme from 'src/theme'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
-import StoreProvider from 'src/store/context'
-import { SliceHandler } from 'src/store/slice'
+import LibrariesProvider from 'src/models/libraries/context'
+import { SliceHandler } from 'src/models/slice/context'
 import ConfigProvider from 'src/config-context'
 
 import Drawer from 'rc-drawer'
@@ -157,7 +157,7 @@ function MyApp({ Component, pageProps }) {
                 !payload || !payload.libraries
                   ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                   : (
-                      <StoreProvider value={payload}>
+                      <LibrariesProvider value={payload}>
                         <SliceHandler {...payload}>
                           <NavBar
                             env={data.env}
@@ -177,7 +177,7 @@ function MyApp({ Component, pageProps }) {
                             />
                           </Drawer>
                         </SliceHandler>
-                      </StoreProvider>
+                      </LibrariesProvider>
                   )
               }
             </ConfigProvider>

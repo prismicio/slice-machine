@@ -1,0 +1,3 @@
+const Actions = {
+  Rename: 'rename'
+}

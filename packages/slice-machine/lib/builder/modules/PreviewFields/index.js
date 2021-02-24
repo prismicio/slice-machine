@@ -81,8 +81,7 @@ const PreviewFields = ({
   }
 
   const onDeleteItem = (key, modelFieldName) => {
-    store.deleteItemInVariation(variation.id, modelFieldName, key)
-    //Model.hydrate(() => variation.delete[modelFieldName](key))
+    store.variation(variation.id).removeWidget(modelFieldName, key)
   }
 
   const onCancelNewField = () => setNewFieldData(null)

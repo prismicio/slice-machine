@@ -2,7 +2,7 @@ import { mutate } from 'swr'
 import { useState, useContext, useEffect } from 'react'
 import { useIsMounted } from 'react-tidy'
 
-import { SliceContext } from 'src/store/slice'
+import { SliceContext } from 'src/models/slice/context'
 import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'

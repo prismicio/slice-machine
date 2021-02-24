@@ -3,8 +3,8 @@ import { Fragment, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { Link as ThemeLink, Text, Select } from 'theme-ui'
 
-import { SliceContext } from 'src/store/slice'
-import { StoreContext } from 'src/store/context'
+import { SliceContext } from 'src/models/slice/context'
+import { LibrariesContext } from 'src/models/libraries/context'
 import NavBar from './'
 import { VersionBadge } from './components'
 
@@ -17,9 +17,8 @@ const Routes = {
 }
 
 const InBuilder = ({ router, ...props }) => {
-  const router = useRouter()
   const { Model } = useContext(SliceContext)
-  const slices = useContext(StoreContext).find(e => e[0] === Model.from)[1]
+  const slices = useContext(LibrariesContext).find(e => e[0] === Model.from)[1]
   return (
     <NavBar {...props} {...Model}>
       <Link href="/index" as="/" passHref>
