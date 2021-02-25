@@ -16,7 +16,7 @@ export const SliceContext = React.createContext([])
  * fsSlicesState
  */
 
-export function useModelReducer({ slice, remoteSlice }) {
+export function useModelReducer({ slice, remoteSlice, mockConfig }) {
   const { model, ...rest } = slice
 
   const variations = createVariations(model)
@@ -24,7 +24,11 @@ export function useModelReducer({ slice, remoteSlice }) {
     jsonModel: model,
     ...rest,
     variations,
-    defaultVariations: variations
+    mockConfig,
+    initialMockConfig: mockConfig,
+    remoteVariations: remoteSlice ? createVariations(remoteSlice) : [],
+    initialPreviewUrl: rest.previewUrl,
+    initialVariations: variations
   })
 
   const store = new Store(dispatch)

@@ -8,21 +8,27 @@
     "primary": {},
     "items": [
       {
-        "sdf": {
+        "sdf2": {
           "link_type": "Web",
-          "url": "https://prismic.io"
+          "url": "http://google.com"
         }
       },
       {
-        "sdf": {
+        "sdf2": {
           "link_type": "Web",
-          "url": "https://prismic.io"
+          "url": "http://google.com"
         }
       },
       {
-        "sdf": {
+        "sdf2": {
           "link_type": "Web",
-          "url": "https://prismic.io"
+          "url": "http://twitter.com"
+        }
+      },
+      {
+        "sdf2": {
+          "link_type": "Web",
+          "url": "http://twitter.com"
         }
       }
     ],

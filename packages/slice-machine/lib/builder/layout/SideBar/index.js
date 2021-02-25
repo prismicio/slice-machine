@@ -25,7 +25,6 @@ const SideBar = ({
   storybookUrl,
 }) => {
   const {
-    isCustomPreview,
     previewUrl,
     isTouched,
     __status,

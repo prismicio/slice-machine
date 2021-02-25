@@ -82,23 +82,27 @@ const EditModal = ({
         onSave={({ newKey, value }, mockValue) => {
           Model.hydrate(() => {
             if (mockValue && Object.keys(mockValue).length) {
-              Model.updateMockConfig({
-                prevId: apiId,
-                newId: newKey,
-                fieldType,
-                value: MockConfigForm.onSave
-                  ? MockConfigForm.onSave(mockValue, value)
-                  : mockValue
-              })
+              console.log('UPDATE MOCK CONFIG FIELD HERE $$')
+              // Model.updateMockConfig({
+              //   prevId: apiId,
+              //   newId: newKey,
+              //   fieldType,
+              //   value: MockConfigForm.onSave
+              //     ? MockConfigForm.onSave(mockValue, value)
+              //     : mockValue
+              // })
             } else {
-              variation.deleteMock[fieldType](apiId)
+              console.log('DELETE MOCK CONFIG FIELD HERE (if it exists) $$')
+              // variation.deleteMock[fieldType](apiId)
             }
+            console.log('SAVE NEW MODEL FOR FIELD HERE $$')
+            /**
             variation.replace[fieldType](
               apiId,
               newKey,
               // some models have been wrongly saved with id and type
               { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type }
-            )
+            ) */
           })
           close()
         }}

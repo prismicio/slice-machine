@@ -10,10 +10,12 @@ export default ({ children, value }) => {
       libName,
       slices.map(slice => useModelReducer({
         slice,
+        mockConfig: env.mockConfig[slice.sliceName],
         remoteSlice: remoteSlices.find(e => e.id === slice.id),
       }))
     ]
   })
+
   return (
     <LibrariesContext.Provider value={models}>
       { children }

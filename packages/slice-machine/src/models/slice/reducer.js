@@ -20,13 +20,20 @@ export function reducer(remoteSlice) {
         case "reset": return (() => {
           return {
             ...state,
-            variations: state.defaultVariations
+            variations: state.initialVariations
           }
         })()
         case "save": return (() => {
           return {
             ...state,
-            defaultVariations: state.variations
+            initialVariations: state.variations
+          }
+        })()
+        case "push": return (() => {
+          return {
+            ...state,
+            initialPreviewUrl: state.previewUrl,
+            remoteVariations: state.variations,
           }
         })()
         case VariationActions.RemoveWidget: return removeWidget(state, payload)
@@ -34,13 +41,12 @@ export function reducer(remoteSlice) {
     })();
     return {
       ...result,
-      isTouched: !equal(result.defaultVariations, result.variations),
+      isTouched: !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig),
       __status: (() => {
-        if (Boolean(!remoteSlice)) {
-          return 'NEW_SLICE'
-        }
-        const remoteVariations = createVariations(remoteSlice)
-        return !equal(remoteVariations, result.defaultVariations) ? 'MODIFIED' : 'SYNCED'
+        return result.previewUrl !== result.initialPreviewUrl
+          || !equal(result.remoteVariations, result.initialVariations)
+          ? 'MODIFIED'
+          : 'SYNCED'
       })()
     }
   }

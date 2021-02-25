@@ -11,24 +11,14 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "title": {
-          "config": {
-            "label": "Title",
-            "placeholder": "This is where it all begins...",
-            "allowTargetBlank": true,
-            "single": "heading2"
-          },
-          "type": "StructuredText"
-        },
-        "embed": {
-          "type": "Embed",
+        "ggg": {
           "config": {
             "label": "",
-            "id": "embed",
             "placeholder": ""
-          }
+          },
+          "type": "Number"
         },
-        "llapiId": {
+        "dddd": {
           "config": {
             "label": "",
             "placeholder": ""

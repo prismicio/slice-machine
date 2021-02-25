@@ -12,7 +12,7 @@
       "description": "MySlice Template",
       "primary": {},
       "items": {
-        "sdf": {
+        "sdf2": {
           "type": "Link",
           "config": {
             "label": "",

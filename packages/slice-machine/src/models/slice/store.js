@@ -21,6 +21,10 @@ export default class SliceStore {
     this.dispatch({ type: 'save' })
   }
 
+  push = () => {
+    this.dispatch({ type: 'push' })
+  }
+
   onScreenshot = (previewUrl) => {
     this.dispatch({ type: 'on-screenshot', payload: previewUrl })
   }

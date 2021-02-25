@@ -112,7 +112,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
       onSuccess() {
-        mutate('/api/state')
+        store.save()
       }
     })
   }
@@ -123,7 +123,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
       onSuccess() {
-        mutate('/api/state')
+        store.push()
       }
     })
   }

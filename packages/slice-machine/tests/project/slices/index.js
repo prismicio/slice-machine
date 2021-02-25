@@ -4,3 +4,5 @@ export { default as CallToAction3 } from './CallToAction3'
 
 export { default as StrcututedTexts } from './StrcututedTexts'
 export { default as WithMocks } from './WithMocks'
+export { default as NewSlice } from './NewSlice'
+export { default as NewSliceA } from './NewSliceA'
