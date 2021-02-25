@@ -1,9 +1,10 @@
 import { Button, Flex, Spinner } from 'theme-ui'
 
-const FooterButton = ({ isNew, isTouched, isModified, onSave, onPush, loading }) => {
+const FooterButton = ({ __status, isTouched, onSave, onPush, loading }) => {
   const onClick = isTouched ? onSave : onPush
-  const editable = isNew || isTouched || isModified
+  const editable = isTouched || ['MODIFIED', 'NEW'].indexOf(__status) !== -1
 
+  console.log({ editable, isTouched, __status })
   const text = (() => {
     if (isTouched) {
       return 'Save model to filesystem'

@@ -27,9 +27,8 @@ const SideBar = ({
   const {
     isCustomPreview,
     previewUrl,
-    isModified,
     isTouched,
-    isNew
+    __status,
   } = Model
 
   const maybeStorybookError = warnings.find(e => storybookWarningStates.includes(e))
@@ -48,18 +47,16 @@ const SideBar = ({
         footerSx={{ p: 0 }}
         Footer={() => (
           <FooterButton
-            isModified={isModified}
-            isTouched={isTouched}
-            isNew={isNew}
             onSave={onSave}
             onPush={onPush}
+            __status={__status}
+            isTouched={isTouched}
             loading={data.loading}
           />
         )}
       >
         <MemoizedImagePreview
           src={previewUrl}
-          isCustomPreview={isCustomPreview}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}

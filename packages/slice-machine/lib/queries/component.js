@@ -70,7 +70,7 @@ function getFileInfoFromPath(slicePath, componentName) {
   throw new Error(`[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`)
 }
 
-export function getComponentInfo(slicePath, { cwd, from }) {
+export function getComponentInfo(slicePath, { cwd, baseUrl, from }) {
   const sliceName = getComponentName(slicePath)
   if (!sliceName || !sliceName.length) {
     return null
@@ -78,7 +78,7 @@ export function getComponentInfo(slicePath, { cwd, from }) {
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
   const { model, ...otherModelValues } =  fromJsonFile(slicePath, 'model.json', 'model')
 
-  const { path: pathToScreenshotFile, defaultPath, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
+  const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
   const hasPreview = !!pathToScreenshotFile
 
   const nameConflict =
@@ -98,6 +98,6 @@ export function getComponentInfo(slicePath, { cwd, from }) {
     nameConflict,
     isCustomPreview,
     hasPreview,
-    previewUrl: hasPreview ? `/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : null
+    previewUrl: hasPreview ? `${baseUrl}/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : null
   }
 }

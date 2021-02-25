@@ -16,5 +16,7 @@ export default async function handler(file, { from, sliceName, img }) {
   const dest = path.join(env.cwd, from, sliceName, `preview.${file.type.split('/')[1]}`)
   fs.renameSync(file.path, dest)
 
-  return { }
+  return {
+    previewUrl: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(dest)}&uniq=${Math.random()}`
+  }
 }

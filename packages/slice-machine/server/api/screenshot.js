@@ -28,5 +28,5 @@ export default async function handler({ from, sliceName }) {
     pathToFile
   })
   await browser.close()
-  return { previewUrl: `/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}` }
+  return isCustom ? {} : { previewUrl: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}` }
 }

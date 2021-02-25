@@ -60,9 +60,6 @@ const Builder = ({ openPanel }) => {
 
   const { storybookUrl } = createStorybookUrls(storybookBaseUrl, sliceName, variation.id)
 
-
-  console.log('previewUrl: ', previewUrl)
-
   useEffect(() => {
     if (isTouched) {
       if (isMounted) {
@@ -89,7 +86,7 @@ const Builder = ({ openPanel }) => {
   }, [data])
 
   useEffect(() => {
-    return () => console.log('UNMOUNT')//store.reset()
+    return () => store.reset()
   }, [])
 
   const onCloseSuccess = () => {
@@ -114,9 +111,7 @@ const Builder = ({ openPanel }) => {
       },
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
-      onSuccess(json) {
-        // console.log({ json })
-        // // hydrate(() => resetInitialModel(value, json, mockConfig))
+      onSuccess() {
         mutate('/api/state')
       }
     })
@@ -127,8 +122,7 @@ const Builder = ({ openPanel }) => {
       url: `/api/push?sliceName=${sliceName}&from=${from}`,
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
-      onSuccess(json) {
-        // hydrate(() => resetInitialModel(value, json, mockConfig))
+      onSuccess() {
         mutate('/api/state')
       }
     })
@@ -141,10 +135,9 @@ const Builder = ({ openPanel }) => {
       setDataParams: [{ imageLoading: true }, { imageLoading: false }],
       successMessage: 'New screenshot added!',
       onSuccess({ previewUrl }) {
-        // console.log({ previewUrl })
-        store.onScreenshot(previewUrl)
-        // mutate('/api/state', { ...Model, previewUrl })
-        // hydrate(appendInfo(json))
+        if (previewUrl) {
+          store.onScreenshot(previewUrl)
+        }
       }
     })
   }
@@ -164,8 +157,8 @@ const Builder = ({ openPanel }) => {
       },
       setDataParams: [{ imageLoading: true }, { imageLoading: false }],
       successMessage: 'New screenshot added!',
-      onSuccess(json) {
-        hydrate(appendInfo(json))
+      onSuccess({ previewUrl }) {
+        store.onScreenshot(previewUrl)
       }
     })
   }
@@ -182,14 +175,6 @@ const Builder = ({ openPanel }) => {
         onClose={onCloseSuccess}
         display={displaySuccess}
       />
-      <button onClick={store.reset}>reset</button>
-      <button onClick={store.save}>Save state</button>
-      <br/>
-      Status: { Model.status }
-      <br/>
-      {
-        isTouched ? 'isTouched': 'isNotTouched'
-      }<br/>
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={<SideBar

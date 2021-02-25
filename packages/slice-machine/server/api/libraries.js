@@ -30,34 +30,29 @@ export const getLibrariesWithFlags = async (env) => {
     return [lib, localSlices.map(localSlice => {
       const sliceFound = remoteSlices.find(slice => localSlice.sliceName === pascalize(slice.id))
 
-      const status = (() => {
+      const __status = (() => {
+        if (!localSlice.hasPreview) {
+          return 'PREVIEW_MISSING'
+        }
+        try {
+          sliceSchema.validateSync(localSlice)
+        } catch (e) {
+          return 'INVALID'
+        }
         if (Boolean(!sliceFound)) {
           return 'NEW_SLICE'
         }
         return !equal(localSlice.model.variations, sliceFound.variations) ? 'MODIFIED' : 'SYNCED'
-      })()
-      const flagged = {
-        ...localSlice,
-        isNew: Boolean(!sliceFound),
-        // check everything once online model matches fs model
-        status,
-        isModified: sliceFound && !equal(localSlice.model.variations, sliceFound.variations) ? true : false,
+      })();
+
+      if (localSlice.sliceName === 'CallToAction') {
+        console.log(JSON.stringify(localSlice.model.variations), '\n\n', JSON.stringify(sliceFound ? sliceFound.variations : []))
+        console.log('STATUS: ', __status)
       }
 
-      try {
-        sliceSchema.validateSync(flagged)
-        return {
-          ...flagged,
-          isValid: true
-        }
-      } catch (e) {
-        // console.error(e)
-        return {
-          ...flagged,
-          status: 200,
-          isValid: false,
-          reason: e
-        }
+      return {
+        ...localSlice,
+        __status,
       }
     })]
   })

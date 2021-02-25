@@ -1,5 +1,4 @@
-import { memo, useState, useRef, useEffect, Fragment } from 'react'
-import { useIsMounted } from 'react-tidy'
+import { memo, useState, useRef, Fragment } from 'react'
 import { Label, Flex, Image, Button, Text, Spinner } from 'theme-ui'
 import { acceptedImagesTypes } from 'src/consts'
 
@@ -22,12 +21,6 @@ const ImagePreview = ({
     onHandleFile(file)
     inputFile.current.value = ''
   }
-
-  console.log(`http://localhost:9999${src}`, decodeURIComponent(src.split('uniq=')[1]))
-
-  // useEffect(() => {
-  //   setBaseData(ref.current)
-  // }, [ref])
 
   return (
     <div>
@@ -89,7 +82,7 @@ const ImagePreview = ({
         ) : null
       }
       {
-        src ? <Image src={`http://localhost:9999${src}`} />  : <Text>Could not load image.</Text>
+        src ? <MemoedImage src={src} />  : <Text>Could not load image.</Text>
       }
     </Flex>
     </div>

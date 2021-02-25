@@ -5,49 +5,20 @@ import ReactTooltip from 'react-tooltip'
 
 const textVariation = (variations) => `${variations.length} variation${variations.length > 1 ? 's' : ''}`
 
+const States = {
+  NEW_SLICE: 'New',
+  MODIFIED: 'Local Update',
+  SYNCED: 'Synced',
+  PREVIEW_MISSING: 'Preview missing',
+  INVALID: 'Contains errors'
+}
+
 const StateBadge = ({
-  isNew,
-  isValid,
-  isModified,
-  hasPreview,
-  sliceName,
-  previewUrl,
+  __status,
 }) => {
 
+  const state = States[__status]
 
-
-  if (sliceName === 'CallToAction') {
-    console.log({
-      
-    })
-  }
-  const [imageFailed, setimageFailed] = useState(false)
-
-  // useEffect(() => {
-  //   console.log('test image', sliceName)
-  //   const tester = new Image()
-  //   tester.addEventListener('error', () => {
-  //     console.log('image failed ', sliceName, previewUrl)
-  //     setimageFailed(true)
-  //   })
-  //   tester.src = previewUrl
-  // })
-
-  const state = (() => {
-    if (!previewUrl) {
-      return 'Preview missing'
-    }
-    if (!isValid) {
-      return 'Contains errors'
-    }
-    if (isNew) {
-      return 'New'
-    }
-    if (isModified) {
-      return 'Local Update'
-    }
-    return 'Synced'
-  })();
   return (
     <Badge
       mt="3px"
@@ -62,19 +33,13 @@ const StateBadge = ({
 }
 
 const Card = forwardRef(({
+  __status,
   sliceName,
   previewUrl,
-  model,
-  isModified,
-  isNew,
-  isValid,
   nameConflict,
-  hasPreview,
-  __isHere,
+  variations,
   ...props
 }, ref) => {
-  const previewPlainUrl = `${previewUrl}&plain=true`
-
   return (
     <Themecard
       {...props}
@@ -113,7 +78,7 @@ const Card = forwardRef(({
             backgroundSize: 'contain',
             backgroundPosition: '50%',
             backgroundRepeat: 'no-repeat',
-            backgroundImage: "url(" + `${previewPlainUrl}` + ")",
+            backgroundImage: "url(" + `${previewUrl}` + ")",
           }}
         >
         </Box>
@@ -122,21 +87,11 @@ const Card = forwardRef(({
       <Flex>
       <Box py={2} sx={{ flex: '1 1 auto' }}>
         <Heading as="h6" my={2}>{sliceName}</Heading>
-        {model && model.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(model.variations)}</Text> : null}
+        {variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(variations)}</Text> : null}
       </Box>
 
       <Box py={2}>
-        <StateBadge
-          sliceName={sliceName}
-          hasPreview={hasPreview}
-          previewUrl={previewPlainUrl}
-          isModified={isModified}
-          isNew={isNew}
-          isValid={isValid}
-        />
-        {
-          __isHere ? 'is here' : 'is not here'
-        }
+        <StateBadge __status={__status} />
         {
           nameConflict ? (
             <Fragment>

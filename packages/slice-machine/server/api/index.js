@@ -14,7 +14,6 @@ const parseOembed = require('./parse-oembed').default
 const state = require('./state').default
 
 router.use('/__preview', async function previewRoute(req, res) {
-  console.log('new preview')
   const p = decodeURIComponent(req.query.q)
   const stream = fs.createReadStream(p)
   const type = mime.getType(p.split('.').pop())
@@ -22,38 +21,14 @@ router.use('/__preview', async function previewRoute(req, res) {
     res.set('Content-Type', type)
     stream.pipe(res)
   })
-  stream.on('error', function (e) {
+  return stream.on('error', function (e) {
     console.log('error', e)
     res.set('Content-Type', 'application/json')
     res.status(404).send({})
   })
-  return
-  // const plain = decodeURIComponent(req.query.plain) != 'undefined' ? true : false
-  // if (plain) {
-  //   const stream = fs.createReadStream(p)
-  //   const type = mime.getType(p.split('.').pop())
-  //   stream.on('open', function () {
-  //     res.set('Content-Type', type)
-  //     stream.pipe(res)
-  //   })
-  //   stream.on('error', function (e) {
-  //     console.log('error', e)
-  //     res.set('Content-Type', 'application/json')
-  //     res.status(404).send({})
-  //   })
-  //   return
-  // }
-  // try {
-  //   const base = base64Img.base64Sync(p)
-  //   res.set('Content-Type', 'application/json')
-  //   res.status(200).json({ base })
-  // } catch(e) {
-  //   res.status(404).json({ base: null })
-  // }
 })
 
 router.use('/state', async function (req, res) {
-  console.log('reftech all')
   const payload = await state()
   if (payload.clientError) {
     return res.status(payload.clientError.status).json(payload)

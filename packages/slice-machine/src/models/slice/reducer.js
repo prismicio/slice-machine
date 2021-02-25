@@ -7,12 +7,11 @@ import {
 } from './variation/actions'
 
 
-export function reducer(remoteSlice, sliceName) {
+export function reducer(remoteSlice) {
   return (state, { type, payload }) => {
     const result = (() => {
       switch(type) {
         case "on-screenshot": return (() => {
-          console.log({ type, payload })
           return {
             ...state,
             previewUrl: payload
@@ -36,20 +35,13 @@ export function reducer(remoteSlice, sliceName) {
     return {
       ...result,
       isTouched: !equal(result.defaultVariations, result.variations),
-      status: (() => {
+      __status: (() => {
         if (Boolean(!remoteSlice)) {
           return 'NEW_SLICE'
         }
         const remoteVariations = createVariations(remoteSlice)
         return !equal(remoteVariations, result.defaultVariations) ? 'MODIFIED' : 'SYNCED'
       })()
-      
     }
   }
 }
-
-/**
- * remote slice variations (comparaison entre remote slice et file system)
- * state variations (client et file system)
- * form variations (entre client et données du form)
- */

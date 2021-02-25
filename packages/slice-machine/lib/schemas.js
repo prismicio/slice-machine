@@ -7,8 +7,6 @@ export const slice = yup.object().shape({
   hasMock: yup.boolean().required(),
   hasModel: yup.boolean().required(),
   isDirectory: yup.boolean().required(),
-  isModified: yup.boolean().required(),
-  isNew: yup.boolean().required(),
   migrated: yup.boolean().required(),
   mock: yup.object().shape({}),
   // slice_type: yup.string().required(),
@@ -17,7 +15,7 @@ export const slice = yup.object().shape({
   }).required(),
   pathToSlice: yup.string().required(),
   hasPreview: yup.boolean().required(),
-  previewUrl: yup.string().required(),
+  previewUrl: yup.string(),
   sliceName: yup.string().required(),
 }).required()
 

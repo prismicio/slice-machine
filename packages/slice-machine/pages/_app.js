@@ -125,7 +125,6 @@ function MyApp({ Component, pageProps }) {
   )
 
   useEffect(() => {
-    console.log('data changed')
     if (!data) {
       return
     }
