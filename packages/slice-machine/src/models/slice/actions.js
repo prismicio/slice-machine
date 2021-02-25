@@ -1,3 +1,0 @@
-const Actions = {
-  Rename: 'rename'
-}

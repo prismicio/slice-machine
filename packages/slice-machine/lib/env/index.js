@@ -4,7 +4,7 @@ import { exec } from 'child_process'
 import { parseDomain, fromUrl } from 'parse-domain'
 
 import { getPrismicData } from '../auth'
-import initClient from '../client'
+import initClient from "../client";
 import createComparator from './semver'
 
 import { getConfig as getMockConfig } from '../mock/fs'
@@ -109,7 +109,7 @@ export const getEnv = async () => {
       mockConfig,
       framework: getFramework(),
       baseUrl: `http://localhost:${process.env.PORT}`,
-      client: initClient({ cwd, base, repo, auth })
+      client: initClient(cwd, base, repo, auth)
     }
   }
 }
