@@ -45,11 +45,6 @@ export const getLibrariesWithFlags = async (env) => {
         return !equal(localSlice.model.variations, sliceFound.variations) ? 'MODIFIED' : 'SYNCED'
       })();
 
-      if (localSlice.sliceName === 'CallToAction3') {
-        console.log(JSON.stringify(localSlice.model.variations), '\n\n', JSON.stringify(sliceFound ? sliceFound.variations : []))
-        console.log('$$ STATUS: ', __status)
-      }
-
       return {
         ...localSlice,
         __status,
