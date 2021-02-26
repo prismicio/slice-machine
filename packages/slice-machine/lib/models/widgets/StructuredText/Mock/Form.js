@@ -14,7 +14,7 @@ import { NumberOfBlocks, PatternCard } from './components'
 import Tooltip from 'components/Tooltip'
 import { Flex as FlexGrid, Col } from 'components/Flex'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from '../../../../consts'
 
 const dataTip = `To generate mock content, we'll use the selected pattern.<br/>A pattern is an array of RichText options, repeated "block" times.`
 

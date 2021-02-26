@@ -10,7 +10,7 @@ import { MockConfigForm } from './Mock/Form'
 import {
   createInitialValues,
   createValidationSchema
-} from 'lib/forms'
+} from '../../../forms'
 
 import { removeProp } from '../../../utils'
 

@@ -5,7 +5,7 @@ import { BlockPicker } from 'react-color'
 
 import { initialValues } from '.'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from 'lib/consts'
 
 const RAND = 'random'
 

@@ -33,4 +33,6 @@ module.exports = withPlugins([
     },
   }],
   [withMDX]
-])
+], {
+  distDir: './build/client',
+})

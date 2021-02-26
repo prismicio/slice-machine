@@ -10,12 +10,12 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import * as Widgets from 'lib/widgets'
+import * as Widgets from 'lib/models/widgets'
 
 import { removeKeys } from 'lib/utils'
 import { createInitialValues, createValidationSchema } from 'lib/forms'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from 'lib/consts'
 
 import Card from 'components/Card/WithTabs'
 import ItemHeader from 'components/ItemHeader'

@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 import { FormFieldCheckboxControl } from 'components/FormFields'
 
-import { CHECKBOX } from 'lib/forms/types'
+import { FormTypes } from 'lib/forms/types'
 
 import { DefaultFields } from 'lib/forms/defaults'
 import { FormFieldArray } from 'components/FormFields'
@@ -9,7 +9,7 @@ import { FormFieldArray } from 'components/FormFields'
 const FormFields = {
   ...DefaultFields,
   default_value: {
-    type: CHECKBOX,
+    type: FormTypes.CHECKBOX,
     yupType: 'string',
     defaultValue: '',
     validate: function() {

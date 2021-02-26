@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
-import { createInitialValues } from 'lib/forms'
+import { createInitialValues } from '../../../forms'
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'

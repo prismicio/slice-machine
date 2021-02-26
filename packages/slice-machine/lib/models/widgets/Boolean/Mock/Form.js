@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 
 import { initialValues } from '.'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from 'lib/consts'
 
 const RAND = 'RANDOM'
 

@@ -1,6 +1,6 @@
 import { memo, useState, useRef, Fragment } from 'react'
 import { Label, Flex, Image, Button, Text, Spinner } from 'theme-ui'
-import { acceptedImagesTypes } from 'src/consts'
+import { acceptedImagesTypes } from '../../../../consts'
 
 const MemoedImage = memo(({ src }) => (
   <Image src={src} alt="Preview image" /> 

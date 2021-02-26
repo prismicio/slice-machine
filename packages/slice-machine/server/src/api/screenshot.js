@@ -1,12 +1,12 @@
 import puppeteer from 'puppeteer'
 
-import { getEnv } from '../../lib/env'
-import { createScreenshotUrl } from '../../lib/utils'
-import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
+import { getEnv } from '../../../lib/env'
+import { createScreenshotUrl } from '../../../lib/utils'
+import { getPathToScreenshot, createPathToScreenshot } from '../../../lib/queries/screenshot'
 
 import { generatePreview } from './common/utils'
 
-import { defaultSliceId } from '../../src/consts'
+import { defaultSliceId } from '../../../lib/consts'
 
 export default async function handler({ from, sliceName }) {
   const { env } = await getEnv()

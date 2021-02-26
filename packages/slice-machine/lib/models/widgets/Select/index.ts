@@ -4,9 +4,9 @@ import { MdDns } from 'react-icons/md'
 import {
   createInitialValues,
   createValidationSchema
-} from 'lib/forms'
+} from '../../../forms'
 
-import { removeProp } from 'lib/utils'
+import { removeProp } from '../../../utils'
 
 import FormFields from './FormFields'
 import { handleMockConfig, handleMockContent } from './Mock'

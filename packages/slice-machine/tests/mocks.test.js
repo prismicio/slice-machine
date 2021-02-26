@@ -1,4 +1,4 @@
-import * as Widgets from '../lib/widgets'
+import * as Widgets from '../lib/models/widgets'
 import { handleFields } from '../lib/mock/handlers'
 import { model, createExpector } from './__mockData__/models'
 

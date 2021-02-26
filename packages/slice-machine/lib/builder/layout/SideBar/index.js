@@ -8,7 +8,7 @@ import StorybookGrey from './icons/storybookGrey.svg'
 import Li from './components/Li'
 import ImagePreview from './components/ImagePreview'
 import FooterButton from './components/FooterButton'
-import { storybookWarningStates, warningTwoLiners } from 'src/consts'
+import { storybookWarningStates, warningTwoLiners } from '../../../consts'
 
 const MemoizedImagePreview = memo(ImagePreview)
 

@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import fetchLibs from './libraries'
-import { getEnv } from '../../lib/env'
-import { warningStates } from '../../src/consts'
+import { getEnv } from '../../../lib/env'
+import { warningStates } from '../../../lib/consts'
 import { fetchStorybookUrl } from './common/utils'
 
 const hasStorybookScript = (cwd) => {

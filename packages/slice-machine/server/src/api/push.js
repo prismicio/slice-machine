@@ -3,11 +3,11 @@ import path from 'path'
 import uniqid from 'uniqid'
 import { snakelize } from 'sm-commons/utils/str'
 
-import { getEnv } from '../../lib/env'
+import { getEnv } from '../../../lib/env'
 
-import { getPathToScreenshot } from '../../lib/queries/screenshot'
+import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 
-import { s3DefaultPrefix } from '../../src/consts'
+import { s3DefaultPrefix } from '../../../lib/consts'
 
 const onError = (r, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),

@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik'
 
 import { initialValues } from '.'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from 'lib/consts'
 import { useState } from 'react'
 
 import InputDeleteIcon from 'components/InputDeleteIcon'

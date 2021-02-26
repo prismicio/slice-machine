@@ -5,7 +5,7 @@ import { BsImage } from 'react-icons/bs'
 import {
   createInitialValues,
   createValidationSchema
-} from 'lib/forms'
+} from '../../../forms'
 
 import { removeProp } from '../../../utils'
 

@@ -11,16 +11,7 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {},
-      "items": {
-        "sdf": {
-          "type": "Link",
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true
-          }
-        }
-      }
+      "items": {}
     }
   ]
 }

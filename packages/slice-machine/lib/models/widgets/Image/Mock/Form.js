@@ -9,7 +9,7 @@ import Tooltip from 'components/Tooltip'
 import WindowPortal from 'components/WindowPortal'
 import InputDeleteIcon from 'components/InputDeleteIcon'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from '../../../../consts'
 
 import * as dataset from './dataset'
 

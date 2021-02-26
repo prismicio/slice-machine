@@ -1,6 +1,6 @@
 import * as Renderers from './Renderers'
 
-import { SupportedFrameworks } from 'src/consts'
+import { SupportedFrameworks } from 'lib/consts'
 
 const FrameworkRenderers = {
   [SupportedFrameworks.nuxt]: Renderers.nuxt,

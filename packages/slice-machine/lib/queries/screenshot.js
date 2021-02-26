@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
-const { acceptedImagesTypes } = require('../../src/consts')
+const { acceptedImagesTypes } = require('../consts')
 
 function createPathToScreenshot({ cwd, from, sliceName }) {
   return path.join(cwd, '.slicemachine/assets', from, sliceName, 'preview.png')

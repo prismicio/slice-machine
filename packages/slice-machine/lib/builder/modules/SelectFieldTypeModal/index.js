@@ -9,7 +9,7 @@ import {
 import Card from 'components/Card'
 import { Flex as FlexGrid, Col } from 'components/Flex'
 
-import * as Widgets from 'lib/widgets'
+import * as Widgets from 'lib/models/widgets'
 import FieldTypeCard from './FieldTypeCard'
 
 Modal.setAppElement("#__next");

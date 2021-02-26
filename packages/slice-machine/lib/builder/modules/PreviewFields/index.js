@@ -6,7 +6,7 @@ import {
 
 import { NonRepeatZone, RepeatZone } from '../FieldZone'
 
-import * as Widgets from '../../../widgets'
+import * as Widgets from '../../../models/widgets'
 
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import EditModal from '../EditModal'

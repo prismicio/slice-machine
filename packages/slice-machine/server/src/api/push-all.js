@@ -1,4 +1,4 @@
-import { getEnv } from '../../lib/env'
+import { getEnv } from '../../../lib/env'
 import push from './push'
 import getLibs from './libraries'
 

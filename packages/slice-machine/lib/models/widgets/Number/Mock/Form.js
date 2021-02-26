@@ -4,7 +4,7 @@ import InputDeleteIcon from 'components/InputDeleteIcon'
 
 import { initialValues } from '.'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from '../../../../consts'
 
 const Form = () => {
   const { values, setFieldValue } = useFormikContext()

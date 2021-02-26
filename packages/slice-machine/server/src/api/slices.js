@@ -1,4 +1,4 @@
-import initClient from '../../lib/client'
+import initClient from '../../../lib/client'
 
 export const getSlices = async(env) => {
   try {

@@ -9,7 +9,7 @@ import createComparator from './semver'
 
 import { getConfig as getMockConfig } from '../mock/fs'
 
-import { SupportedFrameworks } from '../../src/consts'
+import { SupportedFrameworks } from '../consts'
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH)
 

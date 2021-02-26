@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { Formik, Form } from 'formik'
 import { Box } from 'theme-ui'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from '../../../consts'
 
 const WidgetForm = ({
   formId,

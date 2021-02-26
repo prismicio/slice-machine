@@ -4,7 +4,7 @@ import { NewVersionAvailable, ClientError, NotConnected } from './Errors'
 import { StorybookNotInstalled, StorybookNotRunning, StorybookNotInManifest } from './Storybook'
 import ConfigErrors from '../ConfigErrors'
 
-import { warningStates } from 'src/consts'
+import { warningStates } from 'lib/consts'
 
 const Renderers = {
   [warningStates.NOT_CONNECTED]: NotConnected,

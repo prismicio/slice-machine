@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
-import { getPathToScreenshot } from '../../lib/queries/screenshot'
-import { getEnv } from '../../lib/env'
+import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import { getEnv } from '../../../lib/env'
 
 export default async function handler(file, { from, sliceName, img }) {
   const { env } = await getEnv()

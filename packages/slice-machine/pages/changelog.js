@@ -5,7 +5,7 @@ import slash from 'slash'
 
 import hydrate from 'next-mdx-remote/hydrate'
 import renderToString from 'next-mdx-remote/render-to-string'
-import { changelogPath } from '../src/consts'
+import { changelogPath } from '../../common/consts'
 
 import { Heading } from 'theme-ui'
 import Container from '../components/Container'

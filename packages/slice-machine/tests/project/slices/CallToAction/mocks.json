@@ -6,26 +6,7 @@
     "version": "sktwi83ykfdt588n",
     "description": "MySlice Template",
     "primary": {},
-    "items": [
-      {
-        "sdf": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "sdf": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "sdf": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      }
-    ],
+    "items": [],
     "slice_type": "call_to_action"
   }
 ]

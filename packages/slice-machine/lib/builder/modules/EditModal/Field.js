@@ -4,7 +4,7 @@ import { useField } from 'formik'
 
 import { FormFieldCheckbox, FormFieldInput } from 'components/FormFields'
 
-import * as FormTypes from '../../../forms/types'
+import { FormTypes } from '../../../forms/types'
 
 import {
   Box,

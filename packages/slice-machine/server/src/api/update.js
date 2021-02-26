@@ -3,12 +3,12 @@ import path from 'path'
 import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
-import { createScreenshotUrl } from '../../lib/utils'
-import { getPathToScreenshot, createPathToScreenshot } from '../../lib/queries/screenshot'
+import { createScreenshotUrl } from '../../../lib/utils'
+import { getPathToScreenshot, createPathToScreenshot } from '../../../lib/queries/screenshot'
 
-import { getEnv } from '../../lib/env'
-import mock from '../../lib/mock'
-import { insert as insertMockConfig } from '../../lib/mock/fs'
+import { getEnv } from '../../../lib/env'
+import mock from '../../../lib/mock'
+import { insert as insertMockConfig } from '../../../lib/mock/fs'
 
 const testStorybookPreview = async ({ screenshotUrl }) => {
   try {

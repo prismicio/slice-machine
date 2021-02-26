@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik'
 import DatePicker from 'react-datepicker'
 import InputDeleteIcon from 'components/InputDeleteIcon'
 
-import { MockConfigKey } from 'src/consts'
+import { MockConfigKey } from '../../lib/consts'
 
 const Form = ({ initialValues, initialMockValues, formatDate }) => {
   const { values, setFieldValue } = useFormikContext()

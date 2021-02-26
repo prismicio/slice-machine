@@ -1,9 +1,9 @@
 import equal from 'fast-deep-equal'
-import { listComponentsByLibrary } from '../../lib/queries/listComponents'
+import { listComponentsByLibrary } from '../../../lib/queries/listComponents'
 
 import {
   slice as sliceSchema,
-} from '../../lib/schemas'
+} from '../../../lib/schemas'
 
 import { pascalize } from 'sm-commons/utils/str'
 

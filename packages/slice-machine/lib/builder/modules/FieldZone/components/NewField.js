@@ -11,7 +11,7 @@ import {
   createValidationSchema
 } from 'lib/forms'
 
-import * as Widgets from 'lib/widgets'
+import * as Widgets from 'lib/models/widgets'
 
 
 import ErrorTooltip from './ErrorTooltip'
