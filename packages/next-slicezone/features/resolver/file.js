@@ -2,7 +2,12 @@ const ALL_KEY = '__allSlices'
 const DEFAULT_IMPORTS_STRING = 'import { Fragment } from \'react\''
 
 export const createDeclaration = (libs) => {
-  const imports = libs.reduce((acc, { name, pathToSlices }) => `${acc}import * as ${name} from '${pathToSlices}'\n`, '')
+  const imports = libs.reduce((acc, { name, from, isLocal }) => {
+    if (isLocal) {
+      return `${acc}import * as ${name} from './${from}'\n`
+    }
+    return `${acc}import { Slices as ${name} } from '${isLocal ? `${from}` : from}'\n`
+  }, '')
   const spread = `const ${ALL_KEY} = { ${libs.reverse().reduce((acc, { name }) => `${acc} ...${name},`, '')} }`
   return `${DEFAULT_IMPORTS_STRING}\n${imports}\n${spread}\n`
 }
