@@ -2,14 +2,13 @@ import { Button, Flex, Spinner } from 'theme-ui'
 
 const FooterButton = ({ __status, isTouched, onSave, onPush, loading }) => {
   const onClick = isTouched ? onSave : onPush
-  const editable = isTouched || ['MODIFIED', 'NEW'].indexOf(__status) !== -1
+  const unsynced = ['MODIFIED', 'NEW_SLICE'].indexOf(__status) !== -1
 
-  console.log({ editable, isTouched, __status })
   const text = (() => {
     if (isTouched) {
       return 'Save model to filesystem'
     }
-    if (editable) {
+    if (unsynced) {
       return 'Push Slice to Prismic'
     }
     return 'Your Slice is up to date!'
@@ -28,8 +27,8 @@ const FooterButton = ({ __status, isTouched, onSave, onPush, loading }) => {
         justifyContent: 'center',
         borderColor: 'transparent'
       }}
-      variant={editable ? 'buttons.primary' : 'buttons.disabled'}
-      disabled={!editable}
+      variant={isTouched || unsynced ? 'buttons.primary' : 'buttons.disabled'}
+      disabled={!isTouched && !unsynced}
       onClick={onClick}
     >
        { loading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } {text}

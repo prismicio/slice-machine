@@ -16,7 +16,7 @@ import {
 
 import Card from 'components/Card'
 
-import * as Widgets from 'lib/models/widgets'
+import * as Widgets from 'lib/models/common/widgets'
 
 Modal.setAppElement("#__next");
 

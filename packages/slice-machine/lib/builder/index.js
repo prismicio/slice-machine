@@ -34,17 +34,19 @@ const Builder = ({ openPanel }) => {
   const { Model, store } = useContext(SliceContext)
   const { env: { storybook: storybookBaseUrl }, warnings } = useContext(ConfigContext)
   const {
+    infos: {
+      sliceName,
+      previewUrl,
+    },
+    jsonModel,
+    variations,
     from,
-    sliceName,
-    previewUrl,
     value,
     hydrate,
     isTouched,
     isModified,
     mockConfig,
     appendInfo,
-    jsonModel,
-    variations,
     resetInitialModel,
   } = Model
 
@@ -112,7 +114,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
       onSuccess() {
-        mutate('/api/state')
+        store.save()
       }
     })
   }
@@ -123,7 +125,7 @@ const Builder = ({ openPanel }) => {
       setData,
       successMessage: 'Model was correctly saved to Prismic!',
       onSuccess() {
-        mutate('/api/state')
+        store.push()
       }
     })
   }

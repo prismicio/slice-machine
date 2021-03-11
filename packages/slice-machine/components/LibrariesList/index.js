@@ -2,8 +2,9 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import { Box } from 'theme-ui'
 import Card from './Card'
+import LibraryState from 'lib/models/ui/LibraryState'
 
-const editLinkProps = ({ href, sliceName }) => ({
+const editLinkProps = (href, sliceName) => ({
   href: '/[lib]/[sliceName]',
   as: `/${href}/${sliceName}`
 })
@@ -11,14 +12,14 @@ const editLinkProps = ({ href, sliceName }) => ({
 export default ({ libraries }) => (
   <Fragment>
     {
-      libraries && libraries.map(([lib, slices]) => (
-        <div key={lib}>
+      libraries && libraries.map(lib => (
+        <div key={lib.name}>
           <Box
             as="h2"
             sx={{
               pb:3,
             }}>
-            {lib}
+            {lib.name}
           </Box>
           <hr />
 
@@ -34,8 +35,8 @@ export default ({ libraries }) => (
             }}
           >
             {
-              slices.map(([slice]) => (
-                <Link key={`${slice.from}-${slice.id}`} {...editLinkProps(slice)} passHref>
+              lib.components.map(([slice]) => (
+                <Link key={`${slice.from}-${slice.jsonModel.id}`} {...editLinkProps(slice.href, slice.jsonModel.name)} passHref>
                   <Card {...slice} />
                 </Link>
               ))

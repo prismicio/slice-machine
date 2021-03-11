@@ -10,10 +10,6 @@ import { LibrariesContext } from 'src/models/libraries/context'
 const Index = () => {
   const libraries = useContext(LibrariesContext)
 
-  // useEffect(() => {
-  //   mutate('/api/state')
-  // }, [])
-
   return (
     <Fragment>
       <Container>

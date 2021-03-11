@@ -18,7 +18,8 @@ const Routes = {
 
 const InBuilder = ({ router, ...props }) => {
   const { Model } = useContext(SliceContext)
-  const slices = useContext(LibrariesContext).find(e => e[0] === Model.from)[1]
+  const libs = useContext(LibrariesContext)
+  const slices = libs.find(lib => lib.name === Model.from)?.components || []
   return (
     <NavBar {...props} {...Model}>
       <Link href="/index" as="/" passHref>

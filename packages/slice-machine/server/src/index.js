@@ -1,3 +1,5 @@
+/// <reference path="../../../sm-commons/index.d.ts" />
+
 require("@babel/register");
 global.fetch = require("node-fetch");
 

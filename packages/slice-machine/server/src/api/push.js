@@ -123,6 +123,6 @@ export default async function handler(query) {
       console.log('[push] done!')
       return {}
     } catch(e) {
-      return onError(e, 'An unexpected error occured while pushing slices')
+      return onError(e, 'An unexpected error occured while pushing slice')
     }
 }

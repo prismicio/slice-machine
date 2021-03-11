@@ -15,7 +15,7 @@ import Li from 'components/Li'
 import IconButton from 'components/IconButton'
 import ItemHeader from 'components/ItemHeader'
 
-import * as widgets from 'lib/models/widgets'
+import * as widgets from 'lib/models/common/widgets'
 
 import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'

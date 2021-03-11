@@ -1,5 +1,5 @@
 import React from 'react'
-import * as Widgets from 'lib/models/widgets'
+import * as Widgets from 'lib/models/common/widgets'
 import CodeBlock from '../CodeBlock'
 
 // const DOCS_README = 'https://github.com/prismicio/prismic-reactjs';

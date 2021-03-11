@@ -31,7 +31,7 @@ const SideBar = ({
     __status,
   } = Model
 
-  const maybeStorybookError = warnings.find(e => storybookWarningStates.includes(e))
+  const storybookError = warnings.find(w => storybookWarningStates.includes(w.key))
 
   return (
     <Box
@@ -60,17 +60,17 @@ const SideBar = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={!!maybeStorybookError}
+          preventScreenshot={!!storybookError}
         />
         <ul>
           {
-            maybeStorybookError ? (
+            storybookError ? (
               <Li
-                title={warningTwoLiners[maybeStorybookError][0]}
+                title={storybookError.title}
                 hasError
-                description={warningTwoLiners[maybeStorybookError][1]}
+                description={storybookError.description}
                 Icon={StorybookGrey}
-                onClick={() => openPanel(maybeStorybookError)}
+                onClick={() => openPanel(storybookError)}
                 sx={{ cursor: 'pointer' }}
               />
             ) : (

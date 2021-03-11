@@ -1,5 +1,5 @@
 import { Input } from './fields'
-import { VariationAsArr, WidgetsArea } from '../models/Variation';
+import { Variation, AsArray, WidgetsArea } from '../models/common/Variation';
 
 export const validateId = ({
   value,
@@ -8,11 +8,11 @@ export const validateId = ({
   initialValues
 }: {
   value: string,
-  variation: VariationAsArr,
+  variation: Variation<AsArray>,
   fieldType: WidgetsArea,
   initialValues: { id: string }
 }) => {
-  const fieldExists = VariationAsArr.getWidgetArea(variation, fieldType)?.find(e => e.key === value)
+  const fieldExists = Variation.getWidgetArea(variation, fieldType)?.find(({key}) => key === value)
   if (fieldExists && value !== initialValues.id) {
     return `Field "${value}" already exists.`
   }

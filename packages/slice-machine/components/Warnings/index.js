@@ -17,7 +17,6 @@ const Renderers = {
 
 const Warnings = ({ list, configErrors, priority }) => {
   const { theme } = useThemeUI()
-
   const orderedList = priority ? [priority, ...list.filter(e => e !== priority)] : list
   return (
     <Box bg="background" sx={{ minHeight: '100vh' }}>
@@ -35,15 +34,13 @@ const Warnings = ({ list, configErrors, priority }) => {
       </Flex>
       <Box p={3} sx={{ overflow: 'auto' }}>
         {
-          orderedList.map(typeOrTuple => {
-            const [type, payload] = Array.isArray(typeOrTuple) ? typeOrTuple : [typeOrTuple, null]
-            const [errorName, errorType] = type.split(':')
-            const Component = Renderers[errorName]
-            return <Component key={type} errorType={errorType} {...payload} />
+          orderedList.map(warning => {
+            const Component = Renderers[warning.key]
+            return <Component key={warning.key} errorType={warning.title} {...warning} />
           })
         }
         {
-          Object.entries(configErrors).length ? <ConfigErrors errors={configErrors} /> : null
+          Object.entries(configErrors || {}).length ? <ConfigErrors errors={configErrors} /> : null
         }
       </Box>
     </Box>

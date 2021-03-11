@@ -66,7 +66,7 @@ export const NotConnected = () => (
     </Card>
 )
 
-export const NewVersionAvailable = ({ current, next, message }) => (
+export const NewVersionAvailable = ({ value: { current, next, message }}) => (
   <Card
       bg="background"
       bodySx={{ p: 3 }}

@@ -34,10 +34,8 @@ const StateBadge = ({
 
 const Card = forwardRef(({
   __status,
-  sliceName,
-  previewUrl,
-  nameConflict,
-  variations,
+  infos,
+  jsonModel,
   ...props
 }, ref) => {
   return (
@@ -78,7 +76,7 @@ const Card = forwardRef(({
             backgroundSize: 'contain',
             backgroundPosition: '50%',
             backgroundRepeat: 'no-repeat',
-            backgroundImage: "url(" + `${previewUrl}` + ")",
+            backgroundImage: "url(" + `${infos.previewUrl}` + ")",
           }}
         >
         </Box>
@@ -86,14 +84,14 @@ const Card = forwardRef(({
 
       <Flex>
       <Box py={2} sx={{ flex: '1 1 auto' }}>
-        <Heading as="h6" my={2}>{sliceName}</Heading>
-        {variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(variations)}</Text> : null}
+        <Heading as="h6" my={2}>{infos.sliceName}</Heading>
+        {jsonModel.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(jsonModel.variations)}</Text> : null}
       </Box>
 
       <Box py={2}>
         <StateBadge __status={__status} />
         {
-          nameConflict ? (
+          infos.nameConflict ? (
             <Fragment>
               <ReactTooltip type="light" multiline border borderColor={'tomato'} />
               <Badge
@@ -107,7 +105,7 @@ const Card = forwardRef(({
                 sx={{ color: '#FFF' }}
                 data-place="bottom"
                 data-tip={
-                  `Slice name "${nameConflict.sliceName}" can't be transformed<br/> to snake case "${nameConflict.id}". Please update one of these values manually!`
+                  `Slice name "${infos.nameConflict.sliceName}" can't be transformed<br/> to snake case "${nameConflict.id}". Please update one of these values manually!`
                 }
               >
                 Name conflict

@@ -1,4 +1,4 @@
-import * as Widgets from '../lib/models/widgets'
+import * as Widgets from '../lib/models/common/widgets'
 
 const WidgetsTable = Object.entries(Widgets)
 
