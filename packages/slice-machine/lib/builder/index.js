@@ -7,8 +7,6 @@ import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'
 
-import { formatModel } from 'src/models/helpers'
-
 import {
   Box,
   Label,
@@ -98,76 +96,9 @@ const Builder = ({ openPanel }) => {
     }
   }
 
-
-  const onSave = async () => {
-    fetchApi({
-      url: '/api/update',
-      fetchparams: {
-        method: 'POST',
-        body: JSON.stringify({
-          sliceName: sliceName,
-          from: from,
-          model: formatModel(jsonModel, variations),
-          mockConfig
-        })
-      },
-      setData,
-      successMessage: 'Model & mocks have been generated succesfully!',
-      onSuccess() {
-        store.save()
-      }
-    })
-  }
-
-  const onPush = async () => {
-    fetchApi({
-      url: `/api/push?sliceName=${sliceName}&from=${from}`,
-      setData,
-      successMessage: 'Model was correctly saved to Prismic!',
-      onSuccess() {
-        store.push()
-      }
-    })
-  }
-
-  const onScreenshot = async () => {
-    fetchApi({
-      url: `/api/screenshot?sliceName=${sliceName}&from=${from}`,
-      setData,
-      setDataParams: [{ imageLoading: true }, { imageLoading: false }],
-      successMessage: 'New screenshot added!',
-      onSuccess({ previewUrl }) {
-        if (previewUrl) {
-          store.onScreenshot(previewUrl)
-        }
-      }
-    })
-  }
-
-  const onCustomScreenshot = async (file) => {
-    const form = new FormData()
-    Object.entries({ sliceName: sliceName, from: from })
-      .forEach(([key, value]) => form.append(key, value))
-    form.append('file', file)
-    fetchApi({
-      url: '/api/custom-screenshot',
-      setData,
-      fetchparams: {
-        method: 'POST',
-        body: form,
-        headers: {}
-      },
-      setDataParams: [{ imageLoading: true }, { imageLoading: false }],
-      successMessage: 'New screenshot added!',
-      onSuccess({ previewUrl }) {
-        store.onScreenshot(previewUrl)
-      }
-    })
-  }
   const DEFAULT_CHECKED = false;
   const [showHints, setShowHints] = useState(DEFAULT_CHECKED);
   const onToggleHints = () => setShowHints(!showHints);
-
   return (
     <Box>
       <Header Model={Model} />
@@ -182,14 +113,14 @@ const Builder = ({ openPanel }) => {
         SideBar={<SideBar
             data={data}
             Model={Model}
-            onPush={onPush}
-            onSave={onSave}
+            onPush={ () => store.push(Model, setData) }
+            onSave={ () => store.save(Model, setData) }
             warnings={warnings}
             openPanel={openPanel}
             previewUrl={previewUrl}
             storybookUrl={storybookUrl}
-            onScreenshot={onScreenshot}
-            onHandleFile={onCustomScreenshot}
+            onScreenshot={() => store.generateScreenShot(Model, setData)}
+            onHandleFile={(file) => store.generateCustomScreenShot(Model, setData, file)}
             imageLoading={data.imageLoading}
           />}
       >

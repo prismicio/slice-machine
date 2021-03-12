@@ -21,7 +21,7 @@ export default ({ children, libraries, remoteSlices, env }: {
       name: lib.name,
       components: lib.components.map(component => useModelReducer({
         slice: component,
-        mockConfig: env.mockConfig[component.infos.sliceName],
+        mockConfig: env.mockConfig[component.infos.sliceName] || {},
         remoteSlice: remoteSlices?.find(e => e.id === component.model.id),
       }))
     }

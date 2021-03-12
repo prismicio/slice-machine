@@ -1,15 +1,15 @@
 import fs from 'fs'
 import path from 'path'
-import { ComponentInfo } from '../models/common/Component'
+import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 import { pascalize } from 'sm-commons/utils/str'
 
 import { getPathToScreenshot } from './screenshot'
 
-function getMeta(modelData: any): { [propertyKey: string]: any } {
-  return Object.entries(modelData).reduce((acc, [key, value]) => ({
-    ...acc,
-    ...(['id', 'description'].includes(key) ? ({ [key]: value }) : {})
-  }), {})
+function getMeta(modelData: any): ComponentMetadata {
+  return {
+    id: modelData.id,
+    description: modelData.description
+  }
 }
 
 /** take a path to slice and return its name  */

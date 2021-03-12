@@ -12,7 +12,7 @@ export const validateId = ({
   fieldType: WidgetsArea,
   initialValues: { id: string }
 }) => {
-  const fieldExists = Variation.getWidgetArea(variation, fieldType)?.find(({key}) => key === value)
+  const fieldExists = variation[fieldType].find(({key}) => key === value)
   if (fieldExists && value !== initialValues.id) {
     return `Field "${value}" already exists.`
   }

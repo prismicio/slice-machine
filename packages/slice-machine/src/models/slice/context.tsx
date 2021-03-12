@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import SliceStore from './store'
 import { reducer } from './reducer'
 
-import SliceState from '../../../lib/models/ui/SliceState'
+import { SliceState } from '../../../lib/models/ui/SliceState'
 import { ComponentWithLibStatus } from '../../../lib/models/common/Library'
 import { Slice } from '../../../lib/models/common/Slice'
 import { AsObject } from '../../../lib/models/common/Variation'
@@ -64,7 +64,6 @@ export const SliceHandler = ({ children }: { children: any }) => {
     if(l instanceof Array) return l[0]
     else return l
   })() 
-  console.log(libParam)
   const lib = libraries.find(l => l?.name === libParam.replace(/--/g, "/"))
   if (!lib) {
     router.replace('/')

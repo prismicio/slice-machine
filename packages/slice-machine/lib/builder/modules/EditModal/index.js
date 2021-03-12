@@ -32,7 +32,8 @@ const EditModal = ({
   close,
   data,
   Model,
-  variation
+  variation,
+  store
 }) => {
 
   const { theme } = useThemeUI()
@@ -80,31 +81,23 @@ const EditModal = ({
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
-          Model.hydrate(() => {
-            if (mockValue && Object.keys(mockValue).length) {
-              console.log('UPDATE MOCK CONFIG FIELD HERE $$')
-              // Model.updateMockConfig({
-              //   prevId: apiId,
-              //   newId: newKey,
-              //   fieldType,
-              //   value: MockConfigForm.onSave
-              //     ? MockConfigForm.onSave(mockValue, value)
-              //     : mockValue
-              // })
-            } else {
-              console.log('DELETE MOCK CONFIG FIELD HERE (if it exists) $$')
-              // variation.deleteMock[fieldType](apiId)
-            }
-            console.log('SAVE NEW MODEL FOR FIELD HERE $$')
-            /**
-            variation.replace[fieldType](
-              apiId,
-              newKey,
-              // some models have been wrongly saved with id and type
-              { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type }
-            ) */
-          })
-          close()
+          if (mockValue && Object.keys(mockValue).length) {
+            const updatedValue = MockConfigForm.onSave ? MockConfigForm.onSave(mockValue, value) : mockValue
+            store
+              .variation(variation.id)
+              .updateWidgetMockConfig(initialMockConfig, fieldType, apiId, newKey, updatedValue)
+          } else {
+            store
+              .variation(variation.id)
+              .deleteWidgetMockConfig(initialMockConfig, fieldType, apiId)
+          }
+
+          // some models have been wrongly saved with id and type
+          store
+            .variation(variation.id)
+            .replaceWidget(fieldType, apiId, newKey, { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type })
+          
+            close()
         }}
       >
         {(props) => {

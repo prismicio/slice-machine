@@ -25,8 +25,10 @@ const SideBar = ({
   storybookUrl,
 }) => {
   const {
-    isCustomPreview,
-    previewUrl,
+    infos: {
+      isCustomPreview,
+      previewUrl
+    },
     isTouched,
     __status,
   } = Model

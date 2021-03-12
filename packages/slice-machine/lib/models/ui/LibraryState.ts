@@ -1,4 +1,4 @@
-import SliceState from './SliceState'
+import { SliceState } from './SliceState'
 import Store from './Store'
 
 export default interface LibraryState {

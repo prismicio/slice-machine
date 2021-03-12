@@ -43,13 +43,12 @@ const PreviewFields = ({
   }
   const onSaveNewField = ({ id, fieldType }) => {
     const widget = Widgets[fieldType]
-    Model.hydrate(() => variation.add[newFieldData.zone](
-      id,
-      {
+    store
+      .variation(variation.id)
+      .addWidget(newFieldData.zone, id, {
         type: fieldType,
         config: removeKeys(widget.create(id), ['id'])
-      }
-    ))
+      })
     setNewFieldData(null)
   }
 
@@ -57,31 +56,15 @@ const PreviewFields = ({
     if (!result.destination) {
       return
     }
-    Model.reorder(
-      { dispatch: Model.dispatch },
-      variation.id,
-      modelFieldName,
-      result.source.index,
-      result.destination.index
-    )
-
-    // Model.dispatch({
-    //   type: 'reorder',
-    //   payload: {
-    //     id: variation.id,
-    //     modelFieldName,
-    //     source: result.source.index,
-    //     destination: result.destination.index
-    //   }
-    // })
-    // Model.hydrate(() => variation.reorder[modelFieldName](
-    //   result.source.index,
-    //   result.destination.index
-    // ))
+    store
+      .variation(variation.id)
+      .reorderWidget(modelFieldName, result.source.index, result.destination.index)
   }
 
   const onDeleteItem = (key, modelFieldName) => {
-    store.variation(variation.id).removeWidget(modelFieldName, key)
+    store
+      .variation(variation.id)
+      .removeWidget(modelFieldName, key)
   }
 
   const onCancelNewField = () => setNewFieldData(null)
@@ -121,6 +104,7 @@ const PreviewFields = ({
             data={editModalData}
             close={closeEditModal}
             Model={Model}
+            store={store}
             variation={variation}
           />
         ) : null

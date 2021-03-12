@@ -10,7 +10,7 @@ import { defaultSliceId } from '../../../lib/consts'
 
 export default async function handler({ from, sliceName }) {
   const { env } = await getEnv()
-  const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: defaultSliceId })
+  const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, sliceName, variation: defaultSliceId })
 
   const screenshotArgs = { cwd: env.cwd, from, sliceName }
   const { isCustom } = getPathToScreenshot(screenshotArgs)

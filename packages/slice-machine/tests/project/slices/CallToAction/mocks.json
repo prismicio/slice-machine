@@ -5,13 +5,76 @@
     "docURL": "...",
     "version": "sktwi83ykfdt588n",
     "description": "MySlice Template",
-    "primary": {},
+    "primary": {
+      "title": [
+        {
+          "type": "paragraph",
+          "text": "Laboris duis do minim adipisicing eu.",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "In excepteur labore velit nostrud est. Velit fugiat est id irure aliquip laboris velit. Ex reprehenderit ex tempor.",
+          "spans": []
+        }
+      ]
+    },
     "items": [
       {
-        "fghj": 9030
+        "productTitle": [
+          {
+            "type": "paragraph",
+            "text": "Voluptate incididunt commodo dolor fugiat exercitation nostrud Lorem consectetur adipisicing aliqua occaecat tempor cupidatat.",
+            "spans": []
+          }
+        ],
+        "productImage": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1537498425277-c283d32ef9db?w=900&h=500&fit=crop"
+        }
       },
       {
-        "fghj": 9232
+        "productTitle": [
+          {
+            "type": "paragraph",
+            "text": "Culpa minim irure in exercitation consequat magna occaecat quis sunt incididunt. Consectetur laboris non do elit culpa ea dolore aute ad fugiat incididunt.",
+            "spans": []
+          }
+        ],
+        "productImage": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1576662712957-9c79ae1280f8?w=900&h=500&fit=crop"
+        }
+      },
+      {
+        "productTitle": [
+          {
+            "type": "paragraph",
+            "text": "Enim laborum incididunt minim exercitation. Commodo do nostrud ex sit et. Culpa mollit voluptate minim laboris Lorem tempor qui.",
+            "spans": []
+          }
+        ],
+        "productImage": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88?w=900&h=500&fit=crop"
+        }
       }
     ],
     "slice_type": "call_to_action"

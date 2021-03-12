@@ -17,10 +17,15 @@ export interface ComponentInfo {
   isCustomPreview: boolean
   hasPreview: Boolean
   previewUrl?: string
-  meta: { [propertyKey: string]: any }
+  meta: ComponentMetadata
   mock: { has: boolean, data: any }
 }
 
+export interface ComponentMetadata {
+  id: string
+  name?: string
+  description?: string
+}
 export interface Component {
   from: string
   href: string

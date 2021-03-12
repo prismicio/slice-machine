@@ -3,7 +3,7 @@ import { Variation, AsObject, AsArray } from '../common/Variation'
 import { ComponentInfo } from '../common/Component'
 import { LibStatus } from '../common/Library'
 
-export default interface SliceState {
+export interface SliceState {
   jsonModel: Slice<AsObject>
 
   from: string
@@ -23,4 +23,21 @@ export default interface SliceState {
 
   isTouched?: boolean
   __status?: LibStatus
+}
+
+export const SliceState = {
+
+  updateVariation(state: SliceState, variationId: string) {
+    return (mutate: (v: Variation<AsArray>) => Variation<AsArray>): SliceState => {
+      const variations = state.variations.map(v => {
+        if(v.id === variationId) return mutate(v)
+        else return v
+      })
+
+      return {
+        ...state,
+        variations
+      }
+    }
+  }
 }
