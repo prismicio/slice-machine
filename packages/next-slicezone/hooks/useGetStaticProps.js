@@ -8,6 +8,7 @@ export const useGetStaticProps = ({
   body = 'body',
   type = 'page',
   queryType = 'repeat',
+  paramsForGetStaticProps = {},
 }) => {
   const apiParams = params || { lang }
 
@@ -32,7 +33,8 @@ export const useGetStaticProps = ({
           ...doc,
           error: null,
           slices: doc ? doc.data[body] : [],
-        }
+        },
+        ...paramsForGetStaticProps,
       }
 
     } catch(e) {
@@ -46,7 +48,8 @@ export const useGetStaticProps = ({
           uid: resolvedUid,
           slices: [],
           // registry: null
-        }
+        },
+        ...paramsForGetStaticProps,
       }
     }
   }
