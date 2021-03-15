@@ -29,7 +29,7 @@ const Header = ({ Model }) => {
         }}>
           <Flex sx={{ justifyContent: 'space-between'}}>
             <Box as="h2" sx={{ pb:3}}>
-              {Model.sliceName}
+              {Model.infos.sliceName}
             </Box>
             {/* <Box>
               <Button onClick={() => setShowMeta(true)} sx={{ height: 'fit-content', fontSize: 2 }}>MetaData</Button>
