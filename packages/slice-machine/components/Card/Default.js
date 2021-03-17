@@ -3,7 +3,7 @@ import Card from './'
 
 const DefaultCard = ({
   children,
-  FooterContent,
+  FooterContent = null,
   HeaderContent,
   close,
   sx = {},

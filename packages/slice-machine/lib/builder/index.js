@@ -29,7 +29,7 @@ const createStorybookUrls = (storybookBaseUrl, sliceName, variation = 'default-s
 
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
-  const { Model, store } = useContext(SliceContext)
+  const { Model, store, variation } = useContext(SliceContext)
   const { env: { storybook: storybookBaseUrl }, warnings } = useContext(ConfigContext)
   const {
     infos: {
@@ -55,8 +55,6 @@ const Builder = ({ openPanel }) => {
     done: false,
     error: null,
   })
-
-  const variation = variations[0]
 
   const { storybookUrl } = createStorybookUrls(storybookBaseUrl, sliceName, variation.id)
 
@@ -101,7 +99,7 @@ const Builder = ({ openPanel }) => {
   const onToggleHints = () => setShowHints(!showHints);
   return (
     <Box>
-      <Header Model={Model} />
+      <Header Model={Model} store={store} variation={variation} />
 
       <Success
         data={data}

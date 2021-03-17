@@ -1,5 +1,7 @@
 import Builder from 'lib/builder'
 
-const SliceEditor = ({ openPanel }) => <Builder openPanel={openPanel} />
+const SliceEditor = ({ openPanel }) => {
+  return <Builder openPanel={openPanel} />
+}
 
 export default SliceEditor

@@ -5,4 +5,5 @@ export enum ActionType {
   GenerateScreenShot = 'generate-screenshot',
   UpdateMetadata = 'update-metadata',
   UpdateMockConfig = 'update-mock-config',
+  CopyVariation = 'copy-variation',
 }

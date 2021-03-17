@@ -1,4 +1,5 @@
 import { Widget } from './widgets'
+import { pascalize } from 'sm-commons/utils/str'
 
 export enum WidgetsArea {
   Primary = 'primary',
@@ -22,6 +23,24 @@ export type AsArray = ReadonlyArray<{key: string, value: Widget}>
 export type AsObject = { [key: string]: Widget }
 
 export const Variation = {
+  generateId(input: string): string {
+    input = input.replace(/^\s+|\s+$/g, ''); // trim
+    input = input.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+    var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+    for (var i=0, l=from.length ; i<l ; i++) {
+      input = input.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+  
+    input = input.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+      .replace(/\s+/g, '-') // collapse whitespace and replace by -
+      .replace(/-+/g, '-'); // collapse dashes
+  
+    return pascalize(input);
+  },
+
   toObject(variation: Variation<AsArray>): Variation<AsObject> {
     return {
       ...variation,
@@ -55,15 +74,7 @@ export const Variation = {
     }
   },
 
-  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget): Variation<AsArray> {
-    console.log("replace widget variation")
-    console.log({ previousKey, newKey, value, 'delete': this.deleteWidget(variation, widgetsArea, previousKey), 'add': this.addWidget(
-      this.deleteWidget(variation, widgetsArea, previousKey),
-      widgetsArea,
-      newKey,
-      value
-    )})
-    
+  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget): Variation<AsArray> { 
     return this.addWidget(
       this.deleteWidget(variation, widgetsArea, previousKey),
       widgetsArea,
@@ -83,6 +94,14 @@ export const Variation = {
     return {
       ...variation,
       [widgetsArea]: variation[widgetsArea]?.filter(({ key }) => widgetKey !== key)
+    }
+  },
+
+  copyValue<T extends AsArray | AsObject>(variation: Variation<T>, key: string, name: string): Variation<T> {
+    return {
+      ...variation,
+      id: key,
+      name
     }
   }
 }

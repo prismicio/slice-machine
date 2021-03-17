@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { Variation } from '../../../lib/models/common/Variation'
+import { AsArray, Variation } from '../../../lib/models/common/Variation'
 import { SliceState } from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
 import { ComponentMetadata } from '../../../lib/models/common/Component'
@@ -43,6 +43,14 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         infos: {
           ...prevState.infos,
           ...(action.payload as ComponentMetadata)
+        }
+      }
+      case SliceActions.CopyVariation: {
+        console.log("run the copy")
+        const { key, name, copied } = action.payload as { key: string, name: string, copied: Variation<AsArray> }
+        return {
+          ...prevState,
+          variations: prevState.variations.concat([Variation.copyValue(copied, key, name)])
         }
       }
 

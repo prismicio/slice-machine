@@ -8,5 +8,6 @@ declare module 'sm-commons/methods/lib' {
   };
 }
 declare module 'sm-commons/utils/str' {
-  export function pascalize(input: string): string
+  export function pascalize(str: string): string
+  export function slugify(str: string): string
 }

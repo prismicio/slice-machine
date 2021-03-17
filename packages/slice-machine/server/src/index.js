@@ -36,8 +36,9 @@ app.use('/changelog', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, 'changelog.html'));
 })
 
-app.use('/:lib/:sliceName', async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, '[lib]/[sliceName].html'));
+app.use('/:lib/:sliceName/:variation', async function sliceRoute(_, res) {
+  console.log('hello')
+  return res.sendFile(path.join(out, '[lib]/[sliceName]/[variation].html'));
 })
 
 const port = process.env.PORT || 9000

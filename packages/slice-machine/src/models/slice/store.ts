@@ -1,6 +1,6 @@
 
 import { Widget } from 'lib/models/common/widgets';
-import { WidgetsArea } from 'lib/models/common/Variation';
+import { Variation, AsArray, WidgetsArea } from 'lib/models/common/Variation';
 import { ComponentMetadata } from 'lib/models/common/Component';
 import {
   ActionType as VariationActions,
@@ -26,6 +26,7 @@ export default class SliceStore implements Store {
   generateScreenShot = generateScreenShot(this.dispatch)
   generateCustomScreenShot = generateCustomScreenShot(this.dispatch)
   updateMetadata = (value: ComponentMetadata) => this.dispatch({ type: SliceActions.UpdateMetadata, payload: value })
+  copyVariation = (key: string, name: string, copied: Variation<AsArray>) => this.dispatch({ type: SliceActions.CopyVariation, payload: { key, name, copied } })
 
   variation = (variationId: string) => {
     return {
@@ -33,7 +34,6 @@ export default class SliceStore implements Store {
         this.dispatch({ type: VariationActions.AddWidget, payload: { variationId, widgetsArea, key, value } }) 
       },
       replaceWidget: (widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget) => {
-        console.log('replace widget store')
         this.dispatch({ type: VariationActions.ReplaceWidget, payload: { variationId, widgetsArea, previousKey, newKey, value } }) 
       },
       reorderWidget: (widgetsArea: WidgetsArea, start: number, end: number) => {

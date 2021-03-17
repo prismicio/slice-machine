@@ -3,11 +3,8 @@ import Link from 'next/link'
 import { Box } from 'theme-ui'
 import Card from './Card'
 import LibraryState from 'lib/models/ui/LibraryState'
-
-const editLinkProps = (href, sliceName) => ({
-  href: '/[lib]/[sliceName]',
-  as: `/${href}/${sliceName}`
-})
+import { SliceState } from 'lib/models/ui/SliceState'
+import * as Links from 'lib/builder/links'
 
 export default ({ libraries }) => (
   <Fragment>
@@ -35,11 +32,15 @@ export default ({ libraries }) => (
             }}
           >
             {
-              lib.components.map(([slice]) => (
-                <Link key={`${slice.from}-${slice.jsonModel.id}`} {...editLinkProps(slice.href, slice.jsonModel.name)} passHref>
-                  <Card {...slice} />
-                </Link>
-              ))
+              lib.components.map(([slice]) => {
+                const variationId = SliceState.variation(slice).id
+                const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
+                return (
+                  <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
+                    <Card {...slice} />
+                  </Link>
+                )
+              })
             }
           </Box>
         </div>

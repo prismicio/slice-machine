@@ -9,11 +9,12 @@ import { reducer } from './reducer'
 import { SliceState } from '../../../lib/models/ui/SliceState'
 import { ComponentWithLibStatus } from '../../../lib/models/common/Library'
 import { Slice } from '../../../lib/models/common/Slice'
-import { AsObject } from '../../../lib/models/common/Variation'
+import { Variation, AsArray, AsObject } from '../../../lib/models/common/Variation'
 
 type ContextProps = {
   Model: ComponentWithLibStatus
   store: SliceStore
+  variation: Variation<AsArray>
 }
 export const SliceContext = React.createContext<Partial<ContextProps>>({})
 
@@ -43,10 +44,10 @@ export function useModelReducer({ slice, remoteSlice, mockConfig }: {slice: Comp
   return [state, store]
 }
 
-export default function SliceProvider({ children, value }: { children: any, value: any}) {
+export default function SliceProvider({ children, value, variation }: { children: any, value: any, variation: Variation<AsArray>}) {
   const [Model, store] = value
   return (
-    <SliceContext.Provider value={{ Model, store }}>
+    <SliceContext.Provider value={{ Model, store, variation }}>
       { typeof children === 'function' ? children(value) : children }
     </SliceContext.Provider>
   )
@@ -77,8 +78,33 @@ export const SliceHandler = ({ children }: { children: any }) => {
     return null
   }
 
+  const variationParam: string | undefined = (() => {
+    const l = router.query.variation
+    if(l instanceof Array) return l[0]
+    else return l
+  })() 
+  const variation = (() => {
+    if(variationParam) {
+      const maybeVariation = SliceState.variation(slice[0], variationParam)
+      if(!maybeVariation) return SliceState.variation(slice[0])
+      else return maybeVariation
+    } else {
+      return SliceState.variation(slice[0])
+    }
+  })()
+  if(!variation) {
+    router.replace('/')
+    return null
+  }
+
+  // variation not in the URL but a default variation was found
+  if(!variationParam) {
+    console.log({"VariationNotFound": variationParam})
+    router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`)
+  }
+
   return (
-    <SliceProvider value={slice}>
+    <SliceProvider value={slice} variation={variation}>
       { children }
     </SliceProvider>
   )

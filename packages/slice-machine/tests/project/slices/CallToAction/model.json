@@ -49,6 +49,112 @@
           }
         }
       }
+    },
+    {
+      "id": "TestId",
+      "name": "test id",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "testnumb": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {
+        "productTitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "productImage": {
+          "type": "Image",
+          "config": {
+            "label": "",
+            "constraint": {},
+            "thumbnails": []
+          }
+        }
+      }
+    },
+    {
+      "id": "Mysuperid",
+      "name": "My Super Component",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "testnumb": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {
+        "productTitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "productImage": {
+          "type": "Image",
+          "config": {
+            "label": "",
+            "constraint": {},
+            "thumbnails": []
+          }
+        }
+      }
     }
   ]
 }

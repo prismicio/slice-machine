@@ -4,6 +4,7 @@ const Theme = () => ({
   colors: {
     text: '#1D2230',
     textClear: '#667587',
+    hoverBackground: '#f2f2f2',
     background: '#F5F6F9',
     backgroundClear: '#FFF',
     primary: '#5163BA',
@@ -34,6 +35,7 @@ const Theme = () => ({
       dark: {
         text: "#fff",
         textClear: "#6E707B",
+        hoverBackground: '#202020',
         background: "#202022",
         backgroundClear: '#28282C',
         primary: '#4E54D7',
