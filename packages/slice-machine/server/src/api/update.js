@@ -57,7 +57,8 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
     const screenshotArgs = {
       cwd: env.cwd,
       from,
-      sliceName
+      sliceName,
+      variationName: model.variations[0].id
     }
     const pathToFile = createPathToScreenshot(screenshotArgs)
     console.log('[update]: generating screenshot preview')

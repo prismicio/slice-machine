@@ -4,6 +4,8 @@ import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 import { pascalize } from 'sm-commons/utils/str'
 
 import { getPathToScreenshot } from './screenshot'
+import { AsObject } from '../../lib/models/common/Variation'
+import { Slice } from '../../lib/models/common/Slice'
 
 function getMeta(modelData: any): ComponentMetadata {
   return {
@@ -50,11 +52,12 @@ function has(fullPath: string): boolean {
   return fs.existsSync(fullPath)
 }
 
-function fromJsonFile(slicePath: string, filePath: string, fileKey: string): { [fileKey: string]: { has: boolean, data: any }} {
+function fromJsonFile(slicePath: string, filePath: string): { has: boolean, data: any } {
   const fullPath = path.join(slicePath, filePath)
   const hasFile = has(fullPath)
   return {
-    [fileKey]: { has: hasFile, data: hasFile ? JSON.parse(fs.readFileSync(fullPath, 'utf-8')) : {} }
+    has: hasFile,
+    data: hasFile ? JSON.parse(fs.readFileSync(fullPath, 'utf-8')) : {}
   }
 }
 
@@ -82,10 +85,23 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
   if(!fileName || !extension) return
 
-  const model =  fromJsonFile(slicePath, 'model.json', 'model').model
-
-  const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName })
-  const hasPreview = !!pathToScreenshotFile
+  const model: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
+  const previewUrls = model.data.variations
+    .map(v => {
+      const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName, variationName: v.id })
+      const hasPreview = !!pathToScreenshotFile
+      return hasPreview && pathToScreenshotFile
+      ? { [v.id]: {
+          hasPreview,
+          isCustomPreview,
+          url: hasPreview && pathToScreenshotFile ? `${baseUrl}/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : undefined
+        }}
+      : undefined
+    })
+    .reduce((acc, variationPreview) => {
+      return { ...acc, ...variationPreview }
+    }, {})
+    console.log(previewUrls)
 
   const nameConflict = sliceName !== pascalize(model.data.id)
     ? { sliceName, id: model.data.id }
@@ -98,10 +114,8 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
     extension,
     model: model.data,
     meta: getMeta(model.data),
-    mock: fromJsonFile(slicePath, 'mock.json', 'mock').mock.data,
+    mock: fromJsonFile(slicePath, 'mock.json').data,
     nameConflict,
-    isCustomPreview,
-    hasPreview,
-    previewUrl: hasPreview && pathToScreenshotFile ? `${baseUrl}/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : undefined
+    previewUrls
   }
 }

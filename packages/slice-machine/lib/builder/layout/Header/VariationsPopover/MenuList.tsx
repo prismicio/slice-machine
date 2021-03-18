@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { Variation, AsArray } from 'models/common/Variation'
 import { Box, Flex, Text } from 'theme-ui'

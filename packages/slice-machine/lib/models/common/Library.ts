@@ -1,13 +1,9 @@
 import equal from 'fast-deep-equal'
 import { pascalize } from 'sm-commons/utils/str'
 
-import {
-  slice as sliceSchema,
-} from '../../../lib/schemas'
-
 import { Slice } from './Slice'
 import { AsObject } from './Variation'
-import { Component } from './Component'
+import { Component, ComponentInfo } from './Component'
 
 
 export enum LibStatus {
@@ -28,12 +24,13 @@ export const Library = {
     const components = lib.components.map((component: Component) => {
       const sliceFound = remoteSlices.find(slice => component.infos.sliceName === pascalize(slice.id))
       const __status = (() => {
-        if (!component.infos.hasPreview) {
+        const hasPreviewsMissing = ComponentInfo.hasPreviewsMissing(component.infos)
+        if (hasPreviewsMissing) {
           return LibStatus.PreviewMissing
         }
-        try {
-          sliceSchema.validateSync(component)
-        } catch (e) { LibStatus.Invalid }
+        // try {
+        //   sliceSchema.validateSync(component)
+        // } catch (e) { LibStatus.Invalid }
         
         if (!sliceFound) {
           return LibStatus.NewSlice

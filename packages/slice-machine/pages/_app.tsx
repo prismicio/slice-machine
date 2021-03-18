@@ -3,6 +3,7 @@ import useSwr from 'swr'
 import App, { AppContext } from 'next/app'
 
 import theme from 'src/theme'
+// @ts-ignore
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import LibrariesProvider from 'src/models/libraries/context'
@@ -50,7 +51,6 @@ const RenderStates = {
 
 function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Element, pageProps: any }) {
   const { data }: { data?: ServerState } = useSwr('/api/state', fetcher)
-  console.log(data)
   const [sliceCount, setSliceCount] = useState<number | null>(null)
   const [drawerState, setDrawerState] = useState<{ open: boolean, priority?: any}>({ open: false })
   const [state, setRenderer] = useState<{

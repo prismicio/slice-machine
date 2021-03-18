@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field } from 'formik'
-import * as yup from 'yup'
 import Modal from 'react-modal'
 import Card from '../../../../components/Card/Default'
 import Select from 'react-select'
@@ -25,7 +24,6 @@ const VariationModal: React.FunctionComponent<{
     initialVariation: Variation<AsArray>
     variations: ReadonlyArray<Variation<AsArray>>
   }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
-    console.log({'RERENDER MODAL': initialVariation})
   
   const [errors, setErrors] = useState<{ [fieldKey: string]: string }>({})
   const [generatedId, setGeneratedId] = useState<string>('')

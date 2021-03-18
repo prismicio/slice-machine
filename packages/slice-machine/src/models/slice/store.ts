@@ -6,14 +6,14 @@ import {
   ActionType as VariationActions,
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
+  generateCustomScreenShot,
+  generateScreenShot,
 } from './variation/actions';
 
 import {
   ActionType as SliceActions,
   saveSlice,
   pushSlice,
-  generateCustomScreenShot,
-  generateScreenShot,
 } from './actions';
 import Store from 'lib/models/ui/Store';
 
@@ -23,13 +23,13 @@ export default class SliceStore implements Store {
   reset = () => { this.dispatch({ type: SliceActions.Reset }) }
   save = saveSlice(this.dispatch)
   push = pushSlice(this.dispatch)
-  generateScreenShot = generateScreenShot(this.dispatch)
-  generateCustomScreenShot = generateCustomScreenShot(this.dispatch)
   updateMetadata = (value: ComponentMetadata) => this.dispatch({ type: SliceActions.UpdateMetadata, payload: value })
   copyVariation = (key: string, name: string, copied: Variation<AsArray>) => this.dispatch({ type: SliceActions.CopyVariation, payload: { key, name, copied } })
-
+  
   variation = (variationId: string) => {
     return {
+      generateScreenShot: generateScreenShot(this.dispatch)(variationId),
+      generateCustomScreenShot: generateCustomScreenShot(this.dispatch)(variationId),
       addWidget: (widgetsArea: WidgetsArea, key: string, value: Widget) => {
         this.dispatch({ type: VariationActions.AddWidget, payload: { variationId, widgetsArea, key, value } }) 
       },

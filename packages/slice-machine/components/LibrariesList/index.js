@@ -33,11 +33,12 @@ export default ({ libraries }) => (
           >
             {
               lib.components.map(([slice]) => {
-                const variationId = SliceState.variation(slice).id
+                const defaultVariation = SliceState.variation(slice)
+                const variationId = defaultVariation.id
                 const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
                 return (
                   <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
-                    <Card {...slice} />
+                    <Card {...slice} defaultVariation={defaultVariation} />
                   </Link>
                 )
               })

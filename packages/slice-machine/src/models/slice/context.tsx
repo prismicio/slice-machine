@@ -34,7 +34,7 @@ export function useModelReducer({ slice, remoteSlice, mockConfig }: {slice: Comp
     mockConfig,
     initialMockConfig: mockConfig,
     remoteVariations: remoteSlice ? Slice.toArray(remoteSlice).variations : [],
-    initialPreviewUrl: rest.infos.previewUrl,
+    initialPreviewUrls: rest.infos.previewUrls,
     initialVariations: variations
   }
   const [state, dispatch] = useReducer(reducer, initialState)

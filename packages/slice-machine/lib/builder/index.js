@@ -34,7 +34,7 @@ const Builder = ({ openPanel }) => {
   const {
     infos: {
       sliceName,
-      previewUrl,
+      previewUrls,
     },
     jsonModel,
     variations,
@@ -111,14 +111,15 @@ const Builder = ({ openPanel }) => {
         SideBar={<SideBar
             data={data}
             Model={Model}
+            variation={variation}
             onPush={ () => store.push(Model, setData) }
             onSave={ () => store.save(Model, setData) }
             warnings={warnings}
             openPanel={openPanel}
-            previewUrl={previewUrl}
+            previewUrl={previewUrls[variation.id]}
             storybookUrl={storybookUrl}
-            onScreenshot={() => store.generateScreenShot(Model, setData)}
-            onHandleFile={(file) => store.generateCustomScreenShot(Model, setData, file)}
+            onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, variation.name, setData) }
+            onHandleFile={(file) => store.generateCustomScreenShot(Model.from, Model.infos.sliceName, variation.name, setData, file)}
             imageLoading={data.imageLoading}
           />}
       >

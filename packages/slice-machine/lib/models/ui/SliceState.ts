@@ -1,6 +1,6 @@
 import { Slice } from '../common/Slice'
 import { Variation, AsObject, AsArray } from '../common/Variation'
-import { ComponentInfo } from '../common/Component'
+import { ComponentInfo, Preview } from '../common/Component'
 import { LibStatus } from '../common/Library'
 
 export interface SliceState {
@@ -19,7 +19,9 @@ export interface SliceState {
   initialVariations: ReadonlyArray<Variation<AsArray>>
   variations: ReadonlyArray<Variation<AsArray>>
   
-  initialPreviewUrl?: string
+  initialPreviewUrls?: {
+    [variationId: string]: Preview
+  }
 
   isTouched?: boolean
   __status?: LibStatus

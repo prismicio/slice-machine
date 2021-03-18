@@ -14,6 +14,7 @@ const MemoizedImagePreview = memo(ImagePreview)
 
 const SideBar = ({
   Model,
+  variation,
   data,
   onSave,
   onPush,
@@ -24,14 +25,16 @@ const SideBar = ({
   onHandleFile,
   storybookUrl,
 }) => {
+  console.log(Model.infos.previewUrls)
+  console.log(variation)
   const {
     infos: {
-      isCustomPreview,
-      previewUrl
+      previewUrls
     },
     isTouched,
     __status,
   } = Model
+
 
   const storybookError = warnings.find(w => storybookWarningStates.includes(w.key))
 
@@ -58,7 +61,7 @@ const SideBar = ({
         )}
       >
         <MemoizedImagePreview
-          src={previewUrl}
+          src={previewUrls[variation.id] && previewUrls[variation.id].url}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}

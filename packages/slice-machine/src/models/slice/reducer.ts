@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal'
 import { AsArray, Variation } from '../../../lib/models/common/Variation'
 import { SliceState } from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
-import { ComponentMetadata } from '../../../lib/models/common/Component'
+import { ComponentMetadata, Preview } from '../../../lib/models/common/Component'
 import { Widget } from '../../../lib/models/common/widgets'
 
 import {
@@ -18,13 +18,6 @@ import { LibStatus } from 'lib/models/common/Library';
 export function reducer(prevState: SliceState, action: { type: string, payload?: unknown }): SliceState {
   const result = ((): SliceState => {
     switch(action.type) {
-      case SliceActions.GenerateScreenShot: return {
-        ...prevState,
-        infos: {
-          ...prevState.infos,
-          previewUrl: (action.payload as string)
-        }
-      }
       case SliceActions.Reset: return {
         ...prevState,
         variations: prevState.initialVariations
@@ -35,7 +28,7 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
       }
       case SliceActions.Push: return {
         ...prevState,
-        initialPreviewUrl: prevState.infos.previewUrl,
+        initialPreviewUrls: prevState.infos.previewUrls,
         remoteVariations: prevState.variations,
       }
       case SliceActions.UpdateMetadata: return {
@@ -46,14 +39,26 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         }
       }
       case SliceActions.CopyVariation: {
-        console.log("run the copy")
         const { key, name, copied } = action.payload as { key: string, name: string, copied: Variation<AsArray> }
         return {
           ...prevState,
           variations: prevState.variations.concat([Variation.copyValue(copied, key, name)])
         }
       }
-
+      
+      case VariationActions.GenerateScreenShot: {
+        const { variationId, preview } = action.payload as { variationId: string, preview: Preview }
+        return {
+          ...prevState,
+          infos: {
+            ...prevState.infos,
+            previewUrls: {
+              ...prevState.infos.previewUrls,
+              [variationId]: preview
+            }
+          }
+        }
+      }
       case VariationActions.AddWidget: {
         const { variationId, widgetsArea, key, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, key: string, value: Widget }
         return SliceState.updateVariation(prevState, variationId)(v => Variation.addWidget(v, widgetsArea, key, value))
@@ -89,7 +94,7 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
     ...result,
     isTouched: !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig),
     __status: (() => {
-      return result.infos.previewUrl !== result.initialPreviewUrl
+      return result.infos.previewUrls !== result.initialPreviewUrls
       || !equal(result.remoteVariations, result.initialVariations)
       ? LibStatus.Modified
       : LibStatus.Synced

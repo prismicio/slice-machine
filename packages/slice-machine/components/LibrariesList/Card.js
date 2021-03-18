@@ -36,6 +36,7 @@ const Card = forwardRef(({
   __status,
   infos,
   jsonModel,
+  defaultVariation,
   ...props
 }, ref) => {
   return (
@@ -76,7 +77,7 @@ const Card = forwardRef(({
             backgroundSize: 'contain',
             backgroundPosition: '50%',
             backgroundRepeat: 'no-repeat',
-            backgroundImage: "url(" + `${infos.previewUrl}` + ")",
+            backgroundImage: "url(" + `${infos.previewUrls[defaultVariation.id]}` + ")",
           }}
         >
         </Box>

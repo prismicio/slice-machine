@@ -39,8 +39,9 @@ export const fetchApi = ({
     },
     ...params
   }).then(async (res) => {
+    console.log({res})
     const jsonResponse = await res.json()
-    const { err, reason, warning, json } = jsonResponse
+    const { err, reason, warning } = jsonResponse
     if (res.status > 209) {
       return setData({
         loading: false,
@@ -58,6 +59,6 @@ export const fetchApi = ({
       message: warning || successMessage || reason,
       ...data.onResponse ? data.onResponse : []
     })
-    onSuccess(json)
+    onSuccess(jsonResponse)
   })
 }

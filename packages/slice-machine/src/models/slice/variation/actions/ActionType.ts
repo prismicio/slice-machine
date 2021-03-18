@@ -1,4 +1,5 @@
 export enum ActionType {
+  GenerateScreenShot = 'generate-screenshot',
   AddWidget = 'variation-add-widget',
   ReorderWidget = 'variation-reorder-widget',
   ReplaceWidget = 'variation-replace-widget',

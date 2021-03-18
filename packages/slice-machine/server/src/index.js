@@ -17,7 +17,8 @@ const api = require('./api')
 const app = express()
 app.use(bodyParser.json({ limit: '64mb', extended: true }))
 
-const out = path.join(__dirname, '..', 'out')
+console.log({__dirname})
+const out = path.join(__dirname, '../../..', 'out')
 
 const formDataOptions = {
   uploadDir: os.tmpdir()
