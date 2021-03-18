@@ -14,7 +14,6 @@ export default async function handler({ from, sliceName, variationName }: { from
   const screenshotArgs = { cwd: env.cwd, from, sliceName, variationName }
   const { isCustom } = getPathToScreenshot(screenshotArgs)
   const pathToFile = createPathToScreenshot(screenshotArgs)
-  console.log(screenshotUrl)
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {

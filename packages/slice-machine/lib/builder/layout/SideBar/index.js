@@ -25,8 +25,6 @@ const SideBar = ({
   onHandleFile,
   storybookUrl,
 }) => {
-  console.log(Model.infos.previewUrls)
-  console.log(variation)
   const {
     infos: {
       previewUrls

@@ -101,7 +101,6 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
     .reduce((acc, variationPreview) => {
       return { ...acc, ...variationPreview }
     }, {})
-    console.log(previewUrls)
 
   const nameConflict = sliceName !== pascalize(model.data.id)
     ? { sliceName, id: model.data.id }

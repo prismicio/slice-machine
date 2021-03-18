@@ -4,10 +4,10 @@ import path from 'path'
 import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 import { getEnv } from '../../../lib/env'
 
-export default async function handler(file, { from, sliceName, img }) {
+export default async function handler(file, { from, sliceName, variationName, img }) {
   const { env } = await getEnv()
 
-  const { path: filePath, isCustom } = getPathToScreenshot({ cwd: env.cwd, from, sliceName })
+  const { path: filePath, isCustom } = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationName })
 
   if (isCustom) {
     fs.unlinkSync(filePath)
@@ -17,6 +17,8 @@ export default async function handler(file, { from, sliceName, img }) {
   fs.renameSync(file.path, dest)
 
   return {
-    previewUrl: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(dest)}&uniq=${Math.random()}`
+    isCustomPreview: true,
+    hasPreview: true,
+    url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(dest)}&uniq=${Math.random()}`
   }
 }

@@ -17,7 +17,6 @@ const api = require('./api')
 const app = express()
 app.use(bodyParser.json({ limit: '64mb', extended: true }))
 
-console.log({__dirname})
 const out = path.join(__dirname, '../../..', 'out')
 
 const formDataOptions = {
@@ -38,7 +37,6 @@ app.use('/changelog', async function sliceRoute(_, res) {
 })
 
 app.use('/:lib/:sliceName/:variation', async function sliceRoute(_, res) {
-  console.log('hello')
   return res.sendFile(path.join(out, '[lib]/[sliceName]/[variation].html'));
 })
 

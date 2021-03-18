@@ -119,7 +119,7 @@ const Builder = ({ openPanel }) => {
             previewUrl={previewUrls[variation.id]}
             storybookUrl={storybookUrl}
             onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, variation.name, setData) }
-            onHandleFile={(file) => store.generateCustomScreenShot(Model.from, Model.infos.sliceName, variation.name, setData, file)}
+            onHandleFile={(file) => store.variation(variation.id).generateCustomScreenShot(Model.from, Model.infos.sliceName, variation.name, setData, file)}
             imageLoading={data.imageLoading}
           />}
       >

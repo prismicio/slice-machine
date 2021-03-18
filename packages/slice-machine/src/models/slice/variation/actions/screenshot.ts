@@ -25,7 +25,7 @@ export function generateCustomScreenShot(dispatch: ({type, payload}: { type: str
   return (variationId: string) => {
     return async (libFrom: string, sliceName: string, variationName: string, setData: (data: object) => void, file: Blob) => {
       const form = new FormData()
-      Object.entries({ sliceName: sliceName, variation: variationName, from: libFrom })
+      Object.entries({ sliceName, variationName, from: libFrom })
         .forEach(([key, value]) => form.append(key, value))
 
       form.append('file', file)
@@ -41,8 +41,6 @@ export function generateCustomScreenShot(dispatch: ({type, payload}: { type: str
         data: { onLoad: { imageLoading: true }, onResponse: { imageLoading: false } },
         successMessage: 'New screenshot added!',
         onSuccess(preview: Preview) {
-          console.log({ "----------------": preview})
-
           if(preview.hasPreview) {
             dispatch({ type: ActionType.GenerateScreenShot, payload: { variationId, preview } })
           }

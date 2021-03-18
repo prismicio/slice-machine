@@ -39,7 +39,6 @@ export const fetchApi = ({
     },
     ...params
   }).then(async (res) => {
-    console.log({res})
     const jsonResponse = await res.json()
     const { err, reason, warning } = jsonResponse
     if (res.status > 209) {

@@ -5,7 +5,9 @@ module.exports = {
       "root": ["./"],
       "alias": {
         "src": "./src",
-        "components": "./components"
+        "components": "./components",
+        "lib": "./lib",
+        "models": "./lib/models"
       }
     }]
   ]

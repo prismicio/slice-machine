@@ -88,7 +88,6 @@ const VariationModal: React.FunctionComponent<{
           onSubmit={async () => {
             const data = { id: generatedId, name, origin }
             const errors = validateForm(data)
-            console.log({ errors })
             if(errors) setErrors(errors)
             else {
               const copiedVariation = variations.find(v => v.id === origin.value)

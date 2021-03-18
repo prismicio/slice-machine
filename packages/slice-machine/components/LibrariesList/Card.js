@@ -39,6 +39,7 @@ const Card = forwardRef(({
   defaultVariation,
   ...props
 }, ref) => {
+  const preview = infos.previewUrls[defaultVariation.id]
   return (
     <Themecard
       {...props}
@@ -77,7 +78,7 @@ const Card = forwardRef(({
             backgroundSize: 'contain',
             backgroundPosition: '50%',
             backgroundRepeat: 'no-repeat',
-            backgroundImage: "url(" + `${infos.previewUrls[defaultVariation.id]}` + ")",
+            backgroundImage: "url(" + `${preview && preview.url}` + ")",
           }}
         >
         </Box>
