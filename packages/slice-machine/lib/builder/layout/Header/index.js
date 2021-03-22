@@ -50,7 +50,7 @@ const Header = ({ Model, store, variation }) => {
                   { Model.variations.length > 1 && (
                     <Box sx={{ p: 2 }}>
                       <VariationPopover
-                        defaultVariation={variation}
+                        defaultValue={variation}
                         variations={Model.variations}
                         onChange={(v) => router.push(...Links.variation(Model.href, Model.jsonModel.name, v.id).all)} />
                     </Box>
@@ -67,7 +67,6 @@ const Header = ({ Model, store, variation }) => {
               onClose={() => setShowVariationModal(false)}
               onSubmit={(id, name, copiedVariation) => {
                 store.copyVariation(id, name, copiedVariation)
-                store.save(Model)
                 router.push(...Links.variation(Model.from, Model.infos.sliceName, id).all)
               }}
               initialVariation={variation}

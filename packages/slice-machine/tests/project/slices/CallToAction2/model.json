@@ -30,6 +30,42 @@
           }
         }
       }
+    },
+    {
+      "id": "Testvar",
+      "name": "testvar",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "fgdfg": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "fgdfg",
+            "placeholder": ""
+          }
+        },
+        "hello": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "fghj",
+            "placeholder": ""
+          }
+        }
+      }
     }
   ]
 }

@@ -6,23 +6,49 @@
     "version": "sktwi83ykfdt588n",
     "description": "MySlice Template",
     "primary": {
-      "fgdfg": 9838
+      "fgdfg": 1306
     },
     "items": [
       {
-        "fghj": 6388
+        "fghj": 693
       },
       {
-        "fghj": 1624
+        "fghj": 1319
       },
       {
-        "fghj": 991
+        "fghj": 7704
       },
       {
-        "fghj": 2221
+        "fghj": 3689
+      }
+    ],
+    "slice_type": "call_to_action2"
+  },
+  {
+    "id": "Testvar",
+    "name": "testvar",
+    "docURL": "...",
+    "version": "sktwi83ykfdt588n",
+    "description": "MySlice Template",
+    "primary": {
+      "fgdfg": 1961,
+      "hello": [
+        {
+          "type": "paragraph",
+          "text": "Fugiat cillum ea proident consectetur. Ea ex labore ut.",
+          "spans": []
+        }
+      ]
+    },
+    "items": [
+      {
+        "fghj": 580
       },
       {
-        "fghj": 5155
+        "fghj": 5812
+      },
+      {
+        "fghj": 8146
       }
     ],
     "slice_type": "call_to_action2"

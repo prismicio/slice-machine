@@ -49,6 +49,7 @@ const Builder = ({ openPanel }) => {
   } = Model
 
   const isMounted = useIsMounted()
+  // we need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState({
     imageLoading: false,
     loading: false,
@@ -118,8 +119,8 @@ const Builder = ({ openPanel }) => {
             openPanel={openPanel}
             previewUrl={previewUrls[variation.id]}
             storybookUrl={storybookUrl}
-            onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, variation.name, setData) }
-            onHandleFile={(file) => store.variation(variation.id).generateCustomScreenShot(Model.from, Model.infos.sliceName, variation.name, setData, file)}
+            onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, setData) }
+            onHandleFile={(file) => store.variation(variation.id).generateCustomScreenShot(Model.from, Model.infos.sliceName, setData, file)}
             imageLoading={data.imageLoading}
           />}
       >

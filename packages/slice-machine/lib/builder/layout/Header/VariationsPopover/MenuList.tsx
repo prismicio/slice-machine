@@ -8,7 +8,6 @@ const MenuList: React.FunctionComponent<{
   variations: ReadonlyArray<Variation<AsArray>>,
   onChange: (selected: Variation<AsArray>) => void
 }> = ({ defaultValue, variations, onChange }) => {
-
   return (
     <Box
         sx={{
@@ -34,7 +33,7 @@ const MenuList: React.FunctionComponent<{
       </Text>
       <Flex sx={{p: 3, flexDirection: 'column'}}>
         {variations.map(v => {
-          return <MenuItem value={v} isActive={v.id === defaultValue.id} onClick={onChange} />
+          return <MenuItem key={v.id} value={v} isActive={v.id === defaultValue.id} onClick={onChange} />
         })}
       </Flex>
     </Box>

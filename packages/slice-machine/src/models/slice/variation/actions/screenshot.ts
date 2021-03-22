@@ -5,9 +5,9 @@ import { Preview } from '../../../../../lib/models/common/Component'
 
 export function generateScreenShot(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (variationId: string) => {
-    return async (libFrom: string, sliceName: string, variationName: string, setData: (data: object) => void) => {
+    return async (libFrom: string, sliceName: string, setData: (data: object) => void) => {
       fetchApi({
-        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}&variationName=${variationName}`,
+        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}&variationId=${variationId}`,
         setData,
         data: { onLoad: { imageLoading: true }, onResponse: { imageLoading: false } },
         successMessage: 'Model & mocks have been generated succesfully!',
@@ -23,9 +23,9 @@ export function generateScreenShot(dispatch: ({type, payload}: { type: string, p
 
 export function generateCustomScreenShot(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (variationId: string) => {
-    return async (libFrom: string, sliceName: string, variationName: string, setData: (data: object) => void, file: Blob) => {
+    return async (libFrom: string, sliceName: string, setData: (data: object) => void, file: Blob) => {
       const form = new FormData()
-      Object.entries({ sliceName, variationName, from: libFrom })
+      Object.entries({ sliceName, variationId, from: libFrom })
         .forEach(([key, value]) => form.append(key, value))
 
       form.append('file', file)

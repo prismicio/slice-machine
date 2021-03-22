@@ -40,6 +40,18 @@ export default class FakeClient {
     return this.mutate()
   }
 
+  images = {
+    createAcl: async () => {
+      return { status: 200, json() { return {} } }
+    },
+    deleteFolder: async () => {
+      return { status: 200 }
+    },
+    post: async () => {
+      return { status: 200 }
+    } 
+  }
+
   isFake() {
     return true;
   }

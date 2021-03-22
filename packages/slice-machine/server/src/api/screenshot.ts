@@ -7,11 +7,11 @@ import { getPathToScreenshot, createPathToScreenshot } from '../../../lib/querie
 
 import { generatePreview } from './common/utils'
 
-export default async function handler({ from, sliceName, variationName }: { from: string, sliceName: string, variationName: string }): Promise<Preview | { err: Error, reason: string }> {
+export default async function handler({ from, sliceName, variationId }: { from: string, sliceName: string, variationId: string }): Promise<Preview | { err: Error, reason: string }> {
   const { env } = await getEnv()
-  const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, sliceName, variationName })
+  const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, sliceName, variationId })
 
-  const screenshotArgs = { cwd: env.cwd, from, sliceName, variationName }
+  const screenshotArgs = { cwd: env.cwd, from, sliceName, variationId }
   const { isCustom } = getPathToScreenshot(screenshotArgs)
   const pathToFile = createPathToScreenshot(screenshotArgs)
   const browser = await puppeteer.launch()

@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/vue';
 import SliceZone from 'vue-slicezone'
 
 mocks.forEach((variation) => {
-  storiesOf(model.name, MyComponent).add(variation.name, () => ({
+  storiesOf(model.name, MyComponent).add(variation.id, () => ({
     components: {
       MyComponent,
       SliceZone

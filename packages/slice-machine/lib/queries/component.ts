@@ -88,7 +88,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const model: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
   const previewUrls = model.data.variations
     .map(v => {
-      const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName, variationName: v.id })
+      const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
       const hasPreview = !!pathToScreenshotFile
       return hasPreview && pathToScreenshotFile
       ? { [v.id]: {

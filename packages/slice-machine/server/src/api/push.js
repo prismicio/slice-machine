@@ -9,6 +9,8 @@ import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 
 import { s3DefaultPrefix } from '../../../lib/consts'
 
+import { purge, upload } from './upload'
+
 const onError = (r, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),
   status: r && r.status ? r.status : 500,
@@ -55,74 +57,45 @@ export default async function handler(query) {
 
   try {
       const jsonModel = JSON.parse(model)
-      const { path: pathToImageFile } = getPathToScreenshot({ cwd: env.cwd, from, sliceName })
-
-      if (!pathToImageFile) {
-        const msg = '[push] Screenshot not found. Please check that file exists in slice folder or in .slicemachine assets'
-        console.log(msg)
-        return {
-          err: new Error(msg),
-          status: 400,
-          message: msg,
+      
+      // if (!pathToImageFile) {
+        //   const msg = '[push] Screenshot not found. Please check that file exists in slice folder or in .slicemachine assets'
+        //   console.log(msg)
+        //   return {
+          //     err: new Error(msg),
+          //     status: 400,
+          //     message: msg,
+          //   }
+          // }
+          
+          const { err } = purge(env, slices, sliceName, onError)
+          if(err) return err
+          
+          const variationIds = jsonModel.variations.map(v => v.id)
+          
+      for(let i = 0; i < variationIds.length; i += 1) {
+        const variationId = variationIds[i]
+        const { path: pathToImageFile } = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationId })
+        const { err, s3ImageUrl } = await upload(env, sliceName, variationId, pathToImageFile, onError)
+        if(err) throw new Error(err.reason)
+  
+        console.log('[push]: pushing slice model to Prismic')
+        const res = await createOrUpdate({
+          slices,
+          sliceName,
+          model: { ...jsonModel, imageUrl: s3ImageUrl },
+          client: env.client
+        })
+        if (res.status > 209) {
+          const message = res.text ? await res.text() : res.status
+          console.error(`[push] Unexpected error returned. Server message: ${message}`)
+          throw new Error(message)
         }
+        console.log('[push] done!')
       }
-
-      if (slices.find(e => e.id === snakelize(sliceName))) {
-        console.log('\n[push]: purging images folder')
-        const deleteRes = await env.client.images.deleteFolder({ sliceName: snakelize(sliceName) })
-        if (deleteRes.status > 209) {
-          const msg = '[push] An error occured while purging slice folder - please contact support'
-          console.error(msg)
-          return onError(deleteRes, msg)
-        }
-      }
-
-
-      console.log('[push]: uploading preview image')
-      const aclResponse = await (await env.client.images.createAcl()).json()
-      const maybeErrorMessage = aclResponse.error || aclResponse.Message || aclResponse.message
-      if (maybeErrorMessage) {
-        const msg = maybeErrorMessage || 'An error occured while creating ACL - please contact support'
-        console.error(msg)
-        console.error(`Full error: ${JSON.stringify(aclResponse)}`)
-        return onError(aclResponse, msg)
-      }
-      const { values: { url, fields }, imgixEndpoint, } = aclResponse
-
-      const filename = path.basename(pathToImageFile)
-      const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(sliceName)}-${uniqid()}/${filename}`
-      const postStatus = await env.client.images.post({
-        url,
-        fields,
-        key,
-        filename,
-        pathToFile: pathToImageFile,
-      })
-
-      const s3ImageUrl = `${imgixEndpoint}/${key}`
-
-      if (postStatus !== 204) {
-        const msg = '[push] An error occured while uploading files - please contact support'
-        console.error(msg)
-        console.error(`Error code: "${postStatus}"`)
-        return onError(null, msg)
-      }
-
-      console.log('[push]: pushing slice model to Prismic')
-      const res = await createOrUpdate({
-        slices,
-        sliceName,
-        model: { ...jsonModel, imageUrl: s3ImageUrl },
-        client: env.client
-      })
-      if (res.status > 209) {
-        const message = res.text ? await res.text() : res.status
-        console.error(`[push] Unexpected error returned. Server message: ${message}`)
-        return onError(res)
-      }
-      console.log('[push] done!')
       return {}
     } catch(e) {
+      console.log(e)
       return onError(e, 'An unexpected error occured while pushing slice')
     }
 }

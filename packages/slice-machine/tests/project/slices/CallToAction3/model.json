@@ -20,23 +20,43 @@
           },
           "type": "StructuredText"
         },
-        "embed": {
-          "type": "Embed",
+        "description": {
+          "type": "StructuredText",
           "config": {
             "label": "",
-            "id": "embed",
-            "placeholder": ""
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         },
-        "llapiId": {
+        "illustration": {
+          "type": "Image",
           "config": {
             "label": "",
-            "placeholder": ""
-          },
-          "type": "Number"
+            "constraint": {},
+            "thumbnails": []
+          }
         }
       },
-      "items": {}
+      "items": {
+        "repeatableTitle": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "AnImageForFun": {
+          "type": "Image",
+          "config": {
+            "label": "",
+            "constraint": {},
+            "thumbnails": []
+          }
+        }
+      }
     }
   ]
 }

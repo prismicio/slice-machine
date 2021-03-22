@@ -1,7 +1,6 @@
 import fs from 'fs'
 import * as yup from 'yup'
 import { DefaultFields } from './forms/defaults'
-import { hyphenate } from 'sm-commons/utils/str'
 import {
   createInitialValues,
   createValidationSchema,
@@ -45,8 +44,8 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
   }
 }
 
-export const createScreenshotUrl = ({ storybook, sliceName, variationName }) => {
-  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${hyphenate(variationName.replace(/\s/g, '-'))}&viewMode=story`
+export const createScreenshotUrl = ({ storybook, sliceName, variationId }) => {
+  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${variationId.toLowerCase()}&viewMode=story`
 }
 
 export const maybeJsonFile = (pathToFile) => {

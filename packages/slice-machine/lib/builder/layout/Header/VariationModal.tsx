@@ -14,8 +14,8 @@ import {
 } from 'theme-ui'
 import { AsArray, Variation } from 'lib/models/common/Variation'
 
-const Required = () => (
-  <Text as="span" sx={{ fontSize: 12, color: 'error', mt: '5px', ml: 2 }}>Required!</Text>
+const Error = ({ msg }: { msg?: string }) => (
+  <Text as="span" sx={{ fontSize: 12, color: 'error', mt: '5px', ml: 2 }}>{msg || 'Error!'}</Text>
 )
 const VariationModal: React.FunctionComponent<{
     isOpen: boolean,
@@ -32,11 +32,12 @@ const VariationModal: React.FunctionComponent<{
   const [origin, setOrigin] = useState<{ value: string, label: string }>({ value: initialVariation.id, label: initialVariation.name})
 
   function validateForm({id, name, origin}: { id?: string, name?: string, origin: { value: string }}) {
-    const idError = !(id && id.length) ? { id: 'ID required!' }: null
-    const nameError = !(name && name.length) ? { name: 'Name required!' }: null
+    const idError = !(id && id.length) ? { id: 'Required!' }: null
+    const existingIdError = variations.find(v => v.id === id) ? { id: 'This id already exists!' } : null
+    const nameError = !(name && name.length) ? { name: 'Required!' }: null
     const originError = !(origin.value.length && variations.find(v => v.id === origin.value)) ? { id: 'Yuu must select an existing variation!' }: null
 
-    return { ...idError, ...nameError, ...originError }
+    return { ...idError, ...existingIdError, ...nameError, ...originError }
   }
 
   function generateId(str: string) {
@@ -73,22 +74,25 @@ const VariationModal: React.FunctionComponent<{
 
   return (
     <Modal
-    isOpen={isOpen}
-    shouldCloseOnOverlayClick
-    onRequestClose={() => handleClose()}
-    contentLabel="Widget Form Modal"
-    style={{
-      overlay: {
-        overflow: 'auto',
-      },
-    }}
+      isOpen={isOpen}
+      shouldCloseOnOverlayClick
+      onRequestClose={() => handleClose()}
+      contentLabel="Widget Form Modal"
+      style={{
+        content: {
+          maxWidth: '700px'
+        },
+        overlay: {
+          overflow: 'auto',
+        },
+      }}
     >
       <Formik
           initialValues={{ id: generatedId, name, origin }}
           onSubmit={async () => {
             const data = { id: generatedId, name, origin }
             const errors = validateForm(data)
-            if(errors) setErrors(errors)
+            if(Object.keys(errors).length) setErrors(errors)
             else {
               const copiedVariation = variations.find(v => v.id === origin.value)
               if(copiedVariation) {
@@ -118,12 +122,12 @@ const VariationModal: React.FunctionComponent<{
                 close={handleClose}
               >
                 <Box sx={{ pb: 4, mt: 4 }}>
-                  <Label htmlFor="name" sx={{mb: 1}}>Variation name*{errors.name ? <Required />: ''}</Label>
+                  <Label htmlFor="name" sx={{mb: 1}}>Variation name*{errors.name ? <Error msg={errors.name} />: ''}</Label>
                   <Field id="name" name="name" placeholder="e.g. Grid - With Icon" as={Input} maxLength={30} value={name} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeName(e.currentTarget.value)} />
                   <Text>It will appear here in your slice builder, and in the page editor in Prismic</Text>
                 </Box>
                 <Box sx={{ pb: 4 }}>
-                  <Label htmlFor="id" sx={{mb: 1}}>Variation ID*{errors.id ? <Required />: ''}</Label>
+                  <Label htmlFor="id" sx={{mb: 1}}>Variation ID*{errors.id ? <Error msg={errors.id} />: ''}</Label>
                   <Field id="id" name="id" placeholder="e.g. GridWithIcon" as={Input} maxLength={30} value={generatedId} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeId(e.currentTarget.value)} />
                   <Text>It's generated automatically based on the variation name and will appear in the API responses.</Text>
                 </Box>

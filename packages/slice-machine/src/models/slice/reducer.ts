@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { AsArray, Variation } from '../../../lib/models/common/Variation'
+import { Variation } from '../../../lib/models/common/Variation'
 import { SliceState } from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
 import { ComponentMetadata, Preview } from '../../../lib/models/common/Component'
@@ -22,9 +22,9 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         ...prevState,
         variations: prevState.initialVariations
       }
-      case SliceActions.Save: return {
-        ...prevState,
-        initialVariations: prevState.variations
+      case SliceActions.Save: {
+        const { state } = action.payload as { state: SliceState }
+        return state
       }
       case SliceActions.Push: return {
         ...prevState,
@@ -45,7 +45,6 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
           variations: prevState.variations.concat([Variation.copyValue(copied, key, name)])
         }
       }
-      
       case VariationActions.GenerateScreenShot: {
         const { variationId, preview } = action.payload as { variationId: string, preview: Preview }
         return {

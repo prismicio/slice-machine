@@ -1,6 +1,7 @@
 import { Variation } from '../../../../lib/models/common/Variation'
 import { fetchApi } from '../../../../lib/builder/fetch'
 import { SliceState } from '../../../../lib/models/ui/SliceState'
+import { Preview } from '../../../../lib/models/common/Component'
 import { ActionType } from './ActionType'
 
 
@@ -22,8 +23,16 @@ export default function save(dispatch: ({type, payload}: { type: string, payload
       },
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
-      onSuccess() {
-        dispatch({ type: ActionType.Save })
+      onSuccess({ previewUrls }: { previewUrls: { [variationId: string]: Preview }}){
+        const savedState = {
+          ...slice,
+          infos: {
+            ...slice.infos,
+            previewUrls
+          },
+          initialVariations: slice.variations
+        }
+        dispatch({ type: ActionType.Save, payload: { state: savedState } })
       }
     })
   }
