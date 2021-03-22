@@ -17,6 +17,7 @@ const api = require('./api')
 const app = express()
 app.use(bodyParser.json({ limit: '64mb', extended: true }))
 
+console.log(path.join(__dirname, '../../..', 'out'))
 const out = path.join(__dirname, '../../..', 'out')
 
 const formDataOptions = {

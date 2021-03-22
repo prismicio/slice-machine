@@ -42,7 +42,7 @@ async function run() {
   if (!argv.skipMigration) {
     await handleMigration(cwd)
   }
-  const start = spawn(`node`, ["-r", "esm", "./server/index.js"], {
+  const start = spawn(`node`, ["-r", "esm", "./build/server/src/index.js"], {
     cwd: __dirname,
     port,
     env: {

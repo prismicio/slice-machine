@@ -6,5 +6,5 @@
   "apiEndpoint": "https://alw-demo-variations.wroom.io/api/v2",
   "storybook": "http://localhost:6006",
   "chromaticAppId": "5f5b34f06f304800225c4e17",
-  "_latest": "0.0.43"
+  "_latest": "0.0.44"
 }
