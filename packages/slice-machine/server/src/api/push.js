@@ -68,31 +68,37 @@ export default async function handler(query) {
           //   }
           // }
           
-          const { err } = purge(env, slices, sliceName, onError)
-          if(err) return err
-          
-          const variationIds = jsonModel.variations.map(v => v.id)
-          
+      const { err } = purge(env, slices, sliceName, onError)
+      if(err) return err
+      
+      const variationIds = jsonModel.variations.map(v => v.id)
+      
+      let imageUrlsByVariation = {}
+
       for(let i = 0; i < variationIds.length; i += 1) {
         const variationId = variationIds[i]
         const { path: pathToImageFile } = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationId })
         const { err, s3ImageUrl } = await upload(env, sliceName, variationId, pathToImageFile, onError)
         if(err) throw new Error(err.reason)
-  
-        console.log('[push]: pushing slice model to Prismic')
-        const res = await createOrUpdate({
-          slices,
-          sliceName,
-          model: { ...jsonModel, imageUrl: s3ImageUrl },
-          client: env.client
-        })
-        if (res.status > 209) {
-          const message = res.text ? await res.text() : res.status
-          console.error(`[push] Unexpected error returned. Server message: ${message}`)
-          throw new Error(message)
-        }
-        console.log('[push] done!')
+        imageUrlsByVariation[variationId] = s3ImageUrl
       }
+  
+      console.log('[push]: pushing slice model to Prismic')
+      const res = await createOrUpdate({
+        slices,
+        sliceName,
+        model: {
+          ...jsonModel,
+          variations: jsonModel.variations.map(v => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
+        },
+        client: env.client
+      })
+      if (res.status > 209) {
+        const message = res.text ? await res.text() : res.status
+        console.error(`[push] Unexpected error returned. Server message: ${message}`)
+        throw new Error(message)
+      }
+      console.log('[push] done!')
       return {}
     } catch(e) {
       console.log(e)

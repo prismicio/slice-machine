@@ -573,13 +573,6 @@
             "placeholder": ""
           }
         },
-        "test5": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
         "test6": {
           "type": "Text",
           "config": {
