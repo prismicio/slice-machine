@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Label, Box, useThemeUI } from 'theme-ui'
 import { FaRegQuestionCircle } from 'react-icons/fa'
 import { useFormikContext } from 'formik'
@@ -73,10 +74,23 @@ const HandlePatternTypes = ({
 }
 
 const Form = () => {
+  const [patternTypeCheck, setPatternTypeCheck] = useState(null)
   const { values, setFieldValue } = useFormikContext()
-  const options = (values.single || values.multi).split(',')
+  const options = (values.single || values.multi || '').split(',')
 
   const configValues = values[MockConfigKey]?.config || {}
+
+  useEffect(() => {
+    const { mockConfig: { config: { patternType } } } = values
+    if (patternType !== patternTypeCheck && patternType && !Patterns[patternType].test(options)) {
+      onUpdate({
+        key: 'patternType',
+        updateType: 'config',
+        value: findValidPattern(options)
+      })
+      setPatternTypeCheck(patternType)
+    }
+  })
   
   const onUpdate = ({
     updateType,

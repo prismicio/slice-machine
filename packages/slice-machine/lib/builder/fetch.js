@@ -7,7 +7,7 @@ export const fetchApi = ({
   errorMessage,
   onSuccess
 }) => {
-  setData({ loading: true, done: false, error: null, ...setDataParams[0] ? setDataParams : [] })
+  setData({ loading: true, done: false, error: null, ...setDataParams[0] ? setDataParams[0] : [] })
   return fetch(url, {
     headers: {
       'Accept': 'application/json',
@@ -15,22 +15,25 @@ export const fetchApi = ({
     },
     ...fetchparams
   }).then(async (res) => {
-    const json = await res.json()
+    const jsonResponse = await res.json()
+    const { err, reason, warning, json,  } = jsonResponse
+
     if (res.status > 209) {
       return setData({
         loading: false,
         done: true,
-        error: json.err,
-        message: errorMessage || json.reason,
-        ...setDataParams[1] ? setDataParams : []
+        error: err,
+        message: errorMessage || reason,
+        ...setDataParams[1] ? setDataParams[1] : []
       })
     }
     setData({
       loading: false,
       done: true,
       error: null,
-      message: successMessage || json.message,
-      ...setDataParams[1] ? setDataParams : []
+      warning: !!warning,
+      message: warning || successMessage || message,
+      ...setDataParams[1] ? setDataParams[1] : []
     })
     onSuccess(json)
   })

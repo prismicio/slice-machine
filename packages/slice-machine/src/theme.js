@@ -19,6 +19,7 @@ const Theme = () => ({
     error: '#E55737',
     success: '#3AB97A',
     headSection: '#fff',
+    warning: '#E67E22',
     code: {
       border: '#DFE1E5',
       blue: '#3B41BD',
@@ -42,6 +43,7 @@ const Theme = () => ({
         borders: '#3A3A46',
         deep: '#28282C',
         headSection: '#28282C',
+        warning: '#E67E22',
         code: {
           border: '#5D5D6F',
           blue: '#3B41BD',
@@ -212,7 +214,17 @@ const Theme = () => ({
       fontSize: '1',
       color: 'rgba(1, 1, 1, .6)',
       cursor: 'not-allowed',
+      borderColor: 'transparent',
       '&:focus': {
+        bg: 'borders',
+        borderColor: 'transparent',
+        outline: 'none',
+
+      },
+      '&:hover': {
+        bg: 'borders',
+        cursor: 'not-allowed',
+        borderColor: 'transparent',
         outline: 'none',
       }
     },
@@ -357,7 +369,7 @@ const Theme = () => ({
     hint: {
       fontSize: 1,
       color: t => t.colors.link,
-      margin: '0 4px', 
+      margin: '0 4px',
       textDecoration: 'none',
       cursor: 'pointer',
       display: 'inline-block',
@@ -395,6 +407,11 @@ const Theme = () => ({
       p: 2,
       top: '0',
       left: '0'
+    },
+    success: {
+      position: 'absolute',
+      width: '100%',
+      p: 2,
     },
     disabledBox: {
       position: 'absolute',
@@ -463,13 +480,13 @@ const Theme = () => ({
       '.attr-name': {
         color: t => t.colors.code.orange,
       },
-      '.attr-value, .property-access': { // add .plain to highligh vue. 
+      '.attr-value, .property-access': { // add .plain to highligh vue.
         color: t => t.colors.code.green, // green
       },
     },
     ".prism-code.language-jsx": {
       '.language-javascript.punctuation, .language-javascript.script-punctuation.punctuation': {
-        color: t => t.colors.code.gray, 
+        color: t => t.colors.code.gray,
       },
       '.language-javascript, .plain': {
         color: t => t.colors.code.green

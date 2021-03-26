@@ -138,20 +138,28 @@ const createModel = (intialValues, initialInfo, initialMockConfig) => {
             },
             deleteMock: {
               primary(key) {
-                delete mockConfig.primary[key]
+                if (mockConfig && mockConfig.primary) {
+                  delete mockConfig.primary[key]
+                }
               },
               items(key) {
-                delete mockConfig.items[key]
+                if (mockConfig && mockConfig.items) {
+                  delete mockConfig.items[key]
+                }
               },
             },
             delete: {
               primary(key) {
                 _delete(variation, 'primary')(key)
-                delete mockConfig.primary[key]
+                if (mockConfig && mockConfig.primary) {
+                  delete mockConfig.primary[key]
+                }
               },
               items(key) {
                 _delete(variation, 'items')(key)
-                delete mockConfig.items[key]
+                if (mockConfig && mockConfig.items) {
+                  delete mockConfig.items[key]
+                }
               }
             },
           }

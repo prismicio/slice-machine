@@ -10,53 +10,79 @@ import { getEnv } from '../../lib/env'
 import mock from '../../lib/mock'
 import { insert as insertMockConfig } from '../../lib/mock/fs'
 
-export default async function handler(req) {
-  const { env } = await getEnv()
-  const { sliceName, from, model, mockConfig } = req.body
-
-  const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
-
+const testStorybookPreview = async ({ screenshotUrl }) => {
   try {
-    console.log('\n[update]: checking Storybook url')
+    console.log('[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
-  } catch(e) {
-    return { err: e, reason: 'Could not connect to Storybook. Make sure Storybook is running and its url is set in SliceMachine configuration.' }
+  } catch (e) {
+    return {
+      warning: 'Could not connect to Storybook. Model was saved.'
+    }
   }
+  return {}
+}
 
-  const updatedMockConfig = insertMockConfig(env.cwd, { key: sliceName, value: mockConfig })
-
-  const rootPath = path.join(env.cwd, from, sliceName)
-  const mockPath = path.join(rootPath, 'mocks.json')
-  const modelPath = path.join(rootPath, 'model.json')
-
-  console.log('[update]: generating mocks')
-  
-  const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
-
-  fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
-  fs.writeFileSync(mockPath, JSON.stringify(mockedSlice, null, 2), 'utf-8')
-
-  const screenshotArgs = { cwd: env.cwd, from, sliceName }
-  const { isCustom } = getPathToScreenshot(screenshotArgs)
-  const pathToFile = createPathToScreenshot(screenshotArgs)
+const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
+  const { warning } = testStorybookPreview({ screenshotUrl })
+  if (warning) {
+    return warning
+  }
   console.log('[update]: generating screenshot preview')
   const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
-  if (maybeErr) {
-    return {
-      err: maybeErr,
-      reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!'
-    }
-  }
-
-  const screenshot = pathToFile ? base64Img.base64Sync(pathToFile) : null
-
-  console.log('[update]: done!')
-  return {
-    ...!isCustom ? {
-      previewUrl: screenshot,
-      hasPreview: screenshot !== null
-    } : null,
-    isModified: true
-  }
+  return warning || maybeErr ? 'Model was saved but screenshot could not be generated.' : null
+l
 }
+
+ export default async function handler(req) {
+    const { env } = await getEnv()
+    const { sliceName, from, model, mockConfig } = req.body
+
+    const screenshotUrl = createScreenshotUrl({ storybook: env.storybook, sliceName, variation: model.variations[0].id })
+    const updatedMockConfig = insertMockConfig(env.cwd, {
+      key: sliceName,
+      value: mockConfig
+    })
+
+    const rootPath = path.join(env.cwd, from, sliceName)
+    const mockPath = path.join(rootPath, 'mocks.json')
+    const modelPath = path.join(rootPath, 'model.json')
+
+    console.log('[update]: generating mocks')
+
+    const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
+
+    fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
+    fs.writeFileSync(mockPath, JSON.stringify(mockedSlice, null, 2), 'utf-8')
+
+    const screenshotArgs = {
+      cwd: env.cwd,
+      from,
+      sliceName
+    }
+    const pathToFile = createPathToScreenshot(screenshotArgs)
+    console.log('[update]: generating screenshot preview')
+
+    const maybeWarning = await handleStorybookPreview({ screenshotUrl, pathToFile })
+
+    if (maybeWarning) {
+      console.log(`[update]: ${maybeWarning}`)
+    }
+
+    const { exists, isCustom } = getPathToScreenshot(screenshotArgs)
+
+    const screenshot = exists && pathToFile ? base64Img.base64Sync(pathToFile) : null
+
+    console.log('[update]: done!')
+    return {
+      ...!isCustom ? {
+        previewUrl: screenshot,
+        hasPreview: screenshot !== null
+      } : null,
+      isModified: true,
+      ...maybeWarning ? {
+        warning: maybeWarning,
+      } : null
+    }
+
+  }

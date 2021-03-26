@@ -13,12 +13,14 @@ function getPathToScreenshot({ cwd, from, sliceName }) {
   const exists = glob.sync(`${slicePath}/preview.@(${acceptedImagesTypes.join('|')})`)
   if (exists.length) {
     return {
+      exists: true,
       path: exists[0],
       isCustom: true
     }
   }
   const defaultPath = createPathToScreenshot({ cwd, from, sliceName })
   return {
+    exists: false,
     path: fs.existsSync(defaultPath) ? defaultPath : null,
     isCustom: false
   }
