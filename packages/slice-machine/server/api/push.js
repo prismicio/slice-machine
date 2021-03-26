@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import uniqid from 'uniqid'
 import { snakelize } from 'sm-commons/utils/str'
 
 import { getEnv } from '../../lib/env'
@@ -89,7 +90,7 @@ export default async function handler(query) {
       const { values: { url, fields }, imgixEndpoint, } = aclResponse
 
       const filename = path.basename(pathToImageFile)
-      const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(sliceName)}/${filename}`
+      const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(sliceName)}/${uniqid()}-${filename}`
       const postStatus = await env.client.images.post({
         url,
         fields,
