@@ -1,7 +1,7 @@
 import equal from 'fast-deep-equal'
 import { pascalize } from 'sm-commons/utils/str'
 
-import { Slice } from './Slice'
+import Slice from './Slice'
 import { AsObject } from './Variation'
 import { Component, ComponentInfo } from './Component'
 

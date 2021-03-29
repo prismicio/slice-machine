@@ -1,4 +1,4 @@
-import { Slice } from '../common/Slice'
+import Slice from '../common/Slice'
 import { Variation, AsObject, AsArray } from '../common/Variation'
 import { ComponentInfo, Preview } from '../common/Component'
 import { LibStatus } from '../common/Library'

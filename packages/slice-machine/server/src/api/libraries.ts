@@ -2,7 +2,7 @@ import { listComponentsByLibrary } from '../../../lib/queries/listComponents'
 
 import Environment from '../../../lib/models/common/Environment'
 import { Library } from '../../../lib/models/common/Library'
-import { Slice } from '../../../lib/models/common/Slice'
+import Slice from '../../../lib/models/common/Slice'
 import { AsObject } from '../../../lib/models/common/Variation'
 
 import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'

@@ -5,7 +5,7 @@ import { pascalize } from 'sm-commons/utils/str'
 
 import { getPathToScreenshot } from './screenshot'
 import { AsObject } from '../../lib/models/common/Variation'
-import { Slice } from '../../lib/models/common/Slice'
+import Slice from '../../lib/models/common/Slice'
 
 function getMeta(modelData: any): ComponentMetadata {
   return {

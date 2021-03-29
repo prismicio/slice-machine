@@ -4,7 +4,7 @@ import path from 'path'
 import uniqid from 'uniqid'
 
 import Environment from "../../../lib/models/common/Environment"
-import { Slice } from "../../../lib/models/common/Slice"
+import Slice from "../../../lib/models/common/Slice"
 import { AsObject } from "../../../lib/models/common/Variation"
 
 import { s3DefaultPrefix } from '../../../lib/consts'
