@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Box } from 'theme-ui'
 import Card from './Card'
 import LibraryState from 'lib/models/ui/LibraryState'
-import { SliceState } from 'lib/models/ui/SliceState'
+import SliceState from 'lib/models/ui/SliceState'
 import * as Links from 'lib/builder/links'
 
 export default ({ libraries }) => (

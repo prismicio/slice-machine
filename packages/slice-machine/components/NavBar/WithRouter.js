@@ -7,7 +7,7 @@ import { SliceContext } from 'src/models/slice/context'
 import { LibrariesContext } from 'src/models/libraries/context'
 import NavBar from './'
 import { VersionBadge } from './components'
-import { SliceState } from 'lib/models/ui/SliceState'
+import SliceState from 'lib/models/ui/SliceState'
 import * as Links from 'lib/builder/links'
 
 const INDEX = 'INDEX'

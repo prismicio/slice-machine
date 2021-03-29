@@ -1,6 +1,6 @@
 import equal from 'fast-deep-equal'
 import { Variation, AsArray } from '../../../lib/models/common/Variation'
-import { SliceState } from '../../../lib/models/ui/SliceState'
+import SliceState from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
 import { ComponentMetadata, Preview } from '../../../lib/models/common/Component'
 import { Widget } from '../../../lib/models/common/widgets'

@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import SliceStore from './store'
 import { reducer } from './reducer'
 
-import { SliceState } from '../../../lib/models/ui/SliceState'
+import SliceState from '../../../lib/models/ui/SliceState'
 import { ComponentWithLibStatus } from '../../../lib/models/common/Library'
 import { Slice } from '../../../lib/models/common/Slice'
 import { Variation, AsArray, AsObject } from '../../../lib/models/common/Variation'

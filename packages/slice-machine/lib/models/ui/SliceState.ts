@@ -3,7 +3,7 @@ import { Variation, AsObject, AsArray } from '../common/Variation'
 import { ComponentInfo, Preview } from '../common/Component'
 import { LibStatus } from '../common/Library'
 
-export interface SliceState {
+interface SliceState {
   jsonModel: Slice<AsObject>
 
   from: string
@@ -27,7 +27,7 @@ export interface SliceState {
   __status?: LibStatus
 }
 
-export const SliceState = {
+const SliceState = {
   
   variation(state: SliceState, variationId?: string): Variation<AsArray> | undefined {
     if(state.variations.length) {
@@ -50,3 +50,5 @@ export const SliceState = {
     }
   }
 }
+
+export default SliceState
