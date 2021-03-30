@@ -52,7 +52,9 @@ const Header = ({ Model, store, variation }) => {
                       <VariationPopover
                         defaultValue={variation}
                         variations={Model.variations}
-                        onChange={(v) => router.push(...Links.variation(Model.href, Model.jsonModel.name, v.id).all)} />
+                        onChange={(v) => {
+                          router.push(...Links.variation(Model.from, Model.infos.sliceName, v.id).all)}
+                         } />
                     </Box>
                   )}
                 </Flex>
@@ -67,6 +69,7 @@ const Header = ({ Model, store, variation }) => {
               onClose={() => setShowVariationModal(false)}
               onSubmit={(id, name, copiedVariation) => {
                 store.copyVariation(id, name, copiedVariation)
+                console.log({ link: Links.variation(Model.from, Model.infos.sliceName, id)})
                 router.push(...Links.variation(Model.from, Model.infos.sliceName, id).all)
               }}
               initialVariation={variation}

@@ -6,6 +6,7 @@ import { createScreenshotUrl } from '../../../lib/utils'
 import { getPathToScreenshot, createPathToScreenshot } from '../../../lib/queries/screenshot'
 
 import { generatePreview } from './common/utils'
+import { hyphenate } from '../../../lib/utils/str'
 
 export default async function handler({ from, sliceName, variationId }: { from: string, sliceName: string, variationId: string }): Promise<Preview | { err: Error, reason: string }> {
   const { env } = await getEnv()
@@ -14,6 +15,7 @@ export default async function handler({ from, sliceName, variationId }: { from: 
   const screenshotArgs = { cwd: env.cwd, from, sliceName, variationId }
   const { isCustom } = getPathToScreenshot(screenshotArgs)
   const pathToFile = createPathToScreenshot(screenshotArgs)
+  console.log({ screenshotUrl, pathToFile, vid: hyphenate(variationId) })
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {

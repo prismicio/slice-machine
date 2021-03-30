@@ -1,5 +1,5 @@
 // @ts-ignore
-import { snakelize } from 'sm-commons/utils/str'
+import { snakelize } from '../../../lib/utils/str'
 import path from 'path'
 import uniqid from 'uniqid'
 

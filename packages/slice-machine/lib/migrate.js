@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { snakelize } from 'sm-commons/utils/str'
+import { snakelize } from './utils/str'
 import uniqid from 'uniqid'
 
 const migrate = (model, info, env) => {

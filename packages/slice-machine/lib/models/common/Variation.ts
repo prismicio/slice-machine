@@ -1,5 +1,6 @@
 import { Widget } from './widgets'
-import { pascalize } from 'sm-commons/utils/str'
+// @ts-ignore
+import { pascalize } from '../../utils/str'
 
 export enum WidgetsArea {
   Primary = 'primary',

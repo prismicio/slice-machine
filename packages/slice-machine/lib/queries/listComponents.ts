@@ -3,7 +3,7 @@ import path from 'path'
 import slash from 'slash'
 
 import migrate from '../migrate'
-import { getInfoFromPath } from 'sm-commons/methods/lib'
+import { getInfoFromPath } from '../utils/lib'
 import { getComponentInfo } from './component'
 import Environment from '../models/common/Environment'
 import { Component } from '../models/common/Component'

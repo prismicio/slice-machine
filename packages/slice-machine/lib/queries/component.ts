@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
-import { pascalize } from 'sm-commons/utils/str'
+// @ts-ignore
+import { pascalize } from '../utils/str'
 
 import { getPathToScreenshot } from './screenshot'
 import { AsObject } from '../../lib/models/common/Variation'

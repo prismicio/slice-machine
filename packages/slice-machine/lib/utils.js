@@ -6,6 +6,8 @@ import {
   createValidationSchema,
 } from './forms'
 
+import { hyphenate } from './utils/str'
+
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj
   return rest
@@ -45,7 +47,7 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
 }
 
 export const createScreenshotUrl = ({ storybook, sliceName, variationId }) => {
-  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${variationId.toLowerCase()}&viewMode=story`
+  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${hyphenate(variationId)}&viewMode=story`
 }
 
 export const maybeJsonFile = (pathToFile) => {

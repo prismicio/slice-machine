@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import uniqid from 'uniqid'
-import { snakelize } from 'sm-commons/utils/str'
+import { snakelize } from '../../../lib/utils/str'
 
 import { getEnv } from '../../../lib/env'
 
