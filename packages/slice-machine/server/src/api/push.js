@@ -57,17 +57,6 @@ export default async function handler(query) {
 
   try {
       const jsonModel = JSON.parse(model)
-      
-      // if (!pathToImageFile) {
-        //   const msg = '[push] Screenshot not found. Please check that file exists in slice folder or in .slicemachine assets'
-        //   console.log(msg)
-        //   return {
-          //     err: new Error(msg),
-          //     status: 400,
-          //     message: msg,
-          //   }
-          // }
-          
       const { err } = purge(env, slices, sliceName, onError)
       if(err) return err
       

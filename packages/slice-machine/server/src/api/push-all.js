@@ -4,7 +4,6 @@ import getLibs from './libraries'
 
 export default async function handler() {
   const { env } = await getEnv()
-  console.log({ env })
   const { libraries } = await getLibs(env)
   const allSlices = libraries.reduce((acc, curr) => {
     return [...acc, ...curr[1]]

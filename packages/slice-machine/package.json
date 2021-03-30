@@ -57,11 +57,13 @@
     "serve-static": "^1.14.1",
     "slash": "3.0.0",
     "sm-commons": "^0.0.22",
+    "theme-ui": "^0.3.5",
     "uniqid": "^5.2.0",
     "yargs": "^16.0.3",
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@mdx-js/loader": "^1.6.22",
     "@next/mdx": "^10.0.3",
     "@reach/menu-button": "^0.10.5",
     "@svgr/webpack": "^5.4.0",
@@ -98,7 +100,6 @@
     "react-tidy": "^1.1.0",
     "react-tooltip": "^4.2.8",
     "swr": "^0.2.3",
-    "theme-ui": "^0.3.1",
     "typescript": "^4.2.2"
   }
 }

@@ -15,7 +15,6 @@ const Index = () => {
       <Container>
         <Head>
           <title>SliceMachine UI</title>
-          <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
           <LibrariesList libraries={libraries || []} />

@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
-import Link from 'next/link'
-import { Box } from 'theme-ui'
+import NextLink from 'next/link'
+import { Box, Link } from 'theme-ui'
 import Card from './Card'
 import LibraryState from 'lib/models/ui/LibraryState'
 import SliceState from 'lib/models/ui/SliceState'
@@ -37,7 +37,14 @@ export default ({ libraries }) => (
                 const variationId = defaultVariation.id
                 const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
                 return (
-                  <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
+                  <Link
+                    sx={{
+                      textDecoration: 'none',
+                      color: 'inherit'
+                    }}
+                    as="a"
+                    key={`${slice.from}-${slice.jsonModel.name}-${variationId}`} href={link.as}
+                  >
                     <Card {...slice} defaultVariation={defaultVariation} />
                   </Link>
                 )
