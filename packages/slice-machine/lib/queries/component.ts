@@ -6,7 +6,7 @@ import { pascalize } from '../utils/str'
 
 import { getPathToScreenshot } from './screenshot'
 import { AsObject } from '../../lib/models/common/Variation'
-import { Slice } from '../../lib/models/common/Slice'
+import Slice from '../../lib/models/common/Slice'
 
 function getMeta(modelData: any): ComponentMetadata {
   return {
@@ -89,13 +89,13 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const model: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
   const previewUrls = model.data.variations
     .map(v => {
-      const { path: pathToScreenshotFile, isCustom: isCustomPreview } = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
-      const hasPreview = !!pathToScreenshotFile
-      return hasPreview && pathToScreenshotFile
+      const activeScreenshot = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
+
+      return activeScreenshot && activeScreenshot.path
       ? { [v.id]: {
-          hasPreview,
-          isCustomPreview,
-          url: hasPreview && pathToScreenshotFile ? `${baseUrl}/api/__preview?q=${encodeURIComponent(pathToScreenshotFile)}&uniq=${Math.random()}` : undefined
+          hasPreview: !!activeScreenshot,
+          isCustomPreview: activeScreenshot.isCustom,
+          url: activeScreenshot && activeScreenshot.path ? `${baseUrl}/api/__preview?q=${encodeURIComponent(activeScreenshot.path)}&uniq=${Math.random()}` : undefined
         }}
       : undefined
     })

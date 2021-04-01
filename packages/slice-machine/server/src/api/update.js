@@ -1,14 +1,14 @@
-import fs from 'fs'
-import path from 'path'
 import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../../lib/utils'
-import { getPathToScreenshot, createPathToScreenshot } from '../../../lib/queries/screenshot'
+import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import { CustomPaths } from '../../../lib/models/paths'
 
 import { getEnv } from '../../../lib/env'
 import mock from '../../../lib/mock'
 import { insert as insertMockConfig } from '../../../lib/mock/fs'
+import Files from '../../../lib/utils/files'
 
 const testStorybookPreview = async ({ screenshotUrl }) => {
   try {
@@ -41,17 +41,21 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
       value: mockConfig
     })
 
-    const rootPath = path.join(env.cwd, from, sliceName)
-    const mockPath = path.join(rootPath, 'mocks.json')
-    const modelPath = path.join(rootPath, 'model.json')
+    const mockPath = CustomPaths(env.cwd)
+      .library(from)
+      .slice(sliceName)
+      .mocks()
+    const modelPath = CustomPaths(env.cwd)
+      .library(from)
+      .slice(sliceName)
+      .model()
 
     console.log('[update]: generating mocks')
 
     const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
 
-    fs.writeFileSync(modelPath, JSON.stringify(model, null, 2), 'utf-8')
-    fs.writeFileSync(mockPath, JSON.stringify(mockedSlice, null, 2), 'utf-8')
-
+    Files.writeJson(modelPath, model)
+    Files.writeJson(mockPath, mockedSlice)
     
     
     console.log('[update]: generating screenshots previews')
@@ -69,11 +73,15 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
         sliceName,
         variationId: variation.id
       }
-      const { exists, isCustom, path } = getPathToScreenshot(screenshotArgs)
+      const activeScreenshot = getPathToScreenshot(screenshotArgs)
       
-      if(!exists) {
+      if(!activeScreenshot) {
         const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, sliceName, variationId: variation.id })
-        const pathToFile = createPathToScreenshot(screenshotArgs)
+        const pathToFile = GeneratedPaths(env.cwd)
+          .library(screenshotArgs.from)
+          .slice(screenshotArgs.sliceName)
+          .variation(screenshotArgs.variationId)
+          .preview()
         const error = await handleStorybookPreview({ screenshotUrl, pathToFile })
         if(error) {
           console.log(`[update][Slice: ${sliceName}][variation: ${variation.id}]: ${error}`)
@@ -90,9 +98,9 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
         }
       } else {
         previewUrls[variation.id] = {
-          isCustomPreview: isCustom,
+          isCustomPreview: activeScreenshot.isCustom,
           hasPreview: true,
-          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(path)}&uniq=${Math.random()}`
+          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(activeScreenshot.path)}&uniq=${Math.random()}`
         }
       }
     }

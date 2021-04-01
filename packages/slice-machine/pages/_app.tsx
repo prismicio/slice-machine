@@ -29,7 +29,7 @@ import { ServerState } from '../lib/models/server/ServerState'
 import ServerError from '../lib/models/server/ServerError'
 import { Library } from '../lib/models/common/Library'
 import Environment from '../lib/models/common/Environment'
-import { Slice } from 'lib/models/common/Slice'
+import Slice from 'lib/models/common/Slice'
 import { AsObject } from 'lib/models/common/Variation'
 
 async function fetcher(url: string): Promise<any> {

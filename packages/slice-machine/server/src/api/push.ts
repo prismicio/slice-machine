@@ -1,17 +1,19 @@
 import fs from 'fs'
 import path from 'path'
-import uniqid from 'uniqid'
 import { snakelize } from '../../../lib/utils/str'
 
 import { getEnv } from '../../../lib/env'
 
 import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 
-import { s3DefaultPrefix } from '../../../lib/consts'
 
 import { purge, upload } from './upload'
+import DefaultClient from '../../../lib/models/common/http/DefaultClient'
+import FakeClient, { FakeResponse } from '../../../lib/models/common/http/FakeClient'
+import { Variation, AsObject } from '../../../lib/models/common/Variation'
+import Slice from '../../../lib/models/common/Slice'
 
-const onError = (r, message = 'An error occured while pushing slice to Prismic') => ({
+const onError = (r: Response | FakeResponse, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),
   status: r && r.status ? r.status : 500,
   reason: message,
@@ -22,6 +24,12 @@ const createOrUpdate = async ({
   sliceName,
   model,
   client
+}: {
+  slices: ReadonlyArray<Slice<AsObject>>,
+  sliceName: string,
+  model: Slice<AsObject>,
+  client: DefaultClient | FakeClient
+
 }) => {
   if (slices.find(e => e.id === snakelize(sliceName))) {
     return await client.update(model)
@@ -30,7 +38,7 @@ const createOrUpdate = async ({
   }
 }
 
-const getSlices = async(client) => {
+const getSlices = async(client: DefaultClient | FakeClient) => {
   try {
     const res = await client.get()
     if (res.status !== 200) {
@@ -43,7 +51,7 @@ const getSlices = async(client) => {
   }
 }
 
-export default async function handler(query) {
+export default async function handler(query: { sliceName: string, from: string }) {
   const { sliceName, from } = query
   const { env } = await getEnv()
   const { slices, err } = await getSlices(env.client)
@@ -57,19 +65,24 @@ export default async function handler(query) {
 
   try {
       const jsonModel = JSON.parse(model)
-      const { err } = purge(env, slices, sliceName, onError)
+      const { err } = await purge(env, slices, sliceName, onError)
       if(err) return err
       
-      const variationIds = jsonModel.variations.map(v => v.id)
+      const variationIds = jsonModel.variations.map((v: Variation<AsObject>) => v.id)
       
-      let imageUrlsByVariation = {}
+      let imageUrlsByVariation: { [variationId: string]: string } = {}
 
       for(let i = 0; i < variationIds.length; i += 1) {
         const variationId = variationIds[i]
-        const { path: pathToImageFile } = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationId })
-        const { err, s3ImageUrl } = await upload(env, sliceName, variationId, pathToImageFile, onError)
-        if(err) throw new Error(err.reason)
-        imageUrlsByVariation[variationId] = s3ImageUrl
+        const screenshot = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationId })
+        
+        if(screenshot) {
+          const { err, s3ImageUrl } = await upload(env, sliceName, variationId, screenshot.path, onError)
+          if(err) throw new Error(err.reason)
+          imageUrlsByVariation[variationId] = s3ImageUrl
+        } else {
+          throw new Error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+        }
       }
   
       console.log('[push]: pushing slice model to Prismic')
@@ -78,12 +91,12 @@ export default async function handler(query) {
         sliceName,
         model: {
           ...jsonModel,
-          variations: jsonModel.variations.map(v => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
+          variations: jsonModel.variations.map((v: Variation<AsObject>) => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
         },
         client: env.client
       })
       if (res.status > 209) {
-        const message = res.text ? await res.text() : res.status
+        const message = res.text ? await res.text() : res.status.toString()
         console.error(`[push] Unexpected error returned. Server message: ${message}`)
         throw new Error(message)
       }

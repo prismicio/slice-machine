@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal'
 // @ts-ignore
 import { pascalize } from '../../utils/str'
 
-import { Slice } from './Slice'
+import Slice from './Slice'
 import { AsObject } from './Variation'
 import { Component, ComponentInfo } from './Component'
 

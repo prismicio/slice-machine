@@ -75,13 +75,17 @@ export const Variation = {
     }
   },
 
-  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget): Variation<AsArray> { 
-    return this.addWidget(
-      this.deleteWidget(variation, widgetsArea, previousKey),
-      widgetsArea,
-      newKey,
-      value
-    )
+  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, newValue: Widget): Variation<AsArray> { 
+    return {
+      ...variation,
+      [widgetsArea]: variation[widgetsArea].reduce((acc: AsArray, { key, value }) => {
+        if(key === previousKey) {
+          return acc.concat([{ key: newKey, value: newValue }])
+        } else {
+          return acc.concat([{ key, value }])
+        }
+      }, [])
+    }
   },
 
   addWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, key: string, value: Widget): Variation<AsArray> {
