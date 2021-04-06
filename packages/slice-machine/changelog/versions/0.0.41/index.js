@@ -3,7 +3,7 @@ const path = require('path')
 const glob = require('glob')
 const slash = require('slash')
 const { shouldIRun } = require('../../common')
-const { getInfoFromPath } = require('sm-commons/methods/lib')
+const { getInfoFromPath } = require('../../../build/lib/utils/lib')
 
 module.exports = {
   test: function test({ cwd }) {

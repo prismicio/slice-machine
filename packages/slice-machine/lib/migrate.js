@@ -1,7 +1,7 @@
-import fs from 'fs'
-import path from 'path'
-import { snakelize } from 'sm-commons/utils/str'
+import { snakelize } from './utils/str'
 import uniqid from 'uniqid'
+import Files from './utils/files'
+import { CustomPaths } from './models/paths'
 
 const migrate = (model, info, env) => {
   const { type, fieldset, 'non-repeat': nonRepeat = {}, repeat = {} } = model
@@ -24,10 +24,11 @@ const migrate = (model, info, env) => {
     }]
   }
 
-  const rootPath = path.join(env.cwd, info.from, info.sliceName)
-  const modelPath = path.join(rootPath, 'model.json')
-
-  fs.writeFileSync(modelPath, JSON.stringify(newModel, null, 2), 'utf-8')
+  const modelPath = CustomPaths(env.cwd)
+    .library(info.from)
+    .slice(info.sliceName)
+    .model()
+  Files.writeJson(modelPath, newModel)
 
   return { model: newModel, migrated: true }
 }

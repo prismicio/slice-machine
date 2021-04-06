@@ -4,7 +4,7 @@ import Mustache from 'mustache'
 import { AsObject } from "../../../lib/models/common/Variation"
 import Slice from "../../../lib/models/common/Slice"
 
-import Files from '../utils/files'
+import Files from '../../../lib/utils/files'
 
 const Paths = {
   customStories(libraryName: string, sliceName: string): string {
@@ -18,7 +18,7 @@ const Paths = {
 
 export default {
   getStories(libraryName: string, sliceName: string): { exists: boolean, isCustom: boolean, storyPath?: string } {
-    const stories = Files.read(Paths.customStories(libraryName, sliceName))
+    const stories = Files.readString(Paths.customStories(libraryName, sliceName))
     
     return {
       isCustom: false,
@@ -34,7 +34,7 @@ export default {
   generateStory(libraryName: string, sliceName: string, sliceModel: Slice<AsObject>): void {
     console.log(sliceModel)
 
-    const template = Files.read(Paths.storiesTemplate);
+    const template = Files.readString(Paths.storiesTemplate);
 
     const stories = Mustache.render(template, { sliceModel });
 

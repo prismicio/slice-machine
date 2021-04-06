@@ -1,10 +1,12 @@
-import fs from 'fs'
 import * as yup from 'yup'
 import { DefaultFields } from './forms/defaults'
 import {
   createInitialValues,
   createValidationSchema,
 } from './forms'
+
+import Files from './utils/files'
+import { hyphenate } from './utils/str'
 
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj
@@ -45,12 +47,12 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
 }
 
 export const createScreenshotUrl = ({ storybook, sliceName, variationId }) => {
-  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${variationId.toLowerCase()}&viewMode=story`
+  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${hyphenate(variationId)}&viewMode=story`
 }
 
 export const maybeJsonFile = (pathToFile) => {
   try {
-    return JSON.parse(fs.readFileSync(pathToFile, 'utf-8'))
+    return Files.readJson(pathToFile)
   } catch(e) {
     return {}
   }

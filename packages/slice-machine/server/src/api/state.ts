@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import fetchLibs from './libraries'
 import { getEnv } from '../../../lib/env'
 import { warningStates, warningTwoLiners } from '../../../lib/consts'
@@ -8,12 +6,13 @@ import Environment from '../../../lib/models/common/Environment'
 import Warning from '../../../lib/models/common/Warning'
 import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
 import ServerError from '../../../lib/models/server/ServerError'
+import Files from '../../../lib/utils/files'
+import { Pkg } from '../../../lib/models/paths'
 
 const hasStorybookScript = (cwd: string) => {
-  const pathToManifest = path.join(cwd, 'package.json')
+  const pathToManifest = Pkg(cwd)
   try {
-    const file = fs.readFileSync(pathToManifest, 'utf-8')
-    const manifest = JSON.parse(file)
+    const manifest = Files.readJson(pathToManifest)
     return !!(manifest && manifest.scripts && manifest.scripts.storybook)
   } catch(e) {
     return false

@@ -15,7 +15,7 @@ const LIB = 'LIB'
 const VARIATION = 'VARIATION'
 
 const Routes = {
-  '/index': INDEX,
+  '/': INDEX,
   '/[lib]/[sliceName]': LIB,
   '/[lib]/[sliceName]/[variation]': VARIATION
 }
@@ -26,7 +26,7 @@ const InBuilder = ({ router, ...props }) => {
   const slices = libs.find(lib => lib.name === Model.from)?.components || []
   return (
     <NavBar {...props} {...Model}>
-      <Link href="/index" as="/" passHref>
+      <Link href="/" passHref>
         <ThemeLink
           to='/'
           sx={{
@@ -65,12 +65,13 @@ const InBuilder = ({ router, ...props }) => {
 }
 const WithRouter = (props) => {
   const router = useRouter()
+  console.log({ route: router.route })
 
   const route = Routes[router.route] || INDEX
   return route === INDEX ? (
     <NavBar {...props}>
       <Fragment>
-        <Link href="/index" as="/" passHref>
+        <Link href="/" passHref>
           <ThemeLink
             to='/'
             sx={{

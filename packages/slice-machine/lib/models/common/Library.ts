@@ -1,5 +1,6 @@
 import equal from 'fast-deep-equal'
-import { pascalize } from 'sm-commons/utils/str'
+// @ts-ignore
+import { pascalize } from '../../utils/str'
 
 import Slice from './Slice'
 import { AsObject } from './Variation'

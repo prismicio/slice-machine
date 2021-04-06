@@ -7,7 +7,7 @@ const base64Img = require('base64-img')
 
 const push = require('./push').default
 const pushAll = require('./push-all').default
-const update = require('./update').default
+const save = require('./save').default
 const screenshot = require('./screenshot').default
 const customScreenshot = require('./custom-screenshot').default
 const parseOembed = require('./parse-oembed').default
@@ -53,7 +53,7 @@ router.use('/custom-screenshot', async function (req, res) {
 })
 
 router.use('/update', async function (req, res) {
-  const payload = await update(req)
+  const payload = await save(req)
   if (payload.err) {
     return res.status(400).json(payload)
   }

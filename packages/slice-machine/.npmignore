@@ -9,9 +9,6 @@
 /coverage
 
 
-# production
-/build
-
 .next
 
 # misc
