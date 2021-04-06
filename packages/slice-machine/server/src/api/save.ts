@@ -2,13 +2,12 @@ import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../../lib/utils'
 import { getPathToScreenshot } from '../../../lib/queries/screenshot'
-import { CustomPaths } from '../../../lib/models/paths'
+import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
 
 import { getEnv } from '../../../lib/env'
 import mock from '../../../lib/mock'
 import { insert as insertMockConfig } from '../../../lib/mock/fs'
 import Files from '../../../lib/utils/files'
-import { GeneratedPaths } from '../../../lib/models/paths'
 import { Preview } from '../../../lib/models/common/Component'
 
 const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
@@ -42,21 +41,35 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
       value: mockConfig
     })
 
-    const mockPath = CustomPaths(env.cwd)
-      .library(from)
-      .slice(sliceName)
-      .mocks()
+    console.log('[update]: updating slice model')
+
     const modelPath = CustomPaths(env.cwd)
       .library(from)
       .slice(sliceName)
       .model()
-
-    console.log('[update]: generating mocks')
-
-    const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
-
+    
     Files.writeJson(modelPath, model)
-    Files.writeJson(mockPath, mockedSlice)
+    
+    
+    const hasCustomMocks = Files.exists(
+      CustomPaths(env.cwd)
+      .library(from)
+      .slice(sliceName)
+      .mocks()
+    )
+      
+    if(!hasCustomMocks) {
+      console.log('[update]: generating mocks')
+    
+      const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
+      Files.writeJson(
+        GeneratedPaths(env.cwd)
+          .library(from)
+          .slice(sliceName)
+          .mocks(),
+        mockedSlice
+      )
+    }
     
     
     console.log('[update]: generating screenshots previews')
