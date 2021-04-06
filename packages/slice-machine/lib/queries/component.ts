@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 // @ts-ignore
@@ -7,6 +6,7 @@ import { pascalize } from '../utils/str'
 import { getPathToScreenshot } from './screenshot'
 import { AsObject } from '../../lib/models/common/Variation'
 import Slice from '../../lib/models/common/Slice'
+import Files from '../utils/files'
 
 function getMeta(modelData: any): ComponentMetadata {
   return {
@@ -49,27 +49,23 @@ function splitExtension(str: string): { fileName: string, extension: string } | 
   }
 }
 
-function has(fullPath: string): boolean {
-  return fs.existsSync(fullPath)
-}
-
 function fromJsonFile(slicePath: string, filePath: string): { has: boolean, data: any } {
   const fullPath = path.join(slicePath, filePath)
-  const hasFile = has(fullPath)
+  const hasFile = Files.exists(fullPath)
   return {
     has: hasFile,
-    data: hasFile ? JSON.parse(fs.readFileSync(fullPath, 'utf-8')) : {}
+    data: hasFile ? Files.readJson(fullPath) : {}
   }
 }
 
 /** returns fileName, extension and isDirectory from path to slice */
 function getFileInfoFromPath(slicePath: string, componentName: string): { fileName?: string, extension?: string, isDirectory: boolean } {
-  const isDirectory = fs.lstatSync(slicePath).isDirectory()
+  const isDirectory = Files.isDirectory(slicePath)
   if (!isDirectory) {
     return { ...splitExtension(slicePath), isDirectory: false }
   }
 
-  const files = fs.readdirSync(slicePath)
+  const files = Files.readDirectory(slicePath)
   const match = matchPossiblePaths(files, componentName)
   if (match) {
     return { ...splitExtension(match), isDirectory: true };

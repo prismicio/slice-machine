@@ -1,5 +1,5 @@
-import fs from 'fs'
 import path from 'path'
+import Files from '../../../../lib/utils/files'
 
 export const fetchStorybookUrl = async (storybookUrl) => {
   return fetch(storybookUrl)
@@ -7,7 +7,7 @@ export const fetchStorybookUrl = async (storybookUrl) => {
 
 export const generatePreview = async ({ browser, screenshotUrl, pathToFile }) => {
   try {
-    fs.mkdirSync(path.dirname(pathToFile), { recursive: true })
+    Files.mkdir(path.dirname(pathToFile), { recursive: true })
     const page = await browser.newPage()
     await page.goto(screenshotUrl)
     await delay(600)

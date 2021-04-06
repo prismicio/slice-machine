@@ -1,5 +1,5 @@
-import fs from 'fs'
 import path from 'path'
+import Files from './files'
 
 const SM_CONFIG_FILE = "sm.config.json";
 
@@ -11,11 +11,11 @@ export function getInfoFromPath(libPath: string, startPath: string): any {
     isLocal ? libPath.substring(1, libPath.length) : libPath,
   )
   const pathToConfig = path.join(pathToLib, SM_CONFIG_FILE)
-  const pathExists = fs.existsSync(pathToLib)
+  const pathExists = Files.exists(pathToLib)
 
   let config: any = {}
-  if (fs.existsSync(pathToConfig)) {
-    config = JSON.parse(fs.readFileSync(pathToConfig) as any)
+  if (Files.exists(pathToConfig)) {
+    config = Files.readJson(pathToConfig)
   }
   const pathToSlices = path.join(
     pathToLib,

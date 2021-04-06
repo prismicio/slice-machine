@@ -1,7 +1,7 @@
-import fs from 'fs'
 import path from 'path'
 import slash from 'slash'
 
+import Files from '../utils/files'
 import migrate from '../migrate'
 import { getInfoFromPath } from '../utils/lib'
 import { getComponentInfo } from './component'
@@ -28,7 +28,7 @@ async function handleLibraryPath(env: Environment, libPath: string): Promise<Lib
   const from = isLocal ? libPath.slice(2) : libPath
 
   // all paths to components found in slices folder
-  const pathsToComponents = fs.readdirSync(slash(pathToSlices))
+  const pathsToComponents = Files.readDirectory(slash(pathToSlices))
     .map(curr => path.join(pathToSlices, curr))
     .filter(e => e.split(path.sep).pop() !== 'index.js')
 

@@ -20,3 +20,6 @@ export const paths = (cwd: string, prefix: string) => ({
 export const GeneratedPaths = (cwd: string) => paths(cwd, path.join('.slicemachine', 'assets'))
 export const CustomPaths = (cwd: string) => paths(cwd, '')
 export const SMConfig = (cwd: string) => path.join(cwd, 'sm.json')
+export const Pkg = (cwd: string) => path.join(cwd, 'package.json')
+export const YarnLock = (cwd: string) => path.join(cwd, 'yarn.lock')
+export const MocksConfig = (cwd: string) => path.join(cwd, '.slicemachine', 'mocks.json')

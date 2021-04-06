@@ -1,4 +1,3 @@
-import fs from 'fs'
 import * as yup from 'yup'
 import { DefaultFields } from './forms/defaults'
 import {
@@ -6,6 +5,7 @@ import {
   createValidationSchema,
 } from './forms'
 
+import Files from './utils/files'
 import { hyphenate } from './utils/str'
 
 export const removeProp = (obj, prop) => {
@@ -52,7 +52,7 @@ export const createScreenshotUrl = ({ storybook, sliceName, variationId }) => {
 
 export const maybeJsonFile = (pathToFile) => {
   try {
-    return JSON.parse(fs.readFileSync(pathToFile, 'utf-8'))
+    return Files.readJson(pathToFile)
   } catch(e) {
     return {}
   }

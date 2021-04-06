@@ -1,8 +1,7 @@
-import fs from 'fs'
-import path from 'path'
 import { snakelize } from '../../../lib/utils/str'
 
 import { getEnv } from '../../../lib/env'
+import Files from '../../../lib/utils/files'
 
 import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 
@@ -12,6 +11,7 @@ import DefaultClient from '../../../lib/models/common/http/DefaultClient'
 import FakeClient, { FakeResponse } from '../../../lib/models/common/http/FakeClient'
 import { Variation, AsObject } from '../../../lib/models/common/Variation'
 import Slice from '../../../lib/models/common/Slice'
+import { CustomPaths } from '../../../lib/models/paths'
 
 const onError = (r: Response | FakeResponse, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),
@@ -59,12 +59,13 @@ export default async function handler(query: { sliceName: string, from: string }
     console.error('[push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
     return onError(err, `Error ${err.status}: Could not fetch remote slices`)
   }
-  const rootPath = path.join(env.cwd, from, sliceName)
-  const modelPath = path.join(rootPath, 'model.json')
-  const model = fs.readFileSync(modelPath, 'utf-8')
+  const modelPath = CustomPaths(env.cwd)
+    .library(from)
+    .slice(sliceName)
+    .model()
 
   try {
-      const jsonModel = JSON.parse(model)
+      const jsonModel = Files.readJson(modelPath)
       const { err } = await purge(env, slices, sliceName, onError)
       if(err) return err
       

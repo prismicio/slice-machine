@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import { exec } from 'child_process'
 import { parseDomain, fromUrl, ParseResultType, ParseResult } from 'parse-domain'
@@ -10,6 +9,8 @@ import createComparator from './semver'
 import { getConfig as getMockConfig } from '../mock/fs'
 
 import { SupportedFrameworks } from '../consts'
+import Files from '../utils/files'
+import { SMConfig } from '../models/paths'
 
 import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
@@ -90,8 +91,7 @@ function createChromaticUrls({ branch, appId, err }: { branch?: string, appId?: 
 }
 
 export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerError }, env: Environment }> {
-  const userConfigTxt = fs.readFileSync(path.join(cwd, 'sm.json'), 'utf8')
-  const userConfig = JSON.parse(userConfigTxt)
+  const userConfig = Files.readJson(SMConfig(cwd))
   const maybeErrors = validate(userConfig)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)

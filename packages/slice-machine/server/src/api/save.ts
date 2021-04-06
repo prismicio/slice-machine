@@ -1,4 +1,3 @@
-import base64Img from 'base64-img'
 import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../../lib/utils'
@@ -9,8 +8,10 @@ import { getEnv } from '../../../lib/env'
 import mock from '../../../lib/mock'
 import { insert as insertMockConfig } from '../../../lib/mock/fs'
 import Files from '../../../lib/utils/files'
+import { GeneratedPaths } from '../../../lib/models/paths'
+import { Preview } from '../../../lib/models/common/Component'
 
-const testStorybookPreview = async ({ screenshotUrl }) => {
+const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
   try {
     console.log('[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
@@ -22,8 +23,8 @@ const testStorybookPreview = async ({ screenshotUrl }) => {
   return {}
 }
 
-const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
-  const { warning } = testStorybookPreview({ screenshotUrl })
+const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screenshotUrl: string, pathToFile: string }) => {
+  const { warning } = await testStorybookPreview({ screenshotUrl })
   if (warning) {
     return warning
   }
@@ -32,7 +33,7 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
   return warning || maybeErr ? 'Model was saved but screenshot could not be generated.' : null
 }
 
- export default async function handler(req) {
+ export default async function handler(req: { body: any }) {
     const { env } = await getEnv()
     const { sliceName, from, model, mockConfig } = req.body
 
@@ -62,8 +63,8 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }) => {
     // since we iterate over variation and execute async code, we need a regular `for` loop to make sure that it's done sequentially and wait for the promise before running the next iteration
     // no, even foreach doesn't do the trick ;)
 
-    let errors = []
-    let previewUrls = {}
+    let errors: any[] = []
+    let previewUrls: { [variationId: string]: Preview } = {}
 
     for(let i = 0; i < model.variations.length; i += 1) {
       const variation = model.variations[i]
