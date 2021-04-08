@@ -10,7 +10,7 @@ export const getConfig = (cwd) => {
 }
 
 export const writeConfig = (cwd, config) => {
-  Files.write(MocksConfig(cwd), config, { recursive: true })
+  Files.write(MocksConfig(cwd), config)
 }
 
 export const insert = (cwd, { key, value }) => {

@@ -10,12 +10,12 @@ import LibraryState from '../../../lib/models/ui/LibraryState'
 
 export const LibrariesContext = React.createContext<Partial<ReadonlyArray<LibraryState>>>([])
 
-export default ({ children, libraries, remoteSlices, env }: {
+export default function LibraryHandler({ children, libraries, remoteSlices, env }: {
   children: any,
   libraries: ReadonlyArray<Library>,
   env: Environment,
   remoteSlices?: ReadonlyArray<Slice<AsObject>>
-}) => {
+}) {
   const models: ReadonlyArray<LibraryState> = libraries.map((lib) => {
     return {
       name: lib.name,

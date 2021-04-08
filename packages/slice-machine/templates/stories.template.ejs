@@ -1,14 +1,9 @@
-// Button.stories.js
-
-import MyComponent from './';
-import model from './model'
-import mocks from './mocks.json'
-import { storiesOf } from '@storybook/vue';
+import MyComponent from './<%- componentPath %>';
 import SliceZone from 'vue-slicezone'
 
-
-export default function (mock) {
-  return {
+<% mocks.forEach((variation) => { %>
+  export const <%- variation.id %> = () => ({
+    title: "<%- variation.title %>",
     components: {
       MyComponent,
       SliceZone
@@ -20,9 +15,9 @@ export default function (mock) {
     },
     data() {
       return {
-        mock: variation
+        mock: <%- JSON.stringify(variation) %>
       }
     },
     template: '<SliceZone :slices="[mock]" :resolver="resolve" />'
-  }
-}
+  })
+<% }) %>

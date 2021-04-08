@@ -11,85 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "testtext": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "testtext2": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test3": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test5": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test6": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test7": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test8": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test9": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test10": {
-          "type": "StructuredText",
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          }
-        },
-        "test11": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test12": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
         "test13": {
           "type": "Text",
           "config": {
@@ -102,6 +23,22 @@
           "config": {
             "label": "",
             "placeholder": ""
+          }
+        },
+        "test15": {
+          "type": "Text",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        },
+        "test1": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         }
       },

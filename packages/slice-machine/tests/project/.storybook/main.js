@@ -1,6 +1,7 @@
 module.exports = {
   "stories": [
-    "../slices/**/*.stories.js"
+    "../slices/**/*.stories.js",
+    "../.slicemachine/assets/slices/**/*.stories.js"
   ],
   "addons": [
     "@storybook/addon-links",

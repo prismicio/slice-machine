@@ -28,7 +28,7 @@ const migrate = (model, info, env) => {
     .library(info.from)
     .slice(info.sliceName)
     .model()
-  Files.writeJson(modelPath, newModel)
+  Files.write(modelPath, newModel)
 
   return { model: newModel, migrated: true }
 }

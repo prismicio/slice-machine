@@ -7,21 +7,16 @@ const ERROR_CODES = {
 
 const Files = {
   _format: 'utf8' as BufferEncoding,
-  writeJson(pathToFile: string, jsValue: object) {
-    Files.write(pathToFile, JSON.stringify(jsValue, null, 2));
-  },
-  writeString(pathToFile: string, text: string) {
-    fs.writeFileSync(pathToFile, text, Files._format);
-  },
-  write(pathToFile: string, value: string | object, options: { recursive: boolean } = { recursive: false }) {
+  
+  write(pathToFile: string, value: string | object, options: { recursive: boolean } = { recursive: true }) {
     // make sure that the directory exists before writing the file
     if(options.recursive) {
       const directoryPath = path.dirname(pathToFile)
       Files.mkdir(directoryPath, { recursive: true })
     }
 
-    if(typeof value === 'string') this.writeString(pathToFile, value)
-    else this.writeJson(pathToFile, value)
+    if(typeof value === 'string') fs.writeFileSync(pathToFile, value, Files._format)
+    else fs.writeFileSync(pathToFile, JSON.stringify(value, null, 2), Files._format)
   },
   
   readString(pathToFile: string) {
@@ -30,19 +25,26 @@ const Files = {
   readJson(pathToFile: string) {
     return JSON.parse(this.readString(pathToFile));
   },
-  readFirstOf<O extends object>(filePaths: ReadonlyArray<{ path: string, options: O }>): { path: string, value: string } & O | undefined {
-    return filePaths.reduce((acc: { path: string, value: string } & O | undefined, filePath: { path: string, options: O }) => {
-      if(acc) return acc
-      else {
-        if(this.exists(filePath.path)) {
-          return {
-            path: filePath.path,
-            value: this.readString(filePath.path),
-            ...filePath.options
-          }
-        } else return acc
-      }
-    }, undefined)
+  readFirstOf<V, O extends { [key: string]: unknown }>(filePaths: ReadonlyArray<{ path: string, options?: O } | string>) {
+    return (converter: (value: string) => V): ({ path: string, value: V } & O) | undefined => {
+      return filePaths.reduce((acc: { path: string, value: V } & O | undefined, filePath: { path: string, options?: O } | string) => {
+        if(acc) return acc
+        else {
+          const pathWithOpts = typeof filePath === 'string' ? { path: filePath } : filePath
+
+          if(this.exists(pathWithOpts.path)) {
+            const optsOrDefault = (pathWithOpts.options || {} as O)
+
+            const test: { path: string, value: V } & O = {
+              path: pathWithOpts.path,
+              ...optsOrDefault,
+              value: converter(this.readString(pathWithOpts.path)),
+            }
+            return test
+          } else return acc
+        }
+      }, undefined)
+    }
   },
   
   isDirectory: (source: string) => fs.lstatSync(source).isDirectory(),
@@ -69,6 +71,9 @@ const Files = {
   },
   remove(src: string) {
     fs.rmSync(src)
+  },
+  removeAll(srcs: ReadonlyArray<string>) {
+    srcs.forEach(src => Files.remove(src))
   }
 };
 

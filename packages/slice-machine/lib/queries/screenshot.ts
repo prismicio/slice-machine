@@ -32,5 +32,5 @@ export function getPathToScreenshot({ cwd, from, sliceName, variationId }: { cwd
     }
   }
 
-  return Files.readFirstOf(customPaths.concat([defaultPath]))
+  return Files.readFirstOf<string, { exists: boolean, isCustom: boolean }>(customPaths.concat([defaultPath]))((v: string) => v)
 }

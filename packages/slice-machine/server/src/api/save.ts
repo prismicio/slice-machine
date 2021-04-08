@@ -3,6 +3,7 @@ import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../../lib/utils'
 import { getPathToScreenshot } from '../../../lib/queries/screenshot'
 import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
+import Storybook from './storybook'
 
 import { getEnv } from '../../../lib/env'
 import mock from '../../../lib/mock'
@@ -48,8 +49,7 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
       .slice(sliceName)
       .model()
     
-    Files.writeJson(modelPath, model)
-    
+    Files.write(modelPath, model)
     
     const hasCustomMocks = Files.exists(
       CustomPaths(env.cwd)
@@ -57,12 +57,12 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
       .slice(sliceName)
       .mocks()
     )
-      
+
     if(!hasCustomMocks) {
       console.log('[update]: generating mocks')
     
       const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
-      Files.writeJson(
+      Files.write(
         GeneratedPaths(env.cwd)
           .library(from)
           .slice(sliceName)
@@ -70,7 +70,18 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
         mockedSlice
       )
     }
-    
+
+    const hasCustomStories = Files.exists(
+      CustomPaths(env.cwd)
+      .library(from)
+      .slice(sliceName)
+      .stories()
+    )
+
+    if(!hasCustomStories) {
+      console.log('[update]: generating stories')
+      Storybook.generateStories(env.cwd, from, sliceName)
+    }
     
     console.log('[update]: generating screenshots previews')
     // since we iterate over variation and execute async code, we need a regular `for` loop to make sure that it's done sequentially and wait for the promise before running the next iteration
