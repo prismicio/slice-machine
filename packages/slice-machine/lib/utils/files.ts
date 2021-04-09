@@ -1,0 +1,80 @@
+import fs from 'fs'
+import path from 'path'
+
+const ERROR_CODES = {
+  ENOENT: 'ENOENT',
+};
+
+const Files = {
+  _format: 'utf8' as BufferEncoding,
+  
+  write(pathToFile: string, value: string | object, options: { recursive: boolean } = { recursive: true }) {
+    // make sure that the directory exists before writing the file
+    if(options.recursive) {
+      const directoryPath = path.dirname(pathToFile)
+      Files.mkdir(directoryPath, { recursive: true })
+    }
+
+    if(typeof value === 'string') fs.writeFileSync(pathToFile, value, Files._format)
+    else fs.writeFileSync(pathToFile, JSON.stringify(value, null, 2), Files._format)
+  },
+  
+  readString(pathToFile: string) {
+    return fs.readFileSync(pathToFile, { encoding: Files._format });
+  },
+  readJson(pathToFile: string) {
+    return JSON.parse(this.readString(pathToFile));
+  },
+  readFirstOf<V, O extends { [key: string]: unknown }>(filePaths: ReadonlyArray<{ path: string, options?: O } | string>) {
+    return (converter: (value: string) => V): ({ path: string, value: V } & O) | undefined => {
+      return filePaths.reduce((acc: { path: string, value: V } & O | undefined, filePath: { path: string, options?: O } | string) => {
+        if(acc) return acc
+        else {
+          const pathWithOpts = typeof filePath === 'string' ? { path: filePath } : filePath
+
+          if(this.exists(pathWithOpts.path)) {
+            const optsOrDefault = (pathWithOpts.options || {} as O)
+
+            const test: { path: string, value: V } & O = {
+              path: pathWithOpts.path,
+              ...optsOrDefault,
+              value: converter(this.readString(pathWithOpts.path)),
+            }
+            return test
+          } else return acc
+        }
+      }, undefined)
+    }
+  },
+  
+  isDirectory: (source: string) => fs.lstatSync(source).isDirectory(),
+  readDirectory: (source: string) => fs.readdirSync(source, { encoding: Files._format }),
+  mkdir: (target: string, options: { recursive: boolean }) => fs.mkdirSync(target, options),
+  exists(pathToFile: string) {
+    try {
+      return Boolean(fs.lstatSync(pathToFile));
+    } catch (e) {
+      if (e.code === ERROR_CODES.ENOENT) return false;
+      throw e;
+    }
+  },
+  append(filePath: string, data: string) {
+    fs.appendFileSync(filePath, data, { encoding: Files._format });
+  },
+
+  copy(src: string, dest: string,  options: { recursive: boolean } = { recursive: false }) {
+    if(options.recursive) {
+      const directoryPath = path.dirname(dest)
+      Files.mkdir(directoryPath, { recursive: true })
+    }
+    fs.copyFileSync(src, dest);
+  },
+  remove(src: string) {
+    fs.rmSync(src)
+  },
+  removeAll(srcs: ReadonlyArray<string>) {
+    srcs.forEach(src => Files.remove(src))
+  }
+};
+
+export default Files;

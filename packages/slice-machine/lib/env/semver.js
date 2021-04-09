@@ -1,6 +1,7 @@
-import fs from 'fs'
 import path from 'path'
 import semver from 'semver'
+import Files from '../utils/files'
+import { YarnLock } from '../models/paths'
 
 const MessageByManager = {
   YARN: (name) => `yarn add -D ${name}`,
@@ -8,7 +9,7 @@ const MessageByManager = {
 }
 
 const createMessage = (name, cwd) =>
-  fs.existsSync(path.join(cwd, 'yarn.lock'))
+  Files.exists(YarnLock(cwd))
     ? MessageByManager.YARN(name)
     : MessageByManager.NPM(name)
 
@@ -49,8 +50,8 @@ export default function createComparator() {
     const manifest = (() => {
       try {
         const pathToManifest = './package.json'
-        if (fs.existsSync(pathToManifest)) {
-          return JSON.parse(fs.readFileSync(pathToManifest, 'utf8'))
+        if (Files.exists(pathToManifest)) {
+          return Files.readJson(pathToManifest)
         }
     } catch(e) {
       console.error(e)

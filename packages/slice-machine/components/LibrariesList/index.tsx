@@ -1,9 +1,9 @@
 import { Fragment } from 'react'
-import Link from 'next/link'
-import { Box } from 'theme-ui'
+import NextLink from 'next/link'
+import { Box, Link } from 'theme-ui'
 import Card from './Card'
-import { SliceState } from 'lib/models/ui/SliceState'
-import { LibraryState } from 'lib/models/ui/LibraryState'
+import LibraryState from 'lib/models/ui/LibraryState'
+import SliceState from 'lib/models/ui/SliceState'
 import * as Links from 'lib/builder/links'
 
 const defaultRenderTitle = (lib: LibraryState ) => {
@@ -25,8 +25,15 @@ const DefaultCardWrapper = ({
   children
 }) => {
   return (
-    <Link href={link.href} as={link.as} passHref>
-      { children }          
+    <Link
+      sx={{
+        textDecoration: 'none',
+        color: 'inherit'
+      }}
+      as="a"
+      href={link.as}
+    >
+      { children }
     </Link>
   )
 }

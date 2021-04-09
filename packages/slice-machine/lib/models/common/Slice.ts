@@ -1,6 +1,6 @@
 import { AsArray, AsObject, Variation } from "./Variation";
 
-export interface Slice<F extends AsArray | AsObject> {
+interface Slice<F extends AsArray | AsObject> {
   id: string
   type: 'SharedSlice'
   name: string
@@ -8,7 +8,7 @@ export interface Slice<F extends AsArray | AsObject> {
   variations: ReadonlyArray<Variation<F>>
 }
 
-export const Slice = {
+const Slice = {
   toObject(slice: Slice<AsArray>): Slice<AsObject> {
     return {
       ...slice,
@@ -23,3 +23,5 @@ export const Slice = {
     }
   },
 }
+
+export default Slice

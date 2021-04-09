@@ -1,6 +1,6 @@
 import * as Widgets from './widgets'
 
-import { snakelize } from 'sm-commons/utils/str'
+import { snakelize } from '../utils/str'
 
 import { handleFields } from './handlers'
 

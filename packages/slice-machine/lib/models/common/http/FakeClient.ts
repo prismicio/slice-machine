@@ -2,12 +2,13 @@ export interface FakeResponse {
   status: number
   statusText: string
   fake: boolean
-  json?: () => []
+  json: () => []
   error?: string
+  text?: () => ''
 }
 
 export default class FakeClient {
-  private mutate: () => { status: number, statusText: string, fake: boolean, err: string }
+  private mutate: () => { status: number, statusText: string, fake: boolean, err: string, json: () => any }
   
   constructor() {
     this.mutate = () => ({

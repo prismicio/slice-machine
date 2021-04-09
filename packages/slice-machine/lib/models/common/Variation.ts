@@ -1,5 +1,6 @@
 import { Widget } from './widgets'
-import { pascalize } from 'sm-commons/utils/str'
+// @ts-ignore
+import { pascalize } from '../../utils/str'
 
 export enum WidgetsArea {
   Primary = 'primary',
@@ -62,9 +63,10 @@ export const Variation = {
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}. the list of widgets contains only ${variation[widgetsArea].length} elements.`)
 
     const reorderedArea = variation[widgetsArea].reduce<AsArray>((acc, widget, index) => {
+      const elems = [widget, reorderedWidget]
       switch(index) {
         case start: return acc
-        case end: return [ ...acc, reorderedWidget, widget ]
+        case end: return [ ...acc, ...end > start ? elems : elems.reverse() ]
         default: return [ ...acc, widget ]
       }
     }, [])
@@ -74,13 +76,17 @@ export const Variation = {
     }
   },
 
-  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget): Variation<AsArray> { 
-    return this.addWidget(
-      this.deleteWidget(variation, widgetsArea, previousKey),
-      widgetsArea,
-      newKey,
-      value
-    )
+  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, newValue: Widget): Variation<AsArray> { 
+    return {
+      ...variation,
+      [widgetsArea]: variation[widgetsArea].reduce((acc: AsArray, { key, value }) => {
+        if(key === previousKey) {
+          return acc.concat([{ key: newKey, value: newValue }])
+        } else {
+          return acc.concat([{ key, value }])
+        }
+      }, [])
+    }
   },
 
   addWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, key: string, value: Widget): Variation<AsArray> {

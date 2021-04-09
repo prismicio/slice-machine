@@ -1,4 +1,4 @@
-import { Slice } from './Slice'
+import Slice from './Slice'
 import { AsObject } from './Variation'
 
 export interface ComponentInfo {

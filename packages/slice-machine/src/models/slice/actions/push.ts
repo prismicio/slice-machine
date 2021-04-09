@@ -1,5 +1,5 @@
 import { fetchApi } from '../../../../lib/builder/fetch'
-import { SliceState } from '../../../../lib/models/ui/SliceState'
+import SliceState from '../../../../lib/models/ui/SliceState'
 import { ActionType } from './ActionType'
 
 

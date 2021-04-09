@@ -1,5 +1,5 @@
 import Environment from '../../../lib/models/common/Environment'
-import { Slice } from '../../../lib/models/common/Slice'
+import Slice from '../../../lib/models/common/Slice'
 import Warning from '../../../lib/models/common/Warning'
 import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
 import { Library } from '../../../lib/models/common/Library'

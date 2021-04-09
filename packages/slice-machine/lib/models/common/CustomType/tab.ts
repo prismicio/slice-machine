@@ -71,9 +71,10 @@ export const Tab = {
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
 
     const reorderedArea: TabValueAsArray = tab.value.reduce((acc: TabValueAsArray, widget: {key: string, value: Widget} | GroupAsArray, index: number) => {
+      const elems = [widget, reorderedWidget]
       switch(index) {
         case start: return acc
-        case end: return [ ...acc, reorderedWidget, widget ]
+        case end: return [ ...acc, ...end > start ? elems : elems.reverse() ]
         default: return [ ...acc, widget ]
       }
     }, [])

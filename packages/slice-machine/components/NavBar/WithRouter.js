@@ -7,7 +7,7 @@ import { SliceContext } from 'src/models/slice/context'
 import { LibrariesContext } from 'src/models/libraries/context'
 import NavBar from './'
 import { VersionBadge } from './components'
-import { SliceState } from 'lib/models/ui/SliceState'
+import SliceState from 'lib/models/ui/SliceState'
 import * as Links from 'lib/builder/links'
 
 const INDEX = 'INDEX'
@@ -16,19 +16,19 @@ const CTS = 'CTS'
 const VARIATION = 'VARIATION'
 
 const Routes = {
-  '/index': INDEX,
+  '/': INDEX,
   '/cts': CTS,
   '/[lib]/[sliceName]': LIB,
   '/[lib]/[sliceName]/[variation]': VARIATION
 }
 
 const InBuilder = ({ router, ...props }) => {
-  const { Model, variation } = useContext(SliceContext)
+  const { Model } = useContext(SliceContext)
   const libs = useContext(LibrariesContext)
   const slices = libs.find(lib => lib.name === Model.from)?.components || []
   return (
     <NavBar {...props} {...Model}>
-      <Link href="/index" as="/" passHref>
+      <Link href="/" passHref>
         <ThemeLink
           to='/'
           sx={{
@@ -67,12 +67,12 @@ const InBuilder = ({ router, ...props }) => {
 }
 const WithRouter = (props) => {
   const router = useRouter()
-
   const route = Routes[router.route] || INDEX
+
   return route === INDEX || route === CTS ? (
     <NavBar {...props}>
       <Fragment>
-        <Link href="/index" as="/" passHref>
+        <Link href="/" passHref>
           <ThemeLink
             to='/'
             sx={{

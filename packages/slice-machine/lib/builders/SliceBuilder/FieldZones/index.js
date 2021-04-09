@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import Zone from '../../common/Zone'
+import { Box } from 'theme-ui'
 
 import EditModal from '../../common/EditModal'
 
@@ -63,9 +64,6 @@ const Zones = ({
   }
 
   const _onDragEnd = (fieldType) => (result) => {
-    console.log({
-      result
-    })
     if (!result.destination) {
       return
     }
@@ -94,6 +92,7 @@ const Zones = ({
         renderHintBase={({ item }) => `slice.primary.${item.key}`}
         renderFieldAccessor={(key) => `slice.primary.${key}`}
       />
+      <Box mt={4} />
       <Zone
         isRepeatable
         Model={Model}

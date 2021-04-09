@@ -1,28 +1,36 @@
-import fs from 'fs'
-import path from 'path'
-import glob from 'glob'
+import { CustomPaths, GeneratedPaths } from '../models/paths'
+import Files from '../utils/files'
 
 const { acceptedImagesTypes } = require('../consts')
 
-export function createPathToScreenshot({ cwd, from, sliceName, variationId }: { cwd: string, from: string, sliceName: string, variationId: string}): string {
-  return path.join(cwd, '.slicemachine/assets', from, sliceName, variationId, 'preview.png')
-}
-
-export function getPathToScreenshot({ cwd, from, sliceName, variationId }: { cwd: string, from: string, sliceName: string, variationId: string}): { exists: boolean, defaultPath?: string, path?: string, isCustom: boolean } {
-  const slicePath = path.join(cwd, from, sliceName, variationId)
-  const exists = glob.sync(`${slicePath}/preview.@(${acceptedImagesTypes.join('|')})`)
-  if (exists.length) {
-    return {
+export function getPathToScreenshot({ cwd, from, sliceName, variationId }: { cwd: string, from: string, sliceName: string, variationId: string}): { exists: boolean, path: string, isCustom: boolean } | undefined {
+  const customPaths = acceptedImagesTypes.map((imageType: string) => {
+    const previewPath = CustomPaths(cwd)
+      .library(from)
+      .slice(sliceName)
+      .variation(variationId)
+      .preview(`preview.${imageType}`)
+    
+      return {
+        path: previewPath,
+        options: {
+          exists: true,
+          isCustom: true
+        }
+      }
+  })
+  
+  const defaultPath = {
+    path: GeneratedPaths(cwd)
+      .library(from)
+      .slice(sliceName)
+      .variation(variationId)
+      .preview(),
+    options: {
       exists: true,
-      path: exists[0],
-      isCustom: true
+      isCustom: false
     }
   }
-  const defaultPath = createPathToScreenshot({ cwd, from, sliceName, variationId })
-  return {
-    exists: false,
-    path: fs.existsSync(defaultPath) ? defaultPath : undefined,
-    defaultPath,
-    isCustom: false
-  }
+
+  return Files.readFirstOf<string, { exists: boolean, isCustom: boolean }>(customPaths.concat([defaultPath]))((v: string) => v)
 }

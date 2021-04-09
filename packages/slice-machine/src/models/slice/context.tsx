@@ -6,9 +6,9 @@ import { useContext } from 'react'
 import SliceStore from './store'
 import { reducer } from './reducer'
 
-import { SliceState } from '../../../lib/models/ui/SliceState'
+import SliceState from '../../../lib/models/ui/SliceState'
 import { ComponentWithLibStatus } from '../../../lib/models/common/Library'
-import { Slice } from '../../../lib/models/common/Slice'
+import Slice from '../../../lib/models/common/Slice'
 import { Variation, AsArray, AsObject } from '../../../lib/models/common/Variation'
 
 type ContextProps = {
@@ -56,15 +56,17 @@ export default function SliceProvider({ children, value, variation }: { children
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter()
   const libraries = useContext(LibrariesContext)
+
   if (!router.query || !router.query.lib || !router.query.sliceName) {
     return children
   }
-
+  
   const libParam: string = (() => {
     const l = router.query.lib
     if(l instanceof Array) return l[0]
     else return l
   })() 
+  
   const lib = libraries.find(l => l?.name === libParam.replace(/--/g, "/"))
   if (!lib) {
     router.replace('/')
@@ -74,10 +76,10 @@ export const SliceHandler = ({ children }: { children: any }) => {
   const slice = lib.components.find(([state]) => state.infos.sliceName === router.query.sliceName)
 
   if (!slice) {
+    console.log('no slice, replace /')
     router.replace('/')
     return null
   }
-
 
   const variationParam: string | undefined = (() => {
     const l = router.query.variation
@@ -94,12 +96,14 @@ export const SliceHandler = ({ children }: { children: any }) => {
     }
   })()
   if(!variation) {
+    console.log('no variation, replace /')
     router.replace('/')
     return null
   }
 
   // variation not in the URL but a default variation was found
   if(!variationParam) {
+    console.log('no variation param, redirect to default variation')
     router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`)
   }
 

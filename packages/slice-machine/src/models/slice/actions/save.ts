@@ -1,6 +1,6 @@
 import { Variation } from '../../../../lib/models/common/Variation'
 import { fetchApi } from '../../../../lib/builder/fetch'
-import { SliceState } from '../../../../lib/models/ui/SliceState'
+import SliceState from '../../../../lib/models/ui/SliceState'
 import { Preview } from '../../../../lib/models/common/Component'
 import { ActionType } from './ActionType'
 
