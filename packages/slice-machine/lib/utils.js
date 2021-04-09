@@ -46,8 +46,8 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
   }
 }
 
-export const createScreenshotUrl = ({ storybook, sliceName, variationId }) => {
-  return `${storybook}/iframe.html?id=${sliceName.toLowerCase()}--${hyphenate(variationId)}&viewMode=story`
+export const createScreenshotUrl = ({ storybook, libraryName, sliceName, variationId }) => {
+  return `${storybook}/iframe.html?id=${hyphenate(libraryName)}-${sliceName.toLowerCase()}--${hyphenate(variationId)}&viewMode=story`
 }
 
 export const maybeJsonFile = (pathToFile) => {

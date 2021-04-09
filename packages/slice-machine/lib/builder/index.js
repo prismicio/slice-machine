@@ -7,6 +7,8 @@ import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'
 
+import { hyphenate } from '../../lib/utils/str'
+
 import {
   Box,
   Label,
@@ -23,14 +25,14 @@ import {
 import PreviewFields from './modules/PreviewFields'
 import MockModal from './modules/MockModal'
 
-const createStorybookUrls = (storybookBaseUrl, sliceName, variation = 'default-slice') => ({
-  storybookUrl: `${storybookBaseUrl}/?path=/story/${sliceName.toLowerCase()}--${variation}`
+const createStorybookUrls = (storybookBaseUrl, libraryName, sliceName, variation = 'default-slice') => ({
+  storybookUrl: `${storybookBaseUrl}/?path=/story/${hyphenate(libraryName)}-${sliceName.toLowerCase()}--${hyphenate(variation)}`
 })
 
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
   const { Model, store, variation } = useContext(SliceContext)
-  const { env: { storybook: storybookBaseUrl }, warnings } = useContext(ConfigContext)
+  const { env: { userConfig: { storybook: storybookBaseUrl } }, warnings } = useContext(ConfigContext)
   const {
     infos: {
       sliceName,
@@ -57,7 +59,7 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const { storybookUrl } = createStorybookUrls(storybookBaseUrl, sliceName, variation.id)
+  const { storybookUrl } = createStorybookUrls(storybookBaseUrl, from, sliceName, variation.id)
 
   useEffect(() => {
     if (isTouched) {

@@ -41,20 +41,18 @@ export default {
     }
     
     const template = Files.readString(Paths.storiesTemplate(appRoot));
-    console.log("mocks")
-    console.log(mocks)
 
     const withPascalizedIds = mocks.value.map( (m: any) => {
       const id = pascalize(m.id)
       return {
         ...m,
         id,
-        title: `${libraryName}/${sliceName}/${id}`
       }
      })
 
     const componentPath = `../../../../${libraryName}/${sliceName}`
-    const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath });
+    const componentTitle = `${libraryName}/${sliceName}`
+    const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath, componentTitle });
 
     Files.write(
       GeneratedPaths(cwd)

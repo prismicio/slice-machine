@@ -101,7 +101,7 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
       const activeScreenshot = getPathToScreenshot(screenshotArgs)
       
       if(!activeScreenshot) {
-        const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, sliceName, variationId: variation.id })
+        const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, libraryName: from, sliceName, variationId: variation.id })
         const pathToFile = GeneratedPaths(env.cwd)
           .library(screenshotArgs.from)
           .slice(screenshotArgs.sliceName)
