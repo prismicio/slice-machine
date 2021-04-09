@@ -28,7 +28,6 @@ export interface SliceState {
 }
 
 export const SliceState = {
-  
   variation(state: SliceState, variationId?: string): Variation<AsArray> | undefined {
     if(state.variations.length) {
       if(variationId) return state.variations.find(v => v.id === variationId)

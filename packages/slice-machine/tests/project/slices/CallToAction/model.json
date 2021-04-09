@@ -11,15 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "title": {
-          "type": "StructuredText",
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          }
-        },
         "description": {
           "type": "StructuredText",
           "config": {
@@ -29,63 +20,7 @@
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         },
-        "testtext": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "testtext2": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test3": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test5": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test6": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test7": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test8": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test9": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test10": {
+        "title": {
           "type": "StructuredText",
           "config": {
             "label": "",
@@ -94,33 +29,21 @@
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         },
-        "test11": {
-          "type": "Text",
+        "description2": {
           "config": {
             "label": "",
-            "placeholder": ""
-          }
+            "placeholder": "",
+            "allowTargetBlank": true
+          },
+          "type": "Link"
         },
-        "test12": {
-          "type": "Text",
+        "description22": {
           "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test13": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
-        "test14": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
+            "label": "Label",
+            "constraint": {},
+            "thumbnails": []
+          },
+          "type": "Image"
         }
       },
       "items": {

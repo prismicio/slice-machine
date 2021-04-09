@@ -1,0 +1,14 @@
+{
+  "repeatable": true,
+  "title": "Pages",
+  "tabs": {
+    "Page": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "My uid"
+        }
+      }
+    }
+  }
+}

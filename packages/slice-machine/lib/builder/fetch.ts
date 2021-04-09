@@ -30,7 +30,7 @@ export const fetchApi = ({
   errorMessage,
   onSuccess
 }: FetchInput): Promise<void> => {
-  setData({ loading: true, done: false, error: null, ...data.onLoad ? data.onLoad : [] })
+  setData({ loading: true, done: false, error: null, ...data.onLoad ? data.onLoad : {} })
   
   return fetch(url, {
     headers: {
@@ -47,7 +47,7 @@ export const fetchApi = ({
         done: true,
         error: err,
         message: errorMessage || reason,
-        ...data.onResponse ? data.onResponse : []
+        ...data.onResponse ? data.onResponse : {}
       })
     }
     setData({
@@ -56,7 +56,7 @@ export const fetchApi = ({
       error: null,
       warning: !!warning,
       message: warning || successMessage || reason,
-      ...data.onResponse ? data.onResponse : []
+      ...data.onResponse ? data.onResponse : {}
     })
     onSuccess(jsonResponse)
   })

@@ -17,9 +17,9 @@ import { createInitialValues, createValidationSchema } from 'lib/forms'
 
 import { MockConfigKey } from 'lib/consts'
 
-import Card from 'components/Card/WithTabs'
-import ItemHeader from 'components/ItemHeader'
-import { Flex as FlexGrid, Col } from 'components/Flex'
+import Card from '../../../../components/Card/WithTabs'
+import ItemHeader from '../../../../components/ItemHeader'
+import { Flex as FlexGrid, Col } from '../../../../components/Flex'
 
 import WidgetForm from './Form'
 import WidgetFormField from './Field'
@@ -32,14 +32,17 @@ const EditModal = ({
   close,
   data,
   Model,
-  variation,
-  store
+  fields,
+  onSave,
+  getFieldMockConfig
 }) => {
-
+  if (!data.isOpen) {
+    return null
+  }
   const { theme } = useThemeUI()
   
   const { mockConfig: initialMockConfig } = Model
-  const { fieldType, field: [apiId, initialModelValues] } = data
+  const { field: [apiId, initialModelValues] } = data
   const {
     Meta: { icon: WidgetIcon },
     FormFields,
@@ -54,11 +57,16 @@ const EditModal = ({
   const initialValues = {
     ...createInitialValues(FormFields),
     ...removeKeys(initialModelValues.config, ['type']),
-    [MockConfigKey]: deepMerge(MockConfigForm?.initialValues || {}, initialMockConfig?.[fieldType]?.[apiId] || {}),
+    [MockConfigKey]: deepMerge(
+      MockConfigForm?.initialValues || {},
+      getFieldMockConfig({ apiId }) || {}
+    ),
     id: apiId,
   }
 
   const validationSchema = createValidationSchema(FormFields)
+
+  const formId = `${FORM_ID}-${Math.random().toString()}`
 
   return (
     <Modal
@@ -74,30 +82,16 @@ const EditModal = ({
     >
       <WidgetForm
         apiId={apiId}
-        Model={Model}
-        formId={FORM_ID}
-        fieldType={fieldType}
+        formId={formId}
         initialValues={initialValues}
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
-          if (mockValue && Object.keys(mockValue).length) {
-            const updatedValue = MockConfigForm.onSave ? MockConfigForm.onSave(mockValue, value) : mockValue
-            store
-              .variation(variation.id)
-              .updateWidgetMockConfig(initialMockConfig, fieldType, apiId, newKey, updatedValue)
-          } else {
-            store
-              .variation(variation.id)
-              .deleteWidgetMockConfig(initialMockConfig, fieldType, apiId)
-          }
-
-          // some models have been wrongly saved with id and type
-          store
-            .variation(variation.id)
-            .replaceWidget(fieldType, apiId, newKey, { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type })
-          
-            close()
+          const updatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
+            ? MockConfigForm.onSave(mockValue, value)
+            : mockValue
+          onSave({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue: updatedMockValue })
+          close()
         }}
       >
         {(props) => {
@@ -130,7 +124,6 @@ const EditModal = ({
                     <ItemHeader
                       theme={theme}
                       text={label || id}
-                      sliceProperty={`slice.${fieldType}.${id}`}
                       WidgetIcon={WidgetIcon}
                     />
                     <Close onClick={close} type="button" />
@@ -148,7 +141,7 @@ const EditModal = ({
                       Cancel
                     </Button>
                     <Button
-                      form={FORM_ID}
+                      form={formId}
                       type="submit"
                       disabled={!isValid && isSubmitting}
                     >
@@ -158,17 +151,15 @@ const EditModal = ({
                 )}
               >
                 {
-                  CustomForm ? <CustomForm {...props} Model={Model} variation={variation} fieldType={fieldType} /> : (
+                  CustomForm ? <CustomForm {...props} fields={fields} /> : (
                     <FlexGrid>
                       {
                         Object.entries(FormFields).map(([key, field]) => (
                           <Col key={key}>
                             <WidgetFormField
                               fieldName={key}
-                              fieldType={fieldType}
                               formField={field}
-                              variation={variation}
-                              errors={errors}
+                              fields={fields}
                               initialValues={initialValues}
                             />
                           </Col>
@@ -180,16 +171,16 @@ const EditModal = ({
                 <Box>
                   { MockConfigForm ? (
                     <Box>
-                      {
+                      {/* {
                         fieldType === 'items' ? (
                           <Alert mb={3} variant="highlight">
                             Note: setting mock content for repeatable fields will set all items to the same value!
                           </Alert>
                         ) : null
-                      }
+                      } */}
                       <MockConfigForm initialValues={initialValues} />
                     </Box>
-                  ) : <p>Not ready</p>}
+                  ) : <p>Mock Configuration not implemented</p>}
                 </Box>
               </Card>
           )}

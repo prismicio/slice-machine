@@ -19,7 +19,7 @@ export const ClientError = ({ errorType }) => (
             borderBottom: t => `1px solid ${t.colors.borders}`
           }}
         >
-          <Heading as="h3">Unabe to fetch remote slices</Heading>
+          <Heading as="h3">Unable to fetch remote slices</Heading>
         </Flex>
       )}
     >

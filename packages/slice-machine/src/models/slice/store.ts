@@ -16,7 +16,8 @@ import {
   saveSlice,
   pushSlice,
 } from './actions';
-import Store from 'lib/models/ui/Store';
+
+import Store from 'lib/models/ui/Store'
 
 export default class SliceStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}

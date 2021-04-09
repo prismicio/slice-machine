@@ -12,10 +12,12 @@ import * as Links from 'lib/builder/links'
 
 const INDEX = 'INDEX'
 const LIB = 'LIB'
+const CTS = 'CTS'
 const VARIATION = 'VARIATION'
 
 const Routes = {
   '/index': INDEX,
+  '/cts': CTS,
   '/[lib]/[sliceName]': LIB,
   '/[lib]/[sliceName]/[variation]': VARIATION
 }
@@ -67,7 +69,7 @@ const WithRouter = (props) => {
   const router = useRouter()
 
   const route = Routes[router.route] || INDEX
-  return route === INDEX ? (
+  return route === INDEX || route === CTS ? (
     <NavBar {...props}>
       <Fragment>
         <Link href="/index" as="/" passHref>

@@ -7,6 +7,8 @@ import { ConfigContext } from 'src/config-context'
 
 import { fetchApi } from './fetch'
 
+import { removeKeys } from 'lib/utils'
+
 import {
   Box,
   Label,
@@ -20,7 +22,8 @@ import {
   Success
 } from './layout'
 
-import PreviewFields from './modules/PreviewFields'
+// import PreviewFields from './modules/PreviewFields'
+import FieldZones from '../builders/SliceBuilder/FieldZones'
 import MockModal from './modules/MockModal'
 
 const createStorybookUrls = (storybookBaseUrl, sliceName, variation = 'default-slice') => ({
@@ -36,16 +39,7 @@ const Builder = ({ openPanel }) => {
       sliceName,
       previewUrls,
     },
-    jsonModel,
-    variations,
-    from,
-    value,
-    hydrate,
     isTouched,
-    isModified,
-    mockConfig,
-    appendInfo,
-    resetInitialModel,
   } = Model
 
   const isMounted = useIsMounted()
@@ -98,6 +92,7 @@ const Builder = ({ openPanel }) => {
   const DEFAULT_CHECKED = false;
   const [showHints, setShowHints] = useState(DEFAULT_CHECKED);
   const onToggleHints = () => setShowHints(!showHints);
+
   return (
     <Box>
       <Header Model={Model} store={store} variation={variation} />
@@ -110,19 +105,19 @@ const Builder = ({ openPanel }) => {
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={<SideBar
-            data={data}
-            Model={Model}
-            variation={variation}
-            onPush={ () => store.push(Model, setData) }
-            onSave={ () => store.save(Model, setData) }
-            warnings={warnings}
-            openPanel={openPanel}
-            previewUrl={previewUrls[variation.id]}
-            storybookUrl={storybookUrl}
-            onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, setData) }
-            onHandleFile={(file) => store.variation(variation.id).generateCustomScreenShot(Model.from, Model.infos.sliceName, setData, file)}
-            imageLoading={data.imageLoading}
-          />}
+          data={data}
+          Model={Model}
+          variation={variation}
+          onPush={ () => store.push(Model, setData) }
+          onSave={ () => store.save(Model, setData) }
+          warnings={warnings}
+          openPanel={openPanel}
+          previewUrl={previewUrls[variation.id]}
+          storybookUrl={storybookUrl}
+          onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, setData) }
+          onHandleFile={(file) => store.variation(variation.id).generateCustomScreenShot(Model.from, Model.infos.sliceName, setData, file)}
+          imageLoading={data.imageLoading}
+        />}
       >
 
         <Label variant="hint" sx={{ justifyContent: 'flex-end', py: 2, px: 0 }}>
@@ -133,13 +128,13 @@ const Builder = ({ openPanel }) => {
             onChange={onToggleHints}
           />
         </Label>
-        
-          <PreviewFields
-            Model={Model}
-            store={store}
-            variation={variation}
-            showHints={showHints}
-          />
+
+        <FieldZones
+          Model={Model}
+          store={store}
+          showHints={showHints}
+          variation={variation}
+        />
 
       </FlexEditor>
       {

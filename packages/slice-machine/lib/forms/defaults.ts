@@ -1,19 +1,16 @@
 import { Input } from './fields'
-import { Variation, AsArray, WidgetsArea } from '../models/common/Variation';
 
 export const validateId = ({
   value,
-  variation,
-  fieldType,
-  initialValues
+  fields,
+  initialId,
 }: {
   value: string,
-  variation: Variation<AsArray>,
-  fieldType: WidgetsArea,
-  initialValues: { id: string }
+  fields: Array<{ key: string }>,
+  initialId: string
 }) => {
-  const fieldExists = variation[fieldType].find(({key}) => key === value)
-  if (fieldExists && value !== initialValues.id) {
+  const fieldExists = fields.find(({key}) => key === value)
+  if (fieldExists && value !== initialId) {
     return `Field "${value}" already exists.`
   }
 }

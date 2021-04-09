@@ -5,7 +5,7 @@ import { DefaultFields } from 'lib/forms/defaults'
 
 import options, { optionValues } from './options'
 
-import WidgetFormField from 'lib/builder/modules/EditModal/Field'
+import WidgetFormField from 'lib/builders/common/EditModal/Field'
 
 import { Text, Button, Label, Checkbox, Flex, Box } from 'theme-ui'
 import { Col, Flex as FlexGrid } from 'components/Flex'
@@ -31,7 +31,7 @@ const FormFields = {
 const accessors = ['single', 'multi']
 
 const WidgetForm = (props) => {
-  const { initialValues, values: formValues, errors, Model, variation, fieldType, setFieldValue, } = props
+  const { initialValues, values: formValues, errors, Model, fields, fieldType, setFieldValue, } = props
   const { single, multi } = formValues
   const initialOptions = single ? _createInitialOptions(single)
     : (multi && _createInitialOptions(multi))
@@ -56,10 +56,8 @@ const WidgetForm = (props) => {
           <Col key={key}>
             <WidgetFormField
               fieldName={key}
-              fieldType={fieldType}
               formField={field}
-              Model={Model}
-              variation={variation}
+              fields={fields}
               initialValues={initialValues}
             />
           </Col>

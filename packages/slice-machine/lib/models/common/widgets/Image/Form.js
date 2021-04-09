@@ -3,7 +3,7 @@ import { useEffect, useState, Fragment } from 'react'
 import { DefaultFields } from 'lib/forms/defaults'
 
 
-import WidgetFormField from 'lib/builder/modules/EditModal/Field'
+import WidgetFormField from 'lib/builders/common/EditModal/Field'
 
 import { FieldArray } from 'formik'
 
@@ -42,9 +42,7 @@ const Form = (props) => {
     initialValues,
     values: formValues,
     errors,
-    Model,
-    variation,
-    fieldType,
+    fields,
     touched
   } = props
   
@@ -60,10 +58,8 @@ const Form = (props) => {
           <Col key={key}>
             <WidgetFormField
               fieldName={key}
-              fieldType={fieldType}
-              Model={Model}
               formField={field}
-              variation={variation}
+              fields={fields}
               initialValues={initialValues}
             />
           </Col>

@@ -3,12 +3,11 @@ import { Box, Label, Input, Text } from 'theme-ui'
 
 const FormFieldInput = ({
   sx = {},
-  variation,
-  field,
-  meta = {},
+  field, /* from Formik */
+  meta = {}, /* from Formik */
   formField,
   fieldName,
-  fieldType,
+  fields,
   initialValues
 }) => (
   <Box sx={sx}>
@@ -32,10 +31,8 @@ const FormFieldInput = ({
         ...(formField.fieldLevelValidation ? {
           validate: (value) => formField.fieldLevelValidation({
             value,
-            variation,
-            fieldName,
-            fieldType,
-            initialValues
+            fields,
+            initialId: initialValues.id
           })
         } : null)
       }

@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import fetchLibs from './libraries'
+import fetchCustomTypes from './custom-types/index'
 import { getEnv } from '../../../lib/env'
 import { warningStates, warningTwoLiners } from '../../../lib/consts'
 import { fetchStorybookUrl } from './common/utils'
@@ -80,7 +81,10 @@ export default async function handler() {
 
   const { env, errors: configErrors } = await getEnv()
   const { libraries, remoteSlices, clientError } = await fetchLibs(env)
+  const { customTypes } = await fetchCustomTypes(env)
 
   const warnings = await createWarnings(env, configErrors, clientError)
-  return { libraries, remoteSlices, clientError, configErrors, env, warnings }
+
+  console.log({ customTypes })
+  return { libraries, customTypes, remoteSlices, clientError, configErrors, env, warnings }
 }

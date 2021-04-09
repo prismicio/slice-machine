@@ -39,6 +39,11 @@
     }
   },
   "CallToAction2": {},
-  "CallToAction": {},
+  "CallToAction": {
+    "primary": {
+      "a": "l",
+      "d": "e"
+    }
+  },
   "CallToAction3": {}
 }

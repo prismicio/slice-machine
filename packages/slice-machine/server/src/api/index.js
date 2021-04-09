@@ -13,6 +13,8 @@ const customScreenshot = require('./custom-screenshot').default
 const parseOembed = require('./parse-oembed').default
 const state = require('./state').default
 
+const createCustomType = require('./custom-types/create').default
+
 router.use('/__preview', async function previewRoute(req, res) {
   const p = decodeURIComponent(req.query.q)
   const stream = fs.createReadStream(p)
@@ -78,6 +80,15 @@ router.use('/push', async function (req, res) {
 
 router.use('/push-all', async function (req, res) {
   const payload = await pushAll()
+  return res.status(200).json(payload)
+})
+
+router.use('/custom-types/create', async function (req, res) {
+  console.log('/custom-types/create')
+  const payload = await createCustomType(req.body)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
   return res.status(200).json(payload)
 })
 

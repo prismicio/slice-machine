@@ -69,7 +69,9 @@
     "jsx": "preserve",
     "paths": {
       "@/*": ["/*"],
+      "lib/": ["lib/"],
       "lib/*": ["lib/*"],
+      "builders/*": ["lib/builders/*"],
       "models/*": ["lib/models/*"],
       "src/*": ["src/*"],
       "components/*": ["components/*"]

@@ -2,24 +2,51 @@ import { Fragment } from 'react'
 import Link from 'next/link'
 import { Box } from 'theme-ui'
 import Card from './Card'
-import LibraryState from 'lib/models/ui/LibraryState'
 import { SliceState } from 'lib/models/ui/SliceState'
+import { LibraryState } from 'lib/models/ui/LibraryState'
 import * as Links from 'lib/builder/links'
 
-export default ({ libraries }) => (
+const defaultRenderTitle = (lib: LibraryState ) => {
+  return (
+    <Fragment>
+      <Box
+        as="h2"
+        sx={{ pb:3 }}
+      >
+        {lib.name}
+      </Box>
+      <hr />
+    </Fragment>
+  )
+}
+
+const DefaultCardWrapper = ({
+  slice,
+  variationId,
+  link,
+  children
+}) => {
+  return (
+    <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
+      { children }          
+    </Link>
+  )
+}
+
+export default ({
+  libraries,
+  CardWrapper = DefaultCardWrapper,
+  renderTitle = defaultRenderTitle
+}: {
+  libraries: ReadonlyArray<LibraryState>,
+  renderTitle: Function,
+  CardWrapper: Function
+}) => (
   <Fragment>
     {
       libraries && libraries.map(lib => (
         <div key={lib.name}>
-          <Box
-            as="h2"
-            sx={{
-              pb:3,
-            }}>
-            {lib.name}
-          </Box>
-          <hr />
-
+          { renderTitle(lib) }
           <Box
             as="section"
             sx={{
@@ -37,9 +64,9 @@ export default ({ libraries }) => (
                 const variationId = defaultVariation.id
                 const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
                 return (
-                  <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
+                  <CardWrapper slice={slice} variationId={variationId} link={link}>
                     <Card {...slice} defaultVariation={defaultVariation} />
-                  </Link>
+                  </CardWrapper>
                 )
               })
             }

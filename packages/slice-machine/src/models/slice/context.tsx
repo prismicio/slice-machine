@@ -55,7 +55,6 @@ export default function SliceProvider({ children, value, variation }: { children
 
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter()
-  console.log(router.query)
   const libraries = useContext(LibrariesContext)
   if (!router.query || !router.query.lib || !router.query.sliceName) {
     return children
@@ -98,8 +97,6 @@ export const SliceHandler = ({ children }: { children: any }) => {
     router.replace('/')
     return null
   }
-
-  console.log("Hello")
 
   // variation not in the URL but a default variation was found
   if(!variationParam) {

@@ -69,6 +69,11 @@ const PreviewFields = ({
 
   const onCancelNewField = () => setNewFieldData(null)
 
+
+  console.log({
+    prim: variation.primary
+  })
+
   return (
     <Fragment>
       <Fragment>

@@ -11,10 +11,14 @@ export const removeProp = (obj, prop) => {
   return rest
 }
 
-export const removeKeys = (obj, keys) =>
-  Object.entries(obj)
+export const removeKeys = (obj, keys) => {
+  if (typeof obj !== 'object' || Array.isArray(obj)) {
+    return obj
+  }
+  return Object.entries(obj)
     .filter(([key]) => keys.indexOf(key) === -1)
     .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+}
 
 export const createDefaultWidgetValues = (TYPE_NAME) => ({
   TYPE_NAME,

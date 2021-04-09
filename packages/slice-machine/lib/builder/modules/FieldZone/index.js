@@ -87,7 +87,7 @@ const FieldZone = ({
                       index={index}
                       modelFieldName={modelFieldName}
                       enterEditMode={enterEditMode}
-                      deleteItem={_onDeleteItem}
+                      deleteItem={onDeleteItem}
                       showHints={showHints}
                     />
                   ))}

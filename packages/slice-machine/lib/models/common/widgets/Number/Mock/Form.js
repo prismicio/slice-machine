@@ -34,9 +34,9 @@ const Form = () => {
           type="number"
           onChange={e => onUpdate(e.target.value)}
           sx={{
-            '-moz-appearance': 'textField',
+            MozAppearance: 'textField',
             '&::-webkit-outer-spin-button,&::-webkit-inner-spin-button': {
-              '-webkit-appearance': 'none',
+              WebkitAppearance: 'none',
               'margin': 0
             }
           }}

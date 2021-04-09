@@ -7,6 +7,7 @@ import theme from 'src/theme'
 import { ThemeProvider, BaseStyles } from 'theme-ui'
 
 import LibrariesProvider from 'src/models/libraries/context'
+import CustomTypesProvider from 'src/models/customTypes/context'
 import { SliceHandler } from 'src/models/slice/context'
 import ConfigProvider from 'src/config-context'
 
@@ -30,6 +31,8 @@ import ServerError from '../lib/models/server/ServerError'
 import { Library } from '../lib/models/common/Library'
 import Environment from '../lib/models/common/Environment'
 import { Slice } from 'lib/models/common/Slice'
+import { CustomType } from 'lib/models/common/CustomType'
+import { TabsAsObject } from 'lib/models/common/CustomType/tab'
 import { AsObject } from 'lib/models/common/Variation'
 
 async function fetcher(url: string): Promise<any> {
@@ -55,7 +58,12 @@ function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Elemen
   const [drawerState, setDrawerState] = useState<{ open: boolean, priority?: any}>({ open: false })
   const [state, setRenderer] = useState<{
     Renderer: (props: any) => JSX.Element,
-    payload: { libraries?: ReadonlyArray<Library>, env: Environment, remoteSlices?: ReadonlyArray<Slice<AsObject>> } | null
+    payload: {
+      env: Environment,
+      libraries?: ReadonlyArray<Library>,
+      customTypes: ReadonlyArray<CustomType<TabsAsObject>>
+      remoteSlices?: ReadonlyArray<Slice<AsObject>>
+    } | null
   }>({ Renderer: RenderStates.Loading, payload: null })
 
   const openPanel = useCallback(
@@ -102,25 +110,27 @@ function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Elemen
                   ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                   : (
                       <LibrariesProvider remoteSlices={payload.remoteSlices} libraries={payload.libraries} env={payload.env}>
-                        <SliceHandler {...payload}>
-                          <NavBar
-                            env={data.env}
-                            warnings={data.warnings}
-                            openPanel={() => openPanel()}
-                          />
-                          <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
-                          <Drawer
-                            placement="right"
-                            open={drawerState.open}
-                            onClose={() => setDrawerState({ ...drawerState, open: false })}
-                          >
-                            <Warnings
-                              priority={drawerState.priority}
-                              list={data.warnings}
-                              configErrors={data.configErrors}
+                        <CustomTypesProvider customTypes={payload.customTypes}>
+                          <SliceHandler {...payload}>
+                            <NavBar
+                              env={data.env}
+                              warnings={data.warnings}
+                              openPanel={() => openPanel()}
                             />
-                          </Drawer>
-                        </SliceHandler>
+                            <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                            <Drawer
+                              placement="right"
+                              open={drawerState.open}
+                              onClose={() => setDrawerState({ ...drawerState, open: false })}
+                            >
+                              <Warnings
+                                priority={drawerState.priority}
+                                list={data.warnings}
+                                configErrors={data.configErrors}
+                              />
+                            </Drawer>
+                          </SliceHandler>
+                        </CustomTypesProvider>
                       </LibrariesProvider>
                   )
               }

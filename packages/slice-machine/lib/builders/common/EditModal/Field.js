@@ -2,20 +2,16 @@ import { Fragment } from 'react'
 
 import { useField } from 'formik'
 
-import { FormFieldCheckbox, FormFieldInput } from 'components/FormFields'
+import { FormFieldCheckbox, FormFieldInput } from '../../../../components/FormFields'
 
 import { FormTypes } from '../../../forms/types'
 
-import {
-  Box,
-  Label,
-} from 'theme-ui'
+import { Box } from 'theme-ui'
 
 const WidgetFormField = ({
   fieldName,
   formField,
-  fieldType,
-  variation,
+  fields,
   initialValues
 }) => {
   const [field, meta, helpers] = useField(fieldName)
@@ -39,17 +35,17 @@ const WidgetFormField = ({
           helpers={helpers}
           fieldName={fieldName}
           formField={formField}
+          initialValues={initialValues}
         />
       ) : (
         <Fragment>
           {formField.type === FormTypes.INPUT ? (
             <FormFieldInput
-              variation={variation}
-              field={field}
               meta={meta}
+              field={field}
+              fields={fields}
               formField={formField}
               fieldName={fieldName}
-              fieldType={fieldType}
               initialValues={initialValues}
             />
           ) : null}
@@ -58,20 +54,10 @@ const WidgetFormField = ({
               meta={meta}
               label={formField.label}
               fieldName={fieldName}
+              initialValues={initialValues}
               onChange={value => helpers.setValue(value)}
 
             />
-          )}
-          {formField.type === FormTypes.SELECT && (
-            <Fragment>
-              <Label>{formField.label || fieldName}</Label>
-              {/* <MultiSelect
-                options={formField.options}
-                selected={meta.value}
-                onSelectedChanged={(selected) => helpers.setValue(selected)}
-                {...field}
-              /> */}
-            </Fragment>
           )}
         </Fragment>
       )}
