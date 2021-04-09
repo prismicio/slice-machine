@@ -42,9 +42,10 @@ const TabZone = ({
   }
 
   const onDragEnd = (result) => {
-    console.log({
-      result
-    })
+    if (!result.destination) {
+      return
+    }
+    store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
   const onSave = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {

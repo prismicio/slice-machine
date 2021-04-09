@@ -7,6 +7,22 @@ import { LibraryState } from 'lib/models/common/ui/LibraryState'
 import EmptyState from './EmptyState'
 import LibrariesList from '../../../../components/LibrariesList'
 
+const LibLibrariesCardWrapper = ({
+  slice,
+  sliceZone,
+  children
+}) => {
+  console.log(sliceZone.value, '<--', slice)
+  const isChecked = sliceZone.value.find(e => e.key === slice.model.id)
+  return (
+    <Box>
+      { children }
+      { isChecked ? 'is checked' : 'is not checked'}
+    </Box>
+  )
+}
+
+
 const SliceZone = ({ sliceZone, onCreate, onDelete }: { sliceZone: SliceZoneAsArray, onCreate: Function, onDelete: Function }) => {
 
   const [displayList, setDisplay] = useState(false)
@@ -36,7 +52,13 @@ const SliceZone = ({ sliceZone, onCreate, onDelete }: { sliceZone: SliceZoneAsAr
             <button onClick={() => setDisplay(!displayList)}>display</button>
             {
               displayList ? (
-                <LibrariesList libraries={libraries} />
+                <LibrariesList
+                  libraries={libraries}
+                  CardWrapper={LibLibrariesCardWrapper}
+                  cardProps={{
+                    sliceZone
+                  }}
+                />
               ) : null
             }
             {/* <ul>

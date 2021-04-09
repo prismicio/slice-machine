@@ -37,6 +37,7 @@ const Card = forwardRef(({
   infos,
   jsonModel,
   defaultVariation,
+  sx = {},
   ...props
 }, ref) => {
   const preview = infos.previewUrls[defaultVariation.id]
@@ -52,7 +53,8 @@ const Card = forwardRef(({
         cursor: 'pointer',
         borderRadius: '0',
         border: 'none',
-        mb: 3
+        mb: 3,
+        ...sx
       }}
     >
       <Box

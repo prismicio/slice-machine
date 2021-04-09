@@ -66,6 +66,22 @@ export const Tab = {
       })
     }
   },
+  reorderWidget(tab: TabAsArray, start: number, end: number): TabAsArray {
+    const reorderedWidget: {key: string, value: Widget} | GroupAsArray | undefined = tab.value[start]
+    if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
+
+    const reorderedArea: TabValueAsArray = tab.value.reduce((acc: TabValueAsArray, widget: {key: string, value: Widget} | GroupAsArray, index: number) => {
+      switch(index) {
+        case start: return acc
+        case end: return [ ...acc, reorderedWidget, widget ]
+        default: return [ ...acc, widget ]
+      }
+    }, [])
+    return {
+      ...tab,
+      value: reorderedArea
+    }
+  },
   removeWidget(tab: TabAsArray, id: string): TabAsArray {
     const newTab = {
       ...tab,

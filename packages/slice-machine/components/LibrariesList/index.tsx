@@ -21,13 +21,11 @@ const defaultRenderTitle = (lib: LibraryState ) => {
 }
 
 const DefaultCardWrapper = ({
-  slice,
-  variationId,
   link,
   children
 }) => {
   return (
-    <Link key={`${slice.from}-${slice.jsonModel.id}-${variationId}`} href={link.href} as={link.as} passHref>
+    <Link href={link.href} as={link.as} passHref>
       { children }          
     </Link>
   )
@@ -35,12 +33,14 @@ const DefaultCardWrapper = ({
 
 export default ({
   libraries,
+  cardProps = {},
   CardWrapper = DefaultCardWrapper,
   renderTitle = defaultRenderTitle
 }: {
   libraries: ReadonlyArray<LibraryState>,
-  renderTitle: Function,
-  CardWrapper: Function
+  cardProps?: object | undefined,
+  renderTitle?: Function,
+  CardWrapper?: Function
 }) => (
   <Fragment>
     {
@@ -64,7 +64,7 @@ export default ({
                 const variationId = defaultVariation.id
                 const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
                 return (
-                  <CardWrapper slice={slice} variationId={variationId} link={link}>
+                  <CardWrapper {...cardProps} slice={slice} variationId={variationId} link={link} key={`${slice.from}-${slice.jsonModel.id}-${variationId}`}>
                     <Card {...slice} defaultVariation={defaultVariation} />
                   </CardWrapper>
                 )
