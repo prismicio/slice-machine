@@ -1,5 +1,4 @@
 import { Fragment } from 'react'
-import NextLink from 'next/link'
 import { Box, Link } from 'theme-ui'
 import Card from './Card'
 import LibraryState from 'lib/models/ui/LibraryState'
@@ -68,6 +67,9 @@ export default ({
             {
               lib.components.map(([slice]) => {
                 const defaultVariation = SliceState.variation(slice)
+                if (!defaultVariation) {
+                  return null
+                }
                 const variationId = defaultVariation.id
                 const link = Links.variation(slice.href, slice.jsonModel.name, variationId)
                 return (

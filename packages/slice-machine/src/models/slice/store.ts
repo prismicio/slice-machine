@@ -1,7 +1,7 @@
 
-import { Widget } from 'lib/models/common/widgets';
-import { Variation, AsArray, WidgetsArea } from 'lib/models/common/Variation';
-import { ComponentMetadata } from 'lib/models/common/Component';
+import { Widget } from '../../../lib/models/common/widgets';
+import { Variation, AsArray, WidgetsArea } from '../../../lib/models/common/Variation';
+import { ComponentMetadata } from '../../../lib/models/common/Component';
 
 import {
   ActionType as VariationActions,
@@ -17,7 +17,7 @@ import {
   pushSlice,
 } from './actions';
 
-import Store from 'lib/models/ui/Store'
+import Store from '../../../lib/models/ui/Store'
 
 export default class SliceStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}

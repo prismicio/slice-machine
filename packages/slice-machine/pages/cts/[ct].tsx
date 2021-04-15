@@ -27,7 +27,7 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
               sliceZone,
               value,
             }) => (
-          <Box key={key} p={2} sx={{ border: '1px solid #F1F1F1'}}>
+          <Box key={key} p={2} sx={{ border: '1px solid #F1F1F1' }}>
             <TabZone
               fields={value}
               Model={Model}

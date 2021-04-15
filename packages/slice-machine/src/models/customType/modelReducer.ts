@@ -1,7 +1,7 @@
 import { useReducer } from 'react'
-import { CustomType } from 'lib/models/common/CustomType'
-import { TabsAsObject } from 'lib/models/common/CustomType/tab'
-import { CustomTypeState } from 'lib/models/ui/CustomTypeState'
+import { CustomType } from '../../../lib/models/common/CustomType'
+import { TabsAsObject } from '../../../lib/models/common/CustomType/tab'
+import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'
