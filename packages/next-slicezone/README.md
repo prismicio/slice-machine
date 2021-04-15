@@ -97,14 +97,15 @@ export default Page
 
 | Param     	| Type               	| Required 	| Default value      	| Description                                                                     	| Example value                        	|
 |-----------	|--------------------	|----------	|--------------------	|---------------------------------------------------------------------------------	|--------------------------------------	|
-| uid       	| string \| function 	| false    	| null               	| If queryType has value `repeatable`, pass document `uid` or function            	| ({params}) => `/pages/${params.uid}` 	|
+| uid       	| string \| function 	| false    	| null               	| If queryType has value `repeatable`, pass document `uid` or function            	| ({params}) => ({params}) => params.uid 	|
+| lang       	| string \| function 	| false    	| null               	| Use with `uid` to get document in defined lang            	| ({params}) => params.lang 	|
 | lang      	| string             	| false    	| null (master lang) 	| Lang attribute, disabled if `params` is passed                                  	| 'fr-fr'                              	|
 | params    	| object             	| false    	| null               	| Object passed to client `apiOptions`. Disables `lang`                           	| { lang: 'fr-fr' }                    	|
 | client    	| function           	| true     	| null               	| ATM, you have to pass a Prismic client here                                     	| Prismic.client(apiEndpoint)          	|
 | body      	| string             	| false    	| body               	| Key of slices array in API response (`doc.data[body]`)                          	| 'nobody'                             	|
 | type      	| string             	| false    	| page               	| Custom type to be queried                                                       	| 'another_cts'                        	|
 | queryType 	| string             	| false    	| repeat             	| One of 'repeat' or 'single', to switch between `getByUID` and `getSingle` calls 	| 'single'                             	|
-
+| getStaticPropsParams    	| object             	| false    	| null               	| Object passed to return object of `getStatcProps`| { revalidate: true }                    	|
 ### useGetStaticPaths
 
 `useGetStaticPaths` should be used *in each dynamic page* that relies on the SliceZone.
