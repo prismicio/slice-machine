@@ -7,6 +7,7 @@ export const useGetStaticProps = ({
   client,
   body = 'body',
   type = 'page',
+  getStaticPropsParams = {},
   queryType = 'repeat',
 }) => {
 
@@ -36,7 +37,8 @@ export const useGetStaticProps = ({
           preview,
           previewData,
           slices: doc ? doc.data[body] : [],
-        }
+        },
+        ...getStaticPropsParams
       }
 
     } catch(e) {
@@ -52,7 +54,8 @@ export const useGetStaticProps = ({
           preview,
           previewData,
           // registry: null
-        }
+        },
+        ...getStaticPropsParams
       }
     }
   }
