@@ -3,13 +3,12 @@ import { query } from '../features/query'
 export const useGetStaticProps = ({
   uid,
   lang,
-  params,
+  params: initialParams,
   client,
   body = 'body',
   type = 'page',
   queryType = 'repeat',
 }) => {
-  const apiParams = params || { lang }
 
   return async function getStaticProps({
     preview = null,
@@ -18,7 +17,10 @@ export const useGetStaticProps = ({
   }) {
 
     const { ref = null } = previewData
+    const resolvedLang = typeof lang === 'function' ? lang({ params, previewData, preview }) : (lang || null)
     const resolvedUid = typeof uid === 'function' ? uid({ params, previewData, preview }) : (uid || null)
+
+    const apiParams = initialParams || { lang: resolvedLang }
     try {
       const doc = await query({
         queryType,
@@ -31,6 +33,8 @@ export const useGetStaticProps = ({
         props: {
           ...doc,
           error: null,
+          preview,
+          previewData,
           slices: doc ? doc.data[body] : [],
         }
       }
@@ -45,6 +49,8 @@ export const useGetStaticProps = ({
           error: e.toString(),
           uid: resolvedUid,
           slices: [],
+          preview,
+          previewData,
           // registry: null
         }
       }

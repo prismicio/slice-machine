@@ -33,6 +33,7 @@ const slicePropNotFoundProps = {
 }
 
 export default function SliceZone({ slices, resolver = () => null }) {
+  console.log('SliceZone')
   if (!slices || !slices.length) {
     return process.env.NODE_ENV !== 'production' ? <PageInfo {...emptySzProps} /> : null
   }
