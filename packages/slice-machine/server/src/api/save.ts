@@ -13,7 +13,6 @@ import { Preview } from '../../../lib/models/common/Component'
 
 const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
   try {
-    console.log('[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
   } catch (e) {
     return {
@@ -80,7 +79,7 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
 
     if(!hasCustomStories) {
       console.log('[update]: generating stories')
-      Storybook.generateStories(env.cwd, from, sliceName)
+      Storybook.generateStories(env.framework, env.cwd, from, sliceName)
     }
     
     console.log('[update]: generating screenshots previews')

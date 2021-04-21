@@ -16,10 +16,11 @@ import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
+import { Framework } from '../models/common/Framework';
 
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH || '')
 
-function getFramework(): string {
+function getFramework(): Framework {
   const pkgFilePath = path.resolve(cwd, 'package.json')
   const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath)
 
@@ -27,7 +28,7 @@ function getFramework(): string {
 
   const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value])
 
-  return frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : 'vanillajs'
+  return (frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : Framework.vanillajs) as Framework
 }
 
 const compareNpmVersions = createComparator()

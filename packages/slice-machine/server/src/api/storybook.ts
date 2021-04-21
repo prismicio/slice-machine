@@ -5,15 +5,26 @@ import path from 'path'
 import TemplateEngine from 'ejs'
 
 import Files from '../../../lib/utils/files'
+import { Framework } from '../../../lib/models/common/Framework'
 import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
 import { pascalize } from '../../../lib/utils/str';
 
 const Paths = {
-  storiesTemplate: (appRoot: string) => path.join(appRoot, '../../../templates/stories.template.ejs')
+  nuxtTemplate: (appRoot: string) => path.join(appRoot, '../../../templates/storybook/nuxt.template.ejs'),
+  nextTemplate: (appRoot: string) => path.join(appRoot, '../../../templates/storybook/next.template.ejs'),
+  getTemplate(appRoot: string, framework: Framework) {
+    switch(framework) {
+      case Framework.nuxt: return Paths.nuxtTemplate(appRoot)
+      case Framework.vue: return Paths.nuxtTemplate(appRoot)
+      case Framework.next: return Paths.nextTemplate(appRoot)
+      case Framework.react: return Paths.nextTemplate(appRoot)
+      default: return null
+    }
+  }
 }
 
 export default {
-  generateStories(cwd: string, libraryName: string, sliceName: string): void {
+  generateStories(framework: Framework, cwd: string, libraryName: string, sliceName: string): void {
     if(Files.exists(
       CustomPaths(cwd)
         .library(libraryName)
@@ -40,7 +51,13 @@ export default {
       return
     }
     
-    const template = Files.readString(Paths.storiesTemplate(appRoot));
+    const templatePath = Paths.getTemplate(appRoot, framework)
+    if(!templatePath) {
+      console.error(`We don't support storybook generated stories for ${framework} yet`)
+      return
+    }
+    
+    const template = Files.readString(templatePath)
 
     const withPascalizedIds = mocks.value.map( (m: any) => {
       const id = pascalize(m.id)
