@@ -1,40 +1,51 @@
 const fs = require('fs')
 const path = require('path')
+const { SMConfig, Pkg } = require('./build/lib/models/paths')
+const { default: Files } = require('./build/lib/utils/files')
 
-main()
+function retrieveConfigFiles() {
+  const cwd = require.main.paths[0].split('node_modules')[0]
 
-function writeLatest(pathToSmFile, version) {
+  const smPath = SMConfig(cwd)
+  const smValue = Files.exists(smPath) && Files.readJson(smPath)
+  
+  const pkgPath = Pkg(cwd)
+  const pkgValue = Files.exists(pkgPath) && Files.readJson(pkgPath)
+  return {
+    pkg: { path: pkgPath, value: pkgValue },
+    smConfig: { path: smPath, value: smValue }
+  }
+}
+
+function writeSMVersion(pkg, smConfig) {
+  if(smConfig.value._latest) return // if _latest already exists, we should not update this version otherwise we'd break the migration system
+
+  const currentVersion = pkg.value.version.split('-')[0]
   try {
-    const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'))
-    fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: version }, null, 2))
+    Files.write(smConfig.path, { ...smConfig.value, _latest: currentVersion })
   } catch(e) {
     console.log('[postinstall] Could not write sm.json file. Exiting...')
   }
 }
 
-function main() {
-  const cwd = require.main.paths[0].split('node_modules')[0]
-  const pathToPkg = cwd + 'package.json'
-  const pathToSmFile = cwd + 'sm.json'
-  if (fs.existsSync(pathToPkg) && fs.existsSync(pathToSmFile)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pathToPkg, 'utf-8'))
-      if (!pkg.scripts) {
-        pkg.scripts = {};
-      }
-      if (!pkg.scripts.slicemachine) {
-        pkg.scripts.slicemachine = "start-slicemachine --port 9999"
-        fs.writeFileSync(pathToPkg, JSON.stringify(pkg, null, 2))
-        console.log('Added script "slicemachine" to package.json')
-      }
-      const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
-      const cleanVersion = version.split('-')[0]
-      writeLatest(pathToSmFile, cleanVersion)
-    } catch(e) {
-      console.error('Could not parse file at ' + pathToPkg)
-      console.error(`Full error: ${e}`)
-    }
+function installSMScript(pkg) {
+  if (!pkg.value.scripts) {
+    pkg.value.scripts = {};
+  }
+  if (!pkg.value.scripts.slicemachine) {
+    pkg.value.scripts.slicemachine = "start-slicemachine --port 9999"
+    Files.write(pkg.path, pkg.value)
+    console.log('Added script "slicemachine" to package.json')
+  }
+}
+
+(function main() {
+  const { pkg, smConfig } = retrieveConfigFiles()
+  if (pkg && smConfig) {
+    installSMScript(pkg)
+    writeSMVersion(pkg, smConfig)
     return
   }
-  console.error('Missing file package.json or sm.json')
-}
+  if(!pkg) console.error('Missing file package.json')
+  if(!smConfig) console.error('Missing file sm.json')
+})()
