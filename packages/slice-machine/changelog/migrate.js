@@ -18,7 +18,7 @@ function retrieveConfigFiles() {
   const smPath = SMConfig(cwd)
   const smValue = Files.exists(smPath) && Files.readJson(smPath)
   
-  const pkgPath = Pkg(cwd)
+  const pkgPath = Pkg(__dirname)
   const pkgValue = Files.exists(pkgPath) && Files.readJson(pkgPath)
   return {
     pkgSlicemachineUI: { path: pkgPath, value: pkgValue },

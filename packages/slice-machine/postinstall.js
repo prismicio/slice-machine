@@ -17,12 +17,16 @@ function retrieveConfigFiles() {
   }
 }
 
-function writeSMVersion(pkg, smConfig) {
+function smVersion() {
+  const { version } = Files.readJson(path.join(__dirname, 'package.json'))
+  return version.split('-')[0]
+}
+
+function writeSMVersion(smConfig) {
   if(smConfig.value._latest) return // if _latest already exists, we should not update this version otherwise we'd break the migration system
 
-  const currentVersion = pkg.value.version.split('-')[0]
   try {
-    Files.write(smConfig.path, { ...smConfig.value, _latest: currentVersion })
+    Files.write(smConfig.path, { ...smConfig.value, _latest: smVersion() })
   } catch(e) {
     console.log('[postinstall] Could not write sm.json file. Exiting...')
   }
@@ -43,7 +47,7 @@ function installSMScript(pkg) {
   const { pkg, smConfig } = retrieveConfigFiles()
   if (pkg && smConfig) {
     installSMScript(pkg)
-    writeSMVersion(pkg, smConfig)
+    writeSMVersion(smConfig)
     return
   }
   if(!pkg) console.error('Missing file package.json')
