@@ -8,7 +8,7 @@ import { ActionType } from './ActionType'
 export default function save(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return async (slice: SliceState, setData: (data: object) => void = () => {}) => {
     fetchApi({
-      url: '/api/update',
+      url: '/api/slices/save',
       params: {
         method: 'POST',
         body: JSON.stringify({

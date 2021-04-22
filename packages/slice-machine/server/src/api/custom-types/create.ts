@@ -7,7 +7,7 @@ import { CustomType } from '../../../../lib/models/common/CustomType'
 import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
 
 interface CustomTypePayload {
-  title: string
+  label: string
   key: string
   repeatable: boolean
 }
@@ -18,12 +18,12 @@ export default async function handler(env: Environment, payload: CustomTypePaylo
   if (!folderExists) {
     fs.mkdirSync(pathToCustomTypes)
   }
-  const { title, key, repeatable } = payload
+  const { label, key, repeatable } = payload
 
   const pathToNewCustomType = slash(path.join(pathToCustomTypes, `${key}.json`))
   const newCt = {
-    title,
     id: key,
+    label,
     repeatable,
     tabs: {
       Main: {}

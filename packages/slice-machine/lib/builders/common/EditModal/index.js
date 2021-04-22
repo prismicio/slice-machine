@@ -24,6 +24,8 @@ import { Flex as FlexGrid, Col } from '../../../../components/Flex'
 import WidgetForm from './Form'
 import WidgetFormField from './Field'
 
+import { findWidgetByConfigOrType } from '../../utils'
+
 Modal.setAppElement("#__next");
 
 const FORM_ID = 'edit-modal-form'
@@ -43,15 +45,18 @@ const EditModal = ({
   
   const { mockConfig: initialMockConfig } = Model
   const { field: [apiId, initialModelValues] } = data
+
+  console.log({ apiId, initialModelValues })
   const {
     Meta: { icon: WidgetIcon },
     FormFields,
     MockConfigForm,
     Form: CustomForm
-  } = Widgets[initialModelValues.type]
+  } = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
+  // Widgets.find(e => e.CUSTOM_NAME && e.CUSTOM_NAME === initialModelValues.type)
 
   if (!FormFields) {
-    return (<div>{type} not supported yet</div>)
+    return (<div>{initialModelValues.type} not supported yet</div>)
   }
 
   const initialValues = {

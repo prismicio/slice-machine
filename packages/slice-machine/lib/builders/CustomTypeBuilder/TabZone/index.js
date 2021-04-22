@@ -8,6 +8,8 @@ import { removeKeys } from 'lib/utils'
 import { customTypeBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
 
 import SliceZone from '../SliceZone'
+import EmptyState from '../SliceZone/EmptyState'
+
 
 const TabZone = ({
   Model,
@@ -28,7 +30,12 @@ const TabZone = ({
     return Model.mockConfig?.[apiId]
   }
 
+  const onDeleteTab = () => {
+    store.tab(tabId).delete()
+  }
+
   const onSaveNewField = ({ id, widgetTypeName }) => {
+    console.log('ON SAVE NEW FIELD', widgetTypeName)
     const widget = Widgets[widgetTypeName]
     if (!widget) {
       console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
@@ -36,7 +43,7 @@ const TabZone = ({
     store
       .tab(tabId)
       .addWidget(id, {
-        type: widgetTypeName,
+        type: widget.TYPE_NAME,
         [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
       })
   }
@@ -85,6 +92,14 @@ const TabZone = ({
     store.tab(tabId).deleteSliceZone()
   }
 
+  const onAddSharedSlice = (key) => {
+    store.tab(tabId).addSharedSlice(key)
+  }
+
+  const onRemoveSharedSlice = (key) => {
+    store.tab(tabId).removeSharedSlice(key)
+  }
+
   return (
     <Fragment>
       <Zone
@@ -104,11 +119,23 @@ const TabZone = ({
         renderHintBase={({ item }) => `my.${tabId}.${item.key}`}
         renderFieldAccessor={(key) => `my.${tabId}.${key}`}
       />
-      <SliceZone
-        sliceZone={sliceZone}
-        onDelete={onDeleteSliceZone}
-        onCreate={onCreateSliceZone}
-      />
+      {
+        Model.tabs.length > 1 ? (
+          <button onClick={() => onDeleteTab()}>Delete Tab</button>
+        ) : null
+      }
+      {
+        sliceZone ? (
+          <SliceZone
+            sliceZone={sliceZone}
+            onDelete={onDeleteSliceZone}
+            onRemoveSharedSlice={onRemoveSharedSlice}
+            onAddSharedSlice={onAddSharedSlice}
+          />
+        ): (
+          < EmptyState onCreate={onCreateSliceZone} />
+        )
+      }
     </Fragment>
   )
 }

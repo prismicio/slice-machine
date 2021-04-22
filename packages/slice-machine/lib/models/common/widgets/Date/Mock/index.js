@@ -1,4 +1,4 @@
-import { Timestamp } from '../../../../../mock/widgets'
+import { Timestamp } from '../../../../../mock/misc/widgets'
 import { createDefaultHandleMockContentFunction } from '../../../../../utils'
 
 export const initialValues = null

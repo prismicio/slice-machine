@@ -1,6 +1,7 @@
 {
   "repeatable": true,
-  "title": "Pages",
+  "status": true,
+  "label": "Pages",
   "tabs": {
     "Page": {
       "uid": {

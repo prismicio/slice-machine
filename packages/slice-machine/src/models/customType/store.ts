@@ -3,15 +3,18 @@ import { Widget } from '../../../lib/models/common/widgets'
 import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
 import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actions'
 
+import saveCustomType from './actions/save'
+
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
 
-  test() {
-    this.dispatch({ type: Actions.Test })
+  createTab() {
+    this.dispatch({ type: Actions.CreateTab })
   }
   reset() {
     this.dispatch({ type: Actions.Reset })
   }
+  save = saveCustomType(this.dispatch)
   tab(tabId: string) {
     return {
       addWidget: (id: string, widget: Widget | GroupWidget) => {
@@ -33,6 +36,15 @@ export default class CustomTypeStore implements Store {
       },
       deleteSliceZone: () => {
         this.dispatch({ type: Actions.DeleteSliceZone, payload: { tabId } })
+      },
+      delete: () => {
+        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } })
+      },
+      addSharedSlice: (sliceKey: string) => {
+        this.dispatch({ type: Actions.AddSharedSlice, payload: { tabId, sliceKey } })
+      },
+      removeSharedSlice: (sliceKey: string) => {
+        this.dispatch({ type: Actions.RemoveSharedSlice, payload: { tabId, sliceKey } })
       }
     }
   }

@@ -24,6 +24,12 @@ export interface TabsAsObject {
   [tabId: string]: TabAsObject
 }
 
+interface OrganisedFields {
+  fields: ReadonlyArray<{key: string, value: Widget}>
+  groups: ReadonlyArray<GroupAsArray>
+  sliceZone?: SliceZone
+}
+
 export const Tab = {
   toArray(key: string, tab: TabAsObject): TabAsArray {
     const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === FieldType.SliceZone)
@@ -39,6 +45,32 @@ export const Tab = {
         return [...acc, { key: fieldId, value: value as Widget }]
       }, []),
       sliceZone: maybeSliceZone ? SliceZone.toArray(maybeSliceZone[0], maybeSliceZone[1] as SliceZone) : null
+    }
+  },
+  toObject(tab: TabAsArray): TabAsObject {
+    const tabAsObject = tab.value.reduce((acc, { key, value }) => {
+      if (value.type === FieldType.Group) {
+        return {
+          ...acc,
+          [key]: Group.toObject({ key, value: { type: value.type, fields: value.fields } } as GroupAsArray)
+        }
+      }
+      return {
+        ...acc,
+        [key]: value
+      }
+    }, {})
+    if (tab.sliceZone) {
+      tabAsObject[tab.sliceZone.key] = SliceZone.toObject(tab.sliceZone)
+    }
+    return tabAsObject
+  },
+  updateSliceZone(tab: TabAsArray): Function {
+    return (mutate: (v: SliceZoneAsArray) => TabAsArray) => {
+      return {
+        ...tab,
+        sliceZone: mutate(tab.sliceZone as SliceZoneAsArray)
+      }
     }
   },
   addWidget(tab: TabAsArray, id: string, widget: Widget | GroupWidget): TabAsArray {
@@ -100,6 +132,26 @@ export const Tab = {
     return {
       ...tab,
       sliceZone: null
+    }
+  },
+  organiseFields(tab: TabAsObject) {
+    const tabAsArray = Tab.toArray('', tab)
+    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce((acc, curr) => {
+      if (curr.value.type === 'Group') {
+        return {
+          ...acc,
+          groups: [...acc.groups, curr]
+        }
+      }
+      return {
+        ...acc,
+        fields: [...acc.fields, curr]
+      }
+    }, { fields: [], groups: [] } as OrganisedFields)
+    return {
+      fields,
+      groups,
+      sliceZone: tabAsArray.sliceZone,
     }
   }
 }

@@ -2,14 +2,14 @@ import { Tab } from './tab'
 import { TabsAsArray, TabsAsObject } from './tab'
 
 export interface SeoTab {
-  title: string
+  label: string
   description: string
 }
 
 export interface CustomType<T extends TabsAsArray | TabsAsObject> {
   id: string
   repeatable: boolean,
-  title: string,
+  label: string,
   tabs: T
 }
 

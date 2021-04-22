@@ -15,6 +15,7 @@ const createCodeFromTag = (tag) => (fieldText) => `<${tag} :field="${fieldText}"
 const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldText} }}</${tag}>`
 
 const codeByWidgetType = {
+  [Widgets.ContentRelationship.CUSTOM_NAME]: createCodeFromTag('cr-todo'),
   [Widgets.StructuredText.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
   [Widgets.Image.TYPE_NAME]: createCodeFromTag('prismic-image'),
   [Widgets.Link.TYPE_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,

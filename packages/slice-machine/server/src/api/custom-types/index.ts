@@ -8,7 +8,8 @@ import { CustomType } from '../../../../lib/models/common/CustomType'
 import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
 
 const handlePath = (acc: Array<CustomType<TabsAsObject>>, p: string) => {
-  const key = path.basename(p, path.extname(p))
+  const key = path.basename(path.dirname(p))
+  console.log({ key })
   const file = fs.readFileSync(p, 'utf-8')
   try {
     const json = JSON.parse(file)
@@ -31,6 +32,6 @@ export default async function handler(env: Environment): Promise<{ customTypes: 
   if (!folderExists) {
     return { customTypes: [] }
   }
-  const matches = glob.sync(`${pathToCustomTypes}/*.json`)
+  const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return { customTypes: matches.reduce(handlePath, []) }
 }

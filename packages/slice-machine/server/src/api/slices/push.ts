@@ -1,17 +1,17 @@
-import { snakelize } from '../../../lib/utils/str'
+import { snakelize } from '../../../../lib/utils/str'
 
-import { getEnv } from '../../../lib/env'
-import Files from '../../../lib/utils/files'
+import { getEnv } from '../../../../lib/env'
+import Files from '../../../../lib/utils/files'
 
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
 
 
-import { purge, upload } from './upload'
-import DefaultClient from '../../../lib/models/common/http/DefaultClient'
-import FakeClient, { FakeResponse } from '../../../lib/models/common/http/FakeClient'
-import { Variation, AsObject } from '../../../lib/models/common/Variation'
-import Slice from '../../../lib/models/common/Slice'
-import { CustomPaths } from '../../../lib/models/paths'
+import { purge, upload } from '../upload'
+import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
+import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
+import { Variation, AsObject } from '../../../../lib/models/common/Variation'
+import Slice from '../../../../lib/models/common/Slice'
+import { CustomPaths } from '../../../../lib/models/paths'
 
 const onError = (r: Response | FakeResponse, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),

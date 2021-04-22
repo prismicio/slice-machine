@@ -1,5 +1,5 @@
-import Files from '../utils/files'
-import { MocksConfig } from '../models/paths'
+import Files from '../../utils/files'
+import { MocksConfig } from '../../models/paths'
 
 export const getConfig = (cwd) => {
   const pathToMockConfig = MocksConfig(cwd)

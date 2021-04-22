@@ -1,5 +1,5 @@
-import { createDefaultHandleMockContentFunction } from '../../../../../utils'
 import faker from 'faker'
+import { createDefaultHandleMockContentFunction } from '../../../../../utils'
 
 export const initialValues = {
   content: null

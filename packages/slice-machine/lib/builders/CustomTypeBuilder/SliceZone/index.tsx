@@ -1,78 +1,59 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { Box } from 'theme-ui'
 import { LibrariesContext } from 'src/models/libraries/context'
 import { SliceZoneAsArray } from 'lib/models/common/CustomType/sliceZone'
-import { LibraryState } from 'lib/models/common/ui/LibraryState'
+
+import SliceState from '../../../models/ui/SliceState'
+import LibraryState from '../../../models/ui/LibraryState'
 
 import EmptyState from './EmptyState'
-import LibrariesList from '../../../../components/LibrariesList'
 
-const LibLibrariesCardWrapper = ({
-  slice,
-  sliceZone,
-  children
-}) => {
-  console.log(sliceZone.value, '<--', slice)
-  const isChecked = sliceZone.value.find(e => e.key === slice.model.id)
-  return (
-    <Box>
-      { children }
-      { isChecked ? 'is checked' : 'is not checked'}
-    </Box>
-  )
+import List from './components/List'
+
+const mapAvailableAndSharedSlices = (sliceZone: SliceZoneAsArray, libraries: ReadonlyArray<LibraryState>) => {
+  const availableSlices: ReadonlyArray<SliceState> = libraries.reduce((acc, curr) => {
+    return [...acc, ...curr.components.map(e => e[0])]
+  }, [])
+  const { slicesInSliceZone, notFound } : { slicesInSliceZone: ReadonlyArray<SliceState>, notFound: ReadonlyArray<{key: string}>} = sliceZone.value.reduce((acc, { key }) => {
+    const maybeSliceState = availableSlices.find((state) => state.infos.meta.id === key)
+    if (maybeSliceState) {
+      return { ...acc, slicesInSliceZone: [...acc.slicesInSliceZone, maybeSliceState] }
+    }
+    return { ...acc, notFound: [...acc.notFound, { key }]}
+  }, { slicesInSliceZone: [], notFound: [] })
+  return { availableSlices, slicesInSliceZone, notFound }
 }
 
+const SliceZone = ({
+  sliceZone,
+  onAddSharedSlice,
+  onRemoveSharedSlice,
+}: {
+  sliceZone: SliceZoneAsArray,
+  onAddSharedSlice: Function,
+  onRemoveSharedSlice: Function,
+  onDelete: Function
+}) => {
+  const libraries = useContext(LibrariesContext)
 
-const SliceZone = ({ sliceZone, onCreate, onDelete }: { sliceZone: SliceZoneAsArray, onCreate: Function, onDelete: Function }) => {
+  const { availableSlices, slicesInSliceZone, notFound } = mapAvailableAndSharedSlices(sliceZone, libraries)
 
-  const [displayList, setDisplay] = useState(false)
-  const libraries: ReadonlyArray<LibraryState> = useContext(LibrariesContext)
-  const slices = libraries.reduce((acc, curr) => {
-    return [...acc, curr.components.map(([e]) => e.infos)]
-  }, [])
-
+  useEffect(() => {
+    if (notFound?.length) {
+      notFound.forEach(({ key }) => {
+        onRemoveSharedSlice(key)
+      })
+    }
+  }, [notFound])
+  
   return (
     <Box mb={6}>
-      {
-        !sliceZone ? (
-          <EmptyState onCreate={onCreate} />
-        ) : (
-          <div>
-            <h3>{ libraries ? 'Current Slices' : 'not hello'}</h3>
-            <button onClick={() => onDelete()}>Delete SliceZone</button>
-            <ul>
-              {
-                sliceZone.value.map(({ key }) => (
-                  <li key={key}>{key}</li>
-                ))
-              }
-            </ul>
-            <hr />
-            <h3>Available slices</h3>
-            <button onClick={() => setDisplay(!displayList)}>display</button>
-            {
-              displayList ? (
-                <LibrariesList
-                  libraries={libraries}
-                  CardWrapper={LibLibrariesCardWrapper}
-                  cardProps={{
-                    sliceZone
-                  }}
-                />
-              ) : null
-            }
-            {/* <ul>
-              {
-                slices.map(e => (
-                  <li key={e.meta.id}>
-                    <img src={Object.entries(e.previewUrls)[0][1].url} style={{ width: '80px', height: '80px'}} />
-                  </li>
-                ))
-              }
-            </ul> */}
-          </div>
-        )
-      }
+      <List
+        onAddSharedSlice={onAddSharedSlice}
+        availableSlices={availableSlices}
+        onRemoveSharedSlice={onRemoveSharedSlice}
+        slicesInSliceZone={slicesInSliceZone}
+      />
     </Box>
   )
 }

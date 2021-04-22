@@ -1,6 +1,6 @@
 const Pre = {
   "repeatable": false,
-  "title": "HelloTab",
+  "label": "HelloTab",
   "tabs": {
     "MyTab": {
       "myGroup": {
@@ -30,7 +30,7 @@ const Pre = {
 
 const Post = {
   repeatable: false,
-  title: "HelloTab",
+  label: "HelloTab",
   tabs: [{
     key: "MyTab",
     value: [{

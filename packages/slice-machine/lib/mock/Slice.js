@@ -1,8 +1,8 @@
-import * as Widgets from './widgets'
+import * as Widgets from './misc/widgets'
 
 import { snakelize } from '../utils/str'
 
-import { handleFields } from './handlers'
+import { handleFields } from './misc/handlers'
 
 const createEmptyMock = (sliceName, variation) => ({
   ...variation,
@@ -11,7 +11,7 @@ const createEmptyMock = (sliceName, variation) => ({
   primary: {}
 })
 
-export default async (sliceName, model, mockConfig) => {
+export default async function MockSlice(sliceName, model, mockConfig) {
   const variations = model.variations.map(variation => {
     const mock = createEmptyMock(sliceName, variation)
     const handler = handleFields(Widgets)

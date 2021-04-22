@@ -7,12 +7,12 @@ import reducer from './reducer'
 import CustomTypeStore from './store'
 
 export function useModelReducer({ customType }: { customType: CustomType<TabsAsObject> }): [CustomTypeState, CustomTypeStore] {
-  const { id, title } = customType
+  const { id, label } = customType
   const { tabs } = CustomType.toArray(customType)
 
   const initialState: CustomTypeState = {
     id,
-    title,
+    label,
     jsonModel: customType,
     tabs,
     initialTabs: tabs,

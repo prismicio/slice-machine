@@ -23,7 +23,7 @@ const CustomTypes = () => {
           customTypes.map((ct) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
               <a style={{ display: 'block' }}>
-                - {ct.title}
+                - {ct.label}
               </a>
             </Link>
           ))

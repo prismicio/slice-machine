@@ -64,12 +64,12 @@ const SelectFieldTypeModal = ({
         <FlexGrid>
           {
             widgetsArray.map((widget) => {
-              const { Meta, TYPE_NAME } = widget
+              const { Meta, TYPE_NAME, CUSTOM_NAME } = widget
               return (
-                  <Col key={TYPE_NAME}>
+                  <Col key={CUSTOM_NAME || TYPE_NAME}>
                     <FieldTypeCard
                       {...Meta}
-                      onSelect={() => onSelect(TYPE_NAME)}
+                      onSelect={() => onSelect(CUSTOM_NAME || TYPE_NAME)}
                     />
                   </Col>
                 )

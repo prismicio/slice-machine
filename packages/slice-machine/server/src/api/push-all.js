@@ -1,5 +1,5 @@
 import { getEnv } from '../../../lib/env'
-import push from './push'
+import push from './slices/push'
 import getLibs from './libraries'
 
 export default async function handler() {

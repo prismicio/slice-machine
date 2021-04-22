@@ -2,6 +2,10 @@ import path from 'path'
 
 export const paths = (cwd: string, prefix: string) => ({
   value: () => path.join(cwd, prefix),
+  customType: (id: string) => ({
+    model:() => path.join(paths(cwd, prefix).value(), id, 'index.json'),
+    mock:() => path.join(paths(cwd, prefix).value(), id, 'mocks.json'),
+  }),
   library: (libraryName: string) => ({
     value: () => path.join(paths(cwd, prefix).value(), libraryName),
     slice: (sliceName: string) => ({
@@ -18,6 +22,7 @@ export const paths = (cwd: string, prefix: string) => ({
 })
 
 export const GeneratedPaths = (cwd: string) => paths(cwd, path.join('.slicemachine', 'assets'))
+export const CustomTypesPaths = (cwd: string) => paths(cwd, 'customtypes')
 export const CustomPaths = (cwd: string) => paths(cwd, '')
 export const SMConfig = (cwd: string) => path.join(cwd, 'sm.json')
 export const Pkg = (cwd: string) => path.join(cwd, 'package.json')

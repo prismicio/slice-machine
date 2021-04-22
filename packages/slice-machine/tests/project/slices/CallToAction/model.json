@@ -11,14 +11,14 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "test13": {
+        "test14": {
           "type": "Text",
           "config": {
             "label": "",
             "placeholder": ""
           }
         },
-        "test14": {
+        "test13": {
           "type": "Text",
           "config": {
             "label": "",

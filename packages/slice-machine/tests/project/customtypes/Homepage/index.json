@@ -1,0 +1,52 @@
+{
+  "id": "Homepage",
+  "label": "HomePage",
+  "tabs": {
+    "Page": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "My uid"
+        }
+      },
+      "sdfsf": {
+        "type": "Link",
+        "config": {
+          "label": "",
+          "placeholder": "",
+          "allowTargetBlank": true
+        }
+      },
+      "bjnk": {
+        "type": "Link",
+        "config": {
+          "label": "",
+          "select": "document",
+          "customtypes": []
+        }
+      },
+      "PageSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "call_to_action": {
+              "type": "SharedSlice"
+            },
+            "strcututed_texts": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    },
+    "Main Content": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "My uid"
+        }
+      }
+    }
+  }
+}

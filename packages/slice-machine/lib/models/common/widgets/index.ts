@@ -1,5 +1,6 @@
 import { BooleanField as BooleanFieldType } from './Boolean'
 import { Color as ColorType } from './Color'
+import { ContentRelationship as ContentRelationshipType } from './ContentRelationship'
 import { Date as DateType } from './Date'
 import { Embed } from './Embed'
 import { GeoPoint } from './GeoPoint'
@@ -15,6 +16,7 @@ import { UID } from './UID'
 
 export { default as Boolean } from './Boolean'
 export { default as Color } from './Color'
+export { default as ContentRelationship } from './ContentRelationship'
 export { default as Date } from './Date'
 export { default as Embed } from './Embed'
 export { default as GeoPoint } from './GeoPoint'
@@ -42,4 +44,5 @@ export type Widget =  BooleanFieldType  |
                       Text              |
                       Timestamp         |
                       UID               |
-                      Group
+                      Group             |
+                      ContentRelationshipType

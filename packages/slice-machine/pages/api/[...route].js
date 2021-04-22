@@ -11,7 +11,8 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body)
     } : {})
   }).then(async response => {
-    if (response.headers.get('content-type').indexOf('application/json') !== -1) {
+    const headers = response.headers.get('content-type')
+    if (headers && headers.indexOf('application/json') !== -1) {
       const payload = await response.json()
       return res.status(response.status || 200).json(payload)
     }

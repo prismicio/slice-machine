@@ -3,7 +3,7 @@ import { TabsAsObject, TabsAsArray, TabAsArray, TabValueAsArray } from '../commo
 
 export interface CustomTypeState {
   id: string
-  title: string
+  label: string
   jsonModel: CustomType<TabsAsObject>
   tabs: TabsAsArray
   initialTabs: TabsAsArray
@@ -32,6 +32,13 @@ export const CustomTypeState = {
         ...state,
         tabs
       }
+    }
+  },
+  deleteTab(state: CustomTypeState, tabId: string) {
+    const tabs = state.tabs.filter(v => v.key !== tabId)
+    return {
+      ...state,
+      tabs
     }
   },
   getPool(tabs: TabsAsArray):TabValueAsArray {

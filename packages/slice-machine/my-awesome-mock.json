@@ -1,0 +1,24 @@
+{
+  "id": "bd1bef13-1185-4466-93b6-b9bcd736349e",
+  "uid": "provident-ab-nihil",
+  "type": "Homepage",
+  "data": {
+    "uid": "dolore-et-est",
+    "boolean": true,
+    "numero": 2201,
+    "myGroup": [
+      {
+        "boolean": false,
+        "noumber": 7153
+      },
+      {
+        "boolean": true,
+        "noumber": 4310
+      },
+      {
+        "boolean": true,
+        "noumber": 7661
+      }
+    ]
+  }
+}

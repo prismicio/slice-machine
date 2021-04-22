@@ -51,6 +51,7 @@ const Zones = ({
   }
 
   const _onSaveNewField = (fieldType) => ({ id, widgetTypeName }) => {
+    console.log('ON SAVE NEW FIELD', widgetTypeName)
     const widget = Widgets[widgetTypeName]
     if (!widget) {
       console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
@@ -58,7 +59,7 @@ const Zones = ({
     store
       .variation(variation.id)
       .addWidget(fieldType, id, {
-        type: widgetTypeName,
+        type: widget.TYPE_NAME,
         config: removeKeys(widget.create(id), ['id'])
       })
   }

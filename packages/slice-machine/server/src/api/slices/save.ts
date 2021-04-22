@@ -1,37 +1,14 @@
-import puppeteer from 'puppeteer'
-import { fetchStorybookUrl, generatePreview } from './common/utils'
-import { createScreenshotUrl } from '../../../lib/utils'
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
-import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
-import Storybook from './storybook'
+import { createScreenshotUrl } from '../../../../lib/utils'
+import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
+import { CustomPaths, GeneratedPaths } from '../../../../lib/models/paths'
+import Storybook from '../storybook'
 
-import { getEnv } from '../../../lib/env'
-import mock from '../../../lib/mock'
-import { insert as insertMockConfig } from '../../../lib/mock/fs'
-import Files from '../../../lib/utils/files'
-import { Preview } from '../../../lib/models/common/Component'
-
-const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
-  try {
-    console.log('[update]: checking Storybook url')
-    await fetchStorybookUrl(screenshotUrl)
-  } catch (e) {
-    return {
-      warning: 'Could not connect to Storybook. Model was saved.'
-    }
-  }
-  return {}
-}
-
-const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screenshotUrl: string, pathToFile: string }) => {
-  const { warning } = await testStorybookPreview({ screenshotUrl })
-  if (warning) {
-    return warning
-  }
-  const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
-  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
-  return maybeErr ? 'Model was saved but screenshot could not be generated.' : null
-}
+import { getEnv } from '../../../../lib/env'
+import mock from '../../../../lib/mock/Slice'
+import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
+import Files from '../../../../lib/utils/files'
+import { Preview } from '../../../../lib/models/common/Component'
+import { handleStorybookPreview } from '../common/storybook'
 
  export default async function handler(req: { body: any }) {
     const { env } = await getEnv()

@@ -22,6 +22,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 
 import Hint from './Hints'
 
+import { findWidgetByConfigOrType } from '../../../../utils'
+
 const ListItem = ({
   item,
   index,
@@ -38,12 +40,13 @@ const ListItem = ({
   const { config, type } = item.value
   const { env: { framework } } = useContext(ConfigContext)
 
-  if (!widgets[type] || !widgets[type].Meta) {
+  const widget = findWidgetByConfigOrType(widgets, config, type)
+  if (!widget) {
     return (
       <Li><Text>Field type "{type}" not supported</Text></Li>
     )
   }
-  const { Meta: { icon: WidgetIcon }, CustomListItem } = widgets[type]
+  const { Meta: { icon: WidgetIcon }, CustomListItem } = widget
 
   if (CustomListItem) {
     return <CustomListItem value={item.value} />
@@ -110,9 +113,9 @@ const ListItem = ({
             show={showHints}
             isRepeatable={isRepeatable}
             renderHintBase={renderHintBase}
-            modelFieldName={modelFieldName}
             framework={framework}
             item={item}
+            typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
           />
         </Li>
         </Fragment>

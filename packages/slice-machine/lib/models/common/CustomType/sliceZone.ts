@@ -41,6 +41,23 @@ export const SliceZone = {
       }
     }
   },
+  addSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
+    return {
+      ...sz,
+      value: [...sz.value, {
+        key,
+        value: {
+          type:  FieldType.SharedSlice
+        }
+      }]
+    }
+  },
+  removeSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
+    return {
+      ...sz,
+      value: sz.value.filter(e => e.key !== key)
+    }
+  },
   createEmpty(): SliceZone {
     return {
       type: FieldType.SliceZone,
