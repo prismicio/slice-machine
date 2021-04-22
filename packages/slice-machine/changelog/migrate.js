@@ -12,13 +12,11 @@ const MIGRATIONS = require('./versions');
   })
 })()
 
-function retrieveConfigFiles() {
-  const cwd = require.main.paths[0].split('node_modules')[0]
-
-  const smPath = SMConfig(cwd)
+function retrieveConfigFiles(projectCWD, smModuleCWD) {
+  const smPath = SMConfig(projectCWD)
   const smValue = Files.exists(smPath) && Files.readJson(smPath)
   
-  const pkgPath = Pkg(__dirname)
+  const pkgPath = Pkg(smModuleCWD)
   const pkgValue = Files.exists(pkgPath) && Files.readJson(pkgPath)
   return {
     pkgSlicemachineUI: { path: pkgPath, value: pkgValue },
@@ -39,7 +37,7 @@ function run(migrations, smConfig, ignorePrompt, params) {
     .then(() => {
       console.info(`Migration ${head.version} done. Read the full changelog for more info!`)
       // update last migration version
-      Files.write(smConfig.path, { ...smConfig.value, _latest: head.version })
+      // Files.write(smConfig.path, { ...smConfig.value, _latest: head.version })
     
       // call next migrations
       return run(tail, smConfig, ignorePrompt, params)
@@ -48,7 +46,10 @@ function run(migrations, smConfig, ignorePrompt, params) {
 } 
 
 module.exports = async function migrate(ignorePrompt, params) {
-  const { pkgSlicemachineUI, smConfig } = retrieveConfigFiles()
+  const projectCWD = params.cwd
+  const smModuleCWD = require.main.paths[0].split('node_modules')[0]
+  const { pkgSlicemachineUI, smConfig } = retrieveConfigFiles(projectCWD, smModuleCWD)
+
   const currentVersion = pkgSlicemachineUI.value.version.split('-')[0]
   const latestMigrationVersion = smConfig.value._latest
 

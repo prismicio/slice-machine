@@ -3,9 +3,7 @@ const path = require('path')
 const { SMConfig, Pkg } = require('./build/lib/models/paths')
 const { default: Files } = require('./build/lib/utils/files')
 
-function retrieveConfigFiles() {
-  const cwd = require.main.paths[0].split('node_modules')[0]
-
+function retrieveConfigFiles(cwd) {
   const smPath = SMConfig(cwd)
   const smValue = Files.exists(smPath) && Files.readJson(smPath)
   
@@ -17,16 +15,16 @@ function retrieveConfigFiles() {
   }
 }
 
-function smVersion() {
-  const { version } = Files.readJson(path.join(__dirname, 'package.json'))
+function smVersion(smModuleCWD) {
+  const { version } = Files.readJson(path.join(smModuleCWD, 'package.json'))
   return version.split('-')[0]
 }
 
-function writeSMVersion(smConfig) {
+function writeSMVersion(smModuleCWD, smConfig) {
   if(smConfig.value._latest) return // if _latest already exists, we should not update this version otherwise we'd break the migration system
 
   try {
-    Files.write(smConfig.path, { ...smConfig.value, _latest: smVersion() })
+    Files.write(smConfig.path, { ...smConfig.value, _latest: smVersion(smModuleCWD) })
   } catch(e) {
     console.log('[postinstall] Could not write sm.json file. Exiting...')
   }
@@ -44,10 +42,13 @@ function installSMScript(pkg) {
 }
 
 (function main() {
-  const { pkg, smConfig } = retrieveConfigFiles()
+  const projectCWD = process.cwd()
+  const smModuleCWD = require.main.paths[0].split('node_modules')[0]
+  const { pkg, smConfig } = retrieveConfigFiles(projectCWD)
+
   if (pkg && smConfig) {
     installSMScript(pkg)
-    writeSMVersion(smConfig)
+    writeSMVersion(smModuleCWD, smConfig)
     return
   }
   if(!pkg) console.error('Missing file package.json')

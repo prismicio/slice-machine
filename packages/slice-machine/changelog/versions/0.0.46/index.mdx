@@ -1,0 +1,20 @@
+### New Feature
+
+SliceMachine now supports variations! ✌️
+
+Now, you can create different variations of a slice from the UI.
+It will generate all of them in your `model.json` but it will also generate mocks and stories for you.
+Thumbnails are also variation-based so you can have a generated thumbnail or a custom one for every single variation.
+
+To customize the thumbnails, in a slice folder you need to create a folder named after the variation ID and put your
+`preview.png` file.
+
+#### Also
+
+Previously, stories were generated in your component folder, same as mocks.
+We now consider that everything that can be generated should be store in `.slicemachine` and everything stored
+in a component folder should be the user property.
+
+To take control of your mocks and stories, you simple need to add `mocks.js` and `index.stories.js` in
+a component folder.
+It will also prevent the builder to keep generating mocks and stories as long as you have custom ones.
