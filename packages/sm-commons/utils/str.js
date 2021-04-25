@@ -3,7 +3,7 @@ function pascalize(str) {
   if (!str) {
     return "";
   }
-  str = str.replace(/_/g, "-").replace(camelizeRE, (_, c) => {
+  str = str.replace(/[\W_]+/g, "-").replace(camelizeRE, (_, c) => {
     return c ? c.toUpperCase() : "";
   });
   return str[0].toUpperCase() + str.slice(1);
@@ -15,11 +15,11 @@ function hyphenate(str) {
 }
 
 function snakelize(str) {
-  return hyphenate(str).replace(/-/g, '_');
+  return hyphenate(str).replace(/-/g, "_");
 }
 
 module.exports = {
   pascalize,
   hyphenate,
-  snakelize
+  snakelize,
 };
