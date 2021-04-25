@@ -26,7 +26,7 @@ async function handleLibraryPath(libPath) {
   return {
     isLocal,
     from,
-    name: pascalize(from),
+    name: pascalize(from.replace(/\\/ / g, "_")),
     pathToSlices: endPathToSlices
   }
 }
