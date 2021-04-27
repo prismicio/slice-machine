@@ -37,7 +37,7 @@ function run(migrations, smConfig, ignorePrompt, params) {
     .then(() => {
       console.info(`Migration ${head.version} done. Read the full changelog for more info!`)
       // update last migration version
-      // Files.write(smConfig.path, { ...smConfig.value, _latest: head.version })
+      Files.write(smConfig.path, { ...smConfig.value, _latest: head.version })
     
       // call next migrations
       return run(tail, smConfig, ignorePrompt, params)
