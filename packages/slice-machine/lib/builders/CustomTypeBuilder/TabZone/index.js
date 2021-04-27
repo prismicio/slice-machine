@@ -92,8 +92,8 @@ const TabZone = ({
     store.tab(tabId).deleteSliceZone()
   }
 
-  const onAddSharedSlice = (key) => {
-    store.tab(tabId).addSharedSlice(key)
+  const onSelectSharedSlices = (keys) => {
+    store.tab(tabId).replaceSharedSlices(keys)
   }
 
   const onRemoveSharedSlice = (key) => {
@@ -127,10 +127,11 @@ const TabZone = ({
       {
         sliceZone ? (
           <SliceZone
+            tabId={tabId}
             sliceZone={sliceZone}
             onDelete={onDeleteSliceZone}
             onRemoveSharedSlice={onRemoveSharedSlice}
-            onAddSharedSlice={onAddSharedSlice}
+            onSelectSharedSlices={onSelectSharedSlices}
           />
         ): (
           < EmptyState onCreate={onCreateSliceZone} />

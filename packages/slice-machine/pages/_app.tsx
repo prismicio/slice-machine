@@ -17,6 +17,7 @@ import LoadingPage from 'components/LoadingPage'
 import ConfigErrors from 'components/ConfigErrors'
 import NavBar from 'components/NavBar/WithRouter'
 import Warnings from 'components/Warnings'
+import AppLayout from 'components/AppLayout'
 
 import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 
@@ -111,25 +112,27 @@ function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Elemen
                   : (
                       <LibrariesProvider remoteSlices={payload.remoteSlices} libraries={payload.libraries} env={payload.env}>
                         <CustomTypesProvider customTypes={payload.customTypes}>
-                          <SliceHandler {...payload}>
-                            <NavBar
-                              env={data.env}
-                              warnings={data.warnings}
-                              openPanel={() => openPanel()}
-                            />
-                            <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
-                            <Drawer
-                              placement="right"
-                              open={drawerState.open}
-                              onClose={() => setDrawerState({ ...drawerState, open: false })}
-                            >
-                              <Warnings
-                                priority={drawerState.priority}
-                                list={data.warnings}
-                                configErrors={data.configErrors}
-                              />
-                            </Drawer>
-                          </SliceHandler>
+                          <AppLayout {...payload}>
+                            <SliceHandler {...payload}>
+                              {/* <NavBar
+                                env={data.env}
+                                warnings={data.warnings}
+                                openPanel={() => openPanel()}
+                              /> */}
+                              <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                              <Drawer
+                                placement="right"
+                                open={drawerState.open}
+                                onClose={() => setDrawerState({ ...drawerState, open: false })}
+                              >
+                                <Warnings
+                                  priority={drawerState.priority}
+                                  list={data.warnings}
+                                  configErrors={data.configErrors}
+                                />
+                              </Drawer>
+                            </SliceHandler>
+                          </AppLayout>
                         </CustomTypesProvider>
                       </LibrariesProvider>
                   )

@@ -6,7 +6,7 @@ import { getPrismicData } from '../auth'
 import initClient from "../models/common/http";
 import createComparator from './semver'
 
-import { getConfig as getMockConfig } from '../mock/fs'
+import { getConfig as getMockConfig } from '../mock/misc/fs'
 
 import { SupportedFrameworks } from '../consts'
 import Files from '../utils/files'

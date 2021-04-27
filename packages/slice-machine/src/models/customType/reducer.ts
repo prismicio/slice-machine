@@ -65,6 +65,11 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         return CustomTypeState.updateTab(prevState, tabId)
           (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.addSharedSlice(sliceZone, sliceKey)))
       }
+      case Actions.ReplaceSharedSlices: {
+        const { tabId, sliceKeys } = action.payload as { tabId: string, sliceKeys: [string] }
+        return CustomTypeState.updateTab(prevState, tabId)
+          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys)))
+      }
       case Actions.RemoveSharedSlice: {
         const { tabId, sliceKey } = action.payload as { tabId: string, sliceKey: string }
         return CustomTypeState.updateTab(prevState, tabId)

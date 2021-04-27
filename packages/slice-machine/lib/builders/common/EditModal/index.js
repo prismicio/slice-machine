@@ -46,14 +46,12 @@ const EditModal = ({
   const { mockConfig: initialMockConfig } = Model
   const { field: [apiId, initialModelValues] } = data
 
-  console.log({ apiId, initialModelValues })
   const {
     Meta: { icon: WidgetIcon },
     FormFields,
     MockConfigForm,
     Form: CustomForm
   } = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
-  // Widgets.find(e => e.CUSTOM_NAME && e.CUSTOM_NAME === initialModelValues.type)
 
   if (!FormFields) {
     return (<div>{initialModelValues.type} not supported yet</div>)
@@ -92,6 +90,7 @@ const EditModal = ({
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
+          console.log({ mockValue })
           const updatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
             ? MockConfigForm.onSave(mockValue, value)
             : mockValue

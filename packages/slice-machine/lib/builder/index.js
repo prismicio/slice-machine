@@ -19,9 +19,7 @@ import {
   Success
 } from './layout'
 
-// import PreviewFields from './modules/PreviewFields'
 import FieldZones from '../builders/SliceBuilder/FieldZones'
-import MockModal from './modules/MockModal'
 
 const createStorybookUrls = (storybookBaseUrl, libraryName, sliceName, variation = 'default-slice') => ({
   storybookUrl: `${storybookBaseUrl}/?path=/story/${hyphenate(libraryName)}-${sliceName.toLowerCase()}--${hyphenate(variation)}`
@@ -135,15 +133,6 @@ const Builder = ({ openPanel }) => {
         />
 
       </FlexEditor>
-      {
-        false ? (
-          <MockModal
-            close={console.log}
-            variation={variation}
-            Model={Model}
-          />
-        ) : null
-      }
     </Box>
   )
 }

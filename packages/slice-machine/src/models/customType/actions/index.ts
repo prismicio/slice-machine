@@ -11,6 +11,7 @@ enum ActionType {
   CreateSliceZone = 'tab-create-slicezone',
   DeleteSliceZone = 'tab-delete-slicezone',
   AddSharedSlice = 'tab-add-shared-slice',
+  ReplaceSharedSlices = 'tab-replace-shared-slices',
   RemoveSharedSlice = 'tab-remove-shaed-slice',
   ReplaceWidget = 'tab-replace-widget',
   ReorderWidget = 'tab-reorder-widget',

@@ -5,7 +5,6 @@ import { DefaultFields } from 'lib/forms/defaults'
 import { MdSettingsEthernet } from 'react-icons/md'
 
 import { handleMockConfig, handleMockContent } from './Mock'
-import { MockConfigForm } from './Mock/Form'
 
 import {
   createInitialValues,
@@ -62,7 +61,6 @@ export default {
   FormFields,
   CUSTOM_NAME: 'ContentRelationship',
   Form,
-  MockConfigForm,
 }
 
 export interface ContentRelationship extends yup.TypeOf<typeof schema> {}

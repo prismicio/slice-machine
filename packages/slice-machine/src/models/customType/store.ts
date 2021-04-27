@@ -43,6 +43,9 @@ export default class CustomTypeStore implements Store {
       addSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.AddSharedSlice, payload: { tabId, sliceKey } })
       },
+      replaceSharedSlices: (sliceKeys: [string]) => {
+        this.dispatch({ type: Actions.ReplaceSharedSlices, payload: { tabId, sliceKeys } })
+      },
       removeSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.RemoveSharedSlice, payload: { tabId, sliceKey } })
       }

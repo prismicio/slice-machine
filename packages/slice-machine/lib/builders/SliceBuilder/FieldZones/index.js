@@ -34,6 +34,7 @@ const Zones = ({
   }
 
   const _onSave = (fieldType) => ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
+    console.log({ mockValue, initialMockConfig })
     if (mockValue && Object.keys(mockValue).length) {
       store
         .variation(variation.id)

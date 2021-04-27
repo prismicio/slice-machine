@@ -52,6 +52,17 @@ export const SliceZone = {
       }]
     }
   },
+  replaceSharedSlice(sz: SliceZoneAsArray, keys: [string]): SliceZoneAsArray {
+    return {
+      ...sz,
+      value: keys.map(key =>({
+        key,
+        value:  {
+          type: FieldType.SharedSlice
+        }
+      }))
+    }
+  },
   removeSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
     return {
       ...sz,

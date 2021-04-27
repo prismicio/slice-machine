@@ -14,11 +14,11 @@ export default function Provider ({ children, customTypes = [] }: {
 }) {
   const [cts, setCts] = useState(customTypes)
 
-  const onCreate = (key: string) => {
+  const onCreate = (id: string, { label, repeatable }: { label: string, repeatable: boolean }) => {
     setCts([...cts, {
-      id: key,
-      label: 'My New Model',
-      repeatable: true,
+      id,
+      label,
+      repeatable,
       tabs: {
         Main: {}
       }

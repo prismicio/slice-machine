@@ -7,6 +7,7 @@ const Theme = () => ({
     hoverBackground: '#f2f2f2',
     background: '#F5F6F9',
     backgroundClear: '#FFF',
+    ctHeader: '#E6E6EA',
     primary: '#5163BA',
     secondary: '#F9FAFB',
     highlight: 'hsl(10, 40%, 90%)',
@@ -21,6 +22,7 @@ const Theme = () => ({
     success: '#3AB97A',
     headSection: '#fff',
     warning: '#E67E22',
+    sidebar: '#F1F1F4',
     code: {
       border: '#DFE1E5',
       blue: '#3B41BD',
@@ -36,6 +38,7 @@ const Theme = () => ({
         text: "#fff",
         textClear: "#6E707B",
         hoverBackground: '#202020',
+        ctHeader: '#E6E6EA',
         background: "#202022",
         backgroundClear: '#28282C',
         primary: '#4E54D7',
@@ -46,6 +49,7 @@ const Theme = () => ({
         deep: '#28282C',
         headSection: '#28282C',
         warning: '#E67E22',
+        sidebar: '#28282C',
         code: {
           border: '#5D5D6F',
           blue: '#3B41BD',
@@ -102,6 +106,7 @@ const Theme = () => ({
     }
   },
   sizes: {
+    leftSidebar: 220,
     sidebar: 340,
   },
   text: {
@@ -275,6 +280,12 @@ const Theme = () => ({
       '&:focus': {
         outline: 'none',
       }
+    },
+    round: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '50%'
     }
   },
   success: {
@@ -381,6 +392,11 @@ const Theme = () => ({
       textDecoration: 'none',
       cursor: 'pointer',
       display: 'inline-block',
+    },
+    invisible: {
+      color: 'text',
+      textDecoration: 'none',
+      cursor: 'pointer',
     }
   },
   styles: {

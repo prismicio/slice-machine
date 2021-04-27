@@ -1,14 +1,14 @@
-import { useContext, useEffect } from 'react'
-import { Box } from 'theme-ui'
-import { LibrariesContext } from 'src/models/libraries/context'
-import { SliceZoneAsArray } from 'lib/models/common/CustomType/sliceZone'
+import { useContext, useEffect, useState } from 'react'
+import { Box, Flex, Heading, Button } from 'theme-ui'
+import { LibrariesContext } from '../../../../src/models/libraries/context'
+import { SliceZoneAsArray } from '../../../../lib/models/common/CustomType/sliceZone'
 
 import SliceState from '../../../models/ui/SliceState'
 import LibraryState from '../../../models/ui/LibraryState'
 
-import EmptyState from './EmptyState'
+import Form from './Form'
 
-import List from './components/List'
+import DefaultList from './components/DefaultList'
 
 const mapAvailableAndSharedSlices = (sliceZone: SliceZoneAsArray, libraries: ReadonlyArray<LibraryState>) => {
   const availableSlices: ReadonlyArray<SliceState> = libraries.reduce((acc, curr) => {
@@ -25,15 +25,18 @@ const mapAvailableAndSharedSlices = (sliceZone: SliceZoneAsArray, libraries: Rea
 }
 
 const SliceZone = ({
+  tabId,
   sliceZone,
-  onAddSharedSlice,
+  onSelectSharedSlices,
   onRemoveSharedSlice,
 }: {
+  tabId: string,
   sliceZone: SliceZoneAsArray,
-  onAddSharedSlice: Function,
+  onSelectSharedSlices: Function,
   onRemoveSharedSlice: Function,
   onDelete: Function
 }) => {
+  const [formIsOpen, setFormIsOpen] = useState(false)
   const libraries = useContext(LibrariesContext)
 
   const { availableSlices, slicesInSliceZone, notFound } = mapAvailableAndSharedSlices(sliceZone, libraries)
@@ -47,12 +50,27 @@ const SliceZone = ({
   }, [notFound])
   
   return (
-    <Box mb={6}>
-      <List
-        onAddSharedSlice={onAddSharedSlice}
+    <Box my={3}>
+      <Flex bg="ctHeader" sx={{ py:  2, px: 3, mb: 2, borderRadius: '6px', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Flex sx={{ alignItems: 'center' }}>
+          <Heading as="h4">SliceZone</Heading>
+          {/* Select the slices to use in this template */}
+        </Flex>
+        <Button onClick={() => setFormIsOpen(true)}>Edit slices</Button>
+      </Flex>
+      <DefaultList slices={slicesInSliceZone} />
+      {
+        !slicesInSliceZone.length ? (
+          <p>no slices selected</p>
+        ) : null
+      }
+      <Form
+        isOpen={formIsOpen}
+        formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
-        onRemoveSharedSlice={onRemoveSharedSlice}
         slicesInSliceZone={slicesInSliceZone}
+        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) => onSelectSharedSlices(sliceKeys)}
+        close={() => setFormIsOpen(false)}
       />
     </Box>
   )

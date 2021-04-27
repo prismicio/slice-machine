@@ -1,5 +1,5 @@
 import { Badge, Text, Card as Themecard, Box, Heading, Flex } from 'theme-ui'
-import { forwardRef, useState, useEffect, Fragment } from 'react'
+import { forwardRef, Fragment } from 'react'
 
 import ReactTooltip from 'react-tooltip'
 
@@ -33,13 +33,19 @@ const StateBadge = ({
 }
 
 const Card = forwardRef(({
-  __status,
-  infos,
-  jsonModel,
+  slice,
   defaultVariation,
   sx = {},
+  hideVariations,
+  renderSliceState,
+  heightInPx = "290px",
   ...props
 }, ref) => {
+  const {
+    infos,
+    jsonModel,
+    __status,
+  } = slice
   const preview = infos.previewUrls[defaultVariation.id]
   return (
     <Themecard
@@ -63,7 +69,7 @@ const Card = forwardRef(({
           backgroundRepeat: 'repeat',
           backgroundSize: '15px',
           backgroundImage: "url(/pattern.png)",
-          height: '290px',
+          height: heightInPx,
           overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
@@ -89,11 +95,21 @@ const Card = forwardRef(({
       <Flex>
       <Box py={2} sx={{ flex: '1 1 auto' }}>
         <Heading as="h6" my={2}>{infos.sliceName}</Heading>
-        {jsonModel.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(jsonModel.variations)}</Text> : null}
+        {
+          !hideVariations ? (
+            <Fragment>
+              {jsonModel.variations ? <Text sx={{fontSize: 1, color: 'textClear'}}>{textVariation(jsonModel.variations)}</Text> : null}
+            </Fragment>
+          ) : null
+        }
       </Box>
 
       <Box py={2}>
-        <StateBadge __status={__status} />
+        {
+          renderSliceState ? (
+            <Fragment>{renderSliceState(slice, <StateBadge __status={__status} />)}</Fragment>
+          ) : <StateBadge __status={__status} />
+        }
         {
           infos.nameConflict ? (
             <Fragment>

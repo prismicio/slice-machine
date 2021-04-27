@@ -12,6 +12,7 @@ body {
 
 .ReactModal__Content {
   padding: 0 !important;
+  padding-bottom: 40px im !important;
   bottom: auto !important;
   top: 15% !important;
   max-width: 900px;
@@ -22,6 +23,7 @@ body {
 .ReactModal__Overlay {
 	background-color: rgba(11,11,12,.9)!important;
 	backdrop-filter: blur(3px);
+  overflow: auto;
 }
 
 .ReactModal__Content--after-open {
