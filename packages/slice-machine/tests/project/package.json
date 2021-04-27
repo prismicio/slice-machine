@@ -1,0 +1,35 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@storybook/addon-actions": "^6.0.21",
+    "@storybook/addon-essentials": "^6.0.21",
+    "@storybook/addon-links": "^6.0.21",
+    "@storybook/vue": "^6.0.21",
+    "babel-loader": "^8.1.0",
+    "babel-preset-vue": "^2.0.2",
+    "chromatic": "^5.3.0",
+    "node-sass": "^4.14.1",
+    "react-is": "^16.13.1",
+    "sass-loader": "^10.0.2",
+    "slice-machine-ui": "^0.0.25",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "dependencies": {
+    "@prismicio/vue": "^2.0.7",
+    "prismic-dom": "^2.2.3",
+    "prismic-javascript": "^3.0.2",
+    "vue": "^2.6.12",
+    "vue-slicezone": "^0.0.28"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "slicemachine": "node ../../start.js --port 9999",
+    "build-storybook": "build-storybook",
+    "chromatic": "npx chromatic --exit-zero-on-changes --no-interactive"
+  }
+}

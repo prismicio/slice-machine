@@ -1,0 +1,10 @@
+{
+  "libraries": [
+    "@/slices",
+    "vue-essential-slices"
+  ],
+  "apiEndpoint": "https://with-shared-slices.wroom.io/api/v2",
+  "storybook": "http://localhost:6006",
+  "chromaticAppId": "5f5b34f06f304800225c4e17",
+  "_latest": "0.0.43"
+}

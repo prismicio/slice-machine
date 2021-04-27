@@ -1,0 +1,25 @@
+### New Feature
+
+SliceMachine now supports custom screenshots! ✌️
+
+Previously, screenshots were stored along with your components.
+Everytime a change was made to a slice, a new screenshot was generated, erasing the previous one.
+
+This behaviour made it impossible for users to add their own preview file.
+
+These default screenshots are now stored in `.slicemachine`, a special folder that will probaby grow
+with more features in the coming weeks - and that you should definitely push to git!
+
+To enable the custom screenshot feature, simply add a `preview.(png|jpg)` to each of your components folders.
+When pushing slices to Prismic, the builder will select the screenshot by favouring the custom preview file first,
+then the automatic screenshot.
+
+Your editors will then be able to preview your custom screenshot in the editor.
+
+#### Also
+
+We added more options to RichText and fixed a bug in the validation of Image widgets.
+
+#### Oh and...
+
+We now have a changelog 😊

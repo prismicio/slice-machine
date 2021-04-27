@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+}
+
+.sliceMenuButton:hover{
+  background: rgba(0,0,0,0.06)!important;
+  border-radius: 3px;
+}
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.ReactModal__Content {
+  padding: 0 !important;
+  bottom: auto !important;
+  top: 15% !important;
+  max-width: 900px;
+  margin: auto;
+  border: 0!important;
+  background: 0!important;
+}
+.ReactModal__Overlay {
+	background-color: rgba(11,11,12,.9)!important;
+	backdrop-filter: blur(3px);
+}
+
+.ReactModal__Content--after-open {
+  min-height: 60vh;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}

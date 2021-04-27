@@ -1,0 +1,35 @@
+{
+  "id": "call_to_action2",
+  "type": "SharedSlice",
+  "name": "CallToAction2",
+  "description": "MySlice Template",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "fgdfg": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "fgdfg",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "id": "fghj",
+            "placeholder": ""
+          }
+        }
+      }
+    }
+  ]
+}
