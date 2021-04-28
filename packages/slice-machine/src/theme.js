@@ -1,4 +1,4 @@
-import { darken } from '@theme-ui/color'
+import { darken, lighten } from '@theme-ui/color'
 
 const Theme = () => ({
   colors: {
@@ -180,19 +180,23 @@ const Theme = () => ({
       fontSize: 1,
       fontWeight: 'body',
       bg: 'primary',
-      border: '1px solid',
-      borderColor: darken('primary', 0.1),
+      boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
+      userSelect: 'none',
+      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
       '&:hover': {
-        bg: darken('primary', 0.05),
+        bg: darken('primary', 0.02),
         cursor: 'pointer',
+        boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
       },
       '&:focus': {
-        bg: darken('primary', 0.1),
-        borderColor: darken('primary', 0.15),
+        boxShadow: '0 0 0 1px #fff, 0 0 0 3px rgb(110, 82, 255, 1)',
+        bg: darken('primary', 0.02),
         outline: 'none',
       },
       '&:active': {
-        bg: darken('primary', 0.2),
+        boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
+        bg: darken('primary', 0.05),
+        borderColor: darken('primary', 0.08),
         outline: 'none',
       }
     },
@@ -401,10 +405,12 @@ const Theme = () => ({
     sidebar: {
       fontSize: 1,
       color: 'textClear',
+      userSelect: 'none',
       textDecoration: 'none',
       cursor: 'pointer',
       borderRadius: '6px',
       p: 2,
+      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
       '&:hover': {
         color: 'text',
         bg: '#E6E6EA'
