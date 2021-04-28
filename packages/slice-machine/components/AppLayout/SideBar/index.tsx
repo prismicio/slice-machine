@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Flex, Heading, Badge, Link as ThemeLink } from "theme-ui";
+import { Box, Flex, Heading, Link as ThemeLink, SxStyleProp } from "theme-ui";
 
 import Environment from "../../../lib/models/common/Environment";
 
@@ -8,7 +8,13 @@ import Prismic from "./prismic.svg";
 import { FiFile } from "react-icons/fi";
 import { FiBox } from "react-icons/fi";
 
-const VersionBadge = ({ version, sx }: { version: string; sx: any }) => {
+const VersionBadge = ({
+  version,
+  sx,
+}: {
+  version: string;
+  sx?: SxStyleProp;
+}) => {
   return (
     <div>
       <Link href="/changelog" passHref>
@@ -49,8 +55,6 @@ const SideBar = ({ env }: { env: Environment }) => {
       as="aside"
       bg="sidebar"
       sx={{
-        // flexGrow: 1,
-        // flexBasis: 'leftSidebar',
         width: "260px",
         pl: 3,
         pr: 3,
@@ -65,7 +69,6 @@ const SideBar = ({ env }: { env: Environment }) => {
           maxHeight: "calc(100vh - 24px * 2)",
           position: "sticky",
           top: "32px",
-          top: 4,
         }}
       >
         <Link href="/" passHref>
@@ -89,7 +92,6 @@ const SideBar = ({ env }: { env: Environment }) => {
                       display: "flex",
                       alignItems: "center",
                       mb: "10px",
-                      ...link.sx,
                     }}
                   >
                     <link.Icon size={22} />
