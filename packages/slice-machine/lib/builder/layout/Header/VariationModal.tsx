@@ -24,7 +24,7 @@ const VariationModal: React.FunctionComponent<{
     initialVariation: Variation<AsArray>
     variations: ReadonlyArray<Variation<AsArray>>
   }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
-  
+
   const [errors, setErrors] = useState<{ [fieldKey: string]: string }>({})
   const [generatedId, setGeneratedId] = useState<string>('')
   const [isGeneratedFromName, setIsGeneratedFromName] = useState<boolean>(true)

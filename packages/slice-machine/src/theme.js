@@ -2,10 +2,10 @@ import { darken } from '@theme-ui/color'
 
 const Theme = () => ({
   colors: {
-    text: '#1D2230',
-    textClear: '#667587',
+    text: '#25252D',
+    textClear: '#4E4E55',
     hoverBackground: '#f2f2f2',
-    background: '#F5F6F9',
+    background: '#F1F1F4',
     backgroundClear: '#FFF',
     ctHeader: '#E6E6EA',
     primary: '#6E52FF',
@@ -400,12 +400,13 @@ const Theme = () => ({
     },
     sidebar: {
       fontSize: 1,
-      color: 'text',
+      color: 'textClear',
       textDecoration: 'none',
       cursor: 'pointer',
       borderRadius: '6px',
       p: 2,
       '&:hover': {
+        color: 'text',
         bg: '#E6E6EA'
       }
     }
