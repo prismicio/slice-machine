@@ -103,6 +103,11 @@ const Logo = ({ p }: { p?: number }) => {
 
 const Mobile = () => {
   const [show, setShow] = useState(false);
+
+  const handleClick = () => {
+    setShow(!show);
+    alert(show);
+  };
   return (
     <Box as="nav" bg="sidebar">
       <Flex
@@ -111,7 +116,7 @@ const Mobile = () => {
         px={3}
       >
         <Logo />
-        <Button variant="transparent">
+        <Button onClick={handleClick} variant="transparent">
           <Burger />
         </Button>
       </Flex>
