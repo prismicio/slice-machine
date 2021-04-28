@@ -1,11 +1,12 @@
+import { useState } from "react";
 import Link from "next/link";
 import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
 import useWindowsSize from "hooks/useWindowSize";
 import Environment from "../../../lib/models/common/Environment";
 import Prismic from "./prismic";
+import Burger from "./burger";
 import { FiFile } from "react-icons/fi";
 import { FiBox } from "react-icons/fi";
-import { useState } from "react";
 
 const VersionBadge = ({ version }: { version: string }) => {
   return (
@@ -97,9 +98,14 @@ const Mobile = () => {
   const [show, setShow] = useState(false);
   return (
     <Box as="nav" bg="sidebar">
-      <Box p={3}>
-        <Logo />
-      </Box>
+      <Flex
+        sx={{ alignItems: "center", justifyContent: "space-between" }}
+        py={4}
+        px={3}
+      >
+        <Logo p={2} />
+        <Burger />
+      </Flex>
     </Box>
   );
 };
