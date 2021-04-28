@@ -1,4 +1,4 @@
-import { darken } from "@theme-ui/color";
+import { darken, lighten } from "@theme-ui/color";
 
 const Theme = () => ({
   colors: {
@@ -208,6 +208,23 @@ const Theme = () => ({
         outline: "none",
       },
     },
+
+    darkSmall: {
+      borderRadius: '4px',
+      color: "white",
+      fontSize: '13px',
+      fontWeight: 'body',
+      p: 2,
+      bg: 'text',
+      boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
+      userSelect: 'none',
+      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
+      "&:hover": {
+        bg: lighten("text", 0.05),
+        cursor: "pointer",
+      },
+    },
+
     disabled: {
       bg: "borders",
       fontSize: "1",

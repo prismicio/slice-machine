@@ -48,15 +48,15 @@ const SliceZone = ({
       })
     }
   }, [notFound])
-  
+
   return (
     <Box my={3}>
-      <Flex bg="ctHeader" sx={{ py:  2, px: 3, mb: 2, borderRadius: '6px', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Flex bg="ctHeader" sx={{pl: 3, pr: 2, py: 2, mb: 2, borderRadius: '6px', alignItems: 'center', justifyContent: 'space-between' }}>
         <Flex sx={{ alignItems: 'center' }}>
-          <Heading as="h4">SliceZone</Heading>
+          <Heading as="h6">SliceZone</Heading>
           {/* Select the slices to use in this template */}
         </Flex>
-        <Button onClick={() => setFormIsOpen(true)}>Edit slices</Button>
+        <Button variant="buttons.darkSmall" onClick={() => setFormIsOpen(true)}>Edit slices</Button>
       </Flex>
       <DefaultList slices={slicesInSliceZone} />
       {
