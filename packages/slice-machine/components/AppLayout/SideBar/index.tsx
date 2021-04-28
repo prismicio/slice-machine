@@ -5,14 +5,14 @@ import Environment from '../../../lib/models/common/Environment'
 
 import Prismic from './prismic.svg'
 
-import { RiPagesLine } from 'react-icons/ri'
-import { ImPagebreak } from 'react-icons/im'
+import { FiFile } from 'react-icons/fi'
+import { FiBox } from 'react-icons/fi'
 
 const VersionBadge = ({ version, sx }: { version: string, sx: any }) => {
   return (
     <div>
       <Link href="/changelog" passHref>
-        <Badge sx={{ cursor: 'pointer', color: '#FFF', ...sx }}>{version}</Badge>
+        <Box as="span" sx={{ cursor: 'pointer', color: 'textClear', fontSize: 1, position: 'absolute', bottom: 0 }}>Version {version}</Box>
       </Link>
     </div>
   )
@@ -21,12 +21,11 @@ const VersionBadge = ({ version, sx }: { version: string, sx: any }) => {
 const links = [{
   title: 'Custom Types',
   href: '/',
-  Icon: RiPagesLine
+  Icon: FiFile
 }, {
   title: 'Slices',
   href: '/slices',
-  Icon: ImPagebreak,
-  sx: { ml: '-3px' }
+  Icon: FiBox
 }]
 
 const SideBar = ({ env }: { env: Environment }) => {
@@ -34,25 +33,37 @@ const SideBar = ({ env }: { env: Environment }) => {
     <Box
       as="aside"
       sx={{
-        flexGrow: 1,
-        flexBasis: 'leftSidebar',
-        p: 3
+        // flexGrow: 1,
+        // flexBasis: 'leftSidebar',
+        width: '260px',
+        pl: 3,
+        pr: 3,
+        pt: 4,
+        pb: 4,
       }}>
+      <Box
+        as="div"
+        sx={{
+          height: '100%',
+          maxHeight: 'calc(100vh - 2em * 2)',
+          position: 'sticky',
+          top: '32px',
+          top: 4
+        }}>
         <Link href="/" passHref>
           <ThemeLink variant="links.invisible">
-            <Flex sx={{ alignItems: 'center' }}>
-              <Prismic />&nbsp;<Heading as="h4">SliceMachine</Heading>
+            <Flex sx={{ alignItems: 'center', pl: 2 }}>
+              <Prismic /><Heading as="h5" sx={{ml:2}}>Prismic Studio</Heading>
             </Flex>
           </ThemeLink>
         </Link>
-        <VersionBadge version={env.currentVersion} sx={{ mt: 3 }} />
         <Box mt={4}>
           <ul>
             {
               links.map(link => (
                 <li key={link.title}>
                   <Link href={link.href} passHref>
-                    <ThemeLink variant="links.invisible" sx={{ display: 'flex', alignItems: 'center', mb: 3, ...link.sx }}>
+                    <ThemeLink variant="links.sidebar" sx={{ display: 'flex', alignItems: 'center', mb: '10px', ...link.sx }}>
                       <link.Icon size={22}/>&nbsp;{ link.title }
                     </ThemeLink>
                   </Link>
@@ -61,6 +72,8 @@ const SideBar = ({ env }: { env: Environment }) => {
             }
           </ul>
         </Box>
+        <VersionBadge version={env.currentVersion} />
+      </Box>
     </Box>
   )
 }

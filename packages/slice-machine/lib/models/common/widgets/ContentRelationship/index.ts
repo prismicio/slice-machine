@@ -4,7 +4,6 @@ import { DefaultFields } from 'lib/forms/defaults'
 
 import { MdSettingsEthernet } from 'react-icons/md'
 
-import { handleMockConfig, handleMockContent } from './Mock'
 
 import {
   createInitialValues,
@@ -53,8 +52,6 @@ const schema = yup.object().shape({
 
 export default {
   create,
-  handleMockConfig,
-  handleMockContent,
   Meta,
   schema,
   TYPE_NAME,

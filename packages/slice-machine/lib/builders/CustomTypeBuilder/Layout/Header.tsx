@@ -9,7 +9,7 @@ const Header = ({ Model }: { Model: CustomTypeState }) => {
     <Box sx={{ bg: 'backgroundClear' }}>
       <FlexWrapper
         sx={{
-          px: 3,
+          px: '8px',
           py: 4,
         }}
       >
@@ -22,7 +22,12 @@ const Header = ({ Model }: { Model: CustomTypeState }) => {
             minWidth: 320,
           }}
         >
-          <Heading>Templates/{Model.label}</Heading>
+          <Heading>Templates <Box
+            as="span"
+            sx={{
+              fontWeight: '400'
+            }}
+          >/ {Model.label}</Box></Heading>
         </Box>
         <Button>Push to Prismic</Button>
       </FlexWrapper>

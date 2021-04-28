@@ -8,7 +8,7 @@ const Theme = () => ({
     background: '#F5F6F9',
     backgroundClear: '#FFF',
     ctHeader: '#E6E6EA',
-    primary: '#5163BA',
+    primary: '#6E52FF',
     secondary: '#F9FAFB',
     highlight: 'hsl(10, 40%, 90%)',
     purple: 'hsl(250, 60%, 30%)',
@@ -388,7 +388,7 @@ const Theme = () => ({
     hint: {
       fontSize: 1,
       color: t => t.colors.link,
-      margin: '0 4px', 
+      margin: '0 4px',
       textDecoration: 'none',
       cursor: 'pointer',
       display: 'inline-block',
@@ -397,6 +397,17 @@ const Theme = () => ({
       color: 'text',
       textDecoration: 'none',
       cursor: 'pointer',
+    },
+    sidebar: {
+      fontSize: 1,
+      color: 'text',
+      textDecoration: 'none',
+      cursor: 'pointer',
+      borderRadius: '6px',
+      p: 2,
+      '&:hover': {
+        bg: '#E6E6EA'
+      }
     }
   },
   styles: {
@@ -504,13 +515,13 @@ const Theme = () => ({
       '.attr-name': {
         color: t => t.colors.code.orange,
       },
-      '.attr-value, .property-access': { // add .plain to highligh vue. 
+      '.attr-value, .property-access': { // add .plain to highligh vue.
         color: t => t.colors.code.green, // green
       },
     },
     ".prism-code.language-jsx": {
       '.language-javascript.punctuation, .language-javascript.script-punctuation.punctuation': {
-        color: t => t.colors.code.gray, 
+        color: t => t.colors.code.gray,
       },
       '.language-javascript, .plain': {
         color: t => t.colors.code.green
