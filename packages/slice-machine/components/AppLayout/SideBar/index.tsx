@@ -12,7 +12,7 @@ const VersionBadge = ({ version, sx }: { version: string, sx: any }) => {
   return (
     <div>
       <Link href="/changelog" passHref>
-        <Box as="span" sx={{ cursor: 'pointer', color: 'textClear', fontSize: 1, position: 'absolute', bottom: 0 }}>Version {version}</Box>
+        <Box as="span" sx={{ cursor: 'pointer', color: 'textClear', opacity: '0.8', fontSize: '12px', position: 'absolute', bottom: 0 }}>Prismic Studio - version {version}</Box>
       </Link>
     </div>
   )
@@ -45,7 +45,7 @@ const SideBar = ({ env }: { env: Environment }) => {
         as="div"
         sx={{
           height: '100%',
-          maxHeight: 'calc(100vh - 2em * 2)',
+          maxHeight: 'calc(100vh - 24px * 2)',
           position: 'sticky',
           top: '32px',
           top: 4
