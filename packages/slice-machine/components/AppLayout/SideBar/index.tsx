@@ -1,18 +1,8 @@
 import Link from "next/link";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Link as ThemeLink,
-  SxStyleProp,
-} from "theme-ui";
+import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
 import useWindowsSize from "hooks/useWindowSize";
-
 import Environment from "../../../lib/models/common/Environment";
-
-import Prismic from "./prismic.svg";
-
+import Prismic from "./prismic";
 import { FiFile } from "react-icons/fi";
 import { FiBox } from "react-icons/fi";
 import { useState } from "react";
@@ -73,9 +63,9 @@ const Item = ({ link }: { link: any }) => {
     </Box>
   );
 };
-const ItemsList = ({ sx }: { sx: SxStyleProp }) => {
+const ItemsList = ({ mt }: { mt?: number }) => {
   return (
-    <Box as="nav" sx={sx}>
+    <Box as="nav" marginTop={mt}>
       <Box as="ul">
         {links.map((link) => (
           <Item link={link} />
@@ -85,13 +75,14 @@ const ItemsList = ({ sx }: { sx: SxStyleProp }) => {
   );
 };
 
-const Logo = () => {
+const Logo = ({ p }: { p?: number }) => {
+  const { theme } = useThemeUI();
   return (
-    <Box p={2}>
+    <Box p={p}>
       <Link href="/" passHref>
         <ThemeLink variant="links.invisible">
           <Flex sx={{ alignItems: "center" }}>
-            <Prismic />
+            <Prismic fill={theme.colors?.text} />
             <Heading as="h5" sx={{ ml: 2 }}>
               Prismic Studio
             </Heading>
@@ -106,8 +97,9 @@ const Mobile = () => {
   const [show, setShow] = useState(false);
   return (
     <Box as="nav" bg="sidebar">
-      <Button onClick={() => setShow(!show)}>Show</Button>
-      <Box>show {JSON.stringify(show)}</Box>
+      <Box p={3}>
+        <Logo />
+      </Box>
     </Box>
   );
 };
@@ -116,8 +108,8 @@ const Desktop = ({ env }: { env: Environment }) => {
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py="4" px="3">
-        <Logo />
-        <ItemsList sx={{ mt: 4 }} />
+        <Logo p={2} />
+        <ItemsList mt={4} />
         <VersionBadge version={env.currentVersion} />
       </Box>
     </Box>
