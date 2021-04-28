@@ -5,7 +5,7 @@ const Theme = () => ({
     text: "#25252D",
     textClear: "#4E4E55",
     hoverBackground: "#f2f2f2",
-    background: "red",
+    background: "#FFF",
     backgroundClear: "#FFF",
     ctHeader: "#E6E6EA",
     primary: "#6E52FF",
