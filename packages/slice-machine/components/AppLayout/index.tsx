@@ -1,4 +1,4 @@
-import Navigation from "./SideBar";
+import Navigation from "./Navigation";
 import { Box } from "theme-ui";
 
 import Environment from "../../lib/models/common/Environment";
