@@ -3,7 +3,7 @@ import initClient from '../../../lib/client'
 export const getSlices = async(env) => {
   try {
     const client = initClient(env)
-    const res = await client.get()
+    const res = await client.getSlice()
     if (res.status !== 200) {
       return { err: res, slices: [] }
     }

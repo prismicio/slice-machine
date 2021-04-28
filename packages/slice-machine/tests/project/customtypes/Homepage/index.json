@@ -1,52 +1,29 @@
 {
-  "id": "Homepage",
-  "label": "HomePage",
-  "tabs": {
-    "Page": {
-      "uid": {
-        "type": "UID",
+  "id": "homepage",
+  "label": "homepage",
+  "repeatable": false,
+  "json": {
+    "Main": {
+      "rt": {
+        "type": "StructuredText",
         "config": {
-          "label": "My uid"
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+          "label": "rt"
         }
       },
-      "sdfsf": {
-        "type": "Link",
-        "config": {
-          "label": "",
-          "placeholder": "",
-          "allowTargetBlank": true
-        }
-      },
-      "bjnk": {
-        "type": "Link",
-        "config": {
-          "label": "",
-          "select": "document",
-          "customtypes": []
-        }
-      },
-      "PageSliceZone": {
+      "body": {
         "type": "Slices",
-        "fieldset": "Slice Zone",
+        "fieldset": "Slice zone",
         "config": {
+          "labels": {},
           "choices": {
-            "call_to_action": {
-              "type": "SharedSlice"
-            },
-            "strcututed_texts": {
+            "heading_section": {
               "type": "SharedSlice"
             }
           }
         }
       }
-    },
-    "Main Content": {
-      "uid": {
-        "type": "UID",
-        "config": {
-          "label": "My uid"
-        }
-      }
     }
-  }
+  },
+  "status": false
 }

@@ -8,7 +8,7 @@ import { AsObject } from '../../../lib/models/common/Variation'
 import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
 
 export async function getLibrariesWithFlags(env: Environment): Promise<{ remoteSlices: ReadonlyArray<Slice<AsObject>>, clientError: ErrorWithStatus | undefined, libraries: ReadonlyArray<Library> }> {
-  const res = await env.client.get()
+  const res = await env.client.getSlice()
   const { remoteSlices, clientError } = await (async () => {
     if (res.status > 209) {
       return { remoteSlices: [], clientError: new ErrorWithStatus(res.statusText, res.status) }

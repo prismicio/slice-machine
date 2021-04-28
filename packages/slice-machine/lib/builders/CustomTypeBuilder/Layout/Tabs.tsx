@@ -20,7 +20,7 @@ import FlexWrapper from './FlexWrapper'
 //   />
 // )
 
-const CtTabs = ({ sx, Model, renderTab }: { sx: any, Model: CustomTypeState, renderTab: Function }) => {
+const CtTabs = ({ sx, Model, renderTab }: { sx?: any, Model: CustomTypeState, renderTab: Function }) => {
   //const { theme } = useThemeUI()
   return (
     <Box sx={{ bg: 'backgroundClear' }}>
@@ -43,7 +43,7 @@ const CtTabs = ({ sx, Model, renderTab }: { sx: any, Model: CustomTypeState, ren
             }
           </TabList>
           {
-            Model.tabs.map(tab => <TabPanel>{renderTab(tab)}</TabPanel>)
+            Model.tabs.map(tab => <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>)
           }
         </Tabs>
       </FlexWrapper>

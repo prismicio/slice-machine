@@ -9,7 +9,7 @@ import CustomTypeStore from '../../../src/models/customType/store'
 const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
   return (
     <main>
-      <Header Model={Model} />
+      <Header Model={Model} store={store} />
       <Tabs
         Model={Model}
         renderTab={({ value, sliceZone, key }) => (
@@ -24,7 +24,6 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
             />
           </Box>
         )}
-        sx={{ bg: 'backgroundClear', px: 2 }}
       />
       <pre>
         { JSON.stringify(Model.mockConfig)}

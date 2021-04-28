@@ -2,7 +2,7 @@ import fetchLibs from './libraries'
 import fetchCustomTypes from './custom-types/index'
 import { getEnv } from '../../../lib/env'
 import { warningStates, warningTwoLiners } from '../../../lib/consts'
-import { fetchStorybookUrl } from './common/utils'
+import { fetchStorybookUrl } from './common/storybook'
 import Environment from '../../../lib/models/common/Environment'
 import Warning from '../../../lib/models/common/Warning'
 import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
@@ -80,10 +80,9 @@ export default async function handler() {
 
   const { env, errors: configErrors } = await getEnv()
   const { libraries, remoteSlices, clientError } = await fetchLibs(env)
-  const { customTypes } = await fetchCustomTypes(env)
+  const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env)
 
   const warnings = await createWarnings(env, configErrors, clientError)
 
-  console.log({ customTypes })
-  return { libraries, customTypes, remoteSlices, clientError, configErrors, env, warnings }
+  return { libraries, customTypes, remoteCustomTypes, remoteSlices, clientError, configErrors, env, warnings }
 }

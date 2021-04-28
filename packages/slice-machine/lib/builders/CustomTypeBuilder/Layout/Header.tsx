@@ -2,14 +2,23 @@ import { CustomTypeState } from '../../../models/ui/CustomTypeState'
 
 import { Box, Button, Heading, Flex } from 'theme-ui'
 
+import CustomTypeStore from '../../../../src/models/customType/store'
+
+
 import FlexWrapper from './FlexWrapper'
 
-const Header = ({ Model }: { Model: CustomTypeState }) => {
+const Header = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
+  const buttonProps = (() => {
+    if (Model.isTouched) {
+      return { onClick: () => store.save(Model), children: 'Save Custom Type' }
+    }
+    return { onClick: () => store.save(Model), children: 'Push to Prismic' }
+  })()
+
   return (
     <Box sx={{ bg: 'backgroundClear' }}>
       <FlexWrapper
         sx={{
-          px: '8px',
           py: 4,
         }}
       >
@@ -29,7 +38,7 @@ const Header = ({ Model }: { Model: CustomTypeState }) => {
             }}
           >/ {Model.label}</Box></Heading>
         </Box>
-        <Button>Push to Prismic</Button>
+        <Button {...buttonProps} />
       </FlexWrapper>
     </Box>
   )

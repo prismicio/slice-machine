@@ -1,4 +1,5 @@
 import { useReducer } from 'react'
+import { LibStatus } from '../../../lib/models/common/Library'
 import { CustomType } from '../../../lib/models/common/CustomType'
 import { TabsAsObject } from '../../../lib/models/common/CustomType/tab'
 import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
@@ -18,7 +19,8 @@ export function useModelReducer({ customType }: { customType: CustomType<TabsAsO
     initialTabs: tabs,
     mockConfig: {},
     initialMockConfig: {},
-    poolOfFieldsToCheck: CustomTypeState.getPool(tabs)
+    poolOfFieldsToCheck: CustomTypeState.getPool(tabs),
+    __status: LibStatus.NewSlice
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)

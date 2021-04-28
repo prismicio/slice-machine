@@ -8,6 +8,7 @@ const FlexWrapper = ({ children, sx }: { children: any, sx: any }) => (
       margin: '0 auto',
       maxWidth: 1224,
       mx: 'auto',
+      px: 4,
       ...sx
 
     }}

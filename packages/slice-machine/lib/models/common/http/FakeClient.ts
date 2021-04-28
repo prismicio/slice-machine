@@ -22,7 +22,7 @@ export default class FakeClient {
     })
   }
   
-  async get(): Promise<FakeResponse> {
+  async getSlice(): Promise<FakeResponse> {
     return {
       status: 200,
       statusText: 'ok',
@@ -33,11 +33,22 @@ export default class FakeClient {
     }
   }
 
-  async insert(): Promise<FakeResponse> {
+  async getCustomTypes(): Promise<FakeResponse> {
+    return {
+      status: 200,
+      statusText: 'ok',
+      fake: true,
+      json() {
+        return []
+      }
+    }
+  }
+
+  async insertSlice(): Promise<FakeResponse> {
     return this.mutate()
   }
 
-  async update(): Promise<FakeResponse> {
+  async updateSlice(): Promise<FakeResponse> {
     return this.mutate()
   }
 

@@ -7,6 +7,8 @@ import { Widget } from '../../../lib/models/common/widgets'
 import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
 import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
 
+import { LibStatus } from '../../../lib/models/common/Library'
+
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
     switch(action.type) {
@@ -92,6 +94,11 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
   return {
     ...result,
     poolOfFieldsToCheck: CustomTypeState.getPool(result.tabs),
+    __status: (() => {
+      return !equal(result.tabs, {})
+      ? LibStatus.Modified
+      : LibStatus.Synced
+    })(),
     isTouched: !equal(result.initialTabs, result.tabs) || !equal(result.initialMockConfig, result.mockConfig)
   }
 }

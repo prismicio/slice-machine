@@ -1,5 +1,6 @@
 import { CustomType } from '../common/CustomType'
 import { TabsAsObject, TabsAsArray, TabAsArray, TabValueAsArray } from '../common/CustomType/tab'
+import { LibStatus } from '../common/Library'
 
 export interface CustomTypeState {
   id: string
@@ -11,6 +12,7 @@ export interface CustomTypeState {
   initialMockConfig: any
   poolOfFieldsToCheck: TabValueAsArray
   isTouched?: boolean
+  __status?: LibStatus
 }
 
 export const CustomTypeState = {

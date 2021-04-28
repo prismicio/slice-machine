@@ -2,7 +2,7 @@
   "repeatable": true,
   "status": true,
   "label": "Pages",
-  "tabs": {
+  "json": {
     "Page": {
       "uid": {
         "type": "UID",
