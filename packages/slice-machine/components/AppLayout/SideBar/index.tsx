@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { Box, Flex, Heading, Link as ThemeLink, SxStyleProp } from "theme-ui";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link as ThemeLink,
+  SxStyleProp,
+} from "theme-ui";
+import useWindowsSize from "hooks/useWindowSize";
 
 import Environment from "../../../lib/models/common/Environment";
 
@@ -7,14 +15,9 @@ import Prismic from "./prismic.svg";
 
 import { FiFile } from "react-icons/fi";
 import { FiBox } from "react-icons/fi";
+import { useState } from "react";
 
-const VersionBadge = ({
-  version,
-  sx,
-}: {
-  version: string;
-  sx?: SxStyleProp;
-}) => {
+const VersionBadge = ({ version }: { version: string }) => {
   return (
     <div>
       <Link href="/changelog" passHref>
@@ -26,7 +29,7 @@ const VersionBadge = ({
             opacity: "0.8",
             fontSize: "12px",
             position: "absolute",
-            bottom: 0,
+            bottom: 3,
           }}
         >
           Prismic Studio - version {version}
@@ -49,65 +52,81 @@ const links = [
   },
 ];
 
-const SideBar = ({ env }: { env: Environment }) => {
+const Item = ({ link }: { link: any }) => {
   return (
-    <Box
-      as="aside"
-      bg="sidebar"
-      sx={{
-        width: "260px",
-        pl: 3,
-        pr: 3,
-        pt: 4,
-        pb: 4,
-      }}
-    >
-      <Box
-        as="div"
-        sx={{
-          height: "100%",
-          maxHeight: "calc(100vh - 24px * 2)",
-          position: "sticky",
-          top: "32px",
-        }}
-      >
-        <Link href="/" passHref>
-          <ThemeLink variant="links.invisible">
-            <Flex sx={{ alignItems: "center", pl: 2 }}>
-              <Prismic />
-              <Heading as="h5" sx={{ ml: 2 }}>
-                Prismic Studio
-              </Heading>
-            </Flex>
-          </ThemeLink>
-        </Link>
-        <Box mt={4}>
-          <ul>
-            {links.map((link) => (
-              <li key={link.title}>
-                <Link href={link.href} passHref>
-                  <ThemeLink
-                    variant="links.sidebar"
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mb: "10px",
-                    }}
-                  >
-                    <link.Icon size={22} />
-                    <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
-                      {link.title}
-                    </Box>
-                  </ThemeLink>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Box>
+    <Box as="li" key={link.title}>
+      <Link href={link.href} passHref>
+        <ThemeLink
+          variant="links.sidebar"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: "10px",
+          }}
+        >
+          <link.Icon size={22} />
+          <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
+            {link.title}
+          </Box>
+        </ThemeLink>
+      </Link>
+    </Box>
+  );
+};
+const ItemsList = ({ sx }: { sx: SxStyleProp }) => {
+  return (
+    <Box as="nav" sx={sx}>
+      <Box as="ul">
+        {links.map((link) => (
+          <Item link={link} />
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+const Logo = () => {
+  return (
+    <Box p={2}>
+      <Link href="/" passHref>
+        <ThemeLink variant="links.invisible">
+          <Flex sx={{ alignItems: "center" }}>
+            <Prismic />
+            <Heading as="h5" sx={{ ml: 2 }}>
+              Prismic Studio
+            </Heading>
+          </Flex>
+        </ThemeLink>
+      </Link>
+    </Box>
+  );
+};
+
+const Mobile = () => {
+  const [show, setShow] = useState(false);
+  return (
+    <Box as="nav" bg="sidebar">
+      <Button onClick={() => setShow(!show)}>Show</Button>
+      <Box>show {JSON.stringify(show)}</Box>
+    </Box>
+  );
+};
+
+const Desktop = ({ env }: { env: Environment }) => {
+  return (
+    <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
+      <Box py="4" px="3">
+        <Logo />
+        <ItemsList sx={{ mt: 4 }} />
         <VersionBadge version={env.currentVersion} />
       </Box>
     </Box>
   );
 };
 
-export default SideBar;
+const Navigation = ({ env }: { env: Environment }) => {
+  const viewport = useWindowsSize();
+  return (viewport.width as number) < 640 ? <Mobile /> : <Desktop env={env} />;
+};
+
+export default Navigation;
