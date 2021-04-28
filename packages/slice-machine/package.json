@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "dev:static": "yarn build && yarn export",
     "postinstall": "node postinstall",
     "prepublishOnly": "next build && next export",
     "serve": "node -r esm ./build/server/src/index.js",
