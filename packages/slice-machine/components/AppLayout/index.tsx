@@ -17,6 +17,7 @@ const AppLayout = ({ children, env }: { children: any; env: Environment }) => {
         as="main"
         sx={{
           flex: 1,
+          px: [1, 4, null],
           overflow: "auto",
         }}
       >
