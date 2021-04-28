@@ -1,6 +1,13 @@
 import { useState } from "react";
 import Link from "next/link";
-import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link as ThemeLink,
+  useThemeUI,
+} from "theme-ui";
 import useWindowsSize from "hooks/useWindowSize";
 import Environment from "../../../lib/models/common/Environment";
 import Prismic from "./prismic";
@@ -79,7 +86,7 @@ const ItemsList = ({ mt }: { mt?: number }) => {
 const Logo = ({ p }: { p?: number }) => {
   const { theme } = useThemeUI();
   return (
-    <Box p={p}>
+    <Box p={2}>
       <Link href="/" passHref>
         <ThemeLink variant="links.invisible">
           <Flex sx={{ alignItems: "center" }}>
@@ -103,8 +110,10 @@ const Mobile = () => {
         py={4}
         px={3}
       >
-        <Logo p={2} />
-        <Burger />
+        <Logo />
+        <Button variant="transparent">
+          <Burger />
+        </Button>
       </Flex>
     </Box>
   );
@@ -114,7 +123,7 @@ const Desktop = ({ env }: { env: Environment }) => {
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py="4" px="3">
-        <Logo p={2} />
+        <Logo />
         <ItemsList mt={4} />
         <VersionBadge version={env.currentVersion} />
       </Box>
