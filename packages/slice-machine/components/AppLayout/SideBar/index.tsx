@@ -45,7 +45,7 @@ const SideBar = ({ env }: { env: Environment }) => {
         as="div"
         sx={{
           height: '100%',
-          maxHeight: 'calc(100vh - 24px * 2)',
+          maxHeight: 'calc(100vh - 2em * 2)',
           position: 'sticky',
           top: '32px',
           top: 4
