@@ -13,6 +13,14 @@ const Theme = () => ({
         bg: "#E9F6EE",
         color: "#27AE60",
       },
+      new: {
+        bg: "#F6F1FC",
+        color: "#AC7EE9",
+      },
+      modified: {
+        bg: "#FDF4EC",
+        color: "#F2994A",
+      },
     },
     secondary: "#F9FAFB",
     highlight: "hsl(10, 40%, 90%)",
@@ -135,10 +143,24 @@ const Theme = () => ({
     },
   },
   badges: {
-    NEW_SLICE: {
+    PUBLISHED: {
       fontWeight: "body",
       color: "badge.published.color",
       bg: "badge.published.bg",
+      px: 1,
+      py: "1px",
+    },
+    NEW_SLICE: {
+      fontWeight: "body",
+      color: "badge.new.color",
+      bg: "badge.new.bg",
+      px: 1,
+      py: "1px",
+    },
+    MODIFIED: {
+      fontWeight: "body",
+      color: "badge.modified.color",
+      bg: "badge.modified.bg",
       px: 1,
       py: "1px",
     },

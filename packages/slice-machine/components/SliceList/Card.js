@@ -43,7 +43,7 @@ const SliceName = ({ sliceName }) => {
   );
 };
 
-const SliceThumbnail = ({ heightInPx, preview }) => {
+const SliceThumbnail = ({ heightInPx, preview, withShadow = true }) => {
   return (
     <Box
       sx={{
@@ -58,7 +58,7 @@ const SliceThumbnail = ({ heightInPx, preview }) => {
         justifyContent: "center",
         borderRadius: "6px",
         border: ({ colors }) => `1px solid ${colors.borders}`,
-        boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
+        boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
       <Box
@@ -136,7 +136,7 @@ const ForSliceZone = forwardRef(
       slice,
       renderSliceState,
       hideVariations,
-      heightInPx = "287px",
+      heightInPx = "260px",
       defaultVariation,
       sx = {},
     },
@@ -145,19 +145,38 @@ const ForSliceZone = forwardRef(
     const preview = slice?.infos.previewUrls[defaultVariation.id];
     return (
       <Themecard
+        p={3}
         tabindex="0"
         role="button"
         aria-pressed="false"
         ref={ref}
         sx={{
+          border: (t) => `1px solid ${t.colors.code.border}`,
           bg: "transparent",
-          border: "none",
-          transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
+          transition: "all 200ms ease-in",
           ...sx,
+          "&:hover": {
+            transition: "all 200ms ease-out",
+            bg: "sidebar",
+            border: (t) => `1px solid ${t.colors.sidebar}`,
+          },
         }}
       >
-        <SliceThumbnail preview={preview} heightInPx={heightInPx} />
-        <SliceName sliceName={slice?.infos?.sliceName} />
+        <SliceThumbnail
+          withShadow={false}
+          preview={preview}
+          heightInPx={heightInPx}
+        />
+        <Flex
+          mt={3}
+          sx={{ alignItems: "center", justifyContent: "space-between" }}
+        >
+          <SliceName sliceName={slice?.infos?.sliceName} />
+          <SliceVariations
+            jsonModel={slice?.jsonModel}
+            hideVariations={hideVariations}
+          />
+        </Flex>
       </Themecard>
     );
   }
