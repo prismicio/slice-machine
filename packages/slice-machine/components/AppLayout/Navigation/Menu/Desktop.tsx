@@ -12,7 +12,12 @@ const Desktop = () => {
       <Box py={4} px={3}>
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
-        <VersionBadge version={navCtx?.env?.currentVersion as string} />
+        <Box sx={{ position: "absolute", bottom: "3" }}>
+          <VersionBadge
+            label="Version"
+            version={navCtx?.env?.currentVersion as string}
+          />
+        </Box>
       </Box>
     </Box>
   );

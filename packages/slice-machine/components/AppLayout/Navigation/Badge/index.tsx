@@ -6,25 +6,21 @@ interface BadgeProps {
   label?: string;
 }
 
-const VersionBadge = ({ version, label = "Version" }: BadgeProps) => {
+const VersionBadge = ({ version, label = "V" }: BadgeProps) => {
   return (
-    <div>
-      <Link href="/changelog" passHref>
-        <Box
-          as="span"
-          sx={{
-            cursor: "pointer",
-            color: "textClear",
-            opacity: "0.8",
-            fontSize: "12px",
-            position: "absolute",
-            bottom: 3,
-          }}
-        >
-          {label} - {version}
-        </Box>
-      </Link>
-    </div>
+    <Link href="/changelog" passHref>
+      <Box
+        as="span"
+        sx={{
+          cursor: "pointer",
+          color: "textClear",
+          opacity: "0.8",
+          fontSize: "12px",
+        }}
+      >
+        {label} : {version}
+      </Box>
+    </Link>
   );
 };
 

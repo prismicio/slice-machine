@@ -24,7 +24,9 @@ const Mobile = () => {
       {open ? (
         <Box>
           <ItemsList mt={4} links={navCtx?.links as []} />
-          <VersionBadge version={navCtx?.env?.currentVersion as string} />
+          <Box sx={{ textAlign: "right" }}>
+            <VersionBadge version={navCtx?.env?.currentVersion as string} />
+          </Box>
         </Box>
       ) : null}
     </Box>
