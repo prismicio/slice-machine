@@ -1,14 +1,13 @@
-import  SliceList from '../../../../../components/SliceList'
+import SliceList from "../../../../../components/SliceList";
 
-const DefaultList = ({
-  slices
-}) =>(
+const DefaultList = ({ slices, cardType }) => (
   <SliceList
+    cardType={cardType}
     slices={slices}
     CardWrapper={({ children }: { children: any }) => {
-      return children
+      return children;
     }}
   />
-)
+);
 
-export default DefaultList
+export default DefaultList;

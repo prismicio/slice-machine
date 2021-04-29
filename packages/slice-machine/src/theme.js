@@ -8,6 +8,12 @@ const Theme = () => ({
     backgroundClear: "#FFF",
     ctHeader: "#E6E6EA",
     primary: "#6E52FF",
+    badge: {
+      published: {
+        bg: "#E9F6EE",
+        color: "#27AE60",
+      },
+    },
     secondary: "#F9FAFB",
     highlight: "hsl(10, 40%, 90%)",
     purple: "hsl(250, 60%, 30%)",
@@ -129,6 +135,13 @@ const Theme = () => ({
     },
   },
   badges: {
+    NEW_SLICE: {
+      fontWeight: "body",
+      color: "badge.published.color",
+      bg: "badge.published.bg",
+      px: 1,
+      py: "1px",
+    },
     circle: {
       borderRadius: "50%",
       fontSize: "10px",
@@ -166,27 +179,30 @@ const Theme = () => ({
     primary: {
       color: "white",
       fontSize: 1,
-      fontWeight: 'body',
-      bg: 'primary',
-      boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
-      userSelect: 'none',
-      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
-      '&:hover': {
-        bg: darken('primary', 0.02),
-        cursor: 'pointer',
-        boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
+      fontWeight: "body",
+      bg: "primary",
+      boxShadow:
+        "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      userSelect: "none",
+      transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+      "&:hover": {
+        bg: darken("primary", 0.02),
+        cursor: "pointer",
+        boxShadow:
+          "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
       },
-      '&:focus': {
-        boxShadow: '0 0 0 1px #fff, 0 0 0 3px rgb(110, 82, 255, 1)',
-        bg: darken('primary', 0.02),
-        outline: 'none',
+      "&:focus": {
+        boxShadow: "0 0 0 1px #fff, 0 0 0 3px rgb(110, 82, 255, 1)",
+        bg: darken("primary", 0.02),
+        outline: "none",
       },
-      '&:active': {
-        boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
-        bg: darken('primary', 0.05),
-        borderColor: darken('primary', 0.08),
-        outline: 'none',
-      }
+      "&:active": {
+        boxShadow:
+          "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+        bg: darken("primary", 0.05),
+        borderColor: darken("primary", 0.08),
+        outline: "none",
+      },
     },
     secondary: {
       bg: "secondary",
@@ -210,15 +226,16 @@ const Theme = () => ({
     },
 
     darkSmall: {
-      borderRadius: '4px',
+      borderRadius: "4px",
       color: "white",
-      fontSize: '13px',
-      fontWeight: 'body',
+      fontSize: "13px",
+      fontWeight: "body",
       p: 2,
-      bg: 'text',
-      boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)',
-      userSelect: 'none',
-      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
+      bg: "text",
+      boxShadow:
+        "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      userSelect: "none",
+      transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
       "&:hover": {
         bg: lighten("text", 0.05),
         cursor: "pointer",
@@ -415,7 +432,7 @@ const Theme = () => ({
       cursor: "pointer",
       borderRadius: "6px",
       p: 2,
-      transition: 'all 150ms cubic-bezier(0.215,0.60,0.355,1)',
+      transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
       "&:hover": {
         color: "text",
         bg: "#E6E6EA",
