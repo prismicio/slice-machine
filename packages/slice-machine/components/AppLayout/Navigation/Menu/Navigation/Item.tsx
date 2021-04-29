@@ -1,12 +1,6 @@
 import Link from "next/link";
-import { IconType } from "react-icons/lib";
 import { Box, Link as ThemeLink } from "theme-ui";
-
-export interface LinkProps {
-  title: string;
-  href: string;
-  Icon: IconType;
-}
+import { LinkProps } from "components/AppLayout/Navigation";
 
 const Item = ({ link }: { link: LinkProps }) => {
   return (

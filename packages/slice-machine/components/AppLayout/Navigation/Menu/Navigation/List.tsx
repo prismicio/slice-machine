@@ -1,5 +1,6 @@
 import { Box } from "theme-ui";
-import Item, { LinkProps } from "./Item";
+import Item from "./Item";
+import { LinkProps } from "components/AppLayout/Navigation";
 
 const ItemsList = ({ mt, links }: { mt?: number; links: LinkProps[] }) => {
   return (

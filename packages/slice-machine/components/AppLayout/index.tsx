@@ -1,9 +1,15 @@
+import { ReactNode } from "react";
 import Navigation from "./Navigation";
 import { Box } from "theme-ui";
+import Environment from "lib/models/common/Environment";
 
-import Environment from "../../lib/models/common/Environment";
-
-const AppLayout = ({ children, env }: { children: any; env: Environment }) => {
+const AppLayout = ({
+  children,
+  env,
+}: {
+  children: ReactNode;
+  env: Environment;
+}) => {
   return (
     <Box
       sx={{
