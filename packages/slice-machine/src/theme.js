@@ -1,5 +1,4 @@
 import { darken, lighten } from "@theme-ui/color";
-
 const Theme = () => ({
   colors: {
     text: "#25252D",
@@ -69,6 +68,7 @@ const Theme = () => ({
     monospace: "Menlo, monospace",
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
+  breakpoints: ["40em", "56em", "64em"],
   fontWeights: {
     body: 400,
     heading: 500,
