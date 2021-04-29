@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Box } from "theme-ui";
 
-const VersionBadge = ({ version }: { version: string }) => {
+interface BadgeProps {
+  version: string;
+  label?: string;
+}
+
+const VersionBadge = ({ version, label = "Version" }: BadgeProps) => {
   return (
     <div>
       <Link href="/changelog" passHref>
@@ -16,7 +21,7 @@ const VersionBadge = ({ version }: { version: string }) => {
             bottom: 3,
           }}
         >
-          Prismic Studio - version {version}
+          {label} - {version}
         </Box>
       </Link>
     </div>

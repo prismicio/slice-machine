@@ -5,8 +5,9 @@ import VersionBadge from "components/AppLayout/Navigation/Badge";
 import Logo from "components/AppLayout/Navigation/Menu/Logo";
 import ItemsList from "./Navigation/List";
 import Environment from "lib/models/common/Environment";
+import { LinkProps } from "./Navigation/Item";
 
-const Mobile = ({ env, links }: { links: any; env: Environment }) => {
+const Mobile = ({ env, links }: { links: LinkProps[]; env: Environment }) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => {
     setOpen(!open);
@@ -23,7 +24,7 @@ const Mobile = ({ env, links }: { links: any; env: Environment }) => {
       {open ? (
         <Box>
           <ItemsList mt={4} links={links} />
-          <VersionBadge version={env.currentVersion} />
+          <VersionBadge label="Version" version={env.currentVersion} />
         </Box>
       ) : null}
     </Box>

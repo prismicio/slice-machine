@@ -1,7 +1,7 @@
 import { Box } from "theme-ui";
-import Item from "./Item";
+import Item, { LinkProps } from "./Item";
 
-const ItemsList = ({ mt, links }: { mt?: number; links: any }) => {
+const ItemsList = ({ mt, links }: { mt?: number; links: LinkProps[] }) => {
   return (
     <Box as="nav" marginTop={mt}>
       <Box as="ul">

@@ -1,7 +1,14 @@
 import Link from "next/link";
+import { IconType } from "react-icons/lib";
 import { Box, Link as ThemeLink } from "theme-ui";
 
-const Item = ({ link }: { link: any }) => {
+export interface LinkProps {
+  title: string;
+  href: string;
+  Icon: IconType;
+}
+
+const Item = ({ link }: { link: LinkProps }) => {
   return (
     <Box as="li" key={link.title}>
       <Link href={link.href} passHref>

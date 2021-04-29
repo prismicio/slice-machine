@@ -1,4 +1,4 @@
-import useWindowsSize from "hooks/useWindowSize";
+import useWindowSize from "hooks/useWindowSize";
 import Environment from "../../../lib/models/common/Environment";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
@@ -19,7 +19,7 @@ const links = [
 ];
 
 const Navigation = ({ env }: { env: Environment }) => {
-  const viewport = useWindowsSize();
+  const viewport = useWindowSize();
   return (viewport.width as number) < 640 ? (
     <Mobile links={links} env={env} />
   ) : (
