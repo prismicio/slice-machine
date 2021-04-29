@@ -38,7 +38,7 @@ const Card = forwardRef(({
   sx = {},
   hideVariations,
   renderSliceState,
-  heightInPx = "290px",
+  heightInPx = "287px",
   ...props
 }, ref) => {
   const {
@@ -56,10 +56,8 @@ const Card = forwardRef(({
       ref={ref}
       sx={{
         bg: 'transparent',
-        cursor: 'pointer',
-        borderRadius: '0',
         border: 'none',
-        mb: 3,
+        transition: 'all 100ms cubic-bezier(0.215,0.60,0.355,1)',
         ...sx
       }}
     >
@@ -76,7 +74,7 @@ const Card = forwardRef(({
           justifyContent: 'center',
           borderRadius: '6px',
           border: ({ colors }) => `1px solid ${colors.borders}`,
-          boxShadow: '0 10px 10px rgba(0, 0, 0, 0.05)'
+          boxShadow: '0px 8px 14px rgba(0, 0, 0, 0.1)',
         }}
       >
         <Box
