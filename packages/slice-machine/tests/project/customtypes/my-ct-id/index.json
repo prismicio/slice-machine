@@ -1,18 +1,10 @@
 {
-  "id": "homepage",
-  "label": "homepage",
-  "status": true,
+  "id": "my-ct-id",
+  "label": "My Awesome Title",
   "repeatable": false,
   "json": {
     "Main": {
-      "rt": {
-        "type": "StructuredText",
-        "config": {
-          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
-          "label": "rt"
-        }
-      },
-      "sdf": {
+      "img": {
         "type": "Image",
         "config": {
           "label": "",
@@ -20,18 +12,15 @@
           "thumbnails": []
         }
       },
-      "body": {
+      "MainSliceZone": {
         "type": "Slices",
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
-            "call_to_action2": {
+            "call_to_action": {
               "type": "SharedSlice"
             },
             "call_to_action3": {
-              "type": "SharedSlice"
-            },
-            "call_to_action": {
               "type": "SharedSlice"
             },
             "with_mocks": {
@@ -41,5 +30,6 @@
         }
       }
     }
-  }
+  },
+  "status": true
 }

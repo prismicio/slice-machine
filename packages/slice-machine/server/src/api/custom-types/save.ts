@@ -23,7 +23,7 @@ export default async function handler(req: { body: any }) {
     label,
     status,
     repeatable,
-    tabs: model.tabs
+    json: model.tabs
   })
   const mocked = await mock(model)
   Files.write(mockPath, mocked)

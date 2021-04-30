@@ -1,9 +1,10 @@
-import Store from 'lib/models/ui/Store'
+import Store from '../../../lib/models/ui/Store'
 import { Widget } from '../../../lib/models/common/widgets'
 import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
 import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actions'
 
 import saveCustomType from './actions/save'
+import pushCustomType from './actions/push'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
@@ -15,6 +16,7 @@ export default class CustomTypeStore implements Store {
     this.dispatch({ type: Actions.Reset })
   }
   save = saveCustomType(this.dispatch)
+  push = pushCustomType(this.dispatch)
   tab(tabId: string) {
     return {
       addWidget: (id: string, widget: Widget | GroupWidget) => {

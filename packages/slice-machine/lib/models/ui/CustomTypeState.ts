@@ -1,18 +1,26 @@
 import { CustomType } from '../common/CustomType'
 import { TabsAsObject, TabsAsArray, TabAsArray, TabValueAsArray } from '../common/CustomType/tab'
-import { LibStatus } from '../common/Library'
+
+export enum CustomTypeStatus {
+  New = "new-ct",
+  Modified = 'MODIFIED',
+  Synced = 'SYNCED',
+}
 
 export interface CustomTypeState {
   id: string
   label: string
+  status: boolean
+  repeatable: boolean
   jsonModel: CustomType<TabsAsObject>
   tabs: TabsAsArray
+  remoteTabs: TabsAsArray
   initialTabs: TabsAsArray
   mockConfig: any
   initialMockConfig: any
   poolOfFieldsToCheck: TabValueAsArray
   isTouched?: boolean
-  __status?: LibStatus
+  __status?: CustomTypeStatus
 }
 
 export const CustomTypeState = {

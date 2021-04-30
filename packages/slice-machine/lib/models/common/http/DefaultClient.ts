@@ -76,6 +76,14 @@ export default class DefaultClient {
     return this.apiFetcher(CustomTypesPrefix)
   }
 
+  async insertCustomType(body: object | string) {
+    return this.apiFetcher(CustomTypesPrefix, body, 'insert', 'post')
+  }
+
+  async updateCustomType(body: object | string) {
+    return this.apiFetcher(CustomTypesPrefix, body, 'update', 'post')
+  }
+
   async insertSlice(body: object | string) {
     return this.apiFetcher(SlicesPrefix, body, 'insert', 'post')
   }

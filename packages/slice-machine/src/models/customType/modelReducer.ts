@@ -1,26 +1,38 @@
 import { useReducer } from 'react'
-import { LibStatus } from '../../../lib/models/common/Library'
+import equal from 'fast-deep-equal'
 import { CustomType } from '../../../lib/models/common/CustomType'
-import { TabsAsObject } from '../../../lib/models/common/CustomType/tab'
-import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
+import { TabsAsObject, TabsAsArray } from '../../../lib/models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'
 
-export function useModelReducer({ customType }: { customType: CustomType<TabsAsObject> }): [CustomTypeState, CustomTypeStore] {
-  const { id, label } = customType
+export function useModelReducer({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined }): [CustomTypeState, CustomTypeStore] {
+  const { id, label, status, repeatable } = customType
   const { tabs } = CustomType.toArray(customType)
+
+  const remoteTabs: TabsAsArray = remoteCustomType ? CustomType.toArray(remoteCustomType).tabs : [] as TabsAsArray
+
+  const __status = (() => {
+    if (equal(tabs, remoteTabs)) {
+      return CustomTypeStatus.Synced
+    }
+    return CustomTypeStatus.New
+  })()
 
   const initialState: CustomTypeState = {
     id,
     label,
+    status,
+    repeatable,
     jsonModel: customType,
     tabs,
     initialTabs: tabs,
+    remoteTabs,
     mockConfig: {},
     initialMockConfig: {},
     poolOfFieldsToCheck: CustomTypeState.getPool(tabs),
-    __status: LibStatus.NewSlice
+    __status,
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)

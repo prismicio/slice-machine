@@ -1,4 +1,6 @@
-import { CustomTypeState } from '../../../models/ui/CustomTypeState'
+import { CustomTypeState, CustomTypeStatus } from '../../../models/ui/CustomTypeState'
+import { useToasts } from 'react-toast-notifications'
+import { handleRemoteResponse } from '../../../../src/ToastProvider/utils'
 
 import { Box, Button, Heading, Flex } from 'theme-ui'
 
@@ -8,11 +10,21 @@ import CustomTypeStore from '../../../../src/models/customType/store'
 import FlexWrapper from './FlexWrapper'
 
 const Header = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
+  const { addToast } = useToasts()
+
   const buttonProps = (() => {
     if (Model.isTouched) {
-      return { onClick: () => store.save(Model), children: 'Save Custom Type' }
+      return { onClick: () => store.save(Model), children: 'Save to File System' }
     }
-    return { onClick: () => store.save(Model), children: 'Push to Prismic' }
+    if ([CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)) {
+      return {
+        onClick: () => store.push(Model, data => {
+          console.log({ loading: data.loading })
+        }),
+        children: 'Push to Prismic'
+      }
+    }
+    return { variant: "disabled", children: 'Synced with Prismic' }
   })()
 
   return (

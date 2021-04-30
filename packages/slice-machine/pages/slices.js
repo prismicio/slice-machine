@@ -21,7 +21,7 @@ const Index = () => {
       <Container>
         <main>
           {
-            libraries && libraries.map(({ name, components }) => console.log(components.map(([e]) => e)) || (
+            libraries && libraries.map(({ name, components }) => (
               <div key={name}>
                 <Box
                   as="h2"

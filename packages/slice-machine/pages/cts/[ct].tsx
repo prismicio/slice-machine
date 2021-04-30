@@ -16,21 +16,22 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
   )
 }
 
-const WithProvider = ({ customType }: { customType: CustomType<TabsAsObject> }) => {
-  const [Model, store] = useModelReducer({ customType })
+const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> }) => {
+  const [Model, store] = useModelReducer({ customType, remoteCustomType })
   return (<Ct Model={Model} store={store} />)
 }
 
 const WithRouter = () => {
   const router = useRouter()
-  const { customTypes } = useContext(CustomTypesContext)
+  const { customTypes, remoteCustomTypes } = useContext(CustomTypesContext)
 
   const customType = customTypes.find((e) => e && e.id === router.query.ct)
+  const remoteCustomType = remoteCustomTypes.find((e) => e && e.id === router.query.ct)
   if (!customType) {
     router.replace('/cts')
     return null
   }
-  return <WithProvider customType={customType} />
+  return <WithProvider customType={customType} remoteCustomType={remoteCustomType} />
 }
 
 export default WithRouter

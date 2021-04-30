@@ -15,9 +15,10 @@ import Drawer from 'rc-drawer'
 
 import LoadingPage from 'components/LoadingPage'
 import ConfigErrors from 'components/ConfigErrors'
-import NavBar from 'components/NavBar/WithRouter'
+// import NavBar from 'components/NavBar/WithRouter'
 import Warnings from 'components/Warnings'
 import AppLayout from 'components/AppLayout'
+import ToastProvider from 'src/ToastProvider'
 
 import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 
@@ -62,7 +63,8 @@ function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Elemen
     payload: {
       env: Environment,
       libraries?: ReadonlyArray<Library>,
-      customTypes: ReadonlyArray<CustomType<TabsAsObject>>
+      customTypes?: ReadonlyArray<CustomType<TabsAsObject>>
+      remoteCustomTypes?: ReadonlyArray<CustomType<TabsAsObject>>
       remoteSlices?: ReadonlyArray<Slice<AsObject>>
     } | null
   }>({ Renderer: RenderStates.Loading, payload: null })
@@ -111,28 +113,30 @@ function MyApp({ Component, pageProps }: { Component: (props: any) => JSX.Elemen
                   ? <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
                   : (
                       <LibrariesProvider remoteSlices={payload.remoteSlices} libraries={payload.libraries} env={payload.env}>
-                        <CustomTypesProvider customTypes={payload.customTypes}>
-                          <AppLayout {...payload}>
-                            <SliceHandler {...payload}>
-                              {/* <NavBar
-                                env={data.env}
-                                warnings={data.warnings}
-                                openPanel={() => openPanel()}
-                              /> */}
-                              <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
-                              <Drawer
-                                placement="right"
-                                open={drawerState.open}
-                                onClose={() => setDrawerState({ ...drawerState, open: false })}
-                              >
-                                <Warnings
-                                  priority={drawerState.priority}
-                                  list={data.warnings}
-                                  configErrors={data.configErrors}
-                                />
-                              </Drawer>
-                            </SliceHandler>
-                          </AppLayout>
+                        <CustomTypesProvider customTypes={payload.customTypes} remoteCustomTypes={payload.remoteCustomTypes}>
+                          <ToastProvider>
+                            <AppLayout {...payload}>
+                              <SliceHandler {...payload}>
+                                {/* <NavBar
+                                  env={data.env}
+                                  warnings={data.warnings}
+                                  openPanel={() => openPanel()}
+                                /> */}
+                                <Renderer Component={Component} pageProps={pageProps} {...payload} openPanel={openPanel} />
+                                <Drawer
+                                  placement="right"
+                                  open={drawerState.open}
+                                  onClose={() => setDrawerState({ ...drawerState, open: false })}
+                                >
+                                  <Warnings
+                                    priority={drawerState.priority}
+                                    list={data.warnings}
+                                    configErrors={data.configErrors}
+                                  />
+                                </Drawer>
+                              </SliceHandler>
+                            </AppLayout>
+                          </ToastProvider>
                         </CustomTypesProvider>
                       </LibrariesProvider>
                   )

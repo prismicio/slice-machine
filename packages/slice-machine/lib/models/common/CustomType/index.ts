@@ -7,7 +7,8 @@ export interface SeoTab {
 }
 
 export interface CustomType<T extends TabsAsArray | TabsAsObject> {
-  id: string
+  id: string,
+  status: boolean,
   repeatable: boolean,
   label: string,
   tabs: T
@@ -19,7 +20,7 @@ export const CustomType = {
       ...ct,
       tabs: Object.entries(ct.tabs).map(([key, value]) => Tab.toArray(key, value)),
     }
-  },
+  }
   // toObject(ct: CustomType<TabsAsArray>): CustomType<TabsAsObject> {
   //   return {
   //     ...ct,

@@ -30,6 +30,21 @@ interface OrganisedFields {
   sliceZone?: SliceZone
 }
 
+// interface Choices {
+//   [x: string]: { type: string }
+// }
+// const filterChoices = (choices: Choices) => {
+//   return Object.entries(choices).reduce((acc, [key, value]) => {
+//     if (value.type !== FieldType.SharedSlice) {
+//       return acc
+//     }
+//     return {
+//       ...acc,
+//       [key]: value
+//     }
+//   }, {})
+// }
+
 export const Tab = {
   toArray(key: string, tab: TabAsObject): TabAsArray {
     const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === FieldType.SliceZone)
@@ -154,4 +169,28 @@ export const Tab = {
       sliceZone: tabAsArray.sliceZone,
     }
   }
+  
+  // ,
+  // filterNonSharedSlices(tab: any): TabAsObject | undefined {
+  //   const newTab = Object.entries(tab).reduce((acc, [key, value]) => {
+  //     if (value.type !== FieldType.SliceZone) {
+  //       return {
+  //         ...acc,
+  //         [key]: value
+  //       }
+  //     }
+  //     console.log('filter ', value)
+  //     return {
+  //       ...acc,
+  //       [key]: {
+  //         ...value,
+  //         config: {
+  //           ...value.config,
+  //           choices: filterChoices(value.config.choices)
+  //         }
+  //       }
+  //     }
+  //   }, {})
+  //   return newTab
+  // }
 }
