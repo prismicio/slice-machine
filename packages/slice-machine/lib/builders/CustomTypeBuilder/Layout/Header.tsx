@@ -19,7 +19,9 @@ const Header = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeSto
     if ([CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)) {
       return {
         onClick: () => store.push(Model, data => {
-          console.log({ loading: data.loading })
+          if (data.done) {
+            handleRemoteResponse(addToast)(data)
+          }
         }),
         children: 'Push to Prismic'
       }

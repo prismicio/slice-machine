@@ -5,7 +5,10 @@ const Provider = ({ children }) => {
     <ToastProvider
       autoDismiss
       autoDismissTimeout={6000}
-      // components={{ Toast: Snack }}
+      // components={{ Toast: (props) => {
+      //   console.log({ props })
+      //   return <div />
+      // } }}
       placement="bottom-right"
     >
       { children }

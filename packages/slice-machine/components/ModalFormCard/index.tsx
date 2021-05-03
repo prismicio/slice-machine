@@ -70,7 +70,7 @@ const ModalCard = ({
                 }}
               >
                 <Heading>{title}</Heading>
-                <Close onClick={() => close()} />
+                <Close type="button" onClick={() => close()} />
               </Flex>
             )}
             Footer={(
