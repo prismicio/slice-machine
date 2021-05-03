@@ -1,29 +1,36 @@
-import SideBar from './SideBar'
-import { Box } from 'theme-ui'
+import { ReactNode } from "react";
+import Navigation from "./Navigation";
+import { Box } from "theme-ui";
+import Environment from "lib/models/common/Environment";
 
-import Environment from '../../lib/models/common/Environment'
-
-const AppLayout = ({ children, env }: { children: any, env: Environment }) => {
+const AppLayout = ({
+  children,
+  env,
+}: {
+  children: ReactNode;
+  env: Environment;
+}) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-      }}>
-      <SideBar env={env} />
+        display: "flex",
+        height: "100vh",
+        flexDirection: ["column", "row", null],
+      }}
+    >
+      <Navigation env={env} />
       <Box
         as="main"
         sx={{
-          flexGrow: 99999,
-          flexBasis: 0,
-          minWidth: 320,
-          minHeight: '100vh',
-          bg: 'backgroundClear'
-        }}>
-        { children }
+          flex: 1,
+          px: [2, 4, null],
+          overflow: "auto",
+        }}
+      >
+        {children}
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default AppLayout
+export default AppLayout;

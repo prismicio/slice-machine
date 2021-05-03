@@ -1,28 +1,48 @@
-import { useContext, useEffect, useState } from 'react'
-import { Box, Flex, Heading, Button } from 'theme-ui'
-import { LibrariesContext } from '../../../../src/models/libraries/context'
-import { SliceZoneAsArray } from '../../../../lib/models/common/CustomType/sliceZone'
+import { useContext, useEffect, useState } from "react";
+import { Box, Flex, Heading, Button } from "theme-ui";
+import { LibrariesContext } from "../../../../src/models/libraries/context";
+import { SliceZoneAsArray } from "../../../../lib/models/common/CustomType/sliceZone";
 
-import SliceState from '../../../models/ui/SliceState'
-import LibraryState from '../../../models/ui/LibraryState'
+import SliceState from "../../../models/ui/SliceState";
+import LibraryState from "../../../models/ui/LibraryState";
 
-import Form from './Form'
+import Form from "./Form";
 
-import DefaultList from './components/DefaultList'
+import DefaultList from "./components/DefaultList";
 
-const mapAvailableAndSharedSlices = (sliceZone: SliceZoneAsArray, libraries: ReadonlyArray<LibraryState>) => {
-  const availableSlices: ReadonlyArray<SliceState> = libraries.reduce((acc, curr) => {
-    return [...acc, ...curr.components.map(e => e[0])]
-  }, [])
-  const { slicesInSliceZone, notFound } : { slicesInSliceZone: ReadonlyArray<SliceState>, notFound: ReadonlyArray<{key: string}>} = sliceZone.value.reduce((acc, { key }) => {
-    const maybeSliceState = availableSlices.find((state) => state.infos.meta.id === key)
-    if (maybeSliceState) {
-      return { ...acc, slicesInSliceZone: [...acc.slicesInSliceZone, maybeSliceState] }
-    }
-    return { ...acc, notFound: [...acc.notFound, { key }]}
-  }, { slicesInSliceZone: [], notFound: [] })
-  return { availableSlices, slicesInSliceZone, notFound }
-}
+const mapAvailableAndSharedSlices = (
+  sliceZone: SliceZoneAsArray,
+  libraries: ReadonlyArray<LibraryState>
+) => {
+  const availableSlices: ReadonlyArray<SliceState> = libraries.reduce(
+    (acc, curr) => {
+      return [...acc, ...curr.components.map((e) => e[0])];
+    },
+    []
+  );
+  const {
+    slicesInSliceZone,
+    notFound,
+  }: {
+    slicesInSliceZone: ReadonlyArray<SliceState>;
+    notFound: ReadonlyArray<{ key: string }>;
+  } = sliceZone.value.reduce(
+    (acc, { key }) => {
+      const maybeSliceState = availableSlices.find(
+        (state) => state.infos.meta.id === key
+      );
+      if (maybeSliceState) {
+        return {
+          ...acc,
+          slicesInSliceZone: [...acc.slicesInSliceZone, maybeSliceState],
+        };
+      }
+      return { ...acc, notFound: [...acc.notFound, { key }] };
+    },
+    { slicesInSliceZone: [], notFound: [] }
+  );
+  return { availableSlices, slicesInSliceZone, notFound };
+};
 
 const SliceZone = ({
   tabId,
@@ -30,50 +50,65 @@ const SliceZone = ({
   onSelectSharedSlices,
   onRemoveSharedSlice,
 }: {
-  tabId: string,
-  sliceZone: SliceZoneAsArray,
-  onSelectSharedSlices: Function,
-  onRemoveSharedSlice: Function,
-  onDelete: Function
+  tabId: string;
+  sliceZone: SliceZoneAsArray;
+  onSelectSharedSlices: Function;
+  onRemoveSharedSlice: Function;
+  onDelete: Function;
 }) => {
-  const [formIsOpen, setFormIsOpen] = useState(false)
-  const libraries = useContext(LibrariesContext)
+  const [formIsOpen, setFormIsOpen] = useState(false);
+  const libraries = useContext(LibrariesContext);
 
-  const { availableSlices, slicesInSliceZone, notFound } = mapAvailableAndSharedSlices(sliceZone, libraries)
+  const {
+    availableSlices,
+    slicesInSliceZone,
+    notFound,
+  } = mapAvailableAndSharedSlices(sliceZone, libraries);
 
   useEffect(() => {
     if (notFound?.length) {
       notFound.forEach(({ key }) => {
-        onRemoveSharedSlice(key)
-      })
+        onRemoveSharedSlice(key);
+      });
     }
-  }, [notFound])
-  
+  }, [notFound]);
+
   return (
     <Box my={3}>
-      <Flex bg="ctHeader" sx={{ py:  2, px: 3, mb: 2, borderRadius: '6px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Flex sx={{ alignItems: 'center' }}>
-          <Heading as="h4">SliceZone</Heading>
+      <Flex
+        bg="ctHeader"
+        sx={{
+          pl: 3,
+          pr: 2,
+          py: 2,
+          mb: 2,
+          borderRadius: "6px",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Flex sx={{ alignItems: "center" }}>
+          <Heading as="h6">SliceZone</Heading>
           {/* Select the slices to use in this template */}
         </Flex>
-        <Button onClick={() => setFormIsOpen(true)}>Edit slices</Button>
+        <Button variant="buttons.darkSmall" onClick={() => setFormIsOpen(true)}>
+          Edit slices
+        </Button>
       </Flex>
-      <DefaultList slices={slicesInSliceZone} />
-      {
-        !slicesInSliceZone.length ? (
-          <p>no slices selected</p>
-        ) : null
-      }
+      <DefaultList cardType="ForSliceZone" slices={slicesInSliceZone} />
+      {!slicesInSliceZone.length ? <p>no slices selected</p> : null}
       <Form
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
         slicesInSliceZone={slicesInSliceZone}
-        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) => onSelectSharedSlices(sliceKeys)}
+        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+          onSelectSharedSlices(sliceKeys)
+        }
         close={() => setFormIsOpen(false)}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default SliceZone
+export default SliceZone;
