@@ -24,6 +24,7 @@ export default async function handler(env: Environment, payload: CustomTypePaylo
   const newCt = {
     id: key,
     label,
+    status: true,
     repeatable,
     tabs: {
       Main: {}

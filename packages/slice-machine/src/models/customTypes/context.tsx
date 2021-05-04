@@ -5,12 +5,14 @@ import { TabsAsObject } from '../../../lib/models/common/CustomType/tab'
 
 export const CustomTypesContext = React.createContext<{
   customTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>>,
+  remoteCustomTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>>,
   onCreate?: Function
-}>({ customTypes: [] })
+}>({ customTypes: [], remoteCustomTypes: [] })
 
-export default function Provider ({ children, customTypes = [] }: {
+export default function Provider ({ children, customTypes = [], remoteCustomTypes = [] }: {
   children: any,
   customTypes: ReadonlyArray<CustomType<TabsAsObject>>,
+  remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>>,
 }) {
   const [cts, setCts] = useState(customTypes)
 
@@ -26,7 +28,7 @@ export default function Provider ({ children, customTypes = [] }: {
   }
 
   return (
-    <CustomTypesContext.Provider value={{ customTypes: cts, onCreate }}>
+    <CustomTypesContext.Provider value={{ customTypes: cts, remoteCustomTypes, onCreate }}>
       { children }
     </CustomTypesContext.Provider>
   )

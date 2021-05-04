@@ -12,7 +12,8 @@ import {
 import {
   ActionType as SliceActions
 } from './actions'
-import { LibStatus } from 'lib/models/common/Library';
+
+import { LibStatus } from '../../../lib/models/common/Library'
 
 
 export function reducer(prevState: SliceState, action: { type: string, payload?: unknown }): SliceState {

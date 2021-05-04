@@ -29,10 +29,10 @@ const CustomTypes = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { customTypes, onCreate } = useContext(CustomTypesContext)
 
-  const _onCreate = ({ id, label }) => {
+  const _onCreate = ({ id, label, repeatable }) => {
     onCreate(id, {
-      repeatable: false,
       label,
+      repeatable,
     })
     setIsOpen(false)
   }

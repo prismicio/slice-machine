@@ -1,8 +1,8 @@
 export { updateWidgetMockConfig, deleteWidgetMockConfig } from './mocks'
 
 enum ActionType {
-  Test = 'test',
   Reset = 'reset',
+  Push = 'push',
   Save = 'save-custom-type',
   CreateTab = 'create-tab',
   AddWidget= 'tab-add-widget',

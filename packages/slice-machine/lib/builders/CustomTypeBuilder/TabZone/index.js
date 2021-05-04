@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import * as Widgets from 'lib/models/common/widgets'
 import EditModal from '../../common/EditModal'
 
@@ -10,6 +10,8 @@ import { customTypeBuilderWidgetsArray } from 'lib/models/common/widgets/asArray
 import SliceZone from '../SliceZone'
 import EmptyState from '../SliceZone/EmptyState'
 
+import ModalFormCard from 'components/ModalFormCard'
+
 
 const TabZone = ({
   Model,
@@ -19,6 +21,8 @@ const TabZone = ({
   sliceZone,
   showHints,
 }) => {
+
+  const [modaIsOpen, setModalIsOpen] = useState(false)
 
   const onDeleteItem = (key) => {
     store
@@ -119,6 +123,7 @@ const TabZone = ({
         renderHintBase={({ item }) => `my.${tabId}.${item.key}`}
         renderFieldAccessor={(key) => `my.${tabId}.${key}`}
       />
+      <button type="button" onClick={() => setModalIsOpen(true)}>edit modal</button>
       {
         Model.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>
@@ -137,6 +142,14 @@ const TabZone = ({
           < EmptyState onCreate={onCreateSliceZone} />
         )
       }
+      <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
+        {(props) => {
+          console.log({ tabProps: props })
+          return (
+            <div>hello</div>
+          )
+        }}
+      </ModalFormCard>
     </Fragment>
   )
 }

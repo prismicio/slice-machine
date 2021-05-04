@@ -8,21 +8,21 @@ export interface FakeResponse {
 }
 
 export default class FakeClient {
-  private mutate: () => { status: number, statusText: string, fake: boolean, err: string, json: () => any }
+  private mutate: (jsonResponse?: any) => { status: number, statusText: string, fake: boolean, err: string, json: () => any }
   
   constructor() {
-    this.mutate = () => ({
+    this.mutate = (jsonResponse = []) => ({
       status: 403,
       statusText: 'Unauthorized',
       fake: true,
       err: 'You are not connected to Prismic',
       json() {
-        return []
+        return jsonResponse
       }
     })
   }
   
-  async get(): Promise<FakeResponse> {
+  async getSlice(): Promise<FakeResponse> {
     return {
       status: 200,
       statusText: 'ok',
@@ -33,11 +33,30 @@ export default class FakeClient {
     }
   }
 
-  async insert(): Promise<FakeResponse> {
+  async getCustomTypes(): Promise<FakeResponse> {
+    return {
+      status: 200,
+      statusText: 'ok',
+      fake: true,
+      json() {
+        return []
+      }
+    }
+  }
+
+  async insertCustomType(): Promise<FakeResponse> {
+    return this.mutate({})
+  }
+
+  async updateCustomType(): Promise<FakeResponse> {
+    return this.mutate({})
+  }
+
+  async insertSlice(): Promise<FakeResponse> {
     return this.mutate()
   }
 
-  async update(): Promise<FakeResponse> {
+  async updateSlice(): Promise<FakeResponse> {
     return this.mutate()
   }
 

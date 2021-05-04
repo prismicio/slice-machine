@@ -1,15 +1,38 @@
-import { CustomTypeState } from '../../../models/ui/CustomTypeState'
+import { CustomTypeState, CustomTypeStatus } from '../../../models/ui/CustomTypeState'
+import { useToasts } from 'react-toast-notifications'
+import { handleRemoteResponse } from '../../../../src/ToastProvider/utils'
 
 import { Box, Button, Heading, Flex } from 'theme-ui'
 
+import CustomTypeStore from '../../../../src/models/customType/store'
+
+
 import FlexWrapper from './FlexWrapper'
 
-const Header = ({ Model }: { Model: CustomTypeState }) => {
+const Header = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
+  const { addToast } = useToasts()
+
+  const buttonProps = (() => {
+    if (Model.isTouched) {
+      return { onClick: () => store.save(Model), children: 'Save to File System' }
+    }
+    if ([CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)) {
+      return {
+        onClick: () => store.push(Model, data => {
+          if (data.done) {
+            handleRemoteResponse(addToast)(data)
+          }
+        }),
+        children: 'Push to Prismic'
+      }
+    }
+    return { variant: "disabled", children: 'Synced with Prismic' }
+  })()
+
   return (
     <Box sx={{ bg: 'backgroundClear' }}>
       <FlexWrapper
         sx={{
-          px: '8px',
           py: 4,
         }}
       >
@@ -29,7 +52,7 @@ const Header = ({ Model }: { Model: CustomTypeState }) => {
             }}
           >/ {Model.label}</Box></Heading>
         </Box>
-        <Button>Push to Prismic</Button>
+        <Button {...buttonProps} />
       </FlexWrapper>
     </Box>
   )

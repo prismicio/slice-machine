@@ -32,15 +32,15 @@ const createOrUpdate = async ({
 
 }) => {
   if (slices.find(e => e.id === snakelize(sliceName))) {
-    return await client.update(model)
+    return await client.updateSlice(model)
   } else {
-    return await client.insert(model)
+    return await client.insertSlice(model)
   }
 }
 
 const getSlices = async(client: DefaultClient | FakeClient) => {
   try {
-    const res = await client.get()
+    const res = await client.getSlice()
     if (res.status !== 200) {
       return { err: res, slices: [] }
     }

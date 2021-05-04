@@ -13,7 +13,6 @@ const ModalCard = ({
   formId,
   validate,
   onSubmit,
-  widthInPx,
   initialValues = {},
   content: {
     title
@@ -24,7 +23,6 @@ const ModalCard = ({
   isOpen: boolean,
   formId: string,
   validate?: Function,
-  widthInPx?: string,
   onSubmit: Function,
   initialValues?: any,
   content: { title: string }
@@ -34,11 +32,6 @@ const ModalCard = ({
     shouldCloseOnOverlayClick
     onRequestClose={() => close()}
     contentLabel={title}
-    style={{
-      content: {
-        width: widthInPx || '900px'
-      }
-    }}
   >
     <Formik
       validateOnChange
@@ -49,7 +42,7 @@ const ModalCard = ({
         close()
       }}
     >
-      {({ isValid, isSubmitting, values, errors }) => (
+      {({ isValid, isSubmitting, values }) => (
         <Form id={formId}>
           <Card
             borderFooter
@@ -70,7 +63,7 @@ const ModalCard = ({
                 }}
               >
                 <Heading>{title}</Heading>
-                <Close type="button" onClick={() => close()} />
+                <Close onClick={() => close()} />
               </Flex>
             )}
             Footer={(
@@ -94,7 +87,7 @@ const ModalCard = ({
               </Flex>
             )}
           >
-            { children({ isValid, isSubmitting, values, errors }) }
+            { children({ isValid, isSubmitting, values }) }
           </Card>
         </Form>
       )}

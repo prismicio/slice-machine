@@ -15,6 +15,7 @@ const parseOembed = require('./parse-oembed').default
 const state = require('./state').default
 
 const createCustomType = require('./custom-types/create').default
+const pushCustomType = require('./custom-types/push').default
 
 router.use('/__preview', async function previewRoute(req, res) {
   const p = decodeURIComponent(req.query.q)
@@ -94,6 +95,14 @@ router.use('/custom-types/create', async function (req, res) {
 
 router.use('/custom-types/save', async function (req, res) {
   const payload = await saveCT(req)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
+router.use('/custom-types/push', async function (req, res) {
+  const payload = await pushCustomType(req.query)
   if (payload.err) {
     return res.status(400).json(payload)
   }

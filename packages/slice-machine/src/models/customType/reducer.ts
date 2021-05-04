@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
+import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
 import { Tab } from '../../../lib/models/common/CustomType/tab'
 
 import Actions from './actions'
@@ -30,6 +30,10 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
           initialTabs: state.tabs,
           initialMockConfig: state.mockConfig,
         }
+      }
+      case Actions.Push: return {
+        ...prevState,
+        remoteTabs: prevState.tabs,
       }
       case Actions.AddWidget: {
         const { tabId, widget, id } = action.payload as { tabId: string, widget: Widget | GroupWidget, id: string }
@@ -92,6 +96,12 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
   return {
     ...result,
     poolOfFieldsToCheck: CustomTypeState.getPool(result.tabs),
+    __status: (() => {
+      if (equal(result.tabs, result.remoteTabs)) {
+        return CustomTypeStatus.Synced
+      }
+      return CustomTypeStatus.New
+    })(),
     isTouched: !equal(result.initialTabs, result.tabs) || !equal(result.initialMockConfig, result.mockConfig)
   }
 }
