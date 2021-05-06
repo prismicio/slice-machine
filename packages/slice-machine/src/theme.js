@@ -84,6 +84,7 @@ const Theme = () => ({
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
   breakpoints: ["40em", "56em", "64em"],
   fontWeights: {
+    thin: 300,
     body: 400,
     heading: 500,
     label: 500,
@@ -513,6 +514,7 @@ const Theme = () => ({
     },
     h1: {
       variant: "textStyles.display",
+      fontSize: 1,
     },
     h2: {
       variant: "textStyles.heading",
