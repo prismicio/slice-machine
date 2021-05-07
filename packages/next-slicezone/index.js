@@ -32,18 +32,29 @@ const slicePropNotFoundProps = {
   description: 'This usually means that data passed as property `slices` is not right. Check your configuuration and logs for more info!'
 }
 
-export default function SliceZone({ slices, resolver = () => null }) {
+export default function SliceZone({ slices, sliceProps = {}, resolver = () => null }) {
   if (!slices || !slices.length) {
     return process.env.NODE_ENV !== 'production' ? <PageInfo {...emptySzProps} /> : null
   }
   return slices.map((slice, i) => {
     if (!slice || !slice.slice_type) {
-      return <PageInfo {...slicePropNotFoundProps }/>
+      return <PageInfo {...slicePropNotFoundProps} />
     }
     const sliceName = pascalize(slice.slice_type)
     const Component = resolver({ sliceName, slice, i })
+    const finalSliceProps = sliceProps && typeof sliceProps === 'function'
+      ? sliceProps({ sliceName, slice, i })
+      : sliceProps
+
     if (Component) {
-      return <Component key={`slice-${i + 1}`} slice={slice}  i={i} />
+      return (
+        <Component
+          key={`slice-${i + 1}`}
+          slice={slice}
+          i={i}
+          {...finalSliceProps}
+        />
+      )
     }
     console.error('Could not resolve slice, check that you properly pass a `resolver` property to SliceZone')
     return null
