@@ -1,15 +1,23 @@
 import { query } from '../features/query'
 
 export const useGetStaticProps = ({
-  uid,
-  lang,
-  params: initialParams,
-  client,
-  body = 'body',
-  type = 'page',
-  getStaticPropsParams = {},
-  queryType = 'repeat',
+  client, /* instance of Prismic client */
+  body = 'body', /* target tab for slices */
+  type = 'page', /* document type to retrieve */
+  getStaticPropsParams = {}, /* params passed to return object of getStaticProps */
+  queryType = 'repeat', /* one of ["single", "repeat"] */
+  apiParams, /* api params passed to Prismic client */
+
+  uid, /* deprecated, use apiParams.uid instead */
+  lang, /* deprecated, use apiParams.lang instead */
 }) => {
+
+  if (uid) {
+    console.warn(`[next-slicezone/useGetStaticProps]: Parameter "uid" is deprecated, use "apiParams.uid" instead.`)
+  }
+  if (lang) {
+    console.warn(`[next-slicezone/useGetStaticProps]: Parameter "lang" is deprecated, use "apiParams.lang" instead.`)
+  }
 
   return async function getStaticProps({
     preview = null,
@@ -18,16 +26,15 @@ export const useGetStaticProps = ({
   }) {
 
     const { ref = null } = previewData
-    const resolvedLang = typeof lang === 'function' ? lang({ params, previewData, preview }) : (lang || null)
-    const resolvedUid = typeof uid === 'function' ? uid({ params, previewData, preview }) : (uid || null)
+    const finalApiParams = apiParams && typeof apiParams === 'function'
+      ? apiParams({ params, previewData, preview })
+      : apiParams
 
-    const apiParams = initialParams || { lang: resolvedLang }
     try {
       const doc = await query({
         queryType,
-        apiParams: Object.assign({ ref }, apiParams),
+        apiParams: Object.assign({ ref }, finalApiParams),
         type,
-        uid: resolvedUid,
         client,
       })
       return {
@@ -36,7 +43,7 @@ export const useGetStaticProps = ({
           error: null,
           preview,
           previewData,
-          slices: doc ? doc.data[body] : [],
+          slices: doc?.data?.[body] || [],
         },
         ...getStaticPropsParams
       }
@@ -49,11 +56,10 @@ export const useGetStaticProps = ({
         props: {
           ref,
           error: e.toString(),
-          uid: resolvedUid,
+          apiParams,
           slices: [],
           preview,
           previewData,
-          // registry: null
         },
         ...getStaticPropsParams
       }
