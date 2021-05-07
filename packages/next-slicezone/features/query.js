@@ -4,12 +4,13 @@ export async function query({
   queryType,
   apiParams,
   type,
-  uid,
   client,
 }) {
+
+  const { uid, ...restApiParams } = apiParams
   const caller = multiQueryTypes.indexOf(queryType) !== -1 ?
-    ['getByUID', [type, uid, apiParams]] :
-    ['getSingle', [type, apiParams]]
+    ['getByUID', [type, uid, restApiParams]] :
+    ['getSingle', [type, restApiParams]]
 
   return await client[caller[0]](...caller[1])
 }
