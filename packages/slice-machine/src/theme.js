@@ -9,6 +9,7 @@ const Theme = () => ({
     backgroundClear: "#FFF",
     ctHeader: "#E6E6EA",
     primary: "#6E52FF",
+    purpleLight: "#F6F1FC",
     badge: {
       published: {
         bg: "#E9F6EE",
