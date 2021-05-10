@@ -18,7 +18,7 @@ export const CustomType = {
   toArray(ct: CustomType<TabsAsObject>): CustomType<TabsAsArray> {
     return {
       ...ct,
-      tabs: Object.entries(ct.json).map(([key, value]) =>
+      tabs: Object.entries(ct.tabs).map(([key, value]) =>
         Tab.toArray(key, value)
       ),
     };

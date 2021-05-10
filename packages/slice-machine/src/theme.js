@@ -3,6 +3,7 @@ const Theme = () => ({
   colors: {
     text: "#25252D",
     textClear: "#4E4E55",
+    grayLight: "#E8E8ED",
     hoverBackground: "#f2f2f2",
     background: "#FFF",
     backgroundClear: "#FFF",
@@ -393,7 +394,7 @@ const Theme = () => ({
       bg: "headSection",
       borderColor: "borders",
       "&::placeholder": {
-        color: "icons",
+        color: "textClear",
       },
       "&:hover": {
         borderColor: darken("borders", 0.07),
@@ -410,6 +411,7 @@ const Theme = () => ({
       color: (t) => t.colors.choggleBox,
     },
     label: {
+      fontSize: 1,
       primary: {
         mb: 2,
         fontSize: 1,
