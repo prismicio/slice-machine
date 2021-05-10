@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Flex, Button, Text, Heading, Link as ThemeLinK } from "theme-ui";
 import MetaData from "./MetaData";
+import { FiLayers } from "react-icons/fi";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
 import Card from "../../../../components/Card/Default";
@@ -13,6 +14,8 @@ const Header = ({ Model, store, variation }) => {
   const router = useRouter();
   const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);
+
+  console.log(variation);
 
   return (
     <Flex
@@ -34,27 +37,32 @@ const Header = ({ Model, store, variation }) => {
           minWidth: 320,
         }}
       >
-        <Flex sx={{ justifyContent: "space-between", alignItems: "center" }}>
+        <Flex sx={{ justifyContent: "space-between", alignItems: "start" }}>
           <Box>
             <Flex sx={{ flexDirection: "column" }}>
-              <Text sx={{ fontSize: 4, fontWeight: "heading" }}>
+              <Flex
+                sx={{
+                  fontSize: 4,
+                  fontWeight: "heading",
+                  alignItems: "center",
+                }}
+              >
                 <Link href="/slices" passHref>
-                  <ThemeLinK variant="invisible">Slices</ThemeLinK>
+                  <ThemeLinK variant="invisible">
+                    <Flex sx={{ alignItems: "center" }}>
+                      <FiLayers /> <Text ml={2}>Slices</Text>
+                    </Flex>
+                  </ThemeLinK>
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
-                  {" "}
-                  / {Model.infos.sliceName}
+                  <Text ml={2}>
+                    / {Model.infos.sliceName} / {variation.name}
+                  </Text>
                 </Box>
-              </Text>
-              <Flex sx={{ alignItems: "center" }}>
-                <Box as="div" sx={{ pb: 3, mr: 4 }}>
-                  <Box as="h5" sx={{ mb: 1 }}>
-                    {variation.name}
-                  </Box>
-                  <Box>ID: {variation.id}</Box>
-                </Box>
+              </Flex>
+              <Flex mt={3} sx={{ alignItems: "center" }}>
                 {Model.variations.length > 1 && (
-                  <Box sx={{ p: 2 }}>
+                  <Flex sx={{ alignItems: "center" }}>
                     <VariationPopover
                       defaultValue={variation}
                       variations={Model.variations}
@@ -68,7 +76,10 @@ const Header = ({ Model, store, variation }) => {
                         );
                       }}
                     />
-                  </Box>
+                    <Box ml={2}>
+                      <Text variant="xs">{variation.name}</Text>
+                    </Box>
+                  </Flex>
                 )}
               </Flex>
             </Flex>
@@ -95,7 +106,6 @@ const Header = ({ Model, store, variation }) => {
             variations={Model.variations}
           />
         </Flex>
-        <hr />
       </Box>
       <MetaData
         isOpen={showMeta}
