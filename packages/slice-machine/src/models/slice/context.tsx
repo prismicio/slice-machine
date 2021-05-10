@@ -102,8 +102,6 @@ export const SliceHandler = ({ children }: { children: any }) => {
     return null
   }
 
-  console.log("Hello")
-
   // variation not in the URL but a default variation was found
   if(!variationParam) {
     console.log('no variation param, redirect to default variation')

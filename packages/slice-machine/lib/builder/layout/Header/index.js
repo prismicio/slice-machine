@@ -66,7 +66,9 @@ const Header = ({ Model, store, variation }) => {
             </span>
             <VariationModal
               isOpen={showVariationModal}
-              onClose={() => setShowVariationModal(false)}
+              onClose={() => {
+                setShowVariationModal(false)
+              }}
               onSubmit={(id, name, copiedVariation) => {
                 store.copyVariation(id, name, copiedVariation)
                 console.log({ link: Links.variation(Model.from, Model.infos.sliceName, id)})
@@ -83,20 +85,5 @@ const Header = ({ Model, store, variation }) => {
       </Flex>
   )
 }
-
-// const DropdownIndicator = (props) => {
-//   return (
-//     <div {...props} style={{
-//       position: 'absolute',
-//       bottom: 0,
-//       top: 0,
-//       left: 0,
-//       right: 0
-//       }}>
-//     </div>
-//   );
-// };
-
-// const IndicatorSeparator = () => ''
 
 export default Header
