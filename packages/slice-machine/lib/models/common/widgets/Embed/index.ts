@@ -20,7 +20,7 @@ const Meta = {
   description: 'Embed videos, songs, tweets, slides, …'
 }
 
-export default {
+export const Embed = {
   create,
   handleMockConfig,
   MockConfigForm,

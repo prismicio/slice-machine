@@ -36,7 +36,7 @@ const Meta = {
   description: 'A calendar date picker with time'
 }
 
-export default {
+export const Timestamp = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

@@ -15,6 +15,7 @@ const createCodeFromTag = (tag) => (fieldText) => `<${tag} :field="${fieldText}"
 const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldText} }}</${tag}>`
 
 const codeByWidgetType = {
+  [Widgets.Group.TYPE_NAME]: () => null,
   [Widgets.ContentRelationship.CUSTOM_NAME]: createCodeFromTag('todo-hint'),
   [Widgets.UID.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
@@ -33,6 +34,7 @@ const codeByWidgetType = {
 
 const toVue = ({ item, typeName, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item })
+  console.log({ typeName, hintBase })
   const code = codeByWidgetType[typeName](hintBase)
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code
 

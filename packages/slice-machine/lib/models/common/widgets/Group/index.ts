@@ -68,7 +68,7 @@ const schema = yup.object().shape({
 /** Used only here to help generate a proper widget when config key is not "config" */
 const customAccessor = 'fields'
 
-export default {
+export const Group = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

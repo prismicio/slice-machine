@@ -81,7 +81,7 @@ const schema = yup.object().shape({
   config: linkConfigSchema.optional()
 })
 
-export default {
+export const Link = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

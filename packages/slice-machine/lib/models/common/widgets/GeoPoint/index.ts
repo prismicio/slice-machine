@@ -19,7 +19,7 @@ const Meta = {
   description: 'A field for storing geo-coordinates'
 }
 
-export default {
+export const GeoPoint = {
   create,
   handleMockConfig,
   handleMockContent,

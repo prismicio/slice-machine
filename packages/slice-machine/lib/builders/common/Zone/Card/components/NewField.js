@@ -61,7 +61,7 @@ const NewField = ({
             sx={{
               py: 2,
               px: 3,
-              mx: 3,
+              mx: 0,
               alignItems: "center",
               variant: "styles.listItem",
             }}

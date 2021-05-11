@@ -22,6 +22,10 @@ const SelectFieldTypeModal = ({
   if (!data.isOpen) {
     return null
   }
+
+  console.log({
+    widgetsArray
+  })
   return (
     <Modal
       isOpen

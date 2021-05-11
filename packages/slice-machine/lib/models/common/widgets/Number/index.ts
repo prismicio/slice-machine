@@ -20,7 +20,7 @@ const Meta = {
   description: 'Numbers'
 }
 
-export default {
+export const Number = {
   create,
   MockConfigForm,
   handleMockConfig,

@@ -7,7 +7,7 @@ const Theme = () => ({
     hoverBackground: "#f2f2f2",
     background: "#FFF",
     backgroundClear: "#FFF",
-    ctHeader: "#E6E6EA",
+    zoneHeader: "#E6E6EA",
     primary: "#6E52FF",
     purpleLight: "#F6F1FC",
     badge: {
@@ -53,7 +53,7 @@ const Theme = () => ({
         text: "#fff",
         textClear: "#6E707B",
         hoverBackground: "#202020",
-        ctHeader: "#E6E6EA",
+        zoneHeader: "#E6E6EA",
         background: "#202022",
         backgroundClear: "#28282C",
         primary: "#4E54D7",

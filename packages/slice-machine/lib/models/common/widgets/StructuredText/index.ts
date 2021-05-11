@@ -43,7 +43,7 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 
-export default {
+export const StructuredText = {
   create,
   handleMockConfig,
   handleMockContent,

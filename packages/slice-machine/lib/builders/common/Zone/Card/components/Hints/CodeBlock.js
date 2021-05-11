@@ -34,7 +34,7 @@ const CodeBlock = ({ docs, ...props }) => {
     })
   }
 
-  return (
+  return props.children ? (
     <Flex
       sx={{
         p: 2,
@@ -95,7 +95,7 @@ const CodeBlock = ({ docs, ...props }) => {
         </Button>
       </Box>
     </Flex>
-  );
+  ) : null
 }
 
 export default CodeBlock;

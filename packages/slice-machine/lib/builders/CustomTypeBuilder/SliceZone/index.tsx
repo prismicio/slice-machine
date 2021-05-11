@@ -76,7 +76,7 @@ const SliceZone = ({
   return (
     <Box my={3}>
       <Flex
-        bg="ctHeader"
+        bg="zoneHeader"
         sx={{
           pl: 3,
           pr: 2,

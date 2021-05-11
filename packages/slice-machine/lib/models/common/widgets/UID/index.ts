@@ -38,7 +38,7 @@ const Meta = {
   description: 'Unique Identifier'
 }
 
-export default {
+export const UID = {
   create,
   // MockConfigForm,
   // handleMockConfig,

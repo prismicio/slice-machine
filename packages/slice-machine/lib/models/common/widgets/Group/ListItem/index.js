@@ -19,7 +19,9 @@ import {
 
 import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
 import NewField from 'lib/builders/common/Zone/Card/components/NewField'
-import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
+
+import { findWidgetByConfigOrType } from '../../../../../builders/utils'
+// import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
 
 
 import Li from '../../../../../../components/Li'
@@ -31,29 +33,18 @@ import * as Widgets from '../../../widgets'
 import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-// import Hint from './Hints'
+import ListItem from 'components/ListItem'
 
-import { findWidgetByConfigOrType } from '../../../../../utils'
+const CustomListItem = ({
+  item,
+  widget,
+  snapshot,
+  renderFieldAccessor,
+  ...rest
+}) => {
 
-const CustomListItem = (props) => {
-  const {
-    item,
-    index,
-    store,
-    tabId,
-    deleteItem,
-    enterEditMode,
-    modelFieldName,
-    renderHintBase,
-    renderFieldAccessor,
-    isRepeatable,
-    showHints,
 
-    theme,
-    config,
-    WidgetIcon
-  } = props
-
+  const { theme } = useThemeUI()
   const [selectMode, setSelectMode] = useState(false)
   const [newFieldData, setNewFieldData] = useState(null)
 
@@ -67,10 +58,6 @@ const CustomListItem = (props) => {
   }
 
   const onSaveNewField = ({ id, widgetTypeName }, helpers) => {
-    const widget = Widgets[widgetTypeName]
-    if (!widget) {
-      console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
-    }
     store
       .tab(tabId)
       .group(item.key)
@@ -80,25 +67,103 @@ const CustomListItem = (props) => {
       })
   }
 
-
-  /**
-   * apiId: "bool"
-   initialModelValues: {
-     type: "Boolean",
-     config: {
-       …}
-   }
-   newKey: "boola"
-   value: {
-       label: "",
-       placeholder_false: "false",
-       placeholder_true: "true",
-       def
-   */
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return
+    }
+    if (result.source.droppableId !== result.destination.droppableId) {
+      return
+    }
+    store.tab(tabId).group(item.key).reorderWidget(result.source.index, result.destination.index)
+  }
 
   return (
     <Fragment>
-      <Draggable draggableId={item.key} index={index}>
+      <ListItem
+        item={item}
+        widget={widget}
+        renderFieldAccessor={renderFieldAccessor}
+        {...rest}
+        children={(
+          <Box sx={{ ml: 4 }}>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId={"my-unique-id"}>
+                  {(provided) => !snapshot.isDragging && (
+                    <ul ref={provided.innerRef} {...provided.droppableProps}>
+                      {
+                        item.value.fields.map((item, index) => {
+                          const { value: { config, type } } = item
+                          const widget = findWidgetByConfigOrType(Widgets, config, type)
+                          if (!widget) {
+                            return (
+                              <Li><Text>Field type "{type}" not supported</Text></Li>
+                            )
+                          }
+
+                          console.log({
+                            renderFieldAccessor
+                          })
+
+                          const props = {
+                            item,
+                            index,
+                            widget,
+                            snapshot,
+                            key: item.key,
+                            renderFieldAccessor,
+                            // enterEditMode,
+                            // deleteItem: onDeleteItem,
+                            draggableId: `list-item-${item.key}-${index}`,
+                          }
+
+                          if (widget.CustomListItem) {
+                            const { CustomListItem } = widget
+                            return (
+                              <CustomListItem {...props} />
+                            )
+                          }
+
+                          // const HintElement = (
+                          //   <Hint
+                          //     item={item}
+                          //     show={showHints}
+                          //     isRepeatable={isRepeatable}
+                          //     renderHintBase={renderHintBase}
+                          //     framework={framework}
+                          //     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                          //   />
+                          // )
+                          return (
+                            <ListItem
+                              {...props}
+                              // HintElement={HintElement}
+                            />
+                          )
+                        })
+                      }
+
+                      {
+                        newFieldData && (
+                          <NewField
+                            {...newFieldData}
+                            // fields={poolOfFieldsToCheck || fields}
+                            fields={[]}
+                            onSave={(...args) => {
+                              onSaveNewField(...args)
+                              setNewFieldData(null)
+                            }}
+                            onCancelNewField={onCancelNewField}
+                          />
+                        )
+                      }
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+          </Box>
+        )}
+      />
+      {/* <Draggable draggableId={item.key} index={index}>
         {(provided, snapshot) => (
           <Fragment>
             <Li
@@ -120,8 +185,26 @@ const CustomListItem = (props) => {
               </Button>
             </Flex>
           </Li>
-          <Box sx={{ ml: 4 }}>
-            <DragDropContext onDragEnd={() => console.log('REORDER WIDGET')}>
+          
+        </Fragment>
+        )}
+      </Draggable> */}
+      <SelectFieldTypeModal
+        data={{ isOpen: selectMode }}
+        close={() => setSelectMode(false)}
+        onSelect={onSelectFieldType}
+        widgetsArray={[]}
+      />
+    </Fragment>
+  )
+}
+
+export default CustomListItem
+
+
+/**
+ * <Box sx={{ ml: 4 }}>
+            <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={"my-unique-id"}>
                   {(provided) => !snapshot.isDragging && (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
@@ -173,17 +256,4 @@ const CustomListItem = (props) => {
                 </Droppable>
               </DragDropContext>
           </Box>
-        </Fragment>
-        )}
-      </Draggable>
-      <SelectFieldTypeModal
-        data={{ isOpen: selectMode }}
-        close={() => setSelectMode(false)}
-        onSelect={onSelectFieldType}
-        widgetsArray={sliceBuilderWidgetsArray}
-      />
-    </Fragment>
-  )
-}
-
-export default CustomListItem
+ */

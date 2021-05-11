@@ -35,6 +35,26 @@ export const Group = {
       }
     }
   },
+  reorderWidget(group: GroupAsArray, start: number, end: number): GroupAsArray {
+    const reorderedWidget: {key: string, value: Widget} | undefined = group.value.fields[start]
+    if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
+
+    const reorderedArea = group.value.fields.reduce<GroupFieldsAsArray>((acc, widget, index) => {
+      const elems = [widget, reorderedWidget]
+      switch(index) {
+        case start: return acc
+        case end: return [ ...acc, ...end > start ? elems : elems.reverse() ]
+        default: return [ ...acc, widget ]
+      }
+    }, [])
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: reorderedArea
+      }
+    }
+  },
   toArray(key: string, group: GroupWidget): GroupAsArray {
     console.log({ key, group })
     return {
