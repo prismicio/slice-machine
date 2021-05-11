@@ -1,39 +1,31 @@
-import { Fragment, useState } from 'react'
-import { Draggable } from 'react-beautiful-dnd'
-import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
-import { useContext } from 'react'
-import { ConfigContext } from 'src/config-context'
+import { Fragment, useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
+import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
+import { useContext } from "react";
+import { ConfigContext } from "src/config-context";
 
-import { removeKeys } from 'lib/utils'
+import { removeKeys } from "lib/utils";
 
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
+import { Box, Flex, Text, Button, useThemeUI } from "theme-ui";
 
-import {
-  Box,
-  Flex,
-  Text,
-  Button,
-  useThemeUI
-} from 'theme-ui'
+import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
+import NewField from "lib/builders/common/Zone/Card/components/NewField";
+import { sliceBuilderWidgetsArray } from "lib/models/common/widgets/asArray";
 
-import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
-import NewField from 'lib/builders/common/Zone/Card/components/NewField'
-import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
+import Li from "../../../../../../components/Li";
+import IconButton from "../../../../../../components/IconButton";
+import ItemHeader from "../../../../../../components/ItemHeader";
 
+import * as Widgets from "../../../widgets";
 
-import Li from '../../../../../../components/Li'
-import IconButton from '../../../../../../components/IconButton'
-import ItemHeader from '../../../../../../components/ItemHeader'
-
-import * as Widgets from '../../../widgets'
-
-import { AiOutlineEdit } from 'react-icons/ai'
-import { BsThreeDotsVertical } from 'react-icons/bs'
+import { AiOutlineEdit } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 // import Hint from './Hints'
 
-import { findWidgetByConfigOrType } from '../../../../../utils'
+import { findWidgetByConfigOrType } from "../../../../../utils";
 
 const CustomListItem = (props) => {
   const {
@@ -51,35 +43,38 @@ const CustomListItem = (props) => {
 
     theme,
     config,
-    WidgetIcon
-  } = props
+    WidgetIcon,
+  } = props;
 
-  const [selectMode, setSelectMode] = useState(false)
-  const [newFieldData, setNewFieldData] = useState(null)
+  const [selectMode, setSelectMode] = useState(false);
+  const [newFieldData, setNewFieldData] = useState(null);
 
   const onSelectFieldType = (widgetTypeName) => {
-    setNewFieldData({ widgetTypeName })
-    setSelectMode(false)
-  }
+    setNewFieldData({ widgetTypeName });
+    setSelectMode(false);
+  };
 
   const onCancelNewField = () => {
-    setNewFieldData(null)
-  }
+    setNewFieldData(null);
+  };
 
   const onSaveNewField = ({ id, widgetTypeName }, helpers) => {
-    const widget = Widgets[widgetTypeName]
+    const widget = Widgets[widgetTypeName];
     if (!widget) {
-      console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
+      console.log(
+        `Could not find widget with type name "${widgetTypeName}". Please contact us!`
+      );
     }
     store
       .tab(tabId)
       .group(item.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
-      })
-  }
-
+        [widget.customAccessor || "config"]: removeKeys(widget.create(id), [
+          "id",
+        ]),
+      });
+  };
 
   /**
    * apiId: "bool"
@@ -107,28 +102,36 @@ const CustomListItem = (props) => {
               Component={Box}
               sx={{ p: 0 }}
             >
-            <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-              <ItemHeader 
-                theme={theme}
-                text={item.key}
-                sliceFieldName={renderFieldAccessor(item.key)}
-                iconButtonProps={provided.dragHandleProps}
-                WidgetIcon={WidgetIcon}
-              />
-              <Button variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
-                Add Field
-              </Button>
-            </Flex>
-          </Li>
-          <Box sx={{ ml: 4 }}>
-            <DragDropContext onDragEnd={() => console.log('REORDER WIDGET')}>
+              <Flex
+                sx={{ justifyContent: "space-between", width: "100%", p: 3 }}
+              >
+                <ItemHeader
+                  theme={theme}
+                  text={item.key}
+                  sliceFieldName={renderFieldAccessor(item.key)}
+                  iconButtonProps={provided.dragHandleProps}
+                  WidgetIcon={WidgetIcon}
+                />
+                <Button
+                  variant="buttons.darkSmall"
+                  onClick={() => setSelectMode(true)}
+                >
+                  Add Field
+                </Button>
+              </Flex>
+            </Li>
+            <Box sx={{ ml: 4 }}>
+              <DragDropContext onDragEnd={() => console.log("REORDER WIDGET")}>
                 <Droppable droppableId={"my-unique-id"}>
-                  {(provided) => !snapshot.isDragging && (
-                    <ul ref={provided.innerRef} {...provided.droppableProps}>
-                      {
-                        item.value.fields.map((e, i) => {
+                  {(provided) =>
+                    !snapshot.isDragging && (
+                      <ul ref={provided.innerRef} {...provided.droppableProps}>
+                        {item.value.fields.map((e, i) => {
                           return (
-                            <Draggable draggableId={`tab-group-${e.key}`} index={i}>
+                            <Draggable
+                              draggableId={`tab-group-${e.key}`}
+                              index={i}
+                            >
                               {(provided) => (
                                 <Fragment>
                                   <Li
@@ -137,43 +140,51 @@ const CustomListItem = (props) => {
                                     Component={Box}
                                     sx={{ p: 0 }}
                                   >
-                                  <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-                                    <ItemHeader 
-                                      theme={theme}
-                                      text={e.key}
-                                      sliceFieldName={renderFieldAccessor(e.key)}
-                                      iconButtonProps={provided.dragHandleProps}
-                                      WidgetIcon={WidgetIcon}
-                                    />
-                                  </Flex>
-                                </Li>
-                              </Fragment>
+                                    <Flex
+                                      sx={{
+                                        justifyContent: "space-between",
+                                        width: "100%",
+                                        p: 3,
+                                      }}
+                                    >
+                                      <ItemHeader
+                                        theme={theme}
+                                        text={e.key}
+                                        sliceFieldName={renderFieldAccessor(
+                                          e.key
+                                        )}
+                                        iconButtonProps={
+                                          provided.dragHandleProps
+                                        }
+                                        WidgetIcon={WidgetIcon}
+                                      />
+                                    </Flex>
+                                  </Li>
+                                </Fragment>
                               )}
                             </Draggable>
-                          )
-                        })
-                      }
+                          );
+                        })}
 
-                      {
-                        newFieldData && (
+                        {newFieldData && (
                           <NewField
                             {...newFieldData}
                             // fields={poolOfFieldsToCheck || fields}
                             fields={[]}
                             onSave={(...args) => {
-                              onSaveNewField(...args)
-                              setNewFieldData(null)
+                              onSaveNewField(...args);
+                              setNewFieldData(null);
                             }}
                             onCancelNewField={onCancelNewField}
                           />
-                        )
-                      }
-                    </ul>
-                  )}
+                        )}
+                      </ul>
+                    )
+                  }
                 </Droppable>
               </DragDropContext>
-          </Box>
-        </Fragment>
+            </Box>
+          </Fragment>
         )}
       </Draggable>
       <SelectFieldTypeModal
@@ -183,7 +194,7 @@ const CustomListItem = (props) => {
         widgetsArray={sliceBuilderWidgetsArray}
       />
     </Fragment>
-  )
-}
+  );
+};
 
-export default CustomListItem
+export default CustomListItem;
