@@ -3,11 +3,13 @@ const Theme = () => ({
   colors: {
     text: "#25252D",
     textClear: "#4E4E55",
+    grayLight: "#E8E8ED",
     hoverBackground: "#f2f2f2",
     background: "#FFF",
     backgroundClear: "#FFF",
     ctHeader: "#E6E6EA",
     primary: "#6E52FF",
+    purpleLight: "#F6F1FC",
     badge: {
       published: {
         bg: "#E9F6EE",
@@ -84,6 +86,7 @@ const Theme = () => ({
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
   breakpoints: ["40em", "56em", "64em"],
   fontWeights: {
+    thin: 300,
     body: 400,
     heading: 500,
     label: 500,
@@ -393,7 +396,7 @@ const Theme = () => ({
       bg: "headSection",
       borderColor: "borders",
       "&::placeholder": {
-        color: "icons",
+        color: "textClear",
       },
       "&:hover": {
         borderColor: darken("borders", 0.07),
@@ -410,6 +413,7 @@ const Theme = () => ({
       color: (t) => t.colors.choggleBox,
     },
     label: {
+      fontSize: 1,
       primary: {
         mb: 2,
         fontSize: 1,
@@ -513,6 +517,7 @@ const Theme = () => ({
     },
     h1: {
       variant: "textStyles.display",
+      fontSize: 1,
     },
     h2: {
       variant: "textStyles.heading",

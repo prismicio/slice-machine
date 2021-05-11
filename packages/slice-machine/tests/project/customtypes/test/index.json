@@ -1,0 +1,42 @@
+{
+  "id": "test",
+  "label": "test-1",
+  "repeatable": true,
+  "json": {
+    "Main": {
+      "tedt": {
+        "type": "Group",
+        "fields": {}
+      },
+      "test": {
+        "type": "Link",
+        "config": {
+          "label": "",
+          "select": "document",
+          "customtypes": []
+        }
+      },
+      "testtt": {
+        "type": "UID",
+        "config": {
+          "label": "",
+          "placeholder": ""
+        }
+      },
+      "MainSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "strcututed_texts": {
+              "type": "SharedSlice"
+            },
+            "call_to_action": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@ const textVariation = (variations) =>
 
 const States = {
   NEW_SLICE: "New",
-  MODIFIED: "Local Update",
+  MODIFIED: "Modified",
   SYNCED: "Synced",
   PREVIEW_MISSING: "Preview missing",
   INVALID: "Contains errors",

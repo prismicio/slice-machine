@@ -1,61 +1,83 @@
-import { CustomTypeState, CustomTypeStatus } from '../../../models/ui/CustomTypeState'
-import { useToasts } from 'react-toast-notifications'
-import { handleRemoteResponse } from '../../../../src/ToastProvider/utils'
+import {
+  CustomTypeState,
+  CustomTypeStatus,
+} from "../../../models/ui/CustomTypeState";
+import { useToasts } from "react-toast-notifications";
+import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
 
-import { Box, Button, Heading, Flex } from 'theme-ui'
+import { Box, Button, Flex, Link as ThemeLinK, Text } from "theme-ui";
 
-import CustomTypeStore from '../../../../src/models/customType/store'
+import CustomTypeStore from "../../../../src/models/customType/store";
 
+import FlexWrapper from "./FlexWrapper";
 
-import FlexWrapper from './FlexWrapper'
+import { FiLayout } from "react-icons/fi";
+import Link from "next/link";
 
-const Header = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
-  const { addToast } = useToasts()
+const Header = ({
+  Model,
+  store,
+}: {
+  Model: CustomTypeState;
+  store: CustomTypeStore;
+}) => {
+  const { addToast } = useToasts();
+
+  console.log(Model);
 
   const buttonProps = (() => {
     if (Model.isTouched) {
-      return { onClick: () => store.save(Model), children: 'Save to File System' }
-    }
-    if ([CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)) {
       return {
-        onClick: () => store.push(Model, data => {
-          if (data.done) {
-            handleRemoteResponse(addToast)(data)
-          }
-        }),
-        children: 'Push to Prismic'
-      }
+        onClick: () => store.save(Model),
+        children: "Save to File System",
+      };
     }
-    return { variant: "disabled", children: 'Synced with Prismic' }
-  })()
+    if (
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)
+    ) {
+      return {
+        onClick: () =>
+          store.push(Model, (data) => {
+            if (data.done) {
+              handleRemoteResponse(addToast)(data);
+            }
+          }),
+        children: "Push to Prismic",
+      };
+    }
+    return { variant: "disabled", children: "Synced with Prismic" };
+  })();
 
   return (
-    <Box sx={{ bg: 'backgroundClear' }}>
+    <Box sx={{ bg: "backgroundClear" }}>
       <FlexWrapper
         sx={{
           py: 4,
+          justifyContent: "space-between",
         }}
       >
-
-        <Box
-          as="section"
+        <Flex
           sx={{
-            flexGrow: 99999,
-            flexBasis: 0,
-            minWidth: 320,
+            fontSize: 4,
+            fontWeight: "heading",
+            alignItems: "center",
           }}
         >
-          <Heading>Templates <Box
-            as="span"
-            sx={{
-              fontWeight: '400'
-            }}
-          >/ {Model.label}</Box></Heading>
-        </Box>
+          <Link href="/" passHref>
+            <ThemeLinK variant="invisible">
+              <Flex sx={{ alignItems: "center" }}>
+                <FiLayout /> <Text ml={2}>Templates</Text>
+              </Flex>
+            </ThemeLinK>
+          </Link>
+          <Box sx={{ fontWeight: "thin" }} as="span">
+            <Text ml={2}>/ {Model.label} </Text>
+          </Box>
+        </Flex>
         <Button {...buttonProps} />
       </FlexWrapper>
     </Box>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

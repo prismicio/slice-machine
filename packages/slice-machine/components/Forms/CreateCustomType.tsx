@@ -6,8 +6,8 @@ import  { Box, Flex, Label, Input, Text, Radio }from 'theme-ui'
 import ModalFormCard from 'components/ModalFormCard'
 
 const InputBox = ({ name, label, placeholder, error }:{ name: string, label: string, placeholder: string, error?: string }) => (
-  <Box mb={2}>
-    <Label htmlFor={name} mb={1}>
+  <Box mb={3}>
+    <Label htmlFor={name} mb={2}>
       { label }
     </Label>
     <Field
@@ -26,15 +26,14 @@ const formId = "create-custom-type"
 const FlexCard =  (props: any) => (
   <Flex
     sx={{
-      p: 3,
-      my: 2,
-      alignItems: 'center',
+      p: '24px',
+      mb: 3,
+      alignItems: 'top',
       cursor: 'pointer',
-      borderRadius: '3px',
-      border: ({ colors }) => `1px solid ${colors.borders}`,
+      borderRadius: '6px',
+      backgroundColor: 'grayLight',
       '&:hover': {
-        border: ({ colors }) => `1px solid ${colors.primary}`,
-        boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2)'
+        boxShadow: ({ colors }) => `0 0 0 2px ${colors.primary}`
       }
     }}
     {...props}
@@ -46,12 +45,36 @@ const SelectRepeatable = () => {
   return (
     <Box mb={2}>
       <FlexCard onClick={() => helpers.setValue(true)}>
-        Is repeatable
         <Radio checked={field.value} />
+        <Box
+          sx={{
+            marginLeft: 2
+          }}
+        >
+          Repeatable type
+          <Box
+            as='p'
+            sx={{fontSize: '12px', color: 'textClear', mt: 1}}
+          >
+            Best for multiple instances like blog posts, authors, products...
+          </Box>
+        </Box>
       </FlexCard>
       <FlexCard onClick={() => helpers.setValue(false)}>
-        Is single
         <Radio checked={!field.value} />
+        <Box
+          sx={{
+            marginLeft: 2
+          }}
+        >
+          Single type
+          <Box
+            as='p'
+            sx={{fontSize: '12px', color: 'textClear', mt: 1}}
+          >
+            Best for a unique page, like the homepage or privacy policy page...
+          </Box>
+        </Box>
       </FlexCard>
     </Box>
   )
@@ -65,7 +88,7 @@ const CreateCustomtypeForm = ({
   return (
     <ModalFormCard
       isOpen={isOpen}
-      widthInPx="520px"
+      widthInPx="530px"
       formId={formId}
       close={() => close()}
       onSubmit={(values: {}) => {
@@ -80,22 +103,22 @@ const CreateCustomtypeForm = ({
         }
       }}
       content={{
-        title: 'New Custom Type',
+        title: 'Create a new custom type',
       }}
     >
       {({ errors }: { errors: { id?: string } }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
+            name="label"
+            label="Custom Type Name"
+            placeholder="My Custom Type"
+          />
+          <InputBox
             name="id"
             label="Custom Type ID"
             placeholder="my-custom-type"
             error={errors.id}
-          />
-          <InputBox
-            name="label"
-            label="Custom Type Label"
-            placeholder="My Custom Type"
           />
         </Box>
       )}

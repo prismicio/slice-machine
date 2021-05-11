@@ -54,13 +54,13 @@ const ModalCard = ({
           <Card
             borderFooter
             footerSx={{ p: 3 }}
-            bodySx={{ p: 4, pt: 3 }}
+            bodySx={{ px: '48px', py: 4 }}
             sx={{ border: 'none' }}
             Header={({ radius }: { radius: string | number}) => (
               <Flex
                 sx={{
-                  p: 3,
-                  pl: 4,
+                  p: '24px',
+                  pl: '48px',
                   bg: 'headSection',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -69,7 +69,7 @@ const ModalCard = ({
                   borderBottom: t => `1px solid ${t.colors.borders}`
                 }}
               >
-                <Heading>{title}</Heading>
+                <Heading sx={{ fontSize: "20px"}} >{title}</Heading>
                 <Close type="button" onClick={() => close()} />
               </Flex>
             )}
