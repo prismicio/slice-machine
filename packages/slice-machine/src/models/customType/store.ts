@@ -5,6 +5,7 @@ import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actio
 
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
+import { group } from 'yargs'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
@@ -50,6 +51,13 @@ export default class CustomTypeStore implements Store {
       },
       removeSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.RemoveSharedSlice, payload: { tabId, sliceKey } })
+      },
+      group: (groupId: string) => {
+        return {
+          addWidget: (id: string, widget: Widget) => {
+            this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, widget } })
+          }
+        }
       }
     }
   }

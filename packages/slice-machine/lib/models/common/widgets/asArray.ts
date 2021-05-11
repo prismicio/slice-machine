@@ -1,5 +1,7 @@
 import * as Widgets from './'
 
+console.log(Widgets)
+
 export const sliceBuilderWidgetsArray = [
   Widgets.StructuredText,
   Widgets.Image,

@@ -56,10 +56,14 @@ const TabZone = ({
     if (!result.destination) {
       return
     }
+    if (result.source.droppableId !== result.destination.droppableId) {
+      return
+    }
     store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
   const onSave = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
+    console.log({ apiId, newKey, value, initialModelValues })
     if (mockValue && Object.keys(mockValue).length) {
       store
         .tab(tabId)
@@ -107,7 +111,9 @@ const TabZone = ({
   return (
     <Fragment>
       <Zone
+        tabId={tabId}
         Model={Model}
+        store={store}
         title={`${tabId} Tab`}
         dataTip={""}
         fields={fields}
@@ -120,8 +126,8 @@ const TabZone = ({
         onSave={onSave}
         onSaveNewField={onSaveNewField}
         onDragEnd={onDragEnd}
-        renderHintBase={({ item }) => `my.${tabId}.${item.key}`}
-        renderFieldAccessor={(key) => `my.${tabId}.${key}`}
+        renderHintBase={({ item }) => `data.${item.key}`}
+        renderFieldAccessor={(key) => `data.${key}`}
       />
       <button type="button" onClick={() => setModalIsOpen(true)}>edit modal</button>
       {
@@ -139,7 +145,7 @@ const TabZone = ({
             onSelectSharedSlices={onSelectSharedSlices}
           />
         ): (
-          < EmptyState onCreate={onCreateSliceZone} />
+          <EmptyState onCreate={onCreateSliceZone} />
         )
       }
       <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>

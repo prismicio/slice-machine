@@ -22,11 +22,9 @@ const SelectFieldTypeModal = ({
   if (!data.isOpen) {
     return null
   }
-  const { isOpen } = data
-
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen
       shouldCloseOnOverlayClick
       onRequestClose={close}
       contentLabel="Widget Form Modal"
@@ -63,7 +61,7 @@ const SelectFieldTypeModal = ({
       >
         <FlexGrid>
           {
-            widgetsArray.map((widget) => {
+            widgetsArray.filter(e => e).map((widget) => {
               const { Meta, TYPE_NAME, CUSTOM_NAME } = widget
               return (
                   <Col key={CUSTOM_NAME || TYPE_NAME}>
