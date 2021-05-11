@@ -6,6 +6,8 @@ const { CustomPaths, GeneratedPaths } = require('../../../build/lib/models/paths
 const { default: Files } = require('../../../build/lib/utils/files');
 const { shouldIRun } = require('../../common')
 const { getInfoFromPath } = require('../../../build/lib/utils/lib')
+const { detectFramework } = require('../../../build/lib/framework');
+const { default: storybook } = require('../../../build/server/src/api/storybook');
 
 function scopePreviewToDefaultVariation(cwd, libraryName, sliceName) {
   const slicePath = GeneratedPaths(cwd).library(libraryName).slice(sliceName).value()
@@ -28,10 +30,7 @@ function moveMocks(cwd, libraryName, sliceName) {
     .mocks()
 
   const customMocks = Files.exists(customMocksPath) && Files.readString(customMocksPath)
-  if(!customMocks) {
-    console.error(`Mocks' migration ignored. We didn't find any "mocks.json" in ${libraryName} > ${sliceName}`)
-    return
-  }
+  if(!customMocks) return
 
   const generatedMocksPath = GeneratedPaths(cwd)
   .library(libraryName)
@@ -39,6 +38,7 @@ function moveMocks(cwd, libraryName, sliceName) {
   .mocks()
 
   Files.write(generatedMocksPath, customMocks)
+  Files.remove(customMocksPath)
 }
 
 function moveStories(cwd, libraryName, sliceName) {
@@ -47,17 +47,10 @@ function moveStories(cwd, libraryName, sliceName) {
     .slice(sliceName)
     .stories()
   const customStories = Files.exists(customStoriesPath) && Files.readString(customStoriesPath)
-  if(!customStories) {
-    console.error(`Stories' migration ignored. We didn't find any "stories.index.js" in ${libraryName} > ${sliceName}`)
-    return
-  }
+  if(!customStories)  return
 
-  const generatedStoriesPath = GeneratedPaths(cwd)
-  .library(libraryName)
-  .slice(sliceName)
-  .stories()
-
-  Files.write(generatedStoriesPath, customStories)
+  Files.remove(customStoriesPath)
+  storybook.generateStories(path.join(__dirname, "../../../"), detectFramework(cwd), cwd, libraryName, sliceName)
 }
 
 function migrateSlice(cwd, libraryName, sliceName, shouldMigrateMocks, shouldMigrateStories) {
@@ -81,30 +74,26 @@ module.exports = {
     })()
 
     if (Files.exists(pathToSmFile)) {
-      try {
-        const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'));
-        (json.libraries || []).forEach((lib) => {
-          const {
-            isLocal,
-            pathExists,
-            pathToSlices,
-            pathToLib
-          } = getInfoFromPath(lib, cwd)
-          if (isLocal && pathExists) {
-            const libraryName = path.basename(pathToLib)
-            const sliceNames = Files.readDirectory(slash(pathToSlices))
-              .map(curr => path.join(pathToSlices, curr))
-              .filter(e => e.split(path.sep).pop() !== 'index.js')
-              .map(slicePath => path.basename(slicePath))
-            
-            sliceNames.forEach((sliceName) => {
-              migrateSlice(cwd, libraryName, sliceName, shouldMigrateMocks, shouldMigrateStories)
-            })
-          }
-        })
-      } catch(e) {
-        console.log(e)
-      }
+      const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'));
+      (json.libraries || []).forEach((lib) => {
+        const {
+          isLocal,
+          pathExists,
+          pathToSlices,
+          pathToLib
+        } = getInfoFromPath(lib, cwd)
+        if (isLocal && pathExists) {
+          const libraryName = path.basename(pathToLib)
+          const sliceNames = Files.readDirectory(slash(pathToSlices))
+            .map(curr => path.join(pathToSlices, curr))
+            .filter(e => e.split(path.sep).pop() !== 'index.js')
+            .map(slicePath => path.basename(slicePath))
+          
+          sliceNames.forEach((sliceName) => {
+            migrateSlice(cwd, libraryName, sliceName, shouldMigrateMocks, shouldMigrateStories)
+          })
+        }
+      })
     }
   }
 }

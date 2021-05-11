@@ -42,6 +42,9 @@ function run(migrations, smConfig, ignorePrompt, params) {
       // call next migrations
       return run(tail, smConfig, ignorePrompt, params)
     })
+    .catch((e) => {
+      console.error(e)
+    })
 
 } 
 

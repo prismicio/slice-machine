@@ -1,3 +1,6 @@
+/* global variable define in server/src/index.js */
+declare var appRoot: string;
+
 import puppeteer from 'puppeteer'
 import { fetchStorybookUrl, generatePreview } from './common/utils'
 import { createScreenshotUrl } from '../../../lib/utils'
@@ -79,7 +82,7 @@ const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { screensho
 
     if(!hasCustomStories) {
       console.log('[update]: generating stories')
-      Storybook.generateStories(env.framework, env.cwd, from, sliceName)
+      Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     }
     
     console.log('[update]: generating screenshots previews')

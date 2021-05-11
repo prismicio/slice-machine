@@ -1,6 +1,3 @@
-/* global variable define in server/src/index.js */
-declare var appRoot: string;
-
 import path from 'path'
 import TemplateEngine from 'ejs'
 
@@ -10,8 +7,8 @@ import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
 import { pascalize } from '../../../lib/utils/str';
 
 const Paths = {
-  nuxtTemplate: (appRoot: string) => path.join(appRoot, '../../../templates/storybook/nuxt.template.ejs'),
-  nextTemplate: (appRoot: string) => path.join(appRoot, '../../../templates/storybook/next.template.ejs'),
+  nuxtTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/nuxt.template.ejs'),
+  nextTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/next.template.ejs'),
   getTemplate(appRoot: string, framework: Framework) {
     switch(framework) {
       case Framework.nuxt: return Paths.nuxtTemplate(appRoot)
@@ -24,13 +21,13 @@ const Paths = {
 }
 
 export default {
-  generateStories(framework: Framework, cwd: string, libraryName: string, sliceName: string): void {
+  generateStories(appRoot: string, framework: Framework, cwd: string, libraryName: string, sliceName: string): void {
     if(Files.exists(
       CustomPaths(cwd)
         .library(libraryName)
         .slice(sliceName)
         .stories()
-    )) return // we don't generate a story if a custom one already exists
+    )) return
 
 
     const generatedMocksPath = GeneratedPaths(cwd)
