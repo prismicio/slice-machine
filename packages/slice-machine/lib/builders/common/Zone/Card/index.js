@@ -18,7 +18,9 @@ import ListItem  from './components/ListItem'
 
 const FieldZone = ({
   fields,
+  store,
   title,
+  tabId,
   enterEditMode,
   enterSelectMode,
   dataTip,
@@ -66,9 +68,12 @@ const FieldZone = ({
                 <ul ref={provided.innerRef} {...provided.droppableProps}>
                   {fields.map((item, index) => (
                     <ListItem
+                      store={store}
                       item={item}
                       key={item.key}
                       index={index}
+                      tabId={tabId}
+                      enterSelectMode={enterSelectMode}
                       renderFieldAccessor={renderFieldAccessor}
                       enterEditMode={enterEditMode}
                       deleteItem={onDeleteItem}

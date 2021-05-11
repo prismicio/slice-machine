@@ -24,17 +24,19 @@ import Hint from './Hints'
 
 import { findWidgetByConfigOrType } from '../../../../utils'
 
-const ListItem = ({
-  item,
-  index,
-  deleteItem,
-  enterEditMode,
-  modelFieldName,
-  renderHintBase,
-  renderFieldAccessor,
-  isRepeatable,
-  showHints,
-}) => {
+const ListItem = (props) => {
+  const {
+    item,
+    index,
+    deleteItem,
+    enterEditMode,
+    modelFieldName,
+    renderHintBase,
+    renderFieldAccessor,
+    isRepeatable,
+    showHints,
+  } = props
+
   const { key } = item
   const { theme } = useThemeUI()
   const { config, type } = item.value
@@ -49,7 +51,14 @@ const ListItem = ({
   const { Meta: { icon: WidgetIcon }, CustomListItem } = widget
 
   if (CustomListItem) {
-    return <CustomListItem value={item.value} />
+    return (
+      <CustomListItem
+        {...props}
+        theme={theme}
+        config={config}
+        WidgetIcon={WidgetIcon}
+      />
+    )
   }
 
   return (

@@ -7,8 +7,11 @@ export type GroupFieldsAsArray = ReadonlyArray<{key: string, value: Widget }>
 
 export interface GroupWidget {
   type: string
-  fields: {
-    [key: string]: Widget
+  config: {
+    fields: {
+      [key: string]: Widget
+    }
+    label: string
   }
 }
 
@@ -16,24 +19,40 @@ export interface GroupAsArray {
   key: string,
   value: {
     type: string,
+    label: string,
     fields: GroupFieldsAsArray
   }
 }
 
 export const Group = {
+  addWidget(group: GroupAsArray, newField: {key: string, value: Widget }): GroupAsArray {
+    console.log(group, newField)
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: [...group.value.fields, newField]
+      }
+    }
+  },
   toArray(key: string, group: GroupWidget): GroupAsArray {
+    console.log({ key, group })
     return {
       key,
       value: {
-        ...group,
-        fields: Object.entries(group.fields).map(([key, value]) => ({ key, value }))
+        type: group.type,
+        ...group.config,
+        fields: Object.entries(group.config.fields).map(([key, value]) => ({ key, value }))
       }
     }
   },
   toObject(group: GroupAsArray): GroupWidget {
     return {
       type: FieldType.Group,
-      fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+      config: {
+        label: group.value.label,
+        fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+      }
     }
   }
 }

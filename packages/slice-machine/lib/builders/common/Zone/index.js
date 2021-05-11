@@ -16,6 +16,8 @@ import NewField from './Card/components/NewField'
 
 const Zone = ({
   Model,
+  store,
+  tabId,
   title, /* text info to display in Card Header */
   fields, /* widgets registered in the zone */
   poolOfFieldsToCheck, /* if you need to check unicity of fields from other zones */
@@ -59,10 +61,11 @@ const Zone = ({
   return (
     <Fragment>
       <Card
+        tabId={tabId}
         isRepeatable={isRepeatable}
         fields={fields}
         showHints={showHints}
-
+        store={store}
         dataTip={dataTip}
         title={title}
         renderFieldAccessor={renderFieldAccessor}

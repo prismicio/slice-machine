@@ -31,6 +31,9 @@ const codeByWidgetType = {
 }
 
 const toVue = ({ item, modelFieldName }) => {
+  console.log({
+    modelFieldName
+  })
   const isRepeatable = modelFieldName === 'items'
   const fieldText = isRepeatable
     ? `item.${item.key}`

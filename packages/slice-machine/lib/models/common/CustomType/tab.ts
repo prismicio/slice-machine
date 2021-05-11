@@ -88,6 +88,19 @@ export const Tab = {
       }
     }
   },
+  updateGroup(tab: TabAsArray, groupId: string): Function {
+    return (mutate: (v: GroupAsArray) => TabAsArray) => {
+      return {
+        ...tab,
+        value: tab.value.map(t => {
+        if (t.key === groupId) {
+            return mutate(t as GroupAsArray)
+          }
+          return t
+        })
+      }
+    }
+  },
   addWidget(tab: TabAsArray, id: string, widget: Widget | GroupWidget): TabAsArray {
     const elem: TabAsArrayElement =
       widget.type === "Group"

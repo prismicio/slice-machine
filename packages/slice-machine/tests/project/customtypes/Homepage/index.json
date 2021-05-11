@@ -20,6 +20,20 @@
           "thumbnails": []
         }
       },
+      "group": {
+        "type": "Group",
+        "config": {
+          "fields": {
+            "tt": {
+              "type": "Number",
+              "config": {
+                "label": "number"
+              }
+            }
+          },
+          "label": "My Group!"
+        }
+      },
       "body": {
         "type": "Slices",
         "fieldset": "Slice Zone",

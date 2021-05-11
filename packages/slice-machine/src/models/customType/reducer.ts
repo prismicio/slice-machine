@@ -4,7 +4,7 @@ import { Tab } from '../../../lib/models/common/CustomType/tab'
 
 import Actions from './actions'
 import { Widget } from '../../../lib/models/common/widgets'
-import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
+import { Group, GroupWidget, GroupAsArray,} from '../../../lib/models/common/CustomType/group'
 import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
@@ -89,6 +89,11 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         return {
         ...prevState,
         mockConfig: (action.payload as any)
+      }
+      case Actions.GroupAddWidget: {
+        const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: Widget }
+        return CustomTypeState.updateTab(prevState, tabId)
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
       }
       default: throw new Error("Invalid action.")
     }
