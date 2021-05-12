@@ -11,7 +11,7 @@ interface Mock {
   id: string
   uid: string | null
   type: string
-  data: object
+  data: { [key: string]: unknown }
 }
 
 const fieldsHandler = handleFields(Widgets)
@@ -25,8 +25,8 @@ const groupHandler = (fields: GroupFieldsAsArray) => {
   return items
 }
 
-const sliceZoneHandler = ({ value }) => {
-  console.log({ value })
+const sliceZoneHandler = ({ value }: { value: any }) => {
+  console.log('TODO: define type of value other than any', { value })
 }
 
 const createEmptyMock = (type: string) => ({

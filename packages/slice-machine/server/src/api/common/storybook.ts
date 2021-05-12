@@ -1,6 +1,7 @@
 import path from 'path'
 import puppeteer from 'puppeteer'
-import Files from '../../../../lib/utils/files'
+import Files from '@lib/utils/files'
+import { delay } from './utils'
 
 export const fetchStorybookUrl = async (storybookUrl: string) => {
   return fetch(storybookUrl)
