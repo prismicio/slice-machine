@@ -35,6 +35,8 @@ const ListItem = (props) => {
 
     HintElement,
 
+    CustomEditElement,
+
     // renderHintBase,
     // isRepeatable,
     // showHints,
@@ -70,13 +72,19 @@ const ListItem = (props) => {
                 WidgetIcon={widget.Meta.icon}
               />
               <Flex sx={{ alignItems: "center" }}>
-                <IconButton
-                  size={22}
-                  Icon={AiOutlineEdit}
-                  label="Edit slice field"
-                  sx={{ cursor: "pointer", color: theme.colors.icons }}
-                  onClick={() => enterEditMode([key, item.value], modelFieldName, index)}
-                />
+                {
+                  CustomEditElement
+                    ? CustomEditElement
+                    :  (
+                      <IconButton
+                        size={22}
+                        Icon={AiOutlineEdit}
+                        label="Edit slice field"
+                        sx={{ cursor: "pointer", color: theme.colors.icons }}
+                        onClick={() => enterEditMode([key, item.value], modelFieldName, index)}
+                      />
+                    )
+                }
                 <Menu>
                   <MenuButton className="sliceMenuButton"
                     style={{

@@ -27,7 +27,7 @@ export const customTypeBuilderWidgetsArray = [
   Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
-  // Widgets.Date,
+  Widgets.Date,
   Widgets.Timestamp,
   Widgets.Embed,
   Widgets.Number,

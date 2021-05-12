@@ -30,15 +30,22 @@ import ItemHeader from '../../../../../../components/ItemHeader'
 
 import * as Widgets from '../../../widgets'
 
+import sliceBuilderArray from 'lib/models/common/widgets/sliceBuilderArray'
+
+// import Hint from 'lib/builders/common/Zone/Card/components/Hints'
+
 import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
 import ListItem from 'components/ListItem'
 
 const CustomListItem = ({
-  item,
+  item: groupItem,
   widget,
   snapshot,
+  isRepeatable,
+  framework,
+  showHints,
   renderFieldAccessor,
   ...rest
 }) => {
@@ -57,10 +64,12 @@ const CustomListItem = ({
     setNewFieldData(null)
   }
 
-  const onSaveNewField = ({ id, widgetTypeName }, helpers) => {
+  const onSaveNewField = ({ id, widgetTypeName }) => {
+    const widget = Widgets[widgetTypeName]
+
     store
       .tab(tabId)
-      .group(item.key)
+      .group(groupItem.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
         [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
@@ -74,16 +83,21 @@ const CustomListItem = ({
     if (result.source.droppableId !== result.destination.droppableId) {
       return
     }
-    store.tab(tabId).group(item.key).reorderWidget(result.source.index, result.destination.index)
+    store.tab(tabId).group(groupItem.key).reorderWidget(result.source.index, result.destination.index)
   }
 
   return (
     <Fragment>
       <ListItem
-        item={item}
+        item={groupItem}
         widget={widget}
-        renderFieldAccessor={renderFieldAccessor}
+        renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
+        CustomEditElement={(
+          <Button mr={2} variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
+            Add Widget
+          </Button>
+        )}
         children={(
           <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
@@ -91,7 +105,7 @@ const CustomListItem = ({
                   {(provided) => !snapshot.isDragging && (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                       {
-                        item.value.fields.map((item, index) => {
+                        groupItem.value.fields.map((item, index) => {
                           const { value: { config, type } } = item
                           const widget = findWidgetByConfigOrType(Widgets, config, type)
                           if (!widget) {
@@ -100,27 +114,16 @@ const CustomListItem = ({
                             )
                           }
 
-                          console.log({
-                            renderFieldAccessor
-                          })
-
                           const props = {
                             item,
                             index,
                             widget,
                             snapshot,
                             key: item.key,
-                            renderFieldAccessor,
+                            renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
                             // enterEditMode,
                             // deleteItem: onDeleteItem,
                             draggableId: `list-item-${item.key}-${index}`,
-                          }
-
-                          if (widget.CustomListItem) {
-                            const { CustomListItem } = widget
-                            return (
-                              <CustomListItem {...props} />
-                            )
                           }
 
                           // const HintElement = (
@@ -193,7 +196,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={[]}
+        widgetsArray={sliceBuilderArray}
       />
     </Fragment>
   )

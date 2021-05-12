@@ -32,7 +32,6 @@ const handleEmbedCode = (fieldText, useKey) =>
 const appendKey = (id) => `key={\`${id}-\${i}\`}`
 
 const codeByWidgetType = {
-  [Widgets.Group.TYPE_NAME]: () => null,
   [Widgets.ContentRelationship.CUSTOM_NAME]: (fieldText, useKey) => `<span>{{ ${fieldText} }} TODO</span>`,
   [Widgets.UID.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText.TYPE_NAME]: (fieldText, useKey) => `<RichText render={${fieldText}} ${useKey ? appendKey('rich-text') : ''}/>`,
@@ -52,7 +51,8 @@ const codeByWidgetType = {
 const toReact = ({ item, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item })
 
-  const code = codeByWidgetType[typeName](hintBase)
+  const maybeCodeRenderer = codeByWidgetType[typeName]
+  const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : null
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code
 
   return <CodeBlock className="language-jsx">{withRepeat}</CodeBlock>

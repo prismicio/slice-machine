@@ -1,16 +1,8 @@
-import { snakelize } from '../../../../lib/utils/str'
-
 import { getEnv } from '../../../../lib/env'
 import Files from '../../../../lib/utils/files'
 
-import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
-
-
-import { purge, upload } from '../upload'
 import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
 import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
-import { Variation, AsObject } from '../../../../lib/models/common/Variation'
-import Slice from '../../../../lib/models/common/Slice'
 import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 const onError = (r: Response | FakeResponse | null, message = 'An error occured while pushing slice to Prismic') => ({
@@ -61,8 +53,9 @@ export default async function handler(query: { id: string }) {
   const res = await createOrUpdate(env.client, model, remoteCustomType)
   if (res.status > 209) {
     const message = res.text ? await res.text() : res.status.toString()
-    console.error(`[push] Unexpected error returned. Server message: ${message}`)
-    throw new Error(message)
+    const msg = `[push] Unexpected error returned. Server message: ${message}`
+    console.error(msg)
+    return onError(null, msg)
   }
   return {}
 }
