@@ -32,6 +32,7 @@ const Provider = ({ children }) => {
               maxWidth: 568,
               py: 2,
               px: 3,
+              mb: 1,
               pointerEvents: 'initial',
               transitionProperty: `transform`,
               transitionDuration: `${props.transitionDuration}ms`,
