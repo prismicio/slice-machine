@@ -45,6 +45,7 @@ const CustomListItem = ({
   showHints,
   isRepeatable,
   item: groupItem,
+  draggableId,
   renderFieldAccessor,
   ...rest
 }) => {
@@ -82,11 +83,16 @@ const CustomListItem = ({
     store.tab(tabId).group(groupItem.key).reorderWidget(result.source.index, result.destination.index)
   }
 
+  const onDeleteItem = (key) => {
+    store.tab(tabId).group(groupItem.key).deleteWidget(key)
+  }
+
   return (
     <Fragment>
       <ListItem
         item={groupItem}
         widget={widget}
+        draggableId={draggableId}
         renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
         CustomEditElement={(
@@ -97,7 +103,7 @@ const CustomListItem = ({
         children={(
           <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId={"my-unique-id"}>
+                <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
                   {(provided) => !snapshot.isDragging && (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                       {
@@ -118,8 +124,8 @@ const CustomListItem = ({
                             key: item.key,
                             renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
                             // enterEditMode,
-                            // deleteItem: onDeleteItem,
-                            draggableId: `list-item-${item.key}-${index}`,
+                            deleteItem: onDeleteItem,
+                            draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           }
 
                           const HintElement = (

@@ -73,7 +73,7 @@ const FieldZone = ({
                   renderFieldAccessor,
                   enterEditMode,
                   deleteItem: onDeleteItem,
-                  draggableId: `list-item-${item.key}-${index}`,
+                  draggableId: `list-item-${item.key}`,
                 }
 
                 if (widget.CustomListItem) {

@@ -26,7 +26,6 @@ export interface GroupAsArray {
 
 export const Group = {
   addWidget(group: GroupAsArray, newField: {key: string, value: Widget }): GroupAsArray {
-    console.log(group, newField)
     return {
       ...group,
       value: {
@@ -56,7 +55,6 @@ export const Group = {
     }
   },
   toArray(key: string, group: GroupWidget): GroupAsArray {
-    console.log({ key, group })
     return {
       key,
       value: {

@@ -59,7 +59,10 @@ export default class CustomTypeStore implements Store {
           },
           reorderWidget: (start: number, end: number) => {
             this.dispatch({ type: Actions.GroupReorderWidget, payload: { tabId, groupId, start, end } })
-          }
+          },
+          deleteWidget: (key: string) => {
+            this.dispatch({ type: Actions.GroupDeleteWidget, payload: { tabId, groupId, key } })
+          },
         }
       }
     }

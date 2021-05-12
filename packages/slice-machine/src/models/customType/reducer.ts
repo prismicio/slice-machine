@@ -95,6 +95,11 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         return CustomTypeState.updateTab(prevState, tabId)
           (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
       }
+      case Actions.GroupDeleteWidget: {
+        const { tabId, groupId, key } = action.payload as { tabId: string, groupId: string, key: string }
+        return CustomTypeState.updateTab(prevState, tabId)
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.deleteWidget(group, key)))
+      }
       case Actions.GroupReorderWidget: {
         const { tabId, groupId, start, end } = action.payload as { tabId: string, groupId: string, start: number, end: number }
         return CustomTypeState.updateTab(prevState, tabId)
