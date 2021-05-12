@@ -14,21 +14,17 @@ import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";
 import { sliceBuilderWidgetsArray } from "lib/models/common/widgets/asArray";
 
-<<<<<<< HEAD
 import Li from "../../../../../../components/Li";
 import IconButton from "../../../../../../components/IconButton";
 import ItemHeader from "../../../../../../components/ItemHeader";
-=======
 import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
 import NewField from 'lib/builders/common/Zone/Card/components/NewField'
 
 import { findWidgetByConfigOrType } from '../../../../../builders/utils'
 // import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
 
 import * as Widgets from "../../../widgets";
 
-<<<<<<< HEAD
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
@@ -266,7 +262,7 @@ const CustomListItem = ({
               <DragDropContext onDragEnd={() => console.log("REORDER WIDGET")}>
 =======
             <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-              <ItemHeader 
+              <ItemHeader
                 theme={theme}
                 text={item.key}
                 sliceFieldName={renderFieldAccessor(item.key)}
@@ -278,7 +274,7 @@ const CustomListItem = ({
               </Button>
             </Flex>
           </Li>
-          
+
         </Fragment>
         )}
       </Draggable> */}
