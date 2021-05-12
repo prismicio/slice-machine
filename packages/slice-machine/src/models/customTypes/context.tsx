@@ -23,7 +23,7 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
       repeatable,
       tabs: {
         Main: {}
-      }
+      },
     }])
   }
 

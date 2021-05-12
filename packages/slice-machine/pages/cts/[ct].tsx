@@ -16,7 +16,7 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
   )
 }
 
-const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> }) => {
+const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined }) => {
   const [Model, store] = useModelReducer({ customType, remoteCustomType })
   return (<Ct Model={Model} store={store} />)
 }

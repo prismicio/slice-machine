@@ -75,6 +75,7 @@
     "@types/mime": "^2.0.3",
     "@types/puppeteer": "^5.4.3",
     "@types/react": "^17.0.2",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-modal": "^3.12.0",
     "@types/react-select": "^4.0.13",
     "@types/react-tabs": "^2.3.2",

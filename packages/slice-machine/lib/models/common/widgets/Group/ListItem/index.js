@@ -1,7 +1,6 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useContext } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
-import { useContext } from 'react'
 import { ConfigContext } from 'src/config-context'
 
 import { removeKeys } from 'lib/utils'
@@ -21,18 +20,16 @@ import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
 import NewField from 'lib/builders/common/Zone/Card/components/NewField'
 
 import { findWidgetByConfigOrType } from '../../../../../builders/utils'
-// import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
-
 
 import Li from '../../../../../../components/Li'
 import IconButton from '../../../../../../components/IconButton'
 import ItemHeader from '../../../../../../components/ItemHeader'
 
-import * as Widgets from '../../../widgets'
+import * as Widgets from 'lib/models/common/widgets'
 
 import sliceBuilderArray from 'lib/models/common/widgets/sliceBuilderArray'
 
-// import Hint from 'lib/builders/common/Zone/Card/components/Hints'
+import Hint from 'lib/builders/common/Zone/Card/components/Hints'
 
 import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
@@ -40,17 +37,17 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import ListItem from 'components/ListItem'
 
 const CustomListItem = ({
-  item: groupItem,
+  tabId,
+  store,
   widget,
   snapshot,
-  isRepeatable,
   framework,
   showHints,
+  isRepeatable,
+  item: groupItem,
   renderFieldAccessor,
   ...rest
 }) => {
-
-
   const { theme } = useThemeUI()
   const [selectMode, setSelectMode] = useState(false)
   const [newFieldData, setNewFieldData] = useState(null)
@@ -66,7 +63,6 @@ const CustomListItem = ({
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
     const widget = Widgets[widgetTypeName]
-
     store
       .tab(tabId)
       .group(groupItem.key)
@@ -126,20 +122,21 @@ const CustomListItem = ({
                             draggableId: `list-item-${item.key}-${index}`,
                           }
 
-                          // const HintElement = (
-                          //   <Hint
-                          //     item={item}
-                          //     show={showHints}
-                          //     isRepeatable={isRepeatable}
-                          //     renderHintBase={renderHintBase}
-                          //     framework={framework}
-                          //     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
-                          //   />
-                          // )
+                          const HintElement = (
+                            <Hint
+                              item={item}
+                              show={showHints}
+                              isRepeatable={isRepeatable}
+                              renderHintBase={({ item }) => `data.${groupItem.key}.${item.key}`}
+                              framework={framework}
+                              Widgets={Widgets}
+                              typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                            />
+                          )
                           return (
                             <ListItem
                               {...props}
-                              // HintElement={HintElement}
+                              HintElement={HintElement}
                             />
                           )
                         })
@@ -166,97 +163,14 @@ const CustomListItem = ({
           </Box>
         )}
       />
-      {/* <Draggable draggableId={item.key} index={index}>
-        {(provided, snapshot) => (
-          <Fragment>
-            <Li
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              Component={Box}
-              sx={{ p: 0 }}
-            >
-            <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-              <ItemHeader 
-                theme={theme}
-                text={item.key}
-                sliceFieldName={renderFieldAccessor(item.key)}
-                iconButtonProps={provided.dragHandleProps}
-                WidgetIcon={WidgetIcon}
-              />
-              <Button variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
-                Add Field
-              </Button>
-            </Flex>
-          </Li>
-          
-        </Fragment>
-        )}
-      </Draggable> */}
       <SelectFieldTypeModal
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={[]}
+        widgetsArray={sliceBuilderArray}
       />
     </Fragment>
   )
 }
 
 export default CustomListItem
-
-
-/**
- * <Box sx={{ ml: 4 }}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId={"my-unique-id"}>
-                  {(provided) => !snapshot.isDragging && (
-                    <ul ref={provided.innerRef} {...provided.droppableProps}>
-                      {
-                        item.value.fields.map((e, i) => {
-                          return (
-                            <Draggable draggableId={`tab-group-${e.key}`} index={i}>
-                              {(provided) => (
-                                <Fragment>
-                                  <Li
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    Component={Box}
-                                    sx={{ p: 0 }}
-                                  >
-                                  <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-                                    <ItemHeader 
-                                      theme={theme}
-                                      text={e.key}
-                                      sliceFieldName={renderFieldAccessor(e.key)}
-                                      iconButtonProps={provided.dragHandleProps}
-                                      WidgetIcon={WidgetIcon}
-                                    />
-                                  </Flex>
-                                </Li>
-                              </Fragment>
-                              )}
-                            </Draggable>
-                          )
-                        })
-                      }
-
-                      {
-                        newFieldData && (
-                          <NewField
-                            {...newFieldData}
-                            // fields={poolOfFieldsToCheck || fields}
-                            fields={[]}
-                            onSave={(...args) => {
-                              onSaveNewField(...args)
-                              setNewFieldData(null)
-                            }}
-                            onCancelNewField={onCancelNewField}
-                          />
-                        )
-                      }
-                    </ul>
-                  )}
-                </Droppable>
-              </DragDropContext>
-          </Box>
- */

@@ -83,6 +83,7 @@ const Zone = ({
         fields={fields}
         showHints={showHints}
         store={store}
+        Model={Model}
         dataTip={dataTip}
         title={title}
         renderFieldAccessor={renderFieldAccessor}

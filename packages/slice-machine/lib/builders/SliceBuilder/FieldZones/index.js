@@ -6,7 +6,7 @@ import EditModal from '../../common/EditModal'
 
 import { removeKeys } from 'lib/utils'
 import * as Widgets from 'lib/models/common/widgets'
-import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
+import sliceBuilderWidgetsArray from 'lib/models/common/widgets/sliceBuilderArray'
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -34,7 +34,6 @@ const Zones = ({
   }
 
   const _onSave = (fieldType) => ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
-    console.log({ mockValue, initialMockConfig })
     if (mockValue && Object.keys(mockValue).length) {
       store
         .variation(variation.id)
@@ -73,8 +72,6 @@ const Zones = ({
       .variation(variation.id)
       .reorderWidget(fieldType, result.source.index, result.destination.index)
   }
-
-  
 
   return (
     <Fragment>

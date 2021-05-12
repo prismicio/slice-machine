@@ -5,7 +5,7 @@ import EditModal from '../../common/EditModal'
 import Zone from '../../common/Zone'
 
 import { removeKeys } from 'lib/utils'
-import { customTypeBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
+import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
 
 import SliceZone from '../SliceZone'
 import EmptyState from '../SliceZone/EmptyState'
@@ -120,7 +120,7 @@ const TabZone = ({
         poolOfFieldsToCheck={Model.poolOfFieldsToCheck}
         showHints={showHints}
         EditModal={EditModal}
-        widgetsArray={customTypeBuilderWidgetsArray}
+        widgetsArray={ctBuilderArray}
         getFieldMockConfig={getFieldMockConfig}
         onDeleteItem={onDeleteItem}
         onSave={onSave}

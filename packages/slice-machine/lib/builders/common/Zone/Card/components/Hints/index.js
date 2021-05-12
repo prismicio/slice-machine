@@ -10,10 +10,10 @@ const FrameworkRenderers = {
   vanillajs: Renderers.vanillajs
 }
 
-const Hint = ({ framework, show, ...rest }) => { 
+const Hint = ({ framework, show, Widgets, ...rest }) => { 
   if (FrameworkRenderers[framework]) {
     const Render = FrameworkRenderers[framework]
-    return <div style={{ display: show ? 'initial' : 'none' }}><Render {...rest } /></div>
+    return <div style={{ display: show ? 'initial' : 'none' }}><Render Widgets={Widgets} {...rest } /></div>
   }
   console.error(`Framework "${framework}" not supported`)
   return null

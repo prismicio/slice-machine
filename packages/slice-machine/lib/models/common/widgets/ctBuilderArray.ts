@@ -1,4 +1,4 @@
-import * as Widgets from './'
+import * as Widgets from './withGroup'
 
 export default [
   Widgets.UID,

@@ -2,7 +2,6 @@ import { Fragment, useContext } from 'react'
 import { useThemeUI } from 'theme-ui'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { ConfigContext } from 'src/config-context'
-import * as Widgets from '../../../../models/common/widgets'
 
 import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 
@@ -22,12 +21,15 @@ import Hint from './components/Hints'
 
 import { findWidgetByConfigOrType } from '../../../utils'
 
+import * as Widgets from 'lib/models/common/widgets/withGroup'
+
 import Li from 'components/Li'
 // import NewField from './components/NewField'
 
 const FieldZone = ({
   fields,
   store,
+  Model,
   title,
   tabId,
   enterEditMode,
@@ -57,15 +59,15 @@ const FieldZone = ({
                   )
                 }
 
-                console.log({
-                  renderFieldAccessor
-                })
-
                 const props = {
                   item,
                   index,
+                  store,
+                  Model,
+                  tabId,
                   widget,
                   snapshot,
+                  showHints,
                   key: item.key,
                   enterSelectMode,
                   renderFieldAccessor,
@@ -77,7 +79,7 @@ const FieldZone = ({
                 if (widget.CustomListItem) {
                   const { CustomListItem } = widget
                   return (
-                    <CustomListItem {...props} />
+                    <CustomListItem {...props} framework={framework} />
                   )
                 }
 
@@ -88,6 +90,7 @@ const FieldZone = ({
                     isRepeatable={isRepeatable}
                     renderHintBase={renderHintBase}
                     framework={framework}
+                    Widgets={Widgets}
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                   />
                 )
