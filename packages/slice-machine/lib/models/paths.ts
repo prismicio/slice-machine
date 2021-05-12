@@ -3,6 +3,7 @@ import path from 'path'
 export const paths = (cwd: string, prefix: string) => ({
   value: () => path.join(cwd, prefix),
   customType: (id: string) => ({
+    value: () => path.join(paths(cwd, prefix).value()),
     model:() => path.join(paths(cwd, prefix).value(), id, 'index.json'),
     mock:() => path.join(paths(cwd, prefix).value(), id, 'mocks.json'),
   }),

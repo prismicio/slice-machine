@@ -1,8 +1,8 @@
 import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
-import { CustomType } from '../../../lib/models/common/CustomType'
-import { TabsAsObject, TabsAsArray } from '../../../lib/models/common/CustomType/tab'
-import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
+import { CustomType } from '@models/common/CustomType'
+import { TabsAsObject, TabsAsArray } from '@models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'

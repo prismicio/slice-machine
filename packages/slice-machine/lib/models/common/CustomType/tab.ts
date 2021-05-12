@@ -1,7 +1,7 @@
 import { Widget } from '../widgets'
 import { SliceZone, SliceZoneAsArray } from './sliceZone'
 import { FieldType } from './fields'
-import { GroupAsArray, Group, GroupWidget } from './group'
+import { GroupAsArray, Group, GroupWidget, GroupFieldsAsArray } from './group'
 
 export interface TabAsArray {
   key: string
@@ -63,16 +63,19 @@ export const Tab = {
     }
   },
   toObject(tab: TabAsArray): TabAsObject {
-    const tabAsObject = tab.value.reduce((acc, { key, value }) => {
+    const tabAsObject = tab.value.reduce<TabAsObject>((acc: TabAsObject, { key, value }: TabAsArrayElement) => {
       if (value.type === FieldType.Group) {
+        const groupValue = value as { type: string, label: string, fields: GroupFieldsAsArray }      
         return {
           ...acc,
-          [key]: Group.toObject({ key, value: { type: value.type, fields: value.fields } } as GroupAsArray)
+          [key]: Group.toObject({ key, value: { type: groupValue.type, fields: groupValue.fields } } as GroupAsArray)
         }
-      }
-      return {
-        ...acc,
-        [key]: value
+      } else {
+        const fieldValue = value as Widget
+        return {
+          ...acc,
+          [key]: fieldValue
+        }
       }
     }, {})
     if (tab.sliceZone) {
@@ -103,7 +106,7 @@ export const Tab = {
   },
   addWidget(tab: TabAsArray, id: string, widget: Widget | GroupWidget): TabAsArray {
     const elem: TabAsArrayElement =
-      widget.type === "Group"
+      widget.type === FieldType.Group
       ? Group.toArray(id, widget as GroupWidget)
       : { key: id, value: widget } as {key: string, value: Widget}
 
@@ -162,20 +165,30 @@ export const Tab = {
       sliceZone: null
     }
   },
+
+  // interface OrganisedFields {
+  //   fields: ReadonlyArray<{key: string, value: Widget}>
+  //   groups: ReadonlyArray<GroupAsArray>
+  //   sliceZone?: SliceZone
+  // }
+
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray('', tab)
-    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce((acc, curr) => {
-      if (curr.value.type === 'Group') {
+    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: TabAsArrayElement) => {
+      if (curr.value.type === FieldType.Group) {
+        const groupValue = curr as GroupAsArray
         return {
           ...acc,
-          groups: [...acc.groups, curr]
+          groups: [...acc.groups, groupValue]
+        }
+      } else {
+        const fieldValue = curr as {key: string, value: Widget}
+        return {
+          ...acc,
+          fields: [...acc.fields, fieldValue]
         }
       }
-      return {
-        ...acc,
-        fields: [...acc.fields, curr]
-      }
-    }, { fields: [], groups: [] } as OrganisedFields)
+    }, { fields: [], groups: [] })
     return {
       fields,
       groups,

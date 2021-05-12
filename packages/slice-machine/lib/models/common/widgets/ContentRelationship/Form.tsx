@@ -1,17 +1,15 @@
 import * as yup from 'yup'
-import Select, { OptionTypeBase } from 'react-select'
-import { useContext, useEffect, useState } from 'react'
-import { Text, Button, Label, Checkbox, Flex, Box } from 'theme-ui'
+import Select from 'react-select'
+import { useContext } from 'react'
+import { Label, Box } from 'theme-ui'
 
 import { CustomTypesContext } from "src/models/customTypes/context"
 
-import { CheckBox as CheckBoxConstructor } from 'lib/forms/fields'
 import { DefaultFields } from 'lib/forms/defaults'
 
 import WidgetFormField from 'lib/builders/common/EditModal/Field'
 
 import { Col, Flex as FlexGrid } from 'components/Flex'
-import IconButton from 'components/IconButton'
 
 interface FormValues {
   id: string,

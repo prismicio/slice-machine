@@ -16,15 +16,6 @@ async function handleChangelog(params) {
   }
 }
 
-function writeLatest(pathToSmFile, version) {
-  try {
-    const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'))
-    fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: version }, null, 2))
-  } catch(e) {
-    console.log('[postinstall] Could not write sm.json file. Exiting...')
-  }
-}
-
 async function handleMigration(cwd) {
   const pathToPkg = path.join(cwd, 'package.json')
   const pathToSmFile = path.join(cwd, 'sm.json')
@@ -32,8 +23,7 @@ async function handleMigration(cwd) {
   const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
   const cleanVersion = version.split('-')[0]
 
-  await handleChangelog({ cwd, pathToPkg, pathToSmFile })
-  writeLatest(pathToSmFile, cleanVersion)
+  return handleChangelog({ cwd, pathToPkg, pathToSmFile })
 }
 
 async function run() {

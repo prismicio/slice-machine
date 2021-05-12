@@ -1,6 +1,6 @@
-import { Tab } from '../../../../lib/models/common/CustomType/tab'
-import { fetchApi } from '../../../../lib/builder/fetch'
-import { CustomTypeState } from '../../../../lib/models/ui/CustomTypeState'
+import { fetchApi } from '@lib/builder/fetch'
+import { Tab } from '@models/common/CustomType/tab'
+import { CustomTypeState } from '@models/ui/CustomTypeState'
 import ActionType from './'
 
 

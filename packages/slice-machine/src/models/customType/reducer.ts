@@ -1,11 +1,11 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
-import { Tab } from '../../../lib/models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
+import { Tab } from '@models/common/CustomType/tab'
 
 import Actions from './actions'
-import { Widget } from '../../../lib/models/common/widgets'
-import { Group, GroupWidget, GroupAsArray,} from '../../../lib/models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
+import { Widget } from '@models/common/widgets'
+import { Group, GroupWidget, GroupAsArray,} from '@models/common/CustomType/group'
+import { SliceZone, SliceZoneAsArray } from '@models/common/CustomType/sliceZone'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {

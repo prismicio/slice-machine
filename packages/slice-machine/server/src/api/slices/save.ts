@@ -1,13 +1,15 @@
-import { createScreenshotUrl } from '../../../../lib/utils'
-import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
-import { CustomPaths, GeneratedPaths } from '../../../../lib/models/paths'
+/* global variable define in server/src/index.js */
+declare var appRoot: string;
+import { createScreenshotUrl } from '@lib/utils'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
+import { CustomPaths, GeneratedPaths } from '@models/paths'
 import Storybook from '../storybook'
 
-import { getEnv } from '../../../../lib/env'
-import mock from '../../../../lib/mock/Slice'
-import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
-import Files from '../../../../lib/utils/files'
-import { Preview } from '../../../../lib/models/common/Component'
+import { getEnv } from '@lib/env'
+import mock from '@lib/mock/Slice'
+import { insert as insertMockConfig } from '@lib/mock/misc/fs'
+import Files from '@lib/utils/files'
+import { Preview } from '@models/common/Component'
 import { handleStorybookPreview } from '../common/storybook'
 
  export default async function handler(req: { body: any }) {
@@ -57,7 +59,7 @@ import { handleStorybookPreview } from '../common/storybook'
 
     if(!hasCustomStories) {
       console.log('[update]: generating stories')
-      Storybook.generateStories(env.cwd, from, sliceName)
+      Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     }
     
     console.log('[update]: generating screenshots previews')

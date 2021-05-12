@@ -1,4 +1,3 @@
-import { WidgetsArea } from "../../../../../lib/models/common/Variation";
 import Actions from './'
 
 export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {

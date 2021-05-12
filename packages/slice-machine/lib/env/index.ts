@@ -8,7 +8,6 @@ import createComparator from './semver'
 
 import { getConfig as getMockConfig } from '../mock/misc/fs'
 
-import { SupportedFrameworks } from '../consts'
 import Files from '../utils/files'
 import { SMConfig } from '../models/paths'
 
@@ -16,19 +15,8 @@ import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
-
+import { detectFramework } from '../framework'
 const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH || '')
-
-function getFramework(): string {
-  const pkgFilePath = path.resolve(cwd, 'package.json')
-  const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath)
-
-  const deps = { ...peerDependencies, ...devDependencies, ...dependencies }
-
-  const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value])
-
-  return frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : 'vanillajs'
-}
 
 const compareNpmVersions = createComparator()
 
@@ -123,7 +111,7 @@ export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerEr
       currentVersion,
       updateAvailable,
       mockConfig,
-      framework: getFramework(),
+      framework: detectFramework(cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client
     }

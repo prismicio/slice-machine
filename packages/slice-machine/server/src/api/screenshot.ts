@@ -1,12 +1,12 @@
 import puppeteer from 'puppeteer'
 
-import { getEnv } from '../../../lib/env'
-import { Preview } from '../../../lib/models/common/Component'
-import { createScreenshotUrl } from '../../../lib/utils'
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import { getEnv } from '@lib/env'
+import { Preview } from '@models/common/Component'
+import { createScreenshotUrl } from '@lib/utils'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
 
-import { generatePreview } from './common/utils'
-import { GeneratedPaths } from '../../../lib/models/paths'
+import { generatePreview } from './common/storybook'
+import { GeneratedPaths } from '@models/paths'
 
 export default async function handler({ from, sliceName, variationId }: { from: string, sliceName: string, variationId: string }): Promise<Preview | { err: Error, reason: string }> {
   const { env } = await getEnv()

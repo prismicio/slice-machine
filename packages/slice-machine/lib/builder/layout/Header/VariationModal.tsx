@@ -70,7 +70,20 @@ const VariationModal: React.FunctionComponent<{
 
   useEffect(() => {
     reset()
-  }, [initialVariation])
+  }, [initialVariation, isOpen])
+
+  async function handleSubmit() {
+    const data = { id: generatedId, name, origin }
+    const errors = validateForm(data)
+    if(Object.keys(errors).length) setErrors(errors)
+    else {
+      const copiedVariation = variations.find(v => v.id === origin.value)
+      if(copiedVariation) {
+        onSubmit(generatedId, name, copiedVariation)
+        handleClose()
+      }
+    }
+  }
 
   return (
     <Modal
@@ -88,21 +101,15 @@ const VariationModal: React.FunctionComponent<{
       }}
     >
       <Formik
-          initialValues={{ id: generatedId, name, origin }}
-          onSubmit={async () => {
-            const data = { id: generatedId, name, origin }
-            const errors = validateForm(data)
-            if(Object.keys(errors).length) setErrors(errors)
-            else {
-              const copiedVariation = variations.find(v => v.id === origin.value)
-              if(copiedVariation) {
-                onSubmit(generatedId, name, copiedVariation)
-                handleClose()
-              }
-            }
-          }}
+          initialValues={{ id: generatedId, name, origin } as any}
+          onSubmit={handleSubmit}
         >
-          <Form id={'variation-add'}>
+          <Form id={'variation-add'} onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              handleSubmit();
+            }
+          }}>
             <Box>
               <Card
                 sx={{textAlign: "left"}}

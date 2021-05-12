@@ -17,14 +17,15 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
   const [cts, setCts] = useState(customTypes)
 
   const onCreate = (id: string, { label, repeatable }: { label: string, repeatable: boolean }) => {
-    setCts([...cts, {
+    setCts(cts.map(ct => ({
+      ...ct,
       id,
       label,
       repeatable,
       tabs: {
         Main: {}
-      },
-    }])
+      }
+    })))
   }
 
   return (

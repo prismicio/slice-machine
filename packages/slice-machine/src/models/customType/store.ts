@@ -1,11 +1,10 @@
-import Store from '../../../lib/models/ui/Store'
-import { Widget } from '../../../lib/models/common/widgets'
-import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
+import Store from '@models/ui/Store'
+import { Widget } from '@models/common/widgets'
+import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actions'
 
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
-import { group } from 'yargs'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}

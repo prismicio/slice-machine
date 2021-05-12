@@ -4,10 +4,14 @@ module.exports = {
     ["module-resolver", {
       "root": ["./"],
       "alias": {
-        "src": "./src",
-        "components": "./components",
-        "lib": "./lib",
-        "models": "./lib/models"
+        "@": "./",
+        "@lib": "./lib",
+        "@utils": "lib/utils",
+        "@builders": "./lib/builders",
+        "@models": "./lib/models",
+        "@src": "./src",
+        "@hooks": "./hooks",
+        "@components": "./components"
       }
     }]
   ]

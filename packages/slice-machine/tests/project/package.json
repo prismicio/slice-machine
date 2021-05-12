@@ -30,6 +30,7 @@
     "storybook": "start-storybook -p 6006",
     "slicemachine": "node ../../start.js --port 9999",
     "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --exit-zero-on-changes --no-interactive"
+    "chromatic": "npx chromatic --exit-zero-on-changes --no-interactive",
+    "postinstall": "node ../../postinstall.js"
   }
 }
