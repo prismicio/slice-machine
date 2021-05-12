@@ -1,10 +1,10 @@
 import path from 'path'
 import glob from 'glob'
-import Environment from '@models/common/Environment'
-import { CustomType } from '@models/common/CustomType'
-import { TabsAsObject } from '@models/common/CustomType/tab'
-import Files from '@utils/files'
-import { CustomTypesPaths } from '@lib/models/paths'
+import Environment from '../../../../lib/models/common/Environment'
+import { CustomType } from '../../../../lib/models/common/CustomType'
+import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
+import Files from '../../../../lib/utils/files'
+import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 const handlePath = (acc: Array<CustomType<TabsAsObject>>, p: string) => {
   const key = path.basename(path.dirname(p))

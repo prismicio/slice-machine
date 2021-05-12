@@ -1,9 +1,9 @@
-import { getEnv } from '@lib/env'
-import Files from '@utils/files'
+import { getEnv } from '../../../../lib/env'
+import Files from '../../../../lib/utils/files'
 
-import DefaultClient from '@models/common/http/DefaultClient'
-import FakeClient, { FakeResponse } from '@models/common/http/FakeClient'
-import { CustomTypesPaths } from '@models/paths'
+import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
+import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
+import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 const onError = (r: Response | FakeResponse | null, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),

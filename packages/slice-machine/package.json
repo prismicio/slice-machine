@@ -3,6 +3,9 @@
   "version": "0.0.46-alpha.0",
   "private": false,
   "license": "MIT",
+  "_moduleAliases": {
+    "foo": "build"
+  },
   "scripts": {
     "dev": "next dev",
     "dev:static": "yarn build && yarn export",

@@ -1,5 +1,5 @@
-import { fetchApi } from '@lib/builder/fetch'
-import { CustomTypeState } from '@models/ui/CustomTypeState'
+import { fetchApi } from '../../../../lib/builder/fetch'
+import { CustomTypeState } from '../../../../lib/models/ui/CustomTypeState'
 import ActionType from './'
 
 
