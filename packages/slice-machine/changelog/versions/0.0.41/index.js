@@ -6,10 +6,7 @@ const { shouldIRun } = require('../../common')
 const { getInfoFromPath } = require('../../../build/lib/utils/lib')
 
 module.exports = {
-  test: function test({ cwd }) {
-    const smFolder = path.join(cwd, '.slicemachine')
-    return !(fs.existsSync(smFolder))
-  },
+  version: '0.0.41',
   main: async function main(ignorePrompt, { cwd, pathToSmFile }) {
     const { yes } = ignorePrompt ? { yes: true } : await (async () => {
       console.info('\nSliceMachine nows supports both default and custom previews (screenshots)!')

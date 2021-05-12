@@ -1,6 +1,6 @@
 import { Flex, Box } from 'theme-ui'
 
-export default ({ children, SideBar, sx, ...rest }) => (
+const FlexEditor = ({ children, SideBar, sx, ...rest }) => (
   <Flex
     sx={{
       display: 'flex',
@@ -26,3 +26,5 @@ export default ({ children, SideBar, sx, ...rest }) => (
     {SideBar}
   </Flex>
 )
+
+export default FlexEditor
