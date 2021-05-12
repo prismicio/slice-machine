@@ -20,7 +20,7 @@ export const sliceBuilderWidgetsArray = [
 
 export const customTypeBuilderWidgetsArray = [
   Widgets.UID,
-  Widgets.Group,
+  // Widgets.Group,
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,

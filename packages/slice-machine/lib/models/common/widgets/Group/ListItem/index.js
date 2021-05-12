@@ -196,7 +196,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={sliceBuilderArray}
+        widgetsArray={[]}
       />
     </Fragment>
   )
