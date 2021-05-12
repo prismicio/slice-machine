@@ -1,18 +1,18 @@
-const  BooleanField = require('./Boolean').BooleanField
-const  Color = require('./Color').Color
-const  ContentRelationship = require('./ContentRelationship').ContentRelationship
-const  DateField = require('./Date').DateField
-const  Embed = require('./Embed').Embed
-const  GeoPoint = require('./GeoPoint').GeoPoint
-const  Image = require('./Image').Image
-const  Group = require('./Group').Group
-const  Link = require('./Link').Link
-const  Number = require('./Number').Number
-const  Select = require('./Select').Select
-const  StructuredText = require('./StructuredText').StructuredText
-const  Text = require('./Text').Text
-const  Timestamp = require('./Timestamp').Timestamp
-const  UID = require('./UID').UID
+import{ BooleanField } from './Boolean'
+import{ Color } from './Color'
+import{ ContentRelationship } from './ContentRelationship'
+import{ DateField } from './Date'
+import{ Embed } from './Embed'
+import{ GeoPoint } from './GeoPoint'
+import{ Image } from './Image'
+// import{ Group } from './Group'
+import{ Link } from './Link'
+import{ Number } from './Number'
+import{ Select } from './Select'
+import{ StructuredText } from './StructuredText'
+import{ Text } from './Text'
+import{ Timestamp } from './Timestamp'
+import{ UID } from './UID'
 
 // console.log({ StructuredText })
 export {
@@ -23,7 +23,7 @@ export {
   Embed,
   GeoPoint,
   Image,
-  Group,
+  // Group,
   Link,
   Number,
   Select,
@@ -47,5 +47,5 @@ export type Widget =  BooleanField  |
                       Text              |
                       Timestamp         |
                       UID               |
-                      Group             |
+                      // Group             |
                       ContentRelationship

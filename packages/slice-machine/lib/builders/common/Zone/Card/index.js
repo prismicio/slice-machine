@@ -9,6 +9,7 @@ import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 import {
   Button,
   Flex,
+  Text,
   Heading,
 } from 'theme-ui'
 
@@ -20,6 +21,8 @@ import ListItem  from 'components/ListItem'
 import Hint from './components/Hints'
 
 import { findWidgetByConfigOrType } from '../../../utils'
+
+import Li from 'components/Li'
 // import NewField from './components/NewField'
 
 const FieldZone = ({
