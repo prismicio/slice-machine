@@ -1,5 +1,5 @@
 {
-  "id": "homepage",
+  "id": "Homepage",
   "label": "homepage",
   "status": true,
   "repeatable": false,
@@ -12,26 +12,34 @@
           "label": "rt"
         }
       },
+      "group": {
+        "type": "Group",
+        "config": {
+          "fields": {
+            "ttrr": {
+              "type": "Number",
+              "config": {
+                "label": "number",
+                "placeholder": ""
+              }
+            },
+            "link": {
+              "type": "Link",
+              "config": {
+                "label": "",
+                "placeholder": "",
+                "allowTargetBlank": true
+              }
+            }
+          }
+        }
+      },
       "sdf": {
         "type": "Image",
         "config": {
           "label": "",
           "constraint": {},
           "thumbnails": []
-        }
-      },
-      "group": {
-        "type": "Group",
-        "config": {
-          "fields": {
-            "tt": {
-              "type": "Number",
-              "config": {
-                "label": "number"
-              }
-            }
-          },
-          "label": "My Group!"
         }
       },
       "body": {

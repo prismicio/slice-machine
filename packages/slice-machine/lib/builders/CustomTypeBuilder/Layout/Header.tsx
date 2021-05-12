@@ -23,8 +23,6 @@ const Header = ({
 }) => {
   const { addToast } = useToasts();
 
-  console.log(Model);
-
   const buttonProps = (() => {
     if (Model.isTouched) {
       return {

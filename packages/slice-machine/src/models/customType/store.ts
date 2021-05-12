@@ -56,6 +56,9 @@ export default class CustomTypeStore implements Store {
           addWidget: (id: string, widget: Widget) => {
             this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, widget } })
           },
+          replaceWidget: (previousKey: string, newKey: string, value: Widget) => {
+            this.dispatch({ type: Actions.GroupReplaceWidget, payload: { tabId, groupId, previousKey, newKey, value } })
+          },
           reorderWidget: (start: number, end: number) => {
             this.dispatch({ type: Actions.GroupReorderWidget, payload: { tabId, groupId, start, end } })
           },

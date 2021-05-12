@@ -20,7 +20,8 @@ enum ActionType {
 
   GroupAddWidget =  'group-add-widget',
   GroupReorderWidget = 'group-reorder-widget',
-  GroupDeleteWidget = 'group-delete-widget'
+  GroupDeleteWidget = 'group-delete-widget',
+  GroupReplaceWidget = 'group-replace-widget'
 }
 
 export default ActionType

@@ -115,7 +115,7 @@ export const Tab = {
       value: [...tab.value, elem]
     }
   },
-  replaceWidget(tab: TabAsArray, previousKey: string, newKey: string, value: Widget | GroupAsArray): TabAsArray {
+  replaceWidget(tab: TabAsArray, previousKey: string, newKey: string, value: Widget): TabAsArray {
     return {
       ...tab,
       value: tab.value.map(t => {

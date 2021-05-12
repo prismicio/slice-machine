@@ -34,6 +34,15 @@ export const Group = {
       }
     }
   },
+  deleteWidget(group: GroupAsArray, wkey: string): GroupAsArray {
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: group.value.fields.filter(({ key }) => key !== wkey)
+      }
+    }
+  },
   reorderWidget(group: GroupAsArray, start: number, end: number): GroupAsArray {
     const reorderedWidget: {key: string, value: Widget} | undefined = group.value.fields[start]
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
@@ -51,6 +60,23 @@ export const Group = {
       value: {
         ...group.value,
         fields: reorderedArea
+      }
+    }
+  },
+  replaceWidget(group: GroupAsArray, previousKey: string, newKey: string, value: Widget): GroupAsArray {
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: group.value.fields.map(t => {
+          if (t.key === previousKey) {
+            return {
+              key: newKey,
+              value
+            }
+          }
+          return t
+        })
       }
     }
   },

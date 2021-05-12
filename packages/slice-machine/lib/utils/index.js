@@ -1,12 +1,12 @@
 import * as yup from 'yup'
-import { DefaultFields } from './forms/defaults'
+import { DefaultFields } from '../forms/defaults'
 import {
   createInitialValues,
   createValidationSchema,
-} from './forms'
+} from '../forms'
 
-import Files from './utils/files'
-import { hyphenate } from './utils/str'
+import Files from './files'
+import { hyphenate } from './str'
 
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj

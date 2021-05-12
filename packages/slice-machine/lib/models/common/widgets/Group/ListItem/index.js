@@ -1,7 +1,4 @@
-import { Fragment, useState, useContext } from 'react'
-import { Draggable } from 'react-beautiful-dnd'
-import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
-import { ConfigContext } from 'src/config-context'
+import { Fragment, useState } from 'react'
 
 import { removeKeys } from 'lib/utils'
 
@@ -18,12 +15,9 @@ import {
 
 import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
 import NewField from 'lib/builders/common/Zone/Card/components/NewField'
+import EditModal from 'lib/builders/common/EditModal'
 
 import { findWidgetByConfigOrType } from '../../../../../builders/utils'
-
-import Li from '../../../../../../components/Li'
-import IconButton from '../../../../../../components/IconButton'
-import ItemHeader from '../../../../../../components/ItemHeader'
 
 import * as Widgets from 'lib/models/common/widgets'
 
@@ -31,14 +25,12 @@ import sliceBuilderArray from 'lib/models/common/widgets/sliceBuilderArray'
 
 import Hint from 'lib/builders/common/Zone/Card/components/Hints'
 
-import { AiOutlineEdit } from 'react-icons/ai'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-
 import ListItem from 'components/ListItem'
 
 const CustomListItem = ({
   tabId,
   store,
+  Model,
   widget,
   snapshot,
   framework,
@@ -49,17 +41,26 @@ const CustomListItem = ({
   renderFieldAccessor,
   ...rest
 }) => {
-  const { theme } = useThemeUI()
   const [selectMode, setSelectMode] = useState(false)
   const [newFieldData, setNewFieldData] = useState(null)
+  const [editModalData, setEditModalData] = useState({ isOpen: false })
 
   const onSelectFieldType = (widgetTypeName) => {
     setNewFieldData({ widgetTypeName })
     setSelectMode(false)
   }
 
+  const getFieldMockConfig = ({ apiId }) => {
+    console.log('mock config', Model.mockConfig?.[tabId]?.[groupItem.key]?.[apiId])
+    return Model.mockConfig?.[tabId]?.[groupItem.key]?.[apiId]
+  }
+
   const onCancelNewField = () => {
     setNewFieldData(null)
+  }
+
+  const closeEditModal = () => {
+    setEditModalData({ isOpen: false })
   }
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
@@ -71,6 +72,36 @@ const CustomListItem = ({
         type: widget.TYPE_NAME,
         [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
       })
+  }
+
+  const onSaveField = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
+    if (mockValue && Object.keys(mockValue).length) {
+      store
+        .tab(tabId)
+        .updateWidgetMockConfig(initialMockConfig, apiId, newKey, mockValue)
+    } else {
+      store
+        .tab(tabId)
+        .deleteWidgetMockConfig(initialMockConfig, apiId)
+    }
+
+    const widget = Widgets[initialModelValues.type]
+    if (!widget) {
+      console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
+      return
+    }
+
+    store
+      .tab(tabId)
+      .group(groupItem.key)
+      .replaceWidget(
+        apiId,
+        newKey,
+        {
+          type: initialModelValues.type,
+          [widget.customAccessor || 'config']: removeKeys(value, ['id', 'type'])
+        }
+      )
   }
 
   const onDragEnd = (result) => {
@@ -85,6 +116,10 @@ const CustomListItem = ({
 
   const onDeleteItem = (key) => {
     store.tab(tabId).group(groupItem.key).deleteWidget(key)
+  }
+
+  const enterEditMode = (field) =>{
+    setEditModalData({ isOpen: true, field })
   }
 
   return (
@@ -111,9 +146,7 @@ const CustomListItem = ({
                           const { value: { config, type } } = item
                           const widget = findWidgetByConfigOrType(Widgets, config, type)
                           if (!widget) {
-                            return (
-                              <Li><Text>Field type "{type}" not supported</Text></Li>
-                            )
+                            return null
                           }
 
                           const props = {
@@ -123,7 +156,7 @@ const CustomListItem = ({
                             snapshot,
                             key: item.key,
                             renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
-                            // enterEditMode,
+                            enterEditMode,
                             deleteItem: onDeleteItem,
                             draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           }
@@ -174,6 +207,14 @@ const CustomListItem = ({
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
         widgetsArray={sliceBuilderArray}
+      />
+      <EditModal
+        Model={Model}
+        data={editModalData}
+        close={closeEditModal}
+        onSave={onSaveField}
+        fields={groupItem.value.fields}
+        getFieldMockConfig={getFieldMockConfig}
       />
     </Fragment>
   )

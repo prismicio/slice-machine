@@ -89,7 +89,6 @@ const TabZone = ({
           [widget.customAccessor || 'config']: removeKeys(value, ['id', 'type'])
         }
       )
-
   }
 
   const onCreateSliceZone = () => {
