@@ -50,7 +50,7 @@ const schema = yup.object().shape({
   config: configSchema,
 });
 
-export default {
+export const ContentRelationship = {
   create,
   Meta,
   schema,

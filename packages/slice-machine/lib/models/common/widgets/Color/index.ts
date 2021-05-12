@@ -19,7 +19,7 @@ const Meta = {
 
 const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Color')
 
-export default {
+export const Color = {
   handleMockContent,
   handleMockConfig,
   create,

@@ -38,7 +38,7 @@ const Meta = {
   description: 'Text content'
 }
 
-export default {
+export const Text = {
   create,
   MockConfigForm,
   handleMockConfig,

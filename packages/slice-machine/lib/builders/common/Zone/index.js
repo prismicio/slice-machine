@@ -11,8 +11,12 @@ import {
 
 import Card from './Card'
 
+import { Heading, Button } from 'theme-ui'
+
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import NewField from './Card/components/NewField'
+
+import ZoneHeader from './components/ZoneHeader'
 
 const Zone = ({
   Model,
@@ -60,6 +64,19 @@ const Zone = ({
 
   return (
     <Fragment>
+      <ZoneHeader
+        Heading={<Heading as="h6">{title}</Heading>}
+        Actions={(
+          <Fragment>
+            <Button variant="buttons.darkSmall" onClick={() => console.log('Show widgets')}>
+              Show Code Widgets
+            </Button>
+            <Button ml={2} variant="buttons.darkSmall" onClick={() => enterSelectMode()}>
+              Add Widget
+            </Button>
+          </Fragment>
+        )}
+      />
       <Card
         tabId={tabId}
         isRepeatable={isRepeatable}

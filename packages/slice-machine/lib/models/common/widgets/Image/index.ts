@@ -51,7 +51,7 @@ const Meta = {
   description: 'A responsive image field with constraints'
 }
 
-export default {
+export const Image = {
   Meta,
   Form,
   schema,

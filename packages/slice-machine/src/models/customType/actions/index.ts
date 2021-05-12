@@ -19,6 +19,7 @@ enum ActionType {
   DeleteWidgetMockConfig = 'tab-delete-widget-mock-config',
 
   GroupAddWidget =  'group-add-widget',
+  GroupReorderWidget = 'group-reorder-widget'
 }
 
 export default ActionType

@@ -1,6 +1,8 @@
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { useThemeUI } from 'theme-ui'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { ConfigContext } from 'src/config-context'
+import * as Widgets from '../../../../models/common/widgets'
 
 import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 
@@ -13,7 +15,11 @@ import {
 import Card from 'components/Card'
 import Tooltip from 'components/Tooltip'
 
-import ListItem  from './components/ListItem'
+import ListItem  from 'components/ListItem'
+
+import Hint from './components/Hints'
+
+import { findWidgetByConfigOrType } from '../../../utils'
 // import NewField from './components/NewField'
 
 const FieldZone = ({
@@ -32,81 +38,70 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable
 }) => {
-  const { theme } = useThemeUI()
-
+  const { env: { framework } } = useContext(ConfigContext)
   return (
-    <Card
-      bg="gray"
-      bodySx={{ p: 2 }}
-      footerSx={{ px: 4, py: 3, display: 'flex', justifyContent: 'flex-end'}}
-      Header={({ radius }) => (
-        <Flex
-          sx={{
-            p: 3,
-            bg: 'headSection',
-            alignItems: 'center',
-            borderTopLeftRadius: radius,
-            borderTopRightRadius: radius,
-            borderBottom: t => `1px solid ${t.colors.borders}`,
-          }}
-        >
-          <Tooltip id="question-circle" />
-          <Heading as="h5" mr={2}>{title}</Heading>
-          <FaRegQuestionCircle
-            data-for="question-circle"
-            color={theme.colors.icons}
-            data-tip={dataTip}
-            style={{ position: 'relative', top: '1px' }}
-          />
-        </Flex>
-      )}
-      Body={() => (
-        <Fragment>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={title}>
-              {(provided) => (
-                <ul ref={provided.innerRef} {...provided.droppableProps}>
-                  {fields.map((item, index) => (
-                    <ListItem
-                      store={store}
-                      item={item}
-                      key={item.key}
-                      index={index}
-                      tabId={tabId}
-                      enterSelectMode={enterSelectMode}
-                      renderFieldAccessor={renderFieldAccessor}
-                      enterEditMode={enterEditMode}
-                      deleteItem={onDeleteItem}
-                      renderHintBase={renderHintBase}
-                      isRepeatable={isRepeatable}
-                      showHints={showHints}
-                    />
-                  ))}
-                  {provided.placeholder}
-                  <NewFieldC />
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </Fragment>
-      )}
-      Footer={() => (
-        <Button
-          onClick={enterSelectMode}
-          sx={{
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '54px',
-            width: '54px',
-            cursor: 'pointer'
-          }}
-        >
-          <FaPlus color="#FFF" size={16} />
-        </Button>
-      )}
-    />
+    <Fragment>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId={title}>
+          {(provided, snapshot) => (
+            <ul ref={provided.innerRef} {...provided.droppableProps}>
+              { fields.map((item, index) => {
+                const { value: { config, type } } = item
+                const widget = findWidgetByConfigOrType(Widgets, config, type)
+                if (!widget) {
+                  return (
+                    <Li><Text>Field type "{type}" not supported</Text></Li>
+                  )
+                }
+
+                console.log({
+                  renderFieldAccessor
+                })
+
+                const props = {
+                  item,
+                  index,
+                  widget,
+                  snapshot,
+                  key: item.key,
+                  enterSelectMode,
+                  renderFieldAccessor,
+                  enterEditMode,
+                  deleteItem: onDeleteItem,
+                  draggableId: `list-item-${item.key}-${index}`,
+                }
+
+                if (widget.CustomListItem) {
+                  const { CustomListItem } = widget
+                  return (
+                    <CustomListItem {...props} />
+                  )
+                }
+
+                const HintElement = (
+                  <Hint
+                    item={item}
+                    show={showHints}
+                    isRepeatable={isRepeatable}
+                    renderHintBase={renderHintBase}
+                    framework={framework}
+                    typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                  />
+                )
+                return (
+                  <ListItem
+                    {...props}
+                    HintElement={HintElement}
+                  />
+                )
+              })}
+              {provided.placeholder}
+              <NewFieldC />
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </Fragment>
   )
 }
 

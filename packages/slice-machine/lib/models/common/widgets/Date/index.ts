@@ -20,7 +20,7 @@ const Meta = {
   description: 'A calendar date picker'
 }
 
-export default {
+export const DateField = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
@@ -32,4 +32,4 @@ export default {
 }
 
 
-export interface Date extends TypeOf<typeof schema> {}
+export interface DateField extends TypeOf<typeof schema> {}

@@ -51,7 +51,8 @@ const codeByWidgetType = {
 const toReact = ({ item, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item })
 
-  const code = codeByWidgetType[typeName](hintBase)
+  const maybeCodeRenderer = codeByWidgetType[typeName]
+  const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : null
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code
 
   return <CodeBlock className="language-jsx">{withRepeat}</CodeBlock>

@@ -20,26 +20,13 @@
           "thumbnails": []
         }
       },
-      "group": {
-        "type": "Group",
+      "test": {
+        "type": "StructuredText",
         "config": {
-          "fields": {
-            "tt": {
-              "type": "Number",
-              "config": {
-                "label": "number"
-              }
-            },
-            "test": {
-              "type": "Boolean",
-              "config": {
-                "label": "",
-                "placeholder_false": "false",
-                "placeholder_true": "true",
-                "default_value": true
-              }
-            }
-          }
+          "label": "",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
         }
       },
       "body": {
