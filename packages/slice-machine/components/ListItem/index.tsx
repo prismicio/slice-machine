@@ -36,6 +36,7 @@ const ListItem = (props) => {
     HintElement,
 
     CustomEditElement,
+    CustomEditElements,
 
     // renderHintBase,
     // isRepeatable,
@@ -72,6 +73,7 @@ const ListItem = (props) => {
                 WidgetIcon={widget.Meta.icon}
               />
               <Flex sx={{ alignItems: "center" }}>
+                { CustomEditElements ? CustomEditElements : null }
                 {
                   CustomEditElement
                     ? CustomEditElement

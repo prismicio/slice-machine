@@ -11,8 +11,8 @@ export const CustomTypesContext = React.createContext<{
 
 export default function Provider ({ children, customTypes = [], remoteCustomTypes = [] }: {
   children: any,
-  customTypes: ReadonlyArray<CustomType<TabsAsObject>>,
-  remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>>,
+  customTypes: ReadonlyArray<CustomType<TabsAsObject>> | undefined,
+  remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> | undefined,
 }) {
   const [cts, setCts] = useState(customTypes)
 

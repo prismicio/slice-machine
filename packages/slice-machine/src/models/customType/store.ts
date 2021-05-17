@@ -31,6 +31,19 @@ export default class CustomTypeStore implements Store {
       reorderWidget: (start: number, end: number) => {
         this.dispatch({ type: Actions.ReorderWidget, payload: { tabId, start, end }})
       },
+      updateWidgetGroupMockConfig:(initialMockConfig: any, groupItemKey: string, prevId: string, newId: string, mockValue: any) => {
+
+        console.log('UPDATE MOCK CONFIG\n\n')
+        console.log({ initialMockConfig, mockValue, newId })
+        const updatedConfig = {
+          ...initialMockConfig[groupItemKey],
+          ...(prevId !== newId ? {
+              [prevId]: undefined,
+            } : null),
+          [newId]: mockValue
+        }
+        updateWidgetMockConfig(this.dispatch)()(initialMockConfig, groupItemKey, groupItemKey, updatedConfig)
+      },
       updateWidgetMockConfig: updateWidgetMockConfig(this.dispatch)(),
       deleteWidgetMockConfig: deleteWidgetMockConfig(this.dispatch)(),
       createSliceZone: () => {

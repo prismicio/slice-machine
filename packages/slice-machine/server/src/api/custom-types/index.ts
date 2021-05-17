@@ -48,7 +48,8 @@ const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
 }
 
 export default async function handler(env: Environment): Promise<{ customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
-  const { cwd } = env
+  const { cwd, mockConfig } = env
+  console.log({ mockConfig })
   const pathToCustomTypes = CustomTypesPaths(cwd).value()
   const folderExists = Files.exists(pathToCustomTypes)
 

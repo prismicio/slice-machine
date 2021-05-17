@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import * as Widgets from 'lib/models/common/widgets'
+import * as Widgets from 'lib/models/common/widgets/withGroup'
 import EditModal from '../../common/EditModal'
 
 import Zone from '../../common/Zone'
@@ -44,12 +44,18 @@ const TabZone = ({
     if (!widget) {
       console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
     }
+    console.log({
+      type: widget.TYPE_NAME,
+      config: removeKeys(widget.create(id), ['id'])
+    })
     store
       .tab(tabId)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
+        config: removeKeys(widget.create(id), ['id'])
       })
+    
+    console.log({ Model })
   }
 
   const onDragEnd = (result) => {
@@ -63,7 +69,6 @@ const TabZone = ({
   }
 
   const onSave = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
-    console.log({ apiId, newKey, value, initialModelValues })
     if (mockValue && Object.keys(mockValue).length) {
       store
         .tab(tabId)
@@ -76,7 +81,19 @@ const TabZone = ({
 
     const widget = Widgets[initialModelValues.type]
     if (!widget) {
-      console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
+      return console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
+    }
+
+    if (widget.TYPE_NAME === 'Group') {
+      return store
+        .tab(tabId)
+        .replaceWidget(
+          apiId,
+          newKey, {
+            ...initialModelValues,
+            ...value
+          }
+        )
     }
 
     store
@@ -86,7 +103,7 @@ const TabZone = ({
         newKey,
         {
           type: initialModelValues.type,
-          [widget.customAccessor || 'config']: removeKeys(value, ['id', 'type'])
+          config: removeKeys(value, ['id', 'type'])
         }
       )
   }

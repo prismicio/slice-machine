@@ -25,7 +25,7 @@ export interface GroupAsArray {
 }
 
 export const Group = {
-  addWidget(group: GroupAsArray, newField: {key: string, value: Widget }): GroupAsArray {
+  addWidget(group: GroupAsArray, newField: { key: string, value: Widget }): GroupAsArray {
     return {
       ...group,
       value: {
@@ -94,7 +94,7 @@ export const Group = {
     return {
       type: FieldType.Group,
       config: {
-        label: group.value.label,
+        ...group.value,
         fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
       }
     }

@@ -51,8 +51,8 @@ const CustomListItem = ({
   }
 
   const getFieldMockConfig = ({ apiId }) => {
-    console.log('mock config', Model.mockConfig?.[tabId]?.[groupItem.key]?.[apiId])
-    return Model.mockConfig?.[tabId]?.[groupItem.key]?.[apiId]
+    console.log('mock config', Model.mockConfig?.[groupItem.key], apiId)
+    return Model.mockConfig?.[groupItem.key]?.[apiId]
   }
 
   const onCancelNewField = () => {
@@ -70,15 +70,16 @@ const CustomListItem = ({
       .group(groupItem.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
+        config: removeKeys(widget.create(id), ['id'])
       })
   }
 
   const onSaveField = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
     if (mockValue && Object.keys(mockValue).length) {
+      console.log(initialMockConfig, groupItem.key, apiId, newKey, mockValue)
       store
         .tab(tabId)
-        .updateWidgetMockConfig(initialMockConfig, apiId, newKey, mockValue)
+        .updateWidgetGroupMockConfig(initialMockConfig, groupItem.key, apiId, newKey, mockValue)
     } else {
       store
         .tab(tabId)
@@ -99,7 +100,7 @@ const CustomListItem = ({
         newKey,
         {
           type: initialModelValues.type,
-          [widget.customAccessor || 'config']: removeKeys(value, ['id', 'type'])
+          config: removeKeys(value, ['id', 'type'])
         }
       )
   }
@@ -130,11 +131,11 @@ const CustomListItem = ({
         draggableId={draggableId}
         renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
-        CustomEditElement={(
-          <Button mr={2} variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
+        CustomEditElements={[(
+          <Button key={`custom-edit-element-${groupItem.key}`} mr={2} variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
             Add Widget
           </Button>
-        )}
+        )]}
         children={(
           <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
@@ -155,9 +156,9 @@ const CustomListItem = ({
                             widget,
                             snapshot,
                             key: item.key,
-                            renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
                             enterEditMode,
                             deleteItem: onDeleteItem,
+                            renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
                             draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           }
 
@@ -185,8 +186,7 @@ const CustomListItem = ({
                         newFieldData && (
                           <NewField
                             {...newFieldData}
-                            // fields={poolOfFieldsToCheck || fields}
-                            fields={[]}
+                            fields={groupItem.value.fields || []}
                             onSave={(...args) => {
                               onSaveNewField(...args)
                               setNewFieldData(null)

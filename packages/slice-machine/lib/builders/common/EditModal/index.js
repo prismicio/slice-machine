@@ -10,7 +10,7 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import * as Widgets from 'lib/models/common/widgets'
+import * as Widgets from 'lib/models/common/widgets/withGroup'
 
 import { removeKeys } from 'lib/utils'
 import { createInitialValues, createValidationSchema } from 'lib/forms'

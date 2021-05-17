@@ -11,13 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "test14": {
-          "type": "Text",
-          "config": {
-            "label": "",
-            "placeholder": ""
-          }
-        },
         "test13": {
           "type": "Text",
           "config": {
@@ -31,6 +24,13 @@
             "label": "Label",
             "constraint": {},
             "thumbnails": []
+          }
+        },
+        "test14": {
+          "type": "Text",
+          "config": {
+            "label": "",
+            "placeholder": ""
           }
         }
       },

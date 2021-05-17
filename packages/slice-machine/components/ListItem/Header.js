@@ -10,13 +10,17 @@ const ItemHeader = ({
   WidgetIcon,
   iconButtonProps = {}
 }) => (
-  <Flex sx={{ alignItems: "center" }}>
+  <Flex sx={{ alignItems: "center", position: 'relative' }}>
     <IconButton
       label="Reorder slice field (drag and drop)"
       Icon={FaBars}
       color={theme.colors.icons}
       mr={1}
       {...iconButtonProps}
+      sx={{
+        position: 'absolute',
+        left: '-54px'
+      }}
     />
     <WidgetIcon
       size={28}
