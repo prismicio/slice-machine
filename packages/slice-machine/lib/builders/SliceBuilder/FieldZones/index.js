@@ -51,7 +51,6 @@ const Zones = ({
   }
 
   const _onSaveNewField = (fieldType) => ({ id, widgetTypeName }) => {
-    console.log('ON SAVE NEW FIELD', widgetTypeName)
     const widget = Widgets[widgetTypeName]
     if (!widget) {
       console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
@@ -65,13 +64,15 @@ const Zones = ({
   }
 
   const _onDragEnd = (fieldType) => (result) => {
-    if (!result.destination) {
+    if (!result.destination || result.source.index === result.destination.index) {
       return
     }
     store
       .variation(variation.id)
       .reorderWidget(fieldType, result.source.index, result.destination.index)
   }
+
+  console.log(variation)
 
   return (
     <Fragment>
@@ -88,6 +89,7 @@ const Zones = ({
         onSave={_onSave('primary')}
         onSaveNewField={_onSaveNewField('primary')}
         onDragEnd={_onDragEnd('primary')}
+        poolOfFieldsToCheck={variation.primary || []}
         renderHintBase={({ item }) => `slice.primary.${item.key}`}
         renderFieldAccessor={(key) => `slice.primary.${key}`}
       />
@@ -106,6 +108,7 @@ const Zones = ({
         onSave={_onSave('items')}
         onSaveNewField={_onSaveNewField('items')}
         onDragEnd={_onDragEnd('items')}
+        poolOfFieldsToCheck={variation.items || []}
         renderHintBase={({ item }) => `item.${item.key}`}
         renderFieldAccessor={(key) => `slice.items[i].${key}`}
       />

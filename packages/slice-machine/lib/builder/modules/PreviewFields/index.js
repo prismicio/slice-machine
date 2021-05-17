@@ -53,7 +53,7 @@ const PreviewFields = ({
   }
 
   const onDragEnd = (result, modelFieldName) => {
-    if (!result.destination) {
+    if (!result.destination || result.source.index === result.destination.index) {
       return
     }
     store

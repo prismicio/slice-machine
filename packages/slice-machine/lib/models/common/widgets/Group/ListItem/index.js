@@ -106,7 +106,7 @@ const CustomListItem = ({
   }
 
   const onDragEnd = (result) => {
-    if (!result.destination) {
+    if (!result.destination || result.source.index === result.destination.index) {
       return
     }
     if (result.source.droppableId !== result.destination.droppableId) {

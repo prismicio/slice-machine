@@ -43,6 +43,9 @@ const Zone = ({
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
   const [newFieldData, setNewFieldData] = useState(null)
 
+  console.log({
+    poolOfFieldsToCheck
+  })
   const enterEditMode = (field) => {
     setEditModalData({ isOpen: true, field })
   }
@@ -137,6 +140,7 @@ Zone.propTypes = {
   onSaveNewField: func.isRequired,
   onDragEnd: func.isRequired,
   onDeleteItem: func.isRequired,
+  poolOfFieldsToCheck: arrayOf(shape({ key: string, value: object })),
   // how to access mock config for given key
   getFieldMockConfig: func.isRequired,
   renderHintBase: func.isRequired,
