@@ -43,9 +43,6 @@ const Zone = ({
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
   const [newFieldData, setNewFieldData] = useState(null)
 
-  console.log({
-    poolOfFieldsToCheck
-  })
   const enterEditMode = (field) => {
     setEditModalData({ isOpen: true, field })
   }

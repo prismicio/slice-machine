@@ -72,8 +72,6 @@ const Zones = ({
       .reorderWidget(fieldType, result.source.index, result.destination.index)
   }
 
-  console.log(variation)
-
   return (
     <Fragment>
       <Zone

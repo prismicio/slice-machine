@@ -18,7 +18,6 @@ export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: strin
 export function deleteWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return () => {
     return (mockConfig: any, apiId: string): any => {
-      console.log({ mockConfig, apiId })
       if(!mockConfig) return;
 
       const updatedConfig = Object.keys(mockConfig)

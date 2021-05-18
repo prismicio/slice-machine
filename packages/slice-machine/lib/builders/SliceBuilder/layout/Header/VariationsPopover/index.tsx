@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 
 import { Variation, AsArray } from "models/common/Variation";
@@ -11,10 +11,17 @@ const VarationsPopover: React.FunctionComponent<{
   variations: ReadonlyArray<Variation<AsArray>>;
   onChange: (selected: Variation<AsArray>) => void;
 }> = ({ defaultValue, variations, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false)
   const [current, setCurrent] = useState<Variation<AsArray>>(
     defaultValue || variations[0]
-  );
+  )
+
+   useEffect(() => {
+    if (defaultValue) {
+      setCurrent(defaultValue)
+    }
+  }, [defaultValue])
 
   const TRANSITION_DURATION = 200; //ms
   const handleChange = function (variation: Variation<AsArray>) {

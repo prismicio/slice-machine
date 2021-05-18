@@ -10,11 +10,16 @@ import { GoPlus } from 'react-icons/go'
 import Container from 'components/Container'
 
 import Grid from 'components/Grid'
-import ModalFormCard from 'components/ModalFormCard'
 
 import CreateCustomType from 'components/Forms/CreateCustomType'
 
-const Card = ({ ct }) => (
+interface CtPayload {
+  repeatable: boolean,
+  id: string,
+  label: string
+}
+
+const Card = ({ ct }: { ct: CtPayload }) => (
   <Link href={`/cts/${ct.id}`} passHref>
     <ThemeLink variant="links.invisible">
       <ThemeCard p={2} sx={{ minHeight: '60px'}}>
@@ -29,12 +34,14 @@ const CustomTypes = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { customTypes, onCreate } = useContext(CustomTypesContext)
 
-  const _onCreate = ({ id, label, repeatable }) => {
-    onCreate(id, {
-      label,
-      repeatable,
-    })
-    setIsOpen(false)
+  const _onCreate = ({ id, label, repeatable }: CtPayload) => {
+    if (onCreate) {
+      onCreate(id, {
+        label,
+        repeatable,
+      })
+      setIsOpen(false)
+    }
   }
 
   return (
@@ -63,7 +70,7 @@ const CustomTypes = () => {
         {/* <Button type="button" onClick={_onCreate}>New Custom Type</Button> */}
         <Grid
           elems={customTypes}
-          renderElem={(ct) => (
+          renderElem={(ct: CtPayload) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
               <Card ct={ct} />
             </Link>
@@ -72,6 +79,7 @@ const CustomTypes = () => {
         <CreateCustomType
           isOpen={isOpen}
           onSubmit={_onCreate}
+          customTypes={customTypes}
           close={() => setIsOpen(false)}
         />
       </Container>

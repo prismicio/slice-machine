@@ -57,7 +57,8 @@ export default {
     const template = Files.readString(templatePath)
 
     const withPascalizedIds = mocks.value.map( (m: any) => {
-      const id = pascalize(m.id)
+      // use underscore to prevent invalid variable names
+      const id = `_${pascalize(m.id)}`
       return {
         ...m,
         id,

@@ -1,13 +1,13 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
-import  { BsLink } from 'react-icons/bs'
+import  { MdPlaylistAdd } from 'react-icons/md'
 
 import CustomListItem from './ListItem'
 
 const create = () => ({ label: '', placeholder: '', fields: {} })
 
 const Meta = {
-  icon: BsLink,
+  icon: MdPlaylistAdd,
   title: 'Group',
   description: 'A Group of Prismic widgets'
 }
@@ -21,9 +21,6 @@ const schema = yup.object().shape({
   })
 })
 
-/** Used only here to help generate a proper widget when config key is not "config" */
-const customAccessor = 'fields'
-
 export const Group = {
   Meta,
   FormFields,
@@ -31,7 +28,6 @@ export const Group = {
   Form,
   create,
   CustomListItem,
-  customAccessor,
   TYPE_NAME: 'Group'
 }
 

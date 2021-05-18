@@ -1,4 +1,3 @@
-
 import { Widget } from '../../../lib/models/common/widgets';
 import { Variation, AsArray, WidgetsArea } from '../../../lib/models/common/Variation';
 import { ComponentMetadata } from '../../../lib/models/common/Component';

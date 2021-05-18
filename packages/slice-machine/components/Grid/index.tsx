@@ -1,6 +1,6 @@
 import { Box } from 'theme-ui'
 
-const Grid = ({ elems, gridTemplateMinPx = "320px", renderElem }: { elems: any, gridTemplateMinPx: string, renderElem: Function }) => {
+const Grid = ({ elems, gridTemplateMinPx = "320px", renderElem }: { elems: any, gridTemplateMinPx?: string, renderElem: Function }) => {
   return (
     <Box
       as="section"

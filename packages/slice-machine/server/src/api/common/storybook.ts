@@ -32,7 +32,6 @@ export const generatePreview = async (
 
 export const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
   try {
-    console.log('[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
   } catch (e) {
     return {

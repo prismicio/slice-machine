@@ -1,3 +1,5 @@
+// import { useState } from "react"
+
 import {
   CustomTypeState,
   CustomTypeStatus,
@@ -8,11 +10,13 @@ import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
 import { Box, Button, Flex, Link as ThemeLinK, Text } from "theme-ui";
 
 import CustomTypeStore from "../../../../src/models/customType/store";
+import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
 import FlexWrapper from "./FlexWrapper";
 
 import { FiLayout } from "react-icons/fi";
 import Link from "next/link";
+
 
 const Header = ({
   Model,
@@ -21,25 +25,36 @@ const Header = ({
   Model: CustomTypeState;
   store: CustomTypeStore;
 }) => {
-  const { addToast } = useToasts();
+  // const [isLoading, setIsLoading] = useState(false)
+  const { addToast } = useToasts()
 
   const buttonProps = (() => {
     if (Model.isTouched) {
       return {
-        onClick: () => store.save(Model),
-        children: "Save to File System",
+        onClick: () => {
+          // setIsLoading(true)
+          store.save(Model)
+        },
+        children: (
+          <span>
+            {/* { isLoading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } */}
+            Save to File System
+          </span>
+        ),
       };
     }
     if (
-      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status)
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status as CustomTypeStatus)
     ) {
       return {
-        onClick: () =>
-          store.push(Model, (data) => {
+        onClick: () => {
+          store.push(Model, (data: ToastPayload): void => {
             if (data.done) {
+              // setIsLoading(false)
               handleRemoteResponse(addToast)(data);
             }
-          }),
+          })
+        },
         children: "Push to Prismic",
       };
     }

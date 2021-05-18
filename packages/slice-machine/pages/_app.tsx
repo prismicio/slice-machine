@@ -24,7 +24,7 @@ import { FetchError, NoLibraryConfigured } from 'components/UnrecoverableErrors'
 
 import 'react-tabs/style/react-tabs.css'
 import 'rc-drawer/assets/index.css'
-import 'lib/builder/layout/Drawer/index.css'
+import 'lib/builders/SliceBuilder/layout/Drawer/index.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'src/css/modal.css'
 

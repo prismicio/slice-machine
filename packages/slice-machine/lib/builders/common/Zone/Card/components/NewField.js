@@ -68,7 +68,6 @@ const NewField = ({
             <Flex
               sx={{
                 alignItems: "center",
-                marginLeft: 'calc(32px + 4px)',
                 width: '50%'
               }}
             >
