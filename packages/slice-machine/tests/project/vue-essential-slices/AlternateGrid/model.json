@@ -1,0 +1,86 @@
+{
+  "id": "alternate_grid",
+  "type": "SharedSlice",
+  "name": "AlternateGrid",
+  "description": "AlternateGrid",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "350stl1jpvkovgig5g",
+      "description": "AlternateGrid",
+      "primary": {
+        "title": {
+          "config": {
+            "label": "title",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        },
+        "optional_image": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional image"
+          }
+        },
+        "image_side": {
+          "type": "Select",
+          "config": {
+            "options": [
+              "left",
+              "right"
+            ],
+            "default_value": "left",
+            "label": "Image side"
+          }
+        }
+      },
+      "items": {
+        "optional_icon": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional Icon"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading3",
+            "label": "title"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,19 +1,13 @@
-import { Fragment, useContext } from 'react'
-import { useThemeUI } from 'theme-ui'
+import { Fragment, useContext, useState } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { ConfigContext } from 'src/config-context'
 
-import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
+import { getDraggedDom, getDraggedDomPosition } from 'components/ListItem/utils'
 
 import {
-  Button,
   Box,
   Text,
-  Heading,
 } from 'theme-ui'
-
-import Card from 'components/Card'
-import Tooltip from 'components/Tooltip'
 
 import ListItem  from 'components/ListItem'
 
@@ -24,7 +18,6 @@ import { findWidgetByConfigOrType } from '../../../utils'
 import * as Widgets from 'lib/models/common/widgets/withGroup'
 
 import Li from 'components/Li'
-// import NewField from './components/NewField'
 
 const FieldZone = ({
   fields,
@@ -43,18 +36,82 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable
 }) => {
+  const [isMouseDown, setIsMouseDown] = useState(false)
   const { env: { framework } } = useContext(ConfigContext)
+
+  const [placeholderProps, setPlaceholderProps] = useState(null)
+  
+  const onDragStart = (event) => {
+    setPlaceholderProps(getDraggedDomPosition(event))
+  }
+
+  const handleDragUpdate = event => {
+    if (!event.destination) {
+      return;
+    }
+
+    const draggedDOM = getDraggedDom(event.draggableId);
+
+    if (!draggedDOM) {
+      return;
+    }
+
+    const { clientHeight, clientWidth } = draggedDOM;
+    const destinationIndex = event.destination.index;
+    const sourceIndex = event.source.index;
+
+    const childrenArray = [...draggedDOM.parentNode.children];
+    const movedItem = childrenArray[sourceIndex];
+    childrenArray.splice(sourceIndex, 1);
+
+    const updatedArray = [
+      ...childrenArray.slice(0, destinationIndex),
+      movedItem,
+      ...childrenArray.slice(destinationIndex + 1)
+    ];
+
+    var clientY =
+      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      updatedArray.slice(0, destinationIndex).reduce((total, curr) => {
+        const style = curr.currentStyle || window.getComputedStyle(curr);
+        const marginBottom = parseFloat(style.marginBottom);
+        return total + curr.clientHeight + marginBottom;
+      }, 0);
+
+    setPlaceholderProps({
+      clientHeight,
+      clientWidth,
+      clientY,
+      clientX: parseFloat(
+        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
+      )
+    });
+  };
+
+  const onMouseDownDrag = () => {
+    setIsMouseDown(true)
+  }
+
+  const onMouseUpDrag = () => {
+    setIsMouseDown(false)
+    
+  }
+
+  const _onDragEnd =(event) => {
+    onDragEnd(event)
+    onMouseUpDrag()
+  }
+
   return (
     <Fragment>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onMouseDownDrag} onDragEnd={_onDragEnd}>
         <Droppable droppableId={title}>
-          {(provided, snapshot ) => console.log(provided, snapshot) || (
+          {(provided, snapshot) => (
             <Box
               as="ul"
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{ ...provided.droppableProps.style, padding: '4px 0'}}
-              sx={{ background: snapshot.isDraggingOver ? "lightblue" : "initial" }}
             >
               { fields.map((item, index) => {
                 const { value: { config, type } } = item
@@ -72,14 +129,17 @@ const FieldZone = ({
                   Model,
                   tabId,
                   widget,
-                  snapshot,
                   showHints,
                   key: item.key,
                   enterSelectMode,
                   renderFieldAccessor,
                   enterEditMode,
+                  parentSnapshot: snapshot,
                   deleteItem: onDeleteItem,
                   draggableId: `list-item-${item.key}`,
+                  dragMouseIsDown: isMouseDown,
+                  onMouseDownDrag,
+                  onMouseUpDrag
                 }
 
                 if (widget.CustomListItem) {
@@ -108,6 +168,19 @@ const FieldZone = ({
                 )
               })}
               { provided.placeholder }
+              {/* {placeholderProps && Object.keys(placeholderProps) && snapshot.isDraggingOver && (
+                <div
+                  className="placeholder"
+                  style={{
+                    top: placeholderProps.clientY,
+                    left: placeholderProps.clientX,
+                    height: placeholderProps.clientHeight,
+                    width: placeholderProps.clientWidth,
+                    background: 'tomato',
+                    position: 'absolute'
+                  }}
+                />
+              )} */}
               <NewFieldC />
             </Box>
           )}

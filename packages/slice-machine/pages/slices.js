@@ -10,9 +10,11 @@ import SliceList from "components/SliceList";
 
 import { LibrariesContext } from "src/models/libraries/context";
 
+const UnclickableCardWrapper =  ({ children }) => children
+
 const Index = () => {
-  const libraries = useContext(LibrariesContext);
-  console.log({ libraries });
+  const libraries = useContext(LibrariesContext)
+
   return (
     <Fragment>
       <Head>
@@ -22,23 +24,25 @@ const Index = () => {
         <main>
           {libraries &&
             libraries.map(
-              ({ name, components }) =>
-                console.log(components.map(([e]) => e)) || (
-                  <div key={name}>
-                    <Box
-                      as="h2"
-                      sx={{
-                        pb: 3,
-                      }}
-                    >
-                      {name}
-                    </Box>
-                    <SliceList
-                      cardType="ForSlicePage"
-                      slices={components.map(([e]) => e)}
-                    />
-                  </div>
-                )
+              ({ name, isLocal, components }) => (
+                <div key={name}>
+                  <Box
+                    as="h2"
+                    sx={{
+                      pb: 3,
+                    }}
+                  >
+                    {name}
+                  </Box>
+                  <SliceList
+                    cardType="ForSlicePage"
+                    {...(!isLocal ? {
+                      CardWrapper: UnclickableCardWrapper
+                    } : null)}
+                    slices={components.map(([e]) => e)}
+                  />
+                </div>
+              )
             )}
         </main>
       </Container>

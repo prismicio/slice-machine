@@ -32,12 +32,13 @@ const CustomListItem = ({
   store,
   Model,
   widget,
-  snapshot,
+  parentSnapshot,
   framework,
   showHints,
   isRepeatable,
   item: groupItem,
   draggableId,
+  dragMouseIsDown,
   renderFieldAccessor,
   ...rest
 }) => {
@@ -136,11 +137,11 @@ const CustomListItem = ({
             Add Widget
           </Button>
         )]}
-        children={(
-          <Box sx={{ ml: 4 }}>
+        children={false ? null : (
+          <Box sx={{ ml: 4, display: dragMouseIsDown ? 'block' : 'block' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
-                  {(provided) => !snapshot.isDragging && (
+                  {(provided) =>  (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                       {
                         groupItem.value.fields.map((item, index) => {
@@ -154,7 +155,6 @@ const CustomListItem = ({
                             item,
                             index,
                             widget,
-                            snapshot,
                             key: item.key,
                             enterEditMode,
                             deleteItem: onDeleteItem,

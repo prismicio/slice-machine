@@ -3,7 +3,7 @@ import uniqid from 'uniqid'
 import Files from './utils/files'
 import { CustomPaths } from './models/paths'
 
-const migrate = (model, info, env) => {
+const migrate = (model, info, env, write = true) => {
   const { type, fieldset, 'non-repeat': nonRepeat = {}, repeat = {} } = model
   if (type !== 'Slice') {
     return { model, migrated: false }
@@ -24,11 +24,13 @@ const migrate = (model, info, env) => {
     }]
   }
 
-  const modelPath = CustomPaths(env.cwd)
-    .library(info.from)
-    .slice(info.sliceName)
-    .model()
-  Files.write(modelPath, newModel)
+  if (write) {
+    const modelPath = CustomPaths(env.cwd)
+      .library(info.from)
+      .slice(info.sliceName)
+      .model()
+    Files.write(modelPath, newModel)
+  }
 
   return { model: newModel, migrated: true }
 }

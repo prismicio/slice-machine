@@ -19,6 +19,7 @@ export default function LibraryHandler({ children, libraries, remoteSlices, env 
   const models: ReadonlyArray<LibraryState> = libraries.map((lib) => {
     return {
       name: lib.name,
+      isLocal: lib.isLocal,
       components: lib.components.map(component => useModelReducer({
         slice: component,
         mockConfig: env.mockConfig[component.infos.sliceName] || {},

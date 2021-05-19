@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import Form, { FormFields } from "./TSXForm";
+import Form, { FormFields } from "./Form";
 import { DefaultFields } from "lib/forms/defaults";
 
 import { MdSettingsEthernet } from "react-icons/md";

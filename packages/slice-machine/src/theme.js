@@ -476,8 +476,6 @@ const Theme = () => ({
       color: "deep1",
     },
     listItem: {
-      bg: "headSection",
-      border: (t) => `1px solid ${t.colors.borders}`,
       borderRadius: "3px",
       my: 3,
       listStyleType: "none",
@@ -540,6 +538,7 @@ const Theme = () => ({
       fontSize: 1,
     },
     ul: {
+
       p: 0,
       m: 0,
     },

@@ -1,27 +1,15 @@
 import { Flex, Text } from 'theme-ui'
 
-import IconButton from 'components/IconButton'
-import { FaBars } from 'react-icons/fa'
-
 const ItemHeader = ({
   text,
   sliceFieldName,
   theme,
   WidgetIcon,
+  onMouseDownDrag,
+  onMouseUpDrag,
   iconButtonProps = {}
 }) => (
   <Flex sx={{ alignItems: "center", position: 'relative' }}>
-    <IconButton
-      label="Reorder slice field (drag and drop)"
-      Icon={FaBars}
-      color={theme.colors.icons}
-      mr={1}
-      {...iconButtonProps}
-      sx={{
-        position: 'absolute',
-        left: '-54px'
-      }}
-    />
     <WidgetIcon
       size={28}
       style={{
