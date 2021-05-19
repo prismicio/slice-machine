@@ -181,6 +181,7 @@ const CustomListItem = ({
                           )
                         })
                       }
+                      { provided.placeholder }
 
                       {
                         newFieldData && (

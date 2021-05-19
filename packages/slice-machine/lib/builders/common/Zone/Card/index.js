@@ -7,7 +7,7 @@ import { FaRegQuestionCircle, FaPlus } from 'react-icons/fa'
 
 import {
   Button,
-  Flex,
+  Box,
   Text,
   Heading,
 } from 'theme-ui'
@@ -48,8 +48,14 @@ const FieldZone = ({
     <Fragment>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId={title}>
-          {(provided, snapshot) => (
-            <ul ref={provided.innerRef} {...provided.droppableProps}>
+          {(provided, snapshot ) => console.log(provided, snapshot) || (
+            <Box
+              as="ul"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{ ...provided.droppableProps.style, padding: '4px 0'}}
+              sx={{ background: snapshot.isDraggingOver ? "lightblue" : "initial" }}
+            >
               { fields.map((item, index) => {
                 const { value: { config, type } } = item
                 const widget = findWidgetByConfigOrType(Widgets, config, type)
@@ -101,9 +107,9 @@ const FieldZone = ({
                   />
                 )
               })}
-              {provided.placeholder}
+              { provided.placeholder }
               <NewFieldC />
-            </ul>
+            </Box>
           )}
         </Droppable>
       </DragDropContext>

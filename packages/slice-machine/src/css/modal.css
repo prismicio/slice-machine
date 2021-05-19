@@ -12,7 +12,7 @@ body {
 
 .ReactModal__Content {
   padding: 0 !important;
-  padding-bottom: 40px im !important;
+  padding-bottom: 40px !important;
   bottom: auto !important;
   top: 15% !important;
   max-width: 900px;

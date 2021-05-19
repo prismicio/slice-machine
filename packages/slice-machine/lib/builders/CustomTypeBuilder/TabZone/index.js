@@ -145,7 +145,7 @@ const TabZone = ({
         renderHintBase={({ item }) => `data.${item.key}`}
         renderFieldAccessor={(key) => `data.${key}`}
       />
-      <button type="button" onClick={() => setModalIsOpen(true)}>edit modal</button>
+      {/* <button type="button" onClick={() => setModalIsOpen(true)}>edit modal</button> */}
       {
         Model.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>

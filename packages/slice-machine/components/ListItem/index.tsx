@@ -2,12 +2,9 @@ import { Fragment } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { MenuButton, Menu, MenuItem, MenuList } from '@reach/menu-button'
 
-// import { ConfigContext } from 'src/config-context'
-
 import {
   Box,
   Flex,
-  Text,
   useThemeUI
 } from 'theme-ui'
 
@@ -15,16 +12,10 @@ import Li from '../Li'
 import IconButton from '../IconButton'
 import ItemHeader from './Header'
 
-// import * as widgets from '../../lib/models/common/widgets'
-
 import { AiOutlineEdit } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-// import Hint from './Hints'
-
-// import { findWidgetByConfigOrType } from '../../../../utils'
-
-const ListItem = (props) => {
+const ListItem = (props: any) => {
   const {
     item,
     index,
@@ -56,13 +47,14 @@ const ListItem = (props) => {
   return (
     <Fragment>
       <Draggable draggableId={draggableId} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Fragment>
           <Li
             ref={provided.innerRef}
+            {...provided.dragHandleProps}
             {...provided.draggableProps}
             Component={Box}
-            sx={{ p: 0, mx: 0, my: 3 }}
+            sx={{ p: 0, mx: 0, my: 3, bg: snapshot.isDragging ? 'grayLight' : 'initial' }}
           >
             <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
               <ItemHeader 
@@ -82,7 +74,7 @@ const ListItem = (props) => {
                         size={22}
                         Icon={AiOutlineEdit}
                         label="Edit slice field"
-                        sx={{ cursor: "pointer", color: theme.colors.icons }}
+                        sx={{ cursor: "pointer", color: theme.colors?.icons }}
                         onClick={() => enterEditMode([key, item.value], modelFieldName, index)}
                       />
                     )
@@ -99,13 +91,13 @@ const ListItem = (props) => {
                       outline: "0",
                     }}
                   >
-                    <BsThreeDotsVertical size={20} color={theme.colors.icons} />
+                    <BsThreeDotsVertical size={20} color={theme.colors?.icons as string} />
                   </MenuButton>
                   <MenuList style={{
-                    background: theme.colors.gray,
+                    background: theme.colors?.gray as string,
                     border: '1px solid',
                     borderRadius: '3px',
-                    borderColor: theme.colors.borders,
+                    borderColor: theme.colors?.borders as string,
                     outline: '0'
                   }}>
                     <MenuItem
@@ -121,14 +113,6 @@ const ListItem = (props) => {
             {
               HintElement ? HintElement : null
             }
-            {/* <Hint
-              show={showHints}
-              isRepeatable={isRepeatable}
-              renderHintBase={renderHintBase}
-              framework={framework}
-              item={item}
-              typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
-            /> */}
           </Li>
         </Fragment>
       )}

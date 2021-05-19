@@ -27,7 +27,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
 const formId = "create-custom-type"
 
 
-const FlexCard =  (props: any) => (
+const FlexCard =  ({ selected, ...rest }:  { selected: boolean, children: any, onClick: any }) => (
   <Flex
     sx={{
       p: '24px',
@@ -36,11 +36,12 @@ const FlexCard =  (props: any) => (
       cursor: 'pointer',
       borderRadius: '6px',
       backgroundColor: 'grayLight',
+      boxShadow: selected ? ({ colors }) => `0 0 0 2px ${colors.primary}` : 'none', 
       '&:hover': {
         boxShadow: ({ colors }) => `0 0 0 2px ${colors.primary}`
       }
     }}
-    {...props}
+    {...rest}
   />
 )
 
@@ -48,7 +49,7 @@ const SelectRepeatable = () => {
   const [field, _, helpers] = useField('repeatable')
   return (
     <Box mb={2}>
-      <FlexCard onClick={() => helpers.setValue(true)}>
+      <FlexCard selected={field.value} onClick={() => helpers.setValue(true)}>
         <Radio checked={field.value} />
         <Box
           sx={{
@@ -64,7 +65,7 @@ const SelectRepeatable = () => {
           </Box>
         </Box>
       </FlexCard>
-      <FlexCard onClick={() => helpers.setValue(false)}>
+      <FlexCard  selected={!field.value} onClick={() => helpers.setValue(false)}>
         <Radio checked={!field.value} />
         <Box
           sx={{
