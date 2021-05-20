@@ -17,12 +17,6 @@ const links = [
     href: "/slices",
     Icon: FiLayers,
   },
-  {
-    title: "Warnings",
-    delimiter: true,
-    href: "/warnings",
-    Icon: FiZap,
-  },
 ];
 
 export interface LinkProps {
