@@ -37,17 +37,17 @@ const CTName = ({ CTName }) => {
 
 const CTRepeatble = ({ repeatable }) => {
   return !repeatable ? (
-    <Text sx={{ fontSize: 0, color: "textClear", lineHeight: 20 }}>
+    <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
       Repeatable Type
     </Text>
   ) : (
-    <Text sx={{ fontSize: 0, color: "textClear", lineHeight: 20 }}>
+    <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
       Single Type
     </Text>
   );
 };
 
-const SliceThumbnail = ({ heightInPx, preview, withShadow = true }) => {
+const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }) => {
   return (
     <Box
       sx={{
@@ -91,7 +91,7 @@ const Card = ({ ct }: { ct: CtPayload }) => (
           transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
         }}
       >
-        <SliceThumbnail preview={{}} heightInPx="287px" />
+        <CTThumbnail heightInPx="287px" />
         <Flex
           mt={3}
           sx={{ alignItems: "center", justifyContent: "space-between" }}
