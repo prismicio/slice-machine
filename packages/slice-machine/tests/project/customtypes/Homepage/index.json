@@ -14,28 +14,6 @@
           "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
         }
       },
-      "group9": {
-        "type": "Group",
-        "config": {
-          "type": "Group",
-          "fields": {
-            "text": {
-              "type": "Text",
-              "config": {
-                "label": "",
-                "placeholder": ""
-              }
-            },
-            "txt": {
-              "type": "Text",
-              "config": {
-                "label": "",
-                "placeholder": ""
-              }
-            }
-          }
-        }
-      },
       "group1": {
         "type": "Group",
         "config": {
@@ -76,6 +54,36 @@
           }
         }
       },
+      "group9": {
+        "type": "Group",
+        "config": {
+          "type": "Group",
+          "fields": {
+            "txt": {
+              "type": "Text",
+              "config": {
+                "label": "",
+                "placeholder": ""
+              }
+            },
+            "text": {
+              "type": "Text",
+              "config": {
+                "label": "",
+                "placeholder": ""
+              }
+            },
+            "img": {
+              "type": "Image",
+              "config": {
+                "label": "",
+                "constraint": {},
+                "thumbnails": []
+              }
+            }
+          }
+        }
+      },
       "sdf": {
         "type": "Image",
         "config": {
@@ -89,12 +97,6 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
-            "call_to_action2": {
-              "type": "SharedSlice"
-            },
-            "call_to_action3": {
-              "type": "SharedSlice"
-            },
             "with_mocks": {
               "type": "SharedSlice"
             },
@@ -104,7 +106,10 @@
             "images_slider": {
               "type": "SharedSlice"
             },
-            "call_to_action": {
+            "feature_testimonials": {
+              "type": "SharedSlice"
+            },
+            "alternate_grid": {
               "type": "SharedSlice"
             }
           }

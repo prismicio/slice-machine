@@ -3,7 +3,7 @@ import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 // @ts-ignore
 import { pascalize } from '../utils/str'
 
-import { getPathToScreenshot } from './screenshot'
+import { getPathToScreenshot, getExternalPathToScreenshot } from './screenshot'
 import { AsObject } from '../../lib/models/common/Variation'
 import Slice from '../../lib/models/common/Slice'
 import Files from '../utils/files'
@@ -85,11 +85,13 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   if(!fileName || !extension) return
 
   const sliceModel: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
-  const { model: modelData } = migrate(sliceModel.data, { sliceName, from }, null, false)
+  const { model: modelData, migrated } = migrate(sliceModel.data, { sliceName, from }, null, false)
   const model = { data: modelData }
   const previewUrls = model.data.variations
     .map((v: any) => {
-      const activeScreenshot = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
+      const activeScreenshot = migrated
+        ? getExternalPathToScreenshot({ cwd, from, sliceName })
+        : getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
 
       return activeScreenshot && activeScreenshot.path
       ? { [v.id]: {

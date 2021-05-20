@@ -61,8 +61,10 @@ const NewField = ({
               py: 2,
               px: 3,
               mx: 0,
+              ml: '34px',
               alignItems: "center",
               variant: "styles.listItem",
+              border: (t) => `1px solid ${t.colors.borders}`
             }}
           >
             <Flex

@@ -59,26 +59,29 @@ const ListItem = (props: any) => {
               my: 3,
             }}
           >
-            <Flex sx={{ width: '100%', alignItems: 'center' }}>
+            <Flex sx={{ width: '100%' }}>
               <IconButton
                   label="Reorder slice field (drag and drop)"
                   Icon={FaBars}
                   color={theme.colors.icons}
                   mr={1}
+                  mt={3}
                   onMouseDown={onMouseDownDrag}
                   onMouseUp={onMouseUpDrag}
                   {...provided.dragHandleProps}
                 />
-              <Flex
-                sx={{
-                  alignItems: "center",
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  p: 3,
-                  bg: "headSection",
-                  border: (t) => `1px solid ${t.colors.borders}`
-                }}
-              >
+              <Box sx={{
+                    bg: "headSection",
+                    width: '100%',
+                    border: (t) => `1px solid ${t.colors.borders}` }}>
+                <Flex
+                  sx={{
+                    p: 3,
+                    alignItems: "center",
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  }}
+                >
                 
                 <ItemHeader 
                   theme={theme}
@@ -136,10 +139,9 @@ const ListItem = (props: any) => {
                   </Menu>
                 </Flex>
               </Flex>
+              { HintElement ? HintElement : null }
+              </Box>
             </Flex>
-            {
-              HintElement ? HintElement : null
-            }
             { children }
           </Li>
         </Fragment>

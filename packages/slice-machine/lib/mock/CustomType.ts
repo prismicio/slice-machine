@@ -26,7 +26,7 @@ const groupHandler = (fields: GroupFieldsAsArray) => {
 }
 
 const sliceZoneHandler = ({ value }: { value: any }) => {
-  console.log('TODO: define type of value other than any', { value })
+  // console.log('TODO: define type of value other than any', { value })
 }
 
 const createEmptyMock = (type: string) => ({

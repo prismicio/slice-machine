@@ -91,7 +91,7 @@ const CodeBlock = ({ docs, ...props }) => {
               />
             )
           }
-          <Text as="span" sx={{ display: ['none', 'inline', 'none', 'inline'] }}>&nbsp;Copy code</Text>
+          <Text as="span" sx={{ display: ['none', 'inline', 'none', 'inline'] }}>&nbsp;Copy</Text>
         </Button>
       </Box>
     </Flex>
