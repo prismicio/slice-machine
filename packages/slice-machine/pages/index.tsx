@@ -27,6 +27,7 @@ interface CtPayload {
   label: string;
 }
 
+// To isolate later
 const CTName = ({ CTName }) => {
   return (
     <Heading sx={{ flex: 1, lineHeight: 20 }} as="h6">
@@ -35,6 +36,7 @@ const CTName = ({ CTName }) => {
   );
 };
 
+// To isolate later
 const CTRepeatble = ({ repeatable }) => {
   return !repeatable ? (
     <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
@@ -47,6 +49,7 @@ const CTRepeatble = ({ repeatable }) => {
   );
 };
 
+// To isolate later
 const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }) => {
   return (
     <Box
@@ -78,7 +81,7 @@ const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }) => {
     </Box>
   );
 };
-
+// To isolate later
 const Card = ({ ct }: { ct: CtPayload }) => (
   <Link href={`/cts/${ct.id}`} passHref>
     <ThemeLink variant="links.invisible">
