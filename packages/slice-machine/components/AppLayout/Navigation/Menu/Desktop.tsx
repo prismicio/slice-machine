@@ -1,4 +1,4 @@
-import { Box } from "theme-ui";
+import { Box, Divider } from "theme-ui";
 import { useContext } from "react";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "components/AppLayout/Navigation/Badge";
@@ -22,7 +22,7 @@ const Desktop = () => {
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          <Box as="hr" mb="10px" />
+          <Divider variant="sidebar" />
           <Item link={warnings} />
           <VersionBadge
             label="Version"

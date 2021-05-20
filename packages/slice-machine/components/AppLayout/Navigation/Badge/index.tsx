@@ -11,10 +11,10 @@ const VersionBadge = ({ version, label = "V" }: BadgeProps) => {
     <Box
       as="span"
       sx={{
-        cursor: "pointer",
         color: "textClear",
         opacity: "0.8",
         fontSize: "12px",
+        ml: 1,
       }}
     >
       {label} : {version}{" "}
