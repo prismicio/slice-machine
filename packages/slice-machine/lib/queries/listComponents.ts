@@ -16,9 +16,9 @@ async function handleLibraryPath(env: Environment, libPath: string): Promise<Lib
     pathToSlices,
   } = getInfoFromPath(libPath, env.cwd)
 
-  if (!isLocal) {
-    return
-  }
+  // if (!isLocal) {
+  //   return
+  // }
   if (!pathExists) {
     console.warn(`Path to library "${pathToSlices}" does not exist. Skipping.`)
     return
@@ -30,11 +30,13 @@ async function handleLibraryPath(env: Environment, libPath: string): Promise<Lib
   // all paths to components found in slices folder
   const pathsToComponents = Files.readDirectory(slash(pathToSlices))
     .map(curr => path.join(pathToSlices, curr))
-    .filter(e => e.split(path.sep).pop() !== 'index.js')
+    .filter(e => {
+      const f = e.split(path.sep).pop()
+      return f !== 'index.js' && f?.[0] !== '.'
+    })
 
   // relative path to slice folder, to be appended with sliceName
   const pathToSlice = `${isLocal ? './' : ''}${from}${pathToSlices.split(from).slice(1).join('')}`
-
 
   const allComponents: Component[] = pathsToComponents.reduce(
     (acc: Component[], curr: string) => {
@@ -58,6 +60,7 @@ async function handleLibraryPath(env: Environment, libPath: string): Promise<Lib
     }, []
   );
   return {
+    isLocal,
     name: from,
     components: allComponents
   }

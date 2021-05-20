@@ -1,4 +1,4 @@
-interface Payload {
+export interface ToastPayload {
   loading: boolean
   done: boolean
   warning: boolean
@@ -13,7 +13,7 @@ enum Apperance {
   Info = 'info'
 }
 
-export const handleRemoteResponse = (addToast: Function) => (payload: Payload) => {
+export const handleRemoteResponse = (addToast: Function) => (payload: ToastPayload) => {
   if (payload.done) {
     addToast(payload.message, {
       appearance: (() => {

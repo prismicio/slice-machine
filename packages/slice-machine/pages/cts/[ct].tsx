@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useContext } from 'react'
 
 import { CustomTypesContext } from "src/models/customTypes/context"
+import { ConfigContext } from "src/config-context"
 
 import { useModelReducer } from 'src/models/customType/modelReducer'
 import { CustomTypeState } from '../../lib/models/ui/CustomTypeState'
@@ -16,8 +17,9 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
   )
 }
 
-const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> }) => {
-  const [Model, store] = useModelReducer({ customType, remoteCustomType })
+const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType?: CustomType<TabsAsObject> }) => {
+  const { env } = useContext(ConfigContext)
+  const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig: env.mockConfig[customType.id] })
   return (<Ct Model={Model} store={store} />)
 }
 

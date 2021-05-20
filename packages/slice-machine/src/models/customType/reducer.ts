@@ -1,11 +1,11 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
-import { Tab } from '../../../lib/models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
+import { Tab } from '@models/common/CustomType/tab'
 
 import Actions from './actions'
-import { Widget } from '../../../lib/models/common/widgets'
-import { Group, GroupWidget, GroupAsArray,} from '../../../lib/models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
+import { Widget } from '@models/common/widgets'
+import { Group, GroupWidget, GroupAsArray,} from '@models/common/CustomType/group'
+import { SliceZone, SliceZoneAsArray } from '@models/common/CustomType/sliceZone'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -94,6 +94,16 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: Widget }
         return CustomTypeState.updateTab(prevState, tabId)
           (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
+      }
+      case Actions.GroupReplaceWidget: {
+        const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: Widget }
+        return CustomTypeState.updateTab(prevState, tabId)
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.replaceWidget(group, previousKey, newKey, value)))
+      }
+      case Actions.GroupDeleteWidget: {
+        const { tabId, groupId, key } = action.payload as { tabId: string, groupId: string, key: string }
+        return CustomTypeState.updateTab(prevState, tabId)
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.deleteWidget(group, key)))
       }
       case Actions.GroupReorderWidget: {
         const { tabId, groupId, start, end } = action.payload as { tabId: string, groupId: string, start: number, end: number }

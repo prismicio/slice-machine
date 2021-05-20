@@ -1,13 +1,13 @@
 import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
-import { CustomType } from '../../../lib/models/common/CustomType'
-import { TabsAsObject, TabsAsArray } from '../../../lib/models/common/CustomType/tab'
-import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
+import { CustomType } from '@models/common/CustomType'
+import { TabsAsObject, TabsAsArray } from '@models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'
 
-export function useModelReducer({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined }): [CustomTypeState, CustomTypeStore] {
+export function useModelReducer({ customType, remoteCustomType, initialMockConfig = {} }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
   const { id, label, status, repeatable } = customType
   const { tabs } = CustomType.toArray(customType)
 
@@ -29,8 +29,8 @@ export function useModelReducer({ customType, remoteCustomType }: { customType: 
     tabs,
     initialTabs: tabs,
     remoteTabs,
-    mockConfig: {},
-    initialMockConfig: {},
+    mockConfig: initialMockConfig,
+    initialMockConfig,
     poolOfFieldsToCheck: CustomTypeState.getPool(tabs),
     __status,
   }

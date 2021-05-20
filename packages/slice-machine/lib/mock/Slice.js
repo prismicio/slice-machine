@@ -5,7 +5,7 @@ import { snakelize } from '../utils/str'
 import { handleFields } from './misc/handlers'
 
 const createEmptyMock = (sliceName, variation) => ({
-  ...variation,
+  variation: variation.id,
   slice_type: snakelize(sliceName),
   items: [],
   primary: {}

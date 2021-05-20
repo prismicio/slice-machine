@@ -25,13 +25,21 @@ export interface GroupAsArray {
 }
 
 export const Group = {
-  addWidget(group: GroupAsArray, newField: {key: string, value: Widget }): GroupAsArray {
-    console.log(group, newField)
+  addWidget(group: GroupAsArray, newField: { key: string, value: Widget }): GroupAsArray {
     return {
       ...group,
       value: {
         ...group.value,
         fields: [...group.value.fields, newField]
+      }
+    }
+  },
+  deleteWidget(group: GroupAsArray, wkey: string): GroupAsArray {
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: group.value.fields.filter(({ key }) => key !== wkey)
       }
     }
   },
@@ -55,8 +63,24 @@ export const Group = {
       }
     }
   },
+  replaceWidget(group: GroupAsArray, previousKey: string, newKey: string, value: Widget): GroupAsArray {
+    return {
+      ...group,
+      value: {
+        ...group.value,
+        fields: group.value.fields.map(t => {
+          if (t.key === previousKey) {
+            return {
+              key: newKey,
+              value
+            }
+          }
+          return t
+        })
+      }
+    }
+  },
   toArray(key: string, group: GroupWidget): GroupAsArray {
-    console.log({ key, group })
     return {
       key,
       value: {
@@ -70,7 +94,7 @@ export const Group = {
     return {
       type: FieldType.Group,
       config: {
-        label: group.value.label,
+        ...group.value,
         fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
       }
     }

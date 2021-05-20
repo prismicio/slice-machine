@@ -1,10 +1,11 @@
-import { fetchApi } from '../../../../lib/builder/fetch'
+import { fetchApi } from '../../../../lib/builders/common/fetch'
 import SliceState from '../../../../lib/models/ui/SliceState'
 import { ActionType } from './ActionType'
+import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
 
 export default function push(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
-  return async (slice: SliceState, setData: (data: object) => void) => {
+  return async (slice: SliceState, setData: (data: ToastPayload) => void) => {
     fetchApi({
       url: `/api/slices/push?sliceName=${slice.infos.sliceName}&from=${slice.from}`,
       setData,

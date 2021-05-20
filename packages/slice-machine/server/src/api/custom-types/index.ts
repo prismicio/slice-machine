@@ -1,18 +1,15 @@
-import fs from 'fs'
 import path from 'path'
 import glob from 'glob'
-import slash from 'slash'
-
 import Environment from '../../../../lib/models/common/Environment'
 import { CustomType } from '../../../../lib/models/common/CustomType'
 import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
 import Files from '../../../../lib/utils/files'
+import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 const handlePath = (acc: Array<CustomType<TabsAsObject>>, p: string) => {
   const key = path.basename(path.dirname(p))
-  const file = fs.readFileSync(p, 'utf-8')
   try {
-    const { json, ...rest } = JSON.parse(file)
+    const { json, ...rest } = Files.readJson(p)
     return [
       ...acc,
       {
@@ -41,20 +38,23 @@ const fetchRemoteCustomTypes = async (env: Environment) => {
   return { remoteCustomTypes }
 }
 
-const saveCustomTypes = (cts: ReadonlyArray<any>, pathToCustomTypes: string) => {
+const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
   for (const ct of cts) {
-    Files.write(slash(path.join(pathToCustomTypes, ct.id, 'index.json')), JSON.stringify(ct, null, 2))
+    Files.write(
+      CustomTypesPaths(cwd).customType(ct.id).model(),
+      ct
+    )
   }
 }
 
 export default async function handler(env: Environment): Promise<{ customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
   const { cwd } = env
-  const pathToCustomTypes = slash(path.join(cwd, 'customtypes'))
-  const folderExists = fs.existsSync(pathToCustomTypes)
+  const pathToCustomTypes = CustomTypesPaths(cwd).value()
+  const folderExists = Files.exists(pathToCustomTypes)
 
   const { remoteCustomTypes } = await fetchRemoteCustomTypes(env)
   if (!folderExists) {
-    saveCustomTypes(remoteCustomTypes, pathToCustomTypes)
+    saveCustomTypes(remoteCustomTypes, cwd)
   }
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return {

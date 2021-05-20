@@ -1,10 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import slash from 'slash'
-
 import Environment from '../../../../lib/models/common/Environment'
 import { CustomType } from '../../../../lib/models/common/CustomType'
 import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
+import Files from '../../../../lib/utils/files'
+import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 interface CustomTypePayload {
   label: string
@@ -13,14 +11,9 @@ interface CustomTypePayload {
 }
 
 export default async function handler(env: Environment, payload: CustomTypePayload): Promise<CustomType<TabsAsObject>> {
-  const pathToCustomTypes = slash(path.join(env.cwd, 'customtypes'))
-  const folderExists = fs.existsSync(pathToCustomTypes)
-  if (!folderExists) {
-    fs.mkdirSync(pathToCustomTypes)
-  }
   const { label, key, repeatable } = payload
 
-  const pathToNewCustomType = slash(path.join(pathToCustomTypes, `${key}.json`))
+  const pathToNewCustomType = CustomTypesPaths(env.cwd).customType(`${key}.json`).model()
   const newCt = {
     id: key,
     label,
@@ -30,6 +23,6 @@ export default async function handler(env: Environment, payload: CustomTypePaylo
       Main: {}
     }
   }
-  fs.writeFileSync(pathToNewCustomType, JSON.stringify(newCt))
+  Files.write(pathToNewCustomType, newCt)
   return newCt
 }

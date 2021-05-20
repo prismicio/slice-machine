@@ -40,8 +40,7 @@ app.use('/:lib/:sliceName/:variation', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, '[lib]/[sliceName]/[variation].html'));
 })
 
-global.appRoot = path.resolve(__dirname);
-
+global.appRoot = path.join(__dirname, '../../../');
 const port = process.env.PORT || 9000
 app.listen(port, () => console.log(`Now running on http://localhost:${port} !`));
 

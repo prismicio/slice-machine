@@ -1,3 +1,5 @@
+/* global variable define in server/src/index.js */
+declare var appRoot: string;
 import { createScreenshotUrl } from '../../../../lib/utils'
 import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
 import { CustomPaths, GeneratedPaths } from '../../../../lib/models/paths'
@@ -57,7 +59,7 @@ import { handleStorybookPreview } from '../common/storybook'
 
     if(!hasCustomStories) {
       console.log('[update]: generating stories')
-      Storybook.generateStories(env.cwd, from, sliceName)
+      Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     }
     
     console.log('[update]: generating screenshots previews')

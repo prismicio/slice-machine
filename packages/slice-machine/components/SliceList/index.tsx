@@ -2,7 +2,7 @@ import { Link } from "theme-ui";
 import Card from "./Card";
 
 import SliceState from "../../lib/models/ui/SliceState";
-import * as Links from "../../lib/builder/links";
+import * as Links from "../../lib/builders/SliceBuilder/links";
 import Grid from "../Grid";
 
 // const DefaultRenderWrapper = (_, children) => <Fragment>{children}</Fragment>

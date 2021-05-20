@@ -11,8 +11,7 @@ import {
   createValidationSchema
 } from 'lib/forms'
 
-import * as Widgets from '../../../../../models/common/widgets'
-
+import * as Widgets from 'lib/models/common/widgets/withGroup'
 
 import ErrorTooltip from './ErrorTooltip'
 
@@ -69,7 +68,6 @@ const NewField = ({
             <Flex
               sx={{
                 alignItems: "center",
-                marginLeft: 'calc(32px + 4px)',
                 width: '50%'
               }}
             >

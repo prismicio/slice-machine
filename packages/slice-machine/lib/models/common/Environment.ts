@@ -1,6 +1,7 @@
 import PrismicData from './PrismicData'
 import UserConfig from './UserConfig'
 import Chromatic from './Chromatic'
+import { Framework } from './Framework'
 import DefaultClient from './http/DefaultClient'
 import FakeClient from './http/FakeClient'
 import PackageVersion from './PackageVersion'
@@ -14,7 +15,7 @@ export default interface Environment {
   currentVersion: string
   updateAvailable?: PackageVersion
   mockConfig: any
-  framework: string
+  framework: Framework
   baseUrl: string
   client: DefaultClient | FakeClient
 }

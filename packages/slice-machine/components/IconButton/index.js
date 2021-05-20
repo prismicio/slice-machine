@@ -18,7 +18,7 @@ const IconButton = ({
   onClick,
   label,
   Icon,
-  error,
+  error = null,
   size = 18,
   fitButton = false,
   active = false,

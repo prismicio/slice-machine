@@ -1,11 +1,10 @@
-import Store from '../../../lib/models/ui/Store'
-import { Widget } from '../../../lib/models/common/widgets'
-import { GroupWidget, GroupAsArray } from '../../../lib/models/common/CustomType/group'
+import Store from '@models/ui/Store'
+import { Widget } from '@models/common/widgets'
+import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actions'
 
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
-import { group } from 'yargs'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
@@ -32,6 +31,19 @@ export default class CustomTypeStore implements Store {
       reorderWidget: (start: number, end: number) => {
         this.dispatch({ type: Actions.ReorderWidget, payload: { tabId, start, end }})
       },
+      updateWidgetGroupMockConfig:(initialMockConfig: any, groupItemKey: string, prevId: string, newId: string, mockValue: any) => {
+
+        console.log('UPDATE MOCK CONFIG\n\n')
+        console.log({ initialMockConfig, mockValue, newId })
+        const updatedConfig = {
+          ...initialMockConfig[groupItemKey],
+          ...(prevId !== newId ? {
+              [prevId]: undefined,
+            } : null),
+          [newId]: mockValue
+        }
+        updateWidgetMockConfig(this.dispatch)()(initialMockConfig, groupItemKey, groupItemKey, updatedConfig)
+      },
       updateWidgetMockConfig: updateWidgetMockConfig(this.dispatch)(),
       deleteWidgetMockConfig: deleteWidgetMockConfig(this.dispatch)(),
       createSliceZone: () => {
@@ -57,9 +69,15 @@ export default class CustomTypeStore implements Store {
           addWidget: (id: string, widget: Widget) => {
             this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, widget } })
           },
+          replaceWidget: (previousKey: string, newKey: string, value: Widget) => {
+            this.dispatch({ type: Actions.GroupReplaceWidget, payload: { tabId, groupId, previousKey, newKey, value } })
+          },
           reorderWidget: (start: number, end: number) => {
             this.dispatch({ type: Actions.GroupReorderWidget, payload: { tabId, groupId, start, end } })
-          }
+          },
+          deleteWidget: (key: string) => {
+            this.dispatch({ type: Actions.GroupDeleteWidget, payload: { tabId, groupId, key } })
+          },
         }
       }
     }

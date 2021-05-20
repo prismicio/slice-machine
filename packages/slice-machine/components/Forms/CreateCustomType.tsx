@@ -1,6 +1,9 @@
 import { Field, useField } from 'formik'
 import  { Box, Flex, Label, Input, Text, Radio }from 'theme-ui'
 
+import { CustomType } from 'lib/models/common/CustomType'
+import { TabsAsObject } from 'lib/models/common/CustomType/tab'
+
 // import { Col, Flex as FlexGrid } from 'components/Flex'
 
 import ModalFormCard from 'components/ModalFormCard'
@@ -15,6 +18,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
       type="text"
       placeholder={placeholder}
       as={Input}
+      autocomplete="off"
     />
     { error ? <Text sx={{ color: 'error', mt: 1 }}>{error}</Text>: null}
   </Box>
@@ -23,7 +27,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
 const formId = "create-custom-type"
 
 
-const FlexCard =  (props: any) => (
+const FlexCard =  ({ selected, ...rest }:  { selected: boolean, children: any, onClick: any }) => (
   <Flex
     sx={{
       p: '24px',
@@ -32,11 +36,12 @@ const FlexCard =  (props: any) => (
       cursor: 'pointer',
       borderRadius: '6px',
       backgroundColor: 'grayLight',
+      boxShadow: selected ? ({ colors }) => `0 0 0 2px ${colors.primary}` : 'none', 
       '&:hover': {
         boxShadow: ({ colors }) => `0 0 0 2px ${colors.primary}`
       }
     }}
-    {...props}
+    {...rest}
   />
 )
 
@@ -44,7 +49,7 @@ const SelectRepeatable = () => {
   const [field, _, helpers] = useField('repeatable')
   return (
     <Box mb={2}>
-      <FlexCard onClick={() => helpers.setValue(true)}>
+      <FlexCard selected={field.value} onClick={() => helpers.setValue(true)}>
         <Radio checked={field.value} />
         <Box
           sx={{
@@ -60,7 +65,7 @@ const SelectRepeatable = () => {
           </Box>
         </Box>
       </FlexCard>
-      <FlexCard onClick={() => helpers.setValue(false)}>
+      <FlexCard  selected={!field.value} onClick={() => helpers.setValue(false)}>
         <Radio checked={!field.value} />
         <Box
           sx={{
@@ -83,8 +88,10 @@ const SelectRepeatable = () => {
 const CreateCustomtypeForm = ({
   isOpen,
   onSubmit,
-  close
-}: { isOpen: boolean, onSubmit: Function, close: Function }) => {
+  close,
+  customTypes
+}: { isOpen: boolean, onSubmit: Function, close: Function, customTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>> }) => {
+
   return (
     <ModalFormCard
       isOpen={isOpen}
@@ -100,6 +107,9 @@ const CreateCustomtypeForm = ({
       validate={({ id }: { id: string }) => {
         if (id && !id.match(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)) {
           return { id: 'Invalid id: No special characters allowed' }
+        }
+        if (id && customTypes.map(e => e?.id.toLowerCase()).includes(id)) {
+          return { id: `ID "${id}" exists already`}
         }
       }}
       content={{

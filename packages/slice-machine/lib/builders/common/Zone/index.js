@@ -30,7 +30,6 @@ const Zone = ({
   onDeleteItem, /* user clicked on "Delete field" */
   onSaveNewField, /* user clicked on "Save" (NewField) */
   onDragEnd, /* user dragged item to an end location */
-  showHints, /* should we display code hints? */
   EditModal, /* temp */
   onSave, /* user clicked on "Save" (EditModal) */
   dataTip, /* text info to display as tip */
@@ -39,6 +38,7 @@ const Zone = ({
   renderFieldAccessor, /* render field accessor (eg. slice.primary.title) */
 
 }) => {
+  const [showHints, setShowHints] = useState(false)
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
   const [newFieldData, setNewFieldData] = useState(null)
@@ -68,11 +68,14 @@ const Zone = ({
         Heading={<Heading as="h6">{title}</Heading>}
         Actions={(
           <Fragment>
-            <Button variant="buttons.darkSmall" onClick={() => console.log('Show widgets')}>
-              Show Code Widgets
+            <Button
+              variant="buttons.darkSmall"
+              onClick={() => setShowHints(!showHints)}
+            >
+              { showHints ? 'Hide' : 'Show'} Code Widgets
             </Button>
             <Button ml={2} variant="buttons.darkSmall" onClick={() => enterSelectMode()}>
-              Add Widget
+              Add Field
             </Button>
           </Fragment>
         )}
@@ -83,6 +86,7 @@ const Zone = ({
         fields={fields}
         showHints={showHints}
         store={store}
+        Model={Model}
         dataTip={dataTip}
         title={title}
         renderFieldAccessor={renderFieldAccessor}
@@ -112,7 +116,7 @@ const Zone = ({
         onSave={onSave}
         fields={poolOfFieldsToCheck}
         getFieldMockConfig={getFieldMockConfig}
-          />
+      />
       <SelectFieldTypeModal
         data={selectModalData}
         close={closeSelectModal}
@@ -133,6 +137,7 @@ Zone.propTypes = {
   onSaveNewField: func.isRequired,
   onDragEnd: func.isRequired,
   onDeleteItem: func.isRequired,
+  poolOfFieldsToCheck: arrayOf(shape({ key: string, value: object })),
   // how to access mock config for given key
   getFieldMockConfig: func.isRequired,
   renderHintBase: func.isRequired,

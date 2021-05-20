@@ -1,6 +1,7 @@
 import path from 'path'
 import puppeteer from 'puppeteer'
 import Files from '../../../../lib/utils/files'
+import { delay } from './utils'
 
 export const fetchStorybookUrl = async (storybookUrl: string) => {
   return fetch(storybookUrl)
@@ -31,7 +32,6 @@ export const generatePreview = async (
 
 export const testStorybookPreview = async ({ screenshotUrl }: { screenshotUrl: string }) => {
   try {
-    console.log('[update]: checking Storybook url')
     await fetchStorybookUrl(screenshotUrl)
   } catch (e) {
     return {

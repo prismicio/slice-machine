@@ -26,7 +26,7 @@ export function deleteWidgetMockConfig(dispatch: ({type, payload}: { type: strin
 
       const updatedConfig = {
         ...mockConfig,
-        [widgetsArea]: Object.keys(mockConfig[widgetsArea])
+        [widgetsArea]: Object.keys(mockConfig[widgetsArea] || {})
           .filter(([k]) => k !== apiId)
           .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
       }

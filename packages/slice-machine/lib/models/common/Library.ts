@@ -17,6 +17,7 @@ export enum LibStatus {
 
 export interface Library {
   name: string
+  isLocal: boolean,
   components: ReadonlyArray<ComponentWithLibStatus>
 }
 
@@ -47,6 +48,7 @@ export const Library = {
 
     return {
       name: lib.name,
+      isLocal: lib.isLocal,
       components
     }
   }

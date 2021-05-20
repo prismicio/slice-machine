@@ -1,6 +1,6 @@
 import { Widget } from './widgets'
 // @ts-ignore
-import { pascalize } from '../../utils/str'
+import { snakelize } from '../../utils/str'
 
 export enum WidgetsArea {
   Primary = 'primary',
@@ -24,14 +24,15 @@ export type AsArray = ReadonlyArray<{key: string, value: Widget}>
 export type AsObject = { [key: string]: Widget }
 
 export const Variation = {
-  generateId(input: string): string {
+  generateId(str: string): string {
+    let input = str
     input = input.replace(/^\s+|\s+$/g, ''); // trim
     input = input.toLowerCase();
   
     // remove accents, swap ñ for n, etc
-    var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-    var to   = "aaaaaeeeeeiiiiooooouuuunc------";
-    for (var i=0, l=from.length ; i<l ; i++) {
+    const from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+    const to   = "aaaaaeeeeeiiiiooooouuuunc------";
+    for (let i = 0, l = from.length ; i < l; i++) {
       input = input.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
     }
   
@@ -39,7 +40,7 @@ export const Variation = {
       .replace(/\s+/g, '-') // collapse whitespace and replace by -
       .replace(/-+/g, '-'); // collapse dashes
   
-    return pascalize(input);
+    return snakelize(input);
   },
 
   toObject(variation: Variation<AsArray>): Variation<AsObject> {
@@ -53,8 +54,8 @@ export const Variation = {
   toArray(variation: Variation<AsObject>): Variation<AsArray> {
     return {
       ...variation,
-      primary: Object.entries(variation.primary).map(([key, value]) => ({ key, value })),
-      items: Object.entries(variation.items).map(([key, value]) => ({ key, value }))
+      primary: Object.entries(variation.primary || {}).map(([key, value]) => ({ key, value })),
+      items: Object.entries(variation.items || {}).map(([key, value]) => ({ key, value }))
     }
   },
 

@@ -1,11 +1,12 @@
-import { Tab } from '../../../../lib/models/common/CustomType/tab'
-import { fetchApi } from '../../../../lib/builder/fetch'
-import { CustomTypeState } from '../../../../lib/models/ui/CustomTypeState'
+import { fetchApi } from 'lib/builders/common/fetch'
+import { Tab } from '@models/common/CustomType/tab'
+import { CustomTypeState } from '@models/ui/CustomTypeState'
 import ActionType from './'
+import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
 
 export default function save(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
-  return async (customType: CustomTypeState, setData: (data: object) => void = () => {}) => {
+  return async (customType: CustomTypeState, setData: (data: ToastPayload) => void = () => {}) => {
     fetchApi({
       url: '/api/custom-types/save',
       params: {

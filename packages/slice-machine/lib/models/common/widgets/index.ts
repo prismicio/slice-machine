@@ -1,18 +1,17 @@
-import{ BooleanField } from './Boolean'
-import{ Color } from './Color'
-import{ ContentRelationship } from './ContentRelationship'
-import{ DateField } from './Date'
-import{ Embed } from './Embed'
-import{ GeoPoint } from './GeoPoint'
-import{ Image } from './Image'
-// import{ Group } from './Group'
-import{ Link } from './Link'
-import{ Number } from './Number'
-import{ Select } from './Select'
-import{ StructuredText } from './StructuredText'
-import{ Text } from './Text'
-import{ Timestamp } from './Timestamp'
-import{ UID } from './UID'
+import { BooleanField } from './Boolean'
+import { Color } from './Color'
+import { ContentRelationship } from './ContentRelationship'
+import { DateField } from './Date'
+import { Embed } from './Embed'
+import { GeoPoint } from './GeoPoint'
+import { Image } from './Image'
+import { Link } from './Link'
+import { Number } from './Number'
+import { Select } from './Select'
+import { StructuredText } from './StructuredText'
+import { Text } from './Text'
+import { Timestamp } from './Timestamp'
+import { UID } from './UID'
 
 // console.log({ StructuredText })
 export {
@@ -23,7 +22,6 @@ export {
   Embed,
   GeoPoint,
   Image,
-  // Group,
   Link,
   Number,
   Select,
@@ -47,5 +45,4 @@ export type Widget =  BooleanField  |
                       Text              |
                       Timestamp         |
                       UID               |
-                      // Group             |
                       ContentRelationship

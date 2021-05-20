@@ -1,5 +1,4 @@
 import React from 'react'
-import * as Widgets from '../../../../../../../models/common/widgets'
 import CodeBlock from '../CodeBlock'
 
 // const DOCS_README = 'https://github.com/prismicio/prismic-reactjs';
@@ -31,27 +30,27 @@ const handleEmbedCode = (fieldText, useKey) =>
 
 const appendKey = (id) => `key={\`${id}-\${i}\`}`
 
-const codeByWidgetType = {
-  [Widgets.ContentRelationship.CUSTOM_NAME]: (fieldText, useKey) => `<span>{{ ${fieldText} }} TODO</span>`,
-  [Widgets.UID.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
-  [Widgets.StructuredText.TYPE_NAME]: (fieldText, useKey) => `<RichText render={${fieldText}} ${useKey ? appendKey('rich-text') : ''}/>`,
-  [Widgets.Image.TYPE_NAME]: (fieldText, useKey) => `<img src={${fieldText}.url} alt={${fieldText}.alt} ${useKey ? appendKey('img') : ''}/>`,
-  [Widgets.Link.TYPE_NAME]: (fieldText, useKey) => handleLinkCode(fieldText, useKey),
-  [Widgets.Select.TYPE_NAME]: createDefaultField(),
-  [Widgets.Boolean.TYPE_NAME]: (fieldText, useKey) => `<span ${useKey ? appendKey('bool') : ''}> { ${fieldText} ? 'true' : 'false' }</span>`,
-  [Widgets.Date.TYPE_NAME]: (...args) => handleDateCode(...args),
-  [Widgets.Timestamp.TYPE_NAME]: createDefaultField(),
-  [Widgets.Embed.TYPE_NAME]: (...args) => handleEmbedCode(...args),
-  [Widgets.Number.TYPE_NAME]: createDefaultField(),
-  [Widgets.GeoPoint.TYPE_NAME]: createDefaultField(),
-  [Widgets.Color.TYPE_NAME]: (fieldText, useKey) => `<span  ${useKey ? appendKey('color') : ''} style={{ color: ${fieldText} }}>Some Text</span>`,
-  [Widgets.Text.TYPE_NAME]: createDefaultField(),
-}
+const codeByWidgetType = (Widgets) => ({
+  [Widgets.ContentRelationship?.CUSTOM_NAME]: (fieldText, useKey) => `<span>{{ ${fieldText} }} TODO</span>`,
+  [Widgets.UID?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
+  [Widgets.StructuredText?.TYPE_NAME]: (fieldText, useKey) => `<RichText render={${fieldText}} ${useKey ? appendKey('rich-text') : ''}/>`,
+  [Widgets.Image?.TYPE_NAME]: (fieldText, useKey) => `<img src={${fieldText}.url} alt={${fieldText}.alt} ${useKey ? appendKey('img') : ''}/>`,
+  [Widgets.Link?.TYPE_NAME]: (fieldText, useKey) => handleLinkCode(fieldText, useKey),
+  [Widgets.Select?.TYPE_NAME]: createDefaultField(),
+  [Widgets.Boolean?.TYPE_NAME]: (fieldText, useKey) => `<span ${useKey ? appendKey('bool') : ''}> { ${fieldText} ? 'true' : 'false' }</span>`,
+  [Widgets.Date?.TYPE_NAME]: (...args) => handleDateCode(...args),
+  [Widgets.Timestamp?.TYPE_NAME]: createDefaultField(),
+  [Widgets.Embed?.TYPE_NAME]: (...args) => handleEmbedCode(...args),
+  [Widgets.Number?.TYPE_NAME]: createDefaultField(),
+  [Widgets.GeoPoint?.TYPE_NAME]: createDefaultField(),
+  [Widgets.Color?.TYPE_NAME]: (fieldText, useKey) => `<span  ${useKey ? appendKey('color') : ''} style={{ color: ${fieldText} }}>Some Text</span>`,
+  [Widgets.Text?.TYPE_NAME]: createDefaultField(),
+})
 
-const toReact = ({ item, renderHintBase, isRepeatable }) => {
+const toReact = ({ Widgets, item, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item })
 
-  const maybeCodeRenderer = codeByWidgetType[typeName]
+  const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName]
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : null
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code
 
