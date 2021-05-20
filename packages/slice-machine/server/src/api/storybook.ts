@@ -58,7 +58,7 @@ export default {
 
     const withPascalizedIds = mocks.value.map( (m: any) => {
       // use underscore to prevent invalid variable names
-      const id = `_${pascalize(m.id)}`
+      const id = `_${pascalize(m.variation)}`
       return {
         ...m,
         id,

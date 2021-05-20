@@ -25,7 +25,7 @@ const groupHandler = (fields: GroupFieldsAsArray) => {
   return items
 }
 
-const sliceZoneHandler = ({ value }: { value: any }) => {
+const sliceZoneHandler = () => {
   // console.log('TODO: define type of value other than any', { value })
 }
 
@@ -64,7 +64,7 @@ export default async function MockCustomType(model: CustomType<TabsAsObject>) {
     })
 
     if (sliceZone) {
-      sliceZoneHandler(sliceZone)
+      sliceZoneHandler()
     }
   }
   return customTypeMock
