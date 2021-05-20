@@ -47,7 +47,6 @@ const ListItem = (props: any) => {
         <Fragment>
           <Li
             ref={provided.innerRef}
-            // {...provided.dragHandleProps}
             {...provided.draggableProps}
             Component={Box}
             sx={{
@@ -65,11 +64,13 @@ const ListItem = (props: any) => {
                 mt={3}
                 {...provided.dragHandleProps}
               />
-              <Box sx={{
-                    bg: "headSection",
-                    width: '100%',
-                    
-                     }}>
+              <Box
+                sx={{
+                  bg: "headSection",
+                  width: '100%',
+                  border: (t) => `1px solid ${t.colors.borders}`
+                }}
+              >
                 <Flex
                   sx={{
                     p: 3,

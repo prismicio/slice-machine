@@ -25,9 +25,6 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
           </Box>
         )}
       />
-      <pre>
-        { JSON.stringify(Model.mockConfig)}
-      </pre>
     </main>
   )
 }

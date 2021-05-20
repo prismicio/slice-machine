@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Navigation from "./Navigation";
 import { Box } from "theme-ui";
-import Environment from "lib/models/common/Environment";
+import Environment from "../../lib/models/common/Environment";
 
 const AppLayout = ({
   children,

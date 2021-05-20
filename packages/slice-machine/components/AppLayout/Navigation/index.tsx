@@ -10,11 +10,17 @@ const links = [
   {
     title: "Custom Types",
     href: "/",
+    match(pathname: string) {
+      return pathname === '/' || pathname.indexOf('/cts') === 0
+    },
     Icon: FiFile,
   },
   {
     title: "Slices",
     href: "/slices",
+    match(pathname: string) {
+      return pathname.indexOf('/slices') === 0
+    },
     Icon: FiBox,
   },
 ];
@@ -22,6 +28,7 @@ const links = [
 export interface LinkProps {
   title: string;
   href: string;
+  match: Function;
   Icon: IconType;
 }
 

@@ -11,7 +11,7 @@ const Logo = () => {
           <Flex sx={{ alignItems: "center" }}>
             <Prismic fill={theme.colors?.text} />
             <Heading as="h5" sx={{ ml: 2 }}>
-              Prismic Studio
+              Prismic Builder
             </Heading>
           </Flex>
         </ThemeLink>

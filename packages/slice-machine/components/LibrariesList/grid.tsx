@@ -7,7 +7,7 @@ const Grid = ({ elems, renderElem }: { elems: any, renderElem: Function }) => {
       sx={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-        grid: '16px',
+        gridGap: '16px' as any,
         pt: 2,
         mb: 3
       }}
