@@ -1,6 +1,7 @@
+import React from 'react'
 import { ToastProvider } from 'react-toast-notifications'
 
-const Provider = ({ children }) => {
+const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastProvider
       autoDismiss

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 
-import { Variation, AsArray } from "models/common/Variation";
+import { Variation, AsArray } from "../../../../../models/common/Variation";
 import MenuList from "./MenuList";
 
 import { Button } from "theme-ui";

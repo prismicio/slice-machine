@@ -31,7 +31,7 @@ const Form = ({
         title: 'Update SliceZone',
       }}
     >
-      {({ values }) => (
+      {({ values }:  { values: { sliceKeys: any }}) => (
         <FieldArray
           name="sliceKeys"
           render={arrayHelpers => {

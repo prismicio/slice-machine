@@ -47,7 +47,7 @@ const codeByWidgetType = (Widgets) => ({
   [Widgets.Text?.TYPE_NAME]: createDefaultField(),
 })
 
-const toReact = ({ Widgets, item, renderHintBase, isRepeatable }) => {
+const toReact = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item })
 
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName]

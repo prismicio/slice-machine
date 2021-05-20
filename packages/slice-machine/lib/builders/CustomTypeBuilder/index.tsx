@@ -12,7 +12,7 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
       <Header Model={Model} store={store} />
       <Tabs
         Model={Model}
-        renderTab={({ value, sliceZone, key }) => (
+        renderTab={({ value, sliceZone, key }: { value: any, sliceZone: any, key: string }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone
               fields={value}

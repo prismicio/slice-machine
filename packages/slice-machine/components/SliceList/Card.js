@@ -184,10 +184,11 @@ const ForSliceZone = forwardRef(
 
 const Card = ({ cardType, ...otherProps }) => {
   switch (cardType) {
-    case "ForSlicePage":
-      return <ForSlicePage {...otherProps} />;
     case "ForSliceZone":
       return <ForSliceZone {...otherProps} />;
+    case "ForSlicePage":
+    default:
+      return <ForSlicePage {...otherProps} />;
   }
 };
 

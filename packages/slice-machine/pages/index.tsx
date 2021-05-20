@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useContext, useState } from 'react'
-import { Box, Flex, Button, IconButton, Card as ThemeCard, Link as ThemeLink, Heading } from 'theme-ui'
+import { Box, Flex, Button, Card as ThemeCard, Link as ThemeLink, Heading } from 'theme-ui'
 import { CustomTypesContext } from "../src/models/customTypes/context"
 
 import { GoPlus } from 'react-icons/go'
@@ -67,7 +67,6 @@ const CustomTypes = () => {
             <GoPlus size={"2em"} />
           </Button>
         </Flex>
-        {/* <Button type="button" onClick={_onCreate}>New Custom Type</Button> */}
         <Grid
           elems={customTypes}
           renderElem={(ct: CtPayload) => (

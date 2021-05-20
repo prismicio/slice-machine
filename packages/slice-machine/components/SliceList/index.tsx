@@ -5,8 +5,6 @@ import SliceState from "../../lib/models/ui/SliceState";
 import * as Links from "../../lib/builders/SliceBuilder/links";
 import Grid from "../Grid";
 
-// const DefaultRenderWrapper = (_, children) => <Fragment>{children}</Fragment>
-
 const DefaultCardWrapper = ({
   link,
   children,

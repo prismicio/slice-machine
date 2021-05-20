@@ -38,7 +38,6 @@ const CustomListItem = ({
   isRepeatable,
   item: groupItem,
   draggableId,
-  dragMouseIsDown,
   renderFieldAccessor,
   ...rest
 }) => {
@@ -138,7 +137,7 @@ const CustomListItem = ({
           </Button>
         )]}
         children={false ? null : (
-          <Box sx={{ ml: 4, display: dragMouseIsDown ? 'block' : 'block' }}>
+          <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
                   {(provided) =>  (

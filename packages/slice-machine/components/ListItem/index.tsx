@@ -34,9 +34,6 @@ const ListItem = (props: any) => {
 
     draggableId,
 
-    onMouseDownDrag,
-    onMouseUpDrag,
-
     children
   } = props
 
@@ -61,19 +58,18 @@ const ListItem = (props: any) => {
           >
             <Flex sx={{ width: '100%' }}>
               <IconButton
-                  label="Reorder slice field (drag and drop)"
-                  Icon={FaBars}
-                  color={theme.colors.icons}
-                  mr={1}
-                  mt={3}
-                  onMouseDown={onMouseDownDrag}
-                  onMouseUp={onMouseUpDrag}
-                  {...provided.dragHandleProps}
-                />
+                label="Reorder slice field (drag and drop)"
+                Icon={FaBars}
+                color={theme.colors?.icons as string}
+                mr={1}
+                mt={3}
+                {...provided.dragHandleProps}
+              />
               <Box sx={{
                     bg: "headSection",
                     width: '100%',
-                    border: (t) => `1px solid ${t.colors.borders}` }}>
+                    
+                     }}>
                 <Flex
                   sx={{
                     p: 3,

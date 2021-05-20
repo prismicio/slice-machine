@@ -1,11 +1,10 @@
-import { memo } from 'react'
 import { Box, Card as ThemeCard } from 'theme-ui'
 
 const CardBox = ({
   bg,
   background,
   sx,
-  children,
+  children = null,
   withRadius,
   radius
 }) => (
@@ -23,19 +22,19 @@ const CardBox = ({
     { children }
   </Box>
 )
-const Card = memo(({
-  Header,
-  SubHeader,
-  Body,
-  Footer,
+const Card = ({
+  Header = null,
+  SubHeader = null,
+  Body = null,
+  Footer = null,
   borderFooter= false,
   radius = '6px',
   bodySx = {},
   footerSx = {},
-  sx,
-  bg,
+  sx = null,
+  bg = null,
   children = null,
-  background,
+  background = null,
   ...rest
 }) => (
   <ThemeCard
@@ -73,6 +72,6 @@ const Card = memo(({
       </CardBox>
     ) : null}
   </ThemeCard>
-))
+)
 
 export default Card

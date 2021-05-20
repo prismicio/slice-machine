@@ -19,7 +19,7 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
 
 const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType?: CustomType<TabsAsObject> }) => {
   const { env } = useContext(ConfigContext)
-  const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig: env.mockConfig[customType.id] })
+  const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig: env?.mockConfig[customType.id] })
   return (<Ct Model={Model} store={store} />)
 }
 

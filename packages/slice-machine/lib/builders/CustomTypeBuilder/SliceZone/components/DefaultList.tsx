@@ -1,6 +1,7 @@
 import SliceList from "../../../../../components/SliceList";
+import SliceState from "../../../../models/ui/SliceState";
 
-const DefaultList = ({ slices, cardType }) => (
+const DefaultList = ({ slices, cardType }:  { slices: ReadonlyArray<SliceState>, cardType: string }) => (
   <SliceList
     cardType={cardType}
     slices={slices}

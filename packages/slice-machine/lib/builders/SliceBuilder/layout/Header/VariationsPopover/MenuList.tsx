@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Variation, AsArray } from "models/common/Variation";
+import { Variation, AsArray } from "../../../../../models/common/Variation";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{

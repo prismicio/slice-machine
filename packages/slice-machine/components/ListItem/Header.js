@@ -5,9 +5,6 @@ const ItemHeader = ({
   sliceFieldName,
   theme,
   WidgetIcon,
-  onMouseDownDrag,
-  onMouseUpDrag,
-  iconButtonProps = {}
 }) => (
   <Flex sx={{ alignItems: "center", position: 'relative' }}>
     <WidgetIcon

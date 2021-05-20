@@ -12,10 +12,10 @@ import DefaultList from "./components/DefaultList";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SliceZoneAsArray,
-  libraries: ReadonlyArray<LibraryState>
+  libraries: ReadonlyArray<LibraryState> = []
 ) => {
-  const availableSlices: ReadonlyArray<SliceState> = libraries.reduce(
-    (acc, curr) => {
+  const availableSlices = libraries.reduce(
+    (acc: ReadonlyArray<SliceState>, curr: LibraryState) => {
       return [...acc, ...curr.components.map((e) => e[0])];
     },
     []
@@ -27,7 +27,10 @@ const mapAvailableAndSharedSlices = (
     slicesInSliceZone: ReadonlyArray<SliceState>;
     notFound: ReadonlyArray<{ key: string }>;
   } = sliceZone.value.reduce(
-    (acc, { key }) => {
+    (acc: {
+    slicesInSliceZone: ReadonlyArray<SliceState>;
+    notFound: ReadonlyArray<{ key: string }>;
+  }, { key }) => {
       const maybeSliceState = availableSlices.find(
         (state) => state.infos.meta.id === key
       );
@@ -63,7 +66,7 @@ const SliceZone = ({
     availableSlices,
     slicesInSliceZone,
     notFound,
-  } = mapAvailableAndSharedSlices(sliceZone, libraries);
+  } = mapAvailableAndSharedSlices(sliceZone, libraries as ReadonlyArray<LibraryState>);
 
   useEffect(() => {
     if (notFound?.length) {

@@ -14,8 +14,8 @@ const defaultActiveSx = (a, e) => {
 }
 
 const IconButton = ({
-  sx,
-  onClick,
+  sx = null,
+  onClick = null,
   label,
   Icon,
   error = null,

@@ -36,75 +36,11 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable
 }) => {
-  const [isMouseDown, setIsMouseDown] = useState(false)
   const { env: { framework } } = useContext(ConfigContext)
-
-  const [placeholderProps, setPlaceholderProps] = useState(null)
-  
-  const onDragStart = (event) => {
-    setPlaceholderProps(getDraggedDomPosition(event))
-  }
-
-  const handleDragUpdate = event => {
-    if (!event.destination) {
-      return;
-    }
-
-    const draggedDOM = getDraggedDom(event.draggableId);
-
-    if (!draggedDOM) {
-      return;
-    }
-
-    const { clientHeight, clientWidth } = draggedDOM;
-    const destinationIndex = event.destination.index;
-    const sourceIndex = event.source.index;
-
-    const childrenArray = [...draggedDOM.parentNode.children];
-    const movedItem = childrenArray[sourceIndex];
-    childrenArray.splice(sourceIndex, 1);
-
-    const updatedArray = [
-      ...childrenArray.slice(0, destinationIndex),
-      movedItem,
-      ...childrenArray.slice(destinationIndex + 1)
-    ];
-
-    var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
-      updatedArray.slice(0, destinationIndex).reduce((total, curr) => {
-        const style = curr.currentStyle || window.getComputedStyle(curr);
-        const marginBottom = parseFloat(style.marginBottom);
-        return total + curr.clientHeight + marginBottom;
-      }, 0);
-
-    setPlaceholderProps({
-      clientHeight,
-      clientWidth,
-      clientY,
-      clientX: parseFloat(
-        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
-      )
-    });
-  };
-
-  const onMouseDownDrag = () => {
-    setIsMouseDown(true)
-  }
-
-  const onMouseUpDrag = () => {
-    setIsMouseDown(false)
-    
-  }
-
-  const _onDragEnd =(event) => {
-    onDragEnd(event)
-    onMouseUpDrag()
-  }
 
   return (
     <Fragment>
-      <DragDropContext onDragStart={onMouseDownDrag} onDragEnd={_onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId={title}>
           {(provided, snapshot) => (
             <Box
@@ -137,9 +73,6 @@ const FieldZone = ({
                   parentSnapshot: snapshot,
                   deleteItem: onDeleteItem,
                   draggableId: `list-item-${item.key}`,
-                  dragMouseIsDown: isMouseDown,
-                  onMouseDownDrag,
-                  onMouseUpDrag
                 }
 
                 if (widget.CustomListItem) {

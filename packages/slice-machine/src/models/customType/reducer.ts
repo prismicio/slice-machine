@@ -45,7 +45,7 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       }
       case Actions.ReplaceWidget: {
         const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Widget | GroupAsArray }
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value as Widget))
       }
       case Actions.ReorderWidget: {
         const { tabId, start, end } = action.payload as { tabId: string, start: number, end: number }
