@@ -53,7 +53,7 @@ const CustomListItem = (props) => {
 
   const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
-=======
+
 import Li from '../../../../../../components/Li'
 import IconButton from '../../../../../../components/IconButton'
 import ItemHeader from '../../../../../../components/ItemHeader'
@@ -84,7 +84,7 @@ const CustomListItem = ({
   const { theme } = useThemeUI()
   const [selectMode, setSelectMode] = useState(false)
   const [newFieldData, setNewFieldData] = useState(null)
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
+
 
   const onSelectFieldType = (widgetTypeName) => {
     setNewFieldData({ widgetTypeName });
@@ -95,46 +95,14 @@ const CustomListItem = ({
     setNewFieldData(null);
   };
 
-<<<<<<< HEAD
-  const onSaveNewField = ({ id, widgetTypeName }, helpers) => {
-    const widget = Widgets[widgetTypeName];
-    if (!widget) {
-      console.log(
-        `Could not find widget with type name "${widgetTypeName}". Please contact us!`
-      );
-    }
-=======
   const onSaveNewField = ({ id, widgetTypeName }) => {
     const widget = Widgets[widgetTypeName]
 
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
     store
       .tab(tabId)
       .group(groupItem.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-<<<<<<< HEAD
-        [widget.customAccessor || "config"]: removeKeys(widget.create(id), [
-          "id",
-        ]),
-      });
-  };
-
-  /**
-   * apiId: "bool"
-   initialModelValues: {
-     type: "Boolean",
-     config: {
-       …}
-   }
-   newKey: "boola"
-   value: {
-       label: "",
-       placeholder_false: "false",
-       placeholder_true: "true",
-       def
-   */
-=======
         [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
       })
   }
@@ -148,7 +116,6 @@ const CustomListItem = ({
     }
     store.tab(tabId).group(groupItem.key).reorderWidget(result.source.index, result.destination.index)
   }
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
 
   return (
     <Fragment>
@@ -239,28 +206,6 @@ const CustomListItem = ({
               Component={Box}
               sx={{ p: 0 }}
             >
-<<<<<<< HEAD
-              <Flex
-                sx={{ justifyContent: "space-between", width: "100%", p: 3 }}
-              >
-                <ItemHeader
-                  theme={theme}
-                  text={item.key}
-                  sliceFieldName={renderFieldAccessor(item.key)}
-                  iconButtonProps={provided.dragHandleProps}
-                  WidgetIcon={WidgetIcon}
-                />
-                <Button
-                  variant="buttons.darkSmall"
-                  onClick={() => setSelectMode(true)}
-                >
-                  Add Field
-                </Button>
-              </Flex>
-            </Li>
-            <Box sx={{ ml: 4 }}>
-              <DragDropContext onDragEnd={() => console.log("REORDER WIDGET")}>
-=======
             <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
               <ItemHeader
                 theme={theme}
@@ -294,7 +239,6 @@ export default CustomListItem
 /**
  * <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
                 <Droppable droppableId={"my-unique-id"}>
                   {(provided) =>
                     !snapshot.isDragging && (
@@ -356,23 +300,5 @@ export default CustomListItem
                   }
                 </Droppable>
               </DragDropContext>
-<<<<<<< HEAD
-            </Box>
-          </Fragment>
-        )}
-      </Draggable>
-      <SelectFieldTypeModal
-        data={{ isOpen: selectMode }}
-        close={() => setSelectMode(false)}
-        onSelect={onSelectFieldType}
-        widgetsArray={sliceBuilderWidgetsArray}
-      />
-    </Fragment>
-  );
-};
-
-export default CustomListItem;
-=======
           </Box>
  */
->>>>>>> b8781361d737bb06fc06f080eb90b8c39a0814b0
