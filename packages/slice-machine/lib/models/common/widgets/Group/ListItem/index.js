@@ -1,8 +1,4 @@
 import { Fragment, useState } from "react";
-import { Draggable } from "react-beautiful-dnd";
-import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
-import { useContext } from "react";
-import { ConfigContext } from "src/config-context";
 
 import { removeKeys } from "lib/utils";
 
@@ -12,293 +8,230 @@ import { Box, Flex, Text, Button, useThemeUI } from "theme-ui";
 
 import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";
-import { sliceBuilderWidgetsArray } from "lib/models/common/widgets/asArray";
+import EditModal from "lib/builders/common/EditModal";
 
-import Li from "../../../../../../components/Li";
-import IconButton from "../../../../../../components/IconButton";
-import ItemHeader from "../../../../../../components/ItemHeader";
-import SelectFieldTypeModal from 'lib/builders/common/SelectFieldTypeModal'
-import NewField from 'lib/builders/common/Zone/Card/components/NewField'
+import { findWidgetByConfigOrType } from "../../../../../builders/utils";
 
-import { findWidgetByConfigOrType } from '../../../../../builders/utils'
-// import { sliceBuilderWidgetsArray } from 'lib/models/common/widgets/asArray'
+import * as Widgets from "lib/models/common/widgets";
 
-import * as Widgets from "../../../widgets";
+import sliceBuilderArray from "lib/models/common/widgets/sliceBuilderArray";
 
-import { AiOutlineEdit } from "react-icons/ai";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import Hint from "lib/builders/common/Zone/Card/components/Hints";
 
-// import Hint from './Hints'
-
-import { findWidgetByConfigOrType } from "../../../../../utils";
-
-const CustomListItem = (props) => {
-  const {
-    item,
-    index,
-    store,
-    tabId,
-    deleteItem,
-    enterEditMode,
-    modelFieldName,
-    renderHintBase,
-    renderFieldAccessor,
-    isRepeatable,
-    showHints,
-
-    theme,
-    config,
-    WidgetIcon,
-  } = props;
-
-  const [selectMode, setSelectMode] = useState(false);
-  const [newFieldData, setNewFieldData] = useState(null);
-
-import Li from '../../../../../../components/Li'
-import IconButton from '../../../../../../components/IconButton'
-import ItemHeader from '../../../../../../components/ItemHeader'
-
-import * as Widgets from '../../../widgets'
-
-import sliceBuilderArray from 'lib/models/common/widgets/sliceBuilderArray'
-
-// import Hint from 'lib/builders/common/Zone/Card/components/Hints'
-
-import { AiOutlineEdit } from 'react-icons/ai'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-
-import ListItem from 'components/ListItem'
+import ListItem from "components/ListItem";
 
 const CustomListItem = ({
-  item: groupItem,
+  tabId,
+  store,
+  Model,
   widget,
-  snapshot,
-  isRepeatable,
+  parentSnapshot,
   framework,
   showHints,
+  isRepeatable,
+  item: groupItem,
+  draggableId,
+  dragMouseIsDown,
   renderFieldAccessor,
   ...rest
 }) => {
-
-
-  const { theme } = useThemeUI()
-  const [selectMode, setSelectMode] = useState(false)
-  const [newFieldData, setNewFieldData] = useState(null)
-
+  const [selectMode, setSelectMode] = useState(false);
+  const [newFieldData, setNewFieldData] = useState(null);
+  const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
     setNewFieldData({ widgetTypeName });
     setSelectMode(false);
   };
 
+  const getFieldMockConfig = ({ apiId }) => {
+    console.log("mock config", Model.mockConfig?.[groupItem.key], apiId);
+    return Model.mockConfig?.[groupItem.key]?.[apiId];
+  };
+
   const onCancelNewField = () => {
     setNewFieldData(null);
   };
 
-  const onSaveNewField = ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName]
+  const closeEditModal = () => {
+    setEditModalData({ isOpen: false });
+  };
 
+  const onSaveNewField = ({ id, widgetTypeName }) => {
+    const widget = Widgets[widgetTypeName];
     store
       .tab(tabId)
       .group(groupItem.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        [widget.customAccessor || 'config']: removeKeys(widget.create(id), ['id'])
-      })
-  }
+        config: removeKeys(widget.create(id), ["id"]),
+      });
+  };
+
+  const onSaveField = (
+    { apiId, newKey, value, initialModelValues },
+    { initialMockConfig, mockValue }
+  ) => {
+    if (mockValue && Object.keys(mockValue).length) {
+      console.log(initialMockConfig, groupItem.key, apiId, newKey, mockValue);
+      store
+        .tab(tabId)
+        .updateWidgetGroupMockConfig(
+          initialMockConfig,
+          groupItem.key,
+          apiId,
+          newKey,
+          mockValue
+        );
+    } else {
+      store.tab(tabId).deleteWidgetMockConfig(initialMockConfig, apiId);
+    }
+
+    const widget = Widgets[initialModelValues.type];
+    if (!widget) {
+      console.log(
+        `Could not find widget with type name "${initialModelValues.type}". Please contact us!`
+      );
+      return;
+    }
+
+    store
+      .tab(tabId)
+      .group(groupItem.key)
+      .replaceWidget(apiId, newKey, {
+        type: initialModelValues.type,
+        config: removeKeys(value, ["id", "type"]),
+      });
+  };
 
   const onDragEnd = (result) => {
-    if (!result.destination) {
-      return
+    if (
+      !result.destination ||
+      result.source.index === result.destination.index
+    ) {
+      return;
     }
     if (result.source.droppableId !== result.destination.droppableId) {
-      return
+      return;
     }
-    store.tab(tabId).group(groupItem.key).reorderWidget(result.source.index, result.destination.index)
-  }
+    store
+      .tab(tabId)
+      .group(groupItem.key)
+      .reorderWidget(result.source.index, result.destination.index);
+  };
+
+  const onDeleteItem = (key) => {
+    store.tab(tabId).group(groupItem.key).deleteWidget(key);
+  };
+
+  const enterEditMode = (field) => {
+    setEditModalData({ isOpen: true, field });
+  };
 
   return (
     <Fragment>
       <ListItem
         item={groupItem}
         widget={widget}
+        draggableId={draggableId}
         renderFieldAccessor={(key) => `data.${groupItem.key}.[...]`}
         {...rest}
-        CustomEditElement={(
-          <Button mr={2} variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
+        CustomEditElements={[
+          <Button
+            key={`custom-edit-element-${groupItem.key}`}
+            mr={2}
+            variant="buttons.darkSmall"
+            onClick={() => setSelectMode(true)}
+          >
             Add Widget
-          </Button>
-        )}
-        children={(
-          <Box sx={{ ml: 4 }}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId={"my-unique-id"}>
-                  {(provided) => !snapshot.isDragging && (
+          </Button>,
+        ]}
+        children={
+          false ? null : (
+            <Box sx={{ ml: 4, display: dragMouseIsDown ? "block" : "block" }}>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
+                  {(provided) => (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
-                      {
-                        groupItem.value.fields.map((item, index) => {
-                          const { value: { config, type } } = item
-                          const widget = findWidgetByConfigOrType(Widgets, config, type)
-                          if (!widget) {
-                            return (
-                              <Li><Text>Field type "{type}" not supported</Text></Li>
-                            )
-                          }
+                      {groupItem.value.fields.map((item, index) => {
+                        const {
+                          value: { config, type },
+                        } = item;
+                        const widget = findWidgetByConfigOrType(
+                          Widgets,
+                          config,
+                          type
+                        );
+                        if (!widget) {
+                          return null;
+                        }
 
-                          const props = {
-                            item,
-                            index,
-                            widget,
-                            snapshot,
-                            key: item.key,
-                            renderFieldAccessor: (key) => `data.${groupItem.key}.${key}`,
-                            // enterEditMode,
-                            // deleteItem: onDeleteItem,
-                            draggableId: `list-item-${item.key}-${index}`,
-                          }
+                        const props = {
+                          item,
+                          index,
+                          widget,
+                          key: item.key,
+                          enterEditMode,
+                          deleteItem: onDeleteItem,
+                          renderFieldAccessor: (key) =>
+                            `data.${groupItem.key}.${key}`,
+                          draggableId: `group-${groupItem.key}-${item.key}-${index}`,
+                        };
 
-                          // const HintElement = (
-                          //   <Hint
-                          //     item={item}
-                          //     show={showHints}
-                          //     isRepeatable={isRepeatable}
-                          //     renderHintBase={renderHintBase}
-                          //     framework={framework}
-                          //     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
-                          //   />
-                          // )
-                          return (
-                            <ListItem
-                              {...props}
-                              // HintElement={HintElement}
-                            />
-                          )
-                        })
-                      }
-
-                      {
-                        newFieldData && (
-                          <NewField
-                            {...newFieldData}
-                            // fields={poolOfFieldsToCheck || fields}
-                            fields={[]}
-                            onSave={(...args) => {
-                              onSaveNewField(...args)
-                              setNewFieldData(null)
-                            }}
-                            onCancelNewField={onCancelNewField}
+                        const HintElement = (
+                          <Hint
+                            item={item}
+                            show={showHints}
+                            isRepeatable={isRepeatable}
+                            renderHintBase={({ item }) =>
+                              `data.${groupItem.key}.${item.key}`
+                            }
+                            framework={framework}
+                            Widgets={Widgets}
+                            typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                           />
-                        )
-                      }
+                        );
+                        return (
+                          <ListItem {...props} HintElement={HintElement} />
+                        );
+                      })}
+                      {provided.placeholder}
+
+                      {newFieldData && (
+                        <NewField
+                          {...newFieldData}
+                          fields={groupItem.value.fields || []}
+                          onSave={(...args) => {
+                            onSaveNewField(...args);
+                            setNewFieldData(null);
+                          }}
+                          onCancelNewField={onCancelNewField}
+                        />
+                      )}
                     </ul>
                   )}
                 </Droppable>
               </DragDropContext>
-          </Box>
-        )}
+            </Box>
+          )
+        }
       />
-      {/* <Draggable draggableId={item.key} index={index}>
-        {(provided, snapshot) => (
-          <Fragment>
-            <Li
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              Component={Box}
-              sx={{ p: 0 }}
-            >
-            <Flex sx={{ justifyContent: 'space-between', width: '100%', p: 3 }}>
-              <ItemHeader
-                theme={theme}
-                text={item.key}
-                sliceFieldName={renderFieldAccessor(item.key)}
-                iconButtonProps={provided.dragHandleProps}
-                WidgetIcon={WidgetIcon}
-              />
-              <Button variant="buttons.darkSmall" onClick={() => setSelectMode(true)}>
-                Add Field
-              </Button>
-            </Flex>
-          </Li>
-
-        </Fragment>
-        )}
-      </Draggable> */}
       <SelectFieldTypeModal
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={[]}
+        widgetsArray={sliceBuilderArray}
+      />
+      <EditModal
+        Model={Model}
+        data={editModalData}
+        close={closeEditModal}
+        onSave={onSaveField}
+        fields={groupItem.value.fields}
+        getFieldMockConfig={getFieldMockConfig}
       />
     </Fragment>
-  )
-}
+  );
+};
 
-export default CustomListItem
-
-
-/**
- * <Box sx={{ ml: 4 }}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId={"my-unique-id"}>
-                  {(provided) =>
-                    !snapshot.isDragging && (
-                      <ul ref={provided.innerRef} {...provided.droppableProps}>
-                        {item.value.fields.map((e, i) => {
-                          return (
-                            <Draggable
-                              draggableId={`tab-group-${e.key}`}
-                              index={i}
-                            >
-                              {(provided) => (
-                                <Fragment>
-                                  <Li
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    Component={Box}
-                                    sx={{ p: 0 }}
-                                  >
-                                    <Flex
-                                      sx={{
-                                        justifyContent: "space-between",
-                                        width: "100%",
-                                        p: 3,
-                                      }}
-                                    >
-                                      <ItemHeader
-                                        theme={theme}
-                                        text={e.key}
-                                        sliceFieldName={renderFieldAccessor(
-                                          e.key
-                                        )}
-                                        iconButtonProps={
-                                          provided.dragHandleProps
-                                        }
-                                        WidgetIcon={WidgetIcon}
-                                      />
-                                    </Flex>
-                                  </Li>
-                                </Fragment>
-                              )}
-                            </Draggable>
-                          );
-                        })}
-
-                        {newFieldData && (
-                          <NewField
-                            {...newFieldData}
-                            // fields={poolOfFieldsToCheck || fields}
-                            fields={[]}
-                            onSave={(...args) => {
-                              onSaveNewField(...args);
-                              setNewFieldData(null);
-                            }}
-                            onCancelNewField={onCancelNewField}
-                          />
-                        )}
-                      </ul>
-                    )
-                  }
-                </Droppable>
-              </DragDropContext>
-          </Box>
- */
+export default CustomListItem;
