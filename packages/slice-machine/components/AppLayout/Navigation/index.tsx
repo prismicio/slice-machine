@@ -3,24 +3,31 @@ import useWindowSize from "hooks/useWindowSize";
 import Environment from "lib/models/common/Environment";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
-import { FiFile, FiBox } from "react-icons/fi";
+import { FiLayers, FiLayout, FiZap } from "react-icons/fi";
 import { IconType } from "react-icons/lib";
 
 const links = [
   {
     title: "Custom Types",
     href: "/",
-    Icon: FiFile,
+    Icon: FiLayout,
   },
   {
     title: "Slices",
     href: "/slices",
-    Icon: FiBox,
+    Icon: FiLayers,
+  },
+  {
+    title: "Warnings",
+    delimiter: true,
+    href: "/warnings",
+    Icon: FiZap,
   },
 ];
 
 export interface LinkProps {
   title: string;
+  delimiter?: boolean;
   href: string;
   Icon: IconType;
 }

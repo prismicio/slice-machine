@@ -3,17 +3,17 @@ import Head from "next/head";
 
 import { mutate } from "swr";
 import { useContext, Fragment } from "react";
-
-import { Box } from "theme-ui";
+import { FiLayers } from "react-icons/fi";
+import { Box, Flex, Text } from "theme-ui";
 import Container from "components/Container";
 import SliceList from "components/SliceList";
 
 import { LibrariesContext } from "src/models/libraries/context";
 
-const UnclickableCardWrapper =  ({ children }) => children
+const UnclickableCardWrapper = ({ children }) => children;
 
 const Index = () => {
-  const libraries = useContext(LibrariesContext)
+  const libraries = useContext(LibrariesContext);
 
   return (
     <Fragment>
@@ -23,27 +23,31 @@ const Index = () => {
       <Container>
         <main>
           {libraries &&
-            libraries.map(
-              ({ name, isLocal, components }) => (
-                <div key={name}>
-                  <Box
-                    as="h2"
-                    sx={{
-                      pb: 3,
-                    }}
-                  >
-                    {name}
-                  </Box>
-                  <SliceList
-                    cardType="ForSlicePage"
-                    {...(!isLocal ? {
-                      CardWrapper: UnclickableCardWrapper
-                    } : null)}
-                    slices={components.map(([e]) => e)}
-                  />
-                </div>
-              )
-            )}
+            libraries.map(({ name, isLocal, components }) => (
+              <div key={name}>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    fontSize: 4,
+                    lineHeight: "48px",
+                    fontWeight: "heading",
+                    mb: 4,
+                  }}
+                >
+                  <FiLayers /> <Text ml={2}>Slices</Text>
+                </Flex>
+
+                <SliceList
+                  cardType="ForSlicePage"
+                  {...(!isLocal
+                    ? {
+                        CardWrapper: UnclickableCardWrapper,
+                      }
+                    : null)}
+                  slices={components.map(([e]) => e)}
+                />
+              </div>
+            ))}
         </main>
       </Container>
     </Fragment>
