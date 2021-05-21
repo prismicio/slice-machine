@@ -78,8 +78,7 @@ const Theme = () => ({
     },
   },
   fonts: {
-    body:
-      'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
     heading: "inherit",
     monospace: "Menlo, monospace",
   },
@@ -538,7 +537,6 @@ const Theme = () => ({
       fontSize: 1,
     },
     ul: {
-
       p: 0,
       m: 0,
     },
@@ -576,9 +574,10 @@ const Theme = () => ({
       },
     },
     ".prism-code.language-jsx": {
-      ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation": {
-        color: (t) => t.colors.code.gray,
-      },
+      ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation":
+        {
+          color: (t) => t.colors.code.gray,
+        },
       ".language-javascript, .plain": {
         color: (t) => t.colors.code.green,
       },
@@ -587,9 +586,10 @@ const Theme = () => ({
       ".punctuation": {
         color: (t) => t.colors.code.gray,
       },
-      ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access": {
-        color: (t) => t.colors.code.blue, // blue
-      },
+      ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access":
+        {
+          color: (t) => t.colors.code.blue, // blue
+        },
       ".property-access, .plain": {
         color: (t) => t.colors.code.green, // green
       },
@@ -624,7 +624,7 @@ const Theme = () => ({
     hr: {
       border: 0,
       borderBottom: "1px solid",
-      borderColor: "borders",
+      borderColor: "code.border",
     },
     img: {
       maxWidth: "100%",
@@ -647,9 +647,10 @@ const Theme = () => ({
     ".comment": {
       fontStyle: "italic",
     },
-    ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable": {
-      color: "purple",
-    },
+    ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable":
+      {
+        color: "purple",
+      },
     ".atrule,.attr-value,.keyword": {
       color: "primary",
     },

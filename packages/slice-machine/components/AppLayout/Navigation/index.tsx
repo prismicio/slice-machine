@@ -3,7 +3,7 @@ import useWindowSize from "hooks/useWindowSize";
 import Environment from "lib/models/common/Environment";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
-import { FiFile, FiBox } from "react-icons/fi";
+import { FiLayers, FiLayout } from "react-icons/fi";
 import { IconType } from "react-icons/lib";
 
 const links = [
@@ -13,7 +13,7 @@ const links = [
     match(pathname: string) {
       return pathname === '/' || pathname.indexOf('/cts') === 0
     },
-    Icon: FiFile,
+    Icon: FiLayout,
   },
   {
     title: "Slices",
@@ -21,12 +21,13 @@ const links = [
     match(pathname: string) {
       return pathname.indexOf('/slices') === 0
     },
-    Icon: FiBox,
+    Icon: FiLayers,
   },
 ];
 
 export interface LinkProps {
   title: string;
+  delimiter?: boolean;
   href: string;
   match: Function;
   Icon: IconType;

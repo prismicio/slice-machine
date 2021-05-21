@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box } from "theme-ui";
+import { Box, Link as ThemeLink } from "theme-ui";
 
 interface BadgeProps {
   version: string;
@@ -8,19 +8,20 @@ interface BadgeProps {
 
 const VersionBadge = ({ version, label = "V" }: BadgeProps) => {
   return (
-    <Link href="/changelog" passHref>
-      <Box
-        as="span"
-        sx={{
-          cursor: "pointer",
-          color: "textClear",
-          opacity: "0.8",
-          fontSize: "12px",
-        }}
-      >
-        {label} : {version}
-      </Box>
-    </Link>
+    <Box
+      as="span"
+      sx={{
+        color: "textClear",
+        opacity: "0.8",
+        fontSize: "12px",
+        ml: 1,
+      }}
+    >
+      {label} : {version}{" "}
+      <Link passHref href="/changelog">
+        <ThemeLink sx={{ color: "textClear" }}>(Changelog)</ThemeLink>
+      </Link>
+    </Box>
   );
 };
 
