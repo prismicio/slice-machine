@@ -69,8 +69,6 @@ const WithRouter = (props) => {
   const router = useRouter()
   const route = Routes[router.route] || INDEX
 
-  console.log({ props })
-
   return route === INDEX || route === CTS ? (
     <NavBar {...props}>
       <Fragment>

@@ -142,10 +142,10 @@ const CustomListItem = ({
             variant="buttons.darkSmall"
             onClick={() => setSelectMode(true)}
           >
-            Add Widget
+            Add Field
           </Button>
         ]}
-        children={false ? null : (
+        children={(
           <Box sx={{ ml: 4 }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>

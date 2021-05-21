@@ -39,23 +39,16 @@ const TabZone = ({
   }
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
-    console.log('ON SAVE NEW FIELD', widgetTypeName)
     const widget = Widgets[widgetTypeName]
     if (!widget) {
       console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
     }
-    console.log({
-      type: widget.TYPE_NAME,
-      config: removeKeys(widget.create(id), ['id'])
-    })
     store
       .tab(tabId)
       .addWidget(id, {
         type: widget.TYPE_NAME,
         config: removeKeys(widget.create(id), ['id'])
       })
-    
-    console.log({ Model })
   }
 
   const onDragEnd = (result) => {
@@ -145,7 +138,6 @@ const TabZone = ({
         renderHintBase={({ item }) => `data.${item.key}`}
         renderFieldAccessor={(key) => `data.${key}`}
       />
-      {/* <button type="button" onClick={() => setModalIsOpen(true)}>edit modal</button> */}
       {
         Model.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>

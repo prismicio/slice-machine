@@ -23,7 +23,7 @@ const Index = () => {
       <Container>
         <main>
           {libraries &&
-            libraries.map(({ name, isLocal, components }) => (
+            libraries.map(({ name, isLocal, components }, i) => (
               <div key={name}>
                 <Flex
                   sx={{
@@ -32,9 +32,10 @@ const Index = () => {
                     lineHeight: "48px",
                     fontWeight: "heading",
                     mb: 4,
+                    mt: i ? 4 : 0
                   }}
                 >
-                  <FiLayers /> <Text ml={2}>Slices</Text>
+                  <FiLayers /> <Text ml={2}>{name}</Text>
                 </Flex>
 
                 <SliceList

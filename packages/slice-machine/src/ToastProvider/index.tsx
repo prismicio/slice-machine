@@ -15,7 +15,6 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       autoDismiss
       autoDismissTimeout={6000}
       components={{ Toast: (props) => {
-        console.log({ props })
         return (
           <Box
             sx={{

@@ -1,9 +1,9 @@
 import { Box, Divider } from "theme-ui";
 import { useContext } from "react";
 import { FiZap } from "react-icons/fi";
-import VersionBadge from "components/AppLayout/Navigation/Badge";
+import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
-import Logo from "components/AppLayout/Navigation/Menu/Logo";
+import Logo from "../Menu/Logo";
 import { NavCtx } from "..";
 import Item from "./Navigation/Item";
 
@@ -20,8 +20,6 @@ const warnings = {
 const Desktop = () => {
   const navCtx = useContext(NavCtx)
 
-
-  console.log({ navCtx })
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py={4} px={3}>

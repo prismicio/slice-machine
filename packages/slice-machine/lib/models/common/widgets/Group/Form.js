@@ -12,7 +12,6 @@ const Form = (props) => {
     fields,
   } = props
 
-  console.log({ props })
   return (
     <FlexGrid>
       {
