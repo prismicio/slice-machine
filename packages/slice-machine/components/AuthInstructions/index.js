@@ -18,7 +18,7 @@ const AuthInstructions = () => (
             justifyContent: 'space-between',
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
-            borderBottom: t => `1px solid ${t.colors.borders}`
+            borderBottom: t => `1px solid ${t.colors?.borders}`
           }}
         >
           <Heading as="h3">Login to Prismic</Heading>

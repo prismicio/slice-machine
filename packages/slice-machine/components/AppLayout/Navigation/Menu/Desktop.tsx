@@ -11,11 +11,17 @@ const warnings = {
   title: "Warnings",
   delimiter: true,
   href: "/warnings",
+  match(pathname: string) {
+    return pathname.indexOf('/warnings') === 0
+  },
   Icon: FiZap,
 };
 
 const Desktop = () => {
-  const navCtx = useContext(NavCtx);
+  const navCtx = useContext(NavCtx)
+
+
+  console.log({ navCtx })
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py={4} px={3}>

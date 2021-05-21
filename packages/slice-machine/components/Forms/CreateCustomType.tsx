@@ -1,12 +1,12 @@
 import { Field, useField } from 'formik'
 import  { Box, Flex, Label, Input, Text, Radio }from 'theme-ui'
 
-import { CustomType } from 'lib/models/common/CustomType'
-import { TabsAsObject } from 'lib/models/common/CustomType/tab'
+import { CustomType } from '../../lib/models/common/CustomType'
+import { TabsAsObject } from '../../lib/models/common/CustomType/tab'
 
 // import { Col, Flex as FlexGrid } from 'components/Flex'
 
-import ModalFormCard from 'components/ModalFormCard'
+import ModalFormCard from '../../components/ModalFormCard'
 
 const InputBox = ({ name, label, placeholder, error }:{ name: string, label: string, placeholder: string, error?: string }) => (
   <Box mb={3}>
@@ -36,9 +36,9 @@ const FlexCard =  ({ selected, ...rest }:  { selected: boolean, children: any, o
       cursor: 'pointer',
       borderRadius: '6px',
       backgroundColor: 'grayLight',
-      boxShadow: selected ? ({ colors }) => `0 0 0 2px ${colors.primary}` : 'none', 
+      boxShadow: selected ? t => `0 0 0 2px ${t.colors?.primary}` : 'none', 
       '&:hover': {
-        boxShadow: ({ colors }) => `0 0 0 2px ${colors.primary}`
+        boxShadow: t => `0 0 0 2px ${t.colors?.primary}`
       }
     }}
     {...rest}
@@ -65,7 +65,7 @@ const SelectRepeatable = () => {
           </Box>
         </Box>
       </FlexCard>
-      <FlexCard  selected={!field.value} onClick={() => helpers.setValue(false)}>
+      <FlexCard selected={!field.value} onClick={() => helpers.setValue(false)}>
         <Radio checked={!field.value} />
         <Box
           sx={{

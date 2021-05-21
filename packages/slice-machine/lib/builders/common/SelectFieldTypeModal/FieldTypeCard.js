@@ -10,7 +10,7 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         alignItems: 'center',
         cursor: 'pointer',
         borderRadius: '3px',
-        border: ({ colors }) => `1px solid ${colors.borders}`,
+        border: t => `1px solid ${t.colors?.borders}`,
         '&:hover': {
           border: ({ colors }) => `1px solid ${colors.primary}`,
           boxShadow: '0 0 0 3px rgba(81, 99, 186, 0.2)'

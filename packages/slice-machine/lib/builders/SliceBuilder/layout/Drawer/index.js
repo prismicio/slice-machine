@@ -19,7 +19,7 @@ const Drawer = ({
     >
       <Box
         sx={{
-          borderBottom: t => `1px solid ${t.colors.borders}`,
+          borderBottom: t => `1px solid ${t.colors?.borders}`,
           p: 3
         }}
       >

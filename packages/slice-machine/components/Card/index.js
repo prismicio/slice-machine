@@ -39,7 +39,7 @@ const Card = ({
 }) => (
   <ThemeCard
     sx={{
-      border: t => `1px solid ${t.colors.borders}`,
+      border: t => `1px solid ${t.colors?.borders}`,
       borderRadius: radius,
       ...sx
     }}

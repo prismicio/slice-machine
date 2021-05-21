@@ -57,7 +57,7 @@ const SliceThumbnail = ({ heightInPx, preview, withShadow = true }) => {
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: ({ colors }) => `1px solid ${colors.borders}`,
+        border: t => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -151,14 +151,14 @@ const ForSliceZone = forwardRef(
         aria-pressed="false"
         ref={ref}
         sx={{
-          border: (t) => `1px solid ${t.colors.code.border}`,
+          border: (t) => `1px solid ${t.colors?.code.border}`,
           bg: "transparent",
           transition: "all 200ms ease-in",
           ...sx,
           "&:hover": {
             transition: "all 200ms ease-out",
             bg: "sidebar",
-            border: (t) => `1px solid ${t.colors.sidebar}`,
+            border: (t) => `1px solid ${t.colors?.sidebar}`,
           },
         }}
       >

@@ -16,7 +16,7 @@ export const StorybookNotInstalled = () => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">Storybook is not installed</Heading>
@@ -49,7 +49,7 @@ export const StorybookNotRunning = () => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">Storybook is not running</Heading>
@@ -83,7 +83,7 @@ export const StorybookNotInManifest = () => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">Missing property "storybook" in manifest</Heading>

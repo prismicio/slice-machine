@@ -1,5 +1,21 @@
 import { darken, lighten } from "@theme-ui/color";
-const Theme = () => ({
+
+import { Theme } from 'theme-ui'
+
+interface MyTheme extends Theme {
+  codeColor: {
+    [x:string]: string
+  }
+}
+
+const AppTheme = () => ({
+  codeColor: {
+    border: "#DFE1E5",
+    blue: "#3B41BD",
+    gray: "#667587",
+    orange: "#EA6D46",
+    green: "#3AB97A",
+  },
   colors: {
     text: "#25252D",
     textClear: "#4E4E55",
@@ -38,6 +54,8 @@ const Theme = () => ({
     headSection: "#fff",
     warning: "#E67E22",
     sidebar: "#F1F1F4",
+    link: "#5163BA",
+    choggleBox: "#5163BA",
     code: {
       border: "#DFE1E5",
       blue: "#3B41BD",
@@ -45,9 +63,6 @@ const Theme = () => ({
       orange: "#EA6D46",
       green: "#3AB97A",
     },
-    link: "#5163BA",
-    choggleBox: "#5163BA",
-
     modes: {
       dark: {
         text: "#fff",
@@ -194,11 +209,11 @@ const Theme = () => ({
       borderColor: "borders",
     },
   },
-  alerts: {
-    highlight: {
-      background: "highlight",
-    },
-  },
+  // alerts: {
+  //   highlight: {
+  //     background: "highlight",
+  //   },
+  // },
   buttons: {
     primary: {
       color: "white",
@@ -233,7 +248,7 @@ const Theme = () => ({
       fontWeight: "body",
       fontSize: "1",
       color: "textClear",
-      border: ({ colors }) => `1px solid ${colors.borders}`,
+      border: t => `1px solid ${t?.colors?.borders}`,
       "&:hover": {
         bg: darken("secondary", 0.02),
         cursor: "pointer",
@@ -409,7 +424,7 @@ const Theme = () => ({
     },
     hint: {
       fontSize: 1,
-      color: (t) => t.colors.choggleBox,
+      color: (t) => t?.colors?.choggleBox,
     },
     label: {
       fontSize: 1,
@@ -432,14 +447,14 @@ const Theme = () => ({
         pb: "6px",
         px: 1,
         borderRadius: "3px",
-        border: (t) => `1px solid ${t.colors.borders}`,
+        border: (t) => `1px solid ${t?.colors?.borders}`,
       },
     },
   },
   links: {
     hint: {
       fontSize: 1,
-      color: (t) => t.colors.link,
+      color: (t) => t?.colors?.link,
       margin: "0 4px",
       textDecoration: "none",
       cursor: "pointer",
@@ -545,8 +560,8 @@ const Theme = () => ({
     },
     code: {
       display: "inline-block",
-      backgroundColor: (t) => t.colors.gray,
-      border: (t) => `1px solid ${t.colors.code.border}`, // light #DFE1E5 // dark #5D5D6F
+      backgroundColor: (t) => t?.colors?.gray,
+      border: (t: MyTheme) => `1px solid ${t.codeColor.border}`,
       borderRadius: "3px",
       boxSizing: "border-box",
       fontSize: "13px",
@@ -560,38 +575,38 @@ const Theme = () => ({
     ".prism-code": {
       margin: "1px 3px",
       ".tag": {
-        color: (t) => t.colors.code.blue,
+        color: (t: MyTheme) => t.codeColor.blue,
       },
       ".punctuation, .attr-value.punctuation": {
-        color: (t) => t.colors.code.gray, // dark-gray
+        color: (t: MyTheme) => t.codeColor.gray, // dark-gray
       },
       ".attr-name": {
-        color: (t) => t.colors.code.orange,
+        color: (t: MyTheme) => t.codeColor.orange,
       },
       ".attr-value, .property-access": {
         // add .plain to highligh vue.
-        color: (t) => t.colors.code.green, // green
+        color: (t: MyTheme) => t.codeColor.green, // green
       },
     },
     ".prism-code.language-jsx": {
       ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation":
         {
-          color: (t) => t.colors.code.gray,
+          color: (t: MyTheme) => t.codeColor.gray,
         },
       ".language-javascript, .plain": {
-        color: (t) => t.colors.code.green,
+        color: (t: MyTheme) => t.codeColor.green,
       },
     },
     ".prism-code.language-javascript": {
       ".punctuation": {
-        color: (t) => t.colors.code.gray,
+        color: (t: MyTheme) => t.codeColor.gray,
       },
       ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access":
         {
-          color: (t) => t.colors.code.blue, // blue
+          color: (t: MyTheme) => t.codeColor.blue, // blue
         },
       ".property-access, .plain": {
-        color: (t) => t.colors.code.green, // green
+        color: (t: MyTheme) => t.codeColor.green, // green
       },
     },
     inlineCode: {
@@ -658,6 +673,6 @@ const Theme = () => ({
       color: "error",
     },
   },
-});
+}) as MyTheme
 
-export default Theme;
+export default AppTheme;

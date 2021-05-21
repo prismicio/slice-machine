@@ -17,7 +17,7 @@ const MenuList: React.FunctionComponent<{
         overflow: "auto",
         display: "flex",
         borderRadius: "4px",
-        border: ({ colors }) => `1px solid ${colors.borders}`,
+        border: t => `1px solid ${t.colors?.borders}`,
         boxShadow: "0 10px 10px rgba(0, 0, 0, 0.05)",
         maxHeight: 340,
         minWidth: 250,
@@ -65,12 +65,12 @@ const MenuItem: React.FunctionComponent<{
         color: isActive ? "primary" : "",
         cursor: "pointer",
         borderLeft: ({ colors }) =>
-          `2px solid ${isActive ? colors.primary : colors.background}`,
+          `2px solid ${isActive ? colors?.primary : colors?.background}`,
         borderRadius: 0,
         bg: isActive ? "background" : "background",
         ":hover": {
           bg: "hoverBackground",
-          borderLeft: ({ colors }) => `2px solid ${colors.primary}`,
+          borderLeft: ({ colors }) => `2px solid ${colors?.primary}`,
         },
       }}
       onClick={() => onClick(value)}

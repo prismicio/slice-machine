@@ -5,7 +5,6 @@ import {
   Flex,
   Button,
   Text,
-  IconButton,
   Card as ThemeCard,
   Link as ThemeLink,
   Heading,
@@ -28,16 +27,16 @@ interface CtPayload {
 }
 
 // To isolate later
-const CTName = ({ CTName }) => {
+const CTName = ({ ctName }:{ ctName: string }) => {
   return (
     <Heading sx={{ flex: 1, lineHeight: 20 }} as="h6">
-      {CTName}
+      {ctName}
     </Heading>
   );
 };
 
 // To isolate later
-const CTRepeatble = ({ repeatable }) => {
+const CTRepeatble = ({ repeatable }: { repeatable: boolean }) => {
   return !repeatable ? (
     <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
       Repeatable Type
@@ -50,7 +49,7 @@ const CTRepeatble = ({ repeatable }) => {
 };
 
 // To isolate later
-const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }) => {
+const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }: { heightInPx: string, preview: { url: string } | null, withShadow?: boolean }) => {
   return (
     <Box
       sx={{
@@ -64,7 +63,7 @@ const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }) => {
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: ({ colors }) => `1px solid ${colors.borders}`,
+        border: t => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -94,12 +93,12 @@ const Card = ({ ct }: { ct: CtPayload }) => (
           transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
         }}
       >
-        <CTThumbnail heightInPx="287px" />
+        <CTThumbnail preview={null} heightInPx="287px" />
         <Flex
           mt={3}
           sx={{ alignItems: "center", justifyContent: "space-between" }}
         >
-          <CTName CTName={ct.label} />
+          <CTName ctName={ct.label} />
           <CTRepeatble repeatable={ct.repeatable} />
         </Flex>
       </ThemeCard>

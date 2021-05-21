@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
-import Prismic from "components/AppLayout/Navigation/Icons/Prismic";
+import Prismic from "../Icons/Prismic";
 
 const Logo = () => {
   const { theme } = useThemeUI();
@@ -9,7 +9,7 @@ const Logo = () => {
       <Link href="/" passHref>
         <ThemeLink variant="links.invisible">
           <Flex sx={{ alignItems: "center" }}>
-            <Prismic fill={theme.colors?.text} />
+            <Prismic fill={theme.colors?.text as string} />
             <Heading as="h5" sx={{ ml: 2 }}>
               Prismic Builder
             </Heading>

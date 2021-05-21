@@ -15,7 +15,7 @@ export const ClientError = ({ errorType }) => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">Unable to fetch remote slices</Heading>
@@ -44,7 +44,7 @@ export const NotConnected = () => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">You're not logged in</Heading>
@@ -80,7 +80,7 @@ export const NewVersionAvailable = ({ value: { current, next, message } }) => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
-          borderBottom: (t) => `1px solid ${t.colors.borders}`,
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
         <Heading as="h3">New version available</Heading>
