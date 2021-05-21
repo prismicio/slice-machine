@@ -17,13 +17,6 @@ const CodeBlock = ({ docs, ...props }) => {
   
   const [isCopied, setIsCopied] = useState(false)
 
-  const select = () => {
-    const range = document.createRange()
-    range.selectNode(ref.current)
-    window.getSelection().removeAllRanges()
-    window.getSelection().addRange(range)
-  }
-
   const copy = () => {
     const text = ref.current.textContent
     navigator.clipboard.writeText(text).then(() => {
@@ -61,7 +54,6 @@ const CodeBlock = ({ docs, ...props }) => {
           theme={theme}
           as="code"
           variant="hint"
-          onClick={select}
           ref={ref}
           sx={{
             py: '2px',

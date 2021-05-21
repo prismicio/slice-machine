@@ -2,7 +2,7 @@ import { CustomType } from '../common/CustomType'
 import { TabsAsObject, TabsAsArray, TabAsArray, TabValueAsArray } from '../common/CustomType/tab'
 
 export enum CustomTypeStatus {
-  New = "new-ct",
+  New = "NEW_CT",
   Modified = 'MODIFIED',
   Synced = 'SYNCED',
 }

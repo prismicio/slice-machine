@@ -8,10 +8,8 @@ import { removeKeys } from 'lib/utils'
 import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
 
 import SliceZone from '../SliceZone'
-import EmptyState from '../SliceZone/EmptyState'
 
 import ModalFormCard from 'components/ModalFormCard'
-
 
 const TabZone = ({
   Model,
@@ -143,19 +141,14 @@ const TabZone = ({
           <button onClick={() => onDeleteTab()}>Delete Tab</button>
         ) : null
       }
-      {
-        sliceZone ? (
-          <SliceZone
-            tabId={tabId}
-            sliceZone={sliceZone}
-            onDelete={onDeleteSliceZone}
-            onRemoveSharedSlice={onRemoveSharedSlice}
-            onSelectSharedSlices={onSelectSharedSlices}
-          />
-        ): (
-          <EmptyState onCreate={onCreateSliceZone} />
-        )
-      }
+      <SliceZone
+        tabId={tabId}
+        sliceZone={sliceZone}
+        onDelete={onDeleteSliceZone}
+        onRemoveSharedSlice={onRemoveSharedSlice}
+        onCreateSliceZone={onCreateSliceZone}
+        onSelectSharedSlices={onSelectSharedSlices}
+      />
       <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
         {(props) => {
           console.log({ tabProps: props })

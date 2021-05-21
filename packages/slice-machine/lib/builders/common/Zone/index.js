@@ -17,6 +17,7 @@ import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import NewField from './Card/components/NewField'
 
 import ZoneHeader from './components/ZoneHeader'
+import EmptyState from './components/EmptyState'
 
 const Zone = ({
   Model,
@@ -74,7 +75,7 @@ const Zone = ({
     <Fragment>
       <ZoneHeader
         Heading={<Heading as="h6">{title}</Heading>}
-        Actions={(
+        Actions={fields.length ? (
           <Fragment>
             <Button
               variant="buttons.darkSmall"
@@ -86,8 +87,13 @@ const Zone = ({
               Add Field
             </Button>
           </Fragment>
-        )}
+        ) : null}
       />
+      {
+        !fields.length && !newFieldData ? (
+          <EmptyState onEnterSelectMode={() => enterSelectMode()} />
+        ) : null
+      }
       <Card
         tabId={tabId}
         isRepeatable={isRepeatable}

@@ -15,6 +15,10 @@ import * as Widgets from 'lib/models/common/widgets/withGroup'
 
 import ErrorTooltip from './ErrorTooltip'
 
+const RefInput = (args) => {
+  return <Input {...args} ref={args.innerRef} />
+}
+
 const NewField = ({
   widgetTypeName,
   fields,
@@ -46,6 +50,7 @@ const NewField = ({
       fieldRef.current.focus()
     }
   }, [fieldRef])
+
   return (
     <Formik
       validateOnChange
@@ -104,7 +109,7 @@ const NewField = ({
                       initialId: null,
                     })
                   }
-                  as={Input}
+                  as={RefInput}
                   innerRef={fieldRef}
                   sx={{ 
                     border: ({ colors }) => errors.id ? `1px solid tomato` : `1px solid ${colors.primary}`,

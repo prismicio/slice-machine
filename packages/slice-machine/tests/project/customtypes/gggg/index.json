@@ -1,0 +1,31 @@
+{
+  "id": "gggg",
+  "label": "My Awesome Title",
+  "status": true,
+  "repeatable": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "",
+          "placeholder": ""
+        }
+      },
+      "MainSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "call_to_action": {
+              "type": "SharedSlice"
+            },
+            "call_to_action2": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

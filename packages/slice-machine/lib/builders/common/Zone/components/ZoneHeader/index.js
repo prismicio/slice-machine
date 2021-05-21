@@ -10,6 +10,7 @@ const ZoneHeader = ({ Heading, Actions }) => (
       mb: 2,
       borderRadius: "6px",
       alignItems: "center",
+      minHeight: '51px',
       justifyContent: "space-between",
     }}
   >

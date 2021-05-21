@@ -78,7 +78,7 @@ export const Tab = {
         }
       }
     }, {})
-    if (tab.sliceZone) {
+    if (tab.sliceZone && tab.sliceZone.value?.length) {
       tabAsObject[tab.sliceZone.key] = SliceZone.toObject(tab.sliceZone)
     }
     return tabAsObject

@@ -25,7 +25,7 @@ export default function save(dispatch: ({type, payload}: { type: string, payload
       },
       setData,
       successMessage: 'Model & mocks have been generated succesfully!',
-      onSuccess(_) {
+      onSuccess() {
         dispatch({ type: ActionType.Save, payload: { state: customType } })
       }
     })

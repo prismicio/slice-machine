@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from 'next/router'
 import { useContext, useState } from "react";
 import {
   Box,
@@ -107,16 +108,19 @@ const Card = ({ ct }: { ct: CtPayload }) => (
 );
 
 const CustomTypes = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { customTypes, onCreate } = useContext(CustomTypesContext);
+  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
+  const { customTypes, onCreate } = useContext(CustomTypesContext)
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
     if (onCreate) {
       onCreate(id, {
         label,
         repeatable,
-      });
-      setIsOpen(false);
+      })
+      setIsOpen(false)
+      router.push(`/cts/${id}`)
+
     }
   };
 

@@ -1,9 +1,6 @@
 const baseServer = 'http://localhost:9999'
 
 export default async function handler(req, res) {
-  console.log({
-    url: `${baseServer}${req.url}`
-  })
   return fetch(`${baseServer}${req.url}`, {
     method: req.method,
     headers: req.headers,

@@ -6,6 +6,8 @@ import { SliceZoneAsArray } from "../../../../lib/models/common/CustomType/slice
 import SliceState from "../../../models/ui/SliceState";
 import LibraryState from "../../../models/ui/LibraryState";
 
+import ZoneHeader from '../../common/Zone/components/ZoneHeader'
+
 import Form from "./Form";
 
 import DefaultList from "./components/DefaultList";
@@ -52,12 +54,13 @@ const SliceZone = ({
   sliceZone,
   onSelectSharedSlices,
   onRemoveSharedSlice,
+  onCreateSliceZone,
 }: {
   tabId: string;
   sliceZone: SliceZoneAsArray;
   onSelectSharedSlices: Function;
   onRemoveSharedSlice: Function;
-  onDelete: Function;
+  onCreateSliceZone: Function;
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const libraries = useContext(LibrariesContext);
@@ -66,7 +69,9 @@ const SliceZone = ({
     availableSlices,
     slicesInSliceZone,
     notFound,
-  } = mapAvailableAndSharedSlices(sliceZone, libraries as ReadonlyArray<LibraryState>);
+  } = sliceZone
+    ? mapAvailableAndSharedSlices(sliceZone, libraries as ReadonlyArray<LibraryState>)
+    :  { availableSlices: [], slicesInSliceZone: [], notFound: [] }
 
   useEffect(() => {
     if (notFound?.length) {
@@ -78,28 +83,26 @@ const SliceZone = ({
 
   return (
     <Box my={3}>
-      <Flex
-        bg="zoneHeader"
-        sx={{
-          pl: 3,
-          pr: 2,
-          py: 2,
-          mb: 2,
-          borderRadius: "6px",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Flex sx={{ alignItems: "center" }}>
-          <Heading as="h6">SliceZone</Heading>
-          {/* Select the slices to use in this template */}
-        </Flex>
-        <Button variant="buttons.darkSmall" onClick={() => setFormIsOpen(true)}>
-          Edit slices
-        </Button>
-      </Flex>
+      <ZoneHeader
+        Heading={(<Heading as="h6">SliceZone</Heading>)}
+        Actions={(
+          <Button
+            variant="buttons.darkSmall"
+            onClick={() => {
+              if (!sliceZone) {
+                onCreateSliceZone()
+              }
+              setFormIsOpen(true)
+            }}
+          >
+            { sliceZone ? 'Edit' : 'Add' } slices
+          </Button>
+        )}
+      />
       <DefaultList cardType="ForSliceZone" slices={slicesInSliceZone} />
-      {!slicesInSliceZone.length ? <p>no slices selected</p> : null}
+      {!slicesInSliceZone.length ? (
+        <Flex sx={{ justifyContent: 'center' }}><p>No slices selected</p></Flex>
+       ) : null}
       <Form
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
