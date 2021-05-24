@@ -94,16 +94,6 @@ const SideBar = ({
           }
         </ul>
       </Card>
-       <Card
-        bg="headSection"
-        sx={{ mt: 2 }}
-        bodySx={{ p: 3 }}
-        footerSx={{ p: 0 }}
-      >
-        <Flex sx={{ alignItems: 'center', }}>
-          <Storybook /> <Heading ml={2} as="h5">Storybook</Heading>
-        </Flex>
-      </Card>
     </Box>
   )
 }

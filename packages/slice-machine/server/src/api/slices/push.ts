@@ -85,22 +85,24 @@ export default async function handler(query: { sliceName: string, from: string }
           throw new Error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
         }
       }
-
-      console.log({ imageUrlsByVariation })
   
       console.log('[push]: pushing slice model to Prismic')
+
+      const variations = jsonModel.variations.map((v: Variation<AsObject>) => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
+
       const res = await createOrUpdate({
         slices,
         sliceName,
         model: {
           ...jsonModel,
-          variations: jsonModel.variations.map((v: Variation<AsObject>) => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
+          imageUrl: variations[0].imageUrl,
+          variations,
         },
         client: env.client
       })
       if (res.status > 209) {
         const message = res.text ? await res.text() : res.status.toString()
-        console.error(`[push] Unexpected error returned. Server message: ${message}`)
+        console.error(`[push] Slice ${sliceName}: Unexpected error returned. Server message: ${message}`)
         throw new Error(message)
       }
       console.log('[push] done!')

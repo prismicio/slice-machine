@@ -1,5 +1,5 @@
-import { Link } from "theme-ui";
-// import Link from "next/link";
+import { Link as ThemeLink } from "theme-ui";
+import Link from "next/link";
 import Card from "./Card";
 
 import SliceState from "../../lib/models/ui/SliceState";
@@ -15,14 +15,18 @@ const DefaultCardWrapper = ({
 }) => {
   return (
     <Link
-      // sx={{
-      //   textDecoration: "none",
-      //   color: "inherit",
-      // }}
-      // as="a"
+      passHref
       href={link.as}
     >
-      {children}
+      <ThemeLink
+        sx={{
+          textDecoration: "none",
+          color: "inherit",
+        }}
+        as="a"
+      >
+        {children}
+      </ThemeLink>
     </Link>
   );
 };
