@@ -79,7 +79,7 @@ const Header = ({
           <Link href="/" passHref>
             <ThemeLinK variant="invisible">
               <Flex sx={{ alignItems: "center" }}>
-                <FiLayout /> <Text ml={2}>Templates</Text>
+                <FiLayout /> <Text ml={2}>Custom Types</Text>
               </Flex>
             </ThemeLinK>
           </Link>
