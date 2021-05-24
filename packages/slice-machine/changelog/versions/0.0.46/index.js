@@ -65,12 +65,8 @@ module.exports = {
     console.info('\nSliceMachine nows supports variations!')
     console.info('Generated mocks and Stories are now stored in the .slicemachine folder.')
 
-    const { yes: shouldMigrateMocks } = ignorePrompt ? { yes: true } : await (async () => {
-      return shouldIRun('Do you want to move generated mocks to .slicemachine folder?')
-    })()
-
     const { yes: shouldMigrateStories } = ignorePrompt ? { yes: true } : await (async () => {
-      return shouldIRun('Would you like me to move current stories to .slicemachine folder?')
+      return shouldIRun('Would you like me to move current stories and mocks to .slicemachine folder?')
     })()
 
     if (Files.exists(pathToSmFile)) {
@@ -90,7 +86,7 @@ module.exports = {
             .map(slicePath => path.basename(slicePath))
           
           sliceNames.forEach((sliceName) => {
-            migrateSlice(cwd, libraryName, sliceName, shouldMigrateMocks, shouldMigrateStories)
+            migrateSlice(cwd, libraryName, sliceName, true, shouldMigrateStories)
           })
         }
       })
