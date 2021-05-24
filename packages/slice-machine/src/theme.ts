@@ -267,10 +267,24 @@ const AppTheme = () => ({
     darkSmall: {
       borderRadius: "4px",
       color: "white",
-      fontSize: "13px",
+      fontSize: "12px",
       fontWeight: "body",
-      p: 2,
       bg: "text",
+      boxShadow:
+        "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      userSelect: "none",
+      transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+      "&:hover": {
+        bg: lighten("text", 0.05),
+        cursor: "pointer",
+      },
+    },
+    lightSmall: {
+      borderRadius: "4px",
+      color: "text",
+      fontSize: "12px",
+      fontWeight: "body",
+      bg: "white",
       boxShadow:
         "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
       userSelect: "none",

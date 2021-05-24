@@ -78,13 +78,13 @@ const Zone = ({
         Actions={fields.length ? (
           <Fragment>
             <Button
-              variant="buttons.darkSmall"
+              variant="buttons.lightSmall"
               onClick={() => setShowHints(!showHints)}
             >
               { showHints ? 'Hide' : 'Show'} Code Widgets
             </Button>
             <Button ml={2} variant="buttons.darkSmall" onClick={() => enterSelectMode()}>
-              Add Field
+              Add a new Field
             </Button>
           </Fragment>
         ) : null}
