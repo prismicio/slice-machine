@@ -22,6 +22,7 @@ import ToastProvider from "src/ToastProvider";
 
 import {
   FetchError,
+  LacksStorybookConf,
   NoLibraryConfigured,
 } from "components/UnrecoverableErrors";
 
@@ -50,6 +51,7 @@ function countSlices(libraries: ReadonlyArray<Library>): number {
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
+  LacksStorybookConf,
   Default: ({
     Component,
     pageProps,
@@ -113,6 +115,11 @@ function MyApp({
         Renderer: RenderStates.NoLibraryConfigured,
         payload: { env: data.env },
       });
+    } else if (!data.env.hasGeneratedStoriesPath) {
+      setRenderer({
+        Renderer: RenderStates.LacksStorybookConf,
+        payload: { env: data.env },
+      })
     } else {
       const newSliceCount = countSlices(data.libraries);
       if (sliceCount !== null && newSliceCount !== sliceCount) {

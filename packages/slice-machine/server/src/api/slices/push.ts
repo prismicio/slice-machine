@@ -85,6 +85,8 @@ export default async function handler(query: { sliceName: string, from: string }
           throw new Error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
         }
       }
+
+      console.log({ imageUrlsByVariation })
   
       console.log('[push]: pushing slice model to Prismic')
       const res = await createOrUpdate({

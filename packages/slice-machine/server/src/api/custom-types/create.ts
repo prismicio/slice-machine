@@ -19,6 +19,7 @@ export default async function handler(env: Environment, payload: CustomTypePaylo
     label,
     status: true,
     repeatable,
+    previewUrl: '',
     tabs: {
       Main: {}
     }

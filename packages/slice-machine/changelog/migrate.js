@@ -57,7 +57,7 @@ module.exports = async function migrate(ignorePrompt, params) {
   const latestMigrationVersion = smConfig.value._latest
 
   const migrationsToRun = MIGRATIONS.filter(m => {
-    return compareVersions.compare(m.version, latestMigrationVersion, '>')
+    return compareVersions.compare(m.version, latestMigrationVersion || '0.0.41', '>')
   })
 
   if(!migrationsToRun.length) return;

@@ -1,0 +1,32 @@
+{
+  "id": "sdfsdf",
+  "label": "dfsdf",
+  "status": true,
+  "repeatable": false,
+  "json": {
+    "Main": {
+      "fdf": {
+        "type": "Image",
+        "config": {
+          "label": "",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "MainSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "call_to_action2": {
+              "type": "SharedSlice"
+            },
+            "call_to_action3": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

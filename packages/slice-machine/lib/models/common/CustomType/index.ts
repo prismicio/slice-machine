@@ -12,6 +12,7 @@ export interface CustomType<T extends TabsAsArray | TabsAsObject> {
   repeatable: boolean;
   label: string;
   tabs: T;
+  previewUrl?: string;
 }
 
 export const CustomType = {

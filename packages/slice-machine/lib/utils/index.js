@@ -8,6 +8,8 @@ import {
 import Files from './files'
 import { hyphenate } from './str'
 
+import camelCase from 'lodash/camelCase'
+
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj
   return rest
@@ -50,8 +52,25 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
   }
 }
 
+/**
+ * Remove punctuation and illegal characters from a story ID.
+ *
+ * See https://gist.github.com/davidjrice/9d2af51100e41c6c4b4a
+ */
+const sanitizeSbId = (string) => {
+  return (
+    string
+    .toLowerCase()
+    // eslint-disable-next-line no-useless-escape
+    .replace(/[ ’–—―′¿'`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '')
+  );
+};
+
 export const createScreenshotUrl = ({ storybook, libraryName, sliceName, variationId }) => {
-  return `${storybook}/iframe.html?id=${hyphenate(libraryName)}-${sliceName.toLowerCase()}--${hyphenate(variationId)}&viewMode=story`
+  return `${storybook}/iframe.html?id=${sanitizeSbId(libraryName)}-${sliceName.toLowerCase()}--${camelCase(variationId).replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase()}&viewMode=story`
 }
 
 export const maybeJsonFile = (pathToFile) => {

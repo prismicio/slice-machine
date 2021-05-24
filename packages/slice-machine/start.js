@@ -20,8 +20,8 @@ async function handleMigration(cwd) {
   const pathToPkg = path.join(cwd, 'package.json')
   const pathToSmFile = path.join(cwd, 'sm.json')
 
-  const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
-  const cleanVersion = version.split('-')[0]
+  // const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
+  // const cleanVersion = version.split('-')[0]
 
   return handleChangelog({ cwd, pathToPkg, pathToSmFile })
 }

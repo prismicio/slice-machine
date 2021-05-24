@@ -78,9 +78,16 @@ function createChromaticUrls({ branch, appId, err }: { branch?: string, appId?: 
   }
 }
 
+function parseStorybookConfiguration(cwd: string) {
+  const pathsToFile = [path.join(cwd, '.storybook/main.js'), path.join(cwd, 'nuxt.config.js')]
+  const f = Files.readFirstOf(pathsToFile)(v => v)
+  return (f?.value as string).includes('.slicemachine/assets')
+}
+
 export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerError }, env: Environment }> {
   const userConfig = Files.readJson(SMConfig(cwd))
   const maybeErrors = validate(userConfig)
+  const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)
   const prismicData = getPrismicData()
@@ -111,6 +118,7 @@ export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerEr
       currentVersion,
       updateAvailable,
       mockConfig,
+      hasGeneratedStoriesPath,
       framework: detectFramework(cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client

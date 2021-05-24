@@ -91,7 +91,10 @@ const Zone = ({
       />
       {
         !fields.length && !newFieldData ? (
-          <EmptyState onEnterSelectMode={() => enterSelectMode()} />
+          <EmptyState
+            onEnterSelectMode={() => enterSelectMode()}
+            zoneName={isRepeatable ? 'repeatable' : 'static'}
+          />
         ) : null
       }
       <Card

@@ -36,8 +36,20 @@ app.use('/changelog', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, 'changelog.html'));
 })
 
+app.use('/warnings', async function sliceRoute(_, res) {
+  return res.sendFile(path.join(out, 'warnings.html'));
+})
+
 app.use('/:lib/:sliceName/:variation', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, '[lib]/[sliceName]/[variation].html'));
+})
+
+app.use('/:cts/:id', async function sliceRoute(_, res) {
+  return res.sendFile(path.join(out, 'cts/[ct].html'));
+})
+
+app.use('/slices', async function sliceRoute(_, res) {
+  return res.sendFile(path.join(out, 'slices.html'));
 })
 
 global.appRoot = path.join(__dirname, '../../../');

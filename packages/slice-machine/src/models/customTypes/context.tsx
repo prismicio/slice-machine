@@ -15,7 +15,6 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
   remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> | undefined,
 }) {
   const [cts, setCts] = useState(customTypes)
-
   const onCreate = (id: string, { label, repeatable }: { label: string, repeatable: boolean }) => {
     setCts([
       {

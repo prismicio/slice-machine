@@ -17,5 +17,6 @@ export default interface Environment {
   mockConfig: any
   framework: Framework
   baseUrl: string
+  hasGeneratedStoriesPath: boolean,
   client: DefaultClient | FakeClient
 }

@@ -1,4 +1,5 @@
 import { Link } from "theme-ui";
+// import Link from "next/link";
 import Card from "./Card";
 
 import SliceState from "../../lib/models/ui/SliceState";
@@ -14,11 +15,11 @@ const DefaultCardWrapper = ({
 }) => {
   return (
     <Link
-      sx={{
-        textDecoration: "none",
-        color: "inherit",
-      }}
-      as="a"
+      // sx={{
+      //   textDecoration: "none",
+      //   color: "inherit",
+      // }}
+      // as="a"
       href={link.as}
     >
       {children}

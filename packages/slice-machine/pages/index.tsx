@@ -24,6 +24,7 @@ import CreateCustomType from "../components/Forms/CreateCustomType";
 interface CtPayload {
   repeatable: boolean;
   id: string;
+  previewUrl: string;
   label: string;
 }
 
@@ -94,7 +95,7 @@ const Card = ({ ct }: { ct: CtPayload }) => (
           transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
         }}
       >
-        <CTThumbnail preview={null} heightInPx="287px" />
+        <CTThumbnail preview={{ url: ct.previewUrl }} heightInPx="287px" />
         <Flex
           mt={3}
           sx={{ alignItems: "center", justifyContent: "space-between" }}
