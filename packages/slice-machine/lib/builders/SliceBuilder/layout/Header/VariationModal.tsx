@@ -36,8 +36,9 @@ const VariationModal: React.FunctionComponent<{
     const existingIdError = variations.find(v => v.id === id) ? { id: 'This id already exists!' } : null
     const nameError = !(name && name.length) ? { name: 'Required!' }: null
     const originError = !(origin.value.length && variations.find(v => v.id === origin.value)) ? { id: 'Yuu must select an existing variation!' }: null
+    const invalidIdError = id && id.length && !id.match(/^[A-Za-z0-9]+([A-Za-z0-9]+)*$/) && { id: 'No special characters allowed' }
 
-    return { ...idError, ...existingIdError, ...nameError, ...originError }
+    return { ...idError, ...existingIdError, ...nameError, ...originError, ...invalidIdError }
   }
 
   function generateId(str: string) {
@@ -114,11 +115,7 @@ const VariationModal: React.FunctionComponent<{
               <Card
                 sx={{textAlign: "left"}}
                 HeaderContent={
-                  <Text sx={{
-                    textAlign: 'center',
-                    width: '100%',
-                    m: 2
-                  }} as='h2'>Add new Variation</Text>
+                  <Text as='h2'>Add new Variation</Text>
                 }
                 FooterContent={
                   <Flex sx={{justifyContent: 'flex-end'}}>
@@ -130,12 +127,12 @@ const VariationModal: React.FunctionComponent<{
               >
                 <Box sx={{ pb: 4, mt: 4 }}>
                   <Label htmlFor="name" sx={{mb: 1}}>Variation name*{errors.name ? <Error msg={errors.name} />: ''}</Label>
-                  <Field id="name" name="name" placeholder="e.g. Grid - With Icon" as={Input} maxLength={30} value={name} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeName(e.currentTarget.value)} />
+                  <Field autoComplete="off" id="name" name="name" placeholder="e.g. Grid - With Icon" as={Input} maxLength={30} value={name} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeName(e.currentTarget.value)} />
                   <Text>It will appear here in your slice builder, and in the page editor in Prismic</Text>
                 </Box>
                 <Box sx={{ pb: 4 }}>
                   <Label htmlFor="id" sx={{mb: 1}}>Variation ID*{errors.id ? <Error msg={errors.id} />: ''}</Label>
-                  <Field id="id" name="id" placeholder="e.g. GridWithIcon" as={Input} maxLength={30} value={generatedId} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeId(e.currentTarget.value)} />
+                  <Field autoComplete="off" id="id" name="id" placeholder="e.g. GridWithIcon" as={Input} maxLength={30} value={generatedId} onChange={ (e: React.ChangeEvent<HTMLInputElement>) => changeId(e.currentTarget.value)} />
                   <Text>It's generated automatically based on the variation name and will appear in the API responses.</Text>
                 </Box>
 

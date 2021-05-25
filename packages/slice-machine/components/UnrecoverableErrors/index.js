@@ -25,17 +25,20 @@ export const NoLibraryConfigured = () => (
   </FullPage>
 )
 
-export const LacksStorybookConf = () => (
-  <FullPage>
-    <div style={{ maxWidth: '640px' }}>
-      <h2>Missing path in Storybook configuration</h2>
-      <Text style={{ lineHeight: '30px', fontSize: '18px'}}>
-        We could not find a path to slice generated stories in your Storybook configuration.
-        Please add <Text variant="styles.inlineCode">.slicemachine/assets/*/**/*.stories.js</Text> to Storybook <Text variant="styles.inlineCode">main.js</Text> file.
-      </Text>
-      <br /><br />
-      <b>Example:</b><br/><br/>
-      <img src="/storybook-main.png" />
-    </div>
-  </FullPage>
-)
+export const LacksStorybookConf = ({ env }) => {
+  console.log({ env })
+  return (
+    <FullPage>
+      <div style={{ maxWidth: '640px' }}>
+        <h2>Missing path in Storybook configuration</h2>
+        <Text style={{ lineHeight: '30px', fontSize: '18px'}}>
+          We could not find a path to slice generated stories in your Storybook configuration.
+          Please add <Text variant="styles.inlineCode">.slicemachine/assets/*/**/*.stories.js</Text> to Storybook <Text variant="styles.inlineCode">main.js</Text> file.
+        </Text>
+        <br /><br />
+        <b>Example:</b><br/><br/>
+        <img src="/storybook-main.png" />
+      </div>
+    </FullPage>
+  )
+}

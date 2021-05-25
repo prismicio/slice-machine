@@ -78,12 +78,12 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "fgdfg": {
-          "type": "Number",
+        "fgdfg2": {
           "config": {
             "label": "",
             "placeholder": ""
-          }
+          },
+          "type": "Number"
         }
       },
       "items": {

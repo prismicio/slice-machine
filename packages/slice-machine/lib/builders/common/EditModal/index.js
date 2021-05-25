@@ -90,7 +90,6 @@ const EditModal = ({
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
-          console.log({ mockValue })
           const updatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
             ? MockConfigForm.onSave(mockValue, value)
             : mockValue

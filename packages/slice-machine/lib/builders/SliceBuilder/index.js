@@ -7,7 +7,7 @@ import { handleRemoteResponse } from "src/ToastProvider/utils";
 import { SliceContext } from 'src/models/slice/context'
 import { ConfigContext } from 'src/config-context'
 
-import { createScreenshotUrl } from 'lib/utils'
+import { createStorybookUrl } from 'lib/utils'
 
 import {
   Box,
@@ -25,7 +25,6 @@ import {
 import FieldZones from './FieldZones'
 
 const Builder = ({ openPanel }) => {
-  const [displaySuccess, setDisplaySuccess] = useState(false)
   const { Model, store, variation } = useContext(SliceContext)
   const { env: { userConfig: { storybook: storybookBaseUrl } }, warnings } = useContext(ConfigContext)
   const {
@@ -48,7 +47,7 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const storybookUrl = createScreenshotUrl({ storybook: storybookBaseUrl , libraryName: from, sliceName, variationId: variation.id })
+  const storybookUrl = createStorybookUrl({ storybook: storybookBaseUrl , libraryName: from, sliceName, variationId: variation.id })
 
   useEffect(() => {
     if (isTouched) {
@@ -60,13 +59,10 @@ const Builder = ({ openPanel }) => {
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done && isMounted) {
-      setDisplaySuccess(true)
-      setTimeout(() => {
-        if (isMounted) {
-          handleRemoteResponse(addToast)(data);
-        }
-      }, 6500)
+    if (data.done) {
+      if (isMounted) {
+        handleRemoteResponse(addToast)(data)
+      }
     }
   }, [data])
 

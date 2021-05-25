@@ -6,9 +6,7 @@ import {
 } from '../forms'
 
 import Files from './files'
-import { hyphenate } from './str'
-
-import camelCase from 'lodash/camelCase'
+import { createStorybookId, hyphenate, camelCaseToDash } from './str'
 
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj
@@ -52,25 +50,26 @@ export const createDefaultHandleMockContentFunction = (widget, TYPE_NAME, checkF
   }
 }
 
-/**
- * Remove punctuation and illegal characters from a story ID.
- *
- * See https://gist.github.com/davidjrice/9d2af51100e41c6c4b4a
- */
-const sanitizeSbId = (string) => {
+export const sanitizeSbId = (string) => {
   return (
     string
     .toLowerCase()
-    // eslint-disable-next-line no-useless-escape
     .replace(/[ ’–—―′¿'`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '-')
     .replace(/-+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')
   );
-};
+}
+
+const createStorybookPath = ({ libraryName, sliceName, variationId }) =>
+  `${sanitizeSbId(libraryName)}-${sliceName.toLowerCase()}--${camelCaseToDash(createStorybookId(variationId).slice(1))}`
 
 export const createScreenshotUrl = ({ storybook, libraryName, sliceName, variationId }) => {
-  return `${storybook}/iframe.html?id=${sanitizeSbId(libraryName)}-${sliceName.toLowerCase()}--${camelCase(variationId).replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase()}&viewMode=story`
+  return `${storybook}/iframe.html?id=${createStorybookPath({ libraryName, sliceName, variationId })}&viewMode=story`
+}
+
+export const createStorybookUrl = ({ storybook, libraryName, sliceName, variationId }) => {
+  return `${storybook}/?path=/story/${createStorybookPath({ libraryName, sliceName, variationId })}`
 }
 
 export const maybeJsonFile = (pathToFile) => {
