@@ -8,7 +8,7 @@ const ZoneEmptyState = ({ onEnterSelectMode, zoneName }: { onEnterSelectMode: Fu
       <Text sx={{ color: 'textClear' }}>Add a field to your {zoneName} zone</Text>
     </Box>
     <Button mt={3} variant="buttons.darkSmall" onClick={() => onEnterSelectMode()}>
-      <FaPlus style={{ position: 'relative', top: '2px' }} /> Add a new field
+      <FaPlus style={{ marginRight:'8px', position: 'relative', top: '2px' }} /> Add a new field
     </Button>
   </Box>
 )

@@ -12,6 +12,8 @@ import {
 import Card from './Card'
 
 import { Heading, Button } from 'theme-ui'
+import { FaPlus, FaCode } from 'react-icons/fa'
+
 
 import SelectFieldTypeModal from '../SelectFieldTypeModal'
 import NewField from './Card/components/NewField'
@@ -81,10 +83,10 @@ const Zone = ({
               variant="buttons.lightSmall"
               onClick={() => setShowHints(!showHints)}
             >
-              { showHints ? 'Hide' : 'Show'} Code Widgets
+              <FaCode style={{marginRight:'8px', position: 'relative', top: '2px'}}/> { showHints ? 'Hide' : 'Show'} Code Widgets
             </Button>
             <Button ml={2} variant="buttons.darkSmall" onClick={() => enterSelectMode()}>
-              Add a new Field
+              <FaPlus style={{ marginRight:'8px', position: 'relative', top: '2px' }} />Add a new Field
             </Button>
           </Fragment>
         ) : null}
