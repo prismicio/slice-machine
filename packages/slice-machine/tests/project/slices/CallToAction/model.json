@@ -12,12 +12,11 @@
       "description": "MySlice Template",
       "primary": {
         "test15": {
-          "type": "Text",
           "config": {
-            "label": "Label",
-            "constraint": {},
-            "thumbnails": []
-          }
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
         },
         "test13": {
           "type": "Text",

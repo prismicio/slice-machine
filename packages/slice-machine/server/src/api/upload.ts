@@ -24,7 +24,7 @@ export async function purge(env: Environment, slices: ReadonlyArray<Slice<AsObje
 }
 
 export async function upload(env: Environment, sliceName: string, variationId: string, filePath: string, onError: (error?: any, msg?: string) => any) {
-  console.log('[push]: uploading preview image')
+  console.log('[push]: uploading variation preview')
   const aclResponse: any = await (await env.client.images.createAcl()).json()
   const maybeErrorMessage = aclResponse.error || aclResponse.Message || aclResponse.message
   if (maybeErrorMessage) {

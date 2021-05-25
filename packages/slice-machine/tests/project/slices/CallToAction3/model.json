@@ -11,15 +11,6 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "title": {
-          "config": {
-            "label": "Title",
-            "placeholder": "This is where it all begins...",
-            "allowTargetBlank": true,
-            "single": "heading2"
-          },
-          "type": "StructuredText"
-        },
         "description": {
           "type": "StructuredText",
           "config": {
@@ -28,6 +19,15 @@
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
+        },
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading2"
+          },
+          "type": "StructuredText"
         },
         "illustration": {
           "type": "Image",

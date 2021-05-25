@@ -87,6 +87,8 @@ import { handleStorybookPreview } from '../common/storybook'
           .slice(screenshotArgs.sliceName)
           .variation(screenshotArgs.variationId)
           .preview()
+
+        // console.log({ screenshotUrl })
         const error = await handleStorybookPreview({ screenshotUrl, pathToFile })
         if(error) {
           warning = error

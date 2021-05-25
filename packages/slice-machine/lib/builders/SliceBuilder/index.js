@@ -7,7 +7,7 @@ import { handleRemoteResponse } from "src/ToastProvider/utils";
 import { SliceContext } from 'src/models/slice/context'
 import { ConfigContext } from 'src/config-context'
 
-import { hyphenate } from 'lib/utils/str'
+import { createScreenshotUrl } from 'lib/utils'
 
 import {
   Box,
@@ -23,10 +23,6 @@ import {
 } from './layout'
 
 import FieldZones from './FieldZones'
-
-const createStorybookUrls = (storybookBaseUrl, libraryName, sliceName, variation = 'default-slice') => ({
-  storybookUrl: `${storybookBaseUrl}/?path=/story/${hyphenate(libraryName)}-${sliceName.toLowerCase()}--${hyphenate(variation)}`
-})
 
 const Builder = ({ openPanel }) => {
   const [displaySuccess, setDisplaySuccess] = useState(false)
@@ -52,7 +48,7 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const { storybookUrl } = createStorybookUrls(storybookBaseUrl, from, sliceName, variation.id)
+  const storybookUrl = createScreenshotUrl({ storybook: storybookBaseUrl , libraryName: from, sliceName, variationId: variation.id })
 
   useEffect(() => {
     if (isTouched) {

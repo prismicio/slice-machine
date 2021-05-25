@@ -9,7 +9,7 @@ import Environment from '../models/common/Environment'
 import { Component } from '../models/common/Component'
 import { Library } from '../models/common/Library'
 
-async function handleLibraryPath(env: Environment, libPath: string): Promise<Library | undefined> {
+export async function handleLibraryPath(env: Environment, libPath: string): Promise<Library | undefined> {
   const {
     isLocal,
     pathExists,

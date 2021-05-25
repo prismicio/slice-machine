@@ -11,16 +11,6 @@
       "version": "sktwi1xtmkfgx8626",
       "description": "WithMocks",
       "primary": {
-        "description": {
-          "config": {
-            "label": "Description",
-            "placeholder": "A nice description of your product",
-            "allowTargetBlank": true,
-            "type": "StructuredText",
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
-        },
         "title": {
           "config": {
             "label": "Title",
@@ -28,6 +18,16 @@
             "allowTargetBlank": true,
             "type": "StructuredText",
             "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "description": {
+          "config": {
+            "label": "Description",
+            "placeholder": "A nice description of your product",
+            "allowTargetBlank": true,
+            "type": "StructuredText",
+            "single": "paragraph"
           },
           "type": "StructuredText"
         },

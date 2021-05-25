@@ -24,7 +24,7 @@ export default async function handler({ from, sliceName, variationId }: { from: 
   const browser = await puppeteer.launch()
   const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
   if (maybeErr) {
-    console.log('Uncaught error was returned from generate preview')
+    console.error(`Could not generate screenshot. ${maybeErr}`)
     return { err: maybeErr, reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!' }
   }
 
