@@ -4,7 +4,8 @@ import TemplateEngine from 'ejs'
 import Files from '../../../lib/utils/files'
 import { Framework } from '../../../lib/models/common/Framework'
 import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
-import { pascalize } from '../../../lib/utils/str';
+import { pascalize } from '../../../lib/utils/str'
+import camelCase from 'lodash/camelCase'
 
 const Paths = {
   nuxtTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/nuxt.template.ejs'),
@@ -58,7 +59,7 @@ export default {
 
     const withPascalizedIds = mocks.value.map((m: any) => {
       // use underscore to prevent invalid variable names
-      const id = `_${pascalize(m.variation || m.id)}`
+      const id = `_${pascalize(camelCase(m.variation || m.id).replace( /([a-z])([A-Z])/g, '$1-$2' ))}`
       return {
         ...m,
         id,
