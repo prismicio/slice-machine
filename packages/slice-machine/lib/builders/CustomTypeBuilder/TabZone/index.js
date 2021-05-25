@@ -136,11 +136,11 @@ const TabZone = ({
         renderHintBase={({ item }) => `data.${item.key}`}
         renderFieldAccessor={(key) => `data.${key}`}
       />
-      {
+      {/* {
         Model.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>
         ) : null
-      }
+      } */}
       <SliceZone
         tabId={tabId}
         sliceZone={sliceZone}
