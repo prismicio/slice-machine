@@ -290,7 +290,7 @@ const AppTheme = () => ({
       userSelect: "none",
       transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
       "&:hover": {
-        bg: lighten("text", 0.05),
+        bg: darken("white", 0.05),
         cursor: "pointer",
       },
     },
