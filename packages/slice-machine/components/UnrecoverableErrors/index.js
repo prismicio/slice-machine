@@ -45,7 +45,7 @@ export const LacksStorybookConf = ({ env }) => (
         custom type builder 🎉🎉 </h2>
       <Text as="p" style={{ lineHeight: '30px', fontSize: '18px'}}>
         To make your project work with the new builder, you must update your config file.
-        This is because Slice stories have moved from <Code>{'~/slices/'}</Code> to <Code>{'~/.slicemachine/assets/slices/'}</Code>.
+        This is because Slice stories have moved from <Code>{'~/slices/...'}</Code> to <Code>{'~/.slicemachine/assets/slices/**/*.stories.js'}</Code>.
         <br/><br/>
         We have already moved your files for you,
         but you must update your Storybook options in <Code>{ env.framework == "nuxt" ? 'nuxt.config.js' : '.storybook/main.js' }</Code>

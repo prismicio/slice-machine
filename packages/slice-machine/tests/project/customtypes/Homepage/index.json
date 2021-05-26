@@ -5,7 +5,7 @@
   "repeatable": false,
   "json": {
     "Main": {
-      "group1": {
+      "group11": {
         "type": "Group",
         "config": {
           "type": "Group",

@@ -24,6 +24,7 @@ export const paths = (cwd: string, prefix: string) => ({
 })
 
 export const GeneratedPaths = (cwd: string) => paths(cwd, path.join('.slicemachine', 'assets'))
+export const GeneratedCustomTypesPaths = (cwd: string) => paths(cwd, path.join('.slicemachine', 'assets', 'customtypes'))
 export const CustomTypesPaths = (cwd: string) => paths(cwd, 'customtypes')
 export const CustomPaths = (cwd: string) => paths(cwd, '')
 export const PackagePaths = (cwd: string) => paths(cwd, 'node_modules')

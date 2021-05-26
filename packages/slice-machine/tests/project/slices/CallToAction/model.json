@@ -11,7 +11,19 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "test24": {
+        "ctr": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test24333": {
           "config": {
             "label": "Label really!",
             "placeholder": ""

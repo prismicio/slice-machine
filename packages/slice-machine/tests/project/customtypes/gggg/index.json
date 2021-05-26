@@ -5,7 +5,7 @@
   "repeatable": true,
   "json": {
     "Main": {
-      "uid": {
+      "uid2": {
         "type": "UID",
         "config": {
           "label": "",

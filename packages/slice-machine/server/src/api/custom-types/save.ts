@@ -1,6 +1,6 @@
 import { getEnv } from '../../../../lib/env'
 import Files from '../../../../lib/utils/files'
-import { CustomTypesPaths, GeneratedPaths } from '../../../../lib/models/paths'
+import { CustomTypesPaths, GeneratedCustomTypesPaths } from '../../../../lib/models/paths'
 
 import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
 
@@ -11,7 +11,7 @@ export default async function handler(req: { body: any }) {
   const { model, mockConfig, id, label, status, repeatable } = req.body
 
   const modelPath = CustomTypesPaths(env.cwd).customType(id).model()
-  const mockPath = GeneratedPaths(env.cwd).customType(id).mock()
+  const mockPath = GeneratedCustomTypesPaths(env.cwd).customType(id).mock()
 
   insertMockConfig(env.cwd, {
     key: id,
