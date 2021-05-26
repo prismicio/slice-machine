@@ -10,7 +10,6 @@ export const ClientError = ({ errorType }) => (
       <Flex
         sx={{
           p: 3,
-          bg: "headSection",
           alignItems: "center",
           justifyContent: "space-between",
           borderTopLeftRadius: radius,

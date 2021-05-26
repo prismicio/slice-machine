@@ -33,10 +33,18 @@ export const LacksStorybookConf = ({ env }) => (
         custom type builder 🎉🎉 </h2>
       <Text style={{ lineHeight: '30px', fontSize: '18px'}}>
         We migrated generated stories to another place, please update your conf.
-        <br/>Please add <Text variant="styles.inlineCode" style={{fontSize:'16px'}}> {env.framework =="nuxt" ? "~/.slicemachine/assets/slices/**/*.stories.@(ts|js)" : "../.slicemachine/assets/*/**/*.stories.js"}</Text> {env.framework =="nuxt" ? "in your" : "in your Storybook" } <Text variant="styles.inlineCode" style={{fontSize:'16px'}}> {env.framework =="nuxt" ? "nuxt.config.js" : "main.js"}</Text> file.
+        <br/>Please add
+          <Text variant="styles.inlineCode" style={{fontSize:'16px'}}>
+            {env.framework == "nuxt"
+              ? "~/.slicemachine/assets/slices/**/*.stories.@(ts|js)"
+              : "../.slicemachine/assets/*/**/*.stories.js"
+            }
+          </Text>
+          {env.framework == "nuxt" ? " in your" : " in your Storybook" }
+          <Text variant="styles.inlineCode" style={{fontSize:'16px'}}> {env.framework =="nuxt" ? "nuxt.config.js" : "main.js"}</Text> file.
       </Text>
       <br /><br />
-      {env.framework =="nuxt" ? <img src="/nuxt-storybook.png" /> : <img src="/next-storybook.png" />}
+      {env.framework == "nuxt" ? <img src="/nuxt-storybook.png" /> : <img src="/next-storybook.png" />}
     </div>
   </FullPage>
 )

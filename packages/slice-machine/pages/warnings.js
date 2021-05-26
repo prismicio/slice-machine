@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ConfigContext } from "src/config-context";
-import Warnings from "components/Warnings";
 import { Box, Flex, Text } from "@theme-ui/components";
 import Container from "../components/Container";
 import {
@@ -14,13 +13,10 @@ import {
   StorybookNotRunning,
   StorybookNotInManifest,
 } from "../components/Warnings/Storybook";
-import ConfigErrors from "../components/ConfigErrors";
 import { FiZap } from "react-icons/fi";
 
 export default function WarningsPage() {
-  const { warnings, configErrors } = useContext(ConfigContext);
-
-  console.log(configErrors);
+  const { warnings, configErrors } = useContext(ConfigContext)
 
   const Renderers = {
     [warningStates.NOT_CONNECTED]: NotConnected,
@@ -33,7 +29,7 @@ export default function WarningsPage() {
 
   return (
     <main>
-      <Container sx={{ maxWidth: "1224px" }}>
+      <Container sx={{ maxWidth: "890px" }}>
         <Flex
           sx={{
             alignItems: "center",
@@ -54,9 +50,16 @@ export default function WarningsPage() {
                 errorType={warning.title}
                 {...warning}
               />
-            );
+            )
           })}
         </Box>
+        {
+          !warnings || !warnings.length ? (
+            <Box>
+              <Text>Your project is correctly configured. Well done!</Text>
+            </Box>
+          ) : null
+        }
       </Container>
     </main>
   );

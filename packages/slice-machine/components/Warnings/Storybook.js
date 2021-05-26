@@ -11,7 +11,6 @@ export const StorybookNotInstalled = () => (
       <Flex
         sx={{
           p: 3,
-          bg: "headSection",
           alignItems: "center",
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
@@ -44,7 +43,6 @@ export const StorybookNotRunning = () => (
       <Flex
         sx={{
           p: 3,
-          bg: "headSection",
           alignItems: "center",
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
@@ -78,7 +76,6 @@ export const StorybookNotInManifest = () => (
       <Flex
         sx={{
           p: 3,
-          bg: "headSection",
           alignItems: "center",
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
