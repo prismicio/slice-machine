@@ -75,7 +75,7 @@ const Header = ({ Model, store, variation }) => {
                       }}
                     />
                     <Box ml={2}>
-                      <Text variant="xs">{variation.name}</Text>
+                      <Text variant="xs">Variation id : {variation.id}</Text>
                     </Box>
                   </Flex>
                 )}

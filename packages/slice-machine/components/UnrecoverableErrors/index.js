@@ -25,17 +25,18 @@ export const NoLibraryConfigured = () => (
   </FullPage>
 )
 
-export const LacksStorybookConf = () => (
+export const LacksStorybookConf = ({ env }) => (
   <FullPage>
-    <div style={{ maxWidth: '640px' }}>
-      <h2>Missing path in Storybook configuration</h2>
+    <div style={{ maxWidth: '850px', textAlign:'center', color:'#25252D' }}>
+      <img src="/logo.png" width="40px" />
+      <h2>Welcome to the new <br/>
+        custom type builder 🎉🎉 </h2>
       <Text style={{ lineHeight: '30px', fontSize: '18px'}}>
-        We could not find a path to slice generated stories in your Storybook configuration.
-        Please add <Text variant="styles.inlineCode">.slicemachine/assets/*/**/*.stories.js</Text> to Storybook <Text variant="styles.inlineCode">main.js</Text> file.
+        We migrated generated stories to another place, please update your conf.
+        <br/>Please add <Text variant="styles.inlineCode" style={{fontSize:'16px'}}> {env.framework =="nuxt" ? "~/.slicemachine/assets/slices/**/*.stories.@(ts|js)" : "../.slicemachine/assets/*/**/*.stories.js"}</Text> {env.framework =="nuxt" ? "in your" : "in your Storybook" } <Text variant="styles.inlineCode" style={{fontSize:'16px'}}> {env.framework =="nuxt" ? "nuxt.config.js" : "main.js"}</Text> file.
       </Text>
       <br /><br />
-      <b>Example:</b><br/><br/>
-      <img src="/storybook-main.png" />
+      {env.framework =="nuxt" ? <img src="/nuxt-storybook.png" /> : <img src="/next-storybook.png" />}
     </div>
   </FullPage>
 )
