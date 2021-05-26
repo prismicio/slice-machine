@@ -18,7 +18,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
       type="text"
       placeholder={placeholder}
       as={Input}
-      autocomplete="off"
+      autoComplete="off"
     />
     { error ? <Text sx={{ color: 'error', mt: 1 }}>{error}</Text>: null}
   </Box>

@@ -1,6 +1,6 @@
 import { Widget } from './widgets'
-// @ts-ignore
-import { snakelize } from '../../utils/str'
+
+import camelCase from 'lodash/camelCase'
 
 export enum WidgetsArea {
   Primary = 'primary',
@@ -25,22 +25,7 @@ export type AsObject = { [key: string]: Widget }
 
 export const Variation = {
   generateId(str: string): string {
-    let input = str
-    input = input.replace(/^\s+|\s+$/g, ''); // trim
-    input = input.toLowerCase();
-  
-    // remove accents, swap ñ for n, etc
-    const from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-    const to   = "aaaaaeeeeeiiiiooooouuuunc------";
-    for (let i = 0, l = from.length ; i < l; i++) {
-      input = input.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-    }
-  
-    input = input.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-      .replace(/\s+/g, '-') // collapse whitespace and replace by -
-      .replace(/-+/g, '-'); // collapse dashes
-  
-    return snakelize(input);
+    return camelCase(str)
   },
 
   toObject(variation: Variation<AsArray>): Variation<AsObject> {

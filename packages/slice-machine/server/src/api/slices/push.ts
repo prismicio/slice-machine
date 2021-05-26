@@ -95,7 +95,6 @@ export default async function handler(query: { sliceName: string, from: string }
         sliceName,
         model: {
           ...jsonModel,
-          imageUrl: variations[0].imageUrl,
           variations,
         },
         client: env.client
