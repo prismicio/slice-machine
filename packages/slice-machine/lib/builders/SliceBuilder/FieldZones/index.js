@@ -34,7 +34,7 @@ const Zones = ({
   }
 
   const _onSave = (fieldType) => ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
-    if (mockValue && Object.keys(mockValue).length) {
+    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([,v]) => v !== null)) {
       store
         .variation(variation.id)
         .updateWidgetMockConfig(initialMockConfig, fieldType, apiId, newKey, mockValue)

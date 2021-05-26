@@ -92,7 +92,9 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
   })();
   return {
     ...result,
-    isTouched: !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig),
+    isTouched: (()=> {
+      return !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig)
+    })(),
     __status: (() => {
       return result.infos.previewUrls !== result.initialPreviewUrls
       || !equal(result.remoteVariations, result.initialVariations)

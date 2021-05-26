@@ -44,6 +44,47 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "secondVariation",
+      "name": "Second variation",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "StrcututedTexts",
+      "primary": {
+        "dfghj": {
+          "config": {
+            "label": "qsddqsdd",
+            "placeholder": "qsddgfds"
+          },
+          "type": "Text"
+        },
+        "fghjk": {
+          "config": {
+            "label": "",
+            "placeholder_false": "falsy",
+            "placeholder_true": "true",
+            "default_value": true
+          },
+          "type": "Boolean"
+        },
+        "sdfdg": {
+          "config": {
+            "label": "sdf",
+            "placeholder": ""
+          },
+          "type": "Timestamp"
+        },
+        "sdfsdfd": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true
+          }
+        }
+      },
+      "items": {}
     }
   ]
 }

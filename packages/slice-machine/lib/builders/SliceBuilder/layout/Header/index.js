@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Box, Flex, Button, Text, Heading, Link as ThemeLinK } from "theme-ui";
+import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
 import MetaData from "./MetaData";
 import { FiLayers } from "react-icons/fi";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
-import Card from "components/Card/Default";
 import { useRouter } from "next/router";
-import Select, { components } from "react-select";
 import * as Links from "../../links";
 import VariationPopover from "./VariationsPopover";
 
-const Header = ({ Model, store, variation }) => {
+import SaveButton from './SaveButton'
+
+const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
   const router = useRouter();
   const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);
@@ -59,43 +59,41 @@ const Header = ({ Model, store, variation }) => {
                 </Box>
               </Flex>
               <Flex mt={3} sx={{ alignItems: "center" }}>
-                {Model.variations.length > 1 && (
-                  <Flex sx={{ alignItems: "center" }}>
-                    <VariationPopover
-                      defaultValue={variation}
-                      variations={Model.variations}
-                      onChange={(v) => {
-                        router.push(
-                          ...Links.variation(
-                            Model.from,
-                            Model.infos.sliceName,
-                            v.id
-                          ).all
-                        );
-                      }}
-                    />
-                    <Box ml={2}>
-                      <Text variant="xs">Variation id : {variation.id}</Text>
-                    </Box>
-                  </Flex>
-                )}
+                <Flex sx={{ alignItems: "center" }}>
+                  <VariationPopover
+                    defaultValue={variation}
+                    variations={Model.variations}
+                    onNewVariation={() => setShowVariationModal(true)}
+                    onChange={(v) => {
+                      router.push(
+                        ...Links.variation(
+                          Model.from,
+                          Model.infos.sliceName,
+                          v.id
+                        ).all
+                      )
+                    }}
+                  />
+                  <Box ml={2}>
+                    <Text variant="xs">Variation id : {variation.id}</Text>
+                  </Box>
+                </Flex>
               </Flex>
             </Flex>
           </Box>
 
-          <span>
-            <Button onClick={() => setShowVariationModal(true)}>
-              + Add new variation
-            </Button>
-          </span>
+          <SaveButton
+            onSave={onSave}
+            onPush={onPush}
+            __status={Model.__status}
+            isTouched={Model.isTouched}
+            isLoading={isLoading}
+          />
           <VariationModal
             isOpen={showVariationModal}
             onClose={() => setShowVariationModal(false)}
             onSubmit={(id, name, copiedVariation) => {
               store.copyVariation(id, name, copiedVariation);
-              console.log({
-                link: Links.variation(Model.from, Model.infos.sliceName, id),
-              });
               router.push(
                 ...Links.variation(Model.from, Model.infos.sliceName, id).all
               );

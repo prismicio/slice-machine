@@ -37,7 +37,10 @@ export const Library = {
         if (!sliceFound) {
           return LibStatus.NewSlice
         }
-        return !equal(component.model.variations, sliceFound.variations) ? LibStatus.Modified : LibStatus.Synced
+        // imageUrl is always undefined in library state
+        return !equal(component.model.variations.map(e => ({ ...e, imageUrl: undefined })), sliceFound.variations.map(e => ({ ...e, imageUrl: undefined })))
+          ? LibStatus.Modified
+          : LibStatus.Synced
       })();
 
       return {

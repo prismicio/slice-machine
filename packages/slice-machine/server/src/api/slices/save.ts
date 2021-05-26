@@ -88,7 +88,6 @@ import { handleStorybookPreview } from '../common/storybook'
           .variation(screenshotArgs.variationId)
           .preview()
 
-        // console.log({ screenshotUrl })
         const error = await handleStorybookPreview({ screenshotUrl, pathToFile })
         if(error) {
           warning = error
@@ -113,7 +112,7 @@ import { handleStorybookPreview } from '../common/storybook'
       }
     }
 
-    console.log('[update]: done!')
+    console.log('[update]: Slice was saved!')
     
 
     return errors.length ? { err: errors, previewUrls, warning } : { previewUrls, warning }

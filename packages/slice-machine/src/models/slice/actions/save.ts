@@ -31,6 +31,7 @@ export default function save(dispatch: ({type, payload}: { type: string, payload
             ...slice.infos,
             previewUrls
           },
+          initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations
         }
         dispatch({ type: ActionType.Save, payload: { state: savedState } })

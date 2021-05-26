@@ -11,15 +11,12 @@ import { createStorybookUrl } from 'lib/utils'
 
 import {
   Box,
-  Label,
-  Checkbox
 } from 'theme-ui'
 
 import {
   FlexEditor,
   SideBar,
   Header,
-  Success
 } from './layout'
 
 import FieldZones from './FieldZones'
@@ -72,17 +69,24 @@ const Builder = ({ openPanel }) => {
 
   return (
     <Box>
-      <Header Model={Model} store={store} variation={variation} />
+      <Header
+        Model={Model}
+        store={store}
+        variation={variation}
+        onPush={ () => store.push(Model, setData) }
+        onSave={ () => store.save(Model, setData) }
+        isLoading={data.loading}
+      />
       <FlexEditor
         sx={{ py: 4 }}
         SideBar={<SideBar
           data={data}
           Model={Model}
           variation={variation}
-          onPush={ () => store.push(Model, setData) }
-          onSave={ () => store.save(Model, setData) }
           warnings={warnings}
           openPanel={openPanel}
+          onPush={ () => store.push(Model, setData) }
+          onSave={ () => store.save(Model, setData) }
           previewUrl={previewUrls[variation.id]}
           storybookUrl={storybookUrl}
           onScreenshot={() => store.variation(variation.id).generateScreenShot(Model.from, Model.infos.sliceName, setData) }

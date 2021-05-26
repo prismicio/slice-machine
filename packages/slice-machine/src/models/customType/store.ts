@@ -32,8 +32,6 @@ export default class CustomTypeStore implements Store {
         this.dispatch({ type: Actions.ReorderWidget, payload: { tabId, start, end }})
       },
       updateWidgetGroupMockConfig:(initialMockConfig: any, groupItemKey: string, prevId: string, newId: string, mockValue: any) => {
-
-        console.log('UPDATE MOCK CONFIG\n\n')
         console.log({ initialMockConfig, mockValue, newId })
         const updatedConfig = {
           ...initialMockConfig[groupItemKey],

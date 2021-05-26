@@ -2,18 +2,18 @@ import { memo } from 'react'
 import {
   Box,
   Flex,
+  Card as ThemeCard,
   Heading
 } from 'theme-ui'
 
 import Card from 'components/Card/'
 
 import Storybook from './icons/storybook.svg'
-// import SbLogo from './icons/sb-logo.png'
 import StorybookGrey from './icons/storybookGrey.svg'
 import Li from './components/Li'
 import ImagePreview from './components/ImagePreview'
 import FooterButton from './components/FooterButton'
-import { storybookWarningStates, warningTwoLiners } from 'lib/consts'
+import { storybookWarningStates } from 'lib/consts'
 
 const MemoizedImagePreview = memo(ImagePreview)
 
@@ -53,15 +53,6 @@ const SideBar = ({
         bg="headSection"
         bodySx={{ p: 0 }}
         footerSx={{ p: 0 }}
-        Footer={() => (
-          <FooterButton
-            onSave={onSave}
-            onPush={onPush}
-            __status={__status}
-            isTouched={isTouched}
-            loading={data.loading}
-          />
-        )}
       >
         <MemoizedImagePreview
           src={previewUrls[variation.id] && previewUrls[variation.id].url}
@@ -70,7 +61,8 @@ const SideBar = ({
           onHandleFile={onHandleFile}
           preventScreenshot={!!storybookError}
         />
-        <ul>
+      </Card>
+      <ThemeCard mt={3}>
           {
             storybookError ? (
               <Li
@@ -92,8 +84,7 @@ const SideBar = ({
               />
             )
           }
-        </ul>
-      </Card>
+        </ThemeCard>
     </Box>
   )
 }
