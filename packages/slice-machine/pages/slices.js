@@ -23,7 +23,7 @@ const Index = () => {
       <Container>
         <main>
           {libraries &&
-            libraries.map(({ name, isLocal, components }, i) => (
+            libraries.map(({ name, isLocal, components }, i) => isLocal ? (
               <div key={name}>
                 <Flex
                   sx={{
@@ -48,7 +48,7 @@ const Index = () => {
                   slices={components.map(([e]) => e)}
                 />
               </div>
-            ))}
+            ) : null )}
         </main>
       </Container>
     </Fragment>
