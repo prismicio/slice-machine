@@ -16,8 +16,13 @@ import { handleStorybookPreview } from '../common/storybook'
     const { env } = await getEnv()
     const { sliceName, from, model, mockConfig } = req.body
 
+    console.log({
+      mockConfig: JSON.stringify(mockConfig),
+      model: JSON.stringify(model)
+    })
     const updatedMockConfig = insertMockConfig(env.cwd, {
       key: sliceName,
+      prefix: from,
       value: mockConfig
     })
 

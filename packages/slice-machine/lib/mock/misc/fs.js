@@ -13,12 +13,20 @@ export const writeConfig = (cwd, config) => {
   Files.write(MocksConfig(cwd), config)
 }
 
-export const insert = (cwd, { key, value }) => {
+export const insert = (cwd, { key, prefix = null, value }) => {
   const config = getConfig(cwd)
   const withInsert = {
     ...config,
-    [key]: value
+    ...(prefix ? {
+      [prefix]: {
+        ...config[prefix],
+        [key]: value
+      }
+    }: {
+      [key]: value
+    })
   }
+
   writeConfig(cwd, withInsert)
   return withInsert
 }

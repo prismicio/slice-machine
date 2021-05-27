@@ -8,6 +8,8 @@ import { removeKeys } from 'lib/utils'
 import * as Widgets from 'lib/models/common/widgets'
 import sliceBuilderWidgetsArray from 'lib/models/common/widgets/sliceBuilderArray'
 
+import { MockConfig } from '../../../models/common/MockConfig'
+
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
   section title.
@@ -33,20 +35,25 @@ const Zones = ({
     return Model.mockConfig?.[fieldType]?.[apiId]
   }
 
-  const _onSave = (fieldType) => ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
+  const _onSave = (widgetArea) => ({ apiId: previousKey, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
     if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([,v]) => v !== null)) {
       store
         .variation(variation.id)
-        .updateWidgetMockConfig(initialMockConfig, fieldType, apiId, newKey, mockValue)
+        .updateWidgetMockConfig(Model.mockConfig, variation.id, widgetArea, newKey, mockValue)
     } else {
       store
         .variation(variation.id)
-        .deleteWidgetMockConfig(initialMockConfig, fieldType, apiId)
+        .deleteWidgetMockConfig(Model.mockConfig, widgetArea, newKey)
+    }
+    if (newKey !== previousKey) {
+      store
+        .variation(variation.id)
+        .deleteWidgetMockConfig(Model.mockConfig, widgetArea, previousKey)
     }
 
     store
       .variation(variation.id)
-      .replaceWidget(fieldType, apiId, newKey, { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type })
+      .replaceWidget(widgetArea, previousKey, newKey, { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type })
 
   }
 
@@ -82,7 +89,7 @@ const Zones = ({
         showHints={showHints}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
-        getFieldMockConfig={_getFieldMockConfig('primary')}
+        getFieldMockConfig={({ apiId }) => MockConfig.getFieldMockConfig(Model.mockConfig, variation.id, 'primary', apiId)}
         onDeleteItem={_onDeleteItem('primary')}
         onSave={_onSave('primary')}
         onSaveNewField={_onSaveNewField('primary')}
@@ -101,7 +108,7 @@ const Zones = ({
         fields={variation.items}
         showHints={showHints}
         EditModal={EditModal}
-        getFieldMockConfig={_getFieldMockConfig('items')}
+        getFieldMockConfig={({ apiId }) => MockConfig.getFieldMockConfig(Model.mockConfig, variation.id, 'items', apiId)}
         onDeleteItem={_onDeleteItem('items')}
         onSave={_onSave('items')}
         onSaveNewField={_onSaveNewField('items')}

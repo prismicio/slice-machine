@@ -1,7 +1,7 @@
 module.exports = {
   "stories": [
     "../slices/**/*.stories.js",
-    
+    "../.slicemachine/assets/*/**/*.stories.js",
     "../customtypes/**/*.stories.js"
   ],
   "addons": [

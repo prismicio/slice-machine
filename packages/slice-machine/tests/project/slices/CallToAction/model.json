@@ -23,7 +23,36 @@
           },
           "type": "Link"
         },
-        "test24333": {
+        "test121": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "v2",
+      "name": "V2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test": {
           "config": {
             "label": "Label really!",
             "placeholder": ""

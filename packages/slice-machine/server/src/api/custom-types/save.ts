@@ -15,6 +15,7 @@ export default async function handler(req: { body: any }) {
 
   insertMockConfig(env.cwd, {
     key: id,
+    prefix: '_cts',
     value: mockConfig
   })
 
