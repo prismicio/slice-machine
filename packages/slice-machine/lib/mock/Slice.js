@@ -17,12 +17,12 @@ export default async function MockSlice(sliceName, model, mockConfig) {
     const mock = createEmptyMock(sliceName, variation)
     const handler = handleFields(Widgets)
     mock.primary = handler(
-      Object.entries(variation.primary),
+      Object.entries(variation.primary || {}),
       mockConfig ? mockConfig.primary || {} : {}
     )
 
     const items = []
-    const repeat = Object.entries(variation.items)
+    const repeat = Object.entries(variation.items || {})
     if (repeat.length === 0) {
       return {
         ...mock,

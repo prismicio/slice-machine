@@ -123,7 +123,7 @@ const CustomTypes = () => {
       router.push(`/cts/${id}`)
 
     }
-  };
+  }
 
   return (
     <Container>

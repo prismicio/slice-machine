@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "private": false,
   "license": "MIT",
   "_moduleAliases": {
@@ -36,6 +36,7 @@
     "base64-img": "^1.0.4",
     "body-parser": "^1.19.0",
     "compare-versions": "^3.6.0",
+    "copy-template-dir": "^1.4.0",
     "deepmerge": "^4.2.2",
     "ejs": "^3.1.6",
     "esm": "^3.2.25",

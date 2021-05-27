@@ -49,18 +49,18 @@ const ModalCard = ({
         close()
       }}
     >
-      {({ isValid, isSubmitting, values, errors }) => (
+      {({ isValid, isSubmitting, values, errors, touched }) => (
         <Form id={formId}>
           <Card
             borderFooter
             footerSx={{ p: 3 }}
-            bodySx={{ px: '48px', py: 4 }}
+            bodySx={{ px: 4, py: 4 }}
             sx={{ border: 'none' }}
             Header={({ radius }: { radius: string | number}) => (
               <Flex
                 sx={{
-                  p: '24px',
-                  pl: '48px',
+                  p: '16px',
+                  pl: 4,
                   bg: 'headSection',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -94,7 +94,7 @@ const ModalCard = ({
               </Flex>
             )}
           >
-            { children({ isValid, isSubmitting, values, errors }) }
+            { children({ isValid, isSubmitting, values, errors, touched }) }
           </Card>
         </Form>
       )}

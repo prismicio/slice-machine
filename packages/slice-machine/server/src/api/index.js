@@ -6,15 +6,18 @@ const mime = require('mime')
 const base64Img = require('base64-img')
 
 const push = require('./slices/push').default
-const pushAll = require('./push-all').default
 const save = require('./slices/save').default
-const saveCT = require('./custom-types/save').default
+const createSlice = require('./slices/create/index').default
+
+const pushAll = require('./push-all').default
+
 const screenshot = require('./screenshot').default
 const customScreenshot = require('./custom-screenshot').default
 const parseOembed = require('./parse-oembed').default
 const state = require('./state').default
 const pushLibs = require('./libraries/push').default
 
+const saveCT = require('./custom-types/save').default
 const createCustomType = require('./custom-types/create').default
 const pushCustomType = require('./custom-types/push').default
 
@@ -82,6 +85,14 @@ router.use('/slices/save', async function (req, res) {
   }
   return res.status(200).json(payload)
 })
+router.use('/slices/create', async function (req, res) {
+  const payload = await createSlice(req.query)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
 router.use('/slices/push', async function (req, res) {
   const payload = await push(req.query)
   if (payload.err) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field } from 'formik'
 import Modal from 'react-modal'
-import Card from 'components/Card/Default'
+import Card from '../../../../../components/Card/Default'
 import Select from 'react-select'
 
 import {
@@ -12,7 +12,7 @@ import {
   Input,
   Flex
 } from 'theme-ui'
-import { AsArray, Variation } from 'lib/models/common/Variation'
+import { AsArray, Variation } from '../../../../models/common/Variation'
 
 const Error = ({ msg }: { msg?: string }) => (
   <Text as="span" sx={{ fontSize: 12, color: 'error', mt: '5px', ml: 2 }}>{msg || 'Error!'}</Text>
