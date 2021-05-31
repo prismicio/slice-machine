@@ -2,29 +2,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 
-import theme from "src/theme";
+import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles } from "theme-ui";
 
-import LibrariesProvider from "src/models/libraries/context";
-import CustomTypesProvider from "src/models/customTypes/context";
-import { SliceHandler } from "src/models/slice/context";
-import ConfigProvider from "src/config-context";
+import LibrariesProvider from "../src/models/libraries/context";
+import CustomTypesProvider from "../src/models/customTypes/context";
+import { SliceHandler } from "../src/models/slice/context";
+import ConfigProvider from "../src/config-context";
 
 import Drawer from "rc-drawer";
 
-import LoadingPage from "components/LoadingPage";
-import ConfigErrors from "components/ConfigErrors";
+import LoadingPage from "../components/LoadingPage";
+import ConfigErrors from "../components/ConfigErrors";
 // import NavBar from 'components/NavBar/WithRouter'
-import Warnings from "components/Warnings";
-import AppLayout from "components/AppLayout";
-import ToastProvider from "src/ToastProvider";
+import Warnings from "../components/Warnings";
+import AppLayout from "../components/AppLayout";
+import ToastProvider from "../src/ToastProvider";
 
 import {
   FetchError,
   LacksStorybookConf,
   NoLibraryConfigured,
-} from "components/UnrecoverableErrors";
+} from "../components/UnrecoverableErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -36,17 +36,25 @@ import { ServerState } from "../lib/models/server/ServerState";
 import ServerError from "../lib/models/server/ServerError";
 import { Library } from "../lib/models/common/Library";
 import Environment from "../lib/models/common/Environment";
-import Slice from "lib/models/common/Slice";
-import { CustomType } from "lib/models/common/CustomType";
-import { TabsAsObject } from "lib/models/common/CustomType/tab";
-import { AsObject } from "lib/models/common/Variation";
+import Slice from "../lib/models/common/Slice";
+import { CustomType } from "../lib/models/common/CustomType";
+import { TabsAsObject } from "../lib/models/common/CustomType/tab";
+import { AsObject } from "../lib/models/common/Variation";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function countSlices(libraries: ReadonlyArray<Library>): number {
-  return libraries.reduce((acc, lib) => acc + lib.components.length, 0);
+function mapSlices(libraries: ReadonlyArray<Library>): any {
+  return libraries.reduce((acc, lib) => {
+    return {
+      ...acc,
+      ...lib.components.reduce((acc, comp) => ({
+        ...acc,
+        [`${comp.from}:${comp.infos.sliceName}`]: 1
+      }), {})
+    }
+  }, {})
 }
 
 const RenderStates = {
@@ -79,7 +87,7 @@ function MyApp({
   pageProps: any;
 }) {
   const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
-  const [sliceCount, setSliceCount] = useState<number | null>(null);
+  const [sliceMap, setSliceMap] = useState<any | null>(null);
   const [drawerState, setDrawerState] = useState<{
     open: boolean;
     priority?: any;
@@ -121,18 +129,23 @@ function MyApp({
         payload: { env: data.env },
       })
     } else {
-      const newSliceCount = countSlices(data.libraries);
-      if (sliceCount !== null && newSliceCount !== sliceCount) {
-        return location.reload();
+      const newSliceMap = mapSlices(data.libraries)
+      if (sliceMap !== null) {
+        Object.keys(newSliceMap).forEach(key => {
+          if (!sliceMap[key]) {
+            // const [from, sliceName] = key.split(':')
+            return window.location.href = `/slices`
+          }
+        })
       }
-      setSliceCount(newSliceCount);
-      setRenderer({ Renderer: RenderStates.Default, payload: data });
-      const { env, configErrors, warnings } = data;
-      console.log("------ SliceMachine log ------");
-      console.log("Loaded libraries: ", { libraries: data.libraries });
-      console.log("Loaded env: ", { env, configErrors });
-      console.log("Warnings: ", { warnings });
-      console.log("------ End of log ------");
+      setSliceMap(newSliceMap)
+      setRenderer({ Renderer: RenderStates.Default, payload: data })
+      const { env, configErrors, warnings } = data
+      console.log("------ SliceMachine log ------")
+      console.log("Loaded libraries: ", { libraries: data.libraries })
+      console.log("Loaded env: ", { env, configErrors })
+      console.log("Warnings: ", { warnings })
+      console.log("------ End of log ------")
     }
   }, [data]);
 

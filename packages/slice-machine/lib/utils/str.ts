@@ -21,7 +21,8 @@ export function snakelize(str: string): string {
 }
 
 export function createStorybookId(str: string): string {
-  return `_${camelCase(str)}`
+  const camel = camelCase(str)
+  return `_${camel[0].toUpperCase()}${camel.slice(1)}`
 }
 
 export function camelCaseToDash(v: any): string {
