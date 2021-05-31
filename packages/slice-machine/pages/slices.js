@@ -1,10 +1,7 @@
-
-import React, { useState } from 'react'
 import Head from 'next/head'
-
-import { useContext, Fragment } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
-import { Flex, Button, Text } from 'theme-ui'
+import { Box, Flex, Button, Text, Spinner } from 'theme-ui'
 import Container from 'components/Container'
 import SliceList from 'components/SliceList'
 
@@ -16,9 +13,11 @@ import CreateSlice from 'components/Forms/CreateSlice'
 
 import { fetchApi } from 'lib/builders/common/fetch'
 
+import Header from 'components/Header'
+
 const UnclickableCardWrapper = ({ children }) => children
 
-const CreateSliceButton = ({ onClick }) => (
+const CreateSliceButton = ({ onClick, loading }) => (
   <Button
     onClick={() => onClick()}
     sx={{
@@ -30,25 +29,31 @@ const CreateSliceButton = ({ onClick }) => (
       width: "48px",
     }}
   >
-    <GoPlus size={"2em"} />
+    {
+      loading
+        ? <Spinner color="#FFF" /> 
+        : <GoPlus size="2em" />
+    }
   </Button>
 )
 
 const SlicesIndex = () => {
   const libraries = useContext(LibrariesContext)
-  // const router = useRouter()
+  const [data, setData] = useState({ loading: false })
   const [isOpen, setIsOpen] = useState(false)
-  //const { customTypes, onCreate } = useContext(CustomTypesContext)
 
   const _onCreate = ({ sliceName, from }) => {
     fetchApi({
       url: `/api/slices/create?sliceName=${sliceName}&from=${from}`,
-      setData: () => null,
+      setData() {
+        setData({ loading: true })
+      },
       successMessage: 'Model was correctly saved to Prismic!',
-      onSuccess(res) {
-        // get default variation here
-        console.log({ success: true, res })
-        window.location.href = `/${from}/${sliceName}/default-slice`
+      onSuccess({ reason, variationId }) {
+        if (reason) {
+          return console.error(reason)
+        }
+        window.location.href = `/${from}/${sliceName}/${variationId}`
       }
     })
   }
@@ -62,36 +67,44 @@ const SlicesIndex = () => {
       </Head>
       <Container>
         <main>
-          {libraries &&
-            libraries.map(({ name, isLocal, components }, i) => isLocal || true ? (
-              <div key={name}>
-                <Flex sx={{ alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Flex
-                    sx={{
-                      alignItems: "center",
-                      fontSize: 4,
-                      lineHeight: "48px",
-                      fontWeight: "heading",
-                      mb: 4,
-                      mt: i ? 4 : 0
-                    }}
-                  >
-                    <FiLayers /> <Text ml={2}>{name}</Text>
+          <Header
+            ActionButton={localLibs.length ? <CreateSliceButton onClick={() => setIsOpen(true)} {...data} /> : null}
+            MainBreadcrumb={(
+              <Fragment><FiLayers /> <Text ml={2}>Slice libraries</Text></Fragment>
+            )}
+            breadrumbHref="/slices"
+          />
+          <Box>
+            {libraries &&
+              libraries.map(({ name, isLocal, components }, i) => isLocal || true ? (
+                <div key={name}>
+                  <Flex sx={{ alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Flex
+                      sx={{
+                        alignItems: "center",
+                        fontSize: 3,
+                        lineHeight: "48px",
+                        fontWeight: "heading",
+                        mb: 0,
+                        mt: i ? 3 : 0
+                      }}
+                    >
+                      <Text>{name}</Text>
+                    </Flex>
                   </Flex>
-                  { localLibs.length ? <CreateSliceButton onClick={() => setIsOpen(true)}/> : null}
-                </Flex>
-
-                <SliceList
-                  cardType="ForSlicePage"
-                  {...(!isLocal
-                    ? {
-                        CardWrapper: UnclickableCardWrapper,
-                      }
-                    : null)}
-                  slices={components.map(([e]) => e)}
-                />
-              </div>
-            ) : null )}
+                  <SliceList
+                    cardType="ForSlicePage"
+                    {...(!isLocal
+                      ? {
+                          CardWrapper: UnclickableCardWrapper,
+                        }
+                      : null)}
+                    slices={components.map(([e]) => e)}
+                  />
+                </div>
+              ) : null )
+            }
+          </Box>
         </main>
       </Container>
       {

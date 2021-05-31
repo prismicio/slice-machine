@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from 'next/router'
-import { useContext, useState } from "react";
+import { useContext, useState, Fragment } from "react";
 import {
   Box,
   Flex,
@@ -20,6 +20,8 @@ import Container from "../components/Container";
 import Grid from "../components/Grid";
 
 import CreateCustomType from "../components/Forms/CreateCustomType";
+
+import Header from '../components/Header'
 
 interface CtPayload {
   repeatable: boolean;
@@ -127,38 +129,27 @@ const CustomTypes = () => {
 
   return (
     <Container>
-      <Flex
-        sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
-        }}
-      >
-        <Flex
-          sx={{
-            alignItems: "center",
-            fontSize: 4,
-            lineHeight: "48px",
-            fontWeight: "heading",
-          }}
-        >
-          <FiLayout /> <Text ml={2}>Custom Types</Text>
-        </Flex>
-        <Button
-          onClick={() => setIsOpen(true)}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "50%",
-            height: "48px",
-            width: "48px",
-          }}
-        >
-          <GoPlus size={"2em"} />
-        </Button>
-      </Flex>
-      {/* <Button type="button" onClick={_onCreate}>New Custom Type</Button> */}
+      <Header
+        ActionButton={(
+          <Button
+            onClick={() => setIsOpen(true)}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "50%",
+              height: "48px",
+              width: "48px",
+            }}
+          >
+            <GoPlus size={"2em"} />
+          </Button>
+        )}
+        MainBreadcrumb={(
+          <Fragment><FiLayout /> <Text ml={2}>Custom Types</Text></Fragment>
+        )}
+        breadrumbHref="/"
+      />
       <Grid
         elems={customTypes}
         renderElem={(ct: CtPayload) => (

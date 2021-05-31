@@ -1,4 +1,4 @@
-// import { useState } from "react"
+import { Fragment } from "react"
 
 import {
   CustomTypeState,
@@ -7,18 +7,17 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
 
-import { Box, Button, Flex, Link as ThemeLinK, Text } from "theme-ui";
+import { Box, Button, Text } from "theme-ui";
 
 import CustomTypeStore from "../../../../src/models/customType/store";
 import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
-import FlexWrapper from "./FlexWrapper";
-
 import { FiLayout } from "react-icons/fi";
-import Link from "next/link";
+
+import Header from 'components/Header'
 
 
-const Header = ({
+const SliceHeader = ({
   Model,
   store,
 }: {
@@ -62,35 +61,21 @@ const Header = ({
   })();
 
   return (
-    <Box sx={{ bg: "backgroundClear" }}>
-      <FlexWrapper
-        sx={{
-          py: 4,
-          justifyContent: "space-between",
-        }}
-      >
-        <Flex
-          sx={{
-            fontSize: 4,
-            fontWeight: "heading",
-            alignItems: "center",
-          }}
-        >
-          <Link href="/" passHref>
-            <ThemeLinK variant="invisible">
-              <Flex sx={{ alignItems: "center" }}>
-                <FiLayout /> <Text ml={2}>Custom Types</Text>
-              </Flex>
-            </ThemeLinK>
-          </Link>
-          <Box sx={{ fontWeight: "thin" }} as="span">
-            <Text ml={2}>/ {Model.label} </Text>
-          </Box>
-        </Flex>
+    <Header
+      MainBreadcrumb={(
+        <Fragment><FiLayout /> <Text ml={2}>Custom Types</Text></Fragment>
+      )}
+      SecondaryBreadcrumb={(
+        <Box sx={{ fontWeight: "thin" }} as="span">
+          <Text ml={2}>/ {Model.label} </Text>
+        </Box>
+      )}
+      breadrumbHref="/"
+      ActionButton={(
         <Button {...buttonProps} />
-      </FlexWrapper>
-    </Box>
+      )}
+    />
   );
 };
 
-export default Header;
+export default SliceHeader

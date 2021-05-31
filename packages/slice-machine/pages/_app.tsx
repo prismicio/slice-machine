@@ -133,9 +133,8 @@ function MyApp({
       if (sliceMap !== null) {
         Object.keys(newSliceMap).forEach(key => {
           if (!sliceMap[key]) {
-            const [from, sliceName] = key.split(':')
-            // console.log('[debug] New slice detected')
-            return window.location.href = `/${from}/${sliceName}/default-slice?q=_app`
+            // const [from, sliceName] = key.split(':')
+            return window.location.href = `/slices`
           }
         })
       }

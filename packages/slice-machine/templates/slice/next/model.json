@@ -23,7 +23,7 @@
         "config": {
           "single": "paragraph",
           "label": "Description",
-          "placeholder": "A nice description of your product"
+          "placeholder": "A nice description of your feature"
         }
       }
     }
