@@ -6,10 +6,12 @@ import Zone from '../../common/Zone'
 
 import { removeKeys } from 'lib/utils'
 import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
+import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
 
 import SliceZone from '../SliceZone'
 
 import ModalFormCard from 'components/ModalFormCard'
+import { createPortal } from 'react-dom'
 
 const TabZone = ({
   Model,
@@ -23,13 +25,14 @@ const TabZone = ({
   const [modaIsOpen, setModalIsOpen] = useState(false)
 
   const onDeleteItem = (key) => {
+    store.deleteWidgetMockConfig(Model.mockConfig, key)
     store
       .tab(tabId)
       .removeWidget(key)
   }
 
   const getFieldMockConfig = ({ apiId }) => {
-    return Model.mockConfig?.[apiId]
+    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId)
   }
 
   const onDeleteTab = () => {
@@ -59,15 +62,11 @@ const TabZone = ({
     store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
-  const onSave = ({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue }) => {
-    if (mockValue && Object.keys(mockValue).length) {
-      store
-        .tab(tabId)
-        .updateWidgetMockConfig(initialMockConfig, apiId, newKey, mockValue)
+  const onSave = ({ apiId: previousKey, newKey, value, initialModelValues }, { mockValue }) => {
+    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
+      store.updateWidgetMockConfig(Model.mockConfig, previousKey, newKey, mockValue)
     } else {
-      store
-        .tab(tabId)
-        .deleteWidgetMockConfig(initialMockConfig, apiId)
+      store.deleteWidgetMockConfig(Model.mockConfig, newKey)
     }
 
     const widget = Widgets[initialModelValues.type]
@@ -79,7 +78,7 @@ const TabZone = ({
       return store
         .tab(tabId)
         .replaceWidget(
-          apiId,
+          previousKey,
           newKey, {
             ...initialModelValues,
             ...value
@@ -90,7 +89,7 @@ const TabZone = ({
     store
       .tab(tabId)
       .replaceWidget(
-        apiId,
+        previousKey,
         newKey,
         {
           type: initialModelValues.type,
@@ -117,6 +116,7 @@ const TabZone = ({
 
   return (
     <Fragment>
+      {/* { JSON.stringify(Model.mockConfig, null, 2) } */}
       <Zone
         tabId={tabId}
         Model={Model}

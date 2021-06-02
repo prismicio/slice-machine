@@ -113,6 +113,7 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       default: throw new Error("Invalid action.")
     }
   })()
+
   return {
     ...result,
     poolOfFieldsToCheck: CustomTypeState.getPool(result.tabs),

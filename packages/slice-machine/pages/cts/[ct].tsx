@@ -5,11 +5,12 @@ import { CustomTypesContext } from "src/models/customTypes/context"
 import { ConfigContext } from "src/config-context"
 
 import { useModelReducer } from 'src/models/customType/modelReducer'
-import { CustomTypeState } from '../../lib/models/ui/CustomTypeState'
+import { CustomTypeState } from 'lib/models/ui/CustomTypeState'
 import CustomTypeStore from 'src/models/customType/store'
 import { CustomType } from 'lib/models/common/CustomType'
 import { TabsAsObject } from 'lib/models/common/CustomType/tab'
 import CustomTypeBuilder from 'lib/builders/CustomTypeBuilder'
+import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
 
 const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
   return (
@@ -19,7 +20,8 @@ const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }
 
 const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType?: CustomType<TabsAsObject> }) => {
   const { env } = useContext(ConfigContext)
-  const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig: env?.mockConfig[customType.id] })
+  const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(env?.mockConfig || {}, customType.id)
+  const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig })
   return (<Ct Model={Model} store={store} />)
 }
 

@@ -53,10 +53,10 @@ function moveStories(cwd, libraryName, sliceName) {
   storybook.generateStories(path.join(__dirname, "../../../"), detectFramework(cwd), cwd, libraryName, sliceName)
 }
 
-function migrateSlice(cwd, libraryName, sliceName, shouldMigrateMocks, shouldMigrateStories) {
+function migrateSlice(cwd, libraryName, sliceName) {
   scopePreviewToDefaultVariation(cwd, libraryName, sliceName)
-  if(shouldMigrateMocks) moveMocks(cwd, libraryName, sliceName)
-  if(shouldMigrateStories) moveStories(cwd, libraryName, sliceName)
+  moveMocks(cwd, libraryName, sliceName)
+  moveStories(cwd, libraryName, sliceName)
 }
 
 module.exports = {
@@ -64,10 +64,6 @@ module.exports = {
   main: async function main(ignorePrompt, { cwd, pathToSmFile }) {
     console.info('\nSliceMachine nows supports variations!')
     console.info('Generated mocks and Stories are now stored in the .slicemachine folder.')
-
-    const { yes: shouldMigrateStories } = ignorePrompt ? { yes: true } : await (async () => {
-      return shouldIRun('Would you like me to move current stories and mocks to .slicemachine folder?')
-    })()
 
     if (Files.exists(pathToSmFile)) {
       const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'));
@@ -86,7 +82,7 @@ module.exports = {
             .map(slicePath => path.basename(slicePath))
           
           sliceNames.forEach((sliceName) => {
-            migrateSlice(cwd, libraryName, sliceName, true, shouldMigrateStories)
+            migrateSlice(cwd, libraryName, sliceName)
           })
         }
       })

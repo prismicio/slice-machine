@@ -1,7 +1,12 @@
 import Store from '@models/ui/Store'
 import { Widget } from '@models/common/widgets'
 import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
-import Actions, { updateWidgetMockConfig, deleteWidgetMockConfig } from './actions'
+import Actions, {
+  updateWidgetMockConfig,
+  deleteWidgetMockConfig,
+  updateWidgetGroupMockConfig,
+  deleteWidgetGroupMockConfig
+} from './actions'
 
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
@@ -17,6 +22,10 @@ export default class CustomTypeStore implements Store {
   }
   save = saveCustomType(this.dispatch)
   push = pushCustomType(this.dispatch)
+  updateWidgetMockConfig = updateWidgetMockConfig(this.dispatch)
+  deleteWidgetMockConfig = deleteWidgetMockConfig(this.dispatch)
+  updateWidgetGroupMockConfig = updateWidgetGroupMockConfig(this.dispatch)
+  deleteWidgetGroupMockConfig = deleteWidgetGroupMockConfig(this.dispatch)
   tab(tabId: string) {
     return {
       addWidget: (id: string, widget: Widget | GroupWidget) => {
@@ -31,19 +40,6 @@ export default class CustomTypeStore implements Store {
       reorderWidget: (start: number, end: number) => {
         this.dispatch({ type: Actions.ReorderWidget, payload: { tabId, start, end }})
       },
-      updateWidgetGroupMockConfig:(initialMockConfig: any, groupItemKey: string, prevId: string, newId: string, mockValue: any) => {
-        console.log({ initialMockConfig, mockValue, newId })
-        const updatedConfig = {
-          ...initialMockConfig[groupItemKey],
-          ...(prevId !== newId ? {
-              [prevId]: undefined,
-            } : null),
-          [newId]: mockValue
-        }
-        updateWidgetMockConfig(this.dispatch)()(initialMockConfig, groupItemKey, groupItemKey, updatedConfig)
-      },
-      updateWidgetMockConfig: updateWidgetMockConfig(this.dispatch)(),
-      deleteWidgetMockConfig: deleteWidgetMockConfig(this.dispatch)(),
       createSliceZone: () => {
         this.dispatch({ type: Actions.CreateSliceZone, payload: { tabId } })
       },

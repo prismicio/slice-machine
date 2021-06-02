@@ -12,7 +12,8 @@ import EditModal from "lib/builders/common/EditModal";
 
 import { findWidgetByConfigOrType } from "../../../../../builders/utils";
 
-import * as Widgets from "lib/models/common/widgets";
+import * as Widgets from "lib/models/common/widgets"
+import { CustomTypeMockConfig } from "lib/models/common/MockConfig"
 
 import sliceBuilderArray from "lib/models/common/widgets/sliceBuilderArray";
 
@@ -44,8 +45,7 @@ const CustomListItem = ({
   };
 
   const getFieldMockConfig = ({ apiId }) => {
-    console.log("mock config", Model.mockConfig?.[groupItem.key], apiId);
-    return Model.mockConfig?.[groupItem.key]?.[apiId];
+    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId)
   };
 
   const onCancelNewField = () => {
@@ -68,39 +68,37 @@ const CustomListItem = ({
   };
 
   const onSaveField = (
-    { apiId, newKey, value, initialModelValues },
-    { initialMockConfig, mockValue }
+    { apiId: previousKey, newKey, value, initialModelValues },
+    { mockValue }
   ) => {
-    if (mockValue && Object.keys(mockValue).length) {
-      console.log(initialMockConfig, groupItem.key, apiId, newKey, mockValue);
+    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
       store
-        .tab(tabId)
         .updateWidgetGroupMockConfig(
-          initialMockConfig,
+          Model.mockConfig,
           groupItem.key,
-          apiId,
+          previousKey,
           newKey,
           mockValue
         );
     } else {
-      store.tab(tabId).deleteWidgetMockConfig(initialMockConfig, apiId);
+      store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, previousKey)
     }
 
     const widget = Widgets[initialModelValues.type];
     if (!widget) {
       console.log(
         `Could not find widget with type name "${initialModelValues.type}". Please contact us!`
-      );
-      return;
+      )
+      return
     }
 
     store
       .tab(tabId)
       .group(groupItem.key)
-      .replaceWidget(apiId, newKey, {
+      .replaceWidget(previousKey, newKey, {
         type: initialModelValues.type,
         config: removeKeys(value, ["id", "type"]),
-      });
+      })
   };
 
   const onDragEnd = (result) => {
@@ -108,7 +106,7 @@ const CustomListItem = ({
       !result.destination ||
       result.source.index === result.destination.index
     ) {
-      return;
+      return
     }
     if (result.source.droppableId !== result.destination.droppableId) {
       return;
@@ -120,11 +118,12 @@ const CustomListItem = ({
   };
 
   const onDeleteItem = (key) => {
-    store.tab(tabId).group(groupItem.key).deleteWidget(key);
+    store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, key)
+    store.tab(tabId).group(groupItem.key).deleteWidget(key)
   };
 
   const enterEditMode = (field) => {
-    setEditModalData({ isOpen: true, field });
+    setEditModalData({ isOpen: true, field })
   };
 
   return (

@@ -5,7 +5,9 @@ import { CustomType } from '../models/common/CustomType'
 import { Tab, TabsAsObject } from '../models/common/CustomType/tab'
 
 import { handleFields } from './misc/handlers'
-import { GroupFieldsAsArray } from 'lib/models/common/CustomType/group'
+
+import { GroupFieldsAsArray } from '../models/common/CustomType/group'
+import { CustomTypeMockConfig } from '../models/common/MockConfig'
 
 interface Mock {
   id: string
@@ -16,17 +18,16 @@ interface Mock {
 
 const fieldsHandler = handleFields(Widgets)
 
-const groupHandler = (fields: GroupFieldsAsArray) => {
+const groupHandler = (fields: GroupFieldsAsArray, mockConfig: CustomTypeMockConfig) => {
   const items = []
   const entries = fields.map(e => [e.key, e.value])
   for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-    items.push(fieldsHandler(entries))
+    items.push(fieldsHandler(entries, mockConfig))
   }
   return items
 }
 
 const sliceZoneHandler = () => {
-  // console.log('TODO: define type of value other than any', { value })
 }
 
 const createEmptyMock = (type: string) => ({
@@ -36,7 +37,7 @@ const createEmptyMock = (type: string) => ({
   data: {}
 })
 
-export default async function MockCustomType(model: CustomType<TabsAsObject>) {
+export default async function MockCustomType(model: CustomType<TabsAsObject>, mockConfig: CustomTypeMockConfig) {
   const customTypeMock: Mock = createEmptyMock(model.id)
   const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
     const maybeWidgetUid = Object.entries(curr[1]).find(([_, e]) => e.type === "UID")
@@ -53,13 +54,14 @@ export default async function MockCustomType(model: CustomType<TabsAsObject>) {
   for (let [, tab] of Object.entries(model.tabs)) {
     const { fields, groups, sliceZone } = Tab.organiseFields(tab)
     
-    const mockedFields = fieldsHandler(fields.map(e => [e.key, e.value]))
+    const mockedFields = fieldsHandler(fields.map(e => [e.key, e.value]), mockConfig)
     customTypeMock.data = {
       ...customTypeMock.data,
       ...mockedFields
     }
     groups.forEach(({ key, value }) => {
-      const groupFields = groupHandler(value.fields)
+      const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(mockConfig, key)
+      const groupFields = groupHandler(value.fields, groupMockConfig)
       customTypeMock.data[key] = groupFields
     })
 

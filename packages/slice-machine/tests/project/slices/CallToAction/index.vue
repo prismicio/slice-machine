@@ -2,6 +2,7 @@
   <div>
     <div :style="`max-width: 600px; margin: 0 auto;background: #FFF; color: #111`">
         <h1>{{ Math.random() }}</h1>
+        <p>{{ slice.primary.text }}</p>
     </div>
   </div>
 </template>

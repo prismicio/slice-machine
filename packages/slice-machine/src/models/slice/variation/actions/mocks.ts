@@ -1,20 +1,20 @@
 import { WidgetsArea } from "../../../../../lib/models/common/Variation"
-import { MockConfig } from "../../../../../lib/models/common/MockConfig"
+import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig"
 import { ActionType } from './ActionType'
 
 export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (_variationId: string) => {
-    return (sliceMockConfig: MockConfig, variationId: string, widgetArea: WidgetsArea, fieldId: string, value: any): any => {
+    return (sliceMockConfig: SliceMockConfig, widgetArea: WidgetsArea, previousKey: string, fieldId: string, value: any): any => {
 
-      const updatedConfig = MockConfig.updateFieldMockConfig(
+      const updatedConfig = SliceMockConfig.updateFieldMockConfig(
         sliceMockConfig,
-        variationId,
+        _variationId,
         widgetArea,
+        previousKey,
         fieldId,
         value
       )
 
-      console.log({ updatedConfig })
       dispatch({ type: ActionType.UpdateWidgetMockConfig, payload: updatedConfig })
     }
   }
@@ -22,10 +22,10 @@ export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: strin
 
 export function deleteWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (_variationId: string) => {
-    return (sliceMockConfig: MockConfig, widgetArea: WidgetsArea, fieldId: string): any => {
+    return (sliceMockConfig: SliceMockConfig, widgetArea: WidgetsArea, fieldId: string): any => {
       if(!sliceMockConfig) return
 
-      const updatedConfig = MockConfig.deleteFieldMockConfig(
+      const updatedConfig = SliceMockConfig.deleteFieldMockConfig(
         sliceMockConfig,
         _variationId,
         widgetArea,

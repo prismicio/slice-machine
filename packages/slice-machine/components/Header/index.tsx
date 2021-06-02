@@ -30,11 +30,11 @@ const Header = ({
             <Flex sx={{ alignItems: "center", }}>
               { MainBreadcrumb }
             </Flex>
-            <Box sx={{ fontWeight: "thin" }} as="span">
-          { SecondaryBreadcrumb ? SecondaryBreadcrumb : null }
-        </Box>
           </ThemeLink>
         </Link>
+        <Box sx={{ fontWeight: "thin" }} as="span">
+          { SecondaryBreadcrumb ? SecondaryBreadcrumb : null }
+        </Box>
       </Flex>
       <Flex mt={3} sx={{ alignItems: "center" }}>
         <Flex sx={{ alignItems: "center" }}>

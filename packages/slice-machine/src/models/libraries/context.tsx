@@ -8,7 +8,7 @@ import { AsObject } from '../../../lib/models/common/Variation'
 
 import LibraryState from '../../../lib/models/ui/LibraryState'
 
-import { MockConfig } from '../../../lib/models/common/MockConfig'
+import { SliceMockConfig } from '../../../lib/models/common/MockConfig'
 
 export const LibrariesContext = React.createContext<Partial<ReadonlyArray<LibraryState>>>([])
 
@@ -24,7 +24,7 @@ export default function LibraryHandler({ children, libraries, remoteSlices, env 
       isLocal: lib.isLocal,
       components: lib.components.map(component => useModelReducer({
         slice: component,
-        mockConfig: MockConfig.getSliceMockConfig(env.mockConfig, lib.name, component.infos.sliceName),
+        mockConfig: SliceMockConfig.getSliceMockConfig(env.mockConfig, lib.name, component.infos.sliceName),
         remoteSlice: remoteSlices?.find(e => e.id === component.model.id),
       }))
     }

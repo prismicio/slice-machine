@@ -13,7 +13,6 @@ import { Text } from './Text'
 import { Timestamp } from './Timestamp'
 import { UID } from './UID'
 
-// console.log({ StructuredText })
 export {
   BooleanField as Boolean,
   Color,

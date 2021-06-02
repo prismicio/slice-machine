@@ -5,6 +5,7 @@ import { CustomTypesPaths, GeneratedCustomTypesPaths } from '../../../../lib/mod
 import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
 
 import mock from '../../../../lib/mock/CustomType'
+import { CustomTypeMockConfig } from '../../../../lib/models/common/MockConfig'
 
 export default async function handler(req: { body: any }) {
   const { env } = await getEnv()
@@ -13,7 +14,7 @@ export default async function handler(req: { body: any }) {
   const modelPath = CustomTypesPaths(env.cwd).customType(id).model()
   const mockPath = GeneratedCustomTypesPaths(env.cwd).customType(id).mock()
 
-  insertMockConfig(env.cwd, {
+  const updatedMockConfig = insertMockConfig(env.cwd, {
     key: id,
     prefix: '_cts',
     value: mockConfig
@@ -26,7 +27,7 @@ export default async function handler(req: { body: any }) {
     repeatable,
     json: model.tabs
   })
-  const mocked = await mock(model)
+  const mocked = await mock(model, CustomTypeMockConfig.getCustomTypeMockConfig(updatedMockConfig, id))
   Files.write(mockPath, mocked)
   return {}
 }

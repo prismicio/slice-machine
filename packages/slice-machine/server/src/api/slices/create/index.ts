@@ -19,7 +19,7 @@ export default async function handler({ sliceName, from }: { sliceName: string, 
   const { env } = await getEnv()
 
 
-  const templatePath = path.join(appRoot, 'templates', 'slice', 'react')// env.framework)
+  const templatePath = path.join(appRoot, 'templates', 'slice', env.framework)
 
   if (!Files.isDirectory(templatePath)) {
     const message = `[create] Framework "${env.framework}" is not supported. (${templatePath})`

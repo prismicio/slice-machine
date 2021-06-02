@@ -9,6 +9,7 @@ import { getEnv } from '../../../../lib/env'
 import mock from '../../../../lib/mock/Slice'
 import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
 import Files from '../../../../lib/utils/files'
+import { SliceMockConfig } from '../../../../lib/models/common/MockConfig'
 import { Preview } from '../../../../lib/models/common/Component'
 import { handleStorybookPreview } from '../common/storybook'
 
@@ -16,10 +17,6 @@ import { handleStorybookPreview } from '../common/storybook'
     const { env } = await getEnv()
     const { sliceName, from, model, mockConfig } = req.body
 
-    console.log({
-      mockConfig: JSON.stringify(mockConfig),
-      model: JSON.stringify(model)
-    })
     const updatedMockConfig = insertMockConfig(env.cwd, {
       key: sliceName,
       prefix: from,
@@ -45,7 +42,7 @@ import { handleStorybookPreview } from '../common/storybook'
     if(!hasCustomMocks) {
       console.log('[update]: generating mocks')
     
-      const mockedSlice = await mock(sliceName, model, updatedMockConfig[sliceName])
+      const mockedSlice = await mock(sliceName, model, SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName))
       Files.write(
         GeneratedPaths(env.cwd)
           .library(from)

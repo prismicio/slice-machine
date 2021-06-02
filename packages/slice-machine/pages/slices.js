@@ -78,19 +78,19 @@ const SlicesIndex = () => {
             {libraries &&
               libraries.map(({ name, isLocal, components }, i) => isLocal || true ? (
                 <div key={name}>
-                  <Flex sx={{ alignItems: 'center', justifyContent: 'space-between'}}>
+                  <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', mt: i ? 4 : 0}}>
                     <Flex
                       sx={{
                         alignItems: "center",
                         fontSize: 3,
                         lineHeight: "48px",
                         fontWeight: "heading",
-                        mb: 0,
-                        mt: i ? 3 : 0
+                        mb: 1,
                       }}
                     >
                       <Text>{name}</Text>
                     </Flex>
+                    { !isLocal ? <p>⚠️ External libraries are read-only</p> : null}
                   </Flex>
                   <SliceList
                     cardType="ForSlicePage"

@@ -1,4 +1,9 @@
-export { updateWidgetMockConfig, deleteWidgetMockConfig } from './mocks'
+export {
+  updateWidgetMockConfig,
+  deleteWidgetMockConfig,
+  updateWidgetGroupMockConfig,
+  deleteWidgetGroupMockConfig
+} from './mocks'
 
 enum ActionType {
   Reset = 'reset',
