@@ -7,15 +7,15 @@ import Logo from "../Menu/Logo";
 import { NavCtx } from "..";
 import Item from "./Navigation/Item";
 
-const warnings = {
-  title: "Warnings",
+const warnings = (len: number | undefined) => ({
+  title: `Warnings${len ? ` (${len})` : ''}`,
   delimiter: true,
   href: "/warnings",
   match(pathname: string) {
     return pathname.indexOf('/warnings') === 0
   },
   Icon: FiZap,
-};
+})
 
 const Desktop = () => {
   const navCtx = useContext(NavCtx)
@@ -27,7 +27,7 @@ const Desktop = () => {
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
           <Divider variant="sidebar" />
-          <Item link={warnings} />
+          <Item link={warnings(navCtx?.warnings.length)} />
           <VersionBadge
             label="Version"
             version={navCtx?.env?.currentVersion as string}

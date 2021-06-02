@@ -176,7 +176,7 @@ function MyApp({
                   remoteCustomTypes={payload.remoteCustomTypes}
                 >
                   <ToastProvider>
-                    <AppLayout {...payload}>
+                    <AppLayout {...payload} data={data}>
                       <SliceHandler {...payload}>
                         {/* <NavBar
                                   env={data.env}

@@ -1,8 +1,8 @@
+const { getStoriesPaths } = require('../../../helpers/storybook')
+
 module.exports = {
   "stories": [
-    "../slices/**/*.stories.js",
-    "../.slicemachine/assets/*/**/*.stories.js",
-    "../customtypes/**/*.stories.js"
+    ...getStoriesPaths()
   ],
   "addons": [
     "@storybook/addon-links",

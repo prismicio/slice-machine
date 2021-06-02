@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import useWindowSize from "hooks/useWindowSize";
-import Environment from "lib/models/common/Environment";
+import Environment from "lib/models/common/Environment"
+import Warning from 'lib/models/common/Warning'
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { FiLayers, FiLayout } from "react-icons/fi";
@@ -36,14 +37,15 @@ export interface LinkProps {
 export interface NavCtxProps {
   links: LinkProps[];
   env: Environment;
+  warnings: ReadonlyArray<Warning>
 }
 
 export const NavCtx = createContext<NavCtxProps | null>(null);
 
-const Navigation = ({ env }: { env: Environment }) => {
+const Navigation = ({ env, warnings }: { env: Environment, warnings: ReadonlyArray<Warning> }) => {
   const viewport = useWindowSize();
   return (
-    <NavCtx.Provider value={{ links, env }}>
+    <NavCtx.Provider value={{ links, env, warnings }}>
       {(viewport.width as number) < 640 ? <Mobile /> : <Desktop />}
     </NavCtx.Provider>
   );
