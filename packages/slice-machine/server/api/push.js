@@ -109,10 +109,13 @@ export default async function handler(query) {
       }
 
       console.log('[push]: pushing slice model to Prismic')
+
+      const variations = jsonModel.variations.map((v) => ({ ...v, imageUrl: s3ImageUrl }))
+      console.log(`Preview saved at: ${s3ImageUrl}`)
       const res = await createOrUpdate({
         slices,
         sliceName,
-        model: { ...jsonModel, imageUrl: s3ImageUrl },
+        model: { ...jsonModel, variations },
         client: env.client
       })
       if (res.status > 209) {
