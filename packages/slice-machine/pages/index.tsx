@@ -113,7 +113,7 @@ const Card = ({ ct }: { ct: CtPayload }) => (
 const CustomTypes = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
-  const { customTypes, onCreate } = useContext(CustomTypesContext)
+  const { customTypes = [], onCreate } = useContext(CustomTypesContext)
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
     if (onCreate) {

@@ -63,13 +63,11 @@ import Previews from '../previews';
     console.log('[slice/save]: generating stories')
     Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     
-    console.log('[slice/save]: generating screenshots previews')
-    // since we iterate over variation and execute async code, we need a regular `for` loop to make sure that it's done sequentially and wait for the promise before running the next iteration
-    // no, even foreach doesn't do the trick ;)
 
     let warning: string | null = null
     let previewUrls: { [variationId: string]: Preview } = {}
 
+    console.log('[slice/save]: generating screenshots previews')
     const generatedPreviews = await Previews.generateForSlice(env, from, sliceName)
 
     const failedPreviewsIds = generatedPreviews.filter(p => !p.hasPreview).map(p => p.variationId)

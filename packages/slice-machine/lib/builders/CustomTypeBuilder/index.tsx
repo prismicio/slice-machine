@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Box } from 'theme-ui'
 
 import TabZone from './TabZone'
@@ -7,7 +8,21 @@ import { CustomTypeState } from '../../models/ui/CustomTypeState'
 import CustomTypeStore from '../../../src/models/customType/store'
 import Container from '../../../components/Container'
 
-const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
+const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTypeStore, onLeave: Function }) => {
+  const modelRef = useRef(Model)
+
+  useEffect(() => {
+    modelRef.current = Model
+  }, [Model])
+
+  useEffect(() => {
+    return () => {
+      store.reset()
+      console.log('in useeffect', modelRef.current.tabs[0].value[0])
+      onLeave(modelRef.current)
+    }
+  }, [])
+
   return (
     <Box>
       <Container sx={{ pb: 0 }}>

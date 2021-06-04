@@ -22,27 +22,6 @@ export const CustomType = {
       tabs: Object.entries(ct.tabs).map(([key, value]) =>
         Tab.toArray(key, value)
       ),
-    };
-  },
-  // toObject(ct: CustomType<TabsAsArray>): CustomType<TabsAsObject> {
-  //   return {
-  //     ...ct,
-  //     tabs: ct.tabs.reduce((acc, { key, value: fields }) => {
-  //       console.log({ fields })
-  //       return {
-  //         ...acc,
-  //         [key]: (fields as any).reduce((acc, { key: fieldId, value }) => {
-  //           console.log(fieldId, is<Group<GroupFieldsAsArray>>(value))
-  //           return {
-  //             ...acc,
-  //             [fieldId]: value
-  //             // : is<Group<GroupFieldsAsArray>>(value)
-  //             // ? { ...value, fields: fieldsToObject(value.fields) } as GroupFieldsAsObject
-  //             // : value
-  //           }
-  //         }, {})
-  //       }
-  //     }, {})
-  //   }
-  // }
+    }
+  }
 };

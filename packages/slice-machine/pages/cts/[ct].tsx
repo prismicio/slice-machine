@@ -12,30 +12,31 @@ import { TabsAsObject } from 'lib/models/common/CustomType/tab'
 import CustomTypeBuilder from 'lib/builders/CustomTypeBuilder'
 import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
 
-const Ct = ({ Model, store }: { Model: CustomTypeState, store: CustomTypeStore }) => {
+const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTypeStore, onLeave: Function }) => {
   return (
-    <CustomTypeBuilder Model={Model} store={store} />
+    <CustomTypeBuilder Model={Model} store={store} onLeave={onLeave} />
   )
 }
 
-const WithProvider = ({ customType, remoteCustomType }: { customType: CustomType<TabsAsObject>, remoteCustomType?: CustomType<TabsAsObject> }) => {
+const WithProvider = ({ customType, remoteCustomType, onLeave }: { customType: CustomType<TabsAsObject>, remoteCustomType?: CustomType<TabsAsObject>, onLeave: Function }) => {
   const { env } = useContext(ConfigContext)
   const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(env?.mockConfig || {}, customType.id)
   const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig })
-  return (<Ct Model={Model} store={store} />)
+  return (<Ct Model={Model} store={store} onLeave={onLeave} />)
 }
 
 const WithRouter = () => {
   const router = useRouter()
-  const { customTypes, remoteCustomTypes } = useContext(CustomTypesContext)
+  const { customTypes, remoteCustomTypes, onSave } = useContext(CustomTypesContext)
 
-  const customType = customTypes.find((e) => e && e.id === router.query.ct)
-  const remoteCustomType = remoteCustomTypes.find((e) => e && e.id === router.query.ct)
+  const customType = customTypes?.find((e) => e && e.id === router.query.ct)
+  const remoteCustomType = remoteCustomTypes?.find((e) => e && e.id === router.query.ct)
   if (!customType) {
-    router.replace('/cts')
+    router.replace('/')
     return null
   }
-  return <WithProvider customType={customType} remoteCustomType={remoteCustomType} />
+
+  return <WithProvider customType={customType} remoteCustomType={remoteCustomType} onLeave={onSave || function() {}} />
 }
 
 export default WithRouter
