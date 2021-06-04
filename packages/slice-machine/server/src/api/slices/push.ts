@@ -56,7 +56,7 @@ export default async function handler(query: { sliceName: string, from: string }
   const { env } = await getEnv()
   const { slices, err } = await getSlices(env.client)
   if (err) {
-    console.error('[push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
+    console.error('[slice/push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
     return onError(err, `Error ${err.status}: Could not fetch remote slices`)
   }
   const modelPath = CustomPaths(env.cwd)
@@ -86,7 +86,7 @@ export default async function handler(query: { sliceName: string, from: string }
         }
       }
   
-      console.log('[push]: pushing slice model to Prismic')
+      console.log('[slice/push]: pushing slice model to Prismic')
 
       const variations = jsonModel.variations.map((v: Variation<AsObject>) => ({ ...v, imageUrl: imageUrlsByVariation[v.id] }))
 
@@ -101,10 +101,10 @@ export default async function handler(query: { sliceName: string, from: string }
       })
       if (res.status > 209) {
         const message = res.text ? await res.text() : res.status.toString()
-        console.error(`[push] Slice ${sliceName}: Unexpected error returned. Server message: ${message}`)
+        console.error(`[slice/push] Slice ${sliceName}: Unexpected error returned. Server message: ${message}`)
         throw new Error(message)
       }
-      console.log('[push] done!')
+      console.log('[slice/push] done!')
       return {}
     } catch(e) {
       console.log(e)

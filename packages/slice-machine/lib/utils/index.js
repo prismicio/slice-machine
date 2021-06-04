@@ -6,7 +6,7 @@ import {
 } from '../forms'
 
 import Files from './files'
-import { createStorybookId, hyphenate, camelCaseToDash } from './str'
+import { createStorybookId, camelCaseToDash } from './str'
 
 export const removeProp = (obj, prop) => {
   const { [prop]: __removed, ...rest  } = obj

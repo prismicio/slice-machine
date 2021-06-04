@@ -1,28 +1,20 @@
-import { getEnv } from '../../../../lib/env'
-import Files from '../../../../lib/utils/files'
+import fetchState from '../state'
+import pushSlice from '../slices/push'
+import saveSlice from '../slices/save'
 
+import Files from '../../../../lib/utils/files'
+import { CustomTypesPaths } from '../../../../lib/models/paths'
 import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
 import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
-import { CustomTypesPaths } from '../../../../lib/models/paths'
+
+import { ComponentWithLibStatus } from '../../../../lib/models/common/Library'
+import { Tab, TabAsObject } from '../../../../lib/models/common/CustomType/tab'
 
 const onError = (r: Response | FakeResponse | null, message = 'An error occured while pushing slice to Prismic') => ({
   err: r || new Error(message),
   status: r && r.status ? r.status : 500,
   reason: message,
 })
-
-const getCustomTypes = async (client: DefaultClient | FakeClient) => {
-  try {
-    const res = await client.getCustomTypes()
-    if (res.status !== 200) {
-      return { err: res, customTypes: [] }
-    }
-    const customTypes = await res.json()
-    return { err: null, customTypes }
-  } catch(e) {
-    return { customTypes: [], err: e }
-  }
-}
 
 const createOrUpdate = (client: DefaultClient | FakeClient, model: any, remoteCustomType: any) => {
   if (remoteCustomType) {
@@ -33,29 +25,86 @@ const createOrUpdate = (client: DefaultClient | FakeClient, model: any, remoteCu
 
 export default async function handler(query: { id: string }) {
   const { id } = query
-  const { env } = await getEnv()
-  const { customTypes, err } = await getCustomTypes(env.client)
-  if (err) {
-    console.error('[push] An error occured while fetching remote Custom Types.\nCheck that you\'re properly logged in and that you have access to the repo.')
-    return onError(err, `Error ${err.status}: Could not fetch remote slices`)
+
+  const state = await fetchState()
+
+  if (state.clientError || state.isFake) {
+    const message = '[custom-types/push] Could not fetch remotes custom types.'
+    return {
+      err: new Error(message),
+      reason: message,
+      status: 500
+    }
   }
 
-  const remoteCustomType = customTypes.find((e: { id: string }) => e.id === id )
+  const modelPath = CustomTypesPaths(state.env.cwd).customType(id).model()
 
-  const modelPath = CustomTypesPaths(env.cwd).customType(id).model()
-  const model = Files.readJson(modelPath)
-
-  if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
-    const msg = `[push] Model not saved: property "repeatable" in local Model differs from remote source`
-    console.error(msg)
-    return onError(null, `Error ${err.status}: Could not fetch remote slices`)
-  }
-  const res = await createOrUpdate(env.client, model, remoteCustomType)
-  if (res.status > 209) {
-    const message = res.text ? await res.text() : res.status.toString()
-    const msg = `[push] Unexpected error returned. Server message: ${message}`
+  let model
+  try {
+    model = Files.readJson(modelPath)
+  } catch(e) {
+    const msg = `[custom-types/push] Model ${id} is invalid.`
     console.error(msg)
     return onError(null, msg)
   }
+
+  const remoteCustomType = state.remoteCustomTypes.find((e: { id: string }) => e.id === id )
+  if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
+    console.log(remoteCustomType, model.repeatable)
+    const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`
+    console.error(msg)
+    return onError(null, msg)
+  }
+
+  const sliceKeysToPush: string[] =[]
+  for (let [, tab] of Object.entries(model.json)) {
+    const { sliceZone } = Tab.organiseFields(tab as TabAsObject)
+    if (sliceZone?.value) {
+      sliceKeysToPush.push(...new Set(sliceZone.value.map(e => e.key)))
+    }
+  }
+
+  const localSlices: { [x: string]: ComponentWithLibStatus } = state.libraries.reduceRight((acc, curr) => {
+    return {
+      ...acc,
+      ...curr.components.reduce((acc, curr) => ({
+        ...acc,
+        [curr.model.id]: curr
+      }), {})
+    }
+  }, {})
+
+  for await (const sliceKey of sliceKeysToPush) {
+    const slice = localSlices[sliceKey]
+    if (slice) {
+      try {
+        console.log('[custom-types/push] Saving slice', sliceKey)
+        await saveSlice({
+          body: {
+            sliceName: slice.infos.sliceName,
+            from: slice.from,
+            model: slice.model,
+            mockConfig: slice.infos.mock
+          }
+        })
+        console.log('[custom-types/push] Pushing slice', sliceKey)
+        await pushSlice({ sliceName: slice.infos.sliceName, from: slice.from })
+      } catch(e) {
+        console.error(`[custom-types/push] Full error: ${e}`)
+      }
+    }
+  }
+
+  console.log('[custom-types/push] Pushing Custom Type!')
+
+  const res = await createOrUpdate(state.env.client, model, remoteCustomType)
+  if (res.status > 209) {
+    const message = res.text ? await res.text() : res.status.toString()
+    const msg = `[custom-types/push] Unexpected error returned. Server message: ${message}`
+    console.error(msg)
+    return onError(null, msg)
+  }
+
+  console.log(`[custom-types/push] Custom Type ${id} was pushed!`)
   return {}
 }

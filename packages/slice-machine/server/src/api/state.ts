@@ -80,9 +80,9 @@ export default async function handler() {
 
   const { env, errors: configErrors } = await getEnv()
   const { libraries, remoteSlices, clientError } = await fetchLibs(env)
-  const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env)
+  const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(env)
 
   const warnings = await createWarnings(env, configErrors, clientError)
 
-  return { libraries, customTypes, remoteCustomTypes, remoteSlices, clientError, configErrors, env, warnings }
+  return { libraries, customTypes, remoteCustomTypes, remoteSlices, clientError, isFake, configErrors, env, warnings }
 }

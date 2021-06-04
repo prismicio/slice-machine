@@ -6,7 +6,9 @@
     "Main": {
       "tedt": {
         "type": "Group",
-        "fields": {}
+        "config": {
+          "fields": {}
+        }
       },
       "test": {
         "type": "Link",

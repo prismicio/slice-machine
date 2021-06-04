@@ -11,6 +11,13 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
         "ctr": {
           "config": {
             "label": "",
@@ -22,13 +29,6 @@
             ]
           },
           "type": "Link"
-        },
-        "test": {
-          "config": {
-            "label": "Label really!",
-            "placeholder": ""
-          },
-          "type": "Text"
         },
         "text": {
           "config": {
@@ -57,6 +57,35 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "myCoolV2",
+      "name": "MyCoolV2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
         "ctr1": {
           "config": {
             "label": "",
@@ -75,6 +104,35 @@
             "placeholder": ""
           },
           "type": "Text"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "myCoolV20",
+      "name": "MyCoolV20",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
         }
       },
       "items": {}

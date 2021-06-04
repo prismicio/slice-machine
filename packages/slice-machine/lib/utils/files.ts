@@ -74,6 +74,18 @@ const Files = {
   },
   removeAll(srcs: ReadonlyArray<string>) {
     srcs.forEach(src => Files.remove(src))
+  },
+  flushDirectories(directory: string, recursive: boolean = true) {
+    try {
+      const paths = fs.readdirSync(directory)
+      paths.forEach((p) => {
+        const maybedir = path.join(directory, p)
+        if (this.isDirectory(maybedir)) {
+          fs.rmdirSync(maybedir, { recursive })
+        }
+      })
+    } catch(e) {
+    }
   }
 };
 

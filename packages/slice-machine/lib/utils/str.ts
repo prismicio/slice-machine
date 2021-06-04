@@ -27,15 +27,16 @@ export function createStorybookId(str: string): string {
 
 export function camelCaseToDash(v: any): string {
   let ret = '', prevLowercase = false, prevIsNumber = false
+
   for (let s of v) {
     const isUppercase = s.toUpperCase() === s
     const isNumber = !isNaN(s)
-    if (isNumber) {
-      if (prevLowercase) {
-        ret += '-'
-      }
+
+    if (isNumber && !prevIsNumber) {
+      ret += '-'
+
     } else {
-      if (isUppercase && (prevLowercase || prevIsNumber)) {
+      if (isUppercase && !isNumber && (prevLowercase || prevIsNumber)) {
         ret += '-'
       }
     }

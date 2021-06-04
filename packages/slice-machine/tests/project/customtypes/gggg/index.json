@@ -45,6 +45,12 @@
           "choices": {
             "call_to_action3": {
               "type": "SharedSlice"
+            },
+            "call_to_action": {
+              "type": "SharedSlice"
+            },
+            "call_to_action2": {
+              "type": "SharedSlice"
             }
           }
         }

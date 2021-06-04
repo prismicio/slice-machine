@@ -11,10 +11,10 @@ import { s3DefaultPrefix } from '../../../lib/consts'
 
 export async function purge(env: Environment, slices: ReadonlyArray<Slice<AsObject>>, sliceName: string, onError: (error?: any, msg?: string) => any): Promise<{ err?: any }> {
   if (slices.find(e => e.id === snakelize(sliceName))) {
-    console.log('\n[push]: purging images folder')
+    console.log('\n[slice/push]: purging images folder')
     const deleteRes = await env.client.images.deleteFolder({ sliceName: snakelize(sliceName) })
     if (deleteRes.status > 209) {
-      const msg = '[push] An error occured while purging slice folder - please contact support'
+      const msg = '[slice/push] An error occured while purging slice folder - please contact support'
       console.error(msg)
       return { err: onError(deleteRes, msg) }
     }
@@ -24,7 +24,7 @@ export async function purge(env: Environment, slices: ReadonlyArray<Slice<AsObje
 }
 
 export async function upload(env: Environment, sliceName: string, variationId: string, filePath: string, onError: (error?: any, msg?: string) => any) {
-  console.log('[push]: uploading variation preview')
+  console.log('[slice/push]: uploading variation preview')
   const aclResponse: any = await (await env.client.images.createAcl()).json()
   const maybeErrorMessage = aclResponse.error || aclResponse.Message || aclResponse.message
   if (maybeErrorMessage) {
@@ -48,7 +48,7 @@ export async function upload(env: Environment, sliceName: string, variationId: s
   const s3ImageUrl = `${imgixEndpoint}/${key}`
   
   if (postStatus !== 204) {
-    const msg = '[push] An error occured while uploading files - please contact support'
+    const msg = '[slice/push] An error occured while uploading files - please contact support'
     console.error(msg)
     console.error(`Error code: "${postStatus}"`)
     return { err: onError(null, msg) }

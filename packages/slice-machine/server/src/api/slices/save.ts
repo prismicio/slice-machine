@@ -17,13 +17,16 @@ import { handleStorybookPreview } from '../common/storybook'
     const { env } = await getEnv()
     const { sliceName, from, model, mockConfig } = req.body
 
+    const pathToSliceAssets = GeneratedPaths(env.cwd).library(from).slice(sliceName).value()
+    Files.flushDirectories(pathToSliceAssets)
+
     const updatedMockConfig = insertMockConfig(env.cwd, {
       key: sliceName,
       prefix: from,
       value: mockConfig
     })
 
-    console.log('[update]: updating slice model')
+    console.log('[slice/save]: updating slice model')
 
     const modelPath = CustomPaths(env.cwd)
       .library(from)
@@ -40,7 +43,7 @@ import { handleStorybookPreview } from '../common/storybook'
     )
 
     if(!hasCustomMocks) {
-      console.log('[update]: generating mocks')
+      console.log('[slice/save]: generating mocks')
     
       const mockedSlice = await mock(sliceName, model, SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName))
       Files.write(
@@ -52,19 +55,17 @@ import { handleStorybookPreview } from '../common/storybook'
       )
     }
 
-    const hasCustomStories = Files.exists(
-      CustomPaths(env.cwd)
-      .library(from)
-      .slice(sliceName)
-      .stories()
-    )
+    // const hasCustomStories = Files.exists(
+    //   CustomPaths(env.cwd)
+    //   .library(from)
+    //   .slice(sliceName)
+    //   .stories()
+    // )
 
-    if(!hasCustomStories) {
-      console.log('[update]: generating stories')
-      Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
-    }
+    console.log('[slice/save]: generating stories')
+    Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     
-    console.log('[update]: generating screenshots previews')
+    console.log('[slice/save]: generating screenshots previews')
     // since we iterate over variation and execute async code, we need a regular `for` loop to make sure that it's done sequentially and wait for the promise before running the next iteration
     // no, even foreach doesn't do the trick ;)
 
@@ -93,7 +94,7 @@ import { handleStorybookPreview } from '../common/storybook'
         const error = await handleStorybookPreview({ screenshotUrl, pathToFile })
         if(error) {
           warning = error
-          console.log(`[update][Slice: ${sliceName}][variation: ${variation.id}]: ${error}`)
+          console.log(`[slice/save][Slice: ${sliceName}][variation: ${variation.id}]: ${error}`)
           previewUrls[variation.id] = {
             isCustomPreview: false,
             hasPreview: false,
@@ -114,7 +115,7 @@ import { handleStorybookPreview } from '../common/storybook'
       }
     }
 
-    console.log('[update]: Slice was saved!')
+    console.log('[slice/save]: Slice was saved!')
     
 
     return errors.length ? { err: errors, previewUrls, warning } : { previewUrls, warning }

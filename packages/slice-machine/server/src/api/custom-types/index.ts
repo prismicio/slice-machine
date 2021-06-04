@@ -34,7 +34,7 @@ const handleMatch = (matches: string[], env: Environment) => {
 
 const fetchRemoteCustomTypes = async (env: Environment) => {
   if (env.client.isFake()) {
-    return { remoteCustomTypes: [] }
+    return { remoteCustomTypes: [], isFake: true }
   }
   const res = await env.client.getCustomTypes()
   const { remoteCustomTypes } = await (async () => {
@@ -56,17 +56,18 @@ const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
   }
 }
 
-export default async function handler(env: Environment): Promise<{ customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
+export default async function handler(env: Environment): Promise<{ isFake: boolean, customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
   const { cwd } = env
   const pathToCustomTypes = CustomTypesPaths(cwd).value()
   const folderExists = Files.exists(pathToCustomTypes)
 
-  const { remoteCustomTypes } = await fetchRemoteCustomTypes(env)
+  const { remoteCustomTypes, isFake } = await fetchRemoteCustomTypes(env)
   if (!folderExists) {
     saveCustomTypes(remoteCustomTypes, cwd)
   }
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return {
+    isFake: isFake || false,
     customTypes: handleMatch(matches, env),
     remoteCustomTypes: remoteCustomTypes.map((ct: any) => {
       const { json, ...rest } = ct
