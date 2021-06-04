@@ -1,39 +1,12 @@
-import puppeteer from 'puppeteer'
-
 import { getEnv } from '../../../lib/env'
 import { Preview } from '../../../lib/models/common/Component'
-import { createScreenshotUrl } from '../../../lib/utils'
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import previews from './previews'
 
-import { generatePreview } from './common/storybook'
-import { GeneratedPaths } from '../../../lib/models/paths'
-
-export default async function handler({ from, sliceName, variationId }: { from: string, sliceName: string, variationId: string }): Promise<Preview | { err: Error, reason: string }> {
+export default async function handler({ from, sliceName }: { from: string, sliceName: string }): Promise<ReadonlyArray<Preview>> {
   const { env } = await getEnv()
-  const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, libraryName: from, sliceName, variationId })
+  const generatedPreviews = await previews.generateForSlice(env, from, sliceName)
+  const failedPreviewsIds = generatedPreviews.filter(p => !p.hasPreview).map(p => p.variationId)
+  console.error(`Cannot generate previews for variations: ${failedPreviewsIds.join(' | ')}`)
 
-  const screenshotArgs = { cwd: env.cwd, from, sliceName, variationId }
-  const activeScreenshot = getPathToScreenshot(screenshotArgs)
-
-  const pathToFile = GeneratedPaths(env.cwd)
-    .library(screenshotArgs.from)
-    .slice(screenshotArgs.sliceName)
-    .variation(screenshotArgs.variationId)
-    .preview()
-  
-  const browser = await puppeteer.launch()
-  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
-  if (maybeErr) {
-    console.error(`Could not generate screenshot. ${maybeErr}`)
-    return { err: maybeErr, reason: 'Could not generate screenshot. Check that it renders correctly in Storybook!' }
-  }
-
-  await browser.close()
-  return activeScreenshot?.isCustom
-  ? { hasPreview: false, isCustomPreview: false}
-  : {
-    isCustomPreview: false,
-    hasPreview: true,
-    url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}`
-  }
+  return generatedPreviews.filter(p => p.hasPreview) as ReadonlyArray<Preview>
 }

@@ -4,17 +4,15 @@ import { Preview } from '../../../../../lib/models/common/Component'
 
 
 export function generateScreenShot(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
-  return (variationId: string) => {
+  return (_variationId: string) => {
     return async (libFrom: string, sliceName: string, setData: (data: object) => void) => {
       fetchApi({
-        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}&variationId=${variationId}`,
+        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}`,
         setData,
         data: { onLoad: { imageLoading: true }, onResponse: { imageLoading: false } },
         successMessage: 'Model & mocks have been generated succesfully!',
-        onSuccess(preview: Preview) {
-          if(preview.hasPreview) {
-            dispatch({ type: ActionType.GenerateScreenShot, payload: { variationId, preview } })
-          }
+        onSuccess(previews: ReadonlyArray<Preview>) {
+          dispatch({ type: ActionType.GenerateScreenShot, payload: { previews } })
         }
       })
     }

@@ -45,6 +45,7 @@ export interface Component {
 }
 
 export interface Preview {
+  variationId: string
   isCustomPreview: boolean
   hasPreview: boolean
   url?: string

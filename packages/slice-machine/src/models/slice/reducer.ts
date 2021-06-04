@@ -47,14 +47,16 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         }
       }
       case VariationActions.GenerateScreenShot: {
-        const { variationId, preview } = action.payload as { variationId: string, preview: Preview }
+        const { previews } = action.payload as { variationId: string, previews: ReadonlyArray<Preview> }
+        const previewsByVariation = previews.reduce((acc, p) => ({ ...acc, [p.variationId]: p }), {})
+        
         return {
           ...prevState,
           infos: {
             ...prevState.infos,
             previewUrls: {
               ...prevState.infos.previewUrls,
-              [variationId]: preview
+              ...previewsByVariation
             }
           }
         }

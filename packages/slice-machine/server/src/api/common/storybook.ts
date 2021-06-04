@@ -47,6 +47,5 @@ export const handleStorybookPreview = async ({ screenshotUrl, pathToFile }: { sc
     return warning
   }
   const browser = await puppeteer.launch(({ args: [`--window-size=1200,800`] }))
-  const maybeErr = await generatePreview({ browser, screenshotUrl, pathToFile })
-  return maybeErr ? 'Model was saved but screenshot could not be generated.' : null
+  return generatePreview({ browser, screenshotUrl, pathToFile })
 }

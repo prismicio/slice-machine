@@ -1,7 +1,5 @@
 /* global variable define in server/src/index.js */
 declare var appRoot: string;
-import { createScreenshotUrl } from '../../../../lib/utils'
-import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
 import { CustomPaths, GeneratedPaths } from '../../../../lib/models/paths'
 import Storybook from '../storybook'
 
@@ -11,7 +9,7 @@ import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
 import Files from '../../../../lib/utils/files'
 import { SliceMockConfig } from '../../../../lib/models/common/MockConfig'
 import { Preview } from '../../../../lib/models/common/Component'
-import { handleStorybookPreview } from '../common/storybook'
+import Previews from '../previews';
 
  export default async function handler(req: { body: any }) {
     const { env } = await getEnv()
@@ -69,54 +67,37 @@ import { handleStorybookPreview } from '../common/storybook'
     // since we iterate over variation and execute async code, we need a regular `for` loop to make sure that it's done sequentially and wait for the promise before running the next iteration
     // no, even foreach doesn't do the trick ;)
 
-    let errors: any[] = []
     let warning: string | null = null
     let previewUrls: { [variationId: string]: Preview } = {}
 
-    for(let i = 0; i < model.variations.length; i += 1) {
-      const variation = model.variations[i]
-      const screenshotArgs = {
-        cwd: env.cwd,
-        from,
-        sliceName,
-        variationId: variation.id
+    const generatedPreviews = await Previews.generateForSlice(env, from, sliceName)
+
+    const failedPreviewsIds = generatedPreviews.filter(p => !p.hasPreview).map(p => p.variationId)
+    
+    generatedPreviews.forEach(p => {
+      if(!p.hasPreview) {
+        const noPreview = p as { variationId: string, error: Error, hasPreview: boolean }
+        warning = noPreview.error.message
+        console.log(`[slice/save][Slice: ${sliceName}][variation: ${p.variationId}]: ${noPreview.error.message}`)
+        previewUrls[noPreview.variationId] = {
+          variationId: noPreview.variationId,
+          isCustomPreview: false,
+          hasPreview: false,
+        }
       }
-      const activeScreenshot = getPathToScreenshot(screenshotArgs)
       
-      if(!activeScreenshot) {
-        const screenshotUrl = createScreenshotUrl({ storybook: env.userConfig.storybook, libraryName: from, sliceName, variationId: variation.id })
-        const pathToFile = GeneratedPaths(env.cwd)
-          .library(screenshotArgs.from)
-          .slice(screenshotArgs.sliceName)
-          .variation(screenshotArgs.variationId)
-          .preview()
-
-        const error = await handleStorybookPreview({ screenshotUrl, pathToFile })
-        if(error) {
-          warning = error
-          console.log(`[slice/save][Slice: ${sliceName}][variation: ${variation.id}]: ${error}`)
-          previewUrls[variation.id] = {
-            isCustomPreview: false,
-            hasPreview: false,
-          }
-        } else {
-          previewUrls[variation.id] = {
-            isCustomPreview: false,
-            hasPreview: true,
-            url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}`
-          }
-        }
-      } else {
-        previewUrls[variation.id] = {
-          isCustomPreview: activeScreenshot.isCustom,
-          hasPreview: true,
-          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(activeScreenshot.path)}&uniq=${Math.random()}`
-        }
+      const preview = p as Preview
+      previewUrls[preview.variationId] = {
+        variationId: preview.variationId,
+        isCustomPreview: false,
+        hasPreview: true,
+        url: preview.url
       }
-    }
-
+    })
+    
+    warning = `Cannot generate previews for variations: ${failedPreviewsIds.join(' | ')}`
     console.log('[slice/save]: Slice was saved!')
     
 
-    return errors.length ? { err: errors, previewUrls, warning } : { previewUrls, warning }
+    return { previewUrls, warning }
   }

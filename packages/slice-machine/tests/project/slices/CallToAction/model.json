@@ -36,6 +36,15 @@
             "placeholder": ""
           },
           "type": "Text"
+        },
+        "test": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
         }
       },
       "items": {
@@ -109,20 +118,13 @@
       "items": {}
     },
     {
-      "id": "myCoolV20",
-      "name": "MyCoolV20",
+      "id": "otherVariation",
+      "name": "OtherVariation",
       "docURL": "...",
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "test": {
-          "config": {
-            "label": "Label really!",
-            "placeholder": ""
-          },
-          "type": "Text"
-        },
-        "ctr1": {
+        "ctr": {
           "config": {
             "label": "",
             "select": "document",
@@ -133,6 +135,22 @@
             ]
           },
           "type": "Link"
+        },
+        "test121": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "test": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
         }
       },
       "items": {}
