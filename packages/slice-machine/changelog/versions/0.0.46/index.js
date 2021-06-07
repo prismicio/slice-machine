@@ -78,7 +78,7 @@ module.exports = {
           const libraryName = path.basename(pathToLib)
           const sliceNames = Files.readDirectory(slash(pathToSlices))
             .map(curr => path.join(pathToSlices, curr))
-            .filter(e => e.split(path.sep).pop() !== 'index.js')
+            .filter(e => e.split(path.sep).pop() !== 'index.js' && e.split(path.sep).pop() !== '.DS_Store')
             .map(slicePath => path.basename(slicePath))
           
           sliceNames.forEach((sliceName) => {

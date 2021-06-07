@@ -10,10 +10,16 @@ import Files from '../../../../lib/utils/files'
 import { SliceMockConfig } from '../../../../lib/models/common/MockConfig'
 import { Preview } from '../../../../lib/models/common/Component'
 import Previews from '../previews';
+import Environment from '../../../../lib/models/common/Environment';
+import { AsObject } from '../../../../lib/models/common/Variation';
+import Slice from '../../../../lib/models/common/Slice';
 
- export default async function handler(req: { body: any }) {
-    const { env } = await getEnv()
-    const { sliceName, from, model, mockConfig } = req.body
+interface Body { sliceName: string, from: string, model: Slice<AsObject>, mockConfig: any }
+
+export async function handler(
+  env: Environment,
+  { sliceName, from, model, mockConfig }: Body
+) {
 
     const pathToSliceAssets = GeneratedPaths(env.cwd).library(from).slice(sliceName).value()
     Files.flushDirectories(pathToSliceAssets)
@@ -98,4 +104,9 @@ import Previews from '../previews';
     
 
     return { previewUrls, warning }
+  }
+
+  export default async function apiHandler(req: { body: Body }) {
+    const { env } = await getEnv()
+    return handler(env, req.body)
   }

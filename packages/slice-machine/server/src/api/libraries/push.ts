@@ -1,38 +1,11 @@
 import { getEnv } from '../../../../lib/env'
-// import { snakelize } from '../../../../lib/utils/str'
 
-// import Files from '../../../../lib/utils/files'
-
-// import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
-
+import { getSlices } from '../slices'
+import { onError } from '../common/error'
 
 import { purge } from '../upload'
-import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
-// import { Variation, AsObject } from '../../../../lib/models/common/Variation'
-// import Slice from '../../../../lib/models/common/Slice'
-// import { CustomPaths } from '../../../../lib/models/paths'
 
 import { handleLibraryPath } from '../../../../lib/queries/listComponents'
-
-const onError = (r: Response | FakeResponse, message = 'An error occured while pushing slice to Prismic') => ({
-  err: r || new Error(message),
-  status: r && r.status ? r.status : 500,
-  reason: message,
-})
-
-const getSlices = async(client: DefaultClient | FakeClient) => {
-  try {
-    const res = await client.getSlice()
-    if (res.status !== 200) {
-      return { err: res, slices: [] }
-    }
-    const slices = await res.json()
-    return { err: null, slices }
-  } catch(e) {
-    return { slices: [], err: e }
-  }
-}
 
 export default async function handler(query: { from: string }) {
   const { from } = query

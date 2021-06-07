@@ -1,20 +1,15 @@
 import fetchState from '../state'
-import pushSlice from '../slices/push'
-import saveSlice from '../slices/save'
+import { handler as pushSlice } from '../slices/push'
+import { handler as saveSlice } from '../slices/save'
 
+import { onError } from '../common/error'
 import Files from '../../../../lib/utils/files'
 import { CustomTypesPaths } from '../../../../lib/models/paths'
 import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient, { FakeResponse } from '../../../../lib/models/common/http/FakeClient'
+import FakeClient from '../../../../lib/models/common/http/FakeClient'
 
 import { ComponentWithLibStatus } from '../../../../lib/models/common/Library'
 import { Tab, TabAsObject } from '../../../../lib/models/common/CustomType/tab'
-
-const onError = (r: Response | FakeResponse | null, message = 'An error occured while pushing slice to Prismic') => ({
-  err: r || new Error(message),
-  status: r && r.status ? r.status : 500,
-  reason: message,
-})
 
 const createOrUpdate = (client: DefaultClient | FakeClient, model: any, remoteCustomType: any) => {
   if (remoteCustomType) {
@@ -50,7 +45,6 @@ export default async function handler(query: { id: string }) {
 
   const remoteCustomType = state.remoteCustomTypes.find((e: { id: string }) => e.id === id )
   if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
-    console.log(remoteCustomType, model.repeatable)
     const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`
     console.error(msg)
     return onError(null, msg)
@@ -79,16 +73,21 @@ export default async function handler(query: { id: string }) {
     if (slice) {
       try {
         console.log('[custom-types/push] Saving slice', sliceKey)
-        await saveSlice({
-          body: {
+        await saveSlice(
+          state.env,
+           {
             sliceName: slice.infos.sliceName,
             from: slice.from,
             model: slice.model,
             mockConfig: slice.infos.mock
           }
-        })
+        )
         console.log('[custom-types/push] Pushing slice', sliceKey)
-        await pushSlice({ sliceName: slice.infos.sliceName, from: slice.from })
+        await pushSlice(
+          state.env,
+          state.remoteSlices,
+          { sliceName: slice.infos.sliceName, from: slice.from }
+        )
       } catch(e) {
         console.error(`[custom-types/push] Full error: ${e}`)
       }

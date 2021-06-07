@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 
 import {
   CustomTypeState,
@@ -7,14 +7,14 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
 
-import { Box, Button, Text } from "theme-ui";
+import { Box, Button, Text, Spinner } from "theme-ui";
 
 import CustomTypeStore from "../../../../src/models/customType/store";
 import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
 import { FiLayout } from "react-icons/fi";
 
-import Header from 'components/Header'
+import Header from '../../../../components/Header'
 
 
 const SliceHeader = ({
@@ -24,19 +24,17 @@ const SliceHeader = ({
   Model: CustomTypeState;
   store: CustomTypeStore;
 }) => {
-  // const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { addToast } = useToasts()
 
   const buttonProps = (() => {
     if (Model.isTouched) {
       return {
         onClick: () => {
-          // setIsLoading(true)
           store.save(Model)
         },
         children: (
           <span>
-            {/* { isLoading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null } */}
             Save to File System
           </span>
         ),
@@ -47,14 +45,22 @@ const SliceHeader = ({
     ) {
       return {
         onClick: () => {
-          store.push(Model, (data: ToastPayload): void => {
-            if (data.done) {
-              // setIsLoading(false)
-              handleRemoteResponse(addToast)(data);
-            }
-          })
+          if (!isLoading) {
+            setIsLoading(true)
+            store.push(Model, (data: ToastPayload): void => {
+              if (data.done) {
+                setIsLoading(false)
+                handleRemoteResponse(addToast)(data);
+              }
+            })
+          }
         },
-        children: "Push to Prismic",
+        children: (
+          <span>
+            { isLoading ? <Spinner color="#F7F7F7" size={20} mr={2} sx={{ position: 'relative', top: '5px', left: '3px'}}/> : null }
+            Push to Prismic
+          </span>
+        )
       };
     }
     return { variant: "disabled", children: "Synced with Prismic" };

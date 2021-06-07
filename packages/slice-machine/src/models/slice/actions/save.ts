@@ -5,7 +5,6 @@ import { Preview } from '../../../../lib/models/common/Component'
 import { ActionType } from './ActionType'
 import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
-
 export default function save(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return async (slice: SliceState, setData: (data: ToastPayload) => void = () => {}) => {
     fetchApi({

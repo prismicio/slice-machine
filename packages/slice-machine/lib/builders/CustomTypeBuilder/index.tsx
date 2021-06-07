@@ -18,7 +18,6 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
   useEffect(() => {
     return () => {
       store.reset()
-      console.log('in useeffect', modelRef.current.tabs[0].value[0])
       onLeave(modelRef.current)
     }
   }, [])
