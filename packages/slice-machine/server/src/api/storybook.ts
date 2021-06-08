@@ -57,7 +57,7 @@ export default {
     
     const template = Files.readString(templatePath)
 
-    const withPascalizedIds = mocks.value.map((m: any) => {
+    const withPascalizedIds = (mocks.value || []).map((m: any) => {
       // use underscore to prevent invalid variable names
       const id = createStorybookId(m.variation || m.name)
       return {
