@@ -16,6 +16,7 @@ const AppTheme = () => ({
     orange: "#EA6D46",
     green: "#3AB97A",
   },
+  initialColorModeName: 'light',
   colors: {
     text: "#25252D",
     textClear: "#4E4E55",

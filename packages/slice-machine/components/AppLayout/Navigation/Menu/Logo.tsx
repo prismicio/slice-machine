@@ -1,9 +1,17 @@
 import Link from "next/link";
+import { useEffect } from "react";
 import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
 import Prismic from "../Icons/Prismic";
 
 const Logo = () => {
-  const { theme } = useThemeUI();
+  const { theme, setColorMode } = useThemeUI();
+
+  useEffect(() => {
+    if(setColorMode) {
+      //hotfix for previous color modes
+      setColorMode('light')
+    }
+  }, [])
   return (
     <Box p={2}>
       <Link href="/" passHref>

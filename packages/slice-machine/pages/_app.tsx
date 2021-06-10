@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 
+
 import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles } from "theme-ui";
@@ -86,6 +87,7 @@ function MyApp({
   Component: (props: any) => JSX.Element;
   pageProps: any;
 }) {
+
   const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
   const [sliceMap, setSliceMap] = useState<any | null>(null);
   const [drawerState, setDrawerState] = useState<{

@@ -179,13 +179,15 @@ export const createExpector = (expect) => ({
     expect(value.split(':').length).toBe(3)
   },
   embed(value) {
-    expect(typeof value).toBe('string')
-    expect(value.includes('youtube.com')).toBe(true)
+    expect(typeof value).toBe('object')
+    expect(value.provider_name).not.toEqual(null)
   },
   number(value) {
     expect(typeof value).toBe('number')
   },
   geoPoint(value) {
-    expect(typeof value).toBe('string')
+    expect(typeof value).toBe('object')
+    expect(typeof value.latitude).toBe('number')
+    expect(typeof value.longitude).toBe('number')
   },
 })

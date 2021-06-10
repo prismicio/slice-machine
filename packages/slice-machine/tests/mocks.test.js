@@ -1,5 +1,5 @@
 import * as Widgets from '../lib/models/common/widgets'
-import { handleFields } from '../lib/mock/handlers'
+import { handleFields } from '../lib/mock/misc/handlers'
 import { model, createExpector } from './__mockData__/models'
 
 const mockFields = handleFields(Widgets)

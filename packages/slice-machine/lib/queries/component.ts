@@ -81,7 +81,15 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
     return
   }
   
-  const { fileName, extension, isDirectory } = getFileInfoFromPath(slicePath, sliceName)
+  
+  const { fileName, extension, isDirectory } = (() => {
+    try {
+      return getFileInfoFromPath(slicePath, sliceName)
+    } catch(e) {
+      return { fileName: null, extension: null, isDirectory: false }
+    }
+  })();
+
   if(!fileName || !extension) return
 
   const sliceModel: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
