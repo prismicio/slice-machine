@@ -56,7 +56,7 @@ export default {
           // ...else try to find default slice zone
           for (const key of ["body", "slices"]) {
             if (key in doc.data && Array.isArray(doc.data[key])) {
-              this.slices = doc.data[key] 
+              this.slices = doc.data[key];
               break;
             }
           }
