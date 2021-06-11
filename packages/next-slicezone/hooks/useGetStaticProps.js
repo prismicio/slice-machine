@@ -2,7 +2,7 @@ import { query } from '../features/query'
 
 export const useGetStaticProps = ({
   client, /* instance of Prismic client */
-  body = 'body', /* target tab for slices */
+  slicesKey = '', /* target tab for slices */
   type = 'page', /* document type to retrieve */
   getStaticPropsParams = {}, /* params passed to return object of getStaticProps */
   queryType = 'repeat', /* one of ["single", "repeat"] */
@@ -37,13 +37,41 @@ export const useGetStaticProps = ({
         type,
         client,
       })
+
+      let slices;
+      if (doc) {
+        if (slicesKey) {
+          // If slicesKey is specified then use slicesKey...
+          if (slicesKey in doc.data && Array.isArray(doc.data[slicesKey])) {
+            slices = doc.data[slicesKey];
+          } else {
+            console.error("[SliceZone/useGetStaticProps] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", slicesKey, doc.data);
+          }
+        } else {
+          // ...else try to find default slice zone
+          for (const key of ["body", "slices"]) {
+            if (key in doc.data && Array.isArray(doc.data[key])) {
+              slices = doc.data[key];
+              break;
+            }
+          }
+
+          // If slice zone is still not found
+          if (!slices) {
+            console.error("[SliceZone/useGetStaticProps] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slicesKey` option:\n\nuseGetStaticProps({ /* ... */ slicesKey: \"mySliceZone\" });\n", doc.data);
+          }
+        }
+      } else {
+        throw doc;
+      }
+
       return {
         props: {
           ...doc,
           error: null,
           preview,
           previewData,
-          slices: doc?.data?.[body] || [],
+          slices: slices || [],
         },
         ...getStaticPropsParams
       }
