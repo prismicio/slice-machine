@@ -40,8 +40,40 @@ export default {
         multiQueryTypes.indexOf(this.queryType) !== -1
           ? ["getByUID", [this.type, this.uid, this.apiParams]]
           : ["getSingle", [this.type, this.apiParams]];
-      const res = await this.$prismic.api[caller[0]](...caller[1]);
-      this.slices = res ? res.data[this.body] : [];
+
+      const doc = await this.$prismic.api[caller[0]](...caller[1]);
+
+      this.slices = undefined;
+      if (doc) {
+        if (this.slicesKey) {
+          // If slicesKey is specified then use slicesKey...
+          if (this.slicesKey in doc.data && Array.isArray(doc.data[this.slicesKey])) {
+            this.slices = doc.data[this.slicesKey];
+          } else {
+            console.error("[SliceZone/fetch] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", this.slicesKey, doc.data);
+          }
+        } else {
+          // ...else try to find default slice zone
+          for (const key of ["body", "slices"]) {
+            if (key in doc.data && Array.isArray(doc.data[key])) {
+              this.slices = doc.data[key] 
+              break;
+            }
+          }
+
+          // If slice zone is still not found
+          if (!this.slices) {
+            console.error("[SliceZone/fetch] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slices-key` props:\n\n<slice-zone ... slices-key=\"mySliceZone\" />\n", doc.data);
+          }
+        }
+      } else {
+        throw doc;
+      }
+
+      if (!this.slices) {
+        this.slices = [];
+      }
+      
     } catch (e) {
       console.error("[SliceZone/fetch]", e);
       this.slices = [];
