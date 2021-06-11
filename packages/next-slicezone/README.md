@@ -45,7 +45,7 @@ export default Page
 |-----------	|--------------------	|----------	|--------------------	|---------------------------------------------------------------------------------	|--------------------------------------	|
 | apiParams    	| object             	| false    	| null               	| Object passed to client `apiOptions`.                           	| { lang: 'fr-fr' }                    	|
 | client    	| function           	| true     	| null               	| Pass a Prismic client here                                     	| Prismic.client(apiEndpoint)          	|
-| body      	| string             	| false    	| body               	| Key of slices array in API response (`doc.data[body]`)                          	| 'nobody'                             	|
+| slicesKey      	| string             	| false    	| body / slices              	| Key of slices array in API response (`doc.data[slicesKey]`)                          	| 'MySliceZone'                             	|
 | type      	| string             	| false    	| page               	| Custom type to be queried                                                       	| 'another_cts'                        	|
 | queryType 	| string             	| false    	| repeat             	| One of 'repeat' or 'single', to switch between `getByUID` and `getSingle` calls 	| 'single'                             	|
 | getStaticPropsParams    	| object             	| false    	| null               	| Object passed to return object of `getStatcProps`| { revalidate: true }                    	|

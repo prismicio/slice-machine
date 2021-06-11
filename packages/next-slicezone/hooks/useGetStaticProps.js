@@ -1,8 +1,39 @@
 import { query } from '../features/query'
 
+export const findSlices = (doc, slicesKey) => {
+  let slices;
+  if (doc) {
+    if (slicesKey) {
+      // If slicesKey is specified then use slicesKey...
+      if (slicesKey in doc.data && Array.isArray(doc.data[slicesKey])) {
+        slices = doc.data[slicesKey];
+      } else {
+        console.error("[SliceZone/useGetStaticProps] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", slicesKey, doc.data);
+      }
+    } else {
+      // ...else try to find default slice zone
+      for (const key of ["body", "slices"]) {
+        if (key in doc.data && Array.isArray(doc.data[key])) {
+          slices = doc.data[key];
+          break;
+        }
+      }
+
+      // If slice zone is still not found
+      if (!slices) {
+        console.error("[SliceZone/useGetStaticProps] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slicesKey` option:\n\nuseGetStaticProps({ /* ... */ slicesKey: \"mySliceZone\" });\n", doc.data);
+      }
+    }
+  } else {
+    throw doc;
+  }
+
+  return slices || [];
+}
+
 export const useGetStaticProps = ({
   client, /* instance of Prismic client */
-  slicesKey = '', /* target tab for slices */
+  slicesKey, /* slices array accessor */
   type = 'page', /* document type to retrieve */
   getStaticPropsParams = {}, /* params passed to return object of getStaticProps */
   queryType = 'repeat', /* one of ["single", "repeat"] */
@@ -10,6 +41,7 @@ export const useGetStaticProps = ({
 
   uid, /* deprecated, use apiParams.uid instead */
   lang, /* deprecated, use apiParams.lang instead */
+  body, /* deprecated, use slicesKey instead */
 }) => {
 
   if (uid) {
@@ -17,6 +49,9 @@ export const useGetStaticProps = ({
   }
   if (lang) {
     console.warn(`[next-slicezone/useGetStaticProps]: Parameter "lang" is deprecated, use "apiParams.lang" instead.`)
+  }
+  if (body) {
+    console.warn(`[next-slicezone/useGetStaticProps]: Parameter "body" is deprecated, use "slicesKey" instead.`)
   }
 
   return async function getStaticProps({
@@ -38,40 +73,13 @@ export const useGetStaticProps = ({
         client,
       })
 
-      let slices;
-      if (doc) {
-        if (slicesKey) {
-          // If slicesKey is specified then use slicesKey...
-          if (slicesKey in doc.data && Array.isArray(doc.data[slicesKey])) {
-            slices = doc.data[slicesKey];
-          } else {
-            console.error("[SliceZone/useGetStaticProps] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", slicesKey, doc.data);
-          }
-        } else {
-          // ...else try to find default slice zone
-          for (const key of ["body", "slices"]) {
-            if (key in doc.data && Array.isArray(doc.data[key])) {
-              slices = doc.data[key];
-              break;
-            }
-          }
-
-          // If slice zone is still not found
-          if (!slices) {
-            console.error("[SliceZone/useGetStaticProps] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slicesKey` option:\n\nuseGetStaticProps({ /* ... */ slicesKey: \"mySliceZone\" });\n", doc.data);
-          }
-        }
-      } else {
-        throw doc;
-      }
-
       return {
         props: {
           ...doc,
           error: null,
           preview,
           previewData,
-          slices: slices || [],
+          slices: findSlices(doc, slicesKey || body),
         },
         ...getStaticPropsParams
       }
