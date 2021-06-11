@@ -1,5 +1,5 @@
 {
-  "name": "next-slicezone-alpha.1",
+  "name": "next-slicezone",
   "version": "0.1.0",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
