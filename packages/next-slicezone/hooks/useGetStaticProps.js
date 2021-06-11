@@ -1,8 +1,25 @@
 import { query } from '../features/query'
 
+export const findSlices = (data = {}, slicesKey) => {
+  if (slicesKey) {
+    const maybeSlices = data[slicesKey]
+    if (!maybeSlices) {
+      console.warn(`[next-slicezone/useGetStaticProps]: Slices "data[${slicesKey}]" not found. Please check that this key exists.`)
+      return []
+    }
+    return maybeSlices
+  }
+  const maybeSlices = data.body || data.slices
+  if (!maybeSlices) {
+    console.warn(`[next-slicezone/useGetStaticProps]: Slices could not be found automatically (data.body || data.slices). Please pass a "slicesKey".`)
+    return []
+  }
+  return maybeSlices
+}
+
 export const useGetStaticProps = ({
   client, /* instance of Prismic client */
-  body = 'body', /* target tab for slices */
+  slicesKey, /* slices array accessor */
   type = 'page', /* document type to retrieve */
   getStaticPropsParams = {}, /* params passed to return object of getStaticProps */
   queryType = 'repeat', /* one of ["single", "repeat"] */
@@ -10,6 +27,7 @@ export const useGetStaticProps = ({
 
   uid, /* deprecated, use apiParams.uid instead */
   lang, /* deprecated, use apiParams.lang instead */
+  body, /* deprecated, use slicesKey instead */
 }) => {
 
   if (uid) {
@@ -17,6 +35,9 @@ export const useGetStaticProps = ({
   }
   if (lang) {
     console.warn(`[next-slicezone/useGetStaticProps]: Parameter "lang" is deprecated, use "apiParams.lang" instead.`)
+  }
+  if (body) {
+    console.warn(`[next-slicezone/useGetStaticProps]: Parameter "body" is deprecated, use "slicesKey" instead.`)
   }
 
   return async function getStaticProps({
@@ -37,13 +58,16 @@ export const useGetStaticProps = ({
         type,
         client,
       })
+
+      const slices = findSlices(doc?.data, slicesKey || body)
+
       return {
         props: {
           ...doc,
           error: null,
           preview,
           previewData,
-          slices: doc?.data?.[body] || [],
+          slices,
         },
         ...getStaticPropsParams
       }
