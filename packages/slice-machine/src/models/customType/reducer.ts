@@ -6,6 +6,7 @@ import Actions from './actions'
 import { Widget } from '@models/common/widgets'
 import { Group, GroupWidget, GroupAsArray,} from '@models/common/CustomType/group'
 import { SliceZone, SliceZoneAsArray } from '@models/common/CustomType/sliceZone'
+import { CustomType } from '@lib/models/common/CustomType'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -57,8 +58,28 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       }
       case Actions.CreateSliceZone: {
         const { tabId } = action.payload as { tabId: string }
-        const key = `${tabId}SliceZone`
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.createSliceZone(tab, key))
+
+        const tabIndex = prevState.tabs.findIndex(t => t.key === tabId)
+        if (tabIndex === -1) {
+          console.error(`No tabId ${tabId} found in tabs`)
+          return prevState
+        }
+
+        const existingSliceZones = CustomType.getSliceZones(prevState).filter(e => e)
+
+        function findAvailableKey(startI: number, existingSliceZones: (SliceZoneAsArray | null)[]) {
+          for (let i = startI; i < Infinity; i++) {
+            const key = `slices${i.toString()}`
+            if (!existingSliceZones.find(e => e?.key === key)) {
+              return i
+            }
+          }
+          return -1
+        }
+        return CustomTypeState.updateTab(prevState, tabId)(tab => {
+          const i = findAvailableKey(tabIndex, existingSliceZones)
+          return Tab.createSliceZone(tab, `slices${(i !== 0 ? i.toString() : '')}`)
+        })
       }
       case Actions.DeleteSliceZone: {
         const { tabId } = action.payload as { tabId: string }

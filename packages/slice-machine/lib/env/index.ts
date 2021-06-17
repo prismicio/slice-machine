@@ -81,7 +81,8 @@ function createChromaticUrls({ branch, appId, err }: { branch?: string, appId?: 
 function parseStorybookConfiguration(cwd: string) {
   const pathsToFile = [path.join(cwd, '.storybook/main.js'), path.join(cwd, 'nuxt.config.js')]
   const f = Files.readFirstOf(pathsToFile)(v => v)
-  return (f?.value as string).includes('getStoriesPaths')
+  const file = f?.value as string || ''
+  return file.includes('getStoriesPaths') || file.includes('.slicemachine')
 }
 
 export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerError }, env: Environment }> {

@@ -16,9 +16,12 @@ export default async function MockSlice(sliceName, model, mockConfig) {
   const variations = model.variations.map(variation => {
     const mock = createEmptyMock(sliceName, variation)
     const handler = handleFields(Widgets)
+
+    const maybeMockConfig = mockConfig?.[variation.id]?.primary
+
     mock.primary = handler(
       Object.entries(variation.primary || {}),
-      mockConfig ? mockConfig.primary || {} : {}
+      maybeMockConfig || {}
     )
 
     const items = []

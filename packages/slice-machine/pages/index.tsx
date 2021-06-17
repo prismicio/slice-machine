@@ -41,16 +41,12 @@ const CTName = ({ ctName }:{ ctName: string }) => {
 
 // To isolate later
 const CTRepeatble = ({ repeatable }: { repeatable: boolean }) => {
-  return !repeatable ? (
+  return (
     <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
-      Repeatable Type
+      { repeatable ? 'Repeatable' : 'Single'} Type
     </Text>
-  ) : (
-    <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
-      Single Type
-    </Text>
-  );
-};
+  )
+}
 
 // To isolate later
 const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }: { heightInPx: string, preview: { url: string } | null, withShadow?: boolean }) => {

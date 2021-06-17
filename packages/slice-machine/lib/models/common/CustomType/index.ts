@@ -1,5 +1,6 @@
 import { Tab } from "./tab";
 import { TabsAsArray, TabsAsObject } from "./tab";
+import { SliceZoneAsArray } from './sliceZone'
 
 export interface SeoTab {
   label: string;
@@ -23,5 +24,8 @@ export const CustomType = {
         Tab.toArray(key, value)
       ),
     }
+  },
+  getSliceZones(ct: CustomType<TabsAsArray>): ReadonlyArray<SliceZoneAsArray | null> {
+    return ct.tabs.map(t => t.sliceZone)
   }
 };

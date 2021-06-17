@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, Flex, Heading, Button } from "theme-ui";
+import { Text, Box, Flex, Heading, Button } from "theme-ui";
 import { LibrariesContext } from "../../../../src/models/libraries/context";
 import { SliceZoneAsArray } from "../../../../lib/models/common/CustomType/sliceZone";
 
@@ -86,17 +86,20 @@ const SliceZone = ({
       <ZoneHeader
         Heading={(<Heading as="h6">SliceZone</Heading>)}
         Actions={(
-          <Button
-            variant="buttons.darkSmall"
-            onClick={() => {
-              if (!sliceZone) {
-                onCreateSliceZone()
-              }
-              setFormIsOpen(true)
-            }}
-          >
-            { sliceZone ? 'Edit' : 'Add' } slices
-          </Button>
+          <Flex sx={{ alignItems: 'center'}}>
+            { sliceZone ? <Text pr={3} sx={{ fontSize: '14px'}}>data.{sliceZone.key}</Text> : null}
+            <Button
+              variant="buttons.darkSmall"
+              onClick={() => {
+                if (!sliceZone) {
+                  onCreateSliceZone()
+                }
+                setFormIsOpen(true)
+              }}
+            >
+              { sliceZone ? 'Edit' : 'Add' } slices
+            </Button>
+          </Flex>
         )}
       />
       <DefaultList cardType="ForSliceZone" slices={slicesInSliceZone} />
