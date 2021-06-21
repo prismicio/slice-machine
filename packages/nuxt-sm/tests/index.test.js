@@ -58,4 +58,11 @@ describe("prismic-nuxt module", function() {
     expect(context.addPlugin.mock.calls[0][0].src).toContain(expectedSrcPath)
   })
 
+  it("should use user-defined sm.json", async function () {
+    const expectedImportString = await handleLibraryPath('@/tests/__mock__/slices')
+    const pathToSmFile = 'tests/__mock__/sm.json'
+    await smResolver.call(context, { pathToSmFile });
+    expect(context.addPlugin.mock.calls[0][0].options.imports).toContain(expectedImportString)
+  })
+
 });

@@ -1,0 +1,8 @@
+{
+  "apiEndpoint": "https://reponame.cdn.prismic.io/api/v2",
+  "libraries": [
+    "@/tests/__mock__/slices"
+  ],
+  "_latest": "0.1.0",
+  "storybook": "http://localhost:3003"
+}
