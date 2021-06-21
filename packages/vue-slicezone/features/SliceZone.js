@@ -44,10 +44,10 @@ export default {
         return [...multiQueryTypes, 'single'].indexOf(value) !== -1
       }
     },
-    body: {
+    slicesKey: {
       type: String,
       required: false,
-      default: 'body'
+      default: ''
     },
     components: {
       required: false,

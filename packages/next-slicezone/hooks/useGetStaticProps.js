@@ -1,20 +1,34 @@
 import { query } from '../features/query'
 
-export const findSlices = (data = {}, slicesKey) => {
-  if (slicesKey) {
-    const maybeSlices = data[slicesKey]
-    if (!maybeSlices) {
-      console.warn(`[next-slicezone/useGetStaticProps]: Slices "data[${slicesKey}]" not found. Please check that this key exists.`)
-      return []
+export const findSlices = (doc, slicesKey) => {
+  let slices;
+  if (doc) {
+    if (slicesKey) {
+      // If slicesKey is specified then use slicesKey...
+      if (slicesKey in doc.data && Array.isArray(doc.data[slicesKey])) {
+        slices = doc.data[slicesKey];
+      } else {
+        console.error("[SliceZone/useGetStaticProps] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", slicesKey, doc.data);
+      }
+    } else {
+      // ...else try to find default slice zone
+      for (const key of ["body", "slices"]) {
+        if (key in doc.data && Array.isArray(doc.data[key])) {
+          slices = doc.data[key];
+          break;
+        }
+      }
+
+      // If slice zone is still not found
+      if (!slices) {
+        console.error("[SliceZone/useGetStaticProps] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slicesKey` option:\n\nuseGetStaticProps({ /* ... */ slicesKey: \"mySliceZone\" });\n", doc.data);
+      }
     }
-    return maybeSlices
+  } else {
+    throw doc;
   }
-  const maybeSlices = data.body || data.slices
-  if (!maybeSlices) {
-    console.warn(`[next-slicezone/useGetStaticProps]: Slices could not be found automatically (data.body || data.slices). Please pass a "slicesKey".`)
-    return []
-  }
-  return maybeSlices
+
+  return slices || [];
 }
 
 export const useGetStaticProps = ({
@@ -59,15 +73,13 @@ export const useGetStaticProps = ({
         client,
       })
 
-      const slices = findSlices(doc?.data, slicesKey || body)
-
       return {
         props: {
           ...doc,
           error: null,
           preview,
           previewData,
-          slices,
+          slices: findSlices(doc, slicesKey || body),
         },
         ...getStaticPropsParams
       }
