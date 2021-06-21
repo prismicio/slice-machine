@@ -20,7 +20,8 @@ describe("prismic-nuxt module", function() {
         fn(context._routes, context._resolve)
       }),
       options: {
-        srcDir: '/var/nuxt',
+        rootDir: '/var/nuxt',
+        srcDir: '/var/nuxt/src',
         buildDir: '/var/nuxt/.nuxt/',
         head: {},
         dir: {},
