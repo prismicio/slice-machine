@@ -47,7 +47,7 @@ async function install(moduleOptions) {
     })
   }
 
-  const pathToSmFile = options.pathToSmFile || path.join(this.options.srcDir, SM_FILE)
+  const pathToSmFile = options.pathToSmFile || path.join(this.options.rootDir, SM_FILE)
   const smFile = fs.existsSync(pathToSmFile) ? JSON.parse(fs.readFileSync(pathToSmFile)) : {}
 
   const libraries = options.libraries || smFile.libraries
