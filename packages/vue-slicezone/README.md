@@ -102,9 +102,9 @@ This is how you would fetch a single document:
 ```html
 <slice-zone type="mySingleCustomType" queryType="single" />
 ```
-If slices are not stored in `body`, pass a `body` param with the key name of your zone:
+If slices are not stored in `body`, pass a `slices-key` param with the key name of your zone:
 ```html
-<slice-zone type="mySingleCustomType" queryType="single" body="another_body" />
+<slice-zone type="mySingleCustomType" queryType="single" slices-key="MySliceZone" />
 ```
 
 If you need to pass params to the API call (like fetch links), pass the SliceZone a `params` object:

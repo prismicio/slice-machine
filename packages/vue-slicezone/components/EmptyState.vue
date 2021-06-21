@@ -1,21 +1,20 @@
 <template>
-  <main>
-    <section class="box">
-      <h1 class="title">Your SliceZone is empty </h1>
-      <p>
-        To start rendering components here, create a document on Prismic.<br />
-        Then, update your SliceZone accordingly:<br />
-      </p>
-      <p>
-        <code class="code">
-          {{ code }}
-        </code>
-        
-      </p>
-      <a target="_blank" :href="endPath">Create a page on Prismic!</a>
-    </section>
-  </main>
+  <section class="box">
+    <h1 class="title">Your SliceZone is empty </h1>
+    <p>
+      To start rendering components here, create a document on Prismic.<br />
+      Then, update your SliceZone accordingly:<br />
+    </p>
+    <p>
+      <code class="code">
+        {{ code }}
+      </code>
+      
+    </p>
+    <a target="_blank" :href="endPath">Create a page on Prismic!</a>
+  </section>
 </template>
+
 <script>
 export default {
   props: ['type', 'uid', 'pathToDocs'],
@@ -43,11 +42,12 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .box {
   max-width: 840px;
   padding: 44px;
-  margin: 4em auto;
+  margin: 4rem auto;
   background: #FFF;
   color: #111;
   text-align: left;
@@ -56,17 +56,17 @@ export default {
 .code {
   background: #F5F6FA;
   padding: 6px;
-  margin: 1em auto;
+  margin: 1rem auto;
   display: block;
 }
 .title {
   font-size: 32px;
-  margin-bottom: 1em 0;
+  margin-bottom: 1rem 0;
 }
 p {
   font-size: 22px;
   max-width: 650px;
-  margin: 1em 0;
+  margin: 1rem 0;
 }
 a {
   font-size: 24px;
