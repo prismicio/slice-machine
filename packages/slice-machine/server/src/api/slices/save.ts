@@ -14,6 +14,8 @@ import Environment from '../../../../lib/models/common/Environment';
 import { AsObject } from '../../../../lib/models/common/Variation';
 import Slice from '../../../../lib/models/common/Slice';
 
+import onSaveSlice from '../common/hooks/onSaveSlice'
+
 interface Body { sliceName: string, from: string, model: Slice<AsObject>, mockConfig: any }
 
 export async function handler(
@@ -99,9 +101,13 @@ export async function handler(
       }
     })
     
-    warning = `Cannot generate previews for variations: ${failedPreviewsIds.join(' | ')}`
+    if (failedPreviewsIds.length) {
+      warning = `Cannot generate previews for variations: ${failedPreviewsIds.join(' | ')}`
+    }
     console.log('[slice/save]: Slice was saved!')
-    
+
+    await onSaveSlice(env)
+    console.log('[slice/save]: Libraries index files regenerated!')
 
     return { previewUrls, warning }
   }

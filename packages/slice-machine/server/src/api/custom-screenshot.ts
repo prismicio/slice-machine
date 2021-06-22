@@ -17,7 +17,7 @@ export default async function handler(file: File & { path: string }, { from, sli
     .variation(variationId)
     .preview(`preview.${file.type.split('/')[1]}`)
   
-  Files.copy(file.path, previewPath)
+  Files.copy(file.path, previewPath, { recursive: true })
 
   return {
     isCustomPreview: true,

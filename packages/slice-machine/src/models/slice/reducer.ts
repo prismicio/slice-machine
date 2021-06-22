@@ -46,6 +46,27 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
           variations: prevState.variations.concat([Variation.copyValue(copied, key, name)])
         }
       }
+      case VariationActions.GenerateCustomScreenShot: {
+        const { variationId, preview } = action.payload as { variationId: string, preview: Preview }
+        const previewsByVariation = Object.entries(prevState.infos.previewUrls || {})
+          .reduce((acc, statePreview) => {
+            return {
+              ...acc,
+              [statePreview[0]]: statePreview[0] === variationId ? preview : statePreview[1]
+            }
+          }, {})
+        
+        return {
+          ...prevState,
+          infos: {
+            ...prevState.infos,
+            previewUrls: {
+              ...prevState.infos.previewUrls,
+              ...previewsByVariation
+            }
+          }
+        }
+      }
       case VariationActions.GenerateScreenShot: {
         const { previews } = action.payload as { variationId: string, previews: ReadonlyArray<Preview> }
         const previewsByVariation = previews.reduce((acc, p) => ({ ...acc, [p.variationId]: p }), {})

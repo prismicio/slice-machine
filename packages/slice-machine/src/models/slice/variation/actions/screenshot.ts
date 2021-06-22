@@ -10,7 +10,7 @@ export function generateScreenShot(dispatch: ({type, payload}: { type: string, p
         url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}`,
         setData,
         data: { onLoad: { imageLoading: true }, onResponse: { imageLoading: false } },
-        successMessage: 'Model & mocks have been generated succesfully!',
+        successMessage: 'Storybook sreenshot was saved to FileSystem',
         onSuccess(previews: ReadonlyArray<Preview>) {
           dispatch({ type: ActionType.GenerateScreenShot, payload: { previews } })
         }
@@ -40,7 +40,7 @@ export function generateCustomScreenShot(dispatch: ({type, payload}: { type: str
         successMessage: 'New screenshot added!',
         onSuccess(preview: Preview) {
           if(preview.hasPreview) {
-            dispatch({ type: ActionType.GenerateScreenShot, payload: { variationId, preview } })
+            dispatch({ type: ActionType.GenerateCustomScreenShot, payload: { variationId, preview } })
           }
         }
       })

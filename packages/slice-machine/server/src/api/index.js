@@ -86,7 +86,13 @@ router.use('/slices/save', async function (req, res) {
   return res.status(200).json(payload)
 })
 router.use('/slices/create', async function (req, res) {
-  const payload = await createSlice(req.query)
+  let payload
+  if (req.method === 'POST') {
+    payload = await createSlice(req.body)
+  } else {
+    payload = await createSlice(req.query)
+  }
+
   if (payload.err) {
     return res.status(400).json(payload)
   }
