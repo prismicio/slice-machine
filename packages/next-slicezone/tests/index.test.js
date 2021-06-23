@@ -1,30 +1,30 @@
 import { findSlices } from '../hooks/useGetStaticProps'
 
-const data = {
-  body: 1,
-  slices: 2,
-  SliceZone: 3
+const doc = {
+  data: {
+    body: [1, 2],
+    slices: [1, 2, 3],
+    SliceZone: [3, 4, 5]
+  }
 }
 
 test('Should find first SliceZone w/o body key', () => {
-  expect(findSlices(data)).toBe(1)
+  expect(findSlices(doc)).toEqual(doc.data.body)
 });
 
 test('Should find SliceZone with body key', () => {
-  console.log({
-    res: findSlices(data, 'SliceZone')
-  })
-  expect(findSlices(data, 'SliceZone')).toBe(3)
+  expect(findSlices(doc, 'SliceZone')).toEqual(doc.data.SliceZone)
 });
 
 test('Should automatically return body', () => {
-  expect(findSlices({ body: 4 })).toBe(4)
+  const body = [9]
+  expect(findSlices({ data: { body } })).toBe(body)
 });
 
 test('Should return empty array if not found', () => {
-  expect(findSlices({ body: 4 }, 'AnotherSliceZone')).toEqual([])
+  expect(findSlices(doc, 'AnotherSliceZone')).toEqual([])
 });
 
-test('Should not break if data is undefined', () => {
+test('Should not break if doc is undefined', () => {
   expect(findSlices()).toEqual([])
 });

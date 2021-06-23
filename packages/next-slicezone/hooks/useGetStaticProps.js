@@ -6,7 +6,7 @@ export const findSlices = (doc, slicesKey) => {
     if (slicesKey) {
       // If slicesKey is specified then use slicesKey...
       if (slicesKey in doc.data && Array.isArray(doc.data[slicesKey])) {
-        slices = doc.data[slicesKey];
+        slices = doc.data[slicesKey]
       } else {
         console.error("[SliceZone/useGetStaticProps] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", slicesKey, doc.data);
       }
@@ -14,8 +14,8 @@ export const findSlices = (doc, slicesKey) => {
       // ...else try to find default slice zone
       for (const key of ["body", "slices"]) {
         if (key in doc.data && Array.isArray(doc.data[key])) {
-          slices = doc.data[key];
-          break;
+          slices = doc.data[key]
+          break
         }
       }
 
@@ -24,8 +24,6 @@ export const findSlices = (doc, slicesKey) => {
         console.error("[SliceZone/useGetStaticProps] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slicesKey` option:\n\nuseGetStaticProps({ /* ... */ slicesKey: \"mySliceZone\" });\n", doc.data);
       }
     }
-  } else {
-    throw doc;
   }
 
   return slices || [];
