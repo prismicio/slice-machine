@@ -16,32 +16,59 @@ import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
 import { detectFramework } from '../framework'
-const cwd = process.env.CWD || path.resolve(process.env.TEST_PROJECT_PATH || '')
+
+const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : null)
 
 const compareNpmVersions = createComparator()
 
-function validate(config: { apiEndpoint: string }): {[errorKey: string]: ServerError } | undefined {
+function validate(config: { apiEndpoint: string, storybook: string }): {[errorKey: string]: ServerError } | undefined {
+  const errors: {[errorKey: string]: ServerError } | undefined = {}
   if (!config.apiEndpoint) {
-    return { apiEndpoint: {
+    errors.apiEndpoint = {
       message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',
       example: 'http://my-project.prismic.io/api/v2',
       run: 'npx prismic-cli sm --setup'
-    }}
-  }
-  try {
-  } catch(e) {
-    const parsedRepo = parseDomain(fromUrl(config.apiEndpoint))
-    switch (parsedRepo.type) {
-      case ParseResultType.Listed: return
-
-      default:
-        return { apiEndpoint: {
-          message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
-          example: 'http://my-project.prismic.io/api/v2',
-          do: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-        }}
     }
   }
+  if (!errors.apiEndpoint) {
+    try {
+      const endpoint = fromUrl(config.apiEndpoint)
+      const parsedRepo = parseDomain(endpoint)
+      const errorMessage = {
+          message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
+          example: 'http://my-project.prismic.io/api/v2',
+          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
+        }
+      switch (parsedRepo.type) {
+        case ParseResultType.Listed: {
+          if (!parsedRepo?.subDomains?.length) {
+            errors.apiEndpoint = errorMessage
+          }
+          if (typeof endpoint === 'string' && !endpoint.endsWith('api/v2')) {
+            errors.apiEndpoint = {
+          message: `Endpoint does not end with "api/v2" (value: "${config.apiEndpoint}")`,
+          example: 'http://my-project.prismic.io/api/v2',
+          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
+        }
+          }
+        }
+        default: 
+          errors.apiEndpoint = errorMessage
+      }
+    } catch(e) {
+      const message = '[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..'
+      console.error(message)
+      throw new Error(message)
+    }
+  }
+  if (!config.storybook) {
+    errors.storybook = {
+      message: `Could not find storybook property in sm.json`,
+      example: 'http://localhost:STORYBOOK_PORT',
+      run: 'Add "storybook" property with a localhost url'
+    }
+  }
+  return errors
 }
 
 function extractRepo(parsedRepo: ParseResult): string | undefined {
@@ -85,7 +112,19 @@ function parseStorybookConfiguration(cwd: string) {
   return file.includes('getStoriesPaths') || file.includes('.slicemachine')
 }
 
-export async function getEnv(): Promise<{ errors?: {[errorKey: string]: ServerError }, env: Environment }> {
+export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[errorKey: string]: ServerError }, env: Environment }> {
+  const cwd = maybeCustomCwd || ENV_CWD
+  if (!cwd) {
+    const message = '[api/env]: Unrecoverable error. Could not find cwd. Exiting..'
+    console.error(message)
+    throw new Error(message)
+  }
+  const pathToSm = path.join(cwd, 'sm.json')
+  if (!Files.exists(pathToSm)) {
+    const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
+    console.error(message)
+    throw new Error(message)
+  }
   const userConfig = Files.readJson(SMConfig(cwd))
   const maybeErrors = validate(userConfig)
   const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd)

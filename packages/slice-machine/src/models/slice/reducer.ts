@@ -48,22 +48,28 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
       }
       case VariationActions.GenerateCustomScreenShot: {
         const { variationId, preview } = action.payload as { variationId: string, preview: Preview }
-        const previewsByVariation = Object.entries(prevState.infos.previewUrls || {})
-          .reduce((acc, statePreview) => {
+
+        const previewsByVariation = prevState.variations.reduce((acc, variation) => {
+          if (variation.id === variationId) {
             return {
               ...acc,
-              [statePreview[0]]: statePreview[0] === variationId ? preview : statePreview[1]
+              [variationId]: preview
             }
-          }, {})
+          }
+          if (prevState.infos.previewUrls?.[variation.id]) {
+            return {
+              ...acc,
+              [variation.id]: prevState.infos.previewUrls?.[variation.id]
+            }
+          }
+          return acc
+        }, {})
         
         return {
           ...prevState,
           infos: {
             ...prevState.infos,
-            previewUrls: {
-              ...prevState.infos.previewUrls,
-              ...previewsByVariation
-            }
+            previewUrls: previewsByVariation
           }
         }
       }
