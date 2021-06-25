@@ -79,7 +79,11 @@ function createChromaticUrls({ branch, appId, err }: { branch?: string, appId?: 
 }
 
 function parseStorybookConfiguration(cwd: string) {
-  const pathsToFile = [path.join(cwd, '.storybook/main.js'), path.join(cwd, 'nuxt.config.js')]
+  const pathsToFile = [
+    path.join(cwd, '.storybook/main.js'),
+    path.join(cwd, '.storybook/main.cjs'),
+    path.join(cwd, 'nuxt.config.js'),
+  ]
   const f = Files.readFirstOf(pathsToFile)(v => v)
   const file = f?.value as string || ''
   return file.includes('getStoriesPaths') || file.includes('.slicemachine')
