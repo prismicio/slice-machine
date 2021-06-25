@@ -10,12 +10,14 @@ import { createStorybookId } from '../../../lib/utils/str'
 const Paths = {
   nuxtTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/nuxt.template.ejs'),
   nextTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/next.template.ejs'),
+  svelteTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/svelte.template.ejs'),
   getTemplate(appRoot: string, framework: Framework) {
     switch(framework) {
       case Framework.nuxt: return Paths.nuxtTemplate(appRoot)
       case Framework.vue: return Paths.nuxtTemplate(appRoot)
       case Framework.next: return Paths.nextTemplate(appRoot)
       case Framework.react: return Paths.nextTemplate(appRoot)
+      case Framework.svelte: return Paths.svelteTemplate(appRoot)
       default: return null
     }
   }
@@ -69,12 +71,12 @@ export default {
     const componentPath = `../../../../${libraryName}/${sliceName}`
     const componentTitle = `${libraryName}/${sliceName}`
     const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath, componentTitle });
-
+ 
     Files.write(
       GeneratedPaths(cwd)
         .library(libraryName)
         .slice(sliceName)
-        .stories(),
+        .stories(framework === Framework.svelte ? 'index.stories.svelte' : undefined ),
       stories
     )
   }
