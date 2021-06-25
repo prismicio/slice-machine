@@ -35,7 +35,7 @@ function getComponentName(slicePath: string): string | undefined {
 /** naive method to validate that a folder contains a entry file */
 function matchPossiblePaths(files: ReadonlyArray<string>, componentName: string): string | undefined {
   const possiblePaths = ['index', componentName]
-    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`], [])
+    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`, `${f}.svelte`], [])
   return files.find(e => possiblePaths.indexOf(e) > -1)
 }
 

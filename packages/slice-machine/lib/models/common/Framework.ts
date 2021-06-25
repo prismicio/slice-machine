@@ -3,5 +3,6 @@ export enum Framework {
   next = 'next',
   vue = 'vue',
   react = 'react',
+  svelte = 'svelte',
   vanillajs = 'vanillajs'
 }

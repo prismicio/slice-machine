@@ -29,6 +29,7 @@ export const SupportedFrameworks = {
   nuxt: 'nuxt',
   next: 'next',
   vue: 'vue',
+  svelte: 'svelte',
   react: 'react'
 }
 
