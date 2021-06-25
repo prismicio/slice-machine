@@ -24,7 +24,8 @@ const IndexFiles = {
   'next': 'index.js',
   'nuxt': 'index.js',
   'vue': 'index.vue',
-  'vanillajs': 'index.js'
+  'vanillajs': 'index.js',
+  'svelte': 'index.svelte'
 }
 
 const fromTemplate = async (env: Environment, from: string, sliceName: string) => {
@@ -70,7 +71,7 @@ export default async function handler({ sliceName, from, values }: { sliceName: 
     if (maybeError) {
       return maybeError
     }
-  } else {
+  } else { 
     const fileName = IndexFiles[env.framework] || 'index.js'
     const pathToIndexFile = path.join(paths(env.cwd, '').library(from).slice(sliceName).value(), fileName)
     
