@@ -1,20 +1,37 @@
-### New Feature
+### We now support slice variations! ✌️
 
-SliceMachine now supports variations! ✌️
+You can see variations as a folder of slices of a certain type (eg. Headers) or as
+a "default" section with optional layouts and/or fields.
 
-Now, you can create different variations of a slice from the UI.
-It will generate all of them in your `model.json` but it will also generate mocks and stories for you.
-Thumbnails are also variation-based so you can have a generated thumbnail or a custom one for every single variation.
+Each of them comes with its own thumbnail that can be previewed in the Prismic writing room.
+They also come with their own stories and their mocks can also be configured separately!
 
-To customize the thumbnails, in a slice folder you need to create a folder named after the variation ID and put your
-`preview.png` file.
+To customise the thumbnails, create a folder named after the variation ID and put your
+`preview.png` file. Something like: `slices/MySlice/default-variation/preview.png`
+
+### We now support custom types! 🎉
+
+Yes! You can now create/update custom types from the local builder.
+
+This should remove some back and forth between the local builder and the writing room:
+mainly, you can now define which slice should be included in the custom type SliceZone.
+Pushing the custom type to Prismic will also save and push all linked slices!
+
+To customise custom types thumbnails, create a `index.png` file in each CT folder eg. `customtypes/homepage/index.png`.
+
+If you were connected to your Prismic api endpoint when you loaded this page, your existing custom types
+have been downloaded and save in your project. Check them out!
 
 #### Also
 
-Previously, stories were generated in your component folder, same as mocks.
-We now consider that everything that can be generated should be store in `.slicemachine` and everything stored
-in a component folder should be the user property.
+- · We added the (much requested) Content Relationship field
+- · Libraries index files (eg. `slices/index.js`) are now regenerated after each save
+- · Generated mocks and stories are now stored in `.slicemachine/assets`
+- · Various fixes, a bit more stability (we're not there yet!)
 
-To take control of your mocks and stories, you simple need to add `mocks.js` and `index.stories.js` in
-a component folder.
-It will also prevent the builder to keep generating mocks and stories as long as you have custom ones.
+#### Migration
+
+When you launched the new builder, we ran a migration over your content: all mocks and stories
+have been moved to `.slicemachine/assets`. This may break the first render of Storybook. If that's the case
+for you, try to manually save slices that have any issue. If your mocks & stories aren't modified between saves,
+check that the files have been correctly migrated!

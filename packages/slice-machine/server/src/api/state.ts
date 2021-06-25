@@ -20,7 +20,7 @@ const hasStorybookScript = (cwd: string) => {
   }
 }
 
-async function createWarnings(env: Environment, configErrors?: { [errorKey: string]: ServerError }, clientError?: ErrorWithStatus): Promise<ReadonlyArray<Warning>> {
+export async function createWarnings(env: Environment, configErrors?: { [errorKey: string]: ServerError }, clientError?: ErrorWithStatus): Promise<ReadonlyArray<Warning>> {
   const hasScript = hasStorybookScript(env.cwd)
   let storybookIsRunning = await (async () => {
     try {
@@ -32,20 +32,20 @@ async function createWarnings(env: Environment, configErrors?: { [errorKey: stri
   })()
 
   const storybook = (() => {
-    if (!hasScript) {
-      const notInstalled = (warningTwoLiners as any)[warningStates.STORYBOOK_NOT_INSTALLED]
-      return {
-        key: warningStates.STORYBOOK_NOT_INSTALLED,
-        title: notInstalled[0],
-        description: notInstalled[1]
-      }
-    }
     if (configErrors?.storybook) {
       const notInManifest = (warningTwoLiners as any)[warningStates.STORYBOOK_NOT_IN_MANIFEST]
       return {
         key: warningStates.STORYBOOK_NOT_IN_MANIFEST,
         title: notInManifest[0],
         description: notInManifest[1]
+      }
+    }
+    if (!hasScript) {
+      const notInstalled = (warningTwoLiners as any)[warningStates.STORYBOOK_NOT_INSTALLED]
+      return {
+        key: warningStates.STORYBOOK_NOT_INSTALLED,
+        title: notInstalled[0],
+        description: notInstalled[1]
       }
     }
 

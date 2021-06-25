@@ -1,15 +1,29 @@
 import path from 'path'
 
+import Files from './utils/files'
 import { Framework } from './models/common/Framework'
 import { SupportedFrameworks } from './consts'
 
 export function detectFramework(cwd: string): Framework {
   const pkgFilePath = path.resolve(cwd, 'package.json')
-  const { dependencies, devDependencies, peerDependencies } = require(pkgFilePath)
+  if (!Files.exists(pkgFilePath)) {
+    const message = '[api/env]: Unrecoverable error. Could not find package.json. Exiting..'
+    console.error(message)
+    throw new Error(message)
+  }
 
-  const deps = { ...peerDependencies, ...devDependencies, ...dependencies }
+  try {
+    const pkg = JSON.parse(Files.readString(pkgFilePath))
+    const { dependencies, devDependencies, peerDependencies } = pkg
 
-  const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value])
+    const deps = { ...peerDependencies, ...devDependencies, ...dependencies }
 
-  return (frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : Framework.vanillajs) as Framework
+    const frameworkEntry = Object.entries(SupportedFrameworks).find(([, value]) => deps[value])
+
+    return (frameworkEntry && frameworkEntry.length ? frameworkEntry[0] : Framework.vanillajs) as Framework
+  } catch(e) {
+    const message = '[api/env]: Unrecoverable error. Could not parse package.json. Exiting..'
+    console.error(message)
+    throw new Error(message)
+  }
 }

@@ -26,6 +26,7 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{ remoteS
   const withFlags = libraries.map(lib => Library.withStatus(lib, remoteSlices))
   return { clientError, libraries: withFlags, remoteSlices }
 }
+
 export default async function handler(env: Environment): Promise<{ remoteSlices: ReadonlyArray<Slice<AsObject>>, clientError: ErrorWithStatus | undefined, libraries: ReadonlyArray<Library> }> {
   return getLibrariesWithFlags(env)
 }

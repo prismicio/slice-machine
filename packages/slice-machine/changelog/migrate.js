@@ -1,3 +1,4 @@
+const path = require('path')
 const compareVersions = require('compare-versions');
 const { SMConfig, Pkg } = require('../build/lib/models/paths');
 const { default: Files } = require('../build/lib/utils/files');
@@ -50,8 +51,8 @@ function run(migrations, smConfig, ignorePrompt, params) {
 
 module.exports = async function migrate(ignorePrompt, params) {
   const projectCWD = params.cwd
-  const smModuleCWD = require.main.paths[0].split('node_modules')[0]
-  const { pkgSlicemachineUI, smConfig } = retrieveConfigFiles(projectCWD, smModuleCWD)
+
+  const { pkgSlicemachineUI, smConfig } = retrieveConfigFiles(projectCWD, path.join(__dirname, '..'))
 
   const currentVersion = pkgSlicemachineUI.value.version.split('-')[0]
   const latestMigrationVersion = smConfig.value._latest
