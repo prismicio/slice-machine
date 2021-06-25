@@ -3,15 +3,9 @@ const {
   defaultStripKeys,
   SUPPORTED_FRAMEWORKS
 } = require("../common/consts");
-const cors = require("../common/cors");
 
-module.exports = cors(async (req, res) => {
-  const {
-    query: {
-      strip,
-      preserveDefaults
-    }
-  } = req;
+module.exports = async (event) => {
+  const { strip, preserveDefaults } = event.queryStringParameters || {};
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.framework, preserveDefaults);
 
@@ -27,5 +21,8 @@ module.exports = cors(async (req, res) => {
       delete framework[key]
     })
   })
-  res.send(resolved)
-});
+
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
+
+  return { statusCode: 200, headers, body: JSON.stringify(resolved) };
+};

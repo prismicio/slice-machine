@@ -1,6 +1,10 @@
 {
   "name": "slice-machine-ui",
+<<<<<<< HEAD
   "version": "0.1.0-alpha.6",
+=======
+  "version": "0.0.46",
+>>>>>>> origin
   "private": false,
   "license": "MIT",
   "_moduleAliases": {

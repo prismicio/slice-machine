@@ -24,7 +24,7 @@ export default {
 <style scoped>
 .section {
   position: relative;
-  background: #FFFF63;
+  background: #F7F7F7;
   color: #111;
   padding: 4em;
   text-align: center;

@@ -1,8 +1,15 @@
-const current = "0.0.15-alpha.4";
+const { version } = require('../package.json');
 const deprecatedUnder = "0.0.14";
-const cors = require("../common/cors");
 
-
-module.exports = cors((req, res) => {
-  res.send({ current, deprecatedUnder });
-});
+module.exports = async () => {
+  const body = JSON.stringify({ current: version, deprecatedUnder });
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
+      'Content-Type': 'application/json'
+    },
+    body,
+  };
+}

@@ -1,18 +1,20 @@
 {
   "name": "sm-api",
   "private": true,
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "Slice Machine API",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:debug": "node --expose-gc ./node_modules/.bin/jest --runInBand --logHeapUsage --detectOpenHandles --forceExit",
+    "start": "serverless offline",
+    "package": "serverless package",
+    "deploy": "serverless deploy"
   },
   "author": "Hugo Villain",
   "license": "ISC",
   "dependencies": {
     "@slack/web-api": "^5.7.0",
-    "adm-zip": "^0.4.14",
     "cross-fetch": "^3.0.4",
-    "jszip": "^3.2.2",
     "jszip-utils": "^0.1.0",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.2",
@@ -25,6 +27,10 @@
     "tmp": "^0.1.0"
   },
   "devDependencies": {
-    "@now/node": "^1.4.1"
+    "@now/node": "^1.4.1",
+    "dotenv": "^8.2.0",
+    "jest": "^26.4.2",
+    "serverless-dotenv-plugin": "^3.0.0",
+    "serverless-offline": "^6.8.0"
   }
 }

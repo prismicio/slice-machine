@@ -2,28 +2,10 @@ import fs from 'fs'
 import path from 'path'
 
 import { SM_FILE } from 'sm-commons/consts'
-import { getInfoFromPath as getLibraryInfo } from '../helper'
 import { pascalize } from 'sm-commons/utils/str'
 
-
-const ALL_KEY = '__allSlices'
-
-const createDeclaration = (libs) => {
-  const imports = libs.reduce((acc, { name, pathToSlices }) => `${acc}import * as ${name} from '${pathToSlices}'\n`, '')
-  const spread = `const ${ALL_KEY} = { ${libs.reverse().reduce((acc, { name }) => `${acc} ...${name},`, '')} }`
-  return `${imports}\n${spread}\n`
-}
-
-const createBody = () =>
-`const NotFound = ({ sliceName }) => {
-	console.log(\`[sm - resolver] component "\${sliceName}" not found.\`)
-	return process.env.NODE_ENV !== 'production' ? <p>component "{sliceName}" not found.</p> : <div />
-}
-
-export default ({ sliceName, i }) => {
-	return ${ALL_KEY}[sliceName] ? ${ALL_KEY}[sliceName] : () => <NotFound sliceName={sliceName} />
-}
-`
+import { getInfoFromPath as getLibraryInfo } from '../../helpers'
+import { createDeclaration, createBody } from './file'
 
 async function handleLibraryPath(libPath) {
   const {
@@ -64,7 +46,6 @@ export const createResolver = async () => {
   const librariesInfo = await Promise.all(libraries.map(async lib => await handleLibraryPath(lib)))
   
   const declaration = createDeclaration(librariesInfo.filter(e => e))
-
   const body = createBody()
 
   const file = 

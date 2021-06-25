@@ -1,10 +1,10 @@
 {
   "name": "next-slicezone",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,11 @@
     "sm-commons": "^0.0.21"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.14.5",
+    "jest": "^27.0.4"
   }
 }
