@@ -86,7 +86,7 @@ function fetchSliceDefinitions(p) {
 
     const slices = {}
     folders.forEach((p) => {
-      const sliceName = path.basename(p)
+      const sliceName = p.split("/").pop()
 
       const { model } = tests.isSliceFolder(p)
 

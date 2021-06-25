@@ -1,7 +1,7 @@
 import { pascalize } from "sm-commons/utils/str";
 import { formatThemeProps } from './theme'
-import NotFoundView from "../components/NotFound"
-import EmptyState from "../components/EmptyState";
+import NotFoundView from "./NotFound"
+import EmptyState from "./EmptyState";
 
 const invert = p => new Promise((resolve, reject) => p.then(reject, resolve));
 const firstOf = ps => invert(Promise.all(ps.map(invert)));
@@ -13,42 +13,9 @@ const isPromise = elem =>
 
 const promisify = elem => (isPromise(elem) ? elem : Promise.resolve(elem));
 
-const multiQueryTypes = ['repeat', 'repeatable', 'multi']
-
 export default {
   name: "SliceZone",
   props: {
-    type: {
-      type: String,
-      required: false
-    },
-    uid: {
-      type: String,
-      required: false
-    },
-    lang: {
-      type: String,
-      required: false
-    },
-    params: {
-      type: Object,
-      required: false,
-      default() {
-        return null
-      }
-    },
-    queryType: {
-      type: String,
-      default: 'multi',
-      validator(value) {
-        return [...multiQueryTypes, 'single'].indexOf(value) !== -1
-      }
-    },
-    slicesKey: {
-      type: String,
-      required: false,
-      default: ''
-    },
     components: {
       required: false,
       default() {
@@ -93,13 +60,6 @@ export default {
         return {}
       }
     },
-    sliceProps: {
-      type: [Object, Function],
-      required: false,
-      default() {
-        return {}
-      }
-    }
   },
   computed: {
     computedImports: ({ components, resolver, slices, NotFound, debug }) => {
@@ -126,26 +86,22 @@ export default {
         return firstOf(promises).catch(NotFound);
       });
     },
-    computedSlices: ({ slices, theme, sliceProps, computedImports }) => {
-      return (slices || []).map((slice, i) => {
-        const params = {
-          i,
-          slice,
-          sliceName: pascalize(slice.slice_type),
-        }
-        return {
-          import: computedImports[i],
-          data: {
-            props: {
+    computedSlices: ({ slices, theme, computedImports }) => {
+      return (slices || []).map((slice, i) => ({
+        import: computedImports[i],
+        data: {
+          props: {
+            theme: formatThemeProps(theme, {
+              i,
               slice,
-              theme: formatThemeProps(theme, params),
-              ...typeof sliceProps === 'function' ? sliceProps(params) : sliceProps,
-            },
-            key: slice.id
+              sliceName: pascalize(slice.slice_type),
+            }),
+            slice
           },
-          name: pascalize(slice.slice_type)
-        }
-      });
+          key: slice.id
+        },
+        name: pascalize(slice.slice_type)
+      }));
     }
   },
   render(h) {
@@ -165,9 +121,9 @@ export default {
         EmptyState,
         {
           props: {
-            uid: this.uid,
-            type: this.type,
-            pathToDocs: this.pathToDocs
+             uid: this.uid,
+             type: this.type,
+             pathToDocs: this.pathToDocs
           }
         }
       )

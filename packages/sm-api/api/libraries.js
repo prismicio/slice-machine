@@ -1,8 +1,9 @@
 const Mongo = require('../common/mongo');
 const handleStripKeys = require("../common").handleStripKeys;
 const { defaultStripKeys } = require('../common/consts');
- 
-async function fetchLibraries({ framework, list }) { 
+const cors = require("../common/cors");
+
+async function fetchLibraries({ framework, list }) {
   const search = {
     ...(framework ? {
       framework
@@ -13,19 +14,21 @@ async function fetchLibraries({ framework, list }) {
       }
     } : null)
   }
-
-  /* Memory leak here */
-  const cursor = await Mongo.collections.libraries(coll => coll.find(search));
-  return await cursor.toArray();
-  
-  // can get rid of the warning udring the tests with this
-  // return Promise.resolve(require('../__stubs__/libraries-mongo-libraries.json'))
+  const cursor = await Mongo.collections.libraries(coll => (
+    coll.find(search)
+  ));
+  return await cursor.toArray()
 }
 
-module.exports = async (event) => {
-  const { framework, strip, list, preserveDefaults } = event.queryStringParameters || {};
-
-
+module.exports = cors(async (req, res) => {
+  const {
+    query: {
+      framework,
+      strip,
+      list,
+      preserveDefaults
+    }
+  } = req;
 
   const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
 
@@ -39,10 +42,7 @@ module.exports = async (event) => {
       delete library[key]
     })
   })
-  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
 
-  return { statusCode: 200, headers, body: JSON.stringify(libraries) };
+  res.send(libraries)
 
-};
-
-module.exports.fetchLibraries = fetchLibraries;
+});

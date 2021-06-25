@@ -20,8 +20,7 @@ describe("prismic-nuxt module", function() {
         fn(context._routes, context._resolve)
       }),
       options: {
-        rootDir: '/var/nuxt',
-        srcDir: '/var/nuxt/src',
+        srcDir: '/var/nuxt',
         buildDir: '/var/nuxt/.nuxt/',
         head: {},
         dir: {},
@@ -57,13 +56,6 @@ describe("prismic-nuxt module", function() {
     const expectedSrcPath = 'tests/__mock__/resolver.js'
     await smResolver.call(context, { ...moduleOptions, pathToResolver: expectedSrcPath });
     expect(context.addPlugin.mock.calls[0][0].src).toContain(expectedSrcPath)
-  })
-
-  it("should use user-defined sm.json", async function () {
-    const expectedImportString = await handleLibraryPath('@/tests/__mock__/slices')
-    const pathToSmFile = 'tests/__mock__/sm.json'
-    await smResolver.call(context, { pathToSmFile });
-    expect(context.addPlugin.mock.calls[0][0].options.imports).toContain(expectedImportString)
   })
 
 });

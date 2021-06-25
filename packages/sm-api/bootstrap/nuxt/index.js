@@ -29,7 +29,7 @@ module.exports = {
     libraries: [],
     bootstraper: ["npx", ["create-nuxt-app"]],
     transpile: ["vue-slicezone", "nuxt-sm"],
-    dependencies: ["prismic-javascript", "@prismicio/vue", "@nuxtjs/prismic", "vue-slicezone", "nuxt-sm"],
+    dependencies: ["prismic-javascript", "prismic-vue", "@nuxtjs/prismic", "vue-slicezone", "nuxt-sm"],
     modules: [[
       '@nuxtjs/prismic',
       {

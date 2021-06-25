@@ -1,63 +1,43 @@
-const fetch = require("node-fetch");
 const handleStripKeys = require("../common").handleStripKeys;
-const expectLibrary = require("sm-commons/expect").expectLibrary;
+const cors = require("../common/cors");
+const Mongo = require("../common/mongo");
 
-const { parsePackagePathname } = require('../common/package')
+const { defaultStripKeys } = require("../common/consts");
 
-const {
-  SM_FILE,
-  REGISTRY_URL,
-  defaultStripKeys,
-} = require('../common/consts')
-
-async function fetchJson(url) {
-  const response = await fetch(url);
-  if (response.status !== 200) {
-    throw new Error(`[api/job] Unable to fetch "${url}"`);
-  }
-  return await response.json();
+function fetchLibrary(packageName) {
+  return Mongo.collections.libraries((coll) => coll.findOne({ packageName }));
 }
 
-async function fetchLibrary(packageName, expect = true) {
-  const { packageSpec } = parsePackagePathname(packageName);
-  const packageSmUrl = `${REGISTRY_URL}${packageSpec}/${SM_FILE}`;
-
-  const sm = await fetchJson(packageSmUrl);
-
-  if (expect) {
-    expectLibrary(sm);
-  }
-  return sm
-}
-
-const mod = (module.exports = async (event) => {
-  const { lib, library, strip, preserveDefaults } = event.queryStringParameters || {};
+const mod = (module.exports = cors(async (req, res) => {
+  const {
+    query: { lib, library, strip, preserveDefaults },
+  } = req;
 
   const packageName = lib || library;
 
-  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET','Content-Type': 'application/json'};
-
   if (!packageName) {
-
-    const message = 'Endpoint expects query "lib" to be defined.\nExample request: `/api/library?lib=my-lib`';
-
-    return { statusCode: 400, headers, body: JSON.stringify({ error: true, message })}
+    return res
+      .status(400)
+      .send(
+        'Endpoint expects query "lib" to be defined.\nExample request: `/api/library?lib=my-lib`'
+      );
   }
 
-  const sm = await fetchLibrary(packageName)
+  const keysToStrip = handleStripKeys(
+    strip,
+    defaultStripKeys.library,
+    preserveDefaults
+  );
 
-  const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
+  const sm = await fetchLibrary(packageName);
 
   if (sm) {
-    keysToStrip.forEach(key => {
+    keysToStrip.forEach((key) => {
       delete sm[key];
     });
-
-    return { statusCode: 200, headers, body: JSON.stringify(sm)}
+    return res.send(sm);
   }
-  
-  const message = `${packageName} : not found`;
-  return { statusCode: 404, headers, body: JSON.stringify({ error: true, message }) };
-});
+  return res.status(404).send({});
+}));
 
-mod.fetchLibrary = fetchLibrary
+mod.fetchLibrary = fetchLibrary;
