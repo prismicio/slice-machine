@@ -74,6 +74,10 @@ const TabZone = ({
       return console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
     }
 
+    console.log({ previousKey, newKey, value, initialModelValues })
+
+    console.log({ ...initialModelValues, config: { ...initialModelValues.config, ...value } })
+
     if (widget.TYPE_NAME === 'Group') {
       return store
         .tab(tabId)
@@ -137,7 +141,7 @@ const TabZone = ({
         renderFieldAccessor={(key) => `data.${key}`}
       />
       {/* {
-        Model.tabs.length > 1 ? (
+        Model.current.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>
         ) : null
       } */}

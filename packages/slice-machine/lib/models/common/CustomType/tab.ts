@@ -46,6 +46,9 @@ interface OrganisedFields {
 // }
 
 export const Tab = {
+  init(id: string) {
+    return { key: id, value: [], sliceZone: null }
+  },
   toArray(key: string, tab: TabAsObject): TabAsArray {
     const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === FieldType.SliceZone)
     return {

@@ -54,6 +54,7 @@ export default async function MockCustomType(model: CustomType<TabsAsObject>, mo
   for (let [, tab] of Object.entries(model.tabs)) {
     const { fields, groups, sliceZone } = Tab.organiseFields(tab)
     
+    console.log(fields.map(e => [e.key, e.value]), fields)
     const mockedFields = fieldsHandler(fields.map(e => [e.key, e.value]), mockConfig)
     customTypeMock.data = {
       ...customTypeMock.data,

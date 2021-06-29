@@ -28,7 +28,7 @@ const CtTabs = ({ sx, Model, renderTab }: { sx?: any, Model: CustomTypeState, re
         <Tabs style={{ width: '100%' }}>
           <TabList>
             {
-              Model.tabs.map((tab) => (
+              Model.current.tabs.map((tab) => (
                 <Tab
                   key={tab.key}
                   style={{ display: 'flex' }}
@@ -43,7 +43,7 @@ const CtTabs = ({ sx, Model, renderTab }: { sx?: any, Model: CustomTypeState, re
             }
           </TabList>
           {
-            Model.tabs.map(tab => <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>)
+            Model.current.tabs.map(tab => <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>)
           }
         </Tabs>
       </FlexWrapper>

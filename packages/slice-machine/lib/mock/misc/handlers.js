@@ -25,6 +25,7 @@ export const handleFields = (Widgets) => (fields = [], mocks = {}) => {
     const widget = Widgets[value.type]
     const maybeFieldMock = mocks[key]
 
+    console.log({ value, maybeFieldMock })
     if (widget) {
       const mock = handleFieldMock(widget, maybeFieldMock, value.config)
       return {

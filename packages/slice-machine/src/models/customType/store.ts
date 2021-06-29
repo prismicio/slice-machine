@@ -14,8 +14,8 @@ import pushCustomType from './actions/push'
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
 
-  createTab() {
-    this.dispatch({ type: Actions.CreateTab })
+  createTab(id: string) {
+    this.dispatch({ type: Actions.CreateTab, payload: { id } })
   }
   reset() {
     this.dispatch({ type: Actions.Reset })

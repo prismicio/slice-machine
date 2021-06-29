@@ -53,11 +53,11 @@ const CustomListItem = ({
   };
 
   const closeEditModal = () => {
-    setEditModalData({ isOpen: false });
+    setEditModalData({ isOpen: false })
   };
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName];
+    const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
       .group(groupItem.key)
@@ -84,7 +84,7 @@ const CustomListItem = ({
       store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, previousKey)
     }
 
-    const widget = Widgets[initialModelValues.type];
+    const widget = Widgets[initialModelValues.type]
     if (!widget) {
       console.log(
         `Could not find widget with type name "${initialModelValues.type}". Please contact us!`

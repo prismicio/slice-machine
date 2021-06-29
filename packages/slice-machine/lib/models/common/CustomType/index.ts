@@ -7,6 +7,14 @@ export interface SeoTab {
   description: string;
 }
 
+export interface CustomTypeJsonModel {
+  id: string;
+  status: boolean;
+  repeatable: boolean;
+  label: string;
+  json: TabsAsObject;
+}
+
 export interface CustomType<T extends TabsAsArray | TabsAsObject> {
   id: string;
   status: boolean;
@@ -23,6 +31,24 @@ export const CustomType = {
       tabs: Object.entries(ct.tabs).map(([key, value]) =>
         Tab.toArray(key, value)
       ),
+    }
+  },
+  toObject(ct: CustomType<TabsAsArray>): CustomType<TabsAsObject> {
+    return {
+      ...ct,
+      tabs: ct.tabs.reduce((acc, tab) => {
+        return {
+          ...acc,
+          [tab.key]: Tab.toObject(tab)
+        }
+      }, {}),
+    }
+  },
+  toJsonModel(ct: CustomType<TabsAsObject>): CustomTypeJsonModel {
+    const { tabs, previewUrl, ...rest } = ct
+    return {
+      ...rest,
+      json: ct.tabs
     }
   },
   getSliceZones(ct: CustomType<TabsAsArray>): ReadonlyArray<SliceZoneAsArray | null> {

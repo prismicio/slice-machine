@@ -14,27 +14,35 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.Reset: {
         return {
           ...prevState,
-          tabs: prevState.initialTabs,
+          current: prevState.initialCustomType,
           mockConfig: prevState.initialMockConfig
         }
       }
       case Actions.CreateTab: {
+        const { id } = action.payload as { id: string }
+        if (prevState.current.tabs.find(e => e.key === id)) {
+          return prevState
+        }
         return {
           ...prevState,
-          tabs: [...prevState.tabs, { key: 'NewTab', value: [], sliceZone: null }]
+          current: {
+            ...prevState.current,
+            tabs: [...prevState.current.tabs, Tab.init(id)]
+          }
         }
       }
       case Actions.Save: {
         const { state } = action.payload as { state: CustomTypeState }
         return {
           ...state,
-          initialTabs: state.tabs,
+          initialCustomType: state.current,
           initialMockConfig: state.mockConfig,
         }
       }
       case Actions.Push: return {
         ...prevState,
-        remoteTabs: prevState.tabs,
+        initialCustomType: prevState.current,
+        remoteCustomType: prevState.current
       }
       case Actions.AddWidget: {
         const { tabId, widget, id } = action.payload as { tabId: string, widget: Widget | GroupWidget, id: string }
@@ -59,13 +67,13 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.CreateSliceZone: {
         const { tabId } = action.payload as { tabId: string }
 
-        const tabIndex = prevState.tabs.findIndex(t => t.key === tabId)
+        const tabIndex = prevState.current.tabs.findIndex(t => t.key === tabId)
         if (tabIndex === -1) {
           console.error(`No tabId ${tabId} found in tabs`)
           return prevState
         }
 
-        const existingSliceZones = CustomType.getSliceZones(prevState).filter(e => e)
+        const existingSliceZones = CustomType.getSliceZones(prevState.current).filter(e => e)
 
         function findAvailableKey(startI: number, existingSliceZones: (SliceZoneAsArray | null)[]) {
           for (let i = startI; i < Infinity; i++) {
@@ -137,13 +145,16 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
 
   return {
     ...result,
-    poolOfFieldsToCheck: CustomTypeState.getPool(result.tabs),
+    poolOfFieldsToCheck: CustomTypeState.getPool(result.current.tabs),
     __status: (() => {
-      if (equal(result.tabs, result.remoteTabs)) {
+      if (!result.remoteCustomType) {
+        return CustomTypeStatus.New
+      }
+      if (equal(result.current, result.remoteCustomType)) {
         return CustomTypeStatus.Synced
       }
-      return CustomTypeStatus.New
+      return CustomTypeStatus.Modified
     })(),
-    isTouched: !equal(result.initialTabs, result.tabs) || !equal(result.initialMockConfig, result.mockConfig)
+    isTouched: !equal(result.initialCustomType, result.current) || !equal(result.initialMockConfig, result.mockConfig)
   }
 }

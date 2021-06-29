@@ -26,7 +26,10 @@ import WidgetFormField from './Field'
 
 import { findWidgetByConfigOrType } from '../../utils'
 
-Modal.setAppElement("#__next");
+
+if (process.env.NODE_ENV !== 'test') {
+  Modal.setAppElement("#__next");
+}
 
 const FORM_ID = 'edit-modal-form'
 
@@ -59,13 +62,18 @@ const EditModal = ({
 
   const initialValues = {
     ...createInitialValues(FormFields),
-    ...removeKeys(initialModelValues.config, ['type']),
+    ...removeKeys(initialModelValues.config, ['type', 'id']),
     [MockConfigKey]: deepMerge(
       MockConfigForm?.initialValues || {},
       getFieldMockConfig({ apiId }) || {}
     ),
     id: apiId,
   }
+
+  console.log({
+    initialValues,
+    initialModelValues
+  })
 
   const validationSchema = createValidationSchema(FormFields)
 
@@ -174,13 +182,6 @@ const EditModal = ({
                 <Box>
                   { MockConfigForm ? (
                     <Box>
-                      {/* {
-                        fieldType === 'items' ? (
-                          <Alert mb={3} variant="highlight">
-                            Note: setting mock content for repeatable fields will set all items to the same value!
-                          </Alert>
-                        ) : null
-                      } */}
                       <MockConfigForm initialValues={initialValues} />
                     </Box>
                   ) : <p>Mock Configuration not implemented</p>}

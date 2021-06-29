@@ -7,11 +7,7 @@ import { Col, Flex as FlexGrid } from 'components/Flex'
 const FormFields = { ...DefaultFields }
 
 const Form = (props) => {
-  const {
-    initialValues,
-    fields,
-  } = props
-
+  const { initialValues, fields, } = props
   return (
     <FlexGrid>
       {
