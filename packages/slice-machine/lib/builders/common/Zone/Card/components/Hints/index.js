@@ -7,6 +7,7 @@ const FrameworkRenderers = {
   [SupportedFrameworks.next]: Renderers.next,
   [SupportedFrameworks.vue]: Renderers.vue,
   [SupportedFrameworks.react]: Renderers.react,
+  [SupportedFrameworks.svelte]: Renderers.svelte,
   vanillajs: Renderers.vanillajs
 }
 
