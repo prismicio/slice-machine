@@ -12,7 +12,7 @@ const dateCode = (fieldText) => `<time datetime={${fieldText}}>{${fieldText}}</t
 
 const defaultCode = (fieldText) => `<span>{ ${fieldText} }</span>`
 const codeByWidgetType = (Widgets) => ({
-  [Widgets.UID?.TYPE_NAME]: (fieldText) => defaultCode,
+  [Widgets.UID?.TYPE_NAME]: defaultCode,
   [Widgets.Text?.TYPE_NAME]: defaultCode,
   [Widgets.Select?.TYPE_NAME]: defaultCode,
   [Widgets.Number?.TYPE_NAME]: defaultCode,
