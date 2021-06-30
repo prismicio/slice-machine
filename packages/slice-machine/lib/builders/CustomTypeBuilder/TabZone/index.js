@@ -4,14 +4,12 @@ import EditModal from '../../common/EditModal'
 
 import Zone from '../../common/Zone'
 
-import { removeKeys } from 'lib/utils'
 import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
 import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
 
 import SliceZone from '../SliceZone'
 
 import ModalFormCard from 'components/ModalFormCard'
-import { createPortal } from 'react-dom'
 
 const TabZone = ({
   Model,
@@ -42,13 +40,13 @@ const TabZone = ({
   const onSaveNewField = ({ id, widgetTypeName }) => {
     const widget = Widgets[widgetTypeName]
     if (!widget) {
-      console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
+      return console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
     }
     store
       .tab(tabId)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        config: removeKeys(widget.create(id), ['id'])
+        config: widget.create()
       })
   }
 
@@ -62,32 +60,16 @@ const TabZone = ({
     store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
-  const onSave = ({ apiId: previousKey, newKey, value, initialModelValues }, { mockValue }) => {
-    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
+  const onSave = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (mockValue) {
       store.updateWidgetMockConfig(Model.mockConfig, previousKey, newKey, mockValue)
     } else {
       store.deleteWidgetMockConfig(Model.mockConfig, newKey)
     }
 
-    const widget = Widgets[initialModelValues.type]
+    const widget = Widgets[value.type]
     if (!widget) {
-      return console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
-    }
-
-    console.log({ previousKey, newKey, value, initialModelValues })
-
-    console.log({ ...initialModelValues, config: { ...initialModelValues.config, ...value } })
-
-    if (widget.TYPE_NAME === 'Group') {
-      return store
-        .tab(tabId)
-        .replaceWidget(
-          previousKey,
-          newKey, {
-            ...initialModelValues,
-            ...value
-          }
-        )
+      return console.log(`Could not find widget with type name "${value.type}". Please contact us!`)
     }
 
     store
@@ -95,10 +77,7 @@ const TabZone = ({
       .replaceWidget(
         previousKey,
         newKey,
-        {
-          type: initialModelValues.type,
-          config: removeKeys(value, ['id', 'type'])
-        }
+        value
       )
   }
 

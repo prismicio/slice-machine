@@ -31,11 +31,10 @@ import { MockConfigForm } from './Mock/Form'
     }
   } */
 
-const create = (apiId: string) => ({
+const create = () => ({
   ...createInitialValues(FormFields),
   constraint: {},
   thumbnails: [],
-  id: apiId
 })
 
 const schema = yup.object().shape({

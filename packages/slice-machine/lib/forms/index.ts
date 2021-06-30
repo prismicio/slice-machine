@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 import { FormTypes } from './types'
 
 const handleDefaultValue = (field: { type: FormTypes, defaultValue: any}) => {
@@ -16,6 +16,8 @@ const handleDefaultValue = (field: { type: FormTypes, defaultValue: any}) => {
   }
   return undefined
 }
+
+export const createFieldNameFromKey = (key: string) => key === 'id' ? 'id' : `config.${key}`
 
 export const createValidationArgs = (args: any, defaultArgs: any) => {
   if (Array.isArray(args)) {

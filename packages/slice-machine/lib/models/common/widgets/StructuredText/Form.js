@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import * as yup from 'yup'
+import { createFieldNameFromKey } from 'lib/forms'
 import { CheckBox as CheckBoxConstructor } from 'lib/forms/fields'
 import { DefaultFields } from 'lib/forms/defaults'
 
@@ -28,11 +29,11 @@ const FormFields = {
   allowTargetBlank: CheckBoxConstructor('Allow target blank for links')
 }
 
-const accessors = ['single', 'multi']
+const accessors = ['config.single', 'config.multi']
 
 const WidgetForm = (props) => {
   const { initialValues, values: formValues, errors, Model, fields, fieldType, setFieldValue, } = props
-  const { single, multi } = formValues
+  const { config: { single, multi } } = formValues
   const initialOptions = single ? _createInitialOptions(single)
     : (multi && _createInitialOptions(multi))
     || optionValues
@@ -55,7 +56,7 @@ const WidgetForm = (props) => {
         Object.entries(FormFields).map(([key, field]) => (
           <Col key={key}>
             <WidgetFormField
-              fieldName={key}
+              fieldName={createFieldNameFromKey(key)}
               formField={field}
               fields={fields}
               initialValues={initialValues}

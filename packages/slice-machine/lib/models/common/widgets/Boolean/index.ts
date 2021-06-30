@@ -34,10 +34,7 @@ const FormFields = {
   default_value: CheckBox('Default to true'),
 }
 
-const create = (apiId: string) => ({
-  ...createInitialValues(FormFields),
-  id: apiId
-})
+const create = () => createInitialValues(FormFields)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Boolean$/, { excludeEmptyString: true }).required(),

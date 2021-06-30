@@ -11,20 +11,35 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "text": {
-          "config": {
-            "label": "Label Key Text",
-            "placeholder": ""
-          },
-          "type": "Text"
-        },
         "image": {
           "config": {
             "label": "",
-            "constraint": {},
-            "thumbnails": []
+            "constraint": {
+              "width": 222,
+              "height": 222
+            },
+            "thumbnails": [],
+            "id": ""
           },
           "type": "Image"
+        },
+        "aaa": {
+          "config": {
+            "label": "Label ",
+            "placeholder": "place",
+            "id": ""
+          },
+          "type": "Text"
+        },
+        "aaaa": {
+          "type": "Link",
+          "config": {
+            "label": "My label !",
+            "id": "",
+            "placeholder": "Placeholder 2",
+            "allowTargetBlank": true
+          },
+          "label": "Lable !"
         }
       },
       "items": {

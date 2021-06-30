@@ -27,13 +27,12 @@ const Meta = {
   description: "Define content relations & internal links",
 };
 
-const create = (apiId: string) => ({
+const create = () => ({
   ...createInitialValues({
     label: DefaultFields.label,
   }),
   select: "document",
   customtypes: [],
-  id: apiId,
 });
 
 const configSchema = yup.object().shape({

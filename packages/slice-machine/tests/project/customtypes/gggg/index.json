@@ -8,11 +8,13 @@
       "group": {
         "type": "Group",
         "config": {
+          "type": "Group",
           "fields": {
-            "txt": {
+            "ddddaaaa": {
               "type": "StructuredText",
               "config": {
                 "label": "",
+                "id": "",
                 "placeholder": "",
                 "allowTargetBlank": true,
                 "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
@@ -21,20 +23,31 @@
           }
         }
       },
-      "uid2": {
+      "apiId": {
         "type": "UID",
         "config": {
-          "label": "",
-          "placeholder": ""
+          "label": "My Label !",
+          "placeholder": "Place",
+          "id": ""
         }
       },
-      "rtf": {
+      "rtf2": {
         "type": "StructuredText",
         "config": {
           "label": "",
           "placeholder": "",
           "allowTargetBlank": true,
-          "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+          "id": ""
+        }
+      },
+      "ddd": {
+        "type": "Image",
+        "config": {
+          "id": "",
+          "label": "",
+          "constraint": {},
+          "thumbnails": []
         }
       },
       "MainSliceZone": {

@@ -25,10 +25,7 @@ import { MockConfigForm } from './Mock/Form'
 
 const TYPE_NAME = 'Select'
 
-const create = (apiId: string) => ({
-  ...createInitialValues(FormFields),
-  id: apiId
-})
+const create = () => createInitialValues(FormFields)
 
 const Meta = {
   icon: MdDns,

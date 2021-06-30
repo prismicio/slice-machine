@@ -32,10 +32,9 @@ const Meta = {
   description: 'A rich text field with formatting options'
 }
 
-const create = (apiId: string) => ({
+const create = () => ({
   ...createInitialValues(FormFields),
   single: optionValues.join(','),
-  id: apiId
 })
 
 const schema = yup.object().shape({

@@ -10,10 +10,13 @@ import {
   useThemeUI
 } from 'theme-ui'
 
+import * as yup from 'yup'
 import * as Widgets from 'lib/models/common/widgets/withGroup'
 
-import { removeKeys } from 'lib/utils'
-import { createInitialValues, createValidationSchema } from 'lib/forms'
+import {
+  createInitialValues,
+  createFieldNameFromKey
+} from 'lib/forms'
 
 import { MockConfigKey } from 'lib/consts'
 
@@ -36,7 +39,6 @@ const FORM_ID = 'edit-modal-form'
 const EditModal = ({
   close,
   data,
-  Model,
   fields,
   onSave,
   getFieldMockConfig
@@ -46,36 +48,38 @@ const EditModal = ({
   }
   const { theme } = useThemeUI()
   
-  const { mockConfig: initialMockConfig } = Model
   const { field: [apiId, initialModelValues] } = data
 
+  const maybeWidget = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
+
+  if (!maybeWidget) {
+    return (<div>{initialModelValues.type} not found</div>)
+  }
   const {
     Meta: { icon: WidgetIcon },
     FormFields,
     MockConfigForm,
-    Form: CustomForm
-  } = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
-
-  if (!FormFields) {
-    return (<div>{initialModelValues.type} not supported yet</div>)
-  }
+    Form: CustomForm,
+    schema: widgetSchema
+  } = maybeWidget
 
   const initialValues = {
-    ...createInitialValues(FormFields),
-    ...removeKeys(initialModelValues.config, ['type', 'id']),
+    id: apiId,
+    config: {
+      ...createInitialValues(FormFields),
+      ...initialModelValues.config,
+    },
     [MockConfigKey]: deepMerge(
       MockConfigForm?.initialValues || {},
       getFieldMockConfig({ apiId }) || {}
     ),
-    id: apiId,
   }
 
-  console.log({
-    initialValues,
-    initialModelValues
+  console.log(widgetSchema)
+  const validationSchema = yup.object().shape({
+    id: yup.string().matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/).min(3).max(35).required(),
+    config: widgetSchema.fields.config
   })
-
-  const validationSchema = createValidationSchema(FormFields)
 
   const formId = `${FORM_ID}-${Math.random().toString()}`
 
@@ -98,10 +102,29 @@ const EditModal = ({
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
-          const updatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
+          const maybeUpdatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
             ? MockConfigForm.onSave(mockValue, value)
             : mockValue
-          onSave({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue: updatedMockValue })
+
+          const definitiveMockValue = (() => {
+            if (maybeUpdatedMockValue && Object.keys(maybeUpdatedMockValue).length
+              && !!Object.entries(maybeUpdatedMockValue).find(([, v]) => v !== null)
+            ) {
+              return maybeUpdatedMockValue
+            }
+            return null
+          })();
+
+          const updatedValue = {
+            ...initialModelValues,
+            ...value,
+            config: {
+              ...initialModelValues.config,
+              ...value.config
+            }
+          }
+
+          onSave({ apiId, newKey, value: updatedValue, mockValue: definitiveMockValue })
           close()
         }}
       >
@@ -109,13 +132,16 @@ const EditModal = ({
           const {
             values: {
               id,
-              label,
+              config: {
+                label,
+              },
             },
             errors,
             isValid,
             isSubmitting,
             initialValues,
           } = props
+
           return (
               <Card
                 borderFooter
@@ -168,7 +194,7 @@ const EditModal = ({
                         Object.entries(FormFields).map(([key, field]) => (
                           <Col key={key}>
                             <WidgetFormField
-                              fieldName={key}
+                              fieldName={createFieldNameFromKey(key)}
                               formField={field}
                               fields={fields}
                               initialValues={initialValues}

@@ -76,13 +76,13 @@ const HandlePatternTypes = ({
 const Form = () => {
   const [patternTypeCheck, setPatternTypeCheck] = useState(null)
   const { values, setFieldValue } = useFormikContext()
-  const options = (values.single || values.multi || '').split(',')
+  const options = (values.config.single || values.config.multi || '').split(',')
 
   const configValues = values[MockConfigKey]?.config || {}
 
   useEffect(() => {
     const { mockConfig: { config: { patternType } } } = values
-    if (patternType !== patternTypeCheck && patternType && !Patterns[patternType].test(options)) {
+    if (patternType && patternType !== patternTypeCheck && !Patterns[patternType].test(options)) {
       onUpdate({
         key: 'patternType',
         updateType: 'config',
@@ -148,7 +148,7 @@ Form.onSave = (mockValue, values) => {
   if (!patternObj) {
     return initialValues
   }
-  const options = (values.single || values.multi).split(',')
+  const options = (values.config.single || values.config.multi).split(',')
   const isValidPatternType = patternObj.test(options)
   if (isValidPatternType) {
     return mockValue

@@ -20,10 +20,7 @@ const TYPE_NAME = 'Timestamp'
 
 const FormFields = DefaultFields
 
-const create = (apiId: string) => ({
-  ...createInitialValues(DefaultFields),
-  id: apiId
-})
+const create = () => createInitialValues(FormFields)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Timestamp$/, { excludeEmptyString: true }).required(),

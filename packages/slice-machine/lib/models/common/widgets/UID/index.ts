@@ -22,10 +22,7 @@ const TYPE_NAME = 'UID'
 
 const FormFields = DefaultFields
 
-const create = (apiId: string) => ({
-  ...createInitialValues(DefaultFields),
-  id: apiId
-})
+const create = () => createInitialValues(FormFields)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^UID$/, { excludeEmptyString: true }).required(),

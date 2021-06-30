@@ -1,10 +1,8 @@
 import { Fragment, useState } from "react";
 
-import { removeKeys } from "lib/utils";
-
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-import { Box, Flex, Text, Button, useThemeUI } from "theme-ui";
+import { Box, Button } from "theme-ui";
 
 import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";
@@ -63,15 +61,12 @@ const CustomListItem = ({
       .group(groupItem.key)
       .addWidget(id, {
         type: widget.TYPE_NAME,
-        config: removeKeys(widget.create(id), ["id"]),
+        config: widget.create(),
       });
   };
 
-  const onSaveField = (
-    { apiId: previousKey, newKey, value, initialModelValues },
-    { mockValue }
-  ) => {
-    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
+  const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (mockValue) {
       store
         .updateWidgetGroupMockConfig(
           Model.mockConfig,
@@ -79,15 +74,15 @@ const CustomListItem = ({
           previousKey,
           newKey,
           mockValue
-        );
+        )
     } else {
       store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, previousKey)
     }
 
-    const widget = Widgets[initialModelValues.type]
+    const widget = Widgets[value.type]
     if (!widget) {
       console.log(
-        `Could not find widget with type name "${initialModelValues.type}". Please contact us!`
+        `Could not find widget with type name "${value.type}". Please contact us!`
       )
       return
     }
@@ -95,10 +90,7 @@ const CustomListItem = ({
     store
       .tab(tabId)
       .group(groupItem.key)
-      .replaceWidget(previousKey, newKey, {
-        type: initialModelValues.type,
-        config: removeKeys(value, ["id", "type"]),
-      })
+      .replaceWidget(previousKey, newKey, value)
   };
 
   const onDragEnd = (result) => {
@@ -109,7 +101,7 @@ const CustomListItem = ({
       return
     }
     if (result.source.droppableId !== result.destination.droppableId) {
-      return;
+      return
     }
     store
       .tab(tabId)

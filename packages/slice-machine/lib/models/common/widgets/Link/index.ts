@@ -52,10 +52,9 @@ import { MockConfigForm } from './Mock/Form'
   }
   */
 
-const create = (apiId: string) => ({
+const create = () => ({
   ...createInitialValues(FormFields),
   allowTargetBlank: true,
-  id: apiId
 })
 
 const Meta = {
