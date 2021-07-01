@@ -2,6 +2,11 @@ import { Fragment, useState } from 'react'
 import * as Widgets from 'lib/models/common/widgets/withGroup'
 import EditModal from '../../common/EditModal'
 
+import {
+  ensureDnDDestination,
+  ensureWidgetTypeExistence
+} from 'lib/utils'
+
 import Zone from '../../common/Zone'
 
 import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
@@ -38,10 +43,10 @@ const TabZone = ({
   }
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName]
-    if (!widget) {
-      return console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
+    if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
+      return
     }
+    const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
       .addWidget(id, {
@@ -51,25 +56,20 @@ const TabZone = ({
   }
 
   const onDragEnd = (result) => {
-    if (!result.destination || result.source.index === result.destination.index) {
-      return
-    }
-    if (result.source.droppableId !== result.destination.droppableId) {
+    if (ensureDnDDestination(result)) {
       return
     }
     store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
   const onSave = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (ensureWidgetTypeExistence(Widgets, value.type)) {
+      return
+    }
     if (mockValue) {
       store.updateWidgetMockConfig(Model.mockConfig, previousKey, newKey, mockValue)
     } else {
       store.deleteWidgetMockConfig(Model.mockConfig, newKey)
-    }
-
-    const widget = Widgets[value.type]
-    if (!widget) {
-      return console.log(`Could not find widget with type name "${value.type}". Please contact us!`)
     }
 
     store

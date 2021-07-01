@@ -10,6 +10,7 @@ import { DefaultFields } from 'lib/forms/defaults'
 import WidgetFormField from 'lib/builders/common/EditModal/Field'
 
 import { Col, Flex as FlexGrid } from 'components/Flex'
+import { createFieldNameFromKey } from '@lib/forms'
 
 const FormFields = {
   id: DefaultFields.id,
@@ -30,7 +31,7 @@ const WidgetForm = ({
   // const { errors, Model, fieldType } = rest
 
   const options = customTypes.map(ct => ({ value: ct?.id, label: ct?.label }))
-  const selectValues = formValues.customtypes.map((id) => {
+  const selectValues = formValues.config.customtypes.map((id) => {
     const ct = customTypes.find(e => e && e.id === id)
     return { value: ct?.id, label: ct?.label }
   })
@@ -41,7 +42,7 @@ const WidgetForm = ({
         Object.entries(FormFields).filter(e => e[0] !== 'customtypes').map(([key, field]) => (
           <Col key={key}>
             <WidgetFormField
-              fieldName={key}
+              fieldName={createFieldNameFromKey(key)}
               formField={field}
               fields={fields}
               initialValues={initialValues}
@@ -63,7 +64,7 @@ const WidgetForm = ({
             options={options}
             onChange={(v) => {
               if (v) {
-                setFieldValue('customtypes', v.map(({ value }) => value))
+                setFieldValue('config.customtypes', v.map(({ value }) => value))
               }
             }}
             value={selectValues}

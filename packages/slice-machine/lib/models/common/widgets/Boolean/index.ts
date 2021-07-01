@@ -3,6 +3,8 @@ import { BsToggleOn } from 'react-icons/bs'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
+import { BooleanField } from '../types'
+
 /** {
     "type" : "Boolean",
     "config" : {
@@ -18,7 +20,8 @@ import { createInitialValues, createValidationSchema } from '../../../../forms'
 import { DefaultFields } from "../../../../forms/defaults"
 import { Input, CheckBox } from "../../../../forms/fields"
 
-const TYPE_NAME = 'Boolean'
+import { FieldType } from '../../CustomType/fields'
+import { Widget } from '../Widget'
 
 const Meta = {
   icon: BsToggleOn,
@@ -34,22 +37,18 @@ const FormFields = {
   default_value: CheckBox('Default to true'),
 }
 
-const create = () => createInitialValues(FormFields)
-
 const schema = yup.object().shape({
   type: yup.string().matches(/^Boolean$/, { excludeEmptyString: true }).required(),
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 
-export const BooleanField = {
-  TYPE_NAME,
+export const BooleanWidget: Widget = {
+  TYPE_NAME: FieldType.Boolean,
   handleMockContent,
   handleMockConfig,
   MockConfigForm,
-  create,
+  create: () => new BooleanField(),
   Meta,
   schema,
   FormFields
 }
-
-export interface BooleanField extends yup.TypeOf<typeof schema> {}

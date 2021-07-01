@@ -1,7 +1,7 @@
-import { Widget } from '../widgets'
+import { FieldWidget } from '../widgets'
 import { SliceZone, SliceZoneAsArray } from './sliceZone'
-import { FieldType } from './fields'
-import { GroupAsArray, Group, GroupWidget, GroupFieldsAsArray } from './group'
+import { AbstractField, FieldType } from './fields'
+import { GroupAsArray, Group, GroupFieldsAsArray } from './group'
 
 export interface TabAsArray {
   key: string
@@ -9,10 +9,10 @@ export interface TabAsArray {
   sliceZone: SliceZoneAsArray | null
 }
 
-type TabAsArrayElement = {key: string, value: Widget} | GroupAsArray
+type TabAsArrayElement = {key: string, value: FieldWidget} | GroupAsArray
 export type TabValueAsArray = ReadonlyArray<TabAsArrayElement>
 
-type TabContentObject = Widget | SliceZone | GroupWidget
+type TabContentObject = FieldWidget | SliceZone | GroupWidget
 
 export type TabsAsArray = ReadonlyArray<TabAsArray>
 
@@ -25,7 +25,7 @@ export interface TabsAsObject {
 }
 
 interface OrganisedFields {
-  fields: ReadonlyArray<{key: string, value: Widget}>
+  fields: ReadonlyArray<{key: string, value: FieldWidget}>
   groups: ReadonlyArray<GroupAsArray>
   sliceZone?: SliceZone
 }
@@ -60,21 +60,21 @@ export const Tab = {
         if (value.type === FieldType.Group) {
           return [...acc, Group.toArray(fieldId, value as GroupWidget) as GroupAsArray]
         }
-        return [...acc, { key: fieldId, value: value as Widget }]
+        return [...acc, { key: fieldId, value: value as FieldWidget }]
       }, []),
       sliceZone: maybeSliceZone ? SliceZone.toArray(maybeSliceZone[0], maybeSliceZone[1] as SliceZone) : null
     }
   },
   toObject(tab: TabAsArray): TabAsObject {
     const tabAsObject = tab.value.reduce<TabAsObject>((acc: TabAsObject, { key, value }: TabAsArrayElement) => {
-      if (value.type === FieldType.Group) {
+      if (value.fields) {
         const groupValue = value as { type: string, label: string, fields: GroupFieldsAsArray }      
         return {
           ...acc,
-          [key]: Group.toObject({ key, value: { type: groupValue.type, fields: groupValue.fields } } as GroupAsArray)
+          [key]: Group.toObject({ key, type: groupValue.type, value: { label: '', fields: groupValue.fields } } as GroupAsArray)
         }
       } else {
-        const fieldValue = value as Widget
+        const fieldValue = value as FieldWidget
         return {
           ...acc,
           [key]: fieldValue
@@ -107,18 +107,18 @@ export const Tab = {
       }
     }
   },
-  addWidget(tab: TabAsArray, id: string, widget: Widget | GroupWidget): TabAsArray {
+  addWidget(tab: TabAsArray, id: string, widget: AbstractField): TabAsArray {
     const elem: TabAsArrayElement =
       widget.type === FieldType.Group
       ? Group.toArray(id, widget as GroupWidget)
-      : { key: id, value: widget } as {key: string, value: Widget}
+      : { key: id, value: widget } as {key: string, value: FieldWidget}
 
     return {
       ...tab,
       value: [...tab.value, elem]
     }
   },
-  replaceWidget(tab: TabAsArray, previousKey: string, newKey: string, value: Widget): TabAsArray {
+  replaceWidget(tab: TabAsArray, previousKey: string, newKey: string, value: FieldWidget): TabAsArray {
     return {
       ...tab,
       value: tab.value.map(t => {
@@ -133,7 +133,7 @@ export const Tab = {
     }
   },
   reorderWidget(tab: TabAsArray, start: number, end: number): TabAsArray {
-    const reorderedWidget: {key: string, value: Widget} | GroupAsArray | undefined = tab.value[start]
+    const reorderedWidget: {key: string, value: FieldWidget} | GroupAsArray | undefined = tab.value[start]
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
 
     const reorderedArea: TabValueAsArray = tab.value.reduce((acc: TabValueAsArray, widget: {key: string, value: Widget} | GroupAsArray, index: number) => {
@@ -178,14 +178,14 @@ export const Tab = {
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray('', tab)
     const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: TabAsArrayElement) => {
-      if (curr.value.type === FieldType.Group) {
+      if (curr.value.fields) {
         const groupValue = curr as GroupAsArray
         return {
           ...acc,
           groups: [...acc.groups, groupValue]
         }
       } else {
-        const fieldValue = curr as {key: string, value: Widget}
+        const fieldValue = curr as {key: string, value: FieldWidget}
         return {
           ...acc,
           fields: [...acc.fields, fieldValue]

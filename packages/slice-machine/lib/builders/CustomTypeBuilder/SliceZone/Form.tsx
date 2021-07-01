@@ -1,5 +1,5 @@
 import { FieldArray } from 'formik'
-import { Radio } from 'theme-ui'
+import { Checkbox } from 'theme-ui'
 import ModalFormCard from '../../../../components/ModalFormCard'
 import SliceState from '../../../models/ui/SliceState'
 
@@ -47,8 +47,8 @@ const Form = ({
                   renderSliceState(slice: SliceState) {
                     const isInSliceZone = values.sliceKeys.includes(slice.infos.meta.id)
                     return isInSliceZone ? (
-                      <Radio value="true" defaultChecked />
-                    ) : <Radio value="false" />
+                      <Checkbox value="true" defaultChecked />
+                    ) : <Checkbox value="false" />
                   }
                 }}
                 CardWrapper={({ slice, children }: { slice: SliceState, children: any }) => {

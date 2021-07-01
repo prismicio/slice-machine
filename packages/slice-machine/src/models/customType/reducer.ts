@@ -1,12 +1,16 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
-import { Tab } from '@models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
+import { Tab } from '../../../lib/models/common/CustomType/tab'
 
 import Actions from './actions'
-import { Widget } from '@models/common/widgets'
-import { Group, GroupWidget, GroupAsArray,} from '@models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray } from '@models/common/CustomType/sliceZone'
-import { CustomType } from '@lib/models/common/CustomType'
+import { FieldWidget, } from '../../../lib/models/common/widgets'
+import { Group, GroupAsArray,} from '../../../lib/models/common/CustomType/group'
+import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
+import { CustomType } from '../../../lib/models/common/CustomType'
+
+import { WidgetCanvas } from '../../../lib/models/common/widgets/Widget'
+
+import * as Widgets from '../../../lib/models/common/widgets/withGroup'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -45,16 +49,30 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         remoteCustomType: prevState.current
       }
       case Actions.AddWidget: {
-        const { tabId, widget, id } = action.payload as { tabId: string, widget: Widget | GroupWidget, id: string }
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, widget))
+        const { tabId, widget, id } = action.payload as { tabId: string, widget: FieldWidget, id: string }
+        try {
+          const Widget: WidgetCanvas = Widgets[widget.type]
+          Widget.schema.validateSync(widget)
+          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, widget))
+        } catch(err) {
+          console.error(`[store/addWidget] Model is invalid for widget "${widget.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case Actions.RemoveWidget: {
         const { tabId, id } = action.payload as { tabId: string, id: string }
         return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.removeWidget(tab, id))
       }
       case Actions.ReplaceWidget: {
-        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Widget | GroupAsArray }
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value as Widget))
+        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: FieldWidget }
+        try {
+          const Widget: WidgetCanvas = Widgets[value.type]
+          Widget.schema.validateSync(value)
+          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
+        } catch(err) {
+          console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case Actions.ReorderWidget: {
         const { tabId, start, end } = action.payload as { tabId: string, start: number, end: number }
@@ -120,12 +138,12 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         mockConfig: (action.payload as any)
       }
       case Actions.GroupAddWidget: {
-        const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: Widget }
+        const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: FieldWidget }
         return CustomTypeState.updateTab(prevState, tabId)
           (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
       }
       case Actions.GroupReplaceWidget: {
-        const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: Widget }
+        const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: FieldWidget }
         return CustomTypeState.updateTab(prevState, tabId)
           (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.replaceWidget(group, previousKey, newKey, value)))
       }

@@ -1,8 +1,9 @@
-import type { TypeOf } from 'yup'
 import { MdDateRange } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { SimpleWidget, Widget, WidgetType } from '../Widget'
 
 /** {
   "type" : "Date",
@@ -31,5 +32,4 @@ export const DateField = {
   Meta
 }
 
-
-export interface DateField extends TypeOf<typeof schema> {}
+export interface DateField extends Widget<FieldType.Date, SimpleWidget> {}

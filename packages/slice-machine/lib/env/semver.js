@@ -1,4 +1,3 @@
-import path from 'path'
 import semver from 'semver'
 import Files from '../utils/files'
 import { YarnLock } from '../models/paths'
@@ -17,7 +16,7 @@ async function fetchJsonPackage(packageName) {
   try {
     const response = await fetch(`https://unpkg.com/${packageName}/package.json`);
     if (response.status !== 200) {
-      throw new Error(`[scripts/bundle] Unable to fetch JSON package for packahe "${packageName}"`);
+      throw new Error(`[scripts/bundle] Unable to fetch JSON package for package "${packageName}"`);
     }
     return await response.json();
   } catch(e) {

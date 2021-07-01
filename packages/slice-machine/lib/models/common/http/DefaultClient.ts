@@ -1,6 +1,6 @@
 import path from 'path'
-import { maybeJsonFile } from '../../../utils'
 import upload from './upload'
+import Files from '../../../utils/files'
 
 interface ApiSettings {
   STAGE: string
@@ -58,7 +58,16 @@ export default class DefaultClient {
   aclFetcher: (prefix: string, body?: object | string, action?: string, method?: string) => Promise<Response>
 
   constructor(readonly cwd: string, readonly base: string, readonly repo: string, readonly auth: string) {
-    const devConfig = cwd ? maybeJsonFile(path.join(cwd, 'sm.dev.json')) : {}
+    const devConfig = (() => {
+      if (!cwd) {
+        return {}
+      }
+      try {
+        return Files.readJson(path.join(cwd, 'sm.dev.json'))
+      } catch(e) {
+        return {}
+      }
+    })();
 
     this.apiFetcher = initFetcher(base, SharedSlicesApi, devConfig.sharedSlicesApi, repo, auth)
     this.aclFetcher = initFetcher(base, AclProviderApi, devConfig.aclProviderApi, repo, auth)

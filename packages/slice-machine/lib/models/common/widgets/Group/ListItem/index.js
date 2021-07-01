@@ -4,6 +4,8 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Button } from "theme-ui";
 
+import { ensureDnDDestination, ensureWidgetTypeExistence } from 'lib/utils'
+
 import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";
 import EditModal from "lib/builders/common/EditModal";
@@ -66,6 +68,9 @@ const CustomListItem = ({
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (ensureWidgetTypeExistence(Widgets, value.type)) {
+      return
+    }
     if (mockValue) {
       store
         .updateWidgetGroupMockConfig(
@@ -79,14 +84,6 @@ const CustomListItem = ({
       store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, previousKey)
     }
 
-    const widget = Widgets[value.type]
-    if (!widget) {
-      console.log(
-        `Could not find widget with type name "${value.type}". Please contact us!`
-      )
-      return
-    }
-
     store
       .tab(tabId)
       .group(groupItem.key)
@@ -94,13 +91,7 @@ const CustomListItem = ({
   };
 
   const onDragEnd = (result) => {
-    if (
-      !result.destination ||
-      result.source.index === result.destination.index
-    ) {
-      return
-    }
-    if (result.source.droppableId !== result.destination.droppableId) {
+    if (ensureDnDDestination(result)) {
       return
     }
     store

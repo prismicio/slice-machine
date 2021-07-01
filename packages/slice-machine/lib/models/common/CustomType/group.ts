@@ -1,31 +1,19 @@
-import { Widget } from '../widgets'
-import { FieldType } from './fields'
-// import { Group as GroupWidget } from '../widgets/Group'
-// import { FieldType } from './fields'
+import { FieldWidget } from '../widgets'
+import { Group as GroupWidget } from '../widgets/Group'
 
-export type GroupFieldsAsArray = ReadonlyArray<{key: string, value: Widget }>
-
-export interface GroupWidget {
-  type: string
-  config: {
-    fields: {
-      [key: string]: Widget
-    }
-    label: string
-  }
-}
+export type GroupFieldsAsArray = ReadonlyArray<{key: string, value: FieldWidget }>
 
 export interface GroupAsArray {
   key: string,
+  type: string
   value: {
-    type: string,
     label: string,
     fields: GroupFieldsAsArray
   }
 }
 
 export const Group = {
-  addWidget(group: GroupAsArray, newField: { key: string, value: Widget }): GroupAsArray {
+  addWidget(group: GroupAsArray, newField: { key: string, value: FieldWidget }): GroupAsArray {
     return {
       ...group,
       value: {
@@ -44,7 +32,7 @@ export const Group = {
     }
   },
   reorderWidget(group: GroupAsArray, start: number, end: number): GroupAsArray {
-    const reorderedWidget: {key: string, value: Widget} | undefined = group.value.fields[start]
+    const reorderedWidget: { key: string, value: FieldWidget } | undefined = group.value.fields[start]
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
 
     const reorderedArea = group.value.fields.reduce<GroupFieldsAsArray>((acc, widget, index) => {
@@ -63,7 +51,7 @@ export const Group = {
       }
     }
   },
-  replaceWidget(group: GroupAsArray, previousKey: string, newKey: string, value: Widget): GroupAsArray {
+  replaceWidget(group: GroupAsArray, previousKey: string, newKey: string, value: FieldWidget): GroupAsArray {
     return {
       ...group,
       value: {
@@ -83,8 +71,8 @@ export const Group = {
   toArray(key: string, group: GroupWidget): GroupAsArray {
     return {
       key,
+      type: group.type,
       value: {
-        type: group.type,
         ...group.config,
         fields: Object.entries(group.config.fields).map(([key, value]) => ({ key, value }))
       }
@@ -94,6 +82,7 @@ export const Group = {
     return {
       type: FieldType.Group,
       config: {
+        placeholder: '',
         ...group.value,
         fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
       }

@@ -1,13 +1,28 @@
 export enum FieldType {
-  SliceZone = 'Slices',
-  Slice = 'Slice',
-  SharedSlice = 'SharedSlice',
+  Boolean = 'Boolean',
+  GeoPoint = 'GeoPoint',
+  Select = 'Select',
+  Color = 'Color',
   Group = 'Group',
-  Uid = 'UID',
+  StructuredText = 'StructuredText',
+  ContentRelationship = 'ContentRelationship',
+  Image = 'Image',
+  Text = 'Text',
+  Date = 'Date',
+  Link = 'Link',
+  Timestamp = 'Timestamp',
+  Embed = 'Embed',
+  Number = 'Number',
+  UID = 'UID'
 }
 
-export interface Field {
+export interface BaseConfig { label: string }
+
+export interface SimpleField extends BaseConfig {
+  placeholder: string
+}
+
+export interface AbstractField {
   type: FieldType
+  config: BaseConfig
 }
-
-

@@ -1,8 +1,9 @@
-import type { TypeOf } from 'yup'
 import { MdPlace } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { SimpleWidget, Widget, WidgetType } from '../Widget'
 
 /** : {
   "type" : "GeoPoint",
@@ -30,4 +31,4 @@ export const GeoPoint = {
   Meta
 }
 
-export interface GeoPoint extends TypeOf<typeof schema> {}
+export interface GeoPoint extends Widget<FieldType.GeoPoint, SimpleWidget> {}

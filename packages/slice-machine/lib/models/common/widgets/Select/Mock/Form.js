@@ -23,7 +23,7 @@ const Form = () => {
 
   const options = [
     RAND,
-    ...values.options
+    ...values.config.options
   ]
 
   return (

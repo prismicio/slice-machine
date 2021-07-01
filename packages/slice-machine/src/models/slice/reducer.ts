@@ -3,7 +3,10 @@ import { Variation, AsArray } from '../../../lib/models/common/Variation'
 import SliceState from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
 import { ComponentMetadata, Preview } from '../../../lib/models/common/Component'
-import { Widget } from '../../../lib/models/common/widgets'
+import { FieldWidget } from '../../../lib/models/common/widgets'
+import { WidgetCanvas } from '../../../lib/models/common/widgets/Widget'
+
+import * as Widgets from '../../../lib/models/common/widgets'
 
 import {
   ActionType as VariationActions,
@@ -89,12 +92,26 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         }
       }
       case VariationActions.AddWidget: {
-        const { variationId, widgetsArea, key, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, key: string, value: Widget }
-        return SliceState.updateVariation(prevState, variationId)(v => Variation.addWidget(v, widgetsArea, key, value))
+        const { variationId, widgetsArea, key, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, key: string, value: FieldWidget }
+        try {
+          const Widget: WidgetCanvas = Widgets[value.type]
+          Widget.schema.validateSync(value)
+          return SliceState.updateVariation(prevState, variationId)(v => Variation.addWidget(v, widgetsArea, key, value))
+        } catch(err) {
+          console.error(`[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case VariationActions.ReplaceWidget: {
-        const { variationId, widgetsArea, previousKey, newKey, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget }
-        return SliceState.updateVariation(prevState, variationId)(v => Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value))
+        const { variationId, widgetsArea, previousKey, newKey, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: FieldWidget }
+        try {
+          const Widget = Widgets[value.type]
+          Widget.schema.validateSync(value)
+          return SliceState.updateVariation(prevState, variationId)(v => Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value))
+        } catch(err) {
+          console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case VariationActions.ReorderWidget: {
         const { variationId, widgetsArea, start, end } = action.payload as { variationId: string, widgetsArea: WidgetsArea, start: number, end: number }

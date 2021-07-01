@@ -6,6 +6,9 @@ import { MdSettingsEthernet } from "react-icons/md";
 
 import { createInitialValues } from "../../../../forms";
 
+import { Widget } from '../Widget'
+import { FieldType } from "../../CustomType/fields";
+
 /**
  * {
       "type": "Link",
@@ -18,8 +21,6 @@ import { createInitialValues } from "../../../../forms";
       }
     }
 */
-
-const TYPE_NAME = "Link";
 
 const Meta = {
   icon: MdSettingsEthernet,
@@ -36,27 +37,23 @@ const create = () => ({
 });
 
 const configSchema = yup.object().shape({
+  label: yup.string().required(),
   select: yup.string().matches(/document/),
   customtypes: yup.array(yup.string()).optional(),
 });
 
 const schema = yup.object().shape({
-  type: yup
-    .string()
-    .matches(/^Link$/, { excludeEmptyString: true })
-    .required(),
-  label: yup.string().optional(),
+  type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
   config: configSchema,
 });
 
-export const ContentRelationship = {
+export const ContentRelationship: Widget = {
   create,
   Meta,
   schema,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.ContentRelationship,
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
-};
+}
 
-export interface ContentRelationship extends yup.TypeOf<typeof schema> {}

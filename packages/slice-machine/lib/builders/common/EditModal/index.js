@@ -75,7 +75,6 @@ const EditModal = ({
     ),
   }
 
-  console.log(widgetSchema)
   const validationSchema = yup.object().shape({
     id: yup.string().matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/).min(3).max(35).required(),
     config: widgetSchema.fields.config
@@ -118,10 +117,6 @@ const EditModal = ({
           const updatedValue = {
             ...initialModelValues,
             ...value,
-            config: {
-              ...initialModelValues.config,
-              ...value.config
-            }
           }
 
           onSave({ apiId, newKey, value: updatedValue, mockValue: definitiveMockValue })
@@ -136,7 +131,6 @@ const EditModal = ({
                 label,
               },
             },
-            errors,
             isValid,
             isSubmitting,
             initialValues,

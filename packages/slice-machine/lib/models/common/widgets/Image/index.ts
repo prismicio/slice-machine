@@ -12,6 +12,8 @@ import { removeProp } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
+import { SimpleWidget, Widget, WidgetType } from '../Widget'
+
 /** 
  * {
     "type": "Image",
@@ -32,7 +34,7 @@ import { MockConfigForm } from './Mock/Form'
   } */
 
 const create = () => ({
-  ...createInitialValues(FormFields),
+  ...createInitialValues(removeProp(FormFields, 'id')),
   constraint: {},
   thumbnails: [],
 })
@@ -62,4 +64,11 @@ export const Image = {
   TYPE_NAME: 'Image'
 }
 
-export interface Image extends yup.TypeOf<typeof schema> {}
+interface Constraint { height?: number, width?: number }
+
+export interface Image extends Widget<FieldType.Image, {
+  label: string,
+  placeholder: string,
+  constraint: Constraint
+  thumbnails: ReadonlyArray<Constraint>
+}> {}

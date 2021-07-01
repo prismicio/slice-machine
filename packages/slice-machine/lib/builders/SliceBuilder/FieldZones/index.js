@@ -1,7 +1,9 @@
 import { Fragment } from 'react'
-import Zone from '../../common/Zone'
 import { Box } from 'theme-ui'
 
+import { ensureDnDDestination } from 'lib/utils'
+
+import Zone from '../../common/Zone'
 import EditModal from '../../common/EditModal'
 
 import * as Widgets from 'lib/models/common/widgets'
@@ -67,7 +69,7 @@ const Zones = ({
   }
 
   const _onDragEnd = (fieldType) => (result) => {
-    if (!result.destination || result.source.index === result.destination.index) {
+    if (ensureDnDDestination(result)) {
       return
     }
     store

@@ -1,8 +1,12 @@
-import type { TypeOf } from 'yup'
 import { MdColorLens } from 'react-icons/md'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockContent, handleMockConfig } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { Widget } from '../Widget'
+
+import { FieldType, SimpleField } from '../../CustomType/fields'
+import { ColorField } from '../types'
 
 /** {
   "type" : "Color",
@@ -17,9 +21,9 @@ const Meta = {
   description: 'A color picker'
 }
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Color')
+const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues(FieldType.Color)
 
-export const Color = {
+export const Color: Widget<ColorField, typeof schema> = {
   handleMockContent,
   handleMockConfig,
   create,
@@ -29,5 +33,3 @@ export const Color = {
   schema,
   Meta
 }
-
-export interface Color extends TypeOf<typeof schema> {}

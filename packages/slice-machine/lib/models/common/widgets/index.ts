@@ -31,7 +31,7 @@ export {
 }
 
 
-export type Widget =  BooleanField  |
+export type FieldWidget =  BooleanField  |
                       Color         |
                       DateField          |
                       Embed             |

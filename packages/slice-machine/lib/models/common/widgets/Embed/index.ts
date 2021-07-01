@@ -1,8 +1,9 @@
-import type { TypeOf } from 'yup'
 import { FiCode } from 'react-icons/fi'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { SimpleWidget, Widget, WidgetType } from '../Widget'
 
 /**  {
   "type" : "Embed",
@@ -31,4 +32,4 @@ export const Embed = {
   Meta
 }
 
-export interface Embed extends TypeOf<typeof schema> {}
+export interface Embed extends Widget<FieldType.Embed, SimpleWidget> {}

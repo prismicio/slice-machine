@@ -12,6 +12,8 @@ import FormFields from './FormFields'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
+import { Widget, WidgetType } from '../Widget'
+
 /**
  * {
       "type" : "Select",
@@ -25,7 +27,7 @@ import { MockConfigForm } from './Mock/Form'
 
 const TYPE_NAME = 'Select'
 
-const create = () => createInitialValues(FormFields)
+const create = () => createInitialValues(removeProp(FormFields, 'id'))
 
 const Meta = {
   icon: MdDns,
@@ -49,4 +51,9 @@ export const Select = {
   TYPE_NAME
 }
 
-export interface Select extends yup.TypeOf<typeof schema> {}
+export interface Select extends Widget<FieldType.Select, {
+  label: string,
+  placeholder: string,
+  options: ReadonlyArray<string>
+  default_value: string
+}> {}

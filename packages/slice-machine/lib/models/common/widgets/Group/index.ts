@@ -2,6 +2,9 @@ import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import  { MdPlaylistAdd } from 'react-icons/md'
 
+import { FieldWidget } from '../'
+import { Widget, WidgetType } from '../Widget'
+
 import CustomListItem from './ListItem'
 
 const create = () => ({ label: '', placeholder: '', fields: {} })
@@ -31,4 +34,8 @@ export const Group = {
   TYPE_NAME: 'Group'
 }
 
-export interface Group extends yup.TypeOf<typeof schema> {}
+export interface Group extends Widget<FieldType.Group, {
+  label: string,
+  placeholder: string,
+  fields: { [id: string]: FieldWidget }
+}> {}

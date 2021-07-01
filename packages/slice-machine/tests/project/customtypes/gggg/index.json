@@ -5,22 +5,13 @@
   "repeatable": true,
   "json": {
     "Main": {
-      "group": {
-        "type": "Group",
+      "ddd": {
+        "type": "Image",
         "config": {
-          "type": "Group",
-          "fields": {
-            "ddddaaaa": {
-              "type": "StructuredText",
-              "config": {
-                "label": "",
-                "id": "",
-                "placeholder": "",
-                "allowTargetBlank": true,
-                "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-              }
-            }
-          }
+          "id": "",
+          "label": "",
+          "constraint": {},
+          "thumbnails": []
         }
       },
       "apiId": {
@@ -41,13 +32,22 @@
           "id": ""
         }
       },
-      "ddd": {
-        "type": "Image",
+      "group": {
+        "type": "Group",
         "config": {
-          "id": "",
-          "label": "",
-          "constraint": {},
-          "thumbnails": []
+          "type": "Group",
+          "fields": {
+            "ddddaaaa": {
+              "type": "StructuredText",
+              "config": {
+                "label": "",
+                "id": "",
+                "placeholder": "",
+                "allowTargetBlank": true,
+                "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+              }
+            }
+          }
         }
       },
       "MainSliceZone": {
@@ -62,6 +62,12 @@
               "type": "SharedSlice"
             },
             "call_to_action2": {
+              "type": "SharedSlice"
+            },
+            "cards_carousel": {
+              "type": "SharedSlice"
+            },
+            "pricing_table": {
               "type": "SharedSlice"
             }
           }

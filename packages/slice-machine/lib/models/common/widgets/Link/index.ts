@@ -5,6 +5,8 @@ import { createInitialValues } from '../../../../forms'
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+import { removeProp } from '../../../../utils'
+import { Widget, WidgetType } from '../Widget'
 
 /**
 * {
@@ -53,7 +55,7 @@ import { MockConfigForm } from './Mock/Form'
   */
 
 const create = () => ({
-  ...createInitialValues(FormFields),
+  ...createInitialValues(removeProp(FormFields, 'id')),
   allowTargetBlank: true,
 })
 
@@ -76,7 +78,6 @@ const linkConfigSchema = yup.object().shape({
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
-  fieldset: yup.string().optional(),
   config: linkConfigSchema.optional()
 })
 
@@ -92,4 +93,19 @@ export const Link = {
   TYPE_NAME: 'Link'
 }
 
-export interface Link extends yup.TypeOf<typeof schema> {}
+enum Media {
+  media = 'media',
+  document = 'document',
+  web = 'web'
+}
+
+export interface Link extends Widget<FieldType.Link, {
+  label: string,
+  useAsTitle: boolean,
+  placeholder: string,
+  select: Media,
+  customtypes: ReadonlyArray<string>,
+  masks: ReadonlyArray<string>,
+  tags: ReadonlyArray<string>,
+  allowTargetBlank: boolean
+}> {}
