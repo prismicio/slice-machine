@@ -50,7 +50,7 @@ export async function handler(
       
       const variationIds = jsonModel.variations.map((v: Variation<AsObject>) => v.id)
       
-      let imageUrlsByVariation: { [variationId: string]: string } = {}
+      let imageUrlsByVariation: { [variationId: string]: string | null } = {}
 
       for(let i = 0; i < variationIds.length; i += 1) {
         const variationId = variationIds[i]
@@ -61,7 +61,8 @@ export async function handler(
           if(err) throw new Error(err.reason)
           imageUrlsByVariation[variationId] = s3ImageUrl
         } else {
-          throw new Error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+          console.error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+          imageUrlsByVariation[variationId] = null
         }
       }
   
