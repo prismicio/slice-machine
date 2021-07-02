@@ -79,8 +79,10 @@ export async function handler(
     const generatedPreviews = await Previews.generateForSlice(env, from, sliceName)
 
     const failedPreviewsIds = generatedPreviews.filter(p => !p.hasPreview).map(p => p.variationId)
+
+    const mergedPreviews = Previews.mergeWithCustomScreenshots(generatedPreviews, env, from, sliceName)
     
-    generatedPreviews.forEach(p => {
+    mergedPreviews.forEach(p => {
       if(!p.hasPreview) {
         const noPreview = p as { variationId: string, error: Error, hasPreview: boolean }
         warning = noPreview.error.message

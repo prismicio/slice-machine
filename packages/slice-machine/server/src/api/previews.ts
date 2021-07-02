@@ -4,10 +4,13 @@ import { Preview } from '../../../lib/models/common/Component'
 import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
 import { createScreenshotUrl } from '../../../lib/utils'
 import { handleStorybookPreview } from './common/storybook'
+import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+
+type Previews = ReadonlyArray<{ variationId: string, hasPreview: boolean, error: Error } | Preview>
 
 export default {
   async generateForSlice(env: Environment, libraryName: string, sliceName: string): Promise<ReadonlyArray<{ variationId: string, error: Error, hasPreview: boolean } | Preview>> {
-    let result: ReadonlyArray<{ variationId: string, hasPreview: boolean, error: Error } | Preview> = []
+    let result: Previews = []
 
     const model = Files.readJson(CustomPaths(env.cwd).library(libraryName).slice(sliceName).model())
     for(let i = 0; i < model.variations.length; i += 1) {
@@ -37,5 +40,20 @@ export default {
       hasPreview: true,
       url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(pathToFile)}&uniq=${Math.random()}`
     }
+  },
+
+  mergeWithCustomScreenshots(previewUrls: Previews, env: Environment, from: string, sliceName: string) {
+    return previewUrls.map(p => {
+      const maybePreviewPath = getPathToScreenshot({ cwd: env.cwd, from, sliceName, variationId: p.variationId })
+      if (maybePreviewPath?.isCustom) {
+        return {
+          variationId: p.variationId,
+          isCustomPreview: true,
+          hasPreview: true,
+          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(maybePreviewPath.path)}&uniq=${Math.random()}`
+        }
+      }
+      return p
+    })
   }
 }

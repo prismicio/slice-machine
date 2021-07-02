@@ -24,7 +24,7 @@ export default async function handler(query: { id: string }) {
   const state = await fetchState()
 
   if (state.clientError || state.isFake) {
-    const message = '[custom-types/push] Could not fetch remotes custom types.'
+    const message = '[custom-types/push] Could not fetch remotes custom types. Are you logged in?'
     return {
       err: new Error(message),
       reason: message,
