@@ -1,14 +1,13 @@
 import path from 'path'
 import glob from 'glob'
 import Environment from '../../../../lib/models/common/Environment'
-import { CustomType } from '../../../../lib/models/common/CustomType'
-import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
+import { CustomType, ObjectTabs } from '../../../../lib/models/common/CustomType'
 import Files from '../../../../lib/utils/files'
 // import { acceptedImagesTypes } from '../../../../lib/consts'
 import { CustomTypesPaths } from '../../../../lib/models/paths'
 
 const handleMatch = (matches: string[], env: Environment) => {
-  return matches.reduce((acc: Array<CustomType<TabsAsObject>>, p: string) => {
+  return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
     const key = path.basename(path.dirname(p))
     const pathTopreview = path.join(path.dirname(p), 'index.png')
     try {
@@ -22,7 +21,7 @@ const handleMatch = (matches: string[], env: Environment) => {
           previewUrl: Files.exists(pathTopreview)
             ? `${env.baseUrl}/api/__preview?q=${encodeURIComponent(path.join(path.dirname(p), 'index.png'))}&uniq=${Math.random()}`
             : null
-        } as CustomType<TabsAsObject>
+        } as CustomType<ObjectTabs>
       ]
     } catch (e) {
       return acc
@@ -56,7 +55,7 @@ const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
   }
 }
 
-export default async function handler(env: Environment): Promise<{ isFake: boolean, customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
+export default async function handler(env: Environment): Promise<{ isFake: boolean, customTypes: ReadonlyArray<CustomType<ObjectTabs>>, remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>> }> {
   const { cwd } = env
   const pathToCustomTypes = CustomTypesPaths(cwd).value()
   const folderExists = Files.exists(pathToCustomTypes)

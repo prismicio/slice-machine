@@ -62,10 +62,7 @@ const Zones = ({
     }
     store
       .variation(variation.id)
-      .addWidget(fieldType, id, {
-        type: widget.TYPE_NAME,
-        config: widget.create()
-      })
+      .addWidget(fieldType, id, widget.create())
   }
 
   const _onDragEnd = (fieldType) => (result) => {

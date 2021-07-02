@@ -1,6 +1,12 @@
-import { Tab } from "./tab";
-import { TabsAsArray, TabsAsObject } from "./tab";
-import { SliceZoneAsArray } from './sliceZone'
+import { Tab, TabAsArray, TabAsObject } from './tab'
+import { SliceZone, SliceZoneAsArray } from './sliceZone'
+import { Field } from './fields'
+
+export type ObjectTabs = {
+  [key: string]: TabAsObject
+}
+
+export type ArrayTabs = ReadonlyArray<TabAsArray>
 
 export interface SeoTab {
   label: string;
@@ -12,10 +18,12 @@ export interface CustomTypeJsonModel {
   status: boolean;
   repeatable: boolean;
   label: string;
-  json: TabsAsObject;
+  json: {
+    [key: string]: Field | SliceZone
+  };
 }
 
-export interface CustomType<T extends TabsAsArray | TabsAsObject> {
+export interface CustomType<T extends ObjectTabs | ArrayTabs> {
   id: string;
   status: boolean;
   repeatable: boolean;
@@ -25,15 +33,13 @@ export interface CustomType<T extends TabsAsArray | TabsAsObject> {
 }
 
 export const CustomType = {
-  toArray(ct: CustomType<TabsAsObject>): CustomType<TabsAsArray> {
+  toArray(ct: CustomType<ObjectTabs>): CustomType<ArrayTabs> {
     return {
       ...ct,
-      tabs: Object.entries(ct.tabs).map(([key, value]) =>
-        Tab.toArray(key, value)
-      ),
+      tabs: Object.entries(ct.tabs).map(([key, value]) => Tab.toArray(key, value)),
     }
   },
-  toObject(ct: CustomType<TabsAsArray>): CustomType<TabsAsObject> {
+  toObject(ct: CustomType<ArrayTabs>): CustomType<ObjectTabs> {
     return {
       ...ct,
       tabs: ct.tabs.reduce((acc, tab) => {
@@ -44,14 +50,20 @@ export const CustomType = {
       }, {}),
     }
   },
-  toJsonModel(ct: CustomType<TabsAsObject>): CustomTypeJsonModel {
+  toJsonModel(ct: CustomType<ObjectTabs>): CustomTypeJsonModel {
     const { tabs, previewUrl, ...rest } = ct
     return {
       ...rest,
-      json: ct.tabs
+      json: Object.entries(ct.tabs).reduce((acc, [key, tab]) => {
+        return {
+          ...acc,
+          [key]: tab.value
+        }
+
+      }, {})
     }
   },
-  getSliceZones(ct: CustomType<TabsAsArray>): ReadonlyArray<SliceZoneAsArray | null> {
+  getSliceZones(ct: CustomType<ArrayTabs>): ReadonlyArray<SliceZoneAsArray | null> {
     return ct.tabs.map(t => t.sliceZone)
   }
 };

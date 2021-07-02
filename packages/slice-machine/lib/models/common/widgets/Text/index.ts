@@ -3,6 +3,8 @@ import { MdTitle } from 'react-icons/md'
 import { MockConfigForm } from './Mock/Form'
 import { handleMockConfig, handleMockContent } from './Mock'
 
+import { TextField } from '../types'
+
 /**
 * {
      "type": "Text",
@@ -16,13 +18,11 @@ import { handleMockConfig, handleMockContent } from './Mock'
 
 import { removeProp } from '../../../../utils'
 import { DefaultFields } from "../../../../forms/defaults"
-import { createInitialValues, createValidationSchema } from "../../../../forms"
-
-const TYPE_NAME = 'Text'
+import { createValidationSchema } from "../../../../forms"
+import { Widget } from '../Widget'
+import { FieldType } from '../../CustomType/fields'
 
 const FormFields = DefaultFields
-
-const create = () => createInitialValues(FormFields)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Text$/, { excludeEmptyString: true }).required(),
@@ -35,15 +35,13 @@ const Meta = {
   description: 'Text content'
 }
 
-export const Text = {
-  create,
+export const Text: Widget<TextField, typeof schema> = {
+  create: () => new TextField(),
   MockConfigForm,
   handleMockConfig,
   handleMockContent,
   Meta,
   schema,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.Text,
   FormFields
 }
-
-export interface Text extends yup.TypeOf<typeof schema> {}

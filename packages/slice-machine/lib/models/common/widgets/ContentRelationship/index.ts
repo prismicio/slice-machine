@@ -1,13 +1,11 @@
 import * as yup from "yup";
 import Form, { FormFields } from "./Form";
-import { DefaultFields } from "lib/forms/defaults";
 
 import { MdSettingsEthernet } from "react-icons/md";
 
-import { createInitialValues } from "../../../../forms";
-
 import { Widget } from '../Widget'
 import { FieldType } from "../../CustomType/fields";
+import { ContentRelationshipField } from "../types";
 
 /**
  * {
@@ -28,16 +26,8 @@ const Meta = {
   description: "Define content relations & internal links",
 };
 
-const create = () => ({
-  ...createInitialValues({
-    label: DefaultFields.label,
-  }),
-  select: "document",
-  customtypes: [],
-});
-
 const configSchema = yup.object().shape({
-  label: yup.string().required(),
+  label: yup.string().max(35, 'String is too long. Max: 35'),
   select: yup.string().matches(/document/),
   customtypes: yup.array(yup.string()).optional(),
 });
@@ -47,8 +37,8 @@ const schema = yup.object().shape({
   config: configSchema,
 });
 
-export const ContentRelationship: Widget = {
-  create,
+export const ContentRelationship: Widget<ContentRelationshipField, typeof schema> = {
+  create: () => new ContentRelationshipField(),
   Meta,
   schema,
   TYPE_NAME: FieldType.ContentRelationship,

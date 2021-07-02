@@ -1,4 +1,4 @@
-import { Widget } from './widgets'
+import { Field } from './CustomType/fields'
 
 import camelCase from 'lodash/camelCase'
 
@@ -19,9 +19,9 @@ export interface Variation<F extends AsArray | AsObject> {
     readonly items: F
 }
 
-export type AsArray = ReadonlyArray<{key: string, value: Widget}>
+export type AsArray = ReadonlyArray<{key: string, value: Field}>
 
-export type AsObject = { [key: string]: Widget }
+export type AsObject = { [key: string]: Field }
 
 export const Variation = {
   generateId(str: string): string {
@@ -45,7 +45,7 @@ export const Variation = {
   },
 
   reorderWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, start: number, end: number): Variation<AsArray> {
-    const reorderedWidget: {key: string, value: Widget} | undefined = variation[widgetsArea][start]
+    const reorderedWidget: {key: string, value: Field} | undefined = variation[widgetsArea][start]
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}. the list of widgets contains only ${variation[widgetsArea].length} elements.`)
 
     const reorderedArea = variation[widgetsArea].reduce<AsArray>((acc, widget, index) => {
@@ -62,7 +62,7 @@ export const Variation = {
     }
   },
 
-  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, newValue: Widget): Variation<AsArray> { 
+  replaceWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, previousKey: string, newKey: string, newValue: Field): Variation<AsArray> { 
     return {
       ...variation,
       [widgetsArea]: variation[widgetsArea].reduce((acc: AsArray, { key, value }) => {
@@ -75,7 +75,7 @@ export const Variation = {
     }
   },
 
-  addWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, key: string, value: Widget): Variation<AsArray> {
+  addWidget(variation: Variation<AsArray>, widgetsArea: WidgetsArea, key: string, value: Field): Variation<AsArray> {
     return {
       ...variation,
       [widgetsArea]: variation[widgetsArea].concat([{ key, value }])

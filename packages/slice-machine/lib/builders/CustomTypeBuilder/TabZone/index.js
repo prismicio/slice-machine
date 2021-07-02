@@ -49,10 +49,7 @@ const TabZone = ({
     const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
-      .addWidget(id, {
-        type: widget.TYPE_NAME,
-        config: widget.create()
-      })
+      .addWidget(id, widget.create())
   }
 
   const onDragEnd = (result) => {
@@ -134,7 +131,6 @@ const TabZone = ({
       />
       <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
         {(props) => {
-          console.log({ tabProps: props })
           return (
             <div>hello</div>
           )

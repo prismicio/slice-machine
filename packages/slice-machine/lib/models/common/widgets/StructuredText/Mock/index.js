@@ -82,7 +82,6 @@ const createMockFromConfig = (blocksLen, pattern, loremConfig) => {
 }
 
 export const handleMockConfig = (mockConfigValues, fieldConfig) => {
-  console.log({ fieldConfig })
   const options = (fieldConfig.multi || fieldConfig.single).split(',')
   const patternType = mockConfigValues ? mockConfigValues.patternType : null
   const patternObj = Patterns[patternType] || findMatchingPattern(options)
@@ -95,7 +94,6 @@ export const handleMockContent = (mockContent, fieldConfig) => {
   if (Array.isArray(mockContent) && mockContent.length && typeof mockContent[0] === 'object') {
     return mockContent
   }
-  console.log({ fieldConfig, h: true })
   const options = (fieldConfig.single || fieldConfig.multi).split(',')
   return [{
     type: options.find(isHeading) || 'paragraph',

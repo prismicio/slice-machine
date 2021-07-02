@@ -1,5 +1,6 @@
-import { CustomType } from '../common/CustomType'
-import { TabsAsArray, TabAsArray, TabValueAsArray } from '../common/CustomType/tab'
+import { ArrayTabs, CustomType } from '../common/CustomType'
+import { Field } from '../common/CustomType/fields'
+import { TabAsArray } from '../common/CustomType/tab'
 
 export enum CustomTypeStatus {
   New = "NEW_CT",
@@ -7,13 +8,15 @@ export enum CustomTypeStatus {
   Synced = 'SYNCED',
 }
 
+type PoolOfFields = ReadonlyArray<{key: string, value: Field}>
+
 export interface CustomTypeState {
-  current: CustomType<TabsAsArray>,
-  initialCustomType: CustomType<TabsAsArray>,
-  remoteCustomType: CustomType<TabsAsArray> | undefined
+  current: CustomType<ArrayTabs>,
+  initialCustomType: CustomType<ArrayTabs>,
+  remoteCustomType: CustomType<ArrayTabs> | undefined
   mockConfig: any
   initialMockConfig: any
-  poolOfFieldsToCheck: TabValueAsArray
+  poolOfFieldsToCheck: PoolOfFields
   isTouched?: boolean
   __status?: CustomTypeStatus
 }
@@ -52,8 +55,8 @@ export const CustomTypeState = {
       }
     }
   },
-  getPool(tabs: TabsAsArray):TabValueAsArray {
-    return tabs.reduce((acc: TabValueAsArray, curr: TabAsArray) => {
+  getPool(tabs: ArrayTabs): PoolOfFields {
+    return tabs.reduce<PoolOfFields>((acc: PoolOfFields, curr: TabAsArray) => {
       return [...acc, ...curr.value]
     }, [])
   }

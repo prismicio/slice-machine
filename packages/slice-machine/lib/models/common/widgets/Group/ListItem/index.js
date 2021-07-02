@@ -61,10 +61,7 @@ const CustomListItem = ({
     store
       .tab(tabId)
       .group(groupItem.key)
-      .addWidget(id, {
-        type: widget.TYPE_NAME,
-        config: widget.create(),
-      });
+      .addWidget(id, widget.create())
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
@@ -107,11 +104,7 @@ const CustomListItem = ({
 
   const enterEditMode = (field) => {
     setEditModalData({ isOpen: true, field })
-  };
-
-  console.log({
-    groupItem
-  })
+  }
 
   return (
     <Fragment>
@@ -138,9 +131,7 @@ const CustomListItem = ({
                   {(provided) => (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
                       {groupItem.value.config.fields.map((item, index) => {
-                        const {
-                          value: { config, type },
-                        } = item;
+                        const { value: { config, type } } = item
                         const widget = findWidgetByConfigOrType(
                           Widgets,
                           config,
@@ -184,7 +175,7 @@ const CustomListItem = ({
                       {newFieldData && (
                         <NewField
                           {...newFieldData}
-                          fields={groupItem.value.fields || []}
+                          fields={groupItem.value.config.fields || []}
                           onSave={(...args) => {
                             onSaveNewField(...args);
                             setNewFieldData(null);
@@ -211,7 +202,7 @@ const CustomListItem = ({
         data={editModalData}
         close={closeEditModal}
         onSave={onSaveField}
-        fields={groupItem.value.fields}
+        fields={groupItem.value.config.fields}
         getFieldMockConfig={getFieldMockConfig}
       />
     </Fragment>

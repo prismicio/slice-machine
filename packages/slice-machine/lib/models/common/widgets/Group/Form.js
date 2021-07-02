@@ -9,10 +9,7 @@ const FormFields = { ...DefaultFields }
 
 const Form = (props) => {
   const { initialValues, fields, } = props
-  console.log({
-    initialValues,
-    fields,
-  })
+
   return (
     <FlexGrid>
       {

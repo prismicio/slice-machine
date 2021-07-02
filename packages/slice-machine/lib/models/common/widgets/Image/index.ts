@@ -2,17 +2,16 @@ import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import { BsImage } from 'react-icons/bs'
 
-import {
-  createInitialValues,
-  createValidationSchema
-} from '../../../../forms'
+import { createValidationSchema } from '../../../../forms'
 
 import { removeProp } from '../../../../utils'
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
-import { SimpleWidget, Widget, WidgetType } from '../Widget'
+import { Widget } from '../Widget'
+import { ImageField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /** 
  * {
@@ -33,11 +32,6 @@ import { SimpleWidget, Widget, WidgetType } from '../Widget'
     }
   } */
 
-const create = () => ({
-  ...createInitialValues(removeProp(FormFields, 'id')),
-  constraint: {},
-  thumbnails: [],
-})
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Image$/, {
@@ -52,23 +46,14 @@ const Meta = {
   description: 'A responsive image field with constraints'
 }
 
-export const Image = {
+export const Image: Widget<ImageField, typeof schema> = {
   Meta,
   Form,
   schema,
-  create,
+  create: () => new ImageField(),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   FormFields,
-  TYPE_NAME: 'Image'
+  TYPE_NAME: FieldType.Image
 }
-
-interface Constraint { height?: number, width?: number }
-
-export interface Image extends Widget<FieldType.Image, {
-  label: string,
-  placeholder: string,
-  constraint: Constraint
-  thumbnails: ReadonlyArray<Constraint>
-}> {}

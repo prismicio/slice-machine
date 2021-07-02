@@ -38,8 +38,7 @@ import ServerError from "../lib/models/server/ServerError";
 import { Library } from "../lib/models/common/Library";
 import Environment from "../lib/models/common/Environment";
 import Slice from "../lib/models/common/Slice";
-import { CustomType } from "../lib/models/common/CustomType";
-import { TabsAsObject } from "../lib/models/common/CustomType/tab";
+import { CustomType, ObjectTabs } from "../lib/models/common/CustomType";
 import { AsObject } from "../lib/models/common/Variation";
 
 async function fetcher(url: string): Promise<any> {
@@ -99,8 +98,8 @@ function MyApp({
     payload: {
       env: Environment;
       libraries?: ReadonlyArray<Library>;
-      customTypes?: ReadonlyArray<CustomType<TabsAsObject>>;
-      remoteCustomTypes?: ReadonlyArray<CustomType<TabsAsObject>>;
+      customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
+      remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
       remoteSlices?: ReadonlyArray<Slice<AsObject>>;
     } | null;
   }>({ Renderer: RenderStates.Loading, payload: null });

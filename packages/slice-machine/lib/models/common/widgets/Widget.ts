@@ -5,8 +5,8 @@ import { FieldType, Field } from '../CustomType/fields'
 
 export interface Widget<F extends Field, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType,
-  handleMockContent: Function,
-  handleMockConfig: Function,
+  handleMockContent?: Function,
+  handleMockConfig?: Function,
   MockConfigForm?: {
     (): JSX.Element;
     initialValues: any;
@@ -20,7 +20,8 @@ export interface Widget<F extends Field, S extends AnyObjectSchema> {
   schema: S,
   FormFields: {}
   CUSTOM_NAME?: string
-  Form?: React.Component
+  CustomListItem?:(props: any) => React.ReactElement
+  Form?:(props: any) => React.ReactElement
 }
 
 export type AnyWidget = Widget<any, any>

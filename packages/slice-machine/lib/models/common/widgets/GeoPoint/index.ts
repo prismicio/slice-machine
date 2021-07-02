@@ -3,7 +3,9 @@ import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
-import { SimpleWidget, Widget, WidgetType } from '../Widget'
+import { Widget } from '../Widget'
+import { GeoPointField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /** : {
   "type" : "GeoPoint",
@@ -12,7 +14,7 @@ import { SimpleWidget, Widget, WidgetType } from '../Widget'
   }
 } */
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('GeoPoint')
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.GeoPoint)
 
 const Meta = {
   icon: MdPlace,
@@ -20,15 +22,13 @@ const Meta = {
   description: 'A field for storing geo-coordinates'
 }
 
-export const GeoPoint = {
-  create,
+export const GeoPoint: Widget<GeoPointField, typeof schema> = {
+  create: () => new GeoPointField(),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   FormFields,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.GeoPoint,
   schema,
   Meta
 }
-
-export interface GeoPoint extends Widget<FieldType.GeoPoint, SimpleWidget> {}

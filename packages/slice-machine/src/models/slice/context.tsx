@@ -76,7 +76,6 @@ export const SliceHandler = ({ children }: { children: any }) => {
   const slice = lib.components.find(([state]) => state.infos.sliceName === router.query.sliceName)
 
   if (!slice) {
-    console.log('no slice, replace /')
     router.replace('/')
     return null
   }
@@ -96,14 +95,12 @@ export const SliceHandler = ({ children }: { children: any }) => {
     }
   })()
   if(!variation) {
-    console.log('no variation, replace /')
     router.replace('/')
     return null
   }
 
   // variation not in the URL but a default variation was found
   if(!variationParam) {
-    console.log('no variation param, redirect to default variation')
     router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`)
   }
 

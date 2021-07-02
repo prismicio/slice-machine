@@ -1,13 +1,12 @@
 import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
-import { CustomType } from '@models/common/CustomType'
-import { TabsAsObject } from '@models/common/CustomType/tab'
+import { CustomType, ObjectTabs } from '@models/common/CustomType'
 import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'
 
-export function useModelReducer({ customType, remoteCustomType: remoteCustomTypeObject, initialMockConfig = {} }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
+export function useModelReducer({ customType, remoteCustomType: remoteCustomTypeObject, initialMockConfig = {} }: { customType: CustomType<ObjectTabs>, remoteCustomType: CustomType<ObjectTabs> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
   const current = CustomType.toArray(customType)
 
   const remoteCustomType = remoteCustomTypeObject ? CustomType.toArray(remoteCustomTypeObject) : undefined

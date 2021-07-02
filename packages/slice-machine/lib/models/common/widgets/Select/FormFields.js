@@ -34,7 +34,7 @@ const FormFields = {
   },
   options: {
     yupType: 'array',
-    defaultValue: ['', ''],
+    defaultValue: ['1', '2'],
     validate: {
       required: ['Select requires a minimum of 2 options'],
       min: [2, 'Choose at least 2 options'],

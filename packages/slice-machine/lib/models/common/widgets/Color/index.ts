@@ -6,7 +6,7 @@ import { MockConfigForm } from './Mock/Form'
 import { Widget } from '../Widget'
 
 import { FieldType } from '../../CustomType/fields'
-import { BooleanField, ColorField } from '../types'
+import { ColorField } from '../types'
 
 /** {
   "type" : "Color",

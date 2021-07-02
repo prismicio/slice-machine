@@ -1,12 +1,14 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
-import { createInitialValues } from '../../../../forms'
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
-import { removeProp } from '../../../../utils'
-import { Widget, WidgetType } from '../Widget'
+
+import { Widget } from '../Widget'
+import { FieldType } from '../../CustomType/fields'
+
+import { LinkField } from '../types'
 
 /**
 * {
@@ -54,11 +56,6 @@ import { Widget, WidgetType } from '../Widget'
   }
   */
 
-const create = () => ({
-  ...createInitialValues(removeProp(FormFields, 'id')),
-  allowTargetBlank: true,
-})
-
 const Meta = {
   icon: BsLink,
   title: 'Link',
@@ -81,7 +78,7 @@ const schema = yup.object().shape({
   config: linkConfigSchema.optional()
 })
 
-export const Link = {
+export const Link: Widget<LinkField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
@@ -89,23 +86,7 @@ export const Link = {
   FormFields,
   schema,
   Form,
-  create,
-  TYPE_NAME: 'Link'
+  create: () => new LinkField(),
+  TYPE_NAME: FieldType.Link
 }
 
-enum Media {
-  media = 'media',
-  document = 'document',
-  web = 'web'
-}
-
-export interface Link extends Widget<FieldType.Link, {
-  label: string,
-  useAsTitle: boolean,
-  placeholder: string,
-  select: Media,
-  customtypes: ReadonlyArray<string>,
-  masks: ReadonlyArray<string>,
-  tags: ReadonlyArray<string>,
-  allowTargetBlank: boolean
-}> {}

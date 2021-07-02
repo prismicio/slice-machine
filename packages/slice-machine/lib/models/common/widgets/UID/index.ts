@@ -16,13 +16,12 @@ import { MdVpnKey } from 'react-icons/md'
 
 import { removeProp } from '../../../../utils'
 import { DefaultFields } from "../../../../forms/defaults"
-import { createInitialValues, createValidationSchema } from "../../../../forms"
-
-const TYPE_NAME = 'UID'
+import { createValidationSchema } from "../../../../forms"
+import { Widget } from '../Widget'
+import { UIDField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 const FormFields = DefaultFields
-
-const create = () => createInitialValues(FormFields)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^UID$/, { excludeEmptyString: true }).required(),
@@ -35,15 +34,10 @@ const Meta = {
   description: 'Unique Identifier'
 }
 
-export const UID = {
-  create,
-  // MockConfigForm,
-  // handleMockConfig,
-  // handleMockContent,
+export const UID: Widget<UIDField, typeof schema> = {
+  create: () => new UIDField(),
   Meta,
   schema,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.UID,
   FormFields
 }
-
-export interface UID extends yup.TypeOf<typeof schema> {}

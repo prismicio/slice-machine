@@ -1,7 +1,7 @@
 import { BooleanWidget } from './Boolean'
 import { Color } from './Color'
 import { ContentRelationship } from './ContentRelationship'
-import { DateField } from './Date'
+import { DateWidget } from './Date'
 import { Embed } from './Embed'
 import { GeoPoint } from './GeoPoint'
 import { Image } from './Image'
@@ -17,7 +17,7 @@ export {
   BooleanWidget as Boolean,
   Color,
   ContentRelationship,
-  DateField as Date,
+  DateWidget as Date,
   Embed,
   GeoPoint,
   Image,

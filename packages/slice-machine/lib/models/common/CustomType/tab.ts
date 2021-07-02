@@ -6,7 +6,7 @@ import { AsArray, AsObject, GroupField } from '../widgets/types'
 
 export interface TabAsObject {
   key: string
-  value: AsObject | { [key: string]: SliceZone },
+  value: AsObject,
 }
 
 export interface TabAsArray {
@@ -15,41 +15,11 @@ export interface TabAsArray {
   sliceZone: SliceZoneAsArray | null
 }
 
-// type TabAsArrayElement = { key: string, value: Field }
-// export type TabValueAsArray = ReadonlyArray<TabAsArrayElement>
-
-// type TabContentObject = Field | SliceZone
-
-// export type TabsAsArray = ReadonlyArray<TabAsArray>
-
-// export interface TabAsObject {
-//   [fieldId: string]: TabContentObject
-// }
-
-// export interface TabsAsObject {
-//   [tabId: string]: TabAsObject
-// }
-
 interface OrganisedFields {
   fields: ReadonlyArray<{key: string, value: Field }>
-  groups: ReadonlyArray<GroupField<AsArray>>
+  groups: ReadonlyArray<{ key: string, value: GroupField<AsArray>}>
   sliceZone?: SliceZone
 }
-
-// interface Choices {
-//   [x: string]: { type: string }
-// }
-// const filterChoices = (choices: Choices) => {
-//   return Object.entries(choices).reduce((acc, [key, value]) => {
-//     if (value.type !== FieldType.SharedSlice) {
-//       return acc
-//     }
-//     return {
-//       ...acc,
-//       [key]: value
-//     }
-//   }, {})
-// }
 
 export const Tab = {
   init(id: string) {
@@ -57,6 +27,7 @@ export const Tab = {
   },
   toArray(key: string, tab: TabAsObject): TabAsArray {
     const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === FieldType.SliceZone)
+
     return {
       key,
       value: Object.entries(tab).reduce((acc: AsArray, [fieldId, value]: [string, Field]) => {
@@ -72,7 +43,7 @@ export const Tab = {
     }
   },
   toObject(tab: TabAsArray): TabAsObject {
-    const tabAsObject = tab.value.reduce<TabAsObject>((acc: TabAsObject, { key, value }: { key: string, value: Field }) => {
+    const tabValue = tab.value.reduce<AsObject>((acc: AsObject, { key, value }: { key: string, value: Field }) => {
       if (value.type === FieldType.Group) {
         return {
           ...acc,
@@ -80,12 +51,12 @@ export const Tab = {
         }
       }
       return { ...acc, [key]: value }
-    }, {} as TabAsObject)
+    }, {})
 
     if (tab.sliceZone && tab.sliceZone.value?.length) {
-      tabAsObject.value[tab.sliceZone.key] = SliceZone.toObject(tab.sliceZone)
+      tabValue[tab.sliceZone.key] = SliceZone.toObject(tab.sliceZone)
     }
-    return tabAsObject
+    return { key: tab.key, value: tabValue }
   },
   updateSliceZone(tab: TabAsArray): Function {
     return (mutate: (v: SliceZoneAsArray) => TabAsArray) => {
@@ -171,20 +142,17 @@ export const Tab = {
     }
   },
 
-  // interface OrganisedFields {
-  //   fields: ReadonlyArray<{key: string, value: Widget}>
-  //   groups: ReadonlyArray<GroupAsArray>
-  //   sliceZone?: SliceZone
-  // }
-
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray('', tab)
-    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: { key: string, value: Field | GroupField<AsObject> }) => {
+    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: { key: string, value: Field }) => {
+      if (curr.value.type === FieldType.SliceZone) {
+        return acc
+      }
       if (curr.value.type === FieldType.Group) {
         const GroupAsArray = Group.toArray(curr.value as GroupField<AsObject>)
         return {
           ...acc,
-          groups: [...acc.groups, GroupAsArray]
+          groups: [...acc.groups, { key: curr.key, value: GroupAsArray }]
         }
       }
       return {
@@ -198,28 +166,4 @@ export const Tab = {
       sliceZone: tabAsArray.sliceZone,
     }
   }
-  
-  // ,
-  // filterNonSharedSlices(tab: any): TabAsObject | undefined {
-  //   const newTab = Object.entries(tab).reduce((acc, [key, value]) => {
-  //     if (value.type !== FieldType.SliceZone) {
-  //       return {
-  //         ...acc,
-  //         [key]: value
-  //       }
-  //     }
-  //     console.log('filter ', value)
-  //     return {
-  //       ...acc,
-  //       [key]: {
-  //         ...value,
-  //         config: {
-  //           ...value.config,
-  //           choices: filterChoices(value.config.choices)
-  //         }
-  //       }
-  //     }
-  //   }, {})
-  //   return newTab
-  // }
 }

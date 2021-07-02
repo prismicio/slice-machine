@@ -1,8 +1,8 @@
 import Environment from '../../../../lib/models/common/Environment'
-import { CustomType } from '../../../../lib/models/common/CustomType'
-import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
+import { CustomType, ObjectTabs } from '../../../../lib/models/common/CustomType'
 import Files from '../../../../lib/utils/files'
 import { CustomTypesPaths } from '../../../../lib/models/paths'
+import { TabAsObject } from '@lib/models/common/CustomType/tab'
 
 interface CustomTypePayload {
   label: string
@@ -10,7 +10,7 @@ interface CustomTypePayload {
   repeatable: boolean
 }
 
-export default async function handler(env: Environment, payload: CustomTypePayload): Promise<CustomType<TabsAsObject>> {
+export default async function handler(env: Environment, payload: CustomTypePayload): Promise<CustomType<ObjectTabs>> {
   const { label, key, repeatable } = payload
 
   const pathToNewCustomType = CustomTypesPaths(env.cwd).customType(`${key}.json`).model()
@@ -21,7 +21,7 @@ export default async function handler(env: Environment, payload: CustomTypePaylo
     repeatable,
     previewUrl: '',
     tabs: {
-      Main: {}
+      Main: {} as TabAsObject
     }
   }
   Files.write(pathToNewCustomType, newCt)

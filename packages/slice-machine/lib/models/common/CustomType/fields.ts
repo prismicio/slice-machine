@@ -5,7 +5,7 @@ export enum FieldType {
   Color = 'Color',
   Group = 'Group',
   StructuredText = 'StructuredText',
-  ContentRelationship = 'ContentRelationship',
+  ContentRelationship = 'Link',
   Image = 'Image',
   Text = 'Text',
   Date = 'Date',
@@ -15,18 +15,19 @@ export enum FieldType {
   Number = 'Number',
   UID = 'UID',
 
-  SliceZone = 'SliceZone',
+  SliceZone = 'Slices',
 
   SharedSlice = 'SharedSlice'
 }
 
-export interface BaseConfig { label: string }
 
-export interface SimpleField extends BaseConfig {
+export interface SimpleField {
+  label: string
   placeholder: string
 }
 
 export interface Field {
   type: FieldType
-  config: BaseConfig
+  fieldset?: string
+  config: {}
 }
