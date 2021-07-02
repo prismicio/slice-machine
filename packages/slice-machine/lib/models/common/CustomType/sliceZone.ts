@@ -1,10 +1,10 @@
-import { Field, FieldType } from './fields'
+import { FieldType } from './fields'
 
 interface SharedSlice {
   type: FieldType.SharedSlice
 }
 
-export interface SliceZone extends Field {
+export interface SliceZone {
   type: FieldType.SliceZone
   fieldset: string
   config: {

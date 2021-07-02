@@ -1,62 +1,63 @@
-import { FieldWidget } from '../widgets'
-import { Group as GroupWidget } from '../widgets/Group'
+import { Field } from '../CustomType/fields'
+import { GroupField, AsArray, AsObject } from '../widgets/types'
 
-export type GroupFieldsAsArray = ReadonlyArray<{key: string, value: FieldWidget }>
+// export type GroupField<AsArray> = ReadonlyArray<{key: string, value: Field }>
 
-export interface GroupAsArray {
-  key: string,
-  type: string
-  value: {
-    label: string,
-    fields: GroupFieldsAsArray
-  }
-}
+// export interface GroupField<AsArray> {
+//   key: string,
+//   type: string
+//   value: {
+//     label: string,
+//     fields: GroupField<AsArray>
+//   }
+// }
 
 export const Group = {
-  addWidget(group: GroupAsArray, newField: { key: string, value: FieldWidget }): GroupAsArray {
+  addWidget(group: GroupField<AsArray>, newField: { key: string, value: Field }): GroupField<AsArray> {
     return {
       ...group,
-      value: {
-        ...group.value,
-        fields: [...group.value.fields, newField]
+      config: {
+        ...group.config,
+        fields: [...group.config.fields, newField]
       }
     }
   },
-  deleteWidget(group: GroupAsArray, wkey: string): GroupAsArray {
+  deleteWidget(group: GroupField<AsArray>, wkey: string): GroupField<AsArray> {
     return {
       ...group,
-      value: {
-        ...group.value,
-        fields: group.value.fields.filter(({ key }) => key !== wkey)
+      config: {
+        ...group.config,
+        fields: group.config.fields.filter(({ key }) => key !== wkey)
       }
     }
   },
-  reorderWidget(group: GroupAsArray, start: number, end: number): GroupAsArray {
-    const reorderedWidget: { key: string, value: FieldWidget } | undefined = group.value.fields[start]
+  reorderWidget(group: GroupField<AsArray>, start: number, end: number): GroupField<AsArray> {
+    const reorderedWidget: { key: string, value: Field } | undefined = group.config.fields[start]
     if(!reorderedWidget) throw new Error(`Unable to reorder the widget at index ${start}.`)
 
-    const reorderedArea = group.value.fields.reduce<GroupFieldsAsArray>((acc, widget, index) => {
-      const elems = [widget, reorderedWidget]
+    const reorderedArea = group.config.fields.reduce<ReadonlyArray<{ key: string, value: Field }>>((acc, field, index) => {
+      const elems = [field, reorderedWidget]
       switch(index) {
         case start: return acc
         case end: return [ ...acc, ...end > start ? elems : elems.reverse() ]
-        default: return [ ...acc, widget ]
+        default: return [ ...acc, field ]
       }
     }, [])
+
     return {
       ...group,
-      value: {
-        ...group.value,
+      config: {
+        ...group.config,
         fields: reorderedArea
       }
     }
   },
-  replaceWidget(group: GroupAsArray, previousKey: string, newKey: string, value: FieldWidget): GroupAsArray {
+  replaceWidget(group: GroupField<AsArray>, previousKey: string, newKey: string, value: Field): GroupField<AsArray> {
     return {
       ...group,
-      value: {
-        ...group.value,
-        fields: group.value.fields.map(t => {
+      config: {
+        ...group.config,
+        fields: group.config.fields.map(t => {
           if (t.key === previousKey) {
             return {
               key: newKey,
@@ -68,23 +69,21 @@ export const Group = {
       }
     }
   },
-  toArray(key: string, group: GroupWidget): GroupAsArray {
+  toArray(group: GroupField<AsObject>): GroupField<AsArray> {
     return {
-      key,
-      type: group.type,
-      value: {
+      ...group,
+      config: {
         ...group.config,
         fields: Object.entries(group.config.fields).map(([key, value]) => ({ key, value }))
       }
     }
   },
-  toObject(group: GroupAsArray): GroupWidget {
+  toObject(group: GroupField<AsArray>): GroupField<AsObject> {
     return {
-      type: FieldType.Group,
+      ...group,
       config: {
-        placeholder: '',
-        ...group.value,
-        fields: group.value.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+        ...group.config,
+        fields: group.config.fields.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
       }
     }
   }

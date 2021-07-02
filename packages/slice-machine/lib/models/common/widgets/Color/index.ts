@@ -5,8 +5,8 @@ import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
 
-import { FieldType, SimpleField } from '../../CustomType/fields'
-import { ColorField } from '../types'
+import { FieldType } from '../../CustomType/fields'
+import { BooleanField, ColorField } from '../types'
 
 /** {
   "type" : "Color",
@@ -21,12 +21,12 @@ const Meta = {
   description: 'A color picker'
 }
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues(FieldType.Color)
+const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(FieldType.Color)
 
 export const Color: Widget<ColorField, typeof schema> = {
   handleMockContent,
   handleMockConfig,
-  create,
+  create: () => new ColorField(),
   MockConfigForm,
   FormFields,
   TYPE_NAME,

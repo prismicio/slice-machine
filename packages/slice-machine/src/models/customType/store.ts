@@ -1,6 +1,6 @@
-import Store from '@models/ui/Store'
-import { Widget } from '@models/common/widgets'
-import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
+import Store from '../../../lib/models/ui/Store'
+// import { Widget } from '@models/common/widgets'
+// import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
@@ -10,6 +10,8 @@ import Actions, {
 
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
+
+import { Field } from '../../../lib/models/common/CustomType/fields'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
@@ -28,13 +30,13 @@ export default class CustomTypeStore implements Store {
   deleteWidgetGroupMockConfig = deleteWidgetGroupMockConfig(this.dispatch)
   tab(tabId: string) {
     return {
-      addWidget: (id: string, widget: Widget | GroupWidget) => {
-        this.dispatch({ type: Actions.AddWidget, payload: { tabId, id, widget } })
+      addWidget: (id: string, field: Field) => {
+        this.dispatch({ type: Actions.AddWidget, payload: { tabId, id, field } })
       },
       removeWidget: (id: string) => {
         this.dispatch({ type: Actions.RemoveWidget, payload: { tabId, id } })
       },
-      replaceWidget: (previousKey: string, newKey: string, value: Widget | GroupAsArray) => {
+      replaceWidget: (previousKey: string, newKey: string, value: Field) => {
         this.dispatch({ type: Actions.ReplaceWidget, payload: { tabId, previousKey, newKey, value } }) 
       },
       reorderWidget: (start: number, end: number) => {
@@ -60,10 +62,10 @@ export default class CustomTypeStore implements Store {
       },
       group: (groupId: string) => {
         return {
-          addWidget: (id: string, widget: Widget) => {
-            this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, widget } })
+          addWidget: (id: string, field: Field) => {
+            this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, field } })
           },
-          replaceWidget: (previousKey: string, newKey: string, value: Widget) => {
+          replaceWidget: (previousKey: string, newKey: string, value: Field) => {
             this.dispatch({ type: Actions.GroupReplaceWidget, payload: { tabId, groupId, previousKey, newKey, value } })
           },
           reorderWidget: (start: number, end: number) => {

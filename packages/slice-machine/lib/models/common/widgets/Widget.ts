@@ -1,9 +1,9 @@
 import { IconType } from 'react-icons'
 import { AnyObjectSchema } from 'yup'
 
-import { FieldType, AbstractField } from '../CustomType/fields'
+import { FieldType, Field } from '../CustomType/fields'
 
-export interface Widget<F extends AbstractField, S extends AnyObjectSchema> {
+export interface Widget<F extends Field, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType,
   handleMockContent: Function,
   handleMockConfig: Function,
@@ -22,3 +22,5 @@ export interface Widget<F extends AbstractField, S extends AnyObjectSchema> {
   CUSTOM_NAME?: string
   Form?: React.Component
 }
+
+export type AnyWidget = Widget<any, any>

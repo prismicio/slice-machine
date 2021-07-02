@@ -1,24 +1,36 @@
-import { AbstractField, FieldType, SimpleField } from '../CustomType/fields'
+import { Field, FieldType, SimpleField } from '../CustomType/fields'
+
+export type AsArray = ReadonlyArray<{key: string, value: Field}>
+
+export type AsObject = { [key: string]: Field }
 
 const simpleField = { label: '', placeholder: '' }
 
-export class BooleanField implements AbstractField<FieldType.Boolean> {
-  config: SimpleField
-  constructor(readonly type = FieldType.Boolean, config = simpleField) {
+export class BooleanField implements Field {
+  config: SimpleField;
+  readonly type = FieldType.Boolean;
+  constructor(config = simpleField) {
     this.config = config
   }
 }
 
-export class ColorField implements AbstractField {
-  config: SimpleField
-  constructor(readonly type = FieldType.Color, config = simpleField) {
+export class ColorField implements Field {
+  config: SimpleField;
+  readonly type = FieldType.Color;
+  constructor(config = simpleField) {
     this.config = config
   }
 }
 
-
-// export interface ContentRelationship extends Field<FieldType.ContentRelationship, {
-//   label: string,
-//   select: string,
-//   customtypes: ReadonlyArray<string>
-// }> {}
+interface GroupConfig<T extends AsObject | AsArray> {
+  label: string,
+  placeholder: string,
+  fields: T
+}
+export class GroupField<T extends AsObject | AsArray> implements Field {
+  config: GroupConfig<T>
+  readonly type = FieldType.Group
+  constructor(config: GroupConfig<T>) {
+    this.config = config
+  }
+}

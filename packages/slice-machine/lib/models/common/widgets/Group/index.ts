@@ -2,12 +2,11 @@ import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import  { MdPlaylistAdd } from 'react-icons/md'
 
-import { FieldWidget } from '../'
-import { Widget, WidgetType } from '../Widget'
+import { FieldType } from '../../CustomType/fields'
+import { Widget } from '../Widget'
 
 import CustomListItem from './ListItem'
-
-const create = () => ({ label: '', placeholder: '', fields: {} })
+import { AsObject, GroupField } from '../types'
 
 const Meta = {
   icon: MdPlaylistAdd,
@@ -24,18 +23,12 @@ const schema = yup.object().shape({
   })
 })
 
-export const Group = {
+export const Group: Widget<GroupField<AsObject>, typeof schema> = {
   Meta,
   FormFields,
   schema,
   Form,
-  create,
+  create: () => new GroupField({ label: '', placeholder: '', fields: {} }),
   CustomListItem,
-  TYPE_NAME: 'Group'
+  TYPE_NAME: FieldType.Group
 }
-
-export interface Group extends Widget<FieldType.Group, {
-  label: string,
-  placeholder: string,
-  fields: { [id: string]: FieldWidget }
-}> {}

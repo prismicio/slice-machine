@@ -109,6 +109,10 @@ const CustomListItem = ({
     setEditModalData({ isOpen: true, field })
   };
 
+  console.log({
+    groupItem
+  })
+
   return (
     <Fragment>
       <ListItem
@@ -133,7 +137,7 @@ const CustomListItem = ({
                 <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
                   {(provided) => (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
-                      {groupItem.value.fields.map((item, index) => {
+                      {groupItem.value.config.fields.map((item, index) => {
                         const {
                           value: { config, type },
                         } = item;

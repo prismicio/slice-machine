@@ -1,4 +1,4 @@
-import { BooleanField } from './Boolean'
+import { BooleanWidget } from './Boolean'
 import { Color } from './Color'
 import { ContentRelationship } from './ContentRelationship'
 import { DateField } from './Date'
@@ -14,7 +14,7 @@ import { Timestamp } from './Timestamp'
 import { UID } from './UID'
 
 export {
-  BooleanField as Boolean,
+  BooleanWidget as Boolean,
   Color,
   ContentRelationship,
   DateField as Date,
@@ -29,19 +29,3 @@ export {
   Timestamp,
   UID,
 }
-
-
-export type FieldWidget =  BooleanField  |
-                      Color         |
-                      DateField          |
-                      Embed             |
-                      GeoPoint          |
-                      Image             |
-                      Link              |
-                      Number            |
-                      Select            |
-                      StructuredText    |
-                      Text              |
-                      Timestamp         |
-                      UID               |
-                      ContentRelationship

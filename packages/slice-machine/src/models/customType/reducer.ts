@@ -4,13 +4,15 @@ import { Tab } from '../../../lib/models/common/CustomType/tab'
 
 import Actions from './actions'
 import { FieldWidget, } from '../../../lib/models/common/widgets'
-import { Group, GroupAsArray,} from '../../../lib/models/common/CustomType/group'
+import { Group,} from '../../../lib/models/common/CustomType/group'
 import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
 import { CustomType } from '../../../lib/models/common/CustomType'
 
-import { WidgetCanvas } from '../../../lib/models/common/widgets/Widget'
+import { AnyWidget } from '../../../lib/models/common/widgets/Widget'
 
 import * as Widgets from '../../../lib/models/common/widgets/withGroup'
+import { Field } from '../../../lib/models/common/CustomType/fields'
+import { AsArray, GroupField } from '../../../lib/models/common/widgets/types'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -49,13 +51,13 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         remoteCustomType: prevState.current
       }
       case Actions.AddWidget: {
-        const { tabId, widget, id } = action.payload as { tabId: string, widget: FieldWidget, id: string }
+        const { tabId, field, id } = action.payload as { tabId: string, field: Field, id: string }
         try {
-          const Widget: WidgetCanvas = Widgets[widget.type]
-          Widget.schema.validateSync(widget)
-          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, widget))
+          const CurrentWidget: AnyWidget = Widgets[field.type]
+          CurrentWidget.schema.validateSync(field)
+          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, field))
         } catch(err) {
-          console.error(`[store/addWidget] Model is invalid for widget "${widget.type}".\nFull error: ${err}`)
+          console.error(`[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`)
           return prevState
         }
       }
@@ -64,10 +66,10 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.removeWidget(tab, id))
       }
       case Actions.ReplaceWidget: {
-        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: FieldWidget }
+        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Field }
         try {
-          const Widget: WidgetCanvas = Widgets[value.type]
-          Widget.schema.validateSync(value)
+          const CurrentWidget: AnyWidget = Widgets[value.type]
+          CurrentWidget.schema.validateSync(value)
           return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
         } catch(err) {
           console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
@@ -138,24 +140,24 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         mockConfig: (action.payload as any)
       }
       case Actions.GroupAddWidget: {
-        const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: FieldWidget }
+        const { tabId, groupId, id, field } = action.payload as { tabId: string, groupId: string, id: string, field: Field }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.addWidget(group, { key: id, value: field })))
       }
       case Actions.GroupReplaceWidget: {
         const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: FieldWidget }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.replaceWidget(group, previousKey, newKey, value)))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.replaceWidget(group, previousKey, newKey, value)))
       }
       case Actions.GroupDeleteWidget: {
         const { tabId, groupId, key } = action.payload as { tabId: string, groupId: string, key: string }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.deleteWidget(group, key)))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.deleteWidget(group, key)))
       }
       case Actions.GroupReorderWidget: {
         const { tabId, groupId, start, end } = action.payload as { tabId: string, groupId: string, start: number, end: number }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.reorderWidget(group, start, end )))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.reorderWidget(group, start, end )))
       }
       default: throw new Error("Invalid action.")
     }

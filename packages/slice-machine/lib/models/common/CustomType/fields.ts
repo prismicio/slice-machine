@@ -13,7 +13,11 @@ export enum FieldType {
   Timestamp = 'Timestamp',
   Embed = 'Embed',
   Number = 'Number',
-  UID = 'UID'
+  UID = 'UID',
+
+  SliceZone = 'SliceZone',
+
+  SharedSlice = 'SharedSlice'
 }
 
 export interface BaseConfig { label: string }
@@ -22,7 +26,7 @@ export interface SimpleField extends BaseConfig {
   placeholder: string
 }
 
-export interface AbstractField {
+export interface Field {
   type: FieldType
   config: BaseConfig
 }

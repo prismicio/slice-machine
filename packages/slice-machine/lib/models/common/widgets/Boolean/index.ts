@@ -16,7 +16,7 @@ import { BooleanField } from '../types'
   } */
 
 import { removeProp } from '../../../../utils'
-import { createInitialValues, createValidationSchema } from '../../../../forms'
+import { createValidationSchema } from '../../../../forms'
 import { DefaultFields } from "../../../../forms/defaults"
 import { Input, CheckBox } from "../../../../forms/fields"
 
@@ -42,7 +42,7 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 
-export const BooleanWidget: Widget = {
+export const BooleanWidget: Widget<BooleanField, typeof schema> = {
   TYPE_NAME: FieldType.Boolean,
   handleMockContent,
   handleMockConfig,
