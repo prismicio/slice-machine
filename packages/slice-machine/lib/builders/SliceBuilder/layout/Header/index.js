@@ -67,7 +67,7 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
                     onChange={(v) => {
                       router.push(
                         ...Links.variation(
-                          Model.from,
+                          Model.href,
                           Model.infos.sliceName,
                           v.id
                         ).all

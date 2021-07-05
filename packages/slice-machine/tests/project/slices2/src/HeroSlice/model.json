@@ -1,0 +1,147 @@
+{
+  "id": "hero_slice",
+  "type": "SharedSlice",
+  "name": "HeroSlice",
+  "description": "HeroSlice",
+  "variations": [
+    {
+      "id": "heroWithImage",
+      "name": "Hero - With Image",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeroSlice",
+      "primary": {
+        "includeLocation": {
+          "config": {
+            "label": "Include Location",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": true
+          },
+          "type": "Boolean"
+        },
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "defaultButtonLabel": {
+          "config": {
+            "label": "Default Button Label",
+            "placeholder": "Enter default button label..."
+          },
+          "type": "Text"
+        },
+        "defaultButtonLink": {
+          "config": {
+            "label": "Default Button Link",
+            "placeholder": "Select default link...",
+            "allowTargetBlank": true
+          },
+          "type": "Link"
+        },
+        "image": {
+          "config": {
+            "label": "Image",
+            "constraint": {
+              "width": 2500,
+              "height": 1800
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "heroWithVideo",
+      "name": "Hero - With Video",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeroSlice",
+      "primary": {
+        "includeLocation": {
+          "config": {
+            "label": "Include Location",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": true
+          },
+          "type": "Boolean"
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "defaultButtonLabel": {
+          "config": {
+            "label": "Default Button Label",
+            "placeholder": "Enter default button label..."
+          },
+          "type": "Text"
+        },
+        "defaultButtonLink": {
+          "config": {
+            "label": "Default Button Link",
+            "placeholder": "Select default link...",
+            "allowTargetBlank": true
+          },
+          "type": "Link"
+        },
+        "videoPoster": {
+          "config": {
+            "label": "Video Poster",
+            "constraint": {
+              "width": 1920,
+              "height": 1080
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "video": {
+          "config": {
+            "label": "Video",
+            "placeholder": "Select the video...",
+            "allowTargetBlank": true
+          },
+          "type": "Link"
+        },
+        "backgroundVideo": {
+          "config": {
+            "label": "Background Video",
+            "placeholder": "Select background video...",
+            "allowTargetBlank": true
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    }
+  ]
+}
