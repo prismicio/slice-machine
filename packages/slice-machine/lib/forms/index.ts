@@ -2,6 +2,9 @@ import * as Yup from 'yup'
 import { FormTypes } from './types'
 
 const handleDefaultValue = (field: { type: FormTypes, defaultValue: any}) => {
+  if (field.defaultValue === null) {
+    return undefined
+  }
   if (field.defaultValue !== undefined) {
     return field.defaultValue
   }
@@ -68,5 +71,5 @@ export const createValidationSchema = (FormFields: { [fieldKey: string]: any }) 
         ...acc,
         [key]: validator
       }
-  }, {})).required().default(undefined)
+  }, {})).required().default(undefined).noUnknown(true)
 }

@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import Form, { FormFields } from './Form'
+import { DefaultFields } from 'lib/forms/defaults'
 import  { MdPlaylistAdd } from 'react-icons/md'
 
 import { FieldType } from '../../CustomType/fields'
@@ -25,9 +25,8 @@ const schema = yup.object().shape({
 
 export const Group: Widget<GroupField<AsArray>, typeof schema> = {
   Meta,
-  FormFields,
+  FormFields: DefaultFields,
   schema,
-  Form,
   create: () => new GroupField({ label: '', placeholder: '', fields: [] }),
   CustomListItem,
   TYPE_NAME: FieldType.Group

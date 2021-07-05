@@ -11,7 +11,7 @@ const FormFields = {
   default_value: {
     type: FormTypes.CHECKBOX,
     yupType: 'string',
-    defaultValue: '',
+    defaultValue: null,
     validate: function() {
       return yup.string().test({
         name: 'default_value',

@@ -5,38 +5,99 @@
   "repeatable": false,
   "json": {
     "Main": {
-      "group9": {
-        "type": "Group",
-        "config": {
-          "type": "Group",
-          "fields": {
-            "img": {
-              "type": "Image",
-              "config": {
-                "label": "",
-                "constraint": {},
-                "thumbnails": []
-              }
-            }
-          }
-        }
-      },
-      "sdf": {
-        "type": "Image",
+      "sdsds": {
         "config": {
           "label": "",
-          "constraint": {},
-          "thumbnails": []
-        }
-      },
-      "rt222": {
-        "type": "StructuredText",
-        "config": {
-          "label": "rt",
           "placeholder": "",
-          "allowTargetBlank": true,
-          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-        }
+          "options": [
+            "1",
+            "2",
+            "1é3"
+          ]
+        },
+        "type": "Select"
+      },
+      "group": {
+        "config": {
+          "label": "",
+          "placeholder": "",
+          "fields": {
+            "img": {
+              "config": {
+                "thumbnails": [],
+                "constraint": {},
+                "label": ""
+              },
+              "type": "Image"
+            },
+            "geo": {
+              "config": {
+                "label": "",
+                "placeholder": ""
+              },
+              "type": "GeoPoint"
+            }
+          }
+        },
+        "type": "Group"
+      },
+      "fsdf": {
+        "config": {
+          "label": "My Label !",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": true
+        },
+        "type": "Boolean"
+      },
+      "sdfsdf": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": ""
+        },
+        "type": "Date"
+      },
+      "sdfsdfff": {
+        "config": {
+          "label": "",
+          "placeholder": "SSS"
+        },
+        "type": "Timestamp"
+      },
+      "sdfsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Embed"
+      },
+      "sdfdsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "placeholder"
+        },
+        "type": "Number"
+      },
+      "sdfsddd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "GeoPoint"
+      },
+      "sdfsdffd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Color"
+      },
+      "fdsffdd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "SSS"
+        },
+        "type": "Text"
       },
       "body": {
         "type": "Slices",

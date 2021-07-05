@@ -28,6 +28,7 @@ import WidgetForm from './Form'
 import WidgetFormField from './Field'
 
 import { findWidgetByConfigOrType } from '../../utils'
+import { removeProp } from '@lib/utils'
 
 
 if (process.env.NODE_ENV !== 'test') {
@@ -63,12 +64,30 @@ const EditModal = ({
     schema: widgetSchema
   } = maybeWidget
 
+  const initialConfig = {
+    ...createInitialValues(removeProp(FormFields, 'id')),
+    ...initialModelValues.config,
+  }
+
+  const { res: validatedSchema, err } = (() => {
+    try {
+      return { res: widgetSchema.validateSync({
+        type: initialModelValues.type,
+        config: initialConfig
+      }, { stripUnknown: true }) }
+    } catch (e) {
+      return { err: e }
+    }
+  })();
+
+  if (err) {
+    console.error(`[EditModal] Failed to validate field of type ${initialModelValues.type}.\n Please update model.json accordingly.`)
+    console.error(err)
+  }
+
   const initialValues = {
     id: apiId,
-    config: {
-      ...createInitialValues(FormFields),
-      ...initialModelValues.config,
-    },
+    config: validatedSchema ? validatedSchema.config : initialConfig,
     [MockConfigKey]: deepMerge(
       MockConfigForm?.initialValues || {},
       getFieldMockConfig({ apiId }) || {}

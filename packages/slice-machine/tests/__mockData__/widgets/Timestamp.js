@@ -28,3 +28,12 @@ export const labelTooLong = {
     label: "This is so long it should not pass yup validation (max 35 characters right now but it could change ✌️)",
   }
 }
+
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: 'some-id'
+  }
+}

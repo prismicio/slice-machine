@@ -1,11 +1,14 @@
-import { FieldType } from './fields'
+const SharedSliceType = 'SharedSlice'
 
 interface SharedSlice {
-  type: FieldType.SharedSlice
+  type: string
 }
 
+export type SliceZoneType = 'Slices'
+export const sliceZoneType: SliceZoneType = 'Slices'
+
 export interface SliceZone {
-  type: FieldType.SliceZone
+  type: SliceZoneType
   fieldset: string
   config: {
     choices: {
@@ -16,7 +19,7 @@ export interface SliceZone {
 
 export interface SliceZoneAsArray {
   key: string
-  value: ReadonlyArray<{key: string, value: { type: FieldType.SharedSlice } }>
+  value: ReadonlyArray<{key: string, value: SharedSlice }>
 }
 
 export const SliceZone = {
@@ -31,7 +34,7 @@ export const SliceZone = {
   },
   toObject(sz: SliceZoneAsArray): SliceZone {
     return {
-      type: FieldType.SliceZone,
+      type: sliceZoneType,
       fieldset: 'Slice Zone',
       config: {
         choices: sz.value.reduce((acc, curr) => ({
@@ -47,7 +50,7 @@ export const SliceZone = {
       value: [...sz.value, {
         key,
         value: {
-          type:  FieldType.SharedSlice
+          type:  SharedSliceType
         }
       }]
     }
@@ -58,7 +61,7 @@ export const SliceZone = {
       value: keys.map(key =>({
         key,
         value:  {
-          type: FieldType.SharedSlice
+          type: SharedSliceType
         }
       }))
     }
@@ -71,7 +74,7 @@ export const SliceZone = {
   },
   createEmpty(): SliceZone {
     return {
-      type: FieldType.SliceZone,
+      type: sliceZoneType,
       fieldset: 'Slice Zone',
       config: {
         choices: {}

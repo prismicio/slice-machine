@@ -1,3 +1,5 @@
+import { SliceZoneType } from './sliceZone'
+
 export enum FieldType {
   Boolean = 'Boolean',
   GeoPoint = 'GeoPoint',
@@ -14,10 +16,6 @@ export enum FieldType {
   Embed = 'Embed',
   Number = 'Number',
   UID = 'UID',
-
-  SliceZone = 'Slices',
-
-  SharedSlice = 'SharedSlice'
 }
 
 
@@ -27,7 +25,7 @@ export interface SimpleField {
 }
 
 export interface Field {
-  type: FieldType
+  type: FieldType | SliceZoneType
   fieldset?: string
   config: {}
 }

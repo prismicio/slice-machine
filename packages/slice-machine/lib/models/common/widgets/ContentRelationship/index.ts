@@ -28,9 +28,9 @@ const Meta = {
 
 const configSchema = yup.object().shape({
   label: yup.string().max(35, 'String is too long. Max: 35'),
-  select: yup.string().matches(/document/),
-  customtypes: yup.array(yup.string()).optional(),
-});
+  select: yup.string().matches(/^document$/),
+  customtypes: yup.array(yup.string()).strict().optional(),
+}).required().default(undefined).noUnknown(true)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),

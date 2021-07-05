@@ -4,7 +4,7 @@ import { Tab } from '../../../lib/models/common/CustomType/tab'
 
 import Actions from './actions'
 import { Group,} from '../../../lib/models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray } from '../../../lib/models/common/CustomType/sliceZone'
+import { SliceZone, SliceZoneAsArray, sliceZoneType } from '../../../lib/models/common/CustomType/sliceZone'
 import { CustomType } from '../../../lib/models/common/CustomType'
 
 import { AnyWidget } from '../../../lib/models/common/widgets/Widget'
@@ -52,12 +52,12 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.AddWidget: {
         const { tabId, field, id } = action.payload as { tabId: string, field: Field, id: string }
         try {
-          const CurrentWidget: AnyWidget | null = Widgets[field.type]
-          if (!CurrentWidget) {
-            return prevState
+          if (field.type !== sliceZoneType) {
+            const CurrentWidget: AnyWidget = Widgets[field.type]
+            CurrentWidget.schema.validateSync(field, { stripUnknown: false })
+            return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, field))
           }
-          CurrentWidget.schema.validateSync(field)
-          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, field))
+          return prevState
         } catch(err) {
           console.error(`[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`)
           return prevState
@@ -70,12 +70,12 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.ReplaceWidget: {
         const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Field }
         try {
-          const CurrentWidget: AnyWidget | null = Widgets[value.type]
-          if (!CurrentWidget) {
-            return prevState
+          if (value.type !== sliceZoneType) {
+            const CurrentWidget: AnyWidget = Widgets[value.type]
+            CurrentWidget.schema.validateSync(value, { stripUnknown: false })
+            return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
           }
-          CurrentWidget.schema.validateSync(value)
-          return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
+          return prevState
         } catch(err) {
           console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
           return prevState

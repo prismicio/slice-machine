@@ -1,24 +1,31 @@
+// {
+//   "type": "UID",
+//   "config": {
+//     "placeholder": "placeholder",
+//     "label": "label"
+//   }
+
 export const valid = {
   __pass: true,
-  type: "Color",
+  type: "UID",
   config: {
-    label: "Color",
-    placeholder: "hex Color"
+    label: "UID",
+    placeholder: "my UID"
   }
 }
 
 export const wrongType = {
   __pass: false,
-  type: "Color2",
+  type: "UID2",
   config: {
-    label: "Color",
-    placeholder: "hex Color"
+    label: "UID",
+    placeholder: "my UID"
   }
 }
 
 export const noConfig = {
   __pass: false,
-  type: "Color",
+  type: "UID",
 }
 
 export const misplacedId = {

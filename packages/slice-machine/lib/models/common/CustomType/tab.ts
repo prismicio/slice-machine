@@ -1,4 +1,4 @@
-import { SliceZone, SliceZoneAsArray } from './sliceZone'
+import { SliceZone, SliceZoneAsArray, sliceZoneType } from './sliceZone'
 import { Field, FieldType } from './fields'
 import { Group } from './group'
 
@@ -26,12 +26,12 @@ export const Tab = {
     return { key: id, value: [], sliceZone: null }
   },
   toArray(key: string, tab: TabAsObject): TabAsArray {
-    const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === FieldType.SliceZone)
+    const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === sliceZoneType)
 
     return {
       key,
       value: Object.entries(tab).reduce((acc: AsArray, [fieldId, value]: [string, Field]) => {
-        if (value.type === FieldType.SliceZone) {
+        if (value.type === sliceZoneType) {
           return acc
         }
         if (value.type === FieldType.Group) {
@@ -145,7 +145,7 @@ export const Tab = {
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray('', tab)
     const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: { key: string, value: Field }) => {
-      if (curr.value.type === FieldType.SliceZone) {
+      if (curr.value.type === sliceZoneType) {
         return acc
       }
       if (curr.value.type === FieldType.Group) {

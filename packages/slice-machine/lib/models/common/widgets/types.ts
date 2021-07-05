@@ -17,7 +17,7 @@ export class BooleanField implements Field {
     default_value: boolean
   };
   readonly type = FieldType.Boolean;
-  constructor(config = { ...simpleField, placeholder_false: 'false', placeholder_true: 'true', default_value: false }) {
+  constructor(config = { label: '', placeholder_false: 'false', placeholder_true: 'true', default_value: false }) {
     this.config = config
   }
 }
@@ -33,12 +33,11 @@ export class ColorField implements Field {
 export class ContentRelationshipField implements Field {
   config: {
     label: string,
-    placeholder: string,
     select: string,
     customtypes: Array<string>
   };
   readonly type = FieldType.ContentRelationship;
-  constructor(config = { ...simpleField, select: 'document', customtypes: [] }) {
+  constructor(config = { label: '', select: 'document', customtypes: [] }) {
     this.config = config
   }
 }
@@ -85,12 +84,11 @@ interface Constraint { height?: number, width?: number }
 export class ImageField implements Field {
   config: {
     label: string,
-    placeholder: string,
     constraint: Constraint
     thumbnails: ReadonlyArray<Constraint>
   }
   readonly type = FieldType.Image
-  constructor(config = { ...simpleField, constraint: {}, thumbnails: [] }) {
+  constructor(config = { label: '', constraint: {}, thumbnails: [] }) {
     this.config = config
   }
 }

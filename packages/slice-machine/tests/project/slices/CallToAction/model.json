@@ -11,30 +11,45 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "aaa": {
+        "label": {
           "config": {
             "label": "Label ",
-            "placeholder": "place",
-            "id": ""
+            "placeholder": "place"
           },
           "type": "Text"
         },
-        "aaaa": {
+        "deaf": {
           "type": "Link",
           "config": {
-            "label": "My label !",
-            "id": "",
+            "label": "My Label !",
             "placeholder": "Placeholder 2",
             "allowTargetBlank": true
+          }
+        },
+        "hjhjhj": {
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "options": [
+              "1",
+              "2",
+              "3"
+            ]
           },
-          "label": "Lable !"
+          "type": "Select"
+        },
+        "geo": {
+          "config": {
+            "label": "",
+            "placeholder": ""
+          },
+          "type": "GeoPoint"
         }
       },
       "items": {
         "rtfr": {
           "config": {
             "label": "jhjhjhjhjhjh",
-            "id": "",
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"

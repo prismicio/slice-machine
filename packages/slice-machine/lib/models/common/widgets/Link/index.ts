@@ -67,11 +67,11 @@ const linkConfigSchema = yup.object().shape({
   useAsTitle: yup.boolean().optional(),
   placeholder: yup.string().optional(),
   select: yup.string().optional().oneOf(['media', 'document', 'web']),
-  customtypes: yup.array(yup.string()).optional(),
+  customtypes: yup.array(yup.string()).strict().optional(),
   masks: yup.array(yup.string()).optional(),
   tags: yup.array(yup.string()).optional(),
-  allowTargetBlank: yup.boolean().optional()
-})
+  allowTargetBlank: yup.boolean().strict().optional()
+}).required().default(undefined).noUnknown(true)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),

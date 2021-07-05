@@ -101,3 +101,12 @@ export const noName = {
     label: "Label should be less than 35"
   }
 }
+
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: 'some-id'
+  }
+}
