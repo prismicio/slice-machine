@@ -17,6 +17,8 @@ import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
 import { detectFramework } from '../framework'
 
+let DISPLAY_LOG_ONCE = 0
+
 const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : null)
 
 const compareNpmVersions = createComparator()
@@ -135,7 +137,27 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
 
-  const { updateAvailable, currentVersion } = await compareNpmVersions({ cwd })
+  const { updateAvailable, onlinePackage, currentVersion, err } = await compareNpmVersions({ cwd })
+
+
+  if (!err && !DISPLAY_LOG_ONCE) {
+    let log = `╭───────────────────────────────────────────────────╮
+│   🍕 SliceMachine ${currentVersion.split('-')[0]} started.                  │
+`
+  if (updateAvailable) {
+    log += `│   A new version (${onlinePackage.version}) is available!            │
+│                                                   │
+│   Upgrade now: yarn add slice-machine-ui@latest   │
+│                                                   │    
+`
+  }
+
+log += `╰───────────────────────────────────────────────────╯`
+
+  DISPLAY_LOG_ONCE = 1
+  console.log(log)
+
+  }
 
   const mockConfig = getMockConfig(cwd)
 

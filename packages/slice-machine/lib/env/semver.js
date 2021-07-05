@@ -61,10 +61,14 @@ export default function createComparator() {
       comparison = { err: new Error('Could not parse package version') }
       return comparison
     }
+
     const onlinePackage = await fetchJsonPackage(manifest.name)
+    const updateAvailable = compare(manifest, onlinePackage, { cwd })
+
     comparison = {
       currentVersion: manifest.version,
-      updateAvailable: compare(manifest, onlinePackage, { cwd }),
+      onlinePackage,
+      updateAvailable,
     }
     return comparison
   }

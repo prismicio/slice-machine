@@ -39,7 +39,7 @@ const WidgetForm = ({
           onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject)
         }}
       >
-          {props => console.log(props.errors) || (
+          {props => (
             <Form id
             ={formId}>
               {
