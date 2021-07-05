@@ -78,6 +78,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const sliceName = getComponentName(slicePath)
 
   if (!sliceName || !sliceName.length) {
+    console.error(`[queries/component-info] Could not find slice name at path "${slicePath}". Skipping...`)
     return
   }
   
