@@ -1,7 +1,6 @@
 {
   "libraries": [
     "@/slices",
-    "@/slices2/src",
     "vue-essential-slices"
   ],
   "apiEndpoint": "https://sm-env-example.prismic.io/api/v2",

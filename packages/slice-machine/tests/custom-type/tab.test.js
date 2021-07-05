@@ -68,6 +68,21 @@ test('it adds widget', () => {
   
 })
 
+test('it adds widget', () => {
+  const { result, initialTab } = init()
+
+  const previousTabLen = result.current[0].current.tabs.length
+
+  const { key, value } = initialTab
+  const widgetId = 'myWidget'
+  act(() => { result.current[1].tab(key).addWidget(widgetId, widgets.Boolean.create(widgetId)) })
+
+  const newValue = result.current[0].current.tabs[0].value
+  expect(newValue.length).toEqual(value.length + 1)
+  expect(newValue[newValue.length - 1].key).toEqual(widgetId)
+  
+})
+
 test('it removes widget', () => {
   const { result, initialTab } = init()
 
