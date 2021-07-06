@@ -152,7 +152,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
 `
   }
 
-log += `╰───────────────────────────────────────────────────╯`
+  log += `╰───────────────────────────────────────────────────╯`
 
   DISPLAY_LOG_ONCE = 1
   console.log(log)
@@ -187,3 +187,4 @@ log += `╰───────────────────────
     }
   }
 }
+

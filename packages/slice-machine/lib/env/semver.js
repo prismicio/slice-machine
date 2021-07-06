@@ -1,6 +1,8 @@
 import semver from 'semver'
 import Files from '../utils/files'
-import { YarnLock } from '../models/paths'
+import {
+  YarnLock
+} from '../models/paths'
 
 const MessageByManager = {
   YARN: (name) => `yarn add -D ${name}`,
@@ -8,9 +10,9 @@ const MessageByManager = {
 }
 
 const createMessage = (name, cwd) =>
-  Files.exists(YarnLock(cwd))
-    ? MessageByManager.YARN(name)
-    : MessageByManager.NPM(name)
+  Files.exists(YarnLock(cwd)) ?
+    MessageByManager.YARN(name) :
+    MessageByManager.NPM(name)
 
 async function fetchJsonPackage(packageName) {
   try {
@@ -19,7 +21,7 @@ async function fetchJsonPackage(packageName) {
       throw new Error(`[scripts/bundle] Unable to fetch JSON package for package "${packageName}"`);
     }
     return await response.json();
-  } catch(e) {
+  } catch (e) {
     return e
   }
 }
@@ -31,13 +33,15 @@ const compare = (manifest, onlinePackage, { cwd }) => {
     if (lt) {
       return {
         current: manifest.version,
-        next: onlinePackage.version, 
+        next: onlinePackage.version,
         message: createMessage(manifest.name, cwd)
       }
     }
     return null
   }
-  return { err: onlinePackage }
+  return {
+    err: onlinePackage
+  }
 }
 
 export default function createComparator() {
@@ -52,13 +56,15 @@ export default function createComparator() {
         if (Files.exists(pathToManifest)) {
           return Files.readJson(pathToManifest)
         }
-    } catch(e) {
-      console.error(e)
-      return null
-    }
+      } catch (e) {
+        console.error(e)
+        return null
+      }
     })()
     if (!manifest) {
-      comparison = { err: new Error('Could not parse package version') }
+      comparison = {
+        err: new Error('Could not parse package version')
+      }
       return comparison
     }
 
