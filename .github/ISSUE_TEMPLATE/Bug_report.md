@@ -1,27 +1,36 @@
 ---
-name: "🐛 Bug Report"
-about: "Found something that is not working as expected? Please prefer this template 🙂"
-labels: bug
+name: 🚨 Bug report
+about: Report a bug report to help us improve the package.
+title: ""
+labels: "bug"
+assignees: ""
 ---
 
-### Version
+<!-- 💙 Thanks for your time to make this package better with your feedback 💙
 
-- Prismic CLI version (know it by running `prismic --version`): <!-- vX.X.X -->
+**IMPORTANT** Before reporting a bug please make sure that you have read through the documentation:
+- https://prismic.io/docs
 
-<!-- Feel free to include any other environment-related information here (framework used, other modules version, etc.) -->
+👍 A properly detailed bug report can save a LOT of time and help fixing issues as soon as possible.
+-->
+
+### Versions
+
+- slice-machine-ui: <!-- ex: v0.1.0 -->
+- node: <!-- ex: v12.14.0 -->
 
 ### Reproduction
 
-<!-- Define a way to reproduce said bug -->
+<!-- Link to a minimal test case, without a reproduction, it is so hard to address problem :( -->
+
+<details open>
+<summary>Additional Details</summary>
+<br>
+<!-- Attaching `package.json`, dependencies, logs or code snippets would help to find the issue -->
+</details>
+
+### Steps to reproduce
 
 ### What is expected?
 
-<!-- Define the expected behavior -->
-
 ### What is actually happening?
-
-<!-- Define the buggy behavior -->
-
-### Any additional information
-
-<!-- Any other useful information: suggestions, potential workarounds, etc. -->
