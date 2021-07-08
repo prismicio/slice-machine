@@ -19,7 +19,9 @@ export interface CustomTypeJsonModel {
   repeatable: boolean;
   label: string;
   json: {
-    [key: string]: Field | SliceZone
+    [key: string]: {
+      [fieldId: string]: Field | SliceZone
+    }
   };
 }
 
@@ -61,6 +63,19 @@ export const CustomType = {
         }
 
       }, {})
+    }
+  },
+  fromJsonModel(key: string, ct: CustomTypeJsonModel): CustomType<ObjectTabs> {
+    const { json, ...rest } = ct
+    return {
+      ...rest,
+      id: key,
+      tabs: Object.entries(json).reduce((acc, [key, value]) => {
+        return {
+          ...acc,
+          [key]: { key, value }
+        }
+      }, {}),
     }
   },
   getSliceZones(ct: CustomType<ArrayTabs>): ReadonlyArray<SliceZoneAsArray | null> {

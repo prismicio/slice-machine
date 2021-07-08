@@ -2,8 +2,7 @@ export const valid = {
   __pass: true,
   type: "GeoPoint",
   config: {
-    label: "GeoPoint",
-    placeholder: "GeoPoint string"
+    label: "GeoPoint"
   }
 }
 
@@ -11,8 +10,7 @@ export const wrongType = {
   __pass: false,
   type: "GeoPoint2",
   config: {
-    label: "GeoPoint",
-    placeholder: "GeoPoint string"
+    label: "GeoPoint"
   }
 }
 

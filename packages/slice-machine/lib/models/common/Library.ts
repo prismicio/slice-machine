@@ -1,6 +1,6 @@
-import equal from 'fast-deep-equal'
 // @ts-ignore
 import { pascalize } from '../../utils/str'
+import { compareVariations } from '../../utils'
 
 import Slice from './Slice'
 import { AsObject } from './Variation'
@@ -24,7 +24,7 @@ export interface Library {
 export const Library = {
   withStatus: function (lib: Library, remoteSlices: ReadonlyArray<Slice<AsObject>>): Library {
     const components = lib.components.map((component: Component) => {
-      const sliceFound = remoteSlices.find(slice => component.infos.sliceName === pascalize(slice.id))
+      const sliceFound = remoteSlices.find(slice => component.model.id === slice.id)
       const __status = (() => {
         const hasPreviewsMissing = ComponentInfo.hasPreviewsMissing(component.infos)
         if (hasPreviewsMissing) {
@@ -37,8 +37,7 @@ export const Library = {
         if (!sliceFound) {
           return LibStatus.NewSlice
         }
-        // imageUrl is always undefined in library state
-        return !equal(component.model.variations.map(e => ({ ...e, imageUrl: undefined })), sliceFound.variations.map(e => ({ ...e, imageUrl: undefined })))
+        return !compareVariations(component.model.variations, sliceFound.variations)
           ? LibStatus.Modified
           : LibStatus.Synced
       })();

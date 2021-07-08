@@ -2,18 +2,21 @@ import Head from 'next/head'
 import React, { Fragment, useState, useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
 import { Box, Flex, Button, Text, Spinner } from 'theme-ui'
-import Container from 'components/Container'
-import SliceList from 'components/SliceList'
 
-import { LibrariesContext } from 'src/models/libraries/context'
+import { getFormattedLibIdentifier } from '../lib/utils/lib'
+import Container from '../components/Container'
+import SliceList from '../components/SliceList'
+
+import { LibrariesContext } from '../src/models/libraries/context'
+import Environment from '../lib/models/common/Environment'
 
 import { GoPlus } from 'react-icons/go'
 
-import CreateSlice from 'components/Forms/CreateSlice'
+import CreateSlice from '../components/Forms/CreateSlice'
 
-import { fetchApi } from 'lib/builders/common/fetch'
+import { fetchApi } from '../lib/builders/common/fetch'
 
-import Header from 'components/Header'
+import Header from '../components/Header'
 
 const UnclickableCardWrapper = ({ children }) => children
 
@@ -37,7 +40,7 @@ const CreateSliceButton = ({ onClick, loading }) => (
   </Button>
 )
 
-const SlicesIndex = () => {
+const SlicesIndex = ({ env }: { env: Environment }) => {
   const libraries = useContext(LibrariesContext)
   const [data, setData] = useState({ loading: false })
   const [isOpen, setIsOpen] = useState(false)
@@ -49,16 +52,28 @@ const SlicesIndex = () => {
         setData({ loading: true })
       },
       successMessage: 'Model was correctly saved to Prismic!',
-      onSuccess({ reason, variationId }) {
+      onSuccess({ reason, variationId }: { reason: string | undefined, variationId: string }) {
         if (reason) {
           return console.error(reason)
         }
-        window.location.href = `/${from}/${sliceName}/${variationId}`
+        window.location.href = `/${from.replace(/\//g, "--")}/${sliceName}/${variationId}`
       }
     })
   }
 
-  const localLibs = libraries.filter(e => e.isLocal)
+  const localLibs = libraries.length && libraries.filter(e => e.isLocal) 
+  const hasLocalLibs = localLibs.length
+  const configLocalLibs = (env.userConfig.libraries || []).reduce<ReadonlyArray<{name: string}>>((acc, curr) => {
+    const { isLocal, from } = getFormattedLibIdentifier(curr)
+    if (!isLocal) {
+      return acc
+    }
+    return [...acc, { name: from }]
+  }, [])
+  const hasConfigLocalLibs = configLocalLibs.length
+
+  const createSliceLocalLibs = hasLocalLibs ? localLibs : configLocalLibs
+  
 
   return (
     <Fragment>
@@ -68,12 +83,43 @@ const SlicesIndex = () => {
       <Container>
         <main>
           <Header
-            ActionButton={localLibs.length ? <CreateSliceButton onClick={() => setIsOpen(true)} {...data} /> : null}
+            ActionButton={hasLocalLibs ? <CreateSliceButton onClick={() => setIsOpen(true)} {...data} /> : null}
             MainBreadcrumb={(
               <Fragment><FiLayers /> <Text ml={2}>Slice libraries</Text></Fragment>
             )}
             breadrumbHref="/slices"
           />
+          {
+            !libraries.length ? (
+              <Box>
+                {
+                  hasConfigLocalLibs ? (
+                    <Box>
+                      <p>
+                        We could not find any slice in your project.
+                        <br />To start using the builder, create your first slice! 
+                      </p>
+                      <Button
+                        onClick={() => setIsOpen(true)}
+                      >
+                        { data.loading ? <Spinner sx={{ position: "relative", top: '4px'}} color="#F7F7F7" size={18} mr={2} /> : null} Create slice
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Box>
+                      <p>
+                        We could not find any local library in your project.
+                        <br />Please update your `sm.json` file with a path to slices, eg:
+                      </p>
+                      <p>
+                        <pre>{`{ "libraries": ["@/slices"] }`}</pre>
+                      </p>
+                    </Box>
+                  )
+                }
+              </Box>
+            ) : null
+          }
           <Box>
             {libraries &&
               libraries.map(({ name, isLocal, components }, i) => isLocal || true ? (
@@ -108,11 +154,11 @@ const SlicesIndex = () => {
         </main>
       </Container>
       {
-        localLibs.length ? (
+        createSliceLocalLibs.length ? (
           <CreateSlice
             isOpen={isOpen}
             close={() => setIsOpen(false)}
-            libraries={localLibs}
+            libraries={createSliceLocalLibs}
             onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
           />
         ) : null

@@ -46,7 +46,7 @@ test.each(WidgetsTable)('%s: schema validates configuration', (name, widget) => 
 
   const tests = require(`./__mockData__/widgets/${name}`)
   Object.entries(tests).forEach(([testName, t]) => {
-    validate(widget, t, name === 'Link' && testName)
+    validate(widget, t) //, name === 'GeoPoint' && testName)
   })
 });
 

@@ -37,7 +37,7 @@ const createOrUpdate = async ({
 export async function handler(
   env: Environment,
   slices: ReadonlyArray<Slice<AsObject>>,
-  { sliceName, from }: { sliceName: string, from: string}) {
+  { sliceName, from }: { sliceName: string, from: string }) {
   const modelPath = CustomPaths(env.cwd)
     .library(from)
     .slice(sliceName)
@@ -61,7 +61,7 @@ export async function handler(
           if(err) throw new Error(err.reason)
           imageUrlsByVariation[variationId] = s3ImageUrl
         } else {
-          console.error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+          console.error(`--- Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
           imageUrlsByVariation[variationId] = null
         }
       }

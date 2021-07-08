@@ -5,7 +5,7 @@ import App, { AppContext } from "next/app";
 
 import theme from "../src/theme";
 // @ts-ignore
-import { ThemeProvider, BaseStyles } from "theme-ui";
+import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
 import LibrariesProvider from "../src/models/libraries/context";
 import CustomTypesProvider from "../src/models/customTypes/context";
@@ -24,7 +24,6 @@ import ToastProvider from "../src/ToastProvider";
 import {
   FetchError,
   LacksStorybookConf,
-  NoLibraryConfigured,
 } from "../components/UnrecoverableErrors";
 
 import "react-tabs/style/react-tabs.css";
@@ -57,6 +56,17 @@ function mapSlices(libraries: ReadonlyArray<Library>): any {
   }, {})
 }
 
+const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
+  const { setColorMode } = useThemeUI()
+  useEffect(() => {
+    if(setColorMode) {
+      setColorMode('light')
+    }
+  }, [])
+
+  return children
+}
+
 const RenderStates = {
   Loading: () => <LoadingPage />,
   LacksStorybookConf,
@@ -71,7 +81,6 @@ const RenderStates = {
   }) => <Component {...pageProps} {...rest} />,
   FetchError,
   LibError: FetchError,
-  NoLibraryConfigured,
   ConfigError: ({
     configErrors,
   }: {
@@ -119,12 +128,8 @@ function MyApp({
       return;
     } else if (!data.libraries) {
       setRenderer({ Renderer: RenderStates.LibError, payload: data });
-    } else if (!data.libraries.length) {
-      setRenderer({
-        Renderer: RenderStates.NoLibraryConfigured,
-        payload: { env: data.env },
-      });
-    } else if (!data.env.hasGeneratedStoriesPath) {
+    }
+    else if (!data.env.hasGeneratedStoriesPath) {
       setRenderer({
         Renderer: RenderStates.LacksStorybookConf,
         payload: { env: data.env },
@@ -155,62 +160,64 @@ function MyApp({
   return (
     <ThemeProvider theme={theme}>
       <BaseStyles>
-        {!data ? (
-          <Renderer {...payload} />
-        ) : (
-          <ConfigProvider value={data}>
-            {!payload || !payload.libraries ? (
-              <Renderer
-                Component={Component}
-                pageProps={pageProps}
-                {...payload}
-                openPanel={openPanel}
-              />
-            ) : (
-              <LibrariesProvider
-                remoteSlices={payload.remoteSlices}
-                libraries={payload.libraries}
-                env={payload.env}
-              >
-                <CustomTypesProvider
-                  customTypes={payload.customTypes}
-                  remoteCustomTypes={payload.remoteCustomTypes}
+        <RemoveDarkMode>
+          {!data ? (
+            <Renderer {...payload} />
+          ) : (
+            <ConfigProvider value={data}>
+              {!payload || !payload.libraries ? (
+                <Renderer
+                  Component={Component}
+                  pageProps={pageProps}
+                  {...payload}
+                  openPanel={openPanel}
+                />
+              ) : (
+                <LibrariesProvider
+                  remoteSlices={payload.remoteSlices}
+                  libraries={payload.libraries}
+                  env={payload.env}
                 >
-                  <ToastProvider>
-                    <AppLayout {...payload} data={data}>
-                      <SliceHandler {...payload}>
-                        {/* <NavBar
-                                  env={data.env}
-                                  warnings={data.warnings}
-                                  openPanel={() => openPanel()}
-                                /> */}
-                        <Renderer
-                          Component={Component}
-                          pageProps={pageProps}
-                          {...payload}
-                          openPanel={openPanel}
-                        />
-                        <Drawer
-                          placement="right"
-                          open={drawerState.open}
-                          onClose={() =>
-                            setDrawerState({ ...drawerState, open: false })
-                          }
-                        >
-                          <Warnings
-                            priority={drawerState.priority}
-                            list={data.warnings}
-                            configErrors={data.configErrors}
+                  <CustomTypesProvider
+                    customTypes={payload.customTypes}
+                    remoteCustomTypes={payload.remoteCustomTypes}
+                  >
+                    <ToastProvider>
+                      <AppLayout {...payload} data={data}>
+                        <SliceHandler {...payload}>
+                          {/* <NavBar
+                                    env={data.env}
+                                    warnings={data.warnings}
+                                    openPanel={() => openPanel()}
+                                  /> */}
+                          <Renderer
+                            Component={Component}
+                            pageProps={pageProps}
+                            {...payload}
+                            openPanel={openPanel}
                           />
-                        </Drawer>
-                      </SliceHandler>
-                    </AppLayout>
-                  </ToastProvider>
-                </CustomTypesProvider>
-              </LibrariesProvider>
-            )}
-          </ConfigProvider>
-        )}
+                          <Drawer
+                            placement="right"
+                            open={drawerState.open}
+                            onClose={() =>
+                              setDrawerState({ ...drawerState, open: false })
+                            }
+                          >
+                            <Warnings
+                              priority={drawerState.priority}
+                              list={data.warnings}
+                              configErrors={data.configErrors}
+                            />
+                          </Drawer>
+                        </SliceHandler>
+                      </AppLayout>
+                    </ToastProvider>
+                  </CustomTypesProvider>
+                </LibrariesProvider>
+              )}
+            </ConfigProvider>
+          )}
+        </RemoveDarkMode>
       </BaseStyles>
     </ThemeProvider>
   );

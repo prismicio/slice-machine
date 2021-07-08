@@ -1,11 +1,12 @@
-import { renderHook, act } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react-hooks'
 
 import { useModelReducer } from '../../src/models/customType/modelReducer'
 import { CustomTypeStatus } from '../../lib/models/ui/CustomTypeState'
+import { CustomType } from '../../lib/models/common/CustomType'
 
 import jsonModel from './__mockData__/model.json'
 
-const model = { ...jsonModel, tabs: jsonModel.json }
+const model = CustomType.fromJsonModel(jsonModel.id, jsonModel)
 
 test('it renders model reducer', () => {
   const { result } = renderHook(() => useModelReducer({

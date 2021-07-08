@@ -20,7 +20,7 @@
     "build-server": "tsc --project ./server",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && yarn clean-build",
-    "bundle": "yarn build && yarn export-build",
+    "bundle": "yarn test && yarn build && yarn export-build",
     "slicemachine": "start-slicemachine --port 9999"
   },
   "bin": {
@@ -90,6 +90,7 @@
     "@types/slash": "^3.0.0",
     "@types/uniqid": "^5.3.0",
     "cross-env": "^7.0.3",
+    "diff": "^5.0.0",
     "formik": "^2.1.4",
     "i": "^0.3.6",
     "jest": "^26.1.0",

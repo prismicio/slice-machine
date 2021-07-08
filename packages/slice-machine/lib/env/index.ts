@@ -33,36 +33,44 @@ function validate(config: { apiEndpoint: string, storybook: string }): {[errorKe
     }
   }
   if (!errors.apiEndpoint) {
-    try {
-      const endpoint = fromUrl(config.apiEndpoint)
-      const parsedRepo = parseDomain(endpoint)
-      const errorMessage = {
-          message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
-          example: 'http://my-project.prismic.io/api/v2',
-          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-        }
-      switch (parsedRepo.type) {
-        case ParseResultType.Listed: {
-          if (!parsedRepo?.subDomains?.length) {
-            errors.apiEndpoint = errorMessage
+    const maybeError = (() => {
+      try {
+        const endpoint = fromUrl(config.apiEndpoint)
+        const parsedRepo = parseDomain(endpoint)
+        const errorMessage = {
+            message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
+            example: 'http://my-project.prismic.io/api/v2',
+            run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
           }
-          if (typeof endpoint === 'string' && !endpoint.endsWith('api/v2')) {
-            errors.apiEndpoint = {
-          message: `Endpoint does not end with "api/v2" (value: "${config.apiEndpoint}")`,
-          example: 'http://my-project.prismic.io/api/v2',
-          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-        }
+        switch (parsedRepo.type) {
+          case ParseResultType.Listed: {
+            if (!parsedRepo?.subDomains?.length) {
+              return errorMessage
+            }
+            if (!config.apiEndpoint.endsWith('api/v2') && !config.apiEndpoint.endsWith('api/v2/')) {
+              return {
+                message: `Endpoint does not end with "api/v2" (value: "${config.apiEndpoint}")`,
+                example: 'http://my-project.prismic.io/api/v2',
+                run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
+              }
+            }
+            return null
+          }
+          default: {
+            return errorMessage
           }
         }
-        default: 
-          errors.apiEndpoint = errorMessage
+      } catch(e) {
+        const message = '[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..'
+        console.error(message)
+        throw new Error(message)
       }
-    } catch(e) {
-      const message = '[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..'
-      console.error(message)
-      throw new Error(message)
+    })();
+    if (maybeError) {
+      errors.apiEndpoint = maybeError
     }
   }
+
   if (!config.storybook) {
     errors.storybook = {
       message: `Could not find storybook property in sm.json`,

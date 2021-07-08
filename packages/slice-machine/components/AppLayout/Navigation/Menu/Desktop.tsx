@@ -27,7 +27,7 @@ const Desktop = () => {
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
           <Divider variant="sidebar" />
-          <Item link={warnings(navCtx?.warnings.length)} />
+          <Item link={warnings(navCtx?.warnings?.length)} />
           <VersionBadge
             label="Version"
             version={navCtx?.env?.currentVersion as string}

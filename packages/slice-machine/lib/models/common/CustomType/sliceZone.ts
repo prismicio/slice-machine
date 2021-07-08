@@ -45,6 +45,9 @@ export const SliceZone = {
     }
   },
   addSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
+    if (sz.value.find(e => e.key === key)) {
+      return sz
+    }
     return {
       ...sz,
       value: [...sz.value, {
@@ -58,7 +61,7 @@ export const SliceZone = {
   replaceSharedSlice(sz: SliceZoneAsArray, keys: [string]): SliceZoneAsArray {
     return {
       ...sz,
-      value: keys.map(key =>({
+      value: keys.map(key => ({
         key,
         value:  {
           type: SharedSliceType

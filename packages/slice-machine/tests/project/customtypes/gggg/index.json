@@ -2,7 +2,7 @@
   "id": "gggg",
   "label": "gggg",
   "status": true,
-  "repeatable": false,
+  "repeatable": true,
   "json": {
     "Main": {
       "sdsds": {
@@ -41,18 +41,9 @@
         },
         "type": "Group"
       },
-      "fsdf": {
-        "config": {
-          "label": "My Label !",
-          "placeholder_false": "false",
-          "placeholder_true": "true",
-          "default_value": true
-        },
-        "type": "Boolean"
-      },
       "sdfsdf": {
         "config": {
-          "label": "My Label !",
+          "label": "My Label !2",
           "placeholder": ""
         },
         "type": "Date"
@@ -63,6 +54,15 @@
           "placeholder": "SSS"
         },
         "type": "Timestamp"
+      },
+      "fsdf": {
+        "config": {
+          "label": "My Label !",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": true
+        },
+        "type": "Boolean"
       },
       "sdfsd": {
         "config": {
@@ -98,29 +98,6 @@
           "placeholder": "SSS"
         },
         "type": "Text"
-      },
-      "body": {
-        "type": "Slices",
-        "fieldset": "Slice Zone",
-        "config": {
-          "choices": {
-            "with_mocks": {
-              "type": "SharedSlice"
-            },
-            "cards_carousel": {
-              "type": "SharedSlice"
-            },
-            "images_slider": {
-              "type": "SharedSlice"
-            },
-            "feature_testimonials": {
-              "type": "SharedSlice"
-            },
-            "alternate_grid": {
-              "type": "SharedSlice"
-            }
-          }
-        }
       }
     }
   }

@@ -18,6 +18,7 @@ import {
 } from './actions'
 
 import { LibStatus } from '../../../lib/models/common/Library'
+import { compareVariations } from '../../../lib/utils'
 
 
 export function reducer(prevState: SliceState, action: { type: string, payload?: unknown }): SliceState {
@@ -149,8 +150,8 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
       return !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig)
     })(),
     __status: (() => {
-      return result.infos.previewUrls !== result.initialPreviewUrls
-      || !equal(result.remoteVariations, result.initialVariations)
+      return !equal(result.infos.previewUrls, result.initialPreviewUrls)
+      || !compareVariations(result.remoteVariations, result.initialVariations)
       ? LibStatus.Modified
       : LibStatus.Synced
     })()

@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import equal from 'fast-deep-equal'
 
 import { Widget } from '../models/common/widgets/Widget'
 import { FieldType } from '../models/common/CustomType/fields'
@@ -10,6 +11,7 @@ import {
 
 
 import { createStorybookId, camelCaseToDash } from './str'
+import { AsArray, AsObject, Variation } from '@lib/models/common/Variation'
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   const { [prop]: __removed, ...rest  } = obj
@@ -35,6 +37,9 @@ export const ensureWidgetTypeExistence = (Widgets: { [x: string]: Widget<any, an
   return false
 }
 
+export const compareVariations = (lhs: ReadonlyArray<Variation<AsObject|AsArray>>, rhs: ReadonlyArray<Variation<AsObject|AsArray>>) => {
+  return equal(lhs.map(e => ({ ...e, imageUrl: undefined })), rhs.map(e => ({ ...e, imageUrl: undefined })))
+}
 export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
   TYPE_NAME,
   FormFields: DefaultFields,

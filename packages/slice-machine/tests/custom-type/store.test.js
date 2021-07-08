@@ -3,13 +3,13 @@ import { renderHook, act } from '@testing-library/react-hooks'
 import equal from 'fast-deep-equal'
 
 import { useModelReducer } from '../../src/models/customType/modelReducer'
-import { CustomTypeStatus } from '../../lib/models/ui/CustomTypeState'
+import { CustomType } from '../../lib/models/common/CustomType'
 
 import * as widgets from '../../lib/models/common/widgets/withGroup'
 
 import jsonModel from './__mockData__/model.json'
 
-const model = { ...jsonModel, tabs: jsonModel.json }
+const model = CustomType.fromJsonModel(jsonModel.id, jsonModel)
 
 const init = (initialData) => {
   const data = initialData || {
@@ -40,8 +40,6 @@ test('it creates a tab', () => {
 test('it resets custom type', () => {
   const { result } = init()
 
-  const previousTabLen = result.current[0].current.tabs.length
-
   const newTabName = 'Tab1'
   act(() => { result.current[1].createTab(newTabName) })
 
@@ -56,8 +54,6 @@ test('it resets custom type', () => {
 test('it adds widget', () => {
   const { result, initialTab } = init()
 
-  const previousTabLen = result.current[0].current.tabs.length
-
   const { key, value } = initialTab
   const widgetId = 'myWidget'
   act(() => { result.current[1].tab(key).addWidget(widgetId, widgets.Boolean.create(widgetId)) })
@@ -70,8 +66,6 @@ test('it adds widget', () => {
 
 test('it adds widget', () => {
   const { result, initialTab } = init()
-
-  const previousTabLen = result.current[0].current.tabs.length
 
   const { key, value } = initialTab
   const widgetId = 'myWidget'
@@ -86,7 +80,7 @@ test('it adds widget', () => {
 test('it removes widget', () => {
   const { result, initialTab } = init()
 
-  const { key, value } = initialTab
+  const { key } = initialTab
   const widget = initialTab.value[0]
 
   act(() => { result.current[1].tab(key).removeWidget(widget.key) })
@@ -98,7 +92,7 @@ test('it removes widget', () => {
 test('it replaces widget', () => {
   const { result, initialTab } = init()
 
-  const { key, value } = initialTab
+  const { key } = initialTab
   const widget = initialTab.value[0]
 
   const initialStoreTab = result.current[0].current.tabs[0]
@@ -166,14 +160,56 @@ test('it reorders widgets', () => {
 
 })
 
-test('it creates sliceZone', () => {
+test('it removes sliceZone', () => {
   const { result, initialTab } = init()
 
-  const { key, value } = initialTab
-  const widget = initialTab.value[0]
+  const { key } = initialTab
 
-  act(() => { result.current[1].tab(key).removeWidget(widget.key) })
+  expect(result.current[0].current.tabs[0].sliceZone).not.toEqual(null)
 
-  expect(result.current[0].current.tabs[0].value.length).toEqual(initialTab.value.length - 1)
+  act(() => { result.current[1].tab(key).deleteSliceZone() })
+
+  expect(result.current[0].current.tabs[0].sliceZone).toEqual(null)
   
+})
+
+test('it creates sliceZone', () => {
+  const { result, initialTab } = init()
+  const { key } = initialTab
+  act(() => { result.current[1].tab(key).deleteSliceZone() })
+  act(() => { result.current[1].tab(key).createSliceZone() })
+
+  expect(result.current[0].current.tabs[0].sliceZone).not.toEqual(null)  
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(0)
+  expect(result.current[0].current.tabs[0].sliceZone.key).toEqual('slices')
+})
+
+test('it adds and removes slices to/from sliceZone', () => {
+  const { result, initialTab } = init()
+  const { key } = initialTab
+  act(() => { result.current[1].tab(key).deleteSliceZone() })
+  act(() => { result.current[1].tab(key).createSliceZone() })
+
+  act(() => { result.current[1].tab(key).addSharedSlice('MySlice') })
+
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1)
+  expect(result.current[0].current.tabs[0].sliceZone.value[0].value.type).toEqual('SharedSlice')
+
+  // Slice exists already
+  act(() => { result.current[1].tab(key).addSharedSlice('MySlice') })
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1)
+
+  act(() => { result.current[1].tab(key).addSharedSlice('MySlice2') })
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(2)
+
+  // Slice does not exist
+  act(() => { result.current[1].tab(key).removeSharedSlice('MyUndefSlice') })
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(2)
+
+  act(() => { result.current[1].tab(key).removeSharedSlice('MySlice') })
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1)
+
+  const keys = ['Slice1', 'Slice2', 'Slice3', 'Slice4']
+  act(() => { result.current[1].tab(key).replaceSharedSlices(keys) })
+  expect(result.current[0].current.tabs[0].sliceZone.value.map(e => e.key)).toEqual(keys)
 })

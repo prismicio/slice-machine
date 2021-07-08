@@ -32,7 +32,7 @@ export async function handler(
       value: mockConfig
     })
 
-    console.log('[slice/save]: updating slice model')
+    console.log('\n\n[slice/save]: Updating slice model')
 
     const modelPath = CustomPaths(env.cwd)
       .library(from)
@@ -49,7 +49,7 @@ export async function handler(
     )
 
     if(!hasCustomMocks) {
-      console.log('[slice/save]: generating mocks')
+      console.log('[slice/save]: Generating mocks')
     
       const mockedSlice = await mock(sliceName, model, SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName))
       Files.write(
@@ -61,21 +61,14 @@ export async function handler(
       )
     }
 
-    // const hasCustomStories = Files.exists(
-    //   CustomPaths(env.cwd)
-    //   .library(from)
-    //   .slice(sliceName)
-    //   .stories()
-    // )
-
-    console.log('[slice/save]: generating stories')
+    console.log('[slice/save]: Generating stories')
     Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName)
     
 
     let warning: string | null = null
     let previewUrls: { [variationId: string]: Preview } = {}
 
-    console.log('[slice/save]: generating screenshots previews')
+    console.log('[slice/save]: Generating screenshots previews')
     const generatedPreviews = await Previews.generateForSlice(env, from, sliceName)
 
     const failedPreviewsIds = generatedPreviews.filter(p => !p.hasPreview).map(p => p.variationId)

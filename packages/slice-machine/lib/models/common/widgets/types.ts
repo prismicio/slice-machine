@@ -59,9 +59,11 @@ export class EmbedField implements Field {
 }
 
 export class GeoPointField implements Field {
-  config: SimpleField;
+  config: {
+    label: string
+  };
   readonly type = FieldType.GeoPoint;
-  constructor(config = simpleField) {
+  constructor(config = { label: '' }) {
     this.config = config
   }
 }

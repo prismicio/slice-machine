@@ -26,11 +26,11 @@ export const Tab = {
     return { key: id, value: [], sliceZone: null }
   },
   toArray(key: string, tab: TabAsObject): TabAsArray {
-    const maybeSliceZone = Object.entries(tab).find(([, value]) => value.type === sliceZoneType)
+    const maybeSliceZone = Object.entries(tab.value).find(([, value]) => value.type === sliceZoneType)
 
     return {
       key,
-      value: Object.entries(tab).reduce((acc: AsArray, [fieldId, value]: [string, Field]) => {
+      value: Object.entries(tab.value).reduce<AsArray>((acc: AsArray, [fieldId, value]: [string, Field]) => {
         if (value.type === sliceZoneType) {
           return acc
         }
@@ -144,15 +144,17 @@ export const Tab = {
 
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray('', tab)
-    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: { key: string, value: Field }) => {
+    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<OrganisedFields>((acc: OrganisedFields, curr: { key: string, value: Field | GroupField<AsArray> }) => {
       if (curr.value.type === sliceZoneType) {
         return acc
       }
+      if (curr.value.type === FieldType.UID) {
+        return acc
+      }
       if (curr.value.type === FieldType.Group) {
-        const GroupAsArray = Group.toArray(curr.value as GroupField<AsObject>)
         return {
           ...acc,
-          groups: [...acc.groups, { key: curr.key, value: GroupAsArray }]
+          groups: [...acc.groups, { key: curr.key, value: curr.value as GroupField<AsArray> }]
         }
       }
       return {

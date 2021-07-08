@@ -96,7 +96,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const sliceModel: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
   const { model: modelData, migrated } = migrate(sliceModel.data, { sliceName, from }, null, false)
   const model = { data: modelData }
-  const previewUrls = model.data.variations
+  const previewUrls = (model.data.variations || [])
     .map((v: any) => {
       const activeScreenshot = migrated
         ? getExternalPathToScreenshot({ cwd, from, sliceName })

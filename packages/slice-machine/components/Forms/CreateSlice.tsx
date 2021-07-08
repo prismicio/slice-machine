@@ -33,7 +33,7 @@ const CreateSlice = ({
   onSubmit,
   close,
   libraries
-}: { isOpen: boolean, onSubmit: Function, close: Function, libraries: ReadonlyArray<LibraryState> }) => {
+}: { isOpen: boolean, onSubmit: Function, close: Function, libraries: ReadonlyArray<{ name: string }> }) => {
 
   return (
     <ModalFormCard

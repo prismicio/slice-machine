@@ -18,7 +18,6 @@ const state = require('./state').default
 const pushLibs = require('./libraries/push').default
 
 const saveCT = require('./custom-types/save').default
-const createCustomType = require('./custom-types/create').default
 const pushCustomType = require('./custom-types/push').default
 
 router.use('/__preview', async function previewRoute(req, res) {
@@ -103,15 +102,6 @@ router.use('/slices/push', async function (req, res) {
   const payload = await push(req.query)
   if (payload.err) {
     return res.status(payload.status).json(payload)
-  }
-  return res.status(200).json(payload)
-})
-
-router.use('/custom-types/create', async function (req, res) {
-  console.log('/custom-types/create')
-  const payload = await createCustomType(req.body)
-  if (payload.err) {
-    return res.status(400).json(payload)
   }
   return res.status(200).json(payload)
 })
