@@ -71,8 +71,6 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
     return [...acc, { name: from }]
   }, [])
   const hasConfigLocalLibs = configLocalLibs.length
-
-  const createSliceLocalLibs = hasLocalLibs ? localLibs : configLocalLibs
   
 
   return (
@@ -154,11 +152,11 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
         </main>
       </Container>
       {
-        createSliceLocalLibs.length ? (
+        configLocalLibs.length ? (
           <CreateSlice
             isOpen={isOpen}
             close={() => setIsOpen(false)}
-            libraries={createSliceLocalLibs}
+            libraries={configLocalLibs}
             onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
           />
         ) : null

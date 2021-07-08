@@ -64,7 +64,7 @@ const CreateSlice = ({
         title: 'Create a new slice',
       }}
     >
-      {({ errors, touched, values }: { errors: { sliceName?: string }, touched: { sliceName?: string }, values: any }) => (
+      {({ errors, touched, values, setFieldValue }: { errors: { sliceName?: string }, touched: { sliceName?: string }, values: any, setFieldValue: Function }) => (
         <Box>
           <InputBox
             name="sliceName"
@@ -77,7 +77,7 @@ const CreateSlice = ({
             name="origin"
             options={libraries.map(v => ({ value: v.name, label: v.name}))}
             onChange={(v: { label: string, value: string} | null) => {
-              console.log({ v })
+              setFieldValue('from', v.value)
             }}
             defaultValue={{ value: values.from, label: values.from }}
             theme={(theme) => {
