@@ -7,7 +7,7 @@ import Logo from "../Menu/Logo";
 import { NavCtx } from "..";
 import Item from "./Navigation/Item";
 
-const warnings = (len: number | undefined) => ({
+const warnings = (len: number ) => ({
   title: `Warnings${len ? ` (${len})` : ''}`,
   delimiter: true,
   href: "/warnings",
@@ -27,7 +27,7 @@ const Desktop = () => {
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
           <Divider variant="sidebar" />
-          <Item link={warnings(navCtx?.warnings?.length)} />
+          <Item link={warnings((navCtx?.warnings?.length || 0) + Object.keys(navCtx?.configErrors || {}).length)} />
           <VersionBadge
             label="Version"
             version={navCtx?.env?.currentVersion as string}

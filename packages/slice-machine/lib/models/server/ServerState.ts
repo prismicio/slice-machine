@@ -9,12 +9,13 @@ import { CustomType, ObjectTabs } from '../../../lib/models/common/CustomType'
 
 import ServerError from './ServerError'
 
+export interface ConfigErrors {[errorKey: string]: ServerError}
 export interface ServerState {
   libraries: ReadonlyArray<Library>
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>
   remoteSlices: ReadonlyArray<Slice<AsObject>>
   clientError?: ErrorWithStatus
-  configErrors: { errors?: {[errorKey: string]: ServerError} }
+  configErrors: ConfigErrors
   env: Environment
   warnings: ReadonlyArray<Warning>
 }

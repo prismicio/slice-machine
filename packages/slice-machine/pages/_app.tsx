@@ -21,10 +21,7 @@ import Warnings from "../components/Warnings";
 import AppLayout from "../components/AppLayout";
 import ToastProvider from "../src/ToastProvider";
 
-import {
-  FetchError,
-  LacksStorybookConf,
-} from "../components/UnrecoverableErrors";
+import { LacksStorybookConf } from "../components/UnrecoverableErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -79,12 +76,10 @@ const RenderStates = {
     pageProps: any;
     rest: any;
   }) => <Component {...pageProps} {...rest} />,
-  FetchError,
-  LibError: FetchError,
   ConfigError: ({
     configErrors,
   }: {
-    configErrors: { errors?: { [errorKey: string]: ServerError } };
+    configErrors: { [errorKey: string]: ServerError };
   }) => <ConfigErrors errors={configErrors} />,
 };
 
@@ -125,11 +120,9 @@ function MyApp({
 
   useEffect(() => {
     if (!data) {
-      return;
-    } else if (!data.libraries) {
-      setRenderer({ Renderer: RenderStates.LibError, payload: data });
+      return
     }
-    else if (!data.env.hasGeneratedStoriesPath) {
+    if (!data.env.hasGeneratedStoriesPath) {
       setRenderer({
         Renderer: RenderStates.LacksStorybookConf,
         payload: { env: data.env },

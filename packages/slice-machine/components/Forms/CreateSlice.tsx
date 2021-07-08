@@ -1,8 +1,6 @@
 import { Field } from 'formik'
 import  { Box, Label, Input, Text }from 'theme-ui'
 
-import LibraryState from '../../lib/models/ui/LibraryState'
-
 import Select from 'react-select'
 
 import ModalFormCard from '../../components/ModalFormCard'
@@ -77,7 +75,9 @@ const CreateSlice = ({
             name="origin"
             options={libraries.map(v => ({ value: v.name, label: v.name}))}
             onChange={(v: { label: string, value: string} | null) => {
-              setFieldValue('from', v.value)
+              if (v) {
+                setFieldValue('from', v.value)
+              }
             }}
             defaultValue={{ value: values.from, label: values.from }}
             theme={(theme) => {

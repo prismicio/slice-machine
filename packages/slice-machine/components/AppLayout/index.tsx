@@ -21,7 +21,7 @@ const AppLayout = ({
         flexDirection: ["column", "row", null],
       }}
     >
-      <Navigation env={env} warnings={data.warnings} />
+      <Navigation env={env} warnings={data.warnings} configErrors={data.configErrors} />
       <Box
         as="main"
         sx={{

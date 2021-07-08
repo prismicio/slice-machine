@@ -16,6 +16,7 @@ import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
 import { detectFramework } from '../framework'
+import { ConfigErrors } from '../models/server/ServerState';
 
 let DISPLAY_LOG_ONCE = 0
 
@@ -23,8 +24,8 @@ const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve
 
 const compareNpmVersions = createComparator()
 
-function validate(config: { apiEndpoint: string, storybook: string }): {[errorKey: string]: ServerError } | undefined {
-  const errors: {[errorKey: string]: ServerError } | undefined = {}
+function validate(config: { apiEndpoint: string, storybook: string }): ConfigErrors {
+  const errors: ConfigErrors = {}
   if (!config.apiEndpoint) {
     errors.apiEndpoint = {
       message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',

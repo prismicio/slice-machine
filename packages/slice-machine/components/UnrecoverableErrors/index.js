@@ -1,18 +1,5 @@
-import { useEffect } from 'react'
 import { Text } from 'theme-ui'
 import FullPage from 'components/FullPage'
-
-export const FetchError = ({ clientError }) => (
-  <FullPage>
-    <div>
-      <h2>{clientError.reason}</h2>
-      <p style={{ lineHeight: '30px', fontSize: '18px'}}>
-        Possible reasons: your <Text variant="styles.inlineCode">sm.json</Text> file does not contain a valid <Text variant="styles.inlineCode">apiEndpoint</Text> value.<br/>
-        Try to login to Prismic via the CLI (<Text variant="styles.inlineCode">prismic login</Text>) and that <br/><Text variant="styles.inlineCode">~/.prismic</Text> contains a <Text variant="styles.inlineCode">prismic-auth</Text> cookie.
-      </p>
-    </div>
-  </FullPage>
-)
 
 const Code = ({ children }) => (
   <Text variant="styles.inlineCode" sx={{ fontSize:'16px' }}>

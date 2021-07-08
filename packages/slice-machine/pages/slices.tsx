@@ -17,10 +17,11 @@ import CreateSlice from '../components/Forms/CreateSlice'
 import { fetchApi } from '../lib/builders/common/fetch'
 
 import Header from '../components/Header'
+import LibraryState from '../lib/models/ui/LibraryState'
 
-const UnclickableCardWrapper = ({ children }) => children
+const UnclickableCardWrapper = ({ children }: { children: React.ReactChildren }) => children
 
-const CreateSliceButton = ({ onClick, loading }) => (
+const CreateSliceButton = ({ onClick, loading }: { onClick: Function, loading: boolean }) => (
   <Button
     onClick={() => onClick()}
     sx={{
@@ -45,7 +46,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
   const [data, setData] = useState({ loading: false })
   const [isOpen, setIsOpen] = useState(false)
 
-  const _onCreate = ({ sliceName, from }) => {
+  const _onCreate = ({ sliceName, from }: { sliceName: string, from: string }) => {
     fetchApi({
       url: `/api/slices/create?sliceName=${sliceName}&from=${from}`,
       setData() {
@@ -61,7 +62,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
     })
   }
 
-  const localLibs = libraries.length && libraries.filter(e => e.isLocal) 
+  const localLibs = libraries.length ? libraries.filter(e => e && e.isLocal) : []
   const hasLocalLibs = localLibs.length
   const configLocalLibs = (env.userConfig.libraries || []).reduce<ReadonlyArray<{name: string}>>((acc, curr) => {
     const { isLocal, from } = getFormattedLibIdentifier(curr)
@@ -81,7 +82,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
       <Container>
         <main>
           <Header
-            ActionButton={hasLocalLibs ? <CreateSliceButton onClick={() => setIsOpen(true)} {...data} /> : null}
+            ActionButton={hasLocalLibs ? <CreateSliceButton onClick={() => setIsOpen(true)} {...data} /> : undefined}
             MainBreadcrumb={(
               <Fragment><FiLayers /> <Text ml={2}>Slice libraries</Text></Fragment>
             )}
@@ -120,7 +121,12 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
           }
           <Box>
             {libraries &&
-              libraries.map(({ name, isLocal, components }, i) => isLocal || true ? (
+              libraries.map((maybelib: LibraryState | undefined, i) => {
+                if (!maybelib) {
+                  return null
+                }
+                const { name, isLocal, components } = maybelib
+                return (
                 <div key={name}>
                   <Flex sx={{ alignItems: 'center', justifyContent: 'space-between', mt: i ? 4 : 0}}>
                     <Flex
@@ -146,8 +152,9 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                     slices={components.map(([e]) => e)}
                   />
                 </div>
-              ) : null )
-            }
+              )
+            })
+          }
           </Box>
         </main>
       </Container>
@@ -157,7 +164,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
             isOpen={isOpen}
             close={() => setIsOpen(false)}
             libraries={configLocalLibs}
-            onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
+            onSubmit={({ sliceName, from }: { sliceName: string, from: string }) => _onCreate({ sliceName, from })}
           />
         ) : null
       }

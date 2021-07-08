@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { ConfigContext } from "src/config-context";
 import { Box, Flex, Text } from "@theme-ui/components";
 import Container from "../components/Container";
+import ConfigErrors from "../components/ConfigErrors"
 import {
   NewVersionAvailable,
   ClientError,
@@ -53,8 +54,13 @@ export default function WarningsPage() {
             )
           })}
         </Box>
+        <Box>
+          {Object.entries(configErrors || {}).length ? (
+          <ConfigErrors errors={configErrors} />
+        ) : null}
+        </Box>
         {
-          !warnings || !warnings.length ? (
+          (!warnings || !warnings.length) && Object.keys(configErrors).length === 0 ? (
             <Box>
               <Text>Your project is correctly configured. Well done!</Text>
             </Box>
