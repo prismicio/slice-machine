@@ -95,7 +95,7 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
             onSubmit={(id, name, copiedVariation) => {
               store.copyVariation(id, name, copiedVariation);
               router.push(
-                ...Links.variation(Model.from, Model.infos.sliceName, id).all
+                ...Links.variation(Model.href, Model.infos.sliceName, id).all
               );
             }}
             initialVariation={variation}
