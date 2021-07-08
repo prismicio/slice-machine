@@ -12,9 +12,9 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
-<!-- [![Codecov][codecov-src]][codecov-href] -->
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
+<!-- [![Codecov][codecov-src]][codecov-href] -->
 
 - 🔪 &nbsp;Create slices locally;
 - 📄 &nbsp;Manage your custom types;
