@@ -21,7 +21,7 @@
     "lodash.set": "^4.3.2",
     "mongodb": "^3.5.2",
     "mustache": "^4.0.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "sm-commons": "^0.0.16",
     "tmp": "^0.1.0"
