@@ -1,4 +1,3 @@
-import { TabAsObject } from '@lib/models/common/CustomType/tab'
 import React, { useState } from 'react'
 
 import { CustomType, ObjectTabs } from '../../../lib/models/common/CustomType'
@@ -24,7 +23,10 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
         label,
         repeatable,
         tabs: {
-          Main: {} as TabAsObject
+          Main: {
+            key: 'Main',
+            value: {}
+          }
         },
         status: true
       },
