@@ -5,7 +5,7 @@ const glob = require('glob')
 
 const getStoriesPaths = () => {
   return [
-    path.normalize(`${process.cwd()}/.slicemachine/assets/slices/*/*.stories.js`),
+    path.normalize(`${process.cwd()}/.slicemachine/assets/**/*.stories.js`),
     path.normalize(`${process.cwd()}/customtypes/**/*.stories.js`)
   ].filter(e => glob.sync(e).length)
 }

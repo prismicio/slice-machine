@@ -11,6 +11,13 @@
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
+        "label": {
+          "config": {
+            "label": "Label ",
+            "placeholder": "place"
+          },
+          "type": "Text"
+        },
         "deaf": {
           "type": "Link",
           "config": {
@@ -19,13 +26,6 @@
             "allowTargetBlank": true,
             "select": null
           }
-        },
-        "label": {
-          "config": {
-            "label": "Label ",
-            "placeholder": "place"
-          },
-          "type": "Text"
         },
         "geo": {
           "config": {

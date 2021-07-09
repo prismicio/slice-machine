@@ -40,8 +40,7 @@ const WidgetForm = ({
         }}
       >
           {props => (
-            <Form id
-            ={formId}>
+            <Form id={formId}>
               {
                 children({
                   ...props,

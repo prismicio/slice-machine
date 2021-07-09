@@ -66,7 +66,15 @@ export default {
       }
      })
 
-    const componentPath = `../../../../${libraryName}/${sliceName}`
+    const componentPath = path.join(
+      '..',
+      path.relative(
+        GeneratedPaths(cwd).library(libraryName).value(),
+        CustomPaths(cwd).library(libraryName).value()
+      ),
+      sliceName
+    )
+
     const componentTitle = `${libraryName}/${sliceName}`
     const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath, componentTitle });
 
