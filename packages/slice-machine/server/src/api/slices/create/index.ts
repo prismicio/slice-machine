@@ -20,6 +20,7 @@ import { paths } from '../../../../../lib/models/paths'
 const copy = promisify(cpy)
 
 const IndexFiles = {
+  'none': null,
   'react': 'index.js',
   'next': 'index.js',
   'nuxt': 'index.js',

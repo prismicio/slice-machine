@@ -33,10 +33,10 @@ function getComponentName(slicePath: string): string | undefined {
 }
 
 /** naive method to validate that a folder contains a entry file */
-function matchPossiblePaths(files: ReadonlyArray<string>, componentName: string): string | undefined {
-  const possiblePaths = ['index', componentName]
-    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`], [])
-  return files.find(e => possiblePaths.indexOf(e) > -1)
+function matchPossiblePaths(files: ReadonlyArray<string>, _componentName: string): string | undefined {
+  const modelFilename = 'model.json'
+
+  return files.includes(modelFilename) ? modelFilename : undefined
 }
 
 function splitExtension(str: string): { fileName: string, extension: string } | undefined {
