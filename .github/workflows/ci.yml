@@ -33,13 +33,13 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Unit
-        run: npm run test
+        run: yarn test
 
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Coverage
         uses: codecov/codecov-action@v1
