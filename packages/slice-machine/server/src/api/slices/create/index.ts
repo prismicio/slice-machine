@@ -23,6 +23,7 @@ const IndexFiles = {
   'react': 'index.js',
   'next': 'index.js',
   'nuxt': 'index.js',
+  'gatsby': 'index.js',
   'vue': 'index.vue',
   'vanillajs': 'index.js'
 }

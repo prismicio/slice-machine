@@ -28,6 +28,7 @@ export const acceptedImagesTypes = ['png', 'jpg', 'jpeg']
 export const SupportedFrameworks = {
   nuxt: 'nuxt',
   next: 'next',
+  gatsby: 'gatsby',
   vue: 'vue',
   react: 'react'
 }
