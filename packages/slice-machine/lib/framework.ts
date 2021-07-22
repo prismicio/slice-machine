@@ -27,3 +27,7 @@ export function detectFramework(cwd: string): Framework {
     throw new Error(message)
   }
 }
+
+export function isValidFramework(framework: string): framework is Framework {
+  return SupportedFrameworks.hasOwnProperty(framework)
+}

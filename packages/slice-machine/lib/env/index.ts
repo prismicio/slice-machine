@@ -10,12 +10,13 @@ import { getConfig as getMockConfig } from '../mock/misc/fs'
 
 import Files from '../utils/files'
 import { SMConfig } from '../models/paths'
+import { SupportedFrameworks } from '../consts'
+import { detectFramework, isValidFramework } from '../framework'
 
 import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
-import { detectFramework } from '../framework'
 import { ConfigErrors } from '../models/server/ServerState';
 
 let DISPLAY_LOG_ONCE = 0
@@ -24,7 +25,7 @@ const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve
 
 const compareNpmVersions = createComparator()
 
-function validate(config: { apiEndpoint: string, storybook: string }): ConfigErrors {
+function validate(config: { apiEndpoint: string, storybook: string, framework: string }): ConfigErrors {
   const errors: ConfigErrors = {}
   if (!config.apiEndpoint) {
     errors.apiEndpoint = {
@@ -79,6 +80,17 @@ function validate(config: { apiEndpoint: string, storybook: string }): ConfigErr
       run: 'Add "storybook" property with a localhost url'
     }
   }
+
+  if (config.framework && !isValidFramework(config.framework)) {
+    const options = Object.values(SupportedFrameworks)
+
+    errors.framework = {
+      message: `The framework set in sm.json is invalid`,
+      example: 'react',
+      run: `Set framework to one of the following: ${options.join(', ')}`
+    }
+  }
+
   return errors
 }
 
@@ -190,7 +202,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
       updateAvailable,
       mockConfig,
       hasGeneratedStoriesPath,
-      framework: detectFramework(cwd),
+      framework: userConfig.framework ?? detectFramework(cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client
     }
