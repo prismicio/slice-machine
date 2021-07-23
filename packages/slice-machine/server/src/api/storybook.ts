@@ -10,11 +10,13 @@ import { createStorybookId } from '../../../lib/utils/str'
 const Paths = {
   nuxtTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/nuxt.template.ejs'),
   nextTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/next.template.ejs'),
+  gatsbyTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/gatsby.template.ejs'),
   getTemplate(appRoot: string, framework: Framework) {
     switch(framework) {
       case Framework.nuxt: return Paths.nuxtTemplate(appRoot)
       case Framework.vue: return Paths.nuxtTemplate(appRoot)
       case Framework.next: return Paths.nextTemplate(appRoot)
+      case Framework.gatsby: return Paths.gatsbyTemplate(appRoot)
       case Framework.react: return Paths.nextTemplate(appRoot)
       default: return null
     }
