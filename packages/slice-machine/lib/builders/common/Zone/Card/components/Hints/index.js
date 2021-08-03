@@ -5,6 +5,7 @@ import { SupportedFrameworks } from '../../../../../../consts'
 const FrameworkRenderers = {
   [SupportedFrameworks.nuxt]: Renderers.nuxt,
   [SupportedFrameworks.next]: Renderers.next,
+  [SupportedFrameworks.gatsby]: Renderers.gatsby,
   [SupportedFrameworks.vue]: Renderers.vue,
   [SupportedFrameworks.react]: Renderers.react,
   vanillajs: Renderers.vanillajs

@@ -6,5 +6,6 @@ export const react = toReact
 
 export const next = toReact
 export const nuxt = toVue
+export const gatsby = toReact
 
 export const vanillajs = () => null
