@@ -38,7 +38,7 @@ export default function SliceZone({ slices, sliceProps = {}, resolver = () => n
   }
   return slices.map((slice, i) => {
     if (!slice || !slice.slice_type) {
-      return <PageInfo {...slicePropNotFoundProps} />
+      return <PageInfo key={`slice-${i + 1}`} {...slicePropNotFoundProps} />
     }
     const sliceName = pascalize(slice.slice_type)
     const Component = resolver({ sliceName, slice, i })
