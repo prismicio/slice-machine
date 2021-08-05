@@ -28,6 +28,7 @@ import "rc-drawer/assets/index.css";
 import "lib/builders/SliceBuilder/layout/Drawer/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
+import "src/css/tabs.css";
 
 import { ServerState } from "../lib/models/server/ServerState";
 import ServerError from "../lib/models/server/ServerError";

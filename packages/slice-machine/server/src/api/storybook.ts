@@ -73,7 +73,7 @@ export default {
         CustomPaths(cwd).library(libraryName).value()
       ),
       sliceName
-    )
+    ).split(path.sep).join(path.posix.sep)
 
     const componentTitle = `${libraryName}/${sliceName}`
     const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath, componentTitle });
