@@ -70,7 +70,10 @@ export const getStaticProps = useGetStaticProps({
 
 export default PageInFrench
 ````
-👆 `apiParams` can also be a function! See example below
+👆 `apiParams` can also be a function!
+The arguments passed to `apiParams` are the same as for [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation). 
+
+ See example below
 
 ### useGetStaticPaths
 
