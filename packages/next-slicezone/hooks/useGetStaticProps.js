@@ -52,15 +52,12 @@ export const useGetStaticProps = ({
     console.warn(`[next-slicezone/useGetStaticProps]: Parameter "body" is deprecated, use "slicesKey" instead.`)
   }
 
-  return async function getStaticProps({
-    preview = null,
-    previewData = {},
-    params = {}
-  }) {
+  return async function getStaticProps(args) {
+    const { preview = null, previewData = {} } = args;
+    const { ref = null } = previewData;
 
-    const { ref = null } = previewData
     const finalApiParams = apiParams && typeof apiParams === 'function'
-      ? apiParams({ params, previewData, preview })
+      ? apiParams(args)
       : apiParams
 
     try {
