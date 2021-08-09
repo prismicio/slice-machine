@@ -104,7 +104,7 @@ const SliceZone = ({
       />
       <DefaultList cardType="ForSliceZone" slices={slicesInSliceZone} />
       {!slicesInSliceZone.length ? (
-        <Flex sx={{ justifyContent: 'center' }}><p>No slices selected</p></Flex>
+        <Flex sx={{ justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}><p>No slices selected</p></Flex>
        ) : null}
       <Form
         isOpen={formIsOpen}

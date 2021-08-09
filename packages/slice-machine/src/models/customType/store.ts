@@ -30,6 +30,12 @@ export default class CustomTypeStore implements Store {
   deleteWidgetGroupMockConfig = deleteWidgetGroupMockConfig(this.dispatch)
   tab(tabId: string) {
     return {
+      update: (newKey: string) => {
+        this.dispatch({ type: Actions.UpdateTab, payload: { prevKey: tabId, newKey } })
+      },
+      delete: () => {
+        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } })
+      },
       addWidget: (id: string, field: Field) => {
         this.dispatch({ type: Actions.AddWidget, payload: { tabId, id, field } })
       },
@@ -47,9 +53,6 @@ export default class CustomTypeStore implements Store {
       },
       deleteSliceZone: () => {
         this.dispatch({ type: Actions.DeleteSliceZone, payload: { tabId } })
-      },
-      delete: () => {
-        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } })
       },
       addSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.AddSharedSlice, payload: { tabId, sliceKey } })

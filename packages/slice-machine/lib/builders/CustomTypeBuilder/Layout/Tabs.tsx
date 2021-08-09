@@ -1,41 +1,50 @@
 import { useState } from 'react'
 import { CustomTypeState } from '../../../models/ui/CustomTypeState'
 import { AiOutlinePlus } from 'react-icons/ai'
-// import IconButton from 'components/IconButton'
+import IconButton from 'components/IconButton'
 
-import { Box, Button, Flex } from 'theme-ui'
+import { Box, Button, Flex, useThemeUI } from 'theme-ui'
 import { Tabs, TabPanel } from 'react-tabs'
 
-// import { HiOutlineCog } from 'react-icons/hi'
+import { HiOutlineCog } from 'react-icons/hi'
 
 import { CustomTab as Tab, CustomTabList as TabList } from '../../../../components/Card/WithTabs/components'
 
 import FlexWrapper from './FlexWrapper'
 
 import CreateModal from '../TabModal/create'
+import UpdateModal, { ActionType as UpdateModalActionType } from '../TabModal/update'
 import CustomTypeStore from 'src/models/customType/store'
 
 enum ModalType {
   CREATE = 'create', UPDATE = 'udate'
 }
-interface ModalState {
+interface EditState {
+  title: string
+  type: ModalType
+  key: string
+}
+
+interface CreateState {
   title: string
   type: ModalType
 }
 
-// const Icon = ({ theme, onClick }: { theme: any, onClick: Function }) => (
-//   <IconButton
-//     size={20}
-//     error={null}
-//     Icon={HiOutlineCog}
-//     label="Edit slice field"
-//     sx={{ cursor: "pointer", color: theme.colors.icons }}
-//     onClick={onClick}
-//   />
-// )
+type ModalState = EditState | CreateState
+
+const Icon = ({ theme, onClick }: { theme: any, onClick: Function }) => (
+  <IconButton
+    size={20}
+    error={null}
+    Icon={HiOutlineCog}
+    label="Edit tab"
+    sx={{ cursor: "pointer", color: theme.colors.icons }}
+    onClick={onClick}
+  />
+)
 
 const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeState, store: CustomTypeStore, renderTab: Function }) => {
-  // const { theme } = useThemeUI()
+  const { theme } = useThemeUI()
 
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [state, setState] = useState<ModalState | undefined>()
@@ -50,7 +59,7 @@ const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeSt
         >
           <TabList>
             {
-              Model.current.tabs.map((tab) => (
+              Model.current.tabs.map((tab, i) => (
                 <Tab
                   key={tab.key}
                   style={{
@@ -60,17 +69,18 @@ const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeSt
                 >
                   <Flex sx={{ alignItems: 'center' }}>
                     {tab.key}
-                    {/* &nbsp;
+                    &nbsp;
                     {
                       i === tabIndex ? (
                         <Icon
                           theme={theme}
                           onClick={(e: Event) => {
                             e.preventDefault()
+                            setState({ title: 'Edit Tab', type: ModalType.UPDATE, key: tab.key })
                           }}
                         />
                       ) : null
-                    } */}
+                    }
                   </Flex>
                 </Tab>
               ))
@@ -103,6 +113,23 @@ const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeSt
               store.createTab(id)
               // current.tabs is not updated yet
               setTabIndex(Model.current.tabs.length)
+            }}
+          />
+        ) : null
+      }
+      {
+        state?.type === ModalType.UPDATE ? (
+          <UpdateModal
+            {...state}
+            isOpen
+            tabIds={Model.current.tabs.filter(e => e.key !== (state as EditState).key).map(e => e.key.toLowerCase())}
+            close={() => setState(undefined)}
+            onSubmit={({ id, actionType }: { id: string, actionType: UpdateModalActionType }) => {
+              if (actionType === UpdateModalActionType.UPDATE) {
+                return store.tab((state as EditState).key).update(id)
+              }
+              store.tab((state as EditState).key).delete()
+              setTabIndex(0)
             }}
           />
         ) : null

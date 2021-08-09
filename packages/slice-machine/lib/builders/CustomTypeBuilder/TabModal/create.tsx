@@ -46,7 +46,7 @@ const CreateCustomtypeForm = ({
         onSubmit(values)
       }}
       initialValues={{
-        repeatable: true
+        id: ''
       }}
       validate={({ id }: { id: string }) => {
         if (!id) {

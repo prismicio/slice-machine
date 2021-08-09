@@ -36,6 +36,27 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
           }
         }
       }
+      case Actions.UpdateTab: {
+        const { prevKey, newKey } = action.payload as { prevKey: string, newKey: string }
+        if (newKey === prevKey) {
+          return prevState
+        }
+        return {
+          ...prevState,
+          current: {
+            ...prevState.current,
+            tabs: prevState.current.tabs.map(t => {
+              if (t.key === prevKey) {
+                return {
+                  ...t,
+                  key: newKey
+                }
+              }
+              return t
+            })
+          }
+        }
+      }
       case Actions.Save: {
         const { state } = action.payload as { state: CustomTypeState }
         return {

@@ -48,6 +48,7 @@ const Files = {
   },
   
   isDirectory: (source: string) => fs.lstatSync(source).isDirectory(),
+  isFile: (source: string) => fs.lstatSync(source).isFile(),
   readDirectory: (source: string) => fs.readdirSync(source, { encoding: Files._format }),
   mkdir: (target: string, options: { recursive: boolean }) => fs.mkdirSync(target, options),
   exists(pathToFile: string) {

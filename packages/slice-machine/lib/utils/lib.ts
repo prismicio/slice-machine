@@ -15,6 +15,16 @@ const Identifiers: Record<Prefix, number> = {
   '/': 1
 }
 
+export const findIndexFile = (libPath: string) => {
+  try {
+    const dir = Files.readDirectory(libPath)
+    const maybeF = dir.find(f => Files.isFile(path.join(libPath, f)) && f.startsWith('index.'))
+    return maybeF ? path.join(libPath, maybeF) : null
+  } catch(e) {
+    return null
+  }
+}
+
 export const getFormattedLibIdentifier = (libPath: string) => {
   const maybeIdentifier = Object.keys(Identifiers).find((e) => libPath.indexOf(e) === 0)
   const isLocal = !!maybeIdentifier

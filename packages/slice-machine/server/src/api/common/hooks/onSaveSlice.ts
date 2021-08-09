@@ -1,6 +1,7 @@
 import path from 'path'
 import { Library } from '@lib/models/common/Library'
 import Files from '../../../../../lib/utils/files'
+import { findIndexFile } from '../../../../../lib/utils/lib'
 import Environment from '../../../../../lib/models/common/Environment'
 import { listComponentsByLibrary } from '../../../../../lib/queries/listComponents'
 
@@ -19,9 +20,13 @@ export default async function onSaveSlice(env: Environment) {
 
   for (const lib of localLibs) {
     if (lib.components.length) {
-      const { pathToSlice } = lib.components[0]
+      const { pathToSlice: relativePathToLib } = lib.components[0]
       const file = createIndexFile(lib)
-      Files.write(path.join(env.cwd, pathToSlice, 'index.js'), file)
+
+      const pathToLib = path.join(env.cwd, relativePathToLib)
+
+      const indexFilePath = findIndexFile(pathToLib) || path.join(pathToLib, 'index.js')
+      Files.write(indexFilePath, file)
     }
   }
 }
