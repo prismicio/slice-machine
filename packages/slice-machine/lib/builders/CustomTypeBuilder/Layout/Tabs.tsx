@@ -128,8 +128,10 @@ const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeSt
               if (actionType === UpdateModalActionType.UPDATE) {
                 return store.tab((state as EditState).key).update(id)
               }
-              store.tab((state as EditState).key).delete()
-              setTabIndex(0)
+              if (actionType === UpdateModalActionType.DELETE) {
+                store.tab((state as EditState).key).delete()
+                setTabIndex(0)
+              }
             }}
           />
         ) : null

@@ -8,7 +8,7 @@ export enum ActionType {
   DELETE = 'delete'
 }
 
-const InputBox = ({ name, label, placeholder, error }:{ name: string, label: string, placeholder: string, error?: string }) => (
+const InputBox = ({ name, label, placeholder, error, ...rest }:{ name: string, label: string, placeholder: string, error?: string, [x: string]: any }) => (
   <Box mb={3}>
     <Label htmlFor={name} mb={2}>
       { label }
@@ -19,6 +19,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
       placeholder={placeholder}
       as={Input}
       autoComplete="off"
+      {...rest}
     />
     { error ? <Text sx={{ color: 'error', mt: 1 }}>{error}</Text>: null}
   </Box>
@@ -54,6 +55,7 @@ const CreateCustomtypeForm = ({
       }}
       initialValues={{
         id: '',
+        actionType: null
       }}
       validate={({ id }: { id: string }) => {
         if (!id) {
@@ -71,7 +73,7 @@ const CreateCustomtypeForm = ({
         title,
       }}
     >
-      {({ errors, values }: { errors: { id?: string }, values: { id: string } }) => (
+      {({ errors, values, setFieldValue }: { errors: { id?: string }, values: { id: string }, setFieldValue: Function }) => (
         <Box>
           <Box sx={{ px: 4, py: 4 }}>
             <InputBox
@@ -79,6 +81,10 @@ const CreateCustomtypeForm = ({
               label="Update Tab ID"
               placeholder="Tab"
               error={errors.id}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue('id', e.target.value.trim())
+                setFieldValue('actionType', ActionType.UPDATE)
+              }}
             />
             <Button
               type="button"

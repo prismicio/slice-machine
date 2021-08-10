@@ -61,7 +61,7 @@ export default async function handler(env: Environment): Promise<{ isFake: boole
   }
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return {
-    isFake: isFake || false,
+    isFake: !!isFake,
     customTypes: handleMatch(matches, env),
     remoteCustomTypes: remoteCustomTypes.map((ct: any) => CustomType.fromJsonModel(ct.id, ct))
   }

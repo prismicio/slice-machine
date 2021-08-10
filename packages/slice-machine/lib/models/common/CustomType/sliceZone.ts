@@ -1,7 +1,22 @@
-const SharedSliceType = 'SharedSlice'
+export enum SliceType {
+  SharedSlice = 'SharedSlice',
+  Slice = 'Slice'
+}
 
-interface SharedSlice {
-  type: string
+export interface SharedSlice {
+  type: SliceType.SharedSlice
+}
+
+export interface NonSharedSlice {
+  type: SliceType.Slice
+}
+
+export interface NonSharedSliceInSliceZone {
+  key: string,
+  value: {
+    type: SliceType.Slice,
+    [x: string]: any
+  }
 }
 
 export type SliceZoneType = 'Slices'
@@ -12,14 +27,14 @@ export interface SliceZone {
   fieldset: string
   config: {
     choices: {
-      [x: string]: SharedSlice
+      [x: string]: SharedSlice | NonSharedSlice
     }
   }
 }
 
 export interface SliceZoneAsArray {
   key: string
-  value: ReadonlyArray<{key: string, value: SharedSlice }>
+  value: ReadonlyArray<{key: string, value: SharedSlice | NonSharedSlice }>
 }
 
 export const SliceZone = {
@@ -53,7 +68,7 @@ export const SliceZone = {
       value: [...sz.value, {
         key,
         value: {
-          type:  SharedSliceType
+          type:  SliceType.SharedSlice
         }
       }]
     }
@@ -64,7 +79,7 @@ export const SliceZone = {
       value: keys.map(key => ({
         key,
         value:  {
-          type: SharedSliceType
+          type: SliceType.SharedSlice
         }
       }))
     }
