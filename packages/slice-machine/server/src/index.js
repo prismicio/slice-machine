@@ -2,9 +2,6 @@
 
 require("@babel/register");
 
-global.fetch = require('node-fetch')
-global.appRoot = path.join(__dirname, '../../../')
-
 console.log('Launching server')
 
 import os from 'os'
@@ -13,6 +10,9 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import serveStatic from 'serve-static'
 import formData from 'express-form-data'
+
+global.fetch = require('node-fetch')
+global.appRoot = path.join(__dirname, '../../../')
 
 const api = require('./api')
 
