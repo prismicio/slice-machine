@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React, { useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
@@ -16,7 +17,6 @@ import Drawer from "rc-drawer";
 
 import LoadingPage from "../components/LoadingPage";
 import ConfigErrors from "../components/ConfigErrors";
-// import NavBar from 'components/NavBar/WithRouter'
 import Warnings from "../components/Warnings";
 import AppLayout from "../components/AppLayout";
 import ToastProvider from "../src/ToastProvider";
@@ -153,6 +153,9 @@ function MyApp({
 
   return (
     <ThemeProvider theme={theme}>
+      <Head>
+        <title>SliceMachine</title>
+      </Head>
       <BaseStyles>
         <RemoveDarkMode>
           {!data ? (

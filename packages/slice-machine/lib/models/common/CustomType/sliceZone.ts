@@ -73,15 +73,17 @@ export const SliceZone = {
       }]
     }
   },
-  replaceSharedSlice(sz: SliceZoneAsArray, keys: [string]): SliceZoneAsArray {
+  replaceSharedSlice(sz: SliceZoneAsArray, keys: ReadonlyArray<string>, preserve: ReadonlyArray<string> = []): SliceZoneAsArray {
     return {
       ...sz,
-      value: keys.map(key => ({
-        key,
-        value:  {
-          type: SliceType.SharedSlice
-        }
-      }))
+      value: sz.value.filter(e => preserve.includes(e.key)).concat(
+        keys.map(key => ({
+          key,
+          value:  {
+            type: SliceType.SharedSlice
+          }
+        }))
+      )
     }
   },
   removeSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {

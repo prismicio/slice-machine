@@ -1,10 +1,14 @@
 import { useContext, useEffect, useState } from 'react'
 import { Text, Box, Flex, Heading, Button } from 'theme-ui'
-import { LibrariesContext } from '../../../../src/models/libraries/context'
-import { SliceType, NonSharedSliceInSliceZone, SliceZoneAsArray } from '../../../../lib/models/common/CustomType/sliceZone'
+import { LibrariesContext } from '@src/models/libraries/context'
+import {
+  SliceType,
+  NonSharedSliceInSliceZone,
+  SliceZoneAsArray,
+} from '@lib/models/common/CustomType/sliceZone'
 
-import SliceState from '../../../models/ui/SliceState'
-import LibraryState from '../../../models/ui/LibraryState'
+import SliceState from '@lib/models/ui/SliceState'
+import LibraryState from '@lib/models/ui/LibraryState'
 
 import ZoneHeader from '../../common/Zone/components/ZoneHeader'
 
@@ -93,6 +97,13 @@ const SliceZone = ({
     }
   }, [notFound])
 
+  const sharedSlicesInSliceZone = slicesInSliceZone.filter(e => e.type === SliceType.SharedSlice).map(e => e.payload) as ReadonlyArray<SliceState>
+
+  /* Preserve these keys in SliceZone */
+  const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
+    .filter(e => e.type === SliceType.Slice)
+    .map(e => (e.payload as NonSharedSliceInSliceZone).key)
+
   return (
     <Box my={3}>
       <ZoneHeader
@@ -134,9 +145,9 @@ const SliceZone = ({
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
-        slicesInSliceZone={slicesInSliceZone.filter(e => e.type === SliceType.SharedSlice).map(e => e.payload) as ReadonlyArray<SliceState>}
+        slicesInSliceZone={sharedSlicesInSliceZone}
         onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
-          onSelectSharedSlices(sliceKeys)
+          onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
         close={() => setFormIsOpen(false)}
       />

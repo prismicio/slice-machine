@@ -1,7 +1,9 @@
 /// <reference path="../../../sm-commons/index.d.ts" />
 
 require("@babel/register");
-global.fetch = require("node-fetch");
+
+global.fetch = require('node-fetch')
+global.appRoot = path.join(__dirname, '../../../')
 
 console.log('Launching server')
 
@@ -52,7 +54,7 @@ app.use('/slices', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, 'slices.html'));
 })
 
-global.appRoot = path.join(__dirname, '../../../');
+
 const port = process.env.PORT || 9000
 app.listen(port, () => console.log(`Now running on http://localhost:${port} !`));
 

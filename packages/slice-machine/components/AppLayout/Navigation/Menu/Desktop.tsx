@@ -7,7 +7,11 @@ import Logo from "../Menu/Logo";
 import { NavCtx } from "..";
 import Item from "./Navigation/Item";
 
-const warnings = (len: number ) => ({
+import NotLoggedIn from './Navigation/NotLoggedIn'
+
+import { warningStates } from '@lib/consts'
+
+const warnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ''}`,
   delimiter: true,
   href: "/warnings",
@@ -20,12 +24,19 @@ const warnings = (len: number ) => ({
 const Desktop = () => {
   const navCtx = useContext(NavCtx)
 
+  const isNotLoggedIn = !!(navCtx?.warnings || []).find(e => e.key === warningStates.CLIENT_ERROR)
+
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py={4} px={3}>
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
+          {
+            isNotLoggedIn ? (
+              <NotLoggedIn />
+            ) : null
+          }
           <Divider variant="sidebar" />
           <Item link={warnings((navCtx?.warnings?.length || 0) + Object.keys(navCtx?.configErrors || {}).length)} />
           <VersionBadge

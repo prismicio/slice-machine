@@ -86,8 +86,8 @@ const TabZone = ({
     store.tab(tabId).deleteSliceZone()
   }
 
-  const onSelectSharedSlices = (keys) => {
-    store.tab(tabId).replaceSharedSlices(keys)
+  const onSelectSharedSlices = (keys, preserve = []) => {
+    store.tab(tabId).replaceSharedSlices(keys, preserve)
   }
 
   const onRemoveSharedSlice = (key) => {

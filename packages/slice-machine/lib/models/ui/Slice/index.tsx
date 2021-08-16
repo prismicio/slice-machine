@@ -58,7 +58,7 @@ const SliceVariations = ({ hideVariations, variations }: { hideVariations: boole
   ) : null;
 };
 
-const SliceThumbnail = ({ heightInPx, preview, withShadow = true }: { heightInPx: string, preview?: string, withShadow: boolean }) => {
+const SliceThumbnail = ({ heightInPx, previewUrl, withShadow = true }: { heightInPx: string, previewUrl?: string, withShadow: boolean }) => {
   return (
     <Box
       sx={{
@@ -83,7 +83,7 @@ const SliceThumbnail = ({ heightInPx, preview, withShadow = true }: { heightInPx
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
-          backgroundImage: preview ? "url(" + `${preview}` + ")" : 'none',
+          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : 'none',
         }}
       ></Box>
     </Box>
@@ -117,7 +117,7 @@ export const SharedSlice = {
     if (!defaultVariation) {
       return null
     }
-    const variationId = defaultVariation.id;
+    const variationId = defaultVariation.id
     const link = LinkUtil.variation(
       slice.href,
       slice.jsonModel.name,
@@ -125,6 +125,8 @@ export const SharedSlice = {
     )
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType]
+
+    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url
 
     return (
       <CardWrapper link={link} slice={slice}>
@@ -135,7 +137,7 @@ export const SharedSlice = {
         >
           <SliceThumbnail
             withShadow={false}
-            preview={slice.variations[0].imageUrl}
+            previewUrl={previewUrl}
             heightInPx={thumbnailHeightPx}
           />
           <Flex

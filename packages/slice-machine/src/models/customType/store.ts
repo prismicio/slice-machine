@@ -1,4 +1,4 @@
-import Store from '../../../lib/models/ui/Store'
+import Store from '@lib/models/ui/Store'
 // import { Widget } from '@models/common/widgets'
 // import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, {
@@ -11,7 +11,7 @@ import Actions, {
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
 
-import { Field } from '../../../lib/models/common/CustomType/fields'
+import { Field } from '@lib/models/common/CustomType/fields'
 
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
@@ -57,8 +57,8 @@ export default class CustomTypeStore implements Store {
       addSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.AddSharedSlice, payload: { tabId, sliceKey } })
       },
-      replaceSharedSlices: (sliceKeys: [string]) => {
-        this.dispatch({ type: Actions.ReplaceSharedSlices, payload: { tabId, sliceKeys } })
+      replaceSharedSlices: (sliceKeys: [string], preserve: [string]) => {
+        this.dispatch({ type: Actions.ReplaceSharedSlices, payload: { tabId, sliceKeys, preserve } })
       },
       removeSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.RemoveSharedSlice, payload: { tabId, sliceKey } })

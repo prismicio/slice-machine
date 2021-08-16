@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import React, { Fragment, useState, useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
 import { Box, Flex, Button, Text, Spinner } from 'theme-ui'
@@ -77,9 +76,6 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
 
   return (
     <Fragment>
-      <Head>
-        <title>SliceMachine UI</title>
-      </Head>
       <Container>
         <main>
           <Header
