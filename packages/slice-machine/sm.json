@@ -1,3 +1,7 @@
 {
-  "_latest": "0.0.46"
+  "apiEndpoint": "https://update-me.prismic.io/api/v2",
+  "libraries": [
+    "~/slices"
+  ],
+  "_latest": "0.1.0"
 }

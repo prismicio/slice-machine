@@ -2,7 +2,7 @@
 
 require("@babel/register");
 
-console.log('Launching server')
+console.log('\nLaunching server...')
 
 import os from 'os'
 import path from 'path'
@@ -55,7 +55,9 @@ app.use('/slices', async function sliceRoute(_, res) {
 })
 
 
-const port = process.env.PORT || 9000
-app.listen(port, () => console.log(`Now running on http://localhost:${port} !`));
+app.listen(process.env.PORT, () => {
+  const p = `http://localhost:${process.env.PORT}`
+  console.log(`p=${p}`)
+});
 
 process.on('SIGINT', () => { console.log("\nServer killed manually. Exiting..."); process.exit(); });

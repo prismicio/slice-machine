@@ -11,18 +11,18 @@ import {
 } from 'theme-ui'
 
 import * as yup from 'yup'
-import * as Widgets from 'lib/models/common/widgets/withGroup'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 
 import {
   createInitialValues,
   createFieldNameFromKey
-} from 'lib/forms'
+} from '@lib/forms'
 
-import { MockConfigKey } from 'lib/consts'
+import { MockConfigKey } from '@lib/consts'
 
-import Card from '../../../../components/Card/WithTabs'
-import ItemHeader from '../../../../components/ItemHeader'
-import { Flex as FlexGrid, Col } from '../../../../components/Flex'
+import Card from '@components/Card/WithTabs'
+import ItemHeader from '@components/ItemHeader'
+import { Flex as FlexGrid, Col } from '@components/Flex'
 
 import WidgetForm from './Form'
 import WidgetFormField from './Field'

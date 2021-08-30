@@ -1,9 +1,9 @@
 import path from 'path'
 import glob from 'glob'
-import Environment from '../../../../lib/models/common/Environment'
-import { CustomType, ObjectTabs } from '../../../../lib/models/common/CustomType'
-import Files from '../../../../lib/utils/files'
-import { CustomTypesPaths } from '../../../../lib/models/paths'
+import Environment from '@lib/models/common/Environment'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
+import Files from '@lib/utils/files'
+import { CustomTypesPaths } from '@lib/models/paths'
 
 const handleMatch = (matches: string[], env: Environment) => {
   return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {

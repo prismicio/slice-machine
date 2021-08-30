@@ -106,6 +106,14 @@ const Card = ({ ct }: { ct: CtPayload }) => (
   </Link>
 );
 
+const Emptystate = () => (
+  <Box>
+    <Heading as="h3">Create your first custom type</Heading>
+    <p>Click the + button on the top right to create your first custom type.</p>
+    <p>It will be stored locally. You will then be able to push it to Prismic.</p>
+  </Box>
+)
+
 const CustomTypes = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -146,6 +154,11 @@ const CustomTypes = () => {
         )}
         breadrumbHref="/"
       />
+      {
+        !customTypes.length ? (
+          <Emptystate />
+        ) : null
+      }
       <Grid
         elems={customTypes}
         renderElem={(ct: CtPayload) => (

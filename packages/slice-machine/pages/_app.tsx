@@ -21,8 +21,6 @@ import Warnings from "../components/Warnings";
 import AppLayout from "../components/AppLayout";
 import ToastProvider from "../src/ToastProvider";
 
-import { LacksStorybookConf } from "../components/UnrecoverableErrors";
-
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "lib/builders/SliceBuilder/layout/Drawer/index.css";
@@ -67,7 +65,6 @@ const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
-  LacksStorybookConf,
   Default: ({
     Component,
     pageProps,
@@ -123,12 +120,6 @@ function MyApp({
     if (!data) {
       return
     }
-    if (!data.env.hasGeneratedStoriesPath) {
-      setRenderer({
-        Renderer: RenderStates.LacksStorybookConf,
-        payload: { env: data.env },
-      })
-    } else {
       const newSliceMap = mapSlices(data.libraries)
       if (sliceMap !== null) {
         Object.keys(newSliceMap).forEach(key => {
@@ -146,7 +137,6 @@ function MyApp({
       console.log("Loaded env: ", { env, configErrors })
       console.log("Warnings: ", { warnings })
       console.log("------ End of log ------")
-    }
   }, [data]);
 
   const { Renderer, payload } = state;

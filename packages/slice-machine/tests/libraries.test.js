@@ -43,7 +43,7 @@ test("it gets library info from @ path", async () => {
   const libName = 'slices'
   const prefix = '@/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
     "slices/CallToAction/index.js": "const A = 1"
   }, TMP))
@@ -58,7 +58,7 @@ test("it gets library info from ~ path", async () => {
   const libName = 'slices'
   const prefix = '~/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
     "slices/CallToAction/index.js": "const A = 1"
   }, TMP))
@@ -72,7 +72,7 @@ test("it gets library info from / path", async () => {
   const libName = 'slices'
   const prefix = '/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
     "slices/CallToAction/index.js": "const A = 1"
   }, TMP))
@@ -86,7 +86,7 @@ test("it handles nested library info", async () => {
   const libName = 'slices/src/slices'
   const prefix = '~/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
     "slices/src/slices/CallToAction/index.js": "const A = 1"
   }, TMP))
@@ -100,7 +100,7 @@ test("it finds non local libs", async () => {
   const libName = 'vue-essential-slices'
   const pathToSlice = `node_modules/${libName}/slices/CallToAction/index.js`
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
     "package.json": "{}",
     [pathToSlice]: "const A = 1"
   }, TMP))
@@ -116,7 +116,7 @@ test("it finds non local libs", async () => {
 test("it filters non existing libs", async () => {
   const libName = 'vue-essential-slices'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
     "package.json": "{}",
   }, TMP))
 
