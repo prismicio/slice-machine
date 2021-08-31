@@ -15,7 +15,7 @@ import Hint from './components/Hints'
 
 import { findWidgetByConfigOrType } from '../../../utils'
 
-import * as Widgets from 'lib/models/common/widgets/withGroup'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 
 import Li from 'components/Li'
 

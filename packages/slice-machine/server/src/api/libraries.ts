@@ -1,11 +1,11 @@
-import { listComponentsByLibrary } from '../../../lib/queries/listComponents'
+import { listComponentsByLibrary } from '@lib/queries/listComponents'
 
-import Environment from '../../../lib/models/common/Environment'
-import { Library } from '../../../lib/models/common/Library'
-import Slice from '../../../lib/models/common/Slice'
-import { AsObject } from '../../../lib/models/common/Variation'
+import Environment from '@lib/models/common/Environment'
+import { Library } from '@lib/models/common/Library'
+import Slice from '@lib/models/common/Slice'
+import { AsObject } from '@lib/models/common/Variation'
 
-import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
+import ErrorWithStatus from '@lib/models/common/ErrorWithStatus'
 
 export async function getLibrariesWithFlags(env: Environment): Promise<{ remoteSlices: ReadonlyArray<Slice<AsObject>>, clientError: ErrorWithStatus | undefined, libraries: ReadonlyArray<Library> }> {
   const res = await env.client.getSlice()

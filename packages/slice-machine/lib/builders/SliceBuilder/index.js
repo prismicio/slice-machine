@@ -7,7 +7,7 @@ import { handleRemoteResponse } from "src/ToastProvider/utils";
 import { SliceContext } from 'src/models/slice/context'
 import { ConfigContext } from 'src/config-context'
 
-import { createStorybookUrl } from 'lib/utils'
+import { createStorybookUrl } from '@lib/utils'
 
 import {
   Box,

@@ -4,7 +4,7 @@
   "private": false,
   "license": "MIT",
   "_moduleAliases": {
-    "foo": "build"
+    "@lib": "build/lib"
   },
   "scripts": {
     "dev": "next dev",
@@ -17,7 +17,7 @@
     "watch-server": "tsc -w --project ./server/index.ts",
     "dev-server": "cross-env PORT=9999 CWD=./tests/project node build/server/src/index.js",
     "build": "yarn build-server && yarn build-next-app",
-    "build-server": "tsc --project server/tsconfig.json && yarn build-ts-paths",
+    "build-server": "tsc --project server/tsconfig.json",
     "build-ts-paths": "tscpaths --project ./tsconfig.json --src ./lib --out ./build/lib && tscpaths --project ./tsconfig.json --src ./server --out ./build/server",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && yarn clean-build",
@@ -52,6 +52,7 @@
     "lodash": "^4.17.21",
     "lorem-ipsum": "^2.0.3",
     "mime": "^2.5.2",
+    "module-alias": "^2.2.2",
     "multer": "^1.4.2",
     "neverthrow": "^4.2.1",
     "oembed-parser": "^1.4.5",

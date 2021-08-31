@@ -3,14 +3,14 @@ import { handler as pushSlice } from '../slices/push'
 import { handler as saveSlice } from '../slices/save'
 
 import { onError } from '../common/error'
-import Files from '../../../../lib/utils/files'
-import { CustomTypesPaths } from '../../../../lib/models/paths'
-import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient from '../../../../lib/models/common/http/FakeClient'
+import Files from '@lib/utils/files'
+import { CustomTypesPaths } from '@lib/models/paths'
+import DefaultClient from '@lib/models/common/http/DefaultClient'
+import FakeClient from '@lib/models/common/http/FakeClient'
 
-import { ComponentWithLibStatus } from '../../../../lib/models/common/Library'
-import { Tab, TabAsObject } from '../../../../lib/models/common/CustomType/tab'
-import { CustomType } from '../../../../lib/models/common/CustomType'
+import { ComponentWithLibStatus } from '@lib/models/common/Library'
+import { Tab, TabAsObject } from '@lib/models/common/CustomType/tab'
+import { CustomType } from '@lib/models/common/CustomType'
 
 const createOrUpdate = (client: DefaultClient | FakeClient, model: any, remoteCustomType: any) => {
   if (remoteCustomType) {

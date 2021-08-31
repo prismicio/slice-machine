@@ -1,18 +1,18 @@
-import { snakelize } from '../../../../lib/utils/str'
+import { snakelize } from '@lib/utils/str'
 
-import { getEnv } from '../../../../lib/env'
+import { getEnv } from '@lib/env'
 import { getSlices } from './'
-import Files from '../../../../lib/utils/files'
+import Files from '@lib/utils/files'
 
-import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
 
 import { onError } from '../common/error'
 import { purge, upload } from '../upload'
-import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient from '../../../../lib/models/common/http/FakeClient'
-import { Variation, AsObject } from '../../../../lib/models/common/Variation'
-import Slice from '../../../../lib/models/common/Slice'
-import { CustomPaths } from '../../../../lib/models/paths'
+import DefaultClient from '@lib/models/common/http/DefaultClient'
+import FakeClient from '@lib/models/common/http/FakeClient'
+import { Variation, AsObject } from '@lib/models/common/Variation'
+import Slice from '@lib/models/common/Slice'
+import { CustomPaths } from '@lib/models/paths'
 import Environment from '@lib/models/common/Environment'
 
 const createOrUpdate = async ({
