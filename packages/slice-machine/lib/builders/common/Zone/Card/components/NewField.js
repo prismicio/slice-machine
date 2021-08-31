@@ -5,13 +5,13 @@ import { Box, Input, Flex, Text, Button, Label, useThemeUI } from 'theme-ui'
 import {
   DefaultFields,
   validateId
-} from 'lib/forms/defaults'
+} from '@lib/forms/defaults'
 import {
   createInitialValues,
   createValidationSchema
-} from 'lib/forms'
+} from '@lib/forms'
 
-import * as Widgets from 'lib/models/common/widgets/withGroup'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 
 import ErrorTooltip from './ErrorTooltip'
 

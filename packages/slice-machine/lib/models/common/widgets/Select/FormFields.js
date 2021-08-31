@@ -1,9 +1,9 @@
 import * as yup from 'yup'
 import { FormFieldCheckboxControl } from 'components/FormFields'
 
-import { FormTypes } from 'lib/forms/types'
+import { FormTypes } from '@lib/forms/types'
 
-import { DefaultFields } from 'lib/forms/defaults'
+import { DefaultFields } from '@lib/forms/defaults'
 import { FormFieldArray } from 'components/FormFields'
 
 const FormFields = {

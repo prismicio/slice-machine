@@ -5,9 +5,9 @@ import { Label, Box } from 'theme-ui'
 
 import { CustomTypesContext } from "src/models/customTypes/context"
 
-import { DefaultFields } from 'lib/forms/defaults'
+import { DefaultFields } from '@lib/forms/defaults'
 
-import WidgetFormField from 'lib/builders/common/EditModal/Field'
+import WidgetFormField from '@lib/builders/common/EditModal/Field'
 
 import { Col, Flex as FlexGrid } from 'components/Flex'
 import { createFieldNameFromKey } from '@lib/forms'

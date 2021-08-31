@@ -1,4 +1,4 @@
-import { getEnv } from '../../../lib/env'
+import { getEnv } from '@lib/env'
 import push from './slices/push'
 import getLibs from './libraries'
 

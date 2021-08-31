@@ -4,8 +4,8 @@ import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 import { pascalize } from '../utils/str'
 
 import { getPathToScreenshot, getExternalPathToScreenshot } from './screenshot'
-import { AsObject } from '../../lib/models/common/Variation'
-import Slice from '../../lib/models/common/Slice'
+import { AsObject } from '@lib/models/common/Variation'
+import Slice from '@lib/models/common/Slice'
 import Files from '../utils/files'
 import migrate from '../migrate'
 

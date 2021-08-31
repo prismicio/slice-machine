@@ -1,11 +1,11 @@
 import path from 'path'
 import TemplateEngine from 'ejs'
 
-import Files from '../../../lib/utils/files'
-import { Framework } from '../../../lib/models/common/Framework'
-import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
+import Files from '@lib/utils/files'
+import { Framework } from '@lib/models/common/Framework'
+import { CustomPaths, GeneratedPaths } from '@lib/models/paths'
 
-import { createStorybookId } from '../../../lib/utils/str'
+import { createStorybookId } from '@lib/utils/str'
 
 const Paths = {
   nuxtTemplate: (appRoot: string) => path.join(appRoot, 'templates/storybook/nuxt.template.ejs'),

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import * as yup from 'yup'
-import { createFieldNameFromKey } from 'lib/forms'
-import { CheckBox as CheckBoxConstructor } from 'lib/forms/fields'
-import { DefaultFields } from 'lib/forms/defaults'
+import { createFieldNameFromKey } from '@lib/forms'
+import { CheckBox as CheckBoxConstructor } from '@lib/forms/fields'
+import { DefaultFields } from '@lib/forms/defaults'
 
 import options, { optionValues } from './options'
 
-import WidgetFormField from 'lib/builders/common/EditModal/Field'
+import WidgetFormField from '@lib/builders/common/EditModal/Field'
 
 import { Text, Button, Label, Checkbox, Flex, Box } from 'theme-ui'
 import { Col, Flex as FlexGrid } from 'components/Flex'

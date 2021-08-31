@@ -1,7 +1,7 @@
-import { getEnv } from '../../../../lib/env'
+import { getEnv } from '@lib/env'
 
-import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient from '../../../../lib/models/common/http/FakeClient'
+import DefaultClient from '@lib/models/common/http/DefaultClient'
+import FakeClient from '@lib/models/common/http/FakeClient'
 
 export const getSlices = async(client: DefaultClient | FakeClient) => {
   try {

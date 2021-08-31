@@ -4,7 +4,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Button } from "theme-ui";
 
-import { ensureDnDDestination, ensureWidgetTypeExistence } from 'lib/utils'
+import { ensureDnDDestination, ensureWidgetTypeExistence } from '@lib/utils'
 
 import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";

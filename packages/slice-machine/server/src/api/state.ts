@@ -1,14 +1,14 @@
 import fetchLibs from './libraries'
 import fetchCustomTypes from './custom-types/index'
-import { getEnv } from '../../../lib/env'
-import { warningStates, warningTwoLiners } from '../../../lib/consts'
+import { getEnv } from '@lib/env'
+import { warningStates, warningTwoLiners } from '@lib/consts'
 import { fetchStorybookUrl } from './common/storybook'
-import Environment from '../../../lib/models/common/Environment'
-import Warning from '../../../lib/models/common/Warning'
-import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
-import ServerError from '../../../lib/models/server/ServerError'
-import Files from '../../../lib/utils/files'
-import { Pkg } from '../../../lib/models/paths'
+import Environment from '@lib/models/common/Environment'
+import Warning from '@lib/models/common/Warning'
+import ErrorWithStatus from '@lib/models/common/ErrorWithStatus'
+import ServerError from '@lib/models/server/ServerError'
+import Files from '@lib/utils/files'
+import { Pkg } from '@lib/models/paths'
 
 const hasStorybookScript = (cwd: string) => {
   const pathToManifest = Pkg(cwd)

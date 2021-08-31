@@ -1,6 +1,7 @@
 /// <reference path="../../../sm-commons/index.d.ts" />
 
 require("@babel/register");
+require('module-alias/register');
 
 console.log('\nLaunching server...')
 

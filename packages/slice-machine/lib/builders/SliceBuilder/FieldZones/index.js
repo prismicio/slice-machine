@@ -1,13 +1,13 @@
 import { Fragment } from 'react'
 import { Box } from 'theme-ui'
 
-import { ensureDnDDestination } from 'lib/utils'
+import { ensureDnDDestination } from '@lib/utils'
 
 import Zone from '../../common/Zone'
 import EditModal from '../../common/EditModal'
 
-import * as Widgets from 'lib/models/common/widgets'
-import sliceBuilderWidgetsArray from 'lib/models/common/widgets/sliceBuilderArray'
+import * as Widgets from '@lib/models/common/widgets'
+import sliceBuilderWidgetsArray from '@lib/models/common/widgets/sliceBuilderArray'
 
 import { SliceMockConfig } from '../../../models/common/MockConfig'
 
