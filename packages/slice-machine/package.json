@@ -15,7 +15,7 @@
     "postinstall": "node postinstall",
     "prepublishOnly": "yarn bundle",
     "serve": "node -r esm ./build/server/src/index.js",
-    "watch-server": "tsc -w --project ./server/index.ts",
+    "watch-server": "tsc -w --project server/tsconfig.json",
     "dev-server": "cross-env PORT=9999 CWD=./tests/project node build/server/src/index.js",
     "build": "yarn build-server && yarn build-next-app",
     "build-server": "tsc --project server/tsconfig.json",
