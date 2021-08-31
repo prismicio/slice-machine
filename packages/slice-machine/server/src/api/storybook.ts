@@ -16,6 +16,7 @@ const Paths = {
       case Framework.vue: return Paths.nuxtTemplate(appRoot)
       case Framework.next: return Paths.nextTemplate(appRoot)
       case Framework.react: return Paths.nextTemplate(appRoot)
+      case Framework.vanillajs: return Paths.nextTemplate(appRoot)
       default: return null
     }
   }

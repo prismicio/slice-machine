@@ -9,6 +9,7 @@ import PackageVersion from './PackageVersion'
 export default interface Environment {
   cwd: string,
   userConfig: UserConfig
+  hasConfigFile: boolean
   repo?: string
   prismicData?: PrismicData
   chromatic?: Chromatic

@@ -15,12 +15,18 @@ const SharedSlicesApi = {
   PROD: 'https://customtypes.prismic.io/'
 } as ApiSettings
 
+const AuthApi = {
+  STAGE: 'https://auth.wroom.io/',
+  PROD: 'https://auth.prismic.io/',
+}
+
 const AclProviderApi = {
   STAGE: 'https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/',
   PROD: 'https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/'
 } as ApiSettings
 
 const SlicesPrefix = 'slices/'
+const ValidatePrefix = 'validate/'
 const CustomTypesPrefix = 'customtypes/'
 
 function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
@@ -58,6 +64,12 @@ export default class DefaultClient {
   apiFetcher: (prefix: string, body?: object | string, action?: string, method?: string) => Promise<Response>
   aclFetcher: (prefix: string, body?: object | string, action?: string, method?: string) => Promise<Response>
 
+  static validate(base: string, auth: string) {
+    return fetch(`${createApiUrl(base, AuthApi)}${ValidatePrefix}?token=${auth}`, {
+        method: 'GET',
+      }).catch(e => e)
+  }
+
   constructor(readonly cwd: string, readonly base: string, readonly repo: string, readonly auth: string) {
     const devConfig = (() => {
       if (!cwd) {
@@ -70,6 +82,8 @@ export default class DefaultClient {
       }
     })();
 
+    this.base = base
+    this.auth = auth
     this.apiFetcher = initFetcher(base, SharedSlicesApi, devConfig.sharedSlicesApi, repo, auth)
     this.aclFetcher = initFetcher(base, AclProviderApi, devConfig.aclProviderApi, repo, auth)
   }

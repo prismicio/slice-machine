@@ -14,7 +14,6 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{ remoteS
       return { remoteSlices: [], clientError: new ErrorWithStatus(res.statusText, res.status) }
     }
     if (env.client.isFake()) {
-      console.error('[client/get] Could not fetch remote slices. To log in, please run `prismic login`')
       return { remoteSlices: [] }
     }
     const r = await (res.json ? res.json() : Promise.resolve([]))

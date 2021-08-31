@@ -14,10 +14,11 @@ import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
-import { detectFramework } from '../framework'
+
 import { ConfigErrors } from '../models/server/ServerState';
 
 import { createComparator } from './semver'
+import { detectFramework } from './framework'
 import handleManifest, { ManifestStates, Manifest } from './manifest'
 import UserConfig from '@lib/models/common/UserConfig'
 
@@ -86,10 +87,36 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     throw new Error(message)
   }
 
+  const prismicData = getPrismicData()
+  const npmCompare = await compareNpmVersions({ cwd })
+
   if (!Files.exists(SMConfig(cwd))) {
-    const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
-    console.error(message)
-    throw new Error(message)
+    return {
+      env: {
+        cwd,
+        userConfig: {
+          libraries: [],
+          apiEndpoint: '',
+          storybook: '',
+          chromaticAppId: '',
+          _latest: '',
+        },
+        hasConfigFile: false,
+        repo: undefined,
+        prismicData: prismicData.isOk() ? prismicData.value : undefined,
+        chromatic: undefined,
+        currentVersion: npmCompare.currentVersion || '',
+        updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
+        mockConfig: {},
+        hasGeneratedStoriesPath: false,
+        framework: detectFramework(cwd),
+        baseUrl: `http://localhost:${process.env.PORT}`,
+        client: new FakeClient()
+      }
+    }
+    // const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
+    // console.error(message)
+    // throw new Error(message)
   }
 
   const manifestState = handleManifest(cwd)
@@ -104,12 +131,9 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
   const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)
-  const prismicData = getPrismicData()
 
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
-
-  const npmCompare = await compareNpmVersions({ cwd })
 
   const mockConfig = getMockConfig(cwd)
 
@@ -126,6 +150,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     env: {
       cwd,
       userConfig,
+      hasConfigFile: true,
       repo,
       prismicData: prismicData.isOk() ? prismicData.value : undefined,
       chromatic,

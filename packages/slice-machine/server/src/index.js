@@ -54,6 +54,10 @@ app.use('/slices', async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, 'slices.html'));
 })
 
+app.use('/onboarding', async function sliceRoute(_, res) {
+  return res.sendFile(path.join(out, 'onboarding.html'));
+})
+
 
 app.listen(process.env.PORT, () => {
   const p = `http://localhost:${process.env.PORT}`

@@ -19,7 +19,6 @@ export async function handleLibraryPath(env: Environment, libPath: string): Prom
   } = getInfoFromPath(libPath, env.cwd)
 
   if (!pathExists) {
-    console.warn(`Path to library "${pathToSlices}" does not exist. Skipping.`)
     return
   }
 

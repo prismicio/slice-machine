@@ -1,8 +1,15 @@
-import { ReactNode } from "react";
-import Navigation from "./Navigation";
-import { Box } from "theme-ui";
-import Environment from "../../lib/models/common/Environment";
-import { ServerState } from "../../lib/models/server/ServerState";
+import { ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import { Box } from 'theme-ui'
+
+import Navigation from './Navigation'
+
+import Environment from '@lib/models/common/Environment'
+import { ServerState } from '@lib/models/server/ServerState'
+
+const AsIs: { [x: string]: boolean } = {
+  '/onboarding': true
+}
 
 const AppLayout = ({
   children,
@@ -13,6 +20,11 @@ const AppLayout = ({
   env: Environment;
   data: ServerState;
 }) => {
+  const router = useRouter()
+  if (AsIs[router.asPath]) {
+    return <main>{ children }</main>
+  }
+
   return (
     <Box
       sx={{

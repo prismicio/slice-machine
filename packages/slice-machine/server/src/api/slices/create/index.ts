@@ -23,7 +23,7 @@ const copy = promisify(cpy)
 const IndexFiles = {
   'react': 'index.js',
   'next': 'index.js',
-  'nuxt': 'index.js',
+  'nuxt': 'index.vue',
   'vue': 'index.vue',
   'vanillajs': 'index.js'
 }

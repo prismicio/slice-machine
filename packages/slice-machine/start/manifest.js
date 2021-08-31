@@ -2,7 +2,31 @@ const fs = require('fs')
 const path = require('path')
 const prompts = require('prompts')
 
-async function createManifest(cwd) {
+async function selectRepo(repositories) {
+  const response = await prompts({
+    type: 'select',
+    name: 'repo',
+    message: 'Pick a Prismic project',
+    choices: repositories.map(([repo]) => ({
+      title: repo,
+      value: repo
+    })),
+    initial: 1
+  })
+  return response.repo
+}
+
+async function shouldOnboard() {
+  const response = await prompts({
+    type: 'confirm',
+    name: 'confirm',
+    message: 'Would you like to setup the Slicemachine plugin?',
+    initial: true
+  })
+  return response.confirm
+}
+
+async function createManifest(cwd, repositories) {
   const response = await prompts({
     type: 'confirm',
     name: 'confirm',
@@ -29,5 +53,7 @@ async function createManifest(cwd) {
 }
 
 module.exports = {
-  createManifest
+  createManifest,
+  selectRepo,
+  shouldOnboard
 }

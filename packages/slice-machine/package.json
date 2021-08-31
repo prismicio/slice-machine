@@ -21,7 +21,7 @@
     "build-ts-paths": "tscpaths --project ./tsconfig.json --src ./lib --out ./build/lib && tscpaths --project ./tsconfig.json --src ./server --out ./build/server",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && yarn clean-build",
-    "bundle": "yarn test && yarn build && yarn export-build",
+    "bundle": "yarn build && yarn test && yarn export-build",
     "slicemachine": "start-slicemachine --port 9999"
   },
   "bin": {
@@ -55,6 +55,7 @@
     "multer": "^1.4.2",
     "neverthrow": "^4.2.1",
     "oembed-parser": "^1.4.5",
+    "open": "^8.2.1",
     "parse-domain": "^3.0.2",
     "prompts": "^2.4.0",
     "puppeteer": "^10.2.0",

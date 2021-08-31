@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React, { useCallback, useEffect, useState } from "react";
-import useSwr from "swr";
+import useSwr from 'swr'
 import App, { AppContext } from "next/app";
 
 
@@ -35,13 +35,14 @@ import Environment from "../lib/models/common/Environment";
 import Slice from "../lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "../lib/models/common/CustomType";
 import { AsObject } from "../lib/models/common/Variation";
+import { useRouter } from 'next/router';
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
 function mapSlices(libraries: ReadonlyArray<Library>): any {
-  return libraries.reduce((acc, lib) => {
+  return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
       ...lib.components.reduce((acc, comp) => ({
@@ -139,7 +140,15 @@ function MyApp({
       console.log("------ End of log ------")
   }, [data]);
 
-  const { Renderer, payload } = state;
+  const { Renderer, payload } = state
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (data && !data.env.hasConfigFile && router.pathname !== '/onboarding') {
+      router.replace('/onboarding')
+    }
+  }, [data])
 
   return (
     <ThemeProvider theme={theme}>
@@ -172,11 +181,6 @@ function MyApp({
                     <ToastProvider>
                       <AppLayout {...payload} data={data}>
                         <SliceHandler {...payload}>
-                          {/* <NavBar
-                                    env={data.env}
-                                    warnings={data.warnings}
-                                    openPanel={() => openPanel()}
-                                  /> */}
                           <Renderer
                             Component={Component}
                             pageProps={pageProps}

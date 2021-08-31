@@ -1,7 +1,7 @@
 const dedent = require('dedent')
 const boxen = require('boxen')
 
-function infoBox(npmCompare, localhost) {
+function infoBox(npmCompare, localhost, framework, email) {
   if (!npmCompare) {
     return
   }
@@ -16,7 +16,10 @@ function infoBox(npmCompare, localhost) {
             A new version (${npmCompare.onlinePackage.version}) is available!
             Upgrade now: yarn add slice-machine-ui@latest
           ` : ''}
+          Framework:         ${framework}
+          Logged in as:      ${email}
           Running on:        ${localhost}
+
         👇 Server logs will appear right here
         `), {
           padding: 1,
