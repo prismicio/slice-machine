@@ -1,8 +1,7 @@
 import { Field, useField } from 'formik'
 import  { Box, Flex, Label, Input, Text, Radio }from 'theme-ui'
 
-import { CustomType } from '../../lib/models/common/CustomType'
-import { TabsAsObject } from '../../lib/models/common/CustomType/tab'
+import { CustomType, ObjectTabs } from '../../lib/models/common/CustomType'
 
 // import { Col, Flex as FlexGrid } from 'components/Flex'
 
@@ -90,7 +89,12 @@ const CreateCustomtypeForm = ({
   onSubmit,
   close,
   customTypes
-}: { isOpen: boolean, onSubmit: Function, close: Function, customTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>> }) => {
+}: {
+  isOpen: boolean,
+  onSubmit: Function,
+  close: Function,
+  customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>
+}) => {
 
   return (
     <ModalFormCard

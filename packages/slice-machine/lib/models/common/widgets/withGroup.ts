@@ -14,3 +14,6 @@ export { Timestamp } from '.'
 export { UID } from '.'
 
 export { Group } from './Group'
+
+export const SharedSlice = null
+export const SliceZone = null

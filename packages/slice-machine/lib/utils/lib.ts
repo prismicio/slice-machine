@@ -3,8 +3,40 @@ import Files from './files'
 
 const SM_CONFIG_FILE = "sm.config.json";
 
+enum Prefix {
+  A = '@/',
+  B = '~/',
+  C = '/'
+}
+
+const Identifiers: Record<Prefix, number> = {
+  '@/': 2,
+  '~/': 2,
+  '/': 1
+}
+
+export const findIndexFile = (libPath: string) => {
+  try {
+    const dir = Files.readDirectory(libPath)
+    const maybeF = dir.find(f => Files.isFile(path.join(libPath, f)) && f.startsWith('index.'))
+    return maybeF ? path.join(libPath, maybeF) : null
+  } catch(e) {
+    return null
+  }
+}
+
+export const getFormattedLibIdentifier = (libPath: string) => {
+  const maybeIdentifier = Object.keys(Identifiers).find((e) => libPath.indexOf(e) === 0)
+  const isLocal = !!maybeIdentifier
+  return {
+    isLocal,
+    identifier: maybeIdentifier,
+    from: isLocal ? libPath.slice(Identifiers[maybeIdentifier as Prefix]) : libPath
+  }
+}
+
 export function getInfoFromPath(libPath: string, startPath: string): any {
-  const isLocal = ['@/', '~', '/'].find((e) => libPath.indexOf(e) === 0) !== undefined
+  const { isLocal, from } = getFormattedLibIdentifier(libPath)
   const pathToLib = path.join(
     startPath || process.cwd(),
     isLocal ? '' : 'node_modules',
@@ -25,6 +57,7 @@ export function getInfoFromPath(libPath: string, startPath: string): any {
   return {
     config,
     isLocal,
+    from,
     pathExists,
     pathToLib,
     pathToSlices,

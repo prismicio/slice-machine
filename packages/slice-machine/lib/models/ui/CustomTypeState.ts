@@ -1,5 +1,6 @@
-import { CustomType } from '../common/CustomType'
-import { TabsAsObject, TabsAsArray, TabAsArray, TabValueAsArray } from '../common/CustomType/tab'
+import { ArrayTabs, CustomType } from '../common/CustomType'
+import { Field } from '../common/CustomType/fields'
+import { TabAsArray } from '../common/CustomType/tab'
 
 export enum CustomTypeStatus {
   New = "NEW_CT",
@@ -7,52 +8,55 @@ export enum CustomTypeStatus {
   Synced = 'SYNCED',
 }
 
+type PoolOfFields = ReadonlyArray<{key: string, value: Field}>
+
 export interface CustomTypeState {
-  id: string
-  label: string
-  status: boolean
-  repeatable: boolean
-  jsonModel: CustomType<TabsAsObject>
-  tabs: TabsAsArray
-  remoteTabs: TabsAsArray
-  initialTabs: TabsAsArray
+  current: CustomType<ArrayTabs>,
+  initialCustomType: CustomType<ArrayTabs>,
+  remoteCustomType: CustomType<ArrayTabs> | undefined
   mockConfig: any
   initialMockConfig: any
-  poolOfFieldsToCheck: TabValueAsArray
+  poolOfFieldsToCheck: PoolOfFields
   isTouched?: boolean
   __status?: CustomTypeStatus
 }
 
 export const CustomTypeState = {
   tab(state: CustomTypeState, tabId?: string): TabAsArray | undefined {
-    if(state.tabs.length) {
-      if(tabId) return state.tabs.find(v => v.key === tabId)
-      return state.tabs[0]
+    if(state.current.tabs.length) {
+      if(tabId) return state.current.tabs.find(v => v.key === tabId)
+      return state.current.tabs[0]
     }
   },
 
   updateTab(state: CustomTypeState, tabId: string) {
     return (mutate: (v: TabAsArray) => TabAsArray): CustomTypeState => {
-      const tabs = state.tabs.map(v => {
+      const tabs = state.current.tabs.map(v => {
         if(v.key === tabId) return mutate(v)
         else return v
       })
 
       return {
         ...state,
+        current: {
+          ...state.current,
+          tabs
+        }
+      }
+    }
+  },
+  deleteTab(state: CustomTypeState, tabId: string): CustomTypeState {
+    const tabs = state.current.tabs.filter(v => v.key !== tabId)
+    return {
+      ...state,
+      current: {
+        ...state.current,
         tabs
       }
     }
   },
-  deleteTab(state: CustomTypeState, tabId: string) {
-    const tabs = state.tabs.filter(v => v.key !== tabId)
-    return {
-      ...state,
-      tabs
-    }
-  },
-  getPool(tabs: TabsAsArray):TabValueAsArray {
-    return tabs.reduce((acc: TabValueAsArray, curr: TabAsArray) => {
+  getPool(tabs: ArrayTabs): PoolOfFields {
+    return tabs.reduce<PoolOfFields>((acc: PoolOfFields, curr: TabAsArray) => {
       return [...acc, ...curr.value]
     }, [])
   }

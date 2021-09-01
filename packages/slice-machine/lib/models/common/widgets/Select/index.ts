@@ -1,16 +1,17 @@
 import * as yup from 'yup'
 import { MdDns } from 'react-icons/md'
 
-import {
-  createInitialValues,
-  createValidationSchema
-} from '../../../../forms'
+import { createValidationSchema } from '../../../../forms'
 
 import { removeProp } from '../../../../utils'
 
 import FormFields from './FormFields'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { Widget } from '../Widget'
+import { SelectField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /**
  * {
@@ -23,13 +24,6 @@ import { MockConfigForm } from './Mock/Form'
     }
 */
 
-const TYPE_NAME = 'Select'
-
-const create = (apiId: string) => ({
-  ...createInitialValues(FormFields),
-  id: apiId
-})
-
 const Meta = {
   icon: MdDns,
   title: 'Select',
@@ -41,15 +35,13 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, 'id'))
 })
 
-export const Select = {
+export const Select: Widget<SelectField, typeof schema> = {
   FormFields,
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  create,
+  create: () => new SelectField(),
   schema,
   Meta,
-  TYPE_NAME
+  TYPE_NAME: FieldType.Select
 }
-
-export interface Select extends yup.TypeOf<typeof schema> {}

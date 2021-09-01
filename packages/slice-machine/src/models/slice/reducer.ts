@@ -3,7 +3,11 @@ import { Variation, AsArray } from '../../../lib/models/common/Variation'
 import SliceState from '../../../lib/models/ui/SliceState'
 import { WidgetsArea } from '../../../lib/models/common/Variation'
 import { ComponentMetadata, Preview } from '../../../lib/models/common/Component'
-import { Widget } from '../../../lib/models/common/widgets'
+
+import { Field, FieldType } from '../../../lib/models/common/CustomType/fields'
+import { sliceZoneType } from '../../../lib/models/common/CustomType/sliceZone'
+import { AnyWidget } from '../../../lib/models/common/widgets/Widget'
+import * as Widgets from '../../../lib/models/common/widgets'
 
 import {
   ActionType as VariationActions,
@@ -14,6 +18,7 @@ import {
 } from './actions'
 
 import { LibStatus } from '../../../lib/models/common/Library'
+import { compareVariations } from '../../../lib/utils'
 
 
 export function reducer(prevState: SliceState, action: { type: string, payload?: unknown }): SliceState {
@@ -89,12 +94,32 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
         }
       }
       case VariationActions.AddWidget: {
-        const { variationId, widgetsArea, key, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, key: string, value: Widget }
-        return SliceState.updateVariation(prevState, variationId)(v => Variation.addWidget(v, widgetsArea, key, value))
+        const { variationId, widgetsArea, key, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, key: string, value: Field }
+        try {
+          if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
+            const CurrentWidget: AnyWidget = Widgets[value.type]
+            CurrentWidget.schema.validateSync(value, { stripUnknown: false })
+            return SliceState.updateVariation(prevState, variationId)(v => Variation.addWidget(v, widgetsArea, key, value))
+          }
+          return prevState
+        } catch(err) {
+          console.error(`[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case VariationActions.ReplaceWidget: {
-        const { variationId, widgetsArea, previousKey, newKey, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget }
-        return SliceState.updateVariation(prevState, variationId)(v => Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value))
+        const { variationId, widgetsArea, previousKey, newKey, value } = action.payload as { variationId: string, widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Field }
+        try {
+          if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
+            const CurrentWidget: AnyWidget = Widgets[value.type]
+            CurrentWidget.schema.validateSync(value, { stripUnknown: false })
+            return SliceState.updateVariation(prevState, variationId)(v => Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value))
+          }
+          return prevState
+        } catch(err) {
+          console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case VariationActions.ReorderWidget: {
         const { variationId, widgetsArea, start, end } = action.payload as { variationId: string, widgetsArea: WidgetsArea, start: number, end: number }
@@ -125,8 +150,8 @@ export function reducer(prevState: SliceState, action: { type: string, payload?:
       return !equal(result.initialVariations, result.variations) || !equal(result.initialMockConfig, result.mockConfig)
     })(),
     __status: (() => {
-      return result.infos.previewUrls !== result.initialPreviewUrls
-      || !equal(result.remoteVariations, result.initialVariations)
+      return !equal(result.infos.previewUrls, result.initialPreviewUrls)
+      || !compareVariations(result.remoteVariations, result.initialVariations)
       ? LibStatus.Modified
       : LibStatus.Synced
     })()

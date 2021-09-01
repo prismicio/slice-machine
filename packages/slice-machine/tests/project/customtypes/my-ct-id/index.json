@@ -1,7 +1,6 @@
 {
   "id": "my-ct-id",
   "label": "My Awesome Title",
-  "status": true,
   "repeatable": false,
   "json": {
     "Main": {
@@ -31,5 +30,6 @@
         }
       }
     }
-  }
+  },
+  "status": false
 }

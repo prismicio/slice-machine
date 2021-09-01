@@ -1,8 +1,13 @@
-import type { TypeOf } from 'yup'
+import * as yup from 'yup'
 import { MdPlace } from 'react-icons/md'
-import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { DefaultFields } from "../../../../forms/defaults"
+
+import { Widget } from '../Widget'
+import { GeoPointField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /** : {
   "type" : "GeoPoint",
@@ -11,7 +16,17 @@ import { MockConfigForm } from './Mock/Form'
   }
 } */
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('GeoPoint')
+const FormFields = {
+  id: DefaultFields.id,
+  label: DefaultFields.label
+}
+
+const schema = yup.object().shape({
+  type: yup.string().matches(/^GeoPoint$/, { excludeEmptyString: true }).required(),
+  config: yup.object().shape({
+    label: yup.string(),
+  }).required().default(undefined).noUnknown(true)
+})
 
 const Meta = {
   icon: MdPlace,
@@ -19,15 +34,13 @@ const Meta = {
   description: 'A field for storing geo-coordinates'
 }
 
-export const GeoPoint = {
-  create,
+export const GeoPoint: Widget<GeoPointField, typeof schema> = {
+  create: () => new GeoPointField(),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   FormFields,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.GeoPoint,
   schema,
   Meta
 }
-
-export interface GeoPoint extends TypeOf<typeof schema> {}

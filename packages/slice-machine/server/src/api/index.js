@@ -18,8 +18,9 @@ const state = require('./state').default
 const pushLibs = require('./libraries/push').default
 
 const saveCT = require('./custom-types/save').default
-const createCustomType = require('./custom-types/create').default
 const pushCustomType = require('./custom-types/push').default
+
+import validateAuth from './auth/validate'
 
 router.use('/__preview', async function previewRoute(req, res) {
   const p = decodeURIComponent(req.query.q)
@@ -107,15 +108,6 @@ router.use('/slices/push', async function (req, res) {
   return res.status(200).json(payload)
 })
 
-router.use('/custom-types/create', async function (req, res) {
-  console.log('/custom-types/create')
-  const payload = await createCustomType(req.body)
-  if (payload.err) {
-    return res.status(400).json(payload)
-  }
-  return res.status(200).json(payload)
-})
-
 router.use('/custom-types/save', async function (req, res) {
   const payload = await saveCT(req)
   if (payload.err) {
@@ -126,6 +118,14 @@ router.use('/custom-types/save', async function (req, res) {
 
 router.use('/custom-types/push', async function (req, res) {
   const payload = await pushCustomType(req.query)
+  if (payload.err) {
+    return res.status(400).json(payload)
+  }
+  return res.status(200).json(payload)
+})
+
+router.use('/auth/validate', async function (req, res) {
+  const payload = await validateAuth()
   if (payload.err) {
     return res.status(400).json(payload)
   }

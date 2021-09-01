@@ -44,3 +44,11 @@ export const valueNotBool = {
   }
 }
 
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: 'some-id'
+  }
+}

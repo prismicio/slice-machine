@@ -1,36 +1,30 @@
 import path from 'path'
 import glob from 'glob'
-import Environment from '../../../../lib/models/common/Environment'
-import { CustomType } from '../../../../lib/models/common/CustomType'
-import { TabsAsObject } from '../../../../lib/models/common/CustomType/tab'
-import Files from '../../../../lib/utils/files'
-// import { acceptedImagesTypes } from '../../../../lib/consts'
-import { CustomTypesPaths } from '../../../../lib/models/paths'
+import Environment from '@lib/models/common/Environment'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
+import Files from '@lib/utils/files'
+import { CustomTypesPaths } from '@lib/models/paths'
 
 const handleMatch = (matches: string[], env: Environment) => {
-  return matches.reduce((acc: Array<CustomType<TabsAsObject>>, p: string) => {
+  return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
     const key = path.basename(path.dirname(p))
     const pathTopreview = path.join(path.dirname(p), 'index.png')
     try {
-      const { json, ...rest } = Files.readJson(p)
+      const ct = Files.readJson(p)
       return [
         ...acc,
         {
-          ...rest,
-          id: key,
-          tabs: json,
+          ...CustomType.fromJsonModel(key, ct),
           previewUrl: Files.exists(pathTopreview)
             ? `${env.baseUrl}/api/__preview?q=${encodeURIComponent(path.join(path.dirname(p), 'index.png'))}&uniq=${Math.random()}`
-            : null
-        } as CustomType<TabsAsObject>
+            : undefined
+        }
       ]
     } catch (e) {
       return acc
     }
   }, [])
 }
-
-// `${baseUrl}/api/__preview?q=${encodeURIComponent(activeScreenshot.path)}&uniq=${Math.random()}`
 
 const fetchRemoteCustomTypes = async (env: Environment) => {
   if (env.client.isFake()) {
@@ -56,7 +50,7 @@ const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
   }
 }
 
-export default async function handler(env: Environment): Promise<{ isFake: boolean, customTypes: ReadonlyArray<CustomType<TabsAsObject>>, remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> }> {
+export default async function handler(env: Environment): Promise<{ isFake: boolean, customTypes: ReadonlyArray<CustomType<ObjectTabs>>, remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>> }> {
   const { cwd } = env
   const pathToCustomTypes = CustomTypesPaths(cwd).value()
   const folderExists = Files.exists(pathToCustomTypes)
@@ -67,14 +61,8 @@ export default async function handler(env: Environment): Promise<{ isFake: boole
   }
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return {
-    isFake: isFake || false,
+    isFake: !!isFake,
     customTypes: handleMatch(matches, env),
-    remoteCustomTypes: remoteCustomTypes.map((ct: any) => {
-      const { json, ...rest } = ct
-      return {
-        ...rest,
-        tabs: json
-      } 
-    })
+    remoteCustomTypes: remoteCustomTypes.map((ct: any) => CustomType.fromJsonModel(ct.id, ct))
   }
 }

@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import slash from 'slash'
 
@@ -11,28 +12,22 @@ import { Library } from '../models/common/Library'
 
 export async function handleLibraryPath(env: Environment, libPath: string): Promise<Library | undefined> {
   const {
+    from,
     isLocal,
     pathExists,
     pathToSlices,
   } = getInfoFromPath(libPath, env.cwd)
 
-  // if (!isLocal) {
-  //   return
-  // }
   if (!pathExists) {
-    console.warn(`Path to library "${pathToSlices}" does not exist. Skipping.`)
     return
   }
-
-  // library identifier
-  const from = isLocal ? libPath.slice(2) : libPath
 
   // all paths to components found in slices folder
   const pathsToComponents = Files.readDirectory(slash(pathToSlices))
     .map(curr => path.join(pathToSlices, curr))
     .filter(e => {
       const f = e.split(path.sep).pop()
-      return f !== 'index.js' && f?.[0] !== '.'
+      return fs.lstatSync(e).isDirectory() && !(f?.startsWith('.'))
     })
 
   // relative path to slice folder, to be appended with sliceName

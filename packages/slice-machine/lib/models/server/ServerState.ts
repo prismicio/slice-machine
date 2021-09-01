@@ -5,17 +5,17 @@ import ErrorWithStatus from '../../../lib/models/common/ErrorWithStatus'
 import { Library } from '../../../lib/models/common/Library'
 import { AsObject } from '../../../lib/models/common/Variation'
 
-import { CustomType } from '../../../lib/models/common/CustomType'
-import { TabsAsObject } from '../common/CustomType/tab'
+import { CustomType, ObjectTabs } from '../../../lib/models/common/CustomType'
 
 import ServerError from './ServerError'
 
+export interface ConfigErrors {[errorKey: string]: ServerError}
 export interface ServerState {
   libraries: ReadonlyArray<Library>
-  customTypes: ReadonlyArray<CustomType<TabsAsObject>>
+  customTypes: ReadonlyArray<CustomType<ObjectTabs>>
   remoteSlices: ReadonlyArray<Slice<AsObject>>
   clientError?: ErrorWithStatus
-  configErrors: { errors?: {[errorKey: string]: ServerError} }
+  configErrors: ConfigErrors
   env: Environment
   warnings: ReadonlyArray<Warning>
 }

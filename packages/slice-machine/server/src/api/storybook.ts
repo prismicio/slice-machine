@@ -18,6 +18,7 @@ const Paths = {
       case Framework.next: return Paths.nextTemplate(appRoot)
       case Framework.react: return Paths.nextTemplate(appRoot)
       case Framework.svelte: return Paths.svelteTemplate(appRoot)
+      case Framework.vanillajs: return Paths.nextTemplate(appRoot)
       default: return null
     }
   }
@@ -68,7 +69,15 @@ export default {
       }
      })
 
-    const componentPath = `../../../../${libraryName}/${sliceName}`
+    const componentPath = path.join(
+      '..',
+      path.relative(
+        GeneratedPaths(cwd).library(libraryName).value(),
+        CustomPaths(cwd).library(libraryName).value()
+      ),
+      sliceName
+    ).split(path.sep).join(path.posix.sep)
+
     const componentTitle = `${libraryName}/${sliceName}`
     const stories = TemplateEngine.render(template, { mocks: withPascalizedIds, componentPath, componentTitle });
  

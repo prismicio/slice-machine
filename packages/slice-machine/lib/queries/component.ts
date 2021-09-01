@@ -78,6 +78,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const sliceName = getComponentName(slicePath)
 
   if (!sliceName || !sliceName.length) {
+    console.error(`[queries/component-info] Could not find slice name at path "${slicePath}". Skipping...`)
     return
   }
   
@@ -95,7 +96,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   const sliceModel: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
   const { model: modelData, migrated } = migrate(sliceModel.data, { sliceName, from }, null, false)
   const model = { data: modelData }
-  const previewUrls = model.data.variations
+  const previewUrls = (model.data.variations || [])
     .map((v: any) => {
       const activeScreenshot = migrated
         ? getExternalPathToScreenshot({ cwd, from, sliceName })

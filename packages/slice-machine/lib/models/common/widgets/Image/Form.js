@@ -1,6 +1,8 @@
 import * as yup from 'yup'
 import { useEffect, useState, Fragment } from 'react'
+
 import { DefaultFields } from 'lib/forms/defaults'
+import { createFieldNameFromKey } from 'lib/forms'
 
 
 import WidgetFormField from 'lib/builders/common/EditModal/Field'
@@ -46,18 +48,19 @@ const Form = (props) => {
     touched
   } = props
   
-  const { thumbnails, constraint } = formValues
+  const { config: { thumbnails, constraint } } = formValues
 
   useEffect(() => {
     setThumbI(thumbnails.length)
   }, [thumbnails.length])
+
   return (
     <FlexGrid>
       {
         Object.entries(FormFields).map(([key, field]) => (
           <Col key={key}>
             <WidgetFormField
-              fieldName={key}
+              fieldName={createFieldNameFromKey(key)}
               formField={field}
               fields={fields}
               initialValues={initialValues}
@@ -79,7 +82,7 @@ const Form = (props) => {
         </Label>
         <Card p={3}>
           <FieldArray
-            name="thumbnails"
+            name="config.thumbnails"
             render={({ push, remove }) => (
               <Fragment>
                 <Flex mb={3}>
@@ -100,6 +103,7 @@ const Form = (props) => {
                           errors.thumbnails
                           && touched.thumbnails
                           && touched.thumbnails[i]
+                          && errors.thumbnails
                           && errors.thumbnails[i]}
                         onDelete={() => remove(i)}
                         onClick={() => setThumbI(i + 1)}
@@ -115,7 +119,7 @@ const Form = (props) => {
                 <ConstraintForm
                   {...props}
                   display={thumbI === 0}
-                  prefix="constraint"
+                  prefix="config.constraint"
                 />
                 {
                   thumbnails.map((_, i) => (
@@ -124,7 +128,7 @@ const Form = (props) => {
                       required
                       key={`thumbnail-${i + 1}`}
                       display={thumbI === i + 1}
-                      prefix={`thumbnails[${i}]`}
+                      prefix={`config.thumbnails[${i}]`}
                     />
                   ))
                 }

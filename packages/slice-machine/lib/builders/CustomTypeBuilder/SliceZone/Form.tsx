@@ -1,9 +1,11 @@
 import { FieldArray } from 'formik'
-import { Radio } from 'theme-ui'
+import { Checkbox } from 'theme-ui'
 import ModalFormCard from '../../../../components/ModalFormCard'
-import SliceState from '../../../models/ui/SliceState'
 
-import SliceList from '../../../../components/SliceList'
+import SliceState from '@lib/models/ui/SliceState'
+import { SharedSlice } from '@lib/models/ui/Slice'
+
+import Grid from '@components/Grid'
 
 const Form = ({
   isOpen,
@@ -36,36 +38,39 @@ const Form = ({
           name="sliceKeys"
           render={arrayHelpers => {
             return (
-              <SliceList
-                slices={availableSlices}
-                gridProps={{
-                  gridTemplateMinPx: "200px"
-                }}
-                cardProps={{
-                  heightInPx: '220px',
-                  hideVariations: true,
-                  renderSliceState(slice: SliceState) {
-                    const isInSliceZone = values.sliceKeys.includes(slice.infos.meta.id)
-                    return isInSliceZone ? (
-                      <Radio value="true" defaultChecked />
-                    ) : <Radio value="false" />
-                  }
-                }}
-                CardWrapper={({ slice, children }: { slice: SliceState, children: any }) => {
-                  return (
-                    <div
-                      onClick={() => {
-                        const isInSliceZone = values.sliceKeys.includes(slice.infos.meta.id)
-                        if (isInSliceZone) {
-                          return arrayHelpers.remove(values.sliceKeys.indexOf(slice.infos.meta.id))
-                        }
-                        arrayHelpers.push(slice.infos.meta.id)
-                      }}
-                      key={`${slice.from}-${slice.infos.sliceName}`}
-                    >
-                      { children }
-                    </div>
-                  )
+              <Grid
+                gridTemplateMinPx="200px"
+                elems={availableSlices}
+                renderElem={(slice: SliceState) => {
+                  return SharedSlice.render({
+                    bordered: true,
+                    displayStatus: false,
+                    thumbnailHeightPx: '220px',
+                    slice,
+                    Wrapper: ({ slice, children }: { slice: SliceState, children: any }) => {
+                      return (
+                        <div
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            const isInSliceZone = values.sliceKeys.includes(slice.infos.meta.id)
+                            if (isInSliceZone) {
+                              return arrayHelpers.remove(values.sliceKeys.indexOf(slice.infos.meta.id))
+                            }
+                            arrayHelpers.push(slice.infos.meta.id)
+                          }}
+                          key={`${slice.from}-${slice.infos.sliceName}`}
+                        >
+                          { children }
+                        </div>
+                      )
+                    },
+                    CustomStatus: ({ slice }: { slice: SliceState }) => {
+                      const isInSliceZone = values.sliceKeys.includes(slice.infos.meta.id)
+                      return isInSliceZone ? (
+                        <Checkbox value="true" defaultChecked />
+                      ) : <Checkbox value="false" />
+                    }
+                  })
                 }}
               />
             )

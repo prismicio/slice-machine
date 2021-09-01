@@ -1,10 +1,11 @@
 import * as yup from "yup";
 import Form, { FormFields } from "./Form";
-import { DefaultFields } from "lib/forms/defaults";
 
 import { MdSettingsEthernet } from "react-icons/md";
 
-import { createInitialValues } from "../../../../forms";
+import { Widget } from '../Widget'
+import { FieldType } from "../../CustomType/fields";
+import { ContentRelationshipField } from "../types";
 
 /**
  * {
@@ -19,45 +20,30 @@ import { createInitialValues } from "../../../../forms";
     }
 */
 
-const TYPE_NAME = "Link";
-
 const Meta = {
   icon: MdSettingsEthernet,
   title: "Content Relationship",
   description: "Define content relations & internal links",
 };
 
-const create = (apiId: string) => ({
-  ...createInitialValues({
-    label: DefaultFields.label,
-  }),
-  select: "document",
-  customtypes: [],
-  id: apiId,
-});
-
 const configSchema = yup.object().shape({
-  select: yup.string().matches(/document/),
-  customtypes: yup.array(yup.string()).optional(),
-});
+  label: yup.string().max(35, 'String is too long. Max: 35'),
+  select: yup.string().matches(/^document$/),
+  customtypes: yup.array(yup.string()).strict().optional(),
+}).required().default(undefined).noUnknown(true)
 
 const schema = yup.object().shape({
-  type: yup
-    .string()
-    .matches(/^Link$/, { excludeEmptyString: true })
-    .required(),
-  label: yup.string().optional(),
+  type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
   config: configSchema,
 });
 
-export const ContentRelationship = {
-  create,
+export const ContentRelationship: Widget<ContentRelationshipField, typeof schema> = {
+  create: () => new ContentRelationshipField(),
   Meta,
   schema,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.ContentRelationship,
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
-};
+}
 
-export interface ContentRelationship extends yup.TypeOf<typeof schema> {}

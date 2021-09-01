@@ -295,6 +295,22 @@ const AppTheme = () => ({
         cursor: "pointer",
       },
     },
+    actionDelete: {
+      width: '100%',
+      borderRadius: "4px",
+      color: "error",
+      fontSize: "16px",
+      fontWeight: "body",
+      bg: "zoneHeader",
+      boxShadow:
+        "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      userSelect: "none",
+      transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+      "&:hover": {
+        bg: darken("white", 0.05),
+        cursor: "pointer",
+      },
+    },
 
     disabled: {
       bg: "borders",

@@ -1,13 +1,31 @@
+import { SliceZoneType } from './sliceZone'
+
 export enum FieldType {
-  SliceZone = 'Slices',
-  Slice = 'Slice',
-  SharedSlice = 'SharedSlice',
+  Boolean = 'Boolean',
+  GeoPoint = 'GeoPoint',
+  Select = 'Select',
+  Color = 'Color',
   Group = 'Group',
-  Uid = 'UID',
+  StructuredText = 'StructuredText',
+  ContentRelationship = 'Link',
+  Image = 'Image',
+  Text = 'Text',
+  Date = 'Date',
+  Link = 'Link',
+  Timestamp = 'Timestamp',
+  Embed = 'Embed',
+  Number = 'Number',
+  UID = 'UID',
+}
+
+
+export interface SimpleField {
+  label: string
+  placeholder: string
 }
 
 export interface Field {
-  type: FieldType
+  type: FieldType | SliceZoneType
+  fieldset?: string
+  config: {}
 }
-
-

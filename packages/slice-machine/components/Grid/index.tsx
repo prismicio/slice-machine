@@ -12,7 +12,7 @@ const Grid = ({ elems, gridTemplateMinPx = "320px", renderElem }: { elems: any, 
         mb: 3
       }}
     >
-      { elems.map((elem: any) => renderElem(elem) )}
+      { elems.map((elem: any, i: number) => <span key={`list-item-${i + 1}`}>{renderElem(elem, i)}</span>)}
     </Box>
   )
 

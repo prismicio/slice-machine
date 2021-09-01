@@ -73,7 +73,7 @@ const SliceHeader = ({
       )}
       SecondaryBreadcrumb={(
         <Box sx={{ fontWeight: "thin" }} as="span">
-          <Text ml={2}>/ {Model.label} </Text>
+          <Text ml={2}>/ {Model.current.label} </Text>
         </Box>
       )}
       breadrumbHref="/"

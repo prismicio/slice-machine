@@ -37,7 +37,7 @@ const createOrUpdate = async ({
 export async function handler(
   env: Environment,
   slices: ReadonlyArray<Slice<AsObject>>,
-  { sliceName, from }: { sliceName: string, from: string}) {
+  { sliceName, from }: { sliceName: string, from: string }) {
   const modelPath = CustomPaths(env.cwd)
     .library(from)
     .slice(sliceName)
@@ -50,7 +50,7 @@ export async function handler(
       
       const variationIds = jsonModel.variations.map((v: Variation<AsObject>) => v.id)
       
-      let imageUrlsByVariation: { [variationId: string]: string } = {}
+      let imageUrlsByVariation: { [variationId: string]: string | null } = {}
 
       for(let i = 0; i < variationIds.length; i += 1) {
         const variationId = variationIds[i]
@@ -61,7 +61,8 @@ export async function handler(
           if(err) throw new Error(err.reason)
           imageUrlsByVariation[variationId] = s3ImageUrl
         } else {
-          throw new Error(`Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+          console.error(`--- Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`)
+          imageUrlsByVariation[variationId] = null
         }
       }
   
@@ -97,7 +98,7 @@ export default async function apiHander(query: { sliceName: string, from: string
   const { slices, err } = await getSlices(env.client)
   if (err) {
     console.error('[slice/push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
-    return onError(err, `Error ${err.status}: Could not fetch remote slices`)
+    return onError(err, `Error ${err.status}: Could not fetch remote slices. Please log in to Prismic!`)
   }
   return handler(
     env,

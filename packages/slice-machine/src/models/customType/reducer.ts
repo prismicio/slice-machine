@@ -1,12 +1,17 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
-import { Tab } from '@models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@lib/models/ui/CustomTypeState'
+import { Tab } from '@lib/models/common/CustomType/tab'
 
 import Actions from './actions'
-import { Widget } from '@models/common/widgets'
-import { Group, GroupWidget, GroupAsArray,} from '@models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray } from '@models/common/CustomType/sliceZone'
+import { Group } from '@lib/models/common/CustomType/group'
+import { SliceZone, SliceZoneAsArray, sliceZoneType } from '@lib/models/common/CustomType/sliceZone'
 import { CustomType } from '@lib/models/common/CustomType'
+
+import { AnyWidget } from '@lib/models/common/widgets/Widget'
+
+import * as Widgets from '@lib/models/common/widgets/withGroup'
+import { Field } from '@lib/models/common/CustomType/fields'
+import { AsArray, GroupField } from '@lib/models/common/widgets/types'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -14,39 +19,88 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.Reset: {
         return {
           ...prevState,
-          tabs: prevState.initialTabs,
+          current: prevState.initialCustomType,
           mockConfig: prevState.initialMockConfig
         }
       }
       case Actions.CreateTab: {
+        const { id } = action.payload as { id: string }
+        if (prevState.current.tabs.find(e => e.key === id)) {
+          return prevState
+        }
         return {
           ...prevState,
-          tabs: [...prevState.tabs, { key: 'NewTab', value: [], sliceZone: null }]
+          current: {
+            ...prevState.current,
+            tabs: [...prevState.current.tabs, Tab.init(id)]
+          }
+        }
+      }
+      case Actions.UpdateTab: {
+        const { prevKey, newKey } = action.payload as { prevKey: string, newKey: string }
+        if (newKey === prevKey) {
+          return prevState
+        }
+        return {
+          ...prevState,
+          current: {
+            ...prevState.current,
+            tabs: prevState.current.tabs.map(t => {
+              if (t.key === prevKey) {
+                return {
+                  ...t,
+                  key: newKey
+                }
+              }
+              return t
+            })
+          }
         }
       }
       case Actions.Save: {
         const { state } = action.payload as { state: CustomTypeState }
         return {
           ...state,
-          initialTabs: state.tabs,
+          initialCustomType: state.current,
           initialMockConfig: state.mockConfig,
         }
       }
       case Actions.Push: return {
         ...prevState,
-        remoteTabs: prevState.tabs,
+        initialCustomType: prevState.current,
+        remoteCustomType: prevState.current
       }
       case Actions.AddWidget: {
-        const { tabId, widget, id } = action.payload as { tabId: string, widget: Widget | GroupWidget, id: string }
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, widget))
+        const { tabId, field, id } = action.payload as { tabId: string, field: Field, id: string }
+        try {
+          if (field.type !== sliceZoneType) {
+            const CurrentWidget: AnyWidget = Widgets[field.type]
+            CurrentWidget.schema.validateSync(field, { stripUnknown: false })
+            return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.addWidget(tab, id, field))
+          }
+          return prevState
+        } catch(err) {
+          console.error(`[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case Actions.RemoveWidget: {
         const { tabId, id } = action.payload as { tabId: string, id: string }
         return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.removeWidget(tab, id))
       }
       case Actions.ReplaceWidget: {
-        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Widget | GroupAsArray }
-        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value as Widget))
+        const { tabId, previousKey, newKey, value } = action.payload as { tabId: string, previousKey: string, newKey: string, value: Field }
+        try {
+          if (value.type !== sliceZoneType) {
+            const CurrentWidget: AnyWidget = Widgets[value.type]
+            CurrentWidget.schema.validateSync(value, { stripUnknown: false })
+            return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.replaceWidget(tab, previousKey, newKey, value))
+          }
+          return prevState
+        } catch(err) {
+          console.error(`[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`)
+          return prevState
+        }
       }
       case Actions.ReorderWidget: {
         const { tabId, start, end } = action.payload as { tabId: string, start: number, end: number }
@@ -59,13 +113,13 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       case Actions.CreateSliceZone: {
         const { tabId } = action.payload as { tabId: string }
 
-        const tabIndex = prevState.tabs.findIndex(t => t.key === tabId)
+        const tabIndex = prevState.current.tabs.findIndex(t => t.key === tabId)
         if (tabIndex === -1) {
           console.error(`No tabId ${tabId} found in tabs`)
           return prevState
         }
 
-        const existingSliceZones = CustomType.getSliceZones(prevState).filter(e => e)
+        const existingSliceZones = CustomType.getSliceZones(prevState.current).filter(e => e)
 
         function findAvailableKey(startI: number, existingSliceZones: (SliceZoneAsArray | null)[]) {
           for (let i = startI; i < Infinity; i++) {
@@ -91,9 +145,9 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
           (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.addSharedSlice(sliceZone, sliceKey)))
       }
       case Actions.ReplaceSharedSlices: {
-        const { tabId, sliceKeys } = action.payload as { tabId: string, sliceKeys: [string] }
+        const { tabId, sliceKeys, preserve } = action.payload as { tabId: string, sliceKeys: [string], preserve: [string] }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys)))
+          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)))
       }
       case Actions.RemoveSharedSlice: {
         const { tabId, sliceKey } = action.payload as { tabId: string, sliceKey: string }
@@ -112,24 +166,24 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         mockConfig: (action.payload as any)
       }
       case Actions.GroupAddWidget: {
-        const { tabId, groupId, id, widget } = action.payload as { tabId: string, groupId: string, id: string, widget: Widget }
+        const { tabId, groupId, id, field } = action.payload as { tabId: string, groupId: string, id: string, field: Field }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.addWidget(group, { key: id, value: widget })))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.addWidget(group, { key: id, value: field })))
       }
       case Actions.GroupReplaceWidget: {
-        const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: Widget }
+        const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: Field }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.replaceWidget(group, previousKey, newKey, value)))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.replaceWidget(group, previousKey, newKey, value)))
       }
       case Actions.GroupDeleteWidget: {
         const { tabId, groupId, key } = action.payload as { tabId: string, groupId: string, key: string }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.deleteWidget(group, key)))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.deleteWidget(group, key)))
       }
       case Actions.GroupReorderWidget: {
         const { tabId, groupId, start, end } = action.payload as { tabId: string, groupId: string, start: number, end: number }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupAsArray) => Group.reorderWidget(group, start, end )))
+          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.reorderWidget(group, start, end )))
       }
       default: throw new Error("Invalid action.")
     }
@@ -137,13 +191,16 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
 
   return {
     ...result,
-    poolOfFieldsToCheck: CustomTypeState.getPool(result.tabs),
+    poolOfFieldsToCheck: CustomTypeState.getPool(result.current.tabs),
     __status: (() => {
-      if (equal(result.tabs, result.remoteTabs)) {
+      if (!result.remoteCustomType) {
+        return CustomTypeStatus.New
+      }
+      if (equal(result.current, result.remoteCustomType)) {
         return CustomTypeStatus.Synced
       }
-      return CustomTypeStatus.New
+      return CustomTypeStatus.Modified
     })(),
-    isTouched: !equal(result.initialTabs, result.tabs) || !equal(result.initialMockConfig, result.mockConfig)
+    isTouched: !equal(result.initialCustomType, result.current) || !equal(result.initialMockConfig, result.mockConfig)
   }
 }

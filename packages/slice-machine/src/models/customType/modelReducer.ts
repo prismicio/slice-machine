@@ -1,37 +1,33 @@
 import { useReducer } from 'react'
 import equal from 'fast-deep-equal'
-import { CustomType } from '@models/common/CustomType'
-import { TabsAsObject, TabsAsArray } from '@models/common/CustomType/tab'
+import { CustomType, ObjectTabs } from '@models/common/CustomType'
 import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
 
 import reducer from './reducer'
 import CustomTypeStore from './store'
 
-export function useModelReducer({ customType, remoteCustomType, initialMockConfig = {} }: { customType: CustomType<TabsAsObject>, remoteCustomType: CustomType<TabsAsObject> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
-  const { id, label, status, repeatable } = customType
-  const { tabs } = CustomType.toArray(customType)
+export function useModelReducer({ customType, remoteCustomType: remoteCustomTypeObject, initialMockConfig = {} }: { customType: CustomType<ObjectTabs>, remoteCustomType: CustomType<ObjectTabs> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
+  const current = CustomType.toArray(customType)
 
-  const remoteTabs: TabsAsArray = remoteCustomType ? CustomType.toArray(remoteCustomType).tabs : [] as TabsAsArray
+  const remoteCustomType = remoteCustomTypeObject ? CustomType.toArray(remoteCustomTypeObject) : undefined
 
   const __status = (() => {
-    if (equal(tabs, remoteTabs)) {
+    if (!remoteCustomType) {
+      return CustomTypeStatus.New
+    }
+    if (equal(current, remoteCustomType)) {
       return CustomTypeStatus.Synced
     }
-    return CustomTypeStatus.New
+    return CustomTypeStatus.Modified
   })()
 
   const initialState: CustomTypeState = {
-    id,
-    label,
-    status,
-    repeatable,
-    jsonModel: customType,
-    tabs,
-    initialTabs: tabs,
-    remoteTabs,
+    current,
+    initialCustomType: current,
+    remoteCustomType,
     mockConfig: initialMockConfig,
     initialMockConfig,
-    poolOfFieldsToCheck: CustomTypeState.getPool(tabs),
+    poolOfFieldsToCheck: CustomTypeState.getPool(current.tabs),
     __status,
   }
 

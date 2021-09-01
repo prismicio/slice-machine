@@ -1,4 +1,4 @@
-import { Widget } from '../../../lib/models/common/widgets';
+import { Field } from '../../../lib/models/common/CustomType/fields';
 import { Variation, AsArray, WidgetsArea } from '../../../lib/models/common/Variation';
 import { ComponentMetadata } from '../../../lib/models/common/Component';
 
@@ -31,10 +31,10 @@ export default class SliceStore implements Store {
     return {
       generateScreenShot: generateScreenShot(this.dispatch)(variationId),
       generateCustomScreenShot: generateCustomScreenShot(this.dispatch)(variationId),
-      addWidget: (widgetsArea: WidgetsArea, key: string, value: Widget) => {
+      addWidget: (widgetsArea: WidgetsArea, key: string, value: Field) => {
         this.dispatch({ type: VariationActions.AddWidget, payload: { variationId, widgetsArea, key, value } }) 
       },
-      replaceWidget: (widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Widget) => {
+      replaceWidget: (widgetsArea: WidgetsArea, previousKey: string, newKey: string, value: Field) => {
         this.dispatch({ type: VariationActions.ReplaceWidget, payload: { variationId, widgetsArea, previousKey, newKey, value } }) 
       },
       reorderWidget: (widgetsArea: WidgetsArea, start: number, end: number) => {

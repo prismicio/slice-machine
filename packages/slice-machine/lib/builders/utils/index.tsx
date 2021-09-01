@@ -1,7 +1,7 @@
-import { Widget } from '../../models/common/widgets'
+import { AnyWidget } from '../../models/common/widgets/Widget'
 
 interface Widgets {
-  [x: string]: Widget
+  [x: string]: AnyWidget
 }
 
 export const findWidgetByConfigOrType = (widgets: Widgets, config: any, type: string) => {

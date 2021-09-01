@@ -74,11 +74,11 @@ export const ConstraintForm = ({
           error: meta.error && meta.error.name
         }}
         formField={{ label: `Name${requiredChar}`, placeholder: 'main' }}
-        field={prefix === "constraint"
+        field={prefix === "config.constraint"
           ? { value: "main", readOnly: true, }
           : { value: field.value.name, onChange: createSetField('name') }
         }
-        variant={prefix === "constraint" ? 'disabled' : 'primary'}
+        variant={prefix === "config.constraint" ? 'disabled' : 'primary'}
         sx={{ mb: 3 }}
       />
       <FormFieldInput

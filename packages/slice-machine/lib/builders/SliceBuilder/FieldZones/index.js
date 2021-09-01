@@ -1,10 +1,11 @@
 import { Fragment } from 'react'
-import Zone from '../../common/Zone'
 import { Box } from 'theme-ui'
 
+import { ensureDnDDestination } from 'lib/utils'
+
+import Zone from '../../common/Zone'
 import EditModal from '../../common/EditModal'
 
-import { removeKeys } from 'lib/utils'
 import * as Widgets from 'lib/models/common/widgets'
 import sliceBuilderWidgetsArray from 'lib/models/common/widgets/sliceBuilderArray'
 
@@ -38,8 +39,8 @@ const Zones = ({
     return SliceMockConfig.getFieldMockConfig(Model.mockConfig, variation.id, widgetArea, apiId)
   }
 
-  const _onSave = (widgetArea) => ({ apiId: previousKey, newKey, value, initialModelValues }, { mockValue }) => {
-    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([,v]) => v !== null)) {
+  const _onSave = (widgetArea) => ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (mockValue) {
       store
         .variation(variation.id)
         .updateWidgetMockConfig(Model.mockConfig, widgetArea, previousKey, newKey, mockValue)
@@ -50,7 +51,7 @@ const Zones = ({
     }
     store
       .variation(variation.id)
-      .replaceWidget(widgetArea, previousKey, newKey, { config: removeKeys(value, ['id', 'type']), type: initialModelValues.type })
+      .replaceWidget(widgetArea, previousKey, newKey, value)
 
   }
 
@@ -61,14 +62,11 @@ const Zones = ({
     }
     store
       .variation(variation.id)
-      .addWidget(fieldType, id, {
-        type: widget.TYPE_NAME,
-        config: removeKeys(widget.create(id), ['id'])
-      })
+      .addWidget(fieldType, id, widget.create())
   }
 
   const _onDragEnd = (fieldType) => (result) => {
-    if (!result.destination || result.source.index === result.destination.index) {
+    if (ensureDnDDestination(result)) {
       return
     }
     store

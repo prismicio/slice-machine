@@ -1,10 +1,10 @@
 import { Fragment, useState } from "react";
 
-import { removeKeys } from "lib/utils";
-
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-import { Box, Flex, Text, Button, useThemeUI } from "theme-ui";
+import { Box, Button } from "theme-ui";
+
+import { ensureDnDDestination, ensureWidgetTypeExistence } from 'lib/utils'
 
 import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
 import NewField from "lib/builders/common/Zone/Card/components/NewField";
@@ -53,25 +53,22 @@ const CustomListItem = ({
   };
 
   const closeEditModal = () => {
-    setEditModalData({ isOpen: false });
+    setEditModalData({ isOpen: false })
   };
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName];
+    const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
       .group(groupItem.key)
-      .addWidget(id, {
-        type: widget.TYPE_NAME,
-        config: removeKeys(widget.create(id), ["id"]),
-      });
+      .addWidget(id, widget.create())
   };
 
-  const onSaveField = (
-    { apiId: previousKey, newKey, value, initialModelValues },
-    { mockValue }
-  ) => {
-    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
+  const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (ensureWidgetTypeExistence(Widgets, value.type)) {
+      return
+    }
+    if (mockValue) {
       store
         .updateWidgetGroupMockConfig(
           Model.mockConfig,
@@ -79,37 +76,20 @@ const CustomListItem = ({
           previousKey,
           newKey,
           mockValue
-        );
+        )
     } else {
       store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, previousKey)
-    }
-
-    const widget = Widgets[initialModelValues.type];
-    if (!widget) {
-      console.log(
-        `Could not find widget with type name "${initialModelValues.type}". Please contact us!`
-      )
-      return
     }
 
     store
       .tab(tabId)
       .group(groupItem.key)
-      .replaceWidget(previousKey, newKey, {
-        type: initialModelValues.type,
-        config: removeKeys(value, ["id", "type"]),
-      })
+      .replaceWidget(previousKey, newKey, value)
   };
 
   const onDragEnd = (result) => {
-    if (
-      !result.destination ||
-      result.source.index === result.destination.index
-    ) {
+    if (ensureDnDDestination(result)) {
       return
-    }
-    if (result.source.droppableId !== result.destination.droppableId) {
-      return;
     }
     store
       .tab(tabId)
@@ -124,7 +104,7 @@ const CustomListItem = ({
 
   const enterEditMode = (field) => {
     setEditModalData({ isOpen: true, field })
-  };
+  }
 
   return (
     <Fragment>
@@ -150,10 +130,8 @@ const CustomListItem = ({
                 <Droppable droppableId={`${tabId}-${groupItem.key}-zone`}>
                   {(provided) => (
                     <ul ref={provided.innerRef} {...provided.droppableProps}>
-                      {groupItem.value.fields.map((item, index) => {
-                        const {
-                          value: { config, type },
-                        } = item;
+                      {groupItem.value.config.fields.map((item, index) => {
+                        const { value: { config, type } } = item
                         const widget = findWidgetByConfigOrType(
                           Widgets,
                           config,
@@ -197,7 +175,7 @@ const CustomListItem = ({
                       {newFieldData && (
                         <NewField
                           {...newFieldData}
-                          fields={groupItem.value.fields || []}
+                          fields={groupItem.value.config.fields || []}
                           onSave={(...args) => {
                             onSaveNewField(...args);
                             setNewFieldData(null);
@@ -224,7 +202,7 @@ const CustomListItem = ({
         data={editModalData}
         close={closeEditModal}
         onSave={onSaveField}
-        fields={groupItem.value.fields}
+        fields={groupItem.value.config.fields}
         getFieldMockConfig={getFieldMockConfig}
       />
     </Fragment>

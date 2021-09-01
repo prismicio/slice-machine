@@ -38,7 +38,8 @@
           "type": "Link",
           "config": {
             "label": "",
-            "placeholder": "",
+            "placeholder": "SSS",
+            "select": null,
             "allowTargetBlank": true
           }
         }
@@ -80,6 +81,7 @@
           "config": {
             "label": "",
             "placeholder": "",
+            "select": null,
             "allowTargetBlank": true
           }
         }

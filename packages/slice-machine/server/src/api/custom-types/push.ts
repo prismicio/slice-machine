@@ -10,6 +10,7 @@ import FakeClient from '../../../../lib/models/common/http/FakeClient'
 
 import { ComponentWithLibStatus } from '../../../../lib/models/common/Library'
 import { Tab, TabAsObject } from '../../../../lib/models/common/CustomType/tab'
+import { CustomType } from '../../../../lib/models/common/CustomType'
 
 const createOrUpdate = (client: DefaultClient | FakeClient, model: any, remoteCustomType: any) => {
   if (remoteCustomType) {
@@ -24,7 +25,7 @@ export default async function handler(query: { id: string }) {
   const state = await fetchState()
 
   if (state.clientError || state.isFake) {
-    const message = '[custom-types/push] Could not fetch remotes custom types.'
+    const message = '[custom-types/push] Could not fetch remote custom types. Are you logged in to Prismic?'
     return {
       err: new Error(message),
       reason: message,
@@ -51,14 +52,14 @@ export default async function handler(query: { id: string }) {
   }
 
   const sliceKeysToPush: string[] =[]
-  for (let [, tab] of Object.entries(model.json)) {
+  for (let [, tab] of Object.entries(CustomType.fromJsonModel(model.id, model).tabs)) {
     const { sliceZone } = Tab.organiseFields(tab as TabAsObject)
     if (sliceZone?.value) {
       sliceKeysToPush.push(...new Set(sliceZone.value.map(e => e.key)))
     }
   }
 
-  const localSlices: { [x: string]: ComponentWithLibStatus } = state.libraries.reduceRight((acc, curr) => {
+  const localSlices: { [x: string]: ComponentWithLibStatus } = state.libraries.filter(e => e.isLocal).reduceRight((acc, curr) => {
     return {
       ...acc,
       ...curr.components.reduce((acc, curr) => ({
@@ -94,7 +95,7 @@ export default async function handler(query: { id: string }) {
     }
   }
 
-  console.log('[custom-types/push] Pushing Custom Type!')
+  console.log('[custom-types/push] Pushing Custom Type...')
 
   const res = await createOrUpdate(state.env.client, model, remoteCustomType)
   if (res.status > 209) {

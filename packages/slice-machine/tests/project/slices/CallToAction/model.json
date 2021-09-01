@@ -6,31 +6,38 @@
   "variations": [
     {
       "id": "default-slice",
-      "name": "Default slice",
+      "name": "Default slice CTA",
       "docURL": "...",
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "text": {
+        "label": {
           "config": {
-            "label": "Label Key Text",
-            "placeholder": ""
+            "label": "Label ",
+            "placeholder": "place"
           },
           "type": "Text"
         },
-        "image": {
+        "deaf": {
+          "type": "Link",
           "config": {
-            "label": "",
-            "constraint": {},
-            "thumbnails": []
+            "label": "My Label !2",
+            "placeholder": "Placeholder 2",
+            "allowTargetBlank": true,
+            "select": null
+          }
+        },
+        "geo": {
+          "config": {
+            "label": "My Label !"
           },
-          "type": "Image"
+          "type": "GeoPoint"
         }
       },
       "items": {
-        "rtf": {
+        "rtfr": {
           "config": {
-            "label": "",
+            "label": "jhjhjhjhjhjh",
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"

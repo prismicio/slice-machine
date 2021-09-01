@@ -1,8 +1,11 @@
-import type { TypeOf } from 'yup'
 import { AiOutlineFieldNumber } from 'react-icons/ai'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { Widget } from '../Widget'
+import { NumberField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /** {
     "type" : "Number",
@@ -12,7 +15,7 @@ import { MockConfigForm } from './Mock/Form'
     }
   } */
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Number')
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.Number)
 
 const Meta = {
   icon: AiOutlineFieldNumber,
@@ -20,15 +23,13 @@ const Meta = {
   description: 'Numbers'
 }
 
-export const Number = {
-  create,
+export const Number: Widget<NumberField, typeof schema> = {
+  create: () => new NumberField(),
   MockConfigForm,
   handleMockConfig,
   handleMockContent,
   FormFields,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.Number,
   schema,
   Meta
 }
-
-export interface Number extends TypeOf<typeof schema> {}

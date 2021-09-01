@@ -11,7 +11,9 @@ import { Flex as FlexGrid, Col } from 'components/Flex'
 
 import FieldTypeCard from './FieldTypeCard'
 
-Modal.setAppElement("#__next");
+if (process.env.NODE_ENV !== 'test') {
+  Modal.setAppElement("#__next");
+}
 
 const SelectFieldTypeModal = ({
   data,

@@ -1,59 +1,100 @@
 {
   "id": "gggg",
-  "label": "My Awesome Title",
+  "label": "gggg",
   "status": true,
   "repeatable": true,
   "json": {
     "Main": {
-      "uid2": {
-        "type": "UID",
-        "config": {
-          "label": "",
-          "placeholder": ""
-        }
-      },
-      "rtf": {
-        "type": "StructuredText",
+      "sdsds": {
         "config": {
           "label": "",
           "placeholder": "",
-          "allowTargetBlank": true,
-          "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-        }
+          "options": [
+            "1",
+            "2",
+            "1é3"
+          ]
+        },
+        "type": "Select"
       },
       "group": {
-        "type": "Group",
         "config": {
-          "type": "Group",
+          "label": "",
           "fields": {
-            "txt": {
-              "type": "StructuredText",
+            "img": {
               "config": {
-                "label": "",
-                "placeholder": "",
-                "allowTargetBlank": true,
-                "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-              }
+                "thumbnails": [],
+                "constraint": {},
+                "label": ""
+              },
+              "type": "Image"
+            },
+            "geo": {
+              "config": {
+                "label": ""
+              },
+              "type": "GeoPoint"
             }
           }
-        }
+        },
+        "type": "Group"
       },
-      "MainSliceZone": {
-        "type": "Slices",
-        "fieldset": "Slice Zone",
+      "sdfsdf": {
         "config": {
-          "choices": {
-            "call_to_action3": {
-              "type": "SharedSlice"
-            },
-            "call_to_action": {
-              "type": "SharedSlice"
-            },
-            "call_to_action2": {
-              "type": "SharedSlice"
-            }
-          }
-        }
+          "label": "My Label !2",
+          "placeholder": ""
+        },
+        "type": "Date"
+      },
+      "sdfsdfff": {
+        "config": {
+          "label": "",
+          "placeholder": "SSS"
+        },
+        "type": "Timestamp"
+      },
+      "fsdf": {
+        "config": {
+          "label": "My Label !",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": true
+        },
+        "type": "Boolean"
+      },
+      "sdfsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Embed"
+      },
+      "sdfdsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "placeholder"
+        },
+        "type": "Number"
+      },
+      "sdfsddd": {
+        "config": {
+          "label": "My Label !"
+        },
+        "type": "GeoPoint"
+      },
+      "sdfsdffd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Color"
+      },
+      "fdsffdd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "SSS"
+        },
+        "type": "Text"
       }
     }
   }

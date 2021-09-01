@@ -1,10 +1,14 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
 import  { BsLink } from 'react-icons/bs'
-import { createInitialValues } from '../../../../forms'
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { Widget } from '../Widget'
+import { FieldType } from '../../CustomType/fields'
+
+import { LinkField } from '../types'
 
 /**
 * {
@@ -52,12 +56,6 @@ import { MockConfigForm } from './Mock/Form'
   }
   */
 
-const create = (apiId: string) => ({
-  ...createInitialValues(FormFields),
-  allowTargetBlank: true,
-  id: apiId
-})
-
 const Meta = {
   icon: BsLink,
   title: 'Link',
@@ -68,20 +66,19 @@ const linkConfigSchema = yup.object().shape({
   label: yup.string().optional(),
   useAsTitle: yup.boolean().optional(),
   placeholder: yup.string().optional(),
-  select: yup.string().optional().oneOf(['media', 'document', 'web']),
-  customtypes: yup.array(yup.string()).optional(),
+  select: yup.string().optional().oneOf(['media', 'document', 'web']).nullable(true),
+  customtypes: yup.array(yup.string()).strict().optional(),
   masks: yup.array(yup.string()).optional(),
   tags: yup.array(yup.string()).optional(),
-  allowTargetBlank: yup.boolean().optional()
-})
+  allowTargetBlank: yup.boolean().strict().optional()
+}).required().default(undefined).noUnknown(true)
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
-  fieldset: yup.string().optional(),
   config: linkConfigSchema.optional()
 })
 
-export const Link = {
+export const Link: Widget<LinkField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
@@ -89,8 +86,7 @@ export const Link = {
   FormFields,
   schema,
   Form,
-  create,
-  TYPE_NAME: 'Link'
+  create: () => new LinkField(),
+  TYPE_NAME: FieldType.Link
 }
 
-export interface Link extends yup.TypeOf<typeof schema> {}

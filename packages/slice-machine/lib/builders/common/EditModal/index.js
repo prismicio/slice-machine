@@ -10,30 +10,36 @@ import {
   useThemeUI
 } from 'theme-ui'
 
-import * as Widgets from 'lib/models/common/widgets/withGroup'
+import * as yup from 'yup'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 
-import { removeKeys } from 'lib/utils'
-import { createInitialValues, createValidationSchema } from 'lib/forms'
+import {
+  createInitialValues,
+  createFieldNameFromKey
+} from '@lib/forms'
 
-import { MockConfigKey } from 'lib/consts'
+import { MockConfigKey } from '@lib/consts'
 
-import Card from '../../../../components/Card/WithTabs'
-import ItemHeader from '../../../../components/ItemHeader'
-import { Flex as FlexGrid, Col } from '../../../../components/Flex'
+import Card from '@components/Card/WithTabs'
+import ItemHeader from '@components/ItemHeader'
+import { Flex as FlexGrid, Col } from '@components/Flex'
 
 import WidgetForm from './Form'
 import WidgetFormField from './Field'
 
 import { findWidgetByConfigOrType } from '../../utils'
+import { removeProp } from '@lib/utils'
 
-Modal.setAppElement("#__next");
+
+if (process.env.NODE_ENV !== 'test') {
+  Modal.setAppElement("#__next");
+}
 
 const FORM_ID = 'edit-modal-form'
 
 const EditModal = ({
   close,
   data,
-  Model,
   fields,
   onSave,
   getFieldMockConfig
@@ -43,31 +49,55 @@ const EditModal = ({
   }
   const { theme } = useThemeUI()
   
-  const { mockConfig: initialMockConfig } = Model
   const { field: [apiId, initialModelValues] } = data
 
+  const maybeWidget = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
+
+  if (!maybeWidget) {
+    return (<div>{initialModelValues.type} not found</div>)
+  }
   const {
     Meta: { icon: WidgetIcon },
     FormFields,
     MockConfigForm,
-    Form: CustomForm
-  } = findWidgetByConfigOrType(Widgets, initialModelValues.config, initialModelValues.type)
+    Form: CustomForm,
+    schema: widgetSchema
+  } = maybeWidget
 
-  if (!FormFields) {
-    return (<div>{initialModelValues.type} not supported yet</div>)
+  const initialConfig = {
+    ...createInitialValues(removeProp(FormFields, 'id')),
+    ...initialModelValues.config,
+  }
+
+  const { res: validatedSchema, err } = (() => {
+    try {
+      return { res: widgetSchema.validateSync({
+        type: initialModelValues.type,
+        config: initialConfig
+      }, { stripUnknown: true }) }
+    } catch (e) {
+      return { err: e }
+    }
+  })();
+
+  if (err) {
+    console.error(`[EditModal] Failed to validate field of type ${initialModelValues.type}.\n Please update model.json accordingly.`)
+    console.error(err)
   }
 
   const initialValues = {
-    ...createInitialValues(FormFields),
-    ...removeKeys(initialModelValues.config, ['type']),
+    id: apiId,
+    config: validatedSchema ? validatedSchema.config : initialConfig,
     [MockConfigKey]: deepMerge(
       MockConfigForm?.initialValues || {},
       getFieldMockConfig({ apiId }) || {}
     ),
-    id: apiId,
   }
 
-  const validationSchema = createValidationSchema(FormFields)
+  const validationSchema = yup.object().shape({
+    id: yup.string().matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/).min(3).max(35).required(),
+    config: widgetSchema.fields.config
+  })
 
   const formId = `${FORM_ID}-${Math.random().toString()}`
 
@@ -90,10 +120,25 @@ const EditModal = ({
         validationSchema={validationSchema}
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
-          const updatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
+          const maybeUpdatedMockValue = MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
             ? MockConfigForm.onSave(mockValue, value)
             : mockValue
-          onSave({ apiId, newKey, value, initialModelValues }, { initialMockConfig, mockValue: updatedMockValue })
+
+          const definitiveMockValue = (() => {
+            if (maybeUpdatedMockValue && Object.keys(maybeUpdatedMockValue).length
+              && !!Object.entries(maybeUpdatedMockValue).find(([, v]) => v !== null)
+            ) {
+              return maybeUpdatedMockValue
+            }
+            return null
+          })();
+
+          const updatedValue = {
+            ...initialModelValues,
+            ...value,
+          }
+
+          onSave({ apiId, newKey, value: updatedValue, mockValue: definitiveMockValue })
           close()
         }}
       >
@@ -101,13 +146,15 @@ const EditModal = ({
           const {
             values: {
               id,
-              label,
+              config: {
+                label,
+              },
             },
-            errors,
             isValid,
             isSubmitting,
             initialValues,
           } = props
+
           return (
               <Card
                 borderFooter
@@ -160,7 +207,7 @@ const EditModal = ({
                         Object.entries(FormFields).map(([key, field]) => (
                           <Col key={key}>
                             <WidgetFormField
-                              fieldName={key}
+                              fieldName={createFieldNameFromKey(key)}
                               formField={field}
                               fields={fields}
                               initialValues={initialValues}
@@ -174,13 +221,6 @@ const EditModal = ({
                 <Box>
                   { MockConfigForm ? (
                     <Box>
-                      {/* {
-                        fieldType === 'items' ? (
-                          <Alert mb={3} variant="highlight">
-                            Note: setting mock content for repeatable fields will set all items to the same value!
-                          </Alert>
-                        ) : null
-                      } */}
                       <MockConfigForm initialValues={initialValues} />
                     </Box>
                   ) : <p>Mock Configuration not implemented</p>}

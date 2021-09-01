@@ -20,3 +20,12 @@ export const noConfig = {
   __pass: false,
   type: "Color",
 }
+
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: 'some-id'
+  }
+}

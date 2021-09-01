@@ -1,6 +1,6 @@
-import Store from '@models/ui/Store'
-import { Widget } from '@models/common/widgets'
-import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
+import Store from '@lib/models/ui/Store'
+// import { Widget } from '@models/common/widgets'
+// import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
@@ -11,11 +11,13 @@ import Actions, {
 import saveCustomType from './actions/save'
 import pushCustomType from './actions/push'
 
+import { Field } from '@lib/models/common/CustomType/fields'
+
 export default class CustomTypeStore implements Store {
   constructor(readonly dispatch: ({ type, payload }: { type: string, payload?: any }) => void) {}
 
-  createTab() {
-    this.dispatch({ type: Actions.CreateTab })
+  createTab(id: string) {
+    this.dispatch({ type: Actions.CreateTab, payload: { id } })
   }
   reset() {
     this.dispatch({ type: Actions.Reset })
@@ -28,13 +30,19 @@ export default class CustomTypeStore implements Store {
   deleteWidgetGroupMockConfig = deleteWidgetGroupMockConfig(this.dispatch)
   tab(tabId: string) {
     return {
-      addWidget: (id: string, widget: Widget | GroupWidget) => {
-        this.dispatch({ type: Actions.AddWidget, payload: { tabId, id, widget } })
+      update: (newKey: string) => {
+        this.dispatch({ type: Actions.UpdateTab, payload: { prevKey: tabId, newKey } })
+      },
+      delete: () => {
+        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } })
+      },
+      addWidget: (id: string, field: Field) => {
+        this.dispatch({ type: Actions.AddWidget, payload: { tabId, id, field } })
       },
       removeWidget: (id: string) => {
         this.dispatch({ type: Actions.RemoveWidget, payload: { tabId, id } })
       },
-      replaceWidget: (previousKey: string, newKey: string, value: Widget | GroupAsArray) => {
+      replaceWidget: (previousKey: string, newKey: string, value: Field) => {
         this.dispatch({ type: Actions.ReplaceWidget, payload: { tabId, previousKey, newKey, value } }) 
       },
       reorderWidget: (start: number, end: number) => {
@@ -46,24 +54,21 @@ export default class CustomTypeStore implements Store {
       deleteSliceZone: () => {
         this.dispatch({ type: Actions.DeleteSliceZone, payload: { tabId } })
       },
-      delete: () => {
-        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } })
-      },
       addSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.AddSharedSlice, payload: { tabId, sliceKey } })
       },
-      replaceSharedSlices: (sliceKeys: [string]) => {
-        this.dispatch({ type: Actions.ReplaceSharedSlices, payload: { tabId, sliceKeys } })
+      replaceSharedSlices: (sliceKeys: [string], preserve: [string]) => {
+        this.dispatch({ type: Actions.ReplaceSharedSlices, payload: { tabId, sliceKeys, preserve } })
       },
       removeSharedSlice: (sliceKey: string) => {
         this.dispatch({ type: Actions.RemoveSharedSlice, payload: { tabId, sliceKey } })
       },
       group: (groupId: string) => {
         return {
-          addWidget: (id: string, widget: Widget) => {
-            this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, widget } })
+          addWidget: (id: string, field: Field) => {
+            this.dispatch({ type: Actions.GroupAddWidget, payload: { tabId, groupId, id, field } })
           },
-          replaceWidget: (previousKey: string, newKey: string, value: Widget) => {
+          replaceWidget: (previousKey: string, newKey: string, value: Field) => {
             this.dispatch({ type: Actions.GroupReplaceWidget, payload: { tabId, groupId, previousKey, newKey, value } })
           },
           reorderWidget: (start: number, end: number) => {

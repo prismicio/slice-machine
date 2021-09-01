@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 
-import { CustomType } from '../../../lib/models/common/CustomType'
+import { CustomType, ObjectTabs } from '../../../lib/models/common/CustomType'
 import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
-import { Tab, TabsAsObject } from '../../../lib/models/common/CustomType/tab'
 
 export const CustomTypesContext = React.createContext<Partial<{
-  customTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>>,
-  remoteCustomTypes: Partial<ReadonlyArray<CustomType<TabsAsObject>>>,
+  customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>,
+  remoteCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>,
   onCreate: Function,
   onSave: Function
 }>>({ customTypes: [], remoteCustomTypes: [] })
 
 export default function Provider ({ children, customTypes = [], remoteCustomTypes = [] }: {
   children: any,
-  customTypes: ReadonlyArray<CustomType<TabsAsObject>> | undefined,
-  remoteCustomTypes: ReadonlyArray<CustomType<TabsAsObject>> | undefined,
+  customTypes: ReadonlyArray<CustomType<ObjectTabs>> | undefined,
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>> | undefined,
 }) {
   const [cts, setCts] = useState(customTypes)
   const onCreate = (id: string, { label, repeatable }: { label: string, repeatable: boolean }) => {
@@ -24,7 +23,10 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
         label,
         repeatable,
         tabs: {
-          Main: {}
+          Main: {
+            key: 'Main',
+            value: {}
+          }
         },
         status: true
       },
@@ -34,14 +36,8 @@ export default function Provider ({ children, customTypes = [], remoteCustomType
 
   const onSave = (modelPayload: CustomTypeState) => {
     setCts(cts.map(ct => {
-      if (ct.id === modelPayload.id) {
-        return {
-          ...modelPayload.jsonModel,
-          tabs: modelPayload.tabs.reduce((acc, curr) => ({
-            ...acc,
-            [curr.key]: Tab.toObject(curr)
-          }), {})
-        }
+      if (ct.id === modelPayload.current.id) {
+        return CustomType.toObject(modelPayload.current)
       }
       return ct
     }))

@@ -11,7 +11,7 @@ const FormFields = {
   default_value: {
     type: FormTypes.CHECKBOX,
     yupType: 'string',
-    defaultValue: '',
+    defaultValue: null,
     validate: function() {
       return yup.string().test({
         name: 'default_value',
@@ -25,8 +25,8 @@ const FormFields = {
     component: (props) => (
       <FormFieldCheckboxControl
         {...props}
-        controllerField="options"
         defaultValue={props.field.value}
+        getFieldControl={(formValues) => formValues.config?.options}
         setControlFromField={(options, isChecked) => isChecked ? options.length && options[0] : undefined}
         label={(options) => `use first value as default ${options.length ? `("${options[0]}")` : ''}`}
       />
@@ -34,11 +34,10 @@ const FormFields = {
   },
   options: {
     yupType: 'array',
-    defaultValue: ['', ''],
+    defaultValue: ['1', '2'],
     validate: {
       required: ['Select requires a minimum of 2 options'],
-      min: [2, 'Choose between 2 and 6 options'],
-      max: [6, 'Choose between 2 and 6 options'],
+      min: [2, 'Choose at least 2 options'],
       test: {
         name: 'non-empty values',
         message: 'Values cannot be empty',

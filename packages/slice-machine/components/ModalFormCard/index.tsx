@@ -17,7 +17,9 @@ const ModalCard = ({
   initialValues = {},
   content: {
     title
-  }
+  },
+  cardProps,
+  omitFooter,
 }: {
   children: any,
   close: Function,
@@ -28,6 +30,8 @@ const ModalCard = ({
   onSubmit: Function,
   initialValues?: any,
   content: { title: string }
+  cardProps?: {}
+  omitFooter?: boolean
 }) => (
   <Modal
     isOpen={isOpen}
@@ -49,13 +53,14 @@ const ModalCard = ({
         close()
       }}
     >
-      {({ isValid, isSubmitting, values, errors, touched }) => (
+      {({ isValid, isSubmitting, values, errors, touched, setFieldValue }) => (
         <Form id={formId}>
           <Card
             borderFooter
             footerSx={{ p: 3 }}
             bodySx={{ px: 4, py: 4 }}
             sx={{ border: 'none' }}
+            { ...cardProps }
             Header={({ radius }: { radius: string | number}) => (
               <Flex
                 sx={{
@@ -73,7 +78,7 @@ const ModalCard = ({
                 <Close type="button" onClick={() => close()} />
               </Flex>
             )}
-            Footer={(
+            Footer={!omitFooter ? (
               <Flex sx={{ alignItems: 'space-between' }}>
                 <Box sx={{ ml: 'auto' }} />
                 <Button
@@ -92,9 +97,9 @@ const ModalCard = ({
                   Save
                 </Button>
               </Flex>
-            )}
+            ) : null}
           >
-            { children({ isValid, isSubmitting, values, errors, touched }) }
+            { children({ isValid, isSubmitting, values, errors, touched, setFieldValue }) }
           </Card>
         </Form>
       )}

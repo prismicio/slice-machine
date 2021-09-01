@@ -1,8 +1,11 @@
-import type { TypeOf } from 'yup'
 import { FiCode } from 'react-icons/fi'
 import { createDefaultWidgetValues } from '../../../../utils'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
+
+import { Widget } from '../Widget'
+import { EmbedField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 /**  {
   "type" : "Embed",
@@ -12,7 +15,7 @@ import { MockConfigForm } from './Mock/Form'
   }
 } */
 
-const { TYPE_NAME, FormFields, schema, create } = createDefaultWidgetValues('Embed')
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.Embed)
 
 const Meta = {
   icon: FiCode,
@@ -20,15 +23,13 @@ const Meta = {
   description: 'Embed videos, songs, tweets, slides, …'
 }
 
-export const Embed = {
-  create,
+export const Embed: Widget<EmbedField, typeof schema> = {
+  create: () => new EmbedField(),
   handleMockConfig,
-  MockConfigForm,
   handleMockContent,
+  MockConfigForm,
   FormFields,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.Embed,
   schema,
   Meta
 }
-
-export interface Embed extends TypeOf<typeof schema> {}

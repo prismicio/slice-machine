@@ -1,16 +1,25 @@
-import { useContext, useEffect, useState } from "react";
-import { Text, Box, Flex, Heading, Button } from "theme-ui";
-import { LibrariesContext } from "../../../../src/models/libraries/context";
-import { SliceZoneAsArray } from "../../../../lib/models/common/CustomType/sliceZone";
+import { useContext, useEffect, useState } from 'react'
+import { Text, Box, Flex, Heading, Button } from 'theme-ui'
+import { LibrariesContext } from '@src/models/libraries/context'
+import {
+  SliceType,
+  NonSharedSliceInSliceZone,
+  SliceZoneAsArray,
+} from '@lib/models/common/CustomType/sliceZone'
 
-import SliceState from "../../../models/ui/SliceState";
-import LibraryState from "../../../models/ui/LibraryState";
+import SliceState from '@lib/models/ui/SliceState'
+import LibraryState from '@lib/models/ui/LibraryState'
 
 import ZoneHeader from '../../common/Zone/components/ZoneHeader'
 
-import Form from "./Form";
+import Form from './Form'
 
-import DefaultList from "./components/DefaultList";
+import SlicesList from './List'
+
+export interface SliceZoneSlice {
+  type: SliceType,
+  payload: SliceState | NonSharedSliceInSliceZone
+}
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SliceZoneAsArray,
@@ -26,21 +35,28 @@ const mapAvailableAndSharedSlices = (
     slicesInSliceZone,
     notFound,
   }: {
-    slicesInSliceZone: ReadonlyArray<SliceState>;
+    slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
     notFound: ReadonlyArray<{ key: string }>;
   } = sliceZone.value.reduce(
     (acc: {
-    slicesInSliceZone: ReadonlyArray<SliceState>;
+    slicesInSliceZone: ReadonlyArray<SliceZoneSlice>;
     notFound: ReadonlyArray<{ key: string }>;
-  }, { key }) => {
+  }, { key, value }) => {
+      if (value.type === SliceType.Slice) {
+        return {
+          ...acc,
+          slicesInSliceZone: [...acc.slicesInSliceZone, { type: SliceType.Slice, payload: { key, value }}],
+        }
+      }
       const maybeSliceState = availableSlices.find(
         (state) => state.infos.meta.id === key
-      );
+      )
+
       if (maybeSliceState) {
         return {
           ...acc,
-          slicesInSliceZone: [...acc.slicesInSliceZone, maybeSliceState],
-        };
+          slicesInSliceZone: [...acc.slicesInSliceZone, { type: SliceType.SharedSlice, payload: maybeSliceState }],
+        }
       }
       return { ...acc, notFound: [...acc.notFound, { key }] };
     },
@@ -76,10 +92,17 @@ const SliceZone = ({
   useEffect(() => {
     if (notFound?.length) {
       notFound.forEach(({ key }) => {
-        onRemoveSharedSlice(key);
+        onRemoveSharedSlice(key)
       });
     }
-  }, [notFound]);
+  }, [notFound])
+
+  const sharedSlicesInSliceZone = slicesInSliceZone.filter(e => e.type === SliceType.SharedSlice).map(e => e.payload) as ReadonlyArray<SliceState>
+
+  /* Preserve these keys in SliceZone */
+  const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
+    .filter(e => e.type === SliceType.Slice)
+    .map(e => (e.payload as NonSharedSliceInSliceZone).key)
 
   return (
     <Box my={3}>
@@ -102,17 +125,29 @@ const SliceZone = ({
           </Flex>
         )}
       />
-      <DefaultList cardType="ForSliceZone" slices={slicesInSliceZone} />
+      
+      
+      <SlicesList slices={slicesInSliceZone} />
+
+
       {!slicesInSliceZone.length ? (
-        <Flex sx={{ justifyContent: 'center' }}><p>No slices selected</p></Flex>
+        <Flex
+          sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '200px'
+          }}
+        >
+          <p>No slices selected</p>
+        </Flex>
        ) : null}
       <Form
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
-        slicesInSliceZone={slicesInSliceZone}
+        slicesInSliceZone={sharedSlicesInSliceZone}
         onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
-          onSelectSharedSlices(sliceKeys)
+          onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
         close={() => setFormIsOpen(false)}
       />

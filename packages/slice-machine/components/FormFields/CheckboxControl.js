@@ -9,10 +9,11 @@ const CheckboxControl = ({
   label,
   defaultValue,
   onChange,
-  controllerField,
+  getFieldControl,
   setControlFromField
 }) => {
-  const { values: { [controllerField]: fieldControl }} = useFormikContext()
+  const { values } = useFormikContext()
+  const fieldControl = getFieldControl(values)
   const [isChecked, setCheck] = useState(defaultValue || field.defaultValue || false)
 
   useEffect(() => {

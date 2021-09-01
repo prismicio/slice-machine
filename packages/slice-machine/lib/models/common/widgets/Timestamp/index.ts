@@ -14,16 +14,12 @@ import { MockConfigForm } from './Mock/Form'
 
 import { removeProp } from '../../../../utils'
 import { DefaultFields } from "../../../../forms/defaults"
-import { createInitialValues, createValidationSchema } from '../../../../forms'
-
-const TYPE_NAME = 'Timestamp'
+import { createValidationSchema } from '../../../../forms'
+import { Widget } from '../Widget'
+import { TimestampField } from '../types'
+import { FieldType } from '../../CustomType/fields'
 
 const FormFields = DefaultFields
-
-const create = (apiId: string) => ({
-  ...createInitialValues(DefaultFields),
-  id: apiId
-})
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Timestamp$/, { excludeEmptyString: true }).required(),
@@ -36,15 +32,13 @@ const Meta = {
   description: 'A calendar date picker with time'
 }
 
-export const Timestamp = {
+export const Timestamp: Widget<TimestampField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  create,
+  create: () => new TimestampField(),
   schema,
   FormFields,
-  TYPE_NAME,
+  TYPE_NAME: FieldType.Timestamp,
   Meta
 }
-
-export interface Timestamp extends yup.TypeOf<typeof schema> {}

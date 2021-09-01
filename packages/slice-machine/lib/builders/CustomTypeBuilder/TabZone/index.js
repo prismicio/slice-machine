@@ -2,16 +2,19 @@ import { Fragment, useState } from 'react'
 import * as Widgets from 'lib/models/common/widgets/withGroup'
 import EditModal from '../../common/EditModal'
 
+import {
+  ensureDnDDestination,
+  ensureWidgetTypeExistence
+} from 'lib/utils'
+
 import Zone from '../../common/Zone'
 
-import { removeKeys } from 'lib/utils'
 import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
 import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
 
 import SliceZone from '../SliceZone'
 
 import ModalFormCard from 'components/ModalFormCard'
-import { createPortal } from 'react-dom'
 
 const TabZone = ({
   Model,
@@ -40,50 +43,30 @@ const TabZone = ({
   }
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName]
-    if (!widget) {
-      console.log(`Could not find widget with type name "${widgetTypeName}". Please contact us!`)
+    if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
+      return
     }
+    const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
-      .addWidget(id, {
-        type: widget.TYPE_NAME,
-        config: removeKeys(widget.create(id), ['id'])
-      })
+      .addWidget(id, widget.create())
   }
 
   const onDragEnd = (result) => {
-    if (!result.destination || result.source.index === result.destination.index) {
-      return
-    }
-    if (result.source.droppableId !== result.destination.droppableId) {
+    if (ensureDnDDestination(result)) {
       return
     }
     store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
   }
 
-  const onSave = ({ apiId: previousKey, newKey, value, initialModelValues }, { mockValue }) => {
-    if (mockValue && Object.keys(mockValue).length && !!Object.entries(mockValue).find(([, v]) => v !== null)) {
+  const onSave = ({ apiId: previousKey, newKey, value, mockValue }) => {
+    if (ensureWidgetTypeExistence(Widgets, value.type)) {
+      return
+    }
+    if (mockValue) {
       store.updateWidgetMockConfig(Model.mockConfig, previousKey, newKey, mockValue)
     } else {
       store.deleteWidgetMockConfig(Model.mockConfig, newKey)
-    }
-
-    const widget = Widgets[initialModelValues.type]
-    if (!widget) {
-      return console.log(`Could not find widget with type name "${initialModelValues.type}". Please contact us!`)
-    }
-
-    if (widget.TYPE_NAME === 'Group') {
-      return store
-        .tab(tabId)
-        .replaceWidget(
-          previousKey,
-          newKey, {
-            ...initialModelValues,
-            ...value
-          }
-        )
     }
 
     store
@@ -91,10 +74,7 @@ const TabZone = ({
       .replaceWidget(
         previousKey,
         newKey,
-        {
-          type: initialModelValues.type,
-          config: removeKeys(value, ['id', 'type'])
-        }
+        value
       )
   }
 
@@ -106,8 +86,8 @@ const TabZone = ({
     store.tab(tabId).deleteSliceZone()
   }
 
-  const onSelectSharedSlices = (keys) => {
-    store.tab(tabId).replaceSharedSlices(keys)
+  const onSelectSharedSlices = (keys, preserve = []) => {
+    store.tab(tabId).replaceSharedSlices(keys, preserve)
   }
 
   const onRemoveSharedSlice = (key) => {
@@ -137,7 +117,7 @@ const TabZone = ({
         renderFieldAccessor={(key) => `data.${key}`}
       />
       {/* {
-        Model.tabs.length > 1 ? (
+        Model.current.tabs.length > 1 ? (
           <button onClick={() => onDeleteTab()}>Delete Tab</button>
         ) : null
       } */}
@@ -151,7 +131,6 @@ const TabZone = ({
       />
       <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
         {(props) => {
-          console.log({ tabProps: props })
           return (
             <div>hello</div>
           )

@@ -1,6 +1,7 @@
 import path from 'path'
-import { maybeJsonFile } from '../../../utils'
 import upload from './upload'
+
+import Files from '../../../utils/files'
 
 interface ApiSettings {
   STAGE: string
@@ -14,12 +15,18 @@ const SharedSlicesApi = {
   PROD: 'https://customtypes.prismic.io/'
 } as ApiSettings
 
+const AuthApi = {
+  STAGE: 'https://auth.wroom.io/',
+  PROD: 'https://auth.prismic.io/',
+}
+
 const AclProviderApi = {
   STAGE: 'https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/',
   PROD: 'https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/'
 } as ApiSettings
 
 const SlicesPrefix = 'slices/'
+const ValidatePrefix = 'validate/'
 const CustomTypesPrefix = 'customtypes/'
 
 function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
@@ -57,9 +64,26 @@ export default class DefaultClient {
   apiFetcher: (prefix: string, body?: object | string, action?: string, method?: string) => Promise<Response>
   aclFetcher: (prefix: string, body?: object | string, action?: string, method?: string) => Promise<Response>
 
-  constructor(readonly cwd: string, readonly base: string, readonly repo: string, readonly auth: string) {
-    const devConfig = cwd ? maybeJsonFile(path.join(cwd, 'sm.dev.json')) : {}
+  static validate(base: string, auth: string) {
+    return fetch(`${createApiUrl(base, AuthApi)}${ValidatePrefix}?token=${auth}`, {
+        method: 'GET',
+      }).catch(e => e)
+  }
 
+  constructor(readonly cwd: string, readonly base: string, readonly repo: string, readonly auth: string) {
+    const devConfig = (() => {
+      if (!cwd) {
+        return {}
+      }
+      try {
+        return Files.readJson(path.join(cwd, 'sm.dev.json'))
+      } catch(e) {
+        return {}
+      }
+    })();
+
+    this.base = base
+    this.auth = auth
     this.apiFetcher = initFetcher(base, SharedSlicesApi, devConfig.sharedSlicesApi, repo, auth)
     this.aclFetcher = initFetcher(base, AclProviderApi, devConfig.aclProviderApi, repo, auth)
   }

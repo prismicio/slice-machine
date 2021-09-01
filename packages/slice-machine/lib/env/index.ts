@@ -3,8 +3,7 @@ import { exec } from 'child_process'
 import { parseDomain, fromUrl, ParseResultType, ParseResult } from 'parse-domain'
 
 import { getPrismicData } from '../auth'
-import initClient from "../models/common/http";
-import createComparator from './semver'
+import initClient from '../models/common/http'
 
 import { getConfig as getMockConfig } from '../mock/misc/fs'
 
@@ -15,52 +14,20 @@ import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
-import { detectFramework } from '../framework'
 
-const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : null)
+import { ConfigErrors } from '../models/server/ServerState';
 
-const compareNpmVersions = createComparator()
+import { createComparator } from './semver'
+import { detectFramework } from './framework'
+import handleManifest, { ManifestStates, Manifest } from './manifest'
+import UserConfig from '@lib/models/common/UserConfig'
 
-function validate(config: { apiEndpoint: string, storybook: string }): {[errorKey: string]: ServerError } | undefined {
-  const errors: {[errorKey: string]: ServerError } | undefined = {}
-  if (!config.apiEndpoint) {
-    errors.apiEndpoint = {
-      message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',
-      example: 'http://my-project.prismic.io/api/v2',
-      run: 'npx prismic-cli sm --setup'
-    }
-  }
-  if (!errors.apiEndpoint) {
-    try {
-      const endpoint = fromUrl(config.apiEndpoint)
-      const parsedRepo = parseDomain(endpoint)
-      const errorMessage = {
-          message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
-          example: 'http://my-project.prismic.io/api/v2',
-          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-        }
-      switch (parsedRepo.type) {
-        case ParseResultType.Listed: {
-          if (!parsedRepo?.subDomains?.length) {
-            errors.apiEndpoint = errorMessage
-          }
-          if (typeof endpoint === 'string' && !endpoint.endsWith('api/v2')) {
-            errors.apiEndpoint = {
-          message: `Endpoint does not end with "api/v2" (value: "${config.apiEndpoint}")`,
-          example: 'http://my-project.prismic.io/api/v2',
-          run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-        }
-          }
-        }
-        default: 
-          errors.apiEndpoint = errorMessage
-      }
-    } catch(e) {
-      const message = '[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..'
-      console.error(message)
-      throw new Error(message)
-    }
-  }
+const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : '')
+
+const compareNpmVersions = createComparator(path.join(ENV_CWD, 'package.json'))
+
+function validate(config: Manifest): ConfigErrors {
+  const errors: ConfigErrors = {}
   if (!config.storybook) {
     errors.storybook = {
       message: `Could not find storybook property in sm.json`,
@@ -123,23 +90,54 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     console.error(message)
     throw new Error(message)
   }
-  const pathToSm = path.join(cwd, 'sm.json')
-  if (!Files.exists(pathToSm)) {
-    const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
-    console.error(message)
-    throw new Error(message)
+
+  const prismicData = getPrismicData()
+  const npmCompare = await compareNpmVersions({ cwd })
+
+  if (!Files.exists(SMConfig(cwd))) {
+    return {
+      env: {
+        cwd,
+        userConfig: {
+          libraries: [],
+          apiEndpoint: '',
+          storybook: '',
+          chromaticAppId: '',
+          _latest: '',
+        },
+        hasConfigFile: false,
+        repo: undefined,
+        prismicData: prismicData.isOk() ? prismicData.value : undefined,
+        chromatic: undefined,
+        currentVersion: npmCompare.currentVersion || '',
+        updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
+        mockConfig: {},
+        hasGeneratedStoriesPath: false,
+        framework: detectFramework(cwd),
+        baseUrl: `http://localhost:${process.env.PORT}`,
+        client: new FakeClient()
+      }
+    }
+    // const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
+    // console.error(message)
+    // throw new Error(message)
   }
-  const userConfig = Files.readJson(SMConfig(cwd))
+
+  const manifestState = handleManifest(cwd)
+  if (manifestState.state !== ManifestStates.Valid) {
+    console.error(manifestState.message)
+    throw new Error(manifestState.message)
+  }
+
+  const userConfig = manifestState.content as UserConfig
+
   const maybeErrors = validate(userConfig)
   const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)
-  const prismicData = getPrismicData()
 
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
-
-  const { updateAvailable, currentVersion } = await compareNpmVersions({ cwd })
 
   const mockConfig = getMockConfig(cwd)
 
@@ -156,11 +154,12 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     env: {
       cwd,
       userConfig,
+      hasConfigFile: true,
       repo,
       prismicData: prismicData.isOk() ? prismicData.value : undefined,
       chromatic,
-      currentVersion,
-      updateAvailable,
+      currentVersion: npmCompare.currentVersion || '',
+      updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
       mockConfig,
       hasGeneratedStoriesPath,
       framework: detectFramework(cwd),
@@ -169,3 +168,4 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     }
   }
 }
+

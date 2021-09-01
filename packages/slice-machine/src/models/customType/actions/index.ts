@@ -10,6 +10,7 @@ enum ActionType {
   Push = 'push',
   Save = 'save-custom-type',
   CreateTab = 'create-tab',
+  UpdateTab = 'update-tab',
   AddWidget= 'tab-add-widget',
   RemoveWidget = 'tab-remove-widget',
   DeleteTab = 'delete-tab',

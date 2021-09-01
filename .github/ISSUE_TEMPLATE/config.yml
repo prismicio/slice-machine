@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🚨 Having an issue?
+    url: https://community.prismic.io/c/slice-machine
+    about: Reach out to us on our Community Forum.
