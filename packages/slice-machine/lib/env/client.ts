@@ -25,10 +25,18 @@ export async function validate() {
       reason: `Could not authenticate you (base: ${prismicData.value.base})`
     }
   }
-  const body = await res.json()
-  return {
-    connected: true,
-    reason: '',
-    body
+  try {
+    const body = await res.json()
+    return {
+      connected: true,
+      reason: '',
+      body
+    }
+  } catch(e) {
+    return {
+      connected: false,
+      reason: 'Could not validate prismic-auth token.',
+    }
   }
+  
 }

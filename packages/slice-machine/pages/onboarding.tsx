@@ -8,9 +8,15 @@ async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-const LoadingOrError = ({ data }: { data: undefined | { err: string }}) => (
+const LoadingOrError = ({ data }: { data: { err: string, connected?: boolean } | undefined }) => (
   <Box sx={{ border: '1px solid pink', p: 2 }}>
-    { data?.err ? 'Could not log in, retry!' : 'Loading...'}
+    { data?.err ? 'Could not log in, retry!' : (
+      <Fragment>
+        { data?.connected === false ? (
+          <p>Please connect using `prismic login` CLI command</p>
+        ) : 'Loading'}
+      </Fragment>
+    )}
   </Box>
 )
 

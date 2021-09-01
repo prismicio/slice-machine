@@ -42,7 +42,7 @@ async function handleMigration(cwd) {
   return handleChangelog({ cwd, pathToPkg, pathToSmFile })
 }
 
-function start({ cwd, port }, infoBoxArgs, displayInfoBox, openTab = false) {
+function start({ cwd, port }, callback) {
   const start = spawn('node', ['-r', 'esm', '../build/server/src/index.js'], {
     cwd: __dirname,
     port,
@@ -53,14 +53,13 @@ function start({ cwd, port }, infoBoxArgs, displayInfoBox, openTab = false) {
     },
   })
   start.stdout.on('data', function (data) {
-    const lns = data.toString().split('=') // server was launched
-    if (lns.length === 2) {
-      if (displayInfoBox) {
-        const { npmCompareData, framework, validateRes } = infoBoxArgs
-        infobox(npmCompareData, lns[1], framework, validateRes?.body?.email)
-      } else if (openTab) {
-        open(`${lns[1].replace(/\\n/, '').trim()}/onboarding`)
+    const lns = data.toString().split('=')
+    if (lns.length === 2) { // server was launched
+      if (callback) {
+
+
       }
+      callback(lns[1].replace(/\\n/, '').trim())
     } else {
       console.log(data.toString())
     }
@@ -75,43 +74,45 @@ function start({ cwd, port }, infoBoxArgs, displayInfoBox, openTab = false) {
   })
 }
 
-async function handleManifestState(manifestState, repositories, cwd) {
-//   if (manifestState.state !== ManifestStates.Valid) {
-//     console.log(
-//       boxen(
-//         `🔴 A configuration error was detected!
+async function handleManifestState(manifestState, cwd) {
+  if (manifestState.state !== ManifestStates.Valid) {
+    console.log(
+      boxen(
+        `🔴 A configuration error was detected!
         
-// Error Message:
-// "${manifestState.message}"
+Error Message:
+"${manifestState.message}"
 
-// See below for more info 👇`,
-//         { padding: 1, borderColor: 'red' }
-//       )
-//     )
+See below for more info 👇`,
+        { padding: 1, borderColor: 'red' }
+      )
+    )
 
-//     console.log('\n--- ℹ️  How to solve this: ---\n')
-//   }
+    console.log('\n--- ℹ️  How to solve this: ---\n')
+  }
 
   switch (manifestState.state) {
     case ManifestStates.Valid:
       return { exit: false }
     case ManifestStates.NotFound: {
-//       console.log(`Slicemachine requires an "sm.json" config file, at the root of your project.
+      console.log(`Slicemachine requires an "sm.json" config file, at the root of your project.
       
-// Required properties:
-// * apiEndpoint, eg. "https://repo.prismic.io/api/v2"
-// * libraries, eg. ["~/slices"]\n\n`)
+Required properties:
+* apiEndpoint, eg. "https://repo.prismic.io/api/v2"
+* libraries, eg. ["~/slices"]\n\n`)
 
-      console.log('\n\nWelcome to Slicemachine!')
+      return createManifest(cwd)
+
+      // console.log('\n\nWelcome to Slicemachine!')
       
-      const yes = await shouldOnboard()
+      // const yes = await shouldOnboard()
 
-      return !yes
+      // return !yes
 
-      const validateRes = await validate()
-      const repositories = Object.entries(JSON.parse(validateRes.body.repositories))
-      const response = await selectRepo(repositories)
-      return { exit: false, data: validateRes }
+      // const validateRes = await validate()
+      // const repositories = Object.entries(JSON.parse(validateRes.body.repositories))
+      // const response = await selectRepo(repositories)
+      // return { exit: false, data: validateRes }
       // return createManifest(cwd)
     }
     case ManifestStates.MissingEndpoint:
@@ -140,25 +141,27 @@ async function run() {
 
   const nodeVersion = process.version.slice(1).split('.')[0]
   if (parseInt(nodeVersion) < 15) {
-    console.error(`\n🔴 Slicemachine requires node version > 15 to work properly.\nCurrent version: ${process.version}\n`)
+    console.error(`\n🔴 Slicemachine requires node version >= 15 to work properly.\nCurrent version: ${process.version}\n`)
     process.exit(-1)
   }
 
   const userConfig = handleManifest(cwd)
-  if (userConfig.state === ManifestStates.NotFound) {
-    console.log('Welcome to Slicemachine! 🍕')
-    const yes = await shouldOnboard()
-    if (!yes) {
-      console.log('Please create a config file manually!')
-      process.exit(-1)
-    } else {
-      return start({ cwd, port }, null, false, true)
-    }
-  }
-  // const { exit, data } = await handleManifestState(userConfig, cwd)
-  // if (exit) {
-  //   process.exit(-1)
+  // if (userConfig.state === ManifestStates.NotFound) {
+  //   console.log('Welcome to Slicemachine! 🍕')
+  //   const yes = await shouldOnboard()
+  //   if (!yes) {
+  //     console.log('Please create a config file manually!')
+  //     process.exit(-1)
+  //   } else {
+  //     return start({ cwd, port }, (url) => {
+  //       open(`${url}/onboarding`)
+  //     })
+  //   }
   // }
+  const { exit, data } = await handleManifestState(userConfig, cwd)
+  if (exit) {
+    process.exit(-1)
+  }
 
   const npmCompareData = await compareVersions({ cwd }, false)
 
@@ -166,9 +169,14 @@ async function run() {
 
   const validateRes = await validate()
 
-  start({ cwd, port }, { npmCompareData, framework, validateRes }, true)
-
-  // npmCompareData, lns[1], framework, validateRes?.body?.email
+  start({ cwd, port }, (url) => {
+    infobox(
+      npmCompareData,
+      url,
+      framework,
+      validateRes?.body?.email
+    )
+  })
 }
 
 main()

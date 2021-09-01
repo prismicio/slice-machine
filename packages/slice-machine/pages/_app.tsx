@@ -146,7 +146,7 @@ function MyApp({
 
   useEffect(() => {
     if (data && !data.env.hasConfigFile && router.pathname !== '/onboarding') {
-      router.replace('/onboarding')
+      // router.replace('/onboarding')
     }
   }, [data])
 

@@ -50,11 +50,8 @@ const compare = (manifest: Manifest, onlinePackage: Manifest, { cwd }: { cwd: st
     }
     return null
   }
-  return {
-    current: manifest.version,
-    next: manifest.version,
-    message: 'Could not parse remote version'
-  }
+  console.warn('[env/semver] Could not fetch latest version of plugin.')
+  return null
 }
 
 interface Comparison {

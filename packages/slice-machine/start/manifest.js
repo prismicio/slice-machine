@@ -26,7 +26,7 @@ async function shouldOnboard() {
   return response.confirm
 }
 
-async function createManifest(cwd, repositories) {
+async function createManifest(cwd) {
   const response = await prompts({
     type: 'confirm',
     name: 'confirm',
@@ -49,7 +49,7 @@ async function createManifest(cwd, repositories) {
   )
 
   console.log('File created!\nYou\'ll need to update it with a valid Prismic API endpoint!')
-  return true
+  return { exit: true }
 }
 
 module.exports = {

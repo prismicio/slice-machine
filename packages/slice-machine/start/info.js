@@ -17,7 +17,7 @@ function infoBox(npmCompare, localhost, framework, email) {
             Upgrade now: yarn add slice-machine-ui@latest
           ` : ''}
           Framework:         ${framework}
-          Logged in as:      ${email}
+          Logged in as:      ${email || 'Not logged in'}
           Running on:        ${localhost}
 
         👇 Server logs will appear right here
