@@ -1,4 +1,5 @@
 export enum Framework {
+  none = 'none',
   nuxt = 'nuxt',
   next = 'next',
   vue = 'vue',
