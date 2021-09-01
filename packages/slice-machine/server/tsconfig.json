@@ -22,6 +22,7 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@lib/*": ["../lib/*"],
+      "@models/*": ["../lib/models/*"]
     }
   },
   "include": [
