@@ -25,7 +25,7 @@
     "slicemachine": "start-slicemachine --port 9999"
   },
   "bin": {
-    "start-slicemachine": "start.js"
+    "start-slicemachine": "start/index.js"
   },
   "dependencies": {
     "@babel/register": "^7.11.5",

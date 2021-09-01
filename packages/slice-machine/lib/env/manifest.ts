@@ -1,10 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import { parseDomain, fromUrl, ParseResultType, ParseResult } from 'parse-domain'
+import { Framework } from '@lib/models/common/Framework'
 
 export interface Manifest {
-  apiEndpoint?: string
+  apiEndpoint: string
   storybook?: string
+  framework?: Framework
   chromaticAppId?: string
   _latest: string
 }

@@ -9,16 +9,17 @@ import { getConfig as getMockConfig } from '../mock/misc/fs'
 
 import Files from '../utils/files'
 import { SMConfig } from '../models/paths'
+import { SupportedFrameworks } from '../consts'
+
 
 import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
 import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
-
 import { ConfigErrors } from '../models/server/ServerState';
 
 import { createComparator } from './semver'
-import { detectFramework } from './framework'
+import { defineFramework, isValidFramework } from './framework'
 import handleManifest, { ManifestStates, Manifest } from './manifest'
 import UserConfig from '@lib/models/common/UserConfig'
 
@@ -35,6 +36,17 @@ function validate(config: Manifest): ConfigErrors {
       run: 'Add "storybook" property with a localhost url'
     }
   }
+
+  if (config.framework && !isValidFramework(config.framework)) {
+    const options = Object.values(SupportedFrameworks)
+
+    errors.framework = {
+      message: `The framework set in sm.json is invalid`,
+      example: 'react',
+      run: `Set framework to one of the following: ${options.join(', ')}`
+    }
+  }
+
   return errors
 }
 
@@ -113,7 +125,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
         updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
         mockConfig: {},
         hasGeneratedStoriesPath: false,
-        framework: detectFramework(cwd),
+        framework: defineFramework(null, cwd),
         baseUrl: `http://localhost:${process.env.PORT}`,
         client: new FakeClient()
       }
@@ -147,7 +159,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     } else {
       return new FakeClient()
     }
-  })()
+  })();
 
   return {
     errors: maybeErrors,
@@ -162,7 +174,7 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
       updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
       mockConfig,
       hasGeneratedStoriesPath,
-      framework: detectFramework(cwd),
+      framework: defineFramework((manifestState.content as Manifest), cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client
     }

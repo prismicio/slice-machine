@@ -12,7 +12,7 @@ const validate = require('../build/lib/env/client').validate
 const infobox = require('./info')
 
 const compareVersions = require('../build/lib/env/semver').default
-const { detectFramework } = require('../build/lib/env/framework')
+const { defineFramework } = require('../build/lib/env/framework')
 const { default: handleManifest, ManifestStates } = require('../build/lib/env/manifest')
 
 const { createManifest, selectRepo, shouldOnboard } = require('./manifest')
@@ -165,7 +165,7 @@ async function run() {
 
   const npmCompareData = await compareVersions({ cwd }, false)
 
-  const framework = detectFramework(cwd)
+  const framework = defineFramework(userConfig.content, cwd)
 
   const validateRes = await validate()
 

@@ -3,6 +3,7 @@ import path from 'path'
 import Files from '../utils/files'
 import { Framework } from '../models/common/Framework'
 import { SupportedFrameworks } from '../consts'
+import { Manifest } from './manifest'
 
 export function detectFramework(cwd: string): Framework {
   const pkgFilePath = path.resolve(cwd, 'package.json')
@@ -26,4 +27,19 @@ export function detectFramework(cwd: string): Framework {
     console.error(message)
     throw new Error(message)
   }
+}
+
+export function isValidFramework(framework: string): framework is Framework {
+  return SupportedFrameworks.hasOwnProperty(framework)
+}
+
+export function defineFramework(manifest: Manifest | null, cwd: string) {
+  const userDefinedFramework = (() => {
+    if (manifest && manifest.framework && isValidFramework(manifest.framework) ) {
+      return manifest.framework
+    }
+    return null
+  })()
+
+  return userDefinedFramework || detectFramework(cwd)
 }
