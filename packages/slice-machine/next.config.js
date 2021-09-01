@@ -7,7 +7,7 @@ module.exports = withPlugins([
   [withCustomBabelConfigFile, {
     babelConfigFile: path.resolve("./babel.next.config.js"),
     env: {
-      // overriden by start script
+      // overridden by start script
       CWD: path.resolve("./tests/project"),
     },
     webpack: (config, { isServer }) => {
