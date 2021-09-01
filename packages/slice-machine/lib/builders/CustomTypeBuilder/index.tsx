@@ -29,6 +29,7 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
       </Container>
       <Tabs
         Model={Model}
+        store={store}
         renderTab={({ value, sliceZone, key }: { value: any, sliceZone: any, key: string }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone

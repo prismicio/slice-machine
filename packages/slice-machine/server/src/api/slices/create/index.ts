@@ -1,21 +1,22 @@
 declare var appRoot: string;
 
+import path from 'path'
+import { promisify } from 'util'
+
 // @ts-ignore
 import cpy from 'copy-template-dir'
-import { promisify } from 'util'
-import path from 'path'
 
-import Slice from '../../../../../lib/models/common/Slice'
-import { AsObject } from '../../../../../lib/models/common/Variation'
-import Environment from '../../../../../lib/models/common/Environment'
+import Slice from '@lib/models/common/Slice'
+import { AsObject } from '@lib/models/common/Variation'
+import Environment from '@lib/models/common/Environment'
 
-import { getEnv } from '../../../../../lib/env'
-import { snakelize } from '../../../../../lib/utils/str'
-import Files from '../../../../../lib/utils/files'
+import { getEnv } from '@lib/env'
+import { snakelize } from '@lib/utils/str'
+import Files from '@lib/utils/files'
 
 import save from '../save'
 
-import { paths } from '../../../../../lib/models/paths'
+import { paths } from '@lib/models/paths'
 
 const copy = promisify(cpy)
 
@@ -23,9 +24,10 @@ const IndexFiles = {
   'none': null,
   'react': 'index.js',
   'next': 'index.js',
-  'nuxt': 'index.js',
+  'nuxt': 'index.vue',
   'vue': 'index.vue',
-  'vanillajs': 'index.js'
+  'vanillajs': 'index.js',
+  'svelte': 'index.svelte'
 }
 
 const fromTemplate = async (env: Environment, from: string, sliceName: string) => {
@@ -71,7 +73,7 @@ export default async function handler({ sliceName, from, values }: { sliceName: 
     if (maybeError) {
       return maybeError
     }
-  } else {
+  } else { 
     const fileName = IndexFiles[env.framework] || 'index.js'
     const pathToIndexFile = path.join(paths(env.cwd, '').library(from).slice(sliceName).value(), fileName)
     

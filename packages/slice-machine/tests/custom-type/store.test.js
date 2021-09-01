@@ -37,6 +37,22 @@ test('it creates a tab', () => {
   expect(result.current[0].current.tabs.length).toBe(previousTabLen + 1)
 })
 
+test('it renames a tab', () => {
+  const { result } = init()
+  const store = result.current[1]
+  const Tab = result.current[0].current.tabs[0]
+  const newTabKey = 'Tab1'
+  act(() => { store.tab(Tab.key).update(newTabKey) })
+  const NewTab = result.current[0].current.tabs[0]
+
+  expect(NewTab.key).toBe(newTabKey)
+
+  const unattr = `some___${newTabKey}`
+  act(() => { store.tab(`undef___${Tab.key}`).update(unattr) })
+
+  expect(!!(result.current[0].current.tabs.find(e => e.key === unattr))).toBe(false)
+})
+
 test('it resets custom type', () => {
   const { result } = init()
 

@@ -20,7 +20,6 @@
       "group": {
         "config": {
           "label": "",
-          "placeholder": "",
           "fields": {
             "img": {
               "config": {
@@ -32,8 +31,7 @@
             },
             "geo": {
               "config": {
-                "label": "",
-                "placeholder": ""
+                "label": ""
               },
               "type": "GeoPoint"
             }
@@ -80,8 +78,7 @@
       },
       "sdfsddd": {
         "config": {
-          "label": "My Label !",
-          "placeholder": "Place"
+          "label": "My Label !"
         },
         "type": "GeoPoint"
       },

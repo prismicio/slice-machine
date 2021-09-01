@@ -14,7 +14,6 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{ remoteS
       return { remoteSlices: [], clientError: new ErrorWithStatus(res.statusText, res.status) }
     }
     if (env.client.isFake()) {
-      console.error('[client/get] Fetching remote slices is disabled. Continuing...\nIf you logged in in the meantime, please reload server')
       return { remoteSlices: [] }
     }
     const r = await (res.json ? res.json() : Promise.resolve([]))

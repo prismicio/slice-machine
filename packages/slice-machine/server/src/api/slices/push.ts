@@ -98,7 +98,7 @@ export default async function apiHander(query: { sliceName: string, from: string
   const { slices, err } = await getSlices(env.client)
   if (err) {
     console.error('[slice/push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
-    return onError(err, `Error ${err.status}: Could not fetch remote slices`)
+    return onError(err, `Error ${err.status}: Could not fetch remote slices. Please log in to Prismic!`)
   }
   return handler(
     env,

@@ -1,9 +1,9 @@
 import path from 'path'
 import glob from 'glob'
-import Environment from '../../../../lib/models/common/Environment'
-import { CustomType, ObjectTabs } from '../../../../lib/models/common/CustomType'
-import Files from '../../../../lib/utils/files'
-import { CustomTypesPaths } from '../../../../lib/models/paths'
+import Environment from '@lib/models/common/Environment'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
+import Files from '@lib/utils/files'
+import { CustomTypesPaths } from '@lib/models/paths'
 
 const handleMatch = (matches: string[], env: Environment) => {
   return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
@@ -61,7 +61,7 @@ export default async function handler(env: Environment): Promise<{ isFake: boole
   }
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`)
   return {
-    isFake: isFake || false,
+    isFake: !!isFake,
     customTypes: handleMatch(matches, env),
     remoteCustomTypes: remoteCustomTypes.map((ct: any) => CustomType.fromJsonModel(ct.id, ct))
   }

@@ -1,17 +1,17 @@
 import equal from 'fast-deep-equal'
-import { CustomTypeState, CustomTypeStatus } from '../../../lib/models/ui/CustomTypeState'
-import { Tab } from '../../../lib/models/common/CustomType/tab'
+import { CustomTypeState, CustomTypeStatus } from '@lib/models/ui/CustomTypeState'
+import { Tab } from '@lib/models/common/CustomType/tab'
 
 import Actions from './actions'
-import { Group,} from '../../../lib/models/common/CustomType/group'
-import { SliceZone, SliceZoneAsArray, sliceZoneType } from '../../../lib/models/common/CustomType/sliceZone'
-import { CustomType } from '../../../lib/models/common/CustomType'
+import { Group } from '@lib/models/common/CustomType/group'
+import { SliceZone, SliceZoneAsArray, sliceZoneType } from '@lib/models/common/CustomType/sliceZone'
+import { CustomType } from '@lib/models/common/CustomType'
 
-import { AnyWidget } from '../../../lib/models/common/widgets/Widget'
+import { AnyWidget } from '@lib/models/common/widgets/Widget'
 
-import * as Widgets from '../../../lib/models/common/widgets/withGroup'
-import { Field } from '../../../lib/models/common/CustomType/fields'
-import { AsArray, GroupField } from '../../../lib/models/common/widgets/types'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
+import { Field } from '@lib/models/common/CustomType/fields'
+import { AsArray, GroupField } from '@lib/models/common/widgets/types'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -33,6 +33,27 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
           current: {
             ...prevState.current,
             tabs: [...prevState.current.tabs, Tab.init(id)]
+          }
+        }
+      }
+      case Actions.UpdateTab: {
+        const { prevKey, newKey } = action.payload as { prevKey: string, newKey: string }
+        if (newKey === prevKey) {
+          return prevState
+        }
+        return {
+          ...prevState,
+          current: {
+            ...prevState.current,
+            tabs: prevState.current.tabs.map(t => {
+              if (t.key === prevKey) {
+                return {
+                  ...t,
+                  key: newKey
+                }
+              }
+              return t
+            })
           }
         }
       }
@@ -124,9 +145,9 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
           (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.addSharedSlice(sliceZone, sliceKey)))
       }
       case Actions.ReplaceSharedSlices: {
-        const { tabId, sliceKeys } = action.payload as { tabId: string, sliceKeys: [string] }
+        const { tabId, sliceKeys, preserve } = action.payload as { tabId: string, sliceKeys: [string], preserve: [string] }
         return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys)))
+          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)))
       }
       case Actions.RemoveSharedSlice: {
         const { tabId, sliceKey } = action.payload as { tabId: string, sliceKey: string }

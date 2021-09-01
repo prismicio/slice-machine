@@ -1,5 +1,6 @@
+import Head from 'next/head'
 import React, { useCallback, useEffect, useState } from "react";
-import useSwr from "swr";
+import useSwr from 'swr'
 import App, { AppContext } from "next/app";
 
 
@@ -16,18 +17,16 @@ import Drawer from "rc-drawer";
 
 import LoadingPage from "../components/LoadingPage";
 import ConfigErrors from "../components/ConfigErrors";
-// import NavBar from 'components/NavBar/WithRouter'
 import Warnings from "../components/Warnings";
 import AppLayout from "../components/AppLayout";
 import ToastProvider from "../src/ToastProvider";
-
-import { LacksStorybookConf } from "../components/UnrecoverableErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "lib/builders/SliceBuilder/layout/Drawer/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
+import "src/css/tabs.css";
 
 import { ServerState } from "../lib/models/server/ServerState";
 import ServerError from "../lib/models/server/ServerError";
@@ -36,13 +35,14 @@ import Environment from "../lib/models/common/Environment";
 import Slice from "../lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "../lib/models/common/CustomType";
 import { AsObject } from "../lib/models/common/Variation";
+import { useRouter } from 'next/router';
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
 function mapSlices(libraries: ReadonlyArray<Library>): any {
-  return libraries.reduce((acc, lib) => {
+  return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
       ...lib.components.reduce((acc, comp) => ({
@@ -66,7 +66,6 @@ const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
-  LacksStorybookConf,
   Default: ({
     Component,
     pageProps,
@@ -122,12 +121,6 @@ function MyApp({
     if (!data) {
       return
     }
-    if (!data.env.hasGeneratedStoriesPath) {
-      setRenderer({
-        Renderer: RenderStates.LacksStorybookConf,
-        payload: { env: data.env },
-      })
-    } else {
       const newSliceMap = mapSlices(data.libraries)
       if (sliceMap !== null) {
         Object.keys(newSliceMap).forEach(key => {
@@ -145,13 +138,23 @@ function MyApp({
       console.log("Loaded env: ", { env, configErrors })
       console.log("Warnings: ", { warnings })
       console.log("------ End of log ------")
-    }
   }, [data]);
 
-  const { Renderer, payload } = state;
+  const { Renderer, payload } = state
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (data && !data.env.hasConfigFile && router.pathname !== '/onboarding') {
+      // router.replace('/onboarding')
+    }
+  }, [data])
 
   return (
     <ThemeProvider theme={theme}>
+      <Head>
+        <title>SliceMachine</title>
+      </Head>
       <BaseStyles>
         <RemoveDarkMode>
           {!data ? (
@@ -178,11 +181,6 @@ function MyApp({
                     <ToastProvider>
                       <AppLayout {...payload} data={data}>
                         <SliceHandler {...payload}>
-                          {/* <NavBar
-                                    env={data.env}
-                                    warnings={data.warnings}
-                                    openPanel={() => openPanel()}
-                                  /> */}
                           <Renderer
                             Component={Component}
                             pageProps={pageProps}
