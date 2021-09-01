@@ -4,7 +4,8 @@
   "private": false,
   "license": "MIT",
   "_moduleAliases": {
-    "@lib": "build/lib"
+    "@lib": "build/lib",
+    "@models": "build/lib/models"
   },
   "scripts": {
     "dev": "next dev",
@@ -18,7 +19,6 @@
     "dev-server": "cross-env PORT=9999 CWD=./tests/project node build/server/src/index.js",
     "build": "yarn build-server && yarn build-next-app",
     "build-server": "tsc --project server/tsconfig.json",
-    "build-ts-paths": "tscpaths --project ./tsconfig.json --src ./lib --out ./build/lib && tscpaths --project ./tsconfig.json --src ./server --out ./build/server",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && yarn clean-build",
     "bundle": "yarn build && yarn test && yarn export-build",
@@ -68,7 +68,6 @@
     "serve-static": "^1.14.1",
     "slash": "3.0.0",
     "sm-commons": "^0.0.22",
-    "tscpaths": "^0.0.9",
     "uniqid": "^5.2.0",
     "yargs": "^16.0.3",
     "yup": "^0.32.9"
