@@ -150,7 +150,10 @@ test("it gets current mock config", async () => {
 /** nuxt: 'nuxt',
   next: 'next',
   vue: 'vue',
-  react: 'react */
+  react: 'react'
+  none: null
+  
+  */
 test("it finds the right framework in manifest", async () => {
   const frameworkEntries = Object.entries(SupportedFrameworks)
 
@@ -168,21 +171,30 @@ test("it finds the right framework in manifest", async () => {
   }
 })
 
-test("it defaults to vanilla framework if not found in manifest", async () => {
-  const frameworkEntries = Object.entries(SupportedFrameworks)
+test("it uses framework defined in manifest", async () => {
+  const key = "vue"
+  fs.reset()
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "framework": "${key}", "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
+    "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "react": "1.1.0" } }`,
+    "nuxt.config.js": `stories: [".slicemachine/assets"]`,
+    ".slicemachine/mock-config.json": `{ "field": "value" }`
+  }, TMP))
+  const { env } = await getEnv(TMP)
+  expect(env.framework).toEqual(key)
+})
 
-  for await (const framework of frameworkEntries) {
-    fs.reset()
-    const [key, value] = framework
-    fs.use(Volume.fromJSON({
-      "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
-      "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "unknown": "1.1.0" } }`,
-      "nuxt.config.js": `stories: [".slicemachine/assets"]`,
-      ".slicemachine/mock-config.json": `{ "field": "value" }`
-    }, TMP))
-    const { env } = await getEnv(TMP)
-    expect(env.framework).toEqual("vanillajs")
-  }
+test("it defaults to vanilla framework if not found in manifest", async () => {
+  fs.reset()
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
+    "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "unknown": "1.1.0" } }`,
+    "nuxt.config.js": `stories: [".slicemachine/assets"]`,
+    ".slicemachine/mock-config.json": `{ "field": "value" }`
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  expect(env.framework).toEqual("vanillajs")
 })
 
 test("it generates storybook not in manifest warning", async () => {

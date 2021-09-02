@@ -19,8 +19,9 @@ afterEach(() => {
 })
 
 const commonExpect = async (env, prefix, libName, href) => {
-  expect(env.userConfig.libraries).toEqual([`${prefix}${libName}`])
   const libraries = await listComponentsByLibrary(env)
+  expect(env.userConfig.libraries).toEqual([`${prefix}${libName}`])
+
   expect(libraries.length).toEqual(1)
   expect(libraries[0].isLocal).toEqual(true)
   expect(libraries[0].name).toEqual(libName)
@@ -32,26 +33,40 @@ const commonExpect = async (env, prefix, libName, href) => {
   expect(component.pathToSlice).toEqual(`./${libName}`)
 
   expect(component.infos.sliceName).toEqual('CallToAction')
-  expect(component.infos.fileName).toEqual('index')
   expect(component.infos.isDirectory).toEqual(true)
-  expect(component.infos.extension).toEqual('js')
 
   expect(component.migrated).toEqual(false)
+  return libraries
 }
 
-test("it gets library info from @ path", async () => {
+test("it gets library info from @ path 1/2", async () => {
   const libName = 'slices'
   const prefix = '@/'
   fs.use(Volume.fromJSON({
     "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
-  await commonExpect(env, prefix, libName)
+  await commonExpect(env, prefix, libName)  
+})
 
-  
+test("it gets library info from @ path 2/2", async () => {
+  const libName = 'slices'
+  const prefix = '@/'
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
+    "package.json": "{}",
+    "slices/CallToAction/model.json": "{}",
+    "slices/CallToAction/index.svelte": "const a = 1"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  const libraries = await commonExpect(env, prefix, libName)
+  const [component] = libraries[0].components
+  expect(component.infos.fileName).toEqual('index')
+  expect(component.infos.extension).toEqual('svelte')
 })
 
 test("it gets library info from ~ path", async () => {
@@ -60,7 +75,7 @@ test("it gets library info from ~ path", async () => {
   fs.use(Volume.fromJSON({
     "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -74,7 +89,7 @@ test("it gets library info from / path", async () => {
   fs.use(Volume.fromJSON({
     "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
