@@ -1,5 +1,5 @@
 // @ts-ignore
-import { snakelize } from '../../../lib/utils/str'
+import { snakelize } from '@lib/utils/str'
 import path from 'path'
 import uniqid from 'uniqid'
 
@@ -7,7 +7,7 @@ import Environment from "../../../lib/models/common/Environment"
 import Slice from "../../../lib/models/common/Slice"
 import { AsObject } from "../../../lib/models/common/Variation"
 
-import { s3DefaultPrefix } from '../../../lib/consts'
+import { s3DefaultPrefix } from '@lib/consts'
 
 export async function purge(env: Environment, slices: ReadonlyArray<Slice<AsObject>>, sliceName: string, onError: (error?: any, msg?: string) => any): Promise<{ err?: any }> {
   if (slices.find(e => e.id === snakelize(sliceName))) {

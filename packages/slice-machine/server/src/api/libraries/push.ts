@@ -1,11 +1,11 @@
-import { getEnv } from '../../../../lib/env'
+import { getEnv } from '@lib/env'
 
 import { getSlices } from '../slices'
 import { onError } from '../common/error'
 
 import { purge } from '../upload'
 
-import { handleLibraryPath } from '../../../../lib/queries/listComponents'
+import { handleLibraryPath } from '@lib/queries/listComponents'
 
 export default async function handler(query: { from: string }) {
   const { from } = query

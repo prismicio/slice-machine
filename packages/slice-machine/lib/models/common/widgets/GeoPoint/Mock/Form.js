@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik'
 
 import { initialValues } from '.'
 
-import { MockConfigKey } from 'lib/consts'
+import { MockConfigKey } from '@lib/consts'
 
 import InputDeleteIcon from 'components/InputDeleteIcon'
 import PreviewCard from 'components/Card/Preview'

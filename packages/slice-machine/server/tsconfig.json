@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    
     "target": "ES2019",
     "module": "commonjs",
     "allowJs": true,
@@ -10,7 +9,8 @@
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "baseUrl": "../",
+    "baseUrl": ".",
+    "moduleResolution": "node",
     "typeRoots": [
       "../node_modules/@types",
       "../../sm-commons/index.d.ts"
@@ -21,12 +21,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@/*": ["/*"],
-      "@lib/*": ["lib/*"],
-      "@utils/*": ["lib/utils/*"],
-      "@models/*": ["lib/models/*"],
-      "@src/*": ["src/*"],
-      "@components/*": ["components/*"]
+      "@lib/*": ["../lib/*"],
+      "@models/*": ["../lib/models/*"]
     }
   },
   "include": [
