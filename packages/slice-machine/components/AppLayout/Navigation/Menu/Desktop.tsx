@@ -24,7 +24,7 @@ const warnings = (len: number) => ({
 const Desktop = () => {
   const navCtx = useContext(NavCtx)
 
-  const isNotLoggedIn = !!(navCtx?.warnings || []).find(e => e.key === warningStates.CLIENT_ERROR)
+  const isNotLoggedIn = !!(navCtx?.warnings || []).find(e => e.key === warningStates.NOT_CONNECTED)
 
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
@@ -32,11 +32,7 @@ const Desktop = () => {
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {
-            isNotLoggedIn ? (
-              <NotLoggedIn />
-            ) : null
-          }
+          {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item link={warnings((navCtx?.warnings?.length || 0) + Object.keys(navCtx?.configErrors || {}).length)} />
           <VersionBadge
