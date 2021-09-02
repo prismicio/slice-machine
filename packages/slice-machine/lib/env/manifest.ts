@@ -86,7 +86,6 @@ function validate(manifest: Manifest) {
   const endpoint = fromUrl(manifest.apiEndpoint)
   const parsedRepo = parseDomain(endpoint)
   if (!validateEndpoint(manifest.apiEndpoint, parsedRepo)) {
-    console.log('aaa')
     return {
       state: ManifestState.InvalidEndpoint,
       message: Messages[ManifestState.InvalidEndpoint],

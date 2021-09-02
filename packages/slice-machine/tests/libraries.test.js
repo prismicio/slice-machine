@@ -97,13 +97,28 @@ test("it gets library info from / path", async () => {
   
 })
 
+test("it ignores non slice folders", async () => {
+  const libName = '~/slices'
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
+    "package.json": "{}",
+    "slices/CallToAction1/model.json": "{}",
+    "slices/CallToAction/something.else": "const a = 'a'"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  const libraries = await listComponentsByLibrary(env)
+  expect(libraries[0].components.length).toEqual(1)
+
+})
+
 test("it handles nested library info", async () => {
   const libName = 'slices/src/slices'
   const prefix = '~/'
   fs.use(Volume.fromJSON({
     "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/src/slices/CallToAction/index.js": "const A = 1"
+    "slices/src/slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -113,11 +128,11 @@ test("it handles nested library info", async () => {
 
 test("it finds non local libs", async () => {
   const libName = 'vue-essential-slices'
-  const pathToSlice = `node_modules/${libName}/slices/CallToAction/index.js`
+  const pathToSlice = `node_modules/${libName}/slices/CallToAction/model.json`
   fs.use(Volume.fromJSON({
     "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
     "package.json": "{}",
-    [pathToSlice]: "const A = 1"
+    [pathToSlice]: "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -126,6 +141,24 @@ test("it finds non local libs", async () => {
   expect(libraries[0].isLocal).toEqual(false)
   expect(libraries[0].components[0].pathToSlice).toEqual(`${libName}/slices`)
   
+})
+
+test("it rejects invalid JSON models", async () => {
+  const libName = 'vue-essential-slices'
+  const pathToSlice = (slice) => `node_modules/${libName}/slices/${slice}/model.json`
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
+    "package.json": "{}",
+    [pathToSlice('CallToAction')]: "const invalid = true",
+    [pathToSlice('CallToAction2')]: "{}"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  expect(env.userConfig.libraries).toEqual([libName])
+  const libraries = await listComponentsByLibrary(env)
+  expect(libraries[0].isLocal).toEqual(false)
+  expect(libraries[0].components.length).toEqual(1)
+
 })
 
 test("it filters non existing libs", async () => {

@@ -25,6 +25,13 @@ const Files = {
   readJson(pathToFile: string) {
     return JSON.parse(this.readString(pathToFile));
   },
+  safeReadJson(pathToFile: string) {
+    try {
+      return JSON.parse(this.readString(pathToFile))
+    } catch(e) {
+      return null
+    }
+  },
   readFirstOf<V, O extends { [key: string]: unknown }>(filePaths: ReadonlyArray<{ path: string, options?: O } | string>) {
     return (converter: (value: string) => V): ({ path: string, value: V } & O) | undefined => {
       return filePaths.reduce((acc: { path: string, value: V } & O | undefined, filePath: { path: string, options?: O } | string) => {

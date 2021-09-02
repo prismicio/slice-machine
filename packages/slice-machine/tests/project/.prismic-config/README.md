@@ -1,0 +1,1 @@
+Rename this folder to `.prismic` to use `slice-template`

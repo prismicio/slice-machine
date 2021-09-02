@@ -1,0 +1,30 @@
+{
+  "id": "{{componentId}}",
+  "type": "SharedSlice",
+  "name": "{{componentName}}",
+  "description": "{{componentName}}",
+  "variations": [{
+    "id": "{{variationId}}",
+    "name": "Default slice",
+    "docURL": "...",
+    "version": "sktwi1xtmkfgx8626",
+    "description": "{{componentName}}",
+    "primary": {
+      "title": {
+        "type": "StructuredText",
+        "config": {
+          "single": "heading1",
+          "label": "Title",
+          "placeholder": "This is where it all begins..."
+        }
+      },
+      "number": {
+        "type": "Number",
+        "config": {
+          "label": "number",
+          "placeholder": "Some number"
+        }
+      }
+    }
+  }]
+}
