@@ -5,7 +5,7 @@ const slash = require('slash')
 const { CustomPaths, GeneratedPaths } = require('../../../build/lib/models/paths');
 const { default: Files } = require('../../../build/lib/utils/files');
 const { getInfoFromPath } = require('../../../build/lib/utils/lib')
-const { detectFramework } = require('../../../build/lib/framework');
+const { detectFramework } = require('../../../build/lib/env/framework');
 const { default: storybook } = require('../../../build/server/src/api/storybook');
 
 function scopePreviewToDefaultVariation(cwd, libraryName, sliceName) {

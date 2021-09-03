@@ -1,11 +1,15 @@
 #!/usr/bin/env node
+
+require('module-alias/register')
+
 global.fetch = require('node-fetch')
 const fs = require('fs')
+
 const path = require('path')
 const open = require('open')
 const boxen = require('boxen')
 const spawn = require('child_process').spawn
-const migrate = require('../changelog/migrate')
+// const migrate = require('../changelog/migrate')
 
 const validate = require('../build/lib/env/client').validate
 
@@ -21,7 +25,7 @@ const { argv } = require('yargs')
 
 async function handleChangelog(params) {
   try {
-    await migrate(false, params)
+    // await migrate(false, params)
   } catch(e) {
     console.error('An error occured while migrating file system. Continuing...')
     console.error(`Full error: ${e}`)
@@ -43,7 +47,7 @@ async function handleMigration(cwd) {
 }
 
 function start({ cwd, port }, callback) {
-  const start = spawn('node', ['-r', 'esm', '../build/server/src/index.js'], {
+  const start = spawn('node', ['../build/server/src/index.js'], {
     cwd: __dirname,
     port,
     env: {

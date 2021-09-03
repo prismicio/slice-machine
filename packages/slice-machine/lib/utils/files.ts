@@ -61,7 +61,7 @@ const Files = {
   exists(pathToFile: string) {
     try {
       return Boolean(fs.lstatSync(pathToFile));
-    } catch (e) {
+    } catch (e: any) {
       if (e.code === ERROR_CODES.ENOENT) return false;
       throw e;
     }

@@ -32,7 +32,7 @@ export default {
       .preview()
 
     const maybeError = await handleStorybookPreview({ screenshotUrl, pathToFile })
-    if(maybeError) return { variationId, error: new Error(maybeError), hasPreview: false }
+    if(maybeError) return { variationId, error: new Error(maybeError as string), hasPreview: false }
      
     return {
       variationId,

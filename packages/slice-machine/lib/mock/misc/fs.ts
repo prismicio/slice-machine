@@ -1,7 +1,7 @@
 import Files from '../../utils/files'
 import { MocksConfig } from '../../models/paths'
 
-export const getConfig = (cwd) => {
+export const getConfig = (cwd: string) => {
   const pathToMockConfig = MocksConfig(cwd)
   if (Files.exists(pathToMockConfig)) {
     return Files.readJson(pathToMockConfig)
@@ -9,11 +9,11 @@ export const getConfig = (cwd) => {
   return {}
 }
 
-export const writeConfig = (cwd, config) => {
+export const writeConfig = (cwd: string, config: any) => {
   Files.write(MocksConfig(cwd), config)
 }
 
-export const insert = (cwd, { key, prefix = null, value }) => {
+export const insert = (cwd: string, { key, prefix = null, value }: { key: string, prefix: string | null, value: any }) => {
   const config = getConfig(cwd)
   const withInsert = {
     ...config,

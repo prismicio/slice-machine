@@ -86,7 +86,7 @@ export async function handler(
       }
       console.log('[slice/push] done!')
       return {}
-    } catch(e) {
+    } catch(e: any) {
       console.log(e)
       return onError(e, 'An unexpected error occured while pushing slice')
     }
@@ -95,7 +95,7 @@ export async function handler(
 export default async function apiHander(query: { sliceName: string, from: string }) {
   const { sliceName, from } = query
   const { env } = await getEnv()
-  const { slices, err } = await getSlices(env.client)
+  const { slices, err }: { slices: any, err: any } = await getSlices(env.client)
   if (err) {
     console.error('[slice/push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
     return onError(err, `Error ${err.status}: Could not fetch remote slices. Please log in to Prismic!`)
