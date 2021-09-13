@@ -23,6 +23,9 @@ export interface SimpleField {
   label: string
   placeholder: string
 }
+export const SimpleField = {
+  default: { label: '', placeholder: '' }
+}
 
 export interface Field {
   type: FieldType | SliceZoneType

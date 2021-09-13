@@ -18,7 +18,7 @@ import { removeProp } from '../../../../utils'
 import { DefaultFields } from "../../../../forms/defaults"
 import { createValidationSchema } from "../../../../forms"
 import { Widget } from '../Widget'
-import { UIDField } from '../types'
+import { UIDField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 const FormFields = DefaultFields
@@ -35,7 +35,7 @@ const Meta = {
 }
 
 export const UID: Widget<UIDField, typeof schema> = {
-  create: () => new UIDField(),
+  create: (label: string) => new UIDField({ label }),
   Meta,
   schema,
   TYPE_NAME: FieldType.UID,

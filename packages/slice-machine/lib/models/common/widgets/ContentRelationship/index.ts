@@ -5,7 +5,7 @@ import { MdSettingsEthernet } from "react-icons/md";
 
 import { Widget } from '../Widget'
 import { FieldType } from "../../CustomType/fields";
-import { ContentRelationshipField } from "../types";
+import { ContentRelationshipField } from "./type";
 
 /**
  * {
@@ -38,7 +38,7 @@ const schema = yup.object().shape({
 });
 
 export const ContentRelationship: Widget<ContentRelationshipField, typeof schema> = {
-  create: () => new ContentRelationshipField(),
+  create: (label: string) => new ContentRelationshipField({ label }),
   Meta,
   schema,
   TYPE_NAME: FieldType.ContentRelationship,

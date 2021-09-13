@@ -2,7 +2,7 @@ import { SliceZone, SliceZoneAsArray, sliceZoneType } from './sliceZone'
 import { Field, FieldType } from './fields'
 import { Group } from './group'
 
-import { AsArray, AsObject, GroupField } from '../widgets/types'
+import { AsArray, AsObject, GroupField } from '../widgets/Group/type'
 
 export interface TabAsObject {
   key: string

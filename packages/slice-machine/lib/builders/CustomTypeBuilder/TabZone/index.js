@@ -49,7 +49,7 @@ const TabZone = ({
     const widget = Widgets[widgetTypeName]
     store
       .tab(tabId)
-      .addWidget(id, widget.create())
+      .addWidget(id, widget.create(id))
   }
 
   const onDragEnd = (result) => {

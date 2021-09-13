@@ -32,6 +32,22 @@
             "label": "My Label !"
           },
           "type": "GeoPoint"
+        },
+        "bla": {
+          "config": {
+            "label": "",
+            "placeholder": ""
+          },
+          "type": "Number"
+        },
+        "bla2222": {
+          "config": {
+            "label": "bla2222",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          },
+          "type": "Boolean"
         }
       },
       "items": {
