@@ -6,6 +6,7 @@ import { Embed } from './Embed'
 import { GeoPoint } from './GeoPoint'
 import { Image } from './Image'
 import { Link } from './Link'
+import { LinkToMedia } from './LinkToMedia'
 import { Number } from './Number'
 import { Select } from './Select'
 import { StructuredText } from './StructuredText'
@@ -28,4 +29,5 @@ export {
   Text,
   Timestamp,
   UID,
+  LinkToMedia
 }

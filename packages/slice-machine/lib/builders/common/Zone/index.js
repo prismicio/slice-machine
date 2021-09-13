@@ -27,7 +27,7 @@ const Zone = ({
   tabId,
   title, /* text info to display in Card Header */
   fields, /* widgets registered in the zone */
-  poolOfFieldsToCheck, /* if you need to check unicity of fields from other zones */
+  poolOfFieldsToCheck, /* if you need to check unity of fields from other zones */
   widgetsArray, /* Array of available widget fields */
   isRepeatable, /* should we wrap hints in map ? */
   onDeleteItem, /* user clicked on "Delete field" */

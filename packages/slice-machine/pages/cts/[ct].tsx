@@ -5,11 +5,11 @@ import { CustomTypesContext } from "src/models/customTypes/context"
 import { ConfigContext } from "src/config-context"
 
 import { useModelReducer } from 'src/models/customType/modelReducer'
-import { CustomTypeState } from 'lib/models/ui/CustomTypeState'
+import { CustomTypeState } from '@lib/models/ui/CustomTypeState'
 import CustomTypeStore from 'src/models/customType/store'
-import { CustomType, ObjectTabs } from 'lib/models/common/CustomType'
-import CustomTypeBuilder from 'lib/builders/CustomTypeBuilder'
-import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
+import CustomTypeBuilder from '@lib/builders/CustomTypeBuilder'
+import { CustomTypeMockConfig } from '@lib/models/common/MockConfig'
 
 const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTypeStore, onLeave: Function }) => {
   return (
@@ -18,8 +18,8 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
 }
 
 const WithProvider = ({ customType, remoteCustomType, onLeave }: { customType: CustomType<ObjectTabs>, remoteCustomType?: CustomType<ObjectTabs>, onLeave: Function }) => {
-  const { env } = useContext(ConfigContext)
-  const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(env?.mockConfig || {}, customType.id)
+  const { env } = useContext(ConfigContext)
+  const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(env?.mockConfig || {}, customType.id)
   const [Model, store] = useModelReducer({ customType, remoteCustomType, initialMockConfig })
   return (<Ct Model={Model} store={store} onLeave={onLeave} />)
 }
