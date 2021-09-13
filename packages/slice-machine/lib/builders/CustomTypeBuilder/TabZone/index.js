@@ -25,7 +25,7 @@ const TabZone = ({
   showHints,
 }) => {
 
-  const [modaIsOpen, setModalIsOpen] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const onDeleteItem = (key) => {
     store.deleteWidgetMockConfig(Model.mockConfig, key)
@@ -96,7 +96,6 @@ const TabZone = ({
 
   return (
     <Fragment>
-      {/* { JSON.stringify(Model.mockConfig, null, 2) } */}
       <Zone
         tabId={tabId}
         Model={Model}
@@ -116,11 +115,6 @@ const TabZone = ({
         renderHintBase={({ item }) => `data.${item.key}`}
         renderFieldAccessor={(key) => `data.${key}`}
       />
-      {/* {
-        Model.current.tabs.length > 1 ? (
-          <button onClick={() => onDeleteTab()}>Delete Tab</button>
-        ) : null
-      } */}
       <SliceZone
         tabId={tabId}
         sliceZone={sliceZone}
@@ -129,13 +123,7 @@ const TabZone = ({
         onCreateSliceZone={onCreateSliceZone}
         onSelectSharedSlices={onSelectSharedSlices}
       />
-      <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
-        {(props) => {
-          return (
-            <div>hello</div>
-          )
-        }}
-      </ModalFormCard>
+      <ModalFormCard isOpen={modalIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)} />
     </Fragment>
   )
 }
