@@ -55,4 +55,3 @@ export const LinkToMedia: Widget<LinkField, typeof schema> = {
   TYPE_NAME: FieldType.Link,
   CUSTOM_NAME: 'LinkToMedia',
 }
-
