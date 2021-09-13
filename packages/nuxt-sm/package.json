@@ -10,7 +10,7 @@
     "consola": "^2.11.3",
     "jest": "^25.5.4",
     "slash": "^3.0.0",
-    "sm-commons": "^0.0.21"
+    "sm-commons": "^0.0.23"
   },
   "devDependencies": {
     "vue-essential-slices": "0.0.7"
@@ -31,6 +31,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/prismicio/sm-commons/issues"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
   "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1"
