@@ -5,7 +5,7 @@
     "::postinstall": "manypkg check",
     "bootstrap": "lerna bootstrap",
     "dev": "lerna run dev --parallel",
-    "test": "yarn workspaces run test",
+    "test": "yarn workspaces foreach run test",
     "build": "yarn test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
