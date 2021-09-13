@@ -1,15 +1,8 @@
 export const initialValues = null
 
-const randUrls = [
-  'https://slicemachine.dev',
-  'https://prismic.io',
-  'http://google.com',
-  'http://twitter.com'
-]
-
 export const handleMockConfig = () => ({
   link_type: 'Web',
-  url: randUrls[Math.floor(Math.random() * randUrls.length)]
+  url: 'https://source.unsplash.com/daily'
 })
 
 export const handleMockContent = (mockContent, _) => {
@@ -18,6 +11,6 @@ export const handleMockContent = (mockContent, _) => {
   }
   return {
     link_type: 'Web',
-    url: mockContent
+    url: 'https://source.unsplash.com/daily'
   }
 }
