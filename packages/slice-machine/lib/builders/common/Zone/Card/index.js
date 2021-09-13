@@ -35,7 +35,6 @@ const FieldZone = ({
 }) => {
   const { env: { framework } } = useContext(ConfigContext)
 
-  debugger
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId={title}>
