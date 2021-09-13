@@ -27,7 +27,6 @@ const FieldZone = ({
   tabId,
   enterEditMode,
   enterSelectMode,
-  dataTip,
   onDragEnd,
   renderFieldAccessor,
   onDeleteItem,
@@ -101,19 +100,6 @@ const FieldZone = ({
                 )
               })}
               { provided.placeholder }
-              {/* {placeholderProps && Object.keys(placeholderProps) && snapshot.isDraggingOver && (
-                <div
-                  className="placeholder"
-                  style={{
-                    top: placeholderProps.clientY,
-                    left: placeholderProps.clientX,
-                    height: placeholderProps.clientHeight,
-                    width: placeholderProps.clientWidth,
-                    background: 'tomato',
-                    position: 'absolute'
-                  }}
-                />
-              )} */}
               <NewFieldC />
             </Box>
           )}

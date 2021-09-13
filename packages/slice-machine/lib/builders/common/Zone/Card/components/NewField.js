@@ -25,7 +25,6 @@ const NewField = ({
   onSave,
   onCancelNewField,
 }) => {
-
   const fieldRef = useRef(null)
   const { theme } = useThemeUI()
   const widget = Widgets[widgetTypeName]

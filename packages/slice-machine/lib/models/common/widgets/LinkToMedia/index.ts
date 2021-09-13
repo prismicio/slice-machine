@@ -8,7 +8,7 @@ import { MockConfigForm } from './Mock/Form'
 import { Widget } from '../Widget'
 import { FieldType } from '../../CustomType/fields'
 
-import { LinkField } from '../types'
+import { LinkField, Media } from '../types'
 
 /**
 * {
@@ -51,7 +51,8 @@ export const LinkToMedia: Widget<LinkField, typeof schema> = {
   FormFields,
   schema,
   Form,
-  create: () => new LinkField(),
-  TYPE_NAME: FieldType.Link
+  create: () => new LinkField({ label: '', placeholder: '', select: Media.media, allowTargetBlank: false }),
+  TYPE_NAME: FieldType.Link,
+  CUSTOM_NAME: 'LinkToMedia',
 }
 
