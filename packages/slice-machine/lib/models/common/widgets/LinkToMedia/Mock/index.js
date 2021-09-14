@@ -1,7 +1,7 @@
 export const initialValues = null
 
 export const handleMockConfig = () => ({
-  link_type: 'Web',
+  link_type: 'media',
   url: 'https://source.unsplash.com/daily'
 })
 
@@ -10,7 +10,7 @@ export const handleMockContent = (mockContent, _) => {
     return mockContent
   }
   return {
-    link_type: 'Web',
+    link_type: 'media',
     url: 'https://source.unsplash.com/daily'
   }
 }

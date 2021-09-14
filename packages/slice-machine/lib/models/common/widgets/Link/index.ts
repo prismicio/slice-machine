@@ -62,7 +62,7 @@ const Meta = {
   description: 'A link to web, media or Prismic document'
 }
 
-const linkConfigSchema = yup.object().shape({
+export const linkConfigSchema = yup.object().shape({
   label: yup.string().optional(),
   useAsTitle: yup.boolean().optional(),
   placeholder: yup.string().optional(),
