@@ -19,6 +19,7 @@ const codeByWidgetType = (Widgets) => ({
   [Widgets.Date?.TYPE_NAME]: dateCode,
   [Widgets.Timestamp?.TYPE_NAME]: dateCode,
   [Widgets.StructuredText?.TYPE_NAME]: richTextCode,
+  [Widgets.LinkToMedia?.CUSTOM_NAME]: linkCode,
   [Widgets.Link?.TYPE_NAME]: linkCode,
   [Widgets.ContentRelationship?.CUSTOM_NAME]: linkCode,
   [Widgets.GeoPoint?.TYPE_NAME]: (fieldText) => `<span>({${fieldText}.latitude}, {${fieldText}.longitude})</span>`,

@@ -1,8 +1,6 @@
 import React from 'react'
 import CodeBlock from '../CodeBlock'
 
-// const DOCS_README = 'https://github.com/prismicio/prismic-vue'
-
 const wrapRepeatable = (code) =>
 `
 <div v-for="(item, i) in slice.items" :key="\`slice-item-\${i}\`">    
@@ -15,6 +13,7 @@ const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldT
 
 const codeByWidgetType = (Widgets) => ({
   [Widgets.ContentRelationship?.CUSTOM_NAME]: createCodeFromTag('todo-hint'),
+  [Widgets.LinkToMedia?.CUSTOM_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
   [Widgets.UID?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText?.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
   [Widgets.Image?.TYPE_NAME]: createCodeFromTag('prismic-image'),
