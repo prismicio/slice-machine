@@ -16,7 +16,9 @@
     "vue-essential-slices": "0.0.7"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "security-audit:prod": "npm-audit --production --only=prod --audit-level=low",
+    "security-audit:dev": "npm-audit --only=dev --audit-level=moderate"
   },
   "repository": {
     "type": "git",

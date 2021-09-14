@@ -1,0 +1,24 @@
+name: Push
+
+on: [push]
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with :
+        node-version: node
+    - name: Install top level dependencies
+      run: yarn
+    - name: Install package dependencies
+      run: lerna bootstrap
+    - name: Running tests
+      run: lerna run test
+    - name: linting
+      run: echo "TODO add top level linting"
+    - name: Audit
+      run: lerna run security-audit:prod
+    - name: Build slice machine
+      run: lerna run --scope slice-machine-ui build

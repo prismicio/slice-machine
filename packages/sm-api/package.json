@@ -4,7 +4,9 @@
   "version": "0.0.22",
   "description": "Slice Machine API",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "security-audit:prod": "npm-audit --production --only=prod --audit-level=low",
+    "security-audit:dev": "npm-audit --only=dev --audit-level=moderate"
   },
   "author": "Hugo Villain",
   "license": "ISC",
