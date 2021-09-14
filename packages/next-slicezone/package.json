@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
-    "security-audit:prod": "npm-audit --production --only=prod --audit-level=low",
-    "security-audit:dev": "npm-audit --only=dev --audit-level=moderate"
+    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
+    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate"
   },
   "repository": {
     "type": "git",

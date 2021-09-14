@@ -16,9 +16,9 @@ jobs:
       run: lerna bootstrap
     - name: Running tests
       run: lerna run test
-    - name: Audit
-      run: lerna run security-audit:prod
     - name: Build slice machine
       run: lerna run --scope slice-machine-ui build
     - name: linting
       run: lerna run lint
+    - name: Audit
+      run: lerna run security-audit:prod
