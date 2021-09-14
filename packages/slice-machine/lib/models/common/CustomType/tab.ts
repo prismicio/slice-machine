@@ -82,7 +82,7 @@ export const Tab = {
   addWidget(tab: TabAsArray, id: string, widget: Field): TabAsArray {
     const elem =
       widget.type === FieldType.Group
-      ? { key: id, value: Group.toArray(widget as GroupField<AsObject>) }
+      ? { key: id, value: widget as GroupField<AsArray> }
       : { key: id, value: widget } as {key: string, value: Field }
 
     return {
