@@ -9,9 +9,24 @@
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "jest"
+  ],
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
-  ]
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jest/recommended"
+  ],
+  "ignorePatterns": [
+    "build",
+    "templates"
+  ],
+  "rules": {
+    "@typescript-eslint/no-var-requires": "warn",
+    "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-unsafe-call": "warn"
+  }
 }

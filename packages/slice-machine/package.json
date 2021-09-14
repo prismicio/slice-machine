@@ -24,7 +24,8 @@
     "bundle": "yarn build && yarn test && yarn export-build",
     "slicemachine": "start-slicemachine --port 9999",
     "security-audit:prod": "npm-audit --production --only=prod --audit-level=low",
-    "security-audit:dev": "npm-audit --only=dev --audit-level=moderate"
+    "security-audit:dev": "npm-audit --only=dev --audit-level=moderate",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx --config ./eslintrc.json ."
   },
   "bin": {
     "start-slicemachine": "start/index.js"
@@ -102,8 +103,10 @@
     "cross-env": "^7.0.3",
     "dedent": "^0.7.0",
     "diff": "^5.0.0",
+    "eslint": "^7.32.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jest": "^24.4.0",
     "formik": "^2.1.4",
     "jest": "^26.1.0",
     "jest-config": "^26.6.3",
