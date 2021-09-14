@@ -7,6 +7,9 @@
     "@lib": "build/lib",
     "@models": "build/lib/models"
   },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "scripts": {
     "dev": "next dev",
     "test": "jest",
@@ -84,6 +87,7 @@
     "@types/faker": "^5.5.5",
     "@types/glob": "^7.1.3",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.172",
     "@types/mime": "^2.0.3",
     "@types/node-fetch": "^2.5.12",
     "@types/npmlog": "^4.1.3",
