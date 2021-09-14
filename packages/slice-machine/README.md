@@ -2,7 +2,7 @@
 
 This package is meant to be installed as development dependency of any SliceMachine project. It should work with both Nuxt and Next projects.
 
-To help development, folder `tests/project` contains an up-to-date SliceMachine project.
+To help development, the folder `tests/project` contains an up-to-date SliceMachine project.
 To run the builder locally:
 
 ```bash
@@ -18,3 +18,5 @@ Stack:
 - Express (Server)
 - Theme-ui ( see `src/theme.js`)
 - Formik (forms)
+
+:warning: If you want to commit changes to the `tests/project` folder, don't forget to remove it from the `.gitignore` file.
