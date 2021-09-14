@@ -31,7 +31,7 @@ const codeByWidgetType = (Widgets) => ({
 })
 
 const toVue = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
-  const hintBase = renderHintBase({ item })
+  const hintBase = renderHintBase({ item })
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName]
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : null
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code

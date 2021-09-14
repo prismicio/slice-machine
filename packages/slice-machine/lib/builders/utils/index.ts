@@ -6,14 +6,12 @@ interface Widgets {
 }
 
 export const findWidgetByConfigOrType = (widgets: Widgets, config: any, type: string) => {
-  const isALinkField = type === 'Link';
-
-  if (isALinkField && config?.select === Media.document) {
-   return widgets.ContentRelationship
-  }
-
-  if (isALinkField && config?.select === Media.media) {
-    return widgets.LinkToMedia
+  if (type === 'Link') {
+    switch(config?.select) {
+      case Media.document: return widgets.ContentRelationship
+      case Media.media: return widgets.LinkToMedia
+      default: return widgets.Link
+    }
   }
 
   return widgets[type]
