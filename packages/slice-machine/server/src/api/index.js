@@ -3,7 +3,6 @@ const router = express.Router()
 
 const fs = require('fs')
 const mime = require('mime')
-const base64Img = require('base64-img')
 
 const push = require('./slices/push').default
 const save = require('./slices/save').default
