@@ -21,7 +21,8 @@
   ],
   "ignorePatterns": [
     "build",
-    "templates"
+    "templates",
+    "**/tests/**"
   ],
   "rules": {
     "@typescript-eslint/no-var-requires": "warn",
