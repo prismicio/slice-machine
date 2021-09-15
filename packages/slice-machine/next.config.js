@@ -6,15 +6,15 @@ const withCustomBabelConfigFile = require('next-plugin-custom-babel-config');
 module.exports = withPlugins([
   [withCustomBabelConfigFile, {
     babelConfigFile: path.resolve("./babel.next.config.js"),
+    webpack5: false,
     env: {
       // overridden by start script
       CWD: path.resolve("./tests/project"),
     },
     webpack: (config, { isServer }) => {
       if (!isServer) {
-        config.node = {
-          fs: "empty",
-        };
+        config.node = { fs: "empty" };
+        //config.resolve.fallback = { fs: false }
       }
 
       config.module.rules.push({
