@@ -25,7 +25,8 @@
     "slicemachine": "start-slicemachine --port 9999",
     "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx --config ./.eslintrc.json ."
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx --config ./.eslintrc.json .",
+    "audit-fix": "yarn-audit-fix"
   },
   "bin": {
     "start-slicemachine": "start/index.js"
@@ -135,6 +136,15 @@
     "theme-ui": "^0.8.4",
     "typescript": "^4.2.2",
     "typescript-is": "^0.18.2",
-    "unionfs": "^4.4.0"
+    "unionfs": "^4.4.0",
+    "yarn-audit-fix": "^7.0.3"
+  },
+  "resolutions": {
+    "@mdx-js/loader/**/remark-parse/trim": "^0.0.3",
+    "next-mdx-remote/**/remark-parse/trim": "^0.0.3",
+    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
+    "npm/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
+    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
+    "nodemon/**/normalize-url": ">=4.5.1 <5.0.0 || >=5.3.1 <6.0.0 || >=6.0.1" 
   }
 }
