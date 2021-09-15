@@ -28,5 +28,8 @@
   },
   "devDependencies": {
     "@now/node": "^1.4.1"
+  },
+  "resolutions": {
+    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
   }
 }

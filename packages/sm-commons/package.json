@@ -29,5 +29,8 @@
     "expect.js": "^0.3.1",
     "validate-npm-package": "^1.0.5"
   },
+  "resolutions": {
+    "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1" 
+  },
   "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1"
 }
