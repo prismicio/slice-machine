@@ -16,7 +16,7 @@ import { removeProp } from '../../../../utils'
 import { DefaultFields } from "../../../../forms/defaults"
 import { createValidationSchema } from '../../../../forms'
 import { Widget } from '../Widget'
-import { TimestampField } from '../types'
+import { TimestampField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 const FormFields = DefaultFields
@@ -36,7 +36,7 @@ export const Timestamp: Widget<TimestampField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  create: () => new TimestampField(),
+  create: (label: string) => new TimestampField({ label }),
   schema,
   FormFields,
   TYPE_NAME: FieldType.Timestamp,

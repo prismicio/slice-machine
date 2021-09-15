@@ -1,5 +1,5 @@
 import { Field } from '../CustomType/fields'
-import { GroupField, AsArray, AsObject } from '../widgets/types'
+import { GroupField, AsArray, AsObject } from '../widgets/Group/type'
 
 // export type GroupField<AsArray> = ReadonlyArray<{key: string, value: Field }>
 

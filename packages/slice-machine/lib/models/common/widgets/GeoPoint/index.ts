@@ -6,7 +6,7 @@ import { MockConfigForm } from './Mock/Form'
 import { DefaultFields } from "../../../../forms/defaults"
 
 import { Widget } from '../Widget'
-import { GeoPointField } from '../types'
+import { GeoPointField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /** : {
@@ -35,7 +35,7 @@ const Meta = {
 }
 
 export const GeoPoint: Widget<GeoPointField, typeof schema> = {
-  create: () => new GeoPointField(),
+  create: (label: string) => new GeoPointField({ label }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

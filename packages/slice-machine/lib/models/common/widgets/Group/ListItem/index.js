@@ -61,7 +61,7 @@ const CustomListItem = ({
     store
       .tab(tabId)
       .group(groupItem.key)
-      .addWidget(id, widget.create())
+      .addWidget(id, widget.create(id))
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {

@@ -3,7 +3,7 @@ import { MdTitle } from 'react-icons/md'
 import { MockConfigForm } from './Mock/Form'
 import { handleMockConfig, handleMockContent } from './Mock'
 
-import { TextField } from '../types'
+import { TextField } from './type'
 
 /**
 * {
@@ -36,7 +36,7 @@ const Meta = {
 }
 
 export const Text: Widget<TextField, typeof schema> = {
-  create: () => new TextField(),
+  create: (label: string) => new TextField({ label }),
   MockConfigForm,
   handleMockConfig,
   handleMockContent,

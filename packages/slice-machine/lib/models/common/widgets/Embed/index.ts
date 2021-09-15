@@ -4,7 +4,7 @@ import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
-import { EmbedField } from '../types'
+import { EmbedField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /**  {
@@ -24,7 +24,7 @@ const Meta = {
 }
 
 export const Embed: Widget<EmbedField, typeof schema> = {
-  create: () => new EmbedField(),
+  create: (label: string) => new EmbedField({ label }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

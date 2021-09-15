@@ -14,6 +14,15 @@
           "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
         }
       },
+      "Am-i-cool-or-not": {
+        "config": {
+          "label": "Am-i-cool-or-not",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": false
+        },
+        "type": "Boolean"
+      },
       "MainSliceZone": {
         "type": "Slices",
         "fieldset": "Slice Zone",

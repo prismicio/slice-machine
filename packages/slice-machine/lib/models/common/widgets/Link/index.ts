@@ -8,7 +8,7 @@ import { MockConfigForm } from './Mock/Form'
 import { Widget } from '../Widget'
 import { FieldType } from '../../CustomType/fields'
 
-import { LinkField } from '../types'
+import { LinkField } from './type'
 
 /**
 * {
@@ -86,7 +86,7 @@ export const Link: Widget<LinkField, typeof schema> = {
   FormFields,
   schema,
   Form,
-  create: () => new LinkField(),
+  create: (label: string) => new LinkField({ label }),
   TYPE_NAME: FieldType.Link
 }
 

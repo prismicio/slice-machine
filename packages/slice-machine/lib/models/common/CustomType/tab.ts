@@ -2,7 +2,7 @@ import { SliceZone, SliceZoneAsArray, sliceZoneType } from './sliceZone'
 import { Field, FieldType } from './fields'
 import { Group } from './group'
 
-import { AsArray, AsObject, GroupField } from '../widgets/types'
+import { AsArray, AsObject, GroupField } from '../widgets/Group/type'
 
 export interface TabAsObject {
   key: string
@@ -82,7 +82,7 @@ export const Tab = {
   addWidget(tab: TabAsArray, id: string, widget: Field): TabAsArray {
     const elem =
       widget.type === FieldType.Group
-      ? { key: id, value: Group.toArray(widget as GroupField<AsObject>) }
+      ? { key: id, value: widget as GroupField<AsArray> }
       : { key: id, value: widget } as {key: string, value: Field }
 
     return {

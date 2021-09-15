@@ -6,7 +6,7 @@ import { FieldType } from '../../CustomType/fields'
 import { Widget } from '../Widget'
 
 import CustomListItem from './ListItem'
-import { AsArray, GroupField } from '../types'
+import { AsArray, GroupField } from './type'
 
 const Meta = {
   icon: MdPlaylistAdd,
@@ -27,7 +27,7 @@ export const Group: Widget<GroupField<AsArray>, typeof schema> = {
   Meta,
   FormFields: DefaultFields,
   schema,
-  create: () => new GroupField({ label: '', placeholder: '', fields: [] }),
+  create: (label: string) => new GroupField({ label }),
   CustomListItem,
   TYPE_NAME: FieldType.Group
 }

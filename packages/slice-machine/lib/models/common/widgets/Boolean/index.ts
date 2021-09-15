@@ -3,7 +3,7 @@ import { BsToggleOn } from 'react-icons/bs'
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
-import { BooleanField } from '../types'
+import { BooleanField } from './type'
 
 /** {
     "type" : "Boolean",
@@ -47,7 +47,7 @@ export const BooleanWidget: Widget<BooleanField, typeof schema> = {
   handleMockContent,
   handleMockConfig,
   MockConfigForm,
-  create: () => new BooleanField(),
+  create: (label: string) => new BooleanField({ label }),
   Meta,
   schema,
   FormFields

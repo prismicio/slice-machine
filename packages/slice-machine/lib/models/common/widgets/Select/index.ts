@@ -10,7 +10,7 @@ import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
-import { SelectField } from '../types'
+import { SelectField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /**
@@ -40,7 +40,7 @@ export const Select: Widget<SelectField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  create: () => new SelectField(),
+  create: (label: string) => new SelectField({ label }),
   schema,
   Meta,
   TYPE_NAME: FieldType.Select

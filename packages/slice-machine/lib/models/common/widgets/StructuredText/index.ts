@@ -11,7 +11,7 @@ import { createValidationSchema } from '../../../../forms'
 import { removeProp } from '../../../../utils'
 import { Widget } from '../Widget'
 
-import { StructuredTextField } from '../types'
+import { StructuredTextField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /**
@@ -36,7 +36,7 @@ const schema = yup.object().shape({
 })
 
 export const StructuredText: Widget<StructuredTextField, typeof schema> = {
-  create: () => new StructuredTextField(),
+  create: (label: string) => new StructuredTextField({ label }),
   handleMockConfig,
   handleMockContent,
   FormFields,
