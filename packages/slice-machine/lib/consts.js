@@ -26,10 +26,12 @@ export const s3DefaultPrefix = 'shared-slices'
 export const acceptedImagesTypes = ['png', 'jpg', 'jpeg']
 
 export const SupportedFrameworks = {
+  none: 'none',
   nuxt: 'nuxt',
   next: 'next',
   gatsby: 'gatsby',
   vue: 'vue',
+  svelte: 'svelte',
   react: 'react'
 }
 

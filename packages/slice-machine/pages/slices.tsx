@@ -1,11 +1,9 @@
-import Head from 'next/head'
 import React, { Fragment, useState, useContext } from 'react'
 import { FiLayers } from 'react-icons/fi'
 import { Box, Flex, Button, Text, Spinner } from 'theme-ui'
 
 import { getFormattedLibIdentifier } from '../lib/utils/lib'
 import Container from '../components/Container'
-import SliceList from '../components/SliceList'
 
 import { LibrariesContext } from '../src/models/libraries/context'
 import Environment from '../lib/models/common/Environment'
@@ -17,9 +15,11 @@ import CreateSlice from '../components/Forms/CreateSlice'
 import { fetchApi } from '../lib/builders/common/fetch'
 
 import Header from '../components/Header'
-import LibraryState from '../lib/models/ui/LibraryState'
+import Grid from '../components/Grid'
 
-const UnclickableCardWrapper = ({ children }: { children: React.ReactChildren }) => children
+import LibraryState from '../lib/models/ui/LibraryState'
+import SliceState from '../lib/models/ui/SliceState'
+import { SharedSlice } from '../lib/models/ui/Slice'
 
 const CreateSliceButton = ({ onClick, loading }: { onClick: Function, loading: boolean }) => (
   <Button
@@ -76,9 +76,6 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
 
   return (
     <Fragment>
-      <Head>
-        <title>SliceMachine UI</title>
-      </Head>
       <Container>
         <main>
           <Header
@@ -142,14 +139,14 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                     </Flex>
                     { !isLocal ? <p>⚠️ External libraries are read-only</p> : null}
                   </Flex>
-                  <SliceList
-                    cardType="ForSlicePage"
-                    {...(!isLocal
-                      ? {
-                          CardWrapper: UnclickableCardWrapper,
-                        }
-                      : null)}
-                    slices={components.map(([e]) => e)}
+                  <Grid
+                    elems={components.map(([e]) => e)}
+                    renderElem={(slice: SliceState) => {
+                      return SharedSlice.render({
+                        displayStatus: true,
+                        slice
+                      })
+                    }}
                   />
                 </div>
               )

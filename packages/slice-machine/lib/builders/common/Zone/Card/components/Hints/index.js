@@ -8,6 +8,7 @@ const FrameworkRenderers = {
   [SupportedFrameworks.gatsby]: Renderers.gatsby,
   [SupportedFrameworks.vue]: Renderers.vue,
   [SupportedFrameworks.react]: Renderers.react,
+  [SupportedFrameworks.svelte]: Renderers.svelte,
   vanillajs: Renderers.vanillajs
 }
 

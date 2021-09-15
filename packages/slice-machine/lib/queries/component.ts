@@ -4,8 +4,6 @@ import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 import { pascalize } from '../utils/str'
 
 import { getPathToScreenshot, getExternalPathToScreenshot } from './screenshot'
-import { AsObject } from '../../lib/models/common/Variation'
-import Slice from '../../lib/models/common/Slice'
 import Files from '../utils/files'
 import migrate from '../migrate'
 
@@ -32,16 +30,27 @@ function getComponentName(slicePath: string): string | undefined {
   return pop.split('.')[0];
 }
 
-/** naive method to validate that a folder contains a entry file */
-function matchPossiblePaths(files: ReadonlyArray<string>, componentName: string): string | undefined {
+/** naive method to file component file in a folder */
+function findComponentFile(files: ReadonlyArray<string>, componentName: string): string | undefined {
   const possiblePaths = ['index', componentName]
-    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`], [])
+    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`, `${f}.svelte`], [])
   return files.find(e => possiblePaths.indexOf(e) > -1)
 }
 
-function splitExtension(str: string): { fileName: string, extension: string } | undefined {
+function matchPossiblePaths(files: ReadonlyArray<string>, _componentName: string): boolean {
+  const modelFilename = 'model.json'
+
+  return files.includes(modelFilename)
+}
+
+function splitExtension(str: string): { fileName: string | null, extension: string | null } {
   const fullName = str.split('/').pop()
-  if(!fullName) return
+  if(!fullName) {
+    return {
+      fileName: null,
+      extension: null
+    }
+  }
 
   const [fileName, extension] = fullName.split('.')
   return {
@@ -50,17 +59,24 @@ function splitExtension(str: string): { fileName: string, extension: string } | 
   }
 }
 
-function fromJsonFile(slicePath: string, filePath: string): { has: boolean, data: any } {
+function fromJsonFile(slicePath: string, filePath: string): { has: boolean, data: any } | null {
   const fullPath = path.join(slicePath, filePath)
   const hasFile = Files.exists(fullPath)
-  return {
-    has: hasFile,
-    data: hasFile ? Files.readJson(fullPath) : {}
+  
+  if (hasFile) {
+    const maybeData = Files.safeReadJson(fullPath)
+    if (maybeData) {
+      return {
+        has: hasFile,
+        data: maybeData
+      }
+    }
   }
+  return null
 }
 
 /** returns fileName, extension and isDirectory from path to slice */
-function getFileInfoFromPath(slicePath: string, componentName: string): { fileName?: string, extension?: string, isDirectory: boolean } {
+function getFileInfoFromPath(slicePath: string, componentName: string): { fileName: string | null, extension: string | null, isDirectory: boolean } {
   const isDirectory = Files.isDirectory(slicePath)
   if (!isDirectory) {
     return { ...splitExtension(slicePath), isDirectory: false }
@@ -68,8 +84,13 @@ function getFileInfoFromPath(slicePath: string, componentName: string): { fileNa
 
   const files = Files.readDirectory(slicePath)
   const match = matchPossiblePaths(files, componentName)
+
   if (match) {
-    return { ...splitExtension(match), isDirectory: true };
+    const maybeFileComponent = findComponentFile(files, componentName)
+    if (maybeFileComponent) {
+      return { ...splitExtension(maybeFileComponent), isDirectory: true };
+    }
+    return { fileName: null, extension: null, isDirectory: true }
   }
   throw new Error(`[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`)
 }
@@ -83,18 +104,25 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
   }
   
   
-  const { fileName, extension, isDirectory } = (() => {
+  const fileInfo = (() => {
     try {
       return getFileInfoFromPath(slicePath, sliceName)
     } catch(e) {
-      return { fileName: null, extension: null, isDirectory: false }
+      return null
     }
-  })();
+  })()
 
-  if(!fileName || !extension) return
+  if (fileInfo === null) {
+    return
+  }
 
-  const sliceModel: { has: boolean, data: Slice<AsObject> } = fromJsonFile(slicePath, 'model.json')
-  const { model: modelData, migrated } = migrate(sliceModel.data, { sliceName, from }, null, false)
+  const { fileName, extension, isDirectory } = fileInfo
+
+  const maybeSliceModel = fromJsonFile(slicePath, 'model.json')
+  if (!maybeSliceModel) {
+    return
+  }
+  const { model: modelData, migrated } = migrate(maybeSliceModel.data, { sliceName, from }, null, false)
   const model = { data: modelData }
   const previewUrls = (model.data.variations || [])
     .map((v: any) => {
@@ -125,7 +153,7 @@ export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cw
     extension,
     model: model.data,
     meta: getMeta(model.data),
-    mock: fromJsonFile(slicePath, 'mock.json').data,
+    mock: fromJsonFile(slicePath, 'mock.json')?.data,
     nameConflict,
     previewUrls
   }

@@ -1,18 +1,18 @@
-import { snakelize } from '../../../../lib/utils/str'
+import { snakelize } from '@lib/utils/str'
 
-import { getEnv } from '../../../../lib/env'
+import { getEnv } from '@lib/env'
 import { getSlices } from './'
-import Files from '../../../../lib/utils/files'
+import Files from '@lib/utils/files'
 
-import { getPathToScreenshot } from '../../../../lib/queries/screenshot'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
 
 import { onError } from '../common/error'
 import { purge, upload } from '../upload'
-import DefaultClient from '../../../../lib/models/common/http/DefaultClient'
-import FakeClient from '../../../../lib/models/common/http/FakeClient'
-import { Variation, AsObject } from '../../../../lib/models/common/Variation'
-import Slice from '../../../../lib/models/common/Slice'
-import { CustomPaths } from '../../../../lib/models/paths'
+import DefaultClient from '@lib/models/common/http/DefaultClient'
+import FakeClient from '@lib/models/common/http/FakeClient'
+import { Variation, AsObject } from '@lib/models/common/Variation'
+import Slice from '@lib/models/common/Slice'
+import { CustomPaths } from '@lib/models/paths'
 import Environment from '@lib/models/common/Environment'
 
 const createOrUpdate = async ({
@@ -86,7 +86,7 @@ export async function handler(
       }
       console.log('[slice/push] done!')
       return {}
-    } catch(e) {
+    } catch(e: any) {
       console.log(e)
       return onError(e, 'An unexpected error occured while pushing slice')
     }
@@ -95,10 +95,10 @@ export async function handler(
 export default async function apiHander(query: { sliceName: string, from: string }) {
   const { sliceName, from } = query
   const { env } = await getEnv()
-  const { slices, err } = await getSlices(env.client)
+  const { slices, err }: { slices: any, err: any } = await getSlices(env.client)
   if (err) {
     console.error('[slice/push] An error occured while fetching slices.\nCheck that you\'re properly logged in and that you have access to the repo.')
-    return onError(err, `Error ${err.status}: Could not fetch remote slices`)
+    return onError(err, `Error ${err.status}: Could not fetch remote slices. Please log in to Prismic!`)
   }
   return handler(
     env,

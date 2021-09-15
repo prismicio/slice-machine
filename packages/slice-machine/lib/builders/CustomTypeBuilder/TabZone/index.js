@@ -1,16 +1,16 @@
 import { Fragment, useState } from 'react'
-import * as Widgets from 'lib/models/common/widgets/withGroup'
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 import EditModal from '../../common/EditModal'
 
 import {
   ensureDnDDestination,
   ensureWidgetTypeExistence
-} from 'lib/utils'
+} from '@lib/utils'
 
 import Zone from '../../common/Zone'
 
-import ctBuilderArray from 'lib/models/common/widgets/ctBuilderArray'
-import { CustomTypeMockConfig } from 'lib/models/common/MockConfig'
+import ctBuilderArray from '@lib/models/common/widgets/ctBuilderArray'
+import { CustomTypeMockConfig } from '@lib/models/common/MockConfig'
 
 import SliceZone from '../SliceZone'
 
@@ -86,8 +86,8 @@ const TabZone = ({
     store.tab(tabId).deleteSliceZone()
   }
 
-  const onSelectSharedSlices = (keys) => {
-    store.tab(tabId).replaceSharedSlices(keys)
+  const onSelectSharedSlices = (keys, preserve = []) => {
+    store.tab(tabId).replaceSharedSlices(keys, preserve)
   }
 
   const onRemoveSharedSlice = (key) => {

@@ -7,7 +7,7 @@ module.exports = withPlugins([
   [withCustomBabelConfigFile, {
     babelConfigFile: path.resolve("./babel.next.config.js"),
     env: {
-      // overriden by start script
+      // overridden by start script
       CWD: path.resolve("./tests/project"),
     },
     webpack: (config, { isServer }) => {
@@ -16,11 +16,6 @@ module.exports = withPlugins([
           fs: "empty",
         };
       }
-      config.resolve.alias['@'] = __dirname
-      config.resolve.alias.src= path.join(__dirname, "src");
-      config.resolve.alias.lib= path.join(__dirname, "lib");
-      config.resolve.alias.models= path.join(__dirname, "lib/models");
-      config.resolve.alias.components= path.join(__dirname, "components");
 
       config.module.rules.push({
         test: /\.svg$/,

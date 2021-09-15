@@ -3,9 +3,9 @@ import { AsObject } from './Variation'
 
 export interface ComponentInfo {
   sliceName: string
-  fileName: string
+  fileName: string | null
   isDirectory: boolean
-  extension: string
+  extension: string | null
   model: Slice<AsObject>
   nameConflict: {
     sliceName: string

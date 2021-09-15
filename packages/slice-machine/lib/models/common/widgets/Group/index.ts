@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import { DefaultFields } from 'lib/forms/defaults'
+import { DefaultFields } from '@lib/forms/defaults'
 import  { MdPlaylistAdd } from 'react-icons/md'
 
 import { FieldType } from '../../CustomType/fields'

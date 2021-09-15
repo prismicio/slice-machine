@@ -1,13 +1,11 @@
 /** Called from user project */
-
-const path = require('path')
 const glob = require('glob')
 
 const getStoriesPaths = () => {
   return [
-    path.normalize(`${process.cwd()}/.slicemachine/assets/**/*.stories.js`),
-    path.normalize(`${process.cwd()}/customtypes/**/*.stories.js`)
-  ].filter(e => glob.sync(e).length)
+    '.slicemachine/assets/**/*.stories.(js|jsx|ts|tsx|svelte)',
+    'customtypes/**/*.stories.(js|jsx|ts|tsx|svelte)',
+  ].reduce((acc, p) => glob.sync(p).length ? [...acc, `../${p}`] : acc, [])
 }
 
 module.exports = {

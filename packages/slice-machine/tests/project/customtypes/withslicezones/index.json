@@ -1,0 +1,174 @@
+{
+  "id": "withslicezones",
+  "label": "WithSliceZones",
+  "repeatable": false,
+  "json": {
+    "Main": {
+      "MainSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice zone",
+        "config": {
+          "labels": {},
+          "choices": {
+            "alternate_grid": {
+              "type": "Slice",
+              "fieldset": "AlternateGrid",
+              "description": "A predesigned Text Grid with Image left or right",
+              "icon": "wrap_text",
+              "display": "list",
+              "non-repeat": {
+                "eyebrow_headline": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "Eyebrow headline"
+                  }
+                },
+                "title": {
+                  "type": "StructuredText",
+                  "config": {
+                    "single": "heading1,heading2,heading3,heading4,heading5,heading6",
+                    "label": "title"
+                  }
+                },
+                "description": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "description"
+                  }
+                },
+                "optional_image": {
+                  "type": "Image",
+                  "config": {
+                    "constraint": {},
+                    "thumbnails": [],
+                    "label": "Optional image"
+                  }
+                },
+                "image_side": {
+                  "type": "Select",
+                  "config": {
+                    "options": [
+                      "left",
+                      "right"
+                    ],
+                    "label": "Image side"
+                  }
+                }
+              },
+              "repeat": {
+                "optional_icon": {
+                  "type": "Image",
+                  "config": {
+                    "constraint": {},
+                    "thumbnails": [],
+                    "label": "Optional Icon"
+                  }
+                },
+                "title": {
+                  "type": "StructuredText",
+                  "config": {
+                    "single": "heading3",
+                    "label": "title"
+                  }
+                },
+                "description": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "description"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tab2": {
+      "ASliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice zone",
+        "config": {
+          "labels": {},
+          "choices": {
+            "cards_carousel": {
+              "type": "Slice",
+              "fieldset": "Cards Carousel",
+              "description": "A carousel with text + image cards",
+              "icon": "image",
+              "display": "list",
+              "non-repeat": {
+                "eyebrow_headline": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "Eyebrow headline"
+                  }
+                },
+                "title": {
+                  "type": "StructuredText",
+                  "config": {
+                    "single": "heading1,heading2,heading3,heading4,heading5,heading6",
+                    "label": "Title"
+                  }
+                },
+                "description": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "Description"
+                  }
+                }
+              },
+              "repeat": {
+                "image": {
+                  "type": "Image",
+                  "config": {
+                    "constraint": {
+                      "width": null,
+                      "height": null
+                    },
+                    "thumbnails": [],
+                    "label": "Image"
+                  }
+                },
+                "title": {
+                  "type": "StructuredText",
+                  "config": {
+                    "single": "heading3",
+                    "label": "Title"
+                  }
+                },
+                "content": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "Content"
+                  }
+                },
+                "additional_info": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading3,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,o-list-item",
+                    "allowTargetBlank": true,
+                    "label": "Additional Info",
+                    "placeholder": "eg. name of person in testimonial"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "status": false
+}

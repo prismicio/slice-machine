@@ -19,8 +19,9 @@ afterEach(() => {
 })
 
 const commonExpect = async (env, prefix, libName, href) => {
-  expect(env.userConfig.libraries).toEqual([`${prefix}${libName}`])
   const libraries = await listComponentsByLibrary(env)
+  expect(env.userConfig.libraries).toEqual([`${prefix}${libName}`])
+
   expect(libraries.length).toEqual(1)
   expect(libraries[0].isLocal).toEqual(true)
   expect(libraries[0].name).toEqual(libName)
@@ -32,35 +33,49 @@ const commonExpect = async (env, prefix, libName, href) => {
   expect(component.pathToSlice).toEqual(`./${libName}`)
 
   expect(component.infos.sliceName).toEqual('CallToAction')
-  expect(component.infos.fileName).toEqual('index')
   expect(component.infos.isDirectory).toEqual(true)
-  expect(component.infos.extension).toEqual('js')
 
   expect(component.migrated).toEqual(false)
+  return libraries
 }
 
-test("it gets library info from @ path", async () => {
+test("it gets library info from @ path 1/2", async () => {
   const libName = 'slices'
   const prefix = '@/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
-  await commonExpect(env, prefix, libName)
+  await commonExpect(env, prefix, libName)  
+})
 
-  
+test("it gets library info from @ path 2/2", async () => {
+  const libName = 'slices'
+  const prefix = '@/'
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
+    "package.json": "{}",
+    "slices/CallToAction/model.json": "{}",
+    "slices/CallToAction/index.svelte": "const a = 1"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  const libraries = await commonExpect(env, prefix, libName)
+  const [component] = libraries[0].components
+  expect(component.infos.fileName).toEqual('index')
+  expect(component.infos.extension).toEqual('svelte')
 })
 
 test("it gets library info from ~ path", async () => {
   const libName = 'slices'
   const prefix = '~/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -72,9 +87,9 @@ test("it gets library info from / path", async () => {
   const libName = 'slices'
   const prefix = '/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/CallToAction/index.js": "const A = 1"
+    "slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -82,13 +97,28 @@ test("it gets library info from / path", async () => {
   
 })
 
+test("it ignores non slice folders", async () => {
+  const libName = '~/slices'
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
+    "package.json": "{}",
+    "slices/CallToAction1/model.json": "{}",
+    "slices/CallToAction/something.else": "const a = 'a'"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  const libraries = await listComponentsByLibrary(env)
+  expect(libraries[0].components.length).toEqual(1)
+
+})
+
 test("it handles nested library info", async () => {
   const libName = 'slices/src/slices'
   const prefix = '~/'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${prefix}${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${prefix}${libName}"] }`,
     "package.json": "{}",
-    "slices/src/slices/CallToAction/index.js": "const A = 1"
+    "slices/src/slices/CallToAction/model.json": "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -98,11 +128,11 @@ test("it handles nested library info", async () => {
 
 test("it finds non local libs", async () => {
   const libName = 'vue-essential-slices'
-  const pathToSlice = `node_modules/${libName}/slices/CallToAction/index.js`
+  const pathToSlice = `node_modules/${libName}/slices/CallToAction/model.json`
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
     "package.json": "{}",
-    [pathToSlice]: "const A = 1"
+    [pathToSlice]: "{}"
   }, TMP))
 
   const { env } = await getEnv(TMP)
@@ -113,10 +143,28 @@ test("it finds non local libs", async () => {
   
 })
 
+test("it rejects invalid JSON models", async () => {
+  const libName = 'vue-essential-slices'
+  const pathToSlice = (slice) => `node_modules/${libName}/slices/${slice}/model.json`
+  fs.use(Volume.fromJSON({
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
+    "package.json": "{}",
+    [pathToSlice('CallToAction')]: "const invalid = true",
+    [pathToSlice('CallToAction2')]: "{}"
+  }, TMP))
+
+  const { env } = await getEnv(TMP)
+  expect(env.userConfig.libraries).toEqual([libName])
+  const libraries = await listComponentsByLibrary(env)
+  expect(libraries[0].isLocal).toEqual(false)
+  expect(libraries[0].components.length).toEqual(1)
+
+})
+
 test("it filters non existing libs", async () => {
   const libName = 'vue-essential-slices'
   fs.use(Volume.fromJSON({
-    "sm.json": `{ "libraries": ["${libName}"] }`,
+    "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
     "package.json": "{}",
   }, TMP))
 

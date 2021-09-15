@@ -1,0 +1,58 @@
+{
+  "id": "ss",
+  "label": "sss",
+  "repeatable": true,
+  "json": {
+    "Main": {
+      "ddd": {
+        "type": "StructuredText",
+        "config": {
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+          "label": "ddd"
+        }
+      },
+      "body": {
+        "type": "Slices",
+        "fieldset": "Slice zone",
+        "config": {
+          "labels": null,
+          "choices": {
+            "my_slice": {
+              "type": "Slice",
+              "fieldset": "My Slice",
+              "description": "qsdqsd",
+              "icon": "account_balance",
+              "display": "list",
+              "non-repeat": {
+                "bool": {
+                  "type": "Boolean",
+                  "config": {
+                    "default_value": true,
+                    "label": "bool"
+                  }
+                },
+                "ant": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+                    "label": "ant"
+                  }
+                }
+              },
+              "repeat": {
+                "fdsd": {
+                  "type": "StructuredText",
+                  "config": {
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+                    "label": "fdsd"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "status": false
+}

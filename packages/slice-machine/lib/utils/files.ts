@@ -25,6 +25,13 @@ const Files = {
   readJson(pathToFile: string) {
     return JSON.parse(this.readString(pathToFile));
   },
+  safeReadJson(pathToFile: string) {
+    try {
+      return JSON.parse(this.readString(pathToFile))
+    } catch(e) {
+      return null
+    }
+  },
   readFirstOf<V, O extends { [key: string]: unknown }>(filePaths: ReadonlyArray<{ path: string, options?: O } | string>) {
     return (converter: (value: string) => V): ({ path: string, value: V } & O) | undefined => {
       return filePaths.reduce((acc: { path: string, value: V } & O | undefined, filePath: { path: string, options?: O } | string) => {
@@ -48,12 +55,13 @@ const Files = {
   },
   
   isDirectory: (source: string) => fs.lstatSync(source).isDirectory(),
+  isFile: (source: string) => fs.lstatSync(source).isFile(),
   readDirectory: (source: string) => fs.readdirSync(source, { encoding: Files._format }),
   mkdir: (target: string, options: { recursive: boolean }) => fs.mkdirSync(target, options),
   exists(pathToFile: string) {
     try {
       return Boolean(fs.lstatSync(pathToFile));
-    } catch (e) {
+    } catch (e: any) {
       if (e.code === ERROR_CODES.ENOENT) return false;
       throw e;
     }

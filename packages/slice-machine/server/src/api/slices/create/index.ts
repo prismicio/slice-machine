@@ -1,45 +1,37 @@
 declare var appRoot: string;
 
+import path from 'path'
+import { promisify } from 'util'
+
 // @ts-ignore
 import cpy from 'copy-template-dir'
-import { promisify } from 'util'
-import path from 'path'
 
-import Slice from '../../../../../lib/models/common/Slice'
-import { AsObject } from '../../../../../lib/models/common/Variation'
-import Environment from '../../../../../lib/models/common/Environment'
+import Slice from '@lib/models/common/Slice'
+import { AsObject } from '@lib/models/common/Variation'
+import Environment from '@lib/models/common/Environment'
 
-import { getEnv } from '../../../../../lib/env'
-import { snakelize } from '../../../../../lib/utils/str'
-import Files from '../../../../../lib/utils/files'
+import { getEnv } from '@lib/env'
+import { snakelize } from '@lib/utils/str'
+import Files from '@lib/utils/files'
 
 import save from '../save'
 
-import { paths } from '../../../../../lib/models/paths'
+import { paths, SliceTemplateConfig } from '@lib/models/paths'
 
 const copy = promisify(cpy)
 
 const IndexFiles = {
+  'none': null,
   'react': 'index.js',
   'next': 'index.js',
-  'nuxt': 'index.js',
+  'nuxt': 'index.vue',
   'gatsby': 'index.js',
   'vue': 'index.vue',
-  'vanillajs': 'index.js'
+  'vanillajs': 'index.js',
+  'svelte': 'index.svelte'
 }
 
-const fromTemplate = async (env: Environment, from: string, sliceName: string) => {
-  const templatePath = path.join(appRoot, 'templates', 'slice', env.framework)
-  if (!Files.isDirectory(templatePath)) {
-    const message = `[create] Framework "${env.framework}" is not supported. (${templatePath})`
-    console.error(message)
-    return {
-      err: new Error(message),
-      status: 500,
-      reason: message,
-    }
-  }
-
+const copyTemplate = async (env: Environment, templatePath: string, from: string, sliceName: string) => {
   try {
     await copy(
       templatePath,
@@ -61,17 +53,36 @@ const fromTemplate = async (env: Environment, from: string, sliceName: string) =
   }
 }
 
+const fromTemplate = async (env: Environment, from: string, sliceName: string) => {
+  const templatePath = path.join(appRoot, 'templates', 'slice', env.framework)
+  if (!Files.isDirectory(templatePath)) {
+    const message = `[create] Framework "${env.framework}" is not supported. (${templatePath}).`
+    console.error(message)
+    return {
+      err: new Error(message),
+      status: 500,
+      reason: message,
+    }
+  }
+  return copyTemplate(env, templatePath, from, sliceName)
+}
+
 export default async function handler({ sliceName, from, values }: { sliceName: string, from: string, values?: { componentCode: string, model: Slice<AsObject>} }) {
   const { env } = await getEnv()
 
   const pathToModel = paths(env.cwd, '').library(from).slice(sliceName).model()
 
   if (!values) {
-    const maybeError = await fromTemplate(env, from, sliceName)
-    if (maybeError) {
-      return maybeError
+    const templatePath = SliceTemplateConfig(env.cwd /*, pass custom template path here (relative to cwd) */)
+    if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
+      await copyTemplate(env, templatePath, from, sliceName)
+    } else {
+      const maybeError = await fromTemplate(env, from, sliceName)
+      if (maybeError) {
+        return maybeError
+      }
     }
-  } else {
+  } else { 
     const fileName = IndexFiles[env.framework] || 'index.js'
     const pathToIndexFile = path.join(paths(env.cwd, '').library(from).slice(sliceName).value(), fileName)
     

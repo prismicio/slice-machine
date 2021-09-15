@@ -1,12 +1,12 @@
-import { getEnv } from '../../../../lib/env'
-import Files from '../../../../lib/utils/files'
-import { CustomTypesPaths, GeneratedCustomTypesPaths } from '../../../../lib/models/paths'
+import { getEnv } from '@lib/env'
+import Files from '@lib/utils/files'
+import { CustomTypesPaths, GeneratedCustomTypesPaths } from '@lib/models/paths'
 
-import { insert as insertMockConfig } from '../../../../lib/mock/misc/fs'
+import { insert as insertMockConfig } from '@lib/mock/misc/fs'
 
-import mock from '../../../../lib/mock/CustomType'
-import { CustomTypeMockConfig } from '../../../../lib/models/common/MockConfig'
-import { CustomType, ObjectTabs } from '../../../../lib/models/common/CustomType'
+import mock from '@lib/mock/CustomType'
+import { CustomTypeMockConfig } from '@lib/models/common/MockConfig'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
 
 interface Body {
   model: CustomType<ObjectTabs>;

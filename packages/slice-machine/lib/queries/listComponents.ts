@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import slash from 'slash'
 
@@ -18,7 +19,6 @@ export async function handleLibraryPath(env: Environment, libPath: string): Prom
   } = getInfoFromPath(libPath, env.cwd)
 
   if (!pathExists) {
-    console.warn(`Path to library "${pathToSlices}" does not exist. Skipping.`)
     return
   }
 
@@ -27,7 +27,7 @@ export async function handleLibraryPath(env: Environment, libPath: string): Prom
     .map(curr => path.join(pathToSlices, curr))
     .filter(e => {
       const f = e.split(path.sep).pop()
-      return f !== 'index.js' && f?.[0] !== '.'
+      return fs.lstatSync(e).isDirectory() && !(f?.startsWith('.'))
     })
 
   // relative path to slice folder, to be appended with sliceName

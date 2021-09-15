@@ -1,7 +1,7 @@
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
-import { getEnv } from '../../../lib/env'
-import { CustomPaths } from '../../../lib/models/paths'
-import Files from '../../../lib/utils/files'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
+import { getEnv } from '@lib/env'
+import { CustomPaths } from '@lib/models/paths'
+import Files from '@lib/utils/files'
 
 export default async function handler(file: File & { path: string }, { from, sliceName, variationId }: { from: string, sliceName: string, variationId: string }) {
   const { env } = await getEnv()

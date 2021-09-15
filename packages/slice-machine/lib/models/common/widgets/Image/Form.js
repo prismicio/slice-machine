@@ -1,11 +1,11 @@
 import * as yup from 'yup'
 import { useEffect, useState, Fragment } from 'react'
 
-import { DefaultFields } from 'lib/forms/defaults'
-import { createFieldNameFromKey } from 'lib/forms'
+import { DefaultFields } from '@lib/forms/defaults'
+import { createFieldNameFromKey } from '@lib/forms'
 
 
-import WidgetFormField from 'lib/builders/common/EditModal/Field'
+import WidgetFormField from '@lib/builders/common/EditModal/Field'
 
 import { FieldArray } from 'formik'
 

@@ -2,16 +2,16 @@ module.exports = {
   "presets": ["next/babel"],
   "plugins": [
     ["module-resolver", {
-      "root": ["./"],
+      "root": ["."],
       "alias": {
         "@": "./",
-        "@lib": "./lib",
+        "@lib": "lib",
         "@utils": "lib/utils",
-        "@builders": "./lib/builders",
-        "@models": "./lib/models",
-        "@src": "./src",
-        "@hooks": "./hooks",
-        "@components": "./components"
+        "@builders": "lib/builders",
+        "@models": "lib/models",
+        "@src": "src",
+        "@hooks": "hooks",
+        "@components": "components"
       }
     }]
   ]

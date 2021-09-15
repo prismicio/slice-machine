@@ -3,15 +3,14 @@ import { exec } from 'child_process'
 import { parseDomain, fromUrl, ParseResultType, ParseResult } from 'parse-domain'
 
 import { getPrismicData } from '../auth'
-import initClient from "../models/common/http";
-import createComparator from './semver'
+import initClient from '../models/common/http'
 
 import { getConfig as getMockConfig } from '../mock/misc/fs'
 
 import Files from '../utils/files'
 import { SMConfig } from '../models/paths'
 import { SupportedFrameworks } from '../consts'
-import { detectFramework, isValidFramework } from '../framework'
+
 
 import Environment from '../models/common/Environment'
 import ServerError from '../models/server/ServerError'
@@ -19,60 +18,17 @@ import Chromatic from '../models/common/Chromatic'
 import FakeClient from '../models/common/http/FakeClient'
 import { ConfigErrors } from '../models/server/ServerState';
 
-let DISPLAY_LOG_ONCE = 0
+import { createComparator } from './semver'
+import { defineFramework, isValidFramework } from './framework'
+import handleManifest, { ManifestStates, Manifest } from './manifest'
+import UserConfig from '@lib/models/common/UserConfig'
 
-const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : null)
+const ENV_CWD = process.env.CWD || (process.env.TEST_PROJECT_PATH ? path.resolve(process.env.TEST_PROJECT_PATH) : '')
 
-const compareNpmVersions = createComparator()
+const compareNpmVersions = createComparator(path.join(ENV_CWD, 'package.json'))
 
-function validate(config: { apiEndpoint: string, storybook: string, framework: string }): ConfigErrors {
+function validate(config: Manifest): ConfigErrors {
   const errors: ConfigErrors = {}
-  if (!config.apiEndpoint) {
-    errors.apiEndpoint = {
-      message: 'Expects a property "apiEndpoint" which points to your Prismic api/v2 url',
-      example: 'http://my-project.prismic.io/api/v2',
-      run: 'npx prismic-cli sm --setup'
-    }
-  }
-  if (!errors.apiEndpoint) {
-    const maybeError = (() => {
-      try {
-        const endpoint = fromUrl(config.apiEndpoint)
-        const parsedRepo = parseDomain(endpoint)
-        const errorMessage = {
-            message: `Could not parse domain of given apiEnpoint (value: "${config.apiEndpoint}")`,
-            example: 'http://my-project.prismic.io/api/v2',
-            run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-          }
-        switch (parsedRepo.type) {
-          case ParseResultType.Listed: {
-            if (!parsedRepo?.subDomains?.length) {
-              return errorMessage
-            }
-            if (!config.apiEndpoint.endsWith('api/v2') && !config.apiEndpoint.endsWith('api/v2/')) {
-              return {
-                message: `Endpoint does not end with "api/v2" (value: "${config.apiEndpoint}")`,
-                example: 'http://my-project.prismic.io/api/v2',
-                run: 'Update "apiEndpoint" value to match your Prismic api/v2 endpoint'
-              }
-            }
-            return null
-          }
-          default: {
-            return errorMessage
-          }
-        }
-      } catch(e) {
-        const message = '[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..'
-        console.error(message)
-        throw new Error(message)
-      }
-    })();
-    if (maybeError) {
-      errors.apiEndpoint = maybeError
-    }
-  }
-
   if (!config.storybook) {
     errors.storybook = {
       message: `Could not find storybook property in sm.json`,
@@ -129,7 +85,11 @@ function createChromaticUrls({ branch, appId, err }: { branch?: string, appId?: 
 }
 
 function parseStorybookConfiguration(cwd: string) {
-  const pathsToFile = [path.join(cwd, '.storybook/main.js'), path.join(cwd, 'nuxt.config.js')]
+  const pathsToFile = [
+    path.join(cwd, '.storybook/main.js'),
+    path.join(cwd, '.storybook/main.cjs'),
+    path.join(cwd, 'nuxt.config.js'),
+  ]
   const f = Files.readFirstOf(pathsToFile)(v => v)
   const file = f?.value as string || ''
   return file.includes('getStoriesPaths') || file.includes('.slicemachine')
@@ -142,43 +102,54 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     console.error(message)
     throw new Error(message)
   }
-  const pathToSm = path.join(cwd, 'sm.json')
-  if (!Files.exists(pathToSm)) {
-    const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
-    console.error(message)
-    throw new Error(message)
+
+  const prismicData = getPrismicData()
+  const npmCompare = await compareNpmVersions({ cwd })
+
+  if (!Files.exists(SMConfig(cwd))) {
+    return {
+      env: {
+        cwd,
+        userConfig: {
+          libraries: [],
+          apiEndpoint: '',
+          storybook: '',
+          chromaticAppId: '',
+          _latest: '',
+        },
+        hasConfigFile: false,
+        repo: undefined,
+        prismicData: prismicData.isOk() ? prismicData.value : undefined,
+        chromatic: undefined,
+        currentVersion: npmCompare.currentVersion || '',
+        updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
+        mockConfig: {},
+        hasGeneratedStoriesPath: false,
+        framework: defineFramework(null, cwd),
+        baseUrl: `http://localhost:${process.env.PORT}`,
+        client: new FakeClient()
+      }
+    }
+    // const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
+    // console.error(message)
+    // throw new Error(message)
   }
-  const userConfig = Files.readJson(SMConfig(cwd))
+
+  const manifestState = handleManifest(cwd)
+  if (manifestState.state !== ManifestStates.Valid) {
+    console.error(manifestState.message)
+    throw new Error(manifestState.message)
+  }
+
+  const userConfig = manifestState.content as UserConfig
+
   const maybeErrors = validate(userConfig)
   const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd)
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint))
   const repo = extractRepo(parsedRepo)
-  const prismicData = getPrismicData()
 
   const branchInfo = await handleBranch()
   const chromatic = createChromaticUrls({ ...branchInfo, appId: userConfig.chromaticAppId })
-
-  const { updateAvailable, onlinePackage, currentVersion, err } = await compareNpmVersions({ cwd })
-
-
-  if (!err && !DISPLAY_LOG_ONCE) {
-    let log = `╭───────────────────────────────────────────────────╮
-│   🍕 SliceMachine ${currentVersion.split('-')[0]} started.                  │
-`
-  if (updateAvailable) {
-    log += `│   A new version (${onlinePackage.version}) is available!            │
-│                                                   │
-│   Upgrade now: yarn add slice-machine-ui@latest   │
-│                                                   │    
-`
-  }
-
-  log += `╰───────────────────────────────────────────────────╯`
-
-  DISPLAY_LOG_ONCE = 1
-  console.log(log)
-
-  }
 
   const mockConfig = getMockConfig(cwd)
 
@@ -188,21 +159,22 @@ export async function getEnv(maybeCustomCwd?: string): Promise<{ errors?: {[erro
     } else {
       return new FakeClient()
     }
-  })()
+  })();
 
   return {
     errors: maybeErrors,
     env: {
       cwd,
       userConfig,
+      hasConfigFile: true,
       repo,
       prismicData: prismicData.isOk() ? prismicData.value : undefined,
       chromatic,
-      currentVersion,
-      updateAvailable,
+      currentVersion: npmCompare.currentVersion || '',
+      updateAvailable: npmCompare.updateAvailable || { current: '', next: '', message: 'Could not fetch remote version' },
       mockConfig,
       hasGeneratedStoriesPath,
-      framework: userConfig.framework ?? detectFramework(cwd),
+      framework: defineFramework((manifestState.content as Manifest), cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client
     }

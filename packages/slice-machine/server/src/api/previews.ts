@@ -1,10 +1,10 @@
-import Files from '../../../lib/utils/files'
-import Environment from '../../../lib/models/common/Environment'
-import { Preview } from '../../../lib/models/common/Component'
-import { CustomPaths, GeneratedPaths } from '../../../lib/models/paths'
-import { createScreenshotUrl } from '../../../lib/utils'
+import Files from '@lib/utils/files'
+import Environment from '@lib/models/common/Environment'
+import { Preview } from '@lib/models/common/Component'
+import { CustomPaths, GeneratedPaths } from '@lib/models/paths'
+import { createScreenshotUrl } from '@lib/utils'
 import { handleStorybookPreview } from './common/storybook'
-import { getPathToScreenshot } from '../../../lib/queries/screenshot'
+import { getPathToScreenshot } from '@lib/queries/screenshot'
 
 type Previews = ReadonlyArray<{ variationId: string, hasPreview: boolean, error: Error } | Preview>
 
@@ -32,7 +32,7 @@ export default {
       .preview()
 
     const maybeError = await handleStorybookPreview({ screenshotUrl, pathToFile })
-    if(maybeError) return { variationId, error: new Error(maybeError), hasPreview: false }
+    if(maybeError) return { variationId, error: new Error(maybeError as string), hasPreview: false }
      
     return {
       variationId,

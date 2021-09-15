@@ -1,5 +1,5 @@
-import { getEnv } from '../../../lib/env'
-import { Preview } from '../../../lib/models/common/Component'
+import { getEnv } from '@lib/env'
+import { Preview } from '@lib/models/common/Component'
 import Previews from './previews'
 
 export default async function handler({ from, sliceName }: { from: string, sliceName: string })

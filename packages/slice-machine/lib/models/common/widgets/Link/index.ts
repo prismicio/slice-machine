@@ -66,7 +66,7 @@ const linkConfigSchema = yup.object().shape({
   label: yup.string().optional(),
   useAsTitle: yup.boolean().optional(),
   placeholder: yup.string().optional(),
-  select: yup.string().optional().oneOf(['media', 'document', 'web']),
+  select: yup.string().optional().oneOf(['media', 'document', 'web']).nullable(true),
   customtypes: yup.array(yup.string()).strict().optional(),
   masks: yup.array(yup.string()).optional(),
   tags: yup.array(yup.string()).optional(),

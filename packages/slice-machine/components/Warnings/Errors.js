@@ -21,11 +21,16 @@ export const ClientError = ({ errorType }) => (
       </Flex>
     )}
   >
-    <Text as="p">Error type: {errorType}</Text>
     <Text as="p" mt={1}>
-      We're working on making this error message clearer to help you debug what
-      could be wrong. In the meantime, please report to our dedicated Prismic
-      forum.
+      This error probably means that you are not connected to Prismic or that your `prismic-auth`
+      token is outdated.
+    </Text>
+    <Text as="p">
+      To generate a new token, type `prismic login` in your CLI. This message you should disappear instantly.
+    </Text>
+    <Text as="p" mt={4}>
+        If the problem persists, check that your `sm.json` file points to the right API endpoint.<br/>
+        Full error: {errorType}
     </Text>
   </Card>
 );

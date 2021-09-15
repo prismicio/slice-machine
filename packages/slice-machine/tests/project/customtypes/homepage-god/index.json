@@ -1,14 +1,12 @@
 {
   "id": "homepage-god",
   "label": "HomePage",
-  "status": true,
   "repeatable": false,
   "json": {
     "Main": {
       "group": {
         "type": "Group",
         "config": {
-          "type": "Group",
           "fields": {
             "image": {
               "type": "Image",
@@ -50,5 +48,6 @@
         }
       }
     }
-  }
+  },
+  "status": false
 }

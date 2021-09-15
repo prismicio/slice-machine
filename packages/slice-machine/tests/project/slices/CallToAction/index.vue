@@ -2,7 +2,8 @@
   <div>
     <div :style="`max-width: 600px; margin: 0 auto;background: #FFF; color: #111`">
         <h1>{{ Math.random() }}</h1>
-        <p>{{ slice.primary.text }}</p>
+        <p>Slice: {{ slice.slice_type }}</p>
+        <p>Variation ID: {{ slice.variation }}</p>
     </div>
   </div>
 </template>
