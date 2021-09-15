@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
-    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate"
+    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
+    "audit-fix": "yarn-audit-fix"
   },
   "author": "Hugo Villain",
   "license": "ISC",
@@ -27,9 +28,11 @@
     "tmp": "^0.1.0"
   },
   "devDependencies": {
-    "@now/node": "^1.4.1"
+    "@now/node": "^1.4.1",
+    "yarn-audit-fix": "^7.0.3"
   },
   "resolutions": {
-    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
+    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
+    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7"
   }
 }
