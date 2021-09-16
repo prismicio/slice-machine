@@ -1,9 +1,8 @@
-
-import Auth from './Auth'
-import ErrorWithStatus from './ErrorWithStatus';
+import Auth from "./Auth";
+import ErrorWithStatus from "./ErrorWithStatus";
 
 export default interface PrismicData {
-  base: string,
-  auth?: Auth
-  authError?: ErrorWithStatus
+  base: string;
+  auth?: Auth;
+  authError?: ErrorWithStatus;
 }

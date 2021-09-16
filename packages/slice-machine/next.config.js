@@ -1,7 +1,7 @@
-const path = require('path')
-const withPlugins = require('next-compose-plugins');
-const withMDX = require('@next/mdx')()
-const withCustomBabelConfigFile = require('next-plugin-custom-babel-config');
+const path = require("path");
+const withPlugins = require("next-compose-plugins");
+const withMDX = require("@next/mdx")();
+const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
 
 module.exports = withPlugins(
   [
@@ -27,18 +27,21 @@ module.exports = withPlugins(
             use: ["@svgr/webpack"],
           });
 
-      config.module.rules.push({
-        test: /\.svg$/,
-        issuer: {
-          test: /\.(js|ts)x?$/,
-        },
-        use: ["@svgr/webpack"],
-      });
+          config.module.rules.push({
+            test: /\.svg$/,
+            issuer: {
+              test: /\.(js|ts)x?$/,
+            },
+            use: ["@svgr/webpack"],
+          });
 
-      return config;
-    },
-  }],
-  [withMDX]
-], {
-  distDir: './build/client',
-})
+          return config;
+        },
+      },
+    ],
+    [withMDX],
+  ],
+  {
+    distDir: "./build/client",
+  }
+);
