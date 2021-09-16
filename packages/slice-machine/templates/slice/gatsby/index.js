@@ -10,7 +10,7 @@ import { graphql } from 'gatsby'
 export default function {{componentName}}Slice({ slice }) {
   return (
     <section>
-      Placeholder {{componentName}} component
+      Placeholder {{componentName}} ({slice.variation}) component
     </section>
   )
 }
@@ -25,6 +25,7 @@ export default function {{componentName}}Slice({ slice }) {
 export const fragment = graphql`
   fragment Prismic{{componentName}}DefaultSlice on Prismic{{componentName}}DefaultSlice {
     slice_type
+    variation
     # Add your fields here
   }
 `
