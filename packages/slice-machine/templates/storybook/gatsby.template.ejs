@@ -1,12 +1,23 @@
 import * as React from 'react';
+import { createRuntime } from 'gatsby-source-prismic';
 
 import MyComponent from '<%- componentPath %>';
+import model from '<%- componentPath %>/model.json';
 
 export default {
   title: '<%- componentTitle %>'
 }
 
+const runtime = createRuntime();
+runtime.registerSharedSlice(model);
+
 <% mocks.forEach((variation) => { %>
-export const <%- variation.id %> = () => <MyComponent slice={<%- JSON.stringify(variation) %>} />
+export const <%- variation.id %> = () =>
+  <MyComponent
+    slice={runtime.normalize(
+      <%- JSON.stringify(variation) %>,
+      ['<%- variation.slice_type %>', '<%- variation.variation %>']
+    )}
+  />
 <%- variation.id %>.storyName = '<%- variation.name %>'
 <% }) %>
