@@ -27,7 +27,7 @@ const Form = () => {
         <Text as="span">Link value</Text>
         <Input
           value={contentValue || ''}
-          placeholder = "https://prismic.io"
+          placeholder = "https://image.prismic.io"
           onFocus={e => e.target.focus()}
           onChange={e => onUpdate(e.target.value)}
         />

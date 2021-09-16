@@ -9,15 +9,16 @@ const wrapRepeatable = (code) =>
 `
 
 const createCodeFromTag = (tag) => (fieldText) => `<${tag} :field="${fieldText}" />`
+const createPrismicLink = (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`
 const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldText} }}</${tag}>`
 
 const codeByWidgetType = (Widgets) => ({
-  [Widgets.ContentRelationship?.CUSTOM_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
-  [Widgets.LinkToMedia?.CUSTOM_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
+  [Widgets.ContentRelationship?.CUSTOM_NAME]:createPrismicLink,
+  [Widgets.LinkToMedia?.CUSTOM_NAME]: createPrismicLink,
   [Widgets.UID?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText?.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
   [Widgets.Image?.TYPE_NAME]: createCodeFromTag('prismic-image'),
-  [Widgets.Link?.TYPE_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
+  [Widgets.Link?.TYPE_NAME]: createPrismicLink,
   [Widgets.Select?.TYPE_NAME]: createDefaultField(),
   [Widgets.Boolean?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} ? 'true' : 'false' }}</span>`,
   [Widgets.Date?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,

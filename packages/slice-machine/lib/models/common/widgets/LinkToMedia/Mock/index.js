@@ -9,8 +9,9 @@ export const handleMockContent = (mockContent, _) => {
   if (typeof mockContent === 'object') {
     return mockContent
   }
+
   return {
     link_type: 'media',
-    url: 'https://source.unsplash.com/daily'
+    url: mockContent
   }
 }

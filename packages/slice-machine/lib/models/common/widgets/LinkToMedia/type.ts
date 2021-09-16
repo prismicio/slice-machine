@@ -6,12 +6,12 @@ interface LinkToMediaFieldConfig {
   placeholder: string,
   select: Media,
 }
-const defaultConfig = { ...SimpleField.default, select: Media.media }
+const defaultConfig = { ...SimpleField.default }
 
 export class LinkToMediaField implements Field {
   config: LinkToMediaFieldConfig;
   readonly type = FieldType.LinkToMedia;
   constructor(config: Partial<LinkToMediaFieldConfig> = {}) {
-    this.config = { ...defaultConfig, ...config }
+    this.config = { ...defaultConfig, ...config, select: Media.media}
   }
 }

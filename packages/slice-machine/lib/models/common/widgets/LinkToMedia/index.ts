@@ -1,5 +1,4 @@
 import * as yup from 'yup'
-import Form, { FormFields } from './Form'
 import { MdAttachment } from "react-icons/md";
 
 import { handleMockConfig, handleMockContent } from './Mock'
@@ -9,6 +8,7 @@ import { Widget } from '../Widget'
 import { FieldType } from '../../CustomType/fields'
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
+import Form, { FormFields } from "@lib/models/common/widgets/Link/Form";
 import { LinkToMediaField } from "@lib/models/common/widgets/LinkToMedia/type";
 
 const Meta = {
