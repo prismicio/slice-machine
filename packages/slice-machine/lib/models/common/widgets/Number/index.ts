@@ -4,7 +4,7 @@ import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
-import { NumberField } from '../types'
+import { NumberField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /** {
@@ -24,7 +24,7 @@ const Meta = {
 }
 
 export const Number: Widget<NumberField, typeof schema> = {
-  create: () => new NumberField(),
+  create: (label: string) => new NumberField({ label }),
   MockConfigForm,
   handleMockConfig,
   handleMockContent,

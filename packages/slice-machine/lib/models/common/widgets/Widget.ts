@@ -11,7 +11,7 @@ export interface Widget<F extends Field, S extends AnyObjectSchema> {
     (): JSX.Element;
     initialValues: any;
   },
-  create: () => F,
+  create: (label: string) => F,
   Meta: {
     icon: IconType,
     title: string,

@@ -62,7 +62,7 @@ const Zones = ({
     }
     store
       .variation(variation.id)
-      .addWidget(fieldType, id, widget.create())
+      .addWidget(fieldType, id, widget.create(id))
   }
 
   const _onDragEnd = (fieldType) => (result) => {
@@ -76,7 +76,6 @@ const Zones = ({
 
   return (
     <Fragment>
-      {/* { JSON.stringify(Model.mockConfig) } */}
       <Zone
         Model={Model}
         title="Non-Repeatable zone"

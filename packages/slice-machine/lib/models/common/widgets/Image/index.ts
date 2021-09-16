@@ -10,7 +10,7 @@ import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
-import { ImageField } from '../types'
+import { ImageField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /** 
@@ -50,7 +50,7 @@ export const Image: Widget<ImageField, typeof schema> = {
   Meta,
   Form,
   schema,
-  create: () => new ImageField(),
+  create: (label: string) => new ImageField({ label }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

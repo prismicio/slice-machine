@@ -7,7 +7,7 @@ import { Tab } from '../models/common/CustomType/tab'
 import { handleFields } from './misc/handlers'
 
 import { CustomTypeMockConfig } from '../models/common/MockConfig'
-import { AsArray, GroupField } from '@lib/models/common/widgets/types'
+import { AsArray, GroupField } from '@lib/models/common/widgets/Group/type'
 
 interface Mock {
   id: string

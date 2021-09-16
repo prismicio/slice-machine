@@ -4,7 +4,7 @@ import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
 
 import { Widget } from '../Widget'
-import { DateField } from '../types'
+import { DateField } from './type'
 import { FieldType } from '../../CustomType/fields'
 
 /** {
@@ -24,7 +24,7 @@ const Meta = {
 }
 
 export const DateWidget: Widget<DateField, typeof schema> = {
-  create: () => new DateField(),
+  create: (label: string) => new DateField({ label }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
