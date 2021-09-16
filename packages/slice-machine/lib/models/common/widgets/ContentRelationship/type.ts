@@ -1,11 +1,12 @@
 import { Field, FieldType } from '../../CustomType/fields'
+import {Media} from "@lib/models/common/widgets/Link/type";
 
 interface ContentRelationshipFieldConfig {
   label: string,
-  select: string,
+  select: Media,
   customtypes: Array<string>
 }
-const defaultConfig = { label: '', select: 'document', customtypes: [] }
+const defaultConfig = { label: '', select: Media.document, customtypes: [] }
 
 export class ContentRelationshipField implements Field {
   config: ContentRelationshipFieldConfig;

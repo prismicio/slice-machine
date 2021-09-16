@@ -11,7 +11,7 @@ export enum FieldType {
   Text = 'Text',
   Date = 'Date',
   Link = 'Link',
-  LinkToMedia = 'LinkToMedia',
+  LinkToMedia = 'Link',
   ContentRelationship = 'Link',
   Timestamp = 'Timestamp',
   Embed = 'Embed',

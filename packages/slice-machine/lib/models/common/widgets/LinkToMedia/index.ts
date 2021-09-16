@@ -8,8 +8,8 @@ import { MockConfigForm } from './Mock/Form'
 import { Widget } from '../Widget'
 import { FieldType } from '../../CustomType/fields'
 
-import { LinkField, Media } from '../types'
-import { linkConfigSchema } from "@models/common/widgets/Link";
+import { linkConfigSchema } from "@lib/models/common/widgets/Link";
+import { LinkToMediaField } from "@lib/models/common/widgets/LinkToMedia/type";
 
 const Meta = {
   icon: MdAttachment,
@@ -26,7 +26,7 @@ const schema = yup.object().shape({
   config: linkToMediaConfigSchema.optional()
 })
 
-export const LinkToMedia: Widget<LinkField, typeof schema> = {
+export const LinkToMedia: Widget<LinkToMediaField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
@@ -34,7 +34,7 @@ export const LinkToMedia: Widget<LinkField, typeof schema> = {
   FormFields,
   schema,
   Form,
-  create: () => new LinkField({ label: '', placeholder: '', select: Media.media, allowTargetBlank: false }),
+  create: (label: string) => new LinkToMediaField({ label }),
   TYPE_NAME: FieldType.Link,
   CUSTOM_NAME: 'LinkToMedia',
 }
