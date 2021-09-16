@@ -7,6 +7,7 @@ import { Header, Tabs } from './Layout'
 import { CustomTypeState } from '../../models/ui/CustomTypeState'
 import CustomTypeStore from '../../../src/models/customType/store'
 import Container from '../../../components/Container'
+import { UidToggle } from './UidToggle'
 
 const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTypeStore, onLeave: Function }) => {
   const modelRef = useRef(Model)
@@ -27,6 +28,7 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
       <Container sx={{ pb: 0 }}>
         <Header Model={Model} store={store} />
       </Container>
+      <UidToggle Model={Model} onToggle={() => {}} /> 
       <Tabs
         Model={Model}
         store={store}

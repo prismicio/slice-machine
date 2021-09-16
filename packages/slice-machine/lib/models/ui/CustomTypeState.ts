@@ -24,14 +24,14 @@ export interface CustomTypeState {
 export const CustomTypeState = {
   tab(state: CustomTypeState, tabId?: string): TabAsArray | undefined {
     if(state.current.tabs.length) {
-      if(tabId) return state.current.tabs.find(v => v.key === tabId)
+      if(tabId) return state.current.tabs.find((v: TabAsArray) => v.key === tabId)
       return state.current.tabs[0]
     }
   },
 
   updateTab(state: CustomTypeState, tabId: string) {
     return (mutate: (v: TabAsArray) => TabAsArray): CustomTypeState => {
-      const tabs = state.current.tabs.map(v => {
+      const tabs = state.current.tabs.map((v: TabAsArray) => {
         if(v.key === tabId) return mutate(v)
         else return v
       })
@@ -46,7 +46,7 @@ export const CustomTypeState = {
     }
   },
   deleteTab(state: CustomTypeState, tabId: string): CustomTypeState {
-    const tabs = state.current.tabs.filter(v => v.key !== tabId)
+    const tabs = state.current.tabs.filter((v: TabAsArray) => v.key !== tabId)
     return {
       ...state,
       current: {

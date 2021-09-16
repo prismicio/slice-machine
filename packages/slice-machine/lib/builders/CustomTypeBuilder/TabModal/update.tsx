@@ -25,21 +25,22 @@ const InputBox = ({ name, label, placeholder, error, ...rest }:{ name: string, l
   </Box>
 )
 
-const formId = "create-tab"
+const formId = "update-tab"
 
-const CreateCustomtypeForm = ({
+const UpdateCustomTypeTabForm = ({
   title,
   isOpen,
   onSubmit,
   close,
-  tabIds
-
+  tabIds,
+  allowDelete
 }: {
   title: string,
   isOpen: boolean,
   onSubmit: Function,
   close: Function,
-  tabIds: ReadonlyArray<string>
+  tabIds: ReadonlyArray<string>,
+  allowDelete: boolean
 }) => {
 
   return (
@@ -101,28 +102,32 @@ const CreateCustomtypeForm = ({
             </Button>
           </Box>
           <Box as="hr" sx={{ borderBottom: 'none', borderTop: theme => `1px solid ${theme?.colors?.borders}` }} />
-          <Box sx={{ px: 4, py: 4 }}>
-            <Heading as="h4">Delete this tab?</Heading>
-            <Text as="p" color="textClear" sx={{ mt: 2 }}>This action cannot be undone.</Text>
-            <Button
-              type="button"
-              variant="buttons.actionDelete"
-              sx={{ mt: 3 }}
-              onClick={() => {
-                onSubmit({
-                  id: values.id,
-                  actionType: ActionType.DELETE
-                })
-                close()
-              }}
-            >
-              Yes, delete tab
-            </Button>
-          </Box>
+          {
+            allowDelete && (
+              <Box sx={{ px: 4, py: 4 }}>
+                <Heading as="h4">Delete this tab?</Heading>
+                <Text as="p" color="textClear" sx={{ mt: 2 }}>This action cannot be undone.</Text>
+                <Button
+                  type="button"
+                  variant="buttons.actionDelete"
+                  sx={{ mt: 3 }}
+                  onClick={() => {
+                    onSubmit({
+                      id: values.id,
+                      actionType: ActionType.DELETE
+                    })
+                    close()
+                  }}
+                >
+                  Yes, delete tab
+                </Button>
+              </Box>
+            )
+          }
         </Box>
       )}
     </ModalFormCard>
   )
 }
 
-export default CreateCustomtypeForm
+export default UpdateCustomTypeTabForm

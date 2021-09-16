@@ -41,14 +41,6 @@ const Zone = ({
   renderFieldAccessor, /* render field accessor (eg. slice.primary.title) */
 
 }) => {
-
-  const widgetsArrayWithCondUid = (() => {
-    const hasUid = !!Object.entries(poolOfFieldsToCheck).find(([, { value }]) => value.type === 'UID')
-    return hasUid
-      ? widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== 'UID')
-      : widgetsArray
-  })();
-
   const [showHints, setShowHints] = useState(false)
   const [editModalData, setEditModalData] = useState({ isOpen: false })
   const [selectModalData, setSelectModalData] = useState({ isOpen: false })
@@ -140,7 +132,7 @@ const Zone = ({
         data={selectModalData}
         close={closeSelectModal}
         onSelect={onSelectFieldType}
-        widgetsArray={widgetsArrayWithCondUid}
+        widgetsArray={widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== 'UID')}
       />
     </Fragment>
   )

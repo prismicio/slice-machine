@@ -31,13 +31,12 @@ export const Tab = {
     return {
       key,
       value: Object.entries(tab.value).reduce<AsArray>((acc: AsArray, [fieldId, value]: [string, Field]) => {
-        if (value.type === sliceZoneType) {
-          return acc
+        switch(value.type) {
+          case sliceZoneType: return acc
+          case FieldType.UID: return acc
+          case FieldType.Group: return [...acc, { key: fieldId, value: Group.toArray(value as GroupField<AsObject>) }]
+          default: return [...acc, { key: fieldId, value }]
         }
-        if (value.type === FieldType.Group) {
-          return [...acc, { key: fieldId, value: Group.toArray(value as GroupField<AsObject>) }]
-        }
-        return [...acc, { key: fieldId, value }]
       }, []),
       sliceZone: maybeSliceZone ? SliceZone.toArray(maybeSliceZone[0], maybeSliceZone[1] as SliceZone) : null
     }

@@ -21,13 +21,14 @@ enum ModalType {
 }
 interface EditState {
   title: string
-  type: ModalType
+  type: ModalType.UPDATE
   key: string
+  allowDelete: boolean
 }
 
 interface CreateState {
   title: string
-  type: ModalType
+  type: ModalType.CREATE
 }
 
 type ModalState = EditState | CreateState
@@ -76,7 +77,7 @@ const CtTabs = ({ sx, Model, store, renderTab }: { sx?: any, Model: CustomTypeSt
                           theme={theme}
                           onClick={(e: Event) => {
                             e.preventDefault()
-                            setState({ title: 'Edit Tab', type: ModalType.UPDATE, key: tab.key })
+                            setState({ title: 'Edit Tab', type: ModalType.UPDATE, key: tab.key, allowDelete: Model.current.tabs.length > 1 })
                           }}
                         />
                       ) : null

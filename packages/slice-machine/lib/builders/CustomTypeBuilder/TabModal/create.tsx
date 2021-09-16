@@ -21,7 +21,7 @@ const InputBox = ({ name, label, placeholder, error }:{ name: string, label: str
 
 const formId = "create-tab"
 
-const CreateCustomtypeForm = ({
+const CreateCustomtypeTabForm = ({
   title,
   isOpen,
   onSubmit,
@@ -78,4 +78,4 @@ const CreateCustomtypeForm = ({
   )
 }
 
-export default CreateCustomtypeForm
+export default CreateCustomtypeTabForm
