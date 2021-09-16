@@ -5,6 +5,7 @@
   "description": "Slice Machine API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
+    "lint": "eslint .",
     "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
     "audit-fix": "yarn-audit-fix"
@@ -29,6 +30,8 @@
   },
   "devDependencies": {
     "@now/node": "^1.4.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^24.4.0",
     "yarn-audit-fix": "^7.0.3"
   },
   "resolutions": {
