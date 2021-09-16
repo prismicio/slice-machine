@@ -18,7 +18,7 @@ import { AnyWidget } from "@lib/models/common/widgets/Widget";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { Field } from "@lib/models/common/CustomType/fields";
-import { AsArray, GroupField } from "@lib/models/common/widgets/types";
+import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
 
 export default function reducer(
   prevState: CustomTypeState,
