@@ -15,8 +15,7 @@
     "postinstall": "node postinstall",
     "prepublishOnly": "yarn bundle",
     "serve": "node -r esm ./build/server/src/index.js",
-    "compile": "tsc --project server/tsconfig.json && node build/server/src/index.js",
-    "dev-server": "cross-env PORT=9999 CWD=./tests/project ./node_modules/nodemon/bin/nodemon.js -e ts,js --watch server --ignore build/ --exec \"npm run compile\"",
+    "dev-server": "cross-env PORT=9999 CWD=./tests/project nodemon -e ts,js --watch server --ignore '*.test.ts' --exec ts-node server/src/index.js",
     "build": "yarn build-server && yarn build-next-app",
     "build-server": "tsc --project server/tsconfig.json",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
@@ -128,6 +127,7 @@
     "rimraf": "^3.0.2",
     "swr": "^0.2.3",
     "theme-ui": "^0.8.4",
+    "ts-node": "^10.2.1",
     "typescript": "^4.2.2",
     "typescript-is": "^0.18.2",
     "unionfs": "^4.4.0"
