@@ -12,7 +12,7 @@ const createCodeFromTag = (tag) => (fieldText) => `<${tag} :field="${fieldText}"
 const createDefaultField = (tag = 'span') => (fieldText) => `<${tag}>{{ ${fieldText} }}</${tag}>`
 
 const codeByWidgetType = (Widgets) => ({
-  [Widgets.ContentRelationship?.CUSTOM_NAME]: createCodeFromTag('todo-hint'),
+  [Widgets.ContentRelationship?.CUSTOM_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
   [Widgets.LinkToMedia?.CUSTOM_NAME]: (fieldText) => `<prismic-link :field="${fieldText}">My Link</prismic-link>`,
   [Widgets.UID?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText?.TYPE_NAME]: createCodeFromTag('prismic-rich-text'),
