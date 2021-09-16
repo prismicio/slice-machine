@@ -7,34 +7,16 @@ export const valid = {
   }
 }
 
-export const emptycts = {
-  __pass: true,
-  type: "Link",
-  config: {
-    select: 'media',
-    label: "bool",
-  }
-}
-
-export const nocts = {
-  __pass: true,
-  type: "Link",
-  config: {
-    select: 'media',
-    label: "bool",
-  }
-}
-
-export const ctsNotStrings = {
+export const selectNotMedia = {
   __pass: false,
   type: "Link",
   config: {
-    select: 'media',
+    select: 'document',
     label: "bool",
   }
 }
 
-export const selectNotDoc = {
+export const invalidSelect = {
   __pass: false,
   type: "Link",
   config: {
@@ -43,7 +25,6 @@ export const selectNotDoc = {
   }
 }
 
-/** Should this pass? */
 export const noLabel = {
   __pass: true,
   type: "Link",

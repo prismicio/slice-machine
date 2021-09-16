@@ -1,7 +1,7 @@
 import * as Widgets from '@lib/models/common/widgets/withGroup'
 import { findWidgetByConfigOrType } from "@builders/utils";
 import { FieldType } from "@models/common/CustomType/fields";
-import { Media } from "@models/common/widgets/types";
+import { Media } from "@lib/models/common/widgets/Link/type";
 
 const dumbConfig = {
   "label": "",
