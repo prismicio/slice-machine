@@ -1,27 +1,27 @@
-import { Fragment } from "react";
+import { Fragment } from 'react'
 
-import ReactTooltip from "react-tooltip";
-import { FaRegQuestionCircle } from "react-icons/fa";
+import ReactTooltip from 'react-tooltip'
+import { FaRegQuestionCircle } from 'react-icons/fa'
 
-const ErrorTooltip = ({ errors }) => {
+const ErrorTooltip = ({ errors, }) => {
   if (errors && errors.id) {
     return (
       <Fragment>
-        <ReactTooltip type="light" multiline border borderColor={"tomato"} />
+        <ReactTooltip type="light" multiline border borderColor={'tomato'} />
         <FaRegQuestionCircle
-          color={"tomato"}
+          color={'tomato'}
           data-tip={errors.id}
-          style={{
-            position: "relative",
-            top: "1px",
-            right: "24px",
-            width: "24px",
+          style = {{
+            position: 'relative',
+            top: '1px',
+            right: '24px',
+            width: '24px',
           }}
         />
       </Fragment>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
-export default ErrorTooltip;
+export default ErrorTooltip

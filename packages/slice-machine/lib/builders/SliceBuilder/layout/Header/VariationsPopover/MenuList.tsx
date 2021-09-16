@@ -7,7 +7,7 @@ const MenuList: React.FunctionComponent<{
   defaultValue: Variation<AsArray>;
   variations: ReadonlyArray<Variation<AsArray>>;
   onChange: (selected: Variation<AsArray>) => void;
-  MenuItemAction?: React.ReactElement;
+  MenuItemAction?: React.ReactElement
 }> = ({ defaultValue, variations, MenuItemAction, onChange }) => {
   return (
     <Box
@@ -18,7 +18,7 @@ const MenuList: React.FunctionComponent<{
         overflow: "auto",
         display: "flex",
         borderRadius: "4px",
-        border: (t) => `1px solid ${t.colors?.borders}`,
+        border: t => `1px solid ${t.colors?.borders}`,
         boxShadow: "0 10px 10px rgba(0, 0, 0, 0.05)",
         maxHeight: 340,
         minWidth: 250,
@@ -33,7 +33,7 @@ const MenuList: React.FunctionComponent<{
           color: "textClear",
         }}
       >
-        {variations.length} VARIATION{variations.length > 1 ? "S" : ""}
+        {variations.length} VARIATION{variations.length > 1 ? 'S' : ''}
       </Text>
       <Flex sx={{ p: 0, flexDirection: "column" }}>
         {variations.map((v) => {
@@ -44,9 +44,9 @@ const MenuList: React.FunctionComponent<{
               isActive={v.id === defaultValue.id}
               onClick={onChange}
             />
-          );
+          )
         })}
-        {MenuItemAction ? MenuItemAction : null}
+        { MenuItemAction ? MenuItemAction : null}
       </Flex>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState } from "react"
 
 import {
   CustomTypeState,
@@ -10,11 +10,12 @@ import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
 import { Box, Button, Text, Spinner } from "theme-ui";
 
 import CustomTypeStore from "../../../../src/models/customType/store";
-import { ToastPayload } from "../../../../src/ToastProvider/utils";
+import { ToastPayload } from '../../../../src/ToastProvider/utils'
 
 import { FiLayout } from "react-icons/fi";
 
-import Header from "../../../../components/Header";
+import Header from '../../../../components/Header'
+
 
 const SliceHeader = ({
   Model,
@@ -23,48 +24,43 @@ const SliceHeader = ({
   Model: CustomTypeState;
   store: CustomTypeStore;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { addToast } = useToasts();
+  const [isLoading, setIsLoading] = useState(false)
+  const { addToast } = useToasts()
 
   const buttonProps = (() => {
     if (Model.isTouched) {
       return {
         onClick: () => {
-          store.save(Model);
+          store.save(Model)
         },
-        children: <span>Save to File System</span>,
+        children: (
+          <span>
+            Save to File System
+          </span>
+        ),
       };
     }
     if (
-      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
-        Model.__status as CustomTypeStatus
-      )
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(Model.__status as CustomTypeStatus)
     ) {
       return {
         onClick: () => {
           if (!isLoading) {
-            setIsLoading(true);
+            setIsLoading(true)
             store.push(Model, (data: ToastPayload): void => {
               if (data.done) {
-                setIsLoading(false);
+                setIsLoading(false)
                 handleRemoteResponse(addToast)(data);
               }
-            });
+            })
           }
         },
         children: (
           <span>
-            {isLoading ? (
-              <Spinner
-                color="#F7F7F7"
-                size={20}
-                mr={2}
-                sx={{ position: "relative", top: "5px", left: "3px" }}
-              />
-            ) : null}
+            { isLoading ? <Spinner color="#F7F7F7" size={20} mr={2} sx={{ position: 'relative', top: '5px', left: '3px'}}/> : null }
             Push to Prismic
           </span>
-        ),
+        )
       };
     }
     return { variant: "disabled", children: "Synced with Prismic" };
@@ -72,20 +68,20 @@ const SliceHeader = ({
 
   return (
     <Header
-      MainBreadcrumb={
-        <Fragment>
-          <FiLayout /> <Text ml={2}>Custom Types</Text>
-        </Fragment>
-      }
-      SecondaryBreadcrumb={
+      MainBreadcrumb={(
+        <Fragment><FiLayout /> <Text ml={2}>Custom Types</Text></Fragment>
+      )}
+      SecondaryBreadcrumb={(
         <Box sx={{ fontWeight: "thin" }} as="span">
           <Text ml={2}>/ {Model.current.label} </Text>
         </Box>
-      }
+      )}
       breadrumbHref="/"
-      ActionButton={<Button {...buttonProps} />}
+      ActionButton={(
+        <Button {...buttonProps} />
+      )}
     />
   );
 };
 
-export default SliceHeader;
+export default SliceHeader

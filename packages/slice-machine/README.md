@@ -10,7 +10,7 @@ yarn install;
 yarn run dev-server # points to tests/project and starts server
 # then in another shell window:
 yarn dev
-```
+````
 
 Stack:
 

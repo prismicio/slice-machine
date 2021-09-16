@@ -7,26 +7,24 @@ import Logo from "../Menu/Logo";
 import { NavCtx } from "..";
 import Item from "./Navigation/Item";
 
-import NotLoggedIn from "./Navigation/NotLoggedIn";
+import NotLoggedIn from './Navigation/NotLoggedIn'
 
-import { warningStates } from "@lib/consts";
+import { warningStates } from '@lib/consts'
 
 const warnings = (len: number) => ({
-  title: `Warnings${len ? ` (${len})` : ""}`,
+  title: `Warnings${len ? ` (${len})` : ''}`,
   delimiter: true,
   href: "/warnings",
   match(pathname: string) {
-    return pathname.indexOf("/warnings") === 0;
+    return pathname.indexOf('/warnings') === 0
   },
   Icon: FiZap,
-});
+})
 
 const Desktop = () => {
-  const navCtx = useContext(NavCtx);
+  const navCtx = useContext(NavCtx)
 
-  const isNotLoggedIn = !!(navCtx?.warnings || []).find(
-    (e) => e.key === warningStates.NOT_CONNECTED
-  );
+  const isNotLoggedIn = !!(navCtx?.warnings || []).find(e => e.key === warningStates.NOT_CONNECTED)
 
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
@@ -36,12 +34,7 @@ const Desktop = () => {
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
-          <Item
-            link={warnings(
-              (navCtx?.warnings?.length || 0) +
-                Object.keys(navCtx?.configErrors || {}).length
-            )}
-          />
+          <Item link={warnings((navCtx?.warnings?.length || 0) + Object.keys(navCtx?.configErrors || {}).length)} />
           <VersionBadge
             label="Version"
             version={navCtx?.env?.currentVersion as string}

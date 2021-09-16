@@ -1,35 +1,25 @@
-import { useReducer } from "react";
-import equal from "fast-deep-equal";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
-import { CustomTypeState, CustomTypeStatus } from "@models/ui/CustomTypeState";
+import { useReducer } from 'react'
+import equal from 'fast-deep-equal'
+import { CustomType, ObjectTabs } from '@models/common/CustomType'
+import { CustomTypeState, CustomTypeStatus } from '@models/ui/CustomTypeState'
 
-import reducer from "./reducer";
-import CustomTypeStore from "./store";
+import reducer from './reducer'
+import CustomTypeStore from './store'
 
-export function useModelReducer({
-  customType,
-  remoteCustomType: remoteCustomTypeObject,
-  initialMockConfig = {},
-}: {
-  customType: CustomType<ObjectTabs>;
-  remoteCustomType: CustomType<ObjectTabs> | undefined;
-  initialMockConfig: any;
-}): [CustomTypeState, CustomTypeStore] {
-  const current = CustomType.toArray(customType);
+export function useModelReducer({ customType, remoteCustomType: remoteCustomTypeObject, initialMockConfig = {} }: { customType: CustomType<ObjectTabs>, remoteCustomType: CustomType<ObjectTabs> | undefined, initialMockConfig: any }): [CustomTypeState, CustomTypeStore] {
+  const current = CustomType.toArray(customType)
 
-  const remoteCustomType = remoteCustomTypeObject
-    ? CustomType.toArray(remoteCustomTypeObject)
-    : undefined;
+  const remoteCustomType = remoteCustomTypeObject ? CustomType.toArray(remoteCustomTypeObject) : undefined
 
   const __status = (() => {
     if (!remoteCustomType) {
-      return CustomTypeStatus.New;
+      return CustomTypeStatus.New
     }
     if (equal(current, remoteCustomType)) {
-      return CustomTypeStatus.Synced;
+      return CustomTypeStatus.Synced
     }
-    return CustomTypeStatus.Modified;
-  })();
+    return CustomTypeStatus.Modified
+  })()
 
   const initialState: CustomTypeState = {
     current,
@@ -39,11 +29,11 @@ export function useModelReducer({
     initialMockConfig,
     poolOfFieldsToCheck: CustomTypeState.getPool(current.tabs),
     __status,
-  };
+  }
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState)
 
-  const store = new CustomTypeStore(dispatch);
+  const store = new CustomTypeStore(dispatch)
 
-  return [state, store];
+  return [state, store]
 }

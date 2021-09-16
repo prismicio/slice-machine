@@ -1,4 +1,4 @@
-import { Flex } from "theme-ui";
+import { Flex } from 'theme-ui'
 
 const ZoneHeader = ({ Heading, Actions }) => (
   <Flex
@@ -10,13 +10,17 @@ const ZoneHeader = ({ Heading, Actions }) => (
       mb: 2,
       borderRadius: "6px",
       alignItems: "center",
-      minHeight: "51px",
+      minHeight: '51px',
       justifyContent: "space-between",
     }}
   >
-    <Flex sx={{ alignItems: "center" }}>{Heading}</Flex>
-    <Flex sx={{ alignItems: "center" }}>{Actions}</Flex>
+    <Flex sx={{ alignItems: "center" }}>
+      { Heading }
+    </Flex>
+    <Flex sx={{ alignItems: "center" }}>
+      { Actions }
+    </Flex>
   </Flex>
-);
+)
 
-export default ZoneHeader;
+export default ZoneHeader

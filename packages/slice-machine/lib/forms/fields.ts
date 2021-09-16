@@ -1,12 +1,8 @@
-import { FormTypes } from "./types";
+import { FormTypes } from './types'
 
-import { createValidationArgs } from ".";
+import { createValidationArgs } from '.'
 
-export const CheckBox = (
-  label: string,
-  required = true,
-  defaultValue = true
-) => ({
+export const CheckBox = (label: string, required = true, defaultValue = true) => ({
   type: FormTypes.CHECKBOX,
   validate: {
     required: createValidationArgs(required, defaultRequired),
@@ -14,32 +10,26 @@ export const CheckBox = (
   required,
   label,
   defaultValue,
-  yupType: "boolean",
-});
+  yupType: 'boolean',
+})
 
-export const Select = (
-  label: string,
-  options: any,
-  required = true,
-  multi = true,
-  defaultValue = true
-) => ({
+export const Select = (label: string, options: any, required = true, multi = true, defaultValue = true) => ({
   type: FormTypes.SELECT,
   required,
   label,
   options,
   multi,
   defaultValue,
-  yupType: "array",
-});
+  yupType: 'array',
+})
 
-const defaultMin = [3, "String is too short. Min: 3"];
-const defaultMax = [35, "String is too long. Max: 35"];
-const defaultRequired = ["Field is required"];
+const defaultMin = [3, 'String is too short. Min: 3']
+const defaultMax = [35, 'String is too long. Max: 35']
+const defaultRequired = ['Field is required']
 
 export const Input: any = (
   label: string,
-  conditions: { min: any; max: any; required: any; matches?: any } = {
+  conditions: { min: any, max: any, required: any, matches?: any } = {
     min: defaultMin,
     max: defaultMax,
     required: defaultRequired,
@@ -47,7 +37,7 @@ export const Input: any = (
   fieldLevelValidation: any,
   defaultValue: any
 ) => {
-  const { min, max, required, matches } = conditions || {};
+   const { min, max, required, matches } = conditions || {}
   return {
     type: FormTypes.INPUT,
     label,
@@ -59,6 +49,6 @@ export const Input: any = (
     },
     defaultValue,
     fieldLevelValidation,
-    yupType: "string",
-  };
-};
+    yupType: 'string',
+  }
+}

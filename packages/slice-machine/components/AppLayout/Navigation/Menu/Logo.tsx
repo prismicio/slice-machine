@@ -3,7 +3,7 @@ import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
 import Prismic from "../Icons/Prismic";
 
 const Logo = () => {
-  const { theme } = useThemeUI();
+  const { theme } = useThemeUI()
   return (
     <Box p={2}>
       <Link href="/" passHref>

@@ -1,17 +1,17 @@
-import path from "path";
-import { ComponentInfo, ComponentMetadata } from "../models/common/Component";
+import path from 'path'
+import { ComponentInfo, ComponentMetadata } from '../models/common/Component'
 // @ts-ignore
-import { pascalize } from "../utils/str";
+import { pascalize } from '../utils/str'
 
-import { getPathToScreenshot, getExternalPathToScreenshot } from "./screenshot";
-import Files from "../utils/files";
-import migrate from "../migrate";
+import { getPathToScreenshot, getExternalPathToScreenshot } from './screenshot'
+import Files from '../utils/files'
+import migrate from '../migrate'
 
 function getMeta(modelData: any): ComponentMetadata {
   return {
     id: modelData.id,
-    description: modelData.description,
-  };
+    description: modelData.description
+  }
 }
 
 /** take a path to slice and return its name  */
@@ -19,176 +19,132 @@ function getMeta(modelData: any): ComponentMetadata {
 function getComponentName(slicePath: string): string | undefined {
   const split = slicePath.split(path.sep);
   const pop = split.pop();
-  if (!pop) return;
+  if(!pop) return
 
-  if (pop.indexOf("index.") === 0) {
+  if (pop.indexOf('index.') === 0) {
     return split.pop();
   }
   if (pop.indexOf(split[split.length - 1]) === 0) {
     return slicePath.split(path.sep).pop();
   }
-  return pop.split(".")[0];
+  return pop.split('.')[0];
 }
 
 /** naive method to file component file in a folder */
-function findComponentFile(
-  files: ReadonlyArray<string>,
-  componentName: string
-): string | undefined {
-  const possiblePaths = ["index", componentName].reduce(
-    (acc: string[], f: string) => [
-      ...acc,
-      `${f}.vue`,
-      `${f}.js`,
-      `${f}.jsx`,
-      `${f}.ts`,
-      `${f}.tsx`,
-      `${f}.svelte`,
-    ],
-    []
-  );
-  return files.find((e) => possiblePaths.indexOf(e) > -1);
+function findComponentFile(files: ReadonlyArray<string>, componentName: string): string | undefined {
+  const possiblePaths = ['index', componentName]
+    .reduce((acc: string[], f: string) => [...acc, `${f}.vue`, `${f}.js`, `${f}.jsx`, `${f}.ts`, `${f}.tsx`, `${f}.svelte`], [])
+  return files.find(e => possiblePaths.indexOf(e) > -1)
 }
 
-function matchPossiblePaths(
-  files: ReadonlyArray<string>,
-  _componentName: string
-): boolean {
-  const modelFilename = "model.json";
+function matchPossiblePaths(files: ReadonlyArray<string>, _componentName: string): boolean {
+  const modelFilename = 'model.json'
 
-  return files.includes(modelFilename);
+  return files.includes(modelFilename)
 }
 
-function splitExtension(str: string): {
-  fileName: string | null;
-  extension: string | null;
-} {
-  const fullName = str.split("/").pop();
-  if (!fullName) {
+function splitExtension(str: string): { fileName: string | null, extension: string | null } {
+  const fullName = str.split('/').pop()
+  if(!fullName) {
     return {
       fileName: null,
-      extension: null,
-    };
+      extension: null
+    }
   }
 
-  const [fileName, extension] = fullName.split(".");
+  const [fileName, extension] = fullName.split('.')
   return {
     fileName,
     extension,
-  };
+  }
 }
 
-function fromJsonFile(
-  slicePath: string,
-  filePath: string
-): { has: boolean; data: any } | null {
-  const fullPath = path.join(slicePath, filePath);
-  const hasFile = Files.exists(fullPath);
-
+function fromJsonFile(slicePath: string, filePath: string): { has: boolean, data: any } | null {
+  const fullPath = path.join(slicePath, filePath)
+  const hasFile = Files.exists(fullPath)
+  
   if (hasFile) {
-    const maybeData = Files.safeReadJson(fullPath);
+    const maybeData = Files.safeReadJson(fullPath)
     if (maybeData) {
       return {
         has: hasFile,
-        data: maybeData,
-      };
+        data: maybeData
+      }
     }
   }
-  return null;
+  return null
 }
 
 /** returns fileName, extension and isDirectory from path to slice */
-function getFileInfoFromPath(
-  slicePath: string,
-  componentName: string
-): { fileName: string | null; extension: string | null; isDirectory: boolean } {
-  const isDirectory = Files.isDirectory(slicePath);
+function getFileInfoFromPath(slicePath: string, componentName: string): { fileName: string | null, extension: string | null, isDirectory: boolean } {
+  const isDirectory = Files.isDirectory(slicePath)
   if (!isDirectory) {
-    return { ...splitExtension(slicePath), isDirectory: false };
+    return { ...splitExtension(slicePath), isDirectory: false }
   }
 
-  const files = Files.readDirectory(slicePath);
-  const match = matchPossiblePaths(files, componentName);
+  const files = Files.readDirectory(slicePath)
+  const match = matchPossiblePaths(files, componentName)
 
   if (match) {
-    const maybeFileComponent = findComponentFile(files, componentName);
+    const maybeFileComponent = findComponentFile(files, componentName)
     if (maybeFileComponent) {
       return { ...splitExtension(maybeFileComponent), isDirectory: true };
     }
-    return { fileName: null, extension: null, isDirectory: true };
+    return { fileName: null, extension: null, isDirectory: true }
   }
-  throw new Error(
-    `[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`
-  );
+  throw new Error(`[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`)
 }
 
-export function getComponentInfo(
-  slicePath: string,
-  { cwd, baseUrl, from }: { cwd: string; baseUrl: string; from: string }
-): ComponentInfo | undefined {
-  const sliceName = getComponentName(slicePath);
+export function getComponentInfo(slicePath: string, { cwd, baseUrl, from }: { cwd: string, baseUrl: string, from: string }): ComponentInfo | undefined {
+  const sliceName = getComponentName(slicePath)
 
   if (!sliceName || !sliceName.length) {
-    console.error(
-      `[queries/component-info] Could not find slice name at path "${slicePath}". Skipping...`
-    );
-    return;
+    console.error(`[queries/component-info] Could not find slice name at path "${slicePath}". Skipping...`)
+    return
   }
-
+  
+  
   const fileInfo = (() => {
     try {
-      return getFileInfoFromPath(slicePath, sliceName);
-    } catch (e) {
-      return null;
+      return getFileInfoFromPath(slicePath, sliceName)
+    } catch(e) {
+      return null
     }
-  })();
+  })()
 
   if (fileInfo === null) {
-    return;
+    return
   }
 
-  const { fileName, extension, isDirectory } = fileInfo;
+  const { fileName, extension, isDirectory } = fileInfo
 
-  const maybeSliceModel = fromJsonFile(slicePath, "model.json");
+  const maybeSliceModel = fromJsonFile(slicePath, 'model.json')
   if (!maybeSliceModel) {
-    return;
+    return
   }
-  const { model: modelData, migrated } = migrate(
-    maybeSliceModel.data,
-    { sliceName, from },
-    null,
-    false
-  );
-  const model = { data: modelData };
-  const previewUrls = (model.data.variations || [])
+  const { model: modelData, migrated } = migrate(maybeSliceModel.data, { sliceName, from }, null, false)
+  const model = { data: modelData }
+  const previewUrls = (model.data.variations || [])
     .map((v: any) => {
       const activeScreenshot = migrated
         ? getExternalPathToScreenshot({ cwd, from, sliceName })
-        : getPathToScreenshot({ cwd, from, sliceName, variationId: v.id });
+        : getPathToScreenshot({ cwd, from, sliceName, variationId: v.id })
 
       return activeScreenshot && activeScreenshot.path
-        ? {
-            [v.id]: {
-              hasPreview: !!activeScreenshot,
-              isCustomPreview: activeScreenshot.isCustom,
-              url:
-                activeScreenshot && activeScreenshot.path
-                  ? `${baseUrl}/api/__preview?q=${encodeURIComponent(
-                      activeScreenshot.path
-                    )}&uniq=${Math.random()}`
-                  : undefined,
-            },
-          }
-        : undefined;
+      ? { [v.id]: {
+          hasPreview: !!activeScreenshot,
+          isCustomPreview: activeScreenshot.isCustom,
+          url: activeScreenshot && activeScreenshot.path ? `${baseUrl}/api/__preview?q=${encodeURIComponent(activeScreenshot.path)}&uniq=${Math.random()}` : undefined
+        }}
+      : undefined
     })
     .reduce((acc: any, variationPreview: any) => {
-      return { ...acc, ...variationPreview };
-    }, {});
+      return { ...acc, ...variationPreview }
+    }, {})
 
-  const nameConflict =
-    sliceName !== pascalize(model.data.id)
-      ? { sliceName, id: model.data.id }
-      : undefined;
+  const nameConflict = sliceName !== pascalize(model.data.id)
+    ? { sliceName, id: model.data.id }
+    : undefined
 
   return {
     sliceName,
@@ -197,8 +153,8 @@ export function getComponentInfo(
     extension,
     model: model.data,
     meta: getMeta(model.data),
-    mock: fromJsonFile(slicePath, "mock.json")?.data,
+    mock: fromJsonFile(slicePath, 'mock.json')?.data,
     nameConflict,
-    previewUrls,
-  };
+    previewUrls
+  }
 }

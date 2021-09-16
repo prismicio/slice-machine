@@ -1,7 +1,7 @@
-import * as yup from "yup";
-import { MdDateRange } from "react-icons/md";
-import { handleMockConfig, handleMockContent } from "./Mock";
-import { MockConfigForm } from "./Mock/Form";
+import * as yup from 'yup'
+import { MdDateRange } from 'react-icons/md'
+import { handleMockConfig, handleMockContent } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
 /** {
     "type" : "Timestamp",
@@ -11,28 +11,26 @@ import { MockConfigForm } from "./Mock/Form";
     }
   } */
 
-import { removeProp } from "../../../../utils";
-import { DefaultFields } from "../../../../forms/defaults";
-import { createValidationSchema } from "../../../../forms";
-import { Widget } from "../Widget";
-import { TimestampField } from "../types";
-import { FieldType } from "../../CustomType/fields";
 
-const FormFields = DefaultFields;
+import { removeProp } from '../../../../utils'
+import { DefaultFields } from "../../../../forms/defaults"
+import { createValidationSchema } from '../../../../forms'
+import { Widget } from '../Widget'
+import { TimestampField } from '../types'
+import { FieldType } from '../../CustomType/fields'
+
+const FormFields = DefaultFields
 
 const schema = yup.object().shape({
-  type: yup
-    .string()
-    .matches(/^Timestamp$/, { excludeEmptyString: true })
-    .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  type: yup.string().matches(/^Timestamp$/, { excludeEmptyString: true }).required(),
+  config: createValidationSchema(removeProp(FormFields, 'id'))
 });
 
 const Meta = {
   icon: MdDateRange,
-  title: "Timestamp",
-  description: "A calendar date picker with time",
-};
+  title: 'Timestamp',
+  description: 'A calendar date picker with time'
+}
 
 export const Timestamp: Widget<TimestampField, typeof schema> = {
   handleMockConfig,
@@ -42,5 +40,5 @@ export const Timestamp: Widget<TimestampField, typeof schema> = {
   schema,
   FormFields,
   TYPE_NAME: FieldType.Timestamp,
-  Meta,
-};
+  Meta
+}

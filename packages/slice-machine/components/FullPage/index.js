@@ -1,16 +1,16 @@
-import { Flex } from "theme-ui";
+import { Flex } from 'theme-ui'
 
 const FullPage = ({ children }) => (
   <Flex
     sx={{
-      height: "calc(100vh - 57px)",
-      width: "100vw",
-      alignItems: "center",
-      justifyContent: "center",
+      height: 'calc(100vh - 57px)',
+      width: '100vw',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}
   >
-    {children}
+    { children }
   </Flex>
-);
+)
 
-export default FullPage;
+export default FullPage

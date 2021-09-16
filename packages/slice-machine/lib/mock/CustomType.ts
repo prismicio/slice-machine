@@ -1,87 +1,74 @@
-import faker from "faker";
-import * as Widgets from "./misc/widgets";
+import faker from 'faker'
+import * as Widgets from './misc/widgets'
 
-import { CustomType, ObjectTabs } from "../models/common/CustomType";
-import { Tab } from "../models/common/CustomType/tab";
+import { CustomType, ObjectTabs } from '../models/common/CustomType'
+import { Tab } from '../models/common/CustomType/tab'
 
-import { handleFields } from "./misc/handlers";
+import { handleFields } from './misc/handlers'
 
-import { CustomTypeMockConfig } from "../models/common/MockConfig";
-import { AsArray, GroupField } from "@lib/models/common/widgets/types";
+import { CustomTypeMockConfig } from '../models/common/MockConfig'
+import { AsArray, GroupField } from '@lib/models/common/widgets/types'
 
 interface Mock {
-  id: string;
-  uid: string | null;
-  type: string;
-  data: { [key: string]: unknown };
+  id: string
+  uid: string | null
+  type: string
+  data: { [key: string]: unknown }
 }
 
-const fieldsHandler = handleFields(Widgets);
+const fieldsHandler = handleFields(Widgets)
 
-const groupHandler = (
-  group: GroupField<AsArray>,
-  mockConfig: CustomTypeMockConfig
-) => {
-  const items = [];
-  const entries = group.config.fields.map((e) => [e.key, e.value]);
+const groupHandler = (group: GroupField<AsArray>, mockConfig: CustomTypeMockConfig) => {
+  const items = []
+  const entries = group.config.fields.map(e => [e.key, e.value])
   for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-    items.push(fieldsHandler(entries, mockConfig));
+    items.push(fieldsHandler(entries, mockConfig))
   }
-  return items;
-};
+  return items
+}
 
-const sliceZoneHandler = () => {};
+const sliceZoneHandler = () => {
+}
 
 const createEmptyMock = (type: string) => ({
   id: faker.datatype.uuid(),
   uid: null,
   type,
-  data: {},
-});
+  data: {}
+})
 
-export default async function MockCustomType(
-  model: CustomType<ObjectTabs>,
-  mockConfig: CustomTypeMockConfig
-) {
-  const customTypeMock: Mock = createEmptyMock(model.id);
+export default async function MockCustomType(model: CustomType<ObjectTabs>, mockConfig: CustomTypeMockConfig) {
+  const customTypeMock: Mock = createEmptyMock(model.id)
   const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
-    const maybeWidgetUid = Object.entries(curr[1]).find(
-      ([_, e]) => e.type === "UID"
-    );
+    const maybeWidgetUid = Object.entries(curr[1]).find(([_, e]) => e.type === "UID")
     if (!acc && maybeWidgetUid) {
-      return curr;
+      return curr
     }
-    return acc;
-  });
+    return acc
+  })
 
   if (maybeUid) {
-    customTypeMock.uid = Widgets.UID.handleMockConfig();
+    customTypeMock.uid = Widgets.UID.handleMockConfig()
   }
 
   for (let [, tab] of Object.entries(model.tabs)) {
-    const { fields, groups, sliceZone } = Tab.organiseFields(tab);
+    const { fields, groups, sliceZone } = Tab.organiseFields(tab)
 
-    const mockedFields = fieldsHandler(
-      fields.map((e) => [e.key, e.value]),
-      mockConfig
-    );
+    const mockedFields = fieldsHandler(fields.map(e => [e.key, e.value]), mockConfig)
     customTypeMock.data = {
       ...customTypeMock.data,
-      ...mockedFields,
-    };
+      ...mockedFields
+    }
     groups.forEach((group) => {
-      const { key, value } = group;
-      const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(
-        mockConfig,
-        key
-      );
-      const groupFields = groupHandler(value, groupMockConfig);
-      customTypeMock.data[key] = groupFields;
-    });
+      const { key, value } = group
+      const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(mockConfig, key)
+      const groupFields = groupHandler(value, groupMockConfig)
+      customTypeMock.data[key] = groupFields
+    })
 
     if (sliceZone) {
-      sliceZoneHandler();
+      sliceZoneHandler()
     }
   }
-  return customTypeMock;
+  return customTypeMock
 }

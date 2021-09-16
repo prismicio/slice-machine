@@ -1,8 +1,8 @@
-import { memo } from "react";
-import { Formik, Form } from "formik";
-import { Box } from "theme-ui";
+import { memo } from 'react'
+import { Formik, Form } from 'formik'
+import { Box } from 'theme-ui'
 
-import { MockConfigKey } from "../../../consts";
+import { MockConfigKey } from '../../../consts'
 
 const WidgetForm = ({
   formId,
@@ -12,6 +12,7 @@ const WidgetForm = ({
   FormFields,
   children,
 }) => {
+
   return (
     <Box>
       <Formik
@@ -19,43 +20,38 @@ const WidgetForm = ({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, _) => {
-          const {
-            id: apiId,
-            [MockConfigKey]: mockConfigObject,
-            ...rest
-          } = values;
-          const withDefaultValues = Object.entries(rest).reduce(
-            (acc, [key, value]) => {
-              if (typeof value !== Boolean && !value) {
-                const maybeDefaultValue = FormFields[key]?.defaultValue;
-                if (maybeDefaultValue !== undefined) {
-                  return {
-                    ...acc,
-                    [key]: maybeDefaultValue,
-                  };
+          const { id: apiId, [MockConfigKey]: mockConfigObject, ...rest } = values
+          const withDefaultValues = Object.entries(rest).reduce((acc, [key, value]) => {
+            if (typeof value !== Boolean && !value) {
+              const maybeDefaultValue = FormFields[key]?.defaultValue
+              if (maybeDefaultValue !== undefined) {
+                return {
+                  ...acc,
+                  [key]: maybeDefaultValue
                 }
               }
-              return {
-                ...acc,
-                [key]: value,
-              };
-            },
-            {}
-          );
-          onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject);
+            }
+            return {
+              ...acc,
+              [key]: value
+            }
+          }, {})
+          onSave({ newKey: apiId, value: withDefaultValues }, mockConfigObject)
         }}
       >
-        {(props) => (
-          <Form id={formId}>
-            {children({
-              ...props,
-              initialValues,
-            })}
-          </Form>
-        )}
+          {props => (
+            <Form id={formId}>
+              {
+                children({
+                  ...props,
+                  initialValues,
+                })
+              }
+            </Form>
+          )}
       </Formik>
     </Box>
-  );
-};
+  )
+}
 
-export default memo(WidgetForm);
+export default memo(WidgetForm)

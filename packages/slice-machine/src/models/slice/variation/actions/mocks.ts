@@ -1,18 +1,11 @@
-import { WidgetsArea } from "../../../../../lib/models/common/Variation";
-import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
-import { ActionType } from "./ActionType";
+import { WidgetsArea } from "../../../../../lib/models/common/Variation"
+import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig"
+import { ActionType } from './ActionType'
 
-export function updateWidgetMockConfig(
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (_variationId: string) => {
-    return (
-      sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
-      previousKey: string,
-      fieldId: string,
-      value: any
-    ): any => {
+    return (sliceMockConfig: SliceMockConfig, widgetArea: WidgetsArea, previousKey: string, fieldId: string, value: any): any => {
+
       const updatedConfig = SliceMockConfig.updateFieldMockConfig(
         sliceMockConfig,
         _variationId,
@@ -20,38 +13,26 @@ export function updateWidgetMockConfig(
         previousKey,
         fieldId,
         value
-      );
+      )
 
-      dispatch({
-        type: ActionType.UpdateWidgetMockConfig,
-        payload: updatedConfig,
-      });
-    };
-  };
+      dispatch({ type: ActionType.UpdateWidgetMockConfig, payload: updatedConfig })
+    }
+  }
 }
 
-export function deleteWidgetMockConfig(
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export function deleteWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
   return (_variationId: string) => {
-    return (
-      sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
-      fieldId: string
-    ): any => {
-      if (!sliceMockConfig) return;
+    return (sliceMockConfig: SliceMockConfig, widgetArea: WidgetsArea, fieldId: string): any => {
+      if(!sliceMockConfig) return
 
       const updatedConfig = SliceMockConfig.deleteFieldMockConfig(
         sliceMockConfig,
         _variationId,
         widgetArea,
-        fieldId
-      );
+        fieldId,
+      )
 
-      dispatch({
-        type: ActionType.DeleteWidgetMockConfig,
-        payload: updatedConfig,
-      });
-    };
-  };
+      dispatch({ type: ActionType.DeleteWidgetMockConfig, payload: updatedConfig })
+    }
+  }
 }
