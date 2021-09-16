@@ -1,4 +1,4 @@
-import camelCase from 'lodash/camelCase'
+import camelCase from "lodash/camelCase";
 
 const camelizeRE = /-(\w)/g;
 export function pascalize(str: string): string {
@@ -17,33 +17,35 @@ export function hyphenate(str: string): string {
 }
 
 export function snakelize(str: string): string {
-  return hyphenate(str).replace(/-/g, '_');
+  return hyphenate(str).replace(/-/g, "_");
 }
 
 export function createStorybookId(str: string): string {
-  const camel = camelCase(str)
-  return `_${camel[0].toUpperCase()}${camel.slice(1)}`
+  const camel = camelCase(str);
+  return `_${camel[0].toUpperCase()}${camel.slice(1)}`;
 }
 
 export function camelCaseToDash(v: any): string {
-  let ret = '', prevLowercase = false, prevIsNumber = false, isFirstChar = true
+  let ret = "",
+    prevLowercase = false,
+    prevIsNumber = false,
+    isFirstChar = true;
 
   for (let s of v) {
-    const isUppercase = s.toUpperCase() === s
-    const isNumber = !isNaN(s)
+    const isUppercase = s.toUpperCase() === s;
+    const isNumber = !isNaN(s);
 
     if (isNumber && !prevIsNumber && !isFirstChar) {
-      ret += '-'
-
+      ret += "-";
     } else {
       if (isUppercase && !isNumber && (prevLowercase || prevIsNumber)) {
-        ret += '-'
+        ret += "-";
       }
     }
-    ret += s
-    prevLowercase = !isUppercase
-    prevIsNumber = isNumber
-    isFirstChar = false
+    ret += s;
+    prevLowercase = !isUppercase;
+    prevIsNumber = isNumber;
+    isFirstChar = false;
   }
-  return ret.replace(/-+/g, '-').toLowerCase()
+  return ret.replace(/-+/g, "-").toLowerCase();
 }

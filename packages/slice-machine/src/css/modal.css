@@ -2,8 +2,8 @@ body {
   margin: 0;
 }
 
-.sliceMenuButton:hover{
-  background: rgba(0,0,0,0.06)!important;
+.sliceMenuButton:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
   border-radius: 3px;
 }
 .ReactModal__Body--open {
@@ -17,12 +17,12 @@ body {
   top: 15% !important;
   max-width: 900px;
   margin: auto;
-  border: 0!important;
-  background: 0!important;
+  border: 0 !important;
+  background: 0 !important;
 }
 .ReactModal__Overlay {
-	background-color: rgba(11,11,12,.9)!important;
-	backdrop-filter: blur(3px);
+  background-color: rgba(11, 11, 12, 0.9) !important;
+  backdrop-filter: blur(3px);
   overflow: auto;
 }
 

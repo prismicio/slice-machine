@@ -1,19 +1,19 @@
-export { Boolean } from '.'
-export { Color } from '.'
-export { ContentRelationship } from '.'
-export { Date } from '.'
-export { Embed } from '.'
-export { GeoPoint } from '.'
-export { Image } from '.'
-export { Link } from '.'
-export { Number } from '.'
-export { Select } from '.'
-export { StructuredText } from '.'
-export { Text } from '.'
-export { Timestamp } from '.'
-export { UID } from '.'
+export { Boolean } from ".";
+export { Color } from ".";
+export { ContentRelationship } from ".";
+export { Date } from ".";
+export { Embed } from ".";
+export { GeoPoint } from ".";
+export { Image } from ".";
+export { Link } from ".";
+export { Number } from ".";
+export { Select } from ".";
+export { StructuredText } from ".";
+export { Text } from ".";
+export { Timestamp } from ".";
+export { UID } from ".";
 
-export { Group } from './Group'
+export { Group } from "./Group";
 
-export const SharedSlice = null
-export const SliceZone = null
+export const SharedSlice = null;
+export const SliceZone = null;

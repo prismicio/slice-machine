@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ConfigContext } from "src/config-context";
 import { Box, Flex, Text } from "@theme-ui/components";
 import Container from "../components/Container";
-import ConfigErrors from "../components/ConfigErrors"
+import ConfigErrors from "../components/ConfigErrors";
 import {
   NewVersionAvailable,
   ClientError,
@@ -17,7 +17,7 @@ import {
 import { FiZap } from "react-icons/fi";
 
 export default function WarningsPage() {
-  const { warnings, configErrors } = useContext(ConfigContext)
+  const { warnings, configErrors } = useContext(ConfigContext);
 
   const Renderers = {
     [warningStates.NOT_CONNECTED]: NotConnected,
@@ -51,21 +51,20 @@ export default function WarningsPage() {
                 errorType={warning.title}
                 {...warning}
               />
-            )
+            );
           })}
         </Box>
         <Box>
           {Object.entries(configErrors || {}).length ? (
-          <ConfigErrors errors={configErrors} />
-        ) : null}
+            <ConfigErrors errors={configErrors} />
+          ) : null}
         </Box>
-        {
-          (!warnings || !warnings.length) && Object.keys(configErrors).length === 0 ? (
-            <Box>
-              <Text>Your project is correctly configured. Well done!</Text>
-            </Box>
-          ) : null
-        }
+        {(!warnings || !warnings.length) &&
+        Object.keys(configErrors).length === 0 ? (
+          <Box>
+            <Text>Your project is correctly configured. Well done!</Text>
+          </Box>
+        ) : null}
       </Container>
     </main>
   );
