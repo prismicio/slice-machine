@@ -8,7 +8,6 @@ export interface TabAsObject {
   key: string
   value: AsObject,
 }
-
 export interface TabAsArray {
   key: string
   value: AsArray,
