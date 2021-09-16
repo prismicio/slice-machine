@@ -17,7 +17,6 @@ module.exports = withPlugins(
         webpack: (config, { isServer }) => {
           if (!isServer) {
             config.node = { fs: "empty" };
-            //config.resolve.fallback = { fs: false }
           }
 
           config.module.rules.push({
