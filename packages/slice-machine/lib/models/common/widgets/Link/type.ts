@@ -1,6 +1,6 @@
 import { Field, FieldType, SimpleField } from '../../CustomType/fields'
 
-enum Media {
+export enum Media {
   media = 'media',
   document = 'document',
   web = 'web'

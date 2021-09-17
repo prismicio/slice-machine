@@ -92,12 +92,11 @@ const Zone = ({
         ) : null}
       />
       {
-        !fields.length && !newFieldData ? (
+        !fields.length && !newFieldData &&
           <EmptyState
             onEnterSelectMode={() => enterSelectMode()}
             zoneName={isRepeatable ? 'repeatable' : 'static'}
           />
-        ) : null
       }
       <Card
         tabId={tabId}
@@ -114,8 +113,8 @@ const Zone = ({
         enterSelectMode={enterSelectMode}
         onDragEnd={onDragEnd}
         onDeleteItem={onDeleteItem}
-        NewFieldC={() => {
-          return newFieldData && (
+        NewFieldC={() =>
+          newFieldData && (
             <NewField
               {...newFieldData}
               fields={poolOfFieldsToCheck || fields}
@@ -126,7 +125,7 @@ const Zone = ({
               onCancelNewField={onCancelNewField}
             />
           )
-        }}
+        }
       />
       <EditModal
         Model={Model}

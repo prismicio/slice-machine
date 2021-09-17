@@ -76,7 +76,7 @@ const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }: { height
           backgroundRepeat: "no-repeat",
           backgroundImage: "url(" + `${preview?.url}` + ")",
         }}
-      ></Box>
+      />
     </Box>
   );
 };

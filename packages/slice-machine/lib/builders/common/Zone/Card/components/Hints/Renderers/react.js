@@ -31,7 +31,8 @@ const handleEmbedCode = (fieldText, useKey) =>
 const appendKey = (id) => `key={\`${id}-\${i}\`}`
 
 const codeByWidgetType = (Widgets) => ({
-  [Widgets.ContentRelationship?.CUSTOM_NAME]: (fieldText, useKey) => `<span>{{ ${fieldText} }} TODO</span>`,
+  [Widgets.ContentRelationship?.CUSTOM_NAME]: (fieldText, useKey) => handleLinkCode(fieldText, useKey),
+  [Widgets.LinkToMedia?.CUSTOM_NAME]: (fieldText, useKey) => handleLinkCode(fieldText, useKey),
   [Widgets.UID?.TYPE_NAME]: (fieldText) => `<span>{{ ${fieldText} }}</span>`,
   [Widgets.StructuredText?.TYPE_NAME]: (fieldText, useKey) => `<RichText render={${fieldText}} ${useKey ? appendKey('rich-text') : ''}/>`,
   [Widgets.Image?.TYPE_NAME]: (fieldText, useKey) => `<img src={${fieldText}.url} alt={${fieldText}.alt} ${useKey ? appendKey('img') : ''}/>`,

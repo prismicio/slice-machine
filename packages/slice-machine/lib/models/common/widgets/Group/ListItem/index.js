@@ -6,20 +6,20 @@ import { Box, Button } from "theme-ui";
 
 import { ensureDnDDestination, ensureWidgetTypeExistence } from '@lib/utils'
 
-import SelectFieldTypeModal from "lib/builders/common/SelectFieldTypeModal";
-import NewField from "lib/builders/common/Zone/Card/components/NewField";
-import EditModal from "lib/builders/common/EditModal";
+import SelectFieldTypeModal from "@lib/builders/common/SelectFieldTypeModal";
+import NewField from "@lib/builders/common/Zone/Card/components/NewField";
+import EditModal from "@lib/builders/common/EditModal";
 
-import { findWidgetByConfigOrType } from "../../../../../builders/utils";
+import { findWidgetByConfigOrType } from "@builders/utils";
 
-import * as Widgets from "lib/models/common/widgets"
-import { CustomTypeMockConfig } from "lib/models/common/MockConfig"
+import * as Widgets from "@lib/models/common/widgets"
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig"
 
-import sliceBuilderArray from "lib/models/common/widgets/sliceBuilderArray";
+import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 
-import Hint from "lib/builders/common/Zone/Card/components/Hints";
+import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
-import ListItem from "components/ListItem";
+import ListItem from "@components/ListItem";
 
 const CustomListItem = ({
   tabId,

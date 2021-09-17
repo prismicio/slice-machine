@@ -6,6 +6,7 @@ import { MdSettingsEthernet } from "react-icons/md";
 import { Widget } from '../Widget'
 import { FieldType } from "../../CustomType/fields";
 import { ContentRelationshipField } from "./type";
+import {linkConfigSchema} from "@models/common/widgets/Link";
 
 /**
  * {
@@ -26,15 +27,15 @@ const Meta = {
   description: "Define content relations & internal links",
 };
 
-const configSchema = yup.object().shape({
+const contentRelationShipConfigSchema = linkConfigSchema.shape({
   label: yup.string().max(35, 'String is too long. Max: 35'),
-  select: yup.string().matches(/^document$/),
+  select: yup.string().required().matches(/^document$/, { excludeEmptyString: true }),
   customtypes: yup.array(yup.string()).strict().optional(),
-}).required().default(undefined).noUnknown(true)
+})
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
-  config: configSchema,
+  config: contentRelationShipConfigSchema,
 });
 
 export const ContentRelationship: Widget<ContentRelationshipField, typeof schema> = {

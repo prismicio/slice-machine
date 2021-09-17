@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-import { CustomType, ObjectTabs } from '../../../lib/models/common/CustomType'
-import { CustomTypeState } from '../../../lib/models/ui/CustomTypeState'
+import { CustomType, ObjectTabs } from '@lib/models/common/CustomType'
+import { CustomTypeState } from '@lib/models/ui/CustomTypeState'
 
 export const CustomTypesContext = React.createContext<Partial<{
   customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>,

@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { Box } from 'theme-ui'
 
 import { ensureDnDDestination } from '@lib/utils'
@@ -9,7 +8,7 @@ import EditModal from '../../common/EditModal'
 import * as Widgets from '@lib/models/common/widgets'
 import sliceBuilderWidgetsArray from '@lib/models/common/widgets/sliceBuilderArray'
 
-import { SliceMockConfig } from '../../../models/common/MockConfig'
+import { SliceMockConfig } from '@models/common/MockConfig'
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -75,8 +74,8 @@ const Zones = ({
   }
 
   return (
-    <Fragment>
-      <Zone
+  <>
+    <Zone
         Model={Model}
         title="Non-Repeatable zone"
         dataTip={dataTipText}
@@ -89,12 +88,12 @@ const Zones = ({
         onSave={_onSave('primary')}
         onSaveNewField={_onSaveNewField('primary')}
         onDragEnd={_onDragEnd('primary')}
-        poolOfFieldsToCheck={variation.primary || []}
+        poolOfFieldsToCheck={variation.primary || []}
         renderHintBase={({ item }) => `slice.primary.${item.key}`}
         renderFieldAccessor={(key) => `slice.primary.${key}`}
-      />
-      <Box mt={4} />
-      <Zone
+    />
+    <Box mt={4} />
+    <Zone
         isRepeatable
         Model={Model}
         title="Repeatable zone"
@@ -108,13 +107,12 @@ const Zones = ({
         onSave={_onSave('items')}
         onSaveNewField={_onSaveNewField('items')}
         onDragEnd={_onDragEnd('items')}
-        poolOfFieldsToCheck={variation.items || []}
+        poolOfFieldsToCheck={variation.items || []}
         renderHintBase={({ item }) => `item.${item.key}`}
         renderFieldAccessor={(key) => `slice.items[i].${key}`}
-      />
-    </Fragment>
+    />
+  </>
   )
-
 }
 
 export default Zones

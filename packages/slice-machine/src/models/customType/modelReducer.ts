@@ -32,7 +32,6 @@ export function useModelReducer({ customType, remoteCustomType: remoteCustomType
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)
-
   const store = new CustomTypeStore(dispatch)
 
   return [state, store]

@@ -1,3 +1,5 @@
+import * as LinkToMediaMockWidget from '@lib/models/common/widgets/LinkToMedia/Mock'
+
 const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
   if (maybeFieldMock.content) {
     const { handleMockContent } = widget
@@ -22,7 +24,8 @@ const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
 
 export const handleFields = (Widgets) => (fields = [], mocks = {}) => {
   return fields.reduce((acc, [key, value]) => {
-    const widget = Widgets[value.type]
+    const typeName = value.type
+    const widget = typeName === 'Link' && value.config?.select === 'media' ? LinkToMediaMockWidget : Widgets[typeName]
     const maybeFieldMock = mocks[key]
 
     if (widget) {
