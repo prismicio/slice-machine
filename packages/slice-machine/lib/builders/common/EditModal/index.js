@@ -1,4 +1,3 @@
-import React from 'react'
 import Modal from 'react-modal'
 import deepMerge from 'deepmerge'
 
@@ -37,7 +36,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 const FORM_ID = 'edit-modal-form'
 
-const EditModal: React.FC = ({
+const EditModal= ({
   close,
   data,
   fields,
