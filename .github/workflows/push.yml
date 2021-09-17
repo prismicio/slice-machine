@@ -21,8 +21,6 @@ jobs:
         run: lerna bootstrap
       - name: Running tests
         run: lerna run test
-      - name: linting
-        run: lerna run lint
       - name: Audit
         run: lerna run security-audit:prod
       - name: Build and export slice machine
@@ -33,4 +31,6 @@ jobs:
       - name: Installing and running test project
         working-directory: './packages/slice-machine/tests/project'
         run: yarn && yarn test:e2e
+      - name: linting
+        run: lerna run lint
 
