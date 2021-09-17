@@ -29,7 +29,7 @@ jobs:
         working-directory: ./packages/slice-machine
         run: yarn build && yarn export-build
       - name: Preparing to check start script
-        run: lerna clean --yes && lerna bootstrap --production
+        run: lerna clean --yes && lerna bootstrap -- --production
       - name: Installing and running test project
         working-directory: './packages/slice-machine/tests/project'
         run: yarn && yarn test:e2e
