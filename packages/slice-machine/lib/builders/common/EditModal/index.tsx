@@ -1,9 +1,9 @@
+import React from 'react'
 import Modal from 'react-modal'
 import deepMerge from 'deepmerge'
 
 import {
   Box,
-  Alert,
   Close,
   Flex,
   Button,
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 const FORM_ID = 'edit-modal-form'
 
-const EditModal = ({
+const EditModal: React.FC = ({
   close,
   data,
   fields,
@@ -89,7 +89,7 @@ const EditModal = ({
     id: apiId,
     config: validatedSchema ? validatedSchema.config : initialConfig,
     [MockConfigKey]: deepMerge(
-      MockConfigForm?.initialValues || {},
+      MockConfigForm?.initialValues || {},
       getFieldMockConfig({ apiId }) || {}
     ),
   }
@@ -223,7 +223,7 @@ const EditModal = ({
                     <Box>
                       <MockConfigForm initialValues={initialValues} />
                     </Box>
-                  ) : <p>Mock Configuration not implemented</p>}
+                  ) : <p>Mock data for this field is not yet available.</p>}
                 </Box>
               </Card>
           )}
