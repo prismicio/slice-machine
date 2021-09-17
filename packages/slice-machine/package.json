@@ -25,7 +25,7 @@
     "slicemachine": "start-slicemachine --port 9999",
     "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
-    "lint": "eslint --max-warnings 3184 --ext .js,.jsx,.ts,.tsx .",
+    "lint": "eslint --max-warnings 3198 --ext .js,.jsx,.ts,.tsx .",
     "audit-fix": "yarn-audit-fix"
   },
   "bin": {
