@@ -22,7 +22,8 @@ jobs:
     - name: Running tests
       run: lerna run test
     - name: Build slice machine
-      run: lerna run --scope slice-machine-ui build
+      working-directory: ./packages/slice-machine
+      run: yarn build
     - name: linting
       run: lerna run lint
     - name: Audit
