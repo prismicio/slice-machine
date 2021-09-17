@@ -1,6 +1,6 @@
 import equal from 'fast-deep-equal'
 import { CustomTypeState, CustomTypeStatus } from '@lib/models/ui/CustomTypeState'
-import { Tab } from '@lib/models/common/CustomType/tab'
+import { Tab } from '@lib/models/common/CustomType/tab'
 
 import Actions from './actions'
 import { Group } from '@lib/models/common/CustomType/group'
@@ -11,7 +11,7 @@ import { AnyWidget } from '@lib/models/common/widgets/Widget'
 
 import * as Widgets from '@lib/models/common/widgets/withGroup'
 import { Field } from '@lib/models/common/CustomType/fields'
-import { AsArray, GroupField } from '@lib/models/common/widgets/types'
+import { AsArray, GroupField } from '@lib/models/common/widgets/Group/type'
 
 export default function reducer(prevState: CustomTypeState, action: { type: string, payload?: unknown }): CustomTypeState {
   const result = ((): CustomTypeState => {
@@ -120,16 +120,6 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
         }
 
         const existingSliceZones = CustomType.getSliceZones(prevState.current).filter(e => e)
-
-        function findAvailableKey(startI: number, existingSliceZones: (SliceZoneAsArray | null)[]) {
-          for (let i = startI; i < Infinity; i++) {
-            const key = `slices${i.toString()}`
-            if (!existingSliceZones.find(e => e?.key === key)) {
-              return i
-            }
-          }
-          return -1
-        }
         return CustomTypeState.updateTab(prevState, tabId)(tab => {
           const i = findAvailableKey(tabIndex, existingSliceZones)
           return Tab.createSliceZone(tab, `slices${(i !== 0 ? i.toString() : '')}`)
@@ -141,18 +131,15 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       }
       case Actions.AddSharedSlice: {
         const { tabId, sliceKey } = action.payload as { tabId: string, sliceKey: string }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.addSharedSlice(sliceZone, sliceKey)))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.addSharedSlice(sliceZone, sliceKey)))
       }
       case Actions.ReplaceSharedSlices: {
         const { tabId, sliceKeys, preserve } = action.payload as { tabId: string, sliceKeys: [string], preserve: [string] }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)))
       }
       case Actions.RemoveSharedSlice: {
         const { tabId, sliceKey } = action.payload as { tabId: string, sliceKey: string }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.removeSharedSlice(sliceZone, sliceKey)))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) => SliceZone.removeSharedSlice(sliceZone, sliceKey)))
       }
       case Actions.UpdateWidgetMockConfig:
         return {
@@ -167,23 +154,19 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
       }
       case Actions.GroupAddWidget: {
         const { tabId, groupId, id, field } = action.payload as { tabId: string, groupId: string, id: string, field: Field }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.addWidget(group, { key: id, value: field })))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.addWidget(group, { key: id, value: field })))
       }
       case Actions.GroupReplaceWidget: {
         const { tabId, groupId, previousKey, newKey, value } = action.payload as { tabId: string, groupId: string, previousKey: string, newKey: string, value: Field }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.replaceWidget(group, previousKey, newKey, value)))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.replaceWidget(group, previousKey, newKey, value)))
       }
       case Actions.GroupDeleteWidget: {
         const { tabId, groupId, key } = action.payload as { tabId: string, groupId: string, key: string }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.deleteWidget(group, key)))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.deleteWidget(group, key)))
       }
       case Actions.GroupReorderWidget: {
         const { tabId, groupId, start, end } = action.payload as { tabId: string, groupId: string, start: number, end: number }
-        return CustomTypeState.updateTab(prevState, tabId)
-          (tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.reorderWidget(group, start, end )))
+        return CustomTypeState.updateTab(prevState, tabId)(tab => Tab.updateGroup(tab, groupId)((group: GroupField<AsArray>) => Group.reorderWidget(group, start, end )))
       }
       default: throw new Error("Invalid action.")
     }
@@ -203,4 +186,15 @@ export default function reducer(prevState: CustomTypeState, action: { type: stri
     })(),
     isTouched: !equal(result.initialCustomType, result.current) || !equal(result.initialMockConfig, result.mockConfig)
   }
+}
+
+
+const findAvailableKey = (startI: number, existingSliceZones: (SliceZoneAsArray | null)[]) => {
+  for (let i = startI; i < Infinity; i++) {
+    const key = `slices${i.toString()}`
+    if (!existingSliceZones.find(e => e?.key === key)) {
+      return i
+    }
+  }
+  return -1
 }

@@ -9,10 +9,20 @@
     "build": "npm run test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
-    "::release": "manypkg check && yarn build && lerna publish && yarn run changeset"
+    "::release": "manypkg check && yarn build && lerna publish && yarn run changeset",
+    "prepare": "husky install",
+    "lint": "yarn eslint --ext .js,.ts,.tsx --config .eslintrc.json ."
   },
   "devDependencies": {
-    "lerna": "^3.16.4"
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-react": "^7.25.1",
+    "husky": "^7.0.2",
+    "lerna": "^3.16.4",
+    "lint-staged": "^11.1.2",
+    "typescript": "4.2.2"
   },
   "dependencies": {
     "@theme-ui/color": "^0.3.1",
@@ -20,5 +30,8 @@
     "node-fetch": "^2.6.0",
     "tmp": "^0.1.0",
     "validate-npm-package": "^1.0.5"
+  },
+  "lint-staged": {
+    "*.@(js|jsx|ts|tsx|)": "eslint --config .eslintrc.json"
   }
 }
