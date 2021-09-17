@@ -68,6 +68,7 @@ const ListItem = (props: any) => {
                 sx={{
                   bg: "headSection",
                   width: '100%',
+                  borderRadius: "3px",
                   border: (t) => `1px solid ${t.colors?.borders}`
                 }}
               >

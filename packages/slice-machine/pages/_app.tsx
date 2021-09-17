@@ -28,13 +28,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 
-import { ServerState } from "../lib/models/server/ServerState";
-import ServerError from "../lib/models/server/ServerError";
-import { Library } from "../lib/models/common/Library";
-import Environment from "../lib/models/common/Environment";
-import Slice from "../lib/models/common/Slice";
-import { CustomType, ObjectTabs } from "../lib/models/common/CustomType";
-import { AsObject } from "../lib/models/common/Variation";
+import { ServerState } from "@lib/models/server/ServerState";
+import ServerError from "@lib/models/server/ServerError";
+import { Library } from "@lib/models/common/Library";
+import Environment from "@lib/models/common/Environment";
+import Slice from "@lib/models/common/Slice";
+import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
+import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from 'next/router';
 
 async function fetcher(url: string): Promise<any> {
@@ -42,7 +42,7 @@ async function fetcher(url: string): Promise<any> {
 }
 
 function mapSlices(libraries: ReadonlyArray<Library>): any {
-  return (libraries || []).reduce((acc, lib) => {
+  return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
       ...lib.components.reduce((acc, comp) => ({

@@ -1,4 +1,4 @@
-import Builder from "lib/builders/SliceBuilder";
+import Builder from "@builders/SliceBuilder";
 
 const SliceEditor = ({ openPanel }) => {
   return <Builder openPanel={openPanel} />;

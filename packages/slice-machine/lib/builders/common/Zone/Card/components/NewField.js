@@ -25,7 +25,6 @@ const NewField = ({
   onSave,
   onCancelNewField,
 }) => {
-
   const fieldRef = useRef(null)
   const { theme } = useThemeUI()
   const widget = Widgets[widgetTypeName]
@@ -63,7 +62,7 @@ const NewField = ({
           <Flex
             as="li"
             sx={{
-              py: 2,
+              p: 3,
               px: 3,
               mx: 0,
               ml: '34px',
@@ -75,21 +74,20 @@ const NewField = ({
             <Flex
               sx={{
                 alignItems: "center",
-                width: '50%'
               }}
             >
               <WidgetIcon
                 style={{
                   color: theme.colors.primary,
-                  marginRight: '12px',
+                  marginRight: '8px',
                   borderRadius: '4px',
+                  padding: '4px',
                   border: '2px solid',
                   borderColor: theme.colors.primary,
-                  width: '30px' // display bug
                 }}
                 size={28}
               />
-              <Label
+              <Flex
                 sx={{
                   display: 'flex',
                   alignItems: "center",
@@ -119,7 +117,7 @@ const NewField = ({
                   }}
                 />
                 <ErrorTooltip errors={errors} />
-              </Label>
+              </Flex>
             </Flex>
             <Box>
               <Button onClick={onCancelNewField} variant="secondary" type="button">Cancel</Button>

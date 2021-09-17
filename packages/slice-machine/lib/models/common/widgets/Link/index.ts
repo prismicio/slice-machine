@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 import Form, { FormFields } from './Form'
-import  { BsLink } from 'react-icons/bs'
+import { FiLink2 } from "react-icons/fi";
 
 import { handleMockConfig, handleMockContent } from './Mock'
 import { MockConfigForm } from './Mock/Form'
@@ -57,12 +57,12 @@ import { LinkField } from './type'
   */
 
 const Meta = {
-  icon: BsLink,
+  icon: FiLink2,
   title: 'Link',
   description: 'A link to web, media or Prismic document'
 }
 
-const linkConfigSchema = yup.object().shape({
+export const linkConfigSchema = yup.object().shape({
   label: yup.string().optional(),
   useAsTitle: yup.boolean().optional(),
   placeholder: yup.string().optional(),

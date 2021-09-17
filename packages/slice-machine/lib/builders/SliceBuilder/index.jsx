@@ -23,7 +23,7 @@ import FieldZones from './FieldZones'
 
 const Builder = ({ openPanel }) => {
   const { Model, store, variation } = useContext(SliceContext)
-  const { env: { userConfig: { storybook: storybookBaseUrl } }, warnings } = useContext(ConfigContext)
+  const { env: { userConfig: { storybook: storybookBaseUrl } }, warnings } = useContext(ConfigContext)
   const {
     infos: {
       sliceName,
@@ -44,7 +44,7 @@ const Builder = ({ openPanel }) => {
     error: null,
   })
 
-  const storybookUrl = createStorybookUrl({ storybook: storybookBaseUrl , libraryName: from, sliceName, variationId: variation.id })
+  const storybookUrl = createStorybookUrl({ storybook: storybookBaseUrl, libraryName: from, sliceName, variationId: variation.id })
 
   useEffect(() => {
     if (isTouched) {
@@ -99,7 +99,6 @@ const Builder = ({ openPanel }) => {
           store={store}
           variation={variation}
         />
-
       </FlexEditor>
     </Box>
   )
