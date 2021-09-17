@@ -1,16 +1,12 @@
 const fetch = require("node-fetch");
 const expectLibrary = require("sm-commons/expect").expectLibrary;
-const Mongo = require('../../common/mongo');
+const Mongo = require("../../common/mongo");
 
-const {
-  libraries,
-  REGISTRY_URL,
-  SM_FILE
-} = require("../../common/consts");
+const { libraries, REGISTRY_URL, SM_FILE } = require("../../common/consts");
 
 const postMessage = require("./slack").postMessage;
 
-const { parsePackagePathname } = require('./package')
+const { parsePackagePathname } = require("./package");
 
 async function fetchJson(url) {
   const response = await fetch(url);
@@ -22,7 +18,7 @@ async function fetchJson(url) {
 
 module.exports = async (_, res) => {
   const npmPackages = Object.keys(libraries);
-  npmPackages.forEach(async packageName => {
+  npmPackages.forEach(async (packageName) => {
     try {
       const { packageSpec } = parsePackagePathname(packageName);
       const packageSmUrl = `${REGISTRY_URL}${packageSpec}/${SM_FILE}`;
@@ -31,19 +27,18 @@ module.exports = async (_, res) => {
 
       expectLibrary(sm);
 
-
-      await Mongo.collections.libraries(coll => (
+      await Mongo.collections.libraries((coll) =>
         coll.updateOne(
           { packageName: packageName },
           { $set: sm },
           {
-            upsert: true
+            upsert: true,
           }
         )
-      ));
-      return res.status(200).send('');
-    } catch(e) {
-      const latest = await Mongo.collections.errors(coll => {
+      );
+      return res.status(200).send("");
+    } catch (e) {
+      const latest = await Mongo.collections.errors((coll) => {
         coll.findOne({ packageName });
       });
       const err = `An error occured while fetching package definition "${packageName}".\n\n[Full error] ${e}`;
@@ -56,18 +51,17 @@ module.exports = async (_, res) => {
         if (diff < every) {
           return res.status(500).send(err);
         }
-
       }
       await postMessage(err);
-      await Mongo.collections.libraries(coll => (
+      await Mongo.collections.libraries((coll) =>
         coll.updateOne(
           { packageName },
           { $set: { packageName, last_updated: new Date(), err } },
           {
-            upsert: true
+            upsert: true,
           }
         )
-      ));
+      );
       return res.status(500).send(err);
     }
   });

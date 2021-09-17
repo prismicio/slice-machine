@@ -7,16 +7,14 @@ provider:
 #    MONGODB_URI: ""
 #    SLACK_MESSAGE_URI: ""
 
-
 plugins:
   - serverless-dotenv-plugin
   - serverless-offline
 
 functions:
-            
-  bootstrap: 
+  bootstrap:
     handler: handler.bootstrap
-    events: 
+    events:
       - http:
           path: bootstrap
           method: get
@@ -37,14 +35,14 @@ functions:
 
   library:
     handler: handler.library
-    events: 
+    events:
       - http:
           path: library
           method: get
 
   publish:
     handler: handler.publish
-    events: 
+    events:
       - http:
           path: publish
           method: post
@@ -56,13 +54,12 @@ functions:
           path: slices
           method: get
 
-  version: 
+  version:
     handler: handler.version
     events:
-      - http: 
+      - http:
           path: version
           method: get
-
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

@@ -1,6 +1,4 @@
 {
   "apiEndpoint": "https://reponame.cdn.prismic.io/api/v2",
-  "libraries": [
-    "@/tests/__mock__/slices"
-  ]
+  "libraries": ["@/tests/__mock__/slices"]
 }

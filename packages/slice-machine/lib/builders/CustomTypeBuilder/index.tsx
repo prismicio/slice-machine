@@ -1,26 +1,34 @@
-import { useEffect, useRef } from 'react'
-import { Box } from 'theme-ui'
+import { useEffect, useRef } from "react";
+import { Box } from "theme-ui";
 
-import TabZone from './TabZone'
-import { Header, Tabs } from './Layout'
+import TabZone from "./TabZone";
+import { Header, Tabs } from "./Layout";
 
-import { CustomTypeState } from '../../models/ui/CustomTypeState'
-import CustomTypeStore from '../../../src/models/customType/store'
-import Container from '../../../components/Container'
+import { CustomTypeState } from "../../models/ui/CustomTypeState";
+import CustomTypeStore from "../../../src/models/customType/store";
+import Container from "../../../components/Container";
 
-const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTypeStore, onLeave: Function }) => {
-  const modelRef = useRef(Model)
+const Ct = ({
+  Model,
+  store,
+  onLeave,
+}: {
+  Model: CustomTypeState;
+  store: CustomTypeStore;
+  onLeave: Function;
+}) => {
+  const modelRef = useRef(Model);
 
   useEffect(() => {
-    modelRef.current = Model
-  }, [Model])
+    modelRef.current = Model;
+  }, [Model]);
 
   useEffect(() => {
     return () => {
-      store.reset()
-      onLeave(modelRef.current)
-    }
-  }, [])
+      store.reset();
+      onLeave(modelRef.current);
+    };
+  }, []);
 
   return (
     <Box>
@@ -30,7 +38,15 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
       <Tabs
         Model={Model}
         store={store}
-        renderTab={({ value, sliceZone, key }: { value: any, sliceZone: any, key: string }) => (
+        renderTab={({
+          value,
+          sliceZone,
+          key,
+        }: {
+          value: any;
+          sliceZone: any;
+          key: string;
+        }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone
               fields={value}
@@ -44,7 +60,7 @@ const Ct = ({ Model, store, onLeave }: { Model: CustomTypeState, store: CustomTy
         )}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default Ct
+export default Ct;

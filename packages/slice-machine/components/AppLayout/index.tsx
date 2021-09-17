@@ -1,28 +1,28 @@
-import { ReactNode } from 'react'
-import { useRouter } from 'next/router'
-import { Box } from 'theme-ui'
+import { ReactNode } from "react";
+import { useRouter } from "next/router";
+import { Box } from "theme-ui";
 
-import Navigation from './Navigation'
+import Navigation from "./Navigation";
 
-import Environment from '@lib/models/common/Environment'
-import { ServerState } from '@lib/models/server/ServerState'
+import Environment from "@lib/models/common/Environment";
+import { ServerState } from "@lib/models/server/ServerState";
 
 const AsIs: { [x: string]: boolean } = {
-  '/onboarding': true
-}
+  "/onboarding": true,
+};
 
 const AppLayout = ({
   children,
   env,
-  data
+  data,
 }: {
   children: ReactNode;
   env: Environment;
   data: ServerState;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   if (AsIs[router.asPath]) {
-    return <main>{ children }</main>
+    return <main>{children}</main>;
   }
 
   return (
@@ -33,7 +33,11 @@ const AppLayout = ({
         flexDirection: ["column", "row", null],
       }}
     >
-      <Navigation env={env} warnings={data.warnings} configErrors={data.configErrors} />
+      <Navigation
+        env={env}
+        warnings={data.warnings}
+        configErrors={data.configErrors}
+      />
       <Box
         as="main"
         sx={{

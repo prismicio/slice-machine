@@ -22,15 +22,18 @@ export const ClientError = ({ errorType }) => (
     )}
   >
     <Text as="p" mt={1}>
-      This error probably means that you are not connected to Prismic or that your `prismic-auth`
-      token is outdated.
+      This error probably means that you are not connected to Prismic or that
+      your `prismic-auth` token is outdated.
     </Text>
     <Text as="p">
-      To generate a new token, type `prismic login` in your CLI. This message you should disappear instantly.
+      To generate a new token, type `prismic login` in your CLI. This message
+      you should disappear instantly.
     </Text>
     <Text as="p" mt={4}>
-        If the problem persists, check that your `sm.json` file points to the right API endpoint.<br/>
-        Full error: {errorType}
+      If the problem persists, check that your `sm.json` file points to the
+      right API endpoint.
+      <br />
+      Full error: {errorType}
     </Text>
   </Card>
 );

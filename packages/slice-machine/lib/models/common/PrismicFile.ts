@@ -1,4 +1,4 @@
 export default interface PrismicFile {
-  cookies: string
-  base: string
+  cookies: string;
+  base: string;
 }

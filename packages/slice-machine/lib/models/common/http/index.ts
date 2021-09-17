@@ -1,11 +1,16 @@
-import DefaultClient from './DefaultClient'
-import FakeClient from './FakeClient'
+import DefaultClient from "./DefaultClient";
+import FakeClient from "./FakeClient";
 
-function initClient(cwd: string, base: string, repo?: string, auth?: string): DefaultClient | FakeClient {
+function initClient(
+  cwd: string,
+  base: string,
+  repo?: string,
+  auth?: string
+): DefaultClient | FakeClient {
   if (!auth || !repo) {
-    return new FakeClient()
+    return new FakeClient();
   }
-  return new DefaultClient(cwd, base, repo, auth)
+  return new DefaultClient(cwd, base, repo, auth);
 }
 
-export default initClient
+export default initClient;

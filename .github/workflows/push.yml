@@ -2,29 +2,29 @@ name: Push
 
 on: [push]
 
-jobs: 
-  build: 
+jobs:
+  build:
     strategy:
       matrix:
         node-version: [16]
     runs-on: [ubuntu-latest]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with :
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - name: Install top level dependencies
-      run: yarn
-    - name: Install package dependencies
-      run: lerna bootstrap
-    - name: Running tests
-      run: lerna run test
-    - name: Build slice machine
-      working-directory: ./packages/slice-machine
-      run: yarn build
-    - name: linting
-      run: lerna run lint
-    - name: Audit
-      run: lerna run security-audit:prod
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install top level dependencies
+        run: yarn
+      - name: Install package dependencies
+        run: lerna bootstrap
+      - name: Running tests
+        run: lerna run test
+      - name: Build slice machine
+        working-directory: ./packages/slice-machine
+        run: yarn build
+      - name: linting
+        run: lerna run lint
+      - name: Audit
+        run: lerna run security-audit:prod

@@ -1,7 +1,7 @@
-const path = require('path')
-const withPlugins = require('next-compose-plugins');
-const withMDX = require('@next/mdx')()
-const withCustomBabelConfigFile = require('next-plugin-custom-babel-config');
+const path = require("path");
+const withPlugins = require("next-compose-plugins");
+const withMDX = require("@next/mdx")();
+const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
 
 module.exports = withPlugins(
   [
@@ -28,9 +28,12 @@ module.exports = withPlugins(
           });
 
           return config;
-    },
-  }],
-  [withMDX]
-], {
-  distDir: './build/client',
-})
+        },
+      },
+    ],
+    [withMDX],
+  ],
+  {
+    distDir: "./build/client",
+  }
+);

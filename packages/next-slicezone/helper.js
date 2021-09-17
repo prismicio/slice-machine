@@ -1,28 +1,29 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
-const { SM_CONFIG_FILE } = require('sm-commons/consts')
+const { SM_CONFIG_FILE } = require("sm-commons/consts");
 
 /** from relative path */
 function getInfoFromPath(libPath, startPath) {
-  const isLocal = ['@/', '~', '/'].find((e) => libPath.indexOf(e) === 0) !== undefined
+  const isLocal =
+    ["@/", "~", "/"].find((e) => libPath.indexOf(e) === 0) !== undefined;
   const pathToLib = path.join(
     startPath || process.cwd(),
-    isLocal ? '' : 'node_modules',
-    isLocal ? libPath.substring(1, libPath.length) : libPath,
-  )
-  const pathToConfig = path.join(pathToLib, SM_CONFIG_FILE)
-  const pathExists = fs.existsSync(pathToLib)
+    isLocal ? "" : "node_modules",
+    isLocal ? libPath.substring(1, libPath.length) : libPath
+  );
+  const pathToConfig = path.join(pathToLib, SM_CONFIG_FILE);
+  const pathExists = fs.existsSync(pathToLib);
 
-  let config = {}
+  let config = {};
   if (fs.existsSync(pathToConfig)) {
-    config = JSON.parse(fs.readFileSync(pathToConfig))
+    config = JSON.parse(fs.readFileSync(pathToConfig));
   }
   const pathToSlices = path.join(
     pathToLib,
-    config.pathToLibrary || '.',
-    config.slicesFolder || (isLocal ? '.' : 'slices')
-  )
+    config.pathToLibrary || ".",
+    config.slicesFolder || (isLocal ? "." : "slices")
+  );
 
   return {
     config,
@@ -30,9 +31,9 @@ function getInfoFromPath(libPath, startPath) {
     pathExists,
     pathToLib,
     pathToSlices,
-  }
+  };
 }
 
 module.exports = {
-  getInfoFromPath
-}
+  getInfoFromPath,
+};

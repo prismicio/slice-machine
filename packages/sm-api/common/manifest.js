@@ -4,26 +4,23 @@ function merge(manifest, library) {
     script = [],
     packageName,
     dependencies = [],
-    devDependencies = []
-  } = library
+    devDependencies = [],
+  } = library;
 
   return {
     ...manifest,
-      devDependencies: [
-        ...(manifest.devDependencies || []),
-        ...devDependencies
-      ],
-      dependencies: [
-        ...(manifest.dependencies || []),
-        ...dependencies,
-        packageName
-      ],
-      libraries: [...(manifest.libraries || []), packageName],
-      css: [...(manifest.css || []), ...css],
-      script: [...(manifest.script || []), ...script],
-  }
+    devDependencies: [...(manifest.devDependencies || []), ...devDependencies],
+    dependencies: [
+      ...(manifest.dependencies || []),
+      ...dependencies,
+      packageName,
+    ],
+    libraries: [...(manifest.libraries || []), packageName],
+    css: [...(manifest.css || []), ...css],
+    script: [...(manifest.script || []), ...script],
+  };
 }
 
 module.exports = {
-  merge
-}
+  merge,
+};

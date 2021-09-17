@@ -1,0 +1,4 @@
+# Ignore artifacts:
+packages/slice-machine/build
+packages/slice-machine/tests/project/
+packages/slice-machine/templates/

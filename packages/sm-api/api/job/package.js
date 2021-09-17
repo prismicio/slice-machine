@@ -23,10 +23,10 @@ function parsePackagePathname(pathname) {
     packageName,
     packageVersion,
     packageSpec: `${packageName}@${packageVersion}`,
-    filename: filename || "index.js"
+    filename: filename || "index.js",
   };
 }
 
 module.exports = {
-  parsePackagePathname
-}
+  parsePackagePathname,
+};

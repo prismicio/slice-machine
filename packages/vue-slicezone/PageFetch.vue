@@ -2,7 +2,10 @@
   <div>
     <div v-if="$fetchState && ($fetchState.pending || $fetchState.error)">
       <div v-if="$fetchState.error">
-        <p>An error occured while fetching content: <span style="color:tomato">{{$fetchState.error}}</span></p>
+        <p>
+          An error occured while fetching content:
+          <span style="color: tomato">{{ $fetchState.error }}</span>
+        </p>
       </div>
       <div v-else></div>
     </div>
@@ -13,78 +16,79 @@
 </template>
 
 <script>
-import SliceZone from './SliceZone'
+import SliceZone from "./SliceZone";
 
-const multiQueryTypes = ['repeat', 'repeatable', 'multi']
+const multiQueryTypes = ["repeat", "repeatable", "multi"];
 
 export default {
-  name: 'PageFetch',
+  name: "PageFetch",
   components: {
-    SliceZone
+    SliceZone,
   },
   props: {
     type: {
       type: String,
-      required: true
+      required: true,
     },
     uid: {
       type: String,
-      required: false
+      required: false,
     },
     lang: {
       type: String,
-      required: false
+      required: false,
     },
     params: {
       type: Object,
       required: false,
       default() {
-        return null
-      }
+        return null;
+      },
     },
     queryType: {
       type: String,
-      default: 'multi',
+      default: "multi",
       validator(value) {
-        return [...multiQueryTypes, 'single'].indexOf(value) !== -1
-      }
+        return [...multiQueryTypes, "single"].indexOf(value) !== -1;
+      },
     },
     body: {
       type: String,
       required: false,
-      default: 'body'
+      default: "body",
     },
-    ...(Object.entries(SliceZone.props)).reduce((acc, [key, value]) => {
-      if (['slices'].indexOf(key) === -1) {
+    ...Object.entries(SliceZone.props).reduce((acc, [key, value]) => {
+      if (["slices"].indexOf(key) === -1) {
         return {
           ...acc,
-          [key]: value
-        }
+          [key]: value,
+        };
       }
-      return acc
-    }, {})
+      return acc;
+    }, {}),
   },
   data() {
     return {
       slices: [],
-    }
+    };
   },
   computed: {
     apiParams({ params, lang }) {
-      return params || { lang }
-    }
+      return params || { lang };
+    },
   },
   async fetch() {
     try {
-      const caller = multiQueryTypes.indexOf(this.queryType) !== -1
-        ? ['getByUID', [this.type, this.uid, this.apiParams]]
-        : ['getSingle', [this.type, this.apiParams]]
-      const res = await this.$prismic.api[caller[0]](...caller[1])
-      this.slices = res ? res.data[this.body] : []
-    } catch(e) {
-      console.error('[SliceZone/fetch]', e)
-      this.slices = []
+      const caller =
+        multiQueryTypes.indexOf(this.queryType) !== -1
+          ? ["getByUID", [this.type, this.uid, this.apiParams]]
+          : ["getSingle", [this.type, this.apiParams]];
+      const res = await this.$prismic.api[caller[0]](...caller[1]);
+      this.slices = res ? res.data[this.body] : [];
+    } catch (e) {
+      console.error("[SliceZone/fetch]", e);
+      this.slices = [];
     }
-  }
-}
+  },
+};
 </script>
