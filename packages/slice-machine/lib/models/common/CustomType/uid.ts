@@ -5,25 +5,55 @@ import { UIDField } from '../widgets/UID/type'
 import { AsObject } from '../widgets/Group/type'
 import { ObjectTabs } from './index'
 
-function extractUidFromTab(value: AsObject): UIDField | null {
+interface UidExtractedFromTab {
+  uid: UIDField | null,
+  updatedTab: AsObject
+}
+
+function extractUidFromTab(value: AsObject): UidExtractedFromTab {
   return Object
     .entries(value)
-    .reduce((f: UIDField | null, [_, field]: [string, Field | SliceZone]) => {
-      return  field.type === FieldType.UID
-        ? field as UIDField
-        : f
-    }, null)
+    .reduce((acc: UidExtractedFromTab, [fieldId, field]: [string, Field | SliceZone]) => {
+      if (field.type === FieldType.UID) {
+        return {
+          uid: field as UIDField,
+          updatedTab: acc.updatedTab
+        }
+      } else {
+        return {
+          uid: acc.uid,
+          updatedTab: {
+            ...acc.updatedTab,
+            [fieldId]: field
+          }
+        }
+      }
+    }, { uid: null, updatedTab: {} })
+}
+
+interface UidExtractedFromTabs {
+  uid: UIDField | null,
+  updatedTabs: ObjectTabs
 }
 
 export const UID = {
-  extractUidFromTabs(tabs: ObjectTabs): UIDField | null {
+  extractUidFromTabs(tabs: ObjectTabs): UidExtractedFromTabs {
     return Object
     .entries(tabs)
-    .reduce((uid: UIDField | null, [_, tab]: [string, TabAsObject]) => {
-      if (uid) return uid
-      const uidField = extractUidFromTab(tab.value)
-      return uidField || null
-    }, null)
+    .reduce((acc: UidExtractedFromTabs, [tabId, tab]: [string, TabAsObject]) => {
+      const { uid, updatedTab: updatedValue } = extractUidFromTab(tab.value)
+
+      return {
+        uid: acc.uid || uid,
+        updatedTabs: {
+          ...acc.updatedTabs,
+          [tabId]: {
+            ...tab,
+            value: updatedValue
+          }
+        }
+      }
+    }, { uid: null, updatedTabs: {}})
   },
 
   addUidToFirstTab(tabs: ObjectTabs, uid: UIDField): ObjectTabs {

@@ -39,12 +39,12 @@ export interface CustomType<T extends ObjectTabs | ArrayTabs> {
 
 export const CustomType = {
   toArray(ct: CustomType<ObjectTabs>): CustomType<ArrayTabs> {
-    const uid = UID.extractUidFromTabs(ct.tabs)
+    const { uid, updatedTabs } = UID.extractUidFromTabs(ct.tabs)
 
     return {
       ...ct,
       ... uid ? { uid } : {},
-      tabs: Object.entries(ct.tabs).map(([key, value]) => Tab.toArray(key, value)),
+      tabs: Object.entries(updatedTabs).map(([key, value]) => Tab.toArray(key, value)),
     }
   },
   toObject(ct: CustomType<ArrayTabs>): CustomType<ObjectTabs> {
@@ -97,12 +97,12 @@ export const CustomType = {
       }
     }, {})
 
-    const uid: UIDField | null = UID.extractUidFromTabs(tabs)
+    const { uid, updatedTabs } = UID.extractUidFromTabs(tabs)
     
     return {
       ...rest,
       id: key,
-      tabs,
+      tabs: updatedTabs,
       ... uid ? { uid } : {},
     }
   },
