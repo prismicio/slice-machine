@@ -24,7 +24,19 @@ jobs:
       - name: Build slice machine
         working-directory: ./packages/slice-machine
         run: yarn build
+      - name: 'Export-build slicemachine'
+        working-directory: ./packages/slice-machine
+        run: yarn export-build
       - name: linting
         run: lerna run lint
       - name: Audit
         run: lerna run security-audit:prod
+      - name: Preparing to check start script
+        run: lerna clean
+        run: lerna bootstrap --production
+      - name: Installing and running test project
+        working-directory: './packages/slice-machine/tests/project'
+        # uses: cypress-io/github-action@v2
+        run: yarn
+        run: yarn test:e2e
+
