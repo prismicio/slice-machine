@@ -35,6 +35,6 @@
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "cd packages/slice-machine && yarn eslint",
-    "**/packages/slice-machine/**/*": "cd packages/slice-machine && yarn prettier --write --ignore-unknown"
+    "**/packages/slice-machine/**/*": "cd packages/slice-machine && prettier --write --ignore-unknown"
   }
 }
