@@ -7,7 +7,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
-    "tsconfigRootDir": "./packages/slice-machine"
+    "tsconfigRootDir": "./"
   },
   "plugins": ["@typescript-eslint", "import", "jest"],
   "extends": [
