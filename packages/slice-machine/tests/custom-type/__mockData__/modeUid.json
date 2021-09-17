@@ -1,0 +1,55 @@
+{
+  "id": "homepage",
+  "label": "Homepage",
+  "status": true,
+  "repeatable": false,
+  "json": {
+    "Main" : {
+      "mydate" : {
+        "config" : {
+          "label" : "mydate",
+          "placeholder" : ""
+        },
+        "type" : "Date"
+      },
+      "test-UID-fake-id" : {
+        "type" : "UID",
+        "config" : {
+          "label" : "uidddddddddd"
+        }
+      },
+      "rich" : {
+        "config" : {
+          "label" : "rich",
+          "placeholder" : "",
+          "allowTargetBlank" : true,
+          "single" : "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        },
+        "type" : "StructuredText"
+      }
+    },
+    "a second tab" : {
+      "embedmyfacebook" : {
+        "config" : {
+          "label" : "embedmyfacebook",
+          "placeholder" : ""
+        },
+        "type" : "Embed"
+      },
+      "geopoint" : {
+        "config" : {
+          "label" : "geopoint"
+        },
+        "type" : "GeoPoint"
+      },
+      "image" : {
+        "config" : {
+          "label" : "image",
+          "constraint" : { },
+          "thumbnails" : [ ]
+        },
+        "type" : "Image"
+      }
+    }
+  }
+}
