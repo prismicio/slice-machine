@@ -1,31 +1,47 @@
-import { Fragment } from "react";
-import Modal from "react-modal";
-import { Formik, Form, Field } from "formik";
+import { Fragment } from 'react'
+import Modal from 'react-modal'
+import { Formik, Form, Field } from 'formik'
 
-import { Box, Label, Input, Heading, Button } from "theme-ui";
+import {
+  Box,
+  Label,
+  Input,
+  Heading,
+  Button,
+} from 'theme-ui'
 
-import { Flex as FlexGrid, Col } from "components/Flex";
+import { Flex as FlexGrid, Col } from 'components/Flex'
 
-import Card from "components/Card/WithTabs/index";
+import Card from 'components/Card/WithTabs/index'
 
 Modal.setAppElement("#__next");
 
-const FORM_ID = "metadata-modal-form";
+const FORM_ID = 'metadata-modal-form'
 
 const InputBox = ({ name, label, placeholder }) => (
   <Box mb={2}>
     <Label htmlFor={name} mb={1}>
-      {label}
+      { label }
     </Label>
-    <Field name={name} type="text" placeholder={placeholder} as={Input} />
+    <Field
+      name={name}
+      type="text"
+      placeholder={placeholder}
+      as={Input}
+    />
   </Box>
-);
+)
 
-const MetaDataModal = ({ close, isOpen, Model }) => {
+const MetaDataModal = ({
+  close,
+  isOpen,
+  Model,
+}) => {
+
   const onUpdateField = (value) => {
-    store.updateMetadata(Model, value);
-    close();
-  };
+    store.updateMetadata(Model, value)
+    close()
+  }
 
   return (
     <Modal
@@ -38,23 +54,28 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
         validateOnChange
         initialValues={Model.meta}
         onSubmit={(values, _) => {
-          onUpdateField(values);
+          onUpdateField(values)
         }}
       >
         {(props) => {
-          const { values, errors, isValid, isSubmitting } = props;
+          const {
+            values,
+            errors,
+            isValid,
+            isSubmitting,
+          } = props
           return (
             <Form id={FORM_ID}>
               <Card
                 HeaderContent={<Heading as="h3">Update MetaData</Heading>}
-                FooterContent={
+                FooterContent={(
                   <Fragment>
                     <Button
                       mr={2}
                       type="button"
                       onClick={close}
                       variant="secondary"
-                    >
+                      >
                       Cancel
                     </Button>
                     <Button
@@ -65,7 +86,7 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
                       Save
                     </Button>
                   </Fragment>
-                }
+                )}
               >
                 <FlexGrid>
                   <Col>
@@ -90,11 +111,10 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
                 </FlexGrid>
               </Card>
             </Form>
-          );
-        }}
+          )}}
       </Formik>
     </Modal>
-  );
-};
+  )
+}
 
-export default MetaDataModal;
+export default MetaDataModal

@@ -1,7 +1,13 @@
-import { Field } from "formik";
-import { Label, Checkbox } from "theme-ui";
+import { Field } from 'formik'
+import { Label, Checkbox } from 'theme-ui'
 
-const FormFieldCheckbox = ({ meta, label, fieldName, onChange, ...rest }) => {
+const FormFieldCheckbox = ({
+  meta,
+  label,
+  fieldName,
+  onChange,
+  ...rest
+}) => {
   return (
     <Label variant="label.border" {...rest}>
       <Field
@@ -13,7 +19,7 @@ const FormFieldCheckbox = ({ meta, label, fieldName, onChange, ...rest }) => {
       />
       {label}
     </Label>
-  );
-};
+  )
+}
 
-export default FormFieldCheckbox;
+export default FormFieldCheckbox

@@ -1,12 +1,12 @@
-import { MdColorLens } from "react-icons/md";
-import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockContent, handleMockConfig } from "./Mock";
-import { MockConfigForm } from "./Mock/Form";
+import { MdColorLens } from 'react-icons/md'
+import { createDefaultWidgetValues } from '../../../../utils'
+import { handleMockContent, handleMockConfig } from './Mock'
+import { MockConfigForm } from './Mock/Form'
 
-import { Widget } from "../Widget";
+import { Widget } from '../Widget'
 
-import { FieldType } from "../../CustomType/fields";
-import { ColorField } from "./type";
+import { FieldType } from '../../CustomType/fields'
+import { ColorField } from './type'
 
 /** {
   "type" : "Color",
@@ -17,13 +17,11 @@ import { ColorField } from "./type";
 
 const Meta = {
   icon: MdColorLens,
-  title: "Color",
-  description: "A color picker",
-};
+  title: 'Color',
+  description: 'A color picker'
+}
 
-const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
-  FieldType.Color
-);
+const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(FieldType.Color)
 
 export const Color: Widget<ColorField, typeof schema> = {
   handleMockContent,
@@ -33,5 +31,5 @@ export const Color: Widget<ColorField, typeof schema> = {
   FormFields,
   TYPE_NAME,
   schema,
-  Meta,
-};
+  Meta
+}

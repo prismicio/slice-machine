@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
-import { Box, Button, Flex } from "theme-ui";
+import { useContext, useState } from 'react'
+import { Box, Button, Flex } from 'theme-ui'
 
-import Burger from "../Icons/Burger";
-import VersionBadge from "../../Navigation/Badge";
+import Burger from '../Icons/Burger'
+import VersionBadge from '../../Navigation/Badge'
 
-import Logo from "./Logo";
-import ItemsList from "./Navigation/List";
+import Logo from './Logo'
+import ItemsList from './Navigation/List'
 
-import { NavCtx } from "..";
+import { NavCtx } from '..'
 
 const Mobile = () => {
   const navCtx = useContext(NavCtx);

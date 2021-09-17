@@ -1,20 +1,20 @@
-import { Field, FieldType } from "../../CustomType/fields";
-import { SliceZone } from "../../CustomType/sliceZone";
+import { Field, FieldType } from '../../CustomType/fields'
+import { SliceZone } from '../../CustomType/sliceZone';
 
-export type AsArray = ReadonlyArray<{ key: string; value: Field }>;
-export type AsObject = { [key: string]: Field | SliceZone };
+export type AsArray = ReadonlyArray<{key: string, value: Field}>
+export type AsObject = { [key: string]: Field | SliceZone }
 
 interface GroupConfig<T extends AsObject | AsArray> {
-  label: string;
-  placeholder: string;
-  fields: T;
+  label: string,
+  placeholder: string,
+  fields: T
 }
-const defaultConfig = { label: "", placeholder: "", fields: [] as any };
+const defaultConfig = ({ label: '', placeholder: '', fields: [] as any })
 
 export class GroupField<T extends AsObject | AsArray> implements Field {
-  config: GroupConfig<T>;
-  readonly type = FieldType.Group;
+  config: GroupConfig<T>
+  readonly type = FieldType.Group
   constructor(config: Partial<GroupConfig<T>> = {}) {
-    this.config = { ...defaultConfig, ...config };
+    this.config = { ...defaultConfig, ...config }
   }
 }

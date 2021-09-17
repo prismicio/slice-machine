@@ -1,47 +1,55 @@
-import { useEffect, useRef } from "react";
-import { Formik, Form, Field } from "formik";
-import { Box, Input, Flex, Text, Button, Label, useThemeUI } from "theme-ui";
+import { useEffect, useRef } from 'react'
+import { Formik, Form, Field } from 'formik'
+import { Box, Input, Flex, Text, Button, Label, useThemeUI } from 'theme-ui'
 
-import { DefaultFields, validateId } from "@lib/forms/defaults";
-import { createInitialValues, createValidationSchema } from "@lib/forms";
+import {
+  DefaultFields,
+  validateId
+} from '@lib/forms/defaults'
+import {
+  createInitialValues,
+  createValidationSchema
+} from '@lib/forms'
 
-import * as Widgets from "@lib/models/common/widgets/withGroup";
+import * as Widgets from '@lib/models/common/widgets/withGroup'
 
-import ErrorTooltip from "./ErrorTooltip";
+import ErrorTooltip from './ErrorTooltip'
 
 const RefInput = (args) => {
-  return <Input {...args} ref={args.innerRef} />;
-};
+  return <Input {...args} ref={args.innerRef} />
+}
 
-const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
-  const fieldRef = useRef(null);
-  const { theme } = useThemeUI();
-  const widget = Widgets[widgetTypeName];
+const NewField = ({
+  widgetTypeName,
+  fields,
+  onSave,
+  onCancelNewField,
+}) => {
+
+  const fieldRef = useRef(null)
+  const { theme } = useThemeUI()
+  const widget = Widgets[widgetTypeName]
   if (!widget) {
-    console.error(
-      `Widget of type "${widgetTypeName}" not found. This is a problem on our side!`
-    );
-    return <div>Unexpected error. Contact us for more info.</div>;
+    console.error(`Widget of type "${widgetTypeName}" not found. This is a problem on our side!`)
+    return <div>Unexpected error. Contact us for more info.</div>
   }
   const FormFields = {
-    id: DefaultFields.id,
-  };
+    id: DefaultFields.id
+  }
 
-  const {
-    Meta: { icon: WidgetIcon },
-  } = widget;
+  const { Meta: { icon: WidgetIcon } } = widget
 
   const initialValues = {
     ...createInitialValues(FormFields),
-    widgetTypeName,
-  };
-  const validationSchema = createValidationSchema(FormFields);
+    widgetTypeName
+  }
+  const validationSchema = createValidationSchema(FormFields)
 
   useEffect(() => {
     if (fieldRef.current) {
-      fieldRef.current.focus();
+      fieldRef.current.focus()
     }
-  }, [fieldRef]);
+  }, [fieldRef])
 
   return (
     <Formik
@@ -49,8 +57,8 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
       onSubmit={onSave}
       validationSchema={validationSchema}
       initialValues={initialValues}
-    >
-      {({ errors }) => (
+     >
+       {({ errors }) => (
         <Form>
           <Flex
             as="li"
@@ -58,44 +66,44 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
               py: 2,
               px: 3,
               mx: 0,
-              ml: "34px",
+              ml: '34px',
               alignItems: "center",
               variant: "styles.listItem",
-              border: (t) => `1px solid ${t.colors?.borders}`,
+              border: (t) => `1px solid ${t.colors?.borders}`
             }}
           >
             <Flex
               sx={{
                 alignItems: "center",
-                width: "50%",
+                width: '50%'
               }}
             >
               <WidgetIcon
                 style={{
                   color: theme.colors.primary,
-                  marginRight: "12px",
-                  borderRadius: "4px",
-                  border: "2px solid",
+                  marginRight: '12px',
+                  borderRadius: '4px',
+                  border: '2px solid',
                   borderColor: theme.colors.primary,
-                  width: "30px", // display bug
+                  width: '30px' // display bug
                 }}
                 size={28}
               />
               <Label
                 sx={{
-                  display: "flex",
+                  display: 'flex',
                   alignItems: "center",
                 }}
               >
-                <Text as="p" sx={{ mr: 3, minWidth: "56px" }}>
-                  field id
+                <Text as="p" sx={{ mr: 3, minWidth: '56px' }}>
+                field id
                 </Text>
                 <Field
                   name="id"
                   placeholder="myField"
                   type="text"
-                  validate={(value) =>
-                    validateId({
+                  validate={
+                    (value) => validateId({
                       value,
                       fields,
                       initialId: null,
@@ -103,38 +111,25 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                   }
                   as={RefInput}
                   innerRef={fieldRef}
-                  sx={{
-                    border: ({ colors }) =>
-                      errors.id
-                        ? `1px solid tomato`
-                        : `1px solid ${colors.primary}`,
-                    "&:focus": {
-                      border: errors.id
-                        ? `1px solid tomato`
-                        : "1px solid yellow",
-                    },
+                  sx={{ 
+                    border: ({ colors }) => errors.id ? `1px solid tomato` : `1px solid ${colors.primary}`,
+                    '&:focus': {
+                      border: errors.id ? `1px solid tomato` : '1px solid yellow'
+                    }
                   }}
                 />
                 <ErrorTooltip errors={errors} />
               </Label>
             </Flex>
             <Box>
-              <Button
-                onClick={onCancelNewField}
-                variant="secondary"
-                type="button"
-              >
-                Cancel
-              </Button>
-              <Button sx={{ ml: 2 }} type="submit">
-                Add
-              </Button>
+              <Button onClick={onCancelNewField} variant="secondary" type="button">Cancel</Button>
+              <Button sx={{ ml: 2 }} type="submit">Add</Button>
             </Box>
           </Flex>
         </Form>
-      )}
+       )}
     </Formik>
-  );
-};
+  )
+}
 
-export default NewField;
+export default NewField

@@ -1,13 +1,14 @@
-import * as Widgets from "../lib/models/common/widgets";
+import * as Widgets from '../lib/models/common/widgets'
 
-const WidgetsTable = Object.entries(Widgets);
+const WidgetsTable = Object.entries(Widgets)
 
 const validate = (widget, t, log) => {
   const { err } = (() => {
     try {
-      return { res: widget.schema.validateSync(t, { stripUnknown: false }) };
-    } catch (err) {
-      return { err };
+      return { res: widget.schema.validateSync(t, { stripUnknown: false }) }
+    } catch(err) {
+      
+      return { err }
     }
   })();
 
@@ -18,34 +19,34 @@ const validate = (widget, t, log) => {
         __pass: t.__pass,
         err,
         log,
-        t,
-      });
+        t
+      })
     }
-    expect(t.__pass).toBe(false);
+    expect(t.__pass).toBe(false)
   } else {
     if (log && t.__pass !== true) {
       console.log({
         passed: true,
         __pass: t.__pass,
         log,
-        t,
-      });
+        t
+      })
     }
-    expect(t.__pass).toBe(true);
+    expect(t.__pass).toBe(true)
   }
-};
+  
+} 
 
-test.each(WidgetsTable)(
-  "%s: schema validates configuration",
-  (name, widget) => {
-    const defaultWidget = widget.create();
-    expect(function () {
-      widget.schema.validateSync(defaultWidget, { stripUnknown: false });
-    }).not.toThrow();
 
-    const tests = require(`./__mockData__/widgets/${name}`);
-    Object.entries(tests).forEach(([testName, t]) => {
-      validate(widget, t); //, name === 'GeoPoint' && testName)
-    });
-  }
-);
+test.each(WidgetsTable)('%s: schema validates configuration', (name, widget) => {
+  const defaultWidget = widget.create()
+  expect(function () {
+    widget.schema.validateSync(defaultWidget, { stripUnknown: false })
+  }).not.toThrow()
+
+  const tests = require(`./__mockData__/widgets/${name}`)
+  Object.entries(tests).forEach(([testName, t]) => {
+    validate(widget, t) //, name === 'GeoPoint' && testName)
+  })
+});
+
