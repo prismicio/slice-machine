@@ -3,6 +3,7 @@ const withPlugins = require("next-compose-plugins");
 const withMDX = require("@next/mdx")();
 const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
 
+// maybe husky?
 
 module.exports = withPlugins(
   [
