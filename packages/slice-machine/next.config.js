@@ -1,9 +1,8 @@
 const path = require("path");
 const withPlugins = require("next-compose-plugins");
 const withMDX = require("@next/mdx")();
-const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
+const withCustomBabelConfigFile = require("next-plugin-custom-babel-config")
 
-// checking lint-staged
 
 module.exports = withPlugins(
   [
