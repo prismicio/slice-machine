@@ -132,12 +132,10 @@ router.use("/auth/validate", async function (req, res) {
 });
 
 router.use("*", async function (req, res) {
-  return res
-    .status(404)
-    .json({
-      err: "not-found",
-      reason: `Could not find route "${req.baseUrl}"`,
-    });
+  return res.status(404).json({
+    err: "not-found",
+    reason: `Could not find route "${req.baseUrl}"`,
+  });
 });
 
 module.exports = router;
