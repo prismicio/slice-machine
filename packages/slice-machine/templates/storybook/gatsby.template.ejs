@@ -9,7 +9,7 @@ export default {
 }
 
 const runtime = createRuntime();
-runtime.registerSharedSlice(model);
+runtime.registerSharedSliceModel(model);
 
 <% mocks.forEach((variation) => { %>
 export const <%- variation.id %> = () =>
