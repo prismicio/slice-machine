@@ -3,29 +3,32 @@
   "type": "SharedSlice",
   "name": "{{componentName}}",
   "description": "{{componentName}}",
-  "variations": [{
-    "id": "{{variationId}}",
-    "name": "Default slice",
-    "docURL": "...",
-    "version": "sktwi1xtmkfgx8626",
-    "description": "{{componentName}}",
-    "primary": {
-      "title": {
-        "type": "StructuredText",
-        "config": {
-          "single": "heading1",
-          "label": "Title",
-          "placeholder": "This is where it all begins..."
+  "variations": [
+    {
+      "id": "{{variationId}}",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "{{componentName}}",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
         }
       },
-      "description": {
-        "type": "StructuredText",
-        "config": {
-          "single": "paragraph",
-          "label": "Description",
-          "placeholder": "A nice description of your feature"
-        }
-      }
+      "items": {}
     }
-  }]
+  ]
 }
