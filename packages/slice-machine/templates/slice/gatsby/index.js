@@ -23,9 +23,17 @@ export default function {{componentName}}Slice({ slice }) {
 // → Learn how to use this GraphQL fragment
 //   https://prismic.io/docs/technologies/fragments-gatsby
 export const fragment = graphql`
-  fragment Prismic{{componentName}}DefaultSlice on Prismic{{componentName}}DefaultSlice {
-    slice_type
-    variation
-    # Add your fields here
+  fragment Prismic{{componentName}} on Prismic{{componentName}} {
+    # Fields for the DefaultSlice variation
+    ... on Prismic{{componentName}}DefaultSlice {
+      # Add your fields here (__typename can be removed)
+      __typename
+    }
+
+    # Required fields for the SliceZone component
+    ... on PrismicSharedSliceType {
+      slice_type
+      variation
+    }
   }
 `
