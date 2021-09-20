@@ -16,7 +16,7 @@
     "chromatic": "^5.3.0",
     "css-loader": "^5.2.4",
     "cypress": "^8.4.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^6.0.1",
     "react-is": "^16.13.1",
     "sass": "^1.32.13",
     "sass-loader": "10.1.1",
