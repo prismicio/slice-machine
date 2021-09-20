@@ -108,10 +108,18 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
     <>
       <Container
         sx={{
-          backgroundColor: "red",
+          display: "flex",
+          flex: 1,
         }}
       >
-        <main>
+        <Box
+          as={"main"}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Header
             ActionButton={
               hasLocalLibs ? (
@@ -160,18 +168,31 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
               )}
             </Box>
           )}
-          <Box>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             {sliceCount == 0 ? (
-              <Box>
-                <Heading>Create your first Slice</Heading>
-                <p>
+              <Box
+                sx={{
+                  flex: 1,
+                  alignItems: "center",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  display: "flex",
+                  textAlign: "center",
+                }}
+              >
+                <Heading sx={{ mb: 4 }}>Create your first Slice</Heading>
+                <Text sx={{ mb: 4 }}>
                   Click the + button on the top right to create the first slice
-                  of your project.
-                </p>
-                <p>
-                  It will be stored locally. You will then be able to push it to
-                  Prismic.
-                </p>
+                  of your project. <br />
+                  <br /> It will be stored locally. You will then be able to
+                  push it to Prismic.
+                </Text>
                 <Button onClick={() => setIsOpen(true)}>
                   {data.loading ? (
                     <Spinner
@@ -191,12 +212,19 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                 }
                 const { name, isLocal, components } = maybelib;
                 return (
-                  <div key={name}>
+                  <Flex
+                    key={name}
+                    sx={{
+                      flexDirection: "column",
+                      "&:not(last-of-type)": {
+                        mb: 4,
+                      },
+                    }}
+                  >
                     <Flex
                       sx={{
                         alignItems: "center",
                         justifyContent: "space-between",
-                        mt: i ? 4 : 0,
                       }}
                     >
                       <Flex
@@ -223,12 +251,12 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                         });
                       }}
                     />
-                  </div>
+                  </Flex>
                 );
               })
             )}
           </Box>
-        </main>
+        </Box>
       </Container>
       {configLocalLibs.length ? (
         <CreateSlice
