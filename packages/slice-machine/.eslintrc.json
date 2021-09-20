@@ -13,8 +13,8 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:jest/recommended",
-    "eslint-config-prettier"
+    "plugin:jest/recommended"
+    // "eslint-config-prettier"
   ],
   "ignorePatterns": ["build", "templates", "**/tests/**"],
   "rules": {
