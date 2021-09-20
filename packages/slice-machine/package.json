@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "next dev",
     "test": "jest",
+    "watch-test": "jest --watch",
     "config": "tsc --showConfig",
     "clean-build": "rimraf ./build/client",
     "postinstall": "node postinstall",
