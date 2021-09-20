@@ -259,14 +259,19 @@ export default function reducer(
         );
       }
       case Actions.GroupReplaceWidget: {
-        const { tabId, groupId, previousKey, newKey, value } =
-          action.payload as {
-            tabId: string;
-            groupId: string;
-            previousKey: string;
-            newKey: string;
-            value: Field;
-          };
+        const {
+          tabId,
+          groupId,
+          previousKey,
+          newKey,
+          value,
+        } = action.payload as {
+          tabId: string;
+          groupId: string;
+          previousKey: string;
+          newKey: string;
+          value: Field;
+        };
         return CustomTypeState.updateTab(
           prevState,
           tabId

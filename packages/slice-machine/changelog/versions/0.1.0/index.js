@@ -91,8 +91,12 @@ module.exports = {
     if (Files.exists(pathToSmFile)) {
       const json = JSON.parse(fs.readFileSync(pathToSmFile, "utf-8"));
       (json.libraries || []).forEach((lib) => {
-        const { isLocal, pathExists, pathToSlices, pathToLib } =
-          getInfoFromPath(lib, cwd);
+        const {
+          isLocal,
+          pathExists,
+          pathToSlices,
+          pathToLib,
+        } = getInfoFromPath(lib, cwd);
         if (isLocal && pathExists) {
           const libraryName = path.basename(pathToLib);
           const sliceNames = Files.readDirectory(slash(pathToSlices))

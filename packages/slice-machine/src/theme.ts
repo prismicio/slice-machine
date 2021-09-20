@@ -95,7 +95,8 @@ const AppTheme = () =>
       },
     },
     fonts: {
-      body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+      body:
+        'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
       heading: "inherit",
       monospace: "Menlo, monospace",
     },
@@ -621,10 +622,9 @@ const AppTheme = () =>
         },
       },
       ".prism-code.language-jsx": {
-        ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation":
-          {
-            color: (t: MyTheme) => t.codeColor.gray,
-          },
+        ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation": {
+          color: (t: MyTheme) => t.codeColor.gray,
+        },
         ".language-javascript, .plain": {
           color: (t: MyTheme) => t.codeColor.green,
         },
@@ -633,10 +633,9 @@ const AppTheme = () =>
         ".punctuation": {
           color: (t: MyTheme) => t.codeColor.gray,
         },
-        ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access":
-          {
-            color: (t: MyTheme) => t.codeColor.blue, // blue
-          },
+        ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access": {
+          color: (t: MyTheme) => t.codeColor.blue, // blue
+        },
         ".property-access, .plain": {
           color: (t: MyTheme) => t.codeColor.green, // green
         },
@@ -694,10 +693,9 @@ const AppTheme = () =>
       ".comment": {
         fontStyle: "italic",
       },
-      ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable":
-        {
-          color: "purple",
-        },
+      ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable": {
+        color: "purple",
+      },
       ".atrule,.attr-value,.keyword": {
         color: "primary",
       },

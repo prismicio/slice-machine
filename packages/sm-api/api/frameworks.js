@@ -19,7 +19,10 @@ module.exports = cors(async (req, res) => {
   }));
 
   const resolved = (await Promise.all(frameworks)).map(
-    ({ scaffolder, framework }) => ({ manifest: scaffolder.build(), framework })
+    ({ scaffolder, framework }) => ({
+      manifest: scaffolder.build(),
+      framework,
+    })
   );
   resolved.forEach((framework) => {
     keysToStrip.forEach((key) => {

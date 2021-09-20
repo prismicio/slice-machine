@@ -83,9 +83,9 @@ Returns a slice machine library (library name, Git url, slice definitions...), b
 - **Sample Call:**
 
   ```javascript
-  fetch(" http://sm-api.now.sh/api/library?lib=vue-essential-slices").then(
-    (res) => res.json()
-  );
+  fetch(
+    " http://sm-api.now.sh/api/library?lib=vue-essential-slices"
+  ).then((res) => res.json());
   ```
 
 ## fetch slice definitions

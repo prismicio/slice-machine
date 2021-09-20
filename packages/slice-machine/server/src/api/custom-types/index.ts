@@ -49,7 +49,9 @@ const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
   }
 };
 
-export default async function handler(env: Environment): Promise<{
+export default async function handler(
+  env: Environment
+): Promise<{
   isFake: boolean;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;

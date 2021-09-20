@@ -16,7 +16,7 @@ jest.mock(`fs`, () => {
   return unionfs.use(fs);
 });
 
-jest.spyOn(console, 'error').mockImplementation(jest.fn());
+jest.spyOn(console, "error").mockImplementation(jest.fn());
 
 afterEach(() => {
   fs.reset();

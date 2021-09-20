@@ -41,9 +41,11 @@ export function generateCustomScreenShot(
       file: Blob
     ) => {
       const form = new FormData();
-      Object.entries({ sliceName, variationId, from: libFrom }).forEach(
-        ([key, value]) => form.append(key, value)
-      );
+      Object.entries({
+        sliceName,
+        variationId,
+        from: libFrom,
+      }).forEach(([key, value]) => form.append(key, value));
 
       form.append("file", file);
 

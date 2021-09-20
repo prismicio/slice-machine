@@ -12,10 +12,8 @@ const createCodeFromTag = (tag) => (fieldText) =>
   `<${tag} :field="${fieldText}" />`;
 const createPrismicLink = (fieldText) =>
   `<prismic-link :field="${fieldText}">My Link</prismic-link>`;
-const createDefaultField =
-  (tag = "span") =>
-  (fieldText) =>
-    `<${tag}>{{ ${fieldText} }}</${tag}>`;
+const createDefaultField = (tag = "span") => (fieldText) =>
+  `<${tag}>{{ ${fieldText} }}</${tag}>`;
 
 const codeByWidgetType = (Widgets) => ({
   [Widgets.ContentRelationship?.CUSTOM_NAME]: createPrismicLink,

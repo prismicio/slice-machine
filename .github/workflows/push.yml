@@ -31,6 +31,5 @@ jobs:
       - name: Preparing to check start script
         run: lerna clean --yes && lerna bootstrap -- --production
       - name: Installing and running test project
-        working-directory: './packages/slice-machine/tests/project'
+        working-directory: "./packages/slice-machine/tests/project"
         run: yarn && yarn test:e2e
-
