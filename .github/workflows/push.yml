@@ -19,12 +19,12 @@ jobs:
         run: yarn
       - name: Install package dependencies
         run: lerna bootstrap
-      - name: Running tests
-        run: lerna run test
+#      - name: Running tests
+#        run: lerna run test
 #      - name: linting
 #        run: lerna run lint
-      - name: Audit
-        run: lerna run security-audit:prod
+#      - name: Audit
+#        run: lerna run security-audit:prod
       - name: Build and export slice machine
         working-directory: ./packages/slice-machine
         run: yarn build && yarn export-build
