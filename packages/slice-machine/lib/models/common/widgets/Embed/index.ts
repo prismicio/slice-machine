@@ -23,7 +23,7 @@ const Meta = {
   description: "Embed videos, songs, tweets, slides, …",
 };
 
-export const Embed: Widget<EmbedField, typeof schema> = {
+export const EmbedWidget: Widget<EmbedField, typeof schema> = {
   create: (label: string) => new EmbedField({ label }),
   handleMockConfig,
   handleMockContent,

@@ -38,7 +38,7 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
-export const Select: Widget<SelectField, typeof schema> = {
+export const SelectWidget: Widget<SelectField, typeof schema> = {
   FormFields,
   handleMockConfig,
   handleMockContent,

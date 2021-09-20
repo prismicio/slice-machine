@@ -1,109 +1,70 @@
 import * as Widgets from "../lib/models/common/widgets";
 import { handleFields } from "../lib/mock/misc/handlers";
-
-const toHaveProps = (obj, props) =>
-  props.forEach((prop) => expect(obj).toHaveProperty(prop));
+import { ColorWidget } from "@models/common/widgets/Color";
+import { BooleanWidget } from "@models/common/widgets/Boolean";
+import { ImageWidget } from "@models/common/widgets/Image";
+import { StructuredTextWidget } from "@models/common/widgets/StructuredText";
+import { LinkWidget } from "@models/common/widgets/Link";
+import { LinkToMediaWidget } from "@models/common/widgets/LinkToMedia";
+import { SelectWidget } from "@models/common/widgets/Select";
+import { DateWidget } from "@models/common/widgets/Date";
+import { TimestampWidget } from "@models/common/widgets/Timestamp";
+import { EmbedWidget } from "@models/common/widgets/Embed";
+import { NumberWidget } from "@models/common/widgets/Number";
+import { GeoPointWidget } from "@models/common/widgets/GeoPoint";
 
 describe("handleFields", () => {
   const mockFields = handleFields(Widgets);
   test("can create a text mock", () => {
-    const textField = [
-      [
-        "text",
-        {
-          config: {
-            label: "",
-            placeholder: "",
-            allowTargetBlank: true,
-            single: "paragraph",
-          },
-          type: "StructuredText",
-        },
-      ],
-    ];
+    const textField = [["textFieldName", StructuredTextWidget.create("text")]];
 
-    const textFieldMocked = Object.entries(mockFields(textField))[0];
-    const [key, value] = textFieldMocked;
-    expect(Array.isArray(value)).toBe(true);
-    expect(typeof value[0]).toBe("object");
-    expect(value[0].text.length).toBeGreaterThan(0);
+    const textFieldMocked = mockFields(textField);
+    expect(textFieldMocked).toMatchObject({
+      textFieldName: [
+        { type: "paragraph", text: expect.stringMatching(/.{1}/) },
+      ],
+    });
   });
 
   test("can create a color mock", () => {
     const colorField = [
-      [
-        "colorFieldName",
-        {
-          type: "Color",
-          config: {
-            label: "",
-            id: "color",
-            placeholder: "",
-          },
-        },
-      ],
+      ["colorFieldName", ColorWidget.create("colorFieldName")],
     ];
 
-    const colorFieldMocked = Object.entries(mockFields(colorField))[0];
-    const [key, value] = colorFieldMocked;
-    expect(typeof value).toBe("string");
-    expect(value.length).toBe(7);
-    expect(value[0]).toBe("#");
+    const colorFieldMocked = mockFields(colorField);
+    expect(colorFieldMocked).toMatchObject({
+      colorFieldName: expect.stringMatching(/#.{6}/),
+    });
   });
 
   test("can create a bool mock", () => {
     const boolField = [
-      [
-        "boolFieldName",
-        {
-          type: "Boolean",
-          config: {
-            label: "",
-            id: "bool",
-            placeholder: "",
-            placeholder_false: "false",
-            placeholder_true: "true",
-            default_value: true,
-          },
-        },
-      ],
+      ["boolFieldName", BooleanWidget.create("boolFieldName")],
     ];
 
-    const boolFieldMocked = Object.entries(mockFields(boolField))[0];
-    const [key, value] = boolFieldMocked;
-    expect(typeof value).toBe("boolean");
+    const boolFieldMocked = mockFields(boolField);
+    expect(boolFieldMocked).toMatchObject({
+      boolFieldName: expect.any(Boolean),
+    });
   });
 
   test("can create a image mock", () => {
     const imageField = [
-      [
-        "imageFieldName",
-        {
-          type: "Image",
-          config: {
-            label: "My cool label",
-            constraint: {
-              width: 600,
-              height: 600,
-            },
-            thumbnails: [
-              {
-                name: "square",
-                width: 800,
-                height: 800,
-              },
-            ],
-          },
-        },
-      ],
+      ["imageFieldName", ImageWidget.create("imageFieldName")],
     ];
 
-    const imageFieldMocked = Object.entries(mockFields(imageField))[0];
-    const [key, value] = imageFieldMocked;
-    const properties = ["dimensions", "alt", "copyright", "url"];
-    toHaveProps(value, properties);
-    expect(typeof value.square).toBe("object");
-    toHaveProps(value.square, properties);
+    const imageFieldMocked = mockFields(imageField);
+    expect(imageFieldMocked).toMatchObject({
+      imageFieldName: {
+        url: expect.stringMatching(/https:\/\/.{1}/),
+        copyright: null,
+        alt: expect.stringMatching(/.{1}/),
+        dimensions: {
+          height: expect.any(Number),
+          width: expect.any(Number),
+        },
+      },
+    });
   });
 
   test("can create a title mock", () => {
@@ -122,194 +83,104 @@ describe("handleFields", () => {
       ],
     ];
 
-    const titleFieldMocked = Object.entries(mockFields(titleField))[0];
-    const [key, value] = titleFieldMocked;
-    expect(Array.isArray(value)).toBe(true);
-    expect(typeof value[0]).toBe("object");
-    expect(value[0].text.length).toBeGreaterThan(0);
-    expect(value[0].type).toBe("heading1");
+    const titleFieldMocked = mockFields(titleField);
+    expect(titleFieldMocked).toMatchObject({
+      titleFieldName: [
+        { type: "heading1", spans: [], text: expect.stringMatching(/.{1}/) },
+      ],
+    });
   });
 
   test("can create a link mock", () => {
-    const linkField = [
-      [
-        "linkFieldName",
-        {
-          type: "Link",
-          config: {
-            label: "",
-            id: "link",
-            placeholder: "",
-            allowTargetBlank: true,
-          },
-        },
-      ],
-    ];
+    const linkField = [["linkFieldName", LinkWidget.create("linkFieldName")]];
 
-    const linkFieldMocked = Object.entries(mockFields(linkField))[0];
-    const [key, value] = linkFieldMocked;
-    expect(typeof value).toBe("object");
-
-    const properties = ["link_type", "url"];
-    toHaveProps(value, properties);
-    expect(value.link_type).toBe("Web");
-    expect(value.url.length).toBeGreaterThan(0);
+    const linkFieldMocked = mockFields(linkField);
+    expect(linkFieldMocked).toMatchObject({
+      linkFieldName: { link_type: "Web", url: expect.stringMatching(/.{1}/) },
+    });
   });
 
   test("can create a linkToMedia mock", () => {
     const linkToMediaField = [
       [
         "linkToMediaFieldName",
-        {
-          type: "Link",
-          config: {
-            label: "",
-            select: "media",
-            id: "linkToMedia",
-            placeholder: "",
-            allowTargetBlank: true,
-          },
-        },
+        LinkToMediaWidget.create("linkToMediaFieldName"),
       ],
     ];
 
-    const linkToMediaFieldMocked = Object.entries(
-      mockFields(linkToMediaField)
-    )[0];
-    const [key, value] = linkToMediaFieldMocked;
-    expect(typeof value).toBe("object");
-
-    const properties = ["link_type", "url"];
-    toHaveProps(value, properties);
-    expect(value.link_type).toBe("media");
-    expect(value.url.length).toBeGreaterThan(0);
+    const linkToMediaFieldMocked = mockFields(linkToMediaField);
+    expect(linkToMediaFieldMocked).toMatchObject({
+      linkToMediaFieldName: {
+        link_type: "media",
+        url: expect.stringMatching(/.{1}/),
+      },
+    });
   });
 
   test("can create a select mock", () => {
     const selectField = [
-      [
-        "selectFieldName",
-        {
-          type: "Select",
-          config: {
-            label: "",
-            id: "select",
-            placeholder: "",
-            default_value: "",
-            options: ["", ""],
-          },
-        },
-      ],
+      ["selectFieldName", SelectWidget.create("selectFieldName")],
     ];
 
-    const selectFieldMocked = Object.entries(mockFields(selectField))[0];
-    const [key, value] = selectFieldMocked;
-    expect(typeof value).toBe("string");
+    const selectFieldMocked = mockFields(selectField);
+    expect(selectFieldMocked).toMatchObject({
+      selectFieldName: expect.stringMatching(/.{1}/),
+    });
   });
 
   test("can create a date mock", () => {
-    const dateField = [
-      [
-        "dateFieldName",
-        {
-          type: "Date",
-          config: {
-            label: "",
-            id: "date",
-            placeholder: "",
-          },
-        },
-      ],
-    ];
+    const dateField = [["dateFieldName", DateWidget.create("dateFieldName")]];
 
-    const dateFieldMocked = Object.entries(mockFields(dateField))[0];
-    const [key, value] = dateFieldMocked;
-    expect(typeof value).toBe("string");
-    expect(value.length).toBe(10);
-    expect(value.split("-").length).toBe(3);
+    const dateFieldMocked = mockFields(dateField);
+    expect(dateFieldMocked).toMatchObject({
+      dateFieldName: expect.stringMatching(/.{4}-.{2}-.{2}/),
+    });
   });
 
   test("can create a timestamp mock", () => {
     const timestampField = [
-      [
-        "timestampFieldName",
-        {
-          type: "Timestamp",
-          config: {
-            label: "",
-            id: "timestamp",
-            placeholder: "",
-          },
-        },
-      ],
+      ["timestampFieldName", TimestampWidget.create("timestampFieldName")],
     ];
 
-    const timestampFieldMocked = Object.entries(mockFields(timestampField))[0];
-    const [key, value] = timestampFieldMocked;
-    expect(typeof value).toBe("string");
-    expect(value.split(":").length).toBe(3);
+    const timestampFieldMocked = mockFields(timestampField);
+    expect(timestampFieldMocked).toMatchObject({
+      timestampFieldName: expect.stringMatching(/.{4}:.{2}:.{2}/),
+    });
   });
 
   test("can create a embed mock", () => {
     const embedField = [
-      [
-        "embedFieldName",
-        {
-          type: "Embed",
-          config: {
-            label: "",
-            id: "embed",
-            placeholder: "",
-          },
-        },
-      ],
+      ["embedFieldName", EmbedWidget.create("embedFieldName")],
     ];
 
-    const embedFieldMocked = Object.entries(mockFields(embedField))[0];
-    const [key, value] = embedFieldMocked;
-    expect(typeof value).toBe("object");
-    expect(value.provider_name).not.toEqual(null);
+    const embedFieldMocked = mockFields(embedField);
+    expect(embedFieldMocked).toMatchObject({
+      embedFieldName: expect.any(Object),
+    });
   });
 
   test("can create a number mock", () => {
     const numberField = [
-      [
-        "numberFieldName",
-        {
-          type: "Number",
-          config: {
-            label: "",
-            id: "number",
-            placeholder: "",
-          },
-        },
-      ],
+      ["numberFieldName", NumberWidget.create("numberFieldName")],
     ];
 
-    const numberFieldMocked = Object.entries(mockFields(numberField))[0];
-    const [key, value] = numberFieldMocked;
-    expect(typeof value).toBe("number");
+    const numberFieldMocked = mockFields(numberField);
+    expect(numberFieldMocked).toMatchObject({
+      numberFieldName: expect.any(Number),
+    });
   });
 
   test("can create a geoPoint mock", () => {
     const geoPointField = [
-      [
-        "geoPointFieldName",
-        {
-          type: "GeoPoint",
-          config: {
-            label: "",
-            id: "geoPoint",
-            placeholder: "",
-          },
-        },
-      ],
+      ["geoPointFieldName", GeoPointWidget.create("geoPointFieldName")],
     ];
 
-    const geoPointFieldMocked = Object.entries(mockFields(geoPointField))[0];
-    const [key, value] = geoPointFieldMocked;
-    expect(typeof value).toBe("object");
-    expect(typeof value.latitude).toBe("number");
-    expect(typeof value.longitude).toBe("number");
+    const geoPointFieldMocked = mockFields(geoPointField);
+    expect(geoPointFieldMocked).toMatchObject({
+      geoPointFieldName: {
+        latitude: expect.any(Number),
+        longitude: expect.any(Number),
+      },
+    });
   });
 });

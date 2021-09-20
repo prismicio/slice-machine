@@ -33,7 +33,7 @@ const Meta = {
   description: "Unique Identifier",
 };
 
-export const UID: Widget<UIDField, typeof schema> = {
+export const UIDWidget: Widget<UIDField, typeof schema> = {
   create: (label: string) => new UIDField({ label }),
   Meta,
   schema,

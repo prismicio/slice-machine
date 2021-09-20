@@ -1,33 +1,33 @@
 import { BooleanWidget } from "./Boolean";
-import { Color } from "./Color";
-import { ContentRelationship } from "./ContentRelationship";
+import { ColorWidget } from "./Color";
+import { ContentRelationshipWidget } from "./ContentRelationship";
 import { DateWidget } from "./Date";
-import { Embed } from "./Embed";
-import { GeoPoint } from "./GeoPoint";
-import { Image } from "./Image";
-import { Link } from "./Link";
-import { LinkToMedia } from "./LinkToMedia";
-import { Number } from "./Number";
-import { Select } from "./Select";
-import { StructuredText } from "./StructuredText";
-import { Text } from "./Text";
-import { Timestamp } from "./Timestamp";
-import { UID } from "./UID";
+import { EmbedWidget } from "./Embed";
+import { GeoPointWidget } from "./GeoPoint";
+import { ImageWidget } from "./Image";
+import { LinkWidget } from "./Link";
+import { LinkToMediaWidget } from "./LinkToMedia";
+import { NumberWidget } from "./Number";
+import { SelectWidget } from "./Select";
+import { StructuredTextWidget } from "./StructuredText";
+import { TextWidget } from "./Text";
+import { TimestampWidget } from "./Timestamp";
+import { UIDWidget } from "./UID";
 
 export {
   BooleanWidget as Boolean,
-  Color,
-  ContentRelationship,
+  ColorWidget as Color,
+  ContentRelationshipWidget as ContentRelationship,
   DateWidget as Date,
-  Embed,
-  GeoPoint,
-  Image,
-  Link,
-  Number,
-  Select,
-  StructuredText,
-  Text,
-  Timestamp,
-  UID,
-  LinkToMedia,
+  EmbedWidget as Embed,
+  GeoPointWidget as GeoPoint,
+  ImageWidget as Image,
+  LinkWidget as Link,
+  NumberWidget as Number,
+  SelectWidget as Select,
+  StructuredTextWidget as StructuredText,
+  TextWidget as Text,
+  TimestampWidget as Timestamp,
+  UIDWidget as UID,
+  LinkToMediaWidget as LinkToMedia,
 };

@@ -37,7 +37,7 @@ const Meta = {
   description: "Text content",
 };
 
-export const Text: Widget<TextField, typeof schema> = {
+export const TextWidget: Widget<TextField, typeof schema> = {
   create: (label: string) => new TextField({ label }),
   MockConfigForm,
   handleMockConfig,
