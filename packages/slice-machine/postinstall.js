@@ -57,11 +57,11 @@ function installSMScript(pkg) {
   const smModuleCWD = require.main.paths[0].split("node_modules")[0];
   const { pkg, smConfig } = retrieveConfigFiles(projectCWD);
 
-  if (pkg && smConfig) {
-    installSMScript(pkg);
-    writeSMVersion(smModuleCWD, smConfig);
-    return;
-  }
-  if (!pkg) console.error("Missing file package.json");
-  if (!smConfig) console.error("Missing file sm.json");
+  if (pkg.value) installSMScript(pkg);
+  else return console.error("[postinstall] Missing file package.json");
+
+  if (smConfig.value) writeSMVersion(smModuleCWD, smConfig);
+  else return console.error("[postinstall] Missing file sm.json");
+
+  return;
 })();
