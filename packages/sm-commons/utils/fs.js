@@ -4,8 +4,8 @@ const path = require("path");
 function getDirectories(p) {
   return fs
     .readdirSync(p)
-    .map(name => path.join(p, name))
-    .filter(e => fs.lstatSync(e).isDirectory());
+    .map((name) => path.join(p, name))
+    .filter((e) => fs.lstatSync(e).isDirectory());
 }
 
 function readFile(p) {
@@ -18,6 +18,6 @@ function readFile(p) {
 }
 
 module.exports = {
-    getDirectories,
-    readFile
-}
+  getDirectories,
+  readFile,
+};

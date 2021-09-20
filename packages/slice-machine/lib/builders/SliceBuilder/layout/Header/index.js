@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import * as Links from "../../links";
 import VariationPopover from "./VariationsPopover";
 
-import SaveButton from './SaveButton'
+import SaveButton from "./SaveButton";
 
 const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
   const router = useRouter();
@@ -71,7 +71,7 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
                           Model.infos.sliceName,
                           v.id
                         ).all
-                      )
+                      );
                     }}
                   />
                   <Box ml={2}>
@@ -111,4 +111,4 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
     </Flex>
   );
 };
-export default Header
+export default Header;

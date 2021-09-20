@@ -1,6 +1,6 @@
-import { Container, Box, Heading, Button, Flex, Text } from 'theme-ui'
-import Card from 'components/Card'
-import Li from 'components/Li'
+import { Container, Box, Heading, Button, Flex, Text } from "theme-ui";
+import Card from "components/Card";
+import Li from "components/Li";
 
 const ConfigErrors = ({ errors }) => (
   <Card
@@ -21,21 +21,23 @@ const ConfigErrors = ({ errors }) => (
       </Flex>
     )}
   >
-    {
-      Object.entries(errors).map(([key, value]) => (
-        <Li Component={Box} key={key} sx={{ m: 0, p: 1 }}>
-          <Text>- <b>{key}</b></Text><br/>
-          <Text>{value.message}</Text><br/>
-          {
-            value.run ? <Text mt={1}>Try running: <Text variant="pre">{value.run}</Text></Text> : null
-          }
-          {
-            value.do ? <Text mt={1}>Todo: {value.do}</Text> : null
-          }
-        </Li>
-      ))
-    }
+    {Object.entries(errors).map(([key, value]) => (
+      <Li Component={Box} key={key} sx={{ m: 0, p: 1 }}>
+        <Text>
+          - <b>{key}</b>
+        </Text>
+        <br />
+        <Text>{value.message}</Text>
+        <br />
+        {value.run ? (
+          <Text mt={1}>
+            Try running: <Text variant="pre">{value.run}</Text>
+          </Text>
+        ) : null}
+        {value.do ? <Text mt={1}>Todo: {value.do}</Text> : null}
+      </Li>
+    ))}
   </Card>
-)
+);
 
-export default ConfigErrors
+export default ConfigErrors;

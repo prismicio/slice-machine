@@ -5,7 +5,7 @@ const AdmZip = require("adm-zip");
 const JsZip = require("jszip");
 const util = require("util");
 
-const Mustache = require('mustache');
+const Mustache = require("mustache");
 const streamPipeline = util.promisify(require("stream").pipeline);
 
 const cors = require("../common/cors");
@@ -14,10 +14,10 @@ const { SUPPORTED_FRAMEWORKS } = require("../common/consts");
 
 const { libraries } = require("../common/consts");
 
-const { fetchLibrary } = require("./library");
+const { fetchLibrary } = require("./library");
 
-require.extensions['.mustache'] = function (module, filename) {
-  module.exports = fs.readFileSync(filename, 'utf8');
+require.extensions[".mustache"] = function (module, filename) {
+  module.exports = fs.readFileSync(filename, "utf8");
 };
 
 function handleUrl(endpoint, params = {}) {
@@ -39,12 +39,7 @@ async function download(endpoint, params) {
 module.exports = cors(async (req, res) => {
   try {
     const {
-      query: {
-        lib,
-        library,
-        framework = "nuxt",
-        projectType = "landing",
-      }
+      query: { lib, library, framework = "nuxt", projectType = "landing" },
     } = req;
 
     if (SUPPORTED_FRAMEWORKS.indexOf(framework) === -1) {
@@ -66,7 +61,7 @@ module.exports = cors(async (req, res) => {
         );
     }
 
-    const verifiedLibrary = libraries[packageName]
+    const verifiedLibrary = libraries[packageName];
     if (!libraries[packageName]) {
       return res
         .status(400)
@@ -86,33 +81,36 @@ module.exports = cors(async (req, res) => {
 
     const smLibrary = await fetchLibrary(packageName);
 
-    const { cts: mergedCustomTypes, files, routes } = require("../common/custom_types/")[projectType](smLibrary.slices);
+    const {
+      cts: mergedCustomTypes,
+      files,
+      routes,
+    } = require("../common/custom_types/")[projectType](smLibrary.slices);
 
     fZip.file("mergedCustomTypes.json", JSON.stringify(mergedCustomTypes));
 
     Object.entries(files).map(([fileName, content]) => {
       fZip.file(`custom_types/${fileName}`, JSON.stringify(content));
-    })
+    });
 
     const manifest = scaffolder.build(smLibrary, routes);
-    const recapFile = require(`../bootstrap/${framework}/recap.mustache`)
+    const recapFile = require(`../bootstrap/${framework}/recap.mustache`);
     fZip.file(
       "boot.json",
       JSON.stringify({
         manifest,
         library: smLibrary,
-        recap: Mustache.render(recapFile, smLibrary)
+        recap: Mustache.render(recapFile, smLibrary),
       })
-    )
+    );
 
     fZip
       .generateNodeStream({
         type: "nodebuffer",
-        streamFiles: true
+        streamFiles: true,
       })
       .pipe(res);
   } catch (e) {
     console.error(e);
   }
 });
-

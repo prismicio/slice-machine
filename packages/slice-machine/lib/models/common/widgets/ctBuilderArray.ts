@@ -1,4 +1,4 @@
-import * as Widgets from './withGroup'
+import * as Widgets from "./withGroup";
 
 export default [
   Widgets.UID,
@@ -6,6 +6,7 @@ export default [
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,
+  Widgets.LinkToMedia,
   Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
@@ -16,4 +17,4 @@ export default [
   Widgets.GeoPoint,
   Widgets.Color,
   Widgets.Text,
-]
+];

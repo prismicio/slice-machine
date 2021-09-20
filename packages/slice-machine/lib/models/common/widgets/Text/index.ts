@@ -1,9 +1,9 @@
-import * as yup from 'yup'
-import { MdTitle } from 'react-icons/md'
-import { MockConfigForm } from './Mock/Form'
-import { handleMockConfig, handleMockContent } from './Mock'
+import * as yup from "yup";
+import { MdTitle } from "react-icons/md";
+import { MockConfigForm } from "./Mock/Form";
+import { handleMockConfig, handleMockContent } from "./Mock";
 
-import { TextField } from '../types'
+import { TextField } from "./type";
 
 /**
 * {
@@ -15,33 +15,35 @@ import { TextField } from '../types'
   }
  */
 
+import { removeProp } from "../../../../utils";
+import { DefaultFields } from "../../../../forms/defaults";
+import { createValidationSchema } from "../../../../forms";
+import { Widget } from "../Widget";
+import { FieldType } from "../../CustomType/fields";
 
-import { removeProp } from '../../../../utils'
-import { DefaultFields } from "../../../../forms/defaults"
-import { createValidationSchema } from "../../../../forms"
-import { Widget } from '../Widget'
-import { FieldType } from '../../CustomType/fields'
-
-const FormFields = DefaultFields
+const FormFields = DefaultFields;
 
 const schema = yup.object().shape({
-  type: yup.string().matches(/^Text$/, { excludeEmptyString: true }).required(),
-  config: createValidationSchema(removeProp(FormFields, 'id'))
+  type: yup
+    .string()
+    .matches(/^Text$/, { excludeEmptyString: true })
+    .required(),
+  config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
 const Meta = {
   icon: MdTitle,
-  title: 'Key Text',
-  description: 'Text content'
-}
+  title: "Key Text",
+  description: "Text content",
+};
 
 export const Text: Widget<TextField, typeof schema> = {
-  create: () => new TextField(),
+  create: (label: string) => new TextField({ label }),
   MockConfigForm,
   handleMockConfig,
   handleMockContent,
   Meta,
   schema,
   TYPE_NAME: FieldType.Text,
-  FormFields
-}
+  FormFields,
+};

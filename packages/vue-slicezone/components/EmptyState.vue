@@ -1,6 +1,6 @@
 <template>
   <section class="box">
-    <h1 class="title">Your SliceZone is empty </h1>
+    <h1 class="title">Your SliceZone is empty</h1>
     <p>
       To start rendering components here, create a document on Prismic.<br />
       Then, update your SliceZone accordingly:<br />
@@ -9,7 +9,6 @@
       <code class="code">
         {{ code }}
       </code>
-      
     </p>
     <a target="_blank" :href="endPath">Create a page on Prismic!</a>
   </section>
@@ -17,7 +16,7 @@
 
 <script>
 export default {
-  props: ['type', 'uid', 'pathToDocs'],
+  props: ["type", "uid", "pathToDocs"],
   data() {
     if (!this.$prismic) {
       return {
@@ -25,22 +24,22 @@ export default {
           type="pageType"
           uid="pageUid"
         />`,
-        endPath: 'https://prismic.io/dashboard'
-      }
+        endPath: "https://prismic.io/dashboard",
+      };
     }
     // This is temporary
-    const url = this.$prismic.apiEndpoint.replace('cdn.', '')
-    const arr = url.split('/api/')
-    arr.pop()
+    const url = this.$prismic.apiEndpoint.replace("cdn.", "");
+    const arr = url.split("/api/");
+    arr.pop();
     return {
       code: `<slice-zone 
           type="pageType"
           uid="pageUid"
         />`,
-      endPath: arr.join('/').concat('/documents')
-    }
-  }
-}
+      endPath: arr.join("/").concat("/documents"),
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -48,13 +47,13 @@ export default {
   max-width: 840px;
   padding: 44px;
   margin: 4rem auto;
-  background: #FFF;
+  background: #fff;
   color: #111;
   text-align: left;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 }
 .code {
-  background: #F5F6FA;
+  background: #f5f6fa;
   padding: 6px;
   margin: 1rem auto;
   display: block;
@@ -82,7 +81,7 @@ a::after {
   display: inline-block;
   border-radius: 50%;
   height: 30px;
-  color: #1D2230;
+  color: #1d2230;
   vertical-align: center;
   top: 5px;
   position: relative;

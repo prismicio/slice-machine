@@ -1,48 +1,48 @@
-const Mongo = require('../common/mongo');
+const Mongo = require("../common/mongo");
 const handleStripKeys = require("../common").handleStripKeys;
-const { defaultStripKeys } = require('../common/consts');
+const { defaultStripKeys } = require("../common/consts");
 const cors = require("../common/cors");
 
 async function fetchLibraries({ framework, list }) {
   const search = {
-    ...(framework ? {
-      framework
-    } : null),
-    ...(list ? {
-      packageName: {
-        '$in': list.trim().split(',')
-      }
-    } : null)
-  }
-  const cursor = await Mongo.collections.libraries(coll => (
-    coll.find(search)
-  ));
-  return await cursor.toArray()
+    ...(framework
+      ? {
+          framework,
+        }
+      : null),
+    ...(list
+      ? {
+          packageName: {
+            $in: list.trim().split(","),
+          },
+        }
+      : null),
+  };
+  const cursor = await Mongo.collections.libraries((coll) => coll.find(search));
+  return await cursor.toArray();
 }
 
 module.exports = cors(async (req, res) => {
   const {
-    query: {
-      framework,
-      strip,
-      list,
-      preserveDefaults
-    }
+    query: { framework, strip, list, preserveDefaults },
   } = req;
 
-  const keysToStrip = handleStripKeys(strip, defaultStripKeys.library, preserveDefaults);
+  const keysToStrip = handleStripKeys(
+    strip,
+    defaultStripKeys.library,
+    preserveDefaults
+  );
 
   const libraries = await fetchLibraries({
     framework,
-    list
-  })
+    list,
+  });
 
   libraries.forEach((library) => {
     keysToStrip.forEach((key) => {
-      delete library[key]
-    })
-  })
+      delete library[key];
+    });
+  });
 
-  res.send(libraries)
-
+  res.send(libraries);
 });

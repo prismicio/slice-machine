@@ -1,14 +1,14 @@
-import * as yup from 'yup'
-import Form, { FormFields } from './Form'
-import  { BsLink } from 'react-icons/bs'
+import * as yup from "yup";
+import Form, { FormFields } from "./Form";
+import { FiLink2 } from "react-icons/fi";
 
-import { handleMockConfig, handleMockContent } from './Mock'
-import { MockConfigForm } from './Mock/Form'
+import { handleMockConfig, handleMockContent } from "./Mock";
+import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from '../Widget'
-import { FieldType } from '../../CustomType/fields'
+import { Widget } from "../Widget";
+import { FieldType } from "../../CustomType/fields";
 
-import { LinkField } from '../types'
+import { LinkField } from "./type";
 
 /**
 * {
@@ -21,7 +21,7 @@ import { LinkField } from '../types'
   }
  */
 
- /**
+/**
   *{
     "type": "Link",
     "config": {
@@ -33,7 +33,7 @@ import { LinkField } from '../types'
   }
   */
 
-  /**{
+/**{
     "type" : "Link",
     "config" : {
       "select" : "media",
@@ -42,8 +42,7 @@ import { LinkField } from '../types'
     }
   } */
 
-
- /** should handle content relationship and media
+/** should handle content relationship and media
   * 
   *{
     id: "Xt9fSxEAACIAFHz7"
@@ -57,26 +56,38 @@ import { LinkField } from '../types'
   */
 
 const Meta = {
-  icon: BsLink,
-  title: 'Link',
-  description: 'A link to web, media or Prismic document'
-}
+  icon: FiLink2,
+  title: "Link",
+  description: "A link to web, media or Prismic document",
+};
 
-const linkConfigSchema = yup.object().shape({
-  label: yup.string().optional(),
-  useAsTitle: yup.boolean().optional(),
-  placeholder: yup.string().optional(),
-  select: yup.string().optional().oneOf(['media', 'document', 'web']).nullable(true),
-  customtypes: yup.array(yup.string()).strict().optional(),
-  masks: yup.array(yup.string()).optional(),
-  tags: yup.array(yup.string()).optional(),
-  allowTargetBlank: yup.boolean().strict().optional()
-}).required().default(undefined).noUnknown(true)
+export const linkConfigSchema = yup
+  .object()
+  .shape({
+    label: yup.string().optional(),
+    useAsTitle: yup.boolean().optional(),
+    placeholder: yup.string().optional(),
+    select: yup
+      .string()
+      .optional()
+      .oneOf(["media", "document", "web"])
+      .nullable(true),
+    customtypes: yup.array(yup.string()).strict().optional(),
+    masks: yup.array(yup.string()).optional(),
+    tags: yup.array(yup.string()).optional(),
+    allowTargetBlank: yup.boolean().strict().optional(),
+  })
+  .required()
+  .default(undefined)
+  .noUnknown(true);
 
 const schema = yup.object().shape({
-  type: yup.string().matches(/^Link$/, { excludeEmptyString: true }).required(),
-  config: linkConfigSchema.optional()
-})
+  type: yup
+    .string()
+    .matches(/^Link$/, { excludeEmptyString: true })
+    .required(),
+  config: linkConfigSchema.optional(),
+});
 
 export const Link: Widget<LinkField, typeof schema> = {
   handleMockConfig,
@@ -86,7 +97,6 @@ export const Link: Widget<LinkField, typeof schema> = {
   FormFields,
   schema,
   Form,
-  create: () => new LinkField(),
-  TYPE_NAME: FieldType.Link
-}
-
+  create: (label: string) => new LinkField({ label }),
+  TYPE_NAME: FieldType.Link,
+};

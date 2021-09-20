@@ -1,17 +1,17 @@
-import * as yup from 'yup'
-import Form, { FormFields } from './Form'
-import { BsImage } from 'react-icons/bs'
+import * as yup from "yup";
+import Form, { FormFields } from "./Form";
+import { BsImage } from "react-icons/bs";
 
-import { createValidationSchema } from '../../../../forms'
+import { createValidationSchema } from "../../../../forms";
 
-import { removeProp } from '../../../../utils'
+import { removeProp } from "../../../../utils";
 
-import { handleMockConfig, handleMockContent } from './Mock'
-import { MockConfigForm } from './Mock/Form'
+import { handleMockConfig, handleMockContent } from "./Mock";
+import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from '../Widget'
-import { ImageField } from '../types'
-import { FieldType } from '../../CustomType/fields'
+import { Widget } from "../Widget";
+import { ImageField } from "./type";
+import { FieldType } from "../../CustomType/fields";
 
 /** 
  * {
@@ -32,28 +32,30 @@ import { FieldType } from '../../CustomType/fields'
     }
   } */
 
-
 const schema = yup.object().shape({
-  type: yup.string().matches(/^Image$/, {
-    excludeEmptyString: true
-  }).required(),
-  config: createValidationSchema(removeProp(FormFields, 'id')),
-})
+  type: yup
+    .string()
+    .matches(/^Image$/, {
+      excludeEmptyString: true,
+    })
+    .required(),
+  config: createValidationSchema(removeProp(FormFields, "id")),
+});
 
 const Meta = {
   icon: BsImage,
-  title: 'Image',
-  description: 'A responsive image field with constraints'
-}
+  title: "Image",
+  description: "A responsive image field with constraints",
+};
 
 export const Image: Widget<ImageField, typeof schema> = {
   Meta,
   Form,
   schema,
-  create: () => new ImageField(),
+  create: (label: string) => new ImageField({ label }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   FormFields,
-  TYPE_NAME: FieldType.Image
-}
+  TYPE_NAME: FieldType.Image,
+};

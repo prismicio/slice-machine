@@ -1,9 +1,10 @@
-import * as Widgets from '.'
+import * as Widgets from ".";
 
 export default [
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,
+  Widgets.LinkToMedia,
   Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
@@ -14,4 +15,4 @@ export default [
   Widgets.GeoPoint,
   Widgets.Color,
   Widgets.Text,
-]
+];

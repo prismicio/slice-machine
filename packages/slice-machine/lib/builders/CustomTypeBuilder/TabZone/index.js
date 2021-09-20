@@ -1,102 +1,87 @@
-import { Fragment, useState } from 'react'
-import * as Widgets from '@lib/models/common/widgets/withGroup'
-import EditModal from '../../common/EditModal'
+import { Fragment, useState } from "react";
+import * as Widgets from "@lib/models/common/widgets/withGroup";
+import EditModal from "../../common/EditModal";
 
-import {
-  ensureDnDDestination,
-  ensureWidgetTypeExistence
-} from '@lib/utils'
+import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
 
-import Zone from '../../common/Zone'
+import Zone from "../../common/Zone";
 
-import ctBuilderArray from '@lib/models/common/widgets/ctBuilderArray'
-import { CustomTypeMockConfig } from '@lib/models/common/MockConfig'
+import ctBuilderArray from "@lib/models/common/widgets/ctBuilderArray";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
-import SliceZone from '../SliceZone'
+import SliceZone from "../SliceZone";
 
-import ModalFormCard from 'components/ModalFormCard'
+import ModalFormCard from "components/ModalFormCard";
 
-const TabZone = ({
-  Model,
-  store,
-  tabId,
-  fields,
-  sliceZone,
-  showHints,
-}) => {
-
-  const [modaIsOpen, setModalIsOpen] = useState(false)
+const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const onDeleteItem = (key) => {
-    store.deleteWidgetMockConfig(Model.mockConfig, key)
-    store
-      .tab(tabId)
-      .removeWidget(key)
-  }
+    store.deleteWidgetMockConfig(Model.mockConfig, key);
+    store.tab(tabId).removeWidget(key);
+  };
 
   const getFieldMockConfig = ({ apiId }) => {
-    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId)
-  }
+    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId);
+  };
 
   const onDeleteTab = () => {
-    store.tab(tabId).delete()
-  }
+    store.tab(tabId).delete();
+  };
 
   const onSaveNewField = ({ id, widgetTypeName }) => {
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
-      return
+      return;
     }
-    const widget = Widgets[widgetTypeName]
-    store
-      .tab(tabId)
-      .addWidget(id, widget.create())
-  }
+    const widget = Widgets[widgetTypeName];
+    store.tab(tabId).addWidget(id, widget.create(id));
+  };
 
   const onDragEnd = (result) => {
     if (ensureDnDDestination(result)) {
-      return
+      return;
     }
-    store.tab(tabId).reorderWidget(result.source.index, result.destination.index)
-  }
+    store
+      .tab(tabId)
+      .reorderWidget(result.source.index, result.destination.index);
+  };
 
   const onSave = ({ apiId: previousKey, newKey, value, mockValue }) => {
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
-      return
+      return;
     }
     if (mockValue) {
-      store.updateWidgetMockConfig(Model.mockConfig, previousKey, newKey, mockValue)
-    } else {
-      store.deleteWidgetMockConfig(Model.mockConfig, newKey)
-    }
-
-    store
-      .tab(tabId)
-      .replaceWidget(
+      store.updateWidgetMockConfig(
+        Model.mockConfig,
         previousKey,
         newKey,
-        value
-      )
-  }
+        mockValue
+      );
+    } else {
+      store.deleteWidgetMockConfig(Model.mockConfig, newKey);
+    }
+
+    store.tab(tabId).replaceWidget(previousKey, newKey, value);
+  };
 
   const onCreateSliceZone = () => {
-    store.tab(tabId).createSliceZone()
-  }
+    store.tab(tabId).createSliceZone();
+  };
 
   const onDeleteSliceZone = () => {
-    store.tab(tabId).deleteSliceZone()
-  }
+    store.tab(tabId).deleteSliceZone();
+  };
 
   const onSelectSharedSlices = (keys, preserve = []) => {
-    store.tab(tabId).replaceSharedSlices(keys, preserve)
-  }
+    store.tab(tabId).replaceSharedSlices(keys, preserve);
+  };
 
   const onRemoveSharedSlice = (key) => {
-    store.tab(tabId).removeSharedSlice(key)
-  }
+    store.tab(tabId).removeSharedSlice(key);
+  };
 
   return (
     <Fragment>
-      {/* { JSON.stringify(Model.mockConfig, null, 2) } */}
       <Zone
         tabId={tabId}
         Model={Model}
@@ -116,11 +101,6 @@ const TabZone = ({
         renderHintBase={({ item }) => `data.${item.key}`}
         renderFieldAccessor={(key) => `data.${key}`}
       />
-      {/* {
-        Model.current.tabs.length > 1 ? (
-          <button onClick={() => onDeleteTab()}>Delete Tab</button>
-        ) : null
-      } */}
       <SliceZone
         tabId={tabId}
         sliceZone={sliceZone}
@@ -129,15 +109,13 @@ const TabZone = ({
         onCreateSliceZone={onCreateSliceZone}
         onSelectSharedSlices={onSelectSharedSlices}
       />
-      <ModalFormCard isOpen={modaIsOpen} content={{ title: 'Edit Tab'}} close={() => setModalIsOpen(false)}>
-        {(props) => {
-          return (
-            <div>hello</div>
-          )
-        }}
-      </ModalFormCard>
+      <ModalFormCard
+        isOpen={modalIsOpen}
+        content={{ title: "Edit Tab" }}
+        close={() => setModalIsOpen(false)}
+      />
     </Fragment>
-  )
-}
+  );
+};
 
-export default TabZone
+export default TabZone;

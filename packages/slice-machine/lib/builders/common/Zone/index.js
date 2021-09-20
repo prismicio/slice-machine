@@ -1,104 +1,113 @@
-import React, { useState, Fragment } from 'react'
-import {
-  array,
-  arrayOf,
-  bool,
-  shape,
-  string,
-  object,
-  func
-} from 'prop-types'
+import React, { useState, Fragment } from "react";
+import { array, arrayOf, bool, shape, string, object, func } from "prop-types";
 
-import Card from './Card'
+import Card from "./Card";
 
-import { Heading, Button } from 'theme-ui'
-import { FaPlus, FaCode } from 'react-icons/fa'
+import { Heading, Button } from "theme-ui";
+import { FaPlus, FaCode } from "react-icons/fa";
 
+import SelectFieldTypeModal from "../SelectFieldTypeModal";
+import NewField from "./Card/components/NewField";
 
-import SelectFieldTypeModal from '../SelectFieldTypeModal'
-import NewField from './Card/components/NewField'
-
-import ZoneHeader from './components/ZoneHeader'
-import EmptyState from './components/EmptyState'
+import ZoneHeader from "./components/ZoneHeader";
+import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   Model,
   store,
   tabId,
-  title, /* text info to display in Card Header */
-  fields, /* widgets registered in the zone */
-  poolOfFieldsToCheck, /* if you need to check unicity of fields from other zones */
-  widgetsArray, /* Array of available widget fields */
-  isRepeatable, /* should we wrap hints in map ? */
-  onDeleteItem, /* user clicked on "Delete field" */
-  onSaveNewField, /* user clicked on "Save" (NewField) */
-  onDragEnd, /* user dragged item to an end location */
-  EditModal, /* temp */
-  onSave, /* user clicked on "Save" (EditModal) */
-  dataTip, /* text info to display as tip */
-  getFieldMockConfig, /* access mock configuration of given apiId */
-  renderHintBase, /* render base (eg. path to slice) content for hints */
-  renderFieldAccessor, /* render field accessor (eg. slice.primary.title) */
-
+  title /* text info to display in Card Header */,
+  fields /* widgets registered in the zone */,
+  poolOfFieldsToCheck /* if you need to check unicity of fields from other zones */,
+  widgetsArray /* Array of available widget fields */,
+  isRepeatable /* should we wrap hints in map ? */,
+  onDeleteItem /* user clicked on "Delete field" */,
+  onSaveNewField /* user clicked on "Save" (NewField) */,
+  onDragEnd /* user dragged item to an end location */,
+  EditModal /* temp */,
+  onSave /* user clicked on "Save" (EditModal) */,
+  dataTip /* text info to display as tip */,
+  getFieldMockConfig /* access mock configuration of given apiId */,
+  renderHintBase /* render base (eg. path to slice) content for hints */,
+  renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
 }) => {
-
   const widgetsArrayWithCondUid = (() => {
-    const hasUid = !!Object.entries(poolOfFieldsToCheck).find(([, { value }]) => value.type === 'UID')
+    const hasUid = !!Object.entries(poolOfFieldsToCheck).find(
+      ([, { value }]) => value.type === "UID"
+    );
     return hasUid
-      ? widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== 'UID')
-      : widgetsArray
+      ? widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID")
+      : widgetsArray;
   })();
 
-  const [showHints, setShowHints] = useState(false)
-  const [editModalData, setEditModalData] = useState({ isOpen: false })
-  const [selectModalData, setSelectModalData] = useState({ isOpen: false })
-  const [newFieldData, setNewFieldData] = useState(null)
+  const [showHints, setShowHints] = useState(false);
+  const [editModalData, setEditModalData] = useState({ isOpen: false });
+  const [selectModalData, setSelectModalData] = useState({ isOpen: false });
+  const [newFieldData, setNewFieldData] = useState(null);
 
   const enterEditMode = (field) => {
-    setEditModalData({ isOpen: true, field })
-  }
+    setEditModalData({ isOpen: true, field });
+  };
   const enterSelectMode = () => {
-    setSelectModalData({ isOpen: true })
-  }
+    setSelectModalData({ isOpen: true });
+  };
 
   const closeEditModal = () => {
-    setEditModalData({ isOpen: false })
-  }
-  const closeSelectModal = () => setSelectModalData({ isOpen: false })
+    setEditModalData({ isOpen: false });
+  };
+  const closeSelectModal = () => setSelectModalData({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
-    setNewFieldData({ widgetTypeName, fields })
-    setSelectModalData({ isOpen: false })
-  }
+    setNewFieldData({ widgetTypeName, fields });
+    setSelectModalData({ isOpen: false });
+  };
 
-  const onCancelNewField = () => setNewFieldData(null)
+  const onCancelNewField = () => setNewFieldData(null);
 
   return (
     <Fragment>
       <ZoneHeader
         Heading={<Heading as="h6">{title}</Heading>}
-        Actions={fields.length ? (
-          <Fragment>
-            <Button
-              variant="buttons.lightSmall"
-              onClick={() => setShowHints(!showHints)}
-            >
-              <FaCode style={{marginRight:'8px', position: 'relative', top: '2px'}}/> { showHints ? 'Hide' : 'Show'} Code Widgets
-            </Button>
-            <Button ml={2} variant="buttons.darkSmall" onClick={() => enterSelectMode()}>
-              <FaPlus style={{ marginRight:'8px', position: 'relative', top: '2px' }} />Add a new Field
-            </Button>
-          </Fragment>
-        ) : null}
+        Actions={
+          fields.length ? (
+            <Fragment>
+              <Button
+                variant="buttons.lightSmall"
+                onClick={() => setShowHints(!showHints)}
+              >
+                <FaCode
+                  style={{
+                    marginRight: "8px",
+                    position: "relative",
+                    top: "2px",
+                  }}
+                />{" "}
+                {showHints ? "Hide" : "Show"} Code Widgets
+              </Button>
+              <Button
+                ml={2}
+                variant="buttons.darkSmall"
+                onClick={() => enterSelectMode()}
+              >
+                <FaPlus
+                  style={{
+                    marginRight: "8px",
+                    position: "relative",
+                    top: "2px",
+                  }}
+                />
+                Add a new Field
+              </Button>
+            </Fragment>
+          ) : null
+        }
       />
-      {
-        !fields.length && !newFieldData ? (
-          <EmptyState
-            onEnterSelectMode={() => enterSelectMode()}
-            zoneName={isRepeatable ? 'repeatable' : 'static'}
-          />
-        ) : null
-      }
+      {!fields.length && !newFieldData && (
+        <EmptyState
+          onEnterSelectMode={() => enterSelectMode()}
+          zoneName={isRepeatable ? "repeatable" : "static"}
+        />
+      )}
       <Card
         tabId={tabId}
         isRepeatable={isRepeatable}
@@ -114,19 +123,19 @@ const Zone = ({
         enterSelectMode={enterSelectMode}
         onDragEnd={onDragEnd}
         onDeleteItem={onDeleteItem}
-        NewFieldC={() => {
-          return newFieldData && (
+        NewFieldC={() =>
+          newFieldData && (
             <NewField
               {...newFieldData}
               fields={poolOfFieldsToCheck || fields}
               onSave={(...args) => {
-                onSaveNewField(...args)
-                setNewFieldData(null)
+                onSaveNewField(...args);
+                setNewFieldData(null);
               }}
               onCancelNewField={onCancelNewField}
             />
           )
-        }}
+        }
       />
       <EditModal
         Model={Model}
@@ -143,8 +152,8 @@ const Zone = ({
         widgetsArray={widgetsArrayWithCondUid}
       />
     </Fragment>
-  )
-}
+  );
+};
 
 Zone.propTypes = {
   isRepeatable: bool,
@@ -162,14 +171,16 @@ Zone.propTypes = {
   renderHintBase: func.isRequired,
   renderFieldAccessor: func.isRequired,
   widgetsArray: array.isRequired,
-  fields: arrayOf(shape({
-    key: string.isRequired,
-    value: shape({
-      config: object,
-      fields: array,
-      type: string.isRequired
+  fields: arrayOf(
+    shape({
+      key: string.isRequired,
+      value: shape({
+        config: object,
+        fields: array,
+        type: string.isRequired,
+      }),
     })
-  }))
-}
+  ),
+};
 
-export default Zone
+export default Zone;
