@@ -206,7 +206,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                 </Button>
               </Box>
             ) : (
-              libraries.map((maybelib: LibraryState | undefined, i) => {
+              libraries.map((maybelib: LibraryState | undefined) => {
                 if (!maybelib) {
                   return null;
                 }

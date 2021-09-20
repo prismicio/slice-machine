@@ -31,7 +31,7 @@ const Ct = ({
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ flex: 1 }}>
       <Container sx={{ pb: 0 }}>
         <Header Model={Model} store={store} />
       </Container>

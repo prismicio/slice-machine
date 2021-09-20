@@ -114,16 +114,6 @@ const Card = ({ ct }: { ct: CtPayload }) => (
   </Link>
 );
 
-const Emptystate = () => (
-  <Box>
-    <Heading as="h3">Create your first custom type</Heading>
-    <p>Click the + button on the top right to create your first custom type.</p>
-    <p>
-      It will be stored locally. You will then be able to push it to Prismic.
-    </p>
-  </Box>
-);
-
 const CustomTypes = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +131,7 @@ const CustomTypes = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
           <Button
@@ -165,15 +155,45 @@ const CustomTypes = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? <Emptystate /> : null}
-      <Grid
-        elems={customTypes}
-        renderElem={(ct: CtPayload) => (
-          <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-            <Card ct={ct} />
-          </Link>
-        )}
-      />
+      {!customTypes.length ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            textAlign: "center",
+          }}
+        >
+          <Heading sx={{ mb: 4 }}>Create your first Custom Type</Heading>
+          <Text sx={{ mb: 4 }}>
+            Click the + button on the top right to create your first custom
+            type. <br /> <br /> It will be stored locally. You will then be able
+            to push it to Prismic.
+          </Text>
+          <Button
+            onClick={() => setIsOpen(true)}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            Create your first Custom Type
+          </Button>
+        </Box>
+      ) : (
+        <Grid
+          elems={customTypes}
+          renderElem={(ct: CtPayload) => (
+            <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
+              <Card ct={ct} />
+            </Link>
+          )}
+        />
+      )}
+
       <CreateCustomType
         isOpen={isOpen}
         onSubmit={_onCreate}
