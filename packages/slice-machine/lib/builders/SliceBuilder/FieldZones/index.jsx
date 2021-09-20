@@ -1,6 +1,7 @@
 import { Box } from "theme-ui";
 
 import { ensureDnDDestination } from "@lib/utils";
+import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
@@ -97,8 +98,8 @@ const Zones = ({ Model, store, variation, showHints }) => {
         onSaveNewField={_onSaveNewField("primary")}
         onDragEnd={_onDragEnd("primary")}
         poolOfFieldsToCheck={variation.primary || []}
-        renderHintBase={({ item }) => `slice.primary.${item.key}`}
-        renderFieldAccessor={(key) => `slice.primary.${key}`}
+        renderHintBase={({ item }) => `slice.primary${transformKeyAccessor(item.key)}`}
+        renderFieldAccessor={(key) => `slice.primary${transformKeyAccessor(key)}`}
       />
       <Box mt={4} />
       <Zone
@@ -116,8 +117,8 @@ const Zones = ({ Model, store, variation, showHints }) => {
         onSaveNewField={_onSaveNewField("items")}
         onDragEnd={_onDragEnd("items")}
         poolOfFieldsToCheck={variation.items || []}
-        renderHintBase={({ item }) => `item.${item.key}`}
-        renderFieldAccessor={(key) => `slice.items[i].${key}`}
+        renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
+        renderFieldAccessor={(key) => `slice.items[i]${transformKeyAccessor(key)}`}
       />
     </>
   );

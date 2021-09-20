@@ -4,7 +4,12 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Button } from "theme-ui";
 
-import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import {
+  ensureDnDDestination,
+  ensureWidgetTypeExistence
+} from "@lib/utils";
+
+import { transformKeyAccessor } from "@utils/str";
 
 import SelectFieldTypeModal from "@lib/builders/common/SelectFieldTypeModal";
 import NewField from "@lib/builders/common/Zone/Card/components/NewField";
@@ -160,9 +165,7 @@ const CustomListItem = ({
                           item={item}
                           show={showHints}
                           isRepeatable={isRepeatable}
-                          renderHintBase={({ item }) =>
-                            `data.${groupItem.key}.${item.key}`
-                          }
+                          renderHintBase={({ item }) => `data.${groupItem.key}${transformKeyAccessor(item.key)}`}
                           framework={framework}
                           Widgets={Widgets}
                           typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
