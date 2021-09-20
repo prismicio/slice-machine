@@ -61,7 +61,7 @@ function installSMScript(pkg) {
   else return console.error("[postinstall] Missing file package.json");
 
   if (smConfig.value) writeSMVersion(smModuleCWD, smConfig);
-  else return console.error("[postinstall] Missing file sm.json");
+  else console.error("[postinstall] Missing file sm.json");
 
   return;
 })();
