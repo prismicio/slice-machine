@@ -156,6 +156,35 @@ describe("handleFields", () => {
     expect(value.url.length).toBeGreaterThan(0);
   });
 
+  test("can create a linkToMedia mock", () => {
+    const linkToMediaField = [
+      [
+        "linkToMediaFieldName",
+        {
+          type: "Link",
+          config: {
+            label: "",
+            select: "media",
+            id: "linkToMedia",
+            placeholder: "",
+            allowTargetBlank: true,
+          },
+        },
+      ],
+    ];
+
+    const linkToMediaFieldMocked = Object.entries(
+      mockFields(linkToMediaField)
+    )[0];
+    const [key, value] = linkToMediaFieldMocked;
+    expect(typeof value).toBe("object");
+
+    const properties = ["link_type", "url"];
+    toHaveProps(value, properties);
+    expect(value.link_type).toBe("media");
+    expect(value.url.length).toBeGreaterThan(0);
+  });
+
   test("can create a select mock", () => {
     const selectField = [
       [
