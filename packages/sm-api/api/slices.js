@@ -1,13 +1,13 @@
-const fs = require('fs');
+const fs = require("fs");
 const request = require("request");
-const tmp = require('tmp');
+const tmp = require("tmp");
 const cors = require("../common/cors");
 
-const fetchLibrary = require('./library').fetchLibrary
+const fetchLibrary = require("./library").fetchLibrary;
 
 module.exports = cors(async (req, res) => {
   const {
-    query: { lib, library, framework = 'nuxt' }
+    query: { lib, library, framework = "nuxt" },
   } = req;
   const defaultLibrary = require(`../bootstrap/${framework}`).defaultLibrary;
   const packageName = lib || library || defaultLibrary;
@@ -24,4 +24,3 @@ module.exports = cors(async (req, res) => {
 
   res.send(sm.slices);
 });
-

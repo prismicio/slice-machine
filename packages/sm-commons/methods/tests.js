@@ -1,18 +1,18 @@
-const fs = require('fs')
-const path = require('path')
-const consola = require('consola')
+const fs = require("fs");
+const path = require("path");
+const consola = require("consola");
 
-const { pascalize } = require('../utils/str');
+const { pascalize } = require("../utils/str");
 
 const { expectSliceModel } = require("../expect");
 
 function pathExists(p, error, read) {
   try {
     if (fs.existsSync(p)) {
-      return read ? fs.readFileSync(p, 'utf8') : true
+      return read ? fs.readFileSync(p, "utf8") : true;
     }
   } catch (err) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
@@ -26,25 +26,25 @@ function isJSON(content) {
 }
 
 function pathHasType(p, type, error) {
-  if (type === 'f' || type === 'file') {
-    return pathExists(p, error)
+  if (type === "f" || type === "file") {
+    return pathExists(p, error);
   }
-  const isDirectory = fs.lstatSync(p).isDirectory()
+  const isDirectory = fs.lstatSync(p).isDirectory();
   if (!isDirectory) {
-    throw new Error(error)
+    throw new Error(error);
   }
-  return true
+  return true;
 }
 
 function isSliceName(sliceName) {
-  let str = ''
-  sliceName.split('').forEach((l) => {
+  let str = "";
+  sliceName.split("").forEach((l) => {
     if (l === l.toUpperCase()) {
-      return str += `-${l}`
+      return (str += `-${l}`);
     }
-    str += l
-  })
-  
+    str += l;
+  });
+
   if (pascalize(str).localeCompare(sliceName)) {
     throw new Error(
       `folder ${sliceName} is not PascalCased. Therefore, slice type cannot be infered.\nPlease change it before committing your library definition`
@@ -54,7 +54,7 @@ function isSliceName(sliceName) {
 
 function isSliceFolder(p) {
   try {
-    pathExists(path.join(p, "preview.png"))
+    pathExists(path.join(p, "preview.png"));
     // const meta = isJSON(pathExists(path.join(p, 'meta.json'), 'File "meta.json" does not exist.', true))
     const model = isJSON(
       pathExists(
@@ -62,17 +62,18 @@ function isSliceFolder(p) {
         'File "model.json" does not exist.',
         true
       )
-    )
+    );
 
     expectSliceModel(model);
 
     return {
       model,
     };
-
-  } catch(e) {
-    consola.error(`slice-machine/isSliceFolder] Error while parsing slice folder, at path "${path}"`)
-    consola.error(e)
+  } catch (e) {
+    consola.error(
+      `slice-machine/isSliceFolder] Error while parsing slice folder, at path "${path}"`
+    );
+    consola.error(e);
   }
 }
 
@@ -81,5 +82,5 @@ module.exports = {
   pathExists,
   isJSON,
   isSliceName,
-  pathHasType
+  pathHasType,
 };

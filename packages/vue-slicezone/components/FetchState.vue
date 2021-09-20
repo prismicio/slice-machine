@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p v-if="error">An error occured while fetching content: <span style="color:tomato">{{error}}</span></p>
+    <p v-if="error">
+      An error occured while fetching content:
+      <span style="color: tomato">{{ error }}</span>
+    </p>
   </div>
 </template>
 
@@ -8,8 +11,8 @@
 export default {
   props: {
     error: {
-      default: ""
-    }
-  }
-}
+      default: "",
+    },
+  },
+};
 </script>

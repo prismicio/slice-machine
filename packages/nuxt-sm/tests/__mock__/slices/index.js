@@ -1,1 +1,3 @@
-export function slices() { return true }
+export function slices() {
+  return true;
+}

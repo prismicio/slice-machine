@@ -1,4 +1,4 @@
-import * as Widgets from '.'
+import * as Widgets from ".";
 
 export default [
   Widgets.StructuredText,
@@ -15,4 +15,4 @@ export default [
   Widgets.GeoPoint,
   Widgets.Color,
   Widgets.Text,
-]
+];

@@ -1,18 +1,18 @@
 import { Box } from "theme-ui";
 
-export default function Container ({ children, sx = {}, ...rest }) {
+export default function Container({ children, sx = {}, ...rest }) {
   return (
     <Box
       sx={{
         maxWidth: 1224,
-        mx: 'auto',
+        mx: "auto",
         px: 3,
         py: 4,
-        ...sx
+        ...sx,
       }}
       {...rest}
     >
-      { children }
+      {children}
     </Box>
-  )
+  );
 }

@@ -1,1 +1,668 @@
-{"libraryName":"Vue essentials","framework":"nuxt","gitUrl":"//github.com/prismicio/vue-essential-slices","pathToLibrary":"src","dependencies":[],"css":["vue-essential-slices/src/styles/styles.scss"],"script":[{"src":"https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"},{"src":"https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js"}],"devDependencies":["node-sass","sass-loader"],"packageName":"vue-essential-slices","package":{"name":"vue-essential-slices","version":"0.2.0","description":"A set of professionally made, accessible Vue components, linked to a (Prismic) backend","main":"src/index.js","scripts":{"dev":"start-storybook","test":"echo \"Error: no test specified\" && exit 1","build-storybook":"build-storybook","prepack":"yarn bundle","bundle":"node ./node_modules/sm-commons/scripts/bundle","storybook":"start-storybook -p 6006"},"pre-commit":["bundle"],"repository":{"type":"git","url":"git+https://github.com/prismicio/vue-essential-slices.git"},"keywords":["Nuxtjs","Vuejs","Prismic","slices"],"author":"","license":"GPL-3.0-or-later","bugs":{"url":"https://github.com/prismicio/vue-essential-slices/issues"},"homepage":"https://github.com/prismicio/vue-essential-slices#readme","devDependencies":{"@babel/core":"^7.9.6","@prismicio/vue":"^2.0.2","@storybook/addon-actions":"^5.3.18","@storybook/addon-docs":"^5.3.19","@storybook/addon-knobs":"^5.3.18","@storybook/addon-links":"^5.3.18","@storybook/addons":"^5.3.18","@storybook/source-loader":"^5.3.19","@storybook/vue":"^5.3.18","@vue/babel-preset-app":"^4.2.3","@vue/component-compiler-utils":"^3.1.1","babel-loader":"^8.0.6","babel-preset-vue":"^2.0.2","node-sass":"^4.14.1","pre-commit":"^1.2.2","prismic-dom":"^2.1.0","prismic-javascript":"^2.1.5","sass-loader":"^8.0.2","sm-commons":"^0.0.22","vue":"^2.6.11","vue-hot-reload-api":"^2.3.4","vue-loader":"^15.9.2","vue-slicezone":"^0.0.25","vue-template-compiler":"^2.6.11"},"dependencies":{}},"slices":{"alternate_grid":{"type":"Slice","fieldset":"AlternateGrid","description":"A predesigned Text Grid with Image left or right","icon":"wrap_text","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Eyebrow headline"}},"title":{"type":"StructuredText","config":{"single":"heading1, heading2, heading3, heading4, heading5, heading6","label":"title"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"description"}},"optional_image":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Optional image"}},"image_side":{"type":"Select","config":{"options":["left","right"],"default_value":"left","label":"Image side"}}},"repeat":{"optional_icon":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Optional Icon"}},"title":{"type":"StructuredText","config":{"single":"heading3","label":"title"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"description"}}}},"call_to_action":{"type":"Slice","fieldset":"Call to action","description":"A predesigned 'Call to action' for section for your site","icon":"notifications_active","display":"list","non-repeat":{"icon_image":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Icon Image"}},"title":{"type":"StructuredText","config":{"single":"heading1, heading2, heading3, heading4, heading5, heading6","label":"Title"}},"paragraph":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","label":"Paragraph"}},"button_link":{"type":"Link","config":{"label":"Button Link"}},"button_label":{"type":"Text","config":{"label":"Button Label","placeholder":"Text for button"}}},"repeat":{}},"cards_carousel":{"type":"Slice","fieldset":"Cards Carousel","description":"A carousel with text + image cards","icon":"image","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Eyebrow headline"}},"title":{"type":"StructuredText","config":{"single":"heading1, heading2, heading3, heading4, heading5, heading6","label":"Title"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Description"}}},"repeat":{"image":{"type":"Image","config":{"constraint":{"width":null,"height":null},"thumbnails":[],"label":"Image"}},"title":{"type":"StructuredText","config":{"single":"heading3","label":"Title"}},"content":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Content"}},"additional_info":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Additional Info","placeholder":"eg. name of person in testimonial"}}}},"customer_logos":{"type":"Slice","fieldset":"Customer logos","description":"Display a list of your customers logos","icon":"person","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"single":"heading2","label":"Eyebrow Headline","placeholder":"Trusted by"}},"call_to_action":{"type":"StructuredText","config":{"single":"paragraph","label":"Call To Action","placeholder":"View customer stories"}},"call_to_action_link":{"type":"Link","config":{"allowTargetBlank":true,"label":"Call to Action Link","placeholder":"Could be a signup link, or a link to customer stories"}}},"repeat":{"logo":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Logo"}},"link":{"type":"Link","config":{"allowTargetBlank":true,"label":"link","placeholder":"Could be a link to use case, press article, signup..."}}}},"faq_section":{"type":"Slice","fieldset":"FAQ","description":"List of common questions + answers","icon":"question_answer","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"single":"paragraph","label":"Eyebrow headline","placeholder":"Reinforce your copy with a key-worded text, to be displayed before title"}},"title":{"type":"StructuredText","config":{"single":"heading2","label":"title","placeholder":"Title"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, strong, em, hyperlink","allowTargetBlank":true,"label":"Description"}},"optional_image":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Optional image"}}},"repeat":{"title":{"type":"StructuredText","config":{"single":"heading3","label":"Title","placeholder":"Which browsers do you support?"}},"text":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item","allowTargetBlank":true,"label":"Text","placeholder":"The answer to the question"}}}},"feature_testimonials":{"type":"Slice","fieldset":"Feature Testimonials","description":"Testimonial proving the value of a specific feature","icon":"ondemand_video","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"label":"Eyebrow headline","placeholder":"Reinforce your copy with a key-worded text, to be displayed before title","single":"paragraph"}},"title":{"type":"StructuredText","config":{"label":"Title","placeholder":"Our testimonial","single":"heading2"}},"description":{"type":"StructuredText","config":{"label":"Description","placeholder":"These are some awesome tutorials from our awesome clients ...","multi":"paragraph, strong, em, hyperlink","allowTargetBlank":true}},"feature_illustration":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"Feature Illustration"}}},"repeat":{"client_logo":{"type":"Image","config":{"constraint":{"width":100,"height":100},"thumbnails":[],"label":"Client logo"}},"profile_pic":{"type":"Image","config":{"constraint":{"width":80,"height":80},"thumbnails":[],"label":"Profile Pic"}},"quote":{"type":"StructuredText","config":{"multi":"paragraph","label":"Quote","placeholder":"Lorem ipsum dolor sit amet, ...."}},"name":{"type":"StructuredText","config":{"single":"paragraph","label":"Name","placeholder":"John McJohn"}},"role_position":{"type":"StructuredText","config":{"single":"paragraph","label":"Role position","placeholder":"Creative Director"}}}},"images_slider":{"type":"Slice","fieldset":"Images Slider","description":"A slider of full-width images + description","icon":"image","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Eyebrow headline"}},"title":{"type":"StructuredText","config":{"single":"heading1, heading2, heading3, heading4, heading5, heading6","label":"Title"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Description"}}},"repeat":{"image":{"type":"Image","config":{"constraint":{"width":null,"height":null},"thumbnails":[],"label":"Full Width Image"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Description"}}}},"pricing_table":{"type":"Slice","fieldset":"Pricing Table","description":"Display a list of pricing plans","icon":"attach_money","display":"grid","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"single":"paragraph","label":"Eyebrow Headline","placeholder":"Pricing plans"}},"title":{"type":"StructuredText","config":{"single":"heading2","label":"Title","placeholder":"Choose the plan"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, strong, em, hyperlink","allowTargetBlank":true,"label":"Description","placeholder":"Choose the version that works for you ..."}}},"repeat":{"plan_title":{"type":"StructuredText","config":{"single":"heading3","label":"Plan title","placeholder":"Simple, Gold, Premium..."}},"price_option":{"type":"StructuredText","config":{"multi":"heading4","label":"Price Option","placeholder":"Free, $19, Contact us..."}},"features":{"type":"StructuredText","config":{"multi":"list-item","label":"Features","placeholder":"A list of features using bullet list"}},"call_to_action":{"type":"Link","config":{"allowTargetBlank":true,"label":"Call To Action","placeholder":"Link to Signup / More info..."}},"call_to_action_text":{"type":"StructuredText","config":{"multi":"paragraph","label":"Call To Action Text","placeholder":"Start your free trial"}}}},"testimonials_slider":{"type":"Slice","fieldset":"Testimonials Slider","description":"A predesigned Slider with rich testimonial","icon":"notifications_active","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","allowTargetBlank":true,"label":"Eyebrow headline"}},"title":{"type":"StructuredText","config":{"single":"heading1, heading2, heading3, heading4, heading5, heading6","label":"Title"}},"paragraph":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","label":"Paragraph"}},"button_link":{"type":"Link","config":{"label":"Button Link"}},"button_label":{"type":"Text","config":{"label":"Button Label","placeholder":"Text for button"}}},"repeat":{"image":{"type":"Image","config":{"constraint":{},"thumbnails":[],"label":"image"}},"testimonial":{"type":"StructuredText","config":{"multi":"paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item","label":"testimonial"}},"person":{"type":"Text","config":{"label":"person","placeholder":"Their full name"}},"title":{"type":"Text","config":{"label":"title","placeholder":"Their title"}}}},"video_highlights":{"type":"Slice","fieldset":"Video Highlights","description":"Highlights of your video channel","icon":"ondemand_video","display":"list","non-repeat":{"eyebrow_headline":{"type":"StructuredText","config":{"single":"paragraph","label":"Eyebrow headline","placeholder":"Reinforce your copy with a key-worded text, to be displayed before title"}},"title":{"type":"StructuredText","config":{"single":"heading2","label":"Title","placeholder":"Video Highlights"}},"description":{"type":"StructuredText","config":{"multi":"paragraph, strong, em, hyperlink","allowTargetBlank":true,"label":"Description","placeholder":"These are some awesome videos ..."}}},"repeat":{"video_title":{"type":"StructuredText","config":{"multi":"paragraph, strong","label":"Video title","placeholder":"My awesome video"}},"video_src":{"type":"Embed","config":{"label":"Video src"}}}}}}
+{
+  "libraryName": "Vue essentials",
+  "framework": "nuxt",
+  "gitUrl": "//github.com/prismicio/vue-essential-slices",
+  "pathToLibrary": "src",
+  "dependencies": [],
+  "css": ["vue-essential-slices/src/styles/styles.scss"],
+  "script": [
+    {
+      "src": "https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/npm/focus-visible@5.0.2/dist/focus-visible.min.js"
+    }
+  ],
+  "devDependencies": ["node-sass", "sass-loader"],
+  "packageName": "vue-essential-slices",
+  "package": {
+    "name": "vue-essential-slices",
+    "version": "0.2.0",
+    "description": "A set of professionally made, accessible Vue components, linked to a (Prismic) backend",
+    "main": "src/index.js",
+    "scripts": {
+      "dev": "start-storybook",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build-storybook": "build-storybook",
+      "prepack": "yarn bundle",
+      "bundle": "node ./node_modules/sm-commons/scripts/bundle",
+      "storybook": "start-storybook -p 6006"
+    },
+    "pre-commit": ["bundle"],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/prismicio/vue-essential-slices.git"
+    },
+    "keywords": ["Nuxtjs", "Vuejs", "Prismic", "slices"],
+    "author": "",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+      "url": "https://github.com/prismicio/vue-essential-slices/issues"
+    },
+    "homepage": "https://github.com/prismicio/vue-essential-slices#readme",
+    "devDependencies": {
+      "@babel/core": "^7.9.6",
+      "@prismicio/vue": "^2.0.2",
+      "@storybook/addon-actions": "^5.3.18",
+      "@storybook/addon-docs": "^5.3.19",
+      "@storybook/addon-knobs": "^5.3.18",
+      "@storybook/addon-links": "^5.3.18",
+      "@storybook/addons": "^5.3.18",
+      "@storybook/source-loader": "^5.3.19",
+      "@storybook/vue": "^5.3.18",
+      "@vue/babel-preset-app": "^4.2.3",
+      "@vue/component-compiler-utils": "^3.1.1",
+      "babel-loader": "^8.0.6",
+      "babel-preset-vue": "^2.0.2",
+      "node-sass": "^4.14.1",
+      "pre-commit": "^1.2.2",
+      "prismic-dom": "^2.1.0",
+      "prismic-javascript": "^2.1.5",
+      "sass-loader": "^8.0.2",
+      "sm-commons": "^0.0.22",
+      "vue": "^2.6.11",
+      "vue-hot-reload-api": "^2.3.4",
+      "vue-loader": "^15.9.2",
+      "vue-slicezone": "^0.0.25",
+      "vue-template-compiler": "^2.6.11"
+    },
+    "dependencies": {}
+  },
+  "slices": {
+    "alternate_grid": {
+      "type": "Slice",
+      "fieldset": "AlternateGrid",
+      "description": "A predesigned Text Grid with Image left or right",
+      "icon": "wrap_text",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "title"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        },
+        "optional_image": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional image"
+          }
+        },
+        "image_side": {
+          "type": "Select",
+          "config": {
+            "options": ["left", "right"],
+            "default_value": "left",
+            "label": "Image side"
+          }
+        }
+      },
+      "repeat": {
+        "optional_icon": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional Icon"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": { "single": "heading3", "label": "title" }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "description"
+          }
+        }
+      }
+    },
+    "call_to_action": {
+      "type": "Slice",
+      "fieldset": "Call to action",
+      "description": "A predesigned 'Call to action' for section for your site",
+      "icon": "notifications_active",
+      "display": "list",
+      "non-repeat": {
+        "icon_image": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Icon Image"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "Title"
+          }
+        },
+        "paragraph": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "label": "Paragraph"
+          }
+        },
+        "button_link": { "type": "Link", "config": { "label": "Button Link" } },
+        "button_label": {
+          "type": "Text",
+          "config": {
+            "label": "Button Label",
+            "placeholder": "Text for button"
+          }
+        }
+      },
+      "repeat": {}
+    },
+    "cards_carousel": {
+      "type": "Slice",
+      "fieldset": "Cards Carousel",
+      "description": "A carousel with text + image cards",
+      "icon": "image",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "Title"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Description"
+          }
+        }
+      },
+      "repeat": {
+        "image": {
+          "type": "Image",
+          "config": {
+            "constraint": { "width": null, "height": null },
+            "thumbnails": [],
+            "label": "Image"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": { "single": "heading3", "label": "Title" }
+        },
+        "content": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Content"
+          }
+        },
+        "additional_info": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading3, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Additional Info",
+            "placeholder": "eg. name of person in testimonial"
+          }
+        }
+      }
+    },
+    "customer_logos": {
+      "type": "Slice",
+      "fieldset": "Customer logos",
+      "description": "Display a list of your customers logos",
+      "icon": "person",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading2",
+            "label": "Eyebrow Headline",
+            "placeholder": "Trusted by"
+          }
+        },
+        "call_to_action": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Call To Action",
+            "placeholder": "View customer stories"
+          }
+        },
+        "call_to_action_link": {
+          "type": "Link",
+          "config": {
+            "allowTargetBlank": true,
+            "label": "Call to Action Link",
+            "placeholder": "Could be a signup link, or a link to customer stories"
+          }
+        }
+      },
+      "repeat": {
+        "logo": {
+          "type": "Image",
+          "config": { "constraint": {}, "thumbnails": [], "label": "Logo" }
+        },
+        "link": {
+          "type": "Link",
+          "config": {
+            "allowTargetBlank": true,
+            "label": "link",
+            "placeholder": "Could be a link to use case, press article, signup..."
+          }
+        }
+      }
+    },
+    "faq_section": {
+      "type": "Slice",
+      "fieldset": "FAQ",
+      "description": "List of common questions + answers",
+      "icon": "question_answer",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading2",
+            "label": "title",
+            "placeholder": "Title"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, strong, em, hyperlink",
+            "allowTargetBlank": true,
+            "label": "Description"
+          }
+        },
+        "optional_image": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Optional image"
+          }
+        }
+      },
+      "repeat": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading3",
+            "label": "Title",
+            "placeholder": "Which browsers do you support?"
+          }
+        },
+        "text": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Text",
+            "placeholder": "The answer to the question"
+          }
+        }
+      }
+    },
+    "feature_testimonials": {
+      "type": "Slice",
+      "fieldset": "Feature Testimonials",
+      "description": "Testimonial proving the value of a specific feature",
+      "icon": "ondemand_video",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title",
+            "single": "paragraph"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "Our testimonial",
+            "single": "heading2"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "These are some awesome tutorials from our awesome clients ...",
+            "multi": "paragraph, strong, em, hyperlink",
+            "allowTargetBlank": true
+          }
+        },
+        "feature_illustration": {
+          "type": "Image",
+          "config": {
+            "constraint": {},
+            "thumbnails": [],
+            "label": "Feature Illustration"
+          }
+        }
+      },
+      "repeat": {
+        "client_logo": {
+          "type": "Image",
+          "config": {
+            "constraint": { "width": 100, "height": 100 },
+            "thumbnails": [],
+            "label": "Client logo"
+          }
+        },
+        "profile_pic": {
+          "type": "Image",
+          "config": {
+            "constraint": { "width": 80, "height": 80 },
+            "thumbnails": [],
+            "label": "Profile Pic"
+          }
+        },
+        "quote": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph",
+            "label": "Quote",
+            "placeholder": "Lorem ipsum dolor sit amet, ...."
+          }
+        },
+        "name": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Name",
+            "placeholder": "John McJohn"
+          }
+        },
+        "role_position": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Role position",
+            "placeholder": "Creative Director"
+          }
+        }
+      }
+    },
+    "images_slider": {
+      "type": "Slice",
+      "fieldset": "Images Slider",
+      "description": "A slider of full-width images + description",
+      "icon": "image",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "Title"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Description"
+          }
+        }
+      },
+      "repeat": {
+        "image": {
+          "type": "Image",
+          "config": {
+            "constraint": { "width": null, "height": null },
+            "thumbnails": [],
+            "label": "Full Width Image"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Description"
+          }
+        }
+      }
+    },
+    "pricing_table": {
+      "type": "Slice",
+      "fieldset": "Pricing Table",
+      "description": "Display a list of pricing plans",
+      "icon": "attach_money",
+      "display": "grid",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Eyebrow Headline",
+            "placeholder": "Pricing plans"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading2",
+            "label": "Title",
+            "placeholder": "Choose the plan"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, strong, em, hyperlink",
+            "allowTargetBlank": true,
+            "label": "Description",
+            "placeholder": "Choose the version that works for you ..."
+          }
+        }
+      },
+      "repeat": {
+        "plan_title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading3",
+            "label": "Plan title",
+            "placeholder": "Simple, Gold, Premium..."
+          }
+        },
+        "price_option": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "heading4",
+            "label": "Price Option",
+            "placeholder": "Free, $19, Contact us..."
+          }
+        },
+        "features": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "list-item",
+            "label": "Features",
+            "placeholder": "A list of features using bullet list"
+          }
+        },
+        "call_to_action": {
+          "type": "Link",
+          "config": {
+            "allowTargetBlank": true,
+            "label": "Call To Action",
+            "placeholder": "Link to Signup / More info..."
+          }
+        },
+        "call_to_action_text": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph",
+            "label": "Call To Action Text",
+            "placeholder": "Start your free trial"
+          }
+        }
+      }
+    },
+    "testimonials_slider": {
+      "type": "Slice",
+      "fieldset": "Testimonials Slider",
+      "description": "A predesigned Slider with rich testimonial",
+      "icon": "notifications_active",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "allowTargetBlank": true,
+            "label": "Eyebrow headline"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1, heading2, heading3, heading4, heading5, heading6",
+            "label": "Title"
+          }
+        },
+        "paragraph": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, heading1, heading2, heading3, heading4, heading5, heading6, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "label": "Paragraph"
+          }
+        },
+        "button_link": { "type": "Link", "config": { "label": "Button Link" } },
+        "button_label": {
+          "type": "Text",
+          "config": {
+            "label": "Button Label",
+            "placeholder": "Text for button"
+          }
+        }
+      },
+      "repeat": {
+        "image": {
+          "type": "Image",
+          "config": { "constraint": {}, "thumbnails": [], "label": "image" }
+        },
+        "testimonial": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, preformatted, strong, em, hyperlink, image, embed, list-item, o-list-item, o-list-item",
+            "label": "testimonial"
+          }
+        },
+        "person": {
+          "type": "Text",
+          "config": { "label": "person", "placeholder": "Their full name" }
+        },
+        "title": {
+          "type": "Text",
+          "config": { "label": "title", "placeholder": "Their title" }
+        }
+      }
+    },
+    "video_highlights": {
+      "type": "Slice",
+      "fieldset": "Video Highlights",
+      "description": "Highlights of your video channel",
+      "icon": "ondemand_video",
+      "display": "list",
+      "non-repeat": {
+        "eyebrow_headline": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Eyebrow headline",
+            "placeholder": "Reinforce your copy with a key-worded text, to be displayed before title"
+          }
+        },
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading2",
+            "label": "Title",
+            "placeholder": "Video Highlights"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, strong, em, hyperlink",
+            "allowTargetBlank": true,
+            "label": "Description",
+            "placeholder": "These are some awesome videos ..."
+          }
+        }
+      },
+      "repeat": {
+        "video_title": {
+          "type": "StructuredText",
+          "config": {
+            "multi": "paragraph, strong",
+            "label": "Video title",
+            "placeholder": "My awesome video"
+          }
+        },
+        "video_src": { "type": "Embed", "config": { "label": "Video src" } }
+      }
+    }
+  }
+}

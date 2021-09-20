@@ -1,27 +1,29 @@
-import { query } from '../features/query'
-import { registry as createRegistry } from '../features/registry'
+import { query } from "../features/query";
+import { registry as createRegistry } from "../features/registry";
 
 export const useGetStaticProps = ({
   uid,
   lang,
   params,
   client,
-  body = 'body',
-  type = 'page',
-  queryType = 'repeat',
+  body = "body",
+  type = "page",
+  queryType = "repeat",
 }) => {
-  const apiParams = params || { lang }
+  const apiParams = params || { lang };
 
   return async function getStaticProps({
     preview = null,
     previewData = {},
-    params = {}
+    params = {},
   }) {
+    const registry = await createRegistry();
 
-    const registry = await createRegistry()
-
-    const { ref = null } = previewData
-    const resolvedUid = typeof uid === 'function' ? uid({ params, previewData, preview }) : (uid || null)
+    const { ref = null } = previewData;
+    const resolvedUid =
+      typeof uid === "function"
+        ? uid({ params, previewData, preview })
+        : uid || null;
     try {
       const doc = await query({
         queryType,
@@ -29,19 +31,18 @@ export const useGetStaticProps = ({
         type,
         uid: resolvedUid,
         client,
-      })
+      });
       return {
         props: {
           ...doc,
           error: null,
           slices: doc ? doc.data[body] : [],
-          registry
-        }
-      }
-
-    } catch(e) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(`[next-slicezone] ${e.toString()}`)
+          registry,
+        },
+      };
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`[next-slicezone] ${e.toString()}`);
       }
       return {
         props: {
@@ -49,9 +50,9 @@ export const useGetStaticProps = ({
           error: e.toString(),
           uid: resolvedUid,
           slices: [],
-          registry: null
-        }
-      }
+          registry: null,
+        },
+      };
     }
-  }
-}
+  };
+};

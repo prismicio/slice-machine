@@ -15,9 +15,9 @@ export const valid = {
   config: {
     label: "Image side",
     default_value: "left",
-    options: ["left", "right"]
-  }
-}
+    options: ["left", "right"],
+  },
+};
 
 export const wrongType = {
   __pass: false,
@@ -25,27 +25,27 @@ export const wrongType = {
   config: {
     label: "Image side",
     default_value: "left",
-    options: ["left", "right"]
-  }
-}
+    options: ["left", "right"],
+  },
+};
 
 export const noOptions = {
   __pass: false,
   type: "Select",
   config: {
     label: "Image side",
-    default_value: "left"
-  }
-}
+    default_value: "left",
+  },
+};
 
 export const emptyOptions = {
   __pass: false,
   type: "Select",
   config: {
     label: "Image side",
-    options: []
-  }
-}
+    options: [],
+  },
+};
 
 export const wrongDefaultValue = {
   __pass: false,
@@ -53,15 +53,15 @@ export const wrongDefaultValue = {
   config: {
     label: "Image side",
     default_value: "right",
-    options: ["left", "lefty", "left-right"]
-  }
-}
+    options: ["left", "lefty", "left-right"],
+  },
+};
 
 export const misplacedId = {
   ...valid,
   __pass: false,
   config: {
     ...valid.config,
-    id: 'some-id'
-  }
-}
+    id: "some-id",
+  },
+};

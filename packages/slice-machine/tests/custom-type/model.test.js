@@ -1,17 +1,16 @@
-import equal from 'fast-deep-equal'
+import equal from "fast-deep-equal";
 
-import { CustomType } from '../../lib/models/common/CustomType'
+import { CustomType } from "../../lib/models/common/CustomType";
 
-import jsonModel from './__mockData__/model.json'
+import jsonModel from "./__mockData__/model.json";
 
-test('it formats models correctly', () => {
-  const model = CustomType.fromJsonModel(jsonModel.id, jsonModel)
-  
-  const asArray = CustomType.toArray(model)
-  const fromArray = CustomType.toObject(asArray)
-  const finalModel = CustomType.toJsonModel(fromArray)
+test("it formats models correctly", () => {
+  const model = CustomType.fromJsonModel(jsonModel.id, jsonModel);
 
-  expect(equal(model, fromArray)).toBe(true)
-  expect(equal(jsonModel, finalModel)).toBe(true)
-})
+  const asArray = CustomType.toArray(model);
+  const fromArray = CustomType.toObject(asArray);
+  const finalModel = CustomType.toJsonModel(fromArray);
 
+  expect(equal(model, fromArray)).toBe(true);
+  expect(equal(jsonModel, finalModel)).toBe(true);
+});

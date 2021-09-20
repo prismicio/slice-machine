@@ -1,30 +1,37 @@
-import { Fragment } from 'react'
-import { Theme, Text, Card as Themecard, Box, Heading, Flex, Badge } from 'theme-ui'
+import { Fragment } from "react";
+import {
+  Theme,
+  Text,
+  Card as Themecard,
+  Box,
+  Heading,
+  Flex,
+  Badge,
+} from "theme-ui";
 
-import SliceState from '../SliceState'
-import { LibStatus } from '../../common/Library'
+import SliceState from "../SliceState";
+import { LibStatus } from "../../common/Library";
 
-import { Link as LinkUtil } from '../Link'
-import { WrapperType, WrapperByType } from './wrappers'
-
+import { Link as LinkUtil } from "../Link";
+import { WrapperType, WrapperByType } from "./wrappers";
 
 const StateBadgeText = {
-  [LibStatus.Modified]: 'Modified',
-  [LibStatus.Synced]: 'Synced',
-  [LibStatus.PreviewMissing]: 'Preview missing',
-  [LibStatus.Invalid]: 'Contains errors',
-  [LibStatus.NewSlice]: 'New'
-}
+  [LibStatus.Modified]: "Modified",
+  [LibStatus.Synced]: "Synced",
+  [LibStatus.PreviewMissing]: "Preview missing",
+  [LibStatus.Invalid]: "Contains errors",
+  [LibStatus.NewSlice]: "New",
+};
 
 const StatusBadge = ({ libStatus }: { libStatus: LibStatus }) => {
-  const status = StateBadgeText[libStatus]
+  const status = StateBadgeText[libStatus];
 
   return (
     <Badge mr="2" variant={libStatus}>
       {status}
     </Badge>
-  )
-}
+  );
+};
 
 const borderedSx = (sx: any) => ({
   border: (t: Theme) => `1px solid ${t.colors?.border}`,
@@ -37,16 +44,22 @@ const borderedSx = (sx: any) => ({
     bg: "sidebar",
     border: (t: Theme) => `1px solid ${t.colors?.sidebar}`,
   },
-})
+});
 
 const defaultSx = (sx: any) => ({
   bg: "transparent",
   border: "none",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
   ...sx,
-})
+});
 
-const SliceVariations = ({ hideVariations, variations }: { hideVariations: boolean, variations: ReadonlyArray<any>}) => {
+const SliceVariations = ({
+  hideVariations,
+  variations,
+}: {
+  hideVariations: boolean;
+  variations: ReadonlyArray<any>;
+}) => {
   return !hideVariations ? (
     <>
       {variations ? (
@@ -58,7 +71,15 @@ const SliceVariations = ({ hideVariations, variations }: { hideVariations: boole
   ) : null;
 };
 
-const SliceThumbnail = ({ heightInPx, previewUrl, withShadow = true }: { heightInPx: string, previewUrl?: string, withShadow: boolean }) => {
+const SliceThumbnail = ({
+  heightInPx,
+  previewUrl,
+  withShadow = true,
+}: {
+  heightInPx: string;
+  previewUrl?: string;
+  withShadow: boolean;
+}) => {
   return (
     <Box
       sx={{
@@ -72,7 +93,7 @@ const SliceThumbnail = ({ heightInPx, previewUrl, withShadow = true }: { heightI
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: t => `1px solid ${t.colors?.borders}`,
+        border: (t) => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -83,12 +104,12 @@ const SliceThumbnail = ({ heightInPx, previewUrl, withShadow = true }: { heightI
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
-          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : 'none',
+          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : "none",
         }}
       ></Box>
     </Box>
-  )
-}
+  );
+};
 
 export const SharedSlice = {
   render({
@@ -102,31 +123,30 @@ export const SharedSlice = {
     wrapperType = WrapperType.clickable,
     sx,
   }: {
-    bordered?: boolean,
-    displayStatus?: boolean,
+    bordered?: boolean;
+    displayStatus?: boolean;
 
-    CustomStatus?: any,
-    Wrapper?: any /* ? */,
-    slice: SliceState,
-    wrapperType?: WrapperType,
-    thumbnailHeightPx?: string,
-    sx?: any
+    CustomStatus?: any;
+    Wrapper?: any /* ? */;
+    slice: SliceState;
+    wrapperType?: WrapperType;
+    thumbnailHeightPx?: string;
+    sx?: any;
   }) {
-
     const defaultVariation = SliceState.variation(slice);
     if (!defaultVariation) {
-      return null
+      return null;
     }
-    const variationId = defaultVariation.id
+    const variationId = defaultVariation.id;
     const link = LinkUtil.variation(
       slice.href,
       slice.jsonModel.name,
       variationId
-    )
+    );
 
-    const CardWrapper = Wrapper || WrapperByType[wrapperType]
+    const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url
+    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url;
 
     return (
       <CardWrapper link={link} slice={slice}>
@@ -145,13 +165,15 @@ export const SharedSlice = {
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Flex sx={{ alignItems: "center" }}>
-              {
-                CustomStatus ? <CustomStatus slice={slice} /> : (
-                  <Fragment>
-                    { displayStatus && slice.__status ? <StatusBadge libStatus={slice.__status} /> : null }
-                  </Fragment>
-                )
-              }
+              {CustomStatus ? (
+                <CustomStatus slice={slice} />
+              ) : (
+                <Fragment>
+                  {displayStatus && slice.__status ? (
+                    <StatusBadge libStatus={slice.__status} />
+                  ) : null}
+                </Fragment>
+              )}
               <Heading sx={{ flex: 1 }} as="h6">
                 {slice.infos.sliceName}
               </Heading>
@@ -163,9 +185,9 @@ export const SharedSlice = {
           </Flex>
         </Themecard>
       </CardWrapper>
-    )
-  }
-}
+    );
+  },
+};
 
 export const NonSharedSlice = {
   render({
@@ -176,36 +198,36 @@ export const NonSharedSlice = {
     wrapperType = WrapperType.nonClickable,
     sx,
   }: {
-    bordered: boolean,
-    slice: { key: string, value: any },
-    displayStatus?: boolean,
-    thumbnailHeightPx?: string,
-    wrapperType?: WrapperType,
-    sx?: any
+    bordered: boolean;
+    slice: { key: string; value: any };
+    displayStatus?: boolean;
+    thumbnailHeightPx?: string;
+    wrapperType?: WrapperType;
+    sx?: any;
   }) {
-
-    const Wrapper = WrapperByType[wrapperType]
+    const Wrapper = WrapperByType[wrapperType];
 
     return (
       <Wrapper link={undefined}>
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <SliceThumbnail
-            withShadow={false}
-            heightInPx={thumbnailHeightPx}
-          />
+          <SliceThumbnail withShadow={false} heightInPx={thumbnailHeightPx} />
           <Flex
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Flex>
-              { displayStatus ? <Badge mr={2} variant="modified">Non shared</Badge> : null }
+              {displayStatus ? (
+                <Badge mr={2} variant="modified">
+                  Non shared
+                </Badge>
+              ) : null}
               <Heading sx={{ flex: 1 }} as="h6">
-                { slice?.value?.fieldset || slice.key }
+                {slice?.value?.fieldset || slice.key}
               </Heading>
             </Flex>
           </Flex>
         </Themecard>
       </Wrapper>
-    )
-  }
-}
+    );
+  },
+};

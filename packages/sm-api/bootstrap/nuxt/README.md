@@ -31,4 +31,4 @@ If you don't want to escape html (eg. when adding a path or url), prepend your v
 
 eg:
 
-[[ &myUrl ]]
+[[&myUrl]]
