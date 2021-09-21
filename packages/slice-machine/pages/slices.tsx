@@ -198,11 +198,11 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                     <Spinner
                       sx={{ position: "relative", top: "4px" }}
                       color="#F7F7F7"
-                      size={18}
-                      mr={2}
+                      size={24}
                     />
-                  ) : null}{" "}
-                  Create my first slice
+                  ) : (
+                    "Create my first slice"
+                  )}
                 </Button>
               </Box>
             ) : (
