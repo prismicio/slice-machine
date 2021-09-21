@@ -25,7 +25,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
       textAlign: "center",
     }}
   >
-    <Heading as={"h3"} sx={{ mb: 4 }}>
+    <Heading as={"h3"} sx={{ mb: 2 }}>
       {title}
     </Heading>
     {explanations.map((explanation) => (
@@ -39,7 +39,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        mb: 5,
+        mb: 4,
       }}
     >
       {buttonText}
@@ -47,11 +47,19 @@ const EmptyState: React.FunctionComponent<Props> = ({
     <Box
       sx={(theme) => ({
         backgroundColor: theme?.colors?.muted,
-        p: 3,
+        px: 3,
+        py: 2,
         borderRadius: "8px",
       })}
     >
-      <Text variant={"xs"}>{documentationComponent}</Text>
+      <Text
+        variant={"xs"}
+        sx={(theme) => ({
+          color: theme?.colors?.gray,
+        })}
+      >
+        {documentationComponent}
+      </Text>
     </Box>
   </Box>
 );

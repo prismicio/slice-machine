@@ -117,7 +117,7 @@ const Card = ({ ct }: { ct: CtPayload }) => (
 
 const CustomTypes = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { customTypes = [], onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
@@ -171,6 +171,7 @@ const CustomTypes = () => {
               <ThemeLink
                 target={"_blank"}
                 href={"https://prismic.io/docs/core-concepts/custom-types "}
+                sx={(theme) => ({ color: theme?.colors?.primary })}
               >
                 documentation
               </ThemeLink>{" "}

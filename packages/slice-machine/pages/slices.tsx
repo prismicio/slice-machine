@@ -45,8 +45,8 @@ const CreateSliceButton = ({
 
 const SlicesIndex = ({ env }: { env: Environment }) => {
   const libraries = useContext(LibrariesContext);
-  const [data, setData] = useState({ loading: false });
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCreatingSlice, setIsCreatingSlice] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const _onCreate = ({
     sliceName,
@@ -58,7 +58,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
     fetchApi({
       url: `/api/slices/create?sliceName=${sliceName}&from=${from}`,
       setData() {
-        setData({ loading: true });
+        setIsCreatingSlice(true);
       },
       successMessage: "Model was correctly saved to Prismic!",
       onSuccess({
@@ -124,7 +124,10 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
           <Header
             ActionButton={
               hasLocalLibs ? (
-                <CreateSliceButton onClick={() => setIsOpen(true)} {...data} />
+                <CreateSliceButton
+                  onClick={() => setIsOpen(true)}
+                  loading={isCreatingSlice}
+                />
               ) : undefined
             }
             MainBreadcrumb={
@@ -144,15 +147,16 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                     To start using the builder, create your first slice!
                   </p>
                   <Button onClick={() => setIsOpen(true)}>
-                    {data.loading ? (
+                    {isCreatingSlice ? (
                       <Spinner
                         sx={{ position: "relative", top: "4px" }}
                         color="#F7F7F7"
                         size={18}
                         mr={2}
                       />
-                    ) : null}{" "}
-                    Create slice
+                    ) : (
+                      "Create slice"
+                    )}
                   </Button>
                 </Box>
               ) : (
@@ -191,6 +195,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                     <Link
                       target={"_blank"}
                       href={"https://prismic.io/docs/core-concepts/slices"}
+                      sx={(theme) => ({ color: theme?.colors?.primary })}
                     >
                       documentation
                     </Link>{" "}
@@ -231,9 +236,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                       >
                         <Text>{name}</Text>
                       </Flex>
-                      {!isLocal ? (
-                        <p>⚠️ External libraries are read-only</p>
-                      ) : null}
+                      {!isLocal && <p>⚠️ External libraries are read-only</p>}
                     </Flex>
                     <Grid
                       elems={components.map(([e]) => e)}
