@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
-import { Box, Flex, Button, Text, Spinner, Heading, Link } from "theme-ui";
+import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import { getFormattedLibIdentifier } from "@lib/utils/lib";
 import Container from "../components/Container";
 
@@ -19,6 +19,7 @@ import Grid from "../components/Grid";
 import LibraryState from "@lib/models/ui/LibraryState";
 import SliceState from "@lib/models/ui/SliceState";
 import { SharedSlice } from "@lib/models/ui/Slice";
+import EmptyState from "@components/EmptyState";
 
 const CreateSliceButton = ({
   onClick,
@@ -176,54 +177,27 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
             }}
           >
             {sliceCount == 0 ? (
-              <Box
-                sx={{
-                  flex: 1,
-                  alignItems: "center",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  display: "flex",
-                  textAlign: "center",
-                }}
-              >
-                <Heading as={"h3"} sx={{ mb: 4 }}>
-                  Create your first Slice
-                </Heading>
-                <Text variant={"xs"} sx={{ mb: 2 }}>
-                  Click the + button on the top right to create the first slice
-                  of your project.
-                </Text>
-                <Text variant={"xs"} sx={{ mb: 4 }}>
-                  It will be stored locally. You will then be able to push it to
-                  Prismic.
-                </Text>
-                <Button onClick={() => setIsOpen(true)} sx={{ mb: 5 }}>
-                  {data.loading ? (
-                    <Spinner
-                      sx={{ position: "relative", top: "4px" }}
-                      color="#F7F7F7"
-                      size={24}
-                    />
-                  ) : (
-                    "Create my first Slice"
-                  )}
-                </Button>
-                <Box
-                  sx={(theme) => ({
-                    backgroundColor: theme?.colors?.muted,
-                    p: 3,
-                    borderRadius: "8px",
-                  })}
-                >
-                  <Text variant={"xs"}>
+              <EmptyState
+                title={"Create your first Slice"}
+                explanations={[
+                  "Click the + button on the top right to create the first slice of your project.",
+                  "It will be stored locally. You will then be able to push it to Prismic.",
+                ]}
+                onCreateNew={() => setIsOpen(true)}
+                buttonText={"Create my first Slice"}
+                documentationComponent={
+                  <>
                     Go to our{" "}
-                    <Link href={"https://prismic.io/docs/core-concepts/slices"}>
+                    <Link
+                      target={"_blank"}
+                      href={"https://prismic.io/docs/core-concepts/slices"}
+                    >
                       documentation
                     </Link>{" "}
                     to learn more about Slices.
-                  </Text>
-                </Box>
-              </Box>
+                  </>
+                }
+              />
             ) : (
               libraries.map((maybelib: LibraryState | undefined) => {
                 if (!maybelib) {

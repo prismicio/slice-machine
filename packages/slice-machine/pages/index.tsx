@@ -22,6 +22,7 @@ import Grid from "../components/Grid";
 import CreateCustomType from "../components/Forms/CreateCustomType";
 
 import Header from "../components/Header";
+import EmptyState from "@components/EmptyState";
 
 interface CtPayload {
   repeatable: boolean;
@@ -156,56 +157,27 @@ const CustomTypes = () => {
         breadrumbHref="/"
       />
       {!customTypes.length ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
-            textAlign: "center",
-          }}
-        >
-          <Heading as={"h3"} sx={{ mb: 4 }}>
-            Create your first Custom Type
-          </Heading>
-          <Text variant={"xs"} sx={{ mb: 2 }}>
-            Click the + button on the top right to create your first custom
-            type.
-          </Text>
-          <Text variant={"xs"} sx={{ mb: 4 }}>
-            It will be stored locally. You will then be able to push it to
-            Prismic.
-          </Text>
-          <Button
-            onClick={() => setIsOpen(true)}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              mb: 5,
-            }}
-          >
-            Create your first Custom Type
-          </Button>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme?.colors?.muted,
-              p: 3,
-              borderRadius: "8px",
-            })}
-          >
-            <Text variant={"xs"}>
+        <EmptyState
+          title={"Create your first Custom Type"}
+          explanations={[
+            "Click the + button on the top right to create your first custom type.",
+            "It will be stored locally. You will then be able to push it to Prismic.",
+          ]}
+          onCreateNew={() => setIsOpen(true)}
+          buttonText={"Create your first Custom Type"}
+          documentationComponent={
+            <>
               Go to our{" "}
-              <Link
+              <ThemeLink
+                target={"_blank"}
                 href={"https://prismic.io/docs/core-concepts/custom-types "}
               >
                 documentation
-              </Link>{" "}
+              </ThemeLink>{" "}
               to learn more about Custom Types.
-            </Text>
-          </Box>
-        </Box>
+            </>
+          }
+        />
       ) : (
         <Grid
           elems={customTypes}
