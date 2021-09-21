@@ -89,7 +89,7 @@ const schema = yup.object().shape({
   config: linkConfigSchema.optional(),
 });
 
-export const Link: Widget<LinkField, typeof schema> = {
+export const LinkWidget: Widget<LinkField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

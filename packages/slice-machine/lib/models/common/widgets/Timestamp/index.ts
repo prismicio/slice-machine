@@ -34,7 +34,7 @@ const Meta = {
   description: "A calendar date picker with time",
 };
 
-export const Timestamp: Widget<TimestampField, typeof schema> = {
+export const TimestampWidget: Widget<TimestampField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

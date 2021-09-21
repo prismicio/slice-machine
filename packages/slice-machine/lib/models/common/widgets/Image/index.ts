@@ -48,7 +48,7 @@ const Meta = {
   description: "A responsive image field with constraints",
 };
 
-export const Image: Widget<ImageField, typeof schema> = {
+export const ImageWidget: Widget<ImageField, typeof schema> = {
   Meta,
   Form,
   schema,

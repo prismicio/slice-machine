@@ -42,7 +42,7 @@ const Meta = {
   description: "A field for storing geo-coordinates",
 };
 
-export const GeoPoint: Widget<GeoPointField, typeof schema> = {
+export const GeoPointWidget: Widget<GeoPointField, typeof schema> = {
   create: (label: string) => new GeoPointField({ label }),
   handleMockConfig,
   handleMockContent,

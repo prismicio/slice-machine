@@ -26,7 +26,7 @@ const schema = yup.object().shape({
   }),
 });
 
-export const Group: Widget<GroupField<AsArray>, typeof schema> = {
+export const GroupWidget: Widget<GroupField<AsArray>, typeof schema> = {
   Meta,
   FormFields: DefaultFields,
   schema,

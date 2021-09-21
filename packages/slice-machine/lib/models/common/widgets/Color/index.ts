@@ -25,7 +25,7 @@ const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
   FieldType.Color
 );
 
-export const Color: Widget<ColorField, typeof schema> = {
+export const ColorWidget: Widget<ColorField, typeof schema> = {
   handleMockContent,
   handleMockConfig,
   create: (label: string) => new ColorField({ label }),
