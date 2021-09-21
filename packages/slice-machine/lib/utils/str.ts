@@ -4,7 +4,7 @@ const camelizeRE = /-(\w)/g;
 
 export function transformKeyAccessor(str: string): string {
   if (str.includes('-')) {
-    return `["${str}"]`
+    return `['${str}']`
   }
   return `.${str}`
 }
