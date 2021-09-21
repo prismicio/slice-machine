@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { useContext, useState, Fragment } from "react";
 import {
   Box,
@@ -21,7 +21,7 @@ import Grid from "../components/Grid";
 
 import CreateCustomType from "../components/Forms/CreateCustomType";
 
-import Header from '../components/Header'
+import Header from "../components/Header";
 
 interface CtPayload {
   repeatable: boolean;
@@ -31,7 +31,7 @@ interface CtPayload {
 }
 
 // To isolate later
-const CTName = ({ ctName }:{ ctName: string }) => {
+const CTName = ({ ctName }: { ctName: string }) => {
   return (
     <Heading sx={{ flex: 1, lineHeight: 20 }} as="h6">
       {ctName}
@@ -43,13 +43,21 @@ const CTName = ({ ctName }:{ ctName: string }) => {
 const CTRepeatble = ({ repeatable }: { repeatable: boolean }) => {
   return (
     <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
-      { repeatable ? 'Repeatable' : 'Single'} Type
+      {repeatable ? "Repeatable" : "Single"} Type
     </Text>
-  )
-}
+  );
+};
 
 // To isolate later
-const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }: { heightInPx: string, preview: { url: string } | null, withShadow?: boolean }) => {
+const CTThumbnail = ({
+  heightInPx,
+  preview = null,
+  withShadow = true,
+}: {
+  heightInPx: string;
+  preview: { url: string } | null;
+  withShadow?: boolean;
+}) => {
   return (
     <Box
       sx={{
@@ -63,7 +71,7 @@ const CTThumbnail = ({ heightInPx, preview = null, withShadow = true }: { height
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: t => `1px solid ${t.colors?.borders}`,
+        border: (t) => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -110,31 +118,32 @@ const Emptystate = () => (
   <Box>
     <Heading as="h3">Create your first custom type</Heading>
     <p>Click the + button on the top right to create your first custom type.</p>
-    <p>It will be stored locally. You will then be able to push it to Prismic.</p>
+    <p>
+      It will be stored locally. You will then be able to push it to Prismic.
+    </p>
   </Box>
-)
+);
 
 const CustomTypes = () => {
-  const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
-  const { customTypes = [], onCreate } = useContext(CustomTypesContext)
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const { customTypes = [], onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
     if (onCreate) {
       onCreate(id, {
         label,
         repeatable,
-      })
-      setIsOpen(false)
-      router.push(`/cts/${id}`)
-
+      });
+      setIsOpen(false);
+      router.push(`/cts/${id}`);
     }
-  }
+  };
 
   return (
     <Container>
       <Header
-        ActionButton={(
+        ActionButton={
           <Button
             onClick={() => setIsOpen(true)}
             sx={{
@@ -148,17 +157,15 @@ const CustomTypes = () => {
           >
             <GoPlus size={"2em"} />
           </Button>
-        )}
-        MainBreadcrumb={(
-          <Fragment><FiLayout /> <Text ml={2}>Custom Types</Text></Fragment>
-        )}
+        }
+        MainBreadcrumb={
+          <Fragment>
+            <FiLayout /> <Text ml={2}>Custom Types</Text>
+          </Fragment>
+        }
         breadrumbHref="/"
       />
-      {
-        !customTypes.length ? (
-          <Emptystate />
-        ) : null
-      }
+      {!customTypes.length ? <Emptystate /> : null}
       <Grid
         elems={customTypes}
         renderElem={(ct: CtPayload) => (

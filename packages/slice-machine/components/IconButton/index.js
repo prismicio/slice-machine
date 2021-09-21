@@ -1,17 +1,19 @@
-import { IconButton as ThemeIconButton }from 'theme-ui'
+import { IconButton as ThemeIconButton } from "theme-ui";
 
 const defaultActiveSx = (a, e) => {
   if (e) {
     return {
-     border: ({ colors }) => `1px solid ${colors.error}`
-    }
+      border: ({ colors }) => `1px solid ${colors.error}`,
+    };
   }
-  return a ? {
-    border: ({ colors }) => `1px solid ${colors.primary}`
-  } : {
-    border: ({ colors }) => `1px solid ${colors.borders}`
-  }
-}
+  return a
+    ? {
+        border: ({ colors }) => `1px solid ${colors.primary}`,
+      }
+    : {
+        border: ({ colors }) => `1px solid ${colors.borders}`,
+      };
+};
 
 const IconButton = ({
   sx = null,
@@ -31,14 +33,14 @@ const IconButton = ({
     aria-label={label}
     type="button"
     sx={{
-      ...fitButton ? { width: size, height: size } : null,
-      ...useActive && activeSx(active, error),
+      ...(fitButton ? { width: size, height: size } : null),
+      ...(useActive && activeSx(active, error)),
       ...sx,
     }}
     {...rest}
   >
     <Icon size={size} />
   </ThemeIconButton>
-)
+);
 
-export default IconButton
+export default IconButton;

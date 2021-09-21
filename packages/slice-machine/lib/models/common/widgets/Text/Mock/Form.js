@@ -1,44 +1,47 @@
-import { Box, Text, Label, Input } from 'theme-ui'
-import { useFormikContext } from 'formik'
-import InputDeleteIcon from 'components/InputDeleteIcon'
+import { Box, Text, Label, Input } from "theme-ui";
+import { useFormikContext } from "formik";
+import InputDeleteIcon from "components/InputDeleteIcon";
 
-import { initialValues } from '.'
+import { initialValues } from ".";
 
-import { MockConfigKey } from '../../../../../consts'
+import { MockConfigKey } from "../../../../../consts";
 
 const Form = () => {
-  const { values, setFieldValue } = useFormikContext()
+  const { values, setFieldValue } = useFormikContext();
 
-  const contentValue = values[MockConfigKey]?.content || null
-  
+  const contentValue = values[MockConfigKey]?.content || null;
+
   const onUpdate = (value) => {
     if (!value || !value.length) {
-      return setFieldValue(MockConfigKey, {})
+      return setFieldValue(MockConfigKey, {});
     }
     setFieldValue(MockConfigKey, {
-      content: value
-    })
-  }
+      content: value,
+    });
+  };
 
   const onDelete = () => {
-    setFieldValue(MockConfigKey, {})
-  }
+    setFieldValue(MockConfigKey, {});
+  };
 
   return (
     <Box>
-      <Label variant="label.primary" sx={{ display: 'block', maxWidth: '400px' }}>
+      <Label
+        variant="label.primary"
+        sx={{ display: "block", maxWidth: "400px" }}
+      >
         <Text as="span">Text value</Text>
         <Input
-          value={contentValue || ''}
-          placeholder = "Something well put"
-          onChange={e => onUpdate(e.target.value)}
+          value={contentValue || ""}
+          placeholder="Something well put"
+          onChange={(e) => onUpdate(e.target.value)}
         />
-        <InputDeleteIcon onClick={onDelete}/>
+        <InputDeleteIcon onClick={onDelete} />
       </Label>
     </Box>
-  )
-}
+  );
+};
 
-Form.initialValues = initialValues
+Form.initialValues = initialValues;
 
-export const MockConfigForm = Form
+export const MockConfigForm = Form;

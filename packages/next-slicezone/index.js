@@ -1,29 +1,33 @@
-import React from 'react'
+import React from "react";
 
-import { pascalize } from 'sm-commons/utils/str'
+import { pascalize } from "sm-commons/utils/str";
 
-const Empty = () => <p>Your SliceZone is empty!</p>
+const Empty = () => <p>Your SliceZone is empty!</p>;
 export default ({ registry = {}, slices, resolver = () => null }) => {
   if (!slices || !slices.length) {
-    return process.env.NODE_ENV !== 'production' ? <Empty /> : null
+    return process.env.NODE_ENV !== "production" ? <Empty /> : null;
   }
 
   return slices.map((slice, i) => {
-    const sliceName = pascalize(slice.slice_type)
-    const maybeRegister = registry[sliceName]
+    const sliceName = pascalize(slice.slice_type);
+    const maybeRegister = registry[sliceName];
 
     if (!maybeRegister) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(`No component was registered for slice of type "${slice.slice_type}"`)
+      if (process.env.NODE_ENV !== "production") {
+        console.error(
+          `No component was registered for slice of type "${slice.slice_type}"`
+        );
       }
-      return null
+      return null;
     }
 
-    const Component = typeof maybeRegister === 'object' ? resolver({ ...maybeRegister, slice, i }) : maybeRegister
+    const Component =
+      typeof maybeRegister === "object"
+        ? resolver({ ...maybeRegister, slice, i })
+        : maybeRegister;
     if (Component) {
-      return <Component key={`slice-${i + 1}`} slice={slice}  i={i} />
+      return <Component key={`slice-${i + 1}`} slice={slice} i={i} />;
     }
-    return null
-  })
-
-}
+    return null;
+  });
+};

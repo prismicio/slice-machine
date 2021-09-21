@@ -1,5 +1,5 @@
 export enum FormTypes {
-  CHECKBOX = 'checkbox',
-  INPUT = 'input',
-  SELECT = 'select'
+  CHECKBOX = "checkbox",
+  INPUT = "input",
+  SELECT = "select",
 }

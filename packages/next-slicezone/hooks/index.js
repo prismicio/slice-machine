@@ -1,2 +1,2 @@
-export { useGetStaticProps } from './useGetStaticProps'
-export { useGetStaticPaths } from './useGetStaticPaths'
+export { useGetStaticProps } from "./useGetStaticProps";
+export { useGetStaticPaths } from "./useGetStaticPaths";

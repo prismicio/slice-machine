@@ -47,10 +47,17 @@ export default {
       if (doc) {
         if (this.slicesKey) {
           // If slicesKey is specified then use slicesKey...
-          if (this.slicesKey in doc.data && Array.isArray(doc.data[this.slicesKey])) {
+          if (
+            this.slicesKey in doc.data &&
+            Array.isArray(doc.data[this.slicesKey])
+          ) {
             this.slices = doc.data[this.slicesKey];
           } else {
-            console.error("[SliceZone/fetch] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:", this.slicesKey, doc.data);
+            console.error(
+              "[SliceZone/fetch] Cannot find slice zone at specified key `%s`\n\nCheck the document below to make sure you provided the right key:",
+              this.slicesKey,
+              doc.data
+            );
           }
         } else {
           // ...else try to find default slice zone
@@ -63,7 +70,10 @@ export default {
 
           // If slice zone is still not found
           if (!this.slices) {
-            console.error("[SliceZone/fetch] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slices-key` props:\n\n<slice-zone ... slices-key=\"mySliceZone\" />\n", doc.data);
+            console.error(
+              '[SliceZone/fetch] Cannot find slice zone in document\n\nCheck the document below to make sure your slice zone is here or provide the `slices-key` props:\n\n<slice-zone ... slices-key="mySliceZone" />\n',
+              doc.data
+            );
           }
         }
       } else {
@@ -73,7 +83,6 @@ export default {
       if (!this.slices) {
         this.slices = [];
       }
-      
     } catch (e) {
       console.error("[SliceZone/fetch]", e);
       this.slices = [];

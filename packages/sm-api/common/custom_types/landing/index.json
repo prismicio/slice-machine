@@ -1,12 +1,12 @@
 [
-	{
-		"id": "page",
-		"name": "Page",
-		"repeatable": true,
-		"value": "page.json",
-		"route": {
-			"type": "page",
-			"path": "/:uid"
-		}
-	}
+  {
+    "id": "page",
+    "name": "Page",
+    "repeatable": true,
+    "value": "page.json",
+    "route": {
+      "type": "page",
+      "path": "/:uid"
+    }
+  }
 ]

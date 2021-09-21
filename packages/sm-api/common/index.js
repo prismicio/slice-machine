@@ -6,15 +6,12 @@
  */
 
 function handleStripKeys(strip, trimKeys, preserveDefaults) {
-  const defaultTrimKeys = preserveDefaults ? [] : trimKeys
+  const defaultTrimKeys = preserveDefaults ? [] : trimKeys;
   return strip
-    ? strip
-        .trim()
-        .split(",")
-        .concat(defaultTrimKeys)
+    ? strip.trim().split(",").concat(defaultTrimKeys)
     : defaultTrimKeys;
 }
 
 module.exports = {
-  handleStripKeys
+  handleStripKeys,
 };

@@ -1,5 +1,5 @@
 const EditItem = () => {
-  return (<div>edit me!</div>)
-}
+  return <div>edit me!</div>;
+};
 
-export default EditItem
+export default EditItem;

@@ -1,3 +1,3 @@
 export default interface Auth {
-  auth: string  
+  auth: string;
 }
