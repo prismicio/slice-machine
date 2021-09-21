@@ -1,7 +1,7 @@
 import Modal from "react-modal";
 import deepMerge from "deepmerge";
 
-import { Box, Alert, Close, Flex, Button, useThemeUI } from "theme-ui";
+import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 
 import * as yup from "yup";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
@@ -227,13 +227,14 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
                   ))}
                 </FlexGrid>
               )}
+
               <Box>
                 {MockConfigForm ? (
                   <Box>
                     <MockConfigForm initialValues={initialValues} />
                   </Box>
                 ) : (
-                  <p>Mock Configuration not implemented</p>
+                  <p>Mock data for this field is not yet available.</p>
                 )}
               </Box>
             </Card>
