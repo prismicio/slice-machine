@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
-import { Box, Flex, Button, Text, Spinner, Heading } from "theme-ui";
+import { Box, Flex, Button, Text, Spinner, Heading, Link } from "theme-ui";
 import { getFormattedLibIdentifier } from "@lib/utils/lib";
 import Container from "../components/Container";
 
@@ -186,14 +186,18 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                   textAlign: "center",
                 }}
               >
-                <Heading sx={{ mb: 4 }}>Create your first Slice</Heading>
-                <Text sx={{ mb: 4 }}>
+                <Heading as={"h3"} sx={{ mb: 4 }}>
+                  Create your first Slice
+                </Heading>
+                <Text variant={"xs"} sx={{ mb: 2 }}>
                   Click the + button on the top right to create the first slice
-                  of your project. <br />
-                  <br /> It will be stored locally. You will then be able to
-                  push it to Prismic.
+                  of your project.
                 </Text>
-                <Button onClick={() => setIsOpen(true)}>
+                <Text variant={"xs"} sx={{ mb: 4 }}>
+                  It will be stored locally. You will then be able to push it to
+                  Prismic.
+                </Text>
+                <Button onClick={() => setIsOpen(true)} sx={{ mb: 5 }}>
                   {data.loading ? (
                     <Spinner
                       sx={{ position: "relative", top: "4px" }}
@@ -201,9 +205,24 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
                       size={24}
                     />
                   ) : (
-                    "Create my first slice"
+                    "Create my first Slice"
                   )}
                 </Button>
+                <Box
+                  sx={(theme) => ({
+                    backgroundColor: theme?.colors?.muted,
+                    p: 3,
+                    borderRadius: "8px",
+                  })}
+                >
+                  <Text variant={"xs"}>
+                    Go to our{" "}
+                    <Link href={"https://prismic.io/docs/core-concepts/slices"}>
+                      documentation
+                    </Link>{" "}
+                    to learn more about Slices.
+                  </Text>
+                </Box>
               </Box>
             ) : (
               libraries.map((maybelib: LibraryState | undefined) => {

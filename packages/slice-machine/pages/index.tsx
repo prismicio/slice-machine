@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState, Fragment } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import {
   Box,
   Flex,
@@ -166,11 +166,16 @@ const CustomTypes = () => {
             textAlign: "center",
           }}
         >
-          <Heading sx={{ mb: 4 }}>Create your first Custom Type</Heading>
-          <Text sx={{ mb: 4 }}>
+          <Heading as={"h3"} sx={{ mb: 4 }}>
+            Create your first Custom Type
+          </Heading>
+          <Text variant={"xs"} sx={{ mb: 2 }}>
             Click the + button on the top right to create your first custom
-            type. <br /> <br /> It will be stored locally. You will then be able
-            to push it to Prismic.
+            type.
+          </Text>
+          <Text variant={"xs"} sx={{ mb: 4 }}>
+            It will be stored locally. You will then be able to push it to
+            Prismic.
           </Text>
           <Button
             onClick={() => setIsOpen(true)}
@@ -178,10 +183,28 @@ const CustomTypes = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              mb: 5,
             }}
           >
             Create your first Custom Type
           </Button>
+          <Box
+            sx={(theme) => ({
+              backgroundColor: theme?.colors?.muted,
+              p: 3,
+              borderRadius: "8px",
+            })}
+          >
+            <Text variant={"xs"}>
+              Go to our{" "}
+              <Link
+                href={"https://prismic.io/docs/core-concepts/custom-types "}
+              >
+                documentation
+              </Link>{" "}
+              to learn more about Custom Types.
+            </Text>
+          </Box>
         </Box>
       ) : (
         <Grid
