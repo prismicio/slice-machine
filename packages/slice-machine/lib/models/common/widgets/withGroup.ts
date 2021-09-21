@@ -14,7 +14,7 @@ export { Text } from ".";
 export { Timestamp } from ".";
 export { UID } from ".";
 
-export { Group } from "./Group";
+export { GroupWidget as Group } from "./Group";
 
 export const SharedSlice = null;
 export const SliceZone = null;

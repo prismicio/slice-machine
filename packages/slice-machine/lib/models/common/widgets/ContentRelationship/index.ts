@@ -44,7 +44,7 @@ const schema = yup.object().shape({
   config: contentRelationShipConfigSchema,
 });
 
-export const ContentRelationship: Widget<
+export const ContentRelationshipWidget: Widget<
   ContentRelationshipField,
   typeof schema
 > = {

@@ -1,12 +1,3 @@
-// {
-//   "type": "Boolean",
-//   "config": {
-//     "placeholder_false": "false placeholder",
-//     "placeholder_true": "true placeholder",
-//     "default_value": true,
-//     "label": "bool"
-//   }
-
 export const valid = {
   __pass: true,
   type: "Boolean",

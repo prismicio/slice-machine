@@ -2,11 +2,11 @@ import faker from "faker";
 import * as Widgets from "./misc/widgets";
 
 import { CustomType, ObjectTabs } from "../models/common/CustomType";
-import { Tab } from "../models/common/CustomType/tab";
+import { Tab } from "@lib/models/common/CustomType/tab";
 
 import { handleFields } from "./misc/handlers";
 
-import { CustomTypeMockConfig } from "../models/common/MockConfig";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
 
 interface Mock {

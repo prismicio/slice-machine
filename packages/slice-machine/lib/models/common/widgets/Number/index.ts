@@ -23,7 +23,7 @@ const Meta = {
   description: "Numbers",
 };
 
-export const Number: Widget<NumberField, typeof schema> = {
+export const NumberWidget: Widget<NumberField, typeof schema> = {
   create: (label: string) => new NumberField({ label }),
   MockConfigForm,
   handleMockConfig,

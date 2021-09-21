@@ -32,7 +32,7 @@ const schema = yup.object().shape({
   config: linkToMediaConfigSchema.optional(),
 });
 
-export const LinkToMedia: Widget<LinkToMediaField, typeof schema> = {
+export const LinkToMediaWidget: Widget<LinkToMediaField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

@@ -38,14 +38,15 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
-export const StructuredText: Widget<StructuredTextField, typeof schema> = {
-  create: (label: string) => new StructuredTextField({ label }),
-  handleMockConfig,
-  handleMockContent,
-  FormFields,
-  Meta,
-  schema,
-  TYPE_NAME: FieldType.StructuredText,
-  Form,
-  MockConfigForm,
-};
+export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
+  {
+    create: (label: string) => new StructuredTextField({ label }),
+    handleMockConfig,
+    handleMockContent,
+    FormFields,
+    Meta,
+    schema,
+    TYPE_NAME: FieldType.StructuredText,
+    Form,
+    MockConfigForm,
+  };
