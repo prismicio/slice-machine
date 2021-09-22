@@ -16,9 +16,7 @@ const Header = ({
   children?: React.ReactElement;
   sx?: any;
 }) => (
-  <Flex
-    sx={{ justifyContent: "space-between", alignItems: "start", mb: 4, ...sx }}
-  >
+  <Flex sx={{ justifyContent: "space-between", alignItems: "start", ...sx }}>
     <Flex sx={{ flexDirection: "column" }}>
       <Flex
         sx={{
