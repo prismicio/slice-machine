@@ -42,6 +42,7 @@
     "postinstall": "node ../../postinstall.js",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test:e2e": "start-server-and-test 'yarn slicemachine' http://localhost:9999 'yarn cy:run'"
+    "test:e2e": "start-server-and-test 'yarn slicemachine' http://localhost:9999 'yarn cy:run'",
+    "test:e2e:dev": "start-server-and-test 'yarn slicemachine' http://localhost:9999 'yarn cy:open'"
   }
 }
