@@ -6,6 +6,7 @@ import { DefaultFields, validateId } from "@lib/forms/defaults";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
+import { FieldType } from "@lib/models/common/CustomType/fields";
 
 import ErrorTooltip from "./ErrorTooltip";
 
@@ -23,16 +24,19 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
     );
     return <div>Unexpected error. Contact us for more info.</div>;
   }
-  const FormFields = {
-    id: DefaultFields.id,
-  };
 
   const {
     Meta: { icon: WidgetIcon },
+    FormFields: widgetFormFields,
   } = widget;
+
+  const FormFields = {
+    id: widgetFormFields.id,
+  };
 
   const initialValues = {
     ...createInitialValues(FormFields),
+    ...(widgetTypeName === FieldType.UID ? { id: "uid" } : {}),
     widgetTypeName,
   };
   const validationSchema = createValidationSchema(FormFields);

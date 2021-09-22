@@ -1,5 +1,5 @@
 /* global variable define in server/src/index.js */
-declare var appRoot: string;
+declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
 
@@ -64,7 +64,7 @@ export async function handler(
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
   let warning: string | null = null;
-  let previewUrls: { [variationId: string]: Preview } = {};
+  const previewUrls: { [variationId: string]: Preview } = {};
 
   console.log("[slice/save]: Generating screenshots previews");
   const generatedPreviews = await Previews.generateForSlice(

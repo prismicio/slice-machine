@@ -12,12 +12,12 @@ export const paths = (cwd: string, prefix: string) => ({
     slice: (sliceName: string) => ({
       value: () =>
         path.join(paths(cwd, prefix).library(libraryName).value(), sliceName),
-      preview: (filename: string = "preview.png") =>
+      preview: (filename = "preview.png") =>
         path.join(
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
-      stories: (filename: string = "index.stories.js") =>
+      stories: (filename = "index.stories.js") =>
         path.join(
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
@@ -38,7 +38,7 @@ export const paths = (cwd: string, prefix: string) => ({
             paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
             variationId
           ),
-        preview: (filename: string = "preview.png") =>
+        preview: (filename = "preview.png") =>
           path.join(
             paths(cwd, prefix)
               .library(libraryName)

@@ -135,7 +135,7 @@ export function createComparator(pathToPkg: string) {
 }
 export default async function comparator(
   { cwd }: { cwd: string },
-  log: boolean = false
+  log = false
 ) {
   const pathToPkg = path.join(cwd, "package.json");
   const compareNpmVersions = createComparator(pathToPkg);

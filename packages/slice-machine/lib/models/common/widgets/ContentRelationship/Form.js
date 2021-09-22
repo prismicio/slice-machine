@@ -13,8 +13,8 @@ import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 
 const FormFields = {
-  id: DefaultFields.id,
   label: DefaultFields.label,
+  id: DefaultFields.id,
   customtypes: {
     validate: () => yup.array().of(yup.string()),
   },

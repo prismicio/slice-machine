@@ -30,8 +30,8 @@ const Meta = {
 };
 
 const FormFields = {
-  id: DefaultFields.id,
   label: DefaultFields.label,
+  id: DefaultFields.id,
   placeholder_false: Input(
     "False Placeholder",
     { required: false },

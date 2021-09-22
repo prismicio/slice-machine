@@ -10,7 +10,7 @@ export default async function handler() {
   }, []);
 
   const res = {};
-  for (let slice of allSlices) {
+  for (const slice of allSlices) {
     res[slice.sliceName] = await push(slice);
   }
   return res;

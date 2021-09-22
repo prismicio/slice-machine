@@ -9,7 +9,7 @@ import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
 
 import { ComponentWithLibStatus } from "@lib/models/common/Library";
-import { Tab, TabAsObject } from "@lib/models/common/CustomType/tab";
+import { Tab } from "@lib/models/common/CustomType/tab";
 import { CustomType } from "@lib/models/common/CustomType";
 
 const createOrUpdate = (
@@ -59,10 +59,10 @@ export default async function handler(query: { id: string }) {
   }
 
   const sliceKeysToPush: string[] = [];
-  for (let [, tab] of Object.entries(
+  for (const [, tab] of Object.entries(
     CustomType.fromJsonModel(model.id, model).tabs
   )) {
-    const { sliceZone } = Tab.organiseFields(tab as TabAsObject);
+    const { sliceZone } = Tab.organiseFields(tab);
     if (sliceZone?.value) {
       sliceKeysToPush.push(...new Set(sliceZone.value.map((e) => e.key)));
     }

@@ -58,7 +58,7 @@ export default async function MockCustomType(
     customTypeMock.uid = Widgets.UID.handleMockConfig();
   }
 
-  for (let [, tab] of Object.entries(model.tabs)) {
+  for (const [, tab] of Object.entries(model.tabs)) {
     const { fields, groups, sliceZone } = Tab.organiseFields(tab);
 
     const mockedFields = fieldsHandler(
