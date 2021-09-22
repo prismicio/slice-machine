@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState, Fragment } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import {
   Box,
   Flex,
@@ -22,6 +22,7 @@ import Grid from "../components/Grid";
 import CreateCustomType from "../components/Forms/CreateCustomType";
 
 import Header from "../components/Header";
+import EmptyState from "@components/EmptyState";
 
 interface CtPayload {
   repeatable: boolean;
@@ -114,19 +115,9 @@ const Card = ({ ct }: { ct: CtPayload }) => (
   </Link>
 );
 
-const Emptystate = () => (
-  <Box>
-    <Heading as="h3">Create your first custom type</Heading>
-    <p>Click the + button on the top right to create your first custom type.</p>
-    <p>
-      It will be stored locally. You will then be able to push it to Prismic.
-    </p>
-  </Box>
-);
-
 const CustomTypes = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { customTypes = [], onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
@@ -141,7 +132,7 @@ const CustomTypes = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
           <Button
@@ -165,15 +156,40 @@ const CustomTypes = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? <Emptystate /> : null}
-      <Grid
-        elems={customTypes}
-        renderElem={(ct: CtPayload) => (
-          <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-            <Card ct={ct} />
-          </Link>
-        )}
-      />
+      {!customTypes.length ? (
+        <EmptyState
+          title={"Create your first Custom Type"}
+          explanations={[
+            "Click the + button on the top right to create your first custom type.",
+            "It will be stored locally. You will then be able to push it to Prismic.",
+          ]}
+          onCreateNew={() => setIsOpen(true)}
+          buttonText={"Create your first Custom Type"}
+          documentationComponent={
+            <>
+              Go to our{" "}
+              <ThemeLink
+                target={"_blank"}
+                href={"https://prismic.io/docs/core-concepts/custom-types "}
+                sx={(theme) => ({ color: theme?.colors?.primary })}
+              >
+                documentation
+              </ThemeLink>{" "}
+              to learn more about Custom Types.
+            </>
+          }
+        />
+      ) : (
+        <Grid
+          elems={customTypes}
+          renderElem={(ct: CtPayload) => (
+            <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
+              <Card ct={ct} />
+            </Link>
+          )}
+        />
+      )}
+
       <CreateCustomType
         isOpen={isOpen}
         onSubmit={_onCreate}
