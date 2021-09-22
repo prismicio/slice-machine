@@ -110,10 +110,12 @@ const CreateCustomtypeForm = ({
               type="button"
               sx={{ mt: 3, width: "100%" }}
               onClick={() => {
-                onSubmit({
-                  id: values.id,
-                  actionType: ActionType.UPDATE,
-                });
+                if (values.id && values.id.length) {
+                  onSubmit({
+                    id: values.id,
+                    actionType: ActionType.UPDATE,
+                  });
+                }
                 close();
               }}
             >
