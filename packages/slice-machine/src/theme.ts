@@ -48,6 +48,7 @@ const AppTheme = () =>
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
+      textGray: "#667587",
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",

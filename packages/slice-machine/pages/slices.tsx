@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import { getFormattedLibIdentifier } from "@lib/utils/lib";
@@ -131,9 +131,9 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
               ) : undefined
             }
             MainBreadcrumb={
-              <Fragment>
+              <>
                 <FiLayers /> <Text ml={2}>Slice libraries</Text>
-              </Fragment>
+              </>
             }
             breadrumbHref="/slices"
           />
