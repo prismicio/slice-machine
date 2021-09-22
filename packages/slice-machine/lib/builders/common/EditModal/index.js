@@ -6,7 +6,11 @@ import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 import * as yup from "yup";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
-import { createInitialValues, createFieldNameFromKey } from "@lib/forms";
+import {
+  createInitialValues,
+  createFieldNameFromKey,
+  createValidationSchema,
+} from "@lib/forms";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -90,13 +94,9 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
     ),
   };
 
+  const [idMatches, idMessage] = FormFields.id.validate.matches;
   const validationSchema = yup.object().shape({
-    id: yup
-      .string()
-      .matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)
-      .min(3)
-      .max(35)
-      .required(),
+    id: yup.string().matches(idMatches, idMessage).min(3).max(35).required(),
     config: widgetSchema.fields.config,
   });
 

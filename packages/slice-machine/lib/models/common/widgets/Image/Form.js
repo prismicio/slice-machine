@@ -17,8 +17,8 @@ import {
 } from "./components";
 
 const FormFields = {
-  id: DefaultFields.id,
   label: DefaultFields.label,
+  id: DefaultFields.id,
 };
 
 const EMPTY_THUMBNAIL = {

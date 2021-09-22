@@ -20,7 +20,17 @@ import { Widget } from "../Widget";
 import { UIDField } from "./type";
 import { FieldType } from "../../CustomType/fields";
 
-const FormFields = DefaultFields;
+const FormFields = {
+  label: DefaultFields.label,
+  id: {
+    ...DefaultFields.id,
+    validate: {
+      ...DefaultFields.id.validate,
+      matches: [/^uid$/, "Api ID must be 'uid' for this field."],
+    },
+  },
+  placeholder: DefaultFields.placeholder,
+};
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^UID$/, { excludeEmptyString: true }).required(),

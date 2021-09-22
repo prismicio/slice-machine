@@ -17,8 +17,8 @@ import { FieldType } from "../../CustomType/fields";
 } */
 
 const FormFields = {
-  id: DefaultFields.id,
   label: DefaultFields.label,
+  id: DefaultFields.id,
 };
 
 const schema = yup.object().shape({
