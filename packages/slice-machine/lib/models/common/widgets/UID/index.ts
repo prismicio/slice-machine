@@ -25,8 +25,8 @@ const FormFields = {
   id: {
     ...DefaultFields.id,
     validate: {
+      required: "This field is required",
       matches: [/^uid$/, "Api ID must be 'uid' for this field."],
-      required: true,
     },
   },
   placeholder: DefaultFields.placeholder,

@@ -16,13 +16,13 @@ export const validateId = ({
 };
 
 export const DefaultFields: any = {
-  label: Input("Label", { required: false, max: true }),
+  label: Input("Label", { required: "This field is required", max: true }),
   id: Input(
     "API ID*",
     {
       min: true,
       max: true,
-      required: true,
+      required: "This field is required",
       matches: [
         /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/,
         "No special characters allowed",
@@ -30,5 +30,8 @@ export const DefaultFields: any = {
     },
     validateId
   ),
-  placeholder: Input("Placeholder", { required: false, max: true }),
+  placeholder: Input("Placeholder", {
+    required: "This field is required",
+    max: true,
+  }),
 };
