@@ -25,10 +25,6 @@ jobs:
         run: lerna run lint
       - name: Audit
         run: lerna run security-audit:prod
-      - name: Running lerna cleaning
-        run: lerna clean --yes
-      - name: Installing production deps
-        run: lerna bootstrap -- --production
       - name: Build and export slice machine
         working-directory: ./packages/slice-machine
         run: yarn build && yarn export-build
