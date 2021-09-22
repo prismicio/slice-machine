@@ -104,7 +104,6 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                       initialId: null,
                     })
                   }
-                  disabled={widgetTypeName === FieldType.UID}
                   as={RefInput}
                   innerRef={fieldRef}
                   sx={{
