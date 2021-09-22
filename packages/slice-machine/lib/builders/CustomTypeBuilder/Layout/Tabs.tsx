@@ -29,6 +29,7 @@ interface EditState {
   title: string;
   type: ModalType.UPDATE;
   key: string;
+  allowDelete: boolean;
 }
 
 interface CreateState {
