@@ -9,7 +9,7 @@ import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
 
 import { ComponentWithLibStatus } from "@lib/models/common/Library";
-import { Tab, TabAsObject } from "@lib/models/common/CustomType/tab";
+import { Tab } from "@lib/models/common/CustomType/tab";
 import { CustomType } from "@lib/models/common/CustomType";
 
 const createOrUpdate = (
