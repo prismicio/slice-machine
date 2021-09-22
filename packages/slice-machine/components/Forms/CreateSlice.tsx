@@ -67,7 +67,7 @@ const CreateSlice = ({
         if (!sliceName) {
           return { sliceName: "Cannot be empty" };
         }
-        if (!sliceName.match(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)) {
+        if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
           return { sliceName: "No special character allowed" };
         }
         const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");

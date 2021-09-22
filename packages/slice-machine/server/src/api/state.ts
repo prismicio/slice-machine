@@ -26,7 +26,7 @@ export async function createWarnings(
   clientError?: ErrorWithStatus
 ): Promise<ReadonlyArray<Warning>> {
   const hasScript = hasStorybookScript(env.cwd);
-  let storybookIsRunning = await (async () => {
+  const storybookIsRunning = await (async () => {
     try {
       await fetchStorybookUrl(env.userConfig.storybook);
       return true;

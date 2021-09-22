@@ -1,4 +1,4 @@
-declare var appRoot: string;
+declare let appRoot: string;
 
 import path from "path";
 import { promisify } from "util";

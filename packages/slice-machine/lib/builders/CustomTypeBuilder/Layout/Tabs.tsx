@@ -141,7 +141,7 @@ const CtTabs = ({
           {...state}
           isOpen
           tabIds={Model.current.tabs
-            .filter((e) => e.key !== (state as EditState).key)
+            .filter((e) => e.key !== state.key)
             .map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({
@@ -152,10 +152,10 @@ const CtTabs = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
-              return store.tab((state as EditState).key).update(id);
+              return store.tab(state.key).update(id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
-              store.tab((state as EditState).key).delete();
+              store.tab(state.key).delete();
               setTabIndex(0);
             }
           }}

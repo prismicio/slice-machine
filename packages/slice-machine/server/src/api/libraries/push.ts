@@ -27,7 +27,7 @@ export default async function handler(query: { from: string }) {
 
   if (maybeLib) {
     const { components } = maybeLib;
-    for (let slice of components) {
+    for (const slice of components) {
       const { err } = await purge(env, slices, slice.infos.sliceName, onError);
       if (err) {
         console.error(err);
