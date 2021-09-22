@@ -49,7 +49,7 @@ export async function handler(
       (v: Variation<AsObject>) => v.id
     );
 
-    let imageUrlsByVariation: { [variationId: string]: string | null } = {};
+    const imageUrlsByVariation: { [variationId: string]: string | null } = {};
 
     for (let i = 0; i < variationIds.length; i += 1) {
       const variationId = variationIds[i];

@@ -31,7 +31,7 @@ export function camelCaseToDash(v: any): string {
     prevIsNumber = false,
     isFirstChar = true;
 
-  for (let s of v) {
+  for (const s of v) {
     const isUppercase = s.toUpperCase() === s;
     const isNumber = !isNaN(s);
 

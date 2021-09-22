@@ -69,7 +69,7 @@ const Builder = ({ openPanel }) => {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ flex: 1 }}>
       <Header
         Model={Model}
         store={store}

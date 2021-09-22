@@ -44,6 +44,7 @@ const AppLayout = ({
           flex: 1,
           px: [2, 4, null],
           overflow: "auto",
+          display: "flex",
         }}
       >
         {children}

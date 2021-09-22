@@ -53,7 +53,7 @@ const VariationModal: React.FunctionComponent<{
       : null;
     const invalidIdError = id &&
       id.length &&
-      !id.match(/^[A-Za-z0-9]+([A-Za-z0-9]+)*$/) && {
+      !/^[A-Za-z0-9]+([A-Za-z0-9]+)*$/.exec(id) && {
         id: "No special characters allowed",
       };
 

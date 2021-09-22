@@ -1,12 +1,16 @@
 import Modal from "react-modal";
 import deepMerge from "deepmerge";
 
-import { Box, Alert, Close, Flex, Button, useThemeUI } from "theme-ui";
+import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 
 import * as yup from "yup";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
-import { createInitialValues, createFieldNameFromKey } from "@lib/forms";
+import {
+  createInitialValues,
+  createFieldNameFromKey,
+  createValidationSchema,
+} from "@lib/forms";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -90,13 +94,9 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
     ),
   };
 
+  const [idMatches, idMessage] = FormFields.id.validate.matches;
   const validationSchema = yup.object().shape({
-    id: yup
-      .string()
-      .matches(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)
-      .min(3)
-      .max(35)
-      .required(),
+    id: yup.string().matches(idMatches, idMessage).min(3).max(35).required(),
     config: widgetSchema.fields.config,
   });
 
@@ -227,13 +227,14 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
                   ))}
                 </FlexGrid>
               )}
+
               <Box>
                 {MockConfigForm ? (
                   <Box>
                     <MockConfigForm initialValues={initialValues} />
                   </Box>
                 ) : (
-                  <p>Mock Configuration not implemented</p>
+                  <p>Mock data for this field is not yet available.</p>
                 )}
               </Box>
             </Card>
