@@ -1,4 +1,4 @@
-import { findSlices } from '../hooks/useGetStaticProps'
+import { findSlices } from '../src/hooks/useGetStaticProps'
 
 const doc = {
   data: {
