@@ -42,8 +42,8 @@ export default async function handler({
   return {
     err,
     reason,
-    previews: mergedPreviews.filter(
-      (p) => p.hasPreview
-    ) as ReadonlyArray<Preview>,
+    previews: mergedPreviews.filter((p) => p.hasPreview) as ReadonlyArray<
+      Preview
+    >,
   };
 }

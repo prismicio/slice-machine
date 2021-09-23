@@ -103,7 +103,7 @@ export async function handler(
     }
     console.log("[slice/push] done!");
     return {};
-  } catch (e: any) {
+  } catch (e) {
     console.log(e);
     return onError(e, "An unexpected error occured while pushing slice");
   }

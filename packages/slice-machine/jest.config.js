@@ -18,4 +18,5 @@ module.exports = {
       statements: 100,
     },
   },
+  testPathIgnorePatterns: ["node_modules", "cypress"],
 };

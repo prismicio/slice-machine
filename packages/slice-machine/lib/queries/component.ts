@@ -59,7 +59,9 @@ function matchPossiblePaths(
   return files.includes(modelFilename);
 }
 
-function splitExtension(str: string): {
+function splitExtension(
+  str: string
+): {
   fileName: string | null;
   extension: string | null;
 } {

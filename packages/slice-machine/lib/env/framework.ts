@@ -24,11 +24,9 @@ export function detectFramework(cwd: string): Framework {
       ([, value]) => deps[value]
     );
 
-    return (
-      frameworkEntry && frameworkEntry.length
-        ? frameworkEntry[0]
-        : Framework.vanillajs
-    ) as Framework;
+    return (frameworkEntry && frameworkEntry.length
+      ? frameworkEntry[0]
+      : Framework.vanillajs) as Framework;
   } catch (e) {
     const message =
       "[api/env]: Unrecoverable error. Could not parse package.json. Exiting..";

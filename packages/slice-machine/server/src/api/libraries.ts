@@ -7,7 +7,9 @@ import { AsObject } from "@lib/models/common/Variation";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-export async function getLibrariesWithFlags(env: Environment): Promise<{
+export async function getLibrariesWithFlags(
+  env: Environment
+): Promise<{
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
   clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<Library>;
@@ -35,7 +37,9 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
   return { clientError, libraries: withFlags, remoteSlices };
 }
 
-export default async function handler(env: Environment): Promise<{
+export default async function handler(
+  env: Environment
+): Promise<{
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
   clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<Library>;

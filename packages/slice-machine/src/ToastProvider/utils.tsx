@@ -13,19 +13,20 @@ enum Apperance {
   Info = "info",
 }
 
-export const handleRemoteResponse =
-  (addToast: Function) => (payload: ToastPayload) => {
-    if (payload.done) {
-      addToast(payload.message, {
-        appearance: (() => {
-          if (payload.error) {
-            return Apperance.Error;
-          }
-          if (payload.warning) {
-            return Apperance.Warning;
-          }
-          return Apperance.Success;
-        })(),
-      });
-    }
-  };
+export const handleRemoteResponse = (addToast: Function) => (
+  payload: ToastPayload
+) => {
+  if (payload.done) {
+    addToast(payload.message, {
+      appearance: (() => {
+        if (payload.error) {
+          return Apperance.Error;
+        }
+        if (payload.warning) {
+          return Apperance.Warning;
+        }
+        return Apperance.Success;
+      })(),
+    });
+  }
+};

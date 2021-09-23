@@ -1,5 +1,6 @@
 {
   "name": "project",
+  "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,11 +15,13 @@
     "babel-preset-vue": "^2.0.2",
     "chromatic": "^5.3.0",
     "css-loader": "^5.2.4",
-    "node-sass": "^4.14.1",
+    "cypress": "^8.4.0",
+    "node-sass": "^6.0.1",
     "react-is": "^16.13.1",
     "sass": "^1.32.13",
     "sass-loader": "10.1.1",
     "slice-machine-ui": "^0.0.25",
+    "start-server-and-test": "^1.14.0",
     "style-loader": "^2.0.0",
     "vue-loader": "^15.9.3",
     "vue-template-compiler": "^2.6.12"
@@ -33,9 +36,13 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "slicemachine": "node ../../start.js --port 9999",
+    "slicemachine": "node ../../start --port 9999",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic --exit-zero-on-changes --no-interactive",
-    "postinstall": "node ../../postinstall.js"
+    "postinstall": "node ../../postinstall.js",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test:e2e": "start-server-and-test 'yarn slicemachine' http://localhost:9999 'yarn cy:run'",
+    "test:e2e:dev": "start-server-and-test 'yarn slicemachine' http://localhost:9999 'yarn cy:open'"
   }
 }

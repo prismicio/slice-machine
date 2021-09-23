@@ -1,10 +1,7 @@
 import { FiLink2, FiImage, FiCode, FiList } from "react-icons/fi";
 import { BsListOl } from "react-icons/bs";
 
-const Icon =
-  (v) =>
-  ({ size }) =>
-    <span style={{ fontSize: size }}>{v}</span>;
+const Icon = (v) => ({ size }) => <span style={{ fontSize: size }}>{v}</span>;
 
 const options = [
   {

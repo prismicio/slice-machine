@@ -140,14 +140,19 @@ export function reducer(
         }
       }
       case VariationActions.ReplaceWidget: {
-        const { variationId, widgetsArea, previousKey, newKey, value } =
-          action.payload as {
-            variationId: string;
-            widgetsArea: WidgetsArea;
-            previousKey: string;
-            newKey: string;
-            value: Field;
-          };
+        const {
+          variationId,
+          widgetsArea,
+          previousKey,
+          newKey,
+          value,
+        } = action.payload as {
+          variationId: string;
+          widgetsArea: WidgetsArea;
+          previousKey: string;
+          newKey: string;
+          value: Field;
+        };
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
