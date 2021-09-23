@@ -47,9 +47,8 @@ const WithProvider = ({
 
 const WithRouter = () => {
   const router = useRouter();
-  const { customTypes, remoteCustomTypes, onSave } = useContext(
-    CustomTypesContext
-  );
+  const { customTypes, remoteCustomTypes, onSave } =
+    useContext(CustomTypesContext);
 
   const customType = customTypes?.find((e) => e && e.id === router.query.ct);
   const remoteCustomType = remoteCustomTypes?.find(

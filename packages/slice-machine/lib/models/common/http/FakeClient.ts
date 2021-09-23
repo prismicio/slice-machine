@@ -8,9 +8,7 @@ export interface FakeResponse {
 }
 
 export default class FakeClient {
-  private mutate: (
-    jsonResponse?: any
-  ) => {
+  private mutate: (jsonResponse?: any) => {
     status: number;
     statusText: string;
     fake: boolean;

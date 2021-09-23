@@ -31,25 +31,27 @@ const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
   return widget.createMock ? widget.createMock(config || {}) : null;
 };
 
-export const handleFields = (Widgets) => (fields = [], mocks = {}) => {
-  return fields.reduce((acc, [key, value]) => {
-    const typeName = value.type;
-    const widget =
-      typeName === "Link" && value.config?.select === "media"
-        ? LinkToMediaMockWidget
-        : Widgets[typeName];
-    const maybeFieldMock = mocks[key];
+export const handleFields =
+  (Widgets) =>
+  (fields = [], mocks = {}) => {
+    return fields.reduce((acc, [key, value]) => {
+      const typeName = value.type;
+      const widget =
+        typeName === "Link" && value.config?.select === "media"
+          ? LinkToMediaMockWidget
+          : Widgets[typeName];
+      const maybeFieldMock = mocks[key];
 
-    if (widget) {
-      const mock = handleFieldMock(widget, maybeFieldMock, value.config);
-      return {
-        ...acc,
-        [key]: mock,
-      };
-    }
-    console.warn(
-      `[slice-machine] Could not create mock for type "${value.type}": not supported.`
-    );
-    return acc;
-  }, {});
-};
+      if (widget) {
+        const mock = handleFieldMock(widget, maybeFieldMock, value.config);
+        return {
+          ...acc,
+          [key]: mock,
+        };
+      }
+      console.warn(
+        `[slice-machine] Could not create mock for type "${value.type}": not supported.`
+      );
+      return acc;
+    }, {});
+  };

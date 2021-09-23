@@ -8,8 +8,10 @@ const wrapRepeatable = (code) =>
 { slice?.items?.map((item, i) => ${code}) }
 `;
 
-const createDefaultField = (tag = "span") => (fieldText, useKey) =>
-  `<${tag} ${useKey ? appendKey(fieldText) : ""}>{ ${fieldText} }</${tag}>`;
+const createDefaultField =
+  (tag = "span") =>
+  (fieldText, useKey) =>
+    `<${tag} ${useKey ? appendKey(fieldText) : ""}>{ ${fieldText} }</${tag}>`;
 
 const handleDateCode = (fieldText, useKey) =>
   `

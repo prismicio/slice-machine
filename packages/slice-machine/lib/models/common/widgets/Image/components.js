@@ -74,13 +74,15 @@ export const ConstraintForm = ({ prefix, required, display, error = {} }) => {
   const requiredChar = required ? "*" : "";
   const [field, meta, helpers] = useField(prefix);
 
-  const createSetField = (key, fn = (v) => v) => (e) => {
-    helpers.setTouched(true);
-    const cast = fn(e.target.value);
-    const value =
-      e.target.type === "number" ? (isNaN(cast) ? null : cast) : cast;
-    helpers.setValue({ ...field.value, [key]: value });
-  };
+  const createSetField =
+    (key, fn = (v) => v) =>
+    (e) => {
+      helpers.setTouched(true);
+      const cast = fn(e.target.value);
+      const value =
+        e.target.type === "number" ? (isNaN(cast) ? null : cast) : cast;
+      helpers.setValue({ ...field.value, [key]: value });
+    };
 
   return (
     <Fragment>

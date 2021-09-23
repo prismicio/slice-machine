@@ -26,50 +26,51 @@ const Zones = ({ Model, store, variation, showHints }) => {
     store.variation(variation.id).removeWidget(widgetArea, key);
   };
 
-  const _getFieldMockConfig = (widgetArea) => ({ apiId }) => {
-    return SliceMockConfig.getFieldMockConfig(
-      Model.mockConfig,
-      variation.id,
-      widgetArea,
-      apiId
-    );
-  };
-
-  const _onSave = (widgetArea) => ({
-    apiId: previousKey,
-    newKey,
-    value,
-    mockValue,
-  }) => {
-    if (mockValue) {
-      store
-        .variation(variation.id)
-        .updateWidgetMockConfig(
-          Model.mockConfig,
-          widgetArea,
-          previousKey,
-          newKey,
-          mockValue
-        );
-    } else {
-      store
-        .variation(variation.id)
-        .deleteWidgetMockConfig(Model.mockConfig, widgetArea, newKey);
-    }
-    store
-      .variation(variation.id)
-      .replaceWidget(widgetArea, previousKey, newKey, value);
-  };
-
-  const _onSaveNewField = (fieldType) => ({ id, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName];
-    if (!widget) {
-      console.log(
-        `Could not find widget with type name "${widgetTypeName}". Please contact us!`
+  const _getFieldMockConfig =
+    (widgetArea) =>
+    ({ apiId }) => {
+      return SliceMockConfig.getFieldMockConfig(
+        Model.mockConfig,
+        variation.id,
+        widgetArea,
+        apiId
       );
-    }
-    store.variation(variation.id).addWidget(fieldType, id, widget.create(id));
-  };
+    };
+
+  const _onSave =
+    (widgetArea) =>
+    ({ apiId: previousKey, newKey, value, mockValue }) => {
+      if (mockValue) {
+        store
+          .variation(variation.id)
+          .updateWidgetMockConfig(
+            Model.mockConfig,
+            widgetArea,
+            previousKey,
+            newKey,
+            mockValue
+          );
+      } else {
+        store
+          .variation(variation.id)
+          .deleteWidgetMockConfig(Model.mockConfig, widgetArea, newKey);
+      }
+      store
+        .variation(variation.id)
+        .replaceWidget(widgetArea, previousKey, newKey, value);
+    };
+
+  const _onSaveNewField =
+    (fieldType) =>
+    ({ id, widgetTypeName }) => {
+      const widget = Widgets[widgetTypeName];
+      if (!widget) {
+        console.log(
+          `Could not find widget with type name "${widgetTypeName}". Please contact us!`
+        );
+      }
+      store.variation(variation.id).addWidget(fieldType, id, widget.create(id));
+    };
 
   const _onDragEnd = (fieldType) => (result) => {
     if (ensureDnDDestination(result)) {

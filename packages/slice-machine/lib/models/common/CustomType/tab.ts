@@ -175,35 +175,34 @@ export const Tab = {
 
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray("", tab);
-    const { fields, groups }: OrganisedFields = tabAsArray.value.reduce<
-      OrganisedFields
-    >(
-      (
-        acc: OrganisedFields,
-        curr: { key: string; value: Field | GroupField<AsArray> }
-      ) => {
-        if (curr.value.type === sliceZoneType) {
-          return acc;
-        }
-        if (curr.value.type === FieldType.UID) {
-          return acc;
-        }
-        if (curr.value.type === FieldType.Group) {
+    const { fields, groups }: OrganisedFields =
+      tabAsArray.value.reduce<OrganisedFields>(
+        (
+          acc: OrganisedFields,
+          curr: { key: string; value: Field | GroupField<AsArray> }
+        ) => {
+          if (curr.value.type === sliceZoneType) {
+            return acc;
+          }
+          if (curr.value.type === FieldType.UID) {
+            return acc;
+          }
+          if (curr.value.type === FieldType.Group) {
+            return {
+              ...acc,
+              groups: [
+                ...acc.groups,
+                { key: curr.key, value: curr.value as GroupField<AsArray> },
+              ],
+            };
+          }
           return {
             ...acc,
-            groups: [
-              ...acc.groups,
-              { key: curr.key, value: curr.value as GroupField<AsArray> },
-            ],
+            fields: [...acc.fields, curr],
           };
-        }
-        return {
-          ...acc,
-          fields: [...acc.fields, curr],
-        };
-      },
-      { fields: [], groups: [] }
-    );
+        },
+        { fields: [], groups: [] }
+      );
     return {
       fields,
       groups,
