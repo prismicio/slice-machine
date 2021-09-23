@@ -9,17 +9,9 @@
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && yarn build && lerna publish && yarn run changeset",
-    "prepare": "husky install",
-    "lint": "eslint .",
-    "pretty": "prettier --write --ignore-unknown ./packages/slice-machine"
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.1",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^24.4.0",
-    "eslint-plugin-react": "^7.25.1",
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
     "lint-staged": "^11.1.2",
