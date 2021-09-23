@@ -3,20 +3,19 @@ const MongoClient = require("mongodb").MongoClient;
 
 const URI = process.env.MONGODB_URI;
 const databaseName = url.parse(URI).pathname.substr(1);
-let cachedClient;
+let cachedClient = null;
 
 function acquireClient() {
-  return (
-    cachedClient ||
-    (() => {
-      const c = MongoClient.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-      cachedClient = c;
-      return c;
-    })()
-  );
+
+  if(cachedClient) return Promise.resolve(cachedClient);
+  
+  return MongoClient.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then((db) => {
+    cachedClient = db;
+    return cachedClient;
+  });
 }
 
 async function acquireDb() {
