@@ -2,7 +2,12 @@ import { Fragment, useState } from "react";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 
-import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
+import {
+  ensureDnDDestination,
+  ensureWidgetTypeExistence
+} from "@lib/utils";
+
+import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 
@@ -98,8 +103,8 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
         onSave={onSave}
         onSaveNewField={onSaveNewField}
         onDragEnd={onDragEnd}
-        renderHintBase={({ item }) => `data.${item.key}`}
-        renderFieldAccessor={(key) => `data.${key}`}
+        renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
+        renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
       />
       <SliceZone
         tabId={tabId}

@@ -8,7 +8,7 @@ const richTextCode = (fieldText) =>
   `{@html PrismicDom.RichText.asHtml(${fieldText}, linkResolver)}`;
 
 const linkCode = (fieldText) =>
-  `<a href={PrismicDom.RichText.Link.url(${fieldText}, linkResolver)}> My Link</a>`;
+  `<a href={PrismicDom.Link.url(${fieldText}, linkResolver)}> My Link</a>`;
 
 const dateCode = (fieldText) =>
   `<time datetime={${fieldText}}>{${fieldText}}</time>`;
@@ -33,7 +33,7 @@ const codeByWidgetType = (Widgets) => ({
     `{#if ${fieldText}} <p>true</p> {:else} <p>false</p>{/if}`,
   [Widgets.Embed?.TYPE_NAME]: (fieldText) => `{@html ${fieldText}.html}`,
   [Widgets.Color?.TYPE_NAME]: (fieldText) =>
-    `<span style={\`color: \${${fieldText}};\`}}>Some Text</span>`,
+    `<span style={\`color: \${${fieldText}};\`}>Some Text</span>`,
 });
 
 export default ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
