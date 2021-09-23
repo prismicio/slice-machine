@@ -82,8 +82,8 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 [npm-version-href]: https://npmjs.com/package/slice-machine-ui
 [npm-downloads-src]: https://img.shields.io/npm/dm/slice-machine-ui.svg
 [npm-downloads-href]: https://npmjs.com/package/slice-machine-ui
-[github-actions-ci-src]: https://github.com/prismicio/slice-machine/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/prismicio/slice-machine/actions?query=workflow%3Aci
+[github-actions-ci-src]: https://github.com/prismicio/slice-machine/workflows/test/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/slice-machine/actions?query=workflow%3Atest
 [codecov-src]: https://img.shields.io/codecov/c/github/prismicio/slice-machine.svg
 [codecov-href]: https://codecov.io/gh/prismicio/slice-machine
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
