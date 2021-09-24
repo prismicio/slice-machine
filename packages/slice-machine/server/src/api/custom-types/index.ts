@@ -32,15 +32,19 @@ const fetchRemoteCustomTypes = async (env: Environment) => {
   if (env.client.isFake()) {
     return { remoteCustomTypes: [], isFake: true };
   }
-  const res = await env.client.getCustomTypes();
-  const { remoteCustomTypes } = await (async () => {
-    if (res.status > 209) {
-      return { remoteCustomTypes: [] };
-    }
-    const r = await (res.json ? res.json() : Promise.resolve([]));
-    return { remoteCustomTypes: r };
-  })();
-  return { remoteCustomTypes };
+  try {
+    const res = await env.client.getCustomTypes();
+    const { remoteCustomTypes } = await (async () => {
+      if (res.status > 209) {
+        return { remoteCustomTypes: [] };
+      }
+      const r = await (res.json ? res.json() : Promise.resolve([]));
+      return { remoteCustomTypes: r };
+    })();
+    return { remoteCustomTypes };
+  } catch (e) {
+    return { remoteCustomTypes: [] };
+  }
 };
 
 const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
