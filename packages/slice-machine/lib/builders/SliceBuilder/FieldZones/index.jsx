@@ -98,8 +98,12 @@ const Zones = ({ Model, store, variation, showHints }) => {
         onSaveNewField={_onSaveNewField("primary")}
         onDragEnd={_onDragEnd("primary")}
         poolOfFieldsToCheck={variation.primary || []}
-        renderHintBase={({ item }) => `slice.primary${transformKeyAccessor(item.key)}`}
-        renderFieldAccessor={(key) => `slice.primary${transformKeyAccessor(key)}`}
+        renderHintBase={({ item }) =>
+          `slice.primary${transformKeyAccessor(item.key)}`
+        }
+        renderFieldAccessor={(key) =>
+          `slice.primary${transformKeyAccessor(key)}`
+        }
       />
       <Box mt={4} />
       <Zone
@@ -118,7 +122,9 @@ const Zones = ({ Model, store, variation, showHints }) => {
         onDragEnd={_onDragEnd("items")}
         poolOfFieldsToCheck={variation.items || []}
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
-        renderFieldAccessor={(key) => `slice.items[i]${transformKeyAccessor(key)}`}
+        renderFieldAccessor={(key) =>
+          `slice.items[i]${transformKeyAccessor(key)}`
+        }
       />
     </>
   );

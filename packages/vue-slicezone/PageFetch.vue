@@ -4,7 +4,7 @@
       <div v-if="$fetchState.error">
         <p>
           An error occured while fetching content:
-          <span style="color: tomato;">{{ $fetchState.error }}</span>
+          <span style="color: tomato">{{ $fetchState.error }}</span>
         </p>
       </div>
       <div v-else></div>

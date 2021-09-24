@@ -2,10 +2,7 @@ import { Fragment, useState } from "react";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 
-import {
-  ensureDnDDestination,
-  ensureWidgetTypeExistence
-} from "@lib/utils";
+import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
 
 import { transformKeyAccessor } from "@utils/str";
 

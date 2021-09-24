@@ -4,10 +4,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { Box, Button } from "theme-ui";
 
-import {
-  ensureDnDDestination,
-  ensureWidgetTypeExistence
-} from "@lib/utils";
+import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
 
 import { transformKeyAccessor } from "@utils/str";
 
@@ -165,7 +162,11 @@ const CustomListItem = ({
                           item={item}
                           show={showHints}
                           isRepeatable={isRepeatable}
-                          renderHintBase={({ item }) => `data.${groupItem.key}${transformKeyAccessor(item.key)}`}
+                          renderHintBase={({ item }) =>
+                            `data.${groupItem.key}${transformKeyAccessor(
+                              item.key
+                            )}`
+                          }
                           framework={framework}
                           Widgets={Widgets}
                           typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}

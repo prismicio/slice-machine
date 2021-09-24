@@ -3,10 +3,10 @@ import camelCase from "lodash/camelCase";
 const camelizeRE = /-(\w)/g;
 
 export function transformKeyAccessor(str: string): string {
-  if (str.includes('-')) {
-    return `['${str}']`
+  if (str.includes("-")) {
+    return `['${str}']`;
   }
-  return `.${str}`
+  return `.${str}`;
 }
 
 export function pascalize(str: string): string {
