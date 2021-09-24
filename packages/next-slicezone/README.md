@@ -146,7 +146,7 @@ props passed at build time by `useGetStaticProps`. Notably:
 - `slices`, the array data components fetched from Prismic
 - `resolver`, a function that resolves calls to components from the SliceZone
 - `sliceProps`, an object or function that passes props to matched slices
-
+ 
 #### Example SliceZone
 
 ```
