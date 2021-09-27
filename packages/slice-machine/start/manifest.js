@@ -55,7 +55,7 @@ async function createManifest(cwd) {
   console.log(
     "File created!\nYou'll need to update it with a valid Prismic API endpoint!"
   );
-  return { exit: true };
+  return true;
 }
 
 module.exports = {

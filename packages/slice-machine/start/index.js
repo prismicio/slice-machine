@@ -9,7 +9,7 @@ const path = require("path");
 const open = require("open");
 const boxen = require("boxen");
 const spawn = require("child_process").spawn;
-// const migrate = require('../changelog/migrate')
+const migrate = require("../changelog/migrate");
 
 const validate = require("../build/lib/env/client").validate;
 
@@ -28,7 +28,7 @@ const { argv } = require("yargs");
 
 async function handleChangelog(params) {
   try {
-    // await migrate(false, params)
+    await migrate(false, params);
   } catch (e) {
     console.error(
       "An error occured while migrating file system. Continuing..."
@@ -44,9 +44,6 @@ async function handleMigration(cwd) {
   if (!fs.existsSync(pathToSmFile)) {
     return;
   }
-
-  // const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
-  // const cleanVersion = version.split('-')[0]
 
   return handleChangelog({ cwd, pathToPkg, pathToSmFile });
 }
@@ -109,19 +106,8 @@ Required properties:
 * apiEndpoint, eg. "https://repo.prismic.io/api/v2"
 * libraries, eg. ["~/slices"]\n\n`);
 
-      return createManifest(cwd);
-
-      // console.log('\n\nWelcome to Slicemachine!')
-
-      // const yes = await shouldOnboard()
-
-      // return !yes
-
-      // const validateRes = await validate()
-      // const repositories = Object.entries(JSON.parse(validateRes.body.repositories))
-      // const response = await selectRepo(repositories)
-      // return { exit: false, data: validateRes }
-      // return createManifest(cwd)
+      const exit = await createManifest(cwd);
+      return { exit };
     }
     case ManifestStates.MissingEndpoint:
       console.log(
@@ -144,7 +130,7 @@ Required properties:
 }
 
 async function run() {
-  const cwd = process.cwd();
+  const cwd = process.cwd(); // project running the script
 
   const port = argv.p || argv.port || "9999";
   if (!argv.skipMigration) {
@@ -160,24 +146,14 @@ async function run() {
   }
 
   const userConfig = handleManifest(cwd);
-  // if (userConfig.state === ManifestStates.NotFound) {
-  //   console.log('Welcome to Slicemachine! 🍕')
-  //   const yes = await shouldOnboard()
-  //   if (!yes) {
-  //     console.log('Please create a config file manually!')
-  //     process.exit(-1)
-  //   } else {
-  //     return start({ cwd, port }, (url) => {
-  //       open(`${url}/onboarding`)
-  //     })
-  //   }
-  // }
-  const { exit, data } = await handleManifestState(userConfig, cwd);
+  const { exit } = await handleManifestState(userConfig, cwd);
   if (exit) {
+    console.log("");
     process.exit(-1);
   }
 
-  const npmCompareData = await compareVersions({ cwd }, false);
+  const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
+  const npmCompareData = await compareVersions({ cwd: SmDirectory }, false);
 
   const framework = defineFramework(userConfig.content, cwd);
 
