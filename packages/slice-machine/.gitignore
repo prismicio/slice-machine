@@ -30,3 +30,5 @@ tests/project/node_modules
 
 # prov
 /api-dump
+
+/tests/project/.slicemachine

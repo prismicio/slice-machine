@@ -1,0 +1,49 @@
+### We now support Slice variations ✌️
+
+Variations allow you to create another version of your Slice in the Slice Machine and allow your content creators to choose from these different versions when using the Slice in the document editor.
+
+Each variation comes with its own preview thumbnail that views will see in the Prismic writing room.
+They also come with their own mock data that can also be configured separately and viewed in Storybook.
+
+To customise the thumbnails, create a folder named after the variation ID and put your
+`preview.png` file. Something like: `slices/MySlice/default-variation/preview.png`
+
+### The local builder now supports Custom Types 🎉
+
+Yes! You can now create and update Custom Types from the local builder.
+
+This should remove some back-and-forth between the local builder and the writing room.
+You can now define which Slices should be included in the Custom Type SliceZone.
+Pushing the Custom Type to Prismic will also save and push all linked Slices.
+
+To customise Custom Types thumbnails, create an `index.png` file in each CT folder eg. `customtypes/homepage/index.png`.
+
+If you are connected to your Prismic API endpoint when you loaded this page, your existing custom types
+will be downloaded and saved in your project. Check it out!
+
+### New design 🖼
+
+We rethought the SliceMachine UI/UX to make it clearer and simpler to use.
+
+So we reshaped the tool with:
+
+- A more intuitive way to add and edit fields in Slices and Custom Types
+- A new navigation to switch between Custom Types and Slices whenever you want
+
+We hope you will like this new interface. If you find some improvements or have suggestions, don't hesitate to contact us.
+
+### Also
+
+- We added the (much-requested) Content Relationship field
+- We added the Link to Media field
+- Storybook is now optional
+- Libraries index files (eg. `slices/index.js`) are now regenerated after each save
+- Generated mocks and stories are now stored in `.slicemachine/assets`
+- Various fixes, a bit more stability
+
+### Migration
+
+When you launch the new builder, we run a migration over your content: all mocks and stories
+will be moved to `.slicemachine/assets`. This may break the first render of Storybook. If that's the case
+for you, try to manually save Slices that have any issue. If your mocks & stories aren't modified between saves,
+check that the files have been correctly migrated.

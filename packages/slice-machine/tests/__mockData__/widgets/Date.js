@@ -3,20 +3,29 @@ export const valid = {
   type: "Date",
   config: {
     label: "Date",
-    placeholder: "iso Date"
-  }
-}
+    placeholder: "iso Date",
+  },
+};
 
 export const wrongType = {
   __pass: false,
   type: "Date2",
   config: {
     label: "Date",
-    placeholder: "iso Date"
-  }
-}
+    placeholder: "iso Date",
+  },
+};
 
 export const noConfig = {
   __pass: false,
   type: "Date",
-}
+};
+
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: "some-id",
+  },
+};

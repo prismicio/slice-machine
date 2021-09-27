@@ -1,0 +1,101 @@
+{
+  "id": "gggg",
+  "label": "gggg",
+  "status": true,
+  "repeatable": true,
+  "json": {
+    "Main": {
+      "sdsds": {
+        "config": {
+          "label": "",
+          "placeholder": "",
+          "options": [
+            "1",
+            "2",
+            "1é3"
+          ]
+        },
+        "type": "Select"
+      },
+      "group": {
+        "config": {
+          "label": "",
+          "fields": {
+            "img": {
+              "config": {
+                "thumbnails": [],
+                "constraint": {},
+                "label": ""
+              },
+              "type": "Image"
+            },
+            "geo": {
+              "config": {
+                "label": ""
+              },
+              "type": "GeoPoint"
+            }
+          }
+        },
+        "type": "Group"
+      },
+      "sdfsdf": {
+        "config": {
+          "label": "My Label !2",
+          "placeholder": ""
+        },
+        "type": "Date"
+      },
+      "sdfsdfff": {
+        "config": {
+          "label": "",
+          "placeholder": "SSS"
+        },
+        "type": "Timestamp"
+      },
+      "fsdf": {
+        "config": {
+          "label": "My Label !",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": true
+        },
+        "type": "Boolean"
+      },
+      "sdfsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Embed"
+      },
+      "sdfdsd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "placeholder"
+        },
+        "type": "Number"
+      },
+      "sdfsddd": {
+        "config": {
+          "label": "My Label !"
+        },
+        "type": "GeoPoint"
+      },
+      "sdfsdffd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "Place"
+        },
+        "type": "Color"
+      },
+      "fdsffdd": {
+        "config": {
+          "label": "My Label !",
+          "placeholder": "SSS"
+        },
+        "type": "Text"
+      }
+    }
+  }
+}

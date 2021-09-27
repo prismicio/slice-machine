@@ -1,0 +1,35 @@
+{
+  "id": "my-ct-id",
+  "label": "My Awesome Title",
+  "repeatable": false,
+  "json": {
+    "Main": {
+      "img": {
+        "type": "Image",
+        "config": {
+          "label": "",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "MainSliceZone": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "call_to_action3": {
+              "type": "SharedSlice"
+            },
+            "with_mocks": {
+              "type": "SharedSlice"
+            },
+            "call_to_action2": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  },
+  "status": false
+}

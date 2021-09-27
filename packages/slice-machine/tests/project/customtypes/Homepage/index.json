@@ -1,0 +1,53 @@
+{
+  "id": "homepage",
+  "label": "Homepage",
+  "status": true,
+  "repeatable": false,
+  "json": {
+    "Another Tab": {
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "my_non_shared_slice": {
+              "type": "Slice",
+              "fieldset": "My Slice is awesome",
+              "description": "description",
+              "icon": "ac_unit",
+              "display": "list",
+              "non-repeat": {
+                "kkk": {
+                  "type": "Boolean",
+                  "config": {
+                    "default_value": true,
+                    "label": "kkk"
+                  }
+                }
+              },
+              "repeat": {}
+            },
+            "call_to_action": {
+              "type": "SharedSlice"
+            },
+            "call_to_action2": {
+              "type": "SharedSlice"
+            },
+            "my_new_slice": {
+              "type": "SharedSlice"
+            },
+            "my_awesome_z": {
+              "type": "SharedSlice"
+            },
+            "with_mocks": {
+              "type": "SharedSlice"
+            },
+            "strcututed_texts": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

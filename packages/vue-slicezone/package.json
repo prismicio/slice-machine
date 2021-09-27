@@ -1,10 +1,14 @@
 {
   "name": "vue-slicezone",
-  "version": "0.1.0",
+  "version": "0.0.26",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "lint": "eslint --ext .js,.vue .",
+    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
+    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
+    "audit-fix": "yarn-audit-fix"
   },
   "repository": {
     "type": "git",
@@ -21,5 +25,13 @@
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
-  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1"
+  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^7.17.0",
+    "yarn-audit-fix": "^7.0.3"
+  },
+  "resolutions": {
+    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7"
+  }
 }

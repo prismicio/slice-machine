@@ -5,8 +5,8 @@ export const valid = {
     label: "Title",
     single: "paragraph",
     allowTargetBlank: 1,
-  }
-}
+  },
+};
 
 export const multi = {
   __pass: true,
@@ -14,9 +14,9 @@ export const multi = {
   config: {
     label: "Title",
     allowTargetBlank: true,
-    multi: 'paragraph,heading1,heading2'
-  }
-}
+    multi: "paragraph,heading1,heading2",
+  },
+};
 
 export const undefOptions = {
   __pass: false,
@@ -24,8 +24,8 @@ export const undefOptions = {
   config: {
     label: "Title",
     allowTargetBlank: true,
-  }
-}
+  },
+};
 
 export const emptyOptions = {
   __pass: false,
@@ -33,25 +33,32 @@ export const emptyOptions = {
   config: {
     label: "Title",
     allowTargetBlank: true,
-    multi: ''
-  }
-}
+    multi: "",
+  },
+};
 
 export const wrongOptionType = {
   __pass: false,
   type: "StructuredText2",
   config: {
-    multi: ["paragraph", "heading1"]
-  }
-}
+    multi: ["paragraph", "heading1"],
+  },
+};
 
 export const wrongOptions = {
   __pass: false,
   type: "StructuredText2",
   config: {
     label: "Title",
-    single: "p,z"
+    single: "p,z",
+  },
+};
 
-  }
-}
-
+export const misplacedId = {
+  ...valid,
+  __pass: false,
+  config: {
+    ...valid.config,
+    id: "some-id",
+  },
+};

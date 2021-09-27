@@ -1,1 +1,3 @@
-export function resolver() { return true }
+export function resolver() {
+  return true;
+}

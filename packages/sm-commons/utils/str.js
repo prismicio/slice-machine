@@ -15,11 +15,11 @@ function hyphenate(str) {
 }
 
 function snakelize(str) {
-  return hyphenate(str).replace(/-/g, '_');
+  return hyphenate(str).replace(/-/g, "_");
 }
 
 module.exports = {
   pascalize,
   hyphenate,
-  snakelize
+  snakelize,
 };

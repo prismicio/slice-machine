@@ -11,15 +11,14 @@ function expectLibrary(sm) {
   const slices = sm.slices;
   expect(slices).to.be.an("object");
   Object.values(slices).forEach((value) => {
-    expectSliceModel(value)
-  })
+    expectSliceModel(value);
+  });
 
   /**
    * because we spread sm.config in SM_FILE,
    * we can test SM_FILE as sm.config
    */
-  expectConfig(sm)
-
+  expectConfig(sm);
 }
 
 /** test LIBRARY configuration (PATH_TO_LIB/sm.config.json) */

@@ -1,9 +1,11 @@
+const { getStoriesPaths } = require('../../../helpers/storybook')
+
+
 module.exports = {
-  "stories": [
-    "../slices/**/*.stories.js"
-  ],
+  "stories": [...getStoriesPaths()],
   "addons": [
     "@storybook/addon-links",
-    "@storybook/addon-essentials"
+    "@storybook/addon-essentials",
+    '@storybook/preset-scss'
   ]
 }

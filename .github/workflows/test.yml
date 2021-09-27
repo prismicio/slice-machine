@@ -1,0 +1,33 @@
+name: test
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [16]
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install top level dependencies
+        run: yarn
+      - name: Install package dependencies
+        run: lerna bootstrap
+      - name: Running functional and unit tests
+        run: lerna run test
+      - name: Linting
+        run: lerna run lint
+      - name: Audit
+        run: lerna run security-audit:prod
+      - name: Build and export slice machine
+        working-directory: ./packages/slice-machine
+        run: yarn build && yarn export-build
+      - name: Running End to End tests
+        working-directory: "./packages/slice-machine/tests/project"
+        run: yarn && yarn test:e2e

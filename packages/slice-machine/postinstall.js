@@ -1,40 +1,67 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
-main()
+function readJsonFile(path) {
+  if (!fs.existsSync(path)) return null;
+  return JSON.parse(fs.readFileSync(path));
+}
 
-function writeLatest(pathToSmFile, version) {
+function retrieveConfigFiles(cwd) {
+  const smPath = path.join(cwd, "sm.json");
+  const smValue = readJsonFile(smPath);
+
+  const pkgPath = path.join(cwd, "package.json");
+  const pkgValue = readJsonFile(pkgPath);
+  return {
+    pkg: { path: pkgPath, value: pkgValue },
+    smConfig: { path: smPath, value: smValue },
+  };
+}
+
+function smVersion(smModuleCWD) {
+  const pkg = readJsonFileFiles(path.join(smModuleCWD, "package.json"));
+  if (!pkg) throw new Error("Unable to find package.json file.");
+  return pkg.version.split("-")[0];
+}
+
+function writeSMVersion(smModuleCWD, smConfig) {
+  if (smConfig && smConfig.value && smConfig.value._latest) return; // if _latest already exists, we should not update this version otherwise we'd break the migration system
+
   try {
-    const json = JSON.parse(fs.readFileSync(pathToSmFile, 'utf-8'))
-    fs.writeFileSync(pathToSmFile, JSON.stringify({ ...json, _latest: version }, null, 2))
-  } catch(e) {
-    console.log('[postinstall] Could not write sm.json file. Exiting...')
+    fs.writeFileSync(
+      smConfig.path,
+      JSON.stringify(
+        { ...smConfig.value, _latest: smVersion(smModuleCWD) },
+        null,
+        2
+      )
+    );
+  } catch (e) {
+    console.log("[postinstall] Could not write sm.json file. Exiting...");
   }
 }
 
-function main() {
-  const cwd = require.main.paths[0].split('node_modules')[0]
-  const pathToPkg = cwd + 'package.json'
-  const pathToSmFile = cwd + 'sm.json'
-  if (fs.existsSync(pathToPkg) && fs.existsSync(pathToSmFile)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pathToPkg, 'utf-8'))
-      if (!pkg.scripts) {
-        pkg.scripts = {};
-      }
-      if (!pkg.scripts.slicemachine) {
-        pkg.scripts.slicemachine = "start-slicemachine --port 9999"
-        fs.writeFileSync(pathToPkg, JSON.stringify(pkg, null, 2))
-        console.log('Added script "slicemachine" to package.json')
-      }
-      const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
-      const cleanVersion = version.split('-')[0]
-      writeLatest(pathToSmFile, cleanVersion)
-    } catch(e) {
-      console.error('Could not parse file at ' + pathToPkg)
-      console.error(`Full error: ${e}`)
-    }
-    return
+function installSMScript(pkg) {
+  if (!pkg.value.scripts) {
+    pkg.value.scripts = {};
   }
-  console.error('Missing file package.json or sm.json')
+  if (!pkg.value.scripts.slicemachine) {
+    pkg.value.scripts.slicemachine = "start-slicemachine --port 9999";
+    fs.writeFileSync(pkg.path, JSON.stringify(pkg.value, null, 2));
+    console.log('Added script "slicemachine" to package.json');
+  }
 }
+
+(function main() {
+  const projectCWD = process.cwd();
+  const smModuleCWD = require.main.paths[0].split("node_modules")[0];
+  const { pkg, smConfig } = retrieveConfigFiles(projectCWD);
+
+  if (pkg.value) installSMScript(pkg);
+  else return console.error("[postinstall] Missing file package.json");
+
+  if (smConfig.value) writeSMVersion(smModuleCWD, smConfig);
+  else console.error("[postinstall] Missing file sm.json");
+
+  return;
+})();

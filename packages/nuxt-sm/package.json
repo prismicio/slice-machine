@@ -13,10 +13,22 @@
     "sm-commons": "^0.0.21"
   },
   "devDependencies": {
-    "vue-essential-slices": "0.0.7"
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-vue": "^7.17.0",
+    "vue-essential-slices": "0.0.7",
+    "yarn-audit-fix": "^7.0.3"
+  },
+  "resolutions": {
+    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
+    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ext .js .",
+    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
+    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
+    "audit-fix": "yarn-audit-fix"
   },
   "repository": {
     "type": "git",

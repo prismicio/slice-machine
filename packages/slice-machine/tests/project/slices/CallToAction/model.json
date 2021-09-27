@@ -6,139 +6,157 @@
   "variations": [
     {
       "id": "default-slice",
-      "name": "Default slice",
+      "name": "Default slice CTA",
       "docURL": "...",
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "ownContent": {
+        "deaf": {
+          "type": "Link",
           "config": {
-            "label": "",
-            "placeholder": "",
+            "label": "My Label !2",
+            "placeholder": "Placeholder 2",
             "allowTargetBlank": true,
-            "type": "StructuredText",
-            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          },
-          "type": "StructuredText"
-        },
-        "title": {
-          "config": {
-            "label": "My cool title",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
-          },
-          "type": "StructuredText"
-        },
-        "image": {
-          "config": {
-            "label": "My cool label",
-            "type": "Image",
-            "constraint": {
-              "width": 600,
-              "height": 600
-            },
-            "thumbnails": [
-              {
-                "name": "square",
-                "width": 800,
-                "height": 800
-              }
-            ]
-          },
-          "type": "Image"
-        },
-        "multi": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,heading2"
-          },
-          "type": "StructuredText"
-        },
-        "text": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph"
-          },
-          "type": "StructuredText"
-        },
-        "ownContent2": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading5"
-          },
-          "type": "StructuredText"
-        },
-        "image2": {
-          "config": {
-            "label": "",
-            "constraint": {},
-            "thumbnails": [
-              {
-                "name": "square",
-                "width": 300,
-                "height": 300
-              }
-            ]
-          },
-          "type": "Image"
-        },
-        "ownContent3": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading3"
-          },
-          "type": "StructuredText"
-        },
-        "bool": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "placeholder_false": "false",
-            "placeholder_true": "true",
-            "default_value": true,
-            "type": "Boolean"
-          },
-          "type": "Boolean"
-        },
-        "image3": {
-          "type": "Image",
-          "config": {
-            "id": "image3",
-            "label": "",
-            "constraint": {},
-            "thumbnails": []
+            "select": null
           }
         },
-        "color": {
+        "label": {
+          "config": {
+            "label": "Label ",
+            "placeholder": "place"
+          },
+          "type": "Text"
+        },
+        "geo": {
+          "config": {
+            "label": "My Label !"
+          },
+          "type": "GeoPoint"
+        },
+        "bla": {
           "config": {
             "label": "",
-            "placeholder": "",
-            "type": "Color"
+            "placeholder": ""
           },
-          "type": "Color"
+          "type": "Number"
+        },
+        "bla2222": {
+          "config": {
+            "label": "bla2222",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          },
+          "type": "Boolean"
         }
       },
       "items": {
-        "dfgdfdg": {
+        "rtfr": {
+          "config": {
+            "label": "jhjhjhjhjhjh",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        }
+      }
+    },
+    {
+      "id": "v2",
+      "name": "V2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "myCoolV2",
+      "name": "MyCoolV2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "otherVariation",
+      "name": "OtherVariation",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "ctr": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test121": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "test": {
           "type": "StructuredText",
           "config": {
             "label": "",
-            "id": "dfgdfdg",
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         }
-      }
+      },
+      "items": {}
     }
   ]
 }

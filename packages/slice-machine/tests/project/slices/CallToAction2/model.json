@@ -6,17 +6,25 @@
   "variations": [
     {
       "id": "default-slice",
-      "name": "Default slice",
+      "name": "Default slice CTA 2",
       "docURL": "...",
       "version": "sktwi83ykfdt588n",
       "description": "MySlice Template",
       "primary": {
-        "fgdfg": {
-          "type": "Number",
+        "number2": {
           "config": {
             "label": "",
-            "id": "fgdfg",
             "placeholder": ""
+          },
+          "type": "Number"
+        },
+        "text": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         }
       },
@@ -25,8 +33,116 @@
           "type": "Number",
           "config": {
             "label": "",
-            "id": "fghj",
             "placeholder": ""
+          }
+        },
+        "fdf": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true
+          }
+        }
+      }
+    },
+    {
+      "id": "Testvar",
+      "name": "testvar",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "fgdfg": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        },
+        "hello": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "Kllklk",
+      "name": "kllklk",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "fgdfg2": {
+          "config": {
+            "label": "",
+            "placeholder": ""
+          },
+          "type": "Number"
+        }
+      },
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        }
+      }
+    },
+    {
+      "id": "otherVariation",
+      "name": "OtherVariation",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "number2": {
+          "config": {
+            "label": "",
+            "placeholder": ""
+          },
+          "type": "Number"
+        },
+        "text": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {
+        "fghj": {
+          "type": "Number",
+          "config": {
+            "label": "",
+            "placeholder": ""
+          }
+        },
+        "fdf": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true
           }
         }
       }

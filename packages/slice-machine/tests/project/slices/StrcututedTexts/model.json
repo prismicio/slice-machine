@@ -11,200 +11,82 @@
       "version": "sktwi1xtmkfgx8626",
       "description": "StrcututedTexts",
       "primary": {
-        "title": {
+        "dfghj": {
           "config": {
-            "label": "",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "type": "StructuredText",
-            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+            "label": "qsddqsdd",
+            "placeholder": "qsddgfds"
           },
-          "type": "StructuredText"
+          "type": "Text"
         },
-        "image": {
+        "fghjk": {
           "config": {
             "label": "",
-            "type": "Image",
-            "constraint": {
-              "width": 200,
-              "height": 200
-            },
-            "thumbnails": []
-          },
-          "type": "Image"
-        },
-        "link": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Link",
-            "allowTargetBlank": true
-          },
-          "type": "Link"
-        },
-        "randLink": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Link",
-            "allowTargetBlank": true
-          },
-          "type": "Link"
-        },
-        "select": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "options": [
-              "image_left",
-              "image_right"
-            ],
-            "type": "Select"
-          },
-          "type": "Select"
-        },
-        "randSelect": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "options": [
-              "AA",
-              "B"
-            ],
-            "type": "Select"
-          },
-          "type": "Select"
-        },
-        "randBool": {
-          "type": "Boolean",
-          "config": {
-            "label": "",
-            "id": "randBool",
-            "placeholder": "",
-            "placeholder_false": "false",
+            "placeholder_false": "falsy",
             "placeholder_true": "true",
             "default_value": true
-          }
-        },
-        "bool": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "placeholder_false": "false",
-            "placeholder_true": "true",
-            "default_value": true,
-            "type": "Boolean"
           },
           "type": "Boolean"
         },
-        "today": {
+        "sdfdg": {
           "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Date"
-          },
-          "type": "Date"
-        },
-        "randDate": {
-          "type": "Date",
-          "config": {
-            "label": "",
-            "id": "randDate",
+            "label": "sdf",
             "placeholder": ""
+          },
+          "type": "Timestamp"
+        },
+        "sdfsdfd": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "placeholder": "SSS",
+            "select": null,
+            "allowTargetBlank": true
           }
-        },
-        "randEmbed": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Embed"
-          },
-          "type": "Embed"
-        },
-        "embed": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Embed"
-          },
-          "type": "Embed"
-        },
-        "randNumber": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Number"
-          },
-          "type": "Number"
-        },
-        "number": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Number"
-          },
-          "type": "Number"
-        },
-        "moulin": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "GeoPoint"
-          },
-          "type": "GeoPoint"
-        },
-        "randGeo": {
-          "type": "GeoPoint",
-          "config": {
-            "label": "",
-            "id": "randGeo",
-            "placeholder": ""
-          }
-        },
-        "randColor": {
-          "type": "Color",
-          "config": {
-            "label": "",
-            "id": "randColor",
-            "placeholder": ""
-          }
-        },
-        "tomato": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Color"
-          },
-          "type": "Color"
-        },
-        "randText": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Text"
-          },
-          "type": "Text"
-        },
-        "text": {
-          "config": {
-            "label": "",
-            "placeholder": "",
-            "type": "Text"
-          },
-          "type": "Text"
         }
       },
-      "items": {
-        "aze": {
+      "items": {}
+    },
+    {
+      "id": "secondVariation",
+      "name": "Second variation",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "StrcututedTexts",
+      "primary": {
+        "dfghj": {
+          "config": {
+            "label": "qsddqsdd",
+            "placeholder": "qsddgfds"
+          },
+          "type": "Text"
+        },
+        "fghjk": {
           "config": {
             "label": "",
-            "type": "Image",
-            "constraint": {},
-            "thumbnails": []
+            "placeholder_false": "falsy",
+            "placeholder_true": "true",
+            "default_value": true
           },
-          "type": "Image"
+          "type": "Boolean"
+        },
+        "sdfdg": {
+          "config": {
+            "label": "sdf",
+            "placeholder": ""
+          },
+          "type": "Timestamp"
+        },
+        "sdfsdfd": {
+          "type": "Link",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true
+          }
         }
-      }
+      },
+      "items": {}
     }
   ]
 }

@@ -1,17 +1,22 @@
-const { defaults } = require('jest-config');
-
 module.exports = {
-  ...defaults,
-  verbose: true,
+  moduleNameMapper: {
+    "^lib(.*)$": "<rootDir>/lib$1",
+    "^src(.*)$": "<rootDir>/src$1",
+    "^components(.*)$": "<rootDir>/components$1",
+  },
   transform: {
-    '\\.js$': ['babel-jest', { configFile: './babel.next.config.js' }]
+    "\\.(js|ts|jsx|tsx)$": [
+      "babel-jest",
+      { configFile: "./babel.next.config.js" },
+    ],
   },
   coverageThreshold: {
-    './lib/widgets': {
+    "./lib/widgets": {
       branches: 100,
       functions: 100,
       lines: 100,
-      statements: 100
-    }
-  }
+      statements: 100,
+    },
+  },
+  testPathIgnorePatterns: ["node_modules", "cypress"],
 };
