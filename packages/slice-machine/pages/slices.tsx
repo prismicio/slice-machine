@@ -137,124 +137,102 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
             }
             breadrumbHref="/slices"
           />
-          {!libraries.length && (
+          {!hasConfigLocalLibs && (
             <Box>
-              {hasConfigLocalLibs ? (
-                <Box>
-                  <p>
-                    We could not find any slice in your project.
-                    <br />
-                    To start using the builder, create your first slice!
-                  </p>
-                  <Button onClick={() => setIsOpen(true)}>
-                    {isCreatingSlice ? (
-                      <Spinner
-                        sx={{ position: "relative", top: "4px" }}
-                        color="#F7F7F7"
-                        size={18}
-                        mr={2}
-                      />
-                    ) : (
-                      "Create slice"
-                    )}
-                  </Button>
-                </Box>
-              ) : (
-                <Box>
-                  <p>
-                    We could not find any local library in your project.
-                    <br />
-                    Please update your `sm.json` file with a path to slices, eg:
-                  </p>
-                  <p>
-                    <pre>{`{ "libraries": ["@/slices"] }`}</pre>
-                  </p>
-                </Box>
-              )}
+              <p>
+                We could not find any local library in your project.
+                <br />
+                Please update your `sm.json` file with a path to slices, eg:
+              </p>
+              <p>
+                <pre>{`{ "libraries": ["@/slices"] }`}</pre>
+              </p>
             </Box>
           )}
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {sliceCount == 0 ? (
-              <EmptyState
-                title={"Create your first Slice"}
-                explanations={[
-                  "Click the + button on the top right to create the first slice of your project.",
-                  "It will be stored locally. You will then be able to push it to Prismic.",
-                ]}
-                onCreateNew={() => setIsOpen(true)}
-                buttonText={"Create my first Slice"}
-                documentationComponent={
-                  <>
-                    Go to our{" "}
-                    <Link
-                      target={"_blank"}
-                      href={"https://prismic.io/docs/core-concepts/slices"}
-                      sx={(theme) => ({ color: theme?.colors?.primary })}
-                    >
-                      documentation
-                    </Link>{" "}
-                    to learn more about Slices.
-                  </>
-                }
-              />
-            ) : (
-              libraries.map((maybelib: LibraryState | undefined) => {
-                if (!maybelib) {
-                  return null;
-                }
-                const { name, isLocal, components } = maybelib;
-                return (
-                  <Flex
-                    key={name}
-                    sx={{
-                      flexDirection: "column",
-                      "&:not(last-of-type)": {
-                        mb: 4,
-                      },
-                    }}
-                  >
+          {!!hasConfigLocalLibs && (
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {sliceCount == 0 ? (
+                <EmptyState
+                  title={"Create your first Slice"}
+                  explanations={[
+                    "Click the + button on the top right to create the first slice of your project.",
+                    "It will be stored locally. You will then be able to push it to Prismic.",
+                  ]}
+                  onCreateNew={() => setIsOpen(true)}
+                  buttonText={"Create my first Slice"}
+                  documentationComponent={
+                    <>
+                      Go to our{" "}
+                      <Link
+                        target={"_blank"}
+                        href={"https://prismic.io/docs/core-concepts/slices"}
+                        sx={(theme) => ({ color: theme?.colors?.primary })}
+                      >
+                        documentation
+                      </Link>{" "}
+                      to learn more about Slices.
+                    </>
+                  }
+                />
+              ) : (
+                libraries.map((maybelib: LibraryState | undefined) => {
+                  if (!maybelib) {
+                    return null;
+                  }
+                  const { name, isLocal, components } = maybelib;
+                  return (
                     <Flex
+                      key={name}
                       sx={{
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        flexDirection: "column",
+                        "&:not(last-of-type)": {
+                          mb: 4,
+                        },
                       }}
                     >
                       <Flex
                         sx={{
                           alignItems: "center",
-                          fontSize: 3,
-                          lineHeight: "48px",
-                          fontWeight: "heading",
-                          mb: 1,
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Text>{name}</Text>
+                        <Flex
+                          sx={{
+                            alignItems: "center",
+                            fontSize: 3,
+                            lineHeight: "48px",
+                            fontWeight: "heading",
+                            mb: 1,
+                          }}
+                        >
+                          <Text>{name}</Text>
+                        </Flex>
+                        {!isLocal && <p>⚠️ External libraries are read-only</p>}
                       </Flex>
-                      {!isLocal && <p>⚠️ External libraries are read-only</p>}
+                      <Grid
+                        elems={components.map(([e]) => e)}
+                        renderElem={(slice: SliceState) => {
+                          return SharedSlice.render({
+                            displayStatus: true,
+                            slice,
+                          });
+                        }}
+                      />
                     </Flex>
-                    <Grid
-                      elems={components.map(([e]) => e)}
-                      renderElem={(slice: SliceState) => {
-                        return SharedSlice.render({
-                          displayStatus: true,
-                          slice,
-                        });
-                      }}
-                    />
-                  </Flex>
-                );
-              })
-            )}
-          </Box>
+                  );
+                })
+              )}
+            </Box>
+          )}
         </Box>
       </Container>
-      {configLocalLibs.length ? (
+      {!!configLocalLibs.length && (
         <CreateSlice
           isOpen={isOpen}
           close={() => setIsOpen(false)}
@@ -267,7 +245,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
             from: string;
           }) => _onCreate({ sliceName, from })}
         />
-      ) : null}
+      )}
     </>
   );
 };
