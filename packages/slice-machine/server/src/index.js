@@ -1,7 +1,6 @@
 /// <reference path="../../../sm-commons/index.d.ts" />
 
 require("@babel/register");
-require("module-alias/register");
 
 console.log("\nLaunching server...");
 
@@ -9,11 +8,21 @@ import os from "os";
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
+import moduleAlias from "module-alias";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 
 global.fetch = require("node-fetch");
-global.appRoot = path.join(__dirname, "../../../");
+const appRoot = path.join(__dirname, "../../../");
+
+const pkg = require(appRoot + "package.json");
+const LIB_PATH = path.join(appRoot, "build", "lib");
+
+Object.entries(pkg._moduleAliases).forEach(([key, p]) => {
+  moduleAlias.addAlias(key, (fromPath, request, alias) => {
+    return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
+  });
+});
 
 const api = require("./api");
 
@@ -59,8 +68,9 @@ app.use("/onboarding", async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, "onboarding.html"));
 });
 
-app.listen(process.env.PORT, () => {
-  const p = `http://localhost:${process.env.PORT}`;
+const PORT = process.env.PORT || "9999";
+app.listen(PORT, () => {
+  const p = `http://localhost:${PORT}`;
   console.log(`p=${p}`);
 });
 

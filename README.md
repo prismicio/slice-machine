@@ -1,25 +1,35 @@
 <p align="center">
   <a href="https://slicemachine.dev">
-    <img src=".github/logo.svg" alt="Slice Machine logo" width="220" />
+    <img src=".github/logo.svg" alt="Slicemachine logo" width="220" />
   </a>
 </p>
 <p align="center">
-  A series of tools for developing and deploying website sections with <a href="https://prismic.io">Prismic</a>.
+  Develop and work with <a href="https://prismic.io">Prismic</a> slices, locally.
 </p>
 
-# Slice Machine
+# Slicemachine
 
-[![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![npm version][npm-version-src]][npm-version-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
-[![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
-- 🔪 &nbsp;Create slices locally;
-- 📄 &nbsp;Manage your custom types;
-- 🖼 &nbsp;Storybook integrated workflow.
+As a developer tool, the main goal of Slicemachine is to perfect the process of working with a CMS while developing components locally.
+
+### 1. Build reusable website sections
+We call them slices. Create and iterate on these sections from your own project, without going back & forth with a remote content editor.
+
+It takes a few seconds to generate components and their data models. Everything is then stored and versioned right inside your code.
+
+### 2. Preview your components locally
+While you build your components, you probably want to preview them. Slicemachine generates always up-to-date mocks that can be imported in the context of your page. Without querying any remote content!
+
+If you already use Storybook, Slicemachine generates stories for each of your slices. Once your library of slices is ready, publish it to get opinions from your team!
+
+### 3. Ship your library to a page builder
+Once you're done iterating with your components locally, publish them to Prismic. You get a full-fledged online content editor, tailored to your components data models. Content editors can preview slices from there and create pages without any help!
 
 ## Install
 
