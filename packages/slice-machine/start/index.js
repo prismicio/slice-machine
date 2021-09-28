@@ -1,11 +1,21 @@
 #!/usr/bin/env node
 
-require("module-alias/register");
+const path = require("path");
+const pkg = require('../package.json')
+
+const moduleAlias = require("module-alias")
+
+const LIB_PATH = path.join(__dirname, '..', 'build', 'lib')
+
+Object.entries(pkg._moduleAliases).forEach(([key, p]) => {
+  moduleAlias.addAlias(key, (fromPath, request, alias) => {
+    return path.join(path.relative(path.dirname(fromPath), LIB_PATH))
+  })
+})
 
 global.fetch = require("node-fetch");
 const fs = require("fs");
 
-const path = require("path");
 const open = require("open");
 const boxen = require("boxen");
 const spawn = require("child_process").spawn;
@@ -149,7 +159,7 @@ async function run() {
   const { exit } = await handleManifestState(userConfig, cwd);
   if (exit) {
     console.log("");
-    process.exit(-1);
+    process.exit(0);
   }
 
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module

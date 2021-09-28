@@ -27,13 +27,7 @@ import { defineFramework, isValidFramework } from "./framework";
 import handleManifest, { ManifestStates, Manifest } from "./manifest";
 import UserConfig from "@lib/models/common/UserConfig";
 
-const ENV_CWD =
-  process.env.CWD ||
-  (process.env.TEST_PROJECT_PATH
-    ? path.resolve(process.env.TEST_PROJECT_PATH)
-    : "");
-
-const compareNpmVersions = createComparator(path.join(ENV_CWD, "package.json"));
+const compareNpmVersions = createComparator(path.join(global.appRoot as string, "package.json"));
 
 function validate(config: Manifest): ConfigErrors {
   const errors: ConfigErrors = {};
@@ -115,7 +109,7 @@ function parseStorybookConfiguration(cwd: string) {
 export async function getEnv(
   maybeCustomCwd?: string
 ): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
-  const cwd = maybeCustomCwd || ENV_CWD;
+  const cwd = maybeCustomCwd || process.env.CWD;
   if (!cwd) {
     const message =
       "[api/env]: Unrecoverable error. Could not find cwd. Exiting..";
