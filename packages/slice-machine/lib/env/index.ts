@@ -27,7 +27,7 @@ import { defineFramework, isValidFramework } from "./framework";
 import handleManifest, { ManifestStates, Manifest } from "./manifest";
 import UserConfig from "@lib/models/common/UserConfig";
 
-const appRoot = path.join(__dirname, "../../../");
+declare let appRoot: string;
 
 const compareNpmVersions = createComparator(path.join(appRoot, "package.json"));
 

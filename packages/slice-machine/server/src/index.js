@@ -13,25 +13,16 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 
 global.fetch = require("node-fetch");
-const appRoot = path.join(__dirname, "../../../");
+global.appRoot = path.join(__dirname, "../../../");
 
-const pkg = require(appRoot + "package.json");
-const LIB_PATH = path.join(appRoot, "build", "lib");
+const pkg = require(global.appRoot + "package.json");
+const LIB_PATH = path.join(global.appRoot, "build", "lib");
 
-Object.entries(pkg._moduleAliases).forEach(([key, p]) => {
-  moduleAlias.addAlias(key, (fromPath, request, alias) => {
+Object.entries(pkg._moduleAliases).forEach(([key]) => {
+  moduleAlias.addAlias(key, (fromPath) => {
     return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
   });
 });
-
-const pkg = require(global.appRoot + "package.json")
-const LIB_PATH = path.join(global.appRoot, 'build', 'lib')
-
-Object.entries(pkg._moduleAliases).forEach(([key, p]) => {
-  moduleAlias.addAlias(key, (fromPath, request, alias) => {
-    return path.join(path.relative(path.dirname(fromPath), LIB_PATH))
-  })
-})
 
 const api = require("./api");
 
