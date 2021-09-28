@@ -1,4 +1,7 @@
 module.exports = {
+  globals: {
+    appRoot: ".."
+  },
   moduleNameMapper: {
     "^lib(.*)$": "<rootDir>/lib$1",
     "^src(.*)$": "<rootDir>/src$1",
