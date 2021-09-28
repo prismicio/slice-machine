@@ -27,7 +27,9 @@ import { defineFramework, isValidFramework } from "./framework";
 import handleManifest, { ManifestStates, Manifest } from "./manifest";
 import UserConfig from "@lib/models/common/UserConfig";
 
-const compareNpmVersions = createComparator(path.join(global.appRoot as string, "package.json"));
+const appRoot = path.join(__dirname, "../../../");
+
+const compareNpmVersions = createComparator(path.join(appRoot, "package.json"));
 
 function validate(config: Manifest): ConfigErrors {
   const errors: ConfigErrors = {};

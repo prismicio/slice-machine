@@ -1,22 +1,21 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const pkg = require('../package.json')
+const pkg = require("../package.json");
 
-const moduleAlias = require("module-alias")
+const moduleAlias = require("module-alias");
 
-const LIB_PATH = path.join(__dirname, '..', 'build', 'lib')
+const LIB_PATH = path.join(__dirname, "..", "build", "lib");
 
-Object.entries(pkg._moduleAliases).forEach(([key, p]) => {
-  moduleAlias.addAlias(key, (fromPath, request, alias) => {
-    return path.join(path.relative(path.dirname(fromPath), LIB_PATH))
-  })
-})
+Object.entries(pkg._moduleAliases).forEach(([key]) => {
+  moduleAlias.addAlias(key, (fromPath) => {
+    return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
+  });
+});
 
 global.fetch = require("node-fetch");
 const fs = require("fs");
 
-const open = require("open");
 const boxen = require("boxen");
 const spawn = require("child_process").spawn;
 const migrate = require("../changelog/migrate");
@@ -32,7 +31,7 @@ const {
   ManifestStates,
 } = require("../build/lib/env/manifest");
 
-const { createManifest, selectRepo, shouldOnboard } = require("./manifest");
+const { createManifest } = require("./manifest");
 
 const { argv } = require("yargs");
 
