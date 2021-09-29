@@ -169,7 +169,8 @@ async function run() {
   const validateRes = await validate();
 
   start({ cwd, port }, (url) => {
-    infobox(npmCompareData, url, framework, validateRes?.body?.email);
+    const email = validateRes && validateRes.body ? validateRes.body.email : null
+    infobox(npmCompareData, url, framework, email);
   });
 }
 
