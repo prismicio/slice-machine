@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://slicemachine.dev">
-    <img src=".github/logo.svg" alt="Slicemachine logo" width="220" />
+    <img src=".github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
 <p align="center">
   Develop and work with <a href="https://prismic.io">Prismic</a> slices, locally.
 </p>
 
-# Slicemachine
+# Slice Machine
 
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![npm version][npm-version-src]][npm-version-href]
@@ -16,20 +16,20 @@
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
-As a developer tool, the main goal of Slicemachine is to perfect the process of working with a CMS while developing components locally.
+As a developer tool, the main goal of Slice Machine is to perfect the process of working with a CMS while developing components locally.
 
 ### 1. Build reusable website sections
-We call them slices. Create and iterate on these sections from your own project, without going back & forth with a remote content editor.
+We call them Slices. Create and iterate on your Slices within your codebase, without going back and forth to a web app.
 
-It takes a few seconds to generate components and their data models. Everything is then stored and versioned right inside your code.
+It takes a few seconds to generate components with corresponding data models. Everything is stored and versioned right inside your code.
 
 ### 2. Preview your components locally
-While you build your components, you probably want to preview them. Slicemachine generates always up-to-date mocks that can be imported in the context of your page. Without querying any remote content!
+While you build your components, you'll need to preview them. Slice Machine generates updated mocks to display content in the context of your app — without querying any remote content.
 
-If you already use Storybook, Slicemachine generates stories for each of your slices. Once your library of slices is ready, publish it to get opinions from your team!
+If you already use Storybook, Slice Machine generates stories for each of your Slices.
 
 ### 3. Ship your library to a page builder
-Once you're done iterating with your components locally, publish them to Prismic. You get a full-fledged online content editor, tailored to your components data models. Content editors can preview slices from there and create pages without any help!
+Once you're done creating your components locally, publish them to Prismic. You get a full-fledged online content editor, tailored to your components' data models. Content editors can preview Slices from there and create pages without any help!
 
 ## Install
 
