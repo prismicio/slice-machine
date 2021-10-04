@@ -63,6 +63,10 @@ function extractRepo(parsedRepo: ParseResult): string | undefined {
       if (parsedRepo.subDomains.length) {
         return parsedRepo.subDomains[0];
       }
+    case ParseResultType.Reserved:
+      if (parsedRepo.labels.length) {
+        return parsedRepo.labels[0];
+      }
     default:
       return;
   }

@@ -55,6 +55,10 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
       if (parsedRepo.subDomains.length) {
         return parsedRepo.subDomains[0];
       }
+    case ParseResultType.Reserved:
+      if (parsedRepo.labels.length) {
+        return parsedRepo.labels[0];
+      }
     default:
       return;
   }
@@ -67,6 +71,12 @@ function validateEndpoint(endpoint: string, parsedRepo: ParseResult) {
         if (!parsedRepo?.subDomains?.length) {
           return false;
         }
+        if (!endpoint.endsWith("api/v2") && !endpoint.endsWith("api/v2/")) {
+          return false;
+        }
+        return true;
+      }
+      case ParseResultType.Reserved: {
         if (!endpoint.endsWith("api/v2") && !endpoint.endsWith("api/v2/")) {
           return false;
         }

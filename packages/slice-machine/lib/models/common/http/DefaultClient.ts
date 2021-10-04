@@ -4,6 +4,7 @@ import upload from "./upload";
 import Files from "../../../utils/files";
 
 interface ApiSettings {
+  DEV: string;
   STAGE: string;
   PROD: string;
 }
@@ -11,16 +12,19 @@ interface ApiSettings {
 type DevConfig = [string, string, string];
 
 const SharedSlicesApi = {
+  DEV: "https://customtypes.wroom.test/",
   STAGE: "https://customtypes.wroom.io/",
   PROD: "https://customtypes.prismic.io/",
 } as ApiSettings;
 
 const AuthApi = {
+  DEV: "https://auth.wroom.test/",
   STAGE: "https://auth.wroom.io/",
   PROD: "https://auth.prismic.io/",
-};
+} as ApiSettings;
 
 const AclProviderApi = {
+  DEV: "https://customtypes.prismic.io/",
   STAGE: "https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
   PROD: "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
 } as ApiSettings;
@@ -29,9 +33,12 @@ const SlicesPrefix = "slices/";
 const ValidatePrefix = "validate/";
 const CustomTypesPrefix = "customtypes/";
 
-function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
+function createApiUrl(base: string, { STAGE, PROD, DEV }: ApiSettings): string {
   if (base && base.includes("wroom.io")) {
     return STAGE;
+  }
+  if (base && base.includes("wroom.test")) {
+    return DEV;
   }
   return PROD;
 }
