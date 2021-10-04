@@ -25,13 +25,12 @@
     "jest/**/tmpl": ">=1.0.5",
     "jest/**/node-notifier": ">=8.0.1",
     "eslint/**/ansi-regex": ">=5.0.1",
-    "jest/**/ansi-regex": ">=5.0.1",
     "jest/**/set-value": ">=4.0.1"
   },
   "scripts": {
     "test": "jest",
     "lint": "eslint --ext .js .",
-    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
+    "security-audit:prod": "yarn audit --groups dependencies --audit-level=high",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
     "audit-fix": "yarn-audit-fix"
   },
