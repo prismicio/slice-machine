@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "prepublishOnly": "yarn build && yarn test",
     "lint": "eslint --ext .js,.jsx .",
-    "security-audit:prod": "yarn audit --groups dependencies --level=low",
+    "security-audit:prod": "yarn audit --groups dependencies --audit-level=high",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
     "audit-fix": "yarn-audit-fix",
     "test": "jest"
@@ -43,9 +43,7 @@
     "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
     "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
     "yarn-audit-fix/**/ansi-regex": ">=5.0.1",
-    "jest/**/tmpl": ">=1.0.5",
-    "jest/**/strip-ans/ansi-regex": ">=5.0.1",
-    "eslint/**/strip-ans/ansi-regex": ">=5.0.1"
+    "jest/**/tmpl": ">=1.0.5"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.14.5",

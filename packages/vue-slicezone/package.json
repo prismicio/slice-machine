@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint --ext .js,.vue .",
-    "security-audit:prod": "yarn audit --groups dependencies --audit-level=low",
+    "security-audit:prod": "yarn audit --groups dependencies --audit-level=high",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
     "audit-fix": "yarn-audit-fix"
   },
@@ -33,7 +33,6 @@
   },
   "resolutions": {
     "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
-    "yarn-audit-fix/**/ansi-regex": ">=5.0.1",
-    "eslint/**/ansi-regex": ">=5.0.1"
+    "yarn-audit-fix/**/ansi-regex": ">=5.0.1"
   }
 }

@@ -24,7 +24,6 @@
     "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
     "jest/**/tmpl": ">=1.0.5",
     "jest/**/node-notifier": ">=8.0.1",
-    "eslint/**/ansi-regex": ">=5.0.1",
     "jest/**/set-value": ">=4.0.1"
   },
   "scripts": {
