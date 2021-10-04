@@ -155,6 +155,12 @@
     "jest-config/**/ws": ">=5.2.3 <6.0.0 || >=6.2.2 <7.0.0 || >=7.4.6",
     "npm/**/@npmcli/git": ">=2.0.8",
     "yarn-audit-fix/**/@npmcli/git": ">=2.0.8",
-    "npm/**/@npmcli/arborist": ">=2.8.2"
+    "npm/**/@npmcli/arborist": ">=2.8.2",
+    "jest/**/tmpl": ">=1.0.5",
+    "jest/**/node-notifier": ">=8.0.1",
+    "ansi-regex": ">=5.0.1",
+    "jest/**/set-value": ">=4.0.1",
+    "copy-template-dir/**/set-value": ">=4.0.1",
+    "@svgr/webpack/**/nth-check": ">=2.0.1"
   }
 }

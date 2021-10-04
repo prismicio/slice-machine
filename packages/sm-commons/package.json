@@ -33,7 +33,9 @@
   },
   "resolutions": {
     "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
-    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7"
+    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7",
+    "yarn-audit-fix/**/ansi-regex": ">=5.0.1",
+    "eslint/**/strip-ans/ansi-regex": ">=5.0.1"
   },
   "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
   "devDependencies": {
