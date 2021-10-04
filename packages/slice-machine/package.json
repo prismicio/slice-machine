@@ -24,7 +24,7 @@
     "export-build": "next export && yarn clean-build",
     "bundle": "yarn build && yarn test && yarn export-build",
     "slicemachine": "start-slicemachine --port 9999",
-    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
+    "security-audit:prod": "yarn audit --production --only=prod --audit-level=high",
     "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
     "lint": "eslint --max-warnings 3279 --ext .js,.jsx,.ts,.tsx .",
     "audit-fix": "yarn-audit-fix"
