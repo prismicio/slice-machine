@@ -9,7 +9,9 @@
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && yarn build && lerna publish && yarn run changeset",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "lerna bootstrap",
+    "clean": "lerna clean"
   },
   "devDependencies": {
     "husky": "^7.0.2",
