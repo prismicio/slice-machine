@@ -1,0 +1,20 @@
+{
+  "name": "sm-init",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "init": "./build/init.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "watch": "tsc --project tsconfig.json --watch",
+    "prepublishOnly": "yarn run build"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "slicemachine-core": "file:../slicemachine-core"
+  }
+}
