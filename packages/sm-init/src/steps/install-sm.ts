@@ -1,7 +1,8 @@
-import { exec } from 'child_process'
 import util from 'util'
-import { InitOperation, InitOperationStatus } from './initOperation'
+import { exec } from 'child_process'
 import { Utils, FileSystem } from 'slicemachine-core'
+
+import { InitOperation, InitOperationStatus } from '../types/init.js'
 
 const execPromise = util.promisify(exec)
 

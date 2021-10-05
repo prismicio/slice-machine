@@ -1,4 +1,3 @@
-
 export enum InitOperationStatus {
   SUCCESS = 'success',
   FAILURE = 'failure'

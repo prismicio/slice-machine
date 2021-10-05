@@ -1,0 +1,1 @@
+export { installSm } from './install-sm.js'
