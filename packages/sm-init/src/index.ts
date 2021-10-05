@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
 import { FileSystem } from 'slicemachine-core';
-import { InitOperation } from './initOperation';
-import { installSm } from './installSm';
+import ora from 'ora';
+
+import { InitOperation } from './types/init.js';
+import { installSm } from './steps/index.js';
+
+import { purple } from './utils/index.js';
 
 function logStep(step: string) {
   return console.log(`[Slicemachine init] ${step}`)
@@ -13,8 +17,15 @@ function logError(message: string) {
 }
 
 async function init() {
-  logStep('Welcome to the world of Slicemachine')
+  console.log(purple('You\'re about to configure Slicemachine... Press ctrl + C to cancel'))
 
+  const spinner = ora('Loading something');
+  spinner.start()
+
+  setTimeout(() => {
+    spinner.stop()
+  }, 2000)
+  return
   const cwd = process.cwd();
   // const smModuleCWD = require.main?.paths[0].split("node_modules")[0];
 

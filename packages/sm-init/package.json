@@ -1,10 +1,11 @@
 {
   "name": "sm-init",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": "./build/index.js",
+  "type": "module",
   "license": "MIT",
   "bin": {
-    "init": "./build/init.js"
+    "init": "./build/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
@@ -23,6 +24,8 @@
     "@typescript-eslint/parser": "^4.29.1"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
+    "ora": "^6.0.1",
     "slicemachine-core": "file:../slicemachine-core"
   }
 }
