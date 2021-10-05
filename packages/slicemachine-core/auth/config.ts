@@ -27,7 +27,7 @@ function createDefaultConfig(configPath: string): Config {
 function getOrCreateConfig(configPath: string): Config {
   if (!Files.exists(configPath)) return createDefaultConfig(configPath)
   
-  const conf: Config = Files.readJson(configPath) as Config
+  const conf = Files.readJson(configPath)
   const completeConf: Config = { ...DEFAULT_CONFIG, ...conf }
   return completeConf
 }
@@ -40,9 +40,8 @@ function getOrCreateConfig(configPath: string): Config {
 */
 function updateConfig(configPath: string, data: Partial<Config>): void {
   const oldConfig = getOrCreateConfig(configPath)
-  const newConfig: Config = {...oldConfig, ...data}
 
-  return Files.write(configPath, newConfig)
+  return Files.write(configPath, { ...oldConfig, ...data })
 }
 
 /**
