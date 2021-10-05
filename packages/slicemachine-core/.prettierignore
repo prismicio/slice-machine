@@ -1,0 +1,4 @@
+# Ignore artifacts:
+build
+tests/project/
+templates/

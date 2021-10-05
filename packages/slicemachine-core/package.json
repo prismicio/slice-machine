@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "watch": "tsc --project tsconfig.json --watch "
+    "watch": "tsc --project tsconfig.json --watch",
+    "lint": "eslint --ext .ts ."
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
@@ -19,6 +20,13 @@
     "@types/fs-extra": "^9.0.13",
     "@types/hapi__hapi": "^20.0.9",
     "types-package-json": "^2.0.39",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jest": "^24.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1"
   }
 }
