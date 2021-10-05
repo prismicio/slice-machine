@@ -25,7 +25,7 @@
     "validate-npm-package": "^1.0.5"
   },
   "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/slice-machine eslint",
+    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/slice-machine eslint && yarn --cwd ./packages/slicemachine-core eslint && yarn --cwd ./packages/sm-init eslint",
     "**/packages/slice-machine/**/*": "prettier --write --ignore-unknown"
   }
 }

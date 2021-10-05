@@ -40,7 +40,7 @@ async function init() {
   console.log(smInstall.content)
 
   logStep('Adding the Slicemachine start script to your package.json')
-  FileSystem.JsonPackage.addSmScript(cwd)
+  void FileSystem.JsonPackage.addSmScript(cwd)
 }
 
-init()
+void init()
