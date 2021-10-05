@@ -13,7 +13,7 @@ function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
     }
   }
 
-  const content: PackageJson | null = Files.safeReadJson(pkgPath)
+  const content: PackageJson | null = Files.safeReadJson(pkgPath) as PackageJson | null
   return {
     exists: true,
     content

@@ -10,9 +10,9 @@ const Files = {
 
   write(
     pathToFile: string,
-    value: string | object,
+    value: string | Record<string, unknown>,
     options: { recursive: boolean } = { recursive: true }
-  ) {
+  ): void {
     // make sure that the directory exists before writing the file
     if (options.recursive) {
       const directoryPath = path.dirname(pathToFile);
@@ -29,15 +29,15 @@ const Files = {
       );
   },
 
-  readString(pathToFile: string) {
+  readString(pathToFile: string): string {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
-  readJson(pathToFile: string) {
-    return JSON.parse(this.readString(pathToFile));
+  readJson(pathToFile: string): Record<string, unknown> {
+    return JSON.parse(this.readString(pathToFile)) as Record<string, unknown>;
   },
-  safeReadJson(pathToFile: string) {
+  safeReadJson(pathToFile: string): Record<string, unknown> | null {
     try {
-      return JSON.parse(this.readString(pathToFile));
+      return this.readJson(pathToFile);
     } catch (e) {
       return null;
     }
@@ -75,21 +75,21 @@ const Files = {
     };
   },
 
-  isDirectory: (source: string) => fs.lstatSync(source).isDirectory(),
-  isFile: (source: string) => fs.lstatSync(source).isFile(),
-  readDirectory: (source: string) =>
+  isDirectory: (source: string): boolean => fs.lstatSync(source).isDirectory(),
+  isFile: (source: string): boolean => fs.lstatSync(source).isFile(),
+  readDirectory: (source: string): string[] =>
     fs.readdirSync(source, { encoding: Files._format }),
-  mkdir: (target: string, options: { recursive: boolean }) =>
+  mkdir: (target: string, options: { recursive: boolean }): string | undefined =>
     fs.mkdirSync(target, options),
-  exists(pathToFile: string) {
+  exists(pathToFile: string): boolean {
     try {
       return Boolean(fs.lstatSync(pathToFile));
-    } catch (e: any) {
-      if (e.code === ERROR_CODES.ENOENT) return false;
+    } catch (e: unknown) {
+      if ((e as { code: string }).code === ERROR_CODES.ENOENT) return false;
       throw e;
     }
   },
-  append(filePath: string, data: string) {
+  append(filePath: string, data: string): void {
     fs.appendFileSync(filePath, data, { encoding: Files._format });
   },
 
@@ -97,20 +97,20 @@ const Files = {
     src: string,
     dest: string,
     options: { recursive: boolean } = { recursive: false }
-  ) {
+  ): void {
     if (options.recursive) {
       const directoryPath = path.dirname(dest);
       Files.mkdir(directoryPath, { recursive: true });
     }
     fs.copyFileSync(src, dest);
   },
-  remove(src: string) {
+  remove(src: string): void {
     fs.unlinkSync(src);
   },
-  removeAll(srcs: ReadonlyArray<string>) {
+  removeAll(srcs: ReadonlyArray<string>): void {
     srcs.forEach((src) => Files.remove(src));
   },
-  flushDirectories(directory: string, recursive = true) {
+  flushDirectories(directory: string, recursive = true): void {
     try {
       const paths = fs.readdirSync(directory);
       paths.forEach((p) => {

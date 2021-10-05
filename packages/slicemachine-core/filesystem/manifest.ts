@@ -38,7 +38,7 @@ function retrieveManifest(cwd: string): FileContent<Manifest> {
     }
   }
 
-  const content: Manifest | null = Files.safeReadJson(manifestPath)
+  const content: Manifest | null = Files.safeReadJson(manifestPath) as Manifest | null
   return {
     exists: true,
     content
@@ -58,7 +58,7 @@ function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
   return true
 }
 
-function updateSMVersion(cwd: string, version: string) {
+function updateSMVersion(cwd: string, version: string): boolean {
   const manifest: FileContent<Manifest> = retrieveManifest(cwd)
   if (manifest.content?._latest) return false // if _latest already exists, we should not update this version otherwise we'd break the migration system
   

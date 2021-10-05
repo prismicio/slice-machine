@@ -4,10 +4,23 @@ import open from 'open'
 
 export const DEFAULT_PORT = 5555
 
-type HandlerData = { email: unknown; cookies: ReadonlyArray<string> }
+type HandlerData = { email: string; cookies: ReadonlyArray<string> }
+const isHandlerData = (data: string | Record<string, unknown>): data is HandlerData => {
+  if (typeof data != 'object') return false
+
+  const { email, cookies } = data as Partial<HandlerData>
+  if (!email || !cookies) return false
+  if (!Array.isArray(cookies)) return false
+
+  return (
+     Boolean(email && cookies) &&
+     Array.isArray(cookies) &&
+     cookies.some((c: unknown) => typeof c !== 'string')
+  )
+}
 
 const Routes = {
-  authentication: (server: hapi.Server) => (cb: (data: HandlerData) => Promise<void>) => ({
+  authentication: (server: hapi.Server) => (cb: (data: HandlerData) => Promise<void>): hapi.ServerRoute => ({
     method: 'POST',
     path: '/',
     handler: authenticationHandler(server)(cb),
@@ -16,25 +29,21 @@ const Routes = {
   notFound: {
     method: ['GET', 'POST'],
     path: '/{any*}',
-    handler: (request: hapi.Request, h: hapi.ResponseToolkit) => {
+    handler: (request: hapi.Request, h: hapi.ResponseToolkit): hapi.ResponseObject => {
       return h.response(`not found: [${request.method}]: ${request.url.toString()}`).code(404)
     },
   },
 }
 
-function validatePayload(payload: any): HandlerData | null {
-  if (!payload) return null
-  if (!payload.email || !payload.cookies) return null
-  if (!(Array.isArray(payload.cookies))) return null
-  if (payload.cookies.some((c: any) => typeof c !== 'string')) return null
-
-  return payload as HandlerData
+function validatePayload(payload: Buffer | string | Record<string, unknown>): HandlerData | null {
+  if (Buffer.isBuffer(payload)) return null
+  return isHandlerData(payload) ? payload : null
 }
 
 const authenticationHandler = (server: hapi.Server) => (cb: (data: HandlerData) => Promise<void>) => {
   return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
     try {
-      const data: HandlerData | null = validatePayload(request.payload)
+      const data: HandlerData | null = validatePayload(request.payload as Buffer | string | Record<string, unknown>) // type coming from the lib
 
       if (!data) {
         h.response('Error with cookies').code(400)
@@ -43,7 +52,7 @@ const authenticationHandler = (server: hapi.Server) => (cb: (data: HandlerData) 
       await cb(data)
       return h.response(data).code(200)
     } finally {
-      server.stop({timeout: 10000})
+      void server.stop({timeout: 10000})
     }
   }
 }
@@ -79,11 +88,11 @@ async function startServerAndOpenBrowser(
     const server = buildServer(base, port, 'localhost')
     server.route([Routes.authentication(server)(callback), Routes.notFound])
 
-    server.start()
+    void server.start()
     .then(() => {
       console.log('\nOpening browser to ' + LogDecorations.Underscore + url + LogDecorations.Reset)
       console.log(logAction, 'Waiting for the browser response')
-      open(url)
+      void open(url)
     })
   })
 }

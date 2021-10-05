@@ -27,8 +27,9 @@ function createDefaultConfig(configPath: string): Config {
 function getOrCreateConfig(configPath: string): Config {
   if (!Files.exists(configPath)) return createDefaultConfig(configPath)
   
-  const conf = Files.readJson(configPath)
-  return { ...DEFAULT_CONFIG, ...conf }
+  const conf: Config = Files.readJson(configPath) as Config
+  const completeConf: Config = { ...DEFAULT_CONFIG, ...conf }
+  return completeConf
 }
 
 /**
