@@ -57,7 +57,7 @@ export async function validateRepositoryName(name?: string, existingRepo = false
   const url = `/app/dashboard/repositories/${domain}/exists`
 
   return fetch(url).then(res => res.json()).then(res => {
-    if(!res && !existingRepo) Promise.reject(new Error(`${domain} is already in use`))
+    if(!res && !existingRepo) throw new Error(`${domain} is already in use`)
     return domain
   })
 }

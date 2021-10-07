@@ -26,6 +26,9 @@
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/slice-machine eslint && yarn --cwd ./packages/slicemachine-core eslint && yarn --cwd ./packages/sm-init eslint",
-    "**/packages/slice-machine/**/*": "prettier --write --ignore-unknown"
+    "**/packages/slice-machine/**/*": "prettier --write --ignore-unknown",
+    "**/packages/slicemachine-core/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/slicemachine-core eslint",
+    "**/packages/slicemachine-core/**/*": "prettier --write --ignore-unknown",
+    "**/pacckages/sm-init/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/sm-init eslint"
   }
 }

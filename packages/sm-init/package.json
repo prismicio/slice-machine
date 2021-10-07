@@ -26,6 +26,6 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "ora": "^6.0.1",
-    "slicemachine-core": "file:../slicemachine-core"
+    "slicemachine-core": "^0.1.0"
   }
 }

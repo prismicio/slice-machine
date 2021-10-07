@@ -44,7 +44,7 @@ describe('communication', () => {
     .get('/validate?token=biscuits')
     .reply(200, responseData)
     
-    communication.validateSession(fakeCookie, 'https://wroom.io')
+    return communication.validateSession(fakeCookie, 'https://wroom.io')
     .then(res => res.json())
     .then(data => {
       expect(data).toEqual(responseData)
