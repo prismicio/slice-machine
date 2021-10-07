@@ -1,3 +1,5 @@
+import * as communication from './communication'
+
 interface Core {
   CustomTypes: {
     get: (apiEndpoint: string, token: string, customTypeId: string) => Promise<any>,
@@ -16,10 +18,13 @@ interface Core {
   },
 
   Repository: {
-    list: (token: string) => Promise<string[]>
+    list: (token: string, base?: string) => Promise<string[]>
     create: (apiEndpoint: string, token: string) => Promise<void>
   }
 }
+
+type Roles = 'Writer' | 'Owner' | 'Publisher' | 'Admin' // other roles ?
+type RepoData = Record<string, {role: Roles, dbid: string}>
 
 export const Core: Core = {
   CustomTypes: {
@@ -29,6 +34,11 @@ export const Core: Core = {
 
   },
   Repository: {
+    list: (token: string, base?: string): Promise<Array<string>> => {
+      return communication.validateSession(token, base)
+      .then(res => res.json() as Promise<{email: string, type: string, repositories: RepoData}>)
+      .then(data => Object.keys(data.repositories))
+    }
     
   }
 }

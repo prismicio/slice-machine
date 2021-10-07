@@ -1,12 +1,7 @@
+import fetch, {Response} from 'node-fetch'
 import * as cookie from '../auth/cookie'
 
-/**
- * 
- * @param path {string} {path = (validate|refreshtoken)} path to call
- * @param token {string} cookie
- * @param base {string} [base = https://prismic.io]
- * @returns url to vaildate or refresh the current cookie
- */
+
 function toAuthUrl(path: 'validate' | 'refreshtoken', token: string, base = 'https://prismic.io') {
   const url = new URL(base)
   url.hostname = `auth.${url.hostname}`
@@ -15,16 +10,16 @@ function toAuthUrl(path: 'validate' | 'refreshtoken', token: string, base = 'htt
   return url.toString()
 }
 
-export async function refreshSession(cookies: string, base?: string) {
+export async function refreshSession(cookies: string, base?: string): Promise<Response> {
   const token = cookie.parse(cookies)['prismic-auth'] || ''
   const url = toAuthUrl('refreshtoken', token, base)
-  return // fetch and set cookie
+  return fetch(url)
 }
 
-export async function validateSession(cookies: string, base?: string) {
+export async function validateSession(cookies: string, base?: string): Promise<Response> {
   const token = cookie.parse(cookies)['prismic-auth'] || ''
   const url = toAuthUrl('validate', token, base)
-  return // fetch
+  return fetch(url)
 }
 
 /* export async function validateAndRefresh(cookie: string, base?: string) {
@@ -60,13 +55,11 @@ export async function validateRepositoryName(name?: string, existingRepo = false
   }
 
   const url = `/app/dashboard/repositories/${domain}/exists`
-  // TODO: fetch the url
-  return url
-  /* 
-  return this.axios().get<boolean>(url).then(res => {
-    if (!res.data && !existingRepo) return Promise.reject(new Error(`${domain} is already in use`))
+
+  return fetch(url).then(res => res.json()).then(res => {
+    if(!res && !existingRepo) Promise.reject(new Error(`${domain} is already in use`))
     return domain
-  }) */
+  })
 }
 
 // async function createRepository
