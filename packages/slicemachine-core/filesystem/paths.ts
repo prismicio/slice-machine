@@ -1,4 +1,5 @@
 import path from "path";
+import * as os from "os";
 
 export interface FileContent<T> {
   exists: boolean,
@@ -88,14 +89,17 @@ export const CustomTypesPaths = (cwd: string): Paths => Paths(cwd, "customtypes"
 export const CustomPaths = (cwd: string): Paths => Paths(cwd, "");
 export const PackagePaths = (cwd: string): Paths => Paths(cwd, "node_modules");
 export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
-export const PrismicConfig = (cwd: string): string => path.join(cwd, ".prismic");
+
+export const PrismicConfig = (dir = os.homedir()): string => path.join(dir, ".prismic");
+
 export const SliceTemplateConfig = (
   cwd: string,
   customPathToTemplate?: string
 ): string =>
   customPathToTemplate
     ? path.join(cwd, customPathToTemplate)
-    : path.join(PrismicConfig(cwd), "slice-template");
+    : path.join(cwd, "slice-template");
+
 export const JsonPackage = (cwd: string): string => path.join(cwd, "package.json");
 export const YarnLock = (cwd: string): string => path.join(cwd, "yarn.lock");
 export const MocksConfig = (cwd: string): string =>
