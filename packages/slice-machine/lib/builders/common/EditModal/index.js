@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
 import deepMerge from "deepmerge";
 
 import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
@@ -6,11 +7,7 @@ import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 import * as yup from "yup";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
-import {
-  createInitialValues,
-  createFieldNameFromKey,
-  createValidationSchema,
-} from "@lib/forms";
+import { createInitialValues, createFieldNameFromKey } from "@lib/forms";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -103,16 +100,11 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
   const formId = `${FORM_ID}-${Math.random().toString()}`;
 
   return (
-    <Modal
+    <SliceMachineModal
       isOpen
       shouldCloseOnOverlayClick
       onRequestClose={close}
       contentLabel="Widget Form Modal"
-      style={{
-        overlay: {
-          overflow: "auto",
-        },
-      }}
     >
       <WidgetForm
         apiId={apiId}
@@ -241,7 +233,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
           );
         }}
       </WidgetForm>
-    </Modal>
+    </SliceMachineModal>
   );
 };
 

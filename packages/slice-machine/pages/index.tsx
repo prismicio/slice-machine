@@ -23,6 +23,7 @@ import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
 
 import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
+import ReviewModal from "@components/ReviewModal";
 
 interface CtPayload {
   repeatable: boolean;
@@ -194,6 +195,12 @@ const CustomTypes = () => {
         isOpen={isOpen}
         onSubmit={_onCreate}
         customTypes={customTypes}
+        close={() => setIsOpen(false)}
+      />
+      <ReviewModal
+        isOpen={true}
+        onSubmit={() => {}}
+        formId={"reviewModal"}
         close={() => setIsOpen(false)}
       />
     </Container>

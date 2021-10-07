@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
+
 import Card from "@components/Card/Default";
 import Select from "react-select";
 
@@ -112,7 +113,7 @@ const VariationModal: React.FunctionComponent<{
   }
 
   return (
-    <Modal
+    <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
       onRequestClose={() => handleClose()}
@@ -120,9 +121,6 @@ const VariationModal: React.FunctionComponent<{
       style={{
         content: {
           maxWidth: "700px",
-        },
-        overlay: {
-          overflow: "auto",
         },
       }}
     >
@@ -227,7 +225,7 @@ const VariationModal: React.FunctionComponent<{
           </Box>
         </Form>
       </Formik>
-    </Modal>
+    </SliceMachineModal>
   );
 };
 
