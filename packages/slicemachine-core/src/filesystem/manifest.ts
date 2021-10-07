@@ -1,5 +1,4 @@
-import { Framework } from "../../utils/framework";
-import Files from '../../utils/files'
+import { Framework, Files } from "../utils";
 import { FileContent, SMConfigPath } from './paths';
 
 export interface Manifest {

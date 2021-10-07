@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 
-// import { InitOperationStatus } from './types/init.js';
-import { FileSystem } from 'slicemachine-core'
-import { installSm, validatePkg } from './steps/index.js';
+import { Utils, createCore } from 'slicemachine-core';
+import { installSm, validatePkg, addScriptToPkg } from './steps/index.js';
 
-import { purple } from './utils/index.js';
 
 async function init() {
   const cwd = process.cwd();
-  console.log(purple('You\'re about to configure Slicemachine... Press ctrl + C to cancel'));
+  const base = Utils.CONSTS.DEFAULT_BASE
+  console.log(Utils.purple('You\'re about to configure Slicemachine... Press ctrl + C to cancel'));
 
+  const core = createCore({
+    cwd: cwd,
+    base: base,
+    manifest: {
+      apiEndpoint: '' // to be defined in the choose directory step
+    }
+  })
+
+  await core.Auth.login();
   validatePkg(cwd);
   await installSm(cwd);
-
-  void FileSystem.JsonPackage.addSmScript(cwd);
+  addScriptToPkg(cwd);
 }
 
 void init()

@@ -1,8 +1,8 @@
 import { FileSystem, Utils } from "slicemachine-core";
-import { writeError, writeCheck } from "../utils/index.js";
+import { writeError, writeCheck } from "slicemachine-core/utils";
 
 export function addScriptToPkg(cwd: string): void {
-  const success = FileSystem.JsonPackage.addSmScript(cwd);
+  const success = FileSystem.addJsonPackageSmScript(cwd);
   if (!success) {
     return writeError(`Could not write file "${Utils.CONSTS.MANIFEST_FILE_NAME}"`);
   }

@@ -1,2 +1,3 @@
-export { installSm } from './install-sm.js'
-export { validatePkg } from './validate-pkg.js'
+export { installSm } from './install-sm'
+export { validatePkg } from './validate-pkg'
+export { addScriptToPkg } from './add-script-to-pkg'

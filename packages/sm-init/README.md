@@ -10,7 +10,14 @@ This package makes heavy use of the `slicemachine-core` package, you'll have to 
 -------
 
 ## How to test the init script on a project
+
+### Solution 1
 - Use `npm link` in this directory
 - Make an outside project
 - Use `npm link sm-init` in the project
 - Run `npx sm-init` in the project
+
+### Solution 2
+- Watch the Core & the Init
+- run the `index.js` of the build in your project
+- enjoy coding

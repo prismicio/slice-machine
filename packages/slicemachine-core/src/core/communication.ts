@@ -1,4 +1,4 @@
-import * as cookie from '../auth/cookie'
+import { cookie } from '../utils'
 
 /**
  * 
