@@ -212,11 +212,6 @@ const AppTheme = () =>
         borderColor: "borders",
       },
     },
-    // alerts: {
-    //   highlight: {
-    //     background: "highlight",
-    //   },
-    // },
     buttons: {
       primary: {
         color: "white",
@@ -237,6 +232,9 @@ const AppTheme = () =>
           boxShadow: "0 0 0 1px #fff, 0 0 0 3px rgb(110, 82, 255, 1)",
           bg: darken("primary", 0.02),
           outline: "none",
+        },
+        "&:disabled": {
+          bg: lighten("primary", 0.2),
         },
         "&:active": {
           boxShadow:
@@ -442,7 +440,29 @@ const AppTheme = () =>
         fontSize: 1,
         bg: "headSection",
         borderColor: "borders",
+        fontFamily: "body",
         "&::placeholder": {
+          fontFamily: "body",
+          color: "textClear",
+        },
+        "&:hover": {
+          borderColor: darken("borders", 0.07),
+        },
+        "&:focus, &:active": {
+          outline: "none",
+          borderColor: "primary",
+          boxShadow:
+            "0 0 0 3px rgba(81, 99, 186, 0.2), inset 0 1px 2px rgba(102, 113, 123, 0.2)",
+        },
+      },
+      textarea: {
+        fontSize: 1,
+        resize: "none",
+        bg: "headSection",
+        fontFamily: "body",
+        borderColor: "borders",
+        "&::placeholder": {
+          fontFamily: "body",
           color: "textClear",
         },
         "&:hover": {

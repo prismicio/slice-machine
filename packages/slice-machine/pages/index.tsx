@@ -200,7 +200,6 @@ const CustomTypes = () => {
       <ReviewModal
         isOpen={true}
         onSubmit={() => {}}
-        formId={"reviewModal"}
         close={() => setIsOpen(false)}
       />
     </Container>
