@@ -15,13 +15,13 @@ import { CustomTypesContext } from "../src/models/customTypes/context";
 
 import { GoPlus } from "react-icons/go";
 
-import Container from "../components/Container";
+import Container from "@components/Container";
 
-import Grid from "../components/Grid";
+import Grid from "@components/Grid";
 
-import CreateCustomType from "../components/Forms/CreateCustomType";
+import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
 
-import Header from "../components/Header";
+import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
 
 interface CtPayload {
@@ -190,7 +190,7 @@ const CustomTypes = () => {
         />
       )}
 
-      <CreateCustomType
+      <CreateCustomTypeModal
         isOpen={isOpen}
         onSubmit={_onCreate}
         customTypes={customTypes}

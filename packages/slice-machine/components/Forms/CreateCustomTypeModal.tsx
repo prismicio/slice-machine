@@ -1,22 +1,22 @@
 import { Field, useField } from "formik";
 import { Box, Flex, Label, Input, Text, Radio } from "theme-ui";
 
-import { CustomType, ObjectTabs } from "../../lib/models/common/CustomType";
+import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 
-// import { Col, Flex as FlexGrid } from 'components/Flex'
+import ModalFormCard from "@components/ModalFormCard";
 
-import ModalFormCard from "../../components/ModalFormCard";
-
-const InputBox = ({
-  name,
-  label,
-  placeholder,
-  error,
-}: {
+type InputBoxProps = {
   name: string;
   label: string;
   placeholder: string;
   error?: string;
+};
+
+const InputBox: React.FunctionComponent<InputBoxProps> = ({
+  name,
+  label,
+  placeholder,
+  error,
 }) => (
   <Box mb={3}>
     <Label htmlFor={name} mb={2}>
@@ -94,59 +94,57 @@ const SelectRepeatable = () => {
   );
 };
 
-const CreateCustomtypeForm = ({
-  isOpen,
-  onSubmit,
-  close,
-  customTypes,
-}: {
+type CreateCustomTypeModalProps = {
   isOpen: boolean;
   onSubmit: Function;
   close: Function;
   customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
-}) => {
-  return (
-    <ModalFormCard
-      isOpen={isOpen}
-      widthInPx="530px"
-      formId={formId}
-      close={() => close()}
-      onSubmit={(values: {}) => {
-        onSubmit(values);
-      }}
-      initialValues={{
-        repeatable: true,
-      }}
-      validate={({ id }: { id: string }) => {
-        if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
-          return { id: "Invalid id: No special characters allowed" };
-        }
-        if (id && customTypes.map((e) => e?.id.toLowerCase()).includes(id)) {
-          return { id: `ID "${id}" exists already` };
-        }
-      }}
-      content={{
-        title: "Create a new custom type",
-      }}
-    >
-      {({ errors }: { errors: { id?: string } }) => (
-        <Box>
-          <SelectRepeatable />
-          <InputBox
-            name="label"
-            label="Custom Type Name"
-            placeholder="My Custom Type"
-          />
-          <InputBox
-            name="id"
-            label="Custom Type ID"
-            placeholder="my-custom-type"
-            error={errors.id}
-          />
-        </Box>
-      )}
-    </ModalFormCard>
-  );
 };
 
-export default CreateCustomtypeForm;
+const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps> =
+  ({ isOpen, onSubmit, close, customTypes }) => {
+    return (
+      <ModalFormCard
+        isOpen={isOpen}
+        widthInPx="530px"
+        formId={formId}
+        close={() => close()}
+        onSubmit={(values: {}) => {
+          onSubmit(values);
+        }}
+        initialValues={{
+          repeatable: true,
+        }}
+        validate={({ id }: { id: string }) => {
+          if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
+            return { id: "Invalid id: No special characters allowed" };
+          }
+          if (id && customTypes.map((e) => e?.id.toLowerCase()).includes(id)) {
+            return { id: `ID "${id}" exists already` };
+          }
+        }}
+        content={{
+          title: "Create a new custom type",
+        }}
+      >
+        {({ errors }: { errors: { id?: string } }) => (
+          <Box>
+            <SelectRepeatable />
+            <InputBox
+              name="label"
+              label="Custom Type Name"
+              placeholder="My Custom Type"
+            />
+            <InputBox
+              name="id"
+              label="Custom Type ID"
+              placeholder="my-custom-type"
+              error={errors.id}
+            />
+          </Box>
+        )}
+      </ModalFormCard>
+    );
+  };
+
+export default CreateCustomTypeModal;

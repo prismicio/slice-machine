@@ -9,7 +9,7 @@ import Environment from "@lib/models/common/Environment";
 
 import { GoPlus } from "react-icons/go";
 
-import CreateSlice from "../components/Forms/CreateSlice";
+import CreateSliceModal from "@components/Forms/CreateSliceModal";
 
 import { fetchApi } from "@lib/builders/common/fetch";
 
@@ -233,7 +233,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
         </Box>
       </Container>
       {!!configLocalLibs.length && (
-        <CreateSlice
+        <CreateSliceModal
           isOpen={isOpen}
           close={() => setIsOpen(false)}
           libraries={configLocalLibs}

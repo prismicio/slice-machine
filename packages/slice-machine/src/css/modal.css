@@ -20,8 +20,8 @@ body {
   border: 0 !important;
   background: 0 !important;
 }
-.ReactModal__Overlay {
-  background-color: rgba(11, 11, 12, 0.9) !important;
+div.ReactModal__Overlay {
+  background-color: rgba(11, 11, 12, 0.9);
   backdrop-filter: blur(3px);
   overflow: auto;
 }
