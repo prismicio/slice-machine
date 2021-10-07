@@ -1,6 +1,5 @@
 import path from "path";
 import util from "util";
-import ora from "ora";
 import { exec } from "child_process";
 import { Utils, FileSystem } from "slicemachine-core";
 
@@ -10,7 +9,7 @@ export async function installSm(cwd: string): Promise<void> {
   const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
   const command = yarnLock ? "yarn add -D" : "npm install --save-dev";
 
-  const spinner = ora("Downloading Prismic Visual Builder");
+  const spinner = Utils.spinner("Downloading Prismic Visual Builder");
   spinner.start();
 
   const { stderr } = await execPromise(
