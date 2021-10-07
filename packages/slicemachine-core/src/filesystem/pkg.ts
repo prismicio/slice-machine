@@ -1,9 +1,11 @@
-import Files from '../utils/files'
+import Files from '../../utils/files'
 import { JsonPackage as JsonPackagePath, FileContent } from './paths'
-import { SCRIPT_NAME, SCRIPT_VALUE } from '../utils/const'
+import { SCRIPT_NAME, SCRIPT_VALUE } from '../../utils/const'
 import { PackageJson } from 'types-package-json';
 
-function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
+export type JsonPackage = PackageJson
+
+export function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
   const pkgPath = JsonPackagePath(cwd)
 
   if (!Files.exists(pkgPath)) {
@@ -20,7 +22,7 @@ function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
   }
 }
 
-function patchJsonPackage(cwd: string, data: Partial<PackageJson>): boolean {
+export function patchJsonPackage(cwd: string, data: Partial<PackageJson>): boolean {
   const pkg: FileContent<PackageJson> = retrieveJsonPackage(cwd)
   if (!pkg.exists || !pkg.content) return false
 
@@ -33,7 +35,7 @@ function patchJsonPackage(cwd: string, data: Partial<PackageJson>): boolean {
   return true
 }
 
-function addSmScript(
+export function addJsonPackageSmScript(
   cwd: string,
   scriptName = SCRIPT_NAME,
   scriptValue = SCRIPT_VALUE
@@ -46,11 +48,4 @@ function addSmScript(
   if (scripts[scriptName]) return false
 
   return patchJsonPackage(cwd, { scripts: { ...scripts, [scriptName]: scriptValue } })
-}
-
-export type JsonPackage = PackageJson
-export const JsonPackage = {
-  retrieveJsonPackage,
-  patchJsonPackage,
-  addSmScript
 }

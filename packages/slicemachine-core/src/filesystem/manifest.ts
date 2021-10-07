@@ -1,5 +1,5 @@
-import { Framework } from "../utils/framework";
-import Files from '../utils/files'
+import { Framework } from "../../utils/framework";
+import Files from '../../utils/files'
 import { FileContent, SMConfig } from './paths';
 
 export interface Manifest {
@@ -28,7 +28,7 @@ export enum ManifestStates {
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
 };*/
 
-function retrieveManifest(cwd: string): FileContent<Manifest> {
+export function retrieveManifest(cwd: string): FileContent<Manifest> {
   const manifestPath = SMConfig(cwd)
 
   if (!Files.exists(manifestPath)) {
@@ -45,7 +45,7 @@ function retrieveManifest(cwd: string): FileContent<Manifest> {
   }
 }
 
-function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
+export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
   const manifest: FileContent<Manifest> = retrieveManifest(cwd)
   if (!manifest.exists || !manifest.content) return false
 
@@ -58,15 +58,9 @@ function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
   return true
 }
 
-function updateSMVersion(cwd: string, version: string): boolean {
+export function updateManifestSMVersion(cwd: string, version: string): boolean {
   const manifest: FileContent<Manifest> = retrieveManifest(cwd)
   if (manifest.content?._latest) return false // if _latest already exists, we should not update this version otherwise we'd break the migration system
   
   return patchManifest(cwd, { _latest: version })
-}
-
-export const Manifest = {
-  retrieveManifest,
-  patchManifest,
-  updateSMVersion
 }
