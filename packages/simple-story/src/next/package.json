@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "esbuild": "^0.13.4",
+    "react": "^17.0.2",
+    "rollup": "^2.58.0",
+    "rollup-plugin-esbuild": "^4.5.0",
+    "rollup-plugin-import-css": "^3.0.2",
+    "rollup-plugin-svg-import": "^1.5.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
+  }
+}
