@@ -54,8 +54,8 @@ export function createCore({
     manifest,
 
     Auth: {
-      login: (port?: number) => Auth.startServerAndOpenBrowser(endpoints.Dashboard.cliLogin, base, port),
-      signup: (port?: number) => Auth.startServerAndOpenBrowser(endpoints.Dashboard.cliSignup, base, port),
+      login: (port?: number) => Auth.startServerAndOpenBrowser(endpoints.Dashboard.cliLogin, 'login', base, port),
+      signup: (port?: number) => Auth.startServerAndOpenBrowser(endpoints.Dashboard.cliSignup, 'signup', base, port),
       logout: () => removeAuthConfig()
     }
   }

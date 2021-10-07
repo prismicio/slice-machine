@@ -6,7 +6,6 @@ import { setAuthConfigCookies } from '../filesystem'
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> }
 
-
 const isHandlerData = (data: string | Record<string, unknown>): data is HandlerData => {
   if (typeof data != 'object') return false
 
@@ -72,16 +71,33 @@ function buildServer(base: string, port: number, host: string): hapi.Server {
   return server
 }
 
+function askSingleChar(title: string): Promise<string> {
+  return new Promise(resolve => {
+    process.stdout.write(title)
+    const rawMode: boolean = process.stdin.isRaw
+    if (process.stdin.setRawMode) process.stdin.setRawMode(true)
+    process.stdin.on('data', key => {
+      const response: string = key.toString('utf-8')
+      if (process.stdin.setRawMode) process.stdin.setRawMode(Boolean(rawMode))
+      process.stdout.write('\n')
+      resolve(response)
+    })
+  })
+}
+
 export async function startServerAndOpenBrowser(
   url: string,
+  action: 'login' | 'signup',
   base: string = CONSTS.DEFAULT_BASE,
   port: number = CONSTS.DEFAULT_SERVER_PORT
 ): Promise<void> {
+  const confirmation = await askSingleChar(`>> Press any key to open the browser to ${action} or q to exit:`);
+  if (confirmation === 'q') return process.exit(-1);
+
   const spinner = ora('Waiting for the browser response');
 
   function onSuccess(data: HandlerData) {
-    onFail()
-    //spinner.succeed(`Logged in as ${bold(data.email)}`).stop()
+    spinner.succeed(`Logged in as ${bold(data.email)}`).stop()
     setAuthConfigCookies(base, data.cookies)
   }
 
@@ -96,7 +112,7 @@ export async function startServerAndOpenBrowser(
 
   return server.start()
   .then(() => {
-    console.log('\nOpening browser to ' + underline(url))
+    console.log('Opening browser to ' + underline(url))
     spinner.start()
     void open(url)
   })
