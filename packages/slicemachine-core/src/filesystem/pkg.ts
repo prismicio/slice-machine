@@ -1,5 +1,5 @@
 import Files from '../../utils/files'
-import { JsonPackage as JsonPackagePath, FileContent } from './paths'
+import { JsonPackagePath, FileContent } from './paths'
 import { SCRIPT_NAME, SCRIPT_VALUE } from '../../utils/const'
 import { PackageJson } from 'types-package-json';
 

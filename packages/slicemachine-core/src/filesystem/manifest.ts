@@ -1,6 +1,6 @@
 import { Framework } from "../../utils/framework";
 import Files from '../../utils/files'
-import { FileContent, SMConfig } from './paths';
+import { FileContent, SMConfigPath } from './paths';
 
 export interface Manifest {
   apiEndpoint: string;
@@ -29,7 +29,7 @@ export enum ManifestStates {
 };*/
 
 export function retrieveManifest(cwd: string): FileContent<Manifest> {
-  const manifestPath = SMConfig(cwd)
+  const manifestPath = SMConfigPath(cwd)
 
   if (!Files.exists(manifestPath)) {
     return {
@@ -54,7 +54,7 @@ export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
     ...data
   }
 
-  Files.write(SMConfig(cwd), updatedManifest)
+  Files.write(SMConfigPath(cwd), updatedManifest)
   return true
 }
 

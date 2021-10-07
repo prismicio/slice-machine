@@ -1,5 +1,5 @@
 import { Manifest } from "../src/filesystem";
-import { JsonPackage } from "../src/filesystem";
+import { retrieveJsonPackage } from "../src/filesystem";
 
 export enum Framework {
   none = "none",
@@ -21,7 +21,7 @@ export const SupportedFrameworks: Framework[] = [
 ]
 
 export function detectFramework(cwd: string): Framework {
-  const pkg = JsonPackage.retrieveJsonPackage(cwd);
+  const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
     const message =
       "[api/env]: Unrecoverable error. Could not find package.json. Exiting..";

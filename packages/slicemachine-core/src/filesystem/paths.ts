@@ -88,11 +88,11 @@ export const GeneratedCustomTypesPaths = (cwd: string): Paths =>
 export const CustomTypesPaths = (cwd: string): Paths => Paths(cwd, "customtypes");
 export const CustomPaths = (cwd: string): Paths => Paths(cwd, "");
 export const PackagePaths = (cwd: string): Paths => Paths(cwd, "node_modules");
-export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
+export const SMConfigPath = (cwd: string): string => path.join(cwd, "sm.json");
 
-export const PrismicConfig = (dir = os.homedir()): string => path.join(dir, ".prismic");
+export const PrismicConfigPath = (dir = os.homedir()): string => path.join(dir, ".prismic");
 
-export const SliceTemplateConfig = (
+export const SliceTemplateConfigPath = (
   cwd: string,
   customPathToTemplate?: string
 ): string =>
@@ -100,7 +100,6 @@ export const SliceTemplateConfig = (
     ? path.join(cwd, customPathToTemplate)
     : path.join(cwd, "slice-template");
 
-export const JsonPackage = (cwd: string): string => path.join(cwd, "package.json");
-export const YarnLock = (cwd: string): string => path.join(cwd, "yarn.lock");
-export const MocksConfig = (cwd: string): string =>
-  path.join(cwd, ".slicemachine", "mock-config.json");
+export const JsonPackagePath = (cwd: string): string => path.join(cwd, "package.json");
+export const YarnLockPath = (cwd: string): string => path.join(cwd, "yarn.lock");
+export const MocksConfigPath = (cwd: string): string => path.join(cwd, ".slicemachine", "mock-config.json");
