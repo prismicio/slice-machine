@@ -1,13 +1,13 @@
 import * as inquirer from 'inquirer'
 import * as chalk from 'chalk'
-import { Core } from 'slicemachine-core'
-
+import { Communication, Utils } from 'slicemachine-core'
 
 const CREATE_REPO = "$_CREATE_REPO" // not a valid domain name
+const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE
 
-export async function maybeExistingRepo(cookie: string, base = "https://prsimc.io"): Promise<string> {
+export async function maybeExistingRepo(cookie: string, base = DEFAULT_BASE): Promise<string> {
 
-  const repos = await Core.Repository.list(cookie, base)
+  const repos = await Communication.listRepositories(cookie, base)
 
   const address = new URL(base)
 
@@ -39,7 +39,7 @@ export async function maybeExistingRepo(cookie: string, base = "https://prsimc.i
         return msg.join('')
       },
       async validate(name) {
-        const result = await Core.Repository.validateName(name, false)
+        const result = await Communication.validateRepositoryName(name, base, false)
         return result === name || result
       },
     }

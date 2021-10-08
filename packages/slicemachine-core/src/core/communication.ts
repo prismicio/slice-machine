@@ -1,5 +1,7 @@
 import fetch, { Response } from "node-fetch";
-import { cookie } from '../utils'
+import { cookie, CONSTS } from '../utils'
+
+const {DEFAULT_BASE} = CONSTS
 
 /**
  * 
@@ -12,7 +14,7 @@ import { cookie } from '../utils'
 function toAuthUrl(
   path: "validate" | "refreshtoken",
   token: string,
-  base = "https://prismic.io"
+  base = DEFAULT_BASE
 ) {
   const url = new URL(base);
   url.hostname = `auth.${url.hostname}`;
@@ -43,9 +45,24 @@ export async function validateSession(
   return validateSession(cookie, base).then(() => refreshSession(cookie, base))
 } */
 
+
+export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
+export type RepoData = Record<string, { role: Roles; dbid: string }>;
+
+export async function listRepositories(token: string, base = DEFAULT_BASE) {
+  return validateSession(token, base).then((res) =>
+    res.json() as Promise<{
+      email: string;
+      type: string;
+      repositories: RepoData;
+    }>
+  )
+  .then((data) => Object.keys(data.repositories));
+}
+
 export async function validateRepositoryName(
   name?: string,
-  base = 'https://prismic.io',
+  base = DEFAULT_BASE,
   existingRepo = false,
 ): Promise<string> {
   if (!name) return Promise.reject(new Error("repository name is required"));

@@ -2,7 +2,9 @@ import { Manifest, removeAuthConfig } from "../filesystem";
 import * as Auth from './auth'
 import { buildEndpoints } from "../utils";
 import * as communication from "./communication";
+import { CONSTS } from "../utils";
 
+export const Communication = communication
 
 export interface Core {
   cwd: string,
@@ -31,10 +33,10 @@ export interface Core {
     remove: (apiEndpoint: string, token: string, sliceId: string) => Promise<void>
   },
 
-  Repository?: {
+  Repository: {
     list: (token: string, base?: string) => Promise<string[]>
     create: (apiEndpoint: string, token: string) => Promise<void>
-    validateName: (name: string, existingRepo?: boolean) => Promise<string>
+    validateName: (name: string, base?: string, existingRepo?: boolean) => Promise<string>
   }
 }
 
@@ -43,9 +45,6 @@ export interface CoreParams {
   base: string,
   manifest: Manifest
 }
-
-type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
-type RepoData = Record<string, { role: Roles; dbid: string }>;
 
 export function createCore({
   cwd,
@@ -65,21 +64,10 @@ export function createCore({
       logout: () => removeAuthConfig()
     },
     Repository: {
-      list: (token: string, base?: string): Promise<string[]> => {
-        return communication
-          .validateSession(token, base)
-          .then(
-            (res) =>
-              res.json() as Promise<{
-                email: string;
-                type: string;
-                repositories: RepoData;
-              }>
-          )
-          .then((data) => Object.keys(data.repositories));
-      },
-      validateName: (name: string, existingRepo = false) =>
-        communication.validateRepositoryName(name, existingRepo),
+      create: (apiEndpoint: string, token: string) => Promise.resolve(),
+      list: (token: string, base?: string): Promise<string[]> => communication.listRepositories(token, base),
+      validateName: (name: string, base = CONSTS.DEFAULT_BASE, existingRepo = false) =>
+        communication.validateRepositoryName(name, base, existingRepo),
     },
   }
 }
