@@ -5,7 +5,6 @@ import { installSm, validatePkg, addScriptToPkg, maybeExistingRepo } from './ste
 
 async function init() {
   const cwd = process.cwd();
-  const base = Utils.CONSTS.DEFAULT_BASE
 
   const config = FileSystem.getOrCreateAuthConfig()
   console.log(Utils.purple('You\'re about to configure Slicemachine... Press ctrl + C to cancel'));
