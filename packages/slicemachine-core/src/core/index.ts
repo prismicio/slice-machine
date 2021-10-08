@@ -35,7 +35,7 @@ export interface Core {
 
   Repository: {
     list: (token: string, base?: string) => Promise<string[]>
-    create: (apiEndpoint: string, token: string) => Promise<void>
+    // create: (apiEndpoint: string, token: string) => Promise<void>
     validateName: (name: string, base?: string, existingRepo?: boolean) => Promise<string>
   }
 }
@@ -64,9 +64,7 @@ export function createCore({
       logout: () => removeAuthConfig()
     },
     Repository: {
-      create: (apiEndpoint: string, token: string) => {
-        return Promise.resolve();
-      },
+      // create: (apiEndpoint: string, token: string) => Promise.resolve(),
       list: (token: string, base?: string): Promise<string[]> => communication.listRepositories(token, base),
       validateName: (name: string, base = CONSTS.DEFAULT_BASE, existingRepo = false) =>
         communication.validateRepositoryName(name, base, existingRepo),
