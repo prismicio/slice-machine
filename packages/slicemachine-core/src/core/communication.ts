@@ -58,7 +58,7 @@ export async function validateSession(
 
 export async function listRepositories(token: string, base = DEFAULT_BASE) {
   return validateSession(token, base).then((data) => {
-    return Object.keys(data.repositories)
+    return Object.keys(data.repositories).reverse()
   });
 }
 
