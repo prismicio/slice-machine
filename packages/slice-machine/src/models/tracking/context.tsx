@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { fetchApi } from "@builders/common/fetch";
+import ReviewModal from "@components/ReviewModal";
+import { CustomTypesContext } from "@src/models/customTypes/context";
+import { LibrariesContext } from "@src/models/libraries/context";
 
 const returnInitialState = (storageKey: string) => {
   try {
@@ -52,6 +55,23 @@ export default function TrackingProvider({ children }: { children: any }) {
     hasSendAReview: false,
   });
 
+  const { customTypes } = useContext(CustomTypesContext);
+  const libraries = useContext(LibrariesContext);
+
+  const sliceCount =
+    libraries && libraries.length
+      ? libraries.reduce((count, lib) => {
+          if (!lib) {
+            return count;
+          }
+
+          return count + lib.components.length;
+        }, 0)
+      : 0;
+
+  const customTypeCount = !!customTypes ? customTypes.length : 0;
+  const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
+
   const onSendAReview = async (rating: number, comment: string) => {
     fetchApi({
       url: `/api/tracking/review`,
@@ -89,6 +109,11 @@ export default function TrackingProvider({ children }: { children: any }) {
       }}
     >
       {children}
+      <ReviewModal
+        isOpen={userHasCreateEnoughContent && !trackingStore.hasSendAReview}
+        onSubmit={onSendAReview}
+        close={onSkipReview}
+      />
     </TrackingContext.Provider>
   );
 }
