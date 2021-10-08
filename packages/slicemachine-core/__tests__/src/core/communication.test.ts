@@ -24,7 +24,6 @@ describe('communication', () => {
     .reply(200, responseData)
     
     return communication.validateSession(fakeCookie)
-    .then(res => res.json())
     .then(data => {
       expect(data).toEqual(responseData)
     })
@@ -45,7 +44,6 @@ describe('communication', () => {
     .reply(200, responseData)
     
     return communication.validateSession(fakeCookie, 'https://wroom.io')
-    .then(res => res.json())
     .then(data => {
       expect(data).toEqual(responseData)
     })

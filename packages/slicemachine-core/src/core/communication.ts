@@ -94,8 +94,8 @@ export async function validateRepositoryName(
   addr.pathname = `/app/dashboard/repositories/${domain}/exists`
   const url = addr.toString()
 
-  return fetch(url)
-    .then((res) => res.json())
+  return axios.get<boolean>(url)
+    .then(res => res.data)
     .then((res) => {
       if (!res && !existingRepo) throw new Error(`${domain} is already in use`);
       if(res && existingRepo) throw new Error(`${domain} does not exist`);
