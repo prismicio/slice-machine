@@ -12,7 +12,7 @@ export default async function onBeforeSaveSlice(
     sliceName,
   }: { from: string; sliceName: string; model: Slice<AsObject> },
   env: Environment
-) {
+): Promise<void> {
   const pathToSliceAssets = GeneratedPaths(env.cwd)
     .library(from)
     .slice(sliceName)

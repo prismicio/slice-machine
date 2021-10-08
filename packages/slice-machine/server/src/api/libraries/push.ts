@@ -10,9 +10,7 @@ import { handleLibraryPath } from "@lib/queries/listComponents";
 export default async function handler(query: { from: string }) {
   const { from } = query;
   const { env } = await getEnv();
-  const { slices, err }: { slices: any; err: any } = await getSlices(
-    env.client
-  );
+  const { slices, err } = await getSlices(env.client);
   if (err) {
     console.error(
       "[push] An error occured while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."
