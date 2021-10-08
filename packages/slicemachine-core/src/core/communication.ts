@@ -1,4 +1,4 @@
-import fetch, { Response } from "node-fetch";
+import axios from 'axios'
 import { cookie, CONSTS } from '../utils'
 
 const {DEFAULT_BASE} = CONSTS
@@ -26,19 +26,22 @@ function toAuthUrl(
 export async function refreshSession(
   cookies: string,
   base?: string
-): Promise<Response> {
+): Promise<string> {
   const token = cookie.parse(cookies)["prismic-auth"] || "";
   const url = toAuthUrl("refreshtoken", token, base);
-  return fetch(url);
+  return axios.get<string>(url).then(res => res.data);
 }
+
+export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
+export type RepoData = Record<string, { role: Roles; dbid: string }>;
 
 export async function validateSession(
   cookies: string,
   base?: string
-): Promise<Response> {
+): Promise<RepoData> {
   const token = cookie.parse(cookies)["prismic-auth"] || "";
   const url = toAuthUrl("validate", token, base);
-  return fetch(url);
+  return axios.get<RepoData>(url).then(res => res.data);
 }
 
 /* export async function validateAndRefresh(cookie: string, base?: string) {
@@ -46,18 +49,8 @@ export async function validateSession(
 } */
 
 
-export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
-export type RepoData = Record<string, { role: Roles; dbid: string }>;
-
 export async function listRepositories(token: string, base = DEFAULT_BASE) {
-  return validateSession(token, base).then((res) =>
-    res.json() as Promise<{
-      email: string;
-      type: string;
-      repositories: RepoData;
-    }>
-  )
-  .then((data) => Object.keys(data.repositories));
+  return validateSession(token, base).then((data) => Object.keys(data.repositories));
 }
 
 export async function validateRepositoryName(
