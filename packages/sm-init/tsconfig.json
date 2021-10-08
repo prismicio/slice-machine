@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
-    "module": "ES2020",
+    "target": "es2019",
+    "module": "commonjs",
     "removeComments": true,
     "strict": true,
     "strictNullChecks": true,

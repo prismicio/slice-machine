@@ -1,4 +1,5 @@
-import Files from '../../utils/files'
+import { Files, cookie } from '../utils'
+import { PrismicConfigPath } from './paths'
 
 export interface AuthConfig {
   base: string;
@@ -14,8 +15,9 @@ const DEFAULT_CONFIG: AuthConfig = {base: 'https://prismic.io', cookies: ''}
   * @param {string} [configPath] - the path to the configuration file
   * @returns {Config} - the default config.
 */
-function createDefaultConfig(configPath: string): AuthConfig {
-  Files.write(configPath, JSON.stringify(DEFAULT_CONFIG, null, '\t'))
+export function createDefaultAuthConfig(cwd?: string): AuthConfig {
+  const configPath = PrismicConfigPath(cwd)
+  Files.write(configPath, JSON.stringify(DEFAULT_CONFIG, null, '\t'), { recursive: false })
   return DEFAULT_CONFIG
 }
 
@@ -24,8 +26,9 @@ function createDefaultConfig(configPath: string): AuthConfig {
   * @param {string} [configPath] - the path to the configuration file
   * @returns {Config} - the config object.
 */
-function getOrCreateConfig(configPath: string): AuthConfig {
-  if (!Files.exists(configPath)) return createDefaultConfig(configPath)
+export function getOrCreateAuthConfig(cwd?: string): AuthConfig {
+  const configPath = PrismicConfigPath(cwd)
+  if (!Files.exists(configPath)) return createDefaultAuthConfig(cwd)
   
   const conf = Files.readJson(configPath)
   const completeConf: AuthConfig = { ...DEFAULT_CONFIG, ...conf }
@@ -38,10 +41,11 @@ function getOrCreateConfig(configPath: string): AuthConfig {
   * @param {Partial<Config>} [data] - configuration attributes to change
   * @returns {void} nothing
 */
-function updateConfig(configPath: string, data: Partial<AuthConfig>): void {
-  const oldConfig = getOrCreateConfig(configPath)
+export function updateAuthConfig(data: Partial<AuthConfig>, cwd?: string): void {
+  const configPath = PrismicConfigPath(cwd)
+  const oldConfig = getOrCreateAuthConfig(cwd)
 
-  return Files.write(configPath, { ...oldConfig, ...data })
+  return Files.write(configPath, { ...oldConfig, ...data }, { recursive: false })
 }
 
 /**
@@ -49,13 +53,28 @@ function updateConfig(configPath: string, data: Partial<AuthConfig>): void {
   * @param {string} [configPath] - the path to the configuration file
   * @returns {void} nothing
 */
-function removeConfig(configPath: string): void {
+export function removeAuthConfig(cwd?: string): void {
+  const configPath = PrismicConfigPath(cwd)
   return Files.remove(configPath)
 }
 
-export const Config = {
-  createDefaultConfig,
-  getOrCreateConfig,
-  updateConfig,
-  removeConfig
+/**
+  * A function to update the config cookies
+  * @param {string} [base] - the base for which the cookies are valid
+  * @param {string} [cookies] - the list of new cookies
+  * @returns {void} nothing
+*/
+export function setAuthConfigCookies(base: string, cookies: ReadonlyArray<string> = [], cwd?: string): void {
+  const { cookies: currentCookies } = getOrCreateAuthConfig(cwd)
+  const oldCookies = cookie.parse(currentCookies || '')
+
+  const newCookies = cookies.map(str => cookie.parse(str)).reduce((acc, curr) => {
+    return {...acc, ...curr}
+  }, {})
+
+  const mergedCookie = Object.entries({...oldCookies, ...newCookies}).map(([key, value]) => {
+    return cookie.serialize(key, value)
+  }).join('; ')
+
+  return updateAuthConfig({ base, cookies: mergedCookie })
 }

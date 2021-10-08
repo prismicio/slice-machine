@@ -1,6 +1,5 @@
-import Files from '../../utils/files'
 import { JsonPackagePath, FileContent } from './paths'
-import { SCRIPT_NAME, SCRIPT_VALUE } from '../../utils/const'
+import { CONSTS, Files } from '../utils'
 import { PackageJson } from 'types-package-json';
 
 export type JsonPackage = PackageJson
@@ -31,14 +30,14 @@ export function patchJsonPackage(cwd: string, data: Partial<PackageJson>): boole
     ...data
   }
 
-  Files.write(JsonPackagePath(cwd), updatedPkg)
+  Files.write(JsonPackagePath(cwd), updatedPkg, { recursive: false })
   return true
 }
 
 export function addJsonPackageSmScript(
   cwd: string,
-  scriptName = SCRIPT_NAME,
-  scriptValue = SCRIPT_VALUE
+  scriptName = CONSTS.SCRIPT_NAME,
+  scriptValue = CONSTS.SCRIPT_VALUE
 ): boolean {
   const pkg = retrieveJsonPackage(cwd)
   if (!pkg.exists || !pkg.content) return false

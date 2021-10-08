@@ -1,8 +1,6 @@
 {
   "name": "sm-init",
   "version": "1.0.0",
-  "exports": "./build/index.js",
-  "type": "module",
   "license": "MIT",
   "bin": {
     "init": "./build/index.js"

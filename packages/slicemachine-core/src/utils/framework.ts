@@ -1,5 +1,5 @@
-import { Manifest } from "../src/filesystem";
-import { retrieveJsonPackage } from "../src/filesystem";
+import { Manifest } from "../filesystem";
+import { retrieveJsonPackage } from "../filesystem";
 
 export enum Framework {
   none = "none",

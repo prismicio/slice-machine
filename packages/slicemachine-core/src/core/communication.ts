@@ -1,5 +1,13 @@
 import fetch, { Response } from "node-fetch";
-import * as cookie from "../auth/cookie";
+import { cookie } from '../utils'
+
+/**
+ * 
+ * @param path {string} {path = (validate|refreshtoken)} path to call
+ * @param token {string} cookie
+ * @param base {string} [base = https://prismic.io]
+ * @returns url to vaildate or refresh the current cookie
+ */
 
 function toAuthUrl(
   path: "validate" | "refreshtoken",
