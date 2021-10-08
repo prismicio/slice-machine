@@ -22,5 +22,5 @@
     "jsx": "preserve",
     "outDir": "./build",
   },
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build", "__tests__"]
 }

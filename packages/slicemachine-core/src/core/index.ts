@@ -64,7 +64,10 @@ export function createCore({
       logout: () => removeAuthConfig()
     },
     Repository: {
-      create: (apiEndpoint: string, token: string) => Promise.resolve(),
+      create: (apiEndpoint: string, token: string) => {
+        console.log({apiEndpoint, token})
+        return Promise.resolve();
+      },
       list: (token: string, base?: string): Promise<string[]> => communication.listRepositories(token, base),
       validateName: (name: string, base = CONSTS.DEFAULT_BASE, existingRepo = false) =>
         communication.validateRepositoryName(name, base, existingRepo),
