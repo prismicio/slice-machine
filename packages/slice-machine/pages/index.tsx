@@ -24,6 +24,7 @@ import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
 import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
 import ReviewModal from "@components/ReviewModal";
+import { TrackingContext } from "@src/models/tracking/context";
 
 interface CtPayload {
   repeatable: boolean;
@@ -120,6 +121,7 @@ const CustomTypes = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { customTypes = [], onCreate } = useContext(CustomTypesContext);
+  const { hasSendAReview, onSendAReview } = useContext(TrackingContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
     if (onCreate) {
@@ -198,9 +200,11 @@ const CustomTypes = () => {
         close={() => setIsOpen(false)}
       />
       <ReviewModal
-        isOpen={true}
-        onSubmit={() => {}}
-        close={() => setIsOpen(false)}
+        isOpen={!hasSendAReview}
+        onSubmit={() => {
+          onSendAReview();
+        }}
+        close={() => onSendAReview()}
       />
     </Container>
   );

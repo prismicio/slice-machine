@@ -41,23 +41,29 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
   return (
     <SliceMachineModal
       isOpen={isOpen}
-      shouldCloseOnOverlayClick
+      shouldCloseOnOverlayClick={false}
       onRequestClose={() => close()}
+      closeTimeoutMS={500}
       contentLabel={"Review Modal"}
+      portalClassName={"ReviewModal"}
       style={{
         content: {
           display: "flex",
-          bottom: "16px",
-          right: "16px",
+          position: "initial",
           padding: "none",
-          top: "auto",
-          left: "auto",
-          inset: "initial",
+          top: "initial",
+          left: "initial",
           minHeight: "initial",
         },
         overlay: {
-          backgroundColor: "transparent",
-          backdropFilter: "none",
+          top: "initial",
+          left: "initial",
+          right: 16,
+          bottom: 16,
+          position: "absolute",
+          height: "fit-content",
+          width: "fit-content",
+          backgroundColor: "unset"  ,
         },
       }}
     >
@@ -74,14 +80,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
           close();
         }}
       >
-        {({
-          isValid,
-          isSubmitting,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }) => (
+        {({ isValid, isSubmitting }) => (
           <Form id="review-form">
             <Card>
               <Flex
@@ -91,7 +90,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                   bg: "headSection",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  borderRadius: "0px 8px",
+                  borderRadius: "8px 8px 0px 0px",
                   borderBottom: (t) => `1px solid ${t.colors?.borders}`,
                 }}
               >
