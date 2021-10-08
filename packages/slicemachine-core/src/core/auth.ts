@@ -94,26 +94,32 @@ export async function startServerAndOpenBrowser(
   const confirmation = await askSingleChar(`>> Press any key to open the browser to ${action} or q to exit:`);
   if (confirmation === 'q') return process.exit(-1);
 
-  const spinner = ora('Waiting for the browser response');
+  return new Promise((resolve) => {
+    const spinner = ora('Waiting for the browser response');
 
-  function onSuccess(data: HandlerData) {
-    spinner.succeed(`Logged in as ${bold(data.email)}`).stop()
-    setAuthConfigCookies(base, data.cookies)
-  }
+    function onSuccess(data: HandlerData) {
+      spinner.succeed(`Logged in as ${bold(data.email)}`).stop()
+      setAuthConfigCookies(base, data.cookies)
+      console.log({ data })
+      resolve() // todo add cookies here
+    }
+  
+    function onFail(): void {
+      spinner.fail(`${error('Error!')} We failed to log you into your Prismic account`)
+      console.log(`Run ${bold('npx slicemachine init')} again!`)
+      process.exit(-1)
+    }
+  
+    const server = buildServer(base, port, 'localhost')
+    server.route([Routes.authentication(server)(onSuccess , onFail), Routes.notFound])
+  
+    return server.start()
+    .then(() => {
+      console.log('Opening browser to ' + underline(url))
+      spinner.start()
+      void open(url)
+    })
 
-  function onFail(): void {
-    spinner.fail(`${error('Error!')} We failed to log you into your Prismic account`)
-    console.log(`Run ${bold('npx slicemachine init')} again!`)
-    process.exit(-1)
-  }
-
-  const server = buildServer(base, port, 'localhost')
-  server.route([Routes.authentication(server)(onSuccess , onFail), Routes.notFound])
-
-  return server.start()
-  .then(() => {
-    console.log('Opening browser to ' + underline(url))
-    spinner.start()
-    void open(url)
   })
+
 }
