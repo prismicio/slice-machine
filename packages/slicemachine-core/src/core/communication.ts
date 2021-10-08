@@ -34,14 +34,21 @@ export async function refreshSession(
 
 export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
 export type RepoData = Record<string, { role: Roles; dbid: string }>;
+export type UserInfo = {email: string, type: string, repositories: RepoData}
 
 export async function validateSession(
   cookies: string,
   base?: string
-): Promise<RepoData> {
+): Promise<UserInfo> {
   const token = cookie.parse(cookies)["prismic-auth"] || "";
   const url = toAuthUrl("validate", token, base);
-  return axios.get<RepoData>(url).then(res => res.data);
+  return axios.get<{email: string, type: string, repositories?: string}>(url).then(res => {
+    const repositories: RepoData = (res.data.repositories && typeof(res.data.repositories) === 'string') ? JSON.parse(res.data.repositories) : res.data.repositories
+    return {
+      ...res.data,
+      repositories,
+    }
+  });
 }
 
 /* export async function validateAndRefresh(cookie: string, base?: string) {
@@ -50,7 +57,9 @@ export async function validateSession(
 
 
 export async function listRepositories(token: string, base = DEFAULT_BASE) {
-  return validateSession(token, base).then((data) => Object.keys(data.repositories));
+  return validateSession(token, base).then((data) => {
+    return Object.keys(data.repositories)
+  });
 }
 
 export async function validateRepositoryName(
