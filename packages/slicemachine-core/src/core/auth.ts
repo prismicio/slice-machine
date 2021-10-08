@@ -100,7 +100,6 @@ export async function startServerAndOpenBrowser(
     function onSuccess(data: HandlerData) {
       spinner.succeed(`Logged in as ${bold(data.email)}`).stop()
       setAuthConfigCookies(base, data.cookies)
-      console.log({ data })
       resolve() // todo add cookies here
     }
   
