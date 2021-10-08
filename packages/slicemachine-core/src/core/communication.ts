@@ -45,7 +45,8 @@ export async function validateSession(
 
 export async function validateRepositoryName(
   name?: string,
-  existingRepo = false
+  base = 'https://prismic.io',
+  existingRepo = false,
 ): Promise<string> {
   if (!name) return Promise.reject(new Error("repository name is required"));
 
@@ -79,12 +80,15 @@ export async function validateRepositoryName(
     return Promise.reject(new Error(msg));
   }
 
-  const url = `/app/dashboard/repositories/${domain}/exists`;
+  const addr = new URL(base)
+  addr.pathname = `/app/dashboard/repositories/${domain}/exists`
+  const url = addr.toString()
 
   return fetch(url)
     .then((res) => res.json())
     .then((res) => {
       if (!res && !existingRepo) throw new Error(`${domain} is already in use`);
+      if(res && existingRepo) throw new Error(`${domain} does not exist`);
       return domain;
     });
 }
