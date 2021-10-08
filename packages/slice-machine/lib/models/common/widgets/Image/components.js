@@ -3,8 +3,8 @@ import { BsImage, BsFillPlusSquareFill } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 
 import { Text, Badge, Flex } from "theme-ui";
-import SliceMachineIconButton from "components/SliceMachineIconButton";
-import { FormFieldInput } from "components/FormFields";
+import SliceMachineIconButton from "@components/SliceMachineIconButton";
+import { FormFieldInput } from "@components/FormFields";
 import { useField } from "formik";
 
 export const ThumbnailButton = ({

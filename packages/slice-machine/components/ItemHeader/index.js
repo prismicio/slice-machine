@@ -1,6 +1,6 @@
 import { Flex, Text } from "theme-ui";
 
-import IconButton from "components/IconButton";
+import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { FaBars } from "react-icons/fa";
 
 const ItemHeader = ({
@@ -11,7 +11,7 @@ const ItemHeader = ({
   iconButtonProps = {},
 }) => (
   <Flex sx={{ alignItems: "center" }}>
-    <IconButton
+    <SliceMachineIconButton
       label="Reorder slice field (drag and drop)"
       Icon={FaBars}
       color={theme.colors.icons}
