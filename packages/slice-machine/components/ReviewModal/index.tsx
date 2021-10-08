@@ -18,7 +18,7 @@ Modal.setAppElement("#__next");
 type ReviewModalProps = {
   close: Function;
   isOpen: boolean;
-  onSubmit: Function;
+  onSubmit: (rating: number, comment: string) => void;
   cardProps?: {};
 };
 
@@ -27,12 +27,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
   isOpen,
   onSubmit,
 }) => {
-  const validateReview = ({
-    rating,
-  }: {
-    rating: number | null;
-    comment: string;
-  }) => {
+  const validateReview = ({ rating }: { rating: number; comment: string }) => {
     if (!rating) {
       return { id: "Please Choose a rating" };
     }
@@ -63,7 +58,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
           position: "absolute",
           height: "fit-content",
           width: "fit-content",
-          backgroundColor: "unset"  ,
+          backgroundColor: "unset",
         },
       }}
     >
@@ -71,12 +66,12 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
         validateOnMount
         validateOnChange
         initialValues={{
-          rating: null,
+          rating: 0,
           comment: "",
         }}
         validate={validateReview}
-        onSubmit={(values, _) => {
-          onSubmit(values);
+        onSubmit={(values) => {
+          onSubmit(values.rating, values.comment);
           close();
         }}
       >

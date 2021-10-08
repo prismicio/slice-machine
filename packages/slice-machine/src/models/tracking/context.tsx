@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { fetchApi } from "@builders/common/fetch";
 
 const returnInitialState = (storageKey: string) => {
   try {
@@ -38,7 +39,7 @@ const useLocalStorage = (storageKey: string, initialValue: any) => {
 
 export const TrackingContext = React.createContext<{
   hasSendAReview: false;
-  onSendAReview: () => void;
+  onSendAReview: (rating: number, comment: string) => void;
   onSkipReview: () => void;
 }>({
   hasSendAReview: false,
@@ -51,10 +52,24 @@ export default function TrackingProvider({ children }: { children: any }) {
     hasSendAReview: false,
   });
 
-  const onSendAReview = () => {
-    setTrackingStore({
-      ...trackingStore,
-      hasSendAReview: true,
+  const onSendAReview = async (rating: number, comment: string) => {
+    fetchApi({
+      url: `/api/tracking/review`,
+      params: {
+        method: "POST",
+        body: JSON.stringify({
+          rating,
+          comment,
+        }),
+      },
+      setData: () => {},
+      successMessage: "Thank you for your review",
+      onSuccess() {
+        setTrackingStore({
+          ...trackingStore,
+          hasSendAReview: true,
+        });
+      },
     });
   };
 

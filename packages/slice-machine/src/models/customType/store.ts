@@ -1,6 +1,4 @@
 import Store from "@lib/models/ui/Store";
-// import { Widget } from '@models/common/widgets'
-// import { GroupWidget, GroupAsArray } from '@models/common/CustomType/group'
 import Actions, {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,

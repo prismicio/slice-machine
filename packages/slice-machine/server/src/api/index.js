@@ -14,6 +14,7 @@ const screenshot = require("./screenshot").default;
 const customScreenshot = require("./custom-screenshot").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
+const trackReview = require("./tracking/review").default;
 const pushLibs = require("./libraries/push").default;
 
 const saveCT = require("./custom-types/save").default;
@@ -38,6 +39,14 @@ router.use("/__preview", async function previewRoute(req, res) {
 
 router.use("/state", async function (req, res) {
   const payload = await state();
+  if (payload.clientError) {
+    return res.status(payload.clientError.status).json(payload);
+  }
+  return res.status(200).json(payload);
+});
+
+router.use("/tracking/review", async function (req, res) {
+  const payload = await trackReview(req.body);
   if (payload.clientError) {
     return res.status(payload.clientError.status).json(payload);
   }

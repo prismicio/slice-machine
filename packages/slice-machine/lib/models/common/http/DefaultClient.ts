@@ -2,6 +2,7 @@ import path from "path";
 import upload from "./upload";
 
 import Files from "../../../utils/files";
+import { ReviewTrackingEvent } from "@models/common/TrackingEvent";
 
 interface ApiSettings {
   STAGE: string;
@@ -18,6 +19,11 @@ const SharedSlicesApi = {
 const AuthApi = {
   STAGE: "https://auth.wroom.io/",
   PROD: "https://auth.prismic.io/",
+};
+
+const TrackingApi = {
+  STAGE: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
+  PROD: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
 };
 
 const AclProviderApi = {
@@ -93,6 +99,12 @@ export default class DefaultClient {
     action?: string,
     method?: string
   ) => Promise<Response>;
+  trackingFetcher: (
+    prefix: string,
+    body?: object | string,
+    action?: string,
+    method?: string
+  ) => Promise<Response>;
 
   static validate(base: string, auth: string) {
     return fetch(
@@ -136,6 +148,13 @@ export default class DefaultClient {
       repo,
       auth
     );
+    this.trackingFetcher = initFetcher(
+      base,
+      TrackingApi,
+      devConfig.aclProviderApi,
+      repo,
+      auth
+    );
   }
 
   isFake() {
@@ -164,6 +183,10 @@ export default class DefaultClient {
 
   async updateSlice(body: object | string) {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
+  }
+
+  async sendReview(review: ReviewTrackingEvent) {
+    return this.trackingFetcher("", review, "", "post");
   }
 
   images = {

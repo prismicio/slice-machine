@@ -121,7 +121,8 @@ const CustomTypes = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { customTypes = [], onCreate } = useContext(CustomTypesContext);
-  const { hasSendAReview, onSendAReview } = useContext(TrackingContext);
+  const { hasSendAReview, onSendAReview, onSkipReview } =
+    useContext(TrackingContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload) => {
     if (onCreate) {
@@ -201,10 +202,10 @@ const CustomTypes = () => {
       />
       <ReviewModal
         isOpen={!hasSendAReview}
-        onSubmit={() => {
-          onSendAReview();
+        onSubmit={(rating, comment) => {
+          onSendAReview(rating, comment);
         }}
-        close={() => onSendAReview()}
+        close={() => onSkipReview()}
       />
     </Container>
   );

@@ -109,7 +109,7 @@ export async function handler(
   }
 }
 
-export default async function apiHander(query: {
+export default async function apiHandler(query: {
   sliceName: string;
   from: string;
 }) {
