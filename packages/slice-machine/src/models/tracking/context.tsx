@@ -14,7 +14,10 @@ const returnInitialState = (storageKey: string) => {
   }
 };
 
-const useLocalStorage = (storageKey: string, initialValue: any) => {
+function useLocalStorage<S>(
+  storageKey: string,
+  initialValue: S
+): [S, (value: S) => void] {
   const [storedValue, setStoredValue] = useState(
     returnInitialState(storageKey)
   );
@@ -38,10 +41,10 @@ const useLocalStorage = (storageKey: string, initialValue: any) => {
   }
 
   return [storedValue, setValue];
-};
+}
 
 export const TrackingContext = React.createContext<{
-  hasSendAReview: false;
+  hasSendAReview: boolean;
   onSendAReview: (rating: number, comment: string) => void;
   onSkipReview: () => void;
 }>({
@@ -50,8 +53,10 @@ export const TrackingContext = React.createContext<{
   onSkipReview: () => {},
 });
 
-export default function TrackingProvider({ children }: { children: any }) {
-  const [trackingStore, setTrackingStore] = useLocalStorage("tracking", {
+const TrackingProvider: React.FunctionComponent = ({ children }) => {
+  const [trackingStore, setTrackingStore] = useLocalStorage<{
+    hasSendAReview: boolean;
+  }>("tracking", {
     hasSendAReview: false,
   });
 
@@ -116,4 +121,6 @@ export default function TrackingProvider({ children }: { children: any }) {
       />
     </TrackingContext.Provider>
   );
-}
+};
+
+export default TrackingProvider;
