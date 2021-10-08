@@ -9,14 +9,14 @@ import {
   useColorMode,
 } from "theme-ui";
 
-import IconButton from "../IconButton";
+import SliceMachineIconButton from "../SliceMachineIconButton";
 
 import { VscColorMode } from "react-icons/vsc";
 import { AiOutlineWarning } from "react-icons/ai";
 
 const WarningsIcon = ({ theme, warnings, onClick }) => (
   <Fragment>
-    <IconButton
+    <SliceMachineIconButton
       Icon={AiOutlineWarning}
       label="Open warnings panel"
       sx={{ cursor: "pointer", color: theme.colors.icons }}
@@ -116,7 +116,7 @@ const NavBar = ({
           onClick={openPanel}
         />
       ) : null}
-      <IconButton
+      <SliceMachineIconButton
         Icon={VscColorMode}
         label="Color Mode"
         sx={{ cursor: "pointer", color: theme.colors.icons, ml: 1 }}

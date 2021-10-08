@@ -3,7 +3,7 @@ import { BsImage, BsFillPlusSquareFill } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 
 import { Text, Badge, Flex } from "theme-ui";
-import IconButton from "components/IconButton";
+import SliceMachineIconButton from "components/SliceMachineIconButton";
 import { FormFieldInput } from "components/FormFields";
 import { useField } from "formik";
 
@@ -15,7 +15,7 @@ export const ThumbnailButton = ({
   text,
   sx,
 }) => (
-  <IconButton
+  <SliceMachineIconButton
     useActive
     fitButton
     error={error}
@@ -45,7 +45,7 @@ export const ThumbnailButton = ({
 );
 
 export const AddThumbnailButton = ({ onClick }) => (
-  <IconButton
+  <SliceMachineIconButton
     fitButton
     onClick={onClick}
     sx={{

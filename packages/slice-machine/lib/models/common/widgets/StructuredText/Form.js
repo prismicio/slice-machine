@@ -9,8 +9,8 @@ import options, { optionValues } from "./options";
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 
 import { Text, Button, Label, Checkbox, Flex, Box } from "theme-ui";
-import { Col, Flex as FlexGrid } from "components/Flex";
-import IconButton from "components/IconButton";
+import { Col, Flex as FlexGrid } from "@components/Flex";
+import SliceMachineIconButton from "@components/SliceMachineIconButton";
 
 const isAllSet = (curr) => !optionValues.find((e) => !curr.includes(e));
 
@@ -36,9 +36,7 @@ const WidgetForm = (props) => {
     initialValues,
     values: formValues,
     errors,
-    Model,
     fields,
-    fieldType,
     setFieldValue,
   } = props;
   const {
@@ -97,7 +95,7 @@ const WidgetForm = (props) => {
           </Button>
         </Label>
         {options.map((opt) => (
-          <IconButton
+          <SliceMachineIconButton
             fitButton
             useActive
             key={opt.value}
