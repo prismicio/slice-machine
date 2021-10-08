@@ -17,7 +17,8 @@ async function init() {
     }
   })
 
-  await core.Auth.login();
+  await core.Auth.login(); // something is wrong here.
+  process.stdin.removeAllListeners() // this fixes it
   validatePkg(cwd);
   const repoName = await maybeExistingRepo(config.cookies, config.base)
   console.log({repoName})

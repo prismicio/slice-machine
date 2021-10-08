@@ -79,7 +79,7 @@ function askSingleChar(title: string): Promise<string> {
     process.stdin.on('data', key => {
       const response: string = key.toString('utf-8')
       if (process.stdin.setRawMode) process.stdin.setRawMode(Boolean(rawMode))
-      process.stdout.write('\n')
+      process.stdout.write('\r\n')
       resolve(response)
     })
   })
