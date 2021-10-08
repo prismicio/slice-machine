@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FieldProps } from "formik";
 import {
   Box,
   Button,
@@ -8,7 +8,6 @@ import {
   Close,
   Flex,
   Heading,
-  Input,
   Text,
   Textarea,
 } from "theme-ui";
@@ -20,6 +19,34 @@ type ReviewModalProps = {
   isOpen: boolean;
   onSubmit: (rating: number, comment: string) => void;
   cardProps?: {};
+};
+
+const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
+
+const SelectRatingComponent = ({ field, form }: FieldProps) => {
+  return (
+    <Box sx={{ mb: 3 }}>
+      {ratingSelectable.map((rating) => (
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() => form.setFieldValue("rating", rating)}
+          className={field.value === rating ? "selected" : ""}
+          sx={{
+            "&:not(:last-of-type)": {
+              mr: 1,
+            },
+            "&.selected": {
+              backgroundColor: "code.gray",
+              color: "white",
+            },
+          }}
+        >
+          {rating}
+        </Button>
+      ))}
+    </Box>
+  );
 };
 
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
@@ -53,8 +80,8 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
         overlay: {
           top: "initial",
           left: "initial",
-          right: 16,
-          bottom: 16,
+          right: 32,
+          bottom: 32,
           position: "absolute",
           height: "fit-content",
           width: "fit-content",
@@ -75,7 +102,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
           close();
         }}
       >
-        {({ isValid, isSubmitting }) => (
+        {({ isValid, isSubmitting, values }) => (
           <Form id="review-form">
             <Card>
               <Flex
@@ -90,7 +117,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                 }}
               >
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
-                  Do you like the slice machine?
+                  Give us your opinion
                 </Heading>
                 <Close type="button" onClick={() => close()} />
               </Flex>
@@ -102,35 +129,56 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                 }}
               >
                 <Text variant={"xs"} as={"p"} sx={{ maxWidth: 302, mb: 3 }}>
-                  How would you rate your experience using Slice Machine?
+                  Overall, how difficult was your first experience using
+                  Slicemachine?
                 </Text>
-                <Box mb={3}>
-                  <Field
-                    name={"rating"}
-                    type="number"
-                    placeholder={"Rating"}
-                    as={Input}
-                    autoComplete="off"
-                  />
+                <Box
+                  mb={2}
+                  sx={{
+                    display: "flex",
+                    flex: 1,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text variant={"xs"} as={"p"}>
+                    Very difficult
+                  </Text>
+                  <Text variant={"xs"} as={"p"}>
+                    Very easy
+                  </Text>
                 </Box>
-                <Box mb={3}>
-                  <Field
-                    name={"comment"}
-                    type="text"
-                    placeholder={"Tell us more (optional)"}
-                    as={Textarea}
-                    autoComplete="off"
-                    sx={{
-                      height: 80,
-                    }}
-                  />
-                </Box>
+                <Field name={"rating"} component={SelectRatingComponent} />
+                <Field
+                  name={"comment"}
+                  type="text"
+                  placeholder={
+                    "Sorry about that! What did you find the most difficult?"
+                  }
+                  as={Textarea}
+                  autoComplete="off"
+                  className={
+                    values.rating >= 5 || values.rating === 0 ? "hidden" : ""
+                  }
+                  sx={{
+                    height: 80,
+                    opacity: 1,
+                    mb: 3,
+                    transition: "all 300ms",
+                    "&.hidden": {
+                      height: 0,
+                      opacity: 0,
+                      mb: 0,
+                      p: 0,
+                      border: "none",
+                    },
+                  }}
+                />
                 <Button
                   form={"review-form"}
                   type="submit"
                   disabled={!isValid || isSubmitting}
                 >
-                  Submit rating
+                  Submit
                 </Button>
               </Flex>
             </Card>
