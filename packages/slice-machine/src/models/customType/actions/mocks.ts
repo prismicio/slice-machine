@@ -1,4 +1,4 @@
-import { CustomTypeMockConfig } from "../../../../lib/models/common/MockConfig";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import Actions from "./";
 
 export function updateWidgetGroupMockConfig(
@@ -10,7 +10,7 @@ export function updateWidgetGroupMockConfig(
     previousFieldId: string,
     fieldId: string,
     value: any
-  ): any => {
+  ): void => {
     const updatedConfig = CustomTypeMockConfig.updateGroupFieldMockConfig(
       customTypeMockConfig,
       groupId,
@@ -30,7 +30,7 @@ export function updateWidgetMockConfig(
     previousFieldId: string,
     fieldId: string,
     value: any
-  ): any => {
+  ): void => {
     if (!customTypeMockConfig) return;
     const updatedConfig = CustomTypeMockConfig.updateFieldMockConfig(
       customTypeMockConfig,
@@ -49,7 +49,7 @@ export function deleteWidgetGroupMockConfig(
     customTypeMockConfig: CustomTypeMockConfig,
     groupId: string,
     fieldId: string
-  ): any => {
+  ): void => {
     if (!customTypeMockConfig) return;
 
     const updatedConfig = CustomTypeMockConfig.deleteGroupFieldMockConfig(
@@ -65,7 +65,10 @@ export function deleteWidgetGroupMockConfig(
 export function deleteWidgetMockConfig(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return (customTypeMockConfig: CustomTypeMockConfig, fieldId: string): any => {
+  return (
+    customTypeMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ): void => {
     if (!customTypeMockConfig) return;
 
     const updatedConfig = CustomTypeMockConfig.deleteFieldMockConfig(

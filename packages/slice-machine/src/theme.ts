@@ -8,7 +8,7 @@ interface MyTheme extends Theme {
   };
 }
 
-const AppTheme = () =>
+const AppTheme = (): Theme =>
   ({
     codeColor: {
       border: "#DFE1E5",

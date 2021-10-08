@@ -1,44 +1,34 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { fetchApi } from "@builders/common/fetch";
 import ReviewModal from "@components/ReviewModal";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
 
-const returnInitialState = (storageKey: string) => {
+function returnInitialState<S>(storageKey: string, initialValue: S): S {
   try {
     const item = window.localStorage.getItem(storageKey);
-    return item ? JSON.parse(item) : {};
+    return item ? (JSON.parse(item) as S) : initialValue;
   } catch (error) {
-    console.log(error);
-    return {};
+    return initialValue;
   }
-};
+}
 
 function useLocalStorage<S>(
   storageKey: string,
   initialValue: S
 ): [S, (value: S) => void] {
   const [storedValue, setStoredValue] = useState(
-    returnInitialState(storageKey)
+    returnInitialState<S>(storageKey, initialValue)
   );
 
-  const setValue = (value: any) => {
+  const setValue = (value: S) => {
     try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      // Save to local storage
-      window.localStorage.setItem(storageKey, JSON.stringify(valueToStore));
-      // Save state
-      setStoredValue(valueToStore);
+      window.localStorage.setItem(storageKey, JSON.stringify(value));
+      setStoredValue(value);
     } catch (error) {
       console.log(error);
     }
   };
-
-  if (storedValue && Object.keys(storedValue).length === 0) {
-    setValue(initialValue);
-  }
 
   return [storedValue, setValue];
 }
@@ -49,8 +39,8 @@ export const TrackingContext = React.createContext<{
   onSkipReview: () => void;
 }>({
   hasSendAReview: false,
-  onSendAReview: () => {},
-  onSkipReview: () => {},
+  onSendAReview: () => null,
+  onSkipReview: () => null,
 });
 
 const TrackingProvider: React.FunctionComponent = ({ children }) => {
@@ -58,6 +48,11 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
     hasSendAReview: boolean;
   }>("tracking", {
     hasSendAReview: false,
+  });
+
+  useEffect(() => {
+    // We store the value in the local storage if this not done
+    setTrackingStore(trackingStore);
   });
 
   const { customTypes } = useContext(CustomTypesContext);
@@ -77,8 +72,8 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
   const customTypeCount = !!customTypes ? customTypes.length : 0;
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
-  const onSendAReview = async (rating: number, comment: string) => {
-    fetchApi({
+  const onSendAReview = async (rating: number, comment: string): void => {
+    await fetchApi({
       url: `/api/tracking/review`,
       params: {
         method: "POST",
@@ -87,7 +82,7 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
           comment,
         }),
       },
-      setData: () => {},
+      setData: () => null,
       successMessage: "Thank you for your review",
       onSuccess() {
         setTrackingStore({
