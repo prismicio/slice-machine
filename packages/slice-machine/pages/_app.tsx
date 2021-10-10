@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 
@@ -74,7 +74,7 @@ const RenderStates = {
     pageProps,
     ...rest
   }: {
-    Component: (props: any) => JSX.Element;
+    Component: (props: ReactPropTypes) => JSX.Element;
     pageProps: any;
     rest: any;
   }) => <Component {...pageProps} {...rest} />,

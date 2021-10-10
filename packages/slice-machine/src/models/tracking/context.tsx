@@ -72,7 +72,10 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
   const customTypeCount = !!customTypes ? customTypes.length : 0;
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
-  const onSendAReview = async (rating: number, comment: string): void => {
+  const onSendAReview = async (
+    rating: number,
+    comment: string
+  ): Promise<void> => {
     await fetchApi({
       url: `/api/tracking/review`,
       params: {

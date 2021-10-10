@@ -15,7 +15,7 @@ const Identifiers: Record<Prefix, number> = {
   "/": 1,
 };
 
-export const findIndexFile = (libPath: string) => {
+export const findIndexFile = (libPath: string): string | null => {
   try {
     const dir = Files.readDirectory(libPath);
     const maybeF = dir.find(
@@ -27,7 +27,9 @@ export const findIndexFile = (libPath: string) => {
   }
 };
 
-export const getFormattedLibIdentifier = (libPath: string) => {
+export const getFormattedLibIdentifier = (
+  libPath: string
+): { identifier: string | undefined; from: string; isLocal: boolean } => {
   const maybeIdentifier = Object.keys(Identifiers).find(
     (e) => libPath.indexOf(e) === 0
   );
@@ -41,7 +43,17 @@ export const getFormattedLibIdentifier = (libPath: string) => {
   };
 };
 
-export function getInfoFromPath(libPath: string, startPath: string): any {
+export function getInfoFromPath(
+  libPath: string,
+  startPath: string
+): {
+  config: Record<string, string>;
+  isLocal: boolean;
+  from: string;
+  pathExists: boolean;
+  pathToLib: string;
+  pathToSlices: string;
+} {
   const { isLocal, from } = getFormattedLibIdentifier(libPath);
   const pathToLib = path.join(
     startPath || process.cwd(),
@@ -51,7 +63,7 @@ export function getInfoFromPath(libPath: string, startPath: string): any {
   const pathToConfig = path.join(pathToLib, SM_CONFIG_FILE);
   const pathExists = Files.exists(pathToLib);
 
-  let config: any = {};
+  let config: Record<string, string> = {};
   if (Files.exists(pathToConfig)) {
     config = Files.readJson(pathToConfig);
   }
