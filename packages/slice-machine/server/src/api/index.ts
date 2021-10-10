@@ -93,14 +93,6 @@ router.post(
   }
 );
 
-router.use(
-  "/libraries/push",
-  async function (req: express.Request, res: express.Response) {
-    const payload = await pushLibs(req.query);
-    return res.status(200).json(payload);
-  }
-);
-
 /** Slice Routing **/
 
 router.post(
