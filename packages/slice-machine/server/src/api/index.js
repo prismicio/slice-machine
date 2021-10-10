@@ -8,8 +8,6 @@ const push = require("./slices/push").default;
 const save = require("./slices/save").default;
 const createSlice = require("./slices/create/index").default;
 
-const pushAll = require("./push-all").default;
-
 const screenshot = require("./screenshot").default;
 const customScreenshot = require("./custom-screenshot").default;
 const parseOembed = require("./parse-oembed").default;
@@ -74,11 +72,6 @@ router.use("/parse-oembed", async function (req, res) {
   if (payload.err) {
     return res.status(400).json(payload);
   }
-  return res.status(200).json(payload);
-});
-
-router.use("/push-all", async function (req, res) {
-  const payload = await pushAll();
   return res.status(200).json(payload);
 });
 
