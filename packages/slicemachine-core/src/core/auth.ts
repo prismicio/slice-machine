@@ -61,7 +61,7 @@ function validatePayload(
 const authenticationHandler =
   (server: hapi.Server) =>
   (onSuccess: (data: HandlerData) => void, onFail: () => void) => {
-    return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
+    return (request: hapi.Request, h: hapi.ResponseToolkit) => {
       try {
         const data: HandlerData | null = validatePayload(
           request.payload as Buffer | string | Record<string, unknown>
@@ -168,5 +168,5 @@ export const Auth = {
       base
     );
   },
-  logout: () => removeAuthConfig(),
+  logout: (): void => removeAuthConfig(),
 };

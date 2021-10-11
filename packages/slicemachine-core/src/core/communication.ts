@@ -60,7 +60,10 @@ export async function validateSession(
   return validateSession(cookie, base).then(() => refreshSession(cookie, base))
 } */
 
-export async function listRepositories(token: string, base = DEFAULT_BASE) {
+export async function listRepositories(
+  token: string,
+  base = DEFAULT_BASE
+): Promise<string[]> {
   return validateSession(token, base).then((data) => {
     return Object.keys(data.repositories).reverse();
   });
