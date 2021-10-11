@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Utils, createCore, FileSystem, Auth } from "slicemachine-core";
+import { Utils, FileSystem, Auth } from "slicemachine-core";
 import {
   installSm,
   validatePkg,
