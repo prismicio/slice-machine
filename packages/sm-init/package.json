@@ -22,6 +22,6 @@
     "@typescript-eslint/parser": "^4.29.1"
   },
   "dependencies": {
-    "slicemachine-core": "link:../slicemachine-core"
+    "slicemachine-core": "^0.1.0"
   }
 }
