@@ -1,9 +1,20 @@
 import * as inquirer from 'inquirer'
-import * as chalk from 'chalk'
+// import * as chalk from 'chalk'
+const chalk = require('chalk')
 import { Communication, Utils } from 'slicemachine-core'
 
-const CREATE_REPO = "$_CREATE_REPO" // not a valid domain name
+export const CREATE_REPO = "$_CREATE_REPO" // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE
+
+export function prettyRepoName(address: URL, value?: string) {
+  const reponame = value ? chalk.cyan(value) : chalk.dim.cyan('repo-name')
+  const msg = [
+    chalk.dim(`${address.protocol}//`),
+    reponame,
+    chalk.dim(`.${address.hostname}`),
+  ]
+  return msg.join('')
+}
 
 export async function promptForCreateRepo(base: string): Promise<string> {
   const address = new URL(base)
@@ -13,15 +24,7 @@ export async function promptForCreateRepo(base: string): Promise<string> {
       message: "Name your Prismic repository",
       type: "input",
       required: true,
-      transformer(value) {
-        const reponame = value ? chalk.cyan(value) : chalk.dim.cyan('repo-name')
-        const msg = [
-          chalk.dim(`${address.protocol}//`),
-          reponame,
-          chalk.dim(`.${address.hostname}`),
-        ]
-        return msg.join('')
-      },
+      transformer: (value) => prettyRepoName(address, value),
       async validate(name) {
         const result = await Communication.validateRepositoryName(name, base, false)
         return result === name || result

@@ -2,7 +2,9 @@ import {describe, expect, test, jest, afterEach} from '@jest/globals'
 import inquirer from 'inquirer';
 import {
   maybeExistingRepo,
-  promptForCreateRepo
+  promptForCreateRepo,
+  prettyRepoName,
+  CREATE_REPO,
 } from '../src/steps/maybe-existing-repo'
 
 import nock from 'nock'
@@ -62,12 +64,35 @@ describe('maybe-existing-repo', () => {
     })
 
     jest.spyOn(inquirer, 'prompt')
-    .mockResolvedValueOnce({repoName: "$_CREATE_REPO"})
+    .mockResolvedValueOnce({repoName: CREATE_REPO})
     .mockResolvedValueOnce({ repoName })
 
     const result = await maybeExistingRepo(cookies, base)
     expect(inquirer.prompt).toHaveBeenCalledTimes(2)
     expect(result).toEqual(repoName)
 
+  })
+})
+
+describe("prettyRepoName", () => {
+  test('should contain the base url, and a placeholder', () => {
+    const address = new URL('https://prismic.io')
+    const result = prettyRepoName(address)
+    expect(result).toContain('repo-name')
+    expect(result).toContain('.prismic.io')
+  })
+
+  test('should contain the base url, and a placeholder', () => {
+    const address = new URL('https://prismic.io')
+    const result = prettyRepoName(address)
+    expect(result).toContain('repo-name')
+    expect(result).toContain('.prismic.io')
+  })
+
+  test('shohuld contain the value from user input', () => {
+    const address = new URL('https://prismic.io')
+    const result = prettyRepoName(address, 'foo-bar')
+    expect(result).toContain('foo-bar')
+    expect(result).toContain('.prismic.io')
   })
 })
