@@ -1,4 +1,4 @@
-import { FileSystem, Utils } from 'slicemachine-core';
+import { FileSystem, Utils } from "slicemachine-core";
 
 export function validatePkg(cwd: string): void {
   const jsonPackage = FileSystem.retrieveJsonPackage(cwd);

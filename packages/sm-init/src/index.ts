@@ -1,29 +1,50 @@
 #!/usr/bin/env node
 
-import { Utils, createCore, FileSystem } from 'slicemachine-core';
-import { installSm, validatePkg, addScriptToPkg, maybeExistingRepo } from './steps/index.js';
+import { Utils, createCore, FileSystem } from "slicemachine-core";
+import {
+  installSm,
+  validatePkg,
+  addScriptToPkg,
+  maybeExistingRepo,
+} from "./steps/index.js";
+
+function findArgument(args: string[], name: string): string | null {
+  const flagIndex: number = args.indexOf(`--${name}`);
+
+  if (flagIndex === -1) return null;
+  if (args.length < flagIndex + 2) return null;
+
+  const flagValue = args[flagIndex + 1];
+
+  if (flagValue.startsWith("--")) return null;
+  return flagValue;
+}
 
 async function init() {
-  const cwd = process.cwd();
+  const cwd = findArgument(process.argv, "cwd") || process.cwd();
+  const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
 
-  const config = FileSystem.getOrCreateAuthConfig()
-  console.log(Utils.purple('You\'re about to configure Slicemachine... Press ctrl + C to cancel'));
+  console.log(
+    Utils.purple(
+      "You're about to configure Slicemachine... Press ctrl + C to cancel"
+    )
+  );
 
   const core = createCore({
     cwd: cwd,
-    base: config.base,
+    base: base,
     manifest: {
-      apiEndpoint: '' // to be defined in the choose directory step
-    }
-  })
+      apiEndpoint: "", // to be defined in the choose directory step
+    },
+  });
 
-  await core.Auth.login(); // something is wrong here.
-  process.stdin.removeAllListeners() // this fixes it
+  await core.Auth.login();
   validatePkg(cwd);
-  const repoName = await maybeExistingRepo(config.cookies, config.base)
-  console.log({repoName})
+  const config = FileSystem.getOrCreateAuthConfig();
+  const repoName = await maybeExistingRepo(config.cookies, config.base);
+  console.log({ repoName });
   await installSm(cwd);
   addScriptToPkg(cwd);
 }
 
-void init()
+void init();
