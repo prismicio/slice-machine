@@ -1,8 +1,14 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import ora from "ora";
-import { CONSTS, bold, underline, error } from "../utils";
-import { setAuthConfigCookies } from "../filesystem";
+import {
+  CONSTS,
+  bold,
+  underline,
+  error,
+  buildEndpoints,
+  spinner,
+} from "../utils";
+import { setAuthConfigCookies, removeAuthConfig } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
@@ -120,16 +126,16 @@ export async function startServerAndOpenBrowser(
     return process.exit(-1);
 
   return new Promise((resolve) => {
-    const spinner = ora("Waiting for the browser response");
+    const s = spinner("Waiting for the browser response");
 
     function onSuccess(data: HandlerData) {
-      spinner.succeed(`Logged in as ${bold(data.email)}`).stop();
+      s.succeed(`Logged in as ${bold(data.email)}`).stop();
       setAuthConfigCookies(base, data.cookies);
       resolve(); // todo add cookies here
     }
 
     function onFail(): void {
-      spinner.fail(
+      s.fail(
         `${error("Error!")} We failed to log you into your Prismic account`
       );
       console.log(`Run ${bold("npx slicemachine init")} again!`);
@@ -144,8 +150,28 @@ export async function startServerAndOpenBrowser(
 
     server.start().then(() => {
       console.log("Opening browser to " + underline(url));
-      spinner.start();
+      s.start();
       void open(url);
     });
   });
 }
+
+export const Auth = {
+  login: async (base: string): Promise<void> => {
+    const endpoints = buildEndpoints(base);
+    return startServerAndOpenBrowser(
+      endpoints.Dashboard.cliLogin,
+      "login",
+      base
+    );
+  },
+  signup: async (base: string): Promise<void> => {
+    const endpoints = buildEndpoints(base);
+    return startServerAndOpenBrowser(
+      endpoints.Dashboard.cliSignup,
+      "signup",
+      base
+    );
+  },
+  logout: () => removeAuthConfig(),
+};

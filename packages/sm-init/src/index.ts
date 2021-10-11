@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Utils, createCore, FileSystem } from "slicemachine-core";
+import { Utils, createCore, FileSystem, Auth } from "slicemachine-core";
 import {
   installSm,
   validatePkg,
@@ -30,15 +30,7 @@ async function init() {
     )
   );
 
-  const core = createCore({
-    cwd: cwd,
-    base: base,
-    manifest: {
-      apiEndpoint: "", // to be defined in the choose directory step
-    },
-  });
-
-  await core.Auth.login();
+  await Auth.login(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
   const repoName = await maybeExistingRepo(config.cookies, config.base);
