@@ -92,7 +92,7 @@ export async function startServerAndOpenBrowser(
   port: number = CONSTS.DEFAULT_SERVER_PORT
 ): Promise<void> {
   const confirmation = await askSingleChar(`>> Press any key to open the browser to ${action} or q to exit:`);
-  if (confirmation === 'q') return process.exit(-1);
+  if (confirmation === 'q' || confirmation === '\u0003') return process.exit(-1);
 
   const spinner = ora('Waiting for the browser response');
 
