@@ -173,5 +173,5 @@ export const Auth = {
       base
     );
   },
-  logout: () => removeAuthConfig(),
+  logout: (): void => removeAuthConfig(),
 };
