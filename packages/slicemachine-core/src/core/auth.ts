@@ -61,7 +61,7 @@ function validatePayload(
 const authenticationHandler =
   (server: hapi.Server) =>
   (onSuccess: (data: HandlerData) => void, onFail: () => void) => {
-    return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
+    return (request: hapi.Request, h: hapi.ResponseToolkit): void => {
       try {
         const data: HandlerData | null = validatePayload(
           request.payload as Buffer | string | Record<string, unknown>
@@ -75,7 +75,7 @@ const authenticationHandler =
           );
         }
         onSuccess(data);
-        return h.response(data).code(200);
+        h.response(data).code(200);
       } finally {
         void server.stop({ timeout: 10000 });
       }

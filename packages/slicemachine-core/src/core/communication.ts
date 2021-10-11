@@ -36,6 +36,12 @@ export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
 export type RepoData = Record<string, { role: Roles; dbid: string }>;
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
+function maybeParseRepoData(repos?: string | RepoData): RepoData {
+  if(!repos) return {}
+  if(typeof repos === 'string') return JSON.parse(repos) as RepoData
+  return repos
+}
+
 export async function validateSession(
   cookies: string,
   base?: string
@@ -45,10 +51,7 @@ export async function validateSession(
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
     .then((res) => {
-      const repositories: RepoData =
-        res.data.repositories && typeof res.data.repositories === "string"
-          ? JSON.parse(res.data.repositories)
-          : res.data.repositories;
+      const repositories = maybeParseRepoData(res.data.repositories)
       return {
         ...res.data,
         repositories,
@@ -60,7 +63,7 @@ export async function validateSession(
   return validateSession(cookie, base).then(() => refreshSession(cookie, base))
 } */
 
-export async function listRepositories(token: string, base = DEFAULT_BASE) {
+export async function listRepositories(token: string, base = DEFAULT_BASE): Promise<string[]> {
   return validateSession(token, base).then((data) => {
     return Object.keys(data.repositories).reverse();
   });
