@@ -1,5 +1,4 @@
 import * as inquirer from 'inquirer'
-// import * as chalk from 'chalk'
 const chalk = require('chalk')
 import { Communication, Utils } from 'slicemachine-core'
 
