@@ -1,28 +1,73 @@
-import {describe, expect, test, afterAll, afterEach, jest} from '@jest/globals'
+import {describe, expect, test, jest, afterEach} from '@jest/globals'
+import inquirer from 'inquirer';
+import {
+  maybeExistingRepo,
+  promptForCreateRepo
+} from '../src/steps/maybe-existing-repo'
+
 import nock from 'nock'
-// import * as MockStdin from 'mock-stdin'
-import {maybeExistingRepo} from '../src/steps'
-// import {stdout} from 'stdout-stderr'
 
-const UP = '\x1B\x5B\x41';
-const DOWN = '\x1B\x5B\x42';
-const ENTER = '\x0D';
+describe('maybe-existing-repo', () => {
 
-describe('mayeb-existing-repo', () => {
-
-  afterAll(() => nock.restore())
-  // afterEach(() => stdin.restore())
-
-  test.skip('prompts user to select a repo', () => {
-    maybeExistingRepo('foo')
-
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
-  test.skip('if user has no repos it asks them to create a repo', () => {
-    expect(false)
+
+  test('prompts user to select a repo', async () => {
+    const repoName = 'test'
+    const base = 'https://prismic.io'
+
+    jest.spyOn(inquirer, 'prompt').mockResolvedValue({repoName})
+    const result = await promptForCreateRepo(base)
+
+    expect(inquirer.prompt).toHaveBeenCalledTimes(1)
+    expect(result).toBe(repoName)
   })
 
-  test.skip('should resolve with a repo name', () => {
+  test('if user has no repos it asks them to create a repo', async () => {
+    const repoName = 'test'
+    const base = 'https://prismic.io'
+    const authUrl = 'https://auth.prismic.io'
+    const cookies = 'prismic-auth=biscuits;'
+
+    nock(authUrl)
+    .get('/validate?token=biscuits')
+    .reply(200, {
+      email: "fake@prismic.io",
+      type:"USER",
+      repositories:"{}"
+    })
+
+    jest.spyOn(inquirer, 'prompt').mockResolvedValue({repoName})
+    
+    const result = await maybeExistingRepo(cookies, base)
+
+    expect(inquirer.prompt).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(repoName)
+  })
+
+  test('it allows a user to create a new repo', async () => {
+    const repoName = 'test'
+    const base = 'https://prismic.io'
+    const authUrl = 'https://auth.prismic.io'
+    const cookies = 'prismic-auth=biscuits;'
+
+    nock(authUrl)
+    .get('/validate?token=biscuits')
+    .reply(200, {
+      email: "fake@prismic.io",
+      type:"USER",
+      repositories: JSON.stringify({dbid: "foo", role: "Owner"})
+    })
+
+    jest.spyOn(inquirer, 'prompt')
+    .mockResolvedValueOnce({repoName: "$_CREATE_REPO"})
+    .mockResolvedValueOnce({ repoName })
+
+    const result = await maybeExistingRepo(cookies, base)
+    expect(inquirer.prompt).toHaveBeenCalledTimes(2)
+    expect(result).toEqual(repoName)
 
   })
 })

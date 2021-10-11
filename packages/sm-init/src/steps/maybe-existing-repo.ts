@@ -5,7 +5,7 @@ import { Communication, Utils } from 'slicemachine-core'
 const CREATE_REPO = "$_CREATE_REPO" // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE
 
-export function promptForCreateRepo(base: string): Promise<string> {
+export async function promptForCreateRepo(base: string): Promise<string> {
   const address = new URL(base)
   return inquirer.prompt([
     {
