@@ -16,7 +16,7 @@
     "plugin:jest/recommended",
     "eslint-config-prettier"
   ],
-  "ignorePatterns": ["build", "templates", "**/tests/**"],
+  "ignorePatterns": ["build", "templates", "**/__tests__/**"],
   "rules": {
     "@typescript-eslint/no-var-requires": "warn",
     "@typescript-eslint/no-unsafe-member-access": "warn",
