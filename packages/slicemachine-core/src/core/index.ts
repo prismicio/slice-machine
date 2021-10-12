@@ -1,4 +1,9 @@
-import { Manifest, removeAuthConfig } from "../filesystem";
+import {
+  Manifest,
+  removeAuthConfig,
+  getOrCreateAuthConfig,
+  AuthConfig,
+} from "../filesystem";
 import * as Communication from "./communication";
 import { startServerAndOpenBrowser } from "./auth";
 import { buildEndpoints } from "../utils";
@@ -66,4 +71,15 @@ export const Auth = {
     );
   },
   logout: (): void => removeAuthConfig(),
+  validateSession: async (
+    requiredBase: string
+  ): Promise<Communication.UserInfo | null> => {
+    const config: AuthConfig = getOrCreateAuthConfig();
+    if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
+    if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
+
+    return Communication.validateSession(config.cookies, requiredBase).catch(
+      (_) => null
+    );
+  },
 };

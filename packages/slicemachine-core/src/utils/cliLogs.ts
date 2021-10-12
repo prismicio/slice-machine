@@ -15,4 +15,6 @@ export const writeError = (msg: string, prefix = "Error!"): void =>
 export const writeWarning = (msg: string, prefix = "Warning!"): void =>
   console.warn(`${warning(prefix)} ${msg}`);
 
-export const writeCheck = (msg: string): void => console.warn(`✅ ${msg}`);
+export const writeCheck = (msg: string): void => {
+  ora().succeed(msg); // using the same check as Ora for coherence
+};
