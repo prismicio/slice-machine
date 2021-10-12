@@ -128,7 +128,7 @@ export async function createRepository(
   cookies: string,
   framework = '',
   base = DEFAULT_BASE
-  ) {
+  ): Promise<AxiosResponse<{domain:string}>> {
   const data = {
     domain,
     framework,
