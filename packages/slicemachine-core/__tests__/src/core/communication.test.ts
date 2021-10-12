@@ -49,6 +49,34 @@ describe('communication', () => {
     })
   })
 
+  test('refreshSession', async () => {
+    const token = "biscuits"
+    const base = "https://prismic.io"
+    const wanted = 'some-new-token'
+    nock('https://auth.prismic.io').get(`/refreshtoken?token=${token}`).reply(200, wanted)
+    const result = await communication.refreshSession(`prismic-auth=${token}`, base)
+    expect(result).toEqual(wanted)
+  })
+
+  test('listRepositories', async () => {
+    const base = "https://prismic.io"
+    const responseData = {
+      email: 'fake@prismic.io',
+      type: 'USER',
+      repositories: {
+        "foo-repo": {"dbid": "abcd", "role": "OWNER"},
+        "qwerty": {"dbid": "efgh", "role": "WRITER"}
+      }
+    };
+    nock('https://auth.prismic.io')
+    .get('/validate?token=biscuits')
+    .reply(200, responseData)
+
+    const result = await communication.listRepositories(fakeCookie, base)
+    expect(result[0]).toEqual("qwerty")
+    expect(result[1]).toEqual("foo-repo")
+  })
+
   describe('validateRepositoryName', () => {
     const fakeBase = 'https://prismic.io'
 
