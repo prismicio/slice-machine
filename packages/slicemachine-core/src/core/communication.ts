@@ -37,9 +37,9 @@ export type RepoData = Record<string, { role: Roles; dbid: string }>;
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
 function maybeParseRepoData(repos?: string | RepoData): RepoData {
-  if(!repos) return {}
-  if(typeof repos === 'string') return JSON.parse(repos) as RepoData
-  return repos
+  if (!repos) return {};
+  if (typeof repos === "string") return JSON.parse(repos) as RepoData;
+  return repos;
 }
 
 export async function validateSession(
@@ -51,7 +51,7 @@ export async function validateSession(
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
     .then((res) => {
-      const repositories = maybeParseRepoData(res.data.repositories)
+      const repositories = maybeParseRepoData(res.data.repositories);
       return {
         ...res.data,
         repositories,

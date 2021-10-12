@@ -26,16 +26,14 @@ const isHandlerData = (
 };
 
 const Routes = {
-  authentication:
-    (server: hapi.Server) =>
-    (
-      onSuccess: (data: HandlerData) => void,
-      onFail: () => void
-    ): hapi.ServerRoute => ({
-      method: "POST",
-      path: "/",
-      handler: authenticationHandler(server)(onSuccess, onFail),
-    }),
+  authentication: (server: hapi.Server) => (
+    onSuccess: (data: HandlerData) => void,
+    onFail: () => void
+  ): hapi.ServerRoute => ({
+    method: "POST",
+    path: "/",
+    handler: authenticationHandler(server)(onSuccess, onFail),
+  }),
 
   notFound: {
     method: ["GET", "POST"],
@@ -58,29 +56,30 @@ function validatePayload(
   return isHandlerData(payload) ? payload : null;
 }
 
-const authenticationHandler =
-  (server: hapi.Server) =>
-  (onSuccess: (data: HandlerData) => void, onFail: () => void) => {
-    return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
-      try {
-        const data: HandlerData | null = validatePayload(
-          request.payload as Buffer | string | Record<string, unknown>
-        ); // type coming from the lib
+const authenticationHandler = (server: hapi.Server) => (
+  onSuccess: (data: HandlerData) => void,
+  onFail: () => void
+) => {
+  return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
+    try {
+      const data: HandlerData | null = validatePayload(
+        request.payload as Buffer | string | Record<string, unknown>
+      ); // type coming from the lib
 
-        if (!data) {
-          onFail();
-          h.response("Error with cookies").code(400);
-          throw new Error(
-            "It seems the server didn't respond properly, please contact us."
-          );
-        }
-        onSuccess(data);
-        return h.response(data).code(200);
-      } finally {
-        void server.stop({ timeout: 10000 });
+      if (!data) {
+        onFail();
+        h.response("Error with cookies").code(400);
+        throw new Error(
+          "It seems the server didn't respond properly, please contact us."
+        );
       }
-    };
+      onSuccess(data);
+      return h.response(data).code(200);
+    } finally {
+      void server.stop({ timeout: 10000 });
+    }
   };
+};
 
 function buildServer(base: string, port: number, host: string): hapi.Server {
   const server = hapi.server({
