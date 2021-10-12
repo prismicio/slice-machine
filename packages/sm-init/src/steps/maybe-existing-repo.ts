@@ -5,6 +5,7 @@ import { Communication, Utils } from 'slicemachine-core'
 export const CREATE_REPO = "$_CREATE_REPO" // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE
 
+
 export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? chalk.cyan(value) : chalk.dim.cyan('repo-name')
   const msg = [
@@ -32,11 +33,14 @@ export async function promptForCreateRepo(base: string): Promise<string> {
   ]).then(res=> res.repoName)
 }
 
-export async function maybeExistingRepo(cookie: string, base = DEFAULT_BASE): Promise<string> {
+export async function maybeExistingRepo(cookie: string, base = DEFAULT_BASE): Promise<{name: string, existing: boolean}> {
 
   const repos = await Communication.listRepositories(cookie, base)
 
-  if(repos.length === 0) return promptForCreateRepo(base)
+  if(repos.length === 0) {
+    const name = await promptForCreateRepo(base)
+    return {existing: false, name}
+  }
 
   const res = await inquirer.prompt<Record<string, string>>([
     {
@@ -53,6 +57,9 @@ export async function maybeExistingRepo(cookie: string, base = DEFAULT_BASE): Pr
     }, 
   ])
 
-  if(res.repoName === CREATE_REPO) return promptForCreateRepo(base)
-  return Promise.resolve(res.repoName)
+  if(res.repoName === CREATE_REPO) {
+    const name = await promptForCreateRepo(base)
+    return {existing: false, name}
+  }
+  return {existing: true, name: res.repoName}
 }

@@ -9,7 +9,7 @@
     "noUnusedParameters": true,
     "baseUrl": "src",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
