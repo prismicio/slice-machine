@@ -7,8 +7,9 @@ import { Header, Tabs } from "./Layout";
 import { CustomTypeState } from "../../models/ui/CustomTypeState";
 import CustomTypeStore from "../../../src/models/customType/store";
 import Container from "../../../components/Container";
+import LoginModal from "@components/LoginModal";
 
-const Ct = ({
+const CustomTypeBuilder = ({
   Model,
   store,
   onLeave,
@@ -59,8 +60,9 @@ const Ct = ({
           </Box>
         )}
       />
+      <LoginModal isOpen={true} close={() => null} />
     </Box>
   );
 };
 
-export default Ct;
+export default CustomTypeBuilder;
