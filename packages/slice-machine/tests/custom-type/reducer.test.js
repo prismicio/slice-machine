@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { renderHook } from "@testing-library/react-hooks";
 
 import { useModelReducer } from "../../src/models/customType/modelReducer";

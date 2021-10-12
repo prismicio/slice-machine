@@ -1,18 +1,11 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import {
-  CONSTS,
-  bold,
-  underline,
-  error,
-  buildEndpoints,
-  spinner,
-} from "../utils";
-import { setAuthConfigCookies, removeAuthConfig } from "../filesystem";
+import { CONSTS, bold, underline, error, spinner } from "../utils";
+import { setAuthConfigCookies } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
-const isHandlerData = (
+export const isHandlerData = (
   data: string | Record<string, unknown>
 ): data is HandlerData => {
   if (typeof data != "object") return false;
@@ -51,7 +44,7 @@ const Routes = {
   },
 };
 
-function validatePayload(
+export function validatePayload(
   payload: Buffer | string | Record<string, unknown>
 ): HandlerData | null {
   if (Buffer.isBuffer(payload)) return null;
@@ -96,7 +89,7 @@ function buildServer(base: string, port: number, host: string): hapi.Server {
   return server;
 }
 
-function askSingleChar(title: string): Promise<string> {
+export function askSingleChar(title: string): Promise<string> {
   return new Promise((resolve) => {
     process.stdout.write(title);
     const rawMode: boolean = process.stdin.isRaw;
@@ -155,23 +148,3 @@ export async function startServerAndOpenBrowser(
     });
   });
 }
-
-export const Auth = {
-  login: async (base: string): Promise<void> => {
-    const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
-      endpoints.Dashboard.cliLogin,
-      "login",
-      base
-    );
-  },
-  signup: async (base: string): Promise<void> => {
-    const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
-      endpoints.Dashboard.cliSignup,
-      "signup",
-      base
-    );
-  },
-  logout: (): void => removeAuthConfig(),
-};

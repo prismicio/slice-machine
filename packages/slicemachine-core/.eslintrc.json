@@ -7,7 +7,8 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
-    "tsconfigRootDir": "./"
+    "tsconfigRootDir": "./",
+    "createDefaultProgram": true // create default program for excluded files (such as test), this will increase performance but allow tests not to be transpiled.
   },
   "plugins": ["@typescript-eslint", "import", "jest"],
   "extends": [

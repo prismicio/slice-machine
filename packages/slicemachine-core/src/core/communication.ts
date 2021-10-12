@@ -37,9 +37,9 @@ export type RepoData = Record<string, { role: Roles; dbid: string }>;
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
 function maybeParseRepoData(repos?: string | RepoData): RepoData {
-  if(!repos) return {}
-  if(typeof repos === 'string') return JSON.parse(repos) as RepoData
-  return repos
+  if (!repos) return {};
+  if (typeof repos === "string") return JSON.parse(repos) as RepoData;
+  return repos;
 }
 
 export async function validateSession(
@@ -51,7 +51,7 @@ export async function validateSession(
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
     .then((res) => {
-      const repositories = maybeParseRepoData(res.data.repositories)
+      const repositories = maybeParseRepoData(res.data.repositories);
       return {
         ...res.data,
         repositories,
@@ -126,31 +126,34 @@ export async function validateRepositoryName(
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = '',
+  framework = "",
   base = DEFAULT_BASE
-  ): Promise<AxiosResponse<{domain:string}>> {
+): Promise<AxiosResponse<{ domain: string }>> {
   const data = {
     domain,
     framework,
-    plan: 'personal',
-    isAnnual: 'false',
-    role: 'developer',
-  }
+    plan: "personal",
+    isAnnual: "false",
+    role: "developer",
+  };
 
-  const address = new URL(base)
-  address.pathname = '/authentication/newrepository'
-  address.searchParams.append('app', 'slicemachine')
+  const address = new URL(base);
+  address.pathname = "/authentication/newrepository";
+  address.searchParams.append("app", "slicemachine");
 
-  return axios.post<{
-    domain: string;
-    framework: string;
-    plan: string;
-    isAnnual: string;
-    role: string;
-  }, AxiosResponse<{domain: string}>>(address.toString(), data, {
+  return axios.post<
+    {
+      domain: string;
+      framework: string;
+      plan: string;
+      isAnnual: string;
+      role: string;
+    },
+    AxiosResponse<{ domain: string }>
+  >(address.toString(), data, {
     headers: {
       Cookie: cookies,
-      'User-Agent': "prismic-cli/sm"
+      "User-Agent": "prismic-cli/sm",
     },
-  })
+  });
 }

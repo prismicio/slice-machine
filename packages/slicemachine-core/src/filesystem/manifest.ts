@@ -1,5 +1,5 @@
 import { Framework, Files } from "../utils";
-import { FileContent, SMConfigPath } from './paths';
+import { FileContent, SMConfigPath } from "./paths";
 
 export interface Manifest {
   apiEndpoint: string;
@@ -28,38 +28,40 @@ export enum ManifestStates {
 };*/
 
 export function retrieveManifest(cwd: string): FileContent<Manifest> {
-  const manifestPath = SMConfigPath(cwd)
+  const manifestPath = SMConfigPath(cwd);
 
   if (!Files.exists(manifestPath)) {
     return {
       exists: false,
-      content: null
-    }
+      content: null,
+    };
   }
 
-  const content: Manifest | null = Files.safeReadJson(manifestPath) as Manifest | null
+  const content: Manifest | null = Files.safeReadJson(
+    manifestPath
+  ) as Manifest | null;
   return {
     exists: true,
-    content
-  }
+    content,
+  };
 }
 
 export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
-  const manifest: FileContent<Manifest> = retrieveManifest(cwd)
-  if (!manifest.exists || !manifest.content) return false
+  const manifest: FileContent<Manifest> = retrieveManifest(cwd);
+  if (!manifest.exists || !manifest.content) return false;
 
   const updatedManifest = {
     ...manifest.content,
-    ...data
-  }
+    ...data,
+  };
 
-  Files.write(SMConfigPath(cwd), updatedManifest)
-  return true
+  Files.write(SMConfigPath(cwd), updatedManifest);
+  return true;
 }
 
 export function updateManifestSMVersion(cwd: string, version: string): boolean {
-  const manifest: FileContent<Manifest> = retrieveManifest(cwd)
-  if (manifest.content?._latest) return false // if _latest already exists, we should not update this version otherwise we'd break the migration system
-  
-  return patchManifest(cwd, { _latest: version })
+  const manifest: FileContent<Manifest> = retrieveManifest(cwd);
+  if (manifest.content?._latest) return false; // if _latest already exists, we should not update this version otherwise we'd break the migration system
+
+  return patchManifest(cwd, { _latest: version });
 }

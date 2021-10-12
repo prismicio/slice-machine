@@ -1,180 +1,228 @@
-import {describe, expect, test, afterAll} from '@jest/globals'
-import * as communication from '../../../src/core/communication'
-import nock from 'nock'
+import { describe, expect, test, afterAll } from "@jest/globals";
+import * as communication from "../../../src/core/communication";
+import nock from "nock";
 
-describe('communication', () => {
-  
+describe("communication", () => {
   afterAll(() => {
-    return nock.restore()
-  })
-  
-  const fakeCookie = 'prismic-auth=biscuits;'
-  test('validateSession, default base', async () => {
+    return nock.restore();
+  });
 
+  const fakeCookie = "prismic-auth=biscuits;";
+  test("validateSession, default base", async () => {
     const responseData = {
-      email: 'fake@prismic.io',
-      type: 'USER',
+      email: "fake@prismic.io",
+      type: "USER",
       repositories: {
-        "foo-repo": {"dbid": "abcd", "role": "OWNER"},
-        "qwerty": {"dbid": "efgh", "role": "WRITER"}
-      }
+        "foo-repo": { dbid: "abcd", role: "OWNER" },
+        qwerty: { dbid: "efgh", role: "WRITER" },
+      },
     };
-    nock('https://auth.prismic.io')
-    .get('/validate?token=biscuits')
-    .reply(200, responseData)
-    
-    return communication.validateSession(fakeCookie)
-    .then(data => {
-      expect(data).toEqual(responseData)
-    })
-  })
+    nock("https://auth.prismic.io")
+      .get("/validate?token=biscuits")
+      .reply(200, responseData);
 
-  test('validateSession, custom base', async () => {
+    return communication.validateSession(fakeCookie).then((data) => {
+      expect(data).toEqual(responseData);
+    });
+  });
 
+  test("validateSession, custom base", async () => {
     const responseData = {
-      email: 'fake@prismic.io',
-      type: 'USER',
+      email: "fake@prismic.io",
+      type: "USER",
       repositories: {
-        "foo-repo": {"dbid": "abcd", "role": "OWNER"},
-        "qwerty": {"dbid": "efgh", "role": "WRITER"}
-      }
+        "foo-repo": { dbid: "abcd", role: "OWNER" },
+        qwerty: { dbid: "efgh", role: "WRITER" },
+      },
     };
-    nock('https://auth.wroom.io')
-    .get('/validate?token=biscuits')
-    .reply(200, responseData)
-    
-    return communication.validateSession(fakeCookie, 'https://wroom.io')
-    .then(data => {
-      expect(data).toEqual(responseData)
-    })
-  })
+    nock("https://auth.wroom.io")
+      .get("/validate?token=biscuits")
+      .reply(200, responseData);
 
-  describe('validateRepositoryName', () => {
-    const fakeBase = 'https://prismic.io'
+    return communication
+      .validateSession(fakeCookie, "https://wroom.io")
+      .then((data) => {
+        expect(data).toEqual(responseData);
+      });
+  });
 
-    test('should fail if subdomain is not defined', async () => {
-      const fn = () => communication.validateRepositoryName()
-      expect(fn).rejects.toThrow('repository name is required')
-    })
+  test("refreshSession", async () => {
+    const token = "biscuits";
+    const base = "https://prismic.io";
+    const wanted = "some-new-token";
+    nock("https://auth.prismic.io")
+      .get(`/refreshtoken?token=${token}`)
+      .reply(200, wanted);
+    const result = await communication.refreshSession(
+      `prismic-auth=${token}`,
+      base
+    );
+    expect(result).toEqual(wanted);
+  });
 
-    test('should fail if name length is less than 4', async() => {
-      const fn = () => communication.validateRepositoryName('abc')
-      expect(fn).rejects.toThrow('Must have four or more alphanumeric characters and/or hyphens.')
-    })
-    
-    test('should fail if the name contains non alphanumeric characters', async() => {
-      const fn = () => communication.validateRepositoryName('a.bc')
-      expect(fn).rejects.toThrow('Must contain only lowercase letters, numbers and hyphens')
-    })
+  test("listRepositories", async () => {
+    const base = "https://prismic.io";
+    const responseData = {
+      email: "fake@prismic.io",
+      type: "USER",
+      repositories: {
+        "foo-repo": { dbid: "abcd", role: "OWNER" },
+        qwerty: { dbid: "efgh", role: "WRITER" },
+      },
+    };
+    nock("https://auth.prismic.io")
+      .get("/validate?token=biscuits")
+      .reply(200, responseData);
 
-    test('should fail if the name starts with a hyphen', async() => {
-      const fn = () =>  communication.validateRepositoryName('-abc')
-      expect(fn).rejects.toThrow('start with a letter')
-    })
+    const result = await communication.listRepositories(fakeCookie, base);
+    expect(result[0]).toEqual("qwerty");
+    expect(result[1]).toEqual("foo-repo");
+  });
 
-    test('should fail if the name ends with a hyphen', async () => {
-      const fn = () => communication.validateRepositoryName('abc-') 
-      expect(fn).rejects.toThrow('Must end in a letter or a number')
-    })
+  describe("validateRepositoryName", () => {
+    const fakeBase = "https://prismic.io";
 
-    test('Max length 30 characters', async() => {
-      const repoName = Array.from({length: 31}, () => 'a').join('')
-      const fn = () => communication.validateRepositoryName(repoName)
-      expect(fn).rejects.toThrow('30 characters or less')
-    })
+    test("should fail if subdomain is not defined", async () => {
+      const fn = () => communication.validateRepositoryName();
+      expect(fn).rejects.toThrow("repository name is required");
+    });
 
-    test('multiple errors', () => {
-      const repoName = '-abc.d'
-      const fn = () => communication.validateRepositoryName(repoName)
-      expect(fn).rejects.toThrow('(1: Must start with a letter. (2: Must contain only lowercase letters, numbers and hyphens.')
-    })
+    test("should fail if name length is less than 4", async () => {
+      const fn = () => communication.validateRepositoryName("abc");
+      expect(fn).rejects.toThrow(
+        "Must have four or more alphanumeric characters and/or hyphens."
+      );
+    });
 
-    test('should fail if repo name is not available', async() => {
-      const repoName = "test"
-      nock(fakeBase)
-       .get(`/app/dashboard/repositories/${repoName}/exists`)
-       .reply(200, () => false)
+    test("should fail if the name contains non alphanumeric characters", async () => {
+      const fn = () => communication.validateRepositoryName("a.bc");
+      expect(fn).rejects.toThrow(
+        "Must contain only lowercase letters, numbers and hyphens"
+      );
+    });
 
-      const fn = () => communication.validateRepositoryName(repoName)
+    test("should fail if the name starts with a hyphen", async () => {
+      const fn = () => communication.validateRepositoryName("-abc");
+      expect(fn).rejects.toThrow("start with a letter");
+    });
 
-      expect(fn).rejects.toThrow('already in use')
-    })
+    test("should fail if the name ends with a hyphen", async () => {
+      const fn = () => communication.validateRepositoryName("abc-");
+      expect(fn).rejects.toThrow("Must end in a letter or a number");
+    });
 
-    test('existing repo', () => {
-      const repoName = 'test'
+    test("Max length 30 characters", async () => {
+      const repoName = Array.from({ length: 31 }, () => "a").join("");
+      const fn = () => communication.validateRepositoryName(repoName);
+      expect(fn).rejects.toThrow("30 characters or less");
+    });
+
+    test("multiple errors", () => {
+      const repoName = "-abc.d";
+      const fn = () => communication.validateRepositoryName(repoName);
+      expect(fn).rejects.toThrow(
+        "(1: Must start with a letter. (2: Must contain only lowercase letters, numbers and hyphens."
+      );
+    });
+
+    test("should fail if repo name is not available", async () => {
+      const repoName = "test";
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
-        .reply(200, () => false)
-      expect(communication.validateRepositoryName(repoName, fakeBase, true)).resolves.toEqual(repoName)
-    })
+        .reply(200, () => false);
 
-    test('existing repo, does not exist', () => {
-      const repoName = 'test'
+      const fn = () => communication.validateRepositoryName(repoName);
+
+      expect(fn).rejects.toThrow("already in use");
+    });
+
+    test("existing repo", () => {
+      const repoName = "test";
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
-        .reply(200, () => true)
-      expect(communication.validateRepositoryName(repoName, fakeBase, true)).rejects.toThrow('does not exist')
-    })
+        .reply(200, () => false);
+      expect(
+        communication.validateRepositoryName(repoName, fakeBase, true)
+      ).resolves.toEqual(repoName);
+    });
 
-    test('should pass if repo name is valid and available', async () => {
-      const repoName = "test"
+    test("existing repo, does not exist", () => {
+      const repoName = "test";
       nock(fakeBase)
-      .get(`/app/dashboard/repositories/${repoName}/exists`)
-      .reply(200, () => true)
-
-      expect(communication.validateRepositoryName(repoName)).resolves.toEqual(repoName)
-    })
-
-    test('different base', () => {
-      const repoName = "test"
-      nock('https://example.com')
         .get(`/app/dashboard/repositories/${repoName}/exists`)
-        .reply(200, () => true)
-  
-      expect(communication.validateRepositoryName(repoName, 'https://example.com')).resolves.toEqual(repoName)
-    })
-  })
+        .reply(200, () => true);
+      expect(
+        communication.validateRepositoryName(repoName, fakeBase, true)
+      ).rejects.toThrow("does not exist");
+    });
 
-  describe('createRepository', () => {
+    test("should pass if repo name is valid and available", async () => {
+      const repoName = "test";
+      nock(fakeBase)
+        .get(`/app/dashboard/repositories/${repoName}/exists`)
+        .reply(200, () => true);
 
-    test('default arguments', async () => {
-      const cookies = "prismic-auth=biscuit;"
-      const repoName = 'test'
+      expect(communication.validateRepositoryName(repoName)).resolves.toEqual(
+        repoName
+      );
+    });
+
+    test("different base", () => {
+      const repoName = "test";
+      nock("https://example.com")
+        .get(`/app/dashboard/repositories/${repoName}/exists`)
+        .reply(200, () => true);
+
+      expect(
+        communication.validateRepositoryName(repoName, "https://example.com")
+      ).resolves.toEqual(repoName);
+    });
+  });
+
+  describe("createRepository", () => {
+    test("default arguments", async () => {
+      const cookies = "prismic-auth=biscuit;";
+      const repoName = "test";
       const formData = {
         domain: repoName,
         framework: "",
-        plan: 'personal',
-        isAnnual: 'false',
-        role: 'developer'
-      }
+        plan: "personal",
+        isAnnual: "false",
+        role: "developer",
+      };
 
-      nock('https://prismic.io')
-      .post('/authentication/newrepository?app=slicemachine', formData)
-      .reply(200, {domain: repoName})
+      nock("https://prismic.io")
+        .post("/authentication/newrepository?app=slicemachine", formData)
+        .reply(200, { domain: repoName });
 
-      const result = await communication.createRepository(repoName, cookies)
-      expect(result.data.domain).toEqual(repoName)
-    })
+      const result = await communication.createRepository(repoName, cookies);
+      expect(result.data.domain).toEqual(repoName);
+    });
 
-    test('with framework and different base', async () => {
-      const repoName = 'test'
-      const cookies = "prismic-auth=biscuit;"
-      const fakeBase = 'https://example.com'
-      const framework = 'foo-js'
+    test("with framework and different base", async () => {
+      const repoName = "test";
+      const cookies = "prismic-auth=biscuit;";
+      const fakeBase = "https://example.com";
+      const framework = "foo-js";
       const formData = {
         domain: repoName,
         framework,
-        plan: 'personal',
-        isAnnual: 'false',
-        role: 'developer'
-      }
+        plan: "personal",
+        isAnnual: "false",
+        role: "developer",
+      };
 
       nock(fakeBase)
-      .post('/authentication/newrepository?app=slicemachine', formData)
-      .reply(200, {domain: repoName})
+        .post("/authentication/newrepository?app=slicemachine", formData)
+        .reply(200, { domain: repoName });
 
-      const result = await communication.createRepository(repoName, cookies, framework, fakeBase)
-      expect(result.data.domain).toEqual(repoName)
-    })
-  })
-})
+      const result = await communication.createRepository(
+        repoName,
+        cookies,
+        framework,
+        fakeBase
+      );
+      expect(result.data.domain).toEqual(repoName);
+    });
+  });
+});
