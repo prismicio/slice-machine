@@ -118,7 +118,7 @@ export default async function apiHandler(query: {
   const { slices, err } = await getSlices(env.client);
   if (err) {
     console.error(
-      "[slice/push] An error occured while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."
+      "[slice/push] An error occurred while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."
     );
     return onError(
       err,

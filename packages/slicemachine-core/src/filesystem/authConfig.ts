@@ -73,25 +73,53 @@ export function removeAuthConfig(directory?: string): void {
  * @param {string} [cookies] - the list of new cookies
  * @returns {void} nothing
  */
-export function setAuthConfigCookies(
+export function setAuthConfig(
   base: string,
   cookies: ReadonlyArray<string> = [],
   directory?: string
 ): void {
   const { cookies: currentCookies } = getOrCreateAuthConfig(directory);
-  const oldCookies = cookie.parse(currentCookies || "");
+  const mergedCookie = mergeCookies(cookies, currentCookies);
 
-  const newCookies = cookies
+  return updateAuthConfig({ base, cookies: mergedCookie });
+}
+
+export function setAuthConfigCookies(
+  cookies: ReadonlyArray<string> = [],
+  directory?: string
+): void {
+  const { base } = getOrCreateAuthConfig(directory);
+
+  const newCookiesMap = cookies
     .map((str) => cookie.parse(str))
     .reduce((acc, curr) => {
       return { ...acc, ...curr };
     }, {});
 
-  const mergedCookie = Object.entries({ ...oldCookies, ...newCookies })
+  const newCookies = Object.entries(newCookiesMap)
     .map(([key, value]) => {
       return cookie.serialize(key, value);
     })
     .join("; ");
 
-  return updateAuthConfig({ base, cookies: mergedCookie });
+  return updateAuthConfig({ base, cookies: newCookies });
+}
+
+function mergeCookies(
+  newCookies: ReadonlyArray<string>,
+  currentCookies: string
+) {
+  const oldCookiesMap = cookie.parse(currentCookies || "");
+
+  const newCookiesMap = newCookies
+    .map((str) => cookie.parse(str))
+    .reduce((acc, curr) => {
+      return { ...acc, ...curr };
+    }, {});
+
+  return Object.entries({ ...oldCookiesMap, ...newCookiesMap })
+    .map(([key, value]) => {
+      return cookie.serialize(key, value);
+    })
+    .join("; ");
 }

@@ -18,6 +18,9 @@ const saveCustomType = require("./custom-types/save").default;
 const pushCustomType = require("./custom-types/push").default;
 
 import validateAuth from "./auth/validate";
+import startAuth from "./auth/start";
+import statusAuth from "./auth/status";
+import postAuth from "./auth/post";
 
 router.use(
   "/__preview",
@@ -167,6 +170,27 @@ router.get(
     return res.status(200).json(payload);
   }
 );
+
+router.post("/auth/start", async function (req: express.Request, res: express.Response) {
+  const payload = await startAuth();
+  if (payload.err) {
+    return res.status(400).json();
+  }
+  return res.status(200).json();
+});
+
+router.get("/auth/status", async function (req: express.Request, res: express.Response) {
+  const payload = await statusAuth();
+  return res.status(200).json(payload);
+});
+
+router.post("/auth", async function (req: express.Request, res: express.Response) {
+  const payload = await postAuth(req.body);
+  if (payload.err) {
+    return res.status(400).json(req.body);
+  }
+  return res.status(200).json();
+});
 
 router.use("*", async function (req: express.Request, res: express.Response) {
   return res.status(404).json({

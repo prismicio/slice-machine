@@ -34,7 +34,7 @@ export default async function handler(query: { id: string }) {
     return {
       err: new Error(message),
       reason: message,
-      status: 500,
+      status: 403,
     };
   }
 
