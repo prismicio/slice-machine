@@ -1,4 +1,4 @@
-import { describe, expect, test, afterAll } from "@jest/globals";
+import { describe, expect, test, afterAll, jest } from "@jest/globals";
 import * as authHelpers from "../../../src/core/auth";
 import { Auth } from "../../../src/core";
 import { buildEndpoints } from "../../../src/utils";
