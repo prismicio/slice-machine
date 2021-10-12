@@ -147,5 +147,10 @@ export async function createRepository(
     plan: string;
     isAnnual: string;
     role: string;
-  }, AxiosResponse<{domain: string}>>(address.toString(), data, {headers: {Cookie: cookies}})
+  }, AxiosResponse<{domain: string}>>(address.toString(), data, {
+    headers: {
+      Cookie: cookies,
+      'User-Agent': "prismic-cli/sm"
+    },
+  })
 }
