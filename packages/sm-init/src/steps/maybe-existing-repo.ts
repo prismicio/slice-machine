@@ -1,16 +1,15 @@
 import * as inquirer from "inquirer";
-import chalk from "chalk";
 import { Communication, Utils } from "slicemachine-core";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value ? chalk.cyan(value) : chalk.dim.cyan("repo-name");
+  const repoName = value ? Utils.cyan(value) :Utils.dim.cyan("repo-name");
   const msg = [
-    chalk.dim(`${address.protocol}//`),
+    Utils.cyan.dim(`${address.protocol}//`),
     repoName,
-    chalk.dim(`.${address.hostname}`),
+    Utils.cyan.dim(`.${address.hostname}`),
   ];
   return msg.join("");
 }
