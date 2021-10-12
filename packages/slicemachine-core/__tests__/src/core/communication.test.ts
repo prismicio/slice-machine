@@ -8,6 +8,7 @@ describe("communication", () => {
   });
 
   const fakeCookie = "prismic-auth=biscuits;";
+
   test("validateSession, default base", async () => {
     const responseData = {
       email: "fake@prismic.io",

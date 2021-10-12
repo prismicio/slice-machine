@@ -9,7 +9,7 @@
     "noUnusedParameters": true,
     "baseUrl": "src",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -20,7 +20,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "outDir": "./build",
+    "outDir": "./build"
   },
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build", "__tests__"]
 }
