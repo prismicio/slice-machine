@@ -33,8 +33,7 @@ async function init() {
   await Auth.login(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
-  const repoName = await maybeExistingRepo(config.cookies, config.base);
-  console.log({ repoName });
+  await maybeExistingRepo(config.cookies, base);
   await installSm(cwd);
   addScriptToPkg(cwd);
 }
