@@ -1,10 +1,7 @@
-import { Manifest } from "../filesystem";
-
-import * as communication from "./communication";
-import { CONSTS } from "../utils";
-
-export const Communication = communication;
-export { Auth } from "./auth";
+import { Manifest, removeAuthConfig } from "../filesystem";
+import * as Communication from "./communication";
+import { startServerAndOpenBrowser } from "./auth";
+import { buildEndpoints, CONSTS } from "../utils";
 
 export interface Core {
   cwd: string;
@@ -18,7 +15,6 @@ export interface Core {
     update: (apiEndpoint: string, token: string, data: any) => Promise<void>,
     remove: (apiEndpoint: string, token: string, customTypeId: string) => Promise<void>
   },
-
   Slices?: {
     get: (apiEndpoint: string, token: string, sliceId: string) => Promise<any>,
     getAll: (apiEndpoint: string, token: string) => Promise<any>,
@@ -57,7 +53,27 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
         name: string,
         base = CONSTS.DEFAULT_BASE,
         existingRepo = false
-      ) => communication.validateRepositoryName(name, base, existingRepo),
+      ) => Communication.validateRepositoryName(name, base, existingRepo),
     },
   };
 }
+
+export const Auth = {
+  login: async (base: string): Promise<void> => {
+    const endpoints = buildEndpoints(base);
+    return startServerAndOpenBrowser(
+      endpoints.Dashboard.cliLogin,
+      "login",
+      base
+    );
+  },
+  signup: async (base: string): Promise<void> => {
+    const endpoints = buildEndpoints(base);
+    return startServerAndOpenBrowser(
+      endpoints.Dashboard.cliSignup,
+      "signup",
+      base
+    );
+  },
+  logout: (): void => removeAuthConfig(),
+};

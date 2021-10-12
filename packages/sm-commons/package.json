@@ -7,8 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint .",
-    "security-audit:prod": "yarn audit --production --only=prod --audit-level=low",
-    "security-audit:dev": "yarn audit --only=dev --audit-level=moderate",
+    "security-audit:prod": "yarn improved-yarn-audit --ignore-dev-deps --min-severity high",
+    "security-audit:dev": "yarn improved-yarn-audit --min-severity moderate",
     "audit-fix": "yarn-audit-fix"
   },
   "repository": {
@@ -38,6 +38,7 @@
   "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
   "devDependencies": {
     "eslint": "^7.32.0",
+    "improved-yarn-audit": "^3.0.0",
     "yarn-audit-fix": "^7.0.3"
   }
 }
