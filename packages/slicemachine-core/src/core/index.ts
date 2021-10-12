@@ -79,7 +79,7 @@ export const Auth = {
     if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
 
     return Communication.validateSession(config.cookies, requiredBase).catch(
-      (_) => null
+      () => null
     );
   },
 };
