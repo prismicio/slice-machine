@@ -134,4 +134,47 @@ describe('communication', () => {
       expect(communication.validateRepositoryName(repoName, 'https://example.com')).resolves.toEqual(repoName)
     })
   })
+
+  describe('createRepository', () => {
+
+    test('default arguments', async () => {
+      const cookies = "prismic-auth=biscuit;"
+      const repoName = 'test'
+      const formData = {
+        domain: repoName,
+        framework: "",
+        plan: 'personal',
+        isAnnual: 'false',
+        role: 'developer'
+      }
+
+      nock('https://prismic.io')
+      .post('/authentication/newrepository?app=slicemachine', formData)
+      .reply(200, {domain: repoName})
+
+      const result = await communication.createRepository(repoName, cookies)
+      expect(result.data.domain).toEqual(repoName)
+    })
+
+    test('with framework and different base', async () => {
+      const repoName = 'test'
+      const cookies = "prismic-auth=biscuit;"
+      const fakeBase = 'https://example.com'
+      const framework = 'foo-js'
+      const formData = {
+        domain: repoName,
+        framework,
+        plan: 'personal',
+        isAnnual: 'false',
+        role: 'developer'
+      }
+
+      nock(fakeBase)
+      .post('/authentication/newrepository?app=slicemachine', formData)
+      .reply(200, {domain: repoName})
+
+      const result = await communication.createRepository(repoName, cookies, framework, fakeBase)
+      expect(result.data.domain).toEqual(repoName)
+    })
+  })
 })

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { cookie, CONSTS } from "../utils";
 
 const { DEFAULT_BASE } = CONSTS;
@@ -123,7 +123,29 @@ export async function validateRepositoryName(
     });
 }
 
-// async function createRepository
-// async function createRepositoryWithCookie
-// async function createRepositoryWithToken
-// async function signUp
+export async function createRepository(
+  domain: string,
+  cookies: string,
+  framework = '',
+  base = DEFAULT_BASE
+  ) {
+  const data = {
+    domain,
+    framework,
+    plan: 'personal',
+    isAnnual: 'false',
+    role: 'developer',
+  }
+
+  const address = new URL(base)
+  address.pathname = '/authentication/newrepository'
+  address.searchParams.append('app', 'slicemachine')
+
+  return axios.post<{
+    domain: string;
+    framework: string;
+    plan: string;
+    isAnnual: string;
+    role: string;
+  }, AxiosResponse<{domain: string}>>(address.toString(), data, {headers: {Cookie: cookies}})
+}
