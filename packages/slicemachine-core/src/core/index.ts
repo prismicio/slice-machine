@@ -1,7 +1,9 @@
 import { Manifest, removeAuthConfig } from "../filesystem";
-import * as Communication from "./communication";
 import { startServerAndOpenBrowser } from "./auth";
 import { buildEndpoints, CONSTS } from "../utils";
+import { validateRepositoryName, listRepositories } from "./communication";
+
+export * as Communication from "./communication";
 
 export interface Core {
   cwd: string;
@@ -47,13 +49,12 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
     manifest,
 
     Repository: {
-      list: async (token: string): Promise<string[]> =>
-        Communication.listRepositories(token, base),
+      list: async (token: string): Promise<string[]> => listRepositories(token, base),
       validateName: (
         name: string,
         base = CONSTS.DEFAULT_BASE,
         existingRepo = false
-      ) => Communication.validateRepositoryName(name, base, existingRepo),
+      ) => validateRepositoryName(name, base, existingRepo),
     },
   };
 }
