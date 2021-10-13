@@ -32,7 +32,12 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
+export enum Roles {
+  WRITER = "Writer",
+  OWNER = "Owner",
+  PUBLISHER = "Publisher",
+  ADMIN = "Admin",
+}
 export type RepoData = Record<string, { role: Roles; dbid: string }>;
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
