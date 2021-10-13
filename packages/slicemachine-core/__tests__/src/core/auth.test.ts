@@ -79,7 +79,7 @@ describe("communication", () => {
     expect(authHelpers.isHandlerData(nonHandlerData5)).toBe(false);
   });
 
-  test("validate session shouldn't work for empty cookies", async () => {
+  test("validate session should return null if there is no cookies", async () => {
     const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
     mockedConfig.mockReturnValue({ base: fakeBase, cookies: "" });
 
@@ -99,7 +99,7 @@ describe("communication", () => {
     expect(result).toBe(null);
   });
 
-  test("validate session shouldn't work for different base", async () => {
+  test("validate session should return null if there is different bases", async () => {
     const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
     mockedConfig.mockReturnValue({
       base: "other base",
@@ -122,7 +122,7 @@ describe("communication", () => {
     expect(result).toBe(null);
   });
 
-  test("validate session shouldn't work for throw in the validation", async () => {
+  test("validate session should return null when validate session reject the promise", async () => {
     const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
     mockedConfig.mockReturnValue({
       base: fakeBase,

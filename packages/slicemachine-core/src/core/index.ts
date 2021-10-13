@@ -74,13 +74,11 @@ export const Auth = {
   validateSession: async (
     requiredBase: string
   ): Promise<Communication.UserInfo | null> => {
-    console.log("validate session");
     const config: AuthConfig = getOrCreateAuthConfig();
-    console.log(config);
+
     if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
     if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
 
-    console.log("validating now");
     return Communication.validateSession(config.cookies, requiredBase).catch(
       () => null
     );
