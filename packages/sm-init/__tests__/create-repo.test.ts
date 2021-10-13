@@ -1,16 +1,10 @@
-import {
-  describe,
-  expect,
-  test,
-} from "@jest/globals";
+import { describe, expect, test } from "@jest/globals";
 
 import nock from "nock";
 import { createRepository } from "../src/steps/create-repo";
 import { stderr, stdout } from "stdout-stderr";
 
 describe("createRepository", () => {
-
-
   test("success", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
@@ -57,14 +51,13 @@ describe("createRepository", () => {
       .post("/authentication/newrepository?app=slicemachine")
       .reply(500, {});
 
-    stderr.start()
-    stdout.start()
-    await createRepository(domain, cookie, framework, base)
+    stderr.start();
+    stdout.start();
+    await createRepository(domain, cookie, framework, base);
     stderr.stop();
-    stdout.stop()
-    console.log(stderr.output)
+    stdout.stop();
+    console.log(stderr.output);
     expect(stderr.output).toContain("Error creating repository");
-    expect(stdout.output).toContain("Error: [500]")
-
+    expect(stdout.output).toContain("Error: [500]");
   });
 });

@@ -34,8 +34,12 @@ async function init() {
   await Auth.login(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
-  const {existing, name} = await maybeExistingRepo(config.cookies, config.base);
-  if(existing === false) await createRepository(name, config.cookies, 'framework', base)
+  const { existing, name } = await maybeExistingRepo(
+    config.cookies,
+    config.base
+  );
+  if (existing === false)
+    await createRepository(name, config.cookies, "framework", base);
   await installSm(cwd);
   addScriptToPkg(cwd);
 }
