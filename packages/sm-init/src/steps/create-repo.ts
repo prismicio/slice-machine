@@ -1,4 +1,7 @@
-import { Communication, Utils } from "slicemachine-core";
+import {
+  Communication,
+  Utils
+} from "slicemachine-core";
 
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE
 
@@ -13,12 +16,10 @@ export async function createRepository(domain: string, cookies: string, framewor
     const address = addressUrl.toString()
     spinner.succeed(`We created your new repository ${address}`)
   }).catch(error => {
-    spinner.fail()
-    console.error(`Error creating repository ${domain}`)
+    spinner.fail(`Error creating repository ${domain}`)
     if (error.response) {
-      console.error(`Error: [${error.response.status}]: ${error.response.statusText}`)
+      console.log(`Error: [${error.response.status}]: ${error.response.statusText}`)
     }
-    throw error
   })
 
 }
