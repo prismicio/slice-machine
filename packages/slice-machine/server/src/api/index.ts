@@ -171,7 +171,7 @@ router.get(
   }
 );
 
-router.post("/auth/start", async function (req: express.Request, res: express.Response) {
+router.post("/auth/start", async function (_req: express.Request, res: express.Response) {
   const payload = await startAuth();
   if (payload.err) {
     return res.status(400).json();
@@ -179,7 +179,7 @@ router.post("/auth/start", async function (req: express.Request, res: express.Re
   return res.status(200).json();
 });
 
-router.get("/auth/status", async function (req: express.Request, res: express.Response) {
+router.post("/auth/status", async function (_req: express.Request, res: express.Response) {
   const payload = await statusAuth();
   return res.status(200).json(payload);
 });

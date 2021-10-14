@@ -6,7 +6,7 @@ import Prismic from "components/AppLayout/Navigation/Icons/Prismic";
 Modal.setAppElement("#__next");
 
 type LoginModalProps = {
-  close: () => void;
+  onClose: () => void;
   isOpen: boolean;
 };
 
@@ -35,7 +35,7 @@ const poll = async (
 };
 
 const LoginModal: React.FunctionComponent<LoginModalProps> = ({
-  close,
+  onClose,
   isOpen,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
         );
       const isAuthStatusOk = ({ status }: { status: string }) =>
         status === "ok";
-      window.open("http://wroom.test/dasboard/api/cli/login", "_blank");
+      window.open("http://wroom.test/dashboard/cli/login", "_blank");
       await poll(checkStatus, isAuthStatusOk, 5000, 10);
     } catch (e) {
       console.log(e);
@@ -63,7 +63,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
     <Modal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={() => close()}
+      onRequestClose={onClose}
       contentLabel={"login_modal"}
     >
       <Card>
@@ -79,7 +79,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
           }}
         >
           <Heading sx={{ fontSize: "20px" }}>You're not connected</Heading>
-          <Close type="button" onClick={() => close()} />
+          <Close type="button" onClick={onClose} />
         </Flex>
         <Flex
           sx={{
