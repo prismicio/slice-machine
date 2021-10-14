@@ -1,6 +1,6 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import { CONSTS, bold, underline, error, spinner } from "../utils";
+import { CONSTS, bold, underline, spinner, writeError } from "../utils";
 import { setAuthConfigCookies } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
@@ -111,7 +111,9 @@ export async function startServerAndOpenBrowser(
   action: "login" | "signup",
   base: string = CONSTS.DEFAULT_BASE,
   port: number = CONSTS.DEFAULT_SERVER_PORT
-): Promise<void> {
+): Promise<{
+  onLoginFail: () => void;
+}> {
   const confirmation = await askSingleChar(
     `>> Press any key to open the browser to ${action} or q to exit:`
   );
@@ -120,15 +122,20 @@ export async function startServerAndOpenBrowser(
 
   const s = spinner("Waiting for the browser response");
 
+  const onLoginFail = () => {
+    s.stop();
+    writeError(`We failed to log you into your Prismic account`);
+    console.log(`Run ${bold("npx slicemachine init")} again!`);
+    process.exit(-1);
+  };
+
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
     setAuthConfigCookies(base, data.cookies);
   }
 
   function onFail(): void {
-    s.fail(`${error("Error!")} We failed to log you into your Prismic account`);
-    console.log(`Run ${bold("npx slicemachine init")} again!`);
-    process.exit(-1);
+    onLoginFail();
   }
 
   const server = buildServer(base, port, "localhost");
@@ -138,8 +145,11 @@ export async function startServerAndOpenBrowser(
   ]);
 
   return server.start().then(() => {
-    console.log("Opening browser to " + underline(url));
+    console.log("\nOpening browser to " + underline(url));
     s.start();
     void open(url);
+    return {
+      onLoginFail,
+    };
   });
 }

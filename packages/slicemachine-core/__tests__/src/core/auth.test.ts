@@ -1,12 +1,13 @@
 import { describe, expect, test, afterAll, afterEach } from "@jest/globals";
 import * as authHelpers from "../../../src/core/auth";
 import { Auth } from "../../../src/core";
-import { buildEndpoints } from "../../../src/utils";
+import * as Utils from "../../../src/utils";
 import * as communication from "../../../src/core/communication";
 import * as filesystem from "../../../src/filesystem";
 
 jest.mock("../../../src/filesystem");
 jest.mock("../../../src/core/communication");
+jest.mock("../../../src/utils/poll");
 
 describe("communication", () => {
   afterAll(() => {
@@ -19,7 +20,7 @@ describe("communication", () => {
   });
 
   const fakeBase = "https://fake.io";
-  const endpoints = buildEndpoints(fakeBase);
+  const endpoints = Utils.buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
     const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");
@@ -27,7 +28,7 @@ describe("communication", () => {
       expect(url).toEqual(endpoints.Dashboard.cliLogin);
       expect(action).toEqual("login");
       expect(base).toEqual(fakeBase);
-      return Promise.resolve();
+      return Promise.resolve({ onLoginFail: () => null });
     });
 
     await Auth.login(fakeBase);
@@ -39,7 +40,7 @@ describe("communication", () => {
       expect(url).toEqual(endpoints.Dashboard.cliSignup);
       expect(action).toEqual("signup");
       expect(base).toEqual(fakeBase);
-      return Promise.resolve();
+      return Promise.resolve({ onLoginFail: () => null });
     });
 
     await Auth.signup(fakeBase);

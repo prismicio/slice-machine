@@ -6,7 +6,7 @@ import {
 } from "../filesystem";
 import * as Communication from "./communication";
 import { startServerAndOpenBrowser } from "./auth";
-import { buildEndpoints } from "../utils";
+import { poll, buildEndpoints } from "../utils";
 
 export interface Core {
   cwd: string;
@@ -56,19 +56,41 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
 export const Auth = {
   login: async (base: string): Promise<void> => {
     const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
+    const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliLogin,
       "login",
       base
     );
+    try {
+      // We wait 3 minutes before timeout
+      return await poll<Communication.UserInfo | null>(
+        () => Auth.validateSession(base),
+        (user) => !!user,
+        3000,
+        60
+      );
+    } catch (e) {
+      onLoginFail();
+    }
   },
   signup: async (base: string): Promise<void> => {
     const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
+    const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliSignup,
       "signup",
       base
     );
+    try {
+      // We wait 3 minutes before timeout
+      return await poll<Communication.UserInfo | null>(
+        () => Auth.validateSession(base),
+        (user) => !!user,
+        3000,
+        60
+      );
+    } catch (e) {
+      onLoginFail();
+    }
   },
   logout: (): void => removeAuthConfig(),
   validateSession: async (
