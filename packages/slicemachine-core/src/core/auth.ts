@@ -1,6 +1,6 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import { CONSTS, bold, underline, error, spinner } from "../utils";
+import { CONSTS, bold, underline, spinner, writeError } from "../utils";
 import { setAuthConfigCookies } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
@@ -19,14 +19,16 @@ export const isHandlerData = (
 };
 
 const Routes = {
-  authentication: (server: hapi.Server) => (
-    onSuccess: (data: HandlerData) => void,
-    onFail: () => void
-  ): hapi.ServerRoute => ({
-    method: "POST",
-    path: "/",
-    handler: authenticationHandler(server)(onSuccess, onFail),
-  }),
+  authentication:
+    (server: hapi.Server) =>
+    (
+      onSuccess: (data: HandlerData) => void,
+      onFail: () => void
+    ): hapi.ServerRoute => ({
+      method: "POST",
+      path: "/",
+      handler: authenticationHandler(server)(onSuccess, onFail),
+    }),
 
   notFound: {
     method: ["GET", "POST"],
@@ -49,30 +51,29 @@ export function validatePayload(
   return isHandlerData(payload) ? payload : null;
 }
 
-const authenticationHandler = (server: hapi.Server) => (
-  onSuccess: (data: HandlerData) => void,
-  onFail: () => void
-) => {
-  return (request: hapi.Request, h: hapi.ResponseToolkit) => {
-    try {
-      const data: HandlerData | null = validatePayload(
-        request.payload as Buffer | string | Record<string, unknown>
-      ); // type coming from the lib
+const authenticationHandler =
+  (server: hapi.Server) =>
+  (onSuccess: (data: HandlerData) => void, onFail: () => void) => {
+    return (request: hapi.Request, h: hapi.ResponseToolkit) => {
+      try {
+        const data: HandlerData | null = validatePayload(
+          request.payload as Buffer | string | Record<string, unknown>
+        ); // type coming from the lib
 
-      if (!data) {
-        onFail();
-        h.response("Error with cookies").code(400);
-        throw new Error(
-          "It seems the server didn't respond properly, please contact us."
-        );
+        if (!data) {
+          onFail();
+          h.response("Error with cookies").code(400);
+          throw new Error(
+            "It seems the server didn't respond properly, please contact us."
+          );
+        }
+        onSuccess(data);
+        return h.response(data).code(200);
+      } finally {
+        void server.stop({ timeout: 10000 });
       }
-      onSuccess(data);
-      return h.response(data).code(200);
-    } finally {
-      void server.stop({ timeout: 10000 });
-    }
+    };
   };
-};
 
 function buildServer(base: string, port: number, host: string): hapi.Server {
   const server = hapi.server({
@@ -110,7 +111,9 @@ export async function startServerAndOpenBrowser(
   action: "login" | "signup",
   base: string = CONSTS.DEFAULT_BASE,
   port: number = CONSTS.DEFAULT_SERVER_PORT
-): Promise<void> {
+): Promise<{
+  onLoginFail: () => void;
+}> {
   const confirmation = await askSingleChar(
     `>> Press any key to open the browser to ${action} or q to exit:`
   );
@@ -120,18 +123,21 @@ export async function startServerAndOpenBrowser(
   return new Promise((resolve) => {
     const s = spinner("Waiting for the browser response");
 
+    const onLoginFail = () => {
+      s.stop();
+      writeError(`We failed to log you into your Prismic account`);
+      console.log(`Run ${bold("npx slicemachine init")} again!`);
+      process.exit(-1);
+    };
+
     function onSuccess(data: HandlerData) {
       s.succeed(`Logged in as ${bold(data.email)}`).stop();
       setAuthConfigCookies(base, data.cookies);
-      resolve(); // todo add cookies here
+      resolve({ onLoginFail });
     }
 
     function onFail(): void {
-      s.fail(
-        `${error("Error!")} We failed to log you into your Prismic account`
-      );
-      console.log(`Run ${bold("npx slicemachine init")} again!`);
-      process.exit(-1);
+      onLoginFail();
     }
 
     const server = buildServer(base, port, "localhost");

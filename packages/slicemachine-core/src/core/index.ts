@@ -1,8 +1,13 @@
-import { Manifest, removeAuthConfig } from "../filesystem";
+import {
+  Manifest,
+  removeAuthConfig,
+  getOrCreateAuthConfig,
+  AuthConfig,
+} from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { buildEndpoints, CONSTS } from "../utils";
-import { validateRepositoryName, listRepositories } from "./communication";
+import { poll, buildEndpoints, CONSTS } from "../utils";
 
+import * as Communication from "./communication";
 export * as Communication from "./communication";
 
 export interface Core {
@@ -49,12 +54,13 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
     manifest,
 
     Repository: {
-      list: async (token: string): Promise<string[]> => listRepositories(token, base),
+      list: async (token: string): Promise<string[]> =>
+        Communication.listRepositories(token, base),
       validateName: (
         name: string,
         base = CONSTS.DEFAULT_BASE,
         existingRepo = false
-      ) => validateRepositoryName(name, base, existingRepo),
+      ) => Communication.validateRepositoryName(name, base, existingRepo),
     },
   };
 }
@@ -62,19 +68,53 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
 export const Auth = {
   login: async (base: string): Promise<void> => {
     const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
+    const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliLogin,
       "login",
       base
     );
+    try {
+      // We wait 3 minutes before timeout
+      return await poll<Communication.UserInfo | null>(
+        () => Auth.validateSession(base),
+        (user) => !!user,
+        3000,
+        60
+      );
+    } catch (e) {
+      onLoginFail();
+    }
   },
   signup: async (base: string): Promise<void> => {
     const endpoints = buildEndpoints(base);
-    return startServerAndOpenBrowser(
+    const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliSignup,
       "signup",
       base
     );
+    try {
+      // We wait 3 minutes before timeout
+      return await poll<Communication.UserInfo | null>(
+        () => Auth.validateSession(base),
+        (user) => !!user,
+        3000,
+        60
+      );
+    } catch (e) {
+      onLoginFail();
+    }
   },
   logout: (): void => removeAuthConfig(),
+  validateSession: async (
+    requiredBase: string
+  ): Promise<Communication.UserInfo | null> => {
+    const config: AuthConfig = getOrCreateAuthConfig();
+
+    if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
+    if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
+
+    return Communication.validateSession(config.cookies, requiredBase).catch(
+      () => null
+    );
+  },
 };
