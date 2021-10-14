@@ -1,19 +1,8 @@
 #!/usr/bin/env node
 
-import { Utils, Auth } from "slicemachine-core";
-import { installSm, validatePkg, addScriptToPkg } from "./steps/index.js";
-
-function findArgument(args: string[], name: string): string | null {
-  const flagIndex: number = args.indexOf(`--${name}`);
-
-  if (flagIndex === -1) return null;
-  if (args.length < flagIndex + 2) return null;
-
-  const flagValue = args[flagIndex + 1];
-
-  if (flagValue.startsWith("--")) return null;
-  return flagValue;
-}
+import { Utils } from "slicemachine-core";
+import { installSm, validatePkg, loginOrBypass } from "./steps";
+import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -25,10 +14,9 @@ async function init() {
     )
   );
 
-  await Auth.login(base);
+  await loginOrBypass(base);
   validatePkg(cwd);
   await installSm(cwd);
-  addScriptToPkg(cwd);
 }
 
 void init();
