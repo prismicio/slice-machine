@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Utils } from "slicemachine-core";
-import { installSm, validatePkg, addScriptToPkg, loginOrBypass } from "./steps";
+import { installSm, validatePkg, loginOrBypass } from "./steps";
 import { findArgument } from "./utils";
 
 async function init() {
@@ -17,7 +17,6 @@ async function init() {
   await loginOrBypass(base);
   validatePkg(cwd);
   await installSm(cwd);
-  addScriptToPkg(cwd);
 }
 
 void init();
