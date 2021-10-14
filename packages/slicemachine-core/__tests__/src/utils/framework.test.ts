@@ -21,21 +21,33 @@ describe("framework.detectFramework", () => {
     expect(result).toEqual(framework.Framework.vanillajs);
   });
 
-  test("it will return a support framework when a support framework is found in the package.json", () => {
-    const mockedFs = mocked(fs, true);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-    mockedFs.readFileSync.mockReturnValue(
-      JSON.stringify({
-        dependencies: {
-          [framework.Framework.next]: "beta",
-        },
-      })
-    );
+  // poor mans property based testing
+  const valuesToCheck: string[] = [
+    ...Object.values(framework.Framework),
+    "",
+    "foo",
+  ];
+  valuesToCheck.forEach((value) => {
+    test("it will return a support framework when a support framework is found in the package.json", () => {
+      const mockedFs = mocked(fs, true);
+      mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
-    const result = framework.detectFramework(__dirname);
+      mockedFs.readFileSync.mockReturnValue(
+        JSON.stringify({
+          dependencies: {
+            [value]: "beta",
+          },
+        })
+      );
 
-    expect(mockedFs.lstatSync).toHaveBeenCalled();
-    expect(result).toEqual(framework.Framework.next);
+      const wanted = framework.isValidFramework(value as framework.Framework)
+        ? value
+        : framework.Framework.vanillajs;
+
+      const result = framework.detectFramework(__dirname);
+      expect(mockedFs.lstatSync).toHaveBeenCalled();
+      expect(result).toEqual(wanted);
+    });
   });
 
   test("it will throw an error when no package.json is found", () => {
