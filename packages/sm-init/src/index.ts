@@ -7,6 +7,7 @@ import {
   addScriptToPkg,
   maybeExistingRepo,
   createRepository,
+  detectFramework,
 } from "./steps/index.js";
 
 function findArgument(args: string[], name: string): string | null {
@@ -38,8 +39,11 @@ async function init() {
     config.cookies,
     config.base
   );
-  if (existing === false)
-    await createRepository(name, config.cookies, "framework", base);
+
+  const framework = await detectFramework(cwd);
+  if (existing === false) {
+    await createRepository(name, config.cookies, framework, base);
+  }
   await installSm(cwd);
   addScriptToPkg(cwd);
 }

@@ -85,7 +85,8 @@ const Files = {
   ): string | undefined => fs.mkdirSync(target, options),
   exists(pathToFile: string): boolean {
     try {
-      return Boolean(fs.lstatSync(pathToFile));
+      const result = Boolean(fs.lstatSync(pathToFile));
+      return result;
     } catch (e) {
       if ((e as { code: string }).code === ERROR_CODES.ENOENT) return false;
       throw e;

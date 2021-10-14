@@ -29,19 +29,12 @@ export function detectFramework(cwd: string): Framework {
     throw new Error(message);
   }
 
-  try {
-    const { dependencies, devDependencies, peerDependencies } = pkg.content;
-    const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
-    const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
-      (f) => deps[f] && deps[f].length
-    );
-    return frameworkEntry || Framework.vanillajs;
-  } catch (e) {
-    const message =
-      "[api/env]: Unrecoverable error. Could not parse package.json. Exiting..";
-    console.error(message);
-    throw new Error(message);
-  }
+  const { dependencies, devDependencies, peerDependencies } = pkg.content;
+  const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+  const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
+    (f) => deps[f] && deps[f].length
+  );
+  return frameworkEntry || Framework.vanillajs;
 }
 
 export function isValidFramework(framework: Framework): boolean {
