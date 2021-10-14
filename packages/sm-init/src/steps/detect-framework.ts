@@ -12,23 +12,21 @@ export function maybeDetect(cwd: string): Promise<Utils.Framework> {
 }
 
 export function detectFramework(cwd: string): Promise<string> {
-  const spinner = Utils.spinner("Detecting framework");
+  const spinner = Utils.spinner(
+    "Detecting framework to install correct dependencies"
+  );
   return maybeDetect(cwd)
-    .catch(() => "") // or some other framework that's not supported
+    .catch(() => {
+      spinner.fail("Framework not detected");
+      throw new Error("frame work not-found");
+    })
     .then((framework) => {
-      if (!framework) {
-        spinner.fail("Framework not detected");
-        throw new Error("frame work not-found");
-      }
-      if (
-        Utils.framework.SupportedFrameworks.includes(
-          framework as Utils.Framework
-        )
-      ) {
-        spinner.succeed(`Found: ${framework}`);
+      const nameToPrint = Utils.framework.fancyName(framework);
+      if (Utils.framework.SupportedFrameworks.includes(framework)) {
+        spinner.succeed(`${nameToPrint} detected`);
         return framework;
       }
-      spinner.fail(`Framework ${framework} is not supported`);
+      spinner.fail(`Framework: ${nameToPrint} is not supported`);
       throw new Error(framework);
     })
     .catch(() => {

@@ -53,8 +53,9 @@ describe("detect-framework", () => {
     stderr.stop();
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(exitSpy).toHaveBeenCalled();
+    const nameToPrint = Utils.framework.fancyName(Utils.Framework.vanillajs);
     expect(stderr.output).toContain(
-      `Framework ${Utils.framework.Framework.vanillajs} is not supported`
+      `Framework: ${nameToPrint} is not supported`
     );
     expect(logSpy).toHaveBeenCalledWith(
       `Please run ${Utils.bold(

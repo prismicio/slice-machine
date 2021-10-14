@@ -63,3 +63,19 @@ describe("framework.detectFramework", () => {
     expect(spy).toHaveBeenCalledWith(wanted);
   });
 });
+
+describe("framework.fancyName", () => {
+  test("next should be Next.js", () => {
+    const wanted = "Next.js";
+    const result = framework.fancyName(framework.Framework.next);
+    expect(result).toBe(wanted);
+  });
+
+  test("else the first letter should be capatalised", () => {
+    const values = Object.values(framework.Framework);
+    values.forEach((value) => {
+      const result = framework.fancyName(value).charAt(0);
+      expect(result).toBe(result.toUpperCase());
+    });
+  });
+});

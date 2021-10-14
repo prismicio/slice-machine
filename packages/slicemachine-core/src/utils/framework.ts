@@ -20,6 +20,19 @@ export const SupportedFrameworks: Framework[] = [
   Framework.svelte,
 ];
 
+function capitaliseFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function fancyName(str: Framework) {
+  switch (str) {
+    case Framework.next:
+      return "Next.js";
+    default:
+      return capitaliseFirstLetter(str);
+  }
+}
+
 export function detectFramework(cwd: string): Framework {
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
