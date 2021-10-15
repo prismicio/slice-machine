@@ -1,5 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { cookie, CONSTS } from "../utils";
+
+export type { AxiosError } from "axios";
 
 const { DEFAULT_BASE } = CONSTS;
 
@@ -32,7 +34,12 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export type Roles = "Writer" | "Owner" | "Publisher" | "Admin"; // other roles ?
+export enum Roles {
+  WRITER = "Writer",
+  OWNER = "Owner",
+  PUBLISHER = "Publisher",
+  ADMIN = "Admin",
+}
 export type RepoData = Record<string, { role: Roles; dbid: string }>;
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
@@ -141,19 +148,24 @@ export async function createRepository(
   address.pathname = "/authentication/newrepository";
   address.searchParams.append("app", "slicemachine");
 
-  return axios.post<
-    {
-      domain: string;
-      framework: string;
-      plan: string;
-      isAnnual: string;
-      role: string;
-    },
-    AxiosResponse<{ domain: string }>
-  >(address.toString(), data, {
-    headers: {
-      Cookie: cookies,
-      "User-Agent": "prismic-cli/sm",
-    },
-  });
+  return axios
+    .post<
+      {
+        domain: string;
+        framework: string;
+        plan: string;
+        isAnnual: string;
+        role: string;
+      },
+      AxiosResponse<{ domain: string }>
+    >(address.toString(), data, {
+      headers: {
+        Cookie: cookies,
+        "User-Agent": "prismic-cli/sm",
+      },
+    })
+    .catch((error: AxiosError | Error) => {
+      if (axios.isAxiosError(error)) throw error;
+      throw error;
+    });
 }

@@ -1,6 +1,6 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import { CONSTS, bold, underline, error, spinner } from "../utils";
+import { CONSTS, bold, underline, spinner, writeError } from "../utils";
 import { setAuthConfigCookies } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
@@ -54,7 +54,7 @@ export function validatePayload(
 const authenticationHandler =
   (server: hapi.Server) =>
   (onSuccess: (data: HandlerData) => void, onFail: () => void) => {
-    return async (request: hapi.Request, h: hapi.ResponseToolkit) => {
+    return (request: hapi.Request, h: hapi.ResponseToolkit) => {
       try {
         const data: HandlerData | null = validatePayload(
           request.payload as Buffer | string | Record<string, unknown>
@@ -111,40 +111,45 @@ export async function startServerAndOpenBrowser(
   action: "login" | "signup",
   base: string = CONSTS.DEFAULT_BASE,
   port: number = CONSTS.DEFAULT_SERVER_PORT
-): Promise<void> {
+): Promise<{
+  onLoginFail: () => void;
+}> {
   const confirmation = await askSingleChar(
     `>> Press any key to open the browser to ${action} or q to exit:`
   );
   if (confirmation === "q" || confirmation === "\u0003")
     return process.exit(-1);
 
-  return new Promise((resolve) => {
-    const s = spinner("Waiting for the browser response");
+  const s = spinner("Waiting for the browser response");
 
-    function onSuccess(data: HandlerData) {
-      s.succeed(`Logged in as ${bold(data.email)}`).stop();
-      setAuthConfigCookies(base, data.cookies);
-      resolve(); // todo add cookies here
-    }
+  const onLoginFail = () => {
+    s.stop();
+    writeError(`We failed to log you into your Prismic account`);
+    console.log(`Run ${bold("npx slicemachine init")} again!`);
+    process.exit(-1);
+  };
 
-    function onFail(): void {
-      s.fail(
-        `${error("Error!")} We failed to log you into your Prismic account`
-      );
-      console.log(`Run ${bold("npx slicemachine init")} again!`);
-      process.exit(-1);
-    }
+  function onSuccess(data: HandlerData) {
+    s.succeed(`Logged in as ${bold(data.email)}`).stop();
+    setAuthConfigCookies(base, data.cookies);
+  }
 
-    const server = buildServer(base, port, "localhost");
-    server.route([
-      Routes.authentication(server)(onSuccess, onFail),
-      Routes.notFound,
-    ]);
+  function onFail(): void {
+    onLoginFail();
+  }
 
-    server.start().then(() => {
-      console.log("Opening browser to " + underline(url));
-      s.start();
-      void open(url);
-    });
+  const server = buildServer(base, port, "localhost");
+  server.route([
+    Routes.authentication(server)(onSuccess, onFail),
+    Routes.notFound,
+  ]);
+
+  return server.start().then(() => {
+    console.log("\nOpening browser to " + underline(url));
+    s.start();
+    void open(url);
+    return {
+      onLoginFail,
+    };
   });
 }

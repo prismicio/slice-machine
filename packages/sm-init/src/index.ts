@@ -1,26 +1,15 @@
 #!/usr/bin/env node
 
-import { Utils, FileSystem, Auth } from "slicemachine-core";
+import { Utils, FileSystem } from "slicemachine-core";
 import {
   installSm,
   validatePkg,
-  addScriptToPkg,
   maybeExistingRepo,
   createRepository,
+  loginOrBypass,
   detectFramework,
-} from "./steps/index.js";
-
-function findArgument(args: string[], name: string): string | null {
-  const flagIndex: number = args.indexOf(`--${name}`);
-
-  if (flagIndex === -1) return null;
-  if (args.length < flagIndex + 2) return null;
-
-  const flagValue = args[flagIndex + 1];
-
-  if (flagValue.startsWith("--")) return null;
-  return flagValue;
-}
+} from "./steps";
+import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -32,7 +21,7 @@ async function init() {
     )
   );
 
-  await Auth.login(base);
+  await loginOrBypass(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
   const { existing, name } = await maybeExistingRepo(
@@ -45,7 +34,6 @@ async function init() {
     await createRepository(name, config.cookies, framework, base);
   }
   await installSm(cwd);
-  addScriptToPkg(cwd);
 }
 
 void init();

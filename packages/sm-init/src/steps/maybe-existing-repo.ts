@@ -48,6 +48,17 @@ export async function maybeExistingRepo(
     return { existing: false, name };
   }
 
+  const prettyRepos = repos.map((repo) => {
+    const address = new URL(base);
+    address.hostname = `${repo}.${address.hostname}`;
+    return {
+      name: `${Utils.purple("Use")} ${Utils.bold(repo)} ${Utils.purple.dim(
+        address.toString()
+      )}`,
+      value: repo,
+    };
+  });
+
   const res = await inquirer.prompt<Record<string, string>>([
     {
       type: "list",
@@ -56,9 +67,9 @@ export async function maybeExistingRepo(
       required: true,
       message: "Connect a Prismic Repository or create a new one",
       choices: [
-        { name: "Create a new Repository", value: CREATE_REPO },
+        { name: Utils.purple("Create a new Repository"), value: CREATE_REPO },
         new inquirer.Separator("---- Use an existing Repository ----"),
-        ...repos.map((d) => ({ name: d, value: d })),
+        ...prettyRepos,
       ],
     },
   ]);

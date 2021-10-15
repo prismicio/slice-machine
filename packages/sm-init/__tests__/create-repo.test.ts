@@ -56,7 +56,6 @@ describe("createRepository", () => {
     await createRepository(domain, cookie, framework, base);
     stderr.stop();
     stdout.stop();
-    console.log(stderr.output);
     expect(stderr.output).toContain("Error creating repository");
     expect(stdout.output).toContain("Error: [500]");
   });

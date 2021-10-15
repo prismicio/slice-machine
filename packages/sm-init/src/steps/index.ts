@@ -4,3 +4,4 @@ export { addScriptToPkg } from "./add-script-to-pkg";
 export { maybeExistingRepo } from "./maybe-existing-repo";
 export { createRepository } from "./create-repo";
 export { detectFramework } from "./detect-framework";
+export { loginOrBypass } from "./loginOrBypass";
