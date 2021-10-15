@@ -31,7 +31,7 @@ export interface Core {
   },*/
 
   Repository: {
-    list: (token: string, base?: string) => Promise<string[]>;
+    list: (token: string, base?: string) => Promise<Communication.RepoData>;
     // create: (apiEndpoint: string, token: string) => Promise<void>
     validateName: (
       name: string,
@@ -54,7 +54,7 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
     manifest,
 
     Repository: {
-      list: async (token: string): Promise<string[]> =>
+      list: async (token: string): Promise<Communication.RepoData> =>
         Communication.listRepositories(token, base),
       validateName: (
         name: string,
