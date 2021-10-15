@@ -28,7 +28,19 @@ export default async function handler(query: { id: string }) {
 
   const state = await fetchState();
 
-  if (state.clientError || state.isFake) {
+  // When the user is connected but the token expired
+  if (state.clientError) {
+    const message =
+      "[custom-types/push] Could not fetch remote custom types. Are you logged in to Prismic?";
+    return {
+      err: new Error(message),
+      reason: message,
+      status: state.clientError.status,
+    };
+  }
+
+  // When the user is not connected at all
+  if (state.isFake) {
     const message =
       "[custom-types/push] Could not fetch remote custom types. Are you logged in to Prismic?";
     return {

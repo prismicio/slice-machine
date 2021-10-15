@@ -154,7 +154,7 @@ router.get(
   async function (req: express.Request, res: express.Response) {
     const payload = await pushCustomType(req.query);
     if (payload.err) {
-      return res.status(400).json(payload);
+      return res.status(payload.status).json(payload);
     }
     return res.status(200).json(payload);
   }
@@ -171,26 +171,35 @@ router.get(
   }
 );
 
-router.post("/auth/start", async function (_req: express.Request, res: express.Response) {
-  const payload = await startAuth();
-  if (payload.err) {
-    return res.status(400).json();
+router.post(
+  "/auth/start",
+  async function (_req: express.Request, res: express.Response) {
+    const payload = await startAuth();
+    if (payload.err) {
+      return res.status(400).json();
+    }
+    return res.status(200).json();
   }
-  return res.status(200).json();
-});
+);
 
-router.post("/auth/status", async function (_req: express.Request, res: express.Response) {
-  const payload = await statusAuth();
-  return res.status(200).json(payload);
-});
-
-router.post("/auth", async function (req: express.Request, res: express.Response) {
-  const payload = await postAuth(req.body);
-  if (payload.err) {
-    return res.status(400).json(req.body);
+router.post(
+  "/auth/status",
+  async function (_req: express.Request, res: express.Response) {
+    const payload = await statusAuth();
+    return res.status(200).json(payload);
   }
-  return res.status(200).json();
-});
+);
+
+router.post(
+  "/auth",
+  async function (req: express.Request, res: express.Response) {
+    const payload = await postAuth(req.body);
+    if (payload.err) {
+      return res.status(400).json(req.body);
+    }
+    return res.status(200).json();
+  }
+);
 
 router.use("*", async function (req: express.Request, res: express.Response) {
   return res.status(404).json({

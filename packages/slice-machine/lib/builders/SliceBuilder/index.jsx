@@ -14,9 +14,12 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
+import { ToastPayload } from "../../../src/ToastProvider/utils";
+import { LoginModalContext } from "../../../src/LoginModalProvider";
 
 const Builder = ({ openPanel }) => {
   const { Model, store, variation } = useContext(SliceContext);
+  const { openLogin } = useContext(LoginModalContext);
   const {
     env: {
       userConfig: { storybook: storybookBaseUrl },
@@ -39,6 +42,13 @@ const Builder = ({ openPanel }) => {
     done: false,
     error: null,
   });
+
+  const onPush = (data) => {
+    setData(data);
+    if (data.error && (data.status === 401 || data.status === 403)) {
+      openLogin();
+    }
+  };
 
   const storybookUrl = createStorybookUrl({
     storybook: storybookBaseUrl,
@@ -74,7 +84,7 @@ const Builder = ({ openPanel }) => {
         Model={Model}
         store={store}
         variation={variation}
-        onPush={() => store.push(Model, setData)}
+        onPush={() => store.push(Model, onPush)}
         onSave={() => store.save(Model, setData)}
         isLoading={data.loading}
       />

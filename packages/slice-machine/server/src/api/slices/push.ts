@@ -105,7 +105,7 @@ export async function handler(
     return {};
   } catch (e) {
     console.log(e);
-    return onError(e, "An unexpected error occured while pushing slice");
+    return onError(e, "An unexpected error occurred while pushing slice");
   }
 }
 
@@ -116,6 +116,20 @@ export default async function apiHandler(query: {
   const { sliceName, from } = query;
   const { env } = await getEnv();
   const { slices, err } = await getSlices(env.client);
+
+  if (env.client.isFake()) {
+    console.error(
+      "[slice/push] An error occurred while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."
+    );
+    const message =
+      "[slice/push] Could not fetch remote custom types. Are you logged in to Prismic?";
+    return {
+      err: new Error(message),
+      reason: message,
+      status: 403,
+    };
+  }
+
   if (err) {
     console.error(
       "[slice/push] An error occurred while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."

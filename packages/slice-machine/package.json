@@ -19,7 +19,7 @@
     "compile": "tsc --project server/tsconfig.json && node build/server/src/index.js",
     "dev-server": "cross-env PORT=9999 CWD=./tests/project nodemon -e ts,js --watch server --watch lib --ignore build/ --exec \"npm run compile\"",
     "build": "yarn build-server && yarn build-next-app",
-    "build-server": "tsc --projectpackages/slicemachine-core/src/core/auth.ts server/tsconfig.json",
+    "build-server": "tsc --project server/tsconfig.json",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && yarn clean-build",
     "bundle": "yarn build && yarn test && yarn export-build",
