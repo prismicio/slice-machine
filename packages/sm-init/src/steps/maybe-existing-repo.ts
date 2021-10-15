@@ -58,50 +58,54 @@ const canUpdateCustomTypes = (role: Communication.Roles) => {
   return false;
 };
 
-type RepoPrompt = {
-  name: string;
-  value: string;
-  disabled?: string;
-}
+type RepoPrompt = { name: string; value: string; disabled?: string };
 
-type PromptOrSeparator = RepoPrompt | Separator
+type PromptOrSeparator = RepoPrompt | Separator;
 
 type RepoPrompts = Array<PromptOrSeparator>;
 
-const makeReposPretty = (base: string) => (arg: [string, { role: Communication.Roles}]): RepoPrompt => {
-  const [repoName, { role }] = arg
-  const address = new URL(base)
-  if(canUpdateCustomTypes(role) === false) {
+const makeReposPretty =
+  (base: string) =>
+  (arg: [string, { role: Communication.Roles }]): RepoPrompt => {
+    const [repoName, { role }] = arg;
+    const address = new URL(base);
+    if (canUpdateCustomTypes(role) === false) {
+      return {
+        name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
+          repoName
+        )} ${Utils.purple.dim(address.toString())}`,
+        value: repoName,
+        disabled: "Unauthorized",
+      };
+    }
+
     return {
-      name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(repoName)} ${Utils.purple.dim(address.toString())}`,
+      name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(
+        address.toString()
+      )}`,
       value: repoName,
-      disabled: "Unauthorized",
     };
-  }
+  };
 
-  return {
-    name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(address.toString())}`,
-    value: repoName,
-  }
-}
+const orderPrompts =
+  (maybeName?: string | null) =>
+  (a: PromptOrSeparator, b: PromptOrSeparator) => {
+    if (a instanceof Separator || b instanceof Separator) return 0;
+    if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
+    if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
+    if (a.disabled && !b.disabled) return 1;
+    if (!a.disabled && b.disabled) return -1;
+    return 0;
+  };
 
-const orderPrompts = (maybeName?: string | null) => (a: PromptOrSeparator , b: PromptOrSeparator) => {
-  if (a instanceof Separator || b instanceof Separator) return 0;
-  if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
-  if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
-  if (a.disabled && !b.disabled) return 1;
-  if (!a.disabled && b.disabled) return -1;
-  return 0;
-}
-
-const maybeStickTheRepoToTheTopOfTheList = (
-  repoName: string | null | undefined,
-) => (acc: RepoPrompts, curr: RepoPrompt) => {
-  if (repoName && curr.value === repoName) {
-    return [curr, ...acc];
-  }
-  return [...acc, curr];
-}
+const maybeStickTheRepoToTheTopOfTheList =
+  (repoName: string | null | undefined) =>
+  (acc: RepoPrompts, curr: RepoPrompt) => {
+    if (repoName && curr.value === repoName) {
+      return [curr, ...acc];
+    }
+    return [...acc, curr];
+  };
 
 function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
   const createNew = {
@@ -117,7 +121,7 @@ function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
 
   const start: RepoPrompts = [
     createNew,
-  //  sep
+    //  sep
   ];
 
   const maybeConfiguredRepoName = maybeRepoNameFromSMFile(base);
