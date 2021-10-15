@@ -58,14 +58,50 @@ const canUpdateCustomTypes = (role: Communication.Roles) => {
   return false;
 };
 
-type RepoPrompts = Array<
-  | {
-      name: string;
-      value: string;
-      disabled?: string;
-    }
-  | Separator
->;
+type RepoPrompt = {
+  name: string;
+  value: string;
+  disabled?: string;
+}
+
+type PromptOrSeparator = RepoPrompt | Separator
+
+type RepoPrompts = Array<PromptOrSeparator>;
+
+const makeReposPretty = (base: string) => (arg: [string, { role: Communication.Roles}]): RepoPrompt => {
+  const [repoName, { role }] = arg
+  const address = new URL(base)
+  if(canUpdateCustomTypes(role) === false) {
+    return {
+      name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(repoName)} ${Utils.purple.dim(address.toString())}`,
+      value: repoName,
+      disabled: "Unauthorized",
+    };
+  }
+
+  return {
+    name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(address.toString())}`,
+    value: repoName,
+  }
+}
+
+const orderPrompts = (maybeName?: string | null) => (a: PromptOrSeparator , b: PromptOrSeparator) => {
+  if (a instanceof Separator || b instanceof Separator) return 0;
+  if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
+  if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
+  if (a.disabled && !b.disabled) return 1;
+  if (!a.disabled && b.disabled) return -1;
+  return 0;
+}
+
+const maybeStickTheRepoToTheTopOfTheList = (
+  repoName: string | null | undefined,
+) => (acc: RepoPrompts, curr: RepoPrompt) => {
+  if (repoName && curr.value === repoName) {
+    return [curr, ...acc];
+  }
+  return [...acc, curr];
+}
 
 function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
   const createNew = {
@@ -75,55 +111,22 @@ function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
     value: CREATE_REPO,
   };
 
-  const sep: Separator = new inquirer.Separator(
-    "---- Use an existing Repository ----"
-  );
+  // const sep: Separator = new inquirer.Separator(
+  //   "---- Use an existing Repository ----"
+  // );
 
-  const start: RepoPrompts = [createNew, sep];
+  const start: RepoPrompts = [
+    createNew,
+  //  sep
+  ];
 
   const maybeConfiguredRepoName = maybeRepoNameFromSMFile(base);
 
   return Object.entries(repos)
     .reverse()
-    .map(([repoName, { role }]) => {
-      const address = new URL(base);
-      address.hostname = `${repoName}.${address.hostname}`;
-      if (canUpdateCustomTypes(role)) {
-        return {
-          name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(
-            address.toString()
-          )}`,
-          value: repoName,
-        };
-      } else {
-        return {
-          name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
-            repoName
-          )} ${Utils.purple.dim(address.toString())}`,
-          value: repoName,
-          disabled: "Unauthorized",
-        };
-      }
-    })
-    .reduce<RepoPrompts>((acc, curr) => {
-      if (maybeConfiguredRepoName && curr.value === maybeConfiguredRepoName) {
-        return [curr, ...acc];
-      }
-      return [...acc, curr];
-    }, start)
-    .sort((a, b) => {
-      if (a instanceof Separator || b instanceof Separator) return 0;
-      if (
-        maybeConfiguredRepoName &&
-        (a.value === maybeConfiguredRepoName ||
-          b.value === maybeConfiguredRepoName)
-      )
-        return 0;
-      if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
-      if (a.disabled && !b.disabled) return 1;
-      if (!a.disabled && b.disabled) return -1;
-      return 0;
-    });
+    .map(makeReposPretty(base))
+    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), start)
+    .sort(orderPrompts(maybeConfiguredRepoName));
 }
 
 export async function maybeExistingRepo(
@@ -142,10 +145,6 @@ export async function maybeExistingRepo(
   }).length;
 
   const maybeConfiguredRepoName = maybeRepoNameFromSMFile(base);
-  // const defaultIsDisabled = choices.filter(repo => {
-  //   if(repo instanceof Separator) return false
-  //   return repo.value === maybeConfiguredRepoName
-  // })
 
   const res = await inquirer.prompt<Record<string, string>>([
     {
