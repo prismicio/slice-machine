@@ -172,18 +172,18 @@ function MyApp({
                   openPanel={openPanel}
                 />
               ) : (
-                <LoginModalProvider>
-                  <LibrariesProvider
-                    remoteSlices={payload.remoteSlices}
-                    libraries={payload.libraries}
-                    env={payload.env}
-                  >
-                    <TrackingProvider>
-                      <CustomTypesProvider
-                        customTypes={payload.customTypes}
-                        remoteCustomTypes={payload.remoteCustomTypes}
-                      >
-                        <ToastProvider>
+                <ToastProvider>
+                  <LoginModalProvider>
+                    <LibrariesProvider
+                      remoteSlices={payload.remoteSlices}
+                      libraries={payload.libraries}
+                      env={payload.env}
+                    >
+                      <TrackingProvider>
+                        <CustomTypesProvider
+                          customTypes={payload.customTypes}
+                          remoteCustomTypes={payload.remoteCustomTypes}
+                        >
                           <AppLayout {...payload} data={data}>
                             <SliceHandler {...payload}>
                               <Renderer
@@ -210,11 +210,11 @@ function MyApp({
                               </Drawer>
                             </SliceHandler>
                           </AppLayout>
-                        </ToastProvider>
-                      </CustomTypesProvider>
-                    </TrackingProvider>
-                  </LibrariesProvider>
-                </LoginModalProvider>
+                        </CustomTypesProvider>
+                      </TrackingProvider>
+                    </LibrariesProvider>
+                  </LoginModalProvider>
+                </ToastProvider>
               )}
             </ConfigProvider>
           )}

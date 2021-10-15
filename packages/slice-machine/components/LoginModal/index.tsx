@@ -4,6 +4,7 @@ import { Button, Card, Close, Flex, Heading, Spinner, Text } from "theme-ui";
 import Prismic from "components/AppLayout/Navigation/Icons/Prismic";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { ConfigContext } from "@src/config-context";
+import { useToasts } from "react-toast-notifications";
 
 Modal.setAppElement("#__next");
 
@@ -42,6 +43,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { env } = useContext(ConfigContext);
+  const { addToast } = useToasts();
 
   const onClick = async () => {
     if (!env) {
@@ -60,14 +62,16 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
       const apiUrl = new URL(env.baseUrl);
 
       window.open(
-        `https://wroom.io/dashboard/cli/login?port=${apiUrl.port}&path=/api/auth`,
+        `https://prismic.io/dashboard/cli/login?port=${apiUrl.port}&path=/api/auth`,
         "_blank"
       );
-      await poll(checkStatus, isAuthStatusOk, 5000, 10);
-    } catch (e) {
-      console.log(e);
-    } finally {
+      await poll(checkStatus, isAuthStatusOk, 3000, 60);
       setIsLoading(false);
+      addToast("Logging successfully", { appearance: "success" });
+      onClose();
+    } catch (e) {
+      setIsLoading(false);
+      addToast("Logging fail", { appearance: "error" });
     }
   };
 
