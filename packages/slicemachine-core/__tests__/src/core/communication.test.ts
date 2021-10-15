@@ -1,9 +1,21 @@
-import { describe, expect, test, afterAll } from "@jest/globals";
+import {
+  describe,
+  expect,
+  test,
+  afterAll,
+  afterEach,
+  jest,
+} from "@jest/globals";
 import * as communication from "../../../src/core/communication";
 import nock from "nock";
 
 describe("communication", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterAll(() => {
+    jest.clearAllMocks();
     return nock.restore();
   });
 
@@ -31,8 +43,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: "OWNER" },
-        qwerty: { dbid: "efgh", role: "WRITER" },
+        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
       },
     };
     nock("https://auth.wroom.io")

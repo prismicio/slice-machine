@@ -4,3 +4,4 @@ export * as cookie from "./cookie";
 export * as CONSTS from "./const";
 export * from "./cliLogs";
 export * from "./endpoints";
+export { default as poll } from "./poll";
