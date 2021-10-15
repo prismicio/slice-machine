@@ -4,7 +4,6 @@ import { Utils, FileSystem } from "slicemachine-core";
 import {
   installSm,
   validatePkg,
-  addScriptToPkg,
   maybeExistingRepo,
   loginOrBypass,
 } from "./steps";
