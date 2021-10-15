@@ -23,7 +23,13 @@ jobs:
         run: lerna run lint
       - name: Audit
         run: lerna run security-audit:prod
-      - name: Build and export slice machine
+      - name: Build slice machine core
+        working-directory: ./packages/slicemachine-core
+        run: yarn build
+      - name: Build slice machine init
+        working-directory: ./packages/sm-init
+        run: yarn build
+      - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
         run: yarn build && yarn export-build
       - name: Running End to End tests
