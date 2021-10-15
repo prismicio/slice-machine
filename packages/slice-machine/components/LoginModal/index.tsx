@@ -1,7 +1,9 @@
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Card, Close, Flex, Heading, Spinner, Text } from "theme-ui";
 import Prismic from "components/AppLayout/Navigation/Icons/Prismic";
+import SliceMachineModal from "@components/SliceMachineModal";
+import { ConfigContext } from "@src/config-context";
 
 Modal.setAppElement("#__next");
 
@@ -39,8 +41,13 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   isOpen,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { env } = useContext(ConfigContext);
 
   const onClick = async () => {
+    if (!env) {
+      return;
+    }
+
     try {
       setIsLoading(true);
       await fetch("/api/auth/start", { method: "POST" });
@@ -50,7 +57,12 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
         );
       const isAuthStatusOk = ({ status }: { status: string }) =>
         status === "ok";
-      window.open("http://wroom.test/dashboard/cli/login", "_blank");
+      const apiUrl = new URL(env.baseUrl);
+
+      window.open(
+        `https://wroom.io/dashboard/cli/login?port=${apiUrl.port}&path=/api/auth`,
+        "_blank"
+      );
       await poll(checkStatus, isAuthStatusOk, 5000, 10);
     } catch (e) {
       console.log(e);
@@ -60,11 +72,22 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   };
 
   return (
-    <Modal
+    <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
       onRequestClose={onClose}
       contentLabel={"login_modal"}
+      style={{
+        content: {
+          position: "static",
+          display: "flex",
+          margin: "auto",
+          minHeight: "initial",
+        },
+        overlay: {
+          display: "flex",
+        },
+      }}
     >
       <Card>
         <Flex
@@ -111,14 +134,16 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
               <Spinner color="#FFF" size={16} />
             ) : (
               <>
-                <Prismic fill={"white"} />
+                <Flex sx={{ mr: 2 }}>
+                  <Prismic fill={"white"} />
+                </Flex>
                 Signin to Prismic
               </>
             )}
           </Button>
         </Flex>
       </Card>
-    </Modal>
+    </SliceMachineModal>
   );
 };
 

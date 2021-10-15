@@ -179,38 +179,40 @@ function MyApp({
                     env={payload.env}
                   >
                     <TrackingProvider>
-                    <CustomTypesProvider
-                      customTypes={payload.customTypes}
-                      remoteCustomTypes={payload.remoteCustomTypes}
-                    >
-                      <ToastProvider>
-                        <AppLayout {...payload} data={data}>
-                          <SliceHandler {...payload}>
-                            <Renderer
-                              Component={Component}
-                              pageProps={pageProps}
-                              {...payload}
-                              openPanel={openPanel}
-                            />
-                            <Drawer
-                              placement="right"
-                              open={drawerState.open}
-                              onClose={() =>
-                                setDrawerState({ ...drawerState, open: false })
-                              }
-                            >
-                              <Warnings
-                                priority={drawerState.priority}
-                                list={data.warnings}
-                                configErrors={data.configErrors}
+                      <CustomTypesProvider
+                        customTypes={payload.customTypes}
+                        remoteCustomTypes={payload.remoteCustomTypes}
+                      >
+                        <ToastProvider>
+                          <AppLayout {...payload} data={data}>
+                            <SliceHandler {...payload}>
+                              <Renderer
+                                Component={Component}
+                                pageProps={pageProps}
+                                {...payload}
+                                openPanel={openPanel}
                               />
-                            </Drawer>
-                          </SliceHandler>
-                        </AppLayout>
-                      </ToastProvider>
-                  </CustomTypesProvider>
+                              <Drawer
+                                placement="right"
+                                open={drawerState.open}
+                                onClose={() =>
+                                  setDrawerState({
+                                    ...drawerState,
+                                    open: false,
+                                  })
+                                }
+                              >
+                                <Warnings
+                                  priority={drawerState.priority}
+                                  list={data.warnings}
+                                  configErrors={data.configErrors}
+                                />
+                              </Drawer>
+                            </SliceHandler>
+                          </AppLayout>
+                        </ToastProvider>
+                      </CustomTypesProvider>
                     </TrackingProvider>
-
                   </LibrariesProvider>
                 </LoginModalProvider>
               )}
