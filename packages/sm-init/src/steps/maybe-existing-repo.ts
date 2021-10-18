@@ -8,12 +8,9 @@ const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  const msg = [
-    Utils.cyan.dim(`${address.protocol}//`),
-    repoName,
-    Utils.cyan.dim(`.${address.hostname}`),
-  ];
-  return msg.join("");
+  return `${Utils.cyan.dim(
+    `${address.protocol}//`
+  )} ${repoName}.${Utils.cyan.dim(address.hostname)}`;
 }
 
 export async function promptForRepoName(base: string): Promise<string> {
@@ -126,7 +123,9 @@ export function sortReposForPrompt(
   return Object.entries(repos)
     .reverse()
     .map(makeReposPretty(base))
-    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), [createNew])
+    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), [
+      createNew,
+    ])
     .sort(orderPrompts(maybeConfiguredRepoName));
 }
 
