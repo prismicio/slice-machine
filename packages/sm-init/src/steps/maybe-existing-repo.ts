@@ -121,21 +121,12 @@ export function sortReposForPrompt(
     value: CREATE_REPO,
   };
 
-  // const sep: Separator = new inquirer.Separator(
-  //   "---- Use an existing Repository ----"
-  // );
-
-  const start: RepoPrompts = [
-    createNew,
-    //  sep
-  ];
-
   const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
 
   return Object.entries(repos)
     .reverse()
     .map(makeReposPretty(base))
-    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), start)
+    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), [createNew])
     .sort(orderPrompts(maybeConfiguredRepoName));
 }
 
@@ -155,13 +146,11 @@ export async function maybeExistingRepo(
     return repo.disabled;
   }).length;
 
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
-
   const res = await inquirer.prompt<Record<string, string>>([
     {
       type: "list",
       name: "repoName",
-      default: maybeConfiguredRepoName || CREATE_REPO,
+      default: 0,
       required: true,
       message: "Connect a Prismic Repository or create a new one",
       choices,
