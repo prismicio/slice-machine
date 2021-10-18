@@ -46,6 +46,23 @@ export function retrieveManifest(cwd: string): FileContent<Manifest> {
   };
 }
 
+export function maybeRepoNameFromSMFile(
+  cwd: string,
+  base: string
+): string | null {
+  const baseUrl = new URL(base);
+  const maybeSMFile = retrieveManifest(cwd);
+
+  if (maybeSMFile.exists === false) return null;
+  if (!maybeSMFile.content?.apiEndpoint) return null;
+
+  const repoUrl = new URL(maybeSMFile.content.apiEndpoint);
+  const correctBase = repoUrl.hostname.includes(baseUrl.hostname);
+  if (correctBase === false) return null;
+
+  return repoUrl.hostname.split(".")[0];
+}
+
 export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
   const manifest: FileContent<Manifest> = retrieveManifest(cwd);
   if (!manifest.exists || !manifest.content) return false;

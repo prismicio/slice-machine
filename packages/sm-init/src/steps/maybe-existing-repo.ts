@@ -36,23 +36,6 @@ export async function promptForRepoName(base: string): Promise<string> {
     .then((res) => res.repoName);
 }
 
-export function maybeRepoNameFromSMFile(
-  cwd: string,
-  base: string
-): string | null {
-  const baseUrl = new URL(base);
-  const maybeSMFile = FileSystem.retrieveManifest(cwd);
-
-  if (maybeSMFile.exists === false) return null;
-  if (!maybeSMFile.content?.apiEndpoint) return null;
-
-  const repoUrl = new URL(maybeSMFile.content.apiEndpoint);
-  const correctBase = repoUrl.hostname.includes(baseUrl.hostname);
-  if (correctBase === false) return null;
-
-  return repoUrl.hostname.split(".")[0];
-}
-
 export function canUpdateCustomTypes(role: Communication.Roles): boolean {
   if (role === Communication.Roles.OWNER) return true;
   if (role === Communication.Roles.ADMIN) return true;
@@ -121,7 +104,7 @@ export function sortReposForPrompt(
     value: CREATE_REPO,
   };
 
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
+  const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
 
   return Object.entries(repos)
     .reverse()

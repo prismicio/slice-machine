@@ -9,7 +9,6 @@ import {
   orderPrompts,
   RepoPrompts,
   RepoPrompt,
-  maybeRepoNameFromSMFile,
   canUpdateCustomTypes,
   maybeStickTheRepoToTheTopOfTheList,
   sortReposForPrompt,
@@ -69,7 +68,9 @@ describe("maybe-existing-repo", () => {
       .reply(200, {
         email: "fake@prismic.io",
         type: "USER",
-        repositories: JSON.stringify({ dbid: "foo", role: "Owner" }),
+        repositories: JSON.stringify({
+          foo: { dbid: "foo", role: Communication.Roles.OWNER },
+        }),
       });
 
     jest
@@ -96,50 +97,6 @@ describe("prettyRepoName", () => {
     const result = prettyRepoName(address, "foo-bar");
     expect(result).toContain("foo-bar");
     expect(result).toContain(".prismic.io");
-  });
-});
-
-describe("maybeRepoNameFromSMFile", () => {
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  test("should return null if sm.json is not found", () => {
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
-    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
-    expect(result).toBeNull();
-  });
-
-  test("should return null if apiEndpoint is not defined", () => {
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(JSON.stringify({}));
-
-    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
-    expect(result).toBeNull();
-  });
-
-  test("should return null if apiEndpoint is on a different base", () => {
-    const fakeConfig = { apiEndpoint: "https://example.com" };
-
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify(fakeConfig));
-
-    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
-    expect(result).toBeNull();
-  });
-
-  test("should return the repo name from the apiEdinpoint", () => {
-    const fakeConfig = { apiEndpoint: "https://foo-bar.prismic.io" };
-
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify(fakeConfig));
-
-    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
-    expect(result).toBe("foo-bar");
   });
 });
 
