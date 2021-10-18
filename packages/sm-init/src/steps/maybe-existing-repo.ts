@@ -10,7 +10,7 @@ export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
   return `${Utils.cyan.dim(
     `${address.protocol}//`
-  )}${repoName}.${Utils.cyan.dim(address.hostname)}`;
+  )}${repoName}${Utils.cyan.dim(`.${address.hostname}`)}`;
 }
 
 export async function promptForRepoName(base: string): Promise<string> {

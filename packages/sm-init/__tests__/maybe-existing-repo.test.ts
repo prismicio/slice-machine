@@ -2,7 +2,7 @@ import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import inquirer from "inquirer";
 import {
   maybeExistingRepo,
-  promptForCreateRepo,
+  promptForRepoName,
   prettyRepoName,
   CREATE_REPO,
   makeReposPretty,
@@ -32,7 +32,7 @@ describe("maybe-existing-repo", () => {
     const base = "https://prismic.io";
 
     jest.spyOn(inquirer, "prompt").mockResolvedValue({ repoName });
-    const result = await promptForCreateRepo(base);
+    const result = await promptForRepoName(base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
     expect(result).toBe(repoName);
