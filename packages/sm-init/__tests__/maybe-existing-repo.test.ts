@@ -9,7 +9,6 @@ import {
   orderPrompts,
   RepoPrompts,
   RepoPrompt,
-  canUpdateCustomTypes,
   maybeStickTheRepoToTheTopOfTheList,
   sortReposForPrompt,
 } from "../src/steps/maybe-existing-repo";
@@ -97,20 +96,6 @@ describe("prettyRepoName", () => {
     const result = prettyRepoName(address, "foo-bar");
     expect(result).toContain("foo-bar");
     expect(result).toContain(".prismic.io");
-  });
-});
-
-describe("canUpdateCutsomTypes", () => {
-  test("should return true only if role is owner or admin", () => {
-    const roles = Object.values(Communication.Roles);
-
-    roles.forEach((role) => {
-      const result = canUpdateCustomTypes(role);
-      const wanted =
-        role === Communication.Roles.ADMIN ||
-        role === Communication.Roles.OWNER;
-      return expect(result).toBe(wanted);
-    });
   });
 });
 

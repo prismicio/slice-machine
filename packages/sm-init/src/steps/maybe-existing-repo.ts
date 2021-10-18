@@ -36,12 +36,6 @@ export async function promptForRepoName(base: string): Promise<string> {
     .then((res) => res.repoName);
 }
 
-export function canUpdateCustomTypes(role: Communication.Roles): boolean {
-  if (role === Communication.Roles.OWNER) return true;
-  if (role === Communication.Roles.ADMIN) return true;
-  return false;
-}
-
 export type RepoPrompt = { name: string; value: string; disabled?: string };
 
 export type PromptOrSeparator = RepoPrompt | Separator;
@@ -53,7 +47,7 @@ export function makeReposPretty(base: string) {
     const [repoName, { role }] = arg;
     const address = new URL(base);
     address.hostname = `${repoName}.${address.hostname}`;
-    if (canUpdateCustomTypes(role) === false) {
+    if (Communication.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           repoName

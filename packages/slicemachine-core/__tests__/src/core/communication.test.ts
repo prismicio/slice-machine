@@ -190,3 +190,16 @@ describe("maybeParseRepoData", () => {
     expect(result.foo.role).toEqual(communication.Roles.ADMIN);
   });
 });
+
+describe("canUpdateCutsomTypes", () => {
+  test("should return true only if role is owner or admin", () => {
+    const roles = Object.values(communication.Roles);
+    roles.forEach((role) => {
+      const result = communication.canUpdateCustomTypes(role);
+      const wanted =
+        role === communication.Roles.ADMIN ||
+        role === communication.Roles.OWNER;
+      return expect(result).toBe(wanted);
+    });
+  });
+});

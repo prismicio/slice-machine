@@ -158,6 +158,11 @@ export async function validateRepositoryName(
     });
 }
 
+export function canUpdateCustomTypes(role: Roles): boolean {
+  if (role === Roles.OWNER) return true;
+  if (role === Roles.ADMIN) return true;
+  return false;
+}
 // async function createRepository
 // async function createRepositoryWithCookie
 // async function createRepositoryWithToken
