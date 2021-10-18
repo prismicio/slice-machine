@@ -1,5 +1,6 @@
 import { describe, expect, test, afterAll, jest } from "@jest/globals";
 import * as communication from "../../../src/core/communication";
+import { roles } from "../../../src/utils";
 import nock from "nock";
 
 describe("communication", () => {
@@ -14,8 +15,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
@@ -32,8 +33,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.wroom.io")
@@ -67,8 +68,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
@@ -183,23 +184,10 @@ describe("communication", () => {
 describe("maybeParseRepoData", () => {
   test("with repos as a string", () => {
     const repos = JSON.stringify({
-      foo: { role: communication.Roles.ADMIN, dbid: "foo" },
+      foo: { role: roles.Roles.ADMIN, dbid: "foo" },
     });
     const result = communication.maybeParseRepoData(repos);
     expect(result.foo).toBeDefined();
-    expect(result.foo.role).toEqual(communication.Roles.ADMIN);
-  });
-});
-
-describe("canUpdateCutsomTypes", () => {
-  test("should return true only if role is owner or admin", () => {
-    const roles = Object.values(communication.Roles);
-    roles.forEach((role) => {
-      const result = communication.canUpdateCustomTypes(role);
-      const wanted =
-        role === communication.Roles.ADMIN ||
-        role === communication.Roles.OWNER;
-      return expect(result).toBe(wanted);
-    });
+    expect(result.foo.role).toEqual(roles.Roles.ADMIN);
   });
 });

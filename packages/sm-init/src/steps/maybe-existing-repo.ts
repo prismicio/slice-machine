@@ -43,11 +43,11 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function (arg: [string, { role: Communication.Roles }]): RepoPrompt {
+  return function (arg: [string, { role: Utils.roles.Roles }]): RepoPrompt {
     const [repoName, { role }] = arg;
     const address = new URL(base);
     address.hostname = `${repoName}.${address.hostname}`;
-    if (Communication.canUpdateCustomTypes(role) === false) {
+    if (Utils.roles.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           repoName

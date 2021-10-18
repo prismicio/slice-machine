@@ -14,7 +14,9 @@ import {
 } from "../src/steps/maybe-existing-repo";
 
 import nock from "nock";
-import { Communication } from "slicemachine-core";
+import { Communication, Utils } from "slicemachine-core";
+
+const { Roles } = Utils.roles;
 
 import * as fs from "fs";
 
@@ -68,7 +70,7 @@ describe("maybe-existing-repo", () => {
         email: "fake@prismic.io",
         type: "USER",
         repositories: JSON.stringify({
-          foo: { dbid: "foo", role: Communication.Roles.OWNER },
+          foo: { dbid: "foo", role: Roles.OWNER },
         }),
       });
 
@@ -102,10 +104,7 @@ describe("prettyRepoName", () => {
 describe("makeReposPretty", () => {
   test("unauthorized role", () => {
     const base = "https://prismic.io";
-    const result = makeReposPretty(base)([
-      "foo-bar",
-      { role: Communication.Roles.WRITER },
-    ]);
+    const result = makeReposPretty(base)(["foo-bar", { role: Roles.WRITER }]);
 
     expect(result.name).toContain("https://foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
@@ -114,10 +113,7 @@ describe("makeReposPretty", () => {
 
   test("authorized role", () => {
     const base = "https://prismic.io";
-    const result = makeReposPretty(base)([
-      "foo-bar",
-      { role: Communication.Roles.OWNER },
-    ]);
+    const result = makeReposPretty(base)(["foo-bar", { role: Roles.OWNER }]);
 
     expect(result.name).toContain("https://foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
@@ -217,11 +213,11 @@ describe("sortReposForPrompt", () => {
   test("sort without pre-configured repo-name", () => {
     const repos: Communication.RepoData = {
       "foo-bar": {
-        role: Communication.Roles.WRITER,
+        role: Roles.WRITER,
         dbid: "foobar",
       },
       qwerty: {
-        role: Communication.Roles.ADMIN,
+        role: Roles.ADMIN,
         dbid: "qwerty",
       },
     };
@@ -242,11 +238,11 @@ describe("sortReposForPrompt", () => {
   test("sort with pre-configure repo-name", () => {
     const repos: Communication.RepoData = {
       "foo-bar": {
-        role: Communication.Roles.OWNER,
+        role: Roles.OWNER,
         dbid: "foobar",
       },
       qwerty: {
-        role: Communication.Roles.ADMIN,
+        role: Roles.ADMIN,
         dbid: "qwerty",
       },
     };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { cookie, CONSTS } from "../utils";
+import { cookie, CONSTS, roles } from "../utils";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
@@ -35,25 +35,11 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export enum Roles {
-  WRITER = "Writer",
-  OWNER = "Owner",
-  PUBLISHER = "Publisher",
-  ADMIN = "Admin",
-}
-
-const RolesValidator = t.union([
-  t.literal(Roles.WRITER),
-  t.literal(Roles.OWNER),
-  t.literal(Roles.PUBLISHER),
-  t.literal(Roles.ADMIN),
-]);
-
-export type RepoData = Record<string, { role: Roles; dbid: string }>;
+export type RepoData = Record<string, { role: roles.Roles; dbid: string }>;
 const RepoDataValidator = t.record(
   t.string,
   t.type({
-    role: RolesValidator,
+    role: roles.RolesValidator,
     dbid: t.string,
   })
 );
@@ -158,11 +144,6 @@ export async function validateRepositoryName(
     });
 }
 
-export function canUpdateCustomTypes(role: Roles): boolean {
-  if (role === Roles.OWNER) return true;
-  if (role === Roles.ADMIN) return true;
-  return false;
-}
 // async function createRepository
 // async function createRepositoryWithCookie
 // async function createRepositoryWithToken

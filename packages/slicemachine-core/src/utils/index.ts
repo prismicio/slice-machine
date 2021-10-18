@@ -5,3 +5,4 @@ export * as CONSTS from "./const";
 export * from "./cliLogs";
 export * from "./endpoints";
 export { default as poll } from "./poll";
+export * as roles from "./roles";
