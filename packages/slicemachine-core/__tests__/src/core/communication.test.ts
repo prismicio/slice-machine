@@ -87,8 +87,7 @@ describe("communication", () => {
       .reply(200, responseData);
 
     const result = await communication.listRepositories(fakeCookie, base);
-    expect(result[0]).toEqual("qwerty");
-    expect(result[1]).toEqual("foo-repo");
+    expect(result).toEqual(responseData.repositories);
   });
 
   describe("validateRepositoryName", () => {
