@@ -16,7 +16,7 @@ export function prettyRepoName(address: URL, value?: string): string {
   return msg.join("");
 }
 
-export async function promptForCreateRepo(base: string): Promise<string> {
+export async function promptForRepoName(base: string): Promise<string> {
   const address = new URL(base);
   return inquirer
     .prompt<Record<string, string>>([
@@ -137,7 +137,7 @@ export async function maybeExistingRepo(
 ): Promise<string> {
   const repos = await Communication.listRepositories(cookie, base);
 
-  if (Object.keys(repos).length === 0) return promptForCreateRepo(base);
+  if (Object.keys(repos).length === 0) return promptForRepoName(base);
 
   const choices = sortReposForPrompt(repos, base, cwd);
 
@@ -158,6 +158,6 @@ export async function maybeExistingRepo(
     },
   ]);
 
-  if (res.repoName === CREATE_REPO) return promptForCreateRepo(base);
+  if (res.repoName === CREATE_REPO) return promptForRepoName(base);
   return Promise.resolve(res.repoName);
 }
