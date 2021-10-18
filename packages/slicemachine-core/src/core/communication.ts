@@ -1,5 +1,7 @@
 import axios from "axios";
 import { cookie, CONSTS } from "../utils";
+import * as t from "io-ts";
+import { either } from "fp-ts";
 
 const { DEFAULT_BASE } = CONSTS;
 
@@ -38,12 +40,34 @@ export enum Roles {
   PUBLISHER = "Publisher",
   ADMIN = "Admin",
 }
+
+const RolesValidator = t.union([
+  t.literal(Roles.WRITER),
+  t.literal(Roles.OWNER),
+  t.literal(Roles.PUBLISHER),
+  t.literal(Roles.ADMIN),
+]);
+
 export type RepoData = Record<string, { role: Roles; dbid: string }>;
+const RepoDataValidator = t.record(
+  t.string,
+  t.type({
+    role: RolesValidator,
+    dbid: t.string,
+  })
+);
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
 function maybeParseRepoData(repos?: string | RepoData): RepoData {
   if (!repos) return {};
-  if (typeof repos === "string") return JSON.parse(repos) as RepoData;
+  if (typeof repos === "string") {
+    return either.fold<t.Errors, RepoData, RepoData>(
+      () => ({}),
+      (f: RepoData) => {
+        return f;
+      }
+    )(RepoDataValidator.decode(JSON.parse(repos)));
+  }
   return repos;
 }
 
