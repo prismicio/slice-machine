@@ -1,7 +1,8 @@
 import axios from "axios";
 import { cookie, CONSTS } from "../utils";
 import * as t from "io-ts";
-import { either } from "fp-ts";
+import { pipe } from "fp-ts/function";
+import { fold } from "fp-ts/Either";
 
 const { DEFAULT_BASE } = CONSTS;
 
@@ -58,17 +59,20 @@ const RepoDataValidator = t.record(
 );
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
-function maybeParseRepoData(repos?: string | RepoData): RepoData {
+export function maybeParseRepoData(repos?: string | RepoData): RepoData {
   if (!repos) throw new Error("Did not receive repository data");
   if (typeof repos === "string") {
-    return either.fold<t.Errors, RepoData, RepoData>(
-      () => {
-        throw new Error("Can't parse repo data");
-      },
-      (f: RepoData) => {
-        return f;
-      }
-    )(RepoDataValidator.decode(JSON.parse(repos)));
+    return pipe(
+      RepoDataValidator.decode(JSON.parse(repos)),
+      fold<t.Errors, RepoData, RepoData>(
+        () => {
+          throw new Error("Can't parse repo data");
+        },
+        (f: RepoData) => {
+          return f;
+        }
+      )
+    );
   }
   return repos;
 }

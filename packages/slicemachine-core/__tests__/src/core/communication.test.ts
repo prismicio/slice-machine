@@ -179,3 +179,14 @@ describe("communication", () => {
     });
   });
 });
+
+describe("maybeParseRepoData", () => {
+  test("with repos as a string", () => {
+    const repos = JSON.stringify({
+      foo: { role: communication.Roles.ADMIN, dbid: "foo" },
+    });
+    const result = communication.maybeParseRepoData(repos);
+    expect(result.foo).toBeDefined();
+    expect(result.foo.role).toEqual(communication.Roles.ADMIN);
+  });
+});
