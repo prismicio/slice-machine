@@ -59,10 +59,12 @@ const RepoDataValidator = t.record(
 export type UserInfo = { email: string; type: string; repositories: RepoData };
 
 function maybeParseRepoData(repos?: string | RepoData): RepoData {
-  if (!repos) return {};
+  if (!repos) throw new Error("Did not receive repository data");
   if (typeof repos === "string") {
     return either.fold<t.Errors, RepoData, RepoData>(
-      () => ({}),
+      () => {
+        throw new Error("Can't parse repo data");
+      },
       (f: RepoData) => {
         return f;
       }
