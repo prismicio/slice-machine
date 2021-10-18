@@ -22,7 +22,7 @@ async function init() {
   await loginOrBypass(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
-  await maybeExistingRepo(config.cookies, base);
+  await maybeExistingRepo(config.cookies, cwd, base);
   await installSm(cwd);
 }
 

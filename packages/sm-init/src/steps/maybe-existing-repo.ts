@@ -39,11 +39,12 @@ export async function promptForCreateRepo(base: string): Promise<string> {
     .then((res) => res.repoName);
 }
 
-export function maybeRepoNameFromSMFile(base: string) {
+export function maybeRepoNameFromSMFile(cwd: string, base: string) {
   const baseUrl = new URL(base);
-  const maybeSMFile = FileSystem.retrieveManifest(process.cwd());
+  const maybeSMFile = FileSystem.retrieveManifest(cwd);
+
   if (maybeSMFile.exists === false) return null;
-  if (maybeSMFile.content === null) return null;
+  if (!maybeSMFile.content?.apiEndpoint) return null;
 
   const repoUrl = new URL(maybeSMFile.content.apiEndpoint);
   const correctBase = repoUrl.hostname.includes(baseUrl.hostname);
@@ -52,23 +53,23 @@ export function maybeRepoNameFromSMFile(base: string) {
   return repoUrl.hostname.split(".")[0];
 }
 
-const canUpdateCustomTypes = (role: Communication.Roles) => {
+export function canUpdateCustomTypes(role: Communication.Roles) {
   if (role === Communication.Roles.OWNER) return true;
   if (role === Communication.Roles.ADMIN) return true;
   return false;
-};
+}
 
-type RepoPrompt = { name: string; value: string; disabled?: string };
+export type RepoPrompt = { name: string; value: string; disabled?: string };
 
-type PromptOrSeparator = RepoPrompt | Separator;
+export type PromptOrSeparator = RepoPrompt | Separator;
 
-type RepoPrompts = Array<PromptOrSeparator>;
+export type RepoPrompts = Array<PromptOrSeparator>;
 
-const makeReposPretty =
-  (base: string) =>
-  (arg: [string, { role: Communication.Roles }]): RepoPrompt => {
+export function makeReposPretty(base: string) {
+  return function (arg: [string, { role: Communication.Roles }]): RepoPrompt {
     const [repoName, { role }] = arg;
     const address = new URL(base);
+    address.hostname = `${repoName}.${address.hostname}`;
     if (canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
@@ -86,10 +87,10 @@ const makeReposPretty =
       value: repoName,
     };
   };
+}
 
-const orderPrompts =
-  (maybeName?: string | null) =>
-  (a: PromptOrSeparator, b: PromptOrSeparator) => {
+export function orderPrompts(maybeName?: string | null) {
+  return (a: PromptOrSeparator, b: PromptOrSeparator) => {
     if (a instanceof Separator || b instanceof Separator) return 0;
     if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
     if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
@@ -97,17 +98,22 @@ const orderPrompts =
     if (!a.disabled && b.disabled) return -1;
     return 0;
   };
+}
 
-const maybeStickTheRepoToTheTopOfTheList =
-  (repoName: string | null | undefined) =>
-  (acc: RepoPrompts, curr: RepoPrompt) => {
+export function maybeStickTheRepoToTheTopOfTheList(repoName?: string | null) {
+  return (acc: RepoPrompts, curr: RepoPrompt): RepoPrompts => {
     if (repoName && curr.value === repoName) {
       return [curr, ...acc];
     }
     return [...acc, curr];
   };
+}
 
-function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
+export function sortReposForPrompt(
+  repos: RepoData,
+  base: string,
+  cwd: string
+): RepoPrompts {
   const createNew = {
     name: `${Utils.purple("Create a")} ${Utils.bold("New")} ${Utils.purple(
       "Repository"
@@ -124,7 +130,7 @@ function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
     //  sep
   ];
 
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(base);
+  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
 
   return Object.entries(repos)
     .reverse()
@@ -135,20 +141,21 @@ function sortReposForPrompt(repos: RepoData, base: string): RepoPrompts {
 
 export async function maybeExistingRepo(
   cookie: string,
+  cwd: string,
   base = DEFAULT_BASE
 ): Promise<string> {
   const repos = await Communication.listRepositories(cookie, base);
 
   if (Object.keys(repos).length === 0) return promptForCreateRepo(base);
 
-  const choices = sortReposForPrompt(repos, base);
+  const choices = sortReposForPrompt(repos, base, cwd);
 
   const numberOfDisabledRepos = choices.filter((repo) => {
     if (repo instanceof Separator) return false;
     return repo.disabled;
   }).length;
 
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(base);
+  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
 
   const res = await inquirer.prompt<Record<string, string>>([
     {
