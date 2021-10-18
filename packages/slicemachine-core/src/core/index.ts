@@ -60,7 +60,8 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
         name: string,
         base = CONSTS.DEFAULT_BASE,
         existingRepo = false
-      ) => Communication.validateRepositoryName(name, base, existingRepo),
+      ): Promise<string> =>
+        Communication.validateRepositoryName(name, base, existingRepo),
     },
   };
 }
