@@ -14,8 +14,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: "OWNER" },
-        qwerty: { dbid: "efgh", role: "WRITER" },
+        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
