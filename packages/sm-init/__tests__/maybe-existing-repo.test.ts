@@ -55,7 +55,7 @@ describe("maybe-existing-repo", () => {
     const result = await maybeExistingRepo(cookies, base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(repoName);
+    return expect(result).toEqual(repoName);
   });
 
   test("it allows a user to create a new repo", async () => {
@@ -88,14 +88,7 @@ describe("prettyRepoName", () => {
     const address = new URL("https://prismic.io");
     const result = prettyRepoName(address);
     expect(result).toContain("repo-name");
-    expect(result).toContain(".prismic.io");
-  });
-
-  test("should contain the base url, and a placeholder", () => {
-    const address = new URL("https://prismic.io");
-    const result = prettyRepoName(address);
-    expect(result).toContain("repo-name");
-    expect(result).toContain(".prismic.io");
+    return expect(result).toContain(".prismic.io");
   });
 
   test("shohuld contain the value from user input", () => {
@@ -156,9 +149,10 @@ describe("canUpdateCutsomTypes", () => {
 
     roles.forEach((role) => {
       const result = canUpdateCustomTypes(role);
-      if (role === Communication.Roles.ADMIN) return expect(result).toBe(true);
-      if (role === Communication.Roles.OWNER) return expect(result).toBe(true);
-      return expect(result).toBe(false);
+      const wanted =
+        role === Communication.Roles.ADMIN ||
+        role === Communication.Roles.OWNER;
+      return expect(result).toBe(wanted);
     });
   });
 });

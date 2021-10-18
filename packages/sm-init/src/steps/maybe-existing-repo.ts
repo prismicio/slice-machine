@@ -8,9 +8,9 @@ const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  return `${Utils.cyan.dim(
-    `${address.protocol}//`
-  )}${repoName}${Utils.cyan.dim(`.${address.hostname}`)}`;
+  return `${Utils.cyan.dim(`${address.protocol}//`)}${repoName}${Utils.cyan.dim(
+    `.${address.hostname}`
+  )}`;
 }
 
 export async function promptForRepoName(base: string): Promise<string> {
@@ -36,7 +36,10 @@ export async function promptForRepoName(base: string): Promise<string> {
     .then((res) => res.repoName);
 }
 
-export function maybeRepoNameFromSMFile(cwd: string, base: string) {
+export function maybeRepoNameFromSMFile(
+  cwd: string,
+  base: string
+): string | null {
   const baseUrl = new URL(base);
   const maybeSMFile = FileSystem.retrieveManifest(cwd);
 
@@ -50,7 +53,7 @@ export function maybeRepoNameFromSMFile(cwd: string, base: string) {
   return repoUrl.hostname.split(".")[0];
 }
 
-export function canUpdateCustomTypes(role: Communication.Roles) {
+export function canUpdateCustomTypes(role: Communication.Roles): boolean {
   if (role === Communication.Roles.OWNER) return true;
   if (role === Communication.Roles.ADMIN) return true;
   return false;
@@ -87,7 +90,7 @@ export function makeReposPretty(base: string) {
 }
 
 export function orderPrompts(maybeName?: string | null) {
-  return (a: PromptOrSeparator, b: PromptOrSeparator) => {
+  return (a: PromptOrSeparator, b: PromptOrSeparator): number => {
     if (a instanceof Separator || b instanceof Separator) return 0;
     if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
     if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
