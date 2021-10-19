@@ -36,4 +36,9 @@ async function init() {
   await installSm(cwd);
 }
 
-void init();
+try {
+  void init();
+} catch (error) {
+  if (error instanceof Error) Utils.writeError(error.message);
+  else console.error(error);
+}
