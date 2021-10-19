@@ -25,7 +25,6 @@
     "bundle": "npm run build && npm run test && npm run export-build",
     "slicemachine": "start-slicemachine --port 9999",
     "lint": "eslint --max-warnings 3279 --ext .ts,.tsx .",
-    "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -x 1002475 -l high -p",
     "audit-fix": "npm audit fix"
   },
@@ -147,8 +146,8 @@
     "ts-node": "^10.2.1",
     "typescript": "4.2.2",
     "typescript-is": "^0.18.2",
-    "unionfs": "^4.4.0",
     "slicemachine-core": "^0.1.0",
+    "unionfs": "^4.4.0"
   },
   "resolutions": {
     "@mdx-js/loader/**/remark-parse/trim": "^0.0.3",

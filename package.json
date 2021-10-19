@@ -5,7 +5,10 @@
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
     "test": "jest",
+<<<<<<< HEAD
     "lint-staged": "lint-staged",
+=======
+>>>>>>> 04e1d2f (use npm for sm ui)
     "build": "npm run test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
