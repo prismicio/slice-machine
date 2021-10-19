@@ -4,18 +4,31 @@ export enum Roles {
   WRITER = "Writer",
   OWNER = "Owner",
   PUBLISHER = "Publisher",
-  ADMIN = "Admin",
+  ADMIN = "Administrator",
+  SUPERUSER = "SuperUser",
+  MANAGER = "Manager",
+  READONLY = "Readonly",
 }
 
-export const RolesValidator = t.union([
+const RolesV = t.union([
   t.literal(Roles.WRITER),
   t.literal(Roles.OWNER),
   t.literal(Roles.PUBLISHER),
   t.literal(Roles.ADMIN),
+  t.literal(Roles.SUPERUSER),
+  t.literal(Roles.MANAGER),
+  t.literal(Roles.READONLY),
 ]);
 
-export function canUpdateCustomTypes(role: Roles): boolean {
+export const RolePerLocaleProfile = t.record(t.string, RolesV);
+
+export const RolesValidator = t.union([RolesV, RolePerLocaleProfile]);
+
+export function canUpdateCustomTypes(
+  role: Roles | Record<string, Roles>
+): boolean {
   if (role === Roles.OWNER) return true;
   if (role === Roles.ADMIN) return true;
+  if (role === Roles.SUPERUSER) return true;
   return false;
 }

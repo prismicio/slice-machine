@@ -43,7 +43,12 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function (arg: [string, { role: Utils.roles.Roles }]): RepoPrompt {
+  return function (
+    arg: [
+      string,
+      { role: Utils.roles.Roles | Record<string, Utils.roles.Roles> }
+    ]
+  ): RepoPrompt {
     const [repoName, { role }] = arg;
     const address = new URL(base);
     address.hostname = `${repoName}.${address.hostname}`;
@@ -134,6 +139,7 @@ export async function maybeExistingRepo(
       message: "Connect a Prismic Repository or create a new one",
       choices,
       pageSize: numberOfDisabledRepos + 2 <= 7 ? 7 : numberOfDisabledRepos + 2,
+      // loop: false
     },
   ]);
 

@@ -35,7 +35,10 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export type RepoData = Record<string, { role: roles.Roles; dbid: string }>;
+export type RepoData = Record<
+  string,
+  { role: roles.Roles | Record<string, roles.Roles>; dbid: string }
+>;
 const RepoDataValidator = t.record(
   t.string,
   t.type({
