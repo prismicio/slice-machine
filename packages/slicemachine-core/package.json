@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
-    "lint": "eslint",
+    "lint": "eslint --ext .ts .",
+    "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
     "test": "jest"
   },

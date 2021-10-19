@@ -10,6 +10,7 @@
     "watch": "tsc --project tsconfig.json --watch",
     "prepublishOnly": "npm run build",
     "lint": "eslint --ext .ts .",
+    "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
     "test": "jest"
   },

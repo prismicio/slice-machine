@@ -27,9 +27,9 @@
     "validate-npm-package": "^1.0.5"
   },
   "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine lint",
-    "**/packages/slicemachine-core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slicemachine-core eslint",
-    "**/packages/sm-init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/sm-init run eslint",
+    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine run lint:precommit",
+    "**/packages/slicemachine-core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slicemachine-core run lint:precommit",
+    "**/packages/sm-init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/sm-init run lint:precommit",
     "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }
