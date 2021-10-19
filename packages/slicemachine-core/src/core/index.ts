@@ -31,7 +31,7 @@ export interface Core {
   },*/
 
   Repository: {
-    list: (token: string, base?: string) => Promise<Communication.RepoData>;
+    list: (token: string) => Promise<Communication.RepoData>;
     // create: (apiEndpoint: string, token: string) => Promise<void>
     validateName: (
       name: string,
