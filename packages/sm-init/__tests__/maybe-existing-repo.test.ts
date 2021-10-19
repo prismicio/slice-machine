@@ -106,7 +106,7 @@ describe("makeReposPretty", () => {
     const base = "https://prismic.io";
     const result = makeReposPretty(base)(["foo-bar", { role: Roles.WRITER }]);
 
-    expect(result.name).toContain("https://foo-bar.prismic.io");
+    expect(result.name).toContain("foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
     expect(result.disabled).toContain("Unauthorized");
   });
@@ -115,7 +115,7 @@ describe("makeReposPretty", () => {
     const base = "https://prismic.io";
     const result = makeReposPretty(base)(["foo-bar", { role: Roles.OWNER }]);
 
-    expect(result.name).toContain("https://foo-bar.prismic.io");
+    expect(result.name).toContain("foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
     expect(result.disabled).toBeUndefined();
   });
