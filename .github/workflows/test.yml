@@ -16,22 +16,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install dependencies
-        run: yarn
+        run: npm i
       - name: Running functional and unit tests
         run: lerna run test
       - name: Linting
         run: lerna run lint
       - name: Audit
-        run: lerna run security-audit:prod
+        run: lerna run audit
       - name: Build slice machine core
         working-directory: ./packages/slicemachine-core
-        run: yarn build
+        run: npm run build
       - name: Build slice machine init
         working-directory: ./packages/sm-init
-        run: yarn build
+        run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
-        run: yarn build && yarn export-build
+        run: npm run build && npm run export-build
       - name: Running End to End tests
         working-directory: "./packages/slice-machine/tests/project"
-        run: yarn && yarn test:e2e
+        run: npm i && npm tun test:e2e
