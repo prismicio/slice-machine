@@ -14,7 +14,6 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { ToastPayload } from "../../../src/ToastProvider/utils";
 import { LoginModalContext } from "../../../src/LoginModalProvider";
 
 const Builder = ({ openPanel }) => {
