@@ -23,7 +23,7 @@ const AuthApi = {
 
 const TrackingApi = {
   STAGE: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
-  PROD: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
+  PROD: "https://tracking.prismic.io",
 };
 
 const AclProviderApi = {
