@@ -2,11 +2,9 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "::postinstall": "manypkg check",
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
     "test": "jest",
-    "postinstall": "lerna bootstrap",
     "build": "npm run test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",

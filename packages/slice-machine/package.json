@@ -14,20 +14,19 @@
     "config": "tsc --showConfig",
     "clean-build": "rimraf ./build/client",
     "postinstall": "node postinstall",
-    "prepublishOnly": "yarn bundle",
+    "prepublishOnly": "npm run bundle",
     "serve": "node -r esm ./build/server/src/index.js",
     "compile": "tsc --project server/tsconfig.json && node build/server/src/index.js",
     "dev-server": "cross-env PORT=9999 CWD=./tests/project nodemon -e ts,js --watch server --watch lib --ignore build/ --exec \"npm run compile\"",
-    "build": "yarn build-server && yarn build-next-app",
+    "build": "npm run build-server && npm run build-next-app",
     "build-server": "tsc --project server/tsconfig.json",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
-    "export-build": "next export && yarn clean-build",
-    "bundle": "yarn build && yarn test && yarn export-build",
+    "export-build": "next export && npm run clean-build",
+    "bundle": "npm run build && npm run test && npm run export-build",
     "slicemachine": "start-slicemachine --port 9999",
-    "security-audit:prod": "yarn improved-yarn-audit --ignore-dev-deps --min-severity high --exclude GHSA-4jqc-8m5r-9rpr",
-    "security-audit:dev": "yarn improved-yarn-audit --min-severity moderate",
+    "audit": "better-npm-audit audit -x 1002475 -l high -p",
     "lint": "eslint --max-warnings 3279 --ext .ts,.tsx .",
-    "audit-fix": "yarn-audit-fix"
+    "audit-fix": "npm audit fix"
   },
   "bin": {
     "start-slicemachine": "start/index.js"
@@ -109,6 +108,7 @@
     "@types/uniqid": "^5.3.0",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
+    "better-npm-audit": "^3.4.0",
     "cross-env": "^7.0.3",
     "diff": "^5.0.0",
     "eslint": "^7.32.0",
@@ -117,7 +117,6 @@
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
     "formik": "^2.1.4",
-    "improved-yarn-audit": "^3.0.0",
     "jest": "^27.0.0",
     "jest-config": "^27.0.0",
     "memfs": "^3.2.2",
@@ -146,8 +145,7 @@
     "ts-node": "^10.2.1",
     "typescript": "4.2.2",
     "typescript-is": "^0.18.2",
-    "unionfs": "^4.4.0",
-    "yarn-audit-fix": "^7.0.3"
+    "unionfs": "^4.4.0"
   },
   "resolutions": {
     "@mdx-js/loader/**/remark-parse/trim": "^0.0.3",
