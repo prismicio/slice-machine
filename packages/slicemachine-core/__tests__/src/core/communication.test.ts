@@ -7,6 +7,7 @@ import {
   jest,
 } from "@jest/globals";
 import * as communication from "../../../src/core/communication";
+import { roles } from "../../../src/utils";
 import nock from "nock";
 
 describe("communication", () => {
@@ -25,8 +26,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: "OWNER" },
-        qwerty: { dbid: "efgh", role: "WRITER" },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
@@ -43,8 +44,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: communication.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.wroom.io")
@@ -78,8 +79,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: "OWNER" },
-        qwerty: { dbid: "efgh", role: "WRITER" },
+        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
+        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
@@ -93,50 +94,50 @@ describe("communication", () => {
   describe("validateRepositoryName", () => {
     const fakeBase = "https://prismic.io";
 
-    test("should fail if subdomain is not defined", async () => {
+    test("should fail if subdomain is not defined", () => {
       const fn = () => communication.validateRepositoryName();
-      expect(fn).rejects.toThrow("repository name is required");
+      return expect(fn).rejects.toThrow("repository name is required");
     });
 
-    test("should fail if name length is less than 4", async () => {
+    test("should fail if name length is less than 4", () => {
       const fn = () => communication.validateRepositoryName("abc");
-      expect(fn).rejects.toThrow(
+      return expect(fn).rejects.toThrow(
         "Must have four or more alphanumeric characters and/or hyphens."
       );
     });
 
-    test("should fail if the name contains non alphanumeric characters", async () => {
+    test("should fail if the name contains non alphanumeric characters", () => {
       const fn = () => communication.validateRepositoryName("a.bc");
-      expect(fn).rejects.toThrow(
+      return expect(fn).rejects.toThrow(
         "Must contain only lowercase letters, numbers and hyphens"
       );
     });
 
-    test("should fail if the name starts with a hyphen", async () => {
+    test("should fail if the name starts with a hyphen", () => {
       const fn = () => communication.validateRepositoryName("-abc");
-      expect(fn).rejects.toThrow("start with a letter");
+      return expect(fn).rejects.toThrow("start with a letter");
     });
 
-    test("should fail if the name ends with a hyphen", async () => {
+    test("should fail if the name ends with a hyphen", () => {
       const fn = () => communication.validateRepositoryName("abc-");
-      expect(fn).rejects.toThrow("Must end in a letter or a number");
+      return expect(fn).rejects.toThrow("Must end in a letter or a number");
     });
 
-    test("Max length 30 characters", async () => {
+    test("Max length 30 characters", () => {
       const repoName = Array.from({ length: 31 }, () => "a").join("");
       const fn = () => communication.validateRepositoryName(repoName);
-      expect(fn).rejects.toThrow("30 characters or less");
+      return expect(fn).rejects.toThrow("30 characters or less");
     });
 
     test("multiple errors", () => {
       const repoName = "-abc.d";
       const fn = () => communication.validateRepositoryName(repoName);
-      expect(fn).rejects.toThrow(
+      return expect(fn).rejects.toThrow(
         "(1: Must start with a letter. (2: Must contain only lowercase letters, numbers and hyphens."
       );
     });
 
-    test("should fail if repo name is not available", async () => {
+    test("should fail if repo name is not available", () => {
       const repoName = "test";
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
@@ -144,7 +145,7 @@ describe("communication", () => {
 
       const fn = () => communication.validateRepositoryName(repoName);
 
-      expect(fn).rejects.toThrow("already in use");
+      return expect(fn).rejects.toThrow("already in use");
     });
 
     test("existing repo", () => {
@@ -152,7 +153,7 @@ describe("communication", () => {
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
         .reply(200, () => false);
-      expect(
+      return expect(
         communication.validateRepositoryName(repoName, fakeBase, true)
       ).resolves.toEqual(repoName);
     });
@@ -162,20 +163,20 @@ describe("communication", () => {
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
         .reply(200, () => true);
-      expect(
+      return expect(
         communication.validateRepositoryName(repoName, fakeBase, true)
       ).rejects.toThrow("does not exist");
     });
 
-    test("should pass if repo name is valid and available", async () => {
+    test("should pass if repo name is valid and available", () => {
       const repoName = "test";
       nock(fakeBase)
         .get(`/app/dashboard/repositories/${repoName}/exists`)
         .reply(200, () => true);
 
-      expect(communication.validateRepositoryName(repoName)).resolves.toEqual(
-        repoName
-      );
+      return expect(
+        communication.validateRepositoryName(repoName)
+      ).resolves.toEqual(repoName);
     });
 
     test("different base", () => {
@@ -184,7 +185,7 @@ describe("communication", () => {
         .get(`/app/dashboard/repositories/${repoName}/exists`)
         .reply(200, () => true);
 
-      expect(
+      return expect(
         communication.validateRepositoryName(repoName, "https://example.com")
       ).resolves.toEqual(repoName);
     });
@@ -235,5 +236,16 @@ describe("communication", () => {
       );
       expect(result.data.domain).toEqual(repoName);
     });
+  });
+});
+
+describe("maybeParseRepoData", () => {
+  test("with repos as a string", () => {
+    const repos = JSON.stringify({
+      foo: { role: roles.Roles.ADMIN, dbid: "foo" },
+    });
+    const result = communication.maybeParseRepoData(repos);
+    expect(result.foo).toBeDefined();
+    expect(result.foo.role).toEqual(roles.Roles.ADMIN);
   });
 });

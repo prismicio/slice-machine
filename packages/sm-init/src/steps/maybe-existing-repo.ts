@@ -8,15 +8,12 @@ const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  const msg = [
-    Utils.cyan.dim(`${address.protocol}//`),
-    repoName,
-    Utils.cyan.dim(`.${address.hostname}`),
-  ];
-  return msg.join("");
+  return `${Utils.cyan.dim(`${address.protocol}//`)}${repoName}${Utils.cyan.dim(
+    `.${address.hostname}`
+  )}`;
 }
 
-export async function promptForCreateRepo(base: string): Promise<string> {
+export async function promptForRepoName(base: string): Promise<string> {
   const address = new URL(base);
   return inquirer
     .prompt<Record<string, string>>([
@@ -39,26 +36,6 @@ export async function promptForCreateRepo(base: string): Promise<string> {
     .then((res) => res.repoName);
 }
 
-export function maybeRepoNameFromSMFile(cwd: string, base: string) {
-  const baseUrl = new URL(base);
-  const maybeSMFile = FileSystem.retrieveManifest(cwd);
-
-  if (maybeSMFile.exists === false) return null;
-  if (!maybeSMFile.content?.apiEndpoint) return null;
-
-  const repoUrl = new URL(maybeSMFile.content.apiEndpoint);
-  const correctBase = repoUrl.hostname.includes(baseUrl.hostname);
-  if (correctBase === false) return null;
-
-  return repoUrl.hostname.split(".")[0];
-}
-
-export function canUpdateCustomTypes(role: Communication.Roles) {
-  if (role === Communication.Roles.OWNER) return true;
-  if (role === Communication.Roles.ADMIN) return true;
-  return false;
-}
-
 export type RepoPrompt = { name: string; value: string; disabled?: string };
 
 export type PromptOrSeparator = RepoPrompt | Separator;
@@ -66,15 +43,20 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function (arg: [string, { role: Communication.Roles }]): RepoPrompt {
+  return function (
+    arg: [
+      string,
+      { role: Utils.roles.Roles | Record<string, Utils.roles.Roles> }
+    ]
+  ): RepoPrompt {
     const [repoName, { role }] = arg;
     const address = new URL(base);
     address.hostname = `${repoName}.${address.hostname}`;
-    if (canUpdateCustomTypes(role) === false) {
+    if (Utils.roles.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           repoName
-        )} ${Utils.purple.dim(address.toString())}`,
+        )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
         value: repoName,
         disabled: "Unauthorized",
       };
@@ -82,7 +64,7 @@ export function makeReposPretty(base: string) {
 
     return {
       name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(
-        address.toString()
+        `"${address.hostname}"`
       )}`,
       value: repoName,
     };
@@ -90,7 +72,7 @@ export function makeReposPretty(base: string) {
 }
 
 export function orderPrompts(maybeName?: string | null) {
-  return (a: PromptOrSeparator, b: PromptOrSeparator) => {
+  return (a: PromptOrSeparator, b: PromptOrSeparator): number => {
     if (a instanceof Separator || b instanceof Separator) return 0;
     if (maybeName && (a.value === maybeName || b.value === maybeName)) return 0;
     if (a.value === CREATE_REPO || b.value === CREATE_REPO) return 0;
@@ -121,21 +103,14 @@ export function sortReposForPrompt(
     value: CREATE_REPO,
   };
 
-  // const sep: Separator = new inquirer.Separator(
-  //   "---- Use an existing Repository ----"
-  // );
-
-  const start: RepoPrompts = [
-    createNew,
-    //  sep
-  ];
-
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
+  const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
 
   return Object.entries(repos)
     .reverse()
     .map(makeReposPretty(base))
-    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), start)
+    .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), [
+      createNew,
+    ])
     .sort(orderPrompts(maybeConfiguredRepoName));
 }
 
@@ -147,7 +122,7 @@ export async function maybeExistingRepo(
   const repos = await Communication.listRepositories(cookie, base);
 
   if (Object.keys(repos).length === 0) {
-    const name = await promptForCreateRepo(base);
+    const name = await promptForRepoName(base);
     return { existing: false, name };
   }
 
@@ -158,22 +133,21 @@ export async function maybeExistingRepo(
     return repo.disabled;
   }).length;
 
-  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
-
   const res = await inquirer.prompt<Record<string, string>>([
     {
       type: "list",
       name: "repoName",
-      default: maybeConfiguredRepoName || CREATE_REPO,
+      default: 0,
       required: true,
       message: "Connect a Prismic Repository or create a new one",
       choices,
       pageSize: numberOfDisabledRepos + 2 <= 7 ? 7 : numberOfDisabledRepos + 2,
+      // loop: false
     },
   ]);
 
   if (res.repoName === CREATE_REPO) {
-    const name = await promptForCreateRepo(base);
+    const name = await promptForRepoName(base);
     return { existing: false, name };
   }
   return { existing: true, name: res.repoName };

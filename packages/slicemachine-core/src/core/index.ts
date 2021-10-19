@@ -5,7 +5,7 @@ import {
   AuthConfig,
 } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { poll, buildEndpoints, CONSTS } from "../utils";
+import { poll, buildEndpoints } from "../utils";
 
 import * as Communication from "./communication";
 export * as Communication from "./communication";
@@ -31,13 +31,9 @@ export interface Core {
   },*/
 
   Repository: {
-    list: (token: string, base?: string) => Promise<Communication.RepoData>;
+    list: (token: string) => Promise<Communication.RepoData>;
     // create: (apiEndpoint: string, token: string) => Promise<void>
-    validateName: (
-      name: string,
-      base?: string,
-      existingRepo?: boolean
-    ) => Promise<string>;
+    validateName: (name: string, existingRepo?: boolean) => Promise<string>;
   };
 }
 
@@ -56,11 +52,8 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
     Repository: {
       list: async (token: string): Promise<Communication.RepoData> =>
         Communication.listRepositories(token, base),
-      validateName: (
-        name: string,
-        base = CONSTS.DEFAULT_BASE,
-        existingRepo = false
-      ) => Communication.validateRepositoryName(name, base, existingRepo),
+      validateName: (name: string, existingRepo = false): Promise<string> =>
+        Communication.validateRepositoryName(name, base, existingRepo),
     },
   };
 }
