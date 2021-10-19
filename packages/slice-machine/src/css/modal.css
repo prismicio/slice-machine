@@ -10,26 +10,30 @@ body {
   overflow: hidden;
 }
 
-.ReactModal__Content {
-  padding: 0 !important;
-  padding-bottom: 40px !important;
-  bottom: auto !important;
-  top: 10% !important;
-  max-width: 900px;
-  margin: auto;
-  border: 0 !important;
-  background: 0 !important;
-}
-.ReactModal__Overlay {
-  background-color: rgba(11, 11, 12, 0.9) !important;
-  backdrop-filter: blur(3px);
-  overflow: auto;
-}
-
 .ReactModal__Content--after-open {
   min-height: 60vh;
 }
 
 .react-datepicker-wrapper {
   width: 100%;
+}
+
+/* Review modal animation   */
+
+.ReviewModal .ReactModal__Overlay {
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 500ms ease-in-out;
+  bottom: 16px;
+  right: 16px;
+}
+
+.ReviewModal .ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateX(0px);
+}
+
+.ReviewModal .ReactModal__Overlay--before-close {
+  opacity: 0;
+  transform: translateX(100px);
 }

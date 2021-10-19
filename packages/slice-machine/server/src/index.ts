@@ -1,5 +1,3 @@
-/// <reference path="../../../sm-commons/index.d.ts" />
-
 require("@babel/register");
 
 console.log("\nLaunching server...");
@@ -12,6 +10,11 @@ import moduleAlias from "module-alias";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 
+declare let global: {
+  fetch: any;
+  appRoot: string;
+};
+
 global.fetch = require("node-fetch");
 global.appRoot = path.join(__dirname, "../../../");
 
@@ -19,7 +22,8 @@ const pkg = require(global.appRoot + "package.json");
 const LIB_PATH = path.join(global.appRoot, "build", "lib");
 
 Object.entries(pkg._moduleAliases).forEach(([key]) => {
-  moduleAlias.addAlias(key, (fromPath) => {
+  // @ts-ignore As the 2.1 typing is not available yet and solve this problem
+  moduleAlias.addAlias(key, (fromPath: string) => {
     return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
   });
 });
@@ -27,7 +31,8 @@ Object.entries(pkg._moduleAliases).forEach(([key]) => {
 const api = require("./api");
 
 const app = express();
-app.use(bodyParser.json({ limit: "64mb", extended: true }));
+app.use(bodyParser.json({ limit: "64mb" }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const out = path.join(__dirname, "../../..", "out");
 

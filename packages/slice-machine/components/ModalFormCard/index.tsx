@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
 import { Formik, Form } from "formik";
 import { Flex, Heading, Close, Box, Button } from "theme-ui";
 
@@ -31,7 +32,7 @@ const ModalCard = ({
   cardProps?: {};
   omitFooter?: boolean;
 }) => (
-  <Modal
+  <SliceMachineModal
     isOpen={isOpen}
     shouldCloseOnOverlayClick
     onRequestClose={() => close()}
@@ -111,7 +112,7 @@ const ModalCard = ({
         </Form>
       )}
     </Formik>
-  </Modal>
+  </SliceMachineModal>
 );
 
 export default ModalCard;
