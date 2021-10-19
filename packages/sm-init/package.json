@@ -10,6 +10,7 @@
     "watch": "tsc --project tsconfig.json --watch",
     "prepublishOnly": "yarn run build",
     "lint": "eslint --ext .ts .",
+    "audit": "better-npm-audit audit -l high -p",
     "test": "jest"
   },
   "devDependencies": {
@@ -21,11 +22,13 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "babel-jest": "^27.0.2",
+    "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
+    "improved-yarn-audit": "^3.0.0",
     "jest": "^27.2.4",
     "mock-stdin": "^1.0.0",
     "nock": "^13.1.3",
