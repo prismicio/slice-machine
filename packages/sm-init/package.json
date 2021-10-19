@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
-    "prepublishOnly": "yarn run build",
+    "prepublishOnly": "npm run build",
     "lint": "eslint --ext .ts .",
     "audit": "better-npm-audit audit -l high -p",
     "test": "jest"
@@ -28,7 +28,6 @@
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
-    "improved-yarn-audit": "^3.0.0",
     "jest": "^27.2.4",
     "mock-stdin": "^1.0.0",
     "nock": "^13.1.3",
