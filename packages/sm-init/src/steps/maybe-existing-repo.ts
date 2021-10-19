@@ -56,7 +56,7 @@ export function makeReposPretty(base: string) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           repoName
-        )} ${Utils.purple.dim(address.toString())}`,
+        )} ${Utils.purple.dim(address.hostname)}`,
         value: repoName,
         disabled: "Unauthorized",
       };
@@ -64,7 +64,7 @@ export function makeReposPretty(base: string) {
 
     return {
       name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(
-        address.toString()
+        address.hostname
       )}`,
       value: repoName,
     };
