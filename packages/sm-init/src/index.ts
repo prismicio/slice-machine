@@ -33,7 +33,7 @@ async function init() {
   if (existing === false) {
     await createRepository(name, config.cookies, framework, base);
   }
-  if (false) await installSm(cwd);
+  await installSm(cwd);
 }
 
 try {
