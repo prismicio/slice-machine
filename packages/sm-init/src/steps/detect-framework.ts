@@ -1,17 +1,16 @@
 import { Utils } from "slicemachine-core";
 import * as inquirer from "inquirer";
 
-export async function promptForFramework(): Promise<Utils.Framework> {
-  const frameworks = Utils.framework.SupportedFrameworks;
-  const choices = frameworks.map((framework) => {
+export async function promptForFramework(): Promise<Utils.Framework.FrameworkEnum> {
+  const choices = Utils.Framework.SupportedFrameworks.map((framework) => {
     return {
-      name: Utils.framework.fancyName(framework),
+      name: Utils.Framework.fancyName(framework),
       value: framework,
     };
   });
 
   return inquirer
-    .prompt<{ framework: Utils.Framework }>([
+    .prompt<{ framework: Utils.Framework.FrameworkEnum }>([
       {
         name: "framework",
         type: "list",
@@ -23,7 +22,7 @@ export async function promptForFramework(): Promise<Utils.Framework> {
     .then((res) => res.framework);
 }
 
-export async function detectFramework(cwd: string): Promise<Utils.Framework> {
+export async function detectFramework(cwd: string): Promise<Utils.Framework.FrameworkEnum> {
   const failMessage = `Please run ${Utils.bold(
     "npx slicemachine init"
   )} in a Nuxt or Next.js project`;
@@ -35,17 +34,17 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
   spinner.start();
 
   try {
-    const maybeFramework = Utils.framework.detectFramework(cwd);
+    const maybeFramework = Utils.Framework.detectFramework(cwd);
     spinner.stop();
 
-    if (!maybeFramework || maybeFramework === Utils.Framework.vanillajs) {
+    if (!maybeFramework || maybeFramework === Utils.Framework.FrameworkEnum.vanillajs) {
       Utils.writeError("Framework not detected");
       return await promptForFramework();
     }
 
-    const nameToPrint = Utils.framework.fancyName(maybeFramework);
+    const nameToPrint = Utils.Framework.fancyName(maybeFramework);
 
-    if (Utils.framework.isUnsupported(maybeFramework)) {
+    if (Utils.Framework.isUnsupported(maybeFramework)) {
       Utils.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);

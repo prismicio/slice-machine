@@ -35,7 +35,7 @@ export interface Core {
     create: (
       apiEndpoint: string,
       token: string,
-      framework: Framework
+      framework: Framework.FrameworkEnum
     ) => Communication.CreateRepositoryResponse;
     validateName: (name: string, existingRepo?: boolean) => Promise<string>;
   };
@@ -61,7 +61,7 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
       create: async (
         domain: string,
         token: string,
-        framework: Framework
+        framework: Framework.FrameworkEnum
       ): Communication.CreateRepositoryResponse =>
         Communication.createRepository(domain, token, framework, base),
     },

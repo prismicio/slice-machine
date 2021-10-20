@@ -3,6 +3,7 @@
 const path = require("path");
 const pkg = require("../package.json");
 
+const { Utils } = require("slicemachine-core");
 const moduleAlias = require("module-alias");
 
 const LIB_PATH = path.join(__dirname, "..", "build", "lib");
@@ -25,13 +26,10 @@ const validate = require("../build/lib/env/client").validate;
 const infobox = require("./info");
 
 const compareVersions = require("../build/lib/env/semver").default;
-const { defineFramework } = require("../build/lib/env/framework");
 const {
   default: handleManifest,
   ManifestStates,
 } = require("../build/lib/env/manifest");
-
-const { createManifest } = require("./manifest");
 
 const { argv } = require("yargs");
 
@@ -40,7 +38,7 @@ async function handleChangelog(params) {
     await migrate(false, params);
   } catch (e) {
     console.error(
-      "An error occured while migrating file system. Continuing..."
+      "An error occurred while migrating file system. Continuing..."
     );
     console.error(`Full error: ${e}`);
     return;
@@ -58,7 +56,7 @@ async function handleMigration(cwd) {
 }
 
 function start({ cwd, port }, callback) {
-  const start = spawn("node", ["../build/server/src/index.js"], {
+  const smServer = spawn("node", ["../build/server/src/index.js"], {
     cwd: __dirname,
     port,
     env: {
@@ -67,7 +65,8 @@ function start({ cwd, port }, callback) {
       PORT: port,
     },
   });
-  start.stdout.on("data", function (data) {
+
+  smServer.stdout.on("data", function (data) {
     const lns = data.toString().split("=");
     if (lns.length === 2) {
       // server was launched
@@ -79,11 +78,11 @@ function start({ cwd, port }, callback) {
     }
   });
 
-  start.stderr.on("data", function (data) {
+  smServer.stderr.on("data", function (data) {
     console.log("[slice-machine] " + data.toString());
   });
 
-  start.on("exit", function (code) {
+  smServer.on("exit", function (code) {
     console.log("[slice-machine] Thanks for using SliceMachine");
   });
 }
@@ -109,14 +108,9 @@ See below for more info 👇`,
     case ManifestStates.Valid:
       return { exit: false };
     case ManifestStates.NotFound: {
-      console.log(`Slicemachine requires an "sm.json" config file, at the root of your project.
-      
-Required properties:
-* apiEndpoint, eg. "https://repo.prismic.io/api/v2"
-* libraries, eg. ["~/slices"]\n\n`);
+      console.log(`Run "npx sm init" command to configure your project`);
 
-      const exit = await createManifest(cwd);
-      return { exit };
+      return { exit: true };
     }
     case ManifestStates.MissingEndpoint:
       console.log(
@@ -147,9 +141,9 @@ async function run() {
   }
 
   const nodeVersion = process.version.slice(1).split(".")[0];
-  if (parseInt(nodeVersion) < 15) {
+  if (parseInt(nodeVersion) < 12) {
     console.error(
-      `\n🔴 Slicemachine requires node version >= 15 to work properly.\nCurrent version: ${process.version}\n`
+      `\n🔴 Slicemachine requires node version >= 12 to work properly.\nCurrent version: ${process.version}\n`
     );
     process.exit(-1);
   }
@@ -164,7 +158,7 @@ async function run() {
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
   const npmCompareData = await compareVersions({ cwd: SmDirectory }, false);
 
-  const framework = defineFramework(userConfig.content, cwd);
+  const framework = Utils.Framework.defineFramework(userConfig.content, cwd);
 
   const validateRes = await validate();
 

@@ -156,7 +156,7 @@ export type CreateRepositoryResponse = Promise<
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = Framework.vanillajs,
+  framework = Framework.FrameworkEnum.vanillajs,
   base = DEFAULT_BASE
 ): CreateRepositoryResponse {
   const data = {

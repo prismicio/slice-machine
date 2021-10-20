@@ -4,7 +4,7 @@ import { FileContent, SMConfigPath } from "./paths";
 export interface Manifest {
   apiEndpoint: string;
   storybook?: string;
-  framework?: Framework;
+  framework?: Framework.FrameworkEnum;
   chromaticAppId?: string;
   _latest?: string;
 }
