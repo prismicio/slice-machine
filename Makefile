@@ -9,6 +9,7 @@ install_dep:
 	@# Install dep
 	@npm i
 	@npx lerna bootstrap
+	@cd packages/slicemachine-core && npm run build
 
 .PHONY: clean_workspace
 clean_workspace:

@@ -176,9 +176,9 @@ router.post(
   async function (_req: express.Request, res: express.Response) {
     const payload = await startAuth();
     if (payload.err) {
-      return res.status(400).json();
+      return res.status(400).json({});
     }
-    return res.status(200).json();
+    return res.status(200).json({});
   }
 );
 
@@ -197,7 +197,7 @@ router.post(
     if (payload.err) {
       return res.status(400).json(req.body);
     }
-    return res.status(200).json();
+    return res.status(200).json({});
   }
 );
 
