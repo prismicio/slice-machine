@@ -1,7 +1,6 @@
 import Modal from "react-modal";
 import React, { useContext, useState } from "react";
 import { Button, Card, Close, Flex, Heading, Spinner, Text } from "theme-ui";
-import Prismic from "components/AppLayout/Navigation/Icons/Prismic";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
@@ -97,7 +96,6 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
         <Flex
           sx={{
             p: "16px",
-            pl: 4,
             bg: "headSection",
             alignItems: "center",
             justifyContent: "space-between",
@@ -105,15 +103,15 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
             borderBottom: (t) => `1px solid ${t.colors?.borders}`,
           }}
         >
-          <Heading sx={{ fontSize: "20px" }}>You're not connected</Heading>
-          <Close type="button" onClick={onClose} />
+          <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>
+          <Close sx={{ p: 0 }} type="button" onClick={onClose} />
         </Flex>
         <Flex
           sx={{
             flexDirection: "column",
             p: 3,
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "stretch",
           }}
         >
           <Text
@@ -121,28 +119,26 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
             sx={{
               mb: 3,
               maxWidth: 280,
+              textAlign: "center",
             }}
           >
-            In to order to perform this action, you’ve to be connected into your
-            Prismic account.
+            Your session has expired.
+            <br />
+            Please log in again.
           </Text>
           <Button
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              width: 240,
             }}
             onClick={onClick}
           >
             {isLoading ? (
               <Spinner color="#FFF" size={16} />
             ) : (
-              <>
-                <Flex sx={{ mr: 2 }}>
-                  <Prismic fill={"white"} />
-                </Flex>
-                Signin to Prismic
-              </>
+              <>Signin to Prismic</>
             )}
           </Button>
         </Flex>
