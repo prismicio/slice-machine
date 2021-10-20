@@ -1,17 +1,6 @@
 import { Utils } from "slicemachine-core";
 import * as inquirer from "inquirer";
 
-export function maybeDetect(cwd: string): Promise<Utils.Framework> {
-  return new Promise((resolve, reject) => {
-    try {
-      const result = Utils.framework.detectFramework(cwd);
-      return resolve(result);
-    } catch (e) {
-      return reject(e);
-    }
-  });
-}
-
 export async function promptForFramework(): Promise<Utils.Framework> {
   const frameworks = Utils.framework.SupportedFrameworks;
   const choices = frameworks.map((framework) => {
@@ -34,33 +23,32 @@ export async function promptForFramework(): Promise<Utils.Framework> {
     .then((res) => res.framework);
 }
 
-export async function detectFramework(cwd: string): Promise<string> {
+export async function detectFramework(cwd: string): Promise<Utils.Framework> {
   const failMessage = `Please run ${Utils.bold(
     "npx slicemachine init"
   )} in a Nuxt or Next.js project`;
+
   const spinner = Utils.spinner(
     "Detecting framework to install correct dependencies"
   );
 
   spinner.start();
 
-  return maybeDetect(cwd)
-    .catch((error: Error) => {
-      spinner.fail("package.json not found");
+  try {
+    const maybeFramewrok = Utils.framework.detectFramework(cwd);
 
-      Utils.writeError(error.message || failMessage);
+    if (!maybeFramewrok || maybeFramewrok === Utils.Framework.vanillajs) {
+      spinner.fail("Framework not detected");
+      return await promptForFramework();
+    }
 
-      return process.exit(1);
-    })
-    .then((framework) => {
-      if (!framework || framework === Utils.Framework.vanillajs) {
-        spinner.fail("Framework not detected");
-        return promptForFramework();
-      }
+    const nameToPrint = Utils.framework.fancyName(maybeFramewrok);
+    spinner.succeed(`${nameToPrint} detected`);
 
-      const nameToPrint = Utils.framework.fancyName(framework);
-      spinner.succeed(`${nameToPrint} detected`);
-
-      return framework;
-    });
+    return maybeFramewrok;
+  } catch {
+    spinner.fail("package.json not found");
+    Utils.writeError(failMessage);
+    process.exit(1);
+  }
 }
