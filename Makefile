@@ -8,6 +8,7 @@ clean: clean_workspace check_deps install_dep
 install_dep:
 	@# Install dep
 	@npm i
+	@npm i -g lerna
 	@lerna bootstrap
 
 .PHONY: clean_workspace
