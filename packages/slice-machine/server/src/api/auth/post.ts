@@ -7,16 +7,15 @@ const AuthRequest = t.type({
   cookies: t.array(t.string),
 });
 
-type AuthRequest = { email: string; cookies: string[] };
+type AuthRequest = t.TypeOf<typeof AuthRequest>;
 
 type PostAuthResponse = {
   err?: Error;
 };
 
-export default async function handler(authRequest: {
-  email: string;
-  cookies: string;
-}): Promise<PostAuthResponse> {
+export default async function handler(
+  authRequest: Record<string, unknown>
+): Promise<PostAuthResponse> {
   try {
     const authPayload = fold(
       () => {

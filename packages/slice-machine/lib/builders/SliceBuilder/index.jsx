@@ -44,7 +44,7 @@ const Builder = ({ openPanel }) => {
 
   const onPush = (data) => {
     setData(data);
-    if (data.error && (data.status === 401 || data.status === 403)) {
+    if (data.error && data.status === 403) {
       openLogin();
     }
   };

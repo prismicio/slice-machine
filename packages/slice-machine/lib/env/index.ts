@@ -150,9 +150,6 @@ export async function getEnv(
         client: new FakeClient(),
       },
     };
-    // const message = '[api/env]: Unrecoverable error. Could not find file sm.json. Exiting..'
-    // console.error(message)
-    // throw new Error(message)
   }
 
   const manifestState = handleManifest(cwd);

@@ -33,9 +33,9 @@ Object.entries(pkg._moduleAliases).forEach(([key]) => {
 const api = require("./api");
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json({ limit: "64mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 
 const out = path.join(__dirname, "../../..", "out");
 

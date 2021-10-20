@@ -4,13 +4,14 @@ import { Button, Card, Close, Flex, Heading, Spinner, Text } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
+import { checkAuthStatus, startAuth } from "@src/apiClient";
 
 Modal.setAppElement("#__next");
 
-type LoginModalProps = {
+interface LoginModalProps {
   onClose: () => void;
   isOpen: boolean;
-};
+}
 
 const poll = async (
   fn: Function,
@@ -51,22 +52,17 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
 
     try {
       setIsLoading(true);
-      await fetch("/api/auth/start", { method: "POST" });
-      const checkStatus = async () =>
-        await fetch("/api/auth/status", { method: "POST" }).then((response) =>
-          response.json()
-        );
+      await startAuth();
       const isAuthStatusOk = ({ status }: { status: string }) =>
         status === "ok";
       const apiUrl = new URL(env.baseUrl);
-
       window.open(
         `https://prismic.io/dashboard/cli/login?port=${apiUrl.port}&path=/api/auth`,
         "_blank"
       );
-      await poll(checkStatus, isAuthStatusOk, 3000, 60);
+      await poll(checkAuthStatus, isAuthStatusOk, 3000, 60);
       setIsLoading(false);
-      addToast("Logging successfully", { appearance: "success" });
+      addToast("Logged in", { appearance: "success" });
       onClose();
     } catch (e) {
       setIsLoading(false);

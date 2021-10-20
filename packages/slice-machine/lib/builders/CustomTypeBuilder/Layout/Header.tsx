@@ -52,7 +52,7 @@ const CustomTypeHeader = ({
               }
               setIsLoading(false);
               handleRemoteResponse(addToast)(data);
-              if (data.error && (data.status === 401 || data.status === 403)) {
+              if (data.error && data.status === 403) {
                 openLogin();
               }
             });
