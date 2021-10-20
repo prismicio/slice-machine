@@ -10,7 +10,6 @@ export const dim = chalk.dim;
 export const cyan = chalk.cyan;
 export const yellow = chalk.yellow;
 
-
 export const spinner = ora;
 
 export const writeError = (msg: string, prefix = "Error!"): void =>
