@@ -4,6 +4,7 @@ import { mocked } from "ts-jest/utils";
 import { detectFramework } from "../src/steps";
 import { Utils } from "slicemachine-core";
 import { stderr } from "stdout-stderr";
+import inquirer from "inquirer";
 
 jest.mock("fs");
 
@@ -30,50 +31,32 @@ describe("detect-framework", () => {
     expect(result).toBe(Utils.framework.Framework.next);
   });
 
-  test("unsupported framework", async () => {
-    const mockedFs = mocked(fs, true);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
-    mockedFs.readFileSync.mockReturnValue(
+  test("framework not found in package.json", async () => {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats); // linting error?
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
       JSON.stringify({
-        dependencies: {
-          [Utils.framework.Framework.vanillajs]: "0",
-        },
+        dependencies: {},
       })
     );
 
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementation(() => undefined as never);
-    const logSpy = jest
-      .spyOn(console, "log")
-      .mockImplementation(() => undefined);
+    jest
+      .spyOn(inquirer, "prompt")
+      .mockResolvedValue({ framework: Utils.Framework.next });
 
     stderr.start();
-    await detectFramework(__dirname).catch();
+    const result = await detectFramework(__dirname);
     stderr.stop();
+    expect(result).toBe(Utils.Framework.next);
     expect(fs.lstatSync).toHaveBeenCalled();
-    expect(exitSpy).toHaveBeenCalled();
-    const nameToPrint = Utils.framework.fancyName(Utils.Framework.vanillajs);
-    expect(stderr.output).toContain(
-      `Framework: ${nameToPrint} is not supported`
-    );
-    expect(logSpy).toHaveBeenCalledWith(
-      `Please run ${Utils.bold(
-        "npx slicemachine init"
-      )} in a Nuxt or Next.js project`
-    );
+    expect(stderr.output).toContain("Framework not detected");
   });
 
   test("package.json not found", async () => {
-    const mockedFs = mocked(fs, true);
-    mockedFs.lstatSync.mockReturnValue(undefined); // linting error?
+    jest.spyOn(fs, "lstatSync").mockReturnValue(undefined);
 
     const exitSpy = jest
       .spyOn(process, "exit")
-      .mockImplementation(() => undefined as never);
-    const logSpy = jest
-      .spyOn(console, "log")
-      .mockImplementation(() => undefined);
+      .mockImplementation(() => "next" as never);
     const errorSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
@@ -85,12 +68,7 @@ describe("detect-framework", () => {
     expect(errorSpy).toHaveBeenCalledWith(
       "[api/env]: Unrecoverable error. Could not find package.json. Exiting.."
     );
-    expect(stderr.output).toContain("Framework not detected");
-    expect(logSpy).toHaveBeenCalledWith(
-      `Please run ${Utils.bold(
-        "npx slicemachine init"
-      )} in a Nuxt or Next.js project`
-    );
+    expect(stderr.output).toContain("package.json not found");
     expect(exitSpy).toHaveBeenCalled();
   });
 });

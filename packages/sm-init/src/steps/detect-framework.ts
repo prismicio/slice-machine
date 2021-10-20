@@ -1,4 +1,5 @@
 import { Utils } from "slicemachine-core";
+import * as inquirer from "inquirer";
 
 export function maybeDetect(cwd: string): Promise<Utils.Framework> {
   return new Promise((resolve, reject) => {
@@ -11,30 +12,55 @@ export function maybeDetect(cwd: string): Promise<Utils.Framework> {
   });
 }
 
-export function detectFramework(cwd: string): Promise<string> {
+export async function promptForFramework(): Promise<Utils.Framework> {
+  const frameworks = Utils.framework.SupportedFrameworks;
+  const choices = frameworks.map((framework) => {
+    return {
+      name: Utils.framework.fancyName(framework),
+      value: framework,
+    };
+  });
+
+  return inquirer
+    .prompt<{ framework: Utils.Framework }>([
+      {
+        name: "framework",
+        type: "list",
+        message: "Select a framework to use",
+        required: true,
+        choices,
+      },
+    ])
+    .then((res) => res.framework);
+}
+
+export async function detectFramework(cwd: string): Promise<string> {
+  const failMessage = `Please run ${Utils.bold(
+    "npx slicemachine init"
+  )} in a Nuxt or Next.js project`;
   const spinner = Utils.spinner(
     "Detecting framework to install correct dependencies"
   );
+
+  spinner.start();
+
   return maybeDetect(cwd)
-    .catch(() => {
-      spinner.fail("Framework not detected");
-      throw new Error("frame work not-found");
+    .catch((error: Error) => {
+      spinner.fail("package.json not found");
+
+      Utils.writeError(error.message || failMessage);
+
+      return process.exit(1);
     })
     .then((framework) => {
-      const nameToPrint = Utils.framework.fancyName(framework);
-      if (Utils.framework.SupportedFrameworks.includes(framework)) {
-        spinner.succeed(`${nameToPrint} detected`);
-        return framework;
+      if (!framework || framework === Utils.Framework.vanillajs) {
+        spinner.fail("Framework not detected");
+        return promptForFramework();
       }
-      spinner.fail(`Framework: ${nameToPrint} is not supported`);
-      throw new Error(framework);
-    })
-    .catch(() => {
-      console.log(
-        `Please run ${Utils.bold(
-          "npx slicemachine init"
-        )} in a Nuxt or Next.js project`
-      );
-      process.exit(1);
+
+      const nameToPrint = Utils.framework.fancyName(framework);
+      spinner.succeed(`${nameToPrint} detected`);
+
+      return framework;
     });
 }
