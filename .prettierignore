@@ -5,3 +5,5 @@ packages/slice-machine/templates/
 packages/slice-machine/out
 packages/**/package.json
 packages/**/package-lock.json
+package.json
+package-lock.json
