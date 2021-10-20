@@ -46,9 +46,15 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
     spinner.succeed(`${nameToPrint} detected`);
 
     return maybeFramewrok;
-  } catch {
+  } catch (error) {
     spinner.fail("package.json not found");
-    Utils.writeError(failMessage);
+
+    if (error instanceof Error && error.message) {
+      Utils.writeError(error.message);
+    } else {
+      Utils.writeError(failMessage);
+    }
+
     process.exit(1);
   }
 }
