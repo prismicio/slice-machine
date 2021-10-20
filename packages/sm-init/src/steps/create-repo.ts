@@ -1,20 +1,22 @@
-import { Communication, Utils } from "slicemachine-core";
+import { Communication, Utils, FileSystem } from "slicemachine-core";
 import { AxiosError } from "slicemachine-core/src/core/communication";
-
-const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function createRepository(
   domain: string,
-  cookies: string,
-  framework?: string,
-  base = DEFAULT_BASE
+  framework: Utils.Framework,
+  config: FileSystem.AuthConfig
 ): Promise<void> {
   const spinner = Utils.spinner("Creating Prismic Repository");
   spinner.start();
 
-  return Communication.createRepository(domain, cookies, framework, base)
+  return Communication.createRepository(
+    domain,
+    config.cookies,
+    framework,
+    config.base
+  )
     .then((res) => {
-      const addressUrl = new URL(base);
+      const addressUrl = new URL(config.base);
       addressUrl.hostname = `${res.data.domain || domain}.${
         addressUrl.hostname
       }`;
@@ -28,5 +30,8 @@ export function createRepository(
           `Error: [${error.response.status}]: ${error.response.statusText}`
         );
       }
+      Utils.writeError(`We failed to create you new prismic repository`);
+      console.log(`Run ${Utils.bold("npx slicemachine init")} again!`);
+      process.exit(-1);
     });
 }

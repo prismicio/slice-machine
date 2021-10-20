@@ -27,8 +27,9 @@ async function init() {
     config.cookies,
     config.base
   );
-  if (existing === false)
-    await createRepository(name, config.cookies, "framework", base);
+  if (existing === false) {
+    await createRepository(name, Utils.Framework.none, config);
+  }
   await installSm(cwd);
 }
 

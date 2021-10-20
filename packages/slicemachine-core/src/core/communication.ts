@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { cookie, CONSTS, roles } from "../utils";
+import { cookie, CONSTS, roles, Framework } from "../utils";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
@@ -149,12 +149,16 @@ export async function validateRepositoryName(
     });
 }
 
+export type CreateRepositoryResponse = Promise<
+  AxiosResponse<{ domain: string }>
+>;
+
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = "",
+  framework = Framework.vanillajs,
   base = DEFAULT_BASE
-): Promise<AxiosResponse<{ domain: string }>> {
+): CreateRepositoryResponse {
   const data = {
     domain,
     framework,
