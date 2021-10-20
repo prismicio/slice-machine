@@ -8,14 +8,13 @@ clean: clean_workspace check_deps install_dep
 install_dep:
 	@# Install dep
 	@npm i
-	@npm i -g lerna
-	@lerna bootstrap
+	@npx lerna bootstrap
 
 .PHONY: clean_workspace
 clean_workspace:
 	@# Clean the workspace
 	@rm -rf node_modules
-	@lerna clean --yes
+	@npx lerna clean --yes
 
 .PHONY: check_deps
 check_deps:
