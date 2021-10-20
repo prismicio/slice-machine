@@ -16,6 +16,7 @@
     "lint": "eslint --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
+    "audit-fix": "npm audit fix",
     "test": "jest"
   },
   "dependencies": {
