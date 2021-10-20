@@ -15,6 +15,12 @@ export function prettyRepoName(address: URL, value?: string): string {
 
 export async function promptForRepoName(base: string): Promise<string> {
   const address = new URL(base);
+
+  const hint = `${Utils.yellow("ℹ")}  ${Utils.dim(
+    "The name acts as a domain/endpoint for your content repo and should be completely unique."
+  )}`;
+  console.log(hint);
+
   return inquirer
     .prompt<Record<string, string>>([
       {
@@ -97,7 +103,7 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${Utils.purple("Create a")} ${Utils.bold("New")} ${Utils.purple(
+    name: `${Utils.purple("Create a")} ${Utils.bold("new")} ${Utils.purple(
       "Repository"
     )}`,
     value: CREATE_REPO,

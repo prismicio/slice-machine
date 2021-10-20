@@ -32,6 +32,7 @@ describe("maybe-existing-repo", () => {
     const base = "https://prismic.io";
 
     jest.spyOn(inquirer, "prompt").mockResolvedValue({ repoName });
+    jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
     const result = await promptForRepoName(base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
@@ -51,6 +52,7 @@ describe("maybe-existing-repo", () => {
     });
 
     jest.spyOn(inquirer, "prompt").mockResolvedValue({ repoName });
+    jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
     const result = await maybeExistingRepo(cookies, base);
 
@@ -79,6 +81,8 @@ describe("maybe-existing-repo", () => {
       .spyOn(inquirer, "prompt")
       .mockResolvedValueOnce({ repoName: CREATE_REPO })
       .mockResolvedValueOnce({ repoName });
+
+    jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
     const result = await maybeExistingRepo(cookies, base);
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
