@@ -9,6 +9,7 @@ import {
 import * as communication from "../../../src/core/communication";
 import { roles } from "../../../src/utils";
 import nock from "nock";
+import { Framework } from "../../../src/utils";
 
 describe("communication", () => {
   afterEach(() => {
@@ -16,7 +17,6 @@ describe("communication", () => {
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
     return nock.restore();
   });
 
@@ -192,12 +192,13 @@ describe("communication", () => {
   });
 
   describe("createRepository", () => {
-    test("default arguments", async () => {
-      const cookies = "prismic-auth=biscuit;";
-      const repoName = "test";
+    const cookies = "prismic-auth=biscuit;";
+    const repoName = "test";
+
+    test("with default arguments it should call the prismic.io endpoint to create a new repo", async () => {
       const formData = {
         domain: repoName,
-        framework: "",
+        framework: Framework.vanillajs,
         plan: "personal",
         isAnnual: "false",
         role: "developer",
@@ -212,10 +213,9 @@ describe("communication", () => {
     });
 
     test("with framework and different base", async () => {
-      const repoName = "test";
-      const cookies = "prismic-auth=biscuit;";
       const fakeBase = "https://example.com";
-      const framework = "foo-js";
+      const framework = Framework.next;
+
       const formData = {
         domain: repoName,
         framework,

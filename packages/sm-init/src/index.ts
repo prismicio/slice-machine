@@ -31,7 +31,7 @@ async function init() {
 
   const framework = await detectFramework(cwd);
   if (existing === false) {
-    await createRepository(name, config.cookies, framework, base);
+    await createRepository(name, framework, config);
   }
   await installSm(cwd);
 }
