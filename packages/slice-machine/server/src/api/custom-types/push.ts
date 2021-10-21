@@ -28,29 +28,24 @@ export default async function handler(query: { id: string }) {
 
   const state = await fetchState();
 
-  // When the user is connected but the token expired
-  if (state.clientError) {
-    const errorExplanation =
-      state.clientError.status === 403
-        ? "Please log in to Prismic!"
-        : `You don\'t have access to the repo \"${state.env.repo}\"`;
-    const message = `Error ${state.clientError.status}: Could not fetch remote custom types. ${errorExplanation}`;
+  if (state.clientError || state.isFake) {
+    const isAnAuthenticationError =
+      state.isFake || (state.clientError && state.clientError.status === 403);
+    const errorExplanation = isAnAuthenticationError
+      ? "Please log in to Prismic!"
+      : `You don\'t have access to the repo \"${state.env.repo}\"`;
+
+    const errorCode = state.isFake
+      ? 403
+      : state.clientError
+      ? state.clientError.status
+      : 403;
+    const message = `Error ${errorCode}: Could not fetch remote custom types. ${errorExplanation}`;
 
     return {
       err: new Error(message),
       reason: message,
-      status: state.clientError.status,
-    };
-  }
-
-  // When the user is not connected at all
-  if (state.isFake) {
-    const message =
-      "Error: Could not fetch remote custom types. Please log in to Prismic!";
-    return {
-      err: new Error(message),
-      reason: message,
-      status: 403,
+      status: errorCode,
     };
   }
 

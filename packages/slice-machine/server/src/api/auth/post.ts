@@ -16,18 +16,13 @@ type PostAuthResponse = {
 export default async function handler(
   authRequest: Record<string, unknown>
 ): Promise<PostAuthResponse> {
-  try {
-    const authPayload = fold(
-      () => {
-        throw new Error("Invalid auth payload");
-      },
-      (authRequest: AuthRequest) => authRequest
-    )(AuthRequest.decode(authRequest));
-    FileSystem.setAuthConfig(authPayload.cookies);
-    return {};
-  } catch (e) {
-    return {
-      err: e,
-    };
-  }
+  return fold(
+    () => ({
+      err: new Error("Invalid auth payload"),
+    }),
+    (authRequest: AuthRequest) => {
+      FileSystem.setAuthConfig(authRequest.cookies);
+      return {};
+    }
+  )(AuthRequest.decode(authRequest));
 }
