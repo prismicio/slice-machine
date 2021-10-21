@@ -37,12 +37,12 @@ export function setAuthConfig(
   directory?: string
 ): void {
   const currentConfig = getOrCreateAuthConfig(directory);
-  const formattedCookies = formatCookies(cookies);
+  const formattedCookies = cookie.serializeCookies(cookies);
   const configPath = PrismicConfigPath(directory);
 
   const newConfig = {
     cookies: formattedCookies,
-    base: !!base ? base : currentConfig.base,
+    base: base || currentConfig.base,
   };
 
   return Files.write(
@@ -50,18 +50,4 @@ export function setAuthConfig(
     { ...currentConfig, ...newConfig },
     { recursive: false }
   );
-}
-
-function formatCookies(cookies: ReadonlyArray<string>) {
-  const newCookiesMap = cookies
-    .map((str) => cookie.parse(str))
-    .reduce((acc, curr) => {
-      return { ...acc, ...curr };
-    }, {});
-
-  return Object.entries(newCookiesMap)
-    .map(([key, value]) => {
-      return cookie.serialize(key, value);
-    })
-    .join("; ");
 }

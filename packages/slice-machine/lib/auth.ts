@@ -35,20 +35,17 @@ export function parsePrismicFile(): Result<PrismicFile, ErrorWithStatus> {
 export function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   const result = parsePrismicFile();
 
-  return result
-    .map<PrismicData>((prismicFile) => {
-      const authResult = Utils.cookie.parsePrismicAuthToken(
-        prismicFile.cookies
-      );
-      if (!!authResult)
-        return { base: prismicFile.base, auth: { auth: authResult } };
-      else
-        return {
-          base: prismicFile.base,
-          authError: err(
-            new ErrorWithStatus(`Could not find cookie in ~/.prismic file`, 400)
-          ).error,
-        };
-    })
-    .mapErr<ErrorWithStatus>((err) => err);
+  return result.map<PrismicData>((prismicFile) => {
+    const authResult = Utils.cookie.parsePrismicAuthToken(prismicFile.cookies);
+    if (!!authResult)
+      return { base: prismicFile.base, auth: { auth: authResult } };
+    else
+      return {
+        base: prismicFile.base,
+        authError: new ErrorWithStatus(
+          `Could not find cookie in ~/.prismic file`,
+          400
+        ),
+      };
+  });
 }
