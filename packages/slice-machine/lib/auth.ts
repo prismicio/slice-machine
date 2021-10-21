@@ -2,43 +2,11 @@ import os from "os";
 import path from "path";
 import { ok, err, Result } from "neverthrow";
 
-import Auth from "./models/common/Auth";
 import PrismicFile from "./models/common/PrismicFile";
 import PrismicData from "./models/common/PrismicData";
 import ErrorWithStatus from "./models/common/ErrorWithStatus";
 import Files from "./utils/files";
-
-const AUTH_KEY = "prismic-auth";
-
-// https://gist.github.com/rendro/525bbbf85e84fa9042c2
-function parseCookies(cookies: string): { [key: string]: unknown } {
-  return cookies.split(";").reduce((res, c) => {
-    const [key, val] = c.trim().split("=").map(decodeURIComponent);
-    const allNumbers = (str: string) => /^\d+$/.test(str);
-    try {
-      return Object.assign(res, {
-        [key]: allNumbers(val) ? val : JSON.parse(val),
-      });
-    } catch (e) {
-      return Object.assign(res, {
-        [key]: val,
-      });
-    }
-  }, {});
-}
-
-export function parseAuth(cookies = ""): Result<Auth, ErrorWithStatus> {
-  const parsed = parseCookies(cookies);
-  if (parsed[AUTH_KEY]) {
-    return ok({ auth: parsed[AUTH_KEY] as string });
-  }
-  return err(
-    new ErrorWithStatus(
-      `Could not find cookie "${AUTH_KEY}" in ~/.prismic file`,
-      400
-    )
-  );
-}
+import { Utils } from "slicemachine-core";
 
 export function parsePrismicFile(): Result<PrismicFile, ErrorWithStatus> {
   const home = os.homedir();
@@ -69,10 +37,18 @@ export function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
 
   return result
     .map<PrismicData>((prismicFile) => {
-      const authResult = parseAuth(prismicFile.cookies);
-      if (authResult.isOk())
-        return { base: prismicFile.base, auth: authResult.value };
-      else return { base: prismicFile.base, authError: authResult.error };
+      const authResult = Utils.cookie.parsePrismicAuthToken(
+        prismicFile.cookies
+      );
+      if (!!authResult)
+        return { base: prismicFile.base, auth: { auth: authResult } };
+      else
+        return {
+          base: prismicFile.base,
+          authError: err(
+            new ErrorWithStatus(`Could not find cookie in ~/.prismic file`, 400)
+          ).error,
+        };
     })
     .mapErr<ErrorWithStatus>((err) => err);
 }

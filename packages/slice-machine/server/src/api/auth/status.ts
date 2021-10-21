@@ -1,5 +1,4 @@
-import { FileSystem } from "slicemachine-core";
-import { parseAuth } from "@lib/auth";
+import { FileSystem, Utils } from "slicemachine-core";
 
 type StatusResponse = {
   status: "error" | "ok" | "pending";
@@ -8,9 +7,9 @@ type StatusResponse = {
 export default async function handler(): Promise<StatusResponse> {
   try {
     const authConfig = FileSystem.getOrCreateAuthConfig();
-    const authResult = parseAuth(authConfig.cookies);
+    const authResult = Utils.cookie.parsePrismicAuthToken(authConfig.cookies);
     return {
-      status: authResult.isOk() ? "ok" : "pending",
+      status: !!authResult ? "ok" : "pending",
     };
   } catch (e) {
     return {

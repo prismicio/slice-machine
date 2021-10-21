@@ -32,7 +32,7 @@ export async function refreshSession(
   cookies: string,
   base?: string
 ): Promise<string> {
-  const token = cookie.parse(cookies)["prismic-auth"] || "";
+  const token = cookie.parsePrismicAuthToken(cookies);
   const url = toAuthUrl("refreshtoken", token, base);
   return axios.get<string>(url).then((res) => res.data);
 }
@@ -72,7 +72,7 @@ export async function validateSession(
   cookies: string,
   base?: string
 ): Promise<UserInfo> {
-  const token = cookie.parse(cookies)["prismic-auth"] || "";
+  const token = cookie.parsePrismicAuthToken(cookies);
   const url = toAuthUrl("validate", token, base);
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
