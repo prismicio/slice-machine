@@ -8,6 +8,7 @@ export interface Manifest {
   framework?: Framework;
   chromaticAppId?: string;
   _latest?: string;
+  libraries?: string[];
 }
 
 export enum ManifestStates {

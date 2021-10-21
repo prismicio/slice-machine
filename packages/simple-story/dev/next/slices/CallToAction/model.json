@@ -1,0 +1,162 @@
+{
+  "id": "call_to_action",
+  "type": "SharedSlice",
+  "name": "CallToAction",
+  "description": "MySlice Template",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice CTA",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "deaf": {
+          "type": "Link",
+          "config": {
+            "label": "My Label !2",
+            "placeholder": "Placeholder 2",
+            "allowTargetBlank": true,
+            "select": null
+          }
+        },
+        "label": {
+          "config": {
+            "label": "Label ",
+            "placeholder": "place"
+          },
+          "type": "Text"
+        },
+        "geo": {
+          "config": {
+            "label": "My Label !"
+          },
+          "type": "GeoPoint"
+        },
+        "bla": {
+          "config": {
+            "label": "",
+            "placeholder": ""
+          },
+          "type": "Number"
+        },
+        "bla2222": {
+          "config": {
+            "label": "bla2222",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          },
+          "type": "Boolean"
+        }
+      },
+      "items": {
+        "rtfr": {
+          "config": {
+            "label": "jhjhjhjhjhjh",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        }
+      }
+    },
+    {
+      "id": "v2",
+      "name": "V2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "myCoolV2",
+      "name": "MyCoolV2",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "ctr1": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "otherVariation",
+      "name": "OtherVariation",
+      "docURL": "...",
+      "version": "sktwi83ykfdt588n",
+      "description": "MySlice Template",
+      "primary": {
+        "ctr": {
+          "config": {
+            "label": "",
+            "select": "document",
+            "customtypes": [
+              "gggg",
+              "sdfsdf",
+              "test"
+            ]
+          },
+          "type": "Link"
+        },
+        "test121": {
+          "config": {
+            "label": "Label really!",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "test": {
+          "type": "StructuredText",
+          "config": {
+            "label": "",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

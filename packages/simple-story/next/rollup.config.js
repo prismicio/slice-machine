@@ -8,7 +8,7 @@ const browserConfig = {
   input: './index.tsx',
   output: [
     {
-      dir: '../../build/next',
+      dir: './build',
       format: 'cjs',
     },
   ],
@@ -28,7 +28,7 @@ const browserConfig = {
       define: {
         __VERSION__: '"x.y.z"',
       },
-      tsconfig: '../../tsconfig.json', 
+      tsconfig: 'tsconfig.json', 
       loaders: {
         '.json': 'json',
         '.js': 'jsx',
@@ -41,7 +41,7 @@ const nodeConfig = {
   input: 'server/index.ts',
   output: [
     {
-      dir: '../../build/next/server/',
+      dir: './build/server/',
       format: 'cjs',
     },
   ],
@@ -59,7 +59,7 @@ const nodeConfig = {
       define: {
         __VERSION__: '"x.y.z"',
       },
-      tsconfig: '../../tsconfig.json', 
+      tsconfig: 'tsconfig.json', 
       loaders: {
         '.json': 'json',
         '.js': 'jsx',

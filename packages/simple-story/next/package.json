@@ -1,7 +1,13 @@
 {
+  "version": "0.1.0",
+  "name": "simple-story-next-poc",
+  "main": "./build/index.js",
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c"
+  },
+  "dependencies": {
+    "slicemachine-core": "file:../../slicemachine-core"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.0",

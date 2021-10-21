@@ -1,0 +1,12 @@
+[{
+  "variation": "v1",
+  "primary": {
+    "keyText": "123"
+  }
+},
+{
+  "variation": "v2",
+  "primary": {
+    "keyText": "456"
+  }
+}]

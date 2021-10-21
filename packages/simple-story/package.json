@@ -1,5 +1,6 @@
 {
   "name": "simple-story",
+  "private": true,
   "version": "0.1.0",
   "description": "Render simple stories in the context of your project",
   "scripts": {
