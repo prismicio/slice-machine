@@ -7,6 +7,8 @@ import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
+import { LocalStorageKeys } from "@lib/consts";
+
 import LibrariesProvider from "../src/models/libraries/context";
 import CustomTypesProvider from "../src/models/customTypes/context";
 import { SliceHandler } from "../src/models/slice/context";
@@ -91,6 +93,7 @@ function MyApp({
   Component: (props: any) => JSX.Element;
   pageProps: any;
 }) {
+  const router = useRouter();
   const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
   const [sliceMap, setSliceMap] = useState<any | null>(null);
   const [drawerState, setDrawerState] = useState<{
@@ -119,6 +122,15 @@ function MyApp({
   );
 
   useEffect(() => {
+    if (
+      !localStorage.getItem(LocalStorageKeys.isOnboarded) &&
+      router.pathname !== "/onboarding"
+    ) {
+      router.replace("/onboarding");
+    }
+  }, []);
+
+  useEffect(() => {
     if (!data) {
       return;
     }
@@ -142,14 +154,6 @@ function MyApp({
   }, [data]);
 
   const { Renderer, payload } = state;
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (data && !data.env.hasConfigFile && router.pathname !== "/onboarding") {
-      // router.replace('/onboarding')
-    }
-  }, [data]);
 
   return (
     <ThemeProvider theme={theme}>

@@ -70,7 +70,7 @@ function extractRepo(parsedRepo: ParseResult): string | undefined {
 
 function handleBranch(): Promise<{ branch?: string; err?: Error }> {
   return new Promise((resolve) => {
-    exec("git rev-parse --abbrev-ref HEAD", (err, stdout) => {
+    exec("git rev-parse --abbrev-ref HEAD", (err: any, stdout: string) => {
       if (err) {
         resolve({ err });
       }
@@ -193,9 +193,9 @@ export async function getEnv(
     errors: maybeErrors,
     env: {
       cwd,
+      repo,
       userConfig,
       hasConfigFile: true,
-      repo,
       prismicData: prismicData.isOk() ? prismicData.value : undefined,
       chromatic,
       currentVersion: npmCompare.currentVersion || "",
