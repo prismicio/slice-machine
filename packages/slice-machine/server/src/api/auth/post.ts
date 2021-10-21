@@ -23,7 +23,7 @@ export default async function handler(
       },
       (authRequest: AuthRequest) => authRequest
     )(AuthRequest.decode(authRequest));
-    FileSystem.setAuthConfigCookies(authPayload.cookies);
+    FileSystem.setAuthConfig(authPayload.cookies);
     return {};
   } catch (e) {
     return {

@@ -7,7 +7,7 @@ type StartResponse = {
 export default async function handler(): Promise<StartResponse> {
   try {
     // Reset the prismic auth cookie
-    FileSystem.setAuthConfigCookies([]);
+    FileSystem.setAuthConfig([]);
     return {};
   } catch (e) {
     return {

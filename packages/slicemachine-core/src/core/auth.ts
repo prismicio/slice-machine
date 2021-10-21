@@ -136,7 +136,7 @@ export async function startServerAndOpenBrowser(
 
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
-    setAuthConfig(base, data.cookies);
+    setAuthConfig(data.cookies, base);
   }
 
   function onFail(): void {
