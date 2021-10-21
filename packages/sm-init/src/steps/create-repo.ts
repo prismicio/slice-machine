@@ -1,5 +1,4 @@
 import { Communication, Utils, FileSystem } from "slicemachine-core";
-import { AxiosError } from "slicemachine-core/src/core/communication";
 
 export function createRepository(
   domain: string,
@@ -23,12 +22,10 @@ export function createRepository(
       const address = addressUrl.toString();
       spinner.succeed(`We created your new repository ${address}`);
     })
-    .catch((error: AxiosError) => {
+    .catch((error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);
-      if (error.response) {
-        console.log(
-          `Error: [${error.response.status}]: ${error.response.statusText}`
-        );
+      if (error.message) {
+        Utils.writeError(error.message);
       }
       Utils.writeError(`We failed to create you new prismic repository`);
       console.log(`Run ${Utils.bold("npx slicemachine init")} again!`);

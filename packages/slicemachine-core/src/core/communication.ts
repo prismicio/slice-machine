@@ -188,7 +188,10 @@ export async function createRepository(
       },
     })
     .catch((error: AxiosError | Error) => {
-      if (axios.isAxiosError(error)) throw error;
+      if (axios.isAxiosError(error) && error.response) {
+        const message = `[${error.response.status}]: ${error.response.statusText}`;
+        throw new Error(message);
+      }
       throw error;
     });
 }
