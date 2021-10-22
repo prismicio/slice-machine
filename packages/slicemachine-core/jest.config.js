@@ -10,5 +10,5 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest",
     "^.+\\.js$": "babel-jest",
   },
-  transformIgnorePatterns: ["\\.pnp\\.[^\\/]+$"],
+  transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
 };

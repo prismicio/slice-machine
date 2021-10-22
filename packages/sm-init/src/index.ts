@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
-import { Utils } from "slicemachine-core";
-import { installSm, validatePkg, loginOrBypass } from "./steps";
+import { Utils, FileSystem } from "slicemachine-core";
+import {
+  installSm,
+  validatePkg,
+  maybeExistingRepo,
+  loginOrBypass,
+} from "./steps";
 import { findArgument } from "./utils";
 
 async function init() {
@@ -16,7 +21,14 @@ async function init() {
 
   await loginOrBypass(base);
   validatePkg(cwd);
+  const config = FileSystem.getOrCreateAuthConfig();
+  await maybeExistingRepo(config.cookies, cwd, base);
   await installSm(cwd);
 }
 
-void init();
+try {
+  void init();
+} catch (error) {
+  if (error instanceof Error) Utils.writeError(error.message);
+  else console.error(error);
+}

@@ -1,5 +1,8 @@
 import axios from "axios";
-import { cookie, CONSTS } from "../utils";
+import { cookie, CONSTS, roles } from "../utils";
+import * as t from "io-ts";
+import { pipe } from "fp-ts/function";
+import { fold } from "fp-ts/Either";
 
 const { DEFAULT_BASE } = CONSTS;
 
@@ -32,14 +35,36 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export enum Roles {
-  WRITER = "Writer",
-  OWNER = "Owner",
-  PUBLISHER = "Publisher",
-  ADMIN = "Admin",
-}
-export type RepoData = Record<string, { role: Roles; dbid: string }>;
+export type RepoData = Record<
+  string,
+  { role: roles.Roles | Record<string, roles.Roles>; dbid: string }
+>;
+const RepoDataValidator = t.record(
+  t.string,
+  t.type({
+    role: roles.RolesValidator,
+    dbid: t.string,
+  })
+);
 export type UserInfo = { email: string; type: string; repositories: RepoData };
+
+export function maybeParseRepoData(repos?: string | RepoData): RepoData {
+  if (!repos) throw new Error("Did not receive repository data");
+  if (typeof repos === "string") {
+    return pipe(
+      RepoDataValidator.decode(JSON.parse(repos)),
+      fold<t.Errors, RepoData, RepoData>(
+        () => {
+          throw new Error("Can't parse repo data");
+        },
+        (f: RepoData) => {
+          return f;
+        }
+      )
+    );
+  }
+  return repos;
+}
 
 export async function validateSession(
   cookies: string,
@@ -50,10 +75,7 @@ export async function validateSession(
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
     .then((res) => {
-      const repositories: RepoData =
-        res.data.repositories && typeof res.data.repositories === "string"
-          ? JSON.parse(res.data.repositories)
-          : res.data.repositories;
+      const repositories = maybeParseRepoData(res.data.repositories);
       return {
         ...res.data,
         repositories,
@@ -68,9 +90,9 @@ export async function validateSession(
 export async function listRepositories(
   token: string,
   base = DEFAULT_BASE
-): Promise<string[]> {
+): Promise<RepoData> {
   return validateSession(token, base).then((data) => {
-    return Object.keys(data.repositories).reverse();
+    return data.repositories;
   });
 }
 
