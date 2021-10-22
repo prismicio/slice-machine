@@ -9,6 +9,8 @@ jest.mock("../../../src/filesystem");
 jest.mock("../../../src/core/communication");
 jest.mock("../../../src/utils/poll");
 
+const { Roles } = Utils.roles;
+
 describe("communication", () => {
   afterAll(() => {
     jest.clearAllMocks();
@@ -90,8 +92,8 @@ describe("communication", () => {
         email: "fake@prismic.io",
         type: "USER",
         repositories: {
-          "foo-repo": { dbid: "abcd", role: communication.Roles.PUBLISHER },
-          qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+          "foo-repo": { dbid: "abcd", role: Roles.PUBLISHER },
+          qwerty: { dbid: "efgh", role: Roles.WRITER },
         },
       })
     );
@@ -113,8 +115,8 @@ describe("communication", () => {
         email: "fake@prismic.io",
         type: "USER",
         repositories: {
-          "foo-repo": { dbid: "abcd", role: communication.Roles.PUBLISHER },
-          qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+          "foo-repo": { dbid: "abcd", role: Roles.PUBLISHER },
+          qwerty: { dbid: "efgh", role: Roles.WRITER },
         },
       })
     );
@@ -142,8 +144,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: communication.Roles.PUBLISHER },
-        qwerty: { dbid: "efgh", role: communication.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: Roles.PUBLISHER },
+        qwerty: { dbid: "efgh", role: Roles.WRITER },
       },
     };
 

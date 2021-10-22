@@ -6,6 +6,9 @@ export const error = chalk.hex("FF6868");
 export const warning = chalk.hex("F3AD38");
 export const underline = chalk.underline;
 export const bold = chalk.bold;
+export const dim = chalk.dim;
+export const cyan = chalk.cyan;
+export const yellow = chalk.yellow;
 
 export const spinner = ora;
 

@@ -4,20 +4,26 @@ export default async function poll<Result>(
   interval: number,
   maxAttempts: number
 ): Promise<void> {
-  let attempts = 0;
-
-  const executePoll = async (resolve: Function, reject: Function) => {
-    const result = await fn();
-    attempts++;
-
-    if (validate(result)) {
-      return resolve(result);
-    } else if (maxAttempts && attempts === maxAttempts) {
-      return reject(new Error("Exceeded max attempts"));
-    } else {
-      setTimeout(executePoll, interval, resolve, reject);
-    }
-  };
-
-  return new Promise(executePoll);
+  let attempts = 0
+  const checkCondition = (
+    resolve: (value: void | PromiseLike<void>) => void,
+    reject: (reason?: Error) => void,
+    ): void => {
+    Promise.resolve(fn())
+      .then((result) => {
+        if (validate(result)) {
+          resolve();
+        } else if (attempts < maxAttempts) {
+          attempts += 1
+          setTimeout(checkCondition, interval, resolve, reject);
+        } else {
+          reject(new Error('AsyncPoller: reached timeout'));
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  }
+  
+  return new Promise<void>(checkCondition)
 }
