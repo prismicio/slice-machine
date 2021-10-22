@@ -1,18 +1,18 @@
-import { fetchApi } from "lib/builders/common/fetch";
+import { fetchApi } from "@lib/builders/common/fetch";
 
-import { CustomType } from "../../../../lib/models/common/CustomType";
+import { CustomType } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import ActionType from "./";
-import { ToastPayload } from "../../../../src/ToastProvider/utils";
+import { ToastPayload } from "@src/ToastProvider/utils";
 
 export default function save(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return async (
     customType: CustomTypeState,
-    setData: (data: ToastPayload) => void = () => {}
+    setData: (data: ToastPayload) => void = () => null
   ) => {
-    fetchApi({
+    await fetchApi({
       url: "/api/custom-types/save",
       params: {
         method: "POST",
@@ -23,7 +23,7 @@ export default function save(
         }),
       },
       setData,
-      successMessage: "Model & mocks have been generated succesfully!",
+      successMessage: "Model & mocks have been generated successfully!",
       onSuccess() {
         dispatch({ type: ActionType.Save, payload: { state: customType } });
       },

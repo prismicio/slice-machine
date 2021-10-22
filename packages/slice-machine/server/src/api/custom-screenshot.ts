@@ -3,6 +3,12 @@ import { getEnv } from "@lib/env";
 import { CustomPaths } from "@lib/models/paths";
 import Files from "@lib/utils/files";
 
+type CustomScreenshotResponse = {
+  isCustomPreview: boolean;
+  hasPreview: boolean;
+  url: string;
+};
+
 export default async function handler(
   file: File & { path: string },
   {
@@ -10,7 +16,7 @@ export default async function handler(
     sliceName,
     variationId,
   }: { from: string; sliceName: string; variationId: string }
-) {
+): Promise<CustomScreenshotResponse> {
   const { env } = await getEnv();
 
   const activeScreenshot = getPathToScreenshot({

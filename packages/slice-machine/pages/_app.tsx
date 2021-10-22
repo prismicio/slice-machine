@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 
@@ -9,10 +9,11 @@ import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
 import { LocalStorageKeys } from "@lib/consts";
 
-import LibrariesProvider from "../src/models/libraries/context";
-import CustomTypesProvider from "../src/models/customTypes/context";
-import { SliceHandler } from "../src/models/slice/context";
-import ConfigProvider from "../src/config-context";
+import LibrariesProvider from "@src/models/libraries/context";
+import CustomTypesProvider from "@src/models/customTypes/context";
+import TrackingProvider from "@src/models/tracking/context";
+import { SliceHandler } from "@src/models/slice/context";
+import ConfigProvider from "@src/config-context";
 
 import Drawer from "rc-drawer";
 
@@ -75,7 +76,7 @@ const RenderStates = {
     pageProps,
     ...rest
   }: {
-    Component: (props: any) => JSX.Element;
+    Component: (props: ReactPropTypes) => JSX.Element;
     pageProps: any;
     rest: any;
   }) => <Component {...pageProps} {...rest} />,
@@ -183,31 +184,33 @@ function MyApp({
                     customTypes={payload.customTypes}
                     remoteCustomTypes={payload.remoteCustomTypes}
                   >
-                    <ToastProvider>
-                      <AppLayout {...payload} data={data}>
-                        <SliceHandler {...payload}>
-                          <Renderer
-                            Component={Component}
-                            pageProps={pageProps}
-                            {...payload}
-                            openPanel={openPanel}
-                          />
-                          <Drawer
-                            placement="right"
-                            open={drawerState.open}
-                            onClose={() =>
-                              setDrawerState({ ...drawerState, open: false })
-                            }
-                          >
-                            <Warnings
-                              priority={drawerState.priority}
-                              list={data.warnings}
-                              configErrors={data.configErrors}
+                    <TrackingProvider>
+                      <ToastProvider>
+                        <AppLayout {...payload} data={data}>
+                          <SliceHandler {...payload}>
+                            <Renderer
+                              Component={Component}
+                              pageProps={pageProps}
+                              {...payload}
+                              openPanel={openPanel}
                             />
-                          </Drawer>
-                        </SliceHandler>
-                      </AppLayout>
-                    </ToastProvider>
+                            <Drawer
+                              placement="right"
+                              open={drawerState.open}
+                              onClose={() =>
+                                setDrawerState({ ...drawerState, open: false })
+                              }
+                            >
+                              <Warnings
+                                priority={drawerState.priority}
+                                list={data.warnings}
+                                configErrors={data.configErrors}
+                              />
+                            </Drawer>
+                          </SliceHandler>
+                        </AppLayout>
+                      </ToastProvider>
+                    </TrackingProvider>
                   </CustomTypesProvider>
                 </LibrariesProvider>
               )}

@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
+
 import { Formik, Form, Field } from "formik";
 
 import { Box, Label, Input, Heading, Button } from "theme-ui";
@@ -28,7 +30,7 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
   };
 
   return (
-    <Modal
+    <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
       onRequestClose={close}
@@ -93,7 +95,7 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
           );
         }}
       </Formik>
-    </Modal>
+    </SliceMachineModal>
   );
 };
 

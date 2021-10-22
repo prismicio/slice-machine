@@ -32,7 +32,7 @@ const createIndexFileForFrameWork = (env: Environment, lib: Library) => {
   return createIndexFile(lib);
 };
 
-export default async function onSaveSlice(env: Environment) {
+export default async function onSaveSlice(env: Environment): Promise<void> {
   const libraries = await listComponentsByLibrary(env);
   const localLibs = libraries.filter((e) => e.isLocal);
 

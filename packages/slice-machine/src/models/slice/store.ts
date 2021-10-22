@@ -1,10 +1,6 @@
 import { Field } from "../../../lib/models/common/CustomType/fields";
-import {
-  Variation,
-  AsArray,
-  WidgetsArea,
-} from "../../../lib/models/common/Variation";
-import { ComponentMetadata } from "../../../lib/models/common/Component";
+import { Variation, AsArray, WidgetsArea } from "@lib/models/common/Variation";
+import { ComponentMetadata } from "@lib/models/common/Component";
 
 import {
   ActionType as VariationActions,
@@ -16,7 +12,7 @@ import {
 
 import { ActionType as SliceActions, saveSlice, pushSlice } from "./actions";
 
-import Store from "../../../lib/models/ui/Store";
+import Store from "@lib/models/ui/Store";
 
 export default class SliceStore implements Store {
   constructor(
@@ -29,26 +25,34 @@ export default class SliceStore implements Store {
     }) => void
   ) {}
 
-  reset = () => {
+  reset = (): void => {
     this.dispatch({ type: SliceActions.Reset });
   };
   save = saveSlice(this.dispatch);
   push = pushSlice(this.dispatch);
-  updateMetadata = (value: ComponentMetadata) =>
+  updateMetadata = (value: ComponentMetadata): void =>
     this.dispatch({ type: SliceActions.UpdateMetadata, payload: value });
-  copyVariation = (key: string, name: string, copied: Variation<AsArray>) =>
+  copyVariation = (
+    key: string,
+    name: string,
+    copied: Variation<AsArray>
+  ): void =>
     this.dispatch({
       type: SliceActions.CopyVariation,
       payload: { key, name, copied },
     });
 
-  variation = (variationId: string) => {
+  variation = (variationId: string): Record<string, Function> => {
     return {
       generateScreenShot: generateScreenShot(this.dispatch)(variationId),
       generateCustomScreenShot: generateCustomScreenShot(this.dispatch)(
         variationId
       ),
-      addWidget: (widgetsArea: WidgetsArea, key: string, value: Field) => {
+      addWidget: (
+        widgetsArea: WidgetsArea,
+        key: string,
+        value: Field
+      ): void => {
         this.dispatch({
           type: VariationActions.AddWidget,
           payload: { variationId, widgetsArea, key, value },
@@ -59,19 +63,23 @@ export default class SliceStore implements Store {
         previousKey: string,
         newKey: string,
         value: Field
-      ) => {
+      ): void => {
         this.dispatch({
           type: VariationActions.ReplaceWidget,
           payload: { variationId, widgetsArea, previousKey, newKey, value },
         });
       },
-      reorderWidget: (widgetsArea: WidgetsArea, start: number, end: number) => {
+      reorderWidget: (
+        widgetsArea: WidgetsArea,
+        start: number,
+        end: number
+      ): void => {
         this.dispatch({
           type: VariationActions.ReorderWidget,
           payload: { variationId, widgetsArea, start, end },
         });
       },
-      removeWidget: (widgetsArea: WidgetsArea, key: string) => {
+      removeWidget: (widgetsArea: WidgetsArea, key: string): void => {
         this.dispatch({
           type: VariationActions.RemoveWidget,
           payload: { variationId, widgetsArea, key },

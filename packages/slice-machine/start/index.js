@@ -169,7 +169,8 @@ async function run() {
   const validateRes = await validate();
 
   start({ cwd, port }, (url) => {
-    const email = validateRes && validateRes.body ? validateRes.body.email : null
+    const email =
+      validateRes && validateRes.body ? validateRes.body.email : null;
     infobox(npmCompareData, url, framework, email);
   });
 }
@@ -179,7 +180,7 @@ async function main() {
   try {
     run();
   } catch (err) {
-    console.error(`[slice-machine] An unexpected error occured. Exiting...`);
+    console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
     console.log("Full error: ", err);
   }
 }
