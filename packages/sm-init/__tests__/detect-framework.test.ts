@@ -5,6 +5,7 @@ import { detectFramework } from "../src/steps";
 import { Utils } from "slicemachine-core";
 import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
+import { Framework } from "slicemachine-core/src/utils";
 
 jest.mock("fs");
 
@@ -43,12 +44,18 @@ describe("detect-framework", () => {
       .spyOn(inquirer, "prompt")
       .mockResolvedValue({ framework: Utils.Framework.next });
 
+    const fakeError = jest
+      .spyOn(console, "error")
+      .mockImplementationOnce(() => undefined);
+
     stderr.start();
     const result = await detectFramework(__dirname);
     stderr.stop();
     expect(result).toBe(Utils.Framework.next);
     expect(fs.lstatSync).toHaveBeenCalled();
-    expect(stderr.output).toContain("Framework not detected");
+    expect(fakeError).toBeCalledWith(
+      `${Utils.error("Error!")} Framework not detected`
+    );
   });
 
   test("package.json not found", async () => {
@@ -70,5 +77,42 @@ describe("detect-framework", () => {
     );
     expect(stderr.output).toContain("package.json not found");
     expect(exitSpy).toHaveBeenCalled();
+  });
+
+  test("Unsupported framework: gatsby", async () => {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        dependencies: {
+          [Framework.gatsby]: "beta",
+          [Framework.react]: "beta",
+        },
+      })
+    );
+
+    const exitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementationOnce(() => undefined as never);
+    const errorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    const logSpy = jest
+      .spyOn(console, "log")
+      .mockImplementation(() => undefined);
+
+    stderr.start();
+    await detectFramework(__dirname);
+    stderr.stop();
+
+    expect(exitSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(
+      `${Utils.error("Error!")} ${Framework.gatsby} is currently not supported`
+    );
+    expect(logSpy).toHaveBeenCalledWith(
+      `Please run ${Utils.bold(
+        "npx slicemachine init"
+      )} in a Nuxt or Next.js project`
+    );
   });
 });

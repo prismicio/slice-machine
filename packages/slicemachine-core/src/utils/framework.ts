@@ -5,6 +5,7 @@ export enum Framework {
   none = "none",
   nuxt = "nuxt",
   next = "next",
+  gatsby = "gatsby",
   vue = "vue",
   react = "react",
   svelte = "svelte",
@@ -44,6 +45,9 @@ export function detectFramework(cwd: string): Framework {
 
   const { dependencies, devDependencies, peerDependencies } = pkg.content;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+
+  if (deps[Framework.gatsby]) return Framework.gatsby;
+
   const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
     (f) => deps[f] && deps[f].length
   );

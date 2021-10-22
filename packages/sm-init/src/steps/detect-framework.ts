@@ -35,24 +35,35 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
   spinner.start();
 
   try {
-    const maybeFramewrok = Utils.framework.detectFramework(cwd);
+    const maybeFramework = Utils.framework.detectFramework(cwd);
+    spinner.stop();
 
-    if (!maybeFramewrok || maybeFramewrok === Utils.Framework.vanillajs) {
-      spinner.fail("Framework not detected");
+    if (!maybeFramework || maybeFramework === Utils.Framework.vanillajs) {
+      // spinner.fail();
+      Utils.writeError("Framework not detected");
       return await promptForFramework();
     }
 
-    const nameToPrint = Utils.framework.fancyName(maybeFramewrok);
-    spinner.succeed(`${nameToPrint} detected`);
+    const isSupported =
+      Utils.framework.SupportedFrameworks.includes(maybeFramework);
+    if (!isSupported) {
+      Utils.writeError(`${maybeFramework} is currently not supported`);
+      console.log(failMessage);
+      process.exit(1);
+    }
 
-    return maybeFramewrok;
+    const nameToPrint = Utils.framework.fancyName(maybeFramework);
+    // spinner.stop();
+    Utils.writeCheck(`${nameToPrint} detected`);
+
+    return maybeFramework;
   } catch (error) {
     spinner.fail("package.json not found");
 
     if (error instanceof Error && error.message) {
       Utils.writeError(error.message);
     } else {
-      Utils.writeError(failMessage);
+      console.log(failMessage);
     }
 
     process.exit(1);

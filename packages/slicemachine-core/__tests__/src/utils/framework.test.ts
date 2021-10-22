@@ -27,6 +27,23 @@ describe("framework.detectFramework", () => {
     "",
     "foo",
   ];
+
+  test("gatsby", () => {
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [framework.Framework.gatsby]: "beta",
+          [framework.Framework.react]: "beta",
+        },
+      })
+    );
+
+    const result = framework.detectFramework(__dirname);
+    expect(result).toEqual(framework.Framework.gatsby);
+  });
   valuesToCheck.forEach((value) => {
     test("it will return a support framework when a support framework is found in the package.json", () => {
       const mockedFs = mocked(fs, true);
@@ -40,9 +57,14 @@ describe("framework.detectFramework", () => {
         })
       );
 
+      const fallback =
+        value === framework.Framework.gatsby
+          ? framework.Framework.gatsby
+          : framework.Framework.vanillajs;
+
       const wanted = framework.isValidFramework(value as framework.Framework)
         ? value
-        : framework.Framework.vanillajs;
+        : fallback;
 
       const result = framework.detectFramework(__dirname);
       expect(mockedFs.lstatSync).toHaveBeenCalled();
