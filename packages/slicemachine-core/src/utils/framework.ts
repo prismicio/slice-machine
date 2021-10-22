@@ -25,14 +25,14 @@ export const UnsupportedFrameWorks = Object.values(Framework).filter(
   (framework) => SupportedFrameworks.includes(framework) === false
 );
 
-export const isUnsupported = (framework: Framework) =>
+export const isUnsupported = (framework: Framework): boolean =>
   UnsupportedFrameWorks.includes(framework);
 
-function capitaliseFirstLetter(str: string) {
+function capitaliseFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function fancyName(str: Framework) {
+export function fancyName(str: Framework): string {
   switch (str) {
     case Framework.next:
       return "Next.js";
