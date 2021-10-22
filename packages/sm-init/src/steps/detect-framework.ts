@@ -43,15 +43,14 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
       return await promptForFramework();
     }
 
-    const isSupported =
-      Utils.framework.SupportedFrameworks.includes(maybeFramework);
-    if (!isSupported) {
-      Utils.writeError(`${maybeFramework} is currently not supported`);
+    const nameToPrint = Utils.framework.fancyName(maybeFramework);
+
+    if (Utils.framework.isUnsupported(maybeFramework)) {
+      Utils.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
     }
 
-    const nameToPrint = Utils.framework.fancyName(maybeFramework);
     Utils.writeCheck(`${nameToPrint} detected`);
 
     return maybeFramework;

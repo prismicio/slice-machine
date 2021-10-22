@@ -107,7 +107,7 @@ describe("detect-framework", () => {
 
     expect(exitSpy).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalledWith(
-      `${Utils.error("Error!")} ${Framework.gatsby} is currently not supported`
+      `${Utils.error("Error!")} Gatsby is currently not supported`
     );
     expect(logSpy).toHaveBeenCalledWith(
       `Please run ${Utils.bold(

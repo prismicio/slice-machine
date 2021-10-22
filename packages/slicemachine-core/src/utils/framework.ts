@@ -21,6 +21,13 @@ export const SupportedFrameworks: Framework[] = [
   Framework.svelte,
 ];
 
+export const UnsupportedFrameWorks = Object.values(Framework).filter(
+  (framework) => SupportedFrameworks.includes(framework) === false
+);
+
+export const isUnsupported = (framework: Framework) =>
+  UnsupportedFrameWorks.includes(framework);
+
 function capitaliseFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -46,9 +53,7 @@ export function detectFramework(cwd: string): Framework {
   const { dependencies, devDependencies, peerDependencies } = pkg.content;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
-  if (deps[Framework.gatsby]) return Framework.gatsby;
-
-  const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
+  const frameworkEntry: Framework | undefined = Object.values(Framework).find(
     (f) => deps[f] && deps[f].length
   );
   return frameworkEntry || Framework.vanillajs;
