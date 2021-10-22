@@ -9,7 +9,7 @@
     "./filesystem": "./build/src/filesystem/index.js"
   },
   "engines": {
-    "node": "12.x"
+    "node": ">=12"
   },
   "types": "./build/index.d.ts",
   "license": "MIT",

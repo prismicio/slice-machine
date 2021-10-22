@@ -8,7 +8,7 @@
     "@models": "build/lib/models"
   },
   "engines": {
-    "node": "12.x"
+    "node": ">=12"
   },
   "scripts": {
     "dev": "next dev",
@@ -28,7 +28,8 @@
     "bundle": "npm run build && npm run test && npm run export-build",
     "slicemachine": "start-slicemachine --port 9999",
     "lint": "eslint --max-warnings 3279 --ext .ts,.tsx .",
-    "audit": "better-npm-audit audit -x 1002475 -l high -p",
+    "lint:precommit": "eslint",
+    "audit": "better-npm-audit audit -l high -p -x 1002475,1002624",
     "audit-fix": "npm audit fix"
   },
   "bin": {
