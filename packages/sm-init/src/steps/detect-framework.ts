@@ -39,7 +39,6 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
     spinner.stop();
 
     if (!maybeFramework || maybeFramework === Utils.Framework.vanillajs) {
-      // spinner.fail();
       Utils.writeError("Framework not detected");
       return await promptForFramework();
     }
@@ -53,7 +52,6 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework> {
     }
 
     const nameToPrint = Utils.framework.fancyName(maybeFramework);
-    // spinner.stop();
     Utils.writeCheck(`${nameToPrint} detected`);
 
     return maybeFramework;
