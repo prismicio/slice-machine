@@ -25,6 +25,7 @@ async function init() {
   const config = FileSystem.getOrCreateAuthConfig();
   const { existing, name } = await maybeExistingRepo(
     config.cookies,
+    cwd,
     config.base
   );
   if (existing === false) {
