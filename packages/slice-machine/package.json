@@ -7,6 +7,9 @@
     "@lib": "build/lib",
     "@models": "build/lib/models"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "dev": "next dev",
     "test": "jest",

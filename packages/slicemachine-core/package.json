@@ -8,6 +8,9 @@
     "./utils": "./build/src/utils/index.js",
     "./filesystem": "./build/src/filesystem/index.js"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "types": "./build/index.d.ts",
   "license": "MIT",
   "scripts": {

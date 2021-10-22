@@ -1,6 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
