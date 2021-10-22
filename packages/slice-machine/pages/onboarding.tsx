@@ -4,7 +4,7 @@ import { LocalStorageKeys } from "@lib/consts";
 
 export default function Changelog() {
   useEffect(() => {
-    localStorage.setItem(LocalStorageKeys.isOnboarded, "yes");
+    localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
   return (
