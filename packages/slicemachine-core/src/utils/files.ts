@@ -79,12 +79,14 @@ const Files = {
   isFile: (source: string): boolean => fs.lstatSync(source).isFile(),
   readDirectory: (source: string): string[] =>
     fs.readdirSync(source, { encoding: Files._format }),
-  mkdir: (target: string, options: { recursive: boolean }): string | undefined =>
-    fs.mkdirSync(target, options),
+  mkdir: (
+    target: string,
+    options: { recursive: boolean }
+  ): string | undefined => fs.mkdirSync(target, options),
   exists(pathToFile: string): boolean {
     try {
       return Boolean(fs.lstatSync(pathToFile));
-    } catch (e: unknown) {
+    } catch (e) {
       if ((e as { code: string }).code === ERROR_CODES.ENOENT) return false;
       throw e;
     }

@@ -17,29 +17,5 @@
     "plugin:jest/recommended",
     "eslint-config-prettier"
   ],
-  "ignorePatterns": ["build", "templates", "**/tests/**"],
-  "rules": {
-    "@typescript-eslint/no-var-requires": "warn",
-    "@typescript-eslint/no-unsafe-member-access": "warn",
-    "@typescript-eslint/no-unsafe-assignment": "warn",
-    "@typescript-eslint/no-unsafe-call": "warn",
-    "@typescript-eslint/restrict-template-expressions": "warn",
-    "@typescript-eslint/no-unsafe-return": "warn",
-    "@typescript-eslint/require-await": "warn",
-    "@typescript-eslint/ban-types": "warn",
-    "@typescript-eslint/no-floating-promises": "warn",
-    "@typescript-eslint/restrict-plus-operands": "warn",
-    "@typescript-eslint/no-inferrable-types": "warn",
-    "@typescript-eslint/ban-ts-comment": "warn",
-    "@typescript-eslint/unbound-method": "warn",
-    "@typescript-eslint/prefer-regexp-exec": "warn",
-    "@typescript-eslint/no-empty-function": "warn",
-    "prefer-const": "warn",
-    "no-var": "warn",
-    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
-    "jest/no-identical-title": "warn",
-    "@typescript-eslint/triple-slash-reference": "warn",
-    "@typescript-eslint/await-thenable": "warn",
-    "@typescript-eslint/no-misused-promises": "warn"
-  }
+  "ignorePatterns": ["build"]
 }

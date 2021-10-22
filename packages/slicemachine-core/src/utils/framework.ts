@@ -17,8 +17,8 @@ export const SupportedFrameworks: Framework[] = [
   Framework.next,
   Framework.vue,
   Framework.react,
-  Framework.svelte
-]
+  Framework.svelte,
+];
 
 export function detectFramework(cwd: string): Framework {
   const pkg = retrieveJsonPackage(cwd);
@@ -32,8 +32,10 @@ export function detectFramework(cwd: string): Framework {
   try {
     const { dependencies, devDependencies, peerDependencies } = pkg.content;
     const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
-    const frameworkEntry: Framework | undefined = SupportedFrameworks.find(f => deps[f] && deps[f].length)
-    return frameworkEntry || Framework.vanillajs
+    const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
+      (f) => deps[f] && deps[f].length
+    );
+    return frameworkEntry || Framework.vanillajs;
   } catch (e) {
     const message =
       "[api/env]: Unrecoverable error. Could not parse package.json. Exiting..";
@@ -43,10 +45,16 @@ export function detectFramework(cwd: string): Framework {
 }
 
 export function isValidFramework(framework: Framework): boolean {
-  return SupportedFrameworks.includes(framework)
+  return SupportedFrameworks.includes(framework);
 }
 
-export function defineFramework(manifest: Manifest | null, cwd: string): Framework {
-  const userDefinedFramework: Framework | null = manifest?.framework && isValidFramework(manifest.framework) ? manifest.framework : null
+export function defineFramework(
+  manifest: Manifest | null,
+  cwd: string
+): Framework {
+  const userDefinedFramework: Framework | null =
+    manifest?.framework && isValidFramework(manifest.framework)
+      ? manifest.framework
+      : null;
   return userDefinedFramework || detectFramework(cwd);
 }

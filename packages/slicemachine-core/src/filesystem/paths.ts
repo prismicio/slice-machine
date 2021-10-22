@@ -2,31 +2,39 @@ import path from "path";
 import * as os from "os";
 
 export interface FileContent<T> {
-  exists: boolean,
-  content: T | null
+  exists: boolean;
+  content: T | null;
 }
 
 export interface Paths {
-  value: () => string,
-  customType: (id: string) => {
-    value: () => string,
-    model: () => string,
-    mock: () => string
-  },
-  library: (libraryName: string) => {
-    value: () => string,
-    slice: (sliceName: string) => {
-      value: () => string,
-      preview: (filename: string) => string,
-      stories: (filename: string) => string,
-      mocks: () => string,
-      model: () => string,
-      variation: (variationId: string) => {
-        value: () => string,
-        preview: (filename: string) => string
-      },
-    }
-  }
+  value: () => string;
+  customType: (
+    id: string
+  ) => {
+    value: () => string;
+    model: () => string;
+    mock: () => string;
+  };
+  library: (
+    libraryName: string
+  ) => {
+    value: () => string;
+    slice: (
+      sliceName: string
+    ) => {
+      value: () => string;
+      preview: (filename: string) => string;
+      stories: (filename: string) => string;
+      mocks: () => string;
+      model: () => string;
+      variation: (
+        variationId: string
+      ) => {
+        value: () => string;
+        preview: (filename: string) => string;
+      };
+    };
+  };
 }
 
 const Paths = (cwd: string, prefix: string): Paths => ({
@@ -85,12 +93,14 @@ export const GeneratedPaths = (cwd: string): Paths =>
   Paths(cwd, path.join(".slicemachine", "assets"));
 export const GeneratedCustomTypesPaths = (cwd: string): Paths =>
   Paths(cwd, path.join(".slicemachine", "assets", "customtypes"));
-export const CustomTypesPaths = (cwd: string): Paths => Paths(cwd, "customtypes");
+export const CustomTypesPaths = (cwd: string): Paths =>
+  Paths(cwd, "customtypes");
 export const CustomPaths = (cwd: string): Paths => Paths(cwd, "");
 export const PackagePaths = (cwd: string): Paths => Paths(cwd, "node_modules");
 export const SMConfigPath = (cwd: string): string => path.join(cwd, "sm.json");
 
-export const PrismicConfigPath = (dir = os.homedir()): string => path.join(dir, ".prismic");
+export const PrismicConfigPath = (dir = os.homedir()): string =>
+  path.join(dir, ".prismic");
 
 export const SliceTemplateConfigPath = (
   cwd: string,
@@ -100,6 +110,9 @@ export const SliceTemplateConfigPath = (
     ? path.join(cwd, customPathToTemplate)
     : path.join(cwd, "slice-template");
 
-export const JsonPackagePath = (cwd: string): string => path.join(cwd, "package.json");
-export const YarnLockPath = (cwd: string): string => path.join(cwd, "yarn.lock");
-export const MocksConfigPath = (cwd: string): string => path.join(cwd, ".slicemachine", "mock-config.json");
+export const JsonPackagePath = (cwd: string): string =>
+  path.join(cwd, "package.json");
+export const YarnLockPath = (cwd: string): string =>
+  path.join(cwd, "yarn.lock");
+export const MocksConfigPath = (cwd: string): string =>
+  path.join(cwd, ".slicemachine", "mock-config.json");

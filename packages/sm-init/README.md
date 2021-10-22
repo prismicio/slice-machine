@@ -21,3 +21,8 @@ This package makes heavy use of the `slicemachine-core` package, you'll have to 
 - Watch the Core & the Init
 - run the `index.js` of the build in your project
 - enjoy coding
+
+### Solution 3
+- from te top level run `yarn`
+- then `pushd packages/slicemachine-core && yarn build && popd && pushd packages/sm-init && yarn build && popd`
+- the script can then be run with `node packages/sm-init/build/index.js`
