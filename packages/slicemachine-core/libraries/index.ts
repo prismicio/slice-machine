@@ -65,6 +65,6 @@ export function handleLibraryPath(
 
 export function libraries(cwd: string, libraries: string[]): ReadonlyArray<Library> {
   return (libraries || [])
-    .map(async (lib) => await handleLibraryPath(cwd, lib))
+    .map(lib => handleLibraryPath(cwd, lib))
     .filter(Boolean) as ReadonlyArray<Library>
 }
