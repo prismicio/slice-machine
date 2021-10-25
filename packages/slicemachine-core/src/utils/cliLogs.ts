@@ -21,3 +21,7 @@ export const writeWarning = (msg: string, prefix = "Warning!"): void =>
 export const writeCheck = (msg: string): void => {
   ora().succeed(msg); // using the same check as Ora for coherence
 };
+
+export const writeInfo = (msg: string): void => {
+  console.log(`${yellow("ℹ")} ${dim(msg)}`);
+};

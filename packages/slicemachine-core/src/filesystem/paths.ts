@@ -8,28 +8,20 @@ export interface FileContent<T> {
 
 export interface Paths {
   value: () => string;
-  customType: (
-    id: string
-  ) => {
+  customType: (id: string) => {
     value: () => string;
     model: () => string;
     mock: () => string;
   };
-  library: (
-    libraryName: string
-  ) => {
+  library: (libraryName: string) => {
     value: () => string;
-    slice: (
-      sliceName: string
-    ) => {
+    slice: (sliceName: string) => {
       value: () => string;
       preview: (filename: string) => string;
       stories: (filename: string) => string;
       mocks: () => string;
       model: () => string;
-      variation: (
-        variationId: string
-      ) => {
+      variation: (variationId: string) => {
         value: () => string;
         preview: (filename: string) => string;
       };

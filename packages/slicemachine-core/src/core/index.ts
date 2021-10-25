@@ -5,7 +5,7 @@ import {
   AuthConfig,
 } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { poll, buildEndpoints } from "../utils";
+import { poll, buildEndpoints, Framework } from "../utils";
 
 import * as Communication from "./communication";
 export * as Communication from "./communication";
@@ -32,11 +32,12 @@ export interface Core {
 
   Repository: {
     list: (token: string) => Promise<Communication.RepoData>;
-    // create: (apiEndpoint: string, token: string) => Promise<void>
-    validateName: (
-      name: string,
-      existingRepo?: boolean
-    ) => Promise<string>;
+    create: (
+      apiEndpoint: string,
+      token: string,
+      framework: Framework
+    ) => Communication.CreateRepositoryResponse;
+    validateName: (name: string, existingRepo?: boolean) => Promise<string>;
   };
 }
 
@@ -55,11 +56,14 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
     Repository: {
       list: async (token: string): Promise<Communication.RepoData> =>
         Communication.listRepositories(token, base),
-      validateName: (
-        name: string,
-        existingRepo = false
-      ): Promise<string> =>
+      validateName: (name: string, existingRepo = false): Promise<string> =>
         Communication.validateRepositoryName(name, base, existingRepo),
+      create: async (
+        domain: string,
+        token: string,
+        framework: Framework
+      ): Communication.CreateRepositoryResponse =>
+        Communication.createRepository(domain, token, framework, base),
     },
   };
 }

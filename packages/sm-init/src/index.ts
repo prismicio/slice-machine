@@ -5,6 +5,7 @@ import {
   installSm,
   validatePkg,
   maybeExistingRepo,
+  createRepository,
   loginOrBypass,
 } from "./steps";
 import { findArgument } from "./utils";
@@ -22,7 +23,14 @@ async function init() {
   await loginOrBypass(base);
   validatePkg(cwd);
   const config = FileSystem.getOrCreateAuthConfig();
-  await maybeExistingRepo(config.cookies, cwd, base);
+  const { existing, name } = await maybeExistingRepo(
+    config.cookies,
+    cwd,
+    config.base
+  );
+  if (existing === false) {
+    await createRepository(name, Utils.Framework.none, config);
+  }
   await installSm(cwd);
 }
 

@@ -1,4 +1,4 @@
-import { describe, expect, test, afterAll, afterEach } from "@jest/globals";
+import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../../src/core/auth";
 import { Auth } from "../../../src/core";
 import * as Utils from "../../../src/utils";
@@ -12,11 +12,6 @@ jest.mock("../../../src/utils/poll");
 const { Roles } = Utils.roles;
 
 describe("communication", () => {
-  afterAll(() => {
-    jest.clearAllMocks();
-    return;
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });

@@ -1,11 +1,22 @@
-import { describe, expect, test, afterAll, jest } from "@jest/globals";
+import {
+  describe,
+  expect,
+  test,
+  afterAll,
+  afterEach,
+  jest,
+} from "@jest/globals";
 import * as communication from "../../../src/core/communication";
 import { roles } from "../../../src/utils";
 import nock from "nock";
+import { Framework } from "../../../src/utils";
 
 describe("communication", () => {
-  afterAll(() => {
+  afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
     return nock.restore();
   });
 
@@ -86,6 +97,13 @@ describe("communication", () => {
     test("should fail if subdomain is not defined", () => {
       const fn = () => communication.validateRepositoryName();
       return expect(fn).rejects.toThrow("repository name is required");
+    });
+
+    test("no upper case letters", () => {
+      const fn = () => communication.validateRepositoryName("Abcd");
+      return expect(fn).rejects.toThrow(
+        "Must contain only lowercase letters, numbers and hyphens"
+      );
     });
 
     test("should fail if name length is less than 4", () => {
@@ -177,6 +195,53 @@ describe("communication", () => {
       return expect(
         communication.validateRepositoryName(repoName, "https://example.com")
       ).resolves.toEqual(repoName);
+    });
+  });
+
+  describe("createRepository", () => {
+    const cookies = "prismic-auth=biscuit;";
+    const repoName = "test";
+
+    test("with default arguments it should call the prismic.io endpoint to create a new repo", async () => {
+      const formData = {
+        domain: repoName,
+        framework: Framework.vanillajs,
+        plan: "personal",
+        isAnnual: "false",
+        role: "developer",
+      };
+
+      nock("https://prismic.io")
+        .post("/authentication/newrepository?app=slicemachine", formData)
+        .reply(200, { domain: repoName });
+
+      const result = await communication.createRepository(repoName, cookies);
+      expect(result.data.domain).toEqual(repoName);
+    });
+
+    test("with framework and different base", async () => {
+      const fakeBase = "https://example.com";
+      const framework = Framework.next;
+
+      const formData = {
+        domain: repoName,
+        framework,
+        plan: "personal",
+        isAnnual: "false",
+        role: "developer",
+      };
+
+      nock(fakeBase)
+        .post("/authentication/newrepository?app=slicemachine", formData)
+        .reply(200, { domain: repoName });
+
+      const result = await communication.createRepository(
+        repoName,
+        cookies,
+        framework,
+        fakeBase
+      );
+      expect(result.data.domain).toEqual(repoName);
     });
   });
 });

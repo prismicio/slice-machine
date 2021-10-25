@@ -1,8 +1,10 @@
-import axios from "axios";
-import { cookie, CONSTS, roles } from "../utils";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { cookie, CONSTS, roles, Framework } from "../utils";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
+
+export type { AxiosError } from "axios";
 
 const { DEFAULT_BASE } = CONSTS;
 
@@ -103,11 +105,11 @@ export async function validateRepositoryName(
 ): Promise<string> {
   if (!name) return Promise.reject(new Error("repository name is required"));
 
-  const domain = name.toLocaleLowerCase().trim();
+  const domain = name.trim();
 
   const errors = [];
 
-  const startsWithLetter = /^[a-z]/.test(domain);
+  const startsWithLetter = /^[a-zA-Z]/.test(domain);
   if (!startsWithLetter) errors.push("Must start with a letter.");
 
   const acceptedChars = /^[a-z0-9-]+$/.test(domain);
@@ -147,7 +149,49 @@ export async function validateRepositoryName(
     });
 }
 
-// async function createRepository
-// async function createRepositoryWithCookie
-// async function createRepositoryWithToken
-// async function signUp
+export type CreateRepositoryResponse = Promise<
+  AxiosResponse<{ domain: string }>
+>;
+
+export async function createRepository(
+  domain: string,
+  cookies: string,
+  framework = Framework.vanillajs,
+  base = DEFAULT_BASE
+): CreateRepositoryResponse {
+  const data = {
+    domain,
+    framework,
+    plan: "personal",
+    isAnnual: "false",
+    role: "developer",
+  };
+
+  const address = new URL(base);
+  address.pathname = "/authentication/newrepository";
+  address.searchParams.append("app", "slicemachine");
+
+  return axios
+    .post<
+      {
+        domain: string;
+        framework: string;
+        plan: string;
+        isAnnual: string;
+        role: string;
+      },
+      AxiosResponse<{ domain: string }>
+    >(address.toString(), data, {
+      headers: {
+        Cookie: cookies,
+        "User-Agent": "prismic-cli/sm",
+      },
+    })
+    .catch((error: AxiosError | Error) => {
+      if (axios.isAxiosError(error) && error.response) {
+        const message = `[${error.response.status}]: ${error.response.statusText}`;
+        throw new Error(message);
+      }
+      throw error;
+    });
+}

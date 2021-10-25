@@ -57,7 +57,8 @@ describe("maybe-existing-repo", () => {
     const result = await maybeExistingRepo(cookies, base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
-    return expect(result).toEqual(repoName);
+    expect(result.name).toEqual(repoName);
+    return expect(result.existing).toBeFalsy();
   });
 
   test("it allows a user to create a new repo", async () => {
@@ -85,7 +86,8 @@ describe("maybe-existing-repo", () => {
 
     const result = await maybeExistingRepo(cookies, base);
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
-    expect(result).toEqual(repoName);
+    expect(result.name).toEqual(repoName);
+    expect(result.existing).toBeFalsy();
   });
 });
 
