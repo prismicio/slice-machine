@@ -105,11 +105,11 @@ export async function validateRepositoryName(
 ): Promise<string> {
   if (!name) return Promise.reject(new Error("repository name is required"));
 
-  const domain = name.toLocaleLowerCase().trim();
+  const domain = name.trim();
 
   const errors = [];
 
-  const startsWithLetter = /^[a-z]/.test(domain);
+  const startsWithLetter = /^[a-zA-Z]/.test(domain);
   if (!startsWithLetter) errors.push("Must start with a letter.");
 
   const acceptedChars = /^[a-z0-9-]+$/.test(domain);
