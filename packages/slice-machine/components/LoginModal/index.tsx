@@ -1,6 +1,15 @@
 import Modal from "react-modal";
 import React, { useContext, useState } from "react";
-import { Button, Card, Close, Flex, Heading, Spinner, Text } from "theme-ui";
+import {
+  Button,
+  Card,
+  Close,
+  Flex,
+  Heading,
+  Link,
+  Spinner,
+  Text,
+} from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
@@ -44,9 +53,14 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
+  const loginRedirectUrl = !!env
+    ? `https://prismic.io/dashboard/cli/login?port=${
+        new URL(env.baseUrl).port
+      }&path=/api/auth`
+    : "";
 
   const onClick = async () => {
-    if (!env) {
+    if (!loginRedirectUrl) {
       return;
     }
 
@@ -55,11 +69,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
       await startAuth();
       const isAuthStatusOk = ({ status }: { status: string }) =>
         status === "ok";
-      const apiUrl = new URL(env.baseUrl);
-      window.open(
-        `https://prismic.io/dashboard/cli/login?port=${apiUrl.port}&path=/api/auth`,
-        "_blank"
-      );
+      window.open(loginRedirectUrl, "_blank");
       await poll(checkAuthStatus, isAuthStatusOk, 3000, 60);
       setIsLoading(false);
       addToast("Logged in", { appearance: "success" });
@@ -118,9 +128,20 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
               textAlign: "center",
             }}
           >
-            Your session has expired.
-            <br />
-            Please log in again.
+            {isLoading ? (
+              <>
+                Not seeing the browser tab? <br />
+                <Link target={"_blank"} href={loginRedirectUrl}>
+                  Go back and try again
+                </Link>
+              </>
+            ) : (
+              <>
+                Your session has expired.
+                <br />
+                Please log in again.
+              </>
+            )}
           </Text>
           <Button
             sx={{
@@ -128,6 +149,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
               justifyContent: "center",
               alignItems: "center",
               width: 240,
+              mb: 3,
             }}
             onClick={onClick}
           >
