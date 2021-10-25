@@ -21,19 +21,30 @@ async function init() {
     )
   );
 
-  await loginOrBypass(base);
+  // verify package.json file exist
   validatePkg(cwd);
+
+  // login
+  await loginOrBypass(base);
+
+  // retrieve tokens for api Calls
   const config = FileSystem.getOrCreateAuthConfig();
+
+  // detect the framework used by the project
+  const framework = await detectFramework(cwd);
+
+  // select the repository used with the project.
   const { existing, name } = await maybeExistingRepo(
     config.cookies,
     cwd,
     config.base
   );
 
-  const framework = await detectFramework(cwd);
   if (existing === false) {
     await createRepository(name, framework, config);
   }
+
+  // install the slicemachine-ui in the project.
   await installSm(cwd);
 }
 
