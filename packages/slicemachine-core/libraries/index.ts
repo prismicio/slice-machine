@@ -7,10 +7,10 @@ import { getInfoFromPath } from "../utils/lib";
 import { getComponentInfo } from "./component";
 import { Library, Component } from "../models/Library";
 
-export async function handleLibraryPath(
+export function handleLibraryPath(
   cwd: string,
   libPath: string
-): Promise<Library | undefined> {
+): Library | undefined {
   const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(
     libPath,
     cwd
@@ -63,12 +63,8 @@ export async function handleLibraryPath(
   };
 }
 
-export async function libraries(cwd: string, libraries: string[]): Promise<ReadonlyArray<Library>> {
-  const payload = await Promise.all(
-    (libraries || []).map(
-      async (lib) => await handleLibraryPath(cwd, lib)
-    )
-  );
-
-  return payload.filter(Boolean) as ReadonlyArray<Library>;
+export function libraries(cwd: string, libraries: string[]): ReadonlyArray<Library> {
+  return (libraries || [])
+    .map(async (lib) => await handleLibraryPath(cwd, lib))
+    .filter(Boolean) as ReadonlyArray<Library>
 }
