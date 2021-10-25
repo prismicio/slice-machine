@@ -99,6 +99,13 @@ describe("communication", () => {
       return expect(fn).rejects.toThrow("repository name is required");
     });
 
+    test("no upper case letters", () => {
+      const fn = () => communication.validateRepositoryName("Abcd");
+      return expect(fn).rejects.toThrow(
+        "Must contain only lowercase letters, numbers and hyphens"
+      );
+    });
+
     test("should fail if name length is less than 4", () => {
       const fn = () => communication.validateRepositoryName("abc");
       return expect(fn).rejects.toThrow(

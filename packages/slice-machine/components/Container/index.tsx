@@ -1,6 +1,10 @@
-import { Box } from "theme-ui";
+import { Box, BoxProps } from "theme-ui";
 
-export default function Container({ children, sx = {}, ...rest }) {
+const Container: React.FunctionComponent<BoxProps> = ({
+  children,
+  sx = {},
+  ...rest
+}) => {
   return (
     <Box
       sx={{
@@ -15,4 +19,6 @@ export default function Container({ children, sx = {}, ...rest }) {
       {children}
     </Box>
   );
-}
+};
+
+export default Container;

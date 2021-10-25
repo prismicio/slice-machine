@@ -1,21 +1,25 @@
 import path from "path";
 import glob from "glob";
 import Environment from "@lib/models/common/Environment";
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
+import {
+  CustomType,
+  CustomTypeJsonModel,
+  ObjectTabs,
+} from "@lib/models/common/CustomType";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 
 const handleMatch = (matches: string[], env: Environment) => {
   return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
     const key = path.basename(path.dirname(p));
-    const pathTopreview = path.join(path.dirname(p), "index.png");
+    const pathToPreview = path.join(path.dirname(p), "index.png");
     try {
-      const ct = Files.readJson(p);
+      const jsonCustomType: CustomTypeJsonModel = Files.readJson(p);
       return [
         ...acc,
         {
-          ...CustomType.fromJsonModel(key, ct),
-          previewUrl: Files.exists(pathTopreview)
+          ...CustomType.fromJsonModel(key, jsonCustomType),
+          previewUrl: Files.exists(pathToPreview)
             ? `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
                 path.join(path.dirname(p), "index.png")
               )}&uniq=${Math.random()}`
@@ -28,18 +32,24 @@ const handleMatch = (matches: string[], env: Environment) => {
   }, []);
 };
 
-const fetchRemoteCustomTypes = async (env: Environment) => {
+const fetchRemoteCustomTypes = async (
+  env: Environment
+): Promise<{ remoteCustomTypes: CustomTypeJsonModel[]; isFake?: boolean }> => {
   if (env.client.isFake()) {
     return { remoteCustomTypes: [], isFake: true };
   }
   try {
     const res = await env.client.getCustomTypes();
-    const { remoteCustomTypes } = await (async () => {
+    const { remoteCustomTypes } = await (async (): Promise<{
+      remoteCustomTypes: CustomTypeJsonModel[];
+    }> => {
       if (res.status > 209) {
         return { remoteCustomTypes: [] };
       }
-      const r = await (res.json ? res.json() : Promise.resolve([]));
-      return { remoteCustomTypes: r };
+      const remoteCustomTypes = await (res.json
+        ? res.json()
+        : Promise.resolve([]));
+      return { remoteCustomTypes };
     })();
     return { remoteCustomTypes };
   } catch (e) {
@@ -47,7 +57,10 @@ const fetchRemoteCustomTypes = async (env: Environment) => {
   }
 };
 
-const saveCustomTypes = (cts: ReadonlyArray<any>, cwd: string) => {
+const saveCustomTypes = (
+  cts: ReadonlyArray<CustomTypeJsonModel>,
+  cwd: string
+) => {
   for (const ct of cts) {
     Files.write(CustomTypesPaths(cwd).customType(ct.id).model(), ct);
   }
@@ -63,6 +76,7 @@ export default async function handler(env: Environment): Promise<{
   const folderExists = Files.exists(pathToCustomTypes);
 
   const { remoteCustomTypes, isFake } = await fetchRemoteCustomTypes(env);
+
   if (!folderExists) {
     saveCustomTypes(remoteCustomTypes, cwd);
   }

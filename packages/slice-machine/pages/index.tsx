@@ -15,13 +15,13 @@ import { CustomTypesContext } from "../src/models/customTypes/context";
 
 import { GoPlus } from "react-icons/go";
 
-import Container from "../components/Container";
+import Container from "@components/Container";
 
-import Grid from "../components/Grid";
+import Grid from "@components/Grid";
 
-import CreateCustomType from "../components/Forms/CreateCustomType";
+import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
 
-import Header from "../components/Header";
+import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
 
 interface CtPayload {
@@ -32,7 +32,7 @@ interface CtPayload {
 }
 
 // To isolate later
-const CTName = ({ ctName }: { ctName: string }) => {
+const CTName: React.FunctionComponent<{ ctName: string }> = ({ ctName }) => {
   return (
     <Heading sx={{ flex: 1, lineHeight: 20 }} as="h6">
       {ctName}
@@ -41,7 +41,9 @@ const CTName = ({ ctName }: { ctName: string }) => {
 };
 
 // To isolate later
-const CTRepeatble = ({ repeatable }: { repeatable: boolean }) => {
+const CTRepeatble: React.FunctionComponent<{ repeatable: boolean }> = ({
+  repeatable,
+}) => {
   return (
     <Text sx={{ fontSize: 0, color: "textClear", lineHeight: "20px" }}>
       {repeatable ? "Repeatable" : "Single"} Type
@@ -90,7 +92,7 @@ const CTThumbnail = ({
   );
 };
 // To isolate later
-const Card = ({ ct }: { ct: CtPayload }) => (
+const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
   <Link href={`/cts/${ct.id}`} passHref>
     <ThemeLink variant="links.invisible">
       <ThemeCard
@@ -115,12 +117,12 @@ const Card = ({ ct }: { ct: CtPayload }) => (
   </Link>
 );
 
-const CustomTypes = () => {
+const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { customTypes = [], onCreate } = useContext(CustomTypesContext);
 
-  const _onCreate = ({ id, label, repeatable }: CtPayload) => {
+  const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     if (onCreate) {
       onCreate(id, {
         label,
@@ -189,8 +191,7 @@ const CustomTypes = () => {
           )}
         />
       )}
-
-      <CreateCustomType
+      <CreateCustomTypeModal
         isOpen={isOpen}
         onSubmit={_onCreate}
         customTypes={customTypes}

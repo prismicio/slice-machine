@@ -5,7 +5,7 @@ import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
 import { Box, Flex, useThemeUI } from "theme-ui";
 
 import Li from "../Li";
-import IconButton from "../IconButton";
+import SliceMachineIconButton from "../SliceMachineIconButton";
 import ItemHeader from "./Header";
 
 import { AiOutlineEdit } from "react-icons/ai";
@@ -55,7 +55,7 @@ const ListItem = (props: any) => {
               }}
             >
               <Flex sx={{ width: "100%" }}>
-                <IconButton
+                <SliceMachineIconButton
                   label="Reorder slice field (drag and drop)"
                   Icon={FaBars}
                   color={theme.colors?.icons as string}
@@ -90,7 +90,7 @@ const ListItem = (props: any) => {
                       {CustomEditElement ? (
                         CustomEditElement
                       ) : (
-                        <IconButton
+                        <SliceMachineIconButton
                           size={22}
                           Icon={AiOutlineEdit}
                           label="Edit slice field"

@@ -9,7 +9,7 @@ import Environment from "@lib/models/common/Environment";
 
 import { GoPlus } from "react-icons/go";
 
-import CreateSlice from "../components/Forms/CreateSlice";
+import CreateSliceModal from "@components/Forms/CreateSliceModal";
 
 import { fetchApi } from "@lib/builders/common/fetch";
 
@@ -25,7 +25,7 @@ const CreateSliceButton = ({
   onClick,
   loading,
 }: {
-  onClick: Function;
+  onClick: () => void;
   loading: boolean;
 }) => (
   <Button
@@ -43,7 +43,9 @@ const CreateSliceButton = ({
   </Button>
 );
 
-const SlicesIndex = ({ env }: { env: Environment }) => {
+const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
+  env,
+}) => {
   const libraries = useContext(LibrariesContext);
   const [isCreatingSlice, setIsCreatingSlice] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -55,7 +57,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
     sliceName: string;
     from: string;
   }) => {
-    fetchApi({
+    void fetchApi({
       url: `/api/slices/create?sliceName=${sliceName}&from=${from}`,
       setData() {
         setIsCreatingSlice(true);
@@ -233,7 +235,7 @@ const SlicesIndex = ({ env }: { env: Environment }) => {
         </Box>
       </Container>
       {!!configLocalLibs.length && (
-        <CreateSlice
+        <CreateSliceModal
           isOpen={isOpen}
           close={() => setIsOpen(false)}
           libraries={configLocalLibs}

@@ -1,4 +1,4 @@
-import { Container, Box, Heading, Button, Flex, Text } from "theme-ui";
+import { Box, Heading, Flex, Text } from "theme-ui";
 import Card from "components/Card";
 import Li from "components/Li";
 

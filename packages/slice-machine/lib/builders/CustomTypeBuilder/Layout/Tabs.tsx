@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { CustomTypeState } from "../../../models/ui/CustomTypeState";
+import { MouseEventHandler, useState } from "react";
+import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 import { AiOutlinePlus } from "react-icons/ai";
-import IconButton from "components/IconButton";
 
-import { Box, Button, Flex, useThemeUI } from "theme-ui";
+import { Box, Button, Flex, Theme, useThemeUI } from "theme-ui";
 import { Tabs, TabPanel } from "react-tabs";
 
 import { HiOutlineCog } from "react-icons/hi";
@@ -20,6 +19,7 @@ import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
 import CustomTypeStore from "src/models/customType/store";
+import SliceMachineIconButton from "@components/SliceMachineIconButton";
 
 enum ModalType {
   CREATE = "create",
@@ -39,13 +39,18 @@ interface CreateState {
 
 type ModalState = EditState | CreateState;
 
-const Icon = ({ theme, onClick }: { theme: any; onClick: Function }) => (
-  <IconButton
+const Icon = ({
+  theme,
+  onClick,
+}: {
+  theme: Theme;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}) => (
+  <SliceMachineIconButton
     size={20}
-    error={null}
     Icon={HiOutlineCog}
     label="Edit tab"
-    sx={{ cursor: "pointer", color: theme.colors.icons }}
+    sx={{ cursor: "pointer", color: theme.colors?.icons }}
     onClick={onClick}
   />
 );
@@ -89,7 +94,9 @@ const CtTabs = ({
                   {i === tabIndex ? (
                     <Icon
                       theme={theme}
-                      onClick={(e: Event) => {
+                      onClick={(
+                        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                      ) => {
                         e.preventDefault();
                         setState({
                           title: "Edit Tab",
