@@ -1,4 +1,4 @@
-import { Files, cookie } from "../utils";
+import { Files, Cookie } from "../utils";
 import { PrismicConfigPath } from "./paths";
 
 export interface AuthConfig {
@@ -37,7 +37,7 @@ export function setAuthConfig(
   directory?: string
 ): void {
   const currentConfig = getOrCreateAuthConfig(directory);
-  const formattedCookies = cookie.serializeCookies(cookies);
+  const formattedCookies = Cookie.serializeCookies(cookies);
   const configPath = PrismicConfigPath(directory);
 
   const newConfig = {

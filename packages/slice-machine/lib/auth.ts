@@ -36,7 +36,7 @@ export function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   const result = parsePrismicFile();
 
   return result.map<PrismicData>((prismicFile) => {
-    const authResult = Utils.cookie.parsePrismicAuthToken(prismicFile.cookies);
+    const authResult = Utils.Cookie.parsePrismicAuthToken(prismicFile.cookies);
     if (!!authResult)
       return { base: prismicFile.base, auth: { auth: authResult } };
     else

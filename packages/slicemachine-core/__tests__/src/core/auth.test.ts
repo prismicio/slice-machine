@@ -17,7 +17,7 @@ describe("communication", () => {
   });
 
   const fakeBase = "https://fake.io";
-  const endpoints = Utils.buildEndpoints(fakeBase);
+  const endpoints = Utils.Endpoints.buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
     const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");

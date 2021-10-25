@@ -81,10 +81,6 @@ function start({ cwd, port }, callback) {
   smServer.stderr.on("data", function (data) {
     console.log("[slice-machine] " + data.toString());
   });
-
-  smServer.on("exit", function (code) {
-    console.log("[slice-machine] Thanks for using SliceMachine");
-  });
 }
 
 async function handleManifestState(manifestState, cwd) {
@@ -108,7 +104,11 @@ See below for more info 👇`,
     case ManifestStates.Valid:
       return { exit: false };
     case ManifestStates.NotFound: {
-      console.log(`Run "npx sm init" command to configure your project`);
+      console.log(
+        `Run ${Utils.bold(
+          `"${Utils.CONSTS.INIT_COMMAND}"`
+        )} command to configure your project`
+      );
 
       return { exit: true };
     }

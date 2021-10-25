@@ -22,6 +22,9 @@
     "audit-fix": "npm audit fix",
     "test": "jest"
   },
+  "peerDependencies": {
+    "ora": "^5.4.1"
+  },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
     "axios": "^0.22.0",

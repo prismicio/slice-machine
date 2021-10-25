@@ -5,7 +5,7 @@ import {
   AuthConfig,
 } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { poll, buildEndpoints, Framework } from "../utils";
+import { Poll, Endpoints, Framework } from "../utils";
 
 import * as Communication from "./communication";
 export * as Communication from "./communication";
@@ -70,7 +70,7 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
 
 export const Auth = {
   login: async (base: string): Promise<void> => {
-    const endpoints = buildEndpoints(base);
+    const endpoints = Endpoints.buildEndpoints(base);
     const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliLogin,
       "login",
@@ -78,7 +78,7 @@ export const Auth = {
     );
     try {
       // We wait 3 minutes before timeout
-      return await poll<Communication.UserInfo | null>(
+      return await Poll.startPolling<Communication.UserInfo | null>(
         () => Auth.validateSession(base),
         (user) => !!user,
         3000,
@@ -89,7 +89,7 @@ export const Auth = {
     }
   },
   signup: async (base: string): Promise<void> => {
-    const endpoints = buildEndpoints(base);
+    const endpoints = Endpoints.buildEndpoints(base);
     const { onLoginFail } = await startServerAndOpenBrowser(
       endpoints.Dashboard.cliSignup,
       "signup",
@@ -97,7 +97,7 @@ export const Auth = {
     );
     try {
       // We wait 3 minutes before timeout
-      return await poll<Communication.UserInfo | null>(
+      return await Poll.startPolling<Communication.UserInfo | null>(
         () => Auth.validateSession(base),
         (user) => !!user,
         3000,
