@@ -1,5 +1,13 @@
 #!/usr/bin/env node
 
+const nodeVersion = process.version.slice(1).split(".")[0];
+if (parseInt(nodeVersion) < 12) {
+  console.error(
+    `🔴 Slicemachine requires node version >= 12 to work properly.\nCurrent version: ${process.version}\n`
+  );
+  process.exit(-1);
+}
+
 const path = require("path");
 const pkg = require("../package.json");
 
@@ -138,14 +146,6 @@ async function run() {
   const port = argv.p || argv.port || "9999";
   if (!argv.skipMigration) {
     await handleMigration(cwd);
-  }
-
-  const nodeVersion = process.version.slice(1).split(".")[0];
-  if (parseInt(nodeVersion) < 12) {
-    console.error(
-      `\n🔴 Slicemachine requires node version >= 12 to work properly.\nCurrent version: ${process.version}\n`
-    );
-    process.exit(-1);
   }
 
   const userConfig = handleManifest(cwd);
