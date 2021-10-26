@@ -5,6 +5,7 @@ export enum Framework {
   none = "none",
   nuxt = "nuxt",
   next = "next",
+  gatsby = "gatsby",
   vue = "vue",
   react = "react",
   svelte = "svelte",
@@ -20,6 +21,26 @@ export const SupportedFrameworks: Framework[] = [
   Framework.svelte,
 ];
 
+export const UnsupportedFrameWorks = Object.values(Framework).filter(
+  (framework) => SupportedFrameworks.includes(framework) === false
+);
+
+export const isUnsupported = (framework: Framework): boolean =>
+  UnsupportedFrameWorks.includes(framework);
+
+function capitaliseFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function fancyName(str: Framework): string {
+  switch (str) {
+    case Framework.next:
+      return "Next.js";
+    default:
+      return capitaliseFirstLetter(str);
+  }
+}
+
 export function detectFramework(cwd: string): Framework {
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
@@ -29,19 +50,13 @@ export function detectFramework(cwd: string): Framework {
     throw new Error(message);
   }
 
-  try {
-    const { dependencies, devDependencies, peerDependencies } = pkg.content;
-    const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
-    const frameworkEntry: Framework | undefined = SupportedFrameworks.find(
-      (f) => deps[f] && deps[f].length
-    );
-    return frameworkEntry || Framework.vanillajs;
-  } catch (e) {
-    const message =
-      "[api/env]: Unrecoverable error. Could not parse package.json. Exiting..";
-    console.error(message);
-    throw new Error(message);
-  }
+  const { dependencies, devDependencies, peerDependencies } = pkg.content;
+  const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
+
+  const frameworkEntry: Framework | undefined = Object.values(Framework).find(
+    (f) => deps[f] && deps[f].length
+  );
+  return frameworkEntry || Framework.vanillajs;
 }
 
 export function isValidFramework(framework: Framework): boolean {
