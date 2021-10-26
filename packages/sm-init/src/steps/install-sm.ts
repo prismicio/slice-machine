@@ -23,8 +23,7 @@ export async function installSm(cwd: string): Promise<void> {
   const isPackageInstalled = Utils.Files.exists(pathToPkg);
 
   if (isPackageInstalled || !stderr.length) {
-    spinner.succeed();
-    Utils.writeCheck("The Prismic Visual Builder was installed successfully");
+    spinner.succeed("The Prismic Visual Builder was installed successfully");
     return;
   }
 

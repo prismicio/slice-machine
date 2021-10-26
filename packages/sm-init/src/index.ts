@@ -7,12 +7,14 @@ import {
   maybeExistingRepo,
   createRepository,
   loginOrBypass,
+  configureProject,
 } from "./steps";
 import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
-  const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const base = (findArgument(process.argv, "base") ||
+    Utils.CONSTS.DEFAULT_BASE) as Utils.Endpoints.Base;
 
   console.log(
     Utils.purple(
@@ -32,6 +34,10 @@ async function init() {
     await createRepository(name, Utils.Framework.none, config);
   }
   await installSm(cwd);
+  configureProject(cwd, base, "fakeRepoDomain", {
+    value: Utils.Framework.none,
+    manuallyAdded: false,
+  }); // to be modified on merge with framework detection
 }
 
 try {

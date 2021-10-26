@@ -10,7 +10,8 @@
     "watch": "tsc --project tsconfig.json --watch",
     "prepublishOnly": "yarn run build",
     "lint": "eslint --ext .ts .",
-    "test": "jest"
+    "test": "jest",
+    "slicemachine": "start-slicemachine"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
