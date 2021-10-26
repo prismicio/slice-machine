@@ -21,7 +21,7 @@ describe('onboarding', () => {
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 
-  it('when is-onboarded is in loal storge it should not redirect', () => {
+  it('when is-onboarded is in local storage it should not redirect', () => {
     cy.visit('/')
     cy.url().should('eq', 'http://localhost:9999/')
   })
