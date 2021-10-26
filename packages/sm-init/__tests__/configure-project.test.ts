@@ -1,4 +1,11 @@
-import { jest, describe, afterEach, test, expect } from "@jest/globals";
+import {
+  jest,
+  describe,
+  afterEach,
+  test,
+  expect,
+  beforeAll,
+} from "@jest/globals";
 import * as Core from "slicemachine-core";
 import { configureProject } from "../src/steps";
 
@@ -41,8 +48,13 @@ jest.mock("slicemachine-core", () => {
 });
 
 describe("configure-project", () => {
+  beforeAll(() => {
+    jest.spyOn(process, "exit").mockImplementation((number) => number as never);
+  });
+
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.spyOn(process, "exit").mockImplementation((number) => number as never);
   });
 
   const fakeCwd = "./";
@@ -53,22 +65,121 @@ describe("configure-project", () => {
     manuallyAdded: false,
   };
 
-  test("it should create a new manifest if it doesn't exist yet", () => {
-    jest.spyOn(process, "exit").mockImplementation(() => Promise.reject());
+  const retrieveManifestMock = Core.FileSystem.retrieveManifest as jest.Mock;
+  const createManifestMock = Core.FileSystem.createManifest as jest.Mock;
+  const patchManifestMock = Core.FileSystem.patchManifest as jest.Mock;
+  const addJsonPackageSmScriptMock = Core.FileSystem
+    .addJsonPackageSmScript as jest.Mock;
 
-    (Core.FileSystem.retrieveManifest as jest.Mock).mockReturnValue({
+  test("it should create a new manifest if it doesn't exist yet", () => {
+    retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
     });
-
-    (Core.FileSystem.addJsonPackageSmScript as jest.Mock).mockReturnValue(true);
+    addJsonPackageSmScriptMock.mockReturnValue(true);
 
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
 
-    expect(Core.FileSystem.retrieveManifest as jest.Mock).toBeCalled();
-    expect(Core.FileSystem.patchManifest as jest.Mock).not.toBeCalled();
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).toBeCalled();
+    expect(patchManifestMock).not.toBeCalled();
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
+  });
+
+  test("it should patch the existing manifest", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: true,
+      content: {
+        framework: Core.Utils.Framework.react,
+      },
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).not.toBeCalled();
+    expect(patchManifestMock).toBeCalled();
+
+    expect(successFn).toHaveBeenCalled();
+    expect(failFn).not.toHaveBeenCalled();
+  });
+
+  test("it should fail if retrieve manifest throws", () => {
+    retrieveManifestMock.mockImplementation(() => {
+      throw new Error("fake error to test the catch");
+    });
+
+    // process.exit should throw
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).not.toBeCalled();
+    expect(patchManifestMock).not.toBeCalled();
+
+    expect(successFn).not.toHaveBeenCalled();
+    expect(failFn).toHaveBeenCalled();
+  });
+
+  test("it should fail if create manifest throws", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    createManifestMock.mockImplementation(() => {
+      throw new Error("fake error to test the catch");
+    });
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).toBeCalled();
+    expect(patchManifestMock).not.toBeCalled();
+
+    expect(successFn).not.toHaveBeenCalled();
+    expect(failFn).toHaveBeenCalled();
+  });
+
+  test("it should fail if patch manifest throws", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: true,
+      content: {
+        framework: Core.Utils.Framework.react,
+      },
+    });
+    patchManifestMock.mockImplementation(() => {
+      throw new Error("fake error to test the catch");
+    });
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).not.toBeCalled();
+    expect(patchManifestMock).toBeCalled();
+
+    expect(successFn).not.toHaveBeenCalled();
+    expect(failFn).toHaveBeenCalled();
+  });
+
+  test("it should fail if add SM script throws", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    createManifestMock.mockReturnValue(null); // we don't care about this void.
+    addJsonPackageSmScriptMock.mockImplementation(() => {
+      throw new Error("fake error to test the catch");
+    });
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).toBeCalled();
+    expect(patchManifestMock).not.toBeCalled();
+
+    expect(successFn).not.toHaveBeenCalled();
+    expect(failFn).toHaveBeenCalled();
   });
 });

@@ -4,3 +4,4 @@ export { maybeExistingRepo } from "./maybe-existing-repo";
 export { createRepository } from "./create-repo";
 export { loginOrBypass } from "./loginOrBypass";
 export { configureProject } from "./configure-project";
+export { displayFinalMessage } from "./display-final-message";

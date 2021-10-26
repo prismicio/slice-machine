@@ -25,9 +25,7 @@ export function configureProject(
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
     else FileSystem.patchManifest(cwd, manifestUpdated);
 
-    const isScriptAdded = FileSystem.addJsonPackageSmScript(cwd);
-    if (!isScriptAdded)
-      throw new Error("Error adding the SM start script to your package.json");
+    FileSystem.addJsonPackageSmScript(cwd);
 
     spinner.succeed("Project configured! Ready to start");
   } catch {

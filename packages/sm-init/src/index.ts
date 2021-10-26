@@ -8,6 +8,7 @@ import {
   createRepository,
   loginOrBypass,
   configureProject,
+  displayFinalMessage,
 } from "./steps";
 import { findArgument } from "./utils";
 
@@ -38,6 +39,8 @@ async function init() {
     value: Utils.Framework.none,
     manuallyAdded: false,
   }); // to be modified on merge with framework detection
+
+  displayFinalMessage(cwd);
 }
 
 try {
