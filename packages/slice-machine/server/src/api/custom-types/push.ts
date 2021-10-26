@@ -29,12 +29,23 @@ export default async function handler(query: { id: string }) {
   const state = await fetchState();
 
   if (state.clientError || state.isFake) {
-    const message =
-      "[custom-types/push] Could not fetch remote custom types. Are you logged in to Prismic?";
+    const isAnAuthenticationError =
+      state.isFake || (state.clientError && state.clientError.status === 403);
+    const errorExplanation = isAnAuthenticationError
+      ? "Please log in to Prismic!"
+      : `You don\'t have access to the repo \"${state.env.repo}\"`;
+
+    const errorCode = state.isFake
+      ? 403
+      : state.clientError
+      ? state.clientError.status
+      : 403;
+    const message = `Error ${errorCode}: Could not fetch remote custom types. ${errorExplanation}`;
+
     return {
       err: new Error(message),
       reason: message,
-      status: 500,
+      status: errorCode,
     };
   }
 

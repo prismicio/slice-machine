@@ -36,6 +36,7 @@ import Slice from "@lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
+import LoginModalProvider from "@src/LoginModalProvider";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -171,44 +172,49 @@ function MyApp({
                   openPanel={openPanel}
                 />
               ) : (
-                <LibrariesProvider
-                  remoteSlices={payload.remoteSlices}
-                  libraries={payload.libraries}
-                  env={payload.env}
-                >
-                  <CustomTypesProvider
-                    customTypes={payload.customTypes}
-                    remoteCustomTypes={payload.remoteCustomTypes}
-                  >
-                    <TrackingProvider>
-                      <ToastProvider>
-                        <AppLayout {...payload} data={data}>
-                          <SliceHandler {...payload}>
-                            <Renderer
-                              Component={Component}
-                              pageProps={pageProps}
-                              {...payload}
-                              openPanel={openPanel}
-                            />
-                            <Drawer
-                              placement="right"
-                              open={drawerState.open}
-                              onClose={() =>
-                                setDrawerState({ ...drawerState, open: false })
-                              }
-                            >
-                              <Warnings
-                                priority={drawerState.priority}
-                                list={data.warnings}
-                                configErrors={data.configErrors}
+                <ToastProvider>
+                  <LoginModalProvider>
+                    <LibrariesProvider
+                      remoteSlices={payload.remoteSlices}
+                      libraries={payload.libraries}
+                      env={payload.env}
+                    >
+                      <TrackingProvider>
+                        <CustomTypesProvider
+                          customTypes={payload.customTypes}
+                          remoteCustomTypes={payload.remoteCustomTypes}
+                        >
+                          <AppLayout {...payload} data={data}>
+                            <SliceHandler {...payload}>
+                              <Renderer
+                                Component={Component}
+                                pageProps={pageProps}
+                                {...payload}
+                                openPanel={openPanel}
                               />
-                            </Drawer>
-                          </SliceHandler>
-                        </AppLayout>
-                      </ToastProvider>
-                    </TrackingProvider>
-                  </CustomTypesProvider>
-                </LibrariesProvider>
+                              <Drawer
+                                placement="right"
+                                open={drawerState.open}
+                                onClose={() =>
+                                  setDrawerState({
+                                    ...drawerState,
+                                    open: false,
+                                  })
+                                }
+                              >
+                                <Warnings
+                                  priority={drawerState.priority}
+                                  list={data.warnings}
+                                  configErrors={data.configErrors}
+                                />
+                              </Drawer>
+                            </SliceHandler>
+                          </AppLayout>
+                        </CustomTypesProvider>
+                      </TrackingProvider>
+                    </LibrariesProvider>
+                  </LoginModalProvider>
+                </ToastProvider>
               )}
             </ConfigProvider>
           )}
