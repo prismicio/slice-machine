@@ -122,6 +122,7 @@
     "next-compose-plugins": "^2.2.1",
     "next-mdx-remote": "^1.0.0",
     "next-plugin-custom-babel-config": "^1.0.4",
+    "next-videos": "^1.4.0",
     "nodemon": "^2.0.12",
     "npm": "^7.6.3",
     "prettier": "^2.4.1",

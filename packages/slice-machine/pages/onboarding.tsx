@@ -1,14 +1,82 @@
-import { Fragment, ReactElement, useEffect, useState } from "react";
-import { Grid, Box, Button, Flex, Spinner } from "theme-ui";
+import {
+  Fragment,
+  ReactElement,
+  useEffect,
+  useState,
+  //  createRef
+} from "react";
+import {
+  Grid,
+  Box,
+  Button,
+  Flex,
+  Spinner,
+  Paragraph,
+  Heading,
+  Image,
+} from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
 import router from "next/router";
 
-const STEPS = [
-  <Fragment>Hi 1!</Fragment>,
-  <Fragment>Hi 2!</Fragment>,
-  <Fragment>Hi 3!</Fragment>,
-  <Fragment>Hi 4!</Fragment>,
-];
+const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
+  return (
+    <video
+      controls
+      autoPlay
+      loop
+      {...props}
+      style={{
+        maxWidth: "100%",
+        height: "auto",
+        ...props.style,
+      }}
+    />
+  );
+};
+
+// const Header = (props: TextProps) => <Text {...props} sx={{
+//   'font-family': "SF Pro Display",
+//   'font-style': 'normal',
+//   'font-weight': 'bold',
+//   'font-size': '20px',
+//   'line-height': '32px',
+//   'text-align': 'center',
+//   ...props.sx
+// }} />
+
+// const Par = (props: TextProps) => <Text {...props} sx={{
+//   "font-family": "SF Pro Display",
+//   "font-style": "normal",
+//   "font-weight": "normal",
+//   "font-size": "16px",
+//   "line-height": "24px",
+//   "text-align": "center",
+//   ...props.sx
+// }} />
+
+const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
+  <>
+    <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
+    <Heading
+      sx={{
+        fontSize: "20px",
+        textAlign: "center",
+      }}
+    >
+      Welcome to Slice Machine℠
+    </Heading>
+    <Paragraph
+      sx={{
+        fontSize: "16px",
+        textAlign: "center",
+        paddingBottom: "24px",
+      }}
+    >
+      Prismic’s local component development tool
+    </Paragraph>
+    <Button onClick={onClick}>Get Started</Button>
+  </>
+);
 
 const OnboardingGrid = ({
   children,
@@ -60,8 +128,24 @@ const StepIndicator = ({
   );
 };
 
-export default function Changelog() {
+export default function Onboarding() {
   const [state, setState] = useState({ step: 0 });
+
+  const STEPS = [
+    <WelcomeSlide
+      onClick={() => setState({ ...state, step: state.step + 1 })}
+    />,
+    <Fragment>
+      <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
+    </Fragment>,
+    <Fragment>
+      <Video src={require("../public/pexels-videos-1409899.mp4")} />
+    </Fragment>,
+    <Fragment>
+      <Video src={require("../public/pexels-videos-2231485.mp4")} />
+    </Fragment>,
+    <Fragment>Bye</Fragment>,
+  ];
 
   const escape = () => router.push("/");
 
@@ -84,9 +168,11 @@ export default function Changelog() {
           justifyContent: "space-around",
         }}
       >
-        <Button variant="transparent" onClick={escape}>
-          skip
-        </Button>
+        {!!state.step && (
+          <Button variant="transparent" onClick={escape}>
+            skip
+          </Button>
+        )}
       </Flex>
       <Flex
         sx={{
@@ -95,7 +181,9 @@ export default function Changelog() {
           justifyContent: "space-around",
         }}
       >
-        <StepIndicator current={state.step} maxSteps={STEPS.length} />
+        {!!state.step && (
+          <StepIndicator current={state.step} maxSteps={STEPS.length - 1} />
+        )}
       </Flex>
 
       <Flex
@@ -103,6 +191,8 @@ export default function Changelog() {
           gridArea: "content",
           alignItems: "center",
           justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
         }}
       >
         {STEPS[state.step] ? STEPS[state.step] : <Spinner />}
@@ -115,9 +205,11 @@ export default function Changelog() {
           justifyContent: "space-around",
         }}
       >
-        <Button onClick={() => setState({ ...state, step: state.step + 1 })}>
-          Continue
-        </Button>
+        {!!state.step && (
+          <Button onClick={() => setState({ ...state, step: state.step + 1 })}>
+            Continue
+          </Button>
+        )}
       </Flex>
     </OnboardingGrid>
   );
