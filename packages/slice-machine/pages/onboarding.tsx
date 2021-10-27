@@ -1,10 +1,4 @@
-import {
-  Fragment,
-  ReactElement,
-  useEffect,
-  useState,
-  //  createRef
-} from "react";
+import {ReactElement, useEffect, useState} from "react";
 import {
   Grid,
   Box,
@@ -14,6 +8,8 @@ import {
   Paragraph,
   Heading,
   Image,
+  HeadingProps,
+  ParagraphProps
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
 import router from "next/router";
@@ -34,49 +30,47 @@ const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
   );
 };
 
-// const Header = (props: TextProps) => <Text {...props} sx={{
-//   'font-family': "SF Pro Display",
-//   'font-style': 'normal',
-//   'font-weight': 'bold',
-//   'font-size': '20px',
-//   'line-height': '32px',
-//   'text-align': 'center',
-//   ...props.sx
-// }} />
+const Header = (props: HeadingProps) => (<Heading {...props} sx={{ fontSize: "20px", textAlign: "center", ...props.sx}}/>)
 
-// const Par = (props: TextProps) => <Text {...props} sx={{
-//   "font-family": "SF Pro Display",
-//   "font-style": "normal",
-//   "font-weight": "normal",
-//   "font-size": "16px",
-//   "line-height": "24px",
-//   "text-align": "center",
-//   ...props.sx
-// }} />
+const SubHeader = (props: ParagraphProps) => (<Paragraph
+  {...props}
+  sx={{
+    fontSize: "16px",
+    textAlign: "center",
+    paddingBottom: "24px",
+    ...props.sx,
+  }}
+/>)
 
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
-    <Heading
-      sx={{
-        fontSize: "20px",
-        textAlign: "center",
-      }}
-    >
-      Welcome to Slice Machine℠
-    </Heading>
-    <Paragraph
-      sx={{
-        fontSize: "16px",
-        textAlign: "center",
-        paddingBottom: "24px",
-      }}
-    >
-      Prismic’s local component development tool
-    </Paragraph>
+    <Header>Welcome to Slice Machine ℠</Header>
+    <SubHeader>Prismic’s local component development tool</SubHeader>
     <Button onClick={onClick}>Get Started</Button>
   </>
 );
+
+const BuildSlicesSlide = () => (<>
+   <Image src="/horizontal_split.svg" />
+   <Header>Build Slices ℠</Header>
+   <SubHeader>The building blocks used to create your website</SubHeader>
+   <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
+</>)
+
+const CreatePageTypesSlide = () => (<>
+  <Image src="/insert_page_break.svg" />
+  <Header>Create Page Types</Header>
+  <SubHeader>Group your Slices as page builders</SubHeader>
+  <Video src={require("../public/pexels-videos-1409899.mp4")} />
+</>)
+
+const PushPagesSlide = () => (<>
+  <Image src="/send.svg" />
+  <Header>Push your pages to Prismic</Header>
+  <SubHeader>Give your content writers the freedom to build whatever they need</SubHeader>
+  <Video src={require("../public/pexels-videos-2231485.mp4")} />
+</>)
 
 const OnboardingGrid = ({
   children,
@@ -135,16 +129,9 @@ export default function Onboarding() {
     <WelcomeSlide
       onClick={() => setState({ ...state, step: state.step + 1 })}
     />,
-    <Fragment>
-      <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
-    </Fragment>,
-    <Fragment>
-      <Video src={require("../public/pexels-videos-1409899.mp4")} />
-    </Fragment>,
-    <Fragment>
-      <Video src={require("../public/pexels-videos-2231485.mp4")} />
-    </Fragment>,
-    <Fragment>Bye</Fragment>,
+    <BuildSlicesSlide />,
+    <CreatePageTypesSlide />,
+    <PushPagesSlide />
   ];
 
   const escape = () => router.push("/");
@@ -182,7 +169,7 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <StepIndicator current={state.step} maxSteps={STEPS.length - 1} />
+          <StepIndicator current={state.step - 1} maxSteps={STEPS.length - 1} />
         )}
       </Flex>
 
