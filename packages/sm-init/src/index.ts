@@ -9,6 +9,7 @@ import {
   loginOrBypass,
   configureProject,
   displayFinalMessage,
+  detectFramework,
 } from "./steps";
 import { findArgument } from "./utils";
 
@@ -23,23 +24,36 @@ async function init() {
     )
   );
 
-  await loginOrBypass(base);
+  // verify package.json file exist
   validatePkg(cwd);
+
+  // login
+  await loginOrBypass(base);
+
+  // retrieve tokens for api Calls
   const config = FileSystem.getOrCreateAuthConfig();
+
+  // detect the framework used by the project
+  const frameworkResult = await detectFramework(cwd);
+
+  // select the repository used with the project.
   const { existing, name } = await maybeExistingRepo(
     config.cookies,
     cwd,
     config.base
   );
-  if (existing === false) {
-    await createRepository(name, Utils.Framework.none, config);
-  }
-  await installSm(cwd);
-  configureProject(cwd, base, "fakeRepoDomain", {
-    value: Utils.Framework.none,
-    manuallyAdded: false,
-  }); // to be modified on merge with framework detection
 
+  if (existing === false) {
+    await createRepository(name, frameworkResult.value, config);
+  }
+
+  // install the slicemachine-ui in the project.
+  await installSm(cwd);
+
+  // configure the SM.json file and the json package file of the project..
+  configureProject(cwd, base, name, frameworkResult);
+
+  // ask the user to run slice-machine.
   displayFinalMessage(cwd);
 }
 

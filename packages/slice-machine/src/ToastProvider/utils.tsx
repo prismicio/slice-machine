@@ -3,6 +3,7 @@ export interface ToastPayload {
   done: boolean;
   warning: boolean;
   message: string;
+  status: number;
   error: Error | null;
 }
 

@@ -34,7 +34,7 @@ describe("mocking the core example: not advised", () => {
       .mockImplementationOnce(() => undefined as never);
     stderr.start();
     stdout.start();
-    await createRepository("foo-bar", Framework.next, {
+    await createRepository("foo-bar", Framework.FrameworkEnum.next, {
       base: "https://prismic.io",
       cookies: "prismic-auth=abcd",
     });

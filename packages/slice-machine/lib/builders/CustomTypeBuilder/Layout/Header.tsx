@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 
 import {
   CustomTypeState,
@@ -15,8 +15,9 @@ import { ToastPayload } from "../../../../src/ToastProvider/utils";
 import { FiLayout } from "react-icons/fi";
 
 import Header from "../../../../components/Header";
+import { LoginModalContext } from "@src/LoginModalProvider";
 
-const SliceHeader = ({
+const CustomTypeHeader = ({
   Model,
   store,
 }: {
@@ -24,6 +25,7 @@ const SliceHeader = ({
   store: CustomTypeStore;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { openLogin } = useContext(LoginModalContext);
   const { addToast } = useToasts();
 
   const buttonProps = (() => {
@@ -45,9 +47,13 @@ const SliceHeader = ({
           if (!isLoading) {
             setIsLoading(true);
             store.push(Model, (data: ToastPayload): void => {
-              if (data.done) {
-                setIsLoading(false);
-                handleRemoteResponse(addToast)(data);
+              if (!data.done) {
+                return;
+              }
+              setIsLoading(false);
+              handleRemoteResponse(addToast)(data);
+              if (data.error && data.status === 403) {
+                openLogin();
               }
             });
           }
@@ -88,4 +94,4 @@ const SliceHeader = ({
   );
 };
 
-export default SliceHeader;
+export default CustomTypeHeader;

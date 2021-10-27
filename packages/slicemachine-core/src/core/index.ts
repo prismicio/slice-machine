@@ -5,7 +5,7 @@ import {
   AuthConfig,
 } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { poll, Endpoints, Framework } from "../utils";
+import { Poll, Endpoints, Framework } from "../utils";
 
 import * as Communication from "./communication";
 export * as Communication from "./communication";
@@ -35,7 +35,7 @@ export interface Core {
     create: (
       apiEndpoint: string,
       token: string,
-      framework: Framework
+      framework: Framework.FrameworkEnum
     ) => Communication.CreateRepositoryResponse;
     validateName: (name: string, existingRepo?: boolean) => Promise<string>;
   };
@@ -61,7 +61,7 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
       create: async (
         domain: string,
         token: string,
-        framework: Framework
+        framework: Framework.FrameworkEnum
       ): Communication.CreateRepositoryResponse =>
         Communication.createRepository(domain, token, framework, base),
     },
@@ -78,7 +78,7 @@ export const Auth = {
     );
     try {
       // We wait 3 minutes before timeout
-      return await poll<Communication.UserInfo | null>(
+      return await Poll.startPolling<Communication.UserInfo | null>(
         () => Auth.validateSession(base),
         (user) => !!user,
         3000,
@@ -97,7 +97,7 @@ export const Auth = {
     );
     try {
       // We wait 3 minutes before timeout
-      return await poll<Communication.UserInfo | null>(
+      return await Poll.startPolling<Communication.UserInfo | null>(
         () => Auth.validateSession(base),
         (user) => !!user,
         3000,

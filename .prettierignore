@@ -3,3 +3,7 @@ packages/slice-machine/build
 packages/slice-machine/tests/project/
 packages/slice-machine/templates/
 packages/slice-machine/out
+packages/**/package.json
+packages/**/package-lock.json
+package.json
+package-lock.json

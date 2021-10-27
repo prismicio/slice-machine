@@ -1,4 +1,5 @@
 import { FileSystem, Utils } from "slicemachine-core";
+import { FrameworkResult } from "./detect-framework";
 
 type Base = Utils.Endpoints.Base;
 
@@ -6,7 +7,7 @@ export function configureProject(
   cwd: string,
   base: Base,
   repository: string,
-  framework: { value: Utils.Framework; manuallyAdded: boolean }
+  framework: FrameworkResult
 ): void {
   const spinner = Utils.spinner(
     `Configuring your ${framework.value} & Prismic project...`
