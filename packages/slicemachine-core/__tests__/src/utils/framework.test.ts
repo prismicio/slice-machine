@@ -1,5 +1,5 @@
 import { describe, expect, test, jest, afterEach } from "@jest/globals";
-import { framework } from "../../../src/utils";
+import { Framework } from "../../../src/utils";
 import * as fs from "fs";
 import { mocked } from "ts-jest/utils";
 
@@ -15,15 +15,15 @@ describe("framework.detectFramework", () => {
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ dependencies: {} }));
 
-    const result = framework.detectFramework(__dirname);
+    const result = Framework.detectFramework(__dirname);
 
     expect(mockedFs.lstatSync).toHaveBeenCalled();
-    expect(result).toEqual(framework.Framework.vanillajs);
+    expect(result).toEqual(Framework.FrameworkEnum.vanillajs);
   });
 
   // poor mans property based testing
   const valuesToCheck: string[] = [
-    ...Object.values(framework.Framework),
+    ...Object.values(Framework.FrameworkEnum),
     "",
     "foo",
   ];
@@ -35,14 +35,14 @@ describe("framework.detectFramework", () => {
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
         dependencies: {
-          [framework.Framework.gatsby]: "beta",
-          [framework.Framework.react]: "beta",
+          [Framework.FrameworkEnum.gatsby]: "beta",
+          [Framework.FrameworkEnum.react]: "beta",
         },
       })
     );
 
-    const result = framework.detectFramework(__dirname);
-    expect(result).toEqual(framework.Framework.gatsby);
+    const result = Framework.detectFramework(__dirname);
+    expect(result).toEqual(Framework.FrameworkEnum.gatsby);
   });
   valuesToCheck.forEach((value) => {
     test("it will return a support framework when a support framework is found in the package.json", () => {
@@ -58,15 +58,17 @@ describe("framework.detectFramework", () => {
       );
 
       const fallback =
-        value === framework.Framework.gatsby
-          ? framework.Framework.gatsby
-          : framework.Framework.vanillajs;
+        value === Framework.FrameworkEnum.gatsby
+          ? Framework.FrameworkEnum.gatsby
+          : Framework.FrameworkEnum.vanillajs;
 
-      const wanted = framework.isValidFramework(value as framework.Framework)
+      const wanted = Framework.isValidFramework(
+        value as Framework.FrameworkEnum
+      )
         ? value
         : fallback;
 
-      const result = framework.detectFramework(__dirname);
+      const result = Framework.detectFramework(__dirname);
       expect(mockedFs.lstatSync).toHaveBeenCalled();
       expect(result).toEqual(wanted);
     });
@@ -81,7 +83,7 @@ describe("framework.detectFramework", () => {
     const spy = jest
       .spyOn(console, "error")
       .mockImplementationOnce(() => undefined);
-    expect(() => framework.detectFramework(__dirname)).toThrow(wanted);
+    expect(() => Framework.detectFramework(__dirname)).toThrow(wanted);
     expect(spy).toHaveBeenCalledWith(wanted);
   });
 });
@@ -89,14 +91,14 @@ describe("framework.detectFramework", () => {
 describe("framework.fancyName", () => {
   test("next should be Next.js", () => {
     const wanted = "Next.js";
-    const result = framework.fancyName(framework.Framework.next);
+    const result = Framework.fancyName(Framework.FrameworkEnum.next);
     expect(result).toBe(wanted);
   });
 
-  test("else the first letter should be capatalised", () => {
-    const values = Object.values(framework.Framework);
+  test("else the first letter should be capitalised", () => {
+    const values = Object.values(Framework.FrameworkEnum);
     values.forEach((value) => {
-      const result = framework.fancyName(value).charAt(0);
+      const result = Framework.fancyName(value).charAt(0);
       expect(result).toBe(result.toUpperCase());
     });
   });

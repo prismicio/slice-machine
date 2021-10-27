@@ -5,6 +5,9 @@
   "bin": {
     "init": "./build/index.js"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",

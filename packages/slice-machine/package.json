@@ -7,6 +7,9 @@
     "@lib": "build/lib",
     "@models": "build/lib/models"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "dev": "next dev",
     "test": "jest",
@@ -26,7 +29,7 @@
     "slicemachine": "start-slicemachine --port 9999",
     "lint": "eslint --max-warnings 3279 --ext .ts,.tsx .",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -x 1002475 -l high -p",
+    "audit": "better-npm-audit audit -l high -p -x 1002475,1002624",
     "audit-fix": "npm audit fix"
   },
   "bin": {
@@ -67,6 +70,7 @@
     "npmlog": "^5.0.0",
     "oembed-parser": "^1.4.5",
     "open": "^8.2.1",
+    "ora": "^6.0.1",
     "parse-domain": "^3.0.2",
     "prompts": "^2.4.0",
     "puppeteer": "^10.2.0",

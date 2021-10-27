@@ -1,7 +1,7 @@
 import { Manifest } from "../filesystem";
 import { retrieveJsonPackage } from "../filesystem";
 
-export enum Framework {
+export enum FrameworkEnum {
   none = "none",
   nuxt = "nuxt",
   next = "next",
@@ -12,36 +12,36 @@ export enum Framework {
   vanillajs = "vanillajs",
 }
 
-export const SupportedFrameworks: Framework[] = [
-  Framework.none,
-  Framework.nuxt,
-  Framework.next,
-  Framework.vue,
-  Framework.react,
-  Framework.svelte,
+export const SupportedFrameworks: FrameworkEnum[] = [
+  FrameworkEnum.none,
+  FrameworkEnum.nuxt,
+  FrameworkEnum.next,
+  FrameworkEnum.vue,
+  FrameworkEnum.react,
+  FrameworkEnum.svelte,
 ];
 
-export const UnsupportedFrameWorks = Object.values(Framework).filter(
+export const UnsupportedFrameWorks = Object.values(FrameworkEnum).filter(
   (framework) => SupportedFrameworks.includes(framework) === false
 );
 
-export const isUnsupported = (framework: Framework): boolean =>
+export const isUnsupported = (framework: FrameworkEnum): boolean =>
   UnsupportedFrameWorks.includes(framework);
 
 function capitaliseFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function fancyName(str: Framework): string {
+export function fancyName(str: FrameworkEnum): string {
   switch (str) {
-    case Framework.next:
+    case FrameworkEnum.next:
       return "Next.js";
     default:
       return capitaliseFirstLetter(str);
   }
 }
 
-export function detectFramework(cwd: string): Framework {
+export function detectFramework(cwd: string): FrameworkEnum {
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
     const message =
@@ -53,21 +53,21 @@ export function detectFramework(cwd: string): Framework {
   const { dependencies, devDependencies, peerDependencies } = pkg.content;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
-  const frameworkEntry: Framework | undefined = Object.values(Framework).find(
+  const frameworkEntry: FrameworkEnum | undefined = Object.values(FrameworkEnum).find(
     (f) => deps[f] && deps[f].length
   );
-  return frameworkEntry || Framework.vanillajs;
+  return frameworkEntry || FrameworkEnum.vanillajs;
 }
 
-export function isValidFramework(framework: Framework): boolean {
+export function isValidFramework(framework: FrameworkEnum): boolean {
   return SupportedFrameworks.includes(framework);
 }
 
 export function defineFramework(
   manifest: Manifest | null,
   cwd: string
-): Framework {
-  const userDefinedFramework: Framework | null =
+): FrameworkEnum {
+  const userDefinedFramework: FrameworkEnum | null =
     manifest?.framework && isValidFramework(manifest.framework)
       ? manifest.framework
       : null;

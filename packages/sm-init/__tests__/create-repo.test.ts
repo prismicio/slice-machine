@@ -10,7 +10,7 @@ describe("createRepository", () => {
   test("when successful it will have called the endpoint and displayed a success message", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Framework.svelte;
+    const framework = Framework.FrameworkEnum.svelte;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)
@@ -28,7 +28,7 @@ describe("createRepository", () => {
   test("success without domain in the response", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Framework.next;
+    const framework = Framework.FrameworkEnum.next;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)
@@ -46,7 +46,7 @@ describe("createRepository", () => {
   test("when a error code is returned it will inform the user that their was an error", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Utils.Framework.vanillajs;
+    const framework = Utils.Framework.FrameworkEnum.vanillajs;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)

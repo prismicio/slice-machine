@@ -132,7 +132,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
               <>
                 Not seeing the browser tab? <br />
                 <Link target={"_blank"} href={loginRedirectUrl}>
-                  Go back and try again
+                  Click here
                 </Link>
               </>
             ) : (
