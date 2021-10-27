@@ -16,10 +16,9 @@ export function prettyRepoName(address: URL, value?: string): string {
 export async function promptForRepoName(base: string): Promise<string> {
   const address = new URL(base);
 
-  const hint = `${Utils.yellow("ℹ")}  ${Utils.dim(
+  Utils.writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
-  )}`;
-  console.log(hint);
+  );
 
   return inquirer
     .prompt<Record<string, string>>([
@@ -103,7 +102,7 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${Utils.purple("Create a")} ${Utils.bold("New")} ${Utils.purple(
+    name: `${Utils.purple("Create a")} ${Utils.bold("new")} ${Utils.purple(
       "Repository"
     )}`,
     value: CREATE_REPO,
@@ -124,10 +123,13 @@ export async function maybeExistingRepo(
   cookie: string,
   cwd: string,
   base = DEFAULT_BASE
-): Promise<string> {
+): Promise<{ name: string; existing: boolean }> {
   const repos = await Communication.listRepositories(cookie, base);
 
-  if (Object.keys(repos).length === 0) return promptForRepoName(base);
+  if (Object.keys(repos).length === 0) {
+    const name = await promptForRepoName(base);
+    return { existing: false, name };
+  }
 
   const choices = sortReposForPrompt(repos, base, cwd);
 
@@ -149,6 +151,9 @@ export async function maybeExistingRepo(
     },
   ]);
 
-  if (res.repoName === CREATE_REPO) return promptForRepoName(base);
-  return Promise.resolve(res.repoName);
+  if (res.repoName === CREATE_REPO) {
+    const name = await promptForRepoName(base);
+    return { existing: false, name };
+  }
+  return { existing: true, name: res.repoName };
 }

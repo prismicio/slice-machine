@@ -1,4 +1,4 @@
-import {ReactElement, useEffect, useState} from "react";
+import { ReactElement, useEffect, useState } from "react";
 import {
   Grid,
   Box,
@@ -9,7 +9,7 @@ import {
   Heading,
   Image,
   HeadingProps,
-  ParagraphProps
+  ParagraphProps,
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
 import router from "next/router";
@@ -30,17 +30,24 @@ const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
   );
 };
 
-const Header = (props: HeadingProps) => (<Heading {...props} sx={{ fontSize: "20px", textAlign: "center", ...props.sx}}/>)
+const Header = (props: HeadingProps) => (
+  <Heading
+    {...props}
+    sx={{ fontSize: "20px", textAlign: "center", ...props.sx }}
+  />
+);
 
-const SubHeader = (props: ParagraphProps) => (<Paragraph
-  {...props}
-  sx={{
-    fontSize: "16px",
-    textAlign: "center",
-    paddingBottom: "24px",
-    ...props.sx,
-  }}
-/>)
+const SubHeader = (props: ParagraphProps) => (
+  <Paragraph
+    {...props}
+    sx={{
+      fontSize: "16px",
+      textAlign: "center",
+      paddingBottom: "24px",
+      ...props.sx,
+    }}
+  />
+);
 
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
@@ -51,26 +58,34 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   </>
 );
 
-const BuildSlicesSlide = () => (<>
-   <Image src="/horizontal_split.svg" />
-   <Header>Build Slices ℠</Header>
-   <SubHeader>The building blocks used to create your website</SubHeader>
-   <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
-</>)
+const BuildSlicesSlide = () => (
+  <>
+    <Image src="/horizontal_split.svg" />
+    <Header>Build Slices ℠</Header>
+    <SubHeader>The building blocks used to create your website</SubHeader>
+    <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
+  </>
+);
 
-const CreatePageTypesSlide = () => (<>
-  <Image src="/insert_page_break.svg" />
-  <Header>Create Page Types</Header>
-  <SubHeader>Group your Slices as page builders</SubHeader>
-  <Video src={require("../public/pexels-videos-1409899.mp4")} />
-</>)
+const CreatePageTypesSlide = () => (
+  <>
+    <Image src="/insert_page_break.svg" />
+    <Header>Create Page Types</Header>
+    <SubHeader>Group your Slices as page builders</SubHeader>
+    <Video src={require("../public/pexels-videos-1409899.mp4")} />
+  </>
+);
 
-const PushPagesSlide = () => (<>
-  <Image src="/send.svg" />
-  <Header>Push your pages to Prismic</Header>
-  <SubHeader>Give your content writers the freedom to build whatever they need</SubHeader>
-  <Video src={require("../public/pexels-videos-2231485.mp4")} />
-</>)
+const PushPagesSlide = () => (
+  <>
+    <Image src="/send.svg" />
+    <Header>Push your pages to Prismic</Header>
+    <SubHeader>
+      Give your content writers the freedom to build whatever they need
+    </SubHeader>
+    <Video src={require("../public/pexels-videos-2231485.mp4")} />
+  </>
+);
 
 const OnboardingGrid = ({
   children,
@@ -131,13 +146,13 @@ export default function Onboarding() {
     />,
     <BuildSlicesSlide />,
     <CreatePageTypesSlide />,
-    <PushPagesSlide />
+    <PushPagesSlide />,
   ];
 
   const escape = () => router.push("/");
 
   useEffect(() => {
-    localStorage.setItem(LocalStorageKeys.isOnboarded, "yes");
+    localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
   useEffect(() => {
