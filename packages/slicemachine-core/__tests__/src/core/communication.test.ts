@@ -205,7 +205,7 @@ describe("communication", () => {
     test("with default arguments it should call the prismic.io endpoint to create a new repo", async () => {
       const formData = {
         domain: repoName,
-        framework: Framework.vanillajs,
+        framework: Framework.FrameworkEnum.vanillajs,
         plan: "personal",
         isAnnual: "false",
         role: "developer",
@@ -221,7 +221,7 @@ describe("communication", () => {
 
     test("with framework and different base", async () => {
       const fakeBase = "https://example.com";
-      const framework = Framework.next;
+      const framework = Framework.FrameworkEnum.next;
 
       const formData = {
         domain: repoName,

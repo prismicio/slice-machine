@@ -20,7 +20,7 @@ describe("detect-framework", () => {
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
         dependencies: {
-          [Utils.framework.Framework.next]: "beta",
+          [Utils.Framework.FrameworkEnum.next]: "beta",
         },
       })
     );
@@ -29,7 +29,7 @@ describe("detect-framework", () => {
     const result = await detectFramework(__dirname).catch();
     stderr.stop();
     expect(fs.lstatSync).toHaveBeenCalled();
-    expect(result).toBe(Utils.framework.Framework.next);
+    expect(result).toBe(Utils.Framework.FrameworkEnum.next);
   });
 
   test("framework not found in package.json", async () => {
@@ -42,7 +42,7 @@ describe("detect-framework", () => {
 
     jest
       .spyOn(inquirer, "prompt")
-      .mockResolvedValue({ framework: Utils.Framework.next });
+      .mockResolvedValue({ framework: Utils.Framework.FrameworkEnum.next });
 
     const fakeError = jest
       .spyOn(console, "error")
@@ -51,7 +51,7 @@ describe("detect-framework", () => {
     stderr.start();
     const result = await detectFramework(__dirname);
     stderr.stop();
-    expect(result).toBe(Utils.Framework.next);
+    expect(result).toBe(Utils.Framework.FrameworkEnum.next);
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(fakeError).toBeCalledWith(
       `${Utils.error("Error!")} Framework not detected`
@@ -84,8 +84,8 @@ describe("detect-framework", () => {
     jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
       JSON.stringify({
         dependencies: {
-          [Framework.gatsby]: "beta",
-          [Framework.react]: "beta",
+          [Framework.FrameworkEnum.gatsby]: "beta",
+          [Framework.FrameworkEnum.react]: "beta",
         },
       })
     );
