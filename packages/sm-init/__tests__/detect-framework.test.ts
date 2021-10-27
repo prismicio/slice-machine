@@ -14,7 +14,7 @@ describe("detect-framework", () => {
     jest.resetAllMocks();
   });
 
-  test("when supported frame is found", async () => {
+  test("when supported framework is found", async () => {
     const mockedFs = mocked(fs, true);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats); // linting error?
     mockedFs.readFileSync.mockReturnValue(
@@ -29,7 +29,10 @@ describe("detect-framework", () => {
     const result = await detectFramework(__dirname).catch();
     stderr.stop();
     expect(fs.lstatSync).toHaveBeenCalled();
-    expect(result).toBe(Utils.Framework.FrameworkEnum.next);
+    expect(result).toEqual({
+      value: Utils.Framework.FrameworkEnum.next,
+      manuallyAdded: false,
+    });
   });
 
   test("framework not found in package.json", async () => {
@@ -51,7 +54,10 @@ describe("detect-framework", () => {
     stderr.start();
     const result = await detectFramework(__dirname);
     stderr.stop();
-    expect(result).toBe(Utils.Framework.FrameworkEnum.next);
+    expect(result).toEqual({
+      value: Utils.Framework.FrameworkEnum.next,
+      manuallyAdded: true,
+    });
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(fakeError).toBeCalledWith(
       `${Utils.error("Error!")} Framework not detected`
