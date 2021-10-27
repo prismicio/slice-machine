@@ -54,7 +54,9 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
     <Header>Welcome to Slice Machine ℠</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
-    <Button onClick={onClick}>Get Started</Button>
+    <Button data-cy="get-started" onClick={onClick}>
+      Get Started
+    </Button>
   </>
 );
 
@@ -208,7 +210,10 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <Button onClick={() => setState({ ...state, step: state.step + 1 })}>
+          <Button
+            data-cy="continue"
+            onClick={() => setState({ ...state, step: state.step + 1 })}
+          >
             Continue
           </Button>
         )}

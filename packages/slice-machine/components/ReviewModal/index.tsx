@@ -119,7 +119,11 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                 <Heading sx={{ fontSize: "20px", mr: 4 }}>
                   Give us your opinion
                 </Heading>
-                <Close type="button" onClick={() => close()} />
+                <Close
+                  type="button"
+                  onClick={() => close()}
+                  data-cy="close-review"
+                />
               </Flex>
               <Flex
                 sx={{
