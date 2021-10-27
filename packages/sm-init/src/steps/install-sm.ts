@@ -1,9 +1,6 @@
 import path from "path";
-import util from "util";
-import { exec } from "child_process";
+import { execCommand } from "../utils";
 import { Utils, FileSystem } from "slicemachine-core";
-
-const execPromise = util.promisify(exec);
 
 export async function installSm(cwd: string): Promise<void> {
   const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
@@ -12,7 +9,7 @@ export async function installSm(cwd: string): Promise<void> {
   const spinner = Utils.spinner("Downloading Prismic Visual Builder");
   spinner.start();
 
-  const { stderr } = await execPromise(
+  const { stderr } = await execCommand(
     `${command} ${Utils.CONSTS.SM_PACKAGE_NAME}`
   );
 

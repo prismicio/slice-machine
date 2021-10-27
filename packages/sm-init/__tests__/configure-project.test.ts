@@ -4,7 +4,7 @@ import {
   afterEach,
   test,
   expect,
-  beforeAll,
+  beforeEach,
 } from "@jest/globals";
 import * as Core from "slicemachine-core";
 import { configureProject } from "../src/steps";
@@ -48,13 +48,12 @@ jest.mock("slicemachine-core", () => {
 });
 
 describe("configure-project", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     jest.spyOn(process, "exit").mockImplementation((number) => number as never);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(process, "exit").mockImplementation((number) => number as never);
   });
 
   const fakeCwd = "./";
