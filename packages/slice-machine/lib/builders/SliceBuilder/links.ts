@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function variation(
   lib: string,
   sliceName: string,

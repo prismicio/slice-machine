@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from "path";
 import glob from "glob";
 import Environment from "@lib/models/common/Environment";

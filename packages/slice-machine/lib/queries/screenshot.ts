@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from "path";
 import { CustomPaths, PackagePaths, GeneratedPaths } from "../models/paths";
 import Files from "../utils/files";

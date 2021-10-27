@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Environment from "@lib/models/common/Environment";
 import Slice from "@lib/models/common/Slice";
 import { AsObject } from "@lib/models/common/Variation";

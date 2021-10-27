@@ -21,7 +21,7 @@ export default class SliceStore implements Store {
       payload,
     }: {
       type: string;
-      payload?: any;
+      payload?: any; // eslint-disable-line
     }) => void
   ) {}
 
@@ -43,6 +43,7 @@ export default class SliceStore implements Store {
     });
 
   variation = (variationId: string): Record<string, Function> => {
+    // eslint-disable-line
     return {
       generateScreenShot: generateScreenShot(this.dispatch)(variationId),
       generateCustomScreenShot: generateCustomScreenShot(this.dispatch)(

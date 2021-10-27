@@ -1,7 +1,7 @@
+/* eslint-disable */
+
 import * as yup from "yup";
 import { MdVpnKey } from "react-icons/md";
-// import { MockConfigForm } from './Mock/Form'
-// import { handleMockConfig, handleMockContent } from './Mock'
 
 /**
 * {

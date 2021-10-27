@@ -13,7 +13,7 @@ type PostAuthResponse = {
   err?: Error;
 };
 
-export default async function handler(
+export default async function handler( // eslint-disable-line
   authRequest: Record<string, unknown>
 ): Promise<PostAuthResponse> {
   return fold(

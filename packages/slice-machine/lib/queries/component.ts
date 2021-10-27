@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from "path";
 import { ComponentInfo, ComponentMetadata } from "../models/common/Component";
 // @ts-ignore

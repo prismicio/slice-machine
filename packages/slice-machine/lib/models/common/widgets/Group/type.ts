@@ -9,7 +9,7 @@ interface GroupConfig<T extends AsObject | AsArray> {
   placeholder: string;
   fields: T;
 }
-const defaultConfig = { label: "", placeholder: "", fields: [] as any };
+const defaultConfig = { label: "", placeholder: "", fields: [] as any }; //eslint-disable-line
 
 export class GroupField<T extends AsObject | AsArray> implements Field {
   config: GroupConfig<T>;

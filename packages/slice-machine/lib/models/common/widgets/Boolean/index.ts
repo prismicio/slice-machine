@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as yup from "yup";
 import { BsToggleOn } from "react-icons/bs";
 import { handleMockConfig, handleMockContent } from "./Mock";

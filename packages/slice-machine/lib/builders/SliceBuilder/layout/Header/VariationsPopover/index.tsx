@@ -10,7 +10,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
   defaultValue?: Variation<AsArray>;
-  onNewVariation: Function;
+  onNewVariation: Function; // eslint-disable-line
   variations: ReadonlyArray<Variation<AsArray>>;
   onChange: (selected: Variation<AsArray>) => void;
 }> = ({ defaultValue, variations, onNewVariation, onChange }) => {

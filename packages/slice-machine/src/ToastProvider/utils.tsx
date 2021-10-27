@@ -16,6 +16,7 @@ enum Apperance {
 
 export const handleRemoteResponse =
   (addToast: Function) => (payload: ToastPayload) => {
+    // eslint-disable-line
     if (payload.done) {
       addToast(payload.message, {
         appearance: (() => {

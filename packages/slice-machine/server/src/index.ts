@@ -1,3 +1,4 @@
+/* eslint-disable */
 import cors from "cors";
 
 require("@babel/register");

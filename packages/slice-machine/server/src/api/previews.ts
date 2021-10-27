@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
 import { Preview } from "@lib/models/common/Component";

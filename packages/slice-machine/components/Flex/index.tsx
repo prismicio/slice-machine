@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { Box } from "theme-ui";
 

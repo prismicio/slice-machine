@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getPathToScreenshot } from "@lib/queries/screenshot";
 import { getEnv } from "@lib/env";
 import { CustomPaths } from "@lib/models/paths";

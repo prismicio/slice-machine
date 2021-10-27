@@ -12,14 +12,14 @@ const Slice = {
   toObject(slice: Slice<AsArray>): Slice<AsObject> {
     return {
       ...slice,
-      variations: slice.variations.map(Variation.toObject),
+      variations: slice.variations.map(Variation.toObject), // eslint-disable-line
     };
   },
 
   toArray(slice: Slice<AsObject>): Slice<AsArray> {
     return {
       ...slice,
-      variations: slice.variations.map(Variation.toArray),
+      variations: slice.variations.map(Variation.toArray), // eslint-disable-line
     };
   },
 };

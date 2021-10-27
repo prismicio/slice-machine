@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { Box, Link as ThemeLink } from "theme-ui";
+import React from "react";
 
 interface BadgeProps {
   version: string;
   label?: string;
 }
 
-const VersionBadge = ({ version, label = "V" }: BadgeProps) => {
+const VersionBadge: React.FunctionComponent<BadgeProps> = ({
+  version,
+  label = "V",
+}) => {
   return (
     <Box
       as="span"

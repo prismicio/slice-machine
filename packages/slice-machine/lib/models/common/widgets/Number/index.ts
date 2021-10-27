@@ -15,7 +15,7 @@ import { FieldType } from "../../CustomType/fields";
     }
   } */
 
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Number);
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.Number); // eslint-disable-line
 
 const Meta = {
   icon: AiOutlineFieldNumber,
@@ -28,7 +28,7 @@ export const NumberWidget: Widget<NumberField, typeof schema> = {
   MockConfigForm,
   handleMockConfig,
   handleMockContent,
-  FormFields,
+  FormFields, // eslint-disable-line
   TYPE_NAME: FieldType.Number,
   schema,
   Meta,

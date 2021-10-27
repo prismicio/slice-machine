@@ -15,7 +15,7 @@ import { FieldType } from "../../CustomType/fields";
   }
 } */
 
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Date);
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.Date); // eslint-disable-line
 
 const Meta = {
   icon: MdDateRange,
@@ -28,7 +28,7 @@ export const DateWidget: Widget<DateField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  FormFields,
+  FormFields, // eslint-disable-line
   TYPE_NAME: FieldType.Date,
   schema,
   Meta,

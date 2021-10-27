@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
 import Prismic from "../Icons/Prismic";
 
-const Logo = () => {
+const Logo: React.FunctionComponent = () => {
   const { theme } = useThemeUI();
   return (
     <Box p={2}>

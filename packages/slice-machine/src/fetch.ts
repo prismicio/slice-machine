@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface FetchParams {
   method: "POST" | "GET";
   body?: string | FormData;

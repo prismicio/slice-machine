@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { getEnv } from "@lib/env";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths, GeneratedCustomTypesPaths } from "@lib/models/paths";

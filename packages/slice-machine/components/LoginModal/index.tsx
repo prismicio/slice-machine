@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Modal from "react-modal";
 import React, { useContext, useState } from "react";
 import {

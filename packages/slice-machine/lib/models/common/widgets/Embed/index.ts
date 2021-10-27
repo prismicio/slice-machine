@@ -15,7 +15,7 @@ import { FieldType } from "../../CustomType/fields";
   }
 } */
 
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Embed);
+const { FormFields, schema } = createDefaultWidgetValues(FieldType.Embed); // eslint-disable-line
 
 const Meta = {
   icon: FiCode,
@@ -28,7 +28,7 @@ export const EmbedWidget: Widget<EmbedField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
-  FormFields,
+  FormFields, // eslint-disable-line
   TYPE_NAME: FieldType.Embed,
   schema,
   Meta,

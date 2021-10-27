@@ -35,11 +35,11 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Select$/, { excludeEmptyString: true })
     .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(removeProp(FormFields, "id")), // eslint-disable-line
 });
 
 export const SelectWidget: Widget<SelectField, typeof schema> = {
-  FormFields,
+  FormFields, // eslint-disable-line
   handleMockConfig,
   handleMockContent,
   MockConfigForm,

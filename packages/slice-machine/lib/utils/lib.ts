@@ -65,7 +65,7 @@ export function getInfoFromPath(
 
   let config: Record<string, string> = {};
   if (Files.exists(pathToConfig)) {
-    config = Files.readJson(pathToConfig);
+    config = Files.readJson(pathToConfig); // eslint-disable-line
   }
   const pathToSlices = path.join(
     pathToLib,

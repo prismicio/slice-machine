@@ -1,3 +1,4 @@
+/* eslint-disable */
 import equal from "fast-deep-equal";
 import { Variation, AsArray } from "../../../lib/models/common/Variation";
 import SliceState from "../../../lib/models/ui/SliceState";

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as yup from "yup";
 import Form, { FormFields } from "./Form";
 import { FiLink2 } from "react-icons/fi";

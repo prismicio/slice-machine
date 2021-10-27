@@ -1,4 +1,5 @@
 /** global variable define in server/src/index.js **/
+/* eslint-disable */
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
 import { getEnv } from "@lib/env";

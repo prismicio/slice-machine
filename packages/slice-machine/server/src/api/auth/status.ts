@@ -5,6 +5,7 @@ type StatusResponse = {
 };
 
 export default async function handler(): Promise<StatusResponse> {
+  // eslint-disable-line
   try {
     const authConfig = FileSystem.getOrCreateAuthConfig();
     const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);

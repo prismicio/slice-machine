@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import Actions from "./";
 

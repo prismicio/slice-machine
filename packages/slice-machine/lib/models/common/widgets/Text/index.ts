@@ -21,14 +21,14 @@ import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
 import { FieldType } from "../../CustomType/fields";
 
-const FormFields = DefaultFields;
+const FormFields = DefaultFields; // eslint-disable-line
 
 const schema = yup.object().shape({
   type: yup
     .string()
     .matches(/^Text$/, { excludeEmptyString: true })
     .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(removeProp(FormFields, "id")), // eslint-disable-line
 });
 
 const Meta = {
@@ -40,7 +40,7 @@ const Meta = {
 export const TextWidget: Widget<TextField, typeof schema> = {
   create: (label: string) => new TextField({ label }),
   MockConfigForm,
-  handleMockConfig,
+  handleMockConfig, // eslint-disable-line
   handleMockContent,
   Meta,
   schema,

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { Formik, Form, Field, FieldProps } from "formik";

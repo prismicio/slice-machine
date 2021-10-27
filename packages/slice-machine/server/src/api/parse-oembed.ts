@@ -1,3 +1,4 @@
+/* eslint-disable */
 const extract = require("oembed-parser").extract;
 
 export default async function handler(url: string) {

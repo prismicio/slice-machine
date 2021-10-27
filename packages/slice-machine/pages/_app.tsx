@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Head from "next/head";
 import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";

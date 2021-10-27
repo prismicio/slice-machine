@@ -5,14 +5,14 @@ const jsonHeaders = {
 
 /** Auth Routes **/
 
-export const startAuth = async () =>
+export const startAuth: () => Promise<Response> = async () =>
   await fetch("/api/auth/start", { headers: jsonHeaders, method: "POST" });
 
-export const checkAuthStatus = async () => {
+export const checkAuthStatus: () => Promise<Response> = async () => {
   const response = await fetch("/api/auth/status", {
     headers: jsonHeaders,
     method: "POST",
   });
 
-  return response.json();
+  return response.json(); // eslint-disable-line
 };

@@ -5,13 +5,14 @@ type StartResponse = {
 };
 
 export default async function handler(): Promise<StartResponse> {
+  // eslint-disable-line
   try {
     // Reset the prismic auth cookie
     FileSystem.setAuthConfig([]);
     return {};
   } catch (e) {
     return {
-      err: e,
+      err: e, // eslint-disable-line
     };
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { Media } from "@lib/models/common/widgets/Link/type";
 

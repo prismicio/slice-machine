@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface FakeResponse {
   status: number;
   statusText: string;

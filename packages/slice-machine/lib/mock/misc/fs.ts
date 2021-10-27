@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Files from "../../utils/files";
 import { MocksConfig } from "../../models/paths";
 

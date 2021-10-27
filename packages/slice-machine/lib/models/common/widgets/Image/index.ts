@@ -39,7 +39,7 @@ const schema = yup.object().shape({
       excludeEmptyString: true,
     })
     .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(removeProp(FormFields, "id")), // eslint-disable-line
 });
 
 const Meta = {

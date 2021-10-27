@@ -34,6 +34,7 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
         useModelReducer({
           slice: component,
           mockConfig: SliceMockConfig.getSliceMockConfig(
+            // eslint-disable-line
             env.mockConfig,
             lib.name,
             component.infos.sliceName

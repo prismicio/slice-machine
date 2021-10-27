@@ -9,6 +9,7 @@ interface ConfigPayload {
 export const ConfigContext = React.createContext<ConfigPayload>({});
 
 export default function ConfigContextProvider({
+  // eslint-disable-line
   children,
   value,
 }: {

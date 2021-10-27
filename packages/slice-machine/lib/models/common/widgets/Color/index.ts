@@ -22,6 +22,7 @@ const Meta = {
 };
 
 const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
+  // eslint-disable-line
   FieldType.Color
 );
 
@@ -29,7 +30,7 @@ export const ColorWidget: Widget<ColorField, typeof schema> = {
   handleMockContent,
   handleMockConfig,
   create: (label: string) => new ColorField({ label }),
-  MockConfigForm,
+  MockConfigForm, // eslint-disable-line
   FormFields,
   TYPE_NAME,
   schema,

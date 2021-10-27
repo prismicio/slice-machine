@@ -1,3 +1,4 @@
+/* eslint-disable */
 import equal from "fast-deep-equal";
 import {
   CustomTypeState,

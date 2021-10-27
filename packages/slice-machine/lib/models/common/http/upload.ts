@@ -15,6 +15,7 @@ function upload({
   filename: string;
   pathToFile: string;
 }): Promise<any> {
+  // eslint-disable-line
   const fileExtension = filename.split(".").pop();
 
   const form = new FormData();

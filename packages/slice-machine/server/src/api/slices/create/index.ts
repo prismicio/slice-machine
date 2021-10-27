@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare let appRoot: string;
 
 import path from "path";

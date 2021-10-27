@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { WidgetsArea } from "./Variation";
 
 // interface SliceMockConfig {

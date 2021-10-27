@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from "path";
 import puppeteer from "puppeteer";
 import Files from "@lib/utils/files";

@@ -55,7 +55,7 @@ export const CustomType = {
     };
   },
   toJsonModel(ct: CustomType<ObjectTabs>): CustomTypeJsonModel {
-    const { tabs, previewUrl, ...rest } = ct;
+    const { tabs, previewUrl, ...rest } = ct; // eslint-disable-line
     return {
       ...rest,
       json: Object.entries(ct.tabs).reduce((acc, [key, tab]) => {

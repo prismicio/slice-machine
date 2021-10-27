@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 
 import { Variation, AsArray } from "../../../../../models/common/Variation";

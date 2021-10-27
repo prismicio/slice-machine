@@ -18,6 +18,6 @@ export default async function handler(query: {
     }
     return { err: null };
   } catch (e) {
-    return { err: e };
+    return { err: e }; // eslint-disable-line
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
 

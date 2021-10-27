@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as yup from "yup";
 import { MdPlace } from "react-icons/md";
 import { handleMockConfig, handleMockContent } from "./Mock";

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
 import { Preview } from "../../../../../lib/models/common/Component";

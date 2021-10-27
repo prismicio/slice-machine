@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { WidgetsArea } from "../../../../../lib/models/common/Variation";
 import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
 import { ActionType } from "./ActionType";

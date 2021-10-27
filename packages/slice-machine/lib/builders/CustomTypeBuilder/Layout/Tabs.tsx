@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MouseEventHandler, useState } from "react";
 import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 import { AiOutlinePlus } from "react-icons/ai";

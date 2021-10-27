@@ -1,5 +1,5 @@
 import { Box, Divider } from "theme-ui";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
@@ -21,7 +21,7 @@ const warnings = (len: number) => ({
   Icon: FiZap,
 });
 
-const Desktop = () => {
+const Desktop: React.FunctionComponent = () => {
   const navCtx = useContext(NavCtx);
 
   const isNotLoggedIn = !!(navCtx?.warnings || []).find(

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import path from "path";
 import TemplateEngine from "ejs";
 

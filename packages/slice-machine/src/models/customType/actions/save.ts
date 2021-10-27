@@ -6,9 +6,10 @@ import ActionType from "./";
 import { ToastPayload } from "@src/ToastProvider/utils";
 
 export default function save(
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
+  dispatch: ({ type, payload }: { type: string; payload?: any }) => void // eslint-disable-line
 ) {
   return async (
+    // eslint-disable-line
     customType: CustomTypeState,
     setData: (data: ToastPayload) => void = () => null
   ) => {
@@ -19,7 +20,7 @@ export default function save(
         body: JSON.stringify({
           ...customType,
           model: CustomType.toObject(customType.current),
-          mockConfig: customType.mockConfig,
+          mockConfig: customType.mockConfig, // eslint-disable-line
         }),
       },
       setData,

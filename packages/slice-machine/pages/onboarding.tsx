@@ -1,3 +1,4 @@
+/* eslint-disable */
 import useSwr from "swr";
 import { Box, Flex, Text } from "theme-ui";
 import Container from "../components/Container";

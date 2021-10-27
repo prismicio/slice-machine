@@ -15,7 +15,7 @@ export default interface Environment {
   chromatic?: Chromatic;
   currentVersion: string;
   updateAvailable?: PackageVersion;
-  mockConfig: any;
+  mockConfig: any; // eslint-disable-line
   framework: Framework;
   baseUrl: string;
   hasGeneratedStoriesPath: boolean;

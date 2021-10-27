@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-ignore
 import { snakelize } from "@lib/utils/str";
 import path from "path";

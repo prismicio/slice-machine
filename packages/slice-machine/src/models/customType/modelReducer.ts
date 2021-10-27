@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useReducer } from "react";
 import equal from "fast-deep-equal";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";

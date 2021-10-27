@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Auth from "../models/common/Auth";
 import { getPrismicData } from "../auth";
 import DefaultClient from "../models/common/http/DefaultClient";

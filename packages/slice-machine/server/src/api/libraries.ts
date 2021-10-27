@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { listComponentsByLibrary } from "@lib/queries/listComponents";
 
 import Environment from "@lib/models/common/Environment";

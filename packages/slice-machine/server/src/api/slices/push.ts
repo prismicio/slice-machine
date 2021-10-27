@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { snakelize } from "@lib/utils/str";
 
 import { getEnv } from "@lib/env";

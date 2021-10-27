@@ -18,14 +18,14 @@ import { Widget } from "../Widget";
 import { TimestampField } from "./type";
 import { FieldType } from "../../CustomType/fields";
 
-const FormFields = DefaultFields;
+const FormFields = DefaultFields; // eslint-disable-line
 
 const schema = yup.object().shape({
   type: yup
     .string()
     .matches(/^Timestamp$/, { excludeEmptyString: true })
     .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(removeProp(FormFields, "id")), // eslint-disable-line
 });
 
 const Meta = {
@@ -40,7 +40,7 @@ export const TimestampWidget: Widget<TimestampField, typeof schema> = {
   MockConfigForm,
   create: (label: string) => new TimestampField({ label }),
   schema,
-  FormFields,
+  FormFields, // eslint-disable-line
   TYPE_NAME: FieldType.Timestamp,
   Meta,
 };

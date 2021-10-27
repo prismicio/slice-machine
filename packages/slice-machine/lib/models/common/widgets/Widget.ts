@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
 

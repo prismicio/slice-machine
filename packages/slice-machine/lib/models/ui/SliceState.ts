@@ -12,8 +12,8 @@ interface SliceState {
   infos: ComponentInfo;
   migrated: boolean;
 
-  mockConfig: any;
-  initialMockConfig: any;
+  mockConfig: any; // eslint-disable-line
+  initialMockConfig: any; // eslint-disable-line
 
   remoteVariations: ReadonlyArray<Variation<AsArray>>;
   initialVariations: ReadonlyArray<Variation<AsArray>>;

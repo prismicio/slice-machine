@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { fetchApi } from "../../../../lib/builders/common/fetch";
 import SliceState from "../../../../lib/models/ui/SliceState";
 import { ActionType } from "./ActionType";

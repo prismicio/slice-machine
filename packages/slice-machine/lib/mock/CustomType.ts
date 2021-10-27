@@ -1,3 +1,4 @@
+/* eslint-disable */
 import faker from "faker";
 import * as Widgets from "./misc/widgets";
 

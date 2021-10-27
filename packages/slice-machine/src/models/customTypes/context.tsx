@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from "react";
 
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";

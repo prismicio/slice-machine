@@ -4,6 +4,6 @@ export default interface Store {
     payload,
   }: {
     type: string;
-    payload?: any;
+    payload?: any; // eslint-disable-line
   }) => void;
 }

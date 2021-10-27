@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Store from "@lib/models/ui/Store";
 import Actions, {
   updateWidgetMockConfig,

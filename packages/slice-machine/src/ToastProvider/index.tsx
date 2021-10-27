@@ -9,7 +9,7 @@ const snackStates = {
   exited: { transform: "translate3d(0, 120%, 0) scale(0.9)" },
 };
 
-const Provider = ({ children }: { children: React.ReactNode }) => {
+const Provider: React.FunctionComponent = ({ children }) => {
   return (
     <ToastProvider
       autoDismiss

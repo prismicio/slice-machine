@@ -28,7 +28,7 @@ const schema = yup.object().shape({
 
 export const GroupWidget: Widget<GroupField<AsArray>, typeof schema> = {
   Meta,
-  FormFields: DefaultFields,
+  FormFields: DefaultFields, // eslint-disable-line
   schema,
   create: (label: string) => new GroupField({ label }),
   CustomListItem,

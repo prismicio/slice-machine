@@ -35,7 +35,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^StructuredText$/, { excludeEmptyString: true })
     .required(),
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(removeProp(FormFields, "id")), // eslint-disable-line
 });
 
 export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
@@ -43,7 +43,7 @@ export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
     create: (label: string) => new StructuredTextField({ label }),
     handleMockConfig,
     handleMockContent,
-    FormFields,
+    FormFields, // eslint-disable-line
     Meta,
     schema,
     TYPE_NAME: FieldType.StructuredText,

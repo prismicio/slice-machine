@@ -1,3 +1,4 @@
+/* eslint-disable */
 import fetchState from "../state";
 import { handler as pushSlice } from "../slices/push";
 import { handler as saveSlice } from "../slices/save";

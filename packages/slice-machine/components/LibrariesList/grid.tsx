@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Box } from "theme-ui";
 
 const Grid = ({ elems, renderElem }: { elems: any; renderElem: Function }) => {
