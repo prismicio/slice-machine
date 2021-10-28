@@ -57,9 +57,4 @@ async function init() {
   displayFinalMessage(cwd);
 }
 
-try {
-  void init();
-} catch (error) {
-  if (error instanceof Error) Utils.writeError(error.message);
-  else console.error(error);
-}
+void init();
