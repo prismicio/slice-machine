@@ -14,7 +14,7 @@ import {
 } from "../src/steps/maybe-existing-repo";
 
 import nock from "nock";
-import { Communication, Utils } from "slicemachine-core";
+import { Communication, Utils } from "@slicemachine/core";
 
 const { Roles } = Utils.roles;
 

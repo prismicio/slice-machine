@@ -1,5 +1,5 @@
 {
-  "name": "sm-init",
+  "name": "@slicemachine/init",
   "version": "1.0.0",
   "license": "MIT",
   "bin": {
@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run test && npm run build",
     "lint": "eslint --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
@@ -41,9 +41,9 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "@slicemachine/core": "^0.1.2",
     "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
-    "io-ts": "^2.2.16",
-    "slicemachine-core": "^0.1.0"
+    "io-ts": "^2.2.16"
   }
 }

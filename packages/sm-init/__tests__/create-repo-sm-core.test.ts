@@ -1,13 +1,13 @@
 import { test, expect, jest, describe } from "@jest/globals";
 import { mocked } from "ts-jest/utils";
 
-import * as core from "slicemachine-core";
+import * as core from "@slicemachine/core";
 import { createRepository } from "../src/steps/create-repo";
 import { stdout, stderr } from "stdout-stderr";
 
-import { Framework } from "slicemachine-core/src/utils";
+import { Framework } from "@slicemachine/core/src/utils";
 
-jest.mock("slicemachine-core", () => ({
+jest.mock("@slicemachine/core", () => ({
   Communication: {
     createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
   },

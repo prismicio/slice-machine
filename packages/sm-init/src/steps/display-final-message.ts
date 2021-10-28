@@ -1,4 +1,4 @@
-import { Utils, FileSystem } from "slicemachine-core";
+import { Utils, FileSystem } from "@slicemachine/core";
 
 export function displayFinalMessage(cwd: string): void {
   const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
