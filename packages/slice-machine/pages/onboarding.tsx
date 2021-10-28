@@ -149,16 +149,6 @@ const StepIndicator = ({
 };
 
 export default function Onboarding() {
-  const [state, setState] = useState({ step: 0 });
-
-  function nextSlide() {
-    return setState({ ...state, step: state.step + 1 });
-  }
-
-  function prevSlide() {
-    return setState({ ...state, step: state.step - 1 });
-  }
-
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
@@ -166,17 +156,22 @@ export default function Onboarding() {
     <PushPagesSlide />,
   ];
 
-  const escape = () => router.push("/");
+  const [state, setState] = useState({ step: 0 });
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
-  useEffect(() => {
-    if (state.step === STEPS.length) {
-      escape();
-    }
-  }, [state.step]);
+  const escape = () => router.push("/");
+
+  function nextSlide() {
+    if (state.step === STEPS.length - 1) return escape();
+    return setState({ ...state, step: state.step + 1 });
+  }
+
+  function prevSlide() {
+    return setState({ ...state, step: state.step - 1 });
+  }
 
   return (
     <OnboardingGrid>
