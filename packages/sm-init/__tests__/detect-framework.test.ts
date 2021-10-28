@@ -10,7 +10,7 @@ import { Framework } from "slicemachine-core/src/utils";
 jest.mock("fs");
 
 describe("detect-framework", () => {
-  afterEach(() => {
+  void afterEach(() => {
     jest.resetAllMocks();
   });
 

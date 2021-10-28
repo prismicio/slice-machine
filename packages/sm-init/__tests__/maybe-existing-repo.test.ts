@@ -23,7 +23,7 @@ import * as fs from "fs";
 jest.mock("fs");
 
 describe("maybe-existing-repo", () => {
-  afterEach(() => {
+  void afterEach(() => {
     jest.restoreAllMocks();
   });
 

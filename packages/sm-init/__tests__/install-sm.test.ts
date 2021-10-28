@@ -30,7 +30,7 @@ jest.mock("slicemachine-core", () => {
 });
 
 describe("install SM builder dependency", () => {
-  afterEach(() => {
+  void afterEach(() => {
     jest.clearAllMocks();
   });
 
