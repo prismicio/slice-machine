@@ -26,4 +26,29 @@ describe('onboarding', () => {
     cy.visit('/')
     cy.url().should('eq', 'http://localhost:9999/')
   })
+
+  it('begin button and continue button eventually redirect to /', () => {
+    const closeReviewSelector = '[data-cy=close-review]'
+
+    cy.visit('/onboarding')
+    cy.wait(1000)
+
+    // close the popup 
+    cy.get('body').then(body => {
+      body.find(closeReviewSelector).length && cy.get(closeReviewSelector).click()
+    })
+    cy.get('[data-cy=get-started]').click()
+
+    const continueSelector = '[data-cy=continue]'
+
+    const clickContinue = () => cy.get(continueSelector).click()
+    clickContinue()
+    clickContinue()
+    clickContinue()
+
+    cy.wait(1000)
+
+    cy.location('pathname').should('eq', '/')
+
+  })
 })
