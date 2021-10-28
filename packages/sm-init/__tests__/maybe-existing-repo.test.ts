@@ -31,7 +31,11 @@ describe("maybe-existing-repo", () => {
     const repoName = "test";
     const base = "https://prismic.io";
 
-    jest.spyOn(inquirer, "prompt").mockResolvedValue({ repoName });
+    jest
+      .spyOn(inquirer, "prompt")
+      .mockReturnValue(
+        Promise.resolve({ repoName }) as ReturnType<typeof inquirer.prompt>
+      );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
     const result = await promptForRepoName(base);
 
@@ -51,7 +55,11 @@ describe("maybe-existing-repo", () => {
       repositories: "{}",
     });
 
-    jest.spyOn(inquirer, "prompt").mockResolvedValue({ repoName });
+    jest
+      .spyOn(inquirer, "prompt")
+      .mockReturnValue(
+        Promise.resolve({ repoName }) as ReturnType<typeof inquirer.prompt>
+      );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
     const result = await maybeExistingRepo(cookies, base);
@@ -79,8 +87,14 @@ describe("maybe-existing-repo", () => {
 
     jest
       .spyOn(inquirer, "prompt")
-      .mockResolvedValueOnce({ repoName: CREATE_REPO })
-      .mockResolvedValueOnce({ repoName });
+      .mockReturnValueOnce(
+        Promise.resolve({ repoName: CREATE_REPO }) as ReturnType<
+          typeof inquirer.prompt
+        >
+      )
+      .mockReturnValueOnce(
+        Promise.resolve({ repoName }) as ReturnType<typeof inquirer.prompt>
+      );
 
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
@@ -96,7 +110,7 @@ describe("prettyRepoName", () => {
     const address = new URL("https://prismic.io");
     const result = prettyRepoName(address);
     expect(result).toContain("repo-name");
-    return expect(result).toContain(".prismic.io");
+    expect(result).toContain(".prismic.io");
   });
 
   test("shohuld contain the value from user input", () => {
