@@ -24,6 +24,28 @@ describe("maybeRepoNameFromSMFile", () => {
     expect(result).toBeNull();
   });
 
+  test("should return null if sm.json is unreadable", () => {
+    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+    jest
+      .spyOn(fs, "readFileSync")
+      .mockReturnValueOnce("fake value that isn't a regular json");
+
+    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
+    expect(result).toBeNull();
+  });
+
+  test("should return null if apiEndpoint is malformed", () => {
+    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+    jest
+      .spyOn(fs, "readFileSync")
+      .mockReturnValueOnce(
+        JSON.stringify({ apiEndpoint: "fake value that is not a valid url" })
+      );
+
+    const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
+    expect(result).toBeNull();
+  });
+
   test("should return null if apiEndpoint is on a different base", () => {
     const fakeConfig = { apiEndpoint: "https://example.com" };
 
