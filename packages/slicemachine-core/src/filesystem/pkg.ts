@@ -39,19 +39,15 @@ export function patchJsonPackage(
   return true;
 }
 
-export function addJsonPackageSmScript(
-  cwd: string,
-  scriptName = CONSTS.SCRIPT_NAME,
-  scriptValue = CONSTS.SCRIPT_VALUE
-): boolean {
+export function addJsonPackageSmScript(cwd: string): boolean {
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) return false;
 
   const { scripts = {} } = pkg.content;
 
-  if (scripts[scriptName]) return false;
+  if (scripts[CONSTS.SCRIPT_NAME]) return false;
 
   return patchJsonPackage(cwd, {
-    scripts: { ...scripts, [scriptName]: scriptValue },
+    scripts: { ...scripts, [CONSTS.SCRIPT_NAME]: CONSTS.SCRIPT_VALUE },
   });
 }

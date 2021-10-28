@@ -1,4 +1,4 @@
-export default async function poll<Result>(
+export async function startPolling<Result>(
   fn: () => Promise<Result>,
   validate: (result: Result) => boolean,
   interval: number,

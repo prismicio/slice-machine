@@ -7,9 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint .",
-    "security-audit:prod": "yarn improved-yarn-audit --ignore-dev-deps --min-severity high",
-    "security-audit:dev": "yarn improved-yarn-audit --min-severity moderate",
-    "audit-fix": "yarn-audit-fix"
+    "audit": "better-npm-audit audit -l high -p -x 1002624",
+    "audit-fix": "npm audit fix"
   },
   "repository": {
     "type": "git",
@@ -32,13 +31,11 @@
     "validate-npm-package": "^1.0.5"
   },
   "resolutions": {
-    "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1",
-    "yarn-audit-fix/**/tar": ">=4.4.16 <5.0.0 || >=5.0.8 <6.0.0 || >=6.1.7"
+    "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
   },
   "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "improved-yarn-audit": "^3.0.0",
-    "yarn-audit-fix": "^7.0.3"
+    "better-npm-audit": "^3.4.0",
+    "eslint": "^7.32.0"
   }
 }

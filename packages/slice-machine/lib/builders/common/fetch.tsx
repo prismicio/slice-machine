@@ -34,6 +34,7 @@ export const fetchApi = ({
     loading: true,
     done: false,
     error: null,
+    status: null,
     ...(data.onLoad ? data.onLoad : {}),
   });
 
@@ -45,12 +46,13 @@ export const fetchApi = ({
     ...params,
   }).then(async (res) => {
     const jsonResponse = await res.json();
-    const { err, reason, warning } = jsonResponse;
+    const { err, reason, warning, status } = jsonResponse;
     if (res.status > 209) {
       return setData({
         loading: false,
         done: true,
         error: err,
+        status,
         message: errorMessage || reason,
         ...(data.onResponse ? data.onResponse : {}),
       });
@@ -60,6 +62,7 @@ export const fetchApi = ({
       done: true,
       error: null,
       warning: !!warning,
+      status,
       message: warning || successMessage || reason,
       ...(data.onResponse ? data.onResponse : {}),
     });
