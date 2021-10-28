@@ -10,7 +10,7 @@ import { Framework } from "slicemachine-core/src/utils";
 jest.mock("fs");
 
 describe("detect-framework", () => {
-  afterEach(() => {
+  void afterEach(() => {
     jest.resetAllMocks();
   });
 
@@ -45,7 +45,11 @@ describe("detect-framework", () => {
 
     jest
       .spyOn(inquirer, "prompt")
-      .mockResolvedValue({ framework: Utils.Framework.FrameworkEnum.next });
+      .mockReturnValue(
+        Promise.resolve({
+          framework: Utils.Framework.FrameworkEnum.next,
+        }) as ReturnType<typeof inquirer.prompt>
+      );
 
     const fakeError = jest
       .spyOn(console, "error")

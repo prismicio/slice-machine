@@ -48,11 +48,11 @@ jest.mock("slicemachine-core", () => {
 });
 
 describe("configure-project", () => {
-  beforeEach(() => {
+  void beforeEach(() => {
     jest.spyOn(process, "exit").mockImplementation((number) => number as never);
   });
 
-  afterEach(() => {
+  void afterEach(() => {
     jest.clearAllMocks();
   });
 

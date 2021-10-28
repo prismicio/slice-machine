@@ -41,7 +41,9 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
+    "io-ts": "^2.2.16",
     "slicemachine-core": "^0.1.0"
   }
 }
