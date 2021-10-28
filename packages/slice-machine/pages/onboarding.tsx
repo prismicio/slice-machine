@@ -10,9 +10,12 @@ import {
   Image,
   HeadingProps,
   ParagraphProps,
+  IconButton,
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
 import router from "next/router";
+
+import { BiChevronLeft } from "react-icons/bi";
 
 const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
   return (
@@ -142,10 +145,16 @@ const StepIndicator = ({
 export default function Onboarding() {
   const [state, setState] = useState({ step: 0 });
 
+  function nextSlide() {
+    return setState({ ...state, step: state.step + 1 });
+  }
+
+  function prevSlide() {
+    return setState({ ...state, step: state.step - 1 });
+  }
+
   const STEPS = [
-    <WelcomeSlide
-      onClick={() => setState({ ...state, step: state.step + 1 })}
-    />,
+    <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
     <CreatePageTypesSlide />,
     <PushPagesSlide />,
@@ -204,16 +213,36 @@ export default function Onboarding() {
 
       <Flex
         sx={{
+          gridArea: "bottom-left",
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+      >
+        {state.step >= 2 && (
+          <IconButton
+            sx={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              background: "#F1F1F4",
+              border: "1px solid rgba(62, 62, 72, 0.15)",
+            }}
+            onClick={prevSlide}
+          >
+            <BiChevronLeft />
+          </IconButton>
+        )}
+      </Flex>
+
+      <Flex
+        sx={{
           gridArea: "bottom-right",
           alignItems: "center",
           justifyContent: "space-around",
         }}
       >
         {!!state.step && (
-          <Button
-            data-cy="continue"
-            onClick={() => setState({ ...state, step: state.step + 1 })}
-          >
+          <Button data-cy="continue" onClick={nextSlide}>
             Continue
           </Button>
         )}
