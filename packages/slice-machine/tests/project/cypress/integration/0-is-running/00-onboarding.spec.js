@@ -16,6 +16,7 @@ describe('onboarding', () => {
 
   it('should redirect to /onboarding when is-onboared is not in local storage', () => {
     cy.visit('/')
+    cy.wait(1000)
     cy.url().should('eq', 'http://localhost:9999/onboarding')
     cy.wait(1000)
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
@@ -49,5 +50,14 @@ describe('onboarding', () => {
 
     cy.location('pathname').should('eq', '/')
 
+  })
+
+  it('user can skip the onboarding', () => {
+    cy.visit('/onboarding')
+    cy.get('[data-cy=get-started]').click()
+    cy.get('[data-cy=skip-onboarding]').click()
+
+    cy.location('pathname').should('eq', '/')
+    cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 })
