@@ -5,11 +5,17 @@
   "bin": {
     "init": "./build/index.js"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
-    "prepublishOnly": "yarn run build",
+    "prepublishOnly": "npm run build",
     "lint": "eslint --ext .ts .",
+    "lint:precommit": "eslint",
+    "audit": "better-npm-audit audit -l high -p",
+    "audit-fix": "npm audit fix",
     "test": "jest"
   },
   "devDependencies": {
@@ -21,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "babel-jest": "^27.0.2",
+    "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
@@ -34,7 +41,9 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
+    "io-ts": "^2.2.16",
     "slicemachine-core": "^0.1.0"
   }
 }

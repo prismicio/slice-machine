@@ -105,7 +105,7 @@ export async function handler(
     return {};
   } catch (e) {
     console.log(e);
-    return onError(e, "An unexpected error occured while pushing slice");
+    return onError(e, "An unexpected error occurred while pushing slice");
   }
 }
 
@@ -115,14 +115,32 @@ export default async function apiHandler(query: {
 }) {
   const { sliceName, from } = query;
   const { env } = await getEnv();
+
+  // When the user is not connected at all
+  if (env.client.isFake()) {
+    console.error("[slice/push] An error occurred while fetching slices.");
+    const message =
+      "Error: Could not fetch remote slices. Please log in to Prismic!";
+    return {
+      err: new Error(message),
+      reason: message,
+      status: 403,
+    };
+  }
+
   const { slices, err } = await getSlices(env.client);
+
   if (err) {
-    console.error(
-      "[slice/push] An error occured while fetching slices.\nCheck that you're properly logged in and that you have access to the repo."
-    );
+    console.error("[slice/push] An error occurred while fetching slices.");
+
+    const errorExplanation =
+      err.status === 403
+        ? "Please log in to Prismic!"
+        : `You don\'t have access to the repo \"${env.repo}\"`;
+
     return onError(
       err,
-      `Error ${err.status}: Could not fetch remote slices. Please log in to Prismic!`
+      `Error ${err.status}: Could not fetch remote slices. ${errorExplanation}`
     );
   }
   return handler(env, slices, { sliceName, from });

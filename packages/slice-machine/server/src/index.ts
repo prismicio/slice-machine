@@ -1,3 +1,5 @@
+import cors from "cors";
+
 require("@babel/register");
 
 console.log("\nLaunching server...");
@@ -31,6 +33,7 @@ Object.entries(pkg._moduleAliases).forEach(([key]) => {
 const api = require("./api");
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json({ limit: "64mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
