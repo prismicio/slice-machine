@@ -1,11 +1,6 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import {
-  CONSTS,
-  bold,
-  underline,
-  spinner,
-  writeError } from "../utils";
+import { CONSTS, bold, underline, spinner, writeError } from "../utils";
 import { setAuthConfig } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };

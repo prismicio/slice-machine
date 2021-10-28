@@ -9,6 +9,7 @@ export const bold = chalk.bold;
 export const dim = chalk.dim;
 export const cyan = chalk.cyan;
 export const yellow = chalk.yellow;
+export const white = chalk.white;
 
 export const spinner = ora;
 

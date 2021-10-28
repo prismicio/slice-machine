@@ -53,9 +53,9 @@ export function detectFramework(cwd: string): FrameworkEnum {
   const { dependencies, devDependencies, peerDependencies } = pkg.content;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
-  const frameworkEntry: FrameworkEnum | undefined = Object.values(FrameworkEnum).find(
-    (f) => deps[f] && deps[f].length
-  );
+  const frameworkEntry: FrameworkEnum | undefined = Object.values(
+    FrameworkEnum
+  ).find((f) => deps[f] && deps[f].length);
   return frameworkEntry || FrameworkEnum.vanillajs;
 }
 

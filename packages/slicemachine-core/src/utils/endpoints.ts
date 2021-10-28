@@ -17,3 +17,19 @@ export function buildEndpoints(base: string): Endpoints {
     },
   };
 }
+
+export type Base = `${"http" | "https"}://${string}${"/" | ""}`;
+export type ApiEndpoint = `https://${string}/api/v2`;
+
+export function extractDomainFromBase(base: Base): string {
+  const withoutHttp = base.split("://")[1];
+  const result = withoutHttp.split("/")[0];
+  return result;
+}
+
+export function buildRepositoryEndpoint(
+  base: Base,
+  domain: string
+): ApiEndpoint {
+  return `https://${domain}.${extractDomainFromBase(base)}/api/v2`;
+}

@@ -1,7 +1,12 @@
 import { Utils } from "slicemachine-core";
 import * as inquirer from "inquirer";
 
-export async function promptForFramework(): Promise<Utils.Framework.FrameworkEnum> {
+export type FrameworkResult = {
+  value: Utils.Framework.FrameworkEnum;
+  manuallyAdded: boolean;
+};
+
+export async function promptForFramework(): Promise<FrameworkResult> {
   const choices = Utils.Framework.SupportedFrameworks.map((framework) => {
     return {
       name: Utils.Framework.fancyName(framework),
@@ -19,10 +24,15 @@ export async function promptForFramework(): Promise<Utils.Framework.FrameworkEnu
         choices,
       },
     ])
-    .then((res) => res.framework);
+    .then((res) => {
+      return {
+        value: res.framework,
+        manuallyAdded: true,
+      };
+    });
 }
 
-export async function detectFramework(cwd: string): Promise<Utils.Framework.FrameworkEnum> {
+export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   const failMessage = `Please run ${Utils.bold(
     "npx slicemachine init"
   )} in a Nuxt or Next.js project`;
@@ -37,7 +47,10 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework.Fram
     const maybeFramework = Utils.Framework.detectFramework(cwd);
     spinner.stop();
 
-    if (!maybeFramework || maybeFramework === Utils.Framework.FrameworkEnum.vanillajs) {
+    if (
+      !maybeFramework ||
+      maybeFramework === Utils.Framework.FrameworkEnum.vanillajs
+    ) {
       Utils.writeError("Framework not detected");
       return await promptForFramework();
     }
@@ -52,7 +65,10 @@ export async function detectFramework(cwd: string): Promise<Utils.Framework.Fram
 
     Utils.writeCheck(`${nameToPrint} detected`);
 
-    return maybeFramework;
+    return {
+      value: maybeFramework,
+      manuallyAdded: false,
+    };
   } catch (error) {
     spinner.fail("package.json not found");
 
