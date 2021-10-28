@@ -14,6 +14,8 @@ import SliceMachineModal from "@components/SliceMachineModal";
 import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
+import { buildEndpoints } from "slicemachine-core/build/src/utils/endpoints";
+import { startPolling } from "slicemachine-core/build/src/utils/poll";
 
 Modal.setAppElement("#__next");
 
@@ -22,30 +24,6 @@ interface LoginModalProps {
   isOpen: boolean;
 }
 
-const poll = async (
-  fn: Function,
-  validate: Function,
-  interval: number,
-  maxAttempts: number
-) => {
-  let attempts = 0;
-
-  const executePoll = async (resolve: any, reject: any) => {
-    const response = await fn();
-    attempts++;
-
-    if (validate(response)) {
-      return resolve(response);
-    } else if (maxAttempts && attempts === maxAttempts) {
-      return reject(new Error("Exceeded max attempts"));
-    } else {
-      setTimeout(executePoll, interval, resolve, reject);
-    }
-  };
-
-  return new Promise<void>(executePoll);
-};
-
 const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   onClose,
   isOpen,
@@ -53,11 +31,12 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
-  const loginRedirectUrl = !!env
-    ? `https://prismic.io/dashboard/cli/login?port=${
-        new URL(env.baseUrl).port
-      }&path=/api/auth`
-    : "";
+  const loginRedirectUrl =
+    !!env && env.prismicData
+      ? `${buildEndpoints(env.prismicData.base).Dashboard.cliLogin}&port=${
+          new URL(env.baseUrl).port
+        }&path=/api/auth`
+      : "";
 
   const onClick = async () => {
     if (!loginRedirectUrl) {
@@ -70,7 +49,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
       const isAuthStatusOk = ({ status }: { status: string }) =>
         status === "ok";
       window.open(loginRedirectUrl, "_blank");
-      await poll(checkAuthStatus, isAuthStatusOk, 3000, 60);
+      await startPolling(checkAuthStatus, isAuthStatusOk, 3000, 60);
       setIsLoading(false);
       addToast("Logged in", { appearance: "success" });
       onClose();
