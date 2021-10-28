@@ -24,14 +24,13 @@ describe('onboarding', () => {
 
   it('when is-onboarded is in local storage it should not redirect', () => {
     cy.visit('/')
-    cy.url().should('eq', 'http://localhost:9999/')
+    cy.url({timeout: 1000}).should('eq', 'http://localhost:9999/')
   })
 
   it('begin button and continue button eventually redirect to /', () => {
     const closeReviewSelector = '[data-cy=close-review]'
 
     cy.visit('/onboarding')
-    cy.wait(1000)
 
     // close the popup 
     cy.get('body').then(body => {
@@ -46,9 +45,7 @@ describe('onboarding', () => {
     clickContinue()
     clickContinue()
 
-    cy.wait(1000)
-
-    cy.location('pathname').should('eq', '/')
+    cy.location('pathname', {timeout: 1000}).should('eq', '/')
 
   })
 
@@ -57,7 +54,7 @@ describe('onboarding', () => {
     cy.get('[data-cy=get-started]').click()
     cy.get('[data-cy=skip-onboarding]').click()
 
-    cy.location('pathname').should('eq', '/')
+    cy.location('pathname', {timeout: 1000}).should('eq', '/')
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 })
