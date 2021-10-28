@@ -57,7 +57,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
     <Header>Welcome to Slice Machine ℠</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
-    <Button data-cy="get-started" onClick={onClick}>
+    <Button data-cy="get-started" onClick={onClick} title="start onboarding">
       Get Started
     </Button>
   </>
@@ -183,7 +183,12 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <Button variant="transparent" onClick={escape}>
+          <Button
+            variant="transparent"
+            onClick={escape}
+            data-cy="skip-onboarding"
+            title="skip onboarding"
+          >
             skip
           </Button>
         )}
@@ -221,6 +226,7 @@ export default function Onboarding() {
       >
         {state.step >= 2 && (
           <IconButton
+            title="previous slide"
             sx={{
               width: "40px",
               height: "40px",
@@ -243,7 +249,7 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <Button data-cy="continue" onClick={nextSlide}>
+          <Button data-cy="continue" onClick={nextSlide} title="continue">
             Continue
           </Button>
         )}
