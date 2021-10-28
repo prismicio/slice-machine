@@ -8,7 +8,7 @@ import { CustomTypeState } from "../../models/ui/CustomTypeState";
 import CustomTypeStore from "../../../src/models/customType/store";
 import Container from "../../../components/Container";
 
-const Ct = ({
+const CustomTypeBuilder = ({
   Model,
   store,
   onLeave,
@@ -63,4 +63,4 @@ const Ct = ({
   );
 };
 
-export default Ct;
+export default CustomTypeBuilder;

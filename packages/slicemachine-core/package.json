@@ -8,13 +8,22 @@
     "./utils": "./build/src/utils/index.js",
     "./filesystem": "./build/src/filesystem/index.js"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "types": "./build/index.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
     "lint": "eslint --ext .ts .",
+    "lint:precommit": "eslint",
+    "audit": "better-npm-audit audit -l high -p",
+    "audit-fix": "npm audit fix",
     "test": "jest"
+  },
+  "peerDependencies": {
+    "ora": "^5.4.1"
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
@@ -40,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "babel-jest": "^27.2.4",
+    "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",

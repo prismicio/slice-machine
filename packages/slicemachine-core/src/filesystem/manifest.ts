@@ -1,10 +1,10 @@
-import { Framework, Files } from "../utils";
+import { Framework, Files, Endpoints } from "../utils";
 import { FileContent, SMConfigPath } from "./paths";
 
 export interface Manifest {
-  apiEndpoint: string;
+  apiEndpoint: Endpoints.ApiEndpoint;
   storybook?: string;
-  framework?: Framework;
+  framework?: Framework.FrameworkEnum;
   chromaticAppId?: string;
   _latest?: string;
 }
@@ -17,15 +17,12 @@ export enum ManifestStates {
   InvalidJson = "InvalidJson",
 }
 
-/*export const Messages = {
-  [ManifestState.Valid]: "Manifest is correctly setup.",
-  [ManifestState.NotFound]: "Could not find manifest file (./sm.json).",
-  [ManifestState.MissingEndpoint]:
-    'Property "apiEndpoint" is missing in manifest (./sm.json).',
-  [ManifestState.InvalidEndpoint]:
-    'Property "apiEndpoint" is invalid (./sm.json).',
-  [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
-};*/
+export function createManifest(cwd: string, manifest: Manifest): void {
+  const manifestPath = SMConfigPath(cwd);
+  Files.write(manifestPath, JSON.stringify(manifest, null, "\t"), {
+    recursive: false,
+  });
+}
 
 export function retrieveManifest(cwd: string): FileContent<Manifest> {
   const manifestPath = SMConfigPath(cwd);

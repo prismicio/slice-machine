@@ -1,7 +1,7 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
 import { CONSTS, bold, underline, spinner, writeError } from "../utils";
-import { setAuthConfigCookies } from "../filesystem";
+import { setAuthConfig } from "../filesystem";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
@@ -131,7 +131,7 @@ export async function startServerAndOpenBrowser(
 
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
-    setAuthConfigCookies(base, data.cookies);
+    setAuthConfig(data.cookies, base);
   }
 
   function onFail(): void {

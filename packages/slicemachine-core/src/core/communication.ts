@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { cookie, CONSTS, roles, Framework } from "../utils";
+import { Cookie, CONSTS, roles, Framework } from "../utils";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
@@ -32,7 +32,7 @@ export async function refreshSession(
   cookies: string,
   base?: string
 ): Promise<string> {
-  const token = cookie.parse(cookies)["prismic-auth"] || "";
+  const token = Cookie.parsePrismicAuthToken(cookies);
   const url = toAuthUrl("refreshtoken", token, base);
   return axios.get<string>(url).then((res) => res.data);
 }
@@ -72,7 +72,7 @@ export async function validateSession(
   cookies: string,
   base?: string
 ): Promise<UserInfo> {
-  const token = cookie.parse(cookies)["prismic-auth"] || "";
+  const token = Cookie.parsePrismicAuthToken(cookies);
   const url = toAuthUrl("validate", token, base);
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)
@@ -84,10 +84,6 @@ export async function validateSession(
       };
     });
 }
-
-/* export async function validateAndRefresh(cookie: string, base?: string) {
-  return validateSession(cookie, base).then(() => refreshSession(cookie, base))
-} */
 
 export async function listRepositories(
   token: string,
@@ -156,7 +152,7 @@ export type CreateRepositoryResponse = Promise<
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = Framework.vanillajs,
+  framework = Framework.FrameworkEnum.vanillajs,
   base = DEFAULT_BASE
 ): CreateRepositoryResponse {
   const data = {
