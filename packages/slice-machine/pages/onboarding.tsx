@@ -68,7 +68,9 @@ const BuildSlicesSlide = () => (
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video src={require("../public/time-lapse-video-of-night-sky.mp4")} />
+    <Video
+      src={require("../public/onboarding-videos/time-lapse-video-of-night-sky.mp4")}
+    />
   </>
 );
 
@@ -77,7 +79,9 @@ const CreatePageTypesSlide = () => (
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video src={require("../public/pexels-videos-1409899.mp4")} />
+    <Video
+      src={require("../public/onboarding-videos/pexels-videos-1409899.mp4")}
+    />
   </>
 );
 
@@ -88,7 +92,9 @@ const PushPagesSlide = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video src={require("../public/pexels-videos-2231485.mp4")} />
+    <Video
+      src={require("../public/onboarding-videos/pexels-videos-2231485.mp4")}
+    />
   </>
 );
 
