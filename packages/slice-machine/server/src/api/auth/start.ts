@@ -1,4 +1,4 @@
-import { FileSystem } from "slicemachine-core";
+import { FileSystem } from "@slicemachine/core";
 
 type StartResponse = {
   err?: Error;
