@@ -146,7 +146,7 @@ const StepIndicator = ({
   );
 };
 
-export default function Onboarding(): React.FunctionComponent {
+export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
