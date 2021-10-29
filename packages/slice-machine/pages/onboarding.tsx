@@ -17,6 +17,10 @@ import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
 
+import BuildSliceVideo from "../public/onboarding-videos/build-slice.mp4";
+import AddPageVideo from "../public/onboarding-videos/add-to-page.mp4";
+import PushToPrismicVideo from "../public/onboarding-videos/push-to-prismic.mp4";
+
 const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
   return (
     <video
@@ -57,7 +61,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
     <Header>Welcome to Slice Machine ℠</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
-    <Button data-cy="get-started" onClick={onClick}>
+    <Button data-cy="get-started" onClick={onClick} title="start onboarding">
       Get Started
     </Button>
   </>
@@ -68,9 +72,7 @@ const BuildSlicesSlide = () => (
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video
-      src={require("../public/onboarding-videos/time-lapse-video-of-night-sky.mp4")}
-    />
+    <Video src={BuildSliceVideo} />
   </>
 );
 
@@ -79,9 +81,7 @@ const CreatePageTypesSlide = () => (
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video
-      src={require("../public/onboarding-videos/pexels-videos-1409899.mp4")}
-    />
+    <Video src={AddPageVideo} />
   </>
 );
 
@@ -92,9 +92,7 @@ const PushPagesSlide = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video
-      src={require("../public/onboarding-videos/pexels-videos-2231485.mp4")}
-    />
+    <Video src={PushToPrismicVideo} />
   </>
 );
 
@@ -148,7 +146,7 @@ const StepIndicator = ({
   );
 };
 
-export default function Onboarding() {
+export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
@@ -183,7 +181,12 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <Button variant="transparent" onClick={escape}>
+          <Button
+            variant="transparent"
+            onClick={escape}
+            data-cy="skip-onboarding"
+            title="skip onboarding"
+          >
             skip
           </Button>
         )}
@@ -221,6 +224,7 @@ export default function Onboarding() {
       >
         {state.step >= 2 && (
           <IconButton
+            title="previous slide"
             sx={{
               width: "40px",
               height: "40px",
@@ -243,7 +247,7 @@ export default function Onboarding() {
         }}
       >
         {!!state.step && (
-          <Button data-cy="continue" onClick={nextSlide}>
+          <Button data-cy="continue" onClick={nextSlide} title="continue">
             Continue
           </Button>
         )}
