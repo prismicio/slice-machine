@@ -1,5 +1,3 @@
-import { boolean } from "fp-ts";
-
 const DEFAULT_BASE = "https://prismic.io";
 const bases = [
   DEFAULT_BASE,
