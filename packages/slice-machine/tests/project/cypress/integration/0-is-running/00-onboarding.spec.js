@@ -16,15 +16,14 @@ describe('onboarding', () => {
 
   it('should redirect to /onboarding when is-onboared is not in local storage', () => {
     cy.visit('/')
-    cy.wait(1000)
-    cy.url().should('eq', 'http://localhost:9999/onboarding')
+    cy.location('pathname', {timeout: 1000}).should('eq', '/onboarding')
     cy.wait(1000)
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 
   it('when is-onboarded is in local storage it should not redirect', () => {
     cy.visit('/')
-    cy.url({timeout: 1000}).should('eq', 'http://localhost:9999/')
+    cy.location('pathname', {timeout: 1000}).should('eq', '/')
   })
 
   it('begin button and continue button eventually redirect to /', () => {
