@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://slicemachine.dev">
-    <img src=".github/logo.svg" alt="Slice Machine logo" width="220" />
+    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
 
@@ -45,3 +45,7 @@ npm run slicemachine
 _([npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) comes with npm 5.2+ and higher)_
 
 Then open http://localhost:9999 to see the Slice Machine.
+
+<p align='center'>
+    <img src='https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/init-preview.png' width='600'>
+</p>
