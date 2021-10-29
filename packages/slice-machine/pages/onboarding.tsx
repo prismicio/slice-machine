@@ -17,6 +17,10 @@ import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
 
+import BuildSliceVideo from "../public/onboarding-videos/build-slice.mp4";
+import AddPageVideo from "../public/onboarding-videos/add-to-page.mp4";
+import PushToPrismicVideo from "../public/onboarding-videos/push-to-prismic.mp4";
+
 const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
   return (
     <video
@@ -68,11 +72,7 @@ const BuildSlicesSlide = () => (
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video
-      src={
-        require("../public/onboarding-videos/time-lapse-video-of-night-sky.mp4") as string
-      }
-    />
+    <Video src={BuildSliceVideo} />
   </>
 );
 
@@ -81,11 +81,7 @@ const CreatePageTypesSlide = () => (
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video
-      src={
-        require("../public/onboarding-videos/pexels-videos-1409899.mp4") as string
-      }
-    />
+    <Video src={AddPageVideo} />
   </>
 );
 
@@ -96,11 +92,7 @@ const PushPagesSlide = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video
-      src={
-        require("../public/onboarding-videos/pexels-videos-2231485.mp4") as string
-      }
-    />
+    <Video src={PushToPrismicVideo} />
   </>
 );
 
