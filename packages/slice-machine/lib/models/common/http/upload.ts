@@ -14,7 +14,7 @@ function upload({
   key: string;
   filename: string;
   pathToFile: string;
-}): Promise<any> {
+}): Promise<number | undefined> {
   const fileExtension = filename.split(".").pop();
 
   const form = new FormData();

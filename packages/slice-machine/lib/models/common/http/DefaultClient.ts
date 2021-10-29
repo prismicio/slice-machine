@@ -48,13 +48,13 @@ function createFetcher(
   auth: string
 ): (
   prefix: string,
-  body?: object | string,
+  body?: Record<string, unknown> | string,
   action?: string,
   method?: string
 ) => Promise<Response> {
   return function runFetch(
     prefix: string,
-    body?: object | string,
+    body?: Record<string, unknown> | string,
     action = "",
     method = "get"
   ): Promise<Response> {
@@ -90,30 +90,30 @@ const initFetcher = (
 export default class DefaultClient {
   apiFetcher: (
     prefix: string,
-    body?: object | string,
+    body?: Record<string, unknown> | string,
     action?: string,
     method?: string
   ) => Promise<Response>;
   aclFetcher: (
     prefix: string,
-    body?: object | string,
+    body?: Record<string, unknown> | string,
     action?: string,
     method?: string
   ) => Promise<Response>;
   trackingFetcher: (
     prefix: string,
-    body?: object | string,
+    body?: Record<string, unknown> | string,
     action?: string,
     method?: string
   ) => Promise<Response>;
 
-  static validate(base: string, auth: string) {
+  static validate(base: string, auth: string): Promise<Response> {
     return fetch(
       `${createApiUrl(base, AuthApi)}${ValidatePrefix}?token=${auth}`,
       {
         method: "GET",
       }
-    ).catch((e) => e);
+    ); // .catch((e) => e);
   }
 
   constructor(
@@ -122,12 +122,15 @@ export default class DefaultClient {
     readonly repo: string,
     readonly auth: string
   ) {
-    const devConfig = (() => {
+    const devConfig: Record<string, DevConfig> = (() => {
       if (!cwd) {
         return {};
       }
       try {
-        return Files.readJson(path.join(cwd, "sm.dev.json"));
+        return Files.readJson(path.join(cwd, "sm.dev.json")) as Record<
+          string,
+          DevConfig
+        >;
       } catch (e) {
         return {};
       }
@@ -158,52 +161,58 @@ export default class DefaultClient {
     );
   }
 
-  isFake() {
+  isFake(): boolean {
     return false;
   }
 
-  async getSlice() {
+  async getSlice(): Promise<Response> {
     return this.apiFetcher(SlicesPrefix);
   }
 
-  async getCustomTypes() {
+  async getCustomTypes(): Promise<Response> {
     return this.apiFetcher(CustomTypesPrefix);
   }
 
-  async insertCustomType(body: object | string) {
+  async insertCustomType(
+    body: Record<string, unknown> | string
+  ): Promise<Response> {
     return this.apiFetcher(CustomTypesPrefix, body, "insert", "post");
   }
 
-  async updateCustomType(body: object | string) {
+  async updateCustomType(
+    body: Record<string, unknown> | string
+  ): Promise<Response> {
     return this.apiFetcher(CustomTypesPrefix, body, "update", "post");
   }
 
-  async insertSlice(body: object | string) {
+  async insertSlice(body: Record<string, unknown> | string): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "insert", "post");
   }
 
-  async updateSlice(body: object | string) {
+  async updateSlice(body: Record<string, unknown> | string): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
   }
 
-  async sendReview(review: ReviewTrackingEvent) {
+  async sendReview(review: ReviewTrackingEvent): Promise<Response> {
     return this.trackingFetcher("", review, "", "post");
   }
 
   images = {
-    createAcl: async () => {
+    createAcl: async (): Promise<Response> => {
       return this.aclFetcher("", undefined, "create", "get");
     },
-    deleteFolder: async (body: object | string) => {
+    deleteFolder: async (
+      body: Record<string, unknown> | string
+    ): Promise<Response> => {
       return this.aclFetcher("", body, "delete-folder", "post");
     },
     post: async (params: {
       url: string;
-      fields: { [key: string]: string };
+      fields: Record<string, string>;
       key: string;
       filename: string;
       pathToFile: string;
-    }) => {
+    }): Promise<number | undefined> => {
       return upload(params);
     },
   };
