@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "license": "MIT",
   "bin": {
     "init": "./build/index.js"
