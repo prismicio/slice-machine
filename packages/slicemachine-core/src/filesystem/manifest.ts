@@ -2,7 +2,7 @@ import { Framework, Files, Endpoints } from "../utils";
 import { FileContent, SMConfigPath } from "./paths";
 
 export interface Manifest {
-  apiEndpoint: Endpoints.ApiEndpoint;
+  apiEndpoint: string;
   storybook?: string;
   framework?: Framework.FrameworkEnum;
   chromaticAppId?: string;
@@ -53,11 +53,14 @@ export function maybeRepoNameFromSMFile(
   if (maybeSMFile.exists === false) return null;
   if (!maybeSMFile.content?.apiEndpoint) return null;
 
-  const repoUrl = new URL(maybeSMFile.content.apiEndpoint);
+  const repoUrl = new Endpoints.ApiEndpoint(
+    maybeSMFile.content.apiEndpoint,
+    base
+  );
   const correctBase = repoUrl.hostname.includes(baseUrl.hostname);
   if (correctBase === false) return null;
 
-  return repoUrl.hostname.split(".")[0];
+  return repoUrl.repo;
 }
 
 export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {

@@ -1,3 +1,6 @@
+import { ApiEndpoint, Base } from "./ApiEndpoint";
+export { ApiEndpoint } from "./ApiEndpoint";
+export type { Base } from "./ApiEndpoint";
 interface Endpoints {
   Dashboard: {
     index: string;
@@ -18,18 +21,12 @@ export function buildEndpoints(base: string): Endpoints {
   };
 }
 
-export type Base = `${"http" | "https"}://${string}${"/" | ""}`;
-export type ApiEndpoint = `https://${string}/api/v2`;
-
 export function extractDomainFromBase(base: Base): string {
   const withoutHttp = base.split("://")[1];
   const result = withoutHttp.split("/")[0];
   return result;
 }
 
-export function buildRepositoryEndpoint(
-  base: Base,
-  domain: string
-): ApiEndpoint {
-  return `https://${domain}.${extractDomainFromBase(base)}/api/v2`;
+export function buildRepositoryEndpoint(base: Base, domain: string): string {
+  return new ApiEndpoint(domain, base).toString();
 }
