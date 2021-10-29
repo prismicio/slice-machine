@@ -61,6 +61,7 @@ function createFetcher(
     const headers = {
       repository: repo,
       Authorization: `Bearer ${auth}`,
+      UserAgent: "slice-machine",
     };
     return fetch(new URL(action, `${apiUrl}${prefix}`).toString(), {
       headers,
