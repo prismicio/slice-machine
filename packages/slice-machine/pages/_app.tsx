@@ -179,11 +179,11 @@ function MyApp({
                       libraries={payload.libraries}
                       env={payload.env}
                     >
-                      <TrackingProvider>
-                        <CustomTypesProvider
-                          customTypes={payload.customTypes}
-                          remoteCustomTypes={payload.remoteCustomTypes}
-                        >
+                      <CustomTypesProvider
+                        customTypes={payload.customTypes}
+                        remoteCustomTypes={payload.remoteCustomTypes}
+                      >
+                        <TrackingProvider>
                           <AppLayout {...payload} data={data}>
                             <SliceHandler {...payload}>
                               <Renderer
@@ -210,8 +210,8 @@ function MyApp({
                               </Drawer>
                             </SliceHandler>
                           </AppLayout>
-                        </CustomTypesProvider>
-                      </TrackingProvider>
+                        </TrackingProvider>
+                      </CustomTypesProvider>
                     </LibrariesProvider>
                   </LoginModalProvider>
                 </ToastProvider>

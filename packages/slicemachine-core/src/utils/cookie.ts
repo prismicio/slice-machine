@@ -19,7 +19,7 @@ export function serializeCookie(name: string, value: string): string {
 
 export function serializeCookies(cookies: ReadonlyArray<string>): string {
   const newCookiesMap = cookies
-    .map((str) => cookie.parse(str))
+    .map((str) => parse(str))
     .reduce((acc, curr) => {
       return { ...acc, ...curr };
     }, {});

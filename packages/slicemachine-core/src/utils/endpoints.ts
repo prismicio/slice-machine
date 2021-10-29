@@ -12,8 +12,8 @@ export function buildEndpoints(base: string): Endpoints {
   return {
     Dashboard: {
       index: endpoint("/dashboard"),
-      cliLogin: endpoint("/dashboard/cli/login"),
-      cliSignup: endpoint("/dashboard/cli/signup"),
+      cliLogin: endpoint("/dashboard/cli/login?source=slice-machine"),
+      cliSignup: endpoint("/dashboard/cli/signup?source=slice-machine"),
     },
   };
 }

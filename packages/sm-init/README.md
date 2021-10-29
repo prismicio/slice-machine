@@ -1,28 +1,51 @@
-This package is designed to setup Slicemachine for any project.
-It is launched with an  `Npx command`  
-It's main purpose is to install the slice-machine-ui plugin
+<p align="center">
+  <a href="https://slicemachine.dev">
+    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
+  </a>
+</p>
 
-------
+# Slice Machine Init
 
-## How to dev
-This package makes heavy use of the `slicemachine-core` package, you'll have to build the code to be able to run it properly
+[![npm version][npm-version-src]][npm-version-href]
+[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
+[![License][license-src]][license-href]
 
--------
+<!-- Links -->
 
-## How to test the init script on a project
+[prismic]: https://prismic.io
+[prismic-docs]: https://prismic.io/docs
+[changelog]: /CHANGELOG.md
+[forum-question]: https://community.prismic.io
+[repo-bug-report]: https://github.com/prismicio/slice-machine/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[repo-feature-request]: https://github.com/prismicio/slice-machine/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[repo-pull-requests]: https://github.com/prismicio/slice-machine/pulls
 
-### Solution 1
-- Use `npm link` in this directory
-- Make an outside project
-- Use `npm link sm-init` in the project
-- Run `npx sm-init` in the project
+<!-- Badges -->
 
-### Solution 2
-- Watch the Core & the Init
-- run the `index.js` of the build in your project
-- enjoy coding
+[npm-version-src]: https://img.shields.io/npm/v/@slicemachine/init/latest.svg
+[npm-version-href]: https://npmjs.com/package/@slicemachine/init
+[github-actions-ci-src]: https://github.com/prismicio/slice-machine/workflows/test/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/slice-machine/actions?query=workflow%3Atest
+[license-src]: https://img.shields.io/npm/l/slice-machine-ui.svg
+[license-href]: https://npmjs.com/package/slice-machine-ui
 
-### Solution 3
-- from te top level run `yarn`
-- then `pushd packages/slicemachine-core && yarn build && popd && pushd packages/sm-init && yarn build && popd`
-- the script can then be run with `node packages/sm-init/build/index.js`
+Slice Machine Init is the easiest way to add Slice Machine to your project.
+
+Slice Machine Init works on macOS, Windows, and Linux.  
+If something does not work, please [file an issue](https://github.com/prismicio/slice-machine/issues/new).
+
+## Quick Overview
+
+```
+cd my-app
+npx @slicemachine/init
+npm run slicemachine
+```
+
+_([npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) comes with npm 5.2+ and higher)_
+
+Then open http://localhost:9999 to see the Slice Machine.
+
+<p align='center'>
+    <img src='https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/init-preview.png' width='600'>
+</p>

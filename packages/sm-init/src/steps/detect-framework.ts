@@ -1,4 +1,4 @@
-import { Utils } from "slicemachine-core";
+import { Utils } from "@slicemachine/core";
 import * as inquirer from "inquirer";
 
 export type FrameworkResult = {

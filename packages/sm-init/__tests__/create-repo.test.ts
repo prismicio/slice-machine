@@ -3,8 +3,8 @@ import { describe, expect, test, jest } from "@jest/globals";
 import nock from "nock";
 import { createRepository } from "../src/steps/create-repo";
 import { stderr, stdout } from "stdout-stderr";
-import { Utils } from "slicemachine-core";
-import { Framework } from "slicemachine-core/src/utils";
+import { Utils } from "@slicemachine/core";
+import { Framework } from "@slicemachine/core/src/utils";
 
 describe("createRepository", () => {
   test("when successful it will have called the endpoint and displayed a success message", async () => {
