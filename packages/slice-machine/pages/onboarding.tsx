@@ -69,7 +69,9 @@ const BuildSlicesSlide = () => (
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
     <Video
-      src={require("../public/onboarding-videos/time-lapse-video-of-night-sky.mp4")}
+      src={
+        require("../public/onboarding-videos/time-lapse-video-of-night-sky.mp4") as string
+      }
     />
   </>
 );
@@ -80,7 +82,9 @@ const CreatePageTypesSlide = () => (
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
     <Video
-      src={require("../public/onboarding-videos/pexels-videos-1409899.mp4")}
+      src={
+        require("../public/onboarding-videos/pexels-videos-1409899.mp4") as string
+      }
     />
   </>
 );
@@ -93,7 +97,9 @@ const PushPagesSlide = () => (
       Give your content writers the freedom to build whatever they need
     </SubHeader>
     <Video
-      src={require("../public/onboarding-videos/pexels-videos-2231485.mp4")}
+      src={
+        require("../public/onboarding-videos/pexels-videos-2231485.mp4") as string
+      }
     />
   </>
 );
@@ -148,7 +154,7 @@ const StepIndicator = ({
   );
 };
 
-export default function Onboarding() {
+export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
