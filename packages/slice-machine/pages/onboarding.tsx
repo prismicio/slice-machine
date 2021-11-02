@@ -180,7 +180,7 @@ export default function Onboarding(): JSX.Element {
             onClick={escape}
             data-cy="skip-onboarding"
             title="skip onboarding"
-            tabIndex="0"
+            tabIndex={0}
           >
             skip
           </Button>
@@ -219,7 +219,7 @@ export default function Onboarding(): JSX.Element {
       >
         {state.step >= 2 && (
           <IconButton
-            tabIndex="0"
+            tabIndex={0}
             title="previous slide"
             sx={{
               width: "40px",
@@ -247,7 +247,7 @@ export default function Onboarding(): JSX.Element {
             data-cy="continue"
             onClick={nextSlide}
             title="continue"
-            tabIndex="0"
+            tabIndex={0}
           >
             Continue
           </Button>
