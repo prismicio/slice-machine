@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "0.1.1",
+  "version": "0.1.1-beta.1",
   "license": "MIT",
   "bin": {
     "init": "./build/index.js"
@@ -41,7 +41,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@slicemachine/core": "0.1.1",
+    "@slicemachine/core": "0.1.1-beta",
     "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
     "io-ts": "^2.2.16"
