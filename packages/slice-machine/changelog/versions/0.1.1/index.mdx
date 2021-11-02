@@ -1,23 +1,25 @@
 ### We simplified the way you install Slice Machine
 
-Every user can now easily set up Slice Machine in his project using a single command line : `npx @slicemachine/init`
+Every user can now easily set up Slice Machine in their project using a single command : `npx @slicemachine/init`
 
 This command lets users do the following :
 
-- Create or connect to a Prismic repo
-- Detect the project framework
+- Create or connect to a Prismic repo.
+- Detect the project framework.
 - Install Slice Machine UI as a dev dependency.
-- Create a sm.json file including the Prismic API endpoint to query content and the Slices path
-- Add a `slicemachine` script in the package.json to be able to run the plugin easily
+- Create a sm.json file including the Prismic API endpoint to query content and the Slices path.
+- Add a `slicemachine` script in the package.json to be able to run the plugin easily.
 
 ### You can now log in to your repository from the UI 🍾
 
-To avoid doing back and forth between your terminal and the UI. Now when you try to push your data model to Prismic and you are not connected or your connection expired, you will be asked to login with a direct link to do so.
+To avoid going back and forth between your terminal and the UI. Now when you try to push your data model to Prismic and you are not connected or your connection expired, you will be asked to login with a direct link to do so.
 
 The `prismic login` command is not anymore needed to refresh your Prismic connection 🎉
 
+The `prismic sm develop` is now deprecated, instead use `npm run slicemachine-start` in your project
+
 ### Bug fixes
 
-- You have now a proper message if you have not the correct repository access
-- The slice machine can be launched with node 12
-- Minor improvements on the start script
+- You have now a proper message if you have not the correct repository access.
+- The slice machine can be launched with node 12.
+- Minor improvements on the start script.
