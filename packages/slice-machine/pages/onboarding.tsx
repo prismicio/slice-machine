@@ -86,7 +86,7 @@ const PushPagesSlide = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC." />
+    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
   </>
 );
 
