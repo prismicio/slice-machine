@@ -3,6 +3,11 @@ import upload from "./upload";
 
 import Files from "../../../utils/files";
 import { ReviewTrackingEvent } from "@models/common/TrackingEvent";
+import {
+  // Variation,
+  AsObject,
+} from "@lib/models/common/Variation";
+import Slice from "@lib/models/common/Slice";
 
 interface ApiSettings {
   STAGE: string;
@@ -42,19 +47,21 @@ function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
   return PROD;
 }
 
+type Body = Slice<AsObject> | Record<string, unknown> | string;
+
 function createFetcher(
   apiUrl: string,
   repo: string,
   auth: string
 ): (
   prefix: string,
-  body?: Record<string, unknown> | string,
+  body?: Body,
   action?: string,
   method?: string
 ) => Promise<Response> {
   return function runFetch(
     prefix: string,
-    body?: Record<string, unknown> | string,
+    body?: Body,
     action = "",
     method = "get"
   ): Promise<Response> {
@@ -90,19 +97,19 @@ const initFetcher = (
 export default class DefaultClient {
   apiFetcher: (
     prefix: string,
-    body?: Record<string, unknown> | string,
+    body?: Body,
     action?: string,
     method?: string
   ) => Promise<Response>;
   aclFetcher: (
     prefix: string,
-    body?: Record<string, unknown> | string,
+    body?: Body,
     action?: string,
     method?: string
   ) => Promise<Response>;
   trackingFetcher: (
     prefix: string,
-    body?: Record<string, unknown> | string,
+    body?: Body,
     action?: string,
     method?: string
   ) => Promise<Response>;
@@ -173,23 +180,19 @@ export default class DefaultClient {
     return this.apiFetcher(CustomTypesPrefix);
   }
 
-  async insertCustomType(
-    body: Record<string, unknown> | string
-  ): Promise<Response> {
+  async insertCustomType(body: Body): Promise<Response> {
     return this.apiFetcher(CustomTypesPrefix, body, "insert", "post");
   }
 
-  async updateCustomType(
-    body: Record<string, unknown> | string
-  ): Promise<Response> {
+  async updateCustomType(body: Body): Promise<Response> {
     return this.apiFetcher(CustomTypesPrefix, body, "update", "post");
   }
 
-  async insertSlice(body: Record<string, unknown> | string): Promise<Response> {
+  async insertSlice(body: Body): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "insert", "post");
   }
 
-  async updateSlice(body: Record<string, unknown> | string): Promise<Response> {
+  async updateSlice(body: Body): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
   }
 
@@ -201,9 +204,7 @@ export default class DefaultClient {
     createAcl: async (): Promise<Response> => {
       return this.aclFetcher("", undefined, "create", "get");
     },
-    deleteFolder: async (
-      body: Record<string, unknown> | string
-    ): Promise<Response> => {
+    deleteFolder: async (body: Body): Promise<Response> => {
       return this.aclFetcher("", body, "delete-folder", "post");
     },
     post: async (params: {
