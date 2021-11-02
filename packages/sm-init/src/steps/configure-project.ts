@@ -20,6 +20,7 @@ export function configureProject(
     const manifestUpdated: FileSystem.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
+      libraries: ["@/slices"],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
     };
 
