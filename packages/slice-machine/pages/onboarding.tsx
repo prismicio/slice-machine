@@ -16,26 +16,21 @@ import { LocalStorageKeys } from "@lib/consts";
 import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
+import { Video as CldVideo } from "cloudinary-react";
 
-import BuildSliceVideo from "../public/onboarding-videos/build-slice.mp4";
-import AddPageVideo from "../public/onboarding-videos/add-to-page.mp4";
-import PushToPrismicVideo from "../public/onboarding-videos/push-to-prismic.mp4";
-
-const Video = (props: React.VideoHTMLAttributes<HTMLVideoElement>) => {
-  return (
-    <video
-      controls
-      autoPlay
-      loop
-      {...props}
-      style={{
-        maxWidth: "100%",
-        height: "auto",
-        ...props.style,
-      }}
-    />
-  );
-};
+const Video = (props: VideoProps) => (
+  <CldVideo
+    cloudName="dmtf1daqp"
+    autoPlay
+    controls
+    loop
+    style={{
+      maxWidth: "100%",
+      height: "auto",
+    }}
+    {...props}
+  />
+);
 
 const Header = (props: HeadingProps) => (
   <Heading
@@ -66,13 +61,12 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-
 const BuildSlicesSlide = () => (
   <>
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video src={BuildSliceVideo} />
+    <Video publicId="SMONBOARDING/BUILD_SLICE" />
   </>
 );
 
@@ -81,7 +75,7 @@ const CreatePageTypesSlide = () => (
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video src={AddPageVideo} />
+    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
   </>
 );
 
@@ -92,7 +86,7 @@ const PushPagesSlide = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video src={PushToPrismicVideo} />
+    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC." />
   </>
 );
 
@@ -186,6 +180,7 @@ export default function Onboarding(): JSX.Element {
             onClick={escape}
             data-cy="skip-onboarding"
             title="skip onboarding"
+            tabIndex="0"
           >
             skip
           </Button>
@@ -224,6 +219,7 @@ export default function Onboarding(): JSX.Element {
       >
         {state.step >= 2 && (
           <IconButton
+            tabIndex="0"
             title="previous slide"
             sx={{
               width: "40px",
@@ -247,7 +243,12 @@ export default function Onboarding(): JSX.Element {
         }}
       >
         {!!state.step && (
-          <Button data-cy="continue" onClick={nextSlide} title="continue">
+          <Button
+            data-cy="continue"
+            onClick={nextSlide}
+            title="continue"
+            tabIndex="0"
+          >
             Continue
           </Button>
         )}
