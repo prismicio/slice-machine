@@ -120,7 +120,7 @@ export default class DefaultClient {
       {
         method: "GET",
       }
-    ); // .catch((e) => e);
+    );
   }
 
   constructor(
