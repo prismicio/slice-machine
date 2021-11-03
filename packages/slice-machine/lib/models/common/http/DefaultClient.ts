@@ -3,10 +3,7 @@ import upload from "./upload";
 
 import Files from "../../../utils/files";
 import { ReviewTrackingEvent } from "@models/common/TrackingEvent";
-import {
-  // Variation,
-  AsObject,
-} from "@lib/models/common/Variation";
+import { AsObject } from "@lib/models/common/Variation";
 import Slice from "@lib/models/common/Slice";
 
 interface ApiSettings {
@@ -68,7 +65,6 @@ function createFetcher(
     const headers = {
       repository: repo,
       Authorization: `Bearer ${auth}`,
-      ...(typeof window !== undefined ? { "User-Agent": "slice-machine" } : {}),
       "User-Agent": "slice-machine",
     };
     return fetch(new URL(action, `${apiUrl}${prefix}`).toString(), {
