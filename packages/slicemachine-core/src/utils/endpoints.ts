@@ -27,9 +27,6 @@ export function extractDomainFromBase(base: Base): string {
   return result;
 }
 
-export function buildRepositoryEndpoint(
-  base: Base,
-  domain: string
-): ApiEndpoint {
+export function buildRepositoryEndpoint(base: Base, domain: string): string {
   return `https://${domain}.${extractDomainFromBase(base)}/api/v2`;
 }

@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Flex,
-  Spinner,
   Paragraph,
   Heading,
   Image,
@@ -93,7 +92,10 @@ const PushPagesSlide = () => (
 const OnboardingGrid = ({
   children,
 }: {
-  children: ReactElement | ReadonlyArray<ReactElement>;
+  children:
+    | ReactElement
+    | ReadonlyArray<ReactElement | JSX.Element | JSX.Element[]>
+    | Element[];
 }) => {
   return (
     <Grid
@@ -151,6 +153,7 @@ export default function Onboarding(): JSX.Element {
   const [state, setState] = useState({ step: 0 });
 
   useEffect(() => {
+    localStorage.setItem("", "true");
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
@@ -174,17 +177,15 @@ export default function Onboarding(): JSX.Element {
           justifyContent: "space-around",
         }}
       >
-        {!!state.step && (
-          <Button
-            variant="transparent"
-            onClick={escape}
-            data-cy="skip-onboarding"
-            title="skip onboarding"
-            tabIndex={0}
-          >
-            skip
-          </Button>
-        )}
+        <Button
+          variant="transparent"
+          onClick={escape}
+          data-cy="skip-onboarding"
+          title="skip onboarding"
+          tabIndex={0}
+        >
+          skip
+        </Button>
       </Flex>
       <Flex
         sx={{
@@ -198,17 +199,22 @@ export default function Onboarding(): JSX.Element {
         )}
       </Flex>
 
-      <Flex
-        sx={{
-          gridArea: "content",
-          alignItems: "center",
-          justifyContent: "center",
-          alignContent: "center",
-          flexDirection: "column",
-        }}
-      >
-        {STEPS[state.step] ? STEPS[state.step] : <Spinner />}
-      </Flex>
+      {STEPS.map((Component, i) => (
+        <Flex
+          key={`step-${i + 1}`}
+          sx={{
+            gridArea: "content",
+            alignItems: "center",
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "column",
+            opacity: i === state.step ? "1" : "0",
+            zIndex: i === state.step ? "9999" : "-1",
+          }}
+        >
+          {Component}
+        </Flex>
+      ))}
 
       <Flex
         sx={{
