@@ -43,12 +43,12 @@ async function init() {
     config.base
   );
 
-  if (existing === false) {
+  if (!existing) {
     await createRepository(name, frameworkResult.value, config);
   }
 
-  // install the slicemachine-ui in the project.
-  await installSm(cwd);
+  // install the required dependencies in the project.
+  await installSm(cwd, frameworkResult.value);
 
   // configure the SM.json file and the json package file of the project..
   configureProject(cwd, base, name, frameworkResult);
