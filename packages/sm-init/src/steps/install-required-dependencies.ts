@@ -24,6 +24,9 @@ export async function installRequiredDependencies(
     case Utils.Framework.FrameworkEnum.next:
       `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME}`;
       break;
+    case Utils.Framework.FrameworkEnum.svelte:
+      `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME}`;
+      break;
   }
 
   const pathToPkg = path.join(
