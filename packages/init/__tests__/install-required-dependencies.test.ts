@@ -1,7 +1,7 @@
 import { jest, describe, afterEach, test, expect } from "@jest/globals";
 import * as Core from "@slicemachine/core";
 import * as initUtils from "../src/utils";
-import { installSm } from "../src/steps";
+import { installRequiredDependencies } from "../src/steps";
 
 type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
 
@@ -29,7 +29,7 @@ jest.mock("@slicemachine/core", () => {
   };
 });
 
-describe("install SM builder dependency", () => {
+describe("install required dependency", () => {
   void afterEach(() => {
     jest.clearAllMocks();
   });
@@ -45,7 +45,10 @@ describe("install SM builder dependency", () => {
     fileExistsMock.mockReturnValueOnce(true); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installSm(fakeCWD);
+    await installRequiredDependencies(
+      fakeCWD,
+      Core.Utils.Framework.FrameworkEnum.nuxt
+    );
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -64,7 +67,10 @@ describe("install SM builder dependency", () => {
     fileExistsMock.mockReturnValueOnce(false); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installSm(fakeCWD);
+    await installRequiredDependencies(
+      fakeCWD,
+      Core.Utils.Framework.FrameworkEnum.nuxt
+    );
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(

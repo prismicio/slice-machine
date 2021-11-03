@@ -2,7 +2,7 @@ import path from "path";
 import { execCommand } from "../utils";
 import { Utils, FileSystem } from "@slicemachine/core";
 
-export async function installSm(
+export async function installRequiredDependencies(
   cwd: string,
   framework: Utils.Framework.FrameworkEnum
 ): Promise<void> {
