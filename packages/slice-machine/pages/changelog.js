@@ -30,7 +30,16 @@ export default function Changelog({ sources }) {
         {(sources || []).map(({ source, title }) => (
           <Card
             key={title}
-            sx={{ border: (t) => `1px solid ${t.colors?.borders}`, mb: 4 }}
+            sx={{
+              border: (t) => `1px solid ${t.colors?.borders}`,
+              mb: 4,
+              "& li": {
+                listStyle: "initial",
+              },
+              "& ul": {
+                pl: 3,
+              },
+            }}
             HeaderContent={<Heading as="h3">v{title}</Heading>}
           >
             {hydrate(source)}
