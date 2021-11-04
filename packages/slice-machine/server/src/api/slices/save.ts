@@ -1,4 +1,4 @@
-/* global variable define in server/src/index.js */
+/** global variable define in server/src/index.js **/
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
@@ -21,13 +21,13 @@ interface Body {
   sliceName: string;
   from: string;
   model: Slice<AsObject>;
-  mockConfig: any;
+  mockConfig: SliceMockConfig;
 }
 
 export async function handler(
   env: Environment,
   { sliceName, from, model, mockConfig }: Body
-) {
+): Promise<{ previewUrls: Record<string, Preview>; warning: string | null }> {
   await onBeforeSaveSlice({ from, sliceName, model }, env);
 
   const updatedMockConfig = insertMockConfig(env.cwd, {

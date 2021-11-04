@@ -6,14 +6,10 @@ import { useContext } from "react";
 import SliceStore from "./store";
 import { reducer } from "./reducer";
 
-import SliceState from "../../../lib/models/ui/SliceState";
-import { ComponentWithLibStatus } from "../../../lib/models/common/Library";
-import Slice from "../../../lib/models/common/Slice";
-import {
-  Variation,
-  AsArray,
-  AsObject,
-} from "../../../lib/models/common/Variation";
+import SliceState from "@lib/models/ui/SliceState";
+import { ComponentWithLibStatus } from "@lib/models/common/Library";
+import Slice from "@lib/models/common/Slice";
+import { Variation, AsArray, AsObject } from "@lib/models/common/Variation";
 
 type ContextProps = {
   Model: ComponentWithLibStatus;
@@ -56,22 +52,23 @@ export function useModelReducer({
   return [state, store];
 }
 
-export default function SliceProvider({
+type SliceProviderProps = {
+  value: any;
+  variation: Variation<AsArray>;
+};
+
+const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
   children,
   value,
   variation,
-}: {
-  children: any;
-  value: any;
-  variation: Variation<AsArray>;
-}) {
+}) => {
   const [Model, store] = value;
   return (
     <SliceContext.Provider value={{ Model, store, variation }}>
       {typeof children === "function" ? children(value) : children}
     </SliceContext.Provider>
   );
-}
+};
 
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter();
@@ -132,3 +129,5 @@ export const SliceHandler = ({ children }: { children: any }) => {
     </SliceProvider>
   );
 };
+
+export default SliceProvider;

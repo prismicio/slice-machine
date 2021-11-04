@@ -1,33 +1,4 @@
-// export function updateWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
-//   return () => {
-//     return (mockConfig: any, prevId: string, newId: string, updatedValue: any): any => {
-//       const updatedConfig = {
-//         ...mockConfig,
-//         ...(prevId !== newId ? {
-//             [prevId]: undefined,
-//           } : null),
-//           [newId]: updatedValue
-//       }
-//       dispatch({ type: Actions.UpdateWidgetMockConfig, payload: updatedConfig })
-//     }
-//   }
-// }
-
-// export function deleteWidgetMockConfig(dispatch: ({type, payload}: { type: string, payload?: any }) => void) {
-//   return () => {
-//     return (mockConfig: any, apiId: string): any => {
-//       if(!mockConfig) return;
-
-//       const updatedConfig = Object.keys(mockConfig)
-//         .filter(([k]) => k !== apiId)
-//         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-
-//       dispatch({ type: Actions.DeleteWidgetMockConfig, payload: updatedConfig })
-//     }
-//   }
-// }
-
-import { CustomTypeMockConfig } from "../../../../lib/models/common/MockConfig";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import Actions from "./";
 
 export function updateWidgetGroupMockConfig(
@@ -39,7 +10,7 @@ export function updateWidgetGroupMockConfig(
     previousFieldId: string,
     fieldId: string,
     value: any
-  ): any => {
+  ): void => {
     const updatedConfig = CustomTypeMockConfig.updateGroupFieldMockConfig(
       customTypeMockConfig,
       groupId,
@@ -59,7 +30,7 @@ export function updateWidgetMockConfig(
     previousFieldId: string,
     fieldId: string,
     value: any
-  ): any => {
+  ): void => {
     if (!customTypeMockConfig) return;
     const updatedConfig = CustomTypeMockConfig.updateFieldMockConfig(
       customTypeMockConfig,
@@ -78,7 +49,7 @@ export function deleteWidgetGroupMockConfig(
     customTypeMockConfig: CustomTypeMockConfig,
     groupId: string,
     fieldId: string
-  ): any => {
+  ): void => {
     if (!customTypeMockConfig) return;
 
     const updatedConfig = CustomTypeMockConfig.deleteGroupFieldMockConfig(
@@ -94,7 +65,10 @@ export function deleteWidgetGroupMockConfig(
 export function deleteWidgetMockConfig(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return (customTypeMockConfig: CustomTypeMockConfig, fieldId: string): any => {
+  return (
+    customTypeMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ): void => {
     if (!customTypeMockConfig) return;
 
     const updatedConfig = CustomTypeMockConfig.deleteFieldMockConfig(

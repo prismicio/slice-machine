@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, useThemeUI, Text } from "theme-ui";
-import { AiFillWarning } from "react-icons/ai";
 import { NewVersionAvailable, ClientError, NotConnected } from "./Errors";
 import {
   StorybookNotInstalled,

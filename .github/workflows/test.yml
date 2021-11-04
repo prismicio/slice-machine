@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [16.x]
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
@@ -14,20 +14,24 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - name: Install top level dependencies
-        run: yarn
-      - name: Install package dependencies
-        run: lerna bootstrap
+          cache: "npm"
+      - name: Install dependencies
+        run: npm i
       - name: Running functional and unit tests
         run: lerna run test
       - name: Linting
         run: lerna run lint
       - name: Audit
-        run: lerna run security-audit:prod
-      - name: Build and export slice machine
+        run: lerna run audit
+      - name: Build slice machine core
+        working-directory: ./packages/slicemachine-core
+        run: npm run build
+      - name: Build slice machine init
+        working-directory: ./packages/sm-init
+        run: npm run build
+      - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine
-        run: yarn build && yarn export-build
+        run: npm run build && npm run export-build
       - name: Running End to End tests
         working-directory: "./packages/slice-machine/tests/project"
-        run: yarn && yarn test:e2e
+        run: npm i && npm run test:e2e

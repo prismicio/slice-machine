@@ -1,14 +1,18 @@
 {
   "name": "root",
   "private": true,
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
-    "::postinstall": "manypkg check",
     "bootstrap": "lerna bootstrap",
+    "postinstall": "lerna bootstrap",
     "test": "jest",
+    "lint-staged": "lint-staged",
     "build": "npm run test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
-    "::changeset": "yarn changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
-    "::release": "manypkg check && yarn build && lerna publish && yarn run changeset",
+    "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
+    "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -20,12 +24,16 @@
   },
   "dependencies": {
     "@theme-ui/color": "^0.3.1",
+    "fp-ts": "^2.11.4",
+    "io-ts": "^2.2.16",
     "jest": "^25.5.1",
     "node-fetch": "^2.6.1",
     "validate-npm-package": "^1.0.5"
   },
   "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "yarn --cwd ./packages/slice-machine eslint",
-    "**/packages/slice-machine/**/*": "prettier --write --ignore-unknown"
+    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine run lint:precommit",
+    "**/packages/slicemachine-core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slicemachine-core run lint:precommit",
+    "**/packages/sm-init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/sm-init run lint:precommit",
+    "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }

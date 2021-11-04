@@ -41,7 +41,7 @@ const PreviewCard = ({
           borderRadius: "4px",
           cursor: "pointer",
         }}
-      ></Box>
+      />
     </Flex>
   </Card>
 );

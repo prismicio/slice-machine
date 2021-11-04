@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
+    "createDefaultProgram": true // create default program for excluded files (such as test), this will increase performance but allow tests not to be transpiled.
+  },
+  "plugins": ["@typescript-eslint", "import", "jest"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jest/recommended",
+    "eslint-config-prettier"
+  ],
+  "ignorePatterns": ["build"]
+}

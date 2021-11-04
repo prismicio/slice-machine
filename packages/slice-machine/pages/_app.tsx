@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 
@@ -7,10 +7,11 @@ import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
-import LibrariesProvider from "../src/models/libraries/context";
-import CustomTypesProvider from "../src/models/customTypes/context";
-import { SliceHandler } from "../src/models/slice/context";
-import ConfigProvider from "../src/config-context";
+import LibrariesProvider from "@src/models/libraries/context";
+import CustomTypesProvider from "@src/models/customTypes/context";
+import TrackingProvider from "@src/models/tracking/context";
+import { SliceHandler } from "@src/models/slice/context";
+import ConfigProvider from "@src/config-context";
 
 import Drawer from "rc-drawer";
 
@@ -35,6 +36,7 @@ import Slice from "@lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
+import LoginModalProvider from "@src/LoginModalProvider";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -73,7 +75,7 @@ const RenderStates = {
     pageProps,
     ...rest
   }: {
-    Component: (props: any) => JSX.Element;
+    Component: (props: ReactPropTypes) => JSX.Element;
     pageProps: any;
     rest: any;
   }) => <Component {...pageProps} {...rest} />,
@@ -170,42 +172,49 @@ function MyApp({
                   openPanel={openPanel}
                 />
               ) : (
-                <LibrariesProvider
-                  remoteSlices={payload.remoteSlices}
-                  libraries={payload.libraries}
-                  env={payload.env}
-                >
-                  <CustomTypesProvider
-                    customTypes={payload.customTypes}
-                    remoteCustomTypes={payload.remoteCustomTypes}
-                  >
-                    <ToastProvider>
-                      <AppLayout {...payload} data={data}>
-                        <SliceHandler {...payload}>
-                          <Renderer
-                            Component={Component}
-                            pageProps={pageProps}
-                            {...payload}
-                            openPanel={openPanel}
-                          />
-                          <Drawer
-                            placement="right"
-                            open={drawerState.open}
-                            onClose={() =>
-                              setDrawerState({ ...drawerState, open: false })
-                            }
-                          >
-                            <Warnings
-                              priority={drawerState.priority}
-                              list={data.warnings}
-                              configErrors={data.configErrors}
-                            />
-                          </Drawer>
-                        </SliceHandler>
-                      </AppLayout>
-                    </ToastProvider>
-                  </CustomTypesProvider>
-                </LibrariesProvider>
+                <ToastProvider>
+                  <LoginModalProvider>
+                    <LibrariesProvider
+                      remoteSlices={payload.remoteSlices}
+                      libraries={payload.libraries}
+                      env={payload.env}
+                    >
+                      <CustomTypesProvider
+                        customTypes={payload.customTypes}
+                        remoteCustomTypes={payload.remoteCustomTypes}
+                      >
+                        <TrackingProvider>
+                          <AppLayout {...payload} data={data}>
+                            <SliceHandler {...payload}>
+                              <Renderer
+                                Component={Component}
+                                pageProps={pageProps}
+                                {...payload}
+                                openPanel={openPanel}
+                              />
+                              <Drawer
+                                placement="right"
+                                open={drawerState.open}
+                                onClose={() =>
+                                  setDrawerState({
+                                    ...drawerState,
+                                    open: false,
+                                  })
+                                }
+                              >
+                                <Warnings
+                                  priority={drawerState.priority}
+                                  list={data.warnings}
+                                  configErrors={data.configErrors}
+                                />
+                              </Drawer>
+                            </SliceHandler>
+                          </AppLayout>
+                        </TrackingProvider>
+                      </CustomTypesProvider>
+                    </LibrariesProvider>
+                  </LoginModalProvider>
+                </ToastProvider>
               )}
             </ConfigProvider>
           )}

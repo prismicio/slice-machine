@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import SliceMachineModal from "@components/SliceMachineModal";
 
 import { Close, Flex, Heading } from "theme-ui";
 
@@ -16,16 +17,11 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
     return null;
   }
   return (
-    <Modal
+    <SliceMachineModal
       isOpen
       shouldCloseOnOverlayClick
       onRequestClose={close}
       contentLabel="Widget Form Modal"
-      style={{
-        overlay: {
-          overflow: "auto",
-        },
-      }}
     >
       <Card
         borderFooter
@@ -66,7 +62,7 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
             })}
         </FlexGrid>
       </Card>
-    </Modal>
+    </SliceMachineModal>
   );
 };
 
