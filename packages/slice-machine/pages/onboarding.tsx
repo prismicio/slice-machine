@@ -153,7 +153,6 @@ export default function Onboarding(): JSX.Element {
   const [state, setState] = useState({ step: 0 });
 
   useEffect(() => {
-    localStorage.setItem("", "true");
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
@@ -177,15 +176,17 @@ export default function Onboarding(): JSX.Element {
           justifyContent: "space-around",
         }}
       >
-        <Button
-          variant="transparent"
-          onClick={escape}
-          data-cy="skip-onboarding"
-          title="skip onboarding"
-          tabIndex={0}
-        >
-          skip
-        </Button>
+        {!!state.step && (
+          <Button
+            variant="transparent"
+            onClick={escape}
+            data-cy="skip-onboarding"
+            title="skip onboarding"
+            tabIndex={0}
+          >
+            skip
+          </Button>
+        )}
       </Flex>
       <Flex
         sx={{
