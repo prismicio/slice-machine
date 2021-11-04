@@ -1,4 +1,4 @@
-import { FileSystem, Utils } from "slicemachine-core";
+import { FileSystem, Utils } from "@slicemachine/core";
 
 type StatusResponse = {
   status: "error" | "ok" | "pending";

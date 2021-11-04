@@ -1,6 +1,7 @@
 {
-  "name": "slicemachine-core",
-  "version": "0.1.0",
+  "name": "@slicemachine/core",
+  "version": "0.1.1-alpha.0",
+  "private": false,
   "main": "./build/index.js",
   "exports": {
     ".": "./build/index.js",
@@ -19,6 +20,7 @@
     "lint": "eslint --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
+    "prepublishOnly": "npm run test && npm run build",
     "audit-fix": "npm audit fix",
     "test": "jest"
   },

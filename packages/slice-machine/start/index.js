@@ -11,7 +11,7 @@ if (parseInt(nodeVersion) < 12) {
 const path = require("path");
 const pkg = require("../package.json");
 
-const { Utils } = require("slicemachine-core");
+const { Utils } = require("@slicemachine/core");
 const moduleAlias = require("module-alias");
 
 const LIB_PATH = path.join(__dirname, "..", "build", "lib");

@@ -2,10 +2,10 @@ import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
 import { mocked } from "ts-jest/utils";
 import { detectFramework } from "../src/steps";
-import { Utils } from "slicemachine-core";
+import { Utils } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
-import { Framework } from "slicemachine-core/src/utils";
+import { Framework } from "@slicemachine/core/src/utils";
 
 jest.mock("fs");
 

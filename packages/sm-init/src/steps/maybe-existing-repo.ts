@@ -1,7 +1,7 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Communication, Utils, FileSystem } from "slicemachine-core";
-import { RepoData } from "slicemachine-core/src/core/communication";
+import { Communication, Utils, FileSystem } from "@slicemachine/core";
+import { RepoData } from "@slicemachine/core/src/core/communication";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;

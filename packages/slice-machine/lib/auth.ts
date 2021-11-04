@@ -6,7 +6,7 @@ import PrismicFile from "./models/common/PrismicFile";
 import PrismicData from "./models/common/PrismicData";
 import ErrorWithStatus from "./models/common/ErrorWithStatus";
 import Files from "./utils/files";
-import { Utils } from "slicemachine-core";
+import { Utils } from "@slicemachine/core";
 
 export function parsePrismicFile(): Result<PrismicFile, ErrorWithStatus> {
   const home = os.homedir();
