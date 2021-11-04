@@ -21,6 +21,7 @@ import validateAuth from "./auth/validate";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import onboarding from "./tracking/onboarding";
 
 router.use(
   "/__preview",
@@ -59,6 +60,17 @@ router.post(
       return res.status(payload.clientError.status).json(payload);
     }
     return res.status(200).json(payload);
+  }
+);
+
+router.post(
+  "/tracking/onboarding",
+  async (req: express.Request, res: express.Response) => {
+    return onboarding(req.body)
+      .then(res.json)
+      .catch((e) => {
+        res.status(e.response?.status || 500).json({ error: e.message });
+      });
   }
 );
 

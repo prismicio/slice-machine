@@ -2,7 +2,10 @@ import path from "path";
 import upload from "./upload";
 
 import Files from "../../../utils/files";
-import { ReviewTrackingEvent } from "@models/common/TrackingEvent";
+import {
+  ReviewTrackingEvent,
+  OnboardingTrackingEvent,
+} from "@models/common/TrackingEvent";
 
 interface ApiSettings {
   STAGE: string;
@@ -187,6 +190,10 @@ export default class DefaultClient {
 
   async sendReview(review: ReviewTrackingEvent) {
     return this.trackingFetcher("", review, "", "post");
+  }
+
+  async sendOnboarding(data: OnboardingTrackingEvent) {
+    return this.trackingFetcher("", data, "", "post");
   }
 
   images = {

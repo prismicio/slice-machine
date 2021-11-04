@@ -1,0 +1,52 @@
+import nock from "nock";
+import fs from "fs";
+import onboarding from "../server/src/api/tracking/onboarding";
+import { name } from "../package.json";
+import { TrackingEventId } from "../lib/models/common/TrackingEvent";
+import fetch from "node-fetch";
+
+global.fetch = fetch; // not good :/
+
+describe("tracking/onboarding", () => {
+  test("it should post the onboarding data to the tracking endpoint", async () => {
+    const lstat = jest.spyOn(fs, "lstatSync");
+    lstat.mockReturnValueOnce(true);
+
+    const readFileSync = jest.spyOn(fs, "readFileSync");
+    const base = "https://prismic.io";
+    const cookies = "SESSION=abd; prismic-auth=xyz";
+    readFileSync.mockReturnValueOnce(JSON.stringify({ base, cookies }));
+
+    lstat.mockReturnValueOnce(true);
+
+    const version = "0.0.0";
+    readFileSync.mockReturnValueOnce(JSON.stringify({ version, name }));
+    nock("https://unpkg.com")
+      .get(`/${name}/package.json`)
+      .reply(200, { version });
+
+    lstat.mockReturnValueOnce(true);
+    const existsSync = jest.spyOn(fs, "existsSync");
+    existsSync.mockReturnValueOnce(true);
+
+    readFileSync.mockReturnValueOnce(
+      JSON.stringify({
+        apiEndpoint: "https://fake.prismic.io/api/v2",
+      })
+    );
+
+    nock("https://tracking.prismic.io")
+      .post("/", (body) => body.id === TrackingEventId.ONBOARDING)
+      .reply(200);
+
+    const result = await onboarding({
+      lastStep: 3,
+      maxSteps: 3,
+      startTime: Date.now(),
+      endTime: Date.now(),
+      totalTime: 1,
+    });
+
+    expect(result.status).toEqual(200);
+  });
+});
