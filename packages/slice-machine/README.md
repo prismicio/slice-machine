@@ -1,10 +1,10 @@
 <p align="center">
   <a href="https://slicemachine.dev">
-    <img src=".github/logo.svg" alt="Slice Machine logo" width="220" />
+    <img src="https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/logo.svg" alt="Slice Machine logo" width="220" />
   </a>
 </p>
 <p align="center">
-  A series of tools for developing and deploying website sections with <a href="https://prismic.io">Prismic</a>.
+  A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.
 </p>
 
 # Slice Machine
@@ -24,7 +24,7 @@
 ## Install
 
 ```bash
-prismic sm --setup
+npx @slicemachine/init
 ```
 
 ## Documentation

@@ -70,7 +70,9 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
       : 0;
 
   const customTypeCount = !!customTypes ? customTypes.length : 0;
-  const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
+  // Deactivate for this release
+  const userHasCreateEnoughContent =
+    sliceCount >= 1 && customTypeCount >= 1 && false;
 
   const onSendAReview = async (
     rating: number,

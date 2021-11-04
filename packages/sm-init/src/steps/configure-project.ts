@@ -1,4 +1,4 @@
-import { FileSystem, Utils } from "slicemachine-core";
+import { FileSystem, Utils } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 
 type Base = Utils.Endpoints.Base;
@@ -20,6 +20,7 @@ export function configureProject(
     const manifestUpdated: FileSystem.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
+      libraries: ["@/slices"],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
     };
 

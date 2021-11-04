@@ -1,4 +1,4 @@
-import { Communication, Utils, FileSystem } from "slicemachine-core";
+import { Communication, Utils, FileSystem } from "@slicemachine/core";
 
 export function createRepository(
   domain: string,

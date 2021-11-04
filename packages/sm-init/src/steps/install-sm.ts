@@ -1,6 +1,6 @@
 import path from "path";
 import { execCommand } from "../utils";
-import { Utils, FileSystem } from "slicemachine-core";
+import { Utils, FileSystem } from "@slicemachine/core";
 
 export async function installSm(cwd: string): Promise<void> {
   const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));

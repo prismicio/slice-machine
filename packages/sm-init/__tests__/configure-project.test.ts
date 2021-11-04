@@ -6,7 +6,7 @@ import {
   expect,
   beforeEach,
 } from "@jest/globals";
-import * as Core from "slicemachine-core";
+import * as Core from "@slicemachine/core";
 import { configureProject } from "../src/steps";
 
 type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
@@ -15,8 +15,8 @@ const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
 
-jest.mock("slicemachine-core", () => {
-  const actualCore = jest.requireActual("slicemachine-core") as typeof Core;
+jest.mock("@slicemachine/core", () => {
+  const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
 
   return {
     ...actualCore,
