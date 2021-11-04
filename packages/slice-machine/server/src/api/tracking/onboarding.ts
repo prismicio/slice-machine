@@ -26,7 +26,7 @@ export default async function (
       ...query,
       id: TrackingEventId.ONBOARDING,
     })
-    .then((res) => {
+    .then((res: Response | FakeResponse) => {
       if (res.status && res.status !== 200) throw new HTTPResponseError(res);
       return res;
     });

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState, useRef } from "react";
 import {
   Grid,
   Box,
@@ -140,6 +140,40 @@ const StepIndicator = ({
   );
 };
 
+function handleTracking(props: {
+  step: number;
+  startTime: number;
+  maxSteps: number;
+}) {
+  const state = useRef(props);
+
+  useEffect(() => {
+    state.current = props;
+  }, [props]);
+
+  useEffect(
+    () => () => {
+      const { startTime, maxSteps, step } = state.current;
+      const endTime = Date.now();
+      const totalTime = endTime - startTime;
+      const data = {
+        lastStep: step,
+        maxSteps,
+        startTime,
+        endTime,
+        totalTime,
+      };
+
+      fetch("/tracking/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }).catch(console.error);
+    },
+    []
+  );
+}
+
 export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
@@ -148,11 +182,13 @@ export default function Onboarding(): JSX.Element {
     <PushPagesSlide />,
   ];
 
-  const [state, setState] = useState({ step: 0 });
+  const [state, setState] = useState({ step: 0, startTime: Date.now() });
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
+
+  handleTracking({ ...state, maxSteps: STEPS.length });
 
   const escape = () => router.push("/");
 
