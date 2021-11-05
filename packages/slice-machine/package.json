@@ -38,7 +38,8 @@
   "dependencies": {
     "@babel/register": "^7.11.5",
     "@reach/menu-button": "^0.10.5",
-    "@slicemachine/core": "^1.0.0",    "@svgr/webpack": "^5.4.0",
+    "@slicemachine/core": "^1.0.0",
+    "@svgr/webpack": "^5.4.0",
     "@types/cors": "^2.8.12",
     "atob": "^2.1.2",
     "babel-plugin-module-resolver": "^4.0.0",
