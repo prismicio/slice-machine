@@ -57,6 +57,6 @@ contract("contract: onboarding tracking", () => {
       totalTime: 1000,
     });
 
-    expect(result.status).toEqual(200);
+    expect(result.status).toEqual(201);
   });
 });
