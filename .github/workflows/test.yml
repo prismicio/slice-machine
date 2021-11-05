@@ -15,13 +15,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - name: Install dependencies
+        run: npm i
+      - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
           REPO_URL: ${{ secrets.REPO_URL }}
-      - name: Install dependencies
-        run: npm i
-      - name: Running functional and unit tests
         run: lerna run test
       - name: Linting
         run: lerna run lint
