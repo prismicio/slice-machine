@@ -1,5 +1,7 @@
 module.exports = {
   collectCoverage: true,
+  silent: false,
+  colors: true,
   globals: {
     appRoot: ".."
   },

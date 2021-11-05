@@ -19,7 +19,7 @@ const login = (email = EMAIL, password = PASSWORD) =>
   }).then((res) => res.text());
 
 contract("contract: onboarding tracking", () => {
-  jest.setTimeout(20 * 1000);
+  jest.setTimeout(60 * 1000);
   test("it should successfully send onboarding info to wroom", async () => {
     const authToken = await login(EMAIL, PASSWORD);
     const base = "https://wroom.io";
