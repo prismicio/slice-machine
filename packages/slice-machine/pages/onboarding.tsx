@@ -34,18 +34,25 @@ const Video = (props: VideoProps) => (
 const Header = (props: HeadingProps) => (
   <Heading
     {...props}
-    sx={{ fontSize: "20px", textAlign: "center", ...props.sx }}
+    sx={{
+      textAlign: "center",
+      ...props.sx,
+    }}
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.5",
+      fontWeight: 700,
+    }}
   />
 );
 
 const SubHeader = (props: ParagraphProps) => (
   <Paragraph
     {...props}
-    sx={{
+    style={{
       fontSize: "16px",
       textAlign: "center",
       paddingBottom: "24px",
-      ...props.sx,
     }}
   />
 );
@@ -53,7 +60,7 @@ const SubHeader = (props: ParagraphProps) => (
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
-    <Header>Welcome to Slice Machine ℠</Header>
+    <Header>Welcome to Slice Machine</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
     <Button data-cy="get-started" onClick={onClick} title="start onboarding">
       Get Started
@@ -63,7 +70,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
 const BuildSlicesSlide = () => (
   <>
     <Image src="/horizontal_split.svg" />
-    <Header>Build Slices ℠</Header>
+    <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
     <Video publicId="SMONBOARDING/BUILD_SLICE" />
   </>
@@ -99,9 +106,9 @@ const OnboardingGrid: React.FunctionComponent = ({ children }) => {
         gridTemplateAreas: `
           "top-left header top-right"
           "... content ..."
-          "bottom-left footer bottom-right"
+          "footer-left footer footer-right"
         `,
-        gridTemplateRows: "1fr 5fr 1fr",
+        gridTemplateRows: "84px 5fr 1fr",
       }}
       columns="1fr 2fr 1fr"
     >
@@ -126,7 +133,8 @@ const StepIndicator = ({
             key={`box-${i + 1}`}
             sx={{
               bg: i <= current ? "primary" : "muted",
-              height: "4px",
+              borderRadius: "10px",
+              height: "2px",
             }}
           />
         ))}
@@ -166,7 +174,8 @@ export default function Onboarding(): JSX.Element {
         sx={{
           gridArea: "top-right",
           alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "end",
+          padding: "1em 4em",
         }}
       >
         {!!state.step && (
@@ -176,20 +185,12 @@ export default function Onboarding(): JSX.Element {
             data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}
+            sx={{
+              color: "textClear",
+            }}
           >
             skip
           </Button>
-        )}
-      </Flex>
-      <Flex
-        sx={{
-          gridArea: "footer",
-          alignItems: "center",
-          justifyContent: "space-around",
-        }}
-      >
-        {!!state.step && (
-          <StepIndicator current={state.step - 1} maxSteps={STEPS.length - 1} />
         )}
       </Flex>
 
@@ -205,6 +206,7 @@ export default function Onboarding(): JSX.Element {
             flexDirection: "column",
             opacity: i === state.step ? "1" : "0",
             pointerEvents: i === state.step ? "all" : "none",
+            transition: `opacity .2s ease-in`,
           }}
         >
           {Component}
@@ -213,8 +215,21 @@ export default function Onboarding(): JSX.Element {
 
       <Flex
         sx={{
-          gridArea: "bottom-left",
-          alignItems: "center",
+          gridArea: "footer",
+          alignItems: "start",
+          justifyContent: "center",
+          padingTop: "16px", // half height of a button
+        }}
+      >
+        {!!state.step && (
+          <StepIndicator current={state.step - 1} maxSteps={STEPS.length - 1} />
+        )}
+      </Flex>
+
+      <Flex
+        sx={{
+          gridArea: "footer-left",
+          alignItems: "start",
           justifyContent: "space-around",
         }}
       >
@@ -238,9 +253,10 @@ export default function Onboarding(): JSX.Element {
 
       <Flex
         sx={{
-          gridArea: "bottom-right",
-          alignItems: "center",
-          justifyContent: "space-around",
+          gridArea: "footer-right",
+          alignItems: "start",
+          justifyContent: "end",
+          padding: "0em 4em",
         }}
       >
         {!!state.step && (
