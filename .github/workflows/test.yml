@@ -16,9 +16,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
         env:
-          EMAIL: ${{ secret.EMAIL }}
-          PASSWORD: ${{ secret.PASSWORD }}
-          REPO_URL: ${{ secret.REPO_URL }}
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          REPO_URL: ${{ secrets.REPO_URL }}
       - name: Install dependencies
         run: npm i
       - name: Running functional and unit tests
