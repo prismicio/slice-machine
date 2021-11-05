@@ -37,7 +37,7 @@ describe("tracking/onboarding", () => {
 
     nock("https://tracking.prismic.io")
       .post("/", (body) => body.id === TrackingEventId.ONBOARDING)
-      .reply(200);
+      .reply(201);
 
     const result = await onboarding({
       lastStep: 3,
@@ -47,6 +47,6 @@ describe("tracking/onboarding", () => {
       totalTime: 1,
     });
 
-    expect(result.status).toEqual(200);
+    expect(result.status).toEqual(201);
   });
 });
