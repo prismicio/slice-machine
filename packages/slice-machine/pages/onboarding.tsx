@@ -17,6 +17,8 @@ import router from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import { Video as CldVideo } from "cloudinary-react";
 
+const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
+
 const Video = (props: VideoProps) => (
   <CldVideo
     cloudName="dmtf1daqp"
@@ -59,7 +61,7 @@ const SubHeader = (props: ParagraphProps) => (
 
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
-    <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
+    <Image sx={{ display: "block", ...imageSx }} src="/SM-LOGO.svg" />
     <Header>Welcome to Slice Machine</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
     <Button data-cy="get-started" onClick={onClick} title="start onboarding">
@@ -69,7 +71,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
 );
 const BuildSlicesSlide = () => (
   <>
-    <Image src="/horizontal_split.svg" />
+    <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
     <Video publicId="SMONBOARDING/BUILD_SLICE" />
@@ -78,7 +80,7 @@ const BuildSlicesSlide = () => (
 
 const CreatePageTypesSlide = () => (
   <>
-    <Image src="/insert_page_break.svg" />
+    <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
     <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
@@ -87,7 +89,7 @@ const CreatePageTypesSlide = () => (
 
 const PushPagesSlide = () => (
   <>
-    <Image src="/send.svg" />
+    <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
