@@ -89,14 +89,7 @@ const PushPagesSlide = () => (
   </>
 );
 
-const OnboardingGrid = ({
-  children,
-}: {
-  children:
-    | ReactElement
-    | ReadonlyArray<ReactElement | JSX.Element | JSX.Element[]>
-    | Element[];
-}) => {
+const OnboardingGrid: React.FunctionComponent = ({ children }) => {
   return (
     <Grid
       sx={{
@@ -202,6 +195,7 @@ export default function Onboarding(): JSX.Element {
 
       {STEPS.map((Component, i) => (
         <Flex
+          hidden={i !== state.step}
           key={`step-${i + 1}`}
           sx={{
             gridArea: "content",
@@ -210,7 +204,7 @@ export default function Onboarding(): JSX.Element {
             alignContent: "center",
             flexDirection: "column",
             opacity: i === state.step ? "1" : "0",
-            zIndex: i === state.step ? "9999" : "-1",
+            pointerEvents: i === state.step ? "all" : "none",
           }}
         >
           {Component}
