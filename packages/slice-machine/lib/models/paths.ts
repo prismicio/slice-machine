@@ -68,6 +68,8 @@ export const CustomPaths = (cwd: string): Record<string, Function> =>
 export const PackagePaths = (cwd: string): Record<string, Function> =>
   paths(cwd, "node_modules");
 export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
+export const SliceCanvasStatePath = (cwd: string): string =>
+  path.join(cwd, ".slicemachine", "slice-canvas.state.json");
 export const PrismicConfig = (cwd: string): string =>
   path.join(cwd, ".prismic");
 export const SliceTemplateConfig = (

@@ -2,6 +2,7 @@
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
+import * as SliceCanvas from "../common/SliceCanvas";
 
 import { getEnv } from "@lib/env";
 import mock from "@lib/mock/Slice";
@@ -46,19 +47,27 @@ export async function handler(
     CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
   );
 
-  if (!hasCustomMocks) {
-    console.log("[slice/save]: Generating mocks");
+  // these mocks will be used to generate SliceCanvas state so we must return either the generated or custom one.
+  const mockedSlice = await (async () => {
+    if (!hasCustomMocks) {
+      console.log("[slice/save]: Generating mocks");
 
-    const mockedSlice = await mock(
-      sliceName,
-      model,
-      SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
-    );
-    Files.write(
-      GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
-      mockedSlice
-    );
-  }
+      const mocks = await mock(
+        sliceName,
+        model,
+        SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
+      );
+      Files.write(
+        GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
+        mocks
+      );
+      return mocks;
+    } else {
+      return Files.readJson(
+        CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
+      );
+    }
+  })();
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
@@ -120,6 +129,14 @@ export async function handler(
 
   await onSaveSlice(env);
   console.log("[slice/save]: Libraries index files regenerated!");
+
+  // generate state for Slice Canvas
+  await SliceCanvas.updateStateForSlice(env)(
+    from,
+    model,
+    mockedSlice,
+    previewUrls
+  );
 
   return { previewUrls, warning };
 }

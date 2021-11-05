@@ -29,20 +29,37 @@ const Files = {
       );
   },
 
-  readString(pathToFile: string): string {
+  readString(pathToFile: string) {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
-  readJson(pathToFile: string): Record<string, unknown> {
-    return JSON.parse(this.readString(pathToFile)) as Record<string, unknown>;
+  readEntity<T extends any>(
+    pathToFile: string,
+    validate: (payload: any) => Error | T
+  ) {
+    return validate(JSON.parse(this.readString(pathToFile)));
   },
-  safeReadJson(pathToFile: string): Record<string, unknown> | null {
+  safeReadEntity<T>(
+    pathToFile: string,
+    validate: (payload: any) => null | T
+  ) {
     try {
-      return this.readJson(pathToFile);
+      return this.readEntity(pathToFile, validate);
     } catch (e) {
       return null;
     }
   },
-  readFirstOf<V, O extends { [key: string]: unknown }>(
+
+  readJson(pathToFile: string) {
+    return JSON.parse(this.readString(pathToFile));
+  },
+  safeReadJson(pathToFile: string) {
+    try {
+      return JSON.parse(this.readString(pathToFile));
+    } catch (e) {
+      return null;
+    }
+  },
+  readFirstOf<V, O extends { [key: string]: unknown } = {}>(
     filePaths: ReadonlyArray<{ path: string; options?: O } | string>
   ) {
     return (
