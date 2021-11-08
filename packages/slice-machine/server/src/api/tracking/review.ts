@@ -6,8 +6,8 @@ export default async function handler(query: {
   rating: number;
   comment: string;
 }): Promise<{ err: FakeResponse | Response | null }> {
-  const { env } = await getEnv();
   try {
+    const { env } = await getEnv();
     const res = await env.client.sendReview({
       id: TrackingEventId.REVIEW,
       framework: env.framework,

@@ -8,7 +8,10 @@ export interface AuthConfig {
   authUrl?: string;
 }
 
-const DEFAULT_CONFIG: AuthConfig = { base: "https://prismic.io", cookies: "" };
+export const DEFAULT_CONFIG: AuthConfig = {
+  base: "https://prismic.io",
+  cookies: "",
+};
 
 export function createDefaultAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);

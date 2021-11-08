@@ -156,7 +156,7 @@ export async function getEnv(
         cwd,
         prismicData.value.base,
         repo,
-        prismicData.value.auth?.auth
+        prismicData.value.auth
       );
     } else {
       return new FakeClient();
