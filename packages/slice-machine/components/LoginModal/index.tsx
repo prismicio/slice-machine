@@ -31,8 +31,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
-  const prismicBase =
-    !!env && env.prismicData ? env.prismicData.base : "https://prismic.io";
+  const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
   const loginRedirectUrl = !!env
     ? `${buildEndpoints(prismicBase).Dashboard.cliLogin}&port=${
         new URL(env.baseUrl).port

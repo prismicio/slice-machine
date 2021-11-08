@@ -19,7 +19,6 @@ import { SupportedFrameworks } from "../consts";
 import Environment from "../models/common/Environment";
 import ServerError from "../models/server/ServerError";
 import Chromatic from "../models/common/Chromatic";
-import FakeClient from "../models/common/http/FakeClient";
 import { ConfigErrors } from "../models/server/ServerState";
 
 import { createComparator } from "./semver";
@@ -127,6 +126,14 @@ export async function getEnv(
   }
 
   const prismicData = getPrismicData();
+
+  if (!prismicData.isOk()) {
+    const message =
+      "[api/env]: Unrecoverable error. ~/.prismic file unreadable";
+    console.error(message);
+    throw new Error(message);
+  }
+
   const npmCompare = await compareNpmVersions({ cwd });
 
   const manifestState = handleManifest(cwd);
@@ -150,18 +157,12 @@ export async function getEnv(
 
   const mockConfig = getMockConfig(cwd);
 
-  const client = (() => {
-    if (prismicData.isOk()) {
-      return initClient(
-        cwd,
-        prismicData.value.base,
-        repo,
-        prismicData.value.auth
-      );
-    } else {
-      return new FakeClient();
-    }
-  })();
+  const client = initClient(
+    cwd,
+    prismicData.value.base,
+    repo,
+    prismicData.value.auth
+  );
 
   return {
     errors: maybeErrors,
@@ -170,7 +171,7 @@ export async function getEnv(
       repo,
       userConfig,
       hasConfigFile: true,
-      prismicData: prismicData.isOk() ? prismicData.value : undefined,
+      prismicData: prismicData.value,
       chromatic,
       currentVersion: npmCompare.currentVersion || "",
       updateAvailable: npmCompare.updateAvailable || {

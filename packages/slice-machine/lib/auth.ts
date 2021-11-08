@@ -8,16 +8,18 @@ export function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {
     const authConfig = FileSystem.getOrCreateAuthConfig();
 
+    const prismicData: PrismicData = {
+      base: authConfig.base,
+    };
+
     if (authConfig.cookies === FileSystem.DEFAULT_CONFIG.cookies) {
-      return ok({
-        base: authConfig.base,
-      });
+      return ok(prismicData);
     }
 
     const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);
 
     return ok({
-      base: authConfig.base,
+      ...prismicData,
       auth: authResult,
     });
   } catch (e) {
