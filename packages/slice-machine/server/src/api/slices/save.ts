@@ -131,12 +131,14 @@ export async function handler(
   console.log("[slice/save]: Libraries index files regenerated!");
 
   // generate state for Slice Canvas
-  await SliceCanvas.updateStateForSlice(env)(
+  const maybeError = await SliceCanvas.updateStateForSlice(env)(
     from,
     model,
     mockedSlice,
     previewUrls
   );
+
+  if(maybeError) warning = 'Cannot generate state for SliceCanvas';
 
   return { previewUrls, warning };
 }

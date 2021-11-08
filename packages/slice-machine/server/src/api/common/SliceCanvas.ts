@@ -30,7 +30,7 @@ export function updateStateForSlice(env: Environment) {
     else {
       const statePath = Core.FileSystem.SliceCanvasStatePath(env.cwd);
       const stateOrDefault =
-        Files.safeReadEntity<Core.Models.SliceCanvas.GlobalState>(statePath, (payload: any) =>
+        Files.readEntity<Core.Models.SliceCanvas.GlobalState>(statePath, (payload: any) =>
           getOrElseW(() => new Error(`[SliceCanvasState] Invalid structure`))(
             Core.Models.SliceCanvas.GlobalState.decode(payload)
           )

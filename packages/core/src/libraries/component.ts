@@ -7,7 +7,7 @@ import { getPathToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { sliceMocks } from "../mocks";
 
-function getMeta(modelData: any): ComponentMetadata {
+function getMeta(modelData: { id: string, description: string }): ComponentMetadata {
   return {
     id: modelData.id,
     description: modelData.description,
