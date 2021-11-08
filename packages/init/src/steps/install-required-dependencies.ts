@@ -22,10 +22,14 @@ export async function installRequiredDependencies(
   switch (framework) {
     case Utils.Framework.FrameworkEnum.react:
     case Utils.Framework.FrameworkEnum.next:
-      `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME}`;
+      await execCommand(
+        `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME}`
+      );
       break;
     case Utils.Framework.FrameworkEnum.svelte:
-      `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME}`;
+      await execCommand(
+        `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME}`
+      );
       break;
   }
 
