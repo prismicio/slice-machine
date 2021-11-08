@@ -32,3 +32,4 @@ tests/project/node_modules
 /api-dump
 
 /tests/project/.slicemachine
+/tests/project/cypress/videos
