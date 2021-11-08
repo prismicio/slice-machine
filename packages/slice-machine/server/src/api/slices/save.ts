@@ -2,7 +2,7 @@
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
-import * as SliceCanvas from "../common/SliceCanvas";
+import * as LibrariesState from "../common/LibrariesState";
 
 import { getEnv } from "@lib/env";
 import mock from "@lib/mock/Slice";
@@ -47,27 +47,19 @@ export async function handler(
     CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
   );
 
-  // these mocks will be used to generate SliceCanvas state so we must return either the generated or custom one.
-  const mockedSlice = await (async () => {
-    if (!hasCustomMocks) {
-      console.log("[slice/save]: Generating mocks");
+  if (!hasCustomMocks) {
+    console.log("[slice/save]: Generating mocks");
 
-      const mocks = await mock(
-        sliceName,
-        model,
-        SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
-      );
-      Files.write(
-        GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
-        mocks
-      );
-      return mocks;
-    } else {
-      return Files.readJson(
-        CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
-      );
-    }
-  })();
+    const mocks = await mock(
+      sliceName,
+      model,
+      SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
+    );
+    Files.write(
+      GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
+      mocks
+    );
+  }
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
@@ -131,14 +123,7 @@ export async function handler(
   console.log("[slice/save]: Libraries index files regenerated!");
 
   // generate state for Slice Canvas
-  const maybeError = SliceCanvas.updateStateForSlice(env)(
-    from,
-    model,
-    mockedSlice,
-    previewUrls
-  );
-
-  if(maybeError) warning = 'Cannot generate state for SliceCanvas';
+  LibrariesState.generateState(env)
 
   return { previewUrls, warning };
 }

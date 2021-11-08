@@ -1,3 +1,4 @@
+import * as t from 'io-ts';
 import { Field } from "./CustomType/fields";
 
 export enum WidgetsArea {
@@ -5,18 +6,39 @@ export enum WidgetsArea {
   Items = "items",
 }
 
-export interface Variation<F extends AsArray | AsObject> {
-  readonly id: string;
-  readonly name: string;
-  readonly description: string;
-  readonly imageUrl: string;
-  readonly docURL: string;
-  readonly version: string;
-  readonly display?: string;
-  readonly primary: F;
-  readonly items: F;
-}
+export const AsArray = t.array(t.type({ key: t.string, value: Field }))
+export type AsArray = t.TypeOf<typeof AsArray>
 
-export type AsArray = ReadonlyArray<{ key: string; value: Field }>;
+export const AsObject = t.record(t.string, Field);
+export type AsObject = t.TypeOf<typeof AsObject>
 
-export type AsObject = { [key: string]: Field };
+export const Variation = <T = AsObject | AsArray>(formatReader: t.Type<T>) => t.intersection([
+  t.type({
+    id: t.string,
+    name: t.string,
+    description: t.string,
+    imageUrl: t.string,
+    docURL: t.string,
+    version: t.string,
+    primary: formatReader,
+    items: formatReader,
+  }),
+  t.partial({
+    display: t.string
+  })
+])
+
+export const VariationAsObject = Variation(AsObject)
+export type VariationAsObject = t.TypeOf<typeof VariationAsObject>
+
+export const VariationAsArray = Variation(AsArray)
+export type VariationAsArray = t.TypeOf<typeof VariationAsArray>
+
+export const VariationMock = t.type({
+  variation: t.string,
+  name: t.string,
+  slice_type: t.string,
+  items: t.array(t.unknown),
+  primary: t.record(t.string, t.unknown)
+})
+export type VariationMock = t.TypeOf<typeof VariationMock>

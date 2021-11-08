@@ -1,13 +1,12 @@
-import { Slice } from "./Slice";
-import { SliceMock } from './SliceMock';
-import { AsObject } from "./Variation";
+import { VariationMock } from './Variation';
+import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
   sliceName: string;
   fileName: string | null;
   isDirectory: boolean;
   extension: string | null;
-  model: Slice<AsObject>;
+  model: SliceAsObject;
   nameConflict:
     | {
         sliceName: string;
@@ -19,7 +18,7 @@ export interface ComponentInfo {
     [variationId: string]: Preview;
   };
   meta: ComponentMetadata;
-  mock?: SliceMock
+  mock?: ReadonlyArray<VariationMock>
 }
 
 export interface ComponentMetadata {
@@ -32,7 +31,7 @@ export interface Component {
   href: string;
   pathToSlice: string;
   infos: ComponentInfo;
-  model: Slice<AsObject>;
+  model: SliceAsObject;
   migrated: boolean;
 }
 
@@ -40,7 +39,7 @@ export interface Preview {
   variationId: string;
   isCustomPreview: boolean;
   hasPreview: boolean;
-  url?: string;
+  path?: string;
 }
 
 

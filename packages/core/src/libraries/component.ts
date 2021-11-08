@@ -154,7 +154,7 @@ export function getComponentInfo(
   const previewUrls = (model.variations || [])
     .map((v: any) => {
       const activeScreenshot = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id });
-
+      console.log("activeScreenshot", activeScreenshot)
       return activeScreenshot && activeScreenshot.path
         ? {
             [v.id]: {

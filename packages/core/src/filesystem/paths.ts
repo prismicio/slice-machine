@@ -90,8 +90,8 @@ export const CustomTypesPaths = (cwd: string): Paths =>
 export const CustomPaths = (cwd: string): Paths => Paths(cwd, "");
 export const PackagePaths = (cwd: string): Paths => Paths(cwd, "node_modules");
 export const SMConfigPath = (cwd: string): string => path.join(cwd, "sm.json");
-export const SliceCanvasStatePath = (cwd: string): string =>
-  path.join(cwd, ".slicemachine", "slice-canvas.state.json");
+export const LibrariesStatePath = (cwd: string): string =>
+  path.join(cwd, ".slicemachine", "libraries-state.json");
 
 export const PrismicConfigPath = (dir = os.homedir()): string =>
   path.join(dir, ".prismic");
