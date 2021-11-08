@@ -94,7 +94,7 @@ function fromJsonFile(
   return null;
 }
 
-/** returns fileName, extension and isDirectory from path to slice */
+/** returns component file/directory info */
 function getFileInfoFromPath(
   slicePath: string,
   componentName: string
@@ -161,14 +161,6 @@ export function getComponentInfo(
               hasPreview: !!activeScreenshot,
               isCustomPreview: activeScreenshot.isCustom,
               path: activeScreenshot.path,
-              // note: I removed url as this is sm-ui specific
-
-              // url:
-              //   activeScreenshot && activeScreenshot.path
-              //     ? `${baseUrl}/api/__preview?q=${encodeURIComponent(
-              //         activeScreenshot.path
-              //       )}&uniq=${Math.random()}`
-              //     : undefined,
             },
           }
         : undefined;
@@ -189,7 +181,6 @@ export function getComponentInfo(
     extension,
     model,
     meta: getMeta(model),
-    // note: this was updated since extract from sm-ui
     mock: sliceMocks(cwd, from, sliceName),
     nameConflict,
     previewUrls,

@@ -10,9 +10,6 @@ export function sliceMocks(cwd: string, lib: string, sliceName: string): SliceMo
   const pathToLocalMock = CustomPaths(cwd).library(lib).slice(sliceName).mocks()
   const pathToDataMocks = GeneratedPaths(cwd).library(lib).slice(sliceName).mocks()
 
-  console.log(pathToLocalMock)
-  console.log(pathToDataMocks)
-
   return Files.readFirstOf<SliceMock | undefined>([pathToLocalMock, pathToDataMocks])((mocks: string) => {
     console.log(mocks)
     const decoded = SliceMock.decode(JSON.parse(mocks))
