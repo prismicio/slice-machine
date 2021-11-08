@@ -119,38 +119,15 @@ export async function getEnv(
     throw new Error(message);
   }
 
+  if (!Files.exists(SMConfig(cwd))) {
+    const message =
+      "[api/env]: Unrecoverable error. Could not find sm.json in your project. Exiting..";
+    console.error(message);
+    throw new Error(message);
+  }
+
   const prismicData = getPrismicData();
   const npmCompare = await compareNpmVersions({ cwd });
-
-  if (!Files.exists(SMConfig(cwd))) {
-    return {
-      env: {
-        cwd,
-        userConfig: {
-          libraries: [],
-          apiEndpoint: "",
-          storybook: "",
-          chromaticAppId: "",
-          _latest: "",
-        },
-        hasConfigFile: false,
-        repo: undefined,
-        prismicData: prismicData.isOk() ? prismicData.value : undefined,
-        chromatic: undefined,
-        currentVersion: npmCompare.currentVersion || "",
-        updateAvailable: npmCompare.updateAvailable || {
-          current: "",
-          next: "",
-          message: "Could not fetch remote version",
-        },
-        mockConfig: {},
-        hasGeneratedStoriesPath: false,
-        framework: defineFramework(null, cwd),
-        baseUrl: `http://localhost:${process.env.PORT}`,
-        client: new FakeClient(),
-      },
-    };
-  }
 
   const manifestState = handleManifest(cwd);
   if (manifestState.state !== ManifestStates.Valid) {
