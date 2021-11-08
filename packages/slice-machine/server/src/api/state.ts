@@ -1,6 +1,6 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { getEnv } from "@lib/env";
+import getEnv from "./services/getEnv";
 import { warningStates, warningTwoLiners } from "@lib/consts";
 import { fetchStorybookUrl } from "./common/storybook";
 import Environment from "@lib/models/common/Environment";

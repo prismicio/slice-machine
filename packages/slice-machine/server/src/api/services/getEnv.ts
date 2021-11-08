@@ -7,24 +7,22 @@ import {
   ParseResult,
 } from "parse-domain";
 
-import { getPrismicData } from "../auth";
-import initClient from "../models/common/http";
+import getPrismicData from "./getPrismicData";
 
-import { getConfig as getMockConfig } from "../mock/misc/fs";
+import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
+import Files from "@lib/utils/files";
+import { SupportedFrameworks } from "@lib/consts";
+import { createComparator } from "@lib/env/semver";
+import { defineFramework, isValidFramework } from "@lib/env/framework";
+import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
 
-import Files from "../utils/files";
-import { SMConfig } from "../models/paths";
-import { SupportedFrameworks } from "../consts";
-
-import Environment from "../models/common/Environment";
-import ServerError from "../models/server/ServerError";
-import Chromatic from "../models/common/Chromatic";
-import { ConfigErrors } from "../models/server/ServerState";
-
-import { createComparator } from "./semver";
-import { defineFramework, isValidFramework } from "./framework";
-import handleManifest, { ManifestStates, Manifest } from "./manifest";
+import initClient from "@lib/models/common/http";
+import Environment from "@lib/models/common/Environment";
+import ServerError from "@lib/models/server/ServerError";
+import Chromatic from "@lib/models/common/Chromatic";
+import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
+import { SMConfig } from "@lib/models/paths";
 
 declare let appRoot: string;
 
@@ -107,7 +105,7 @@ function parseStorybookConfiguration(cwd: string) {
   return file.includes("getStoriesPaths") || file.includes(".slicemachine");
 }
 
-export async function getEnv(
+export default async function getEnv(
   maybeCustomCwd?: string
 ): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
   const cwd = maybeCustomCwd || process.env.CWD;

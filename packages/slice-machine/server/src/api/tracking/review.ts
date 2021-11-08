@@ -1,4 +1,4 @@
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import { TrackingEventId } from "@lib/models/common/TrackingEvent";
 import { FakeResponse } from "@models/common/http/FakeClient";
 

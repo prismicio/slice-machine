@@ -1,10 +1,10 @@
 import { ok, err, Result } from "neverthrow";
 
-import PrismicData from "./models/common/PrismicData";
-import ErrorWithStatus from "./models/common/ErrorWithStatus";
+import PrismicData from "@lib/models/common/PrismicData";
 import { Utils, FileSystem } from "@slicemachine/core";
+import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-export function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
+export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {
     const authConfig = FileSystem.getOrCreateAuthConfig();
 

@@ -1,5 +1,5 @@
 import { getPathToScreenshot } from "@lib/queries/screenshot";
-import { getEnv } from "@lib/env";
+import getEnv from "./services/getEnv";
 import { CustomPaths } from "@lib/models/paths";
 import Files from "@lib/utils/files";
 

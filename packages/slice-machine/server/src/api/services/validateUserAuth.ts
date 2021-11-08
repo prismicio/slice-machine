@@ -1,7 +1,7 @@
-import { getPrismicData } from "../auth";
-import DefaultClient from "../models/common/http/DefaultClient";
+import getPrismicData from "./getPrismicData";
+import DefaultClient from "@lib/models/common/http/DefaultClient";
 
-export async function validate() {
+export async function validateUserAuth() {
   const prismicData = getPrismicData();
   if (!prismicData.isOk()) {
     return {

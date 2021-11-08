@@ -1,4 +1,4 @@
-import { getEnv } from "@lib/env";
+import getEnv from "./services/getEnv";
 import { Preview } from "@lib/models/common/Component";
 import Previews from "./previews";
 
