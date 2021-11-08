@@ -8,8 +8,7 @@ function stateExists(cwd: string) {
   return Files.exists(Core.FileSystem.SliceCanvasStatePath(cwd));
 }
 
-export async function generateState(env: Environment) {
-  console.log('generate state')
+export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
     .map(lib => Core.Libraries.handleLibraryPath(env.cwd, lib))
     .filter(Boolean) as ReadonlyArray<Core.Models.Library.Library>;
@@ -19,12 +18,12 @@ export async function generateState(env: Environment) {
 }
 
 export function updateStateForSlice(env: Environment) {
-  return async (
+  return (
     libraryFrom: string,
     model: Core.Models.Slice<Core.Models.AsObject>,
     mock: Core.Models.SliceMock,
     previewUrls: Record<string, Core.Models.Library.Preview>
-  ): Promise<Error | void> => {
+  ): Error | void => {
     if (!stateExists(env.cwd)) generateState(env);
     // will be invoked on first slice or for existing project who never got this code active before.
     else {
