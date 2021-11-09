@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { fetchApi } from "@builders/common/fetch";
 import ReviewModal from "@components/ReviewModal";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
+import { LoginModalContext } from "@src/LoginModalProvider";
+import { sendTrackingReview } from "@src/apiClient";
+import { AxiosError } from "axios";
 
 function returnInitialState<S>(storageKey: string, initialValue: S): S {
   try {
@@ -57,6 +59,7 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
 
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
+  const { openLogin } = useContext(LoginModalContext);
 
   const sliceCount =
     libraries && libraries.length
@@ -78,24 +81,17 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
     rating: number,
     comment: string
   ): Promise<void> => {
-    await fetchApi({
-      url: `/api/tracking/review`,
-      params: {
-        method: "POST",
-        body: JSON.stringify({
-          rating,
-          comment,
-        }),
-      },
-      setData: () => null,
-      successMessage: "Thank you for your review",
-      onSuccess() {
-        setTrackingStore({
-          ...trackingStore,
-          hasSendAReview: true,
-        });
-      },
-    });
+    try {
+      await sendTrackingReview(rating, comment);
+      setTrackingStore({
+        ...trackingStore,
+        hasSendAReview: true,
+      });
+    } catch (error: AxiosError) {
+      if (403 === error.response?.status || 401 === error.response?.status) {
+        openLogin();
+      }
+    }
   };
 
   const onSkipReview = () => {
