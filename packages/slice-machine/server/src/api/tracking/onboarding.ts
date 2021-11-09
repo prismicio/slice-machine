@@ -1,10 +1,12 @@
 import { getEnv } from "@lib/env";
 import { FakeResponse } from "@lib/models/common/http/FakeClient";
 import {
-  OnboardingTrackingEvent,
-  TrackingEventId,
+  OnboardingStartEvent,
+  OnboardingSkipEvent,
+  OnboardingContinueEvent,
+  OnBoardingContinueWithVideoEvent
 } from "@lib/models/common/TrackingEvent";
-
+ 
 export class HTTPResponseError extends Error {
   response: Response | FakeResponse;
   constructor(response: Response | FakeResponse) {
@@ -14,18 +16,12 @@ export class HTTPResponseError extends Error {
 }
 
 export default async function (
-  query: Pick<
-    OnboardingTrackingEvent,
-    "lastStep" | "maxSteps" | "startTime" | "endTime" | "totalTime"
-  >
+  query:  OnboardingStartEvent | OnboardingSkipEvent | OnboardingContinueEvent| OnBoardingContinueWithVideoEvent
 ): Promise<Response | FakeResponse> {
   const { env } = await getEnv();
 
   return env.client
-    .sendOnboarding({
-      ...query,
-      id: TrackingEventId.ONBOARDING,
-    })
+    .sendOnboarding(query)
     .then((res: Response | FakeResponse) => {
       if (res.status && Math.floor(res.status / 100) !== 2)
         throw new HTTPResponseError(res);

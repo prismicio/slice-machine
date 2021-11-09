@@ -141,16 +141,6 @@ const StepIndicator = ({
   );
 };
 
-// enum EVENT_NAMES {
-//   start = 'slicemachine_onboarding_start',
-//   skip = 'slicemachine_onboarding_skip',
-//   continue_screen_intro ='slicemachine_continue_screen_intro',
-//   first = 'slicemachine_onboarding_continue_1',
-//   second = 'slicemachine_onboarding_continue_2',
-//   third = 'slicemachine_onboarding_continue_3',
-//   end = 'slicemachine_onboarding_end'
-// }
-
 type EVENT_NAMES = TrackingEventId.ONBOARDING_START | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO | TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD | TrackingEventId.ONBOARDING_SKIP
 
 function idFromStep(step: number) {
