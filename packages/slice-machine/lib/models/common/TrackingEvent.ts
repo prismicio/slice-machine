@@ -59,12 +59,3 @@ export type OnboardingContinueWithVideoEvent = OnboardingContinueEvent & {
     | TrackingEventId.ONBOARDING_THIRD;
   completed: boolean;
 };
-
-// export type OnboardingTrackingEvent = TrackingEvent & {
-//   id: OnboardingTrackingEvent;
-//   lastStep: number;
-//   maxSteps: number;
-//   startTime: number;
-//   endTime: number;
-//   totalTime: number;
-// };
