@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { fold } from "fp-ts/Either";
-import { FileSystem } from "slicemachine-core";
+import { FileSystem } from "@slicemachine/core";
 
 const AuthRequest = t.type({
   email: t.string,
