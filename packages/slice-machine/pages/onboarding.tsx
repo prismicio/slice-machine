@@ -13,6 +13,7 @@ import {
   IconButton,
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
+import { TrackingEventId } from "@lib/models/common/TrackingEvent";
 import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
@@ -61,32 +62,32 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-const BuildSlicesSlide = () => (
+const BuildSlicesSlide = ({onEnded}: { onEnded: () => void }) => (
   <>
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/BUILD_SLICE" />
   </>
 );
 
-const CreatePageTypesSlide = () => (
+const CreatePageTypesSlide = ({onEnded}: { onEnded: () => void }) => (
   <>
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/ADD_TO_PAGE" />
   </>
 );
 
-const PushPagesSlide = () => (
+const PushPagesSlide = ({onEnded}: { onEnded: () => void }) => (
   <>
     <Image src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
   </>
 );
 
@@ -140,65 +141,141 @@ const StepIndicator = ({
   );
 };
 
+// enum EVENT_NAMES {
+//   start = 'slicemachine_onboarding_start',
+//   skip = 'slicemachine_onboarding_skip',
+//   continue_screen_intro ='slicemachine_continue_screen_intro',
+//   first = 'slicemachine_onboarding_continue_1',
+//   second = 'slicemachine_onboarding_continue_2',
+//   third = 'slicemachine_onboarding_continue_3',
+//   end = 'slicemachine_onboarding_end'
+// }
+
+type EVENT_NAMES = TrackingEventId.ONBOARDING_START | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO | TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD | TrackingEventId.ONBOARDING_SKIP
+
+function idFromStep(step: number) {
+  switch (step) {
+    case 0: return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
+    case 1: return TrackingEventId.ONBOARDING_FIRST
+    case 2: return TrackingEventId.ONBOARDING_SECOND
+    default: return TrackingEventId.ONBOARDING_THIRD
+  }
+}
+
+interface TrackingEvent {
+  id: EVENT_NAMES;
+  time: number;
+}
+
+interface StartEvent extends TrackingEvent {
+  id: TrackingEventId.ONBOARDING_START;
+}
+
+interface SkipEvent extends TrackingEvent {
+  id: TrackingEventId.ONBOARDING_SKIP;
+  screen: number;
+  completed?: boolean;
+}
+
+interface ContinueEvent extends TrackingEvent {
+  id: TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO | TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD
+}
+
+interface ContinueWithVideoEvent extends ContinueEvent {
+  id: TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD
+  completed: boolean;
+}
+
+function postTracking(data: StartEvent | SkipEvent | ContinueEvent | ContinueWithVideoEvent) {
+  return fetch("/tracking/onboarding", {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+}
+
+
 function handleTracking(props: {
   step: number;
-  startTime: number;
   maxSteps: number;
+  videoCompleted: boolean;
 }) {
   const state = useRef(props);
 
   useEffect(() => {
+    // on update
     state.current = props;
   }, [props]);
 
   useEffect(
-    () => () => {
-      const { startTime, maxSteps, step } = state.current;
-      const endTime = Date.now();
-      const totalTime = endTime - startTime;
-      const data = {
-        lastStep: step,
-        maxSteps,
-        startTime,
-        endTime,
-        totalTime,
-      };
+    () => {
 
-      fetch("/tracking/onboarding", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }).catch(console.error);
+      // on mount
+      postTracking({id: TrackingEventId.ONBOARDING_START, time: Date.now()})
+      
+      return () => {
+        // on unmount
+        const { maxSteps, step, videoCompleted } = state.current;
+        const time = Date.now()
+
+        const data: SkipEvent | ContinueWithVideoEvent = step < maxSteps - 1  ? {
+          id: TrackingEventId.ONBOARDING_SKIP,
+          time,
+          screen: step,
+          completed: videoCompleted
+        } : {
+          id: TrackingEventId.ONBOARDING_THIRD,
+          time,
+          completed: videoCompleted
+        }
+
+        postTracking(data).catch(console.error);
+      }
     },
     []
   );
 }
 
+
 export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide />,
-    <CreatePageTypesSlide />,
-    <PushPagesSlide />,
+    <BuildSlicesSlide onEnded={handleOnVideoEnd} />,
+    <CreatePageTypesSlide onEnded={handleOnVideoEnd} />,
+    <PushPagesSlide onEnded={handleOnVideoEnd} />,
   ];
 
-  const [state, setState] = useState({ step: 0, startTime: Date.now() });
+  const [state, setState] = useState({ step: 0, startTime: Date.now(), videoCompleted: false });
+
+  function handleOnVideoEnd() {
+    return setState({...state, videoCompleted: true})
+  }
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
-  handleTracking({ ...state, maxSteps: STEPS.length });
+  handleTracking({ ...state, maxSteps: STEPS.length, videoCompleted: state.videoCompleted });
 
   const escape = () => router.push("/");
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return escape();
-    return setState({ ...state, step: state.step + 1 });
+    const id = idFromStep(state.step)
+    const time = Date.now()
+    const data: ContinueEvent | ContinueWithVideoEvent = {
+      id,
+      time,
+      ...(state.step > 0 ? { completed: state.videoCompleted }: {})
+    }
+
+    postTracking(data)
+
+    return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
 
   function prevSlide() {
-    return setState({ ...state, step: state.step - 1 });
+    return setState({ ...state, step: state.step - 1, videoCompleted: false });
   }
 
   return (
