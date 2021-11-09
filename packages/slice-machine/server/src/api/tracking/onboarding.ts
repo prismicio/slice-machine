@@ -4,9 +4,9 @@ import {
   OnboardingStartEvent,
   OnboardingSkipEvent,
   OnboardingContinueEvent,
-  OnBoardingContinueWithVideoEvent
+  OnboardingContinueWithVideoEvent,
 } from "@lib/models/common/TrackingEvent";
- 
+
 export class HTTPResponseError extends Error {
   response: Response | FakeResponse;
   constructor(response: Response | FakeResponse) {
@@ -16,7 +16,11 @@ export class HTTPResponseError extends Error {
 }
 
 export default async function (
-  query:  OnboardingStartEvent | OnboardingSkipEvent | OnboardingContinueEvent| OnBoardingContinueWithVideoEvent
+  query:
+    | OnboardingStartEvent
+    | OnboardingSkipEvent
+    | OnboardingContinueEvent
+    | OnboardingContinueWithVideoEvent
 ): Promise<Response | FakeResponse> {
   const { env } = await getEnv();
 

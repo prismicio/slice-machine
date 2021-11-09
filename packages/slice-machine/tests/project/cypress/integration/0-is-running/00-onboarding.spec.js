@@ -15,8 +15,14 @@ describe('onboarding', () => {
   });
 
   it('should redirect to /onboarding when is-onboared is not in local storage', () => {
+    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
+      expect(body.id).equal("slicemachine_onboarding_start")
+    })
+    
     cy.visit('/')
+
     cy.location('pathname', {timeout: 1000}).should('eq', '/onboarding')
+
     cy.wait(1500)
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
@@ -27,6 +33,18 @@ describe('onboarding', () => {
   })
 
   it('begin button and continue button eventually redirect to /', () => {
+
+    const ids = [
+      "slicemachine_onboarding_start",
+      "slicemachine_onboarding_continue_screen_intro",
+      "slicemachine_onboarding_continue_1",
+      "slicemachine_onboarding_continue_2",
+      "slicemachine_onboarding_continue_3",
+    ]
+    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
+      expect(body.id).equal(ids.shift())
+    })
+
     const closeReviewSelector = '[data-cy=close-review]'
 
     cy.visit('/onboarding')
@@ -35,32 +53,40 @@ describe('onboarding', () => {
     cy.get('body').then(body => {
       body.find(closeReviewSelector).length && cy.get(closeReviewSelector).click()
     })
+
+    
     cy.get('[data-cy=get-started]').click()
 
     const continueSelector = '[data-cy=continue]'
 
     const clickContinue = () => cy.get(continueSelector).click()
+
     clickContinue()
     clickContinue()
     clickContinue()
+
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
 
   })
 
   it('user can skip the onboarding', () => {
-    cy.intercept('POST', '/tracking/onboarding').as('tracking')
+
+    const ids = [
+      "slicemachine_onboarding_start",
+      "slicemachine_onboarding_continue_screen_intro",
+      "slicemachine_onboarding_skip",
+    ]
+
+    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
+      expect(body.id).equal(ids.shift())
+    })
+
     cy.visit('/onboarding')
+
     cy.get('[data-cy=get-started]').click()
 
     cy.get('[data-cy=skip-onboarding]').click()
-    cy.wait('@tracking').then(interception => {
-      const {body} = interception.request
-      expect(body.lastStep).to.equal(1)
-      expect(body.endTime).to.be.gte(body.startTime)
-      expect(body.totalTime).to.exist
-    })
-
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
 

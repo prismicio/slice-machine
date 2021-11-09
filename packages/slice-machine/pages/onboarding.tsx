@@ -13,7 +13,13 @@ import {
   IconButton,
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
-import { TrackingEventId } from "@lib/models/common/TrackingEvent";
+import {
+  TrackingEventId,
+  OnboardingStartEvent,
+  OnboardingSkipEvent,
+  OnboardingContinueEvent,
+  OnboardingContinueWithVideoEvent,
+} from "@lib/models/common/TrackingEvent";
 import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
@@ -62,7 +68,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-const BuildSlicesSlide = ({onEnded}: { onEnded: () => void }) => (
+const BuildSlicesSlide = ({ onEnded }: { onEnded: () => void }) => (
   <>
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
@@ -71,7 +77,7 @@ const BuildSlicesSlide = ({onEnded}: { onEnded: () => void }) => (
   </>
 );
 
-const CreatePageTypesSlide = ({onEnded}: { onEnded: () => void }) => (
+const CreatePageTypesSlide = ({ onEnded }: { onEnded: () => void }) => (
   <>
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
@@ -80,7 +86,7 @@ const CreatePageTypesSlide = ({onEnded}: { onEnded: () => void }) => (
   </>
 );
 
-const PushPagesSlide = ({onEnded}: { onEnded: () => void }) => (
+const PushPagesSlide = ({ onEnded }: { onEnded: () => void }) => (
   <>
     <Image src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
@@ -141,49 +147,32 @@ const StepIndicator = ({
   );
 };
 
-type EVENT_NAMES = TrackingEventId.ONBOARDING_START | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO | TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD | TrackingEventId.ONBOARDING_SKIP
-
 function idFromStep(step: number) {
   switch (step) {
-    case 0: return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
-    case 1: return TrackingEventId.ONBOARDING_FIRST
-    case 2: return TrackingEventId.ONBOARDING_SECOND
-    default: return TrackingEventId.ONBOARDING_THIRD
+    case 0:
+      return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO;
+    case 1:
+      return TrackingEventId.ONBOARDING_FIRST;
+    case 2:
+      return TrackingEventId.ONBOARDING_SECOND;
+    default:
+      return TrackingEventId.ONBOARDING_THIRD;
   }
 }
 
-interface TrackingEvent {
-  id: EVENT_NAMES;
-  time: number;
-}
-
-interface StartEvent extends TrackingEvent {
-  id: TrackingEventId.ONBOARDING_START;
-}
-
-interface SkipEvent extends TrackingEvent {
-  id: TrackingEventId.ONBOARDING_SKIP;
-  screen: number;
-  completed?: boolean;
-}
-
-interface ContinueEvent extends TrackingEvent {
-  id: TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO | TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD
-}
-
-interface ContinueWithVideoEvent extends ContinueEvent {
-  id: TrackingEventId.ONBOARDING_FIRST | TrackingEventId.ONBOARDING_SECOND | TrackingEventId.ONBOARDING_THIRD
-  completed: boolean;
-}
-
-function postTracking(data: StartEvent | SkipEvent | ContinueEvent | ContinueWithVideoEvent) {
+function postTracking(
+  data:
+    | OnboardingStartEvent
+    | OnboardingSkipEvent
+    | OnboardingContinueEvent
+    | OnboardingContinueWithVideoEvent
+) {
   return fetch("/tracking/onboarding", {
-    method: 'POST',
+    method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  })
+    body: JSON.stringify(data),
+  });
 }
-
 
 function handleTracking(props: {
   step: number;
@@ -197,35 +186,33 @@ function handleTracking(props: {
     state.current = props;
   }, [props]);
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    // on mount
+    postTracking({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
 
-      // on mount
-      postTracking({id: TrackingEventId.ONBOARDING_START, time: Date.now()})
-      
-      return () => {
-        // on unmount
-        const { maxSteps, step, videoCompleted } = state.current;
-        const time = Date.now()
+    return () => {
+      // on unmount
+      const { maxSteps, step, videoCompleted } = state.current;
+      const time = Date.now();
 
-        const data: SkipEvent | ContinueWithVideoEvent = step < maxSteps - 1  ? {
-          id: TrackingEventId.ONBOARDING_SKIP,
-          time,
-          screen: step,
-          completed: videoCompleted
-        } : {
-          id: TrackingEventId.ONBOARDING_THIRD,
-          time,
-          completed: videoCompleted
-        }
+      const data: OnboardingSkipEvent | OnboardingContinueWithVideoEvent =
+        step < maxSteps - 1
+          ? {
+              id: TrackingEventId.ONBOARDING_SKIP,
+              time,
+              screen: step,
+              completed: videoCompleted,
+            }
+          : {
+              id: TrackingEventId.ONBOARDING_THIRD,
+              time,
+              completed: videoCompleted,
+            };
 
-        postTracking(data).catch(console.error);
-      }
-    },
-    []
-  );
+      postTracking(data).catch(console.error);
+    };
+  }, []);
 }
-
 
 export default function Onboarding(): JSX.Element {
   const STEPS = [
@@ -235,31 +222,39 @@ export default function Onboarding(): JSX.Element {
     <PushPagesSlide onEnded={handleOnVideoEnd} />,
   ];
 
-  const [state, setState] = useState({ step: 0, startTime: Date.now(), videoCompleted: false });
+  const [state, setState] = useState({
+    step: 0,
+    startTime: Date.now(),
+    videoCompleted: false,
+  });
 
   function handleOnVideoEnd() {
-    return setState({...state, videoCompleted: true})
+    return setState({ ...state, videoCompleted: true });
   }
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
-  handleTracking({ ...state, maxSteps: STEPS.length, videoCompleted: state.videoCompleted });
+  handleTracking({
+    ...state,
+    maxSteps: STEPS.length,
+    videoCompleted: state.videoCompleted,
+  });
 
   const escape = () => router.push("/");
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return escape();
-    const id = idFromStep(state.step)
-    const time = Date.now()
-    const data: ContinueEvent | ContinueWithVideoEvent = {
+    const id = idFromStep(state.step);
+    const time = Date.now();
+    const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
       id,
       time,
-      ...(state.step > 0 ? { completed: state.videoCompleted }: {})
-    }
+      ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
+    };
 
-    postTracking(data)
+    postTracking(data);
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
