@@ -147,7 +147,13 @@ const StepIndicator = ({
   );
 };
 
-function idFromStep(step: number) {
+function idFromStep(
+  step: number
+):
+  | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
+  | TrackingEventId.ONBOARDING_FIRST
+  | TrackingEventId.ONBOARDING_SECOND
+  | TrackingEventId.ONBOARDING_THIRD {
   switch (step) {
     case 0:
       return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO;
@@ -166,7 +172,7 @@ function postTracking(
     | OnboardingSkipEvent
     | OnboardingContinueEvent
     | OnboardingContinueWithVideoEvent
-) {
+): Promise<Response> {
   return fetch("/tracking/onboarding", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -178,7 +184,7 @@ function handleTracking(props: {
   step: number;
   maxSteps: number;
   videoCompleted: boolean;
-}) {
+}): void {
   const state = useRef(props);
 
   useEffect(() => {
