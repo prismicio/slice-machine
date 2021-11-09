@@ -6,6 +6,9 @@ import { pascalize } from "../utils/str";
 import { getPathToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { sliceMocks } from "../mocks";
+import { getOrElseW } from "fp-ts/lib/Either";
+import { Slice } from '../models/Slice'
+import { AsObject } from '../models/Variation'
 
 function getMeta(modelData: { id: string, description: string }): ComponentMetadata {
   return {
@@ -78,18 +81,16 @@ function splitExtension(str: string): {
   };
 }
 
-function fromJsonFile(
+function fromJsonFile<T extends unknown>(
   slicePath: string,
-  filePath: string
-): any | null {
+  filePath: string,
+  validate: (payload: any) => Error | T
+): T | Error | null {
   const fullPath = path.join(slicePath, filePath);
   const hasFile = Files.exists(fullPath);
 
   if (hasFile) {
-    const maybeData = Files.safeReadJson(fullPath);
-    if (maybeData) {
-      return maybeData;
-    }
+    return Files.readEntity(fullPath, validate)
   }
   return null;
 }
@@ -146,7 +147,13 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const model = fromJsonFile(slicePath, "model.json");
+  const model = fromJsonFile(slicePath, "model.json", (payload: any) => (
+    getOrElseW(() => new Error('Invalid slice model format.'))(Slice(AsObject).decode(payload))
+  ));
+  if(model instanceof Error) {
+    console.error(model)
+    return
+  }
   if (!model) {
     return;
   }

@@ -20,11 +20,11 @@ export const Variation = <T = AsObject | AsArray>(formatReader: t.Type<T>) => t.
     imageUrl: t.string,
     docURL: t.string,
     version: t.string,
-    primary: formatReader,
-    items: formatReader,
   }),
   t.partial({
-    display: t.string
+    primary: formatReader,
+    items: formatReader,
+    display: t.string,
   })
 ])
 
