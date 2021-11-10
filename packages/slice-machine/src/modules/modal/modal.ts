@@ -7,15 +7,10 @@ export enum ModalKeysEnum {
   LOGIN = "LOGIN",
 }
 
-export type ModalStoreType = {
-  isOpen: Record<ModalKeysEnum, boolean>;
-};
+export type ModalStoreType = Record<ModalKeysEnum, boolean>;
 
 const initialState: ModalStoreType = {
-  isOpen: mapValues(ModalKeysEnum, () => false) as Record<
-    ModalKeysEnum,
-    boolean
-  >,
+  ...(mapValues(ModalKeysEnum, () => false) as Record<ModalKeysEnum, boolean>),
 };
 
 // Actions Creators
@@ -35,7 +30,7 @@ type ModalActions = ActionType<
 export const isModalOpen = (
   state: SliceMachineStoreType,
   dialog: ModalKeysEnum
-) => state.modal.isOpen[dialog];
+) => state.modal[dialog];
 
 // Reducer
 export const modalReducer: Reducer<ModalStoreType, ModalActions> = (
@@ -46,18 +41,12 @@ export const modalReducer: Reducer<ModalStoreType, ModalActions> = (
     case getType(modalCloseCreator):
       return {
         ...state,
-        isOpen: {
-          ...state.isOpen,
-          [action.payload.modalKey]: false,
-        },
+        [action.payload.modalKey]: false,
       };
     case getType(modalOpenCreator):
       return {
         ...state,
-        isOpen: {
-          ...state.isOpen,
-          [action.payload.modalKey]: true,
-        },
+        [action.payload.modalKey]: true,
       };
     default:
       return state;

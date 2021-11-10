@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Button,
   Card,
@@ -77,8 +77,8 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      stopLoadingLogin();
       addToast("Logged in", { appearance: "success" });
+      stopLoadingLogin();
       onClose();
     } catch (e) {
       stopLoadingLogin();

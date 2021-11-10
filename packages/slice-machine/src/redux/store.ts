@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, compose } from "redux";
 import createReducer from "./reducer";
 
 declare var window: {
@@ -6,10 +6,6 @@ declare var window: {
 };
 
 export default function configureStore() {
-  const middlewares = [];
-
-  const enhancers = [applyMiddleware(...middlewares)];
-
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
@@ -19,11 +15,7 @@ export default function configureStore() {
 
   const rootReducer = createReducer();
 
-  const store: any = createStore(
-    rootReducer,
-    {},
-    composeEnhancers(...enhancers)
-  );
+  const store: any = createStore(rootReducer, {}, composeEnhancers());
 
   store.asyncReducers = {};
 

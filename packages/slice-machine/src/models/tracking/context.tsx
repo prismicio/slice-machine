@@ -5,6 +5,12 @@ import { LibrariesContext } from "@src/models/libraries/context";
 import { sendTrackingReview } from "@src/apiClient";
 import { useDispatch } from "react-redux";
 import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import {
+  startLoadingActionCreator,
+  stopLoadingActionCreator,
+} from "@src/modules/loading";
+import { useToasts } from "react-toast-notifications";
 
 function returnInitialState<S>(storageKey: string, initialValue: S): S {
   try {
@@ -62,6 +68,12 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
   const libraries = useContext(LibrariesContext);
   const openLogin = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const startReviewLoading = () =>
+    dispatch(startLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
+  const stopReviewLoading = () =>
+    dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
+
+  const { addToast } = useToasts();
 
   const sliceCount =
     libraries && libraries.length
@@ -84,14 +96,20 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
     comment: string
   ): Promise<void> => {
     try {
+      startReviewLoading();
       await sendTrackingReview(rating, comment);
       setTrackingStore({
         ...trackingStore,
         hasSendAReview: true,
       });
+      stopReviewLoading();
     } catch (error) {
-      if (403 === error.response?.status || 401 === error.response?.status) {
+      stopReviewLoading();
+      if (403 === error.response?.status) {
         openLogin();
+      }
+      if (401 === error.response?.status) {
+        addToast("You don't have access to the repo", { appearance: "error" });
       }
     }
   };

@@ -5,7 +5,10 @@ import { LoadingStoreType, LoadingKeysEnum } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
 const initialState: LoadingStoreType = {
-  ...mapValues(LoadingKeysEnum, () => false),
+  ...(mapValues(LoadingKeysEnum, () => false) as Record<
+    LoadingKeysEnum,
+    boolean
+  >),
 };
 
 // Action Creators

@@ -20,7 +20,8 @@ import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
 const Builder = ({ openPanel }) => {
   const dispatch = useDispatch();
   const { Model, store, variation } = useContext(SliceContext);
-  const openLogin = () => dispatch(modalOpenCreator(ModalKeysEnum.LOGIN)());
+  const openLogin = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
   const {
     env: {

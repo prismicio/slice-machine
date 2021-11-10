@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { Formik, Form, Field, FieldProps } from "formik";
+import { Field, FieldProps, Form, Formik } from "formik";
 import {
   Box,
   Button,
@@ -11,6 +11,11 @@ import {
   Text,
   Textarea,
 } from "theme-ui";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isModalOpen, ModalKeysEnum } from "@src/modules/modal";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 Modal.setAppElement("#__next");
 
@@ -54,6 +59,13 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
   isOpen,
   onSubmit,
 }) => {
+  const { isReviewLoading, isLoginModalOpen } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
+      isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+    })
+  );
+
   const validateReview = ({ rating }: { rating: number; comment: string }) => {
     if (!rating) {
       return { id: "Please Choose a rating" };
@@ -102,7 +114,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
           close();
         }}
       >
-        {({ isValid, isSubmitting, values }) => (
+        {({ isValid, values }) => (
           <Form id="review-form">
             <Card>
               <Flex
@@ -180,7 +192,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                 <Button
                   form={"review-form"}
                   type="submit"
-                  disabled={!isValid || isSubmitting}
+                  disabled={!isValid || isReviewLoading || isLoginModalOpen}
                 >
                   Submit
                 </Button>
