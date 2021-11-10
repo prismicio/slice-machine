@@ -4,6 +4,11 @@ import { Volume } from "memfs";
 
 import { libraries } from "../../../src/libraries"
 
+import slice from "../../_misc/validSliceModel.json"
+const model = JSON.stringify(slice)
+
+console.log(model)
+
 jest.mock(`fs`, () => {
   const fs = jest.requireActual(`fs`);
   const unionfs = require(`unionfs`).default;
@@ -42,7 +47,7 @@ const testPrefix = async (prefix) => {
   fs.use(
     Volume.fromJSON(
       {
-        "slices/CallToAction/model.json": "{}",
+        "slices/CallToAction/model.json": `${model}`,
         "slices/CallToAction/index.svelte": "const a = 1",
       },
       TMP
@@ -62,7 +67,7 @@ test("it finds slice in local library", async () => {
   fs.use(
     Volume.fromJSON(
       {
-        "slices/CallToAction/model.json": "{}",
+        "slices/CallToAction/model.json": model,
       },
       TMP
     )
@@ -90,8 +95,8 @@ test("it ignores non slice folders", async () => {
   fs.use(
     Volume.fromJSON(
       {
-        "slices/NonSlice/ex.json": "{}",
-        "slices/CallToAction1/model.json": "{}",
+        "slices/NonSlice/ex.json": model,
+        "slices/CallToAction1/model.json": model,
         "slices/CallToAction/something.else": "const a = 'a'",
       },
       TMP
@@ -107,7 +112,7 @@ test("it handles nested library info", async () => {
   fs.use(
     Volume.fromJSON(
       {
-        "slices/src/slices/CallToAction/model.json": "{}",
+        "slices/src/slices/CallToAction/model.json": model,
       },
       TMP
     )
@@ -122,7 +127,7 @@ test("it finds non local libs", async () => {
     Volume.fromJSON(
       {
         "package.json": "{}",
-        [pathToSlice]: "{}",
+        [pathToSlice]: model,
       },
       TMP
     )
@@ -143,7 +148,7 @@ test("it rejects invalid JSON models", async () => {
         "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
         "package.json": "{}",
         [pathToSlice("CallToAction")]: "const invalid = true",
-        [pathToSlice("CallToAction2")]: "{}",
+        [pathToSlice("CallToAction2")]: model,
       },
       TMP
     )
@@ -166,4 +171,25 @@ test("it filters non existing libs", async () => {
 
   const result = await libraries(TMP, ["vue-essential-slices"]);
   expect(result).toEqual([]);
+});
+
+
+test("test custom sm.json in library", async () => {
+  fs.use(
+    Volume.fromJSON(
+      {
+        "slices/sm.json": '{ "slicesFolder": "custom_folder" }',
+        "slices/NonSlice/ex.json": model,
+        "slices/CallToAction1/model.json": model,
+        "slices/CallToAction/something.else": "const a = 'a'",
+        "slices/custom_folder/CallToAction1/model.json": model,
+        "slices/custom_folder/CallToAction/something.else": "const a = 'a'",
+      },
+      TMP
+    )
+  );
+
+  const result = await libraries(TMP, ["/slices"]);
+  console.log({ result })
+  // expect(result).toEqual([]);
 });

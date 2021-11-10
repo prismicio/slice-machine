@@ -36,7 +36,8 @@ const Files = {
     pathToFile: string,
     validate: (payload: unknown) => Error | T
   ) {
-    return validate(JSON.parse(this.readString(pathToFile)));
+    const response = validate(JSON.parse(this.readString(pathToFile)));
+    return response
   },
   safeReadEntity<T>(
     pathToFile: string,

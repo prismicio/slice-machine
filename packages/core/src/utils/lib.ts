@@ -58,6 +58,7 @@ export function getInfoFromPath(libPath: string, startPath: string): {
     isLocal ? "" : "node_modules",
     isLocal ? libPath.substring(1, libPath.length) : libPath
   );
+
   const pathToConfig = path.join(pathToLib, MANIFEST_FILE_NAME);
   const pathExists = Files.exists(pathToLib);
 
@@ -70,6 +71,8 @@ export function getInfoFromPath(libPath: string, startPath: string): {
     config.pathToLibrary || ".",
     config.slicesFolder || (isLocal ? "." : "slices")
   );
+
+  console.log({ pathToSlices, config })
   return {
     config,
     isLocal,

@@ -1,4 +1,6 @@
 import path from "path";
+// import { PathReporter } from 'io-ts/PathReporter'
+// import { Validation } from "io-ts"
 import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
 
 import { pascalize } from "../utils/str";
@@ -147,11 +149,16 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
+  const payload = Files.readJson(path.join(slicePath, "model.json"))
+
+  // @ts-ignore
+  console.log(Slice(AsObject).decode(payload).left[0].context)
+
   const model = fromJsonFile(slicePath, "model.json", payload => (
-    getOrElseW(() => new Error('Invalid slice model format.'))(Slice(AsObject).decode(payload))
+    getOrElseW(() => { return new Error('Invalid slice model format.') })(Slice(AsObject).decode(payload))
   ));
   if(model instanceof Error) {
-    console.error(model)
+    // console.error(`Could not parse model ${path.basename(slicePath)}`)
     return
   }
   if (!model) {
