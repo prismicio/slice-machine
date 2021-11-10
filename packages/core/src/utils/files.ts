@@ -32,10 +32,10 @@ const Files = {
   readString(pathToFile: string): string {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
-  readEntity<T extends any>(
+  readEntity<T extends unknown>(
     pathToFile: string,
     validate: (payload: unknown) => Error | T
-  ) {
+  ): Error | T {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
   safeReadEntity<T>(
@@ -51,7 +51,7 @@ const Files = {
     }
   },
 
-  readJson(pathToFile: string) {
+  readJson(pathToFile: string): unknown {
     return JSON.parse(this.readString(pathToFile)) as unknown
   },
   safeReadJson(pathToFile: string): unknown | null {
