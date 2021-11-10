@@ -1,5 +1,5 @@
 import path from "path";
-import { ComponentInfo, ComponentMetadata } from "../models/Library";
+import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
 
 import { pascalize } from "../utils/str";
 
@@ -7,13 +7,14 @@ import { getPathToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { sliceMocks } from "../mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice } from '../models/Slice'
-import { AsObject } from '../models/Variation'
+import { Slice, SliceAsObject } from '../models/Slice'
+import { VariationAsObject, AsObject } from '../models/Variation'
 
-function getMeta(modelData: { id: string, description: string }): ComponentMetadata {
+function getMeta(model: SliceAsObject): ComponentMetadata {
   return {
-    id: modelData.id,
-    description: modelData.description,
+    id: model.id,
+    name: model.name,
+    description: model.description,
   };
 }
 
@@ -159,9 +160,8 @@ export function getComponentInfo(
   }
 
   const previewUrls = (model.variations || [])
-    .map((v: any) => {
+    .map((v: VariationAsObject) => {
       const activeScreenshot = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id });
-      console.log("activeScreenshot", activeScreenshot)
       return activeScreenshot && activeScreenshot.path
         ? {
             [v.id]: {
@@ -172,7 +172,7 @@ export function getComponentInfo(
           }
         : undefined;
     })
-    .reduce((acc: any, variationPreview: any) => {
+    .reduce((acc: { [variationId: string]: Preview }, variationPreview: { [variationId: string]: Preview } | undefined) => {
       return { ...acc, ...variationPreview };
     }, {});
 

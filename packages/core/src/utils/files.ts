@@ -41,9 +41,11 @@ const Files = {
   safeReadEntity<T>(
     pathToFile: string,
     validate: (payload: any) => null | T
-  ) {
+  ): null | T {
     try {
-      return this.readEntity(pathToFile, validate);
+      const result = this.readEntity(pathToFile, validate);
+      if(result instanceof Error) return null
+      return result
     } catch (e) {
       return null;
     }

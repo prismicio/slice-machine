@@ -1,12 +1,19 @@
+import { getOrElseW } from 'fp-ts/lib/Either';
+import * as t from 'io-ts';
 import { Files, Cookie } from "../utils";
 import { PrismicConfigPath } from "./paths";
 
-export interface AuthConfig {
-  base: string;
-  cookies: string;
-  oauthAccessToken?: string;
-  authUrl?: string;
-}
+export const AuthConfig = t.intersection([
+  t.type({
+    base: t.string,
+    cookies: t.string
+  }),
+  t.partial({
+    oauthAccessToken: t.string,
+    authUrl: t.string
+  })
+]);
+export type AuthConfig = t.TypeOf<typeof AuthConfig>
 
 const DEFAULT_CONFIG: AuthConfig = { base: "https://prismic.io", cookies: "" };
 
@@ -22,7 +29,9 @@ export function getOrCreateAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);
   if (!Files.exists(configPath)) return createDefaultAuthConfig(directory);
 
-  const conf = Files.readJson(configPath);
+  const conf = Files.safeReadEntity(configPath, (payload: any) => {
+    return getOrElseW(() => null)(AuthConfig.decode(payload))
+  });
   return { ...DEFAULT_CONFIG, ...conf } as AuthConfig;
 }
 
