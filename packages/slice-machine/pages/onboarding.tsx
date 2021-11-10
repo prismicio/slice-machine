@@ -168,8 +168,8 @@ function idFromStep(
   }
 }
 
-function onboardingEvent(
-  data:
+function postTracking(
+  onboardingEvent:
     | OnboardingStartEvent
     | OnboardingSkipEvent
     | OnboardingContinueEvent
@@ -178,7 +178,7 @@ function onboardingEvent(
   return fetch("/tracking/onboarding", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(onboardingEvent),
   });
 }
 
@@ -196,7 +196,7 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    onboardingEvent({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
+    postTracking({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
 
     return () => {
       // on unmount
@@ -217,7 +217,7 @@ function handleTracking(props: {
               completed: videoCompleted,
             };
 
-      onboardingEvent(data).catch(console.error);
+      postTracking(data).catch(console.error);
     };
   }, []);
 }
@@ -262,7 +262,7 @@ export default function Onboarding(): JSX.Element {
       ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
     };
 
-    onboardingEvent(data);
+    postTracking(data);
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
