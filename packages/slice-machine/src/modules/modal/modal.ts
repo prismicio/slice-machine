@@ -1,6 +1,7 @@
 import mapValues from "lodash/mapValues";
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { ActionType, createAction, getType } from "typesafe-actions";
 
 export enum ModalKeysEnum {
   LOGIN = "LOGIN",
@@ -17,23 +18,18 @@ const initialState: ModalStoreType = {
   >,
 };
 
-const actionTypes = {
-  MODAL: {
-    CLOSE: "MODAL.CLOSE",
-    OPEN: "MODAL.OPEN",
-  },
-};
-
 // Actions Creators
-export const modalCloseCreator = (dialog: ModalKeysEnum) => ({
-  type: actionTypes.MODAL.CLOSE,
-  dialog,
-});
+export const modalCloseCreator = createAction("MODAL/CLOSE")<{
+  modalKey: ModalKeysEnum;
+}>();
 
-export const modalOpenCreator = (dialog: ModalKeysEnum) => ({
-  type: actionTypes.MODAL.OPEN,
-  dialog,
-});
+export const modalOpenCreator = createAction("MODAL/OPEN")<{
+  modalKey: ModalKeysEnum;
+}>();
+
+type ModalActions = ActionType<
+  typeof modalCloseCreator | typeof modalOpenCreator
+>;
 
 // Selectors
 export const isModalOpen = (
@@ -42,25 +38,25 @@ export const isModalOpen = (
 ) => state.modal.isOpen[dialog];
 
 // Reducer
-export const modalReducer: Reducer<ModalStoreType> = (
+export const modalReducer: Reducer<ModalStoreType, ModalActions> = (
   state = initialState,
   action
 ) => {
   switch (action.type) {
-    case actionTypes.MODAL.CLOSE:
+    case getType(modalCloseCreator):
       return {
         ...state,
         isOpen: {
           ...state.isOpen,
-          [action.dialog]: false,
+          [action.payload.modalKey]: false,
         },
       };
-    case actionTypes.MODAL.OPEN:
+    case getType(modalOpenCreator):
       return {
         ...state,
         isOpen: {
           ...state.isOpen,
-          [action.dialog]: true,
+          [action.payload.modalKey]: true,
         },
       };
     default:

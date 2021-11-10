@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import ReviewModal from "@components/ReviewModal";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
-import { LoginModalContext } from "@src/LoginModalProvider";
 import { sendTrackingReview } from "@src/apiClient";
 import { useDispatch } from "react-redux";
-import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
+import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal";
 
 function returnInitialState<S>(storageKey: string, initialValue: S): S {
   try {
@@ -61,7 +60,8 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
   const dispatch = useDispatch();
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
-  const openLogin = () => dispatch(modalOpenCreator(ModalKeysEnum.LOGIN));
+  const openLogin = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
   const sliceCount =
     libraries && libraries.length

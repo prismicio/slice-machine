@@ -41,7 +41,6 @@ import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
 import LoginModal from "@components/LoginModal";
-import { SliceMachineStoreType } from "@src/redux/type";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -91,8 +90,7 @@ const RenderStates = {
   }) => <ConfigErrors errors={configErrors} />,
 };
 
-const initialState = {};
-const { store } = configureStore(initialState);
+const { store } = configureStore();
 
 function MyApp({
   Component,

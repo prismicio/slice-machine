@@ -1,14 +1,11 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import createReducer from "./reducer";
-import { SliceMachineStoreType } from "@src/redux/type";
 
 declare var window: {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
 };
 
-export default function configureStore(
-  initialState: SliceMachineStoreType = {}
-) {
+export default function configureStore() {
   const middlewares = [];
 
   const enhancers = [applyMiddleware(...middlewares)];
@@ -24,7 +21,7 @@ export default function configureStore(
 
   const store: any = createStore(
     rootReducer,
-    initialState,
+    {},
     composeEnhancers(...enhancers)
   );
 

@@ -4,7 +4,8 @@
  */
 
 import { combineReducers } from "redux";
-import { modalReducer } from "@src/modules/modal/modal";
+import { modalReducer } from "@src/modules/modal";
+import { loadingReducer } from "@src/modules/loading";
 
 /**
  * Creates the main reducer
@@ -12,6 +13,7 @@ import { modalReducer } from "@src/modules/modal/modal";
 const createReducer = () =>
   combineReducers({
     modal: modalReducer,
+    loading: loadingReducer,
   });
 
 export default createReducer;

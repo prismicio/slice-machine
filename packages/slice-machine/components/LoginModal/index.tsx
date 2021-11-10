@@ -25,17 +25,31 @@ import {
   ModalKeysEnum,
 } from "@src/modules/modal/modal";
 import { SliceMachineStoreType } from "@src/redux/type";
+import {
+  isLoading,
+  startLoadingActionCreator,
+  stopLoadingActionCreator,
+} from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 Modal.setAppElement("#__next");
 
 const LoginModal: React.FunctionComponent = () => {
-  const isOpen = useSelector((state: SliceMachineStoreType) =>
-    isModalOpen(state, ModalKeysEnum.LOGIN)
+  const { isOpen, isLoginLoading } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+      isLoginLoading: isLoading(store, LoadingKeysEnum.LOGIN),
+    })
   );
-  const dispatch = useDispatch();
-  const onClose = () => dispatch(modalCloseCreator(ModalKeysEnum.LOGIN));
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const onClose = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const startLoadingLogin = () =>
+    dispatch(startLoadingActionCreator({ key: LoadingKeysEnum.LOGIN }));
+  const stopLoadingLogin = () =>
+    dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.LOGIN }));
+
   const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
   const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
@@ -51,7 +65,7 @@ const LoginModal: React.FunctionComponent = () => {
     }
 
     try {
-      setIsLoading(true);
+      startLoadingLogin();
       await startAuth();
       const isAuthStatusOk = (
         response: AxiosResponse<CheckAuthStatusResponse>
@@ -63,11 +77,11 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      setIsLoading(false);
+      stopLoadingLogin();
       addToast("Logged in", { appearance: "success" });
       onClose();
     } catch (e) {
-      setIsLoading(false);
+      stopLoadingLogin();
       addToast("Logging fail", { appearance: "error" });
     }
   };
@@ -120,7 +134,7 @@ const LoginModal: React.FunctionComponent = () => {
               textAlign: "center",
             }}
           >
-            {isLoading ? (
+            {isLoginLoading ? (
               <>
                 Not seeing the browser tab? <br />
                 <Link target={"_blank"} href={loginRedirectUrl}>
@@ -145,7 +159,7 @@ const LoginModal: React.FunctionComponent = () => {
             }}
             onClick={onClick}
           >
-            {isLoading ? (
+            {isLoginLoading ? (
               <Spinner color="#FFF" size={16} />
             ) : (
               <>Signin to Prismic</>

@@ -9,7 +9,7 @@ import {
 } from "@lib/models/ui/CustomTypeState";
 import { handleRemoteResponse, ToastPayload } from "@src/ToastProvider/utils";
 import CustomTypeStore from "@src/models/customType/store";
-import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
+import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal";
 
 import { FiLayout } from "react-icons/fi";
 
@@ -24,7 +24,8 @@ const CustomTypeHeader = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const openLogin = () => dispatch(modalOpenCreator(ModalKeysEnum.LOGIN));
+  const openLogin = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const { addToast } = useToasts();
 
   const buttonProps = (() => {
