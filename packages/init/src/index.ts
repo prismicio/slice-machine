@@ -2,7 +2,7 @@
 
 import { Utils, FileSystem } from "@slicemachine/core";
 import {
-  installSm,
+  installRequiredDependencies,
   validatePkg,
   maybeExistingRepo,
   createRepository,
@@ -30,7 +30,7 @@ async function init() {
   // login
   await loginOrBypass(base);
 
-  // retrieve tokens for api Calls
+  // retrieve tokens for api calls
   const config = FileSystem.getOrCreateAuthConfig();
 
   // detect the framework used by the project
@@ -43,12 +43,12 @@ async function init() {
     config.base
   );
 
-  if (existing === false) {
+  if (!existing) {
     await createRepository(name, frameworkResult.value, config);
   }
 
-  // install the slicemachine-ui in the project.
-  await installSm(cwd);
+  // install the required dependencies in the project.
+  await installRequiredDependencies(cwd, frameworkResult.value);
 
   // configure the SM.json file and the json package file of the project..
   configureProject(cwd, base, name, frameworkResult);

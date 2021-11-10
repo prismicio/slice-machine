@@ -58,13 +58,11 @@ describe('onboarding', () => {
     
     cy.get('[data-cy=get-started]').click()
 
-    const continueSelector = '[data-cy=continue]'
-
-    const clickContinue = () => cy.get(continueSelector).click()
-
-    clickContinue()
-    clickContinue()
-    clickContinue()
+    const clickContinue = () => cy.get('[data-cy=continue]').click()
+    
+    for (let i = 0; i <= 2; i++) {
+      clickContinue()
+    }
 
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
