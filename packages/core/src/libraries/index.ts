@@ -63,12 +63,8 @@ export function handleLibraryPath(
   };
 }
 
-export async function libraries(cwd: string, libraries: string[]): Promise<ReadonlyArray<Library>> {
-  const payload = await Promise.all(
-    (libraries || []).map(
-      async (lib) => await handleLibraryPath(cwd, lib)
-    )
-  );
-
-  return payload.filter(Boolean) as ReadonlyArray<Library>;
+export function libraries(cwd: string, libraries: string[]): ReadonlyArray<Library> {
+  return (libraries || [])
+    .map(lib => handleLibraryPath(cwd, lib))
+    .filter(Boolean) as ReadonlyArray<Library>;
 }

@@ -10,7 +10,7 @@ export interface ComponentInfo {
   nameConflict:
     | {
         sliceName: string;
-        id: any;
+        id: string;
       }
     | null;
 

@@ -1,6 +1,5 @@
 import path from "path";
-// import { PathReporter } from 'io-ts/PathReporter'
-// import { Validation } from "io-ts"
+import * as t from 'io-ts'
 import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
 
 import { pascalize } from "../utils/str";
@@ -11,6 +10,8 @@ import { sliceMocks } from "../mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { Slice, SliceAsObject } from '../models/Slice'
 import { VariationAsObject, AsObject } from '../models/Variation'
+
+import Errors from '../utils/errors'
 
 function getMeta(model: SliceAsObject): ComponentMetadata {
   return {
@@ -155,7 +156,10 @@ export function getComponentInfo(
   console.log(Slice(AsObject).decode(payload).left[0].context)
 
   const model = fromJsonFile(slicePath, "model.json", payload => (
-    getOrElseW(() => { return new Error('Invalid slice model format.') })(Slice(AsObject).decode(payload))
+    getOrElseW((e: t.Errors) => {
+      console.log(Errors.report(e))
+      return new Error('Invalid slice model format.')
+    })(Slice(AsObject).decode(payload))
   ));
   if(model instanceof Error) {
     // console.error(`Could not parse model ${path.basename(slicePath)}`)
