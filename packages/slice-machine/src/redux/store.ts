@@ -1,5 +1,13 @@
 import { createStore, compose } from "redux";
 import createReducer from "./reducer";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["userContext"],
+};
 
 declare var window: {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
@@ -15,9 +23,9 @@ export default function configureStore() {
 
   const rootReducer = createReducer();
 
-  const store: any = createStore(rootReducer, {}, composeEnhancers());
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
+  const store: any = createStore(persistedReducer, {}, composeEnhancers());
+  const persistor = persistStore(store);
 
-  store.asyncReducers = {};
-
-  return { store };
+  return { store, persistor };
 }

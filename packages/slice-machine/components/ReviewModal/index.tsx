@@ -11,18 +11,33 @@ import {
   Text,
   Textarea,
 } from "theme-ui";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen, ModalKeysEnum } from "@src/modules/modal";
-import { isLoading } from "@src/modules/loading";
+import {
+  isModalOpen,
+  ModalKeysEnum,
+  modalOpenCreator,
+} from "@src/modules/modal";
+import {
+  isLoading,
+  startLoadingActionCreator,
+  stopLoadingActionCreator,
+} from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { useContext } from "react";
+import { CustomTypesContext } from "@src/models/customTypes/context";
+import { LibrariesContext } from "@src/models/libraries/context";
+import {
+  sendAReviewCreator,
+  skipReviewCreator,
+  userHasSendAReview,
+} from "@src/modules/userContext";
+import { useToasts } from "react-toast-notifications";
+import { sendTrackingReview } from "@src/apiClient";
 
 Modal.setAppElement("#__next");
 
 type ReviewModalProps = {
-  close: Function;
-  isOpen: boolean;
-  onSubmit: (rating: number, comment: string) => void;
   cardProps?: {};
 };
 
@@ -54,17 +69,64 @@ const SelectRatingComponent = ({ field, form }: FieldProps) => {
   );
 };
 
-const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
-  close,
-  isOpen,
-  onSubmit,
-}) => {
-  const { isReviewLoading, isLoginModalOpen } = useSelector(
+const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
+  const { customTypes } = useContext(CustomTypesContext);
+  const libraries = useContext(LibrariesContext);
+  const { isReviewLoading, isLoginModalOpen, hasSendAReview } = useSelector(
     (store: SliceMachineStoreType) => ({
       isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
       isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+      hasSendAReview: userHasSendAReview(store),
     })
   );
+
+  const dispatch = useDispatch();
+  const openLogin = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const startReviewLoading = () =>
+    dispatch(startLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
+  const stopReviewLoading = () =>
+    dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
+  const skipReview = () => dispatch(skipReviewCreator());
+  const sendAReview = () => dispatch(sendAReviewCreator());
+
+  const { addToast } = useToasts();
+
+  const sliceCount =
+    libraries && libraries.length
+      ? libraries.reduce((count, lib) => {
+          if (!lib) {
+            return count;
+          }
+
+          return count + lib.components.length;
+        }, 0)
+      : 0;
+
+  const customTypeCount = !!customTypes ? customTypes.length : 0;
+  // Deactivate for this release
+  const userHasCreateEnoughContent =
+    sliceCount >= 1 && customTypeCount >= 1 && false;
+
+  const onSendAReview = async (
+    rating: number,
+    comment: string
+  ): Promise<void> => {
+    try {
+      startReviewLoading();
+      await sendTrackingReview(rating, comment);
+      sendAReview();
+      stopReviewLoading();
+    } catch (error) {
+      stopReviewLoading();
+      if (403 === error.response?.status) {
+        openLogin();
+      }
+      if (401 === error.response?.status) {
+        addToast("You don't have access to the repo", { appearance: "error" });
+      }
+    }
+  };
 
   const validateReview = ({ rating }: { rating: number; comment: string }) => {
     if (!rating) {
@@ -74,9 +136,9 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
 
   return (
     <SliceMachineModal
-      isOpen={isOpen}
+      isOpen={userHasCreateEnoughContent && !hasSendAReview}
       shouldCloseOnOverlayClick={false}
-      onRequestClose={() => close()}
+      onRequestClose={() => skipReview()}
       closeTimeoutMS={500}
       contentLabel={"Review Modal"}
       portalClassName={"ReviewModal"}
@@ -110,8 +172,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
         }}
         validate={validateReview}
         onSubmit={(values) => {
-          onSubmit(values.rating, values.comment);
-          close();
+          onSendAReview(values.rating, values.comment);
         }}
       >
         {({ isValid, values }) => (
@@ -133,7 +194,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = ({
                 </Heading>
                 <Close
                   type="button"
-                  onClick={() => close()}
+                  onClick={() => skipReview()}
                   data-cy="close-review"
                 />
               </Flex>

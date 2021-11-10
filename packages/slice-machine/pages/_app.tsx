@@ -4,6 +4,7 @@ import configureStore from "src/redux/store";
 import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
+import { PersistGate } from "redux-persist/integration/react";
 
 import theme from "../src/theme";
 // @ts-ignore
@@ -13,7 +14,6 @@ import { LocalStorageKeys } from "@lib/consts";
 
 import LibrariesProvider from "@src/models/libraries/context";
 import CustomTypesProvider from "@src/models/customTypes/context";
-import TrackingProvider from "@src/models/tracking/context";
 import { SliceHandler } from "@src/models/slice/context";
 import ConfigProvider from "@src/config-context";
 
@@ -41,6 +41,7 @@ import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
 import LoginModal from "@components/LoginModal";
+import ReviewModal from "@components/ReviewModal";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -90,7 +91,7 @@ const RenderStates = {
   }) => <ConfigErrors errors={configErrors} />,
 };
 
-const { store } = configureStore();
+const { store, persistor } = configureStore();
 
 function MyApp({
   Component,
@@ -163,35 +164,35 @@ function MyApp({
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Head>
-          <title>SliceMachine</title>
-        </Head>
-        <BaseStyles>
-          <RemoveDarkMode>
-            {!data ? (
-              <Renderer {...payload} />
-            ) : (
-              <ConfigProvider value={data}>
-                {!payload || !payload.libraries ? (
-                  <Renderer
-                    Component={Component}
-                    pageProps={pageProps}
-                    {...payload}
-                    openPanel={openPanel}
-                  />
-                ) : (
-                  <ToastProvider>
-                    <LibrariesProvider
-                      remoteSlices={payload.remoteSlices}
-                      libraries={payload.libraries}
-                      env={payload.env}
-                    >
-                      <CustomTypesProvider
-                        customTypes={payload.customTypes}
-                        remoteCustomTypes={payload.remoteCustomTypes}
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>SliceMachine</title>
+          </Head>
+          <BaseStyles>
+            <RemoveDarkMode>
+              {!data ? (
+                <Renderer {...payload} />
+              ) : (
+                <ConfigProvider value={data}>
+                  {!payload || !payload.libraries ? (
+                    <Renderer
+                      Component={Component}
+                      pageProps={pageProps}
+                      {...payload}
+                      openPanel={openPanel}
+                    />
+                  ) : (
+                    <ToastProvider>
+                      <LibrariesProvider
+                        remoteSlices={payload.remoteSlices}
+                        libraries={payload.libraries}
+                        env={payload.env}
                       >
-                        <TrackingProvider>
+                        <CustomTypesProvider
+                          customTypes={payload.customTypes}
+                          remoteCustomTypes={payload.remoteCustomTypes}
+                        >
                           <AppLayout {...payload} data={data}>
                             <SliceHandler {...payload}>
                               <Renderer
@@ -218,17 +219,18 @@ function MyApp({
                               </Drawer>
                             </SliceHandler>
                           </AppLayout>
-                        </TrackingProvider>
-                      </CustomTypesProvider>
-                    </LibrariesProvider>
-                    <LoginModal />
-                  </ToastProvider>
-                )}
-              </ConfigProvider>
-            )}
-          </RemoveDarkMode>
-        </BaseStyles>
-      </ThemeProvider>
+                        </CustomTypesProvider>
+                      </LibrariesProvider>
+                      <LoginModal />
+                      <ReviewModal />
+                    </ToastProvider>
+                  )}
+                </ConfigProvider>
+              )}
+            </RemoveDarkMode>
+          </BaseStyles>
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   );
 }

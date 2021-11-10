@@ -6,6 +6,7 @@
 import { combineReducers } from "redux";
 import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
+import { userContextReducer } from "@src/modules/userContext";
 
 /**
  * Creates the main reducer
@@ -14,6 +15,7 @@ const createReducer = () =>
   combineReducers({
     modal: modalReducer,
     loading: loadingReducer,
+    userContext: userContextReducer,
   });
 
 export default createReducer;

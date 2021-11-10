@@ -28,6 +28,7 @@
     "io-ts": "^2.2.16",
     "jest": "^25.5.1",
     "node-fetch": "^2.6.1",
+    "redux-persist": "^6.0.0",
     "validate-npm-package": "^1.0.5"
   },
   "lint-staged": {
