@@ -1,7 +1,6 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { TrackingReviewResponse } from "@models/common/TrackingEvent";
-
-const axios = require("axios");
+import { CheckAuthStatusResponse } from "@models/common/Auth";
 
 const jsonHeaders = {
   headers: {
@@ -10,24 +9,14 @@ const jsonHeaders = {
   },
 };
 
-const test = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
-
 /** Auth Routes **/
 
-export const startAuth = async () =>
-  await fetch("/api/auth/start", { headers: test, method: "POST" });
+export const startAuth = (): Promise<AxiosResponse<{}>> =>
+  axios.post("/api/auth/start", {}, jsonHeaders);
 
-export const checkAuthStatus = async () => {
-  const response = await fetch("/api/auth/status", {
-    headers: test,
-    method: "POST",
-  });
-
-  return response.json();
-};
+export const checkAuthStatus = (): Promise<
+  AxiosResponse<CheckAuthStatusResponse>
+> => axios.post("/api/auth/status", {}, jsonHeaders);
 
 /** Tracking Routes **/
 

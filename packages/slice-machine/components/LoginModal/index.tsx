@@ -16,6 +16,8 @@ import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
+import { AxiosResponse } from "axios";
+import { CheckAuthStatusResponse } from "@models/common/Auth";
 
 Modal.setAppElement("#__next");
 
@@ -46,10 +48,16 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
     try {
       setIsLoading(true);
       await startAuth();
-      const isAuthStatusOk = ({ status }: { status: string }) =>
-        status === "ok";
+      const isAuthStatusOk = (
+        response: AxiosResponse<CheckAuthStatusResponse>
+      ) => response.data.status === "ok";
       window.open(loginRedirectUrl, "_blank");
-      await startPolling(checkAuthStatus, isAuthStatusOk, 3000, 60);
+      await startPolling<AxiosResponse<CheckAuthStatusResponse>>(
+        checkAuthStatus,
+        isAuthStatusOk,
+        3000,
+        60
+      );
       setIsLoading(false);
       addToast("Logged in", { appearance: "success" });
       onClose();

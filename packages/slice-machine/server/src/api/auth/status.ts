@@ -1,10 +1,7 @@
 import { FileSystem, Utils } from "@slicemachine/core";
+import { CheckAuthStatusResponse } from "@models/common/Auth";
 
-type StatusResponse = {
-  status: "error" | "ok" | "pending";
-};
-
-export default async function handler(): Promise<StatusResponse> {
+export default async function handler(): Promise<CheckAuthStatusResponse> {
   try {
     const authConfig = FileSystem.getOrCreateAuthConfig();
     const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);

@@ -4,7 +4,6 @@ import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
 import { LoginModalContext } from "@src/LoginModalProvider";
 import { sendTrackingReview } from "@src/apiClient";
-import { AxiosError } from "axios";
 
 function returnInitialState<S>(storageKey: string, initialValue: S): S {
   try {
@@ -87,7 +86,7 @@ const TrackingProvider: React.FunctionComponent = ({ children }) => {
         ...trackingStore,
         hasSendAReview: true,
       });
-    } catch (error: AxiosError) {
+    } catch (error) {
       if (403 === error.response?.status || 401 === error.response?.status) {
         openLogin();
       }
