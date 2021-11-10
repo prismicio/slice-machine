@@ -50,11 +50,8 @@ contract("contract: onboarding tracking", () => {
     const now = Date.now();
 
     const result = await onboarding({
-      lastStep: 3,
-      maxSteps: 3,
-      startTime: now,
-      endTime: now + 1000,
-      totalTime: 1000,
+      id: "slicemachine_onboarding_start",
+      time: now,
     });
 
     expect(result.status).toEqual(201);
