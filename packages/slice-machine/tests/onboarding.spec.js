@@ -36,17 +36,16 @@ describe("tracking/onboarding", () => {
     );
 
     nock("https://tracking.prismic.io")
-      .post("/", (body) => body.id === TrackingEventId.ONBOARDING)
+      .post("/", (body) => body.id === TrackingEventId.ONBOARDING_START)
       .reply(201);
 
+    const now = Date.now();
+
     const result = await onboarding({
-      lastStep: 3,
-      maxSteps: 3,
-      startTime: Date.now(),
-      endTime: Date.now(),
-      totalTime: 1,
+      id: TrackingEventId.ONBOARDING_START,
+      time: now,
     });
 
-    expect(result.status).toEqual(201);
+    expect(result.err).toBeNull();
   });
 });

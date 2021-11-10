@@ -7,28 +7,22 @@ import {
   OnboardingContinueWithVideoEvent,
 } from "@lib/models/common/TrackingEvent";
 
-export class HTTPResponseError extends Error {
-  response: Response | FakeResponse;
-  constructor(response: Response | FakeResponse) {
-    super(`HTTP Error Response: ${response.status} ${response.statusText}`);
-    this.response = response;
-  }
-}
-
 export default async function (
   query:
     | OnboardingStartEvent
     | OnboardingSkipEvent
     | OnboardingContinueEvent
     | OnboardingContinueWithVideoEvent
-): Promise<Response | FakeResponse> {
+): Promise<{ err: Response | FakeResponse | null }> {
   const { env } = await getEnv();
 
-  return env.client
-    .sendOnboarding(query)
-    .then((res: Response | FakeResponse) => {
-      if (res.status && Math.floor(res.status / 100) !== 2)
-        throw new HTTPResponseError(res);
-      return res;
-    });
+  try {
+    const res = await env.client.sendOnboarding(query);
+    if (res.status && Math.floor(res.status / 100) !== 2) {
+      return { err: res };
+    }
+    return { err: null };
+  } catch (e) {
+    return { err: e };
+  }
 }

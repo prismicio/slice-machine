@@ -28,6 +28,7 @@ describe('onboarding', () => {
   })
 
   it('when is-onboarded is in local storage it should not redirect', () => {
+    cy.setLocalStorage("is-onboarded", true)
     cy.visit('/')
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
   })

@@ -66,11 +66,12 @@ router.post(
 router.post(
   "/tracking/onboarding",
   async (req: express.Request, res: express.Response) => {
-    return onboarding(req.body)
-      .then(res.json)
-      .catch((e) => {
-        res.status(e.response?.status || 500).json({ error: e.message });
-      });
+    const result = await onboarding(req.body);
+    if (result.err) {
+      const status = result.err.status || 400;
+      return res.status(status).json(result);
+    }
+    return res.json(result);
   }
 );
 
