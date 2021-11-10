@@ -7,8 +7,8 @@ interface PathType {
 
 const Errors = {
   report(errors: Errors): string {
-    const invalidPaths = errors
-    .map(error => {
+    const invalidPaths: string = errors
+      .map<{ value: unknown, formattedPath: string}>(error => {
       const chunk = error.context.map(({ key }) => key).filter(c => c !== '')
       const computedChunks: PathType[] = chunk.map(c => {
         const index = parseInt(c)
@@ -32,15 +32,12 @@ const Errors = {
         }
       }, '');
 
-      return [error.value, formattedPath]
+        return { value: error.value, formattedPath }
     })
-    .map(([value, path]) => `\tPATH: ${path}\n\tVALUE: ${JSON.stringify(value)}`)
+    .map(({ value, formattedPath }) => `\tPATH: ${formattedPath}\n\tVALUE: ${JSON.stringify(value)}`)
     .join('\n\n');
 
-  return `
-Invalid Paths:
-${invalidPaths}
-`
+    return `Invalid Paths:\n  ${invalidPaths}`
   }
 }
 

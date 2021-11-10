@@ -150,19 +150,11 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const payload = Files.readJson(path.join(slicePath, "model.json"))
-
-  // @ts-ignore
-  console.log(Slice(AsObject).decode(payload).left[0].context)
-
   const model = fromJsonFile(slicePath, "model.json", payload => (
-    getOrElseW((e: t.Errors) => {
-      console.log(Errors.report(e))
-      return new Error('Invalid slice model format.')
-    })(Slice(AsObject).decode(payload))
+    getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(Slice(AsObject).decode(payload))
   ));
   if(model instanceof Error) {
-    // console.error(`Could not parse model ${path.basename(slicePath)}`)
+    console.error(`Could not parse model ${path.basename(slicePath)}\nFull error: ${model.toString()}`)
     return
   }
   if (!model) {

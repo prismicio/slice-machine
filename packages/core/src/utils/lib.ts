@@ -1,6 +1,5 @@
 import path from "path";
 import Files from "./files";
-import { MANIFEST_FILE_NAME } from "./const";
 
 enum Prefix {
   A = "@/",
@@ -45,7 +44,6 @@ export const getFormattedLibIdentifier = (libPath: string): {
 };
 
 export function getInfoFromPath(libPath: string, startPath: string): {
-  config: any,
   isLocal: boolean,
   from: string,
   pathExists: boolean,
@@ -59,22 +57,10 @@ export function getInfoFromPath(libPath: string, startPath: string): {
     isLocal ? libPath.substring(1, libPath.length) : libPath
   );
 
-  const pathToConfig = path.join(pathToLib, MANIFEST_FILE_NAME);
   const pathExists = Files.exists(pathToLib);
+  const pathToSlices = path.join(pathToLib, isLocal ? "." : "slices")
 
-  let config: any = {};
-  if (Files.exists(pathToConfig)) {
-    config = Files.readJson(pathToConfig);
-  }
-  const pathToSlices = path.join(
-    pathToLib,
-    config.pathToLibrary || ".",
-    config.slicesFolder || (isLocal ? "." : "slices")
-  );
-
-  console.log({ pathToSlices, config })
   return {
-    config,
     isLocal,
     from,
     pathExists,
