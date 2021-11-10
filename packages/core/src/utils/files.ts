@@ -34,13 +34,13 @@ const Files = {
   },
   readEntity<T extends any>(
     pathToFile: string,
-    validate: (payload: any) => Error | T
+    validate: (payload: unknown) => Error | T
   ) {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
   safeReadEntity<T>(
     pathToFile: string,
-    validate: (payload: any) => null | T
+    validate: (payload: unknown) => null | T
   ): null | T {
     try {
       const result = this.readEntity(pathToFile, validate);
@@ -52,11 +52,11 @@ const Files = {
   },
 
   readJson(pathToFile: string) {
-    return JSON.parse(this.readString(pathToFile));
+    return JSON.parse(this.readString(pathToFile)) as unknown
   },
   safeReadJson(pathToFile: string) {
     try {
-      return JSON.parse(this.readString(pathToFile));
+      return JSON.parse(this.readString(pathToFile)) as unknown;
     } catch (e) {
       return null;
     }

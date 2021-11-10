@@ -29,7 +29,7 @@ export function getOrCreateAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);
   if (!Files.exists(configPath)) return createDefaultAuthConfig(directory);
 
-  const conf = Files.safeReadEntity(configPath, (payload: any) => {
+  const conf = Files.safeReadEntity(configPath, payload => {
     return getOrElseW(() => null)(AuthConfig.decode(payload))
   });
   return { ...DEFAULT_CONFIG, ...conf } as AuthConfig;

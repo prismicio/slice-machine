@@ -55,8 +55,7 @@ function findComponentFile(
 }
 
 function matchPossiblePaths(
-  files: ReadonlyArray<string>,
-  _componentName: string
+  files: ReadonlyArray<string>
 ): boolean {
   const modelFilename = "model.json";
 
@@ -85,7 +84,7 @@ function splitExtension(str: string): {
 function fromJsonFile<T extends unknown>(
   slicePath: string,
   filePath: string,
-  validate: (payload: any) => Error | T
+  validate: (payload: unknown) => Error | T
 ): T | Error | null {
   const fullPath = path.join(slicePath, filePath);
   const hasFile = Files.exists(fullPath);
@@ -107,7 +106,7 @@ function getFileInfoFromPath(
   }
 
   const files = Files.readDirectory(slicePath);
-  const match = matchPossiblePaths(files, componentName);
+  const match = matchPossiblePaths(files);
 
   if (match) {
     const maybeFileComponent = findComponentFile(files, componentName);
@@ -148,7 +147,7 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const model = fromJsonFile(slicePath, "model.json", (payload: any) => (
+  const model = fromJsonFile(slicePath, "model.json", payload => (
     getOrElseW(() => new Error('Invalid slice model format.'))(Slice(AsObject).decode(payload))
   ));
   if(model instanceof Error) {
