@@ -5,6 +5,13 @@ const ERROR_CODES = {
   ENOENT: "ENOENT",
 };
 
+function instanceOfNodeError<T extends new (...args: any) => Error>(
+  value: Error,
+  errorType: T
+): value is InstanceType<T> & NodeJS.ErrnoException {
+  return value instanceof errorType;
+}
+
 const Files = {
   _format: "utf8" as BufferEncoding,
 
@@ -103,8 +110,8 @@ const Files = {
   exists(pathToFile: string) {
     try {
       return Boolean(fs.lstatSync(pathToFile));
-    } catch (e) {
-      if (e.code === ERROR_CODES.ENOENT) return false;
+    } catch (e: unknown) {
+      if ((e as { code: string }).code === ERROR_CODES.ENOENT) return false;
       throw e;
     }
   },

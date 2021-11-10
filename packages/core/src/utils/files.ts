@@ -29,13 +29,13 @@ const Files = {
       );
   },
 
-  readString(pathToFile: string) {
+  readString(pathToFile: string): string {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
   readEntity<T extends any>(
     pathToFile: string,
     validate: (payload: any) => Error | T
-  ) {
+  ): Error | T {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
   safeReadEntity<T>(
@@ -51,17 +51,17 @@ const Files = {
     }
   },
 
-  readJson(pathToFile: string) {
+  readJson(pathToFile: string): unknown {
     return JSON.parse(this.readString(pathToFile));
   },
-  safeReadJson(pathToFile: string) {
+  safeReadJson(pathToFile: string): unknown | null {
     try {
       return JSON.parse(this.readString(pathToFile));
     } catch (e) {
       return null;
     }
   },
-  readFirstOf<V, O extends { [key: string]: unknown } = {}>(
+  readFirstOf<V, O extends Record<string, unknown>>(
     filePaths: ReadonlyArray<{ path: string; options?: O } | string>
   ) {
     return (
