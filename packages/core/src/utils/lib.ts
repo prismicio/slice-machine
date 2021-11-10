@@ -14,7 +14,7 @@ const Identifiers: Record<Prefix, number> = {
   "/": 1,
 };
 
-export const findIndexFile = (libPath: string) => {
+export const findIndexFile = (libPath: string): string | null => {
   try {
     const dir = Files.readDirectory(libPath);
     const maybeF = dir.find(
@@ -26,7 +26,11 @@ export const findIndexFile = (libPath: string) => {
   }
 };
 
-export const getFormattedLibIdentifier = (libPath: string) => {
+export const getFormattedLibIdentifier = (libPath: string): {
+  isLocal: boolean;
+  identifier: string | undefined;
+  from: string;
+} => {
   const maybeIdentifier = Object.keys(Identifiers).find(
     (e) => libPath.indexOf(e) === 0
   );
@@ -40,7 +44,14 @@ export const getFormattedLibIdentifier = (libPath: string) => {
   };
 };
 
-export function getInfoFromPath(libPath: string, startPath: string): any {
+export function getInfoFromPath(libPath: string, startPath: string): {
+  config: any,
+  isLocal: boolean,
+  from: string,
+  pathExists: boolean,
+  pathToLib: string,
+  pathToSlices: string,
+} {
   const { isLocal, from } = getFormattedLibIdentifier(libPath);
   const pathToLib = path.join(
     startPath || process.cwd(),
