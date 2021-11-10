@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { Provider } from "react-redux";
+import configureStore from "src/redux/store";
 import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
@@ -38,7 +40,8 @@ import Slice from "@lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
-import LoginModalProvider from "@src/LoginModalProvider";
+import LoginModal from "@components/LoginModal";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -87,6 +90,9 @@ const RenderStates = {
     configErrors: { [errorKey: string]: ServerError };
   }) => <ConfigErrors errors={configErrors} />,
 };
+
+const initialState = {};
+const { store } = configureStore(initialState);
 
 function MyApp({
   Component,
@@ -158,26 +164,26 @@ function MyApp({
   const { Renderer, payload } = state;
 
   return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <title>SliceMachine</title>
-      </Head>
-      <BaseStyles>
-        <RemoveDarkMode>
-          {!data ? (
-            <Renderer {...payload} />
-          ) : (
-            <ConfigProvider value={data}>
-              {!payload || !payload.libraries ? (
-                <Renderer
-                  Component={Component}
-                  pageProps={pageProps}
-                  {...payload}
-                  openPanel={openPanel}
-                />
-              ) : (
-                <ToastProvider>
-                  <LoginModalProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>SliceMachine</title>
+        </Head>
+        <BaseStyles>
+          <RemoveDarkMode>
+            {!data ? (
+              <Renderer {...payload} />
+            ) : (
+              <ConfigProvider value={data}>
+                {!payload || !payload.libraries ? (
+                  <Renderer
+                    Component={Component}
+                    pageProps={pageProps}
+                    {...payload}
+                    openPanel={openPanel}
+                  />
+                ) : (
+                  <ToastProvider>
                     <LibrariesProvider
                       remoteSlices={payload.remoteSlices}
                       libraries={payload.libraries}
@@ -217,14 +223,15 @@ function MyApp({
                         </TrackingProvider>
                       </CustomTypesProvider>
                     </LibrariesProvider>
-                  </LoginModalProvider>
-                </ToastProvider>
-              )}
-            </ConfigProvider>
-          )}
-        </RemoveDarkMode>
-      </BaseStyles>
-    </ThemeProvider>
+                    <LoginModal />
+                  </ToastProvider>
+                )}
+              </ConfigProvider>
+            )}
+          </RemoveDarkMode>
+        </BaseStyles>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

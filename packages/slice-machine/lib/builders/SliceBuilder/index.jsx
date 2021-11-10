@@ -14,11 +14,14 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { LoginModalContext } from "../../../src/LoginModalProvider";
+import { useDispatch } from "react-redux";
+import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
 
 const Builder = ({ openPanel }) => {
+  const dispatch = useDispatch();
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLogin } = useContext(LoginModalContext);
+  const openLogin = () => dispatch(modalOpenCreator(ModalKeysEnum.LOGIN)());
+
   const {
     env: {
       userConfig: { storybook: storybookBaseUrl },

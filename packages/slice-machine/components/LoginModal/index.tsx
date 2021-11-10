@@ -18,18 +18,23 @@ import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
 import { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  modalCloseCreator,
+  isModalOpen,
+  ModalKeysEnum,
+} from "@src/modules/modal/modal";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 Modal.setAppElement("#__next");
 
-interface LoginModalProps {
-  onClose: () => void;
-  isOpen: boolean;
-}
+const LoginModal: React.FunctionComponent = () => {
+  const isOpen = useSelector((state: SliceMachineStoreType) =>
+    isModalOpen(state, ModalKeysEnum.LOGIN)
+  );
+  const dispatch = useDispatch();
+  const onClose = () => dispatch(modalCloseCreator(ModalKeysEnum.LOGIN));
 
-const LoginModal: React.FunctionComponent<LoginModalProps> = ({
-  onClose,
-  isOpen,
-}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
