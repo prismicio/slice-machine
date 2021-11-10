@@ -1,6 +1,9 @@
 /// <reference types="cypress" />
 
-describe('onboarding', () => {
+describe('onboarding', {retries: {
+  runMode: 1,
+  openMode: 0,
+}}, () => {
 
   before(() => {
     cy.clearLocalStorageSnapshot();
