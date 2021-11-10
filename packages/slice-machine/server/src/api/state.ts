@@ -9,6 +9,7 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "@lib/models/server/ServerError";
 import Files from "@lib/utils/files";
 import { Pkg } from "@lib/models/paths";
+import * as LibrariesState from "./common/LibrariesState";
 
 const hasStorybookScript = (cwd: string) => {
   const pathToManifest = Pkg(cwd);
@@ -105,6 +106,8 @@ export default async function handler() {
   );
 
   const warnings = await createWarnings(env, configErrors, clientError);
+
+  LibrariesState.generateState(env);
 
   return {
     libraries,
