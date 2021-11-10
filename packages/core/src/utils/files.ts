@@ -61,7 +61,7 @@ const Files = {
       return null;
     }
   },
-  readFirstOf<V, O extends Record<string, unknown>>(
+  readFirstOf<V, O extends Record<string, unknown> = Record<string, never>>(
     filePaths: ReadonlyArray<{ path: string; options?: O } | string>
   ) {
     return (
