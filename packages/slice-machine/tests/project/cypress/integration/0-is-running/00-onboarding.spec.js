@@ -1,9 +1,6 @@
 /// <reference types="cypress" />
 
-describe('onboarding', {retries: {
-  runMode: 1,
-  openMode: 0,
-}}, () => {
+describe('onboarding', () => {
 
   before(() => {
     cy.clearLocalStorageSnapshot();
@@ -71,28 +68,5 @@ describe('onboarding', {retries: {
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
 
-  })
-
-  it('user can skip the onboarding', () => {
-
-    const ids = [
-      "slicemachine_onboarding_start",
-      "slicemachine_onboarding_continue_screen_intro",
-      "slicemachine_onboarding_skip",
-    ]
-
-    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
-      expect(body.id).equal(ids.shift())
-    })
-
-    cy.visit('/onboarding')
-
-    cy.get('[data-cy=get-started]').click()
-
-    cy.get('[data-cy=skip-onboarding]').click()
-
-    cy.location('pathname', {timeout: 1000}).should('eq', '/')
-
-    cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 })
