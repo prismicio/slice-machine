@@ -5,13 +5,6 @@ const ERROR_CODES = {
   ENOENT: "ENOENT",
 };
 
-function instanceOfNodeError<T extends new (...args: any) => Error>(
-  value: Error,
-  errorType: T
-): value is InstanceType<T> & NodeJS.ErrnoException {
-  return value instanceof errorType;
-}
-
 const Files = {
   _format: "utf8" as BufferEncoding,
 
@@ -45,14 +38,11 @@ const Files = {
   ) {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
-  safeReadEntity<T>(
-    pathToFile: string,
-    validate: (payload: any) => null | T
-  ) {
+  safeReadEntity<T>(pathToFile: string, validate: (payload: any) => null | T) {
     try {
       const result = this.readEntity(pathToFile, validate);
-      if(result instanceof Error) return null
-      return result
+      if (result instanceof Error) return null;
+      return result;
     } catch (e) {
       return null;
     }
