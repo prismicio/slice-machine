@@ -7,10 +7,6 @@ interface ImageProps extends JSX.IntrinsicElements.img {
   crop: string;
 }
 
-// interface VideoProps extends JSX.IntrinsicElements.video {
-//   publicId: string;
-// }
-
 interface VideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
   publicId: string;
 }

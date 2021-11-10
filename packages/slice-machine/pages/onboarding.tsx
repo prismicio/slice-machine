@@ -58,6 +58,8 @@ const SubHeader = (props: ParagraphProps) => (
   />
 );
 
+type WithOnEnded = { onEnded: () => void };
+
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
     <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
@@ -68,7 +70,7 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-const BuildSlicesSlide = ({ onEnded }: { onEnded: () => void }) => (
+const BuildSlicesSlide = ({ onEnded }: WithOnEnded) => (
   <>
     <Image src="/horizontal_split.svg" />
     <Header>Build Slices ℠</Header>
@@ -77,7 +79,7 @@ const BuildSlicesSlide = ({ onEnded }: { onEnded: () => void }) => (
   </>
 );
 
-const CreatePageTypesSlide = ({ onEnded }: { onEnded: () => void }) => (
+const CreatePageTypesSlide = ({ onEnded }: WithOnEnded) => (
   <>
     <Image src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
@@ -86,7 +88,7 @@ const CreatePageTypesSlide = ({ onEnded }: { onEnded: () => void }) => (
   </>
 );
 
-const PushPagesSlide = ({ onEnded }: { onEnded: () => void }) => (
+const PushPagesSlide = ({ onEnded }: WithOnEnded) => (
   <>
     <Image src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
@@ -166,7 +168,7 @@ function idFromStep(
   }
 }
 
-function postTracking(
+function onboardingEvent(
   data:
     | OnboardingStartEvent
     | OnboardingSkipEvent
@@ -194,7 +196,7 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    postTracking({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
+    onboardingEvent({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
 
     return () => {
       // on unmount
@@ -215,7 +217,7 @@ function handleTracking(props: {
               completed: videoCompleted,
             };
 
-      postTracking(data).catch(console.error);
+      onboardingEvent(data).catch(console.error);
     };
   }, []);
 }
@@ -260,7 +262,7 @@ export default function Onboarding(): JSX.Element {
       ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
     };
 
-    postTracking(data);
+    onboardingEvent(data);
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
