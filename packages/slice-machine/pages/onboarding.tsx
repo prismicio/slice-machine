@@ -207,7 +207,7 @@ function handleTracking(props: {
               id: TrackingEventId.ONBOARDING_SKIP,
               time,
               screen: step,
-              completed: videoCompleted,
+              ...(step > 0 ? { completed: videoCompleted } : {}),
             }
           : {
               id: TrackingEventId.ONBOARDING_THIRD,
