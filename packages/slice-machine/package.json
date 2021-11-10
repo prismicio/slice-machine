@@ -133,6 +133,7 @@
     "next-mdx-remote": "^1.0.0",
     "next-plugin-custom-babel-config": "^1.0.4",
     "next-videos": "^1.4.0",
+    "nock": "^13.1.4",
     "nodemon": "^2.0.12",
     "npm": "^7.6.3",
     "prettier": "^2.4.1",

@@ -18,6 +18,10 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Running functional and unit tests
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          REPO_URL: ${{ secrets.REPO_URL }}
         run: lerna run test
       - name: Linting
         run: lerna run lint

@@ -111,7 +111,7 @@ function parseStorybookConfiguration(cwd: string) {
 export async function getEnv(
   maybeCustomCwd?: string
 ): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
-  const cwd = maybeCustomCwd || process.env.CWD;
+  const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
       "[api/env]: Unrecoverable error. Could not find cwd. Exiting..";
