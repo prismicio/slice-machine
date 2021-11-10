@@ -15,7 +15,7 @@ export interface NonSharedSliceInSliceZone {
   key: string;
   value: {
     type: SliceType.Slice;
-    [x: string]: any;
+    [x: string]: unknown;
   };
 }
 
