@@ -191,7 +191,7 @@ function handleTracking(props: {
     sendTrackingOnboarding({
       id: TrackingEventId.ONBOARDING_START,
       time: Date.now(),
-    });
+    }).catch(console.error);
 
     return () => {
       // on unmount
@@ -238,20 +238,19 @@ export default function Onboarding(): JSX.Element {
     return setState({ ...state, videoCompleted: true });
   }
 
-  useEffect(() => {
-    finishOnboarding();
-  }, []);
-
   handleTracking({
     ...state,
     maxSteps: STEPS.length,
     videoCompleted: state.videoCompleted,
   });
 
-  const escape = () => router.push("/");
+  const finish = () => {
+    finishOnboarding();
+    router.push("/");
+  };
 
   function nextSlide() {
-    if (state.step === STEPS.length - 1) return escape();
+    if (state.step === STEPS.length - 1) return finish();
     const id = idFromStep(state.step);
     const time = Date.now();
     const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
@@ -260,7 +259,7 @@ export default function Onboarding(): JSX.Element {
       ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
     };
 
-    sendTrackingOnboarding(data);
+    sendTrackingOnboarding(data).catch(console.error);
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
@@ -282,7 +281,7 @@ export default function Onboarding(): JSX.Element {
         {!!state.step && (
           <Button
             variant="transparent"
-            onClick={escape}
+            onClick={finish}
             data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}

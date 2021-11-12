@@ -27,7 +27,7 @@ export default function save(
         }),
       },
       setData,
-      successMessage: "Model & mocks have been generated succesfully!",
+      successMessage: "Model & mocks have been generated successfully!",
       onSuccess({
         previewUrls,
       }: {
