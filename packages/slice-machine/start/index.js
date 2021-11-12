@@ -30,7 +30,7 @@ const spawn = require("child_process").spawn;
 const migrate = require("../changelog/migrate");
 
 const validateUserAuth =
-  require("../server/src/api/services/validateUserAuth").validateUserAuth;
+  require("../build/server/src/api/services/validateUserAuth").validateUserAuth;
 
 const infobox = require("./info");
 
