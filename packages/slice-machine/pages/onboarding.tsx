@@ -1,10 +1,9 @@
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Grid,
   Box,
   Button,
   Flex,
-  Spinner,
   Paragraph,
   Heading,
   Image,
@@ -13,10 +12,19 @@ import {
   IconButton,
 } from "theme-ui";
 import { LocalStorageKeys } from "@lib/consts";
+import {
+  TrackingEventId,
+  OnboardingStartEvent,
+  OnboardingSkipEvent,
+  OnboardingContinueEvent,
+  OnboardingContinueWithVideoEvent,
+} from "@lib/models/common/TrackingEvent";
 import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
 import { Video as CldVideo } from "cloudinary-react";
+
+const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
 const Video = (props: VideoProps) => (
   <CldVideo
@@ -35,66 +43,71 @@ const Video = (props: VideoProps) => (
 const Header = (props: HeadingProps) => (
   <Heading
     {...props}
-    sx={{ fontSize: "20px", textAlign: "center", ...props.sx }}
+    sx={{
+      textAlign: "center",
+      ...props.sx,
+    }}
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.5",
+      fontWeight: 700,
+    }}
   />
 );
 
 const SubHeader = (props: ParagraphProps) => (
   <Paragraph
     {...props}
-    sx={{
+    style={{
       fontSize: "16px",
       textAlign: "center",
       paddingBottom: "24px",
-      ...props.sx,
     }}
   />
 );
 
+type WithOnEnded = { onEnded: () => void };
+
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
-    <Image sx={{ display: "block" }} src="/SM-LOGO.svg" />
-    <Header>Welcome to Slice Machine ℠</Header>
+    <Image sx={{ display: "block", ...imageSx }} src="/SM-LOGO.svg" />
+    <Header>Welcome to Slice Machine</Header>
     <SubHeader>Prismic’s local component development tool</SubHeader>
     <Button data-cy="get-started" onClick={onClick} title="start onboarding">
       Get Started
     </Button>
   </>
 );
-const BuildSlicesSlide = () => (
+const BuildSlicesSlide = ({ onEnded }: WithOnEnded) => (
   <>
-    <Image src="/horizontal_split.svg" />
-    <Header>Build Slices ℠</Header>
+    <Image sx={imageSx} src="/horizontal_split.svg" />
+    <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/BUILD_SLICE" />
   </>
 );
 
-const CreatePageTypesSlide = () => (
+const CreatePageTypesSlide = ({ onEnded }: WithOnEnded) => (
   <>
-    <Image src="/insert_page_break.svg" />
+    <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/ADD_TO_PAGE" />
   </>
 );
 
-const PushPagesSlide = () => (
+const PushPagesSlide = ({ onEnded }: WithOnEnded) => (
   <>
-    <Image src="/send.svg" />
+    <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video onEnded={onEnded} publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
   </>
 );
 
-const OnboardingGrid = ({
-  children,
-}: {
-  children: ReactElement | ReadonlyArray<ReactElement>;
-}) => {
+const OnboardingGrid: React.FunctionComponent = ({ children }) => {
   return (
     <Grid
       sx={{
@@ -104,9 +117,9 @@ const OnboardingGrid = ({
         gridTemplateAreas: `
           "top-left header top-right"
           "... content ..."
-          "bottom-left footer bottom-right"
+          "footer-left footer footer-right"
         `,
-        gridTemplateRows: "1fr 5fr 1fr",
+        gridTemplateRows: "84px 5fr 1fr",
       }}
       columns="1fr 2fr 1fr"
     >
@@ -131,7 +144,8 @@ const StepIndicator = ({
             key={`box-${i + 1}`}
             sx={{
               bg: i <= current ? "primary" : "muted",
-              height: "4px",
+              borderRadius: "10px",
+              height: "2px",
             }}
           />
         ))}
@@ -140,29 +154,126 @@ const StepIndicator = ({
   );
 };
 
+function idFromStep(
+  step: number
+):
+  | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
+  | TrackingEventId.ONBOARDING_FIRST
+  | TrackingEventId.ONBOARDING_SECOND
+  | TrackingEventId.ONBOARDING_THIRD {
+  switch (step) {
+    case 0:
+      return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO;
+    case 1:
+      return TrackingEventId.ONBOARDING_FIRST;
+    case 2:
+      return TrackingEventId.ONBOARDING_SECOND;
+    default:
+      return TrackingEventId.ONBOARDING_THIRD;
+  }
+}
+
+function postTracking(
+  onboardingEvent:
+    | OnboardingStartEvent
+    | OnboardingSkipEvent
+    | OnboardingContinueEvent
+    | OnboardingContinueWithVideoEvent
+): Promise<Response> {
+  return fetch("/tracking/onboarding", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(onboardingEvent),
+  });
+}
+
+function handleTracking(props: {
+  step: number;
+  maxSteps: number;
+  videoCompleted: boolean;
+}): void {
+  const state = useRef(props);
+
+  useEffect(() => {
+    // on update
+    state.current = props;
+  }, [props]);
+
+  useEffect(() => {
+    // on mount
+    postTracking({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
+
+    return () => {
+      // on unmount
+      const { maxSteps, step, videoCompleted } = state.current;
+      const time = Date.now();
+
+      const data: OnboardingSkipEvent | OnboardingContinueWithVideoEvent =
+        step < maxSteps - 1
+          ? {
+              id: TrackingEventId.ONBOARDING_SKIP,
+              time,
+              screen: step,
+              ...(step > 0 ? { completed: videoCompleted } : {}),
+            }
+          : {
+              id: TrackingEventId.ONBOARDING_THIRD,
+              time,
+              completed: videoCompleted,
+            };
+
+      postTracking(data).catch(console.error);
+    };
+  }, []);
+}
+
 export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide />,
-    <CreatePageTypesSlide />,
-    <PushPagesSlide />,
+    <BuildSlicesSlide onEnded={handleOnVideoEnd} />,
+    <CreatePageTypesSlide onEnded={handleOnVideoEnd} />,
+    <PushPagesSlide onEnded={handleOnVideoEnd} />,
   ];
 
-  const [state, setState] = useState({ step: 0 });
+  const [state, setState] = useState({
+    step: 0,
+    startTime: Date.now(),
+    videoCompleted: false,
+  });
+
+  function handleOnVideoEnd() {
+    return setState({ ...state, videoCompleted: true });
+  }
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
   }, []);
 
+  handleTracking({
+    ...state,
+    maxSteps: STEPS.length,
+    videoCompleted: state.videoCompleted,
+  });
+
   const escape = () => router.push("/");
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return escape();
-    return setState({ ...state, step: state.step + 1 });
+    const id = idFromStep(state.step);
+    const time = Date.now();
+    const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
+      id,
+      time,
+      ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
+    };
+
+    postTracking(data);
+
+    return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
 
   function prevSlide() {
-    return setState({ ...state, step: state.step - 1 });
+    return setState({ ...state, step: state.step - 1, videoCompleted: false });
   }
 
   return (
@@ -171,7 +282,8 @@ export default function Onboarding(): JSX.Element {
         sx={{
           gridArea: "top-right",
           alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "end",
+          padding: "1em 4em",
         }}
       >
         {!!state.step && (
@@ -181,16 +293,40 @@ export default function Onboarding(): JSX.Element {
             data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}
+            sx={{
+              color: "textClear",
+            }}
           >
             skip
           </Button>
         )}
       </Flex>
+
+      {STEPS.map((Component, i) => (
+        <Flex
+          hidden={i !== state.step}
+          key={`step-${i + 1}`}
+          sx={{
+            gridArea: "content",
+            alignItems: "center",
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "column",
+            opacity: i === state.step ? "1" : "0",
+            pointerEvents: i === state.step ? "all" : "none",
+            transition: `opacity .2s ease-in`,
+          }}
+        >
+          {Component}
+        </Flex>
+      ))}
+
       <Flex
         sx={{
           gridArea: "footer",
-          alignItems: "center",
-          justifyContent: "space-around",
+          alignItems: "start",
+          justifyContent: "center",
+          padingTop: "16px", // half height of a button
         }}
       >
         {!!state.step && (
@@ -200,20 +336,8 @@ export default function Onboarding(): JSX.Element {
 
       <Flex
         sx={{
-          gridArea: "content",
-          alignItems: "center",
-          justifyContent: "center",
-          alignContent: "center",
-          flexDirection: "column",
-        }}
-      >
-        {STEPS[state.step] ? STEPS[state.step] : <Spinner />}
-      </Flex>
-
-      <Flex
-        sx={{
-          gridArea: "bottom-left",
-          alignItems: "center",
+          gridArea: "footer-left",
+          alignItems: "start",
           justifyContent: "space-around",
         }}
       >
@@ -237,9 +361,10 @@ export default function Onboarding(): JSX.Element {
 
       <Flex
         sx={{
-          gridArea: "bottom-right",
-          alignItems: "center",
-          justifyContent: "space-around",
+          gridArea: "footer-right",
+          alignItems: "start",
+          justifyContent: "end",
+          padding: "0em 4em",
         }}
       >
         {!!state.step && (

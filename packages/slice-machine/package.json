@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@babel/register": "^7.11.5",
-    "@reach/menu-button": "^0.10.5",
+    "@reach/menu-button": "^0.16.2",
     "@slicemachine/core": "^1.0.0",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",
@@ -77,6 +77,7 @@
     "prompts": "^2.4.0",
     "puppeteer": "^10.2.0",
     "random-sentence": "^1.0.4",
+    "react": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-select": "^4.2.1",
     "react-tiny-popover": "^6.0.5",
@@ -94,7 +95,6 @@
   "devDependencies": {
     "@mdx-js/loader": "^1.6.22",
     "@next/mdx": "^10.0.3",
-    "@reach/menu-button": "^0.10.5",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/react-hooks": "^7.0.0",
     "@theme-ui/color": "0.8.4",
@@ -138,11 +138,10 @@
     "next-mdx-remote": "^1.0.0",
     "next-plugin-custom-babel-config": "^1.0.4",
     "next-videos": "^1.4.0",
+    "nock": "^13.1.4",
     "nodemon": "^2.0.12",
-    "npm": "^7.6.3",
     "prettier": "^2.4.1",
     "rc-drawer": "^4.1.0",
-    "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.19.3",
     "react-datepicker": "^3.4.1",
@@ -171,8 +170,6 @@
     "next/browserslist": ">=4.16.5",
     "jest/**/ws": ">=5.2.3 <6.0.0 || >=6.2.2 <7.0.0 || >=7.4.6",
     "jest-config/**/ws": ">=5.2.3 <6.0.0 || >=6.2.2 <7.0.0 || >=7.4.6",
-    "npm/**/@npmcli/git": ">=2.0.8",
-    "yarn-audit-fix/**/@npmcli/git": ">=2.0.8",
-    "npm/**/@npmcli/arborist": ">=2.8.2"
+    "yarn-audit-fix/**/@npmcli/git": ">=2.0.8"
   }
 }

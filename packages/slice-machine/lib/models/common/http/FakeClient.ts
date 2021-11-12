@@ -72,6 +72,17 @@ export default class FakeClient {
     };
   }
 
+  async sendOnboarding(): Promise<FakeResponse> {
+    return {
+      status: 200,
+      statusText: "ok",
+      fake: true,
+      json() {
+        return [];
+      },
+    };
+  }
+
   images = {
     createAcl: async () => {
       return {

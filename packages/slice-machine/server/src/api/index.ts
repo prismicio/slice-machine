@@ -21,6 +21,7 @@ import validateAuth from "./auth/validate";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import onboarding from "./tracking/onboarding";
 
 import {
   TrackingReviewRequest,
@@ -64,6 +65,18 @@ router.post(
   ) {
     const payload = await trackReview(req.body);
     return res.status(payload.status).json({});
+  }
+);
+
+router.post(
+  "/tracking/onboarding",
+  async (req: express.Request, res: express.Response) => {
+    const result = await onboarding(req.body);
+    if (result.err) {
+      const status = result.err.status || 400;
+      return res.status(status).json(result);
+    }
+    return res.json(result);
   }
 );
 

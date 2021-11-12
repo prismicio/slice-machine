@@ -1,8 +1,10 @@
 import path from "path";
 import upload from "./upload";
-
 import Files from "../../../utils/files";
-import { ReviewTrackingEvent } from "@models/common/TrackingEvent";
+import {
+  ReviewTrackingEvent,
+  OnboardingTrackingEvent,
+} from "@models/common/TrackingEvent";
 import { AsObject } from "@lib/models/common/Variation";
 import Slice from "@lib/models/common/Slice";
 
@@ -195,6 +197,10 @@ export default class DefaultClient {
 
   async sendReview(review: ReviewTrackingEvent): Promise<Response> {
     return this.trackingFetcher("", review, "", "post");
+  }
+
+  async sendOnboarding(data: OnboardingTrackingEvent) {
+    return this.trackingFetcher("", data, "", "post");
   }
 
   images = {

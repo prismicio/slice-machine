@@ -1,8 +1,8 @@
-import { Framework, Files, Endpoints } from "../utils";
+import { Framework, Files } from "../utils";
 import { FileContent, SMConfigPath } from "./paths";
 
 export interface Manifest {
-  apiEndpoint: Endpoints.ApiEndpoint;
+  apiEndpoint: string;
   storybook?: string;
   libraries?: string[];
   framework?: Framework.FrameworkEnum;
