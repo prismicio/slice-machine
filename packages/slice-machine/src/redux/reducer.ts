@@ -7,6 +7,7 @@ import { combineReducers } from "redux";
 import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
+import { environmentReducer } from "@src/modules/environment";
 
 /**
  * Creates the main reducer
@@ -16,6 +17,7 @@ const createReducer = () =>
     modal: modalReducer,
     loading: loadingReducer,
     userContext: userContextReducer,
+    environment: environmentReducer,
   });
 
 export default createReducer;

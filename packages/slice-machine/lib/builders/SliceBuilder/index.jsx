@@ -1,11 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
+import { useDispatch, useSelector } from "react-redux";
 
 import { handleRemoteResponse } from "src/ToastProvider/utils";
 
 import { SliceContext } from "src/models/slice/context";
-import { ConfigContext } from "src/config-context";
 
 import { createStorybookUrl } from "@lib/utils";
 
@@ -14,21 +14,24 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { useDispatch } from "react-redux";
 import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
+import { getEnvironment, getWarnings } from "@src/modules/environment";
 
 const Builder = ({ openPanel }) => {
   const dispatch = useDispatch();
-  const { Model, store, variation } = useContext(SliceContext);
-  const openLogin = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-
   const {
     env: {
       userConfig: { storybook: storybookBaseUrl },
     },
     warnings,
-  } = useContext(ConfigContext);
+  } = useSelector((store) => ({
+    env: getEnvironment(store),
+    warnings: getWarnings(store),
+  }));
+  const { Model, store, variation } = useContext(SliceContext);
+  const openLogin = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
   const {
     infos: { sliceName, previewUrls },
     from,

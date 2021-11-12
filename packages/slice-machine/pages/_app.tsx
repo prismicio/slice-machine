@@ -13,7 +13,7 @@ import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 import LibrariesProvider from "@src/models/libraries/context";
 import CustomTypesProvider from "@src/models/customTypes/context";
 import { SliceHandler } from "@src/models/slice/context";
-import ConfigProvider from "@src/config-context";
+import StateDispatcher from "@src/stateDispatcher";
 
 import Drawer from "rc-drawer";
 
@@ -98,7 +98,10 @@ function MyApp({
   Component: (props: any) => JSX.Element;
   pageProps: any;
 }) {
-  const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
+  const { data: serverState }: { data?: ServerState } = useSwr(
+    "/api/state",
+    fetcher
+  );
   const [sliceMap, setSliceMap] = useState<any | null>(null);
   const [drawerState, setDrawerState] = useState<{
     open: boolean;
@@ -126,27 +129,26 @@ function MyApp({
   );
 
   useEffect(() => {
-    if (!data) {
+    if (!serverState) {
       return;
     }
-    const newSliceMap = mapSlices(data.libraries);
+    const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {
       Object.keys(newSliceMap).forEach((key) => {
         if (!sliceMap[key]) {
-          // const [from, sliceName] = key.split(':')
           return (window.location.href = `/slices`);
         }
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default, payload: data });
-    const { env, configErrors, warnings } = data;
+    setRenderer({ Renderer: RenderStates.Default, payload: serverState });
+    const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
-    console.log("Loaded libraries: ", { libraries: data.libraries });
+    console.log("Loaded libraries: ", { libraries });
     console.log("Loaded env: ", { env, configErrors });
     console.log("Warnings: ", { warnings });
     console.log("------ End of log ------");
-  }, [data]);
+  }, [serverState]);
 
   const { Renderer, payload } = state;
 
@@ -160,10 +162,10 @@ function MyApp({
           <RouterProvider>
             <BaseStyles>
               <RemoveDarkMode>
-                {!data ? (
+                {!serverState ? (
                   <Renderer {...payload} />
                 ) : (
-                  <ConfigProvider value={data}>
+                  <StateDispatcher serverState={serverState}>
                     {!payload || !payload.libraries ? (
                       <Renderer
                         Component={Component}
@@ -182,7 +184,7 @@ function MyApp({
                             customTypes={payload.customTypes}
                             remoteCustomTypes={payload.remoteCustomTypes}
                           >
-                            <AppLayout {...payload} data={data}>
+                            <AppLayout {...payload} serverState={serverState}>
                               <SliceHandler {...payload}>
                                 <Renderer
                                   Component={Component}
@@ -202,8 +204,8 @@ function MyApp({
                                 >
                                   <Warnings
                                     priority={drawerState.priority}
-                                    list={data.warnings}
-                                    configErrors={data.configErrors}
+                                    list={serverState.warnings}
+                                    configErrors={serverState.configErrors}
                                   />
                                 </Drawer>
                               </SliceHandler>
@@ -214,7 +216,7 @@ function MyApp({
                         <ReviewModal />
                       </ToastProvider>
                     )}
-                  </ConfigProvider>
+                  </StateDispatcher>
                 )}
               </RemoveDarkMode>
             </BaseStyles>

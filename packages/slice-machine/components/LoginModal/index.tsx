@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React, { useContext } from "react";
+import React from "react";
 import {
   Button,
   Card,
@@ -11,7 +11,6 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
@@ -31,14 +30,16 @@ import {
   stopLoadingActionCreator,
 } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { getEnvironment } from "@src/modules/environment";
 
 Modal.setAppElement("#__next");
 
 const LoginModal: React.FunctionComponent = () => {
-  const { isOpen, isLoginLoading } = useSelector(
+  const { env, isOpen, isLoginLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
       isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
       isLoginLoading: isLoading(store, LoadingKeysEnum.LOGIN),
+      env: getEnvironment(store),
     })
   );
 
@@ -50,7 +51,6 @@ const LoginModal: React.FunctionComponent = () => {
   const stopLoadingLogin = () =>
     dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.LOGIN }));
 
-  const { env } = useContext(ConfigContext);
   const { addToast } = useToasts();
   const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
   const loginRedirectUrl = !!env
