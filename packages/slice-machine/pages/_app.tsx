@@ -10,8 +10,6 @@ import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
-import { LocalStorageKeys } from "@lib/consts";
-
 import LibrariesProvider from "@src/models/libraries/context";
 import CustomTypesProvider from "@src/models/customTypes/context";
 import { SliceHandler } from "@src/models/slice/context";
@@ -39,9 +37,9 @@ import Environment from "@lib/models/common/Environment";
 import Slice from "@lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { AsObject } from "@lib/models/common/Variation";
-import { useRouter } from "next/router";
 import LoginModal from "@components/LoginModal";
 import ReviewModal from "@components/ReviewModal";
+import RouterProvider from "@src/routerProvider";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -100,7 +98,6 @@ function MyApp({
   Component: (props: any) => JSX.Element;
   pageProps: any;
 }) {
-  const router = useRouter();
   const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
   const [sliceMap, setSliceMap] = useState<any | null>(null);
   const [drawerState, setDrawerState] = useState<{
@@ -127,15 +124,6 @@ function MyApp({
       }),
     []
   );
-
-  useEffect(() => {
-    if (
-      !localStorage.getItem(LocalStorageKeys.isOnboarded) &&
-      router.pathname !== "/onboarding"
-    ) {
-      router.replace("/onboarding");
-    }
-  }, []);
 
   useEffect(() => {
     if (!data) {
@@ -169,66 +157,68 @@ function MyApp({
           <Head>
             <title>SliceMachine</title>
           </Head>
-          <BaseStyles>
-            <RemoveDarkMode>
-              {!data ? (
-                <Renderer {...payload} />
-              ) : (
-                <ConfigProvider value={data}>
-                  {!payload || !payload.libraries ? (
-                    <Renderer
-                      Component={Component}
-                      pageProps={pageProps}
-                      {...payload}
-                      openPanel={openPanel}
-                    />
-                  ) : (
-                    <ToastProvider>
-                      <LibrariesProvider
-                        remoteSlices={payload.remoteSlices}
-                        libraries={payload.libraries}
-                        env={payload.env}
-                      >
-                        <CustomTypesProvider
-                          customTypes={payload.customTypes}
-                          remoteCustomTypes={payload.remoteCustomTypes}
+          <RouterProvider>
+            <BaseStyles>
+              <RemoveDarkMode>
+                {!data ? (
+                  <Renderer {...payload} />
+                ) : (
+                  <ConfigProvider value={data}>
+                    {!payload || !payload.libraries ? (
+                      <Renderer
+                        Component={Component}
+                        pageProps={pageProps}
+                        {...payload}
+                        openPanel={openPanel}
+                      />
+                    ) : (
+                      <ToastProvider>
+                        <LibrariesProvider
+                          remoteSlices={payload.remoteSlices}
+                          libraries={payload.libraries}
+                          env={payload.env}
                         >
-                          <AppLayout {...payload} data={data}>
-                            <SliceHandler {...payload}>
-                              <Renderer
-                                Component={Component}
-                                pageProps={pageProps}
-                                {...payload}
-                                openPanel={openPanel}
-                              />
-                              <Drawer
-                                placement="right"
-                                open={drawerState.open}
-                                onClose={() =>
-                                  setDrawerState({
-                                    ...drawerState,
-                                    open: false,
-                                  })
-                                }
-                              >
-                                <Warnings
-                                  priority={drawerState.priority}
-                                  list={data.warnings}
-                                  configErrors={data.configErrors}
+                          <CustomTypesProvider
+                            customTypes={payload.customTypes}
+                            remoteCustomTypes={payload.remoteCustomTypes}
+                          >
+                            <AppLayout {...payload} data={data}>
+                              <SliceHandler {...payload}>
+                                <Renderer
+                                  Component={Component}
+                                  pageProps={pageProps}
+                                  {...payload}
+                                  openPanel={openPanel}
                                 />
-                              </Drawer>
-                            </SliceHandler>
-                          </AppLayout>
-                        </CustomTypesProvider>
-                      </LibrariesProvider>
-                      <LoginModal />
-                      <ReviewModal />
-                    </ToastProvider>
-                  )}
-                </ConfigProvider>
-              )}
-            </RemoveDarkMode>
-          </BaseStyles>
+                                <Drawer
+                                  placement="right"
+                                  open={drawerState.open}
+                                  onClose={() =>
+                                    setDrawerState({
+                                      ...drawerState,
+                                      open: false,
+                                    })
+                                  }
+                                >
+                                  <Warnings
+                                    priority={drawerState.priority}
+                                    list={data.warnings}
+                                    configErrors={data.configErrors}
+                                  />
+                                </Drawer>
+                              </SliceHandler>
+                            </AppLayout>
+                          </CustomTypesProvider>
+                        </LibrariesProvider>
+                        <LoginModal />
+                        <ReviewModal />
+                      </ToastProvider>
+                    )}
+                  </ConfigProvider>
+                )}
+              </RemoveDarkMode>
+            </BaseStyles>
+          </RouterProvider>
         </ThemeProvider>
       </PersistGate>
     </Provider>

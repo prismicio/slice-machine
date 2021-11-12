@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from "axios";
-import { TrackingReviewResponse } from "@models/common/TrackingEvent";
+import {
+  OnboardingContinueEvent,
+  OnboardingContinueWithVideoEvent,
+  OnboardingSkipEvent,
+  OnboardingStartEvent,
+  TrackingReviewResponse,
+} from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
 const jsonHeaders = {
@@ -25,3 +31,12 @@ export const sendTrackingReview = (
   comment: string
 ): Promise<AxiosResponse<TrackingReviewResponse>> =>
   axios.post(`/api/tracking/review`, { rating, comment }, jsonHeaders);
+
+export const sendTrackingOnboarding = (
+  onboardingEvent:
+    | OnboardingStartEvent
+    | OnboardingSkipEvent
+    | OnboardingContinueEvent
+    | OnboardingContinueWithVideoEvent
+): Promise<AxiosResponse<TrackingReviewResponse>> =>
+  axios.post(`/api/tracking/onboarding`, onboardingEvent, jsonHeaders);
