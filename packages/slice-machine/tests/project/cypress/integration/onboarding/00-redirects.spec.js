@@ -23,7 +23,7 @@ describe('onboarding redirects and local storage', () => {
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/onboarding')
 
-    cy.wait(1500)
+    cy.wait(2000)
     cy.getLocalStorage("is-onboarded").should('eq', 'true')
   })
 
