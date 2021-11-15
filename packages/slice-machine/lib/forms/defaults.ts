@@ -24,7 +24,7 @@ export const DefaultFields: any = {
       max: true,
       required: "This field is required",
       matches: [
-        /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/,
+        /^[A-Za-z0-9]+(?:-[A-Za-z0-9_]+)*$/,
         "No special characters allowed",
       ],
     },
