@@ -70,7 +70,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       if (!sliceName) {
         return { sliceName: "Cannot be empty" };
       }
-      if (!/^[A-Za-z0-9]+(?:[-_][A-Za-z0-9]+)*$/.exec(sliceName)) {
+      if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
         return { sliceName: "No special character allowed" };
       }
       const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");

@@ -116,7 +116,7 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
           repeatable: true,
         }}
         validate={({ id }: { id: string }) => {
-          if (id && !/^[A-Za-z0-9]+(?:[-_][A-Za-z0-9]+)*$/.exec(id)) {
+          if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
             return { id: "Invalid id: No special characters allowed" };
           }
           if (id && customTypes.map((e) => e?.id.toLowerCase()).includes(id)) {
