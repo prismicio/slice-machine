@@ -2,7 +2,6 @@
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
-import * as LibrariesState from "../common/LibrariesState";
 
 import { getEnv } from "@lib/env";
 import mock from "@lib/mock/Slice";
@@ -121,9 +120,6 @@ export async function handler(
 
   await onSaveSlice(env);
   console.log("[slice/save]: Libraries index files regenerated!");
-
-  // generate state for Slice Canvas
-  LibrariesState.generateState(env)
 
   return { previewUrls, warning };
 }
