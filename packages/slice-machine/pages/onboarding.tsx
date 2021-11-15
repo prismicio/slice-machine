@@ -201,25 +201,22 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    postTracking({ id: TrackingEventId.ONBOARDING_START, time: Date.now() });
+    postTracking({ id: TrackingEventId.ONBOARDING_START });
 
     return () => {
       // on unmount
       const { maxSteps, step, videoCompleted } = state.current;
-      const time = Date.now();
 
       const data: OnboardingSkipEvent | OnboardingContinueWithVideoEvent =
         step < maxSteps - 1
           ? {
               id: TrackingEventId.ONBOARDING_SKIP,
-              time,
-              screen: step,
-              ...(step > 0 ? { completed: videoCompleted } : {}),
+              screenSkipped: step,
+              ...(step > 0 ? { onboardingVideoCompleted: videoCompleted } : {}),
             }
           : {
               id: TrackingEventId.ONBOARDING_THIRD,
-              time,
-              completed: videoCompleted,
+              onboardingVideoCompleted: videoCompleted,
             };
 
       postTracking(data).catch(console.error);
@@ -237,7 +234,6 @@ export default function Onboarding(): JSX.Element {
 
   const [state, setState] = useState({
     step: 0,
-    startTime: Date.now(),
     videoCompleted: false,
   });
 
@@ -260,11 +256,11 @@ export default function Onboarding(): JSX.Element {
   function nextSlide() {
     if (state.step === STEPS.length - 1) return escape();
     const id = idFromStep(state.step);
-    const time = Date.now();
     const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
       id,
-      time,
-      ...(state.step > 0 ? { completed: state.videoCompleted } : {}),
+      ...(state.step > 0
+        ? { onboardingVideoCompleted: state.videoCompleted }
+        : {}),
     };
 
     postTracking(data);
