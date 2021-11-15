@@ -31,7 +31,6 @@ export type OnboardingEventIds =
 
 export type OnboardingTrackingEvent = TrackingEvent & {
   id: OnboardingEventIds;
-  time: number;
 };
 
 export type OnboardingStartEvent = OnboardingTrackingEvent & {
@@ -40,8 +39,8 @@ export type OnboardingStartEvent = OnboardingTrackingEvent & {
 
 export type OnboardingSkipEvent = OnboardingTrackingEvent & {
   id: TrackingEventId.ONBOARDING_SKIP;
-  screen: number;
-  completed?: boolean;
+  screenSkipped: number;
+  onboardingVideoCompleted?: boolean;
 };
 
 export type OnboardingContinueEvent = OnboardingTrackingEvent & {
@@ -57,5 +56,5 @@ export type OnboardingContinueWithVideoEvent = OnboardingContinueEvent & {
     | TrackingEventId.ONBOARDING_FIRST
     | TrackingEventId.ONBOARDING_SECOND
     | TrackingEventId.ONBOARDING_THIRD;
-  completed: boolean;
+  onboardingVideoCompleted: boolean;
 };
