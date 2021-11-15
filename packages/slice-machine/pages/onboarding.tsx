@@ -234,7 +234,6 @@ export default function Onboarding(): JSX.Element {
 
   const [state, setState] = useState({
     step: 0,
-    startTime: Date.now(),
     videoCompleted: false,
   });
 
