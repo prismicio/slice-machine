@@ -6,9 +6,9 @@ describe("onboarding finish", () => {
     const ids = [
       "slicemachine_onboarding_start",
       "slicemachine_onboarding_continue_screen_intro",
-      "slicemachine_onboarding_continue_1",
-      "slicemachine_onboarding_continue_2",
-      "slicemachine_onboarding_continue_3",
+      "slicemachine_onboarding_continue_screen_1",
+      "slicemachine_onboarding_continue_screen_2",
+      "slicemachine_onboarding_continue_screen_3",
     ]
 
     cy.intercept('POST', '/tracking/onboarding', ({body}) => {
