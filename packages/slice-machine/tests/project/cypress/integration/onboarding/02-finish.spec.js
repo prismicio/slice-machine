@@ -11,7 +11,7 @@ describe("onboarding finish", () => {
       "slicemachine_onboarding_continue_screen_3",
     ]
 
-    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
+    cy.intercept('POST', '/api/tracking/onboarding', ({body}) => {
       expect(body.id).equal(ids.shift())
     })
   

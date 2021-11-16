@@ -180,7 +180,7 @@ function postTracking(
     | OnboardingContinueEvent
     | OnboardingContinueWithVideoEvent
 ): Promise<Response> {
-  return fetch("/tracking/onboarding", {
+  return fetch("/api/tracking/onboarding", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(onboardingEvent),
