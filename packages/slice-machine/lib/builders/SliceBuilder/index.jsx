@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { handleRemoteResponse } from "src/ToastProvider/utils";
 
@@ -14,11 +14,10 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { ModalKeysEnum, modalOpenCreator } from "@src/modules/modal/modal";
-import { getEnvironment, getWarnings } from "@src/modules/environment";
+import { getEnvironment, getWarnings } from "src/modules/environment";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
 const Builder = ({ openPanel }) => {
-  const dispatch = useDispatch();
   const {
     env: {
       userConfig: { storybook: storybookBaseUrl },
@@ -29,8 +28,7 @@ const Builder = ({ openPanel }) => {
     warnings: getWarnings(store),
   }));
   const { Model, store, variation } = useContext(SliceContext);
-  const openLogin = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const { openLoginModal } = useSliceMachineActions();
 
   const {
     infos: { sliceName, previewUrls },
@@ -52,7 +50,7 @@ const Builder = ({ openPanel }) => {
   const onPush = (data) => {
     setData(data);
     if (data.error && data.status === 403) {
-      openLogin();
+      openLoginModal();
     }
   };
 

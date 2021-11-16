@@ -1,4 +1,4 @@
-import { ModalStoreType } from "@src/modules/modal/modal";
+import { ModalStoreType } from "@src/modules/modal/types";
 import { LoadingStoreType } from "@src/modules/loading/types";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 import { EnvironmentStoreType } from "@src/modules/environment/types";

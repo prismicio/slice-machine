@@ -1,7 +1,8 @@
-import { createStore, compose } from "redux";
+import { createStore, compose, Store } from "redux";
 import createReducer from "./reducer";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
+import { SliceMachineStoreType } from "@src/redux/type"; // defaults to localStorage for web
 
 const persistConfig = {
   key: "root",
@@ -24,7 +25,11 @@ export default function configureStore() {
   const rootReducer = createReducer();
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
-  const store: any = createStore(persistedReducer, {}, composeEnhancers());
+  const store: Store<SliceMachineStoreType> = createStore(
+    persistedReducer,
+    {},
+    composeEnhancers()
+  );
   const persistor = persistStore(store);
 
   return { store, persistor };

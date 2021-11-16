@@ -8,7 +8,7 @@ import {
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
-const jsonHeaders = {
+const defaultAxiosConfig = {
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -18,11 +18,11 @@ const jsonHeaders = {
 /** Auth Routes **/
 
 export const startAuth = (): Promise<AxiosResponse<{}>> =>
-  axios.post("/api/auth/start", {}, jsonHeaders);
+  axios.post("/api/auth/start", {}, defaultAxiosConfig);
 
 export const checkAuthStatus = (): Promise<
   AxiosResponse<CheckAuthStatusResponse>
-> => axios.post("/api/auth/status", {}, jsonHeaders);
+> => axios.post("/api/auth/status", {}, defaultAxiosConfig);
 
 /** Tracking Routes **/
 
@@ -30,7 +30,7 @@ export const sendTrackingReview = (
   rating: number,
   comment: string
 ): Promise<AxiosResponse<TrackingReviewResponse>> =>
-  axios.post(`/api/tracking/review`, { rating, comment }, jsonHeaders);
+  axios.post(`/api/tracking/review`, { rating, comment }, defaultAxiosConfig);
 
 export const sendTrackingOnboarding = (
   onboardingEvent:
@@ -39,4 +39,4 @@ export const sendTrackingOnboarding = (
     | OnboardingContinueEvent
     | OnboardingContinueWithVideoEvent
 ): Promise<AxiosResponse<TrackingReviewResponse>> =>
-  axios.post(`/api/tracking/onboarding`, onboardingEvent, jsonHeaders);
+  axios.post(`/api/tracking/onboarding`, onboardingEvent, defaultAxiosConfig);

@@ -11,33 +11,23 @@ import {
   Text,
   Textarea,
 } from "theme-ui";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  isModalOpen,
-  ModalKeysEnum,
-  modalOpenCreator,
-} from "@src/modules/modal";
-import {
-  isLoading,
-  startLoadingActionCreator,
-  stopLoadingActionCreator,
-} from "@src/modules/loading";
+import { isModalOpen } from "@src/modules/modal";
+import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
-import {
-  sendAReviewCreator,
-  skipReviewCreator,
-  userHasSendAReview,
-} from "@src/modules/userContext";
+import { userHasSendAReview } from "@src/modules/userContext";
 import { useToasts } from "react-toast-notifications";
 import { sendTrackingReview } from "@src/apiClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 
 Modal.setAppElement("#__next");
 
-type ReviewModalProps = {
+type RatingModalProps = {
   cardProps?: {};
 };
 
@@ -69,7 +59,7 @@ const SelectRatingComponent = ({ field, form }: FieldProps) => {
   );
 };
 
-const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
+const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
   const { isReviewLoading, isLoginModalOpen, hasSendAReview } = useSelector(
@@ -80,15 +70,13 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
     })
   );
 
-  const dispatch = useDispatch();
-  const openLogin = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-  const startReviewLoading = () =>
-    dispatch(startLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
-  const stopReviewLoading = () =>
-    dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.REVIEW }));
-  const skipReview = () => dispatch(skipReviewCreator());
-  const sendAReview = () => dispatch(sendAReviewCreator());
+  const {
+    skipReview,
+    sendAReview,
+    openLoginModal,
+    startLoadingReview,
+    stopLoadingReview,
+  } = useSliceMachineActions();
 
   const { addToast } = useToasts();
 
@@ -105,22 +93,21 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
 
   const customTypeCount = !!customTypes ? customTypes.length : 0;
   // Deactivate for this release
-  const userHasCreateEnoughContent =
-    sliceCount >= 1 && customTypeCount >= 1 && false;
+  const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
   const onSendAReview = async (
     rating: number,
     comment: string
   ): Promise<void> => {
     try {
-      startReviewLoading();
+      startLoadingReview();
       await sendTrackingReview(rating, comment);
       sendAReview();
-      stopReviewLoading();
+      stopLoadingReview();
     } catch (error) {
-      stopReviewLoading();
+      stopLoadingReview();
       if (403 === error.response?.status) {
-        openLogin();
+        openLoginModal();
       }
       if (401 === error.response?.status) {
         addToast("You don't have access to the repo", { appearance: "error" });
@@ -141,7 +128,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
       onRequestClose={() => skipReview()}
       closeTimeoutMS={500}
       contentLabel={"Review Modal"}
-      portalClassName={"ReviewModal"}
+      portalClassName={"RatingModal"}
       style={{
         content: {
           display: "flex",
@@ -266,4 +253,4 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   );
 };
 
-export default ReviewModal;
+export default RatingModal;

@@ -13,11 +13,11 @@ const initialState: LoadingStoreType = {
 
 // Action Creators
 export const startLoadingActionCreator = createAction("LOADING/START")<{
-  key: LoadingKeysEnum;
+  loadingKey: LoadingKeysEnum;
 }>();
 
 export const stopLoadingActionCreator = createAction("LOADING/STOP")<{
-  key: LoadingKeysEnum;
+  loadingKey: LoadingKeysEnum;
 }>();
 
 type LoadingActions = ActionType<
@@ -39,12 +39,12 @@ export const loadingReducer: Reducer<LoadingStoreType, LoadingActions> = (
     case getType(startLoadingActionCreator):
       return {
         ...state,
-        [action.payload.key]: true,
+        [action.payload.loadingKey]: true,
       };
     case getType(stopLoadingActionCreator):
       return {
         ...state,
-        [action.payload.key]: false,
+        [action.payload.loadingKey]: false,
       };
     default:
       return state;

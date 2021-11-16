@@ -22,8 +22,7 @@ import router from "next/router";
 import { BiChevronLeft } from "react-icons/bi";
 import { Video as CldVideo } from "cloudinary-react";
 import { sendTrackingOnboarding } from "@src/apiClient";
-import { useDispatch } from "react-redux";
-import { finishOnboardingCreator } from "@src/modules/userContext";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -225,8 +224,7 @@ export default function Onboarding(): JSX.Element {
     <PushPagesSlide onEnded={handleOnVideoEnd} />,
   ];
 
-  const dispatch = useDispatch();
-  const finishOnboarding = () => dispatch(finishOnboardingCreator());
+  const { finishOnboarding } = useSliceMachineActions();
 
   const [state, setState] = useState({
     step: 0,

@@ -6,6 +6,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 const initialState: EnvironmentStoreType = {
   warnings: [],
   configErrors: {},
+  env: null,
 };
 
 // Action Creators

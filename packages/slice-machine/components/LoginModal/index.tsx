@@ -17,20 +17,14 @@ import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
 import { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  modalCloseCreator,
-  isModalOpen,
-  ModalKeysEnum,
-} from "@src/modules/modal/modal";
+import { useSelector } from "react-redux";
+import { isModalOpen } from "@src/modules/modal";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  isLoading,
-  startLoadingActionCreator,
-  stopLoadingActionCreator,
-} from "@src/modules/loading";
+import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 Modal.setAppElement("#__next");
 
@@ -43,13 +37,8 @@ const LoginModal: React.FunctionComponent = () => {
     })
   );
 
-  const dispatch = useDispatch();
-  const onClose = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
-  const startLoadingLogin = () =>
-    dispatch(startLoadingActionCreator({ key: LoadingKeysEnum.LOGIN }));
-  const stopLoadingLogin = () =>
-    dispatch(stopLoadingActionCreator({ key: LoadingKeysEnum.LOGIN }));
+  const { closeLoginModal, startLoadingLogin, stopLoadingLogin } =
+    useSliceMachineActions();
 
   const { addToast } = useToasts();
   const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
@@ -79,7 +68,7 @@ const LoginModal: React.FunctionComponent = () => {
       );
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
-      onClose();
+      closeLoginModal();
     } catch (e) {
       stopLoadingLogin();
       addToast("Logging fail", { appearance: "error" });
@@ -90,7 +79,7 @@ const LoginModal: React.FunctionComponent = () => {
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={onClose}
+      onRequestClose={closeLoginModal}
       contentLabel={"login_modal"}
       style={{
         content: {
@@ -116,7 +105,7 @@ const LoginModal: React.FunctionComponent = () => {
           }}
         >
           <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>
-          <Close sx={{ p: 0 }} type="button" onClick={onClose} />
+          <Close sx={{ p: 0 }} type="button" onClick={closeLoginModal} />
         </Flex>
         <Flex
           sx={{
