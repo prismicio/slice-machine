@@ -3,7 +3,7 @@ import { Endpoints } from "../../../src/utils";
 
 describe("endpoints", () => {
   const baseDomain = "music.to.my.hears.io";
-  const base = `https://${baseDomain}`;
+  const base: Endpoints.Base = `https://${baseDomain}`;
   const fakeRepository = "dragonborn";
   const fakeRepositoryEndpoint = `https://${fakeRepository}.${baseDomain}/api/v2`;
 
