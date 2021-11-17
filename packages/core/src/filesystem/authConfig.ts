@@ -8,7 +8,10 @@ export interface AuthConfig {
   authUrl?: string;
 }
 
-const DEFAULT_CONFIG: AuthConfig = { base: "https://prismic.io", cookies: "" };
+export const DEFAULT_CONFIG: AuthConfig = {
+  base: "https://prismic.io",
+  cookies: "",
+};
 
 export function createDefaultAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);
@@ -43,6 +46,35 @@ export function setAuthConfig(
   const newConfig = {
     cookies: formattedCookies,
     base: base || currentConfig.base,
+  };
+
+  return Files.write(
+    configPath,
+    { ...currentConfig, ...newConfig },
+    { recursive: false }
+  );
+}
+
+export function updateAuthCookie(authCookie: string, directory?: string): void {
+  const currentConfig = getOrCreateAuthConfig(directory);
+  const currentCookieIndexByCookieName = Cookie.parse(currentConfig.cookies);
+
+  const newCookies = {
+    ...currentCookieIndexByCookieName,
+    [Cookie.AUTH_KEY]: authCookie,
+  };
+
+  const cookiesSerialized = Cookie.serializeCookies(
+    Object.entries(newCookies).map(([cookieName, cookieValue]) => {
+      return Cookie.serializeCookie(cookieName, cookieValue);
+    })
+  );
+
+  const configPath = PrismicConfigPath(directory);
+
+  const newConfig: AuthConfig = {
+    cookies: cookiesSerialized,
+    base: currentConfig.base,
   };
 
   return Files.write(

@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React, { useContext, useState } from "react";
+import React from "react";
 import {
   Button,
   Card,
@@ -11,28 +11,37 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { ConfigContext } from "@src/config-context";
 import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
+import { AxiosResponse } from "axios";
+import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { useSelector } from "react-redux";
+import { isModalOpen } from "@src/modules/modal";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getEnvironment } from "@src/modules/environment";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 Modal.setAppElement("#__next");
 
-interface LoginModalProps {
-  onClose: () => void;
-  isOpen: boolean;
-}
+const LoginModal: React.FunctionComponent = () => {
+  const { env, isOpen, isLoginLoading } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+      isLoginLoading: isLoading(store, LoadingKeysEnum.LOGIN),
+      env: getEnvironment(store),
+    })
+  );
 
-const LoginModal: React.FunctionComponent<LoginModalProps> = ({
-  onClose,
-  isOpen,
-}) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { env } = useContext(ConfigContext);
+  const { closeLoginModal, startLoadingLogin, stopLoadingLogin } =
+    useSliceMachineActions();
+
   const { addToast } = useToasts();
-  const prismicBase =
-    !!env && env.prismicData ? env.prismicData.base : "https://prismic.io";
+  const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
   const loginRedirectUrl = !!env
     ? `${buildEndpoints(prismicBase).Dashboard.cliLogin}&port=${
         new URL(env.baseUrl).port
@@ -45,17 +54,23 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
     }
 
     try {
-      setIsLoading(true);
+      startLoadingLogin();
       await startAuth();
-      const isAuthStatusOk = ({ status }: { status: string }) =>
-        status === "ok";
+      const isAuthStatusOk = (
+        response: AxiosResponse<CheckAuthStatusResponse>
+      ) => response.data.status === "ok";
       window.open(loginRedirectUrl, "_blank");
-      await startPolling(checkAuthStatus, isAuthStatusOk, 3000, 60);
-      setIsLoading(false);
+      await startPolling<AxiosResponse<CheckAuthStatusResponse>>(
+        checkAuthStatus,
+        isAuthStatusOk,
+        3000,
+        60
+      );
       addToast("Logged in", { appearance: "success" });
-      onClose();
+      stopLoadingLogin();
+      closeLoginModal();
     } catch (e) {
-      setIsLoading(false);
+      stopLoadingLogin();
       addToast("Logging fail", { appearance: "error" });
     }
   };
@@ -64,7 +79,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={onClose}
+      onRequestClose={closeLoginModal}
       contentLabel={"login_modal"}
       style={{
         content: {
@@ -90,7 +105,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
           }}
         >
           <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>
-          <Close sx={{ p: 0 }} type="button" onClick={onClose} />
+          <Close sx={{ p: 0 }} type="button" onClick={closeLoginModal} />
         </Flex>
         <Flex
           sx={{
@@ -108,7 +123,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
               textAlign: "center",
             }}
           >
-            {isLoading ? (
+            {isLoginLoading ? (
               <>
                 Not seeing the browser tab? <br />
                 <Link target={"_blank"} href={loginRedirectUrl}>
@@ -133,7 +148,7 @@ const LoginModal: React.FunctionComponent<LoginModalProps> = ({
             }}
             onClick={onClick}
           >
-            {isLoading ? (
+            {isLoginLoading ? (
               <Spinner color="#FFF" size={16} />
             ) : (
               <>Signin to Prismic</>

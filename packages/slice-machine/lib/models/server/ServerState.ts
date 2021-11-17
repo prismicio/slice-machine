@@ -21,3 +21,11 @@ export interface ServerState {
   env: Environment;
   warnings: ReadonlyArray<Warning>;
 }
+
+export interface AppPayload {
+  env: Environment;
+  libraries?: ReadonlyArray<Library>;
+  customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteSlices?: ReadonlyArray<Slice<AsObject>>;
+}

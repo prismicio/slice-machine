@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { ConfigContext } from "src/config-context";
 import { Box, Flex, Text } from "@theme-ui/components";
 import Container from "../components/Container";
 import ConfigErrors from "../components/ConfigErrors";
@@ -15,11 +13,19 @@ import {
   StorybookNotInManifest,
 } from "../components/Warnings/Storybook";
 import { FiZap } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getConfigErrors, getWarnings } from "@src/modules/environment";
 
-export default function WarningsPage() {
-  const { warnings, configErrors } = useContext(ConfigContext);
+const WarningsPage: React.FunctionComponent = () => {
+  const { warnings, configErrors } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      configErrors: getConfigErrors(store),
+      warnings: getWarnings(store),
+    })
+  );
 
-  const Renderers = {
+  const Renderers: Record<string, React.FunctionComponent<any>> = {
     [warningStates.NOT_CONNECTED]: NotConnected,
     [warningStates.STORYBOOK_NOT_IN_MANIFEST]: StorybookNotInManifest,
     [warningStates.STORYBOOK_NOT_INSTALLED]: StorybookNotInstalled,
@@ -45,13 +51,7 @@ export default function WarningsPage() {
         <Box>
           {warnings.map((warning) => {
             const Component = Renderers[warning.key];
-            return (
-              <Component
-                key={warning.key}
-                errorType={warning.title}
-                {...warning}
-              />
-            );
+            return <Component errorType={warning.title} {...warning} />;
           })}
         </Box>
         <Box>
@@ -68,4 +68,6 @@ export default function WarningsPage() {
       </Container>
     </main>
   );
-}
+};
+
+export default WarningsPage;
