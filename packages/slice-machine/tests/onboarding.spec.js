@@ -39,11 +39,8 @@ describe("tracking/onboarding", () => {
       .post("/", (body) => body.id === TrackingEventId.ONBOARDING_START)
       .reply(201);
 
-    const now = Date.now();
-
     const result = await onboarding({
       id: TrackingEventId.ONBOARDING_START,
-      time: now,
     });
 
     expect(result.err).toBeNull();

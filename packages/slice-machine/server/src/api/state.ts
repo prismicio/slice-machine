@@ -113,8 +113,14 @@ export default async function handler() {
         env.prismicData.base,
         env.prismicData.auth
       );
-      const newtToken = await newTokenResponse.text();
-      FileSystem.updateAuthCookie(newtToken);
+
+      if (
+        newTokenResponse.status &&
+        Math.floor(newTokenResponse.status / 100) === 2
+      ) {
+        const newtToken = await newTokenResponse.text();
+        FileSystem.updateAuthCookie(newtToken);
+      }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);
     }

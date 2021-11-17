@@ -171,7 +171,7 @@ export default class DefaultClient {
     this.trackingFetcher = initFetcher(
       base,
       TrackingApi,
-      {} as DevConfig,
+      devConfig.aclProviderApi,
       repo,
       auth
     );
@@ -209,8 +209,8 @@ export default class DefaultClient {
     return this.trackingFetcher("", review, "", "post");
   }
 
-  async sendOnboarding(data: OnboardingTrackingEvent) {
-    return this.trackingFetcher("", data, "", "post");
+  async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {
+    return this.trackingFetcher("", onboardingEvent, "", "post");
   }
 
   images = {
