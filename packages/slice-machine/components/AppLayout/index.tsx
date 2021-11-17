@@ -9,6 +9,7 @@ import { ServerState } from "@lib/models/server/ServerState";
 
 const AsIs: { [x: string]: boolean } = {
   "/onboarding": true,
+  "/[lib]/[sliceName]/[variation]/preview": true,
 };
 
 const AppLayout = ({
@@ -21,7 +22,7 @@ const AppLayout = ({
   data: ServerState;
 }) => {
   const router = useRouter();
-  if (AsIs[router.asPath]) {
+  if (AsIs[router.asPath] || AsIs[router.pathname]) {
     return <main>{children}</main>;
   }
 

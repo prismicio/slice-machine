@@ -12,7 +12,7 @@ import Slice from "@lib/models/common/Slice";
 import { Variation, AsArray, AsObject } from "@lib/models/common/Variation";
 
 type ContextProps = {
-  Model: ComponentWithLibStatus;
+  Model: SliceState;
   store: SliceStore;
   variation: Variation<AsArray>;
 };

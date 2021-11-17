@@ -4,16 +4,17 @@ import { Popover } from "react-tiny-popover";
 import { Variation, AsArray } from "../../../../../models/common/Variation";
 import MenuList from "./MenuList";
 
-import { Button, Box } from "theme-ui";
+import { Button, Box, ThemeUICSSObject } from "theme-ui";
 
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
+  buttonSx?: ThemeUICSSObject;
   defaultValue?: Variation<AsArray>;
-  onNewVariation: Function;
+  onNewVariation?: Function;
   variations: ReadonlyArray<Variation<AsArray>>;
   onChange: (selected: Variation<AsArray>) => void;
-}> = ({ defaultValue, variations, onNewVariation, onChange }) => {
+}> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [current, setCurrent] = useState<Variation<AsArray>>(
     defaultValue || variations[0]
@@ -39,7 +40,9 @@ const VarationsPopover: React.FunctionComponent<{
         sx={{ color: "text" }}
         onClick={() => {
           setIsOpen(false);
-          onNewVariation();
+          if (onNewVariation) {
+            onNewVariation();
+          }
         }}
       >
         + Add new variation
@@ -60,7 +63,7 @@ const VarationsPopover: React.FunctionComponent<{
             defaultValue={current}
             variations={variations}
             onChange={handleChange}
-            MenuItemAction={MenuItemAction}
+            MenuItemAction={onNewVariation ? MenuItemAction : undefined}
           />
         )}
         containerClassName={"variationSelectorContainer"}
@@ -72,6 +75,7 @@ const VarationsPopover: React.FunctionComponent<{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            ...buttonSx,
           }}
           variant="secondary"
           onClick={() => setIsOpen(!isOpen)}
