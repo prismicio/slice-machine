@@ -3,10 +3,9 @@ export enum TrackingEventId {
   ONBOARDING_START = "slicemachine_onboarding_start",
   ONBOARDING_SKIP = "slicemachine_onboarding_skip",
   ONBOARDING_CONTINUE_SCREEN_INTRO = "slicemachine_onboarding_continue_screen_intro",
-  ONBOARDING_FIRST = "slicemachine_onboarding_continue_1",
-  ONBOARDING_SECOND = "slicemachine_onboarding_continue_2",
-  ONBOARDING_THIRD = "slicemachine_onboarding_continue_3",
-  ONBOARDING_END = "slicemachine_onboarding_end",
+  ONBOARDING_FIRST = "slicemachine_onboarding_continue_screen_1",
+  ONBOARDING_SECOND = "slicemachine_onboarding_continue_screen_2",
+  ONBOARDING_THIRD = "slicemachine_onboarding_continue_screen_3",
 }
 
 export type TrackingEvent = {
@@ -37,12 +36,10 @@ export type OnboardingEventIds =
   | TrackingEventId.ONBOARDING_FIRST
   | TrackingEventId.ONBOARDING_SECOND
   | TrackingEventId.ONBOARDING_THIRD
-  | TrackingEventId.ONBOARDING_SKIP
-  | TrackingEventId.ONBOARDING_END;
+  | TrackingEventId.ONBOARDING_SKIP;
 
 export type OnboardingTrackingEvent = TrackingEvent & {
   id: OnboardingEventIds;
-  time: number;
 };
 
 export type OnboardingStartEvent = OnboardingTrackingEvent & {
@@ -51,8 +48,8 @@ export type OnboardingStartEvent = OnboardingTrackingEvent & {
 
 export type OnboardingSkipEvent = OnboardingTrackingEvent & {
   id: TrackingEventId.ONBOARDING_SKIP;
-  screen: number;
-  completed?: boolean;
+  screenSkipped: number;
+  onboardingVideoCompleted?: boolean;
 };
 
 export type OnboardingContinueEvent = OnboardingTrackingEvent & {
@@ -68,5 +65,5 @@ export type OnboardingContinueWithVideoEvent = OnboardingContinueEvent & {
     | TrackingEventId.ONBOARDING_FIRST
     | TrackingEventId.ONBOARDING_SECOND
     | TrackingEventId.ONBOARDING_THIRD;
-  completed: boolean;
+  onboardingVideoCompleted: boolean;
 };

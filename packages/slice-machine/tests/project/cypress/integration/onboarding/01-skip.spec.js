@@ -7,7 +7,7 @@ describe("onboarding skip", () => {
       "slicemachine_onboarding_skip",
     ]
   
-    cy.intercept('POST', '/tracking/onboarding', ({body}) => {
+    cy.intercept('POST', '/api/tracking/onboarding', ({body}) => {
       expect(body.id).equal(ids.shift())
     })
   
