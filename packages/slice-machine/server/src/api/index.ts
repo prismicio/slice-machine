@@ -22,6 +22,7 @@ import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 import onboarding from "./tracking/onboarding";
+import versionInfo from "./versions";
 
 router.use(
   "/__preview",
@@ -214,6 +215,17 @@ router.post(
       return res.status(500).json(req.body);
     }
     return res.status(200).json({});
+  }
+);
+
+router.get(
+  "/version",
+  async function (_req: express.Request, res: express.Response) {
+    const payload = await versionInfo();
+    if (payload.err) {
+      return res.status(500).json(payload);
+    }
+    return res.status(200).json(payload);
   }
 );
 
