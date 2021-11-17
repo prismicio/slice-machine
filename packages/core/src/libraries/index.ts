@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import slash from "slash";
 
 import Files from "../utils/files";
 import { getInfoFromPath } from "../utils/lib";
@@ -21,7 +20,9 @@ export function handleLibraryPath(
   }
 
   // all paths to components found in slices folder
-  const pathsToComponents = Files.readDirectory(slash(pathToSlices))
+  const pathsToComponents = Files.readDirectory(
+    pathToSlices.split(path.sep).join(path.posix.sep)
+  )
     .map((curr) => path.join(pathToSlices, curr))
     .filter((e) => {
       const f = e.split(path.sep).pop();
@@ -63,8 +64,11 @@ export function handleLibraryPath(
   };
 }
 
-export function libraries(cwd: string, libraries: string[]): ReadonlyArray<Library> {
+export function libraries(
+  cwd: string,
+  libraries: string[]
+): ReadonlyArray<Library> {
   return (libraries || [])
-    .map(lib => handleLibraryPath(cwd, lib))
+    .map((lib) => handleLibraryPath(cwd, lib))
     .filter(Boolean) as ReadonlyArray<Library>;
 }
