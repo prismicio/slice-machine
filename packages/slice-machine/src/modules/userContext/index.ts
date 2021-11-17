@@ -3,7 +3,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 
-// Be careful every key writing in this store is persisted and rehydrated in the localstorage
+// NOTE: Be careful every key written in this store is persisted in the localstorage
 
 const initialState: UserContextStoreType = {
   hasSendAReview: false,

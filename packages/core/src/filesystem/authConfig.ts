@@ -54,3 +54,32 @@ export function setAuthConfig(
     { recursive: false }
   );
 }
+
+export function updateAuthCookie(authCookie: string, directory?: string): void {
+  const currentConfig = getOrCreateAuthConfig(directory);
+  const currentCookieIndexByCookieName = Cookie.parse(currentConfig.cookies);
+
+  const newCookies = {
+    ...currentCookieIndexByCookieName,
+    [Cookie.AUTH_KEY]: authCookie,
+  };
+
+  const cookiesSerialized = Cookie.serializeCookies(
+    Object.entries(newCookies).map(([cookieName, cookieValue]) => {
+      return Cookie.serializeCookie(cookieName, cookieValue);
+    })
+  );
+
+  const configPath = PrismicConfigPath(directory);
+
+  const newConfig: AuthConfig = {
+    cookies: cookiesSerialized,
+    base: currentConfig.base,
+  };
+
+  return Files.write(
+    configPath,
+    { ...currentConfig, ...newConfig },
+    { recursive: false }
+  );
+}

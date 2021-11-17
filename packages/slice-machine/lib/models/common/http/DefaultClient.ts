@@ -37,6 +37,7 @@ const AclProviderApi = {
 
 const SlicesPrefix = "slices/";
 const ValidatePrefix = "validate/";
+const RefreshTokenPrefix = "refreshtoken/";
 const CustomTypesPrefix = "customtypes/";
 
 function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
@@ -122,6 +123,15 @@ export default class DefaultClient {
     );
   }
 
+  static refreshToken(base: string, auth: string): Promise<Response> {
+    return fetch(
+      `${createApiUrl(base, AuthApi)}${RefreshTokenPrefix}?token=${auth}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
   constructor(
     readonly cwd: string,
     readonly base: string,
@@ -161,7 +171,7 @@ export default class DefaultClient {
     this.trackingFetcher = initFetcher(
       base,
       TrackingApi,
-      devConfig.aclProviderApi,
+      {} as DevConfig,
       repo,
       auth
     );
