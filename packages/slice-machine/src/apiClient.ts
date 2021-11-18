@@ -4,6 +4,7 @@ import {
   OnboardingContinueWithVideoEvent,
   OnboardingSkipEvent,
   OnboardingStartEvent,
+  TrackingReviewRequest,
   TrackingReviewResponse,
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
@@ -29,8 +30,14 @@ export const checkAuthStatus = (): Promise<
 export const sendTrackingReview = (
   rating: number,
   comment: string
-): Promise<AxiosResponse<TrackingReviewResponse>> =>
-  axios.post(`/api/tracking/review`, { rating, comment }, defaultAxiosConfig);
+): Promise<AxiosResponse<TrackingReviewResponse>> => {
+  const trackingReviewRequest: TrackingReviewRequest = { rating, comment };
+  return axios.post(
+    `/api/tracking/review`,
+    trackingReviewRequest,
+    defaultAxiosConfig
+  );
+};
 
 export const sendTrackingOnboarding = (
   onboardingEvent:

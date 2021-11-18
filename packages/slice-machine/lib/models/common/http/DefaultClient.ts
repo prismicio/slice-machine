@@ -4,7 +4,8 @@ import Files from "../../../utils/files";
 import {
   ReviewTrackingEvent,
   OnboardingTrackingEvent,
-} from "@models/common/TrackingEvent";
+  TrackingEventId,
+} from "@lib/models/common/TrackingEvent";
 import { AsObject } from "@lib/models/common/Variation";
 import Slice from "@lib/models/common/Slice";
 
@@ -205,8 +206,12 @@ export default class DefaultClient {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
   }
 
-  async sendReview(review: ReviewTrackingEvent): Promise<Response> {
-    return this.trackingFetcher("", review, "", "post");
+  async sendReview(review: Omit<ReviewTrackingEvent, "id">): Promise<Response> {
+    const payload: ReviewTrackingEvent = {
+      ...review,
+      id: TrackingEventId.REVIEW,
+    };
+    return this.trackingFetcher("", payload, "", "post");
   }
 
   async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {

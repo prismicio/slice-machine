@@ -3,8 +3,3 @@ export enum ModalKeysEnum {
 }
 
 export type ModalStoreType = Record<ModalKeysEnum, boolean>;
-
-export type UserContextStoreType = {
-  hasSendAReview: boolean;
-  isOnboarded: boolean;
-};

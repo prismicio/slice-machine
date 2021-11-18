@@ -13,7 +13,7 @@ import AppLayout from "../AppLayout";
 import ToastProvider from "../../src/ToastProvider";
 
 import LoginModal from "@components/LoginModal";
-import RatingModal from "@components/RatingModal";
+import ReviewModal from "@components/ReviewModal";
 import { AppPayload, ServerState } from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
@@ -116,10 +116,10 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                           </Drawer>
                         </SliceHandler>
                       </AppLayout>
+                      <LoginModal />
+                      <ReviewModal />
                     </CustomTypesProvider>
                   </LibrariesProvider>
-                  <LoginModal />
-                  <RatingModal />
                 </ToastProvider>
               )}
             </>

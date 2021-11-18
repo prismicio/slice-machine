@@ -19,7 +19,10 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
-import { userHasSendAReview } from "@src/modules/userContext";
+import {
+  userHasDoneTheOnboarding,
+  userHasSendAReview,
+} from "@src/modules/userContext";
 import { useToasts } from "react-toast-notifications";
 import { sendTrackingReview } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -27,13 +30,13 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 
 Modal.setAppElement("#__next");
 
-type RatingModalProps = {
+type ReviewModalProps = {
   cardProps?: {};
 };
 
 const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
 
-const SelectRatingComponent = ({ field, form }: FieldProps) => {
+const SelectReviewComponent = ({ field, form }: FieldProps) => {
   return (
     <Box sx={{ mb: 3 }}>
       {ratingSelectable.map((rating) => (
@@ -59,16 +62,20 @@ const SelectRatingComponent = ({ field, form }: FieldProps) => {
   );
 };
 
-const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
+const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
-  const { isReviewLoading, isLoginModalOpen, hasSendAReview } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
-      isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
-      hasSendAReview: userHasSendAReview(store),
-    })
-  );
+  const {
+    isReviewLoading,
+    isLoginModalOpen,
+    hasSendAReview,
+    hasDoneTheOnboarding,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
+    isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
+    hasSendAReview: userHasSendAReview(store),
+    hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
+  }));
 
   const {
     skipReview,
@@ -92,7 +99,7 @@ const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
       : 0;
 
   const customTypeCount = !!customTypes ? customTypes.length : 0;
-  // Deactivate for this release
+
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
   const onSendAReview = async (
@@ -123,12 +130,14 @@ const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
 
   return (
     <SliceMachineModal
-      isOpen={userHasCreateEnoughContent && !hasSendAReview}
+      isOpen={
+        userHasCreateEnoughContent && !hasSendAReview && hasDoneTheOnboarding
+      }
       shouldCloseOnOverlayClick={false}
       onRequestClose={() => skipReview()}
       closeTimeoutMS={500}
       contentLabel={"Review Modal"}
-      portalClassName={"RatingModal"}
+      portalClassName={"ReviewModal"}
       style={{
         content: {
           display: "flex",
@@ -211,7 +220,7 @@ const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
                     Very easy
                   </Text>
                 </Box>
-                <Field name={"rating"} component={SelectRatingComponent} />
+                <Field name={"rating"} component={SelectReviewComponent} />
                 <Field
                   name={"comment"}
                   type="text"
@@ -253,4 +262,4 @@ const RatingModal: React.FunctionComponent<RatingModalProps> = () => {
   );
 };
 
-export default RatingModal;
+export default ReviewModal;

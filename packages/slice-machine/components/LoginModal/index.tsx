@@ -28,6 +28,9 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 Modal.setAppElement("#__next");
 
+const isAuthStatusOk = (response: AxiosResponse<CheckAuthStatusResponse>) =>
+  response.data.status === "ok";
+
 const LoginModal: React.FunctionComponent = () => {
   const { env, isOpen, isLoginLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -56,9 +59,6 @@ const LoginModal: React.FunctionComponent = () => {
     try {
       startLoadingLogin();
       await startAuth();
-      const isAuthStatusOk = (
-        response: AxiosResponse<CheckAuthStatusResponse>
-      ) => response.data.status === "ok";
       window.open(loginRedirectUrl, "_blank");
       await startPolling<AxiosResponse<CheckAuthStatusResponse>>(
         checkAuthStatus,
