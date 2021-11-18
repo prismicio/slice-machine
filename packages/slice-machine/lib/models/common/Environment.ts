@@ -11,7 +11,7 @@ export default interface Environment {
   userConfig: UserConfig;
   hasConfigFile: boolean;
   repo?: string;
-  prismicData?: PrismicData;
+  prismicData: PrismicData;
   chromatic?: Chromatic;
   currentVersion: string;
   updateAvailable?: PackageVersion;

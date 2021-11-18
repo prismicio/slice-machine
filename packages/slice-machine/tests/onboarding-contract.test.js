@@ -47,11 +47,8 @@ contract("contract: onboarding tracking", () => {
       JSON.stringify({ apiEndpoint: repoUrl.toString() })
     );
 
-    const now = Date.now();
-
     const result = await onboarding({
       id: "slicemachine_onboarding_start",
-      time: now,
     });
 
     expect(result.err).toBeNull();

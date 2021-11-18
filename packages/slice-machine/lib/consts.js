@@ -44,7 +44,3 @@ export const SupportedFrameworks = {
 };
 
 export const MockConfigKey = "mockConfig";
-
-export const LocalStorageKeys = {
-  isOnboarded: "is-onboarded",
-};

@@ -12,6 +12,7 @@ import ServerError from "./ServerError";
 export interface ConfigErrors {
   [errorKey: string]: ServerError;
 }
+
 export interface ServerState {
   libraries: ReadonlyArray<Library>;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
@@ -20,4 +21,12 @@ export interface ServerState {
   configErrors: ConfigErrors;
   env: Environment;
   warnings: ReadonlyArray<Warning>;
+}
+
+export interface AppPayload {
+  env: Environment;
+  libraries?: ReadonlyArray<Library>;
+  customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteSlices?: ReadonlyArray<Slice<AsObject>>;
 }

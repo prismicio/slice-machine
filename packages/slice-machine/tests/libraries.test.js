@@ -2,7 +2,7 @@ const TMP = "/tmp";
 import fs from "fs";
 import { Volume } from "memfs";
 
-import { getEnv } from "../lib/env";
+import getEnv from "../server/src/api/services/getEnv";
 import { listComponentsByLibrary } from "../lib/queries/listComponents";
 
 jest.mock(`fs`, () => {

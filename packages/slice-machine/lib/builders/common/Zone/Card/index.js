@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { ConfigContext } from "src/config-context";
 
 import { Box, Text } from "theme-ui";
 
@@ -13,6 +11,8 @@ import { findWidgetByConfigOrType } from "../../../utils";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 
 import Li from "components/Li";
+import { useSelector } from "react-redux";
+import { getEnvironment } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
@@ -32,7 +32,9 @@ const FieldZone = ({
 }) => {
   const {
     env: { framework },
-  } = useContext(ConfigContext);
+  } = useSelector((store) => ({
+    env: getEnvironment(store),
+  }));
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

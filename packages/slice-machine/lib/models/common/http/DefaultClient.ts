@@ -4,7 +4,8 @@ import Files from "../../../utils/files";
 import {
   ReviewTrackingEvent,
   OnboardingTrackingEvent,
-} from "@models/common/TrackingEvent";
+  TrackingEventId,
+} from "@lib/models/common/TrackingEvent";
 import { AsObject } from "@lib/models/common/Variation";
 import Slice from "@lib/models/common/Slice";
 
@@ -37,6 +38,7 @@ const AclProviderApi = {
 
 const SlicesPrefix = "slices/";
 const ValidatePrefix = "validate/";
+const RefreshTokenPrefix = "refreshtoken/";
 const CustomTypesPrefix = "customtypes/";
 
 function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
@@ -122,6 +124,15 @@ export default class DefaultClient {
     );
   }
 
+  static refreshToken(base: string, auth: string): Promise<Response> {
+    return fetch(
+      `${createApiUrl(base, AuthApi)}${RefreshTokenPrefix}?token=${auth}`,
+      {
+        method: "GET",
+      }
+    );
+  }
+
   constructor(
     readonly cwd: string,
     readonly base: string,
@@ -195,12 +206,16 @@ export default class DefaultClient {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
   }
 
-  async sendReview(review: ReviewTrackingEvent): Promise<Response> {
-    return this.trackingFetcher("", review, "", "post");
+  async sendReview(review: Omit<ReviewTrackingEvent, "id">): Promise<Response> {
+    const payload: ReviewTrackingEvent = {
+      ...review,
+      id: TrackingEventId.REVIEW,
+    };
+    return this.trackingFetcher("", payload, "", "post");
   }
 
-  async sendOnboarding(data: OnboardingTrackingEvent) {
-    return this.trackingFetcher("", data, "", "post");
+  async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {
+    return this.trackingFetcher("", onboardingEvent, "", "post");
   }
 
   images = {

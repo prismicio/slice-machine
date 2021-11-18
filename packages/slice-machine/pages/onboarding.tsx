@@ -11,10 +11,8 @@ import {
   ParagraphProps,
   IconButton,
 } from "theme-ui";
-import { LocalStorageKeys } from "@lib/consts";
 import {
   TrackingEventId,
-  OnboardingStartEvent,
   OnboardingSkipEvent,
   OnboardingContinueEvent,
   OnboardingContinueWithVideoEvent,
@@ -23,6 +21,8 @@ import router from "next/router";
 
 import { BiChevronLeft } from "react-icons/bi";
 import { Video as CldVideo } from "cloudinary-react";
+import { sendTrackingOnboarding } from "@src/apiClient";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -173,20 +173,6 @@ function idFromStep(
   }
 }
 
-function postTracking(
-  onboardingEvent:
-    | OnboardingStartEvent
-    | OnboardingSkipEvent
-    | OnboardingContinueEvent
-    | OnboardingContinueWithVideoEvent
-): Promise<Response> {
-  return fetch("/api/tracking/onboarding", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(onboardingEvent),
-  });
-}
-
 function handleTracking(props: {
   step: number;
   maxSteps: number;
@@ -201,7 +187,9 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    postTracking({ id: TrackingEventId.ONBOARDING_START });
+    sendTrackingOnboarding({
+      id: TrackingEventId.ONBOARDING_START,
+    }).catch(console.error);
 
     return () => {
       // on unmount
@@ -219,7 +207,7 @@ function handleTracking(props: {
               onboardingVideoCompleted: videoCompleted,
             };
 
-      postTracking(data).catch(console.error);
+      sendTrackingOnboarding(data).catch(console.error);
     };
   }, []);
 }
@@ -232,6 +220,8 @@ export default function Onboarding(): JSX.Element {
     <PushPagesSlide onEnded={handleOnVideoEnd} />,
   ];
 
+  const { finishOnboarding } = useSliceMachineActions();
+
   const [state, setState] = useState({
     step: 0,
     videoCompleted: false,
@@ -241,20 +231,19 @@ export default function Onboarding(): JSX.Element {
     return setState({ ...state, videoCompleted: true });
   }
 
-  useEffect(() => {
-    localStorage.setItem(LocalStorageKeys.isOnboarded, "true");
-  }, []);
-
   handleTracking({
     ...state,
     maxSteps: STEPS.length,
     videoCompleted: state.videoCompleted,
   });
 
-  const escape = () => router.push("/");
+  const finish = () => {
+    finishOnboarding();
+    router.push("/");
+  };
 
   function nextSlide() {
-    if (state.step === STEPS.length - 1) return escape();
+    if (state.step === STEPS.length - 1) return finish();
     const id = idFromStep(state.step);
     const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
       id,
@@ -263,7 +252,7 @@ export default function Onboarding(): JSX.Element {
         : {}),
     };
 
-    postTracking(data);
+    sendTrackingOnboarding(data).catch(console.error);
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
@@ -285,7 +274,7 @@ export default function Onboarding(): JSX.Element {
         {!!state.step && (
           <Button
             variant="transparent"
-            onClick={escape}
+            onClick={finish}
             data-cy="skip-onboarding"
             title="skip onboarding"
             tabIndex={0}

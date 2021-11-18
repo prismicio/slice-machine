@@ -1,11 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
+import { useSelector } from "react-redux";
 
 import { handleRemoteResponse } from "src/ToastProvider/utils";
 
 import { SliceContext } from "src/models/slice/context";
-import { ConfigContext } from "src/config-context";
 
 import { createStorybookUrl } from "@lib/utils";
 
@@ -14,17 +14,22 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { LoginModalContext } from "../../../src/LoginModalProvider";
+import { getEnvironment, getWarnings } from "src/modules/environment";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
 const Builder = ({ openPanel }) => {
-  const { Model, store, variation } = useContext(SliceContext);
-  const { openLogin } = useContext(LoginModalContext);
   const {
     env: {
       userConfig: { storybook: storybookBaseUrl },
     },
     warnings,
-  } = useContext(ConfigContext);
+  } = useSelector((store) => ({
+    env: getEnvironment(store),
+    warnings: getWarnings(store),
+  }));
+  const { Model, store, variation } = useContext(SliceContext);
+  const { openLoginModal } = useSliceMachineActions();
+
   const {
     infos: { sliceName, previewUrls },
     from,
@@ -45,7 +50,7 @@ const Builder = ({ openPanel }) => {
   const onPush = (data) => {
     setData(data);
     if (data.error && data.status === 403) {
-      openLogin();
+      openLoginModal();
     }
   };
 

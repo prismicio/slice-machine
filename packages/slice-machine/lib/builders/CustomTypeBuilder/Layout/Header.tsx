@@ -1,21 +1,18 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useState } from "react";
+import { useToasts } from "react-toast-notifications";
+import { Box, Button, Spinner, Text } from "theme-ui";
 
 import {
   CustomTypeState,
   CustomTypeStatus,
-} from "../../../models/ui/CustomTypeState";
-import { useToasts } from "react-toast-notifications";
-import { handleRemoteResponse } from "../../../../src/ToastProvider/utils";
-
-import { Box, Button, Text, Spinner } from "theme-ui";
-
-import CustomTypeStore from "../../../../src/models/customType/store";
-import { ToastPayload } from "../../../../src/ToastProvider/utils";
+} from "@lib/models/ui/CustomTypeState";
+import { handleRemoteResponse, ToastPayload } from "@src/ToastProvider/utils";
+import CustomTypeStore from "@src/models/customType/store";
 
 import { FiLayout } from "react-icons/fi";
 
 import Header from "../../../../components/Header";
-import { LoginModalContext } from "@src/LoginModalProvider";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const CustomTypeHeader = ({
   Model,
@@ -25,7 +22,7 @@ const CustomTypeHeader = ({
   store: CustomTypeStore;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { openLogin } = useContext(LoginModalContext);
+  const { openLoginModal } = useSliceMachineActions();
   const { addToast } = useToasts();
 
   const buttonProps = (() => {
@@ -53,7 +50,7 @@ const CustomTypeHeader = ({
               setIsLoading(false);
               handleRemoteResponse(addToast)(data);
               if (data.error && data.status === 403) {
-                openLogin();
+                openLoginModal();
               }
             });
           }

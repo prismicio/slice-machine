@@ -1,4 +1,4 @@
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import { FakeResponse } from "@lib/models/common/http/FakeClient";
 import {
   OnboardingStartEvent,

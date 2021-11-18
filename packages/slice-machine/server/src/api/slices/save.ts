@@ -3,7 +3,7 @@ declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
 
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import mock from "@lib/mock/Slice";
 import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
