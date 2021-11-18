@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { ThemeProvider, BaseStyles, Theme } from "theme-ui";
+import { ThemeProvider, BaseStyles, useThemeUI, Theme } from "theme-ui";
 
 import LibrariesProvider from "@src/models/libraries/context";
 import CustomTypesProvider from "@src/models/customTypes/context";
@@ -17,6 +17,17 @@ import ReviewModal from "@components/ReviewModal";
 import { AppPayload, ServerState } from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
+
+const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
+  const { setColorMode } = useThemeUI();
+  useEffect(() => {
+    if (setColorMode) {
+      setColorMode("light");
+    }
+  }, []);
+
+  return children;
+};
 
 type AppProps = {
   theme: () => Theme;
@@ -56,62 +67,64 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
   return (
     <ThemeProvider theme={theme}>
       <BaseStyles>
-        {!serverState ? (
-          <Renderer {...payload} />
-        ) : (
-          <>
-            {!payload || !payload.libraries ? (
-              <Renderer
-                Component={Component}
-                pageProps={pageProps}
-                {...payload}
-                openPanel={openPanel}
-              />
-            ) : (
-              <ToastProvider>
-                <LibrariesProvider
-                  remoteSlices={payload.remoteSlices}
-                  libraries={payload.libraries}
-                  env={payload.env}
-                >
-                  <CustomTypesProvider
-                    customTypes={payload.customTypes}
-                    remoteCustomTypes={payload.remoteCustomTypes}
+        <RemoveDarkMode>
+          {!serverState ? (
+            <Renderer {...payload} />
+          ) : (
+            <>
+              {!payload || !payload.libraries ? (
+                <Renderer
+                  Component={Component}
+                  pageProps={pageProps}
+                  {...payload}
+                  openPanel={openPanel}
+                />
+              ) : (
+                <ToastProvider>
+                  <LibrariesProvider
+                    remoteSlices={payload.remoteSlices}
+                    libraries={payload.libraries}
+                    env={payload.env}
                   >
-                    <AppLayout {...payload} serverState={serverState}>
-                      <SliceHandler {...payload}>
-                        <Renderer
-                          Component={Component}
-                          pageProps={pageProps}
-                          {...payload}
-                          openPanel={openPanel}
-                        />
-                        <Drawer
-                          placement="right"
-                          open={drawerState.open}
-                          onClose={() =>
-                            setDrawerState({
-                              ...drawerState,
-                              open: false,
-                            })
-                          }
-                        >
-                          <Warnings
-                            priority={drawerState.priority}
-                            list={serverState.warnings}
-                            configErrors={serverState.configErrors}
+                    <CustomTypesProvider
+                      customTypes={payload.customTypes}
+                      remoteCustomTypes={payload.remoteCustomTypes}
+                    >
+                      <AppLayout {...payload} serverState={serverState}>
+                        <SliceHandler {...payload}>
+                          <Renderer
+                            Component={Component}
+                            pageProps={pageProps}
+                            {...payload}
+                            openPanel={openPanel}
                           />
-                        </Drawer>
-                      </SliceHandler>
-                    </AppLayout>
-                    <LoginModal />
-                    <ReviewModal />
-                  </CustomTypesProvider>
-                </LibrariesProvider>
-              </ToastProvider>
-            )}
-          </>
-        )}
+                          <Drawer
+                            placement="right"
+                            open={drawerState.open}
+                            onClose={() =>
+                              setDrawerState({
+                                ...drawerState,
+                                open: false,
+                              })
+                            }
+                          >
+                            <Warnings
+                              priority={drawerState.priority}
+                              list={serverState.warnings}
+                              configErrors={serverState.configErrors}
+                            />
+                          </Drawer>
+                        </SliceHandler>
+                      </AppLayout>
+                      <LoginModal />
+                      <ReviewModal />
+                    </CustomTypesProvider>
+                  </LibrariesProvider>
+                </ToastProvider>
+              )}
+            </>
+          )}
+        </RemoveDarkMode>
       </BaseStyles>
     </ThemeProvider>
   );
