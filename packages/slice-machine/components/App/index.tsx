@@ -17,6 +17,7 @@ import RatingModal from "@components/RatingModal";
 import { AppPayload, ServerState } from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
+import UpdateModal from "../UpdateModal";
 
 const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
   const { setColorMode } = useThemeUI();
@@ -118,6 +119,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                       </AppLayout>
                     </CustomTypesProvider>
                   </LibrariesProvider>
+                  <UpdateModal />
                   <LoginModal />
                   <RatingModal />
                 </ToastProvider>
