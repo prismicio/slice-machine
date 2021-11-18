@@ -29,6 +29,7 @@ const STUB_DATA: VersionInfo = {
 export default function UpdateModal() {
   const [state] = React.useState(STUB_DATA);
   const ref = React.useRef<HTMLDivElement>(null);
+  const isOpen = false;
 
   const copy = () => {
     ref.current?.textContent &&
@@ -42,7 +43,7 @@ export default function UpdateModal() {
   return (
     !state.err && (
       <SliceMachineModal
-        isOpen={true}
+        isOpen={isOpen}
         style={{
           content: {
             position: "static",
