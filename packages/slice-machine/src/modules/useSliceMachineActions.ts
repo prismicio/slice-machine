@@ -13,15 +13,26 @@ import {
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
 import { ServerState } from "@models/server/ServerState";
+import { getUpdateNotificationCreator } from "./update";
+import { VersionInfo } from "server/src/api/versions";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
+
+  // Update Notification
+
+  const updateNotification = (payload: VersionInfo) =>
+    dispatch(getUpdateNotificationCreator(payload));
 
   // Modal store
   const closeLoginModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeUpdateModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.NEW_VERSION }));
+  const openUpdateModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.NEW_VERSION }));
 
   // Loading store
   const startLoadingReview = () =>
@@ -60,6 +71,9 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     sendAReview,
     skipReview,
+    updateNotification,
+    closeUpdateModal,
+    openUpdateModal,
   };
 };
 

@@ -8,6 +8,8 @@ import {
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
+import type { VersionInfo } from "../server/src/api/versions";
+
 const defaultAxiosConfig = {
   headers: {
     Accept: "application/json",
@@ -40,3 +42,9 @@ export const sendTrackingOnboarding = (
     | OnboardingContinueWithVideoEvent
 ): Promise<AxiosResponse<TrackingReviewResponse>> =>
   axios.post(`/api/tracking/onboarding`, onboardingEvent, defaultAxiosConfig);
+
+/** Version info Route **/
+
+export function getVersionInfo(): Promise<AxiosResponse<VersionInfo>> {
+  return axios.get<VersionInfo>("/api/version");
+}

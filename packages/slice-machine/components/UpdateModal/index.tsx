@@ -1,118 +1,121 @@
 import React from "react";
-import axios from "axios";
-
 import SliceMachineModal from "../SliceMachineModal";
-// import { getVersionInfo } from '../../src/apiClient'
-import { VersionInfo } from "../../server/src/api/versions";
 import {
-  //  Button,
   Card,
   Close,
   Flex,
   Heading,
-  //  Link,
-  //  Spinner,
   Text,
   Paragraph,
   IconButton,
 } from "theme-ui";
 import { MdOutlineCopyAll } from "react-icons/md";
-
-const STUB_DATA: VersionInfo = {
-  update: true,
-  updateCommand: "yarn update slice-machine-ui",
-  packageManager: "yarn",
-  current: "0.0.0",
-  recent: "0.0.1",
-};
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { getUpdateNotification } from "../../src/modules/update";
+import { getVersionInfo } from "@src/apiClient";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isModalOpen } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 
 export default function UpdateModal() {
-  const [state] = React.useState(STUB_DATA);
   const ref = React.useRef<HTMLDivElement>(null);
-  const isOpen = false;
+
+  const { isOpen, state } = useSelector((store: SliceMachineStoreType) => ({
+    state: getUpdateNotification(store),
+    isOpen: isModalOpen(store, ModalKeysEnum.NEW_VERSION),
+  }));
+
+  const { updateNotification, closeUpdateModal, openUpdateModal } =
+    useSliceMachineActions();
+
+  React.useEffect(() => {
+    getVersionInfo().then((res) => {
+      updateNotification(res.data);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (state.update) openUpdateModal();
+  }, [state.update]);
 
   const copy = () => {
     ref.current?.textContent &&
       navigator.clipboard.writeText(ref.current.textContent);
   };
 
-  if ("err" in state) {
+  if (state.err) {
     console.error(state.err);
-    return null;
+    return false;
   }
+
   return (
-    !state.err && (
-      <SliceMachineModal
-        isOpen={isOpen}
-        style={{
-          content: {
-            position: "static",
-            display: "flex",
-            margin: "auto",
-            minHeight: "initial",
-          },
-          overlay: {
-            display: "flex",
-          },
+    <SliceMachineModal
+      isOpen={isOpen}
+      style={{
+        content: {
+          position: "static",
+          display: "flex",
+          margin: "auto",
+          minHeight: "initial",
+        },
+        overlay: {
+          display: "flex",
+        },
+      }}
+    >
+      <Card
+        sx={{
+          maxWidth: "380px",
+          padding: "20px",
+          bg: "headSection",
         }}
       >
-        <Card
+        <Flex
           sx={{
-            maxWidth: "380px",
-            padding: "20px",
-            bg: "headSection",
+            marginBottom: "20px",
+            paddingBottom: "20px",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: "8px 8px 0px 0px",
+            borderBottom: (t) => `1px solid ${t.colors?.borders}`,
           }}
         >
-          <Flex
-            sx={{
-              marginBottom: "20px",
-              paddingBottom: "20px",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderRadius: "8px 8px 0px 0px",
-              borderBottom: (t) => `1px solid ${t.colors?.borders}`,
-            }}
-          >
-            <Heading sx={{ fontSize: "16px" }}>
-              {" "}
-              SliceMachine {state.recent} available
-            </Heading>
-            <Close
-              tabIndex={0}
-              sx={{ p: 0, alignSelf: "start" }}
-              type="button"
-              onClick={() => undefined}
-            />
-          </Flex>
+          <Heading sx={{ fontSize: "16px" }}>
+            {" "}
+            SliceMachine {state.recent} available
+          </Heading>
+          <Close
+            tabIndex={0}
+            sx={{ p: 0, alignSelf: "start" }}
+            type="button"
+            onClick={closeUpdateModal}
+          />
+        </Flex>
 
-          <Paragraph
-            sx={{ fontSize: "14px", color: "#4E4E55", marginBottom: "20px" }}
-          >
-            To update to new version of Slice Machine, open a terminal, run the
-            following command and restart Slice Machine:
-          </Paragraph>
+        <Paragraph
+          sx={{ fontSize: "14px", color: "#4E4E55", marginBottom: "20px" }}
+        >
+          To update to new version of Slice Machine, open a terminal, run the
+          following command and restart Slice Machine:
+        </Paragraph>
 
-          <Flex
-            sx={{
-              border: "1px solid rgba(62, 62, 72, 0.15)",
-              borderRadius: "4px",
-              padding: "4px",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              ref={ref}
-              as="code"
-              sx={{ margin: "4px", textAlign: "center" }}
-            >
-              {state.updateCommand}
-            </Text>
-            <IconButton title="Click to copy" tabIndex={0} onClick={copy}>
-              <MdOutlineCopyAll />
-            </IconButton>
-          </Flex>
-        </Card>
-      </SliceMachineModal>
-    )
+        <Flex
+          sx={{
+            border: "1px solid rgba(62, 62, 72, 0.15)",
+            borderRadius: "4px",
+            padding: "4px",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text ref={ref} as="code" sx={{ margin: "4px", textAlign: "center" }}>
+            {state.updateCommand}
+          </Text>
+          <IconButton title="Click to copy" tabIndex={0} onClick={copy}>
+            <MdOutlineCopyAll />
+          </IconButton>
+        </Flex>
+      </Card>
+    </SliceMachineModal>
   );
 }
