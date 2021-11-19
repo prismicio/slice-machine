@@ -3,11 +3,11 @@ import {
   hasYarn,
   getRemotePackage,
   HTTPResponseError,
-} from "../../../lib/utils/version";
+} from "../../../../server/src/api/versions";
 import fs from "fs";
 import nock from "nock";
 import semver from "semver";
-import { name, version } from "../../../package.json";
+import { name, version } from "../../../../package.json";
 
 describe("version", () => {
   describe("checkVersion", () => {
