@@ -10,14 +10,6 @@ export interface Manifest {
   _latest?: string;
 }
 
-export enum ManifestStates {
-  Valid = "Valid",
-  NotFound = "NotFound",
-  MissingEndpoint = "MissingEndpoint",
-  InvalidEndpoint = "InvalidEndpoint",
-  InvalidJson = "InvalidJson",
-}
-
 export function createManifest(cwd: string, manifest: Manifest): void {
   const manifestPath = SMConfigPath(cwd);
   Files.write(manifestPath, JSON.stringify(manifest, null, "\t"), {

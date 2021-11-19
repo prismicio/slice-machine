@@ -12,6 +12,7 @@ import ServerError from "./ServerError";
 export interface ConfigErrors {
   [errorKey: string]: ServerError;
 }
+
 export interface ServerState {
   libraries: ReadonlyArray<Library>;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;

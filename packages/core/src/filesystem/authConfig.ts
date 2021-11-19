@@ -64,22 +64,11 @@ export function updateAuthCookie(authCookie: string, directory?: string): void {
     [Cookie.AUTH_KEY]: authCookie,
   };
 
-  const cookiesSerialized = Cookie.serializeCookies(
-    Object.entries(newCookies).map(([cookieName, cookieValue]) => {
+  const cookiesSerialized = Object.entries(newCookies).map(
+    ([cookieName, cookieValue]) => {
       return Cookie.serializeCookie(cookieName, cookieValue);
-    })
+    }
   );
 
-  const configPath = PrismicConfigPath(directory);
-
-  const newConfig: AuthConfig = {
-    cookies: cookiesSerialized,
-    base: currentConfig.base,
-  };
-
-  return Files.write(
-    configPath,
-    { ...currentConfig, ...newConfig },
-    { recursive: false }
-  );
+  return setAuthConfig(cookiesSerialized);
 }
