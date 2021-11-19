@@ -4,7 +4,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render } from "../test-utils";
-import UpdateModal from "../../components/UpdateModal";
+import UpdateModal from "../../components/UpdateVersionModal";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 
