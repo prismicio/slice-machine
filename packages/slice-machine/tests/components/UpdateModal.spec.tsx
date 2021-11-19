@@ -4,10 +4,9 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render } from "../test-utils";
-import UpdateModal from "@components/UpdateModal";
+import UpdateModal from "../../components/UpdateModal";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import Modal from "react-modal";
 
 const NEEDS_UPDATE = {
   update: true,
