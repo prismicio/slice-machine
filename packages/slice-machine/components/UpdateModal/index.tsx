@@ -51,6 +51,7 @@ export default function UpdateModal(): JSX.Element | null {
 
   return (
     <SliceMachineModal
+      appElement={document.body}
       isOpen={isOpen}
       style={{
         content: {
