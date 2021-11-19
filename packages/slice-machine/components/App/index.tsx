@@ -119,8 +119,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                       </AppLayout>
                     </CustomTypesProvider>
                   </LibrariesProvider>
-                  <UpdateModal />
-                  <LoginModal />
+                  {<UpdateModal /> || <LoginModal />}
                   <RatingModal />
                 </ToastProvider>
               )}

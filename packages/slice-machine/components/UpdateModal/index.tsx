@@ -18,7 +18,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 
-export default function UpdateModal() {
+export default function UpdateModal(): JSX.Element | null {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { isOpen, state } = useSelector((store: SliceMachineStoreType) => ({
@@ -46,7 +46,7 @@ export default function UpdateModal() {
 
   if (state.err) {
     console.error(state.err);
-    return false;
+    return null;
   }
 
   return (
