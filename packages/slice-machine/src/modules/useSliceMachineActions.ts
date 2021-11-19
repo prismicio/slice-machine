@@ -29,10 +29,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-  const closeUpdateModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.NEW_VERSION }));
-  const openUpdateModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.NEW_VERSION }));
+  const closeUpdateVersionModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
+  const openUpdateVersionModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
 
   // Loading store
   const startLoadingReview = () =>
@@ -72,8 +72,8 @@ const useSliceMachineActions = () => {
     sendAReview,
     skipReview,
     updateNotification,
-    closeUpdateModal,
-    openUpdateModal,
+    closeUpdateVersionModal,
+    openUpdateVersionModal,
   };
 };
 

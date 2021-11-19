@@ -1,5 +1,5 @@
+import React from "react";
 import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
-import { useContext } from "react";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
@@ -25,11 +25,7 @@ const warnings = (len: number) => ({
   Icon: FiZap,
 });
 
-const UpdateInfo = (): JSX.Element | null => {
-  const { openUpdateModal } = useSliceMachineActions();
-  const { update } = useSelector(getUpdateNotification);
-  if (!update) return null;
-
+const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <Flex
       sx={{
@@ -66,7 +62,7 @@ const UpdateInfo = (): JSX.Element | null => {
           margin: "8px",
           fontSize: "11.67px",
         }}
-        onClick={openUpdateModal}
+        onClick={onClick}
       >
         Update
       </Button>
@@ -75,7 +71,9 @@ const UpdateInfo = (): JSX.Element | null => {
 };
 
 const Desktop = () => {
-  const navCtx = useContext(NavCtx);
+  const navCtx = React.useContext(NavCtx);
+  const { openUpdateVersionModal } = useSliceMachineActions();
+  const { update } = useSelector(getUpdateNotification);
 
   const isNotLoggedIn = !!(navCtx?.warnings || []).find(
     (e) => e.key === warningStates.NOT_CONNECTED
@@ -87,7 +85,8 @@ const Desktop = () => {
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          <UpdateInfo />
+          {update && <UpdateInfo onClick={openUpdateVersionModal} />}
+
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item

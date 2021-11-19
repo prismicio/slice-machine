@@ -18,16 +18,19 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 
-export default function UpdateModal(): JSX.Element | null {
+const UpdateVersionModal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { isOpen, state } = useSelector((store: SliceMachineStoreType) => ({
     state: getUpdateNotification(store),
-    isOpen: isModalOpen(store, ModalKeysEnum.NEW_VERSION),
+    isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
   }));
 
-  const { updateNotification, closeUpdateModal, openUpdateModal } =
-    useSliceMachineActions();
+  const {
+    updateNotification,
+    closeUpdateVersionModal,
+    openUpdateVersionModal,
+  } = useSliceMachineActions();
 
   React.useEffect(() => {
     getVersionInfo().then((res) => {
@@ -36,7 +39,7 @@ export default function UpdateModal(): JSX.Element | null {
   }, []);
 
   React.useEffect(() => {
-    if (state.update) openUpdateModal();
+    if (state.update) openUpdateVersionModal();
   }, [state.update]);
 
   const copy = () => {
@@ -52,7 +55,7 @@ export default function UpdateModal(): JSX.Element | null {
   return (
     <SliceMachineModal
       appElement={document.body}
-      isOpen={isOpen}
+      isOpen={isOpen && !state.err}
       style={{
         content: {
           position: "static",
@@ -90,7 +93,7 @@ export default function UpdateModal(): JSX.Element | null {
             tabIndex={0}
             sx={{ p: 0, alignSelf: "start" }}
             type="button"
-            onClick={closeUpdateModal}
+            onClick={closeUpdateVersionModal}
           />
         </Flex>
 
@@ -119,4 +122,6 @@ export default function UpdateModal(): JSX.Element | null {
       </Card>
     </SliceMachineModal>
   );
-}
+};
+
+export default UpdateVersionModal;

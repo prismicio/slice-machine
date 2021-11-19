@@ -1,6 +1,6 @@
 export enum ModalKeysEnum {
   LOGIN = "LOGIN",
-  NEW_VERSION = "NEW_VERSION",
+  UPDATE_VERSION = "UPDATE_VERSION",
 }
 
 export type ModalStoreType = Record<ModalKeysEnum, boolean>;
