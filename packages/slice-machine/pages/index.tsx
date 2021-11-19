@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import {
   Box,
   Flex,
@@ -11,7 +11,6 @@ import {
   Heading,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
-import { CustomTypesContext } from "../src/models/customTypes/context";
 
 import { GoPlus } from "react-icons/go";
 
@@ -23,6 +22,9 @@ import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
 
 import Header from "@components/Header";
 import EmptyState from "@components/EmptyState";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { getLocalCustomTypes } from "@src/modules/customTypes";
 
 interface CtPayload {
   repeatable: boolean;
@@ -120,17 +122,13 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { customTypes = [], onCreate } = useContext(CustomTypesContext);
+  const { createCustomType } = useSliceMachineActions();
+  const customTypes = useSelector(getLocalCustomTypes);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
-    if (onCreate) {
-      onCreate(id, {
-        label,
-        repeatable,
-      });
-      setIsOpen(false);
-      router.push(`/cts/${id}`);
-    }
+    createCustomType(id, label, repeatable);
+    setIsOpen(false);
+    router.push(`/cts/${id}`);
   };
 
   return (

@@ -6,7 +6,11 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 const useServerState = (serverState: ServerState | undefined) => {
   const { getEnvironment } = useSliceMachineActions();
 
-  useEffect(() => getEnvironment(serverState), [serverState]);
+  useEffect(() => {
+    if (!serverState) return;
+
+    getEnvironment(serverState);
+  }, [serverState]);
 
   return;
 };

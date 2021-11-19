@@ -1,7 +1,4 @@
 import { useRouter } from "next/router";
-import { useContext } from "react";
-
-import { CustomTypesContext } from "src/models/customTypes/context";
 
 import { useModelReducer } from "src/models/customType/modelReducer";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
@@ -10,6 +7,11 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
+import {
+  getLocalCustomTypes,
+  getRemoteCustomTypes,
+} from "@src/modules/customTypes";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomType<ObjectTabs>;
@@ -36,10 +38,17 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
 
 const CustomTypeBuilderWithRouter = () => {
   const router = useRouter();
-  const { customTypes, remoteCustomTypes, onSave } =
-    useContext(CustomTypesContext);
+  const { saveCustomType } = useSliceMachineActions();
+  const { localCustomTypes, remoteCustomTypes } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      localCustomTypes: getLocalCustomTypes(state),
+      remoteCustomTypes: getRemoteCustomTypes(state),
+    })
+  );
 
-  const customType = customTypes?.find((e) => e && e.id === router.query.ct);
+  const customType = localCustomTypes?.find(
+    (e) => e && e.id === router.query.ct
+  );
   const remoteCustomType = remoteCustomTypes?.find(
     (e) => e && e.id === router.query.ct
   );
@@ -52,7 +61,7 @@ const CustomTypeBuilderWithRouter = () => {
     <CustomTypeBuilderWithProvider
       customType={customType}
       remoteCustomType={remoteCustomType}
-      onLeave={onSave || function () {}}
+      onLeave={saveCustomType}
     />
   );
 };

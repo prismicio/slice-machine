@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 export const CustomTypesContext = React.createContext<
   Partial<{
@@ -22,26 +23,6 @@ export default function Provider({
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>> | undefined;
 }) {
   const [cts, setCts] = useState(customTypes);
-  const onCreate = (
-    id: string,
-    { label, repeatable }: { label: string; repeatable: boolean }
-  ) => {
-    setCts([
-      {
-        id,
-        label,
-        repeatable,
-        tabs: {
-          Main: {
-            key: "Main",
-            value: {},
-          },
-        },
-        status: true,
-      },
-      ...cts,
-    ]);
-  };
 
   const onSave = (modelPayload: CustomTypeState) => {
     setCts(
@@ -54,9 +35,17 @@ export default function Provider({
     );
   };
 
+  const { getCustomTypes } = useSliceMachineActions();
+
+  useEffect(() => {
+    if (cts && remoteCustomTypes) {
+      getCustomTypes(cts, remoteCustomTypes);
+    }
+  }, []);
+
   return (
     <CustomTypesContext.Provider
-      value={{ customTypes: cts, remoteCustomTypes, onCreate, onSave }}
+      value={{ customTypes: cts, remoteCustomTypes, onSave }}
     >
       {children}
     </CustomTypesContext.Provider>

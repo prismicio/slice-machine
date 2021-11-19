@@ -17,7 +17,6 @@ import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
-import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
 import {
   userHasDoneTheOnboarding,
@@ -27,6 +26,7 @@ import { useToasts } from "react-toast-notifications";
 import { sendTrackingReview } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getLocalCustomTypes } from "@src/modules/customTypes";
 
 Modal.setAppElement("#__next");
 
@@ -63,7 +63,7 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 };
 
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
-  const { customTypes } = useContext(CustomTypesContext);
+  const localCustomTypes = useSelector(getLocalCustomTypes);
   const libraries = useContext(LibrariesContext);
   const {
     isReviewLoading,
@@ -98,7 +98,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
         }, 0)
       : 0;
 
-  const customTypeCount = !!customTypes ? customTypes.length : 0;
+  const customTypeCount = !!localCustomTypes ? localCustomTypes.length : 0;
 
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 

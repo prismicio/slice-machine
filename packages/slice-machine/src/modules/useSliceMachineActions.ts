@@ -13,6 +13,13 @@ import {
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
 import { ServerState } from "@models/server/ServerState";
+import {
+  createCustomTypesCreator,
+  getCustomTypesCreator,
+  saveCustomTypesCreator,
+} from "@src/modules/customTypes";
+import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { CustomTypeState } from "@models/ui/CustomTypeState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -41,9 +48,9 @@ const useSliceMachineActions = () => {
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
-  const getEnvironment = (serverState: ServerState | undefined) => {
-    if (!serverState) return;
 
+  // Environment store
+  const getEnvironment = (serverState: ServerState) => {
     dispatch(
       getEnvironmentCreator({
         env: serverState.env,
@@ -53,7 +60,24 @@ const useSliceMachineActions = () => {
     );
   };
 
+  // CustomTypes store
+  const getCustomTypes = (
+    localCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>,
+    remoteCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>
+  ) => {
+    dispatch(getCustomTypesCreator({ localCustomTypes, remoteCustomTypes }));
+  };
+  const saveCustomType = (modelPayload: CustomTypeState) => {
+    dispatch(saveCustomTypesCreator({ modelPayload }));
+  };
+  const createCustomType = (id: string, label: string, repeatable: boolean) => {
+    dispatch(createCustomTypesCreator({ id, label, repeatable }));
+  };
+
   return {
+    getCustomTypes,
+    saveCustomType,
+    createCustomType,
     getEnvironment,
     finishOnboarding,
     openLoginModal,
