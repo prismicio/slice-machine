@@ -54,6 +54,7 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
         A new version of Slice Machine is available
       </Paragraph>
       <Button
+        data-testid="update-modal-open"
         sx={{
           background: "#5B3DF5",
           border: "1px solid rgba(62, 62, 72, 0.15)",
