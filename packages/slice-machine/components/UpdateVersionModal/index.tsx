@@ -94,6 +94,7 @@ const UpdateVersionModal: React.FC = () => {
             sx={{ p: 0, alignSelf: "start" }}
             type="button"
             onClick={closeUpdateVersionModal}
+            data-testid="update-modal-close"
           />
         </Flex>
 

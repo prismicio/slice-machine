@@ -3,7 +3,7 @@
  */
 import "@testing-library/jest-dom";
 import React from "react";
-import { render } from "../test-utils";
+import { render, fireEvent } from "../test-utils";
 import UpdateModal from "../../components/UpdateVersionModal";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
@@ -32,10 +32,13 @@ afterAll(() => server.close());
 
 test("it should open when a more recent version is available", async () => {
   const result = render(<UpdateModal />);
+  const text = "npm i -D slice-machine-ui";
 
-  expect(
-    await result.findByText("npm i -D slice-machine-ui")
-  ).toBeInTheDocument();
+  expect(await result.findByText(text)).toBeInTheDocument();
+
+  fireEvent.click(result.getByTestId("update-modal-close"));
+
+  expect(result.queryByText(text)).toBeNull();
 });
 
 test("it should not open when using the most recent version", () => {

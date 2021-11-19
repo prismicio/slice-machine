@@ -2,11 +2,9 @@ import React from "react";
 import { render as rtlRender, RenderOptions } from "@testing-library/react";
 import { Store, AnyAction } from "redux";
 
-// import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from "react-redux";
 import type { SliceMachineStoreType } from "../src/redux/type";
 import configureStore from "@src/redux/store";
-// import createReducer from '@src/redux/reducer'
 
 function render(
   ui: any,
