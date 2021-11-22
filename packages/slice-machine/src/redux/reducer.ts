@@ -8,7 +8,6 @@ import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
-import { updateNotificationReducer } from "@src/modules/update";
 
 /**
  * Creates the main reducer
@@ -19,7 +18,6 @@ const createReducer = () =>
     loading: loadingReducer,
     userContext: userContextReducer,
     environment: environmentReducer,
-    updateVersionInfo: updateNotificationReducer,
   });
 
 export default createReducer;

@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import {
   getConfigErrors,
   getEnvironment,
+  getUpdateVersionInfo,
   getWarnings,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -79,15 +80,15 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
 const Desktop = () => {
   const navCtx = React.useContext(NavCtx);
-  const { env, warnings, configErrors } = useSelector(
+  const { env, warnings, configErrors, updateVersionInfo } = useSelector(
     (store: SliceMachineStoreType) => ({
       env: getEnvironment(store),
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
+      updateVersionInfo: getUpdateVersionInfo(store),
     })
   );
   const { openUpdateVersionModal } = useSliceMachineActions();
-  const { update } = useSelector(getUpdateNotification);
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
@@ -99,8 +100,9 @@ const Desktop = () => {
         <Logo />
         <ItemsList mt={4} links={navCtx?.links as []} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {update && <UpdateInfo onClick={openUpdateVersionModal} />}
-
+          {updateVersionInfo?.updateAvailable && (
+            <UpdateInfo onClick={openUpdateVersionModal} />
+          )}
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item

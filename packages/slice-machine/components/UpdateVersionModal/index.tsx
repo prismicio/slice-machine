@@ -12,56 +12,48 @@ import {
 import { MdOutlineCopyAll } from "react-icons/md";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
-import { getUpdateNotification } from "../../src/modules/update";
-import { getVersionInfo } from "@src/apiClient";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getUpdateVersionInfo } from "@src/modules/environment";
 
 const UpdateVersionModal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { isOpen, state } = useSelector((store: SliceMachineStoreType) => ({
-    state: getUpdateNotification(store),
-    isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
-  }));
+  const { isOpen, updateVersionInfo } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      updateVersionInfo: getUpdateVersionInfo(store),
+      isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
+    })
+  );
 
-  const {
-    updateNotification,
-    closeUpdateVersionModal,
-    openUpdateVersionModal,
-  } = useSliceMachineActions();
-
-  React.useEffect(() => {
-    getVersionInfo().then((res) => {
-      updateNotification(res.data);
-    });
-  }, []);
+  const { closeUpdateVersionModal, openUpdateVersionModal } =
+    useSliceMachineActions();
 
   React.useEffect(() => {
-    if (state.update) openUpdateVersionModal();
-  }, [state.update]);
+    if (!updateVersionInfo) return;
+    if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
+  }, [updateVersionInfo]);
 
   const copy = () => {
     ref.current?.textContent &&
       navigator.clipboard.writeText(ref.current.textContent);
   };
 
-  if (state.err) {
-    console.error(state.err);
-    return null;
-  }
+  // if the data is not loaded
+  if (!updateVersionInfo) return null;
 
   return (
     <SliceMachineModal
       appElement={document.body}
-      isOpen={isOpen && !state.err}
+      isOpen={isOpen}
       style={{
         content: {
           position: "static",
           display: "flex",
           margin: "auto",
           minHeight: "initial",
+          textAlign: "center",
         },
         overlay: {
           display: "flex",
@@ -87,7 +79,7 @@ const UpdateVersionModal: React.FC = () => {
         >
           <Heading sx={{ fontSize: "16px" }}>
             {" "}
-            SliceMachine {state.recent} available
+            SliceMachine {updateVersionInfo.latestVersion} available
           </Heading>
           <Close
             tabIndex={0}
@@ -97,14 +89,12 @@ const UpdateVersionModal: React.FC = () => {
             data-testid="update-modal-close"
           />
         </Flex>
-
         <Paragraph
           sx={{ fontSize: "14px", color: "#4E4E55", marginBottom: "20px" }}
         >
           To update to new version of Slice Machine, open a terminal, run the
           following command and restart Slice Machine:
         </Paragraph>
-
         <Flex
           sx={{
             border: "1px solid rgba(62, 62, 72, 0.15)",
@@ -114,7 +104,7 @@ const UpdateVersionModal: React.FC = () => {
           }}
         >
           <Text ref={ref} as="code" sx={{ margin: "4px", textAlign: "center" }}>
-            {state.updateCommand}
+            {updateVersionInfo.updateCommand}
           </Text>
           <IconButton title="Click to copy" tabIndex={0} onClick={copy}>
             <MdOutlineCopyAll />

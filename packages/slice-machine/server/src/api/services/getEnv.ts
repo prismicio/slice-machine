@@ -178,11 +178,6 @@ export default async function getEnv(
         updateCommand: npmCompare.updateCommand,
         updateAvailable: npmCompare.updateAvailable,
       },
-      updateAvailable: {
-        current: "",
-        next: "",
-        message: "Could not fetch remote version",
-      },
       mockConfig,
       hasGeneratedStoriesPath,
       framework: defineFramework(manifestState.content as Manifest, cwd),

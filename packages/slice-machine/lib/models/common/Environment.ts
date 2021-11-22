@@ -4,7 +4,6 @@ import Chromatic from "./Chromatic";
 import { Framework } from "./Framework";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
-import PackageVersion from "./PackageVersion";
 
 export interface UpdateVersionInfo {
   currentVersion: string;
@@ -22,7 +21,6 @@ export default interface Environment {
   prismicData: PrismicData;
   chromatic?: Chromatic;
   updateVersionInfo: UpdateVersionInfo;
-  updateAvailable?: PackageVersion;
   mockConfig: any;
   framework: Framework;
   baseUrl: string;

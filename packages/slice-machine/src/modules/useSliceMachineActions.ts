@@ -13,16 +13,9 @@ import {
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
 import { ServerState } from "@models/server/ServerState";
-import { getUpdateNotificationCreator } from "./update";
-import { VersionInfo } from "server/src/api/versions";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
-
-  // Update Notification
-
-  const updateNotification = (payload: VersionInfo) =>
-    dispatch(getUpdateNotificationCreator(payload));
 
   // Modal store
   const closeLoginModal = () =>
@@ -71,7 +64,6 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     sendAReview,
     skipReview,
-    updateNotification,
     closeUpdateVersionModal,
     openUpdateVersionModal,
   };
