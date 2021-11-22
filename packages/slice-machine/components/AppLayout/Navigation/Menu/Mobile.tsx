@@ -8,9 +8,16 @@ import Logo from "./Logo";
 import ItemsList from "./Navigation/List";
 
 import { NavCtx } from "..";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getEnvironment } from "@src/modules/environment";
 
 const Mobile = () => {
   const navCtx = useContext(NavCtx);
+  const { env } = useSelector((store: SliceMachineStoreType) => ({
+    env: getEnvironment(store),
+  }));
+
   const [open, setOpen] = useState(false);
   const handleClick = () => {
     setOpen(!open);
@@ -28,7 +35,7 @@ const Mobile = () => {
         <Box>
           <ItemsList mt={4} links={navCtx?.links as []} />
           <Box sx={{ textAlign: "right" }}>
-            <VersionBadge version={navCtx?.env?.currentVersion as string} />
+            <VersionBadge version={env?.updateVersionInfo.currentVersion} />
           </Box>
         </Box>
       ) : null}

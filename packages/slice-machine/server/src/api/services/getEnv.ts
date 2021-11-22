@@ -178,7 +178,6 @@ export default async function getEnv(
         updateCommand: npmCompare.updateCommand,
         updateAvailable: npmCompare.updateAvailable,
       },
-      currentVersion: "",
       updateAvailable: {
         current: "",
         next: "",

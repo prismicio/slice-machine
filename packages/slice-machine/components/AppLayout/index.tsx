@@ -17,7 +17,6 @@ type AppLayoutProps = {
 
 const AppLayout: React.FunctionComponent<AppLayoutProps> = ({
   children,
-  env,
   serverState,
 }) => {
   const router = useRouter();
@@ -34,7 +33,6 @@ const AppLayout: React.FunctionComponent<AppLayoutProps> = ({
       }}
     >
       <Navigation
-        env={env}
         warnings={serverState.warnings}
         configErrors={serverState.configErrors}
       />

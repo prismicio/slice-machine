@@ -22,7 +22,6 @@ export default interface Environment {
   prismicData: PrismicData;
   chromatic?: Chromatic;
   updateVersionInfo: UpdateVersionInfo;
-  currentVersion: string;
   updateAvailable?: PackageVersion;
   mockConfig: any;
   framework: Framework;

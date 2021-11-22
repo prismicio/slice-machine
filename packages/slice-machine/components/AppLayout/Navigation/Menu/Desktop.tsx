@@ -14,8 +14,14 @@ import { warningStates } from "@lib/consts";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { getUpdateNotification } from "../../../../src/modules/update";
 import { useSelector } from "react-redux";
+import {
+  getConfigErrors,
+  getEnvironment,
+  getWarnings,
+} from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
 
-const warnings = (len: number) => ({
+const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
   delimiter: true,
   href: "/warnings",
@@ -73,10 +79,17 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 
 const Desktop = () => {
   const navCtx = React.useContext(NavCtx);
+  const { env, warnings, configErrors } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      env: getEnvironment(store),
+      warnings: getWarnings(store),
+      configErrors: getConfigErrors(store),
+    })
+  );
   const { openUpdateVersionModal } = useSliceMachineActions();
   const { update } = useSelector(getUpdateNotification);
 
-  const isNotLoggedIn = !!(navCtx?.warnings || []).find(
+  const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
   );
 
@@ -91,14 +104,13 @@ const Desktop = () => {
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item
-            link={warnings(
-              (navCtx?.warnings?.length || 0) +
-                Object.keys(navCtx?.configErrors || {}).length
+            link={formatWarnings(
+              warnings.length + Object.keys(configErrors).length
             )}
           />
           <VersionBadge
             label="Version"
-            version={navCtx?.env?.currentVersion as string}
+            version={env?.updateVersionInfo.currentVersion}
           />
         </Box>
       </Box>

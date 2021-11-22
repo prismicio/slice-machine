@@ -56,7 +56,6 @@ const App = () => (
   <NavCtx.Provider
     value={{
       links: [],
-      env,
       warnings: [],
       configErrors: {},
     }}

@@ -38,7 +38,6 @@ export interface LinkProps {
 
 export interface NavCtxProps {
   links: LinkProps[];
-  env: Environment;
   warnings: ReadonlyArray<Warning>;
   configErrors: ConfigErrors;
 }
@@ -46,17 +45,15 @@ export interface NavCtxProps {
 export const NavCtx = createContext<NavCtxProps | null>(null);
 
 const Navigation = ({
-  env,
   warnings,
   configErrors,
 }: {
-  env: Environment;
   warnings: ReadonlyArray<Warning>;
   configErrors: ConfigErrors;
 }) => {
   const viewport = useWindowSize();
   return (
-    <NavCtx.Provider value={{ links, env, warnings, configErrors }}>
+    <NavCtx.Provider value={{ links, warnings, configErrors }}>
       {(viewport.width as number) < 640 ? <Mobile /> : <Desktop />}
     </NavCtx.Provider>
   );
