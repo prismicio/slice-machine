@@ -6,7 +6,6 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { render, fireEvent } from "../test-utils";
 import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
-import { NavCtx } from "../../components/AppLayout/Navigation";
 import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Framework } from "../../lib/models/common/Framework";
 import UpdateModal from "../../components/UpdateVersionModal";
@@ -23,16 +22,10 @@ jest.mock("next/router", () => ({
 }));
 
 const App = () => (
-  <NavCtx.Provider
-    value={{
-      links: [],
-      warnings: [],
-      configErrors: {},
-    }}
-  >
-    <Desktop />
+  <>
+    <Desktop links={[]} />
     <UpdateModal />
-  </NavCtx.Provider>
+  </>
 );
 
 const FAKE_ENVIRONMENT = {

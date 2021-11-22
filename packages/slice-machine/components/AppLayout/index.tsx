@@ -3,22 +3,13 @@ import { Box } from "theme-ui";
 
 import Navigation from "./Navigation";
 
-import Environment from "@lib/models/common/Environment";
-import { ServerState } from "@lib/models/server/ServerState";
-
 const AsIs: { [x: string]: boolean } = {
   "/onboarding": true,
 };
 
-type AppLayoutProps = {
-  env: Environment;
-  serverState: ServerState;
-};
+type AppLayoutProps = {};
 
-const AppLayout: React.FunctionComponent<AppLayoutProps> = ({
-  children,
-  serverState,
-}) => {
+const AppLayout: React.FunctionComponent<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   if (AsIs[router.asPath]) {
     return <main>{children}</main>;
@@ -32,10 +23,7 @@ const AppLayout: React.FunctionComponent<AppLayoutProps> = ({
         flexDirection: ["column", "row", null],
       }}
     >
-      <Navigation
-        warnings={serverState.warnings}
-        configErrors={serverState.configErrors}
-      />
+      <Navigation />
       <Box
         as="main"
         sx={{

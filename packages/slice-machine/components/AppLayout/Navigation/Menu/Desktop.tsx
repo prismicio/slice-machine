@@ -4,7 +4,7 @@ import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
-import { NavCtx } from "..";
+import { LinkProps } from "..";
 import Item from "./Navigation/Item";
 
 import NotLoggedIn from "./Navigation/NotLoggedIn";
@@ -12,7 +12,6 @@ import NotLoggedIn from "./Navigation/NotLoggedIn";
 import { warningStates } from "@lib/consts";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { getUpdateNotification } from "../../../../src/modules/update";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
@@ -78,8 +77,9 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-const Desktop = () => {
-  const navCtx = React.useContext(NavCtx);
+const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
+  links,
+}) => {
   const { env, warnings, configErrors, updateVersionInfo } = useSelector(
     (store: SliceMachineStoreType) => ({
       env: getEnvironment(store),
@@ -98,7 +98,7 @@ const Desktop = () => {
     <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
       <Box py={4} px={3}>
         <Logo />
-        <ItemsList mt={4} links={navCtx?.links as []} />
+        <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo?.updateAvailable && (
             <UpdateInfo onClick={openUpdateVersionModal} />
@@ -112,7 +112,7 @@ const Desktop = () => {
           />
           <VersionBadge
             label="Version"
-            version={env?.updateVersionInfo.currentVersion}
+            version={env ? env.updateVersionInfo.currentVersion : ""}
           />
         </Box>
       </Box>

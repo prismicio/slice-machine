@@ -9,8 +9,6 @@ import {
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
-import type { VersionInfo } from "../server/src/api/versions";
-
 const defaultAxiosConfig = {
   headers: {
     Accept: "application/json",

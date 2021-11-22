@@ -91,7 +91,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                       customTypes={payload.customTypes}
                       remoteCustomTypes={payload.remoteCustomTypes}
                     >
-                      <AppLayout {...payload} serverState={serverState}>
+                      <AppLayout>
                         <SliceHandler {...payload}>
                           <Renderer
                             Component={Component}
