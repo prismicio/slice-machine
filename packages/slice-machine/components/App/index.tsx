@@ -17,6 +17,7 @@ import ReviewModal from "@components/ReviewModal";
 import { AppPayload, ServerState } from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
+import UpdateVersionModal from "../UpdateVersionModal";
 
 const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
   const { setColorMode } = useThemeUI();
@@ -90,7 +91,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                       customTypes={payload.customTypes}
                       remoteCustomTypes={payload.remoteCustomTypes}
                     >
-                      <AppLayout {...payload} serverState={serverState}>
+                      <AppLayout>
                         <SliceHandler {...payload}>
                           <Renderer
                             Component={Component}
@@ -116,6 +117,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                           </Drawer>
                         </SliceHandler>
                       </AppLayout>
+                      <UpdateVersionModal />
                       <LoginModal />
                       <ReviewModal />
                     </CustomTypesProvider>

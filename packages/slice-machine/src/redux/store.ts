@@ -14,7 +14,9 @@ declare var window: {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
 };
 
-export default function configureStore() {
+export default function configureStore(
+  preloadedState: Partial<SliceMachineStoreType> = {}
+) {
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
@@ -27,7 +29,7 @@ export default function configureStore() {
   const persistedReducer = persistReducer(persistConfig, rootReducer);
   const store: Store<SliceMachineStoreType> = createStore(
     persistedReducer,
-    {},
+    preloadedState,
     composeEnhancers()
   );
   const persistor = persistStore(store);

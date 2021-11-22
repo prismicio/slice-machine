@@ -72,10 +72,10 @@ export async function createWarnings(
   })();
 
   const newVersion =
-    env.updateAvailable && env.updateAvailable.next
+    env.updateVersionInfo && env.updateVersionInfo.updateAvailable
       ? {
           key: warningStates.NEW_VERSION_AVAILABLE,
-          value: env.updateAvailable,
+          value: env.updateVersionInfo,
         }
       : undefined;
 

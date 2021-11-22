@@ -157,7 +157,7 @@ async function run() {
   }
 
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
-  const npmCompareData = await compareVersions({ cwd: SmDirectory }, false);
+  const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
   const framework = Utils.Framework.defineFramework(userConfig.content, cwd);
 

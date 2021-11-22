@@ -171,11 +171,12 @@ export default async function getEnv(
       hasConfigFile: true,
       prismicData: prismicData.value,
       chromatic,
-      currentVersion: npmCompare.currentVersion || "",
-      updateAvailable: npmCompare.updateAvailable || {
-        current: "",
-        next: "",
-        message: "Could not fetch remote version",
+      updateVersionInfo: {
+        currentVersion: npmCompare.currentVersion,
+        latestVersion: npmCompare.onlinePackage?.version || "",
+        packageManager: npmCompare.packageManager,
+        updateCommand: npmCompare.updateCommand,
+        updateAvailable: npmCompare.updateAvailable,
       },
       mockConfig,
       hasGeneratedStoriesPath,
