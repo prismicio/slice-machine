@@ -1,21 +1,13 @@
-import { Framework, Files, Endpoints } from "../utils";
+import { Framework, Files } from "../utils";
 import { FileContent, SMConfigPath } from "./paths";
 
 export interface Manifest {
-  apiEndpoint: Endpoints.ApiEndpoint;
+  apiEndpoint: string;
   storybook?: string;
   libraries?: string[];
   framework?: Framework.FrameworkEnum;
   chromaticAppId?: string;
   _latest?: string;
-}
-
-export enum ManifestStates {
-  Valid = "Valid",
-  NotFound = "NotFound",
-  MissingEndpoint = "MissingEndpoint",
-  InvalidEndpoint = "InvalidEndpoint",
-  InvalidJson = "InvalidJson",
 }
 
 export function createManifest(cwd: string, manifest: Manifest): void {

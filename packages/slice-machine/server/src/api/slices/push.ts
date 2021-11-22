@@ -1,6 +1,6 @@
 import { snakelize } from "@lib/utils/str";
 
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 import Files from "@lib/utils/files";
 

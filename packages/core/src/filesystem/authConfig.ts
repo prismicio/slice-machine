@@ -1,21 +1,24 @@
-import { getOrElseW } from 'fp-ts/lib/Either';
-import * as t from 'io-ts';
+import { getOrElseW } from "fp-ts/lib/Either";
+import * as t from "io-ts";
 import { Files, Cookie } from "../utils";
 import { PrismicConfigPath } from "./paths";
 
 export const AuthConfig = t.intersection([
   t.type({
     base: t.string,
-    cookies: t.string
+    cookies: t.string,
   }),
   t.partial({
     oauthAccessToken: t.string,
-    authUrl: t.string
-  })
+    authUrl: t.string,
+  }),
 ]);
-export type AuthConfig = t.TypeOf<typeof AuthConfig>
+export type AuthConfig = t.TypeOf<typeof AuthConfig>;
 
-const DEFAULT_CONFIG: AuthConfig = { base: "https://prismic.io", cookies: "" };
+export const DEFAULT_CONFIG: AuthConfig = {
+  base: "https://prismic.io",
+  cookies: "",
+};
 
 export function createDefaultAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);
@@ -29,8 +32,8 @@ export function getOrCreateAuthConfig(directory?: string): AuthConfig {
   const configPath = PrismicConfigPath(directory);
   if (!Files.exists(configPath)) return createDefaultAuthConfig(directory);
 
-  const conf = Files.safeReadEntity(configPath, payload => {
-    return getOrElseW(() => null)(AuthConfig.decode(payload))
+  const conf = Files.safeReadEntity(configPath, (payload) => {
+    return getOrElseW(() => null)(AuthConfig.decode(payload));
   });
   return { ...DEFAULT_CONFIG, ...conf } as AuthConfig;
 }
@@ -59,4 +62,22 @@ export function setAuthConfig(
     { ...currentConfig, ...newConfig },
     { recursive: false }
   );
+}
+
+export function updateAuthCookie(authCookie: string, directory?: string): void {
+  const currentConfig = getOrCreateAuthConfig(directory);
+  const currentCookieIndexByCookieName = Cookie.parse(currentConfig.cookies);
+
+  const newCookies = {
+    ...currentCookieIndexByCookieName,
+    [Cookie.AUTH_KEY]: authCookie,
+  };
+
+  const cookiesSerialized = Object.entries(newCookies).map(
+    ([cookieName, cookieValue]) => {
+      return Cookie.serializeCookie(cookieName, cookieValue);
+    }
+  );
+
+  return setAuthConfig(cookiesSerialized);
 }

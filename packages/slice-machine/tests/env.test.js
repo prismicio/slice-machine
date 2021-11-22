@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Volume } from "memfs";
 
-import { getEnv } from "../lib/env";
+import getEnv from "../server/src/api/services/getEnv";
 import { createWarnings } from "../server/src/api/state";
 import { warningStates, SupportedFrameworks } from "../lib/consts";
 

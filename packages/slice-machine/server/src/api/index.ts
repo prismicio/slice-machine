@@ -21,6 +21,12 @@ import validateAuth from "./auth/validate";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+import onboarding from "./tracking/onboarding";
+
+import {
+  TrackingReviewRequest,
+  TrackingReviewResponse,
+} from "@lib/models/common/TrackingEvent";
 
 router.use(
   "/__preview",
@@ -53,12 +59,24 @@ router.get(
 
 router.post(
   "/tracking/review",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request<TrackingReviewRequest>,
+    res: express.Response<TrackingReviewResponse>
+  ) {
     const payload = await trackReview(req.body);
-    if (payload.clientError) {
-      return res.status(payload.clientError.status).json(payload);
+    return res.status(payload.status).json({});
+  }
+);
+
+router.post(
+  "/tracking/onboarding",
+  async (req: express.Request, res: express.Response) => {
+    const result = await onboarding(req.body);
+    if (result.err) {
+      const status = result.err.status || 400;
+      return res.status(status).json(result);
     }
-    return res.status(200).json(payload);
+    return res.json(result);
   }
 );
 

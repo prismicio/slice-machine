@@ -1,6 +1,6 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { getEnv } from "@lib/env";
+import getEnv from "./services/getEnv";
 import { warningStates, warningTwoLiners } from "@lib/consts";
 import { fetchStorybookUrl } from "./common/storybook";
 import Environment from "@lib/models/common/Environment";
@@ -10,6 +10,8 @@ import ServerError from "@lib/models/server/ServerError";
 import Files from "@lib/utils/files";
 import { Pkg } from "@lib/models/paths";
 import { generate } from "./common/generate";
+import DefaultClient from "@lib/models/common/http/DefaultClient";
+import { FileSystem } from "@slicemachine/core";
 
 const hasStorybookScript = (cwd: string) => {
   const pathToManifest = Pkg(cwd);
@@ -104,6 +106,26 @@ export default async function handler() {
   const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
     env
   );
+
+  // Refresh auth
+  if (!isFake && env.prismicData.auth) {
+    try {
+      const newTokenResponse: Response = await DefaultClient.refreshToken(
+        env.prismicData.base,
+        env.prismicData.auth
+      );
+
+      if (
+        newTokenResponse.status &&
+        Math.floor(newTokenResponse.status / 100) === 2
+      ) {
+        const newtToken = await newTokenResponse.text();
+        FileSystem.updateAuthCookie(newtToken);
+      }
+    } catch (e) {
+      console.error("[Refresh token]: Internal error : ", e);
+    }
+  }
 
   const warnings = await createWarnings(env, configErrors, clientError);
 

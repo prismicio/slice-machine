@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { Box } from "theme-ui";
 
@@ -12,14 +11,15 @@ const AsIs: { [x: string]: boolean } = {
   "/[lib]/[sliceName]/[variation]/preview": true,
 };
 
-const AppLayout = ({
+type AppLayoutProps = {
+  env: Environment;
+  serverState: ServerState;
+};
+
+const AppLayout: React.FunctionComponent<AppLayoutProps> = ({
   children,
   env,
-  data,
-}: {
-  children: ReactNode;
-  env: Environment;
-  data: ServerState;
+  serverState,
 }) => {
   const router = useRouter();
   if (AsIs[router.asPath] || AsIs[router.pathname]) {
@@ -36,8 +36,8 @@ const AppLayout = ({
     >
       <Navigation
         env={env}
-        warnings={data.warnings}
-        configErrors={data.configErrors}
+        warnings={serverState.warnings}
+        configErrors={serverState.configErrors}
       />
       <Box
         as="main"

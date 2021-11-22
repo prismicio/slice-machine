@@ -1,8 +1,7 @@
-import Auth from "../models/common/Auth";
-import { getPrismicData } from "../auth";
-import DefaultClient from "../models/common/http/DefaultClient";
+import getPrismicData from "./getPrismicData";
+import DefaultClient from "@lib/models/common/http/DefaultClient";
 
-export async function validate() {
+export async function validateUserAuth() {
   const prismicData = getPrismicData();
   if (!prismicData.isOk()) {
     return {
@@ -10,17 +9,16 @@ export async function validate() {
       reason: `Could not parse ~/.prismic file`,
     };
   }
-  if (prismicData.value.authError) {
+  if (!prismicData.value.auth) {
     return {
       connected: false,
       reason: `Could not parse ~/.prismic prismic-auth string`,
     };
   }
-  const authObject = prismicData.value.auth as Auth;
 
   const res = await DefaultClient.validate(
     prismicData.value.base,
-    authObject.auth
+    prismicData.value.auth
   );
   if (res.status > 209) {
     return {

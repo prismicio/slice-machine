@@ -7,25 +7,22 @@ import {
   ParseResult,
 } from "parse-domain";
 
-import { getPrismicData } from "../auth";
-import initClient from "../models/common/http";
+import getPrismicData from "./getPrismicData";
 
-import { getConfig as getMockConfig } from "../mock/misc/fs";
+import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
+import Files from "@lib/utils/files";
+import { SupportedFrameworks } from "@lib/consts";
+import { createComparator } from "@lib/env/semver";
+import { defineFramework, isValidFramework } from "@lib/env/framework";
+import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
 
-import Files from "../utils/files";
-import { SMConfig } from "../models/paths";
-import { SupportedFrameworks } from "../consts";
-
-import Environment from "../models/common/Environment";
-import ServerError from "../models/server/ServerError";
-import Chromatic from "../models/common/Chromatic";
-import FakeClient from "../models/common/http/FakeClient";
-import { ConfigErrors } from "../models/server/ServerState";
-
-import { createComparator } from "./semver";
-import { defineFramework, isValidFramework } from "./framework";
-import handleManifest, { ManifestStates, Manifest } from "./manifest";
+import initClient from "@lib/models/common/http";
+import Environment from "@lib/models/common/Environment";
+import ServerError from "@lib/models/server/ServerError";
+import Chromatic from "@lib/models/common/Chromatic";
+import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
+import { SMConfig } from "@lib/models/paths";
 
 declare let appRoot: string;
 
@@ -108,10 +105,10 @@ function parseStorybookConfiguration(cwd: string) {
   return file.includes("getStoriesPaths") || file.includes(".slicemachine");
 }
 
-export async function getEnv(
+export default async function getEnv(
   maybeCustomCwd?: string
 ): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
-  const cwd = maybeCustomCwd || process.env.CWD;
+  const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
       "[api/env]: Unrecoverable error. Could not find cwd. Exiting..";
@@ -119,38 +116,23 @@ export async function getEnv(
     throw new Error(message);
   }
 
-  const prismicData = getPrismicData();
-  const npmCompare = await compareNpmVersions({ cwd });
-
   if (!Files.exists(SMConfig(cwd))) {
-    return {
-      env: {
-        cwd,
-        userConfig: {
-          libraries: [],
-          apiEndpoint: "",
-          storybook: "",
-          chromaticAppId: "",
-          _latest: "",
-        },
-        hasConfigFile: false,
-        repo: undefined,
-        prismicData: prismicData.isOk() ? prismicData.value : undefined,
-        chromatic: undefined,
-        currentVersion: npmCompare.currentVersion || "",
-        updateAvailable: npmCompare.updateAvailable || {
-          current: "",
-          next: "",
-          message: "Could not fetch remote version",
-        },
-        mockConfig: {},
-        hasGeneratedStoriesPath: false,
-        framework: defineFramework(null, cwd),
-        baseUrl: `http://localhost:${process.env.PORT}`,
-        client: new FakeClient(),
-      },
-    };
+    const message =
+      "[api/env]: Unrecoverable error. Could not find sm.json in your project. Exiting..";
+    console.error(message);
+    throw new Error(message);
   }
+
+  const prismicData = getPrismicData();
+
+  if (!prismicData.isOk()) {
+    const message =
+      "[api/env]: Unrecoverable error. ~/.prismic file unreadable";
+    console.error(message);
+    throw new Error(message);
+  }
+
+  const npmCompare = await compareNpmVersions({ cwd });
 
   const manifestState = handleManifest(cwd);
   if (manifestState.state !== ManifestStates.Valid) {
@@ -173,18 +155,12 @@ export async function getEnv(
 
   const mockConfig = getMockConfig(cwd);
 
-  const client = (() => {
-    if (prismicData.isOk()) {
-      return initClient(
-        cwd,
-        prismicData.value.base,
-        repo,
-        prismicData.value.auth?.auth
-      );
-    } else {
-      return new FakeClient();
-    }
-  })();
+  const client = initClient(
+    cwd,
+    prismicData.value.base,
+    repo,
+    prismicData.value.auth
+  );
 
   return {
     errors: maybeErrors,
@@ -193,7 +169,7 @@ export async function getEnv(
       repo,
       userConfig,
       hasConfigFile: true,
-      prismicData: prismicData.isOk() ? prismicData.value : undefined,
+      prismicData: prismicData.value,
       chromatic,
       currentVersion: npmCompare.currentVersion || "",
       updateAvailable: npmCompare.updateAvailable || {
