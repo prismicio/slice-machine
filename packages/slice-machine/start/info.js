@@ -12,7 +12,7 @@ function infoBox(npmCompare, localhost, framework, email) {
       npmCompare && npmCompare.currentVersion ? npmCompare.currentVersion : "";
     console.log(
       boxen(
-        dedent(`🍕 Slicemachine ${currentVersion.split("-")[0]} started.
+        dedent(`🍕 SliceMachine ${currentVersion.split("-")[0]} started.
           ${
             hasUpdate && npmCompare.onlinePackage
               ? `

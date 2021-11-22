@@ -6,6 +6,14 @@ import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
 import PackageVersion from "./PackageVersion";
 
+export interface UpdateVersionInfo {
+  currentVersion: string;
+  latestVersion: string;
+  packageManager: "npm" | "yarn";
+  updateCommand: string;
+  updateAvailable: boolean;
+}
+
 export default interface Environment {
   cwd: string;
   userConfig: UserConfig;
@@ -13,6 +21,7 @@ export default interface Environment {
   repo?: string;
   prismicData: PrismicData;
   chromatic?: Chromatic;
+  updateVersionInfo: UpdateVersionInfo;
   currentVersion: string;
   updateAvailable?: PackageVersion;
   mockConfig: any;
