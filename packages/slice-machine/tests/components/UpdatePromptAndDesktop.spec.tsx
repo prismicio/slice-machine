@@ -10,36 +10,6 @@ import { NavCtx } from "../../components/AppLayout/Navigation";
 import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Framework } from "../../lib/models/common/Framework";
 import UpdateModal from "../../components/UpdateVersionModal";
-import { rest } from "msw";
-import { setupServer } from "msw/node";
-
-const NEEDS_UPDATE = {
-  update: true,
-  updateCommand: "npm i -D slice-machine-ui",
-  packageManager: "npm",
-  current: "0.1.0",
-  recent: "0.1.1",
-};
-
-const userConfig = {
-  apiEndpoint: "",
-  storybook: "",
-  chromaticAppId: "",
-  _latest: "",
-};
-
-const env = {
-  cwd: "",
-  userConfig,
-  hasConfigFile: false,
-  prismicData: { base: "" },
-  currentVersion: "",
-  framework: Framework.react,
-  baseUrl: "",
-  hasGeneratedStoriesPath: true,
-  client: new FakeClient(),
-  mockConfig: {},
-};
 
 jest.mock("next/router", () => ({
   useRouter() {
@@ -65,19 +35,49 @@ const App = () => (
   </NavCtx.Provider>
 );
 
-const server = setupServer(
-  rest.get("/api/version", (_, res, ctx) => {
-    return res(ctx.json(NEEDS_UPDATE));
-  })
-);
+const FAKE_ENVIRONMENT = {
+  warnings: [],
+  configErrors: {},
+  env: {
+    cwd: "./tests/project",
+    repo: "sm-env-example",
+    userConfig: {
+      libraries: ["~/slices", "@/slices2/src/slices"],
+      apiEndpoint: "",
+      storybook: "",
+      chromaticAppId: "",
+      _latest: "0.1.0",
+    },
+    hasConfigFile: true,
+    prismicData: {
+      base: "",
+      auth: "",
+    },
+    chromatic: {
+      storybook: "",
+      library: "",
+    },
+    updateVersionInfo: {
+      currentVersion: "0.1.1",
+      latestVersion: "0.1.1",
+      packageManager: "npm" as "npm" | "yarn",
+      updateCommand: "npm i --save-dev slice-machine-ui",
+      updateAvailable: true,
+    },
+    mockConfig: {},
+    hasGeneratedStoriesPath: true,
+    framework: Framework.next,
+    baseUrl: "http://localhost:9999",
+    client: new FakeClient(),
+  },
+};
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
+const STATE_FOR_UPDATE = {
+  environment: FAKE_ENVIRONMENT,
+};
 test("when not upto date it should open a model and provided update instructions", async () => {
-  const result = render(<App />);
-  const text = "npm i -D slice-machine-ui";
+  const result = render(<App />, { preloadedState: STATE_FOR_UPDATE });
+  const text = "npm i --save-dev slice-machine-ui";
 
   expect(await result.findByText(text)).toBeInTheDocument();
 
@@ -93,12 +93,20 @@ test("when not upto date it should open a model and provided update instructions
 });
 
 test("when up to date it should not prompt the user to update", async () => {
-  server.use(
-    rest.get("/api/version", (_, res, ctx) => {
-      return res(ctx.json({ ...NEEDS_UPDATE, update: false }));
-    })
-  );
-
-  const result = render(<App />);
+  const result = render(<App />, {
+    preloadedState: {
+      ...STATE_FOR_UPDATE,
+      environment: {
+        ...STATE_FOR_UPDATE.environment,
+        env: {
+          ...STATE_FOR_UPDATE.environment.env,
+          updateVersionInfo: {
+            ...STATE_FOR_UPDATE.environment.env.updateVersionInfo,
+            updateAvailable: false,
+          },
+        },
+      },
+    },
+  });
   expect(await result.queryByText("Update Available")).toBeNull();
 });
