@@ -34,32 +34,13 @@ Once you're done creating your components locally, publish them to Prismic. You 
 
 ---
 
-## Installation
-We're reworking our setup process with a unified command. In the meantime, you can start from a theme, available from the docs, or install Slicemachine manually in an existing project.
-
-### New to Prismic?
-You're better off starting from [the official Prismic documentation][prismic-docs]. It will teach you the concepts you need (slices and custom types) before starting. Next and Nuxt boilerplate projects are available.
-
-### Manual installation
-The following steps assume that you already have a project setup with a framework.
-
-Although most of Slicemachine is framework agnostic, the code it generates might expect additional dependencies that will need to be installed. We'll describe those for both Next and Nuxt.
-
-#### Install the plugin
+## Install
 
 ```bash
-# From inside your project
-npm i --save-dev slice-machine-ui
+npx @slicemachine/init
 ```
-The command should add a `slicemachine` script to your `package.json`:
 
-```json
-"scripts": {
-  "slicemachine": "start-slicemachine --port 9999"
-}
-```
-npm 7 users: you might have to do this step manually.
-#### Install required deps
+### Install required deps
 
 ```bash
 # using React/Next
@@ -68,33 +49,12 @@ npm i --save next-slicezone prismic-reactjs
 npm i --save vue-slicezone nuxt-sm
 ````
 
-Nuxt users: you will have to add `nuxt-sm` to your `nuxt.config.js` modules section.
-
-#### Add `sm.json` manifest
-Our plugin expects a small config file to be defined at the root of your project. It should contain at least a list of libraries and a Prismic API endpoint:
-
-```JSON
-{
-  "libraries": ["~/path-to-slices-lib"],
-  "apiEndpoint": "https://endpoint.prismic.io/api/v2"
-}
-````
-**Notes:**
-The `~/` part of the library path means that it is local. You can have multiple libraries but _Slice names should NOT conflict across libraries_.
-
-You can get an API endpoint by creating a project on Prismic. Make sure you have access to Prismic data models (eg. you are an admin) and that your endpoint ends with `/api/v2`.
-
-#### Login to Prismic
-
-At the moment, you cannot login to Prismic from the plugin.
-Run this command instead from the CLI:
-
-```bash
-npx prismic login
-````
-This stores a small token at `~/.prismic`. You will have to type this everytime the plugin warns that you are not logged in.
-
-#### Launch Slice Machine
+Nuxt users: you will have to add `nuxt-sm` to your `nuxt.config.js` modules section.  
+<br>
+### Documentation
+For full documentation, visit the [the official Prismic documentation][prismic-docs].  
+<br>
+### Launch Slice Machine
 
 You should now be ready to launch the plugin:
 ```bash
