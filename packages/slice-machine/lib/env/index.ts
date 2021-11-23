@@ -9,6 +9,7 @@ import {
 
 import { getPrismicData } from "../auth";
 import initClient from "../models/common/http";
+import Tracker from "../models/common/tracker";
 
 import { getConfig as getMockConfig } from "../mock/misc/fs";
 
@@ -122,9 +123,15 @@ export async function getEnv(
   const prismicData = getPrismicData();
   const npmCompare = await compareNpmVersions({ cwd });
 
+  const tracker = new Tracker(
+    process.env.SEGMENT_WRITE_KEY,
+    npmCompare.currentVersion
+  );
+
   if (!Files.exists(SMConfig(cwd))) {
     return {
       env: {
+        tracker,
         cwd,
         userConfig: {
           libraries: [],
@@ -189,6 +196,7 @@ export async function getEnv(
   return {
     errors: maybeErrors,
     env: {
+      tracker,
       cwd,
       repo,
       userConfig,

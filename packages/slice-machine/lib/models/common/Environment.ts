@@ -5,6 +5,7 @@ import { Framework } from "./Framework";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
 import PackageVersion from "./PackageVersion";
+import type Tracker from "./tracker";
 
 export default interface Environment {
   cwd: string;
@@ -20,4 +21,5 @@ export default interface Environment {
   baseUrl: string;
   hasGeneratedStoriesPath: boolean;
   client: DefaultClient | FakeClient;
+  tracker: Tracker;
 }
