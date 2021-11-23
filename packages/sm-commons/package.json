@@ -1,6 +1,6 @@
 {
   "name": "sm-commons",
-  "version": "0.0.24-alpha.0",
+  "version": "0.0.24-beta.0",
   "description": "A set of common utilities for slice machine libraries",
   "main": "scripts/bundle.js",
   "typings": "index.d.ts",
