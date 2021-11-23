@@ -46,5 +46,6 @@
     "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
     "io-ts": "^2.2.16"
-  }
+  },
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d"
 }

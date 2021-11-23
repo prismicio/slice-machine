@@ -29,7 +29,7 @@
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
-  "gitHead": "58f9c3a4bd3fc23cf5270639829bfebeaa23bdd4",
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "dependencies": {
     "slash": "^3.0.0",
     "sm-commons": "^0.0.21"

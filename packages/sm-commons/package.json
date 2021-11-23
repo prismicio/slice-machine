@@ -33,7 +33,7 @@
   "resolutions": {
     "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
   },
-  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "devDependencies": {
     "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0"
