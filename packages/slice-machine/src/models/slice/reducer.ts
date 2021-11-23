@@ -1,11 +1,7 @@
+import type { Models } from "@slicemachine/core";
+import { Variation } from "../../../lib/models/common/Variation";
 import equal from "fast-deep-equal";
-import { Variation, AsArray } from "../../../lib/models/common/Variation";
 import SliceState from "../../../lib/models/ui/SliceState";
-import { WidgetsArea } from "../../../lib/models/common/Variation";
-import {
-  ComponentMetadata,
-  Preview,
-} from "../../../lib/models/common/Component";
 
 import { Field, FieldType } from "../../../lib/models/common/CustomType/fields";
 import { sliceZoneType } from "../../../lib/models/common/CustomType/sliceZone";
@@ -16,7 +12,7 @@ import { ActionType as VariationActions } from "./variation/actions";
 
 import { ActionType as SliceActions } from "./actions";
 
-import { LibStatus } from "../../../lib/models/common/Library";
+import { LibStatus } from "../../../lib/models/common/ComponentUI";
 import { compareVariations } from "../../../lib/utils";
 
 export function reducer(
@@ -45,26 +41,26 @@ export function reducer(
           ...prevState,
           infos: {
             ...prevState.infos,
-            ...(action.payload as ComponentMetadata),
+            ...(action.payload as Models.ComponentMetadata),
           },
         };
       case SliceActions.CopyVariation: {
         const { key, name, copied } = action.payload as {
           key: string;
           name: string;
-          copied: Variation<AsArray>;
+          copied: Models.VariationAsArray;
         };
         return {
           ...prevState,
           variations: prevState.variations.concat([
-            Variation.copyValue(copied, key, name),
+            Variation.copyValue<Models.VariationAsArray>(copied, key, name),
           ]),
         };
       }
       case VariationActions.GenerateCustomScreenShot: {
         const { variationId, preview } = action.payload as {
           variationId: string;
-          preview: Preview;
+          preview: Models.Preview;
         };
 
         const previewsByVariation = prevState.variations.reduce(
@@ -97,20 +93,15 @@ export function reducer(
       case VariationActions.GenerateScreenShot: {
         const { previews } = action.payload as {
           variationId: string;
-          previews: ReadonlyArray<Preview>;
+          previews: Record<string, Models.Preview>;
         };
-        const previewsByVariation = previews.reduce(
-          (acc, p) => ({ ...acc, [p.variationId]: p }),
-          {}
-        );
-
         return {
           ...prevState,
           infos: {
             ...prevState.infos,
             previewUrls: {
               ...prevState.infos.previewUrls,
-              ...previewsByVariation,
+              ...previews,
             },
           },
         };
@@ -118,7 +109,7 @@ export function reducer(
       case VariationActions.AddWidget: {
         const { variationId, widgetsArea, key, value } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           key: string;
           value: Field;
         };
@@ -143,7 +134,7 @@ export function reducer(
         const { variationId, widgetsArea, previousKey, newKey, value } =
           action.payload as {
             variationId: string;
-            widgetsArea: WidgetsArea;
+            widgetsArea: Models.WidgetsArea;
             previousKey: string;
             newKey: string;
             value: Field;
@@ -176,7 +167,7 @@ export function reducer(
       case VariationActions.ReorderWidget: {
         const { variationId, widgetsArea, start, end } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           start: number;
           end: number;
         };
@@ -188,7 +179,7 @@ export function reducer(
       case VariationActions.RemoveWidget: {
         const { variationId, widgetsArea, key } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           key: string;
         };
         return SliceState.updateVariation(

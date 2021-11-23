@@ -1,4 +1,4 @@
-import { VariationMock } from './Variation';
+import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
@@ -7,19 +7,31 @@ export interface ComponentInfo {
   isDirectory: boolean;
   extension: string | null;
   model: SliceAsObject;
-  nameConflict:
-    | {
-        sliceName: string;
-        id: string;
-      }
-    | null;
+  nameConflict: {
+    sliceName: string;
+    id: string;
+  } | null;
 
   previewUrls?: {
     [variationId: string]: Preview;
   };
   meta: ComponentMetadata;
-  mock?: ReadonlyArray<VariationMock>
+  mock?: ReadonlyArray<VariationMock>;
 }
+
+export const ComponentInfo = {
+  hasPreviewsMissing(infos: ComponentInfo): boolean {
+    const previews = infos.previewUrls;
+    if (!previews) return true;
+
+    return Object.entries(previews).reduce(
+      (acc: boolean, [, preview]: [string, Preview]) => {
+        return Boolean(!preview) || (acc && preview?.hasPreview);
+      },
+      false
+    );
+  },
+};
 
 export interface ComponentMetadata {
   id: string;
@@ -41,10 +53,13 @@ export interface Preview {
   path?: string;
 }
 
-
-export interface Library {
+export interface Library<C extends Component> {
   name: string;
   isLocal: boolean;
-  components: ReadonlyArray<Component>;
+  components: ReadonlyArray<C>;
+  meta?: LibraryMeta;
 }
 
+export interface LibraryMeta {
+  name: string;
+}

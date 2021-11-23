@@ -1,5 +1,5 @@
 import path from "path";
-import * as t from 'io-ts'
+import * as t from "io-ts";
 import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
 
 import { pascalize } from "../utils/str";
@@ -8,10 +8,10 @@ import { getPathToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { sliceMocks } from "../mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice, SliceAsObject } from '../models/Slice'
-import { VariationAsObject, AsObject } from '../models/Variation'
+import { Slice, SliceAsObject } from "../models/Slice";
+import { VariationAsObject, AsObject } from "../models/Variation";
 
-import Errors from '../utils/errors'
+import Errors from "../utils/errors";
 
 function getMeta(model: SliceAsObject): ComponentMetadata {
   return {
@@ -57,9 +57,7 @@ function findComponentFile(
   return files.find((e) => possiblePaths.indexOf(e) > -1);
 }
 
-function matchPossiblePaths(
-  files: ReadonlyArray<string>
-): boolean {
+function matchPossiblePaths(files: ReadonlyArray<string>): boolean {
   const modelFilename = "model.json";
 
   return files.includes(modelFilename);
@@ -93,7 +91,7 @@ function fromJsonFile<T extends unknown>(
   const hasFile = Files.exists(fullPath);
 
   if (hasFile) {
-    return Files.readEntity(fullPath, validate)
+    return Files.readEntity(fullPath, validate);
   }
   return null;
 }
@@ -150,12 +148,18 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const model = fromJsonFile(slicePath, "model.json", payload => (
-    getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(Slice(AsObject).decode(payload))
-  ));
-  if(model instanceof Error) {
-    console.error(`Could not parse model ${path.basename(slicePath)}\nFull error: ${model.toString()}`)
-    return
+  const model = fromJsonFile(slicePath, "model.json", (payload) =>
+    getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
+      Slice(AsObject).decode(payload)
+    )
+  );
+  if (model instanceof Error) {
+    console.error(
+      `Could not parse model ${path.basename(
+        slicePath
+      )}\nFull error: ${model.toString()}`
+    );
+    return;
   }
   if (!model) {
     return;
@@ -163,7 +167,12 @@ export function getComponentInfo(
 
   const previewUrls = (model.variations || [])
     .map((v: VariationAsObject) => {
-      const activeScreenshot = getPathToScreenshot({ cwd, from, sliceName, variationId: v.id });
+      const activeScreenshot = getPathToScreenshot({
+        cwd,
+        from,
+        sliceName,
+        variationId: v.id,
+      });
       return activeScreenshot && activeScreenshot.path
         ? {
             [v.id]: {
@@ -174,14 +183,18 @@ export function getComponentInfo(
           }
         : undefined;
     })
-    .reduce((acc: { [variationId: string]: Preview }, variationPreview: { [variationId: string]: Preview } | undefined) => {
-      return { ...acc, ...variationPreview };
-    }, {});
+    .reduce(
+      (
+        acc: { [variationId: string]: Preview },
+        variationPreview: { [variationId: string]: Preview } | undefined
+      ) => {
+        return { ...acc, ...variationPreview };
+      },
+      {}
+    );
 
   const nameConflict =
-    sliceName !== pascalize(model.id)
-      ? { sliceName, id: model.id }
-      : null;
+    sliceName !== pascalize(model.id) ? { sliceName, id: model.id } : null;
 
   return {
     sliceName,

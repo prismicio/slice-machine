@@ -1,43 +1,43 @@
+import type { Models } from "@slicemachine/core";
+import { getPathToScreenshot } from "@slicemachine/core/build/src/libraries/index";
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
-import { Preview } from "@lib/models/common/Component";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import { createScreenshotUrl } from "@lib/utils";
 import { handleStorybookPreview } from "./common/storybook";
-import { getPathToScreenshot } from "@lib/queries/screenshot";
 
-type Previews = ReadonlyArray<
-  { variationId: string; hasPreview: boolean; error: Error } | Preview
->;
+type Previews = Record<Models.VariationAsObject["id"], Models.Preview>;
 
 export default {
   async generateForSlice(
     env: Environment,
     libraryName: string,
     sliceName: string
-  ): Promise<
-    ReadonlyArray<
-      { variationId: string; error: Error; hasPreview: boolean } | Preview
-    >
-  > {
-    let result: Previews = [];
+  ): Promise<[{ error: Error; variationId: string }[], Previews]> {
+    let result: Previews = {};
+    let failures: { error: Error; variationId: string }[] = [];
 
     const model = Files.readJson(
       CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
     );
     for (let i = 0; i < model.variations.length; i += 1) {
       const variation = model.variations[i];
-      result = result.concat([
-        await this.generateForVariation(
-          env,
-          libraryName,
-          sliceName,
-          variation.id
-        ),
-      ]);
+      const generateResult = await this.generateForVariation(
+        env,
+        libraryName,
+        sliceName,
+        variation.id
+      );
+      if (generateResult instanceof Error) {
+        failures = failures.concat([
+          { error: generateResult, variationId: variation.id },
+        ]);
+      } else {
+        result = { ...result, [variation.id]: generateResult };
+      }
     }
 
-    return result;
+    return [failures, result];
   },
 
   async generateForVariation(
@@ -45,9 +45,7 @@ export default {
     libraryName: string,
     sliceName: string,
     variationId: string
-  ): Promise<
-    { variationId: string; hasPreview: boolean; error: Error } | Preview
-  > {
+  ): Promise<Error | Models.Preview> {
     const screenshotUrl = createScreenshotUrl({
       storybook: env.userConfig.storybook,
       libraryName,
@@ -64,18 +62,14 @@ export default {
       screenshotUrl,
       pathToFile,
     });
-    if (maybeError)
-      return {
-        variationId,
-        error: new Error(maybeError as string),
-        hasPreview: false,
-      };
+    if (maybeError instanceof Error) {
+      return maybeError;
+    }
 
     return {
-      variationId,
       isCustomPreview: false,
       hasPreview: true,
-      url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
+      path: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
         pathToFile
       )}&uniq=${Math.random()}`,
     };
@@ -86,25 +80,31 @@ export default {
     env: Environment,
     from: string,
     sliceName: string
-  ) {
-    return previewUrls.map((p) => {
-      const maybePreviewPath = getPathToScreenshot({
-        cwd: env.cwd,
-        from,
-        sliceName,
-        variationId: p.variationId,
-      });
-      if (maybePreviewPath?.isCustom) {
-        return {
-          variationId: p.variationId,
-          isCustomPreview: true,
-          hasPreview: true,
-          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-            maybePreviewPath.path
-          )}&uniq=${Math.random()}`,
-        };
-      }
-      return p;
-    });
+  ): Previews {
+    const R = Object.entries(previewUrls).reduce<Previews>(
+      (acc, [variationId, p]) => {
+        const maybePreviewPath = getPathToScreenshot({
+          cwd: env.cwd,
+          from,
+          sliceName,
+          variationId,
+        });
+        if (maybePreviewPath?.isCustom) {
+          return {
+            ...acc,
+            [variationId]: {
+              isCustomPreview: true,
+              hasPreview: true,
+              path: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
+                maybePreviewPath.path
+              )}&uniq=${Math.random()}`,
+            },
+          };
+        }
+        return { [variationId]: p };
+      },
+      {}
+    );
+    return R;
   },
 };

@@ -1,20 +1,19 @@
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
-
+import type { Models } from "@slicemachine/core";
 import { LibrariesContext } from "../libraries/context";
 import { useContext } from "react";
 import SliceStore from "./store";
 import { reducer } from "./reducer";
 
 import SliceState from "@lib/models/ui/SliceState";
-import { ComponentWithLibStatus } from "@lib/models/common/Library";
 import Slice from "@lib/models/common/Slice";
-import { Variation, AsArray, AsObject } from "@lib/models/common/Variation";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 type ContextProps = {
-  Model: ComponentWithLibStatus;
+  Model: ComponentUI;
   store: SliceStore;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
 };
 export const SliceContext = React.createContext<Partial<ContextProps>>({});
 
@@ -28,8 +27,8 @@ export function useModelReducer({
   remoteSlice,
   mockConfig,
 }: {
-  slice: ComponentWithLibStatus;
-  remoteSlice?: Slice<AsObject>;
+  slice: ComponentUI;
+  remoteSlice?: Models.SliceAsObject;
   mockConfig: any;
 }): [SliceState, SliceStore] {
   const { model, ...rest } = slice;
@@ -54,7 +53,7 @@ export function useModelReducer({
 
 type SliceProviderProps = {
   value: any;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
 };
 
 const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({

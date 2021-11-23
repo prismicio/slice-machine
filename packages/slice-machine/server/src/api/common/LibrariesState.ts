@@ -1,26 +1,28 @@
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
-import * as Core from '@slicemachine/core'
+import type { Models } from "@slicemachine/core";
+import { handleLibraryPath } from "@slicemachine/core/build/src/libraries/index";
+import { LibrariesStatePath } from "@slicemachine/core/build/src/filesystem/index";
 
 export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
-    .map(lib => Core.Libraries.handleLibraryPath(env.cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Core.Models.Library.Library>;
+    .map((lib) => handleLibraryPath(env.cwd, lib))
+    .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 
   const state = formatLibraries(libraries);
-  Files.write(Core.FileSystem.LibrariesStatePath(env.cwd), state);
+  Files.write(LibrariesStatePath(env.cwd), state);
 }
 
 export function formatLibraries(
-  libraries: ReadonlyArray<Core.Models.Library.Library>
-): Core.Models.LibrariesState.Library {
+  libraries: ReadonlyArray<Models.Library<Models.Component>>
+): Models.LibrariesState.Library {
   return libraries.reduce((acc, library) => {
     return { ...acc, [library.name]: formatLibrary(library) };
   }, {});
 }
 
-export function formatLibrary(library: Core.Models.Library.Library): {
-  [sliceId: string]: Core.Models.LibrariesState.Component;
+export function formatLibrary(library: Models.Library<Models.Component>): {
+  [sliceId: string]: Models.LibrariesState.Component;
 } {
   return library.components.reduce(
     (acc, component) => ({
@@ -32,15 +34,17 @@ export function formatLibrary(library: Core.Models.Library.Library): {
 }
 
 export function formatComponent(
-  slice: Core.Models.Library.Component
-): Core.Models.LibrariesState.Component {
+  slice: Models.Component
+): Models.LibrariesState.Component {
   return {
     library: slice.from,
     id: slice.model.id,
     name: slice.infos.meta.name,
     description: slice.infos.meta.description,
     model: slice.model,
-    mocks: (slice.infos.mock || []).reduce<Core.Models.LibrariesState.ComponentMocks>(
+    mocks: (
+      slice.infos.mock || []
+    ).reduce<Models.LibrariesState.ComponentMocks>(
       (acc, variationMock) => ({
         ...acc,
         [variationMock.variation]: variationMock,
@@ -50,7 +54,7 @@ export function formatComponent(
     meta: {
       fileName: slice.infos.fileName,
       isDirectory: slice.infos.isDirectory,
-      extension: slice.infos.extension
+      extension: slice.infos.extension,
     },
     previewUrls: !slice.infos.previewUrls
       ? {}

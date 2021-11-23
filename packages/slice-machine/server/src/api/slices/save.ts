@@ -3,16 +3,14 @@ declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
 
+import type { Models } from "@slicemachine/core";
 import { getEnv } from "@lib/env";
 import mock from "@lib/mock/Slice";
 import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { Preview } from "@lib/models/common/Component";
 import Previews from "../previews";
 import Environment from "@lib/models/common/Environment";
-import { AsObject } from "@lib/models/common/Variation";
-import Slice from "@lib/models/common/Slice";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
@@ -20,14 +18,17 @@ import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 interface Body {
   sliceName: string;
   from: string;
-  model: Slice<AsObject>;
-  mockConfig: SliceMockConfig;
+  model: Models.SliceAsObject;
+  mockConfig?: SliceMockConfig;
 }
 
 export async function handler(
   env: Environment,
   { sliceName, from, model, mockConfig }: Body
-): Promise<{ previewUrls: Record<string, Preview>; warning: string | null }> {
+): Promise<{
+  previewUrls: Record<string, Models.Preview>;
+  warning: string | null;
+}> {
   await onBeforeSaveSlice({ from, sliceName, model }, env);
 
   const updatedMockConfig = insertMockConfig(env.cwd, {
@@ -64,18 +65,14 @@ export async function handler(
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
   let warning: string | null = null;
-  const previewUrls: { [variationId: string]: Preview } = {};
+  const previewUrls: { [variationId: string]: Models.Preview } = {};
 
   console.log("[slice/save]: Generating screenshots previews");
-  const generatedPreviews = await Previews.generateForSlice(
+  const [failed, generatedPreviews] = await Previews.generateForSlice(
     env,
     from,
     sliceName
   );
-
-  const failedPreviewsIds = generatedPreviews
-    .filter((p) => !p.hasPreview)
-    .map((p) => p.variationId);
 
   const mergedPreviews = Previews.mergeWithCustomScreenshots(
     generatedPreviews,
@@ -84,37 +81,35 @@ export async function handler(
     sliceName
   );
 
-  mergedPreviews.forEach((p) => {
+  Object.entries(mergedPreviews).forEach(([variationId, p]) => {
     if (!p.hasPreview) {
-      const noPreview = p as {
-        variationId: string;
-        error: Error;
-        hasPreview: boolean;
-      };
-      warning = noPreview.error.message;
+      const previewError = failed.find(
+        (f) => f.variationId === variationId
+      )?.error;
+      warning =
+        previewError?.message ||
+        `Preview generation for variation ${variationId} has failed.`;
       console.log(
-        `[slice/save][Slice: ${sliceName}][variation: ${p.variationId}]: ${noPreview.error.message}`
+        `[slice/save][Slice: ${sliceName}][variation: ${variationId}]: ${previewError?.message}`
       );
-      previewUrls[noPreview.variationId] = {
-        variationId: noPreview.variationId,
+      previewUrls[variationId] = {
         isCustomPreview: false,
         hasPreview: false,
       };
     }
 
-    const preview = p as Preview;
-    previewUrls[preview.variationId] = {
-      variationId: preview.variationId,
+    const preview = p as Models.Preview;
+    previewUrls[variationId] = {
       isCustomPreview: false,
       hasPreview: true,
-      url: preview.url,
+      path: preview.path,
     };
   });
 
-  if (failedPreviewsIds.length) {
-    warning = `Cannot generate previews for variations: ${failedPreviewsIds.join(
-      " | "
-    )}`;
+  if (failed.length) {
+    warning = `Cannot generate previews for variations: ${failed
+      .map((f) => f.variationId)
+      .join(" | ")}`;
   }
   console.log("[slice/save]: Slice was saved!");
 

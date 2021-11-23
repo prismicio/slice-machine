@@ -38,7 +38,7 @@
   "dependencies": {
     "@babel/register": "^7.11.5",
     "@reach/menu-button": "^0.10.5",
-    "@slicemachine/core": "^1.0.0",
+    "@slicemachine/core": "^1.0.1-slicecanvas.2",
     "@svgr/webpack": "^5.4.0",
     "@types/cors": "^2.8.12",
     "analytics-node": "^6.0.0",
@@ -73,7 +73,7 @@
     "npmlog": "^5.0.0",
     "oembed-parser": "^1.4.5",
     "open": "^8.2.1",
-    "ora": "^6.0.1",
+    "ora": "6.0.1",
     "parse-domain": "^3.0.2",
     "prompts": "^2.4.0",
     "puppeteer": "^10.2.0",

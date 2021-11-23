@@ -2,7 +2,8 @@ import mock from "@lib/mock/Slice";
 import * as LibrariesState from "./LibrariesState";
 
 import Environment from "@lib/models/common/Environment";
-import { Library, ComponentWithLibStatus } from "@lib/models/common/Library";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import Files from "@lib/utils/files";
 import { GeneratedPaths } from "@lib/models/paths";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
@@ -10,10 +11,10 @@ import { getConfig as getGobalMockConfig } from "@lib/mock/misc/fs";
 
 export async function generate(
   env: Environment,
-  libraries: ReadonlyArray<Library>
+  libraries: ReadonlyArray<LibraryUI>
 ): Promise<void> {
   try {
-    const components = libraries.reduce<ComponentWithLibStatus[]>(
+    const components = libraries.reduce<ComponentUI[]>(
       (acc, curr) => [...acc, ...curr.components],
       []
     );

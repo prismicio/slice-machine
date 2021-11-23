@@ -1,13 +1,12 @@
 declare let appRoot: string;
 
+import type { Models } from "@slicemachine/core";
 import path from "path";
 import { promisify } from "util";
 
 // @ts-ignore
 import cpy from "copy-template-dir";
 
-import Slice from "@lib/models/common/Slice";
-import { AsObject } from "@lib/models/common/Variation";
 import Environment from "@lib/models/common/Environment";
 
 import { getEnv } from "@lib/env";
@@ -78,7 +77,7 @@ export default async function handler({
 }: {
   sliceName: string;
   from: string;
-  values?: { componentCode: string; model: Slice<AsObject> };
+  values?: { componentCode: string; model: Models.SliceAsObject };
 }) {
   const { env } = await getEnv();
 

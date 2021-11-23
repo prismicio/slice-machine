@@ -15,7 +15,7 @@ export const generatePreview = async ({
   browser: puppeteer.Browser;
   screenshotUrl: string;
   pathToFile: string;
-}) => {
+}): Promise<Error | void> => {
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
     const page = await browser.newPage();
@@ -30,9 +30,9 @@ export const generatePreview = async ({
     if (element) {
       await element.screenshot({ path: pathToFile });
     }
-    return null;
+    return;
   } catch (err) {
-    return err;
+    return err as Error;
   }
 };
 
@@ -57,10 +57,10 @@ export const handleStorybookPreview = async ({
 }: {
   screenshotUrl: string;
   pathToFile: string;
-}) => {
+}): Promise<Error | void> => {
   const { warning } = await testStorybookPreview({ screenshotUrl });
   if (warning) {
-    return warning;
+    return Error(warning);
   }
   const browser = await puppeteer.launch({ args: [`--window-size=1200,800`] });
   return generatePreview({ browser, screenshotUrl, pathToFile });

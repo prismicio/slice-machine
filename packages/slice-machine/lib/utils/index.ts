@@ -1,3 +1,4 @@
+import type { Models } from "@slicemachine/core";
 import * as yup from "yup";
 import equal from "fast-deep-equal";
 
@@ -7,7 +8,6 @@ import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 
 import { createStorybookId, camelCaseToDash } from "./str";
-import { AsArray, AsObject, Variation } from "@lib/models/common/Variation";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   const { [prop]: __removed, ...rest } = obj;
@@ -40,8 +40,8 @@ export const ensureWidgetTypeExistence = (
 };
 
 export const compareVariations = (
-  lhs: ReadonlyArray<Variation<AsObject | AsArray>>,
-  rhs: ReadonlyArray<Variation<AsObject | AsArray>>
+  lhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>,
+  rhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>
 ) => {
   return equal(
     lhs.map((e) => ({ ...e, imageUrl: undefined })),

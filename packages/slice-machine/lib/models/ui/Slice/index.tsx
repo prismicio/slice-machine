@@ -10,7 +10,7 @@ import {
 } from "theme-ui";
 
 import SliceState from "../SliceState";
-import { LibStatus } from "../../common/Library";
+import { LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
@@ -146,7 +146,7 @@ export const SharedSlice = {
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url;
+    const previewUrl = slice.infos?.previewUrls?.[variationId]?.path;
 
     return (
       <CardWrapper link={link} slice={slice}>

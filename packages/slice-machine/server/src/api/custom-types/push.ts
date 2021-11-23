@@ -8,7 +8,7 @@ import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
 
-import { ComponentWithLibStatus } from "@lib/models/common/Library";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
 import { CustomType } from "@lib/models/common/CustomType";
 
@@ -79,7 +79,7 @@ export default async function handler(query: { id: string }) {
     }
   }
 
-  const localSlices: { [x: string]: ComponentWithLibStatus } = state.libraries
+  const localSlices: { [x: string]: ComponentUI } = state.libraries
     .filter((e) => e.isLocal)
     .reduceRight((acc, curr) => {
       return {

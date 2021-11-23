@@ -9,7 +9,7 @@ import { Library, Component } from "../models/Library";
 export function handleLibraryPath(
   cwd: string,
   libPath: string
-): Library | undefined {
+): Library<Component> | undefined {
   const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(
     libPath,
     cwd
@@ -67,8 +67,10 @@ export function handleLibraryPath(
 export function libraries(
   cwd: string,
   libraries: string[]
-): ReadonlyArray<Library> {
+): ReadonlyArray<Library<Component>> {
   return (libraries || [])
     .map((lib) => handleLibraryPath(cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Library>;
+    .filter(Boolean) as ReadonlyArray<Library<Component>>;
 }
+
+export * from "./screenshot";

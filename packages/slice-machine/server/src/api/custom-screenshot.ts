@@ -1,4 +1,4 @@
-import { getPathToScreenshot } from "@lib/queries/screenshot";
+import { Libraries } from "@slicemachine/core";
 import { getEnv } from "@lib/env";
 import { CustomPaths } from "@lib/models/paths";
 import Files from "@lib/utils/files";
@@ -19,7 +19,7 @@ export default async function handler(
 ): Promise<CustomScreenshotResponse> {
   const { env } = await getEnv();
 
-  const activeScreenshot = getPathToScreenshot({
+  const activeScreenshot = Libraries.getPathToScreenshot({
     cwd: env.cwd,
     from,
     sliceName,

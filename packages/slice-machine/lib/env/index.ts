@@ -124,7 +124,7 @@ export async function getEnv(
   const npmCompare = await compareNpmVersions({ cwd });
 
   const tracker = new Tracker(
-    process.env.SEGMENT_WRITE_KEY,
+    process.env.SEGMENT_WRITE_KEY || "TODO" /* TRACKER:TODO */,
     npmCompare.currentVersion
   );
 

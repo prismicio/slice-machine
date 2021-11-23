@@ -1,6 +1,6 @@
+import type { Models } from "@slicemachine/core";
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
-import { Preview } from "../../../../../lib/models/common/Component";
 
 export function generateScreenShot(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
@@ -19,7 +19,7 @@ export function generateScreenShot(
           onResponse: { imageLoading: false },
         },
         successMessage: "Storybook screenshot was saved to FileSystem",
-        onSuccess({ previews }: { previews: ReadonlyArray<Preview> }) {
+        onSuccess({ previews }: { previews: Record<string, Models.Preview> }) {
           dispatch({
             type: ActionType.GenerateScreenShot,
             payload: { previews },
@@ -62,7 +62,7 @@ export function generateCustomScreenShot(
           onResponse: { imageLoading: false },
         },
         successMessage: "New screenshot added!",
-        onSuccess(preview: Preview) {
+        onSuccess(preview: Models.Preview) {
           if (preview.hasPreview) {
             dispatch({
               type: ActionType.GenerateCustomScreenShot,

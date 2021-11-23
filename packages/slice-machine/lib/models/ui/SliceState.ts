@@ -1,26 +1,24 @@
-import Slice from "../common/Slice";
-import { Variation, AsObject, AsArray } from "../common/Variation";
-import { ComponentInfo, Preview } from "../common/Component";
-import { LibStatus } from "../common/Library";
+import type { Models } from "@slicemachine/core";
+import { LibStatus } from "../common/ComponentUI";
 
 interface SliceState {
-  jsonModel: Slice<AsObject>;
+  jsonModel: Models.SliceAsObject;
 
   from: string;
   href: string;
   pathToSlice: string;
-  infos: ComponentInfo;
+  infos: Models.ComponentInfo;
   migrated: boolean;
 
   mockConfig: any;
   initialMockConfig: any;
 
-  remoteVariations: ReadonlyArray<Variation<AsArray>>;
-  initialVariations: ReadonlyArray<Variation<AsArray>>;
-  variations: ReadonlyArray<Variation<AsArray>>;
+  remoteVariations: ReadonlyArray<Models.VariationAsArray>;
+  initialVariations: ReadonlyArray<Models.VariationAsArray>;
+  variations: ReadonlyArray<Models.VariationAsArray>;
 
   initialPreviewUrls?: {
-    [variationId: string]: Preview;
+    [variationId: string]: Models.Preview;
   };
 
   isTouched?: boolean;
@@ -31,7 +29,7 @@ const SliceState = {
   variation(
     state: SliceState,
     variationId?: string
-  ): Variation<AsArray> | undefined {
+  ): Models.VariationAsArray | undefined {
     if (state.variations.length) {
       if (variationId)
         return state.variations.find((v) => v.id === variationId);
@@ -41,7 +39,7 @@ const SliceState = {
 
   updateVariation(state: SliceState, variationId: string) {
     return (
-      mutate: (v: Variation<AsArray>) => Variation<AsArray>
+      mutate: (v: Models.VariationAsArray) => Models.VariationAsArray
     ): SliceState => {
       const variations = state.variations.map((v) => {
         if (v.id === variationId) return mutate(v);

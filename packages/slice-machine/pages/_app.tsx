@@ -2,6 +2,7 @@ import Head from "next/head";
 import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
+import type { Models } from "@slicemachine/core";
 
 import theme from "../src/theme";
 // @ts-ignore
@@ -32,19 +33,19 @@ import "src/css/tabs.css";
 
 import { ServerState } from "@lib/models/server/ServerState";
 import ServerError from "@lib/models/server/ServerError";
-import { Library } from "@lib/models/common/Library";
 import Environment from "@lib/models/common/Environment";
-import Slice from "@lib/models/common/Slice";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
-import { AsObject } from "@lib/models/common/Variation";
 import { useRouter } from "next/router";
 import LoginModalProvider from "@src/LoginModalProvider";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function mapSlices(libraries: ReadonlyArray<Library>): any {
+function mapSlices(
+  libraries: ReadonlyArray<Models.Library<Models.Component>>
+): any {
   return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
@@ -106,10 +107,10 @@ function MyApp({
     Renderer: (props: any) => JSX.Element;
     payload: {
       env: Environment;
-      libraries?: ReadonlyArray<Library>;
+      libraries?: ReadonlyArray<LibraryUI>;
       customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
       remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-      remoteSlices?: ReadonlyArray<Slice<AsObject>>;
+      remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
     } | null;
   }>({ Renderer: RenderStates.Loading, payload: null });
 

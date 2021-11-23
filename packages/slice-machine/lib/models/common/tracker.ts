@@ -1,5 +1,5 @@
 import Analytics from "analytics-node";
-import { Library } from "./Library";
+import { LibraryUI } from "./LibraryUI";
 
 export default class Tracker {
   readonly analytics: Analytics;
@@ -19,7 +19,7 @@ export default class Tracker {
     if (!repo) return; // we can't track as long as we're not tied to a repo.
 
     return {
-      libraries: (libs: readonly Library[]) => {
+      libraries: (libs: readonly LibraryUI[]) => {
         this.analytics.group({
           userId: "",
           groupId: repo,
