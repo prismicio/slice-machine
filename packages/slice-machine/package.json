@@ -3,6 +3,7 @@
   "version": "0.1.2-beta.1",
   "private": false,
   "license": "MIT",
+  "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "_moduleAliases": {
     "@lib": "build/lib",
     "@models": "build/lib/models"
