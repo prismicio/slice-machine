@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.0.9-beta.0",
+  "version": "0.0.9-beta.1",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
