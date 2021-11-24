@@ -1,5 +1,4 @@
-import router, { Router } from "next/router";
-import Link from "next/link";
+import router from "next/router";
 import { Box, Text, Flex, Button } from "theme-ui";
 
 import VarationsPopover from "@builders/SliceBuilder/layout/Header/VariationsPopover";

@@ -7,7 +7,6 @@ import Storybook from "./icons/storybook.svg";
 import StorybookGrey from "./icons/storybookGrey.svg";
 import Li from "./components/Li";
 import ImagePreview from "./components/ImagePreview";
-import FooterButton from "./components/FooterButton";
 import { storybookWarningStates } from "@lib/consts";
 
 const MemoizedImagePreview = memo(ImagePreview);
@@ -15,9 +14,6 @@ const MemoizedImagePreview = memo(ImagePreview);
 const SideBar = ({
   Model,
   variation,
-  data,
-  onSave,
-  onPush,
   warnings,
   openPanel,
   imageLoading,
@@ -27,8 +23,6 @@ const SideBar = ({
 }) => {
   const {
     infos: { previewUrls },
-    isTouched,
-    __status,
   } = Model;
 
   const storybookError = warnings.find((w) =>

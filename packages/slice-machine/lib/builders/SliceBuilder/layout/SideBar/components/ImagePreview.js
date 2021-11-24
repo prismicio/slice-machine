@@ -1,6 +1,7 @@
 import { memo, useState, useRef, Fragment } from "react";
 import { Label, Flex, Image, Button, Text, Spinner } from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
+import InfoOutlined from "../icons/infoOutlined.svg";
 
 const MemoedImage = memo(({ src }) => <Image src={src} alt="Preview image" />);
 
@@ -13,7 +14,6 @@ const ImagePreview = ({
 }) => {
   const inputFile = useRef(null);
   const [display, setDisplay] = useState(false);
-  const handleMouseHover = (state) => setDisplay(state);
 
   const handleFile = (file) => {
     onHandleFile(file);
@@ -40,11 +40,13 @@ const ImagePreview = ({
           backgroundImage: "url(/pattern.png)",
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
-          backgroundSize: "15px",
-          boxShadow: "0 10px 10px rgba(0, 0, 0, 0.05)",
+          backgroundSize: "20px",
+          border: "1px solid #C9D0D8",
+          boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
+          borderRadius: "4px",
         }}
-        onMouseEnter={() => handleMouseHover(true)}
-        onMouseLeave={() => handleMouseHover(false)}
+        onMouseEnter={() => setDisplay(true)}
+        onMouseLeave={() => setDisplay(false)}
       >
         {display || imageLoading ? (
           <Flex
@@ -83,7 +85,20 @@ const ImagePreview = ({
             )}
           </Flex>
         ) : null}
-        {src ? <MemoedImage src={src} /> : <Text>Could not load image.</Text>}
+        {src ? (
+          <MemoedImage src={src} />
+        ) : (
+          <Text
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <InfoOutlined />
+            You have no screenshot yet.
+          </Text>
+        )}
       </Flex>
     </div>
   );

@@ -313,22 +313,11 @@ const AppTheme = (): Theme =>
       },
 
       disabled: {
-        bg: "borders",
+        bg: "#D6CEFC",
         fontSize: "1",
-        color: "rgba(1, 1, 1, .6)",
+        color: "white",
         cursor: "not-allowed",
         borderColor: "transparent",
-        "&:focus": {
-          bg: "borders",
-          borderColor: "transparent",
-          outline: "none",
-        },
-        "&:hover": {
-          bg: "borders",
-          cursor: "not-allowed",
-          borderColor: "transparent",
-          outline: "none",
-        },
       },
       transparent: {
         background: "transparent",

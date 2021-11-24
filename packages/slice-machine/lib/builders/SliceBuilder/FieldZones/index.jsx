@@ -19,7 +19,7 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
 
-const Zones = ({ Model, store, variation, showHints }) => {
+const Zones = ({ Model, store, variation }) => {
   const _onDeleteItem = (widgetArea) => (key) => {
     store
       .variation(variation.id)
@@ -89,7 +89,6 @@ const Zones = ({ Model, store, variation, showHints }) => {
         title="Non-Repeatable zone"
         dataTip={dataTipText}
         fields={variation.primary}
-        showHints={showHints}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
         getFieldMockConfig={_getFieldMockConfig("primary")}
@@ -113,7 +112,6 @@ const Zones = ({ Model, store, variation, showHints }) => {
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
         fields={variation.items}
-        showHints={showHints}
         EditModal={EditModal}
         getFieldMockConfig={_getFieldMockConfig("items")}
         onDeleteItem={_onDeleteItem("items")}

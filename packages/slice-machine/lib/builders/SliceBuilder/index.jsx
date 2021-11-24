@@ -16,6 +16,7 @@ import { FlexEditor, SideBar, Header } from "./layout";
 import FieldZones from "./FieldZones";
 import { getEnvironment, getWarnings } from "src/modules/environment";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import { MdViewSidebar } from "react-icons/md";
 
 const Builder = ({ openPanel }) => {
   const {
@@ -96,13 +97,10 @@ const Builder = ({ openPanel }) => {
         sx={{ py: 4 }}
         SideBar={
           <SideBar
-            data={data}
             Model={Model}
             variation={variation}
             warnings={warnings}
             openPanel={openPanel}
-            onPush={() => store.push(Model, setData)}
-            onSave={() => store.save(Model, setData)}
             previewUrl={previewUrls[variation.id]}
             storybookUrl={storybookUrl}
             onScreenshot={() =>
