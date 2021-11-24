@@ -1,10 +1,10 @@
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
-import * as Core from '@slicemachine/core'
+import * as Core from "@slicemachine/core";
 
 export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
-    .map(lib => Core.Libraries.handleLibraryPath(env.cwd, lib))
+    .map((lib) => Core.Libraries.handleLibraryPath(env.cwd, lib))
     .filter(Boolean) as ReadonlyArray<Core.Models.Library.Library>;
 
   const state = formatLibraries(libraries);
@@ -13,15 +13,16 @@ export function generateState(env: Environment): void {
 
 export function formatLibraries(
   libraries: ReadonlyArray<Core.Models.Library.Library>
-): Core.Models.LibrariesState.Library {
-  return libraries.reduce((acc, library) => {
+): Core.Models.LibrariesState.Libraries {
+  const t = libraries.reduce((acc, library) => {
     return { ...acc, [library.name]: formatLibrary(library) };
   }, {});
+  return t;
 }
 
-export function formatLibrary(library: Core.Models.Library.Library): {
-  [sliceId: string]: Core.Models.LibrariesState.Component;
-} {
+export function formatLibrary(
+  library: Core.Models.Library.Library
+): Core.Models.LibrariesState.Library {
   return library.components.reduce(
     (acc, component) => ({
       ...acc,
@@ -40,7 +41,9 @@ export function formatComponent(
     name: slice.infos.meta.name,
     description: slice.infos.meta.description,
     model: slice.model,
-    mocks: (slice.infos.mock || []).reduce<Core.Models.LibrariesState.ComponentMocks>(
+    mocks: (
+      slice.infos.mock || []
+    ).reduce<Core.Models.LibrariesState.ComponentMocks>(
       (acc, variationMock) => ({
         ...acc,
         [variationMock.variation]: variationMock,
@@ -50,7 +53,7 @@ export function formatComponent(
     meta: {
       fileName: slice.infos.fileName,
       isDirectory: slice.infos.isDirectory,
-      extension: slice.infos.extension
+      extension: slice.infos.extension,
     },
     previewUrls: !slice.infos.previewUrls
       ? {}

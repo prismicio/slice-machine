@@ -15,7 +15,6 @@ function getMeta(modelData: any): ComponentMetadata {
 }
 
 /** take a path to slice and return its name  */
-/* TODO: REFACTOR! so error prone to pop everywhere */
 function getComponentName(slicePath: string): string | undefined {
   const split = slicePath.split(path.sep);
   const pop = split.pop();
