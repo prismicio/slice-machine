@@ -1,13 +1,13 @@
 {
   "name": "sm-commons",
-  "version": "0.0.24-alpha.0",
+  "version": "0.0.24-beta.2",
   "description": "A set of common utilities for slice machine libraries",
   "main": "scripts/bundle.js",
   "typings": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint .",
-    "audit": "better-npm-audit audit -l high -p -x 1002624",
+    "audit": "better-npm-audit audit -l high -p -x 1005151",
     "audit-fix": "npm audit fix"
   },
   "repository": {
@@ -33,7 +33,7 @@
   "resolutions": {
     "validate-npm-package/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
   },
-  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1",
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "devDependencies": {
     "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0"

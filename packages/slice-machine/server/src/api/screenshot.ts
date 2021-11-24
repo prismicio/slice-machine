@@ -1,5 +1,5 @@
 import type { Models } from "@slicemachine/core";
-import { getEnv } from "@lib/env";
+import getEnv from "./services/getEnv";
 import Previews from "./previews";
 
 export default async function handler({

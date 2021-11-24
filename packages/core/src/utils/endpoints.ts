@@ -20,16 +20,12 @@ export function buildEndpoints(base: string): Endpoints {
 
 export type Base = string;
 export type ApiEndpoint = string;
-
 export function extractDomainFromBase(base: Base): string {
   const withoutHttp = base.split("://")[1];
   const result = withoutHttp.split("/")[0];
   return result;
 }
 
-export function buildRepositoryEndpoint(
-  base: Base,
-  domain: string
-): ApiEndpoint {
+export function buildRepositoryEndpoint(base: Base, domain: string): string {
   return `https://${domain}.${extractDomainFromBase(base)}/api/v2`;
 }

@@ -210,6 +210,7 @@ const VariationModal: React.FunctionComponent<{
                     if (v) setOrigin(v);
                   }}
                   defaultValue={origin}
+                  maxMenuHeight={150}
                   theme={(theme) => {
                     return {
                       ...theme,

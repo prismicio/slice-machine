@@ -11,7 +11,7 @@ import Slice from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 type ContextProps = {
-  Model: ComponentUI;
+  Model: SliceState;
   store: SliceStore;
   variation: Models.VariationAsArray;
 };
@@ -35,7 +35,7 @@ export function useModelReducer({
 
   const variations = Slice.toArray(model).variations;
   const initialState: SliceState = {
-    jsonModel: model,
+    model,
     ...rest,
     variations,
     mockConfig,

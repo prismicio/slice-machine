@@ -1,6 +1,6 @@
-import type { Models } from "@slicemachine/core";
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 
+import type { Models } from "@slicemachine/core";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
 

@@ -138,11 +138,7 @@ export const SharedSlice = {
       return null;
     }
     const variationId = defaultVariation.id;
-    const link = LinkUtil.variation(
-      slice.href,
-      slice.jsonModel.name,
-      variationId
-    );
+    const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 

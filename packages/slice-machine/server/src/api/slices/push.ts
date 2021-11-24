@@ -2,7 +2,7 @@ import type { Models } from "@slicemachine/core";
 import { getPathToScreenshot } from "@slicemachine/core/build/src/libraries/index";
 import { snakelize } from "@lib/utils/str";
 
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 import Files from "@lib/utils/files";
 

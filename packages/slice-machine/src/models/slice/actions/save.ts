@@ -20,14 +20,14 @@ export default function save(
           sliceName: slice.infos.sliceName,
           from: slice.from,
           model: {
-            ...slice.jsonModel,
+            ...slice.model,
             variations: slice.variations.map(Variation.toObject),
           },
           mockConfig: slice.mockConfig,
         }),
       },
       setData,
-      successMessage: "Model & mocks have been generated succesfully!",
+      successMessage: "Model & mocks have been generated successfully!",
       onSuccess({
         previewUrls,
       }: {

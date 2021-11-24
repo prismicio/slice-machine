@@ -1,15 +1,7 @@
 import type { Models } from "@slicemachine/core";
-import { LibStatus } from "../common/ComponentUI";
+import { ComponentUI, LibStatus } from "../common/ComponentUI";
 
-interface SliceState {
-  jsonModel: Models.SliceAsObject;
-
-  from: string;
-  href: string;
-  pathToSlice: string;
-  infos: Models.ComponentInfo;
-  migrated: boolean;
-
+interface SliceState extends ComponentUI {
   mockConfig: any;
   initialMockConfig: any;
 
@@ -22,7 +14,7 @@ interface SliceState {
   };
 
   isTouched?: boolean;
-  __status?: LibStatus;
+  __status: LibStatus;
 }
 
 const SliceState = {

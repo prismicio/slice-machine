@@ -66,11 +66,11 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
                     onNewVariation={() => setShowVariationModal(true)}
                     onChange={(v) => {
                       router.push(
-                        ...Links.variation(
-                          Model.href,
-                          Model.infos.sliceName,
-                          v.id
-                        ).all
+                        ...Links.variation({
+                          lib: Model.href,
+                          sliceName: Model.infos.sliceName,
+                          variationId: v.id,
+                        }).all
                       );
                     }}
                   />
@@ -95,7 +95,11 @@ const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
             onSubmit={(id, name, copiedVariation) => {
               store.copyVariation(id, name, copiedVariation);
               router.push(
-                ...Links.variation(Model.href, Model.infos.sliceName, id).all
+                ...Links.variation({
+                  lib: Model.href,
+                  sliceName: Model.infos.sliceName,
+                  variationId: id,
+                }).all
               );
             }}
             initialVariation={variation}

@@ -1,4 +1,4 @@
-export { installSm } from "./install-sm";
+export { installRequiredDependencies } from "./install-required-dependencies";
 export { validatePkg } from "./validate-pkg";
 export { maybeExistingRepo } from "./maybe-existing-repo";
 export { createRepository } from "./create-repo";

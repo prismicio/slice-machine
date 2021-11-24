@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.0.9-alpha.0",
+  "version": "0.0.9-beta.2",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint --ext .js .",
-    "audit": "better-npm-audit audit -l high -p -x 1002624",
+    "audit": "better-npm-audit audit -l high -p -x 1005151",
     "audit-fix": "npm audit fix"
   },
   "repository": {
@@ -43,5 +43,5 @@
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
-  "gitHead": "fb20ffb558133075252c4983d496d21de7db76d1"
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d"
 }

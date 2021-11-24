@@ -1,27 +1,18 @@
-import { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { Box } from "theme-ui";
 
 import Navigation from "./Navigation";
 
-import Environment from "@lib/models/common/Environment";
-import { ServerState } from "@lib/models/server/ServerState";
-
 const AsIs: { [x: string]: boolean } = {
   "/onboarding": true,
+  "/[lib]/[sliceName]/[variation]/preview": true,
 };
 
-const AppLayout = ({
-  children,
-  env,
-  data,
-}: {
-  children: ReactNode;
-  env: Environment;
-  data: ServerState;
-}) => {
+type AppLayoutProps = {};
+
+const AppLayout: React.FunctionComponent<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
-  if (AsIs[router.asPath]) {
+  if (AsIs[router.asPath] || AsIs[router.pathname]) {
     return <main>{children}</main>;
   }
 
@@ -33,11 +24,7 @@ const AppLayout = ({
         flexDirection: ["column", "row", null],
       }}
     >
-      <Navigation
-        env={env}
-        warnings={data.warnings}
-        configErrors={data.configErrors}
-      />
+      <Navigation />
       <Box
         as="main"
         sx={{

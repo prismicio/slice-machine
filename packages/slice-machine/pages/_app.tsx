@@ -1,28 +1,17 @@
-import Head from "next/head";
-import React, { ReactPropTypes, useCallback, useEffect, useState } from "react";
+import { Provider } from "react-redux";
+import configureStore from "src/redux/store";
+import React, { ReactPropTypes, useEffect, useState } from "react";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
-import type { Models } from "@slicemachine/core";
+import { PersistGate } from "redux-persist/integration/react";
 
 import theme from "../src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
-import { LocalStorageKeys } from "@lib/consts";
-
-import LibrariesProvider from "@src/models/libraries/context";
-import CustomTypesProvider from "@src/models/customTypes/context";
-import TrackingProvider from "@src/models/tracking/context";
-import { SliceHandler } from "@src/models/slice/context";
-import ConfigProvider from "@src/config-context";
-
-import Drawer from "rc-drawer";
-
 import LoadingPage from "../components/LoadingPage";
+import SliceMachineApp from "../components/App";
 import ConfigErrors from "../components/ConfigErrors";
-import Warnings from "../components/Warnings";
-import AppLayout from "../components/AppLayout";
-import ToastProvider from "../src/ToastProvider";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -31,21 +20,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 
-import { ServerState } from "@lib/models/server/ServerState";
+import ServerState from "@lib/models/server/ServerState";
+import AppState from "@lib/models/common/AppState";
 import ServerError from "@lib/models/server/ServerError";
-import Environment from "@lib/models/common/Environment";
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
-import { useRouter } from "next/router";
-import LoginModalProvider from "@src/LoginModalProvider";
+
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import Head from "next/head";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function mapSlices(
-  libraries: ReadonlyArray<Models.Library<Models.Component>>
-): any {
+function mapSlices(libraries: ReadonlyArray<LibraryUI> | undefined) {
   return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
@@ -59,17 +45,6 @@ function mapSlices(
     };
   }, {});
 }
-
-const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
-  const { setColorMode } = useThemeUI();
-  useEffect(() => {
-    if (setColorMode) {
-      setColorMode("light");
-    }
-  }, []);
-
-  return children;
-};
 
 const RenderStates = {
   Loading: () => <LoadingPage />,
@@ -89,6 +64,8 @@ const RenderStates = {
   }) => <ConfigErrors errors={configErrors} />,
 };
 
+const { store, persistor } = configureStore();
+
 function MyApp({
   Component,
   pageProps,
@@ -96,136 +73,63 @@ function MyApp({
   Component: (props: any) => JSX.Element;
   pageProps: any;
 }) {
-  const router = useRouter();
-  const { data }: { data?: ServerState } = useSwr("/api/state", fetcher);
-  const [sliceMap, setSliceMap] = useState<any | null>(null);
-  const [drawerState, setDrawerState] = useState<{
-    open: boolean;
-    priority?: any;
-  }>({ open: false });
-  const [state, setRenderer] = useState<{
-    Renderer: (props: any) => JSX.Element;
-    payload: {
-      env: Environment;
-      libraries?: ReadonlyArray<LibraryUI>;
-      customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-      remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-      remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
-    } | null;
-  }>({ Renderer: RenderStates.Loading, payload: null });
-
-  const openPanel = useCallback(
-    (priority?: any) =>
-      setDrawerState({
-        ...drawerState,
-        open: true,
-        ...(priority ? { priority } : null),
-      }),
-    []
+  const { data: serverState }: { data?: ServerState } = useSwr(
+    "/api/state",
+    fetcher
   );
 
-  useEffect(() => {
-    if (
-      !localStorage.getItem(LocalStorageKeys.isOnboarded) &&
-      router.pathname !== "/onboarding"
-    ) {
-      router.replace("/onboarding");
-    }
-  }, []);
+  const [sliceMap, setSliceMap] = useState<any | null>(null);
+
+  const [state, setRenderer] = useState<{
+    Renderer: (props: any) => JSX.Element;
+    payload: AppState | null;
+  }>({ Renderer: RenderStates.Loading, payload: null });
 
   useEffect(() => {
-    if (!data) {
+    if (!serverState) {
       return;
     }
-    const newSliceMap = mapSlices(data.libraries);
+
+    const appState = AppState.filter(serverState);
+
+    const newSliceMap = mapSlices(appState.libraries);
     if (sliceMap !== null) {
       Object.keys(newSliceMap).forEach((key) => {
         if (!sliceMap[key]) {
-          // const [from, sliceName] = key.split(':')
           return (window.location.href = `/slices`);
         }
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default, payload: data });
-    const { env, configErrors, warnings } = data;
+    setRenderer({ Renderer: RenderStates.Default, payload: appState });
+    const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
-    console.log("Loaded libraries: ", { libraries: data.libraries });
+    console.log("Loaded libraries: ", { libraries });
     console.log("Loaded env: ", { env, configErrors });
     console.log("Warnings: ", { warnings });
     console.log("------ End of log ------");
-  }, [data]);
+  }, [serverState]);
 
   const { Renderer, payload } = state;
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Head>
         <title>SliceMachine</title>
       </Head>
-      <BaseStyles>
-        <RemoveDarkMode>
-          {!data ? (
-            <Renderer {...payload} />
-          ) : (
-            <ConfigProvider value={data}>
-              {!payload || !payload.libraries ? (
-                <Renderer
-                  Component={Component}
-                  pageProps={pageProps}
-                  {...payload}
-                  openPanel={openPanel}
-                />
-              ) : (
-                <ToastProvider>
-                  <LoginModalProvider>
-                    <LibrariesProvider
-                      remoteSlices={payload.remoteSlices}
-                      libraries={payload.libraries}
-                      env={payload.env}
-                    >
-                      <CustomTypesProvider
-                        customTypes={payload.customTypes}
-                        remoteCustomTypes={payload.remoteCustomTypes}
-                      >
-                        <TrackingProvider>
-                          <AppLayout {...payload} data={data}>
-                            <SliceHandler {...payload}>
-                              <Renderer
-                                Component={Component}
-                                pageProps={pageProps}
-                                {...payload}
-                                openPanel={openPanel}
-                              />
-                              <Drawer
-                                placement="right"
-                                open={drawerState.open}
-                                onClose={() =>
-                                  setDrawerState({
-                                    ...drawerState,
-                                    open: false,
-                                  })
-                                }
-                              >
-                                <Warnings
-                                  priority={drawerState.priority}
-                                  list={data.warnings}
-                                  configErrors={data.configErrors}
-                                />
-                              </Drawer>
-                            </SliceHandler>
-                          </AppLayout>
-                        </TrackingProvider>
-                      </CustomTypesProvider>
-                    </LibrariesProvider>
-                  </LoginModalProvider>
-                </ToastProvider>
-              )}
-            </ConfigProvider>
-          )}
-        </RemoveDarkMode>
-      </BaseStyles>
-    </ThemeProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <SliceMachineApp
+            theme={theme}
+            serverState={serverState}
+            payload={payload}
+            pageProps={pageProps}
+            Component={Component}
+            Renderer={Renderer}
+          />
+        </PersistGate>
+      </Provider>
+    </>
   );
 }
 

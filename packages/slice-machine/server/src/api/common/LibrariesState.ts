@@ -1,8 +1,10 @@
+import type { Models } from "@slicemachine/core";
+
+import { LibrariesStatePath } from "@slicemachine/core/build/src/filesystem/index";
+import { handleLibraryPath } from "@slicemachine/core/build/src/libraries/index";
+
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
-import type { Models } from "@slicemachine/core";
-import { handleLibraryPath } from "@slicemachine/core/build/src/libraries/index";
-import { LibrariesStatePath } from "@slicemachine/core/build/src/filesystem/index";
 
 export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
