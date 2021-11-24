@@ -15,16 +15,16 @@ export function generateState(env: Environment): void {
 
 export function formatLibraries(
   libraries: ReadonlyArray<Models.Library<Models.Component>>
-): Models.LibrariesState.Library {
-  return libraries.reduce((acc, library) => {
+): Models.LibrariesState.Libraries {
+  return libraries.reduce<Models.LibrariesState.Libraries>((acc, library) => {
     return { ...acc, [library.name]: formatLibrary(library) };
   }, {});
 }
 
-export function formatLibrary(library: Models.Library<Models.Component>): {
-  [sliceId: string]: Models.LibrariesState.Component;
-} {
-  return library.components.reduce(
+export function formatLibrary(
+  library: Models.Library<Models.Component>
+): Models.LibrariesState.Library {
+  return library.components.reduce<Models.LibrariesState.Library>(
     (acc, component) => ({
       ...acc,
       [component.model.id]: formatComponent(component),
