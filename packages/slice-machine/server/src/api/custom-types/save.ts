@@ -1,4 +1,4 @@
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths, GeneratedCustomTypesPaths } from "@lib/models/paths";
 

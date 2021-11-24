@@ -74,7 +74,9 @@ export const NotConnected = () => (
   </Card>
 );
 
-export const NewVersionAvailable = ({ value: { current, next, message } }) => (
+export const NewVersionAvailable = ({
+  value: { latestVersion, updateCommand },
+}) => (
   <Card
     bg="background"
     bodySx={{ p: 3 }}
@@ -95,10 +97,10 @@ export const NewVersionAvailable = ({ value: { current, next, message } }) => (
     )}
   >
     <Text as="p">
-      A new version of the slice builder is available (<b>{next}</b>).
+      A new version of the slice builder is available (<b>{latestVersion}</b>).
       <br />
     </Text>
-    Please run: <Text variant="pre">{message}</Text>
+    Please run: <Text variant="pre">{updateCommand}</Text>
     to update it to latest version!
   </Card>
 );

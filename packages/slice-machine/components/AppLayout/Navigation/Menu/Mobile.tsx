@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Box, Button, Flex } from "theme-ui";
 
 import Burger from "../Icons/Burger";
@@ -7,10 +7,16 @@ import VersionBadge from "../../Navigation/Badge";
 import Logo from "./Logo";
 import ItemsList from "./Navigation/List";
 
-import { NavCtx } from "..";
+import { LinkProps } from "..";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getEnvironment } from "@src/modules/environment";
 
-const Mobile = () => {
-  const navCtx = useContext(NavCtx);
+const Mobile: React.FunctionComponent<{ links: LinkProps[] }> = ({ links }) => {
+  const { env } = useSelector((store: SliceMachineStoreType) => ({
+    env: getEnvironment(store),
+  }));
+
   const [open, setOpen] = useState(false);
   const handleClick = () => {
     setOpen(!open);
@@ -26,9 +32,11 @@ const Mobile = () => {
       </Flex>
       {open ? (
         <Box>
-          <ItemsList mt={4} links={navCtx?.links as []} />
+          <ItemsList mt={4} links={links} />
           <Box sx={{ textAlign: "right" }}>
-            <VersionBadge version={navCtx?.env?.currentVersion as string} />
+            <VersionBadge
+              version={env ? env.updateVersionInfo.currentVersion : ""}
+            />
           </Box>
         </Box>
       ) : null}

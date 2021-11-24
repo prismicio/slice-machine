@@ -11,6 +11,7 @@
     "noUnusedParameters": true,
     "baseUrl": ".",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "typeRoots": ["../node_modules/@types", "../../sm-commons/index.d.ts"],
     "types": ["node"],
     "esModuleInterop": true,

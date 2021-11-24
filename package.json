@@ -32,8 +32,8 @@
   },
   "lint-staged": {
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine run lint:precommit",
-    "**/packages/slicemachine-core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slicemachine-core run lint:precommit",
-    "**/packages/sm-init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/sm-init run lint:precommit",
+    "**/packages/core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/core run lint:precommit",
+    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/init run lint:precommit",
     "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }

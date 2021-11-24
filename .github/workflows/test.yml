@@ -18,16 +18,20 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Running functional and unit tests
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          REPO_URL: ${{ secrets.REPO_URL }}
         run: lerna run test
       - name: Linting
         run: lerna run lint
       - name: Audit
         run: lerna run audit
       - name: Build slice machine core
-        working-directory: ./packages/slicemachine-core
+        working-directory: ./packages/core
         run: npm run build
       - name: Build slice machine init
-        working-directory: ./packages/sm-init
+        working-directory: ./packages/init
         run: npm run build
       - name: Build and export slice machine UI
         working-directory: ./packages/slice-machine

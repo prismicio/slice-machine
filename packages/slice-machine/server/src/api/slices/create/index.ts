@@ -10,7 +10,7 @@ import Slice from "@lib/models/common/Slice";
 import { AsObject } from "@lib/models/common/Variation";
 import Environment from "@lib/models/common/Environment";
 
-import { getEnv } from "@lib/env";
+import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
 

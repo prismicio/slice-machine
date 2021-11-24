@@ -29,7 +29,8 @@ const boxen = require("boxen");
 const spawn = require("child_process").spawn;
 const migrate = require("../changelog/migrate");
 
-const validate = require("../build/lib/env/client").validate;
+const validateUserAuth =
+  require("../build/server/src/api/services/validateUserAuth").validateUserAuth;
 
 const infobox = require("./info");
 
@@ -156,11 +157,11 @@ async function run() {
   }
 
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
-  const npmCompareData = await compareVersions({ cwd: SmDirectory }, false);
+  const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
   const framework = Utils.Framework.defineFramework(userConfig.content, cwd);
 
-  const validateRes = await validate();
+  const validateRes = await validateUserAuth();
 
   start({ cwd, port }, (url) => {
     const email =

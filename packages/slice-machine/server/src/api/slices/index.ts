@@ -1,9 +1,9 @@
-import { getEnv } from "@lib/env";
+import getEnv from "../services/getEnv";
 
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
-import Slice from "@models/common/Slice";
-import { AsObject } from "@models/common/Variation";
+import Slice from "@lib/models/common/Slice";
+import { AsObject } from "@lib/models/common/Variation";
 
 export const getSlices = async (
   client: DefaultClient | FakeClient
