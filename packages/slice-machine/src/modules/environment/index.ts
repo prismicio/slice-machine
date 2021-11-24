@@ -26,6 +26,14 @@ export const getWarnings = (store: SliceMachineStoreType) =>
 export const getConfigErrors = (store: SliceMachineStoreType) =>
   store.environment.configErrors;
 
+export const getUpdateVersionInfo = (store: SliceMachineStoreType) => {
+  if (!store.environment.env) {
+    return null;
+  }
+
+  return store.environment.env.updateVersionInfo;
+};
+
 // Reducer
 export const environmentReducer: Reducer<
   EnvironmentStoreType,

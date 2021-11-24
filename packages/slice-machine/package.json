@@ -3,6 +3,7 @@
   "version": "0.1.2-slicecanvas.1",
   "private": false,
   "license": "MIT",
+  "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "_moduleAliases": {
     "@lib": "build/lib",
     "@models": "build/lib/models"
@@ -97,6 +98,8 @@
     "@mdx-js/loader": "^1.6.22",
     "@next/mdx": "^10.0.3",
     "@svgr/webpack": "^5.4.0",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.0",
     "@theme-ui/color": "0.8.4",
     "@theme-ui/prism": "0.8.4",
@@ -118,6 +121,7 @@
     "@types/react-redux": "^7.1.20",
     "@types/react-select": "^4.0.13",
     "@types/react-tabs": "^2.3.2",
+    "@types/semver": "^7.3.9",
     "@types/slash": "^3.0.0",
     "@types/uniqid": "^5.3.0",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
@@ -134,6 +138,7 @@
     "jest": "^27.0.0",
     "jest-config": "^27.0.0",
     "memfs": "^3.2.2",
+    "msw": "^0.35.0",
     "next": "^11.1.2",
     "next-compose-plugins": "^2.2.1",
     "next-mdx-remote": "^1.0.0",
@@ -172,5 +177,6 @@
     "jest/**/ws": ">=5.2.3 <6.0.0 || >=6.2.2 <7.0.0 || >=7.4.6",
     "jest-config/**/ws": ">=5.2.3 <6.0.0 || >=6.2.2 <7.0.0 || >=7.4.6",
     "yarn-audit-fix/**/@npmcli/git": ">=2.0.8"
-  }
+  },
+  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d"
 }
