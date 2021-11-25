@@ -20,14 +20,13 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-
       - name: Install Dependencies
       - run: npm ci
-
-      - name: Bump Versions
-      - run: lerna version prerelease --preid alpha --exact --yes
-
-      - name: Publish Alpha Versions
-      - run: lerna publish from-package --dist-tag alpha --yes
+      - name: Version An Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          lerna version prerelease --preid alpha --exact --yes
+          lerna publish from-package --dist-tag alpha --yes
