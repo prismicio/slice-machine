@@ -1,4 +1,4 @@
-import Environment from "@lib/models/common/Environment";
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import Slice from "@lib/models/common/Slice";
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
@@ -16,15 +16,17 @@ export interface ConfigErrors {
 export interface ServerState {
   libraries: ReadonlyArray<Library>;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
-  clientError?: ErrorWithStatus;
-  configErrors: ConfigErrors;
-  env: Environment;
+  clientError: ErrorWithStatus | undefined;
+  configErrors: ConfigErrors | undefined;
+  env: FrontEndEnvironment;
   warnings: ReadonlyArray<Warning>;
+  isFake: boolean;
 }
 
 export interface AppPayload {
-  env: Environment;
+  env: FrontEndEnvironment;
   libraries?: ReadonlyArray<Library>;
   customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;

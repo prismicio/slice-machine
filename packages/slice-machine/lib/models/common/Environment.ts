@@ -27,3 +27,9 @@ export default interface Environment {
   hasGeneratedStoriesPath: boolean;
   client: DefaultClient | FakeClient;
 }
+
+export type FrontEndEnvironment = {
+  prismicData: {
+    base: string;
+  };
+} & Omit<Environment, "client" | "cwd" | "prismicData">;

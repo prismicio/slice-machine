@@ -18,7 +18,6 @@ import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
 import Environment from "@lib/models/common/Environment";
-import ServerError from "@lib/models/server/ServerError";
 import Chromatic from "@lib/models/common/Chromatic";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
@@ -107,7 +106,7 @@ function parseStorybookConfiguration(cwd: string) {
 
 export default async function getEnv(
   maybeCustomCwd?: string
-): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
+): Promise<{ errors?: ConfigErrors; env: Environment }> {
   const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
