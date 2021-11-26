@@ -3,7 +3,7 @@ import fetchCustomTypes from "./custom-types/index";
 import getEnv from "./services/getEnv";
 import { warningStates, warningTwoLiners } from "@lib/consts";
 import { fetchStorybookUrl } from "./common/storybook";
-import Environment, {
+import BackendEnvironment, {
   FrontEndEnvironment,
 } from "@lib/models/common/Environment";
 import Warning from "@lib/models/common/Warning";
@@ -26,7 +26,7 @@ const hasStorybookScript = (cwd: string) => {
 };
 
 export async function createWarnings(
-  env: Environment,
+  env: BackendEnvironment,
   configErrors?: { [errorKey: string]: ServerError },
   clientError?: ErrorWithStatus
 ): Promise<ReadonlyArray<Warning>> {

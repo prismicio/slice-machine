@@ -1,5 +1,5 @@
 import Files from "@lib/utils/files";
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import { Preview } from "@lib/models/common/Component";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import { createScreenshotUrl } from "@lib/utils";
@@ -12,7 +12,7 @@ type Previews = ReadonlyArray<
 
 export default {
   async generateForSlice(
-    env: Environment,
+    env: BackendEnvironment,
     libraryName: string,
     sliceName: string
   ): Promise<
@@ -41,7 +41,7 @@ export default {
   },
 
   async generateForVariation(
-    env: Environment,
+    env: BackendEnvironment,
     libraryName: string,
     sliceName: string,
     variationId: string
@@ -83,7 +83,7 @@ export default {
 
   mergeWithCustomScreenshots(
     previewUrls: Previews,
-    env: Environment,
+    env: BackendEnvironment,
     from: string,
     sliceName: string
   ) {

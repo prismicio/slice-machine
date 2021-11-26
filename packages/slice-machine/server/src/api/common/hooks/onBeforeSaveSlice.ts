@@ -1,4 +1,4 @@
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import Slice from "@lib/models/common/Slice";
 import { AsObject } from "@lib/models/common/Variation";
 
@@ -11,7 +11,7 @@ export default async function onBeforeSaveSlice(
     from,
     sliceName,
   }: { from: string; sliceName: string; model: Slice<AsObject> },
-  env: Environment
+  env: BackendEnvironment
 ): Promise<void> {
   const pathToSliceAssets = GeneratedPaths(env.cwd)
     .library(from)

@@ -17,7 +17,7 @@ import { defineFramework, isValidFramework } from "@lib/env/framework";
 import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import Chromatic from "@lib/models/common/Chromatic";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
@@ -106,7 +106,7 @@ function parseStorybookConfiguration(cwd: string) {
 
 export default async function getEnv(
   maybeCustomCwd?: string
-): Promise<{ errors?: ConfigErrors; env: Environment }> {
+): Promise<{ errors?: ConfigErrors; env: BackendEnvironment }> {
   const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
@@ -167,7 +167,6 @@ export default async function getEnv(
       cwd,
       repo,
       userConfig,
-      hasConfigFile: true,
       prismicData: prismicData.value,
       chromatic,
       updateVersionInfo: {

@@ -13,23 +13,22 @@ export interface UpdateVersionInfo {
   updateAvailable: boolean;
 }
 
-export default interface Environment {
+export default interface BackendEnvironment extends FrontEndEnvironment {
   cwd: string;
-  userConfig: UserConfig;
-  hasConfigFile: boolean;
-  repo?: string;
   prismicData: PrismicData;
+  client: DefaultClient | FakeClient;
+}
+
+export interface FrontEndEnvironment {
+  userConfig: UserConfig;
+  repo?: string;
   chromatic?: Chromatic;
   updateVersionInfo: UpdateVersionInfo;
   mockConfig: any;
   framework: Framework;
   baseUrl: string;
   hasGeneratedStoriesPath: boolean;
-  client: DefaultClient | FakeClient;
-}
-
-export type FrontEndEnvironment = {
   prismicData: {
     base: string;
   };
-} & Omit<Environment, "client" | "cwd" | "prismicData">;
+}

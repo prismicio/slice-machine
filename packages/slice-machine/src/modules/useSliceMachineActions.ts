@@ -48,7 +48,9 @@ const useSliceMachineActions = () => {
       getEnvironmentCreator({
         env: serverState.env,
         warnings: serverState.warnings,
-        configErrors: serverState.configErrors,
+        configErrors: !!serverState.configErrors
+          ? serverState.configErrors
+          : {},
       })
     );
   };

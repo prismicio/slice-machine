@@ -1,7 +1,7 @@
 import React from "react";
 import { useModelReducer } from "../slice/context";
 
-import Environment from "../../../lib/models/common/Environment";
+import { FrontEndEnvironment } from "../../../lib/models/common/Environment";
 import { Library } from "../../../lib/models/common/Library";
 import Slice from "../../../lib/models/common/Slice";
 import { AsObject } from "../../../lib/models/common/Variation";
@@ -16,7 +16,7 @@ export const LibrariesContext = React.createContext<
 
 type LibraryHandlerProps = {
   libraries: ReadonlyArray<Library>;
-  env: Environment;
+  env: FrontEndEnvironment;
   remoteSlices?: ReadonlyArray<Slice<AsObject>>;
 };
 

@@ -6,12 +6,12 @@ import Files from "../utils/files";
 import migrate from "../migrate";
 import { getInfoFromPath } from "../utils/lib";
 import { getComponentInfo } from "./component";
-import Environment from "../models/common/Environment";
+import BackendEnvironment from "../models/common/Environment";
 import { Component } from "../models/common/Component";
 import { Library } from "../models/common/Library";
 
 export async function handleLibraryPath(
-  env: Environment,
+  env: BackendEnvironment,
   libPath: string
 ): Promise<Library | undefined> {
   const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(
@@ -71,7 +71,7 @@ export async function handleLibraryPath(
 }
 
 export async function listComponentsByLibrary(
-  env: Environment
+  env: BackendEnvironment
 ): Promise<ReadonlyArray<Library>> {
   const payload = await Promise.all(
     (env.userConfig.libraries || []).map(

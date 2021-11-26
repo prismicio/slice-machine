@@ -1,6 +1,6 @@
 import path from "path";
 import glob from "glob";
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import {
   CustomType,
   CustomTypeJsonModel,
@@ -9,7 +9,7 @@ import {
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 
-const handleMatch = (matches: string[], env: Environment) => {
+const handleMatch = (matches: string[], env: BackendEnvironment) => {
   return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
     const key = path.basename(path.dirname(p));
     const pathToPreview = path.join(path.dirname(p), "index.png");
@@ -33,7 +33,7 @@ const handleMatch = (matches: string[], env: Environment) => {
 };
 
 const fetchRemoteCustomTypes = async (
-  env: Environment
+  env: BackendEnvironment
 ): Promise<{ remoteCustomTypes: CustomTypeJsonModel[]; isFake?: boolean }> => {
   if (env.client.isFake()) {
     return { remoteCustomTypes: [], isFake: true };
@@ -66,7 +66,7 @@ const saveCustomTypes = (
   }
 };
 
-export default async function handler(env: Environment): Promise<{
+export default async function handler(env: BackendEnvironment): Promise<{
   isFake: boolean;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
