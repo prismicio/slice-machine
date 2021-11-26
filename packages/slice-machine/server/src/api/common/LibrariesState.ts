@@ -1,10 +1,15 @@
 import type { Models } from "@slicemachine/core";
 
+import Environment from "@lib/models/common/Environment";
+import Files from "@slicemachine/core/build/src/utils/files";
 import { LibrariesStatePath } from "@slicemachine/core/build/src/filesystem/index";
 import { handleLibraryPath } from "@slicemachine/core/build/src/libraries/index";
+import probe from "probe-image-size";
 
-import Files from "@lib/utils/files";
-import Environment from "@lib/models/common/Environment";
+const DEFAULT_IMAGE_DIMENSIONS = {
+  width: undefined,
+  height: undefined,
+};
 
 export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
@@ -35,6 +40,17 @@ export function formatLibrary(
   );
 }
 
+function getImageDimensions(imagePath: string | undefined) {
+  if (!imagePath || !Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
+
+  const imageBuffer = Files.readBuffer(imagePath);
+  const result = probe.sync(imageBuffer);
+
+  if (!result) return DEFAULT_IMAGE_DIMENSIONS;
+
+  return { width: result.width, height: result.height };
+}
+
 export function formatComponent(
   slice: Models.Component
 ): Models.LibrariesState.Component {
@@ -60,19 +76,20 @@ export function formatComponent(
     },
     previewUrls: !slice.infos.previewUrls
       ? {}
-      : Object.entries(slice.infos.previewUrls).reduce<{
-          [variationId: string]: {
-            hasPreview: boolean;
-            path: string | undefined;
-          };
-        }>((acc, [variationId, preview]) => {
-          return {
-            ...acc,
-            [variationId]: {
-              hasPreview: preview.hasPreview,
-              path: preview.path,
-            },
-          };
-        }, {}),
+      : Object.entries(
+          slice.infos.previewUrls
+        ).reduce<Models.LibrariesState.ComponentPreviews>(
+          (acc, [variationId, preview]) => {
+            return {
+              ...acc,
+              [variationId]: {
+                hasPreview: preview.hasPreview,
+                path: preview.path,
+                ...getImageDimensions(preview.path),
+              },
+            };
+          },
+          {}
+        ),
   };
 }
