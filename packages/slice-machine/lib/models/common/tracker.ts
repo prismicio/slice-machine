@@ -20,13 +20,15 @@ export default class Tracker {
 
     return {
       libraries: (libs: readonly LibraryUI[]) => {
+        const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+
         this.analytics.group({
-          userId: "",
           groupId: repo,
           traits: {
-            manualLibsCount: libs.filter((l) => l.isLocal).length,
-            downloadedLibsCount: libs.filter((l) => !l.isLocal).length,
-            downloadedLibs: [],
+            manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+            downloadedLibsCount: downloadedLibs.length,
+            npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+            downloadedLibs: downloadedLibs.map((l) => l.meta.name),
             slicemachineVersion: this.slicemachineVersion,
           },
         });

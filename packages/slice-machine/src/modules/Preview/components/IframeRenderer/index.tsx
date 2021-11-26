@@ -1,11 +1,4 @@
-import {
-  FC,
-  RefCallback,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
 import { Flex } from "theme-ui";
 

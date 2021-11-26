@@ -10,10 +10,8 @@ export function handleLibraryPath(
   cwd: string,
   libPath: string
 ): Library<Component> | undefined {
-  const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(
-    libPath,
-    cwd
-  );
+  const { from, isLocal, pathExists, pathToSlices, pathToLib } =
+    getInfoFromPath(libPath, cwd);
 
   if (!pathExists) {
     return;
@@ -58,6 +56,7 @@ export function handleLibraryPath(
   );
 
   return {
+    path: pathToLib,
     isLocal,
     name: from,
     components: allComponents,
@@ -66,7 +65,7 @@ export function handleLibraryPath(
 
 export function libraries(
   cwd: string,
-  libraries: string[]
+  libraries: ReadonlyArray<string>
 ): ReadonlyArray<Library<Component>> {
   return (libraries || [])
     .map((lib) => handleLibraryPath(cwd, lib))

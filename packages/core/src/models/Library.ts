@@ -55,11 +55,7 @@ export interface Preview {
 
 export interface Library<C extends Component> {
   name: string;
+  path: string;
   isLocal: boolean;
   components: ReadonlyArray<C>;
-  meta?: LibraryMeta;
-}
-
-export interface LibraryMeta {
-  name: string;
 }

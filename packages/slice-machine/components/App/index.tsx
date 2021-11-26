@@ -14,7 +14,8 @@ import ToastProvider from "../../src/ToastProvider";
 
 import LoginModal from "@components/LoginModal";
 import ReviewModal from "@components/ReviewModal";
-import { AppPayload, ServerState } from "@models/server/ServerState";
+import ServerState from "@models/server/ServerState";
+import AppState from "@models/common/AppState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import UpdateVersionModal from "../UpdateVersionModal";
@@ -33,7 +34,7 @@ const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
 type AppProps = {
   theme: () => Theme;
   serverState: ServerState | undefined;
-  payload: AppPayload | null;
+  payload: AppState | null;
   pageProps: any; // This is coming from next
   Component: (props: any) => JSX.Element;
   Renderer: (props: any) => JSX.Element;

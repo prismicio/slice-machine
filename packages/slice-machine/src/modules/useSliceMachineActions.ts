@@ -12,7 +12,7 @@ import {
   skipReviewCreator,
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
-import { ServerState } from "@models/server/ServerState";
+import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
