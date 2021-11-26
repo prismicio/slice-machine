@@ -29,4 +29,4 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           lerna version prerelease --preid alpha --exact --yes
-          lerna publish from-package --dist-tag alpha --yes
+          lerna publish from-package --dist-tag alpha --yes --no-verify-access
