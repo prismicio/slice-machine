@@ -3,14 +3,17 @@ name: deploy-alpha
 concurrency: alpha
 
 on:
-  pull_request:
-    types: [closed]
+ workflow_run:
+    workflows: ["test"]
+    types:
+      - completed
     branches:
       - v[0-9]+.[0-9]+.[0-9]+
 
+
 jobs:
   deployment:
-    if: github.event.pull_request.merged == true
+    if: github.event.workflow_run.conclusion == 'success' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: alpha
     steps: 
