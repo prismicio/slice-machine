@@ -98,7 +98,7 @@ type CreateCustomTypeModalProps = {
   isOpen: boolean;
   onSubmit: Function;
   close: Function;
-  customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
+  customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 };
 
 const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps> =

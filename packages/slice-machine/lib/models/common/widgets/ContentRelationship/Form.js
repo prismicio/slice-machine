@@ -1,9 +1,6 @@
 import * as yup from "yup";
 import Select from "react-select";
-import { useContext } from "react";
 import { Label, Box } from "theme-ui";
-
-import { CustomTypesContext } from "src/models/customTypes/context";
 
 import { DefaultFields } from "@lib/forms/defaults";
 
@@ -11,6 +8,8 @@ import WidgetFormField from "@lib/builders/common/EditModal/Field";
 
 import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
+import { useSelector } from "react-redux";
+import { getLocalCustomTypes } from "@src/modules/customTypes";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -26,16 +25,15 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }) => {
-  const { customTypes } = useContext(CustomTypesContext);
+  const localCustomTypes = useSelector(getLocalCustomTypes);
 
-  // const { errors, Model, fieldType } = rest
-
-  const options = customTypes.map((ct) => ({
+  const options = localCustomTypes.map((ct) => ({
     value: ct?.id,
     label: ct?.label,
   }));
+
   const selectValues = formValues.config.customtypes.map((id) => {
-    const ct = customTypes.find((e) => e && e.id === id);
+    const ct = localCustomTypes.find((e) => e && e.id === id);
     return { value: ct?.id, label: ct?.label };
   });
 

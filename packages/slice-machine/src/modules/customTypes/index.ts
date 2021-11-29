@@ -12,8 +12,8 @@ const initialState: CustomTypesStoreType = {
 
 // Action Creators
 export const getCustomTypesCreator = createAction("CUSTOM_TYPES/GET.RESPONSE")<{
-  localCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
-  remoteCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
+  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 }>();
 
 export const saveCustomTypesCreator = createAction(
@@ -39,8 +39,31 @@ type CustomTypesActions =
 export const getLocalCustomTypes = (store: SliceMachineStoreType) =>
   store.customTypes.localCustomTypes;
 
+export const getLocalCustomTypesCount = (store: SliceMachineStoreType) =>
+  !!store.customTypes.localCustomTypes
+    ? store.customTypes.localCustomTypes.length
+    : 0;
+
 export const getRemoteCustomTypes = (store: SliceMachineStoreType) =>
   store.customTypes.remoteCustomTypes;
+
+// Factory
+const createCustomType = (
+  id: string,
+  label: string,
+  repeatable: boolean
+): CustomType<ObjectTabs> => ({
+  id,
+  label,
+  repeatable,
+  tabs: {
+    Main: {
+      key: "Main",
+      value: {},
+    },
+  },
+  status: true,
+});
 
 // Reducer
 export const customTypesReducer: Reducer<
@@ -67,18 +90,11 @@ export const customTypesReducer: Reducer<
       return {
         ...state,
         localCustomTypes: [
-          {
-            id: action.payload.id,
-            label: action.payload.label,
-            repeatable: action.payload.repeatable,
-            tabs: {
-              Main: {
-                key: "Main",
-                value: {},
-              },
-            },
-            status: true,
-          },
+          createCustomType(
+            action.payload.id,
+            action.payload.label,
+            action.payload.repeatable
+          ),
           ...state.localCustomTypes,
         ],
       };

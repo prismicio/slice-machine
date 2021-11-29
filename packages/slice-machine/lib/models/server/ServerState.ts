@@ -16,6 +16,7 @@ export interface ConfigErrors {
 export interface ServerState {
   libraries: ReadonlyArray<Library>;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
   clientError?: ErrorWithStatus;
   configErrors: ConfigErrors;

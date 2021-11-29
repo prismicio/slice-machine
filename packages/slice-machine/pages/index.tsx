@@ -123,7 +123,7 @@ const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { createCustomType } = useSliceMachineActions();
-  const customTypes = useSelector(getLocalCustomTypes);
+  const localCustomTypes = useSelector(getLocalCustomTypes);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     createCustomType(id, label, repeatable);
@@ -156,7 +156,7 @@ const CustomTypes: React.FunctionComponent = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? (
+      {!localCustomTypes.length ? (
         <EmptyState
           title={"Create your first Custom Type"}
           explanations={[
@@ -181,7 +181,7 @@ const CustomTypes: React.FunctionComponent = () => {
         />
       ) : (
         <Grid
-          elems={customTypes}
+          elems={localCustomTypes}
           renderElem={(ct: CtPayload) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
               <Card ct={ct} />
@@ -192,7 +192,7 @@ const CustomTypes: React.FunctionComponent = () => {
       <CreateCustomTypeModal
         isOpen={isOpen}
         onSubmit={_onCreate}
-        customTypes={customTypes}
+        customTypes={localCustomTypes}
         close={() => setIsOpen(false)}
       />
     </Container>

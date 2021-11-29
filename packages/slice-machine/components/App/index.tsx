@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ThemeProvider, BaseStyles, useThemeUI, Theme } from "theme-ui";
 
 import LibrariesProvider from "@src/models/libraries/context";
-import CustomTypesProvider from "@src/models/customTypes/context";
 import { SliceHandler } from "@src/models/slice/context";
 
 import Drawer from "rc-drawer";
@@ -87,40 +86,35 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                     libraries={payload.libraries}
                     env={payload.env}
                   >
-                    <CustomTypesProvider
-                      customTypes={payload.customTypes}
-                      remoteCustomTypes={payload.remoteCustomTypes}
-                    >
-                      <AppLayout>
-                        <SliceHandler {...payload}>
-                          <Renderer
-                            Component={Component}
-                            pageProps={pageProps}
-                            {...payload}
-                            openPanel={openPanel}
+                    <AppLayout>
+                      <SliceHandler {...payload}>
+                        <Renderer
+                          Component={Component}
+                          pageProps={pageProps}
+                          {...payload}
+                          openPanel={openPanel}
+                        />
+                        <Drawer
+                          placement="right"
+                          open={drawerState.open}
+                          onClose={() =>
+                            setDrawerState({
+                              ...drawerState,
+                              open: false,
+                            })
+                          }
+                        >
+                          <Warnings
+                            priority={drawerState.priority}
+                            list={serverState.warnings}
+                            configErrors={serverState.configErrors}
                           />
-                          <Drawer
-                            placement="right"
-                            open={drawerState.open}
-                            onClose={() =>
-                              setDrawerState({
-                                ...drawerState,
-                                open: false,
-                              })
-                            }
-                          >
-                            <Warnings
-                              priority={drawerState.priority}
-                              list={serverState.warnings}
-                              configErrors={serverState.configErrors}
-                            />
-                          </Drawer>
-                        </SliceHandler>
-                      </AppLayout>
-                      <UpdateVersionModal />
-                      <LoginModal />
-                      <ReviewModal />
-                    </CustomTypesProvider>
+                        </Drawer>
+                      </SliceHandler>
+                    </AppLayout>
+                    <UpdateVersionModal />
+                    <LoginModal />
+                    <ReviewModal />
                   </LibrariesProvider>
                 </ToastProvider>
               )}

@@ -26,7 +26,7 @@ import { useToasts } from "react-toast-notifications";
 import { sendTrackingReview } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { getLocalCustomTypes } from "@src/modules/customTypes";
+import { getLocalCustomTypesCount } from "@src/modules/customTypes";
 
 Modal.setAppElement("#__next");
 
@@ -63,7 +63,12 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 };
 
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
-  const localCustomTypes = useSelector(getLocalCustomTypes);
+  const { localCustomTypesCount } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      localCustomTypesCount: getLocalCustomTypesCount(store),
+    })
+  );
+
   const libraries = useContext(LibrariesContext);
   const {
     isReviewLoading,
@@ -98,9 +103,8 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
         }, 0)
       : 0;
 
-  const customTypeCount = !!localCustomTypes ? localCustomTypes.length : 0;
-
-  const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
+  const userHasCreateEnoughContent =
+    sliceCount >= 1 && localCustomTypesCount >= 1;
 
   const onSendAReview = async (
     rating: number,

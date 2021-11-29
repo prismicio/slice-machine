@@ -62,8 +62,8 @@ const useSliceMachineActions = () => {
 
   // CustomTypes store
   const getCustomTypes = (
-    localCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>,
-    remoteCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>
+    localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>,
+    remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>
   ) => {
     dispatch(getCustomTypesCreator({ localCustomTypes, remoteCustomTypes }));
   };
