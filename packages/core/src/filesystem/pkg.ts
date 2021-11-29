@@ -1,10 +1,10 @@
 import { JsonPackagePath, FileContent } from "./paths";
 import { CONSTS, Files } from "../utils";
-import { PackageJson } from "types-package-json";
+import type { PackageJson } from "types-package-json";
 
 export type JsonPackage = PackageJson;
 
-export function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
+export function retrieveJsonPackage(cwd: string): FileContent<JsonPackage> {
   const pkgPath = JsonPackagePath(cwd);
 
   if (!Files.exists(pkgPath)) {
@@ -14,9 +14,9 @@ export function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
     };
   }
 
-  const content: PackageJson | null = Files.safeReadJson(
+  const content: JsonPackage | null = Files.safeReadJson(
     pkgPath
-  ) as PackageJson | null;
+  ) as JsonPackage | null;
   return {
     exists: true,
     content,
@@ -25,9 +25,9 @@ export function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
 
 export function patchJsonPackage(
   cwd: string,
-  data: Partial<PackageJson>
+  data: Partial<JsonPackage>
 ): boolean {
-  const pkg: FileContent<PackageJson> = retrieveJsonPackage(cwd);
+  const pkg: FileContent<JsonPackage> = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) return false;
 
   const updatedPkg = {
