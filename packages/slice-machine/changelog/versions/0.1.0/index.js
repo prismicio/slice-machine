@@ -7,7 +7,7 @@ const {
   GeneratedPaths,
 } = require("../../../build/lib/models/paths");
 const { default: Files } = require("../../../build/lib/utils/files");
-const { getInfoFromPath } = require("../../../build/lib/utils/lib");
+const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
 const { detectFramework } = require("../../../build/lib/env/framework");
 const {
   default: storybook,
@@ -92,7 +92,7 @@ module.exports = {
       const json = JSON.parse(fs.readFileSync(pathToSmFile, "utf-8"));
       (json.libraries || []).forEach((lib) => {
         const { isLocal, pathExists, pathToSlices, pathToLib } =
-          getInfoFromPath(lib, cwd);
+          getInfoFromPath(cwd, lib);
         if (isLocal && pathExists) {
           const libraryName = path.basename(pathToLib);
           const sliceNames = Files.readDirectory(slash(pathToSlices))

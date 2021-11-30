@@ -1,8 +1,6 @@
 import path from "path";
 import Files from "./files";
 
-const SM_CONFIG_FILE = "sm.config.json";
-
 enum Prefix {
   A = "@/",
   B = "~/",
@@ -42,42 +40,3 @@ export const getFormattedLibIdentifier = (
       : libPath,
   };
 };
-
-export function getInfoFromPath(
-  libPath: string,
-  startPath: string
-): {
-  config: Record<string, string>;
-  isLocal: boolean;
-  from: string;
-  pathExists: boolean;
-  pathToLib: string;
-  pathToSlices: string;
-} {
-  const { isLocal, from } = getFormattedLibIdentifier(libPath);
-  const pathToLib = path.join(
-    startPath || process.cwd(),
-    isLocal ? "" : "node_modules",
-    isLocal ? libPath.substring(1, libPath.length) : libPath
-  );
-  const pathToConfig = path.join(pathToLib, SM_CONFIG_FILE);
-  const pathExists = Files.exists(pathToLib);
-
-  let config: Record<string, string> = {};
-  if (Files.exists(pathToConfig)) {
-    config = Files.readJson(pathToConfig);
-  }
-  const pathToSlices = path.join(
-    pathToLib,
-    config.pathToLibrary || ".",
-    config.slicesFolder || (isLocal ? "." : "slices")
-  );
-  return {
-    config,
-    isLocal,
-    from,
-    pathExists,
-    pathToLib,
-    pathToSlices,
-  };
-}

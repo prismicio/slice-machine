@@ -1,48 +1,74 @@
-import { CustomPaths, GeneratedPaths } from "../filesystem/paths";
+import path from "path";
 import Files from "../utils/files";
 
-import { ACCEPTED_IMAGE_TYPES } from '../utils/const'
+export enum Extensions {
+  jpeg = "jpeg",
+  jpg = "jpg",
+  png = "png"
+}
 
-export function getPathToScreenshot({
-  cwd,
+export function createPathToScreenshot({
+  path: filePath,
+  from,
+  sliceName,
+  variationId,
+  extension
+}: {
+  path: string,
+  from: string,
+  sliceName: string,
+  variationId: string,
+  extension: Extensions
+}) {
+  return path.join(
+    filePath,
+    from,
+    sliceName,
+    variationId,
+    `preview.${extension}`
+  )
+}
+
+export function generatePathsToScreenshot({
+  base,
   from,
   sliceName,
   variationId,
 }: {
-  cwd: string;
+  base: string;
   from: string;
   sliceName: string;
   variationId: string;
-}): { exists: boolean; path: string; isCustom: boolean } | undefined {
-  const customPaths = ACCEPTED_IMAGE_TYPES.map((imageType: string) => {
-    const previewPath = CustomPaths(cwd)
-      .library(from)
-      .slice(sliceName)
-      .variation(variationId)
-      .preview(`preview.${imageType}`);
-
-    return {
-      path: previewPath,
-      options: {
-        exists: true,
-        isCustom: true,
-      },
-    };
+}): Array<string> {
+  return Object.values(Extensions).map((imageType: string) => {
+    return path.join(
+      base,
+      from,
+      sliceName,
+      variationId,
+      `preview.${imageType}`
+    )
   });
+}
 
-  const defaultPath = {
-    path: GeneratedPaths(cwd)
-      .library(from)
-      .slice(sliceName)
-      .variation(variationId)
-      .preview(),
-    options: {
-      exists: true,
-      isCustom: false,
-    },
-  };
-
-  return Files.readFirstOf<string, { exists: boolean; isCustom: boolean }>(
-    customPaths.concat([defaultPath])
-  )((v: string) => v);
+export function resolvePathsToScreenshot({
+  paths,
+  from,
+  sliceName,
+  variationId,
+}: {
+  paths: Array<string>;
+  from: string;
+  sliceName: string;
+  variationId: string;
+}): { exists: boolean; path: string; } | undefined {
+  const possiblePaths = paths.map((base) => {
+    return generatePathsToScreenshot({
+      base,
+      from,
+      sliceName,
+      variationId
+    })
+  }).flat()
+  return Files.readFirstOf<string, { exists: boolean; }>(possiblePaths)((v: string) => v);
 }

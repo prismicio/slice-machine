@@ -36,10 +36,6 @@ export const Library = {
         if (hasPreviewsMissing) {
           return LibStatus.PreviewMissing;
         }
-        // try {
-        //   sliceSchema.validateSync(component)
-        // } catch (e) { LibStatus.Invalid }
-
         if (!sliceFound) {
           return LibStatus.NewSlice;
         }

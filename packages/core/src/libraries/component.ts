@@ -1,10 +1,10 @@
 import path from "path";
 import * as t from "io-ts";
-import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
+import { ComponentInfo, ComponentMetadata, Screenshot } from "../models/Library";
 
 import { pascalize } from "../utils/str";
 
-import { getPathToScreenshot } from "./screenshot";
+import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { sliceMocks } from "../mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
@@ -164,28 +164,24 @@ export function getComponentInfo(
     return;
   }
 
-  const previewUrls = (model.variations || [])
+  const screenshotPaths = (model.variations || [])
     .map((v: VariationAsObject) => {
-      const activeScreenshot = getPathToScreenshot({
-        cwd,
+      const activeScreenshot = resolvePathsToScreenshot({
+        paths: [cwd],
         from,
         sliceName,
         variationId: v.id,
       });
-      return activeScreenshot && activeScreenshot.path
+      return activeScreenshot
         ? {
-            [v.id]: {
-              hasPreview: !!activeScreenshot,
-              isCustomPreview: activeScreenshot.isCustom,
-              path: activeScreenshot.path,
-            },
+            [v.id]: activeScreenshot,
           }
         : undefined;
     })
     .reduce(
       (
-        acc: { [variationId: string]: Preview },
-        variationPreview: { [variationId: string]: Preview } | undefined
+        acc: { [variationId: string]: Screenshot },
+        variationPreview: { [variationId: string]: Screenshot } | undefined
       ) => {
         return { ...acc, ...variationPreview };
       },
@@ -204,6 +200,6 @@ export function getComponentInfo(
     meta: getMeta(model),
     mock: sliceMocks(cwd, from, sliceName),
     nameConflict,
-    previewUrls,
+    screenshotPaths,
   };
 }

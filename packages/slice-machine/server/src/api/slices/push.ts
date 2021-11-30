@@ -1,10 +1,11 @@
+import path from "path"
 import { snakelize } from "@lib/utils/str";
 
 import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 import Files from "@lib/utils/files";
 
-import { getPathToScreenshot } from "@lib/queries/screenshot";
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot"
 
 import { onError } from "../common/error";
 import { purge, upload } from "../upload";
@@ -53,12 +54,13 @@ export async function handler(
 
     for (let i = 0; i < variationIds.length; i += 1) {
       const variationId = variationIds[i];
-      const screenshot = getPathToScreenshot({
-        cwd: env.cwd,
+
+      const screenshot = resolvePathsToScreenshot({
+        paths: [env.cwd, path.join(env.cwd, ".slicemchine/assets")],
         from,
         sliceName,
         variationId,
-      });
+      })
 
       if (screenshot) {
         const { err, s3ImageUrl } = await upload(

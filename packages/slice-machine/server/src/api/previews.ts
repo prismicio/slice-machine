@@ -4,8 +4,7 @@ import { Preview } from "@lib/models/common/Component";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import { createScreenshotUrl } from "@lib/utils";
 import { handleStorybookPreview } from "./common/storybook";
-import { getPathToScreenshot } from "@lib/queries/screenshot";
-
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot"
 type Previews = ReadonlyArray<
   { variationId: string; hasPreview: boolean; error: Error } | Preview
 >;
@@ -84,13 +83,13 @@ export default {
     sliceName: string
   ) {
     return previewUrls.map((p) => {
-      const maybePreviewPath = getPathToScreenshot({
-        cwd: env.cwd,
+      const maybePreviewPath = resolvePathsToScreenshot({
+        paths: [env.cwd],
         from,
         sliceName,
-        variationId: p.variationId,
-      });
-      if (maybePreviewPath?.isCustom) {
+        variationId: p.variationId
+      })
+      if (maybePreviewPath) {
         return {
           variationId: p.variationId,
           isCustomPreview: true,

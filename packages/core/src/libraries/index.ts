@@ -10,10 +10,7 @@ export function handleLibraryPath(
   cwd: string,
   libPath: string
 ): Library | undefined {
-  const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(
-    libPath,
-    cwd
-  );
+  const { from, isLocal, pathExists, pathToSlices } = getInfoFromPath(cwd, libPath);
 
   if (!pathExists) {
     return;

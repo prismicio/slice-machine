@@ -3,7 +3,7 @@ const path = require("path");
 const glob = require("glob");
 const slash = require("slash");
 const { shouldIRun } = require("../../common");
-const { getInfoFromPath } = require("../../../build/lib/utils/lib");
+const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
 
 module.exports = {
   version: "0.0.41",
@@ -29,10 +29,7 @@ module.exports = {
           });
           const json = JSON.parse(fs.readFileSync(pathToSmFile, "utf-8"));
           (json.libraries || []).forEach((lib) => {
-            const { isLocal, pathExists, pathToSlices } = getInfoFromPath(
-              lib,
-              cwd
-            );
+            const { isLocal, pathExists, pathToSlices } = getInfoFromPath(cwd, lib);
             if (isLocal && pathExists) {
               const matches = glob.sync(
                 `${slash(pathToSlices)}/**/preview.png`

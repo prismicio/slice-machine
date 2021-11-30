@@ -14,8 +14,8 @@ export interface ComponentInfo {
       }
     | null;
 
-  previewUrls?: {
-    [variationId: string]: Preview;
+  screenshotPaths?: {
+    [variationId: string]: Screenshot;
   };
   meta: ComponentMetadata;
   mock?: ReadonlyArray<VariationMock>
@@ -35,9 +35,8 @@ export interface Component {
   migrated: boolean;
 }
 
-export interface Preview {
-  isCustomPreview: boolean;
-  hasPreview: boolean;
+export interface Screenshot {
+  exists: boolean;
   path?: string;
 }
 

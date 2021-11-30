@@ -1,11 +1,11 @@
-import { listComponentsByLibrary } from "@lib/queries/listComponents";
-
 import Environment from "@lib/models/common/Environment";
 import { Library } from "@lib/models/common/Library";
 import Slice from "@lib/models/common/Slice";
 import { AsObject } from "@lib/models/common/Variation";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
+
+import { libraries as getLibs } from "@slicemachine/core/build/src/libraries";
 
 export async function getLibrariesWithFlags(env: Environment): Promise<{
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
@@ -28,8 +28,11 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
       return { remoteSlices: r };
     })();
 
-    const libraries = await listComponentsByLibrary(env);
+    const libraries = env.userConfig.libraries
+      ? await getLibs(env.cwd, env.userConfig.libraries as string[])
+      : []
 
+    
     const withFlags = libraries.map((lib) =>
       Library.withStatus(lib, remoteSlices)
     );
