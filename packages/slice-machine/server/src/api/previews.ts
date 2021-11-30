@@ -48,12 +48,8 @@ export default {
   ): Promise<
     { variationId: string; hasPreview: boolean; error: Error } | Preview
   > {
-    const screenshotUrl = createScreenshotUrl({
-      storybook: env.userConfig.storybook,
-      libraryName,
-      sliceName,
-      variationId,
-    });
+    console.log("Todo createScreenshotUrl");
+    const screenshotUrl = createScreenshotUrl();
     const pathToFile = GeneratedPaths(env.cwd)
       .library(libraryName)
       .slice(sliceName)

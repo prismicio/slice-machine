@@ -7,11 +7,7 @@ import {
   NotConnected,
 } from "../components/Warnings/Errors";
 import { warningStates } from "lib/consts";
-import {
-  StorybookNotInstalled,
-  StorybookNotRunning,
-  StorybookNotInManifest,
-} from "../components/Warnings/Storybook";
+
 import { FiZap } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -27,9 +23,6 @@ const WarningsPage: React.FunctionComponent = () => {
 
   const Renderers: Record<string, React.FunctionComponent<any>> = {
     [warningStates.NOT_CONNECTED]: NotConnected,
-    [warningStates.STORYBOOK_NOT_IN_MANIFEST]: StorybookNotInManifest,
-    [warningStates.STORYBOOK_NOT_INSTALLED]: StorybookNotInstalled,
-    [warningStates.STORYBOOK_NOT_RUNNING]: StorybookNotRunning,
     [warningStates.CLIENT_ERROR]: ClientError,
     [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable,
   };
@@ -49,7 +42,7 @@ const WarningsPage: React.FunctionComponent = () => {
           <FiZap /> <Text ml={2}>Warnings</Text>
         </Flex>
         <Box>
-          {warnings.map((warning) => {
+          {(warnings || []).map((warning) => {
             const Component = Renderers[warning.key];
             return <Component errorType={warning.title} {...warning} />;
           })}
@@ -60,7 +53,7 @@ const WarningsPage: React.FunctionComponent = () => {
           ) : null}
         </Box>
         {(!warnings || !warnings.length) &&
-        Object.keys(configErrors).length === 0 ? (
+        (!configErrors || Object.keys(configErrors).length === 0) ? (
           <Box>
             <Text>Your project is correctly configured. Well done!</Text>
           </Box>

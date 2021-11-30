@@ -1,76 +1,24 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
 import getEnv from "./services/getEnv";
-import { warningStates, warningTwoLiners } from "@lib/consts";
-import { fetchStorybookUrl } from "./common/storybook";
+import { warningStates } from "@lib/consts";
+
 import Environment from "@lib/models/common/Environment";
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "@lib/models/server/ServerError";
-import Files from "@lib/utils/files";
-import { Pkg } from "@lib/models/paths";
+
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { FileSystem } from "@slicemachine/core";
-
-const hasStorybookScript = (cwd: string) => {
-  const pathToManifest = Pkg(cwd);
-  try {
-    const manifest = Files.readJson(pathToManifest);
-    return !!(manifest && manifest.scripts && manifest.scripts.storybook);
-  } catch (e) {
-    return false;
-  }
-};
 
 export async function createWarnings(
   env: Environment,
   configErrors?: { [errorKey: string]: ServerError },
   clientError?: ErrorWithStatus
 ): Promise<ReadonlyArray<Warning>> {
-  const hasScript = hasStorybookScript(env.cwd);
-  const storybookIsRunning = await (async () => {
-    try {
-      await fetchStorybookUrl(env.userConfig.storybook);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  })();
-
-  const storybook = (() => {
-    if (configErrors?.storybook) {
-      const notInManifest = (warningTwoLiners as any)[
-        warningStates.STORYBOOK_NOT_IN_MANIFEST
-      ];
-      return {
-        key: warningStates.STORYBOOK_NOT_IN_MANIFEST,
-        title: notInManifest[0],
-        description: notInManifest[1],
-      };
-    }
-    if (!hasScript) {
-      const notInstalled = (warningTwoLiners as any)[
-        warningStates.STORYBOOK_NOT_INSTALLED
-      ];
-      return {
-        key: warningStates.STORYBOOK_NOT_INSTALLED,
-        title: notInstalled[0],
-        description: notInstalled[1],
-      };
-    }
-
-    if (!storybookIsRunning) {
-      const notRunning = (warningTwoLiners as any)[
-        warningStates.STORYBOOK_NOT_RUNNING
-      ];
-      return {
-        key: warningStates.STORYBOOK_NOT_RUNNING,
-        title: notRunning[0],
-        description: notRunning[1],
-      };
-    }
-  })();
+  console.log("Update config errors");
+  configErrors;
 
   const newVersion =
     env.updateVersionInfo && env.updateVersionInfo.updateAvailable
@@ -95,7 +43,7 @@ export async function createWarnings(
       }
     : undefined;
 
-  return [storybook, newVersion, connected, client].filter(
+  return [newVersion, connected, client].filter(
     Boolean
   ) as ReadonlyArray<Warning>;
 }

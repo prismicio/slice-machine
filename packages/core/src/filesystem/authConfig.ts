@@ -35,7 +35,7 @@ export function getOrCreateAuthConfig(directory?: string): AuthConfig {
   const conf = Files.safeReadEntity(configPath, (payload) => {
     return getOrElseW(() => null)(AuthConfig.decode(payload));
   });
-  return { ...DEFAULT_CONFIG, ...conf } as AuthConfig;
+  return { ...DEFAULT_CONFIG, ...conf };
 }
 
 export function removeAuthConfig(directory?: string): void {
