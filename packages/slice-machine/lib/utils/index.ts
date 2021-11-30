@@ -6,7 +6,6 @@ import { FieldType } from "../models/common/CustomType/fields";
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 
-import { createStorybookId, camelCaseToDash } from "./str";
 import { AsArray, AsObject, Variation } from "@lib/models/common/Variation";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
@@ -93,51 +92,7 @@ export const sanitizeSbId = (str: string) => {
     .replace(/-+$/, "");
 };
 
-const createStorybookPath = ({
-  libraryName,
-  sliceName,
-  variationId,
-}: {
-  libraryName: string;
-  sliceName: string;
-  variationId: string;
-}) =>
-  `${sanitizeSbId(libraryName)}-${sliceName.toLowerCase()}--${camelCaseToDash(
-    createStorybookId(variationId).slice(1)
-  )}`;
-
-export const createScreenshotUrl = ({
-  storybook,
-  libraryName,
-  sliceName,
-  variationId,
-}: {
-  storybook: string;
-  libraryName: string;
-  sliceName: string;
-  variationId: string;
-}) => {
-  return `${storybook}/iframe.html?id=${createStorybookPath({
-    libraryName,
-    sliceName,
-    variationId,
-  })}&viewMode=story`;
-};
-
-export const createStorybookUrl = ({
-  storybook,
-  libraryName,
-  sliceName,
-  variationId,
-}: {
-  storybook: string;
-  libraryName: string;
-  sliceName: string;
-  variationId: string;
-}) => {
-  return `${storybook}/?path=/story/${createStorybookPath({
-    libraryName,
-    sliceName,
-    variationId,
-  })}`;
+export const createScreenshotUrl = () => {
+  console.log("TODO");
+  return "/hi";
 };
