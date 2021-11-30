@@ -1,5 +1,5 @@
 export default interface UserConfig {
-  libraries?: ReadonlyArray<string>;
+  libraries?: readonly string[];
   apiEndpoint: string;
   storybook: string;
   chromaticAppId: string;

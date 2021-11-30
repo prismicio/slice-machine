@@ -1,10 +1,9 @@
 import router from "next/router";
 import { Box, Text, Flex, Button } from "theme-ui";
+import { Models } from "@slicemachine/core";
 
 import VarationsPopover from "@builders/SliceBuilder/layout/Header/VariationsPopover";
 
-import { Variation } from "@lib/models/common/Variation";
-import { AsArray } from "@lib/models/common/Variation";
 import SliceState from "@lib/models/ui/SliceState";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
@@ -14,7 +13,7 @@ import * as Links from "@builders/SliceBuilder/links";
 type PropTypes = {
   title: string;
   Model: SliceState;
-  variation: Variation<AsArray> | undefined;
+  variation: Models.VariationAsArray | undefined;
   handleScreenSizeChange: Function;
   size: Size;
 };

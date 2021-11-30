@@ -1,3 +1,5 @@
+import type { Models } from "@slicemachine/core";
+import { Variation } from "@models/common/Variation";
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import SliceMachineModal from "@components/SliceMachineModal";
@@ -6,7 +8,6 @@ import Card from "@components/Card/Default";
 import Select from "react-select";
 
 import { Text, Box, Button, Label, Input, Flex } from "theme-ui";
-import { AsArray, Variation } from "@models/common/Variation";
 
 const Error = ({ msg }: { msg?: string }) => (
   <Text as="span" sx={{ fontSize: 12, color: "error", mt: "5px", ml: 2 }}>
@@ -19,10 +20,10 @@ const VariationModal: React.FunctionComponent<{
   onSubmit: (
     id: string,
     name: string,
-    copiedVariation: Variation<AsArray>
+    copiedVariation: Models.VariationAsArray
   ) => void;
-  initialVariation: Variation<AsArray>;
-  variations: ReadonlyArray<Variation<AsArray>>;
+  initialVariation: Models.VariationAsArray;
+  variations: ReadonlyArray<Models.VariationAsArray>;
 }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
   const [errors, setErrors] = useState<{ [fieldKey: string]: string }>({});
   const [generatedId, setGeneratedId] = useState<string>("");

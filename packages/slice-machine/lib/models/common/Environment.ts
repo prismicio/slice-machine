@@ -4,6 +4,7 @@ import Chromatic from "./Chromatic";
 import { Framework } from "./Framework";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
+import Tracker from "./tracker";
 
 export interface UpdateVersionInfo {
   currentVersion: string;
@@ -26,4 +27,5 @@ export default interface Environment {
   baseUrl: string;
   hasGeneratedStoriesPath: boolean;
   client: DefaultClient | FakeClient;
+  tracker: Tracker;
 }

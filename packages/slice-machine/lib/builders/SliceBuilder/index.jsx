@@ -26,11 +26,7 @@ const Builder = ({ openPanel }) => {
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal } = useSliceMachineActions();
 
-  const {
-    infos: { sliceName, previewUrls },
-    from,
-    isTouched,
-  } = Model;
+  const { screenshotUrls, isTouched } = Model;
 
   const { addToast } = useToasts();
 
@@ -92,7 +88,7 @@ const Builder = ({ openPanel }) => {
             openPanel={openPanel}
             onPush={() => store.push(Model, setData)}
             onSave={() => store.save(Model, setData)}
-            previewUrl={previewUrls[variation.id]}
+            previewUrl={screenshotUrls[variation.id]}
             onScreenshot={() =>
               store
                 .variation(variation.id)

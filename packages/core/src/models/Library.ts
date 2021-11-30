@@ -1,4 +1,4 @@
-import { VariationMock } from './Variation';
+import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
@@ -7,19 +7,31 @@ export interface ComponentInfo {
   isDirectory: boolean;
   extension: string | null;
   model: SliceAsObject;
-  nameConflict:
-    | {
-        sliceName: string;
-        id: string;
-      }
-    | null;
+  nameConflict: {
+    sliceName: string;
+    id: string;
+  } | null;
 
   screenshotPaths?: {
     [variationId: string]: Screenshot;
   };
   meta: ComponentMetadata;
-  mock?: ReadonlyArray<VariationMock>
+  mock?: ReadonlyArray<VariationMock>;
 }
+
+export const ComponentInfo = {
+  hasPreviewsMissing(infos: ComponentInfo): boolean {
+    const { screenshotPaths } = infos;
+    if (!screenshotPaths) return true;
+
+    return Object.entries(screenshotPaths).reduce(
+      (acc: boolean, [, screenshot]: [string, Screenshot]) => {
+        return Boolean(!screenshot) || (acc && screenshot?.exists);
+      },
+      false
+    );
+  },
+};
 
 export interface ComponentMetadata {
   id: string;
@@ -40,10 +52,9 @@ export interface Screenshot {
   path?: string;
 }
 
-
-export interface Library {
+export interface Library<C extends Component> {
   name: string;
+  path: string;
   isLocal: boolean;
-  components: ReadonlyArray<Component>;
+  components: ReadonlyArray<C>;
 }
-

@@ -23,6 +23,7 @@ import Chromatic from "@lib/models/common/Chromatic";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
 import { SMConfig } from "@lib/models/paths";
+import Tracker from "@lib/models/common/tracker";
 
 declare let appRoot: string;
 
@@ -162,9 +163,15 @@ export default async function getEnv(
     prismicData.value.auth
   );
 
+  const tracker = new Tracker(
+    process.env.SEGMENT_WRITE_KEY || "TODO" /* TRACKER:TODO */,
+    npmCompare.currentVersion
+  );
+
   return {
     errors: maybeErrors,
     env: {
+      tracker,
       cwd,
       repo,
       userConfig,

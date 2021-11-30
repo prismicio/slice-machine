@@ -1,16 +1,15 @@
+import { Libraries, Models } from "@slicemachine/core";
+
 import Environment from "@lib/models/common/Environment";
-import { Library } from "@lib/models/common/Library";
-import Slice from "@lib/models/common/Slice";
-import { AsObject } from "@lib/models/common/Variation";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-import { libraries as getLibs } from "@slicemachine/core/build/src/libraries";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 export async function getLibrariesWithFlags(env: Environment): Promise<{
-  remoteSlices: ReadonlyArray<Slice<AsObject>>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<Library>;
+  libraries: ReadonlyArray<LibraryUI>;
 }> {
   try {
     const res = await env.client.getSlice();
@@ -28,13 +27,13 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
       return { remoteSlices: r };
     })();
 
-    const libraries = env.userConfig.libraries
-      ? await getLibs(env.cwd, env.userConfig.libraries as string[])
-      : []
+    const libraries = await Libraries.libraries(
+      env.cwd,
+      env.userConfig.libraries || []
+    );
 
-    
     const withFlags = libraries.map((lib) =>
-      Library.withStatus(lib, remoteSlices)
+      LibraryUI.build(lib, remoteSlices)
     );
     return { clientError, libraries: withFlags, remoteSlices };
   } catch (e) {
@@ -47,9 +46,9 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
 }
 
 export default async function handler(env: Environment): Promise<{
-  remoteSlices: ReadonlyArray<Slice<AsObject>>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<Library>;
+  libraries: ReadonlyArray<LibraryUI>;
 }> {
   return getLibrariesWithFlags(env);
 }

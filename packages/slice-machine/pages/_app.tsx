@@ -20,16 +20,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 
-import { AppPayload, ServerState } from "@lib/models/server/ServerState";
+import ServerState from "@lib/models/server/ServerState";
+import AppState from "@lib/models/common/AppState";
 import ServerError from "@lib/models/server/ServerError";
-import { Library } from "@lib/models/common/Library";
+
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 import Head from "next/head";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function mapSlices(libraries: ReadonlyArray<Library>): any {
+function mapSlices(libraries: ReadonlyArray<LibraryUI> | undefined) {
   return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
@@ -80,14 +82,17 @@ function MyApp({
 
   const [state, setRenderer] = useState<{
     Renderer: (props: any) => JSX.Element;
-    payload: AppPayload | null;
+    payload: AppState | null;
   }>({ Renderer: RenderStates.Loading, payload: null });
 
   useEffect(() => {
     if (!serverState) {
       return;
     }
-    const newSliceMap = mapSlices(serverState.libraries);
+
+    const appState = AppState.filter(serverState);
+
+    const newSliceMap = mapSlices(appState.libraries);
     if (sliceMap !== null) {
       Object.keys(newSliceMap).forEach((key) => {
         if (!sliceMap[key]) {
@@ -96,7 +101,7 @@ function MyApp({
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default, payload: serverState });
+    setRenderer({ Renderer: RenderStates.Default, payload: appState });
     const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
     console.log("Loaded libraries: ", { libraries });

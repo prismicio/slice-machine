@@ -78,6 +78,7 @@ export default async function handler() {
   const warnings = await createWarnings(env, configErrors, clientError);
 
   await generate(env, libraries);
+  // env.tracker.Repository(env.repo)?.libraries(libraries);
 
   return {
     libraries,
