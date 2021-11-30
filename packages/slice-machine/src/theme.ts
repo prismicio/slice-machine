@@ -265,6 +265,17 @@ const AppTheme = (): Theme =>
         },
       },
 
+      small: {
+        bg: "primary",
+        borderRadius: "4px",
+        pl: 2,
+        pr: 2,
+        pb: 1,
+        pt: 1,
+        fontSize: "12px",
+        fontWeight: "body",
+      },
+
       darkSmall: {
         borderRadius: "4px",
         color: "white",

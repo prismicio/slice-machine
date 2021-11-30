@@ -1,13 +1,7 @@
 import Builder from "@builders/SliceBuilder";
 
-interface SliceEditorProps {
-  openPanel: (priority?: any) => void;
-}
-
-const SliceEditor: React.FunctionComponent<SliceEditorProps> = ({
-  openPanel,
-}) => {
-  return <Builder openPanel={openPanel} />;
+const SliceEditor: React.FunctionComponent = ({}) => {
+  return <Builder />;
 };
 
 export default SliceEditor;

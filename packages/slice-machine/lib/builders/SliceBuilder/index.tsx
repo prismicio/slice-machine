@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
-import { useSelector } from "react-redux";
 
 import { handleRemoteResponse } from "src/ToastProvider/utils";
 
@@ -12,34 +11,37 @@ import { Box } from "theme-ui";
 import { FlexEditor, SideBar, Header } from "./layout";
 
 import FieldZones from "./FieldZones";
-import { getEnvironment, getWarnings } from "src/modules/environment";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
-const Builder = ({ openPanel }) => {
-  const {
-    env: { userConfig },
-    warnings,
-  } = useSelector((store) => ({
-    env: getEnvironment(store),
-    warnings: getWarnings(store),
-  }));
+type SliceBuilderState = {
+  imageLoading: boolean;
+  loading: boolean;
+  done: boolean;
+  error: null;
+  status: number | null;
+};
+
+const initialState: SliceBuilderState = {
+  imageLoading: false,
+  loading: false,
+  done: false,
+  error: null,
+  status: null,
+};
+
+const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal } = useSliceMachineActions();
 
-  const { screenshotUrls, isTouched } = Model;
+  if (!store || !Model || !variation) return null;
 
   const { addToast } = useToasts();
 
   const isMounted = useIsMounted();
-  // we need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
-  const [data, setData] = useState({
-    imageLoading: false,
-    loading: false,
-    done: false,
-    error: null,
-  });
+  // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
+  const [data, setData] = useState<SliceBuilderState>(initialState);
 
-  const onPush = (data) => {
+  const onPush = (data: SliceBuilderState) => {
     setData(data);
     if (data.error && data.status === 403) {
       openLoginModal();
@@ -47,23 +49,22 @@ const Builder = ({ openPanel }) => {
   };
 
   useEffect(() => {
-    if (isTouched) {
-      if (isMounted) {
-        setData({ loading: false, done: false, error: null });
-      }
+    if (Model.isTouched && isMounted) {
+      setData(initialState);
     }
-  }, [isTouched]);
+  }, [Model.isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done) {
-      if (isMounted) {
-        handleRemoteResponse(addToast)(data);
-      }
+    if (data.done && isMounted) {
+      // @ts-expect-error
+      handleRemoteResponse(addToast)(data);
     }
   }, [data]);
 
   useEffect(() => {
+    if (!store) return;
+
     return () => store.reset();
   }, []);
 
@@ -73,7 +74,9 @@ const Builder = ({ openPanel }) => {
         Model={Model}
         store={store}
         variation={variation}
+        // @ts-expect-error
         onPush={() => store.push(Model, onPush)}
+        // @ts-expect-error
         onSave={() => store.save(Model, setData)}
         isLoading={data.loading}
       />
@@ -81,14 +84,8 @@ const Builder = ({ openPanel }) => {
         sx={{ py: 4 }}
         SideBar={
           <SideBar
-            data={data}
             Model={Model}
             variation={variation}
-            warnings={warnings}
-            openPanel={openPanel}
-            onPush={() => store.push(Model, setData)}
-            onSave={() => store.save(Model, setData)}
-            previewUrl={screenshotUrls[variation.id]}
             onScreenshot={() =>
               store
                 .variation(variation.id)
@@ -114,4 +111,4 @@ const Builder = ({ openPanel }) => {
   );
 };
 
-export default Builder;
+export default SliceBuilder;

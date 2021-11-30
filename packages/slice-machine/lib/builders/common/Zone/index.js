@@ -160,7 +160,6 @@ Zone.propTypes = {
   Model: object.isRequired, // todo
   title: string.isRequired,
   dataTip: string.isRequired,
-  showHints: bool,
   onSave: func.isRequired,
   onSaveNewField: func.isRequired,
   onDragEnd: func.isRequired,
