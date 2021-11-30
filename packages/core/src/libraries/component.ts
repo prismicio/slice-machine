@@ -1,12 +1,16 @@
 import path from "path";
 import * as t from "io-ts";
-import { ComponentInfo, ComponentMetadata, Screenshot } from "../models/Library";
+import {
+  ComponentInfo,
+  ComponentMetadata,
+  Screenshot,
+} from "../models/Library";
 
 import { pascalize } from "../utils/str";
 
 import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../utils/files";
-import { sliceMocks } from "../mocks";
+import { resolvePathsToMock } from "./mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { Slice, SliceAsObject } from "../models/Slice";
 import { VariationAsObject, AsObject } from "../models/Variation";
@@ -191,6 +195,13 @@ export function getComponentInfo(
   const nameConflict =
     sliceName !== pascalize(model.id) ? { sliceName, id: model.id } : null;
 
+  /* This illustrates the requirement for apps to pass paths to mocks */
+  const maybeMock = resolvePathsToMock({
+    paths: [cwd, path.join(cwd, ".slicemachine/assets")],
+    from,
+    sliceName,
+  });
+
   return {
     sliceName,
     fileName,
@@ -198,7 +209,7 @@ export function getComponentInfo(
     extension,
     model,
     meta: getMeta(model),
-    mock: sliceMocks(cwd, from, sliceName),
+    mock: maybeMock?.value,
     nameConflict,
     screenshotPaths,
   };

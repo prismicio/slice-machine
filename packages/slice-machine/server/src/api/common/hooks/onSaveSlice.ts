@@ -3,7 +3,7 @@ import { Library } from "@lib/models/common/Library";
 import Files from "@lib/utils/files";
 import { findIndexFile } from "@lib/utils/lib";
 import Environment from "@lib/models/common/Environment";
-import { listComponentsByLibrary } from "@lib/queries/listComponents";
+import { libraries as getLibs } from "@slicemachine/core/build/src/libraries";
 import { Framework } from "@lib/models/common/Framework";
 import * as LibrariesState from "../LibrariesState";
 
@@ -34,12 +34,15 @@ const createIndexFileForFrameWork = (env: Environment, lib: Library) => {
 };
 
 export default async function onSaveSlice(env: Environment): Promise<void> {
-  const libraries = await listComponentsByLibrary(env);
+  const libraries = env.userConfig.libraries
+    ? await getLibs(env.cwd, env.userConfig.libraries as string[])
+    : [];
   const localLibs = libraries.filter((e) => e.isLocal);
 
   for (const lib of localLibs) {
     if (lib.components.length) {
       const { pathToSlice: relativePathToLib } = lib.components[0];
+      //@ts-ignore
       const file = createIndexFileForFrameWork(env, lib);
 
       const pathToLib = path.join(env.cwd, relativePathToLib);

@@ -4,7 +4,7 @@ import Files from "../utils/files";
 export enum Extensions {
   jpeg = "jpeg",
   jpg = "jpg",
-  png = "png"
+  png = "png",
 }
 
 export function createPathToScreenshot({
@@ -12,13 +12,13 @@ export function createPathToScreenshot({
   from,
   sliceName,
   variationId,
-  extension
+  extension,
 }: {
-  path: string,
-  from: string,
-  sliceName: string,
-  variationId: string,
-  extension: Extensions
+  path: string;
+  from: string;
+  sliceName: string;
+  variationId: string;
+  extension: Extensions;
 }) {
   return path.join(
     filePath,
@@ -26,7 +26,7 @@ export function createPathToScreenshot({
     sliceName,
     variationId,
     `preview.${extension}`
-  )
+  );
 }
 
 export function generatePathsToScreenshot({
@@ -47,7 +47,7 @@ export function generatePathsToScreenshot({
       sliceName,
       variationId,
       `preview.${imageType}`
-    )
+    );
   });
 }
 
@@ -61,14 +61,23 @@ export function resolvePathsToScreenshot({
   from: string;
   sliceName: string;
   variationId: string;
-}): { exists: boolean; path: string; } | undefined {
-  const possiblePaths = paths.map((base) => {
-    return generatePathsToScreenshot({
-      base,
-      from,
-      sliceName,
-      variationId
+}): { path: string; value: string; exists: boolean } | undefined {
+  const possiblePaths = paths
+    .map((base) => {
+      return generatePathsToScreenshot({
+        base,
+        from,
+        sliceName,
+        variationId,
+      }).map((e) => ({
+        path: e,
+        options: {
+          exists: true,
+        },
+      }));
     })
-  }).flat()
-  return Files.readFirstOf<string, { exists: boolean; }>(possiblePaths)((v: string) => v);
+    .flat();
+  return Files.readFirstOf<string, { exists: boolean }>(possiblePaths)(
+    (v: string) => v
+  );
 }

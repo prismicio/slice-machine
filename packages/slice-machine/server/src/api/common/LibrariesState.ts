@@ -73,18 +73,18 @@ export function formatComponent(
       isDirectory: slice.infos.isDirectory,
       extension: slice.infos.extension,
     },
-    previewUrls: !slice.infos.previewUrls
+    screenshotPaths: !slice.infos.screenshotPaths
       ? {}
       : Object.entries(
-          slice.infos.previewUrls
-        ).reduce<Models.LibrariesState.ComponentPreviews>(
-          (acc, [variationId, preview]) => {
+          slice.infos.screenshotPaths
+        ).reduce<Models.LibrariesState.ComponentScreenshots>(
+          (acc, [variationId, screenshot]) => {
             return {
               ...acc,
               [variationId]: {
-                hasPreview: preview.hasPreview,
-                path: preview.path,
-                ...getImageDimensions(preview.path),
+                exists: screenshot.exists,
+                path: screenshot.path,
+                ...getImageDimensions(screenshot.path),
               },
             };
           },
