@@ -28,8 +28,12 @@ const EmptyState: React.FunctionComponent<Props> = ({
     <Heading as={"h3"} sx={{ mb: 2 }}>
       {title}
     </Heading>
-    {explanations.map((explanation) => (
-      <Text variant={"xs"} sx={{ mb: 2, "&:last-of-type": { mb: 4 } }}>
+    {explanations.map((explanation, i) => (
+      <Text
+        key={`expl-${i + 1}`}
+        variant="xs"
+        sx={{ mb: 2, "&:last-of-type": { mb: 4 } }}
+      >
         {explanation}
       </Text>
     ))}

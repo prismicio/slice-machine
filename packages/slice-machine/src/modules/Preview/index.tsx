@@ -27,11 +27,6 @@ export default function Preview() {
     { sliceID: Model.infos.model.id, variationID: variation.id },
   ];
 
-  console.log({ sliceView });
-
-  if (!Model) {
-    return <div />;
-  }
   return (
     <div>
       <Header
@@ -42,43 +37,6 @@ export default function Preview() {
         size={state.size}
       />
       <IframeRenderer size={state.size} sliceView={sliceView} />
-      {/* <Flex
-        sx={{
-          justifyContent: 'center',
-          borderTop: '1px solid #F1F1F1',
-          margin: '0 auto',
-          overflow: 'auto',
-          ...iframeSizes[state.size]
-        }}
-      >
-        <iframe src="http://localhost:3001/_canvas" style={{ border: 'none', height: '100%', width: '100%' }} />
-      </Flex> */}
     </div>
   );
 }
-
-/**
- * .iframe-container {
-  overflow: hidden;
-<Flex
-  sx={{
-    justifyContent: 'center',
-    borderTop: '1px solid #F1F1F1',
-    margin: '0 auto',
-    overflow: 'hidden',
-    paddingTop: '56.25%',
-    position: 'relative',
-    '& > iframe': {
-      border: 'red',
-      height: '100%',
-      left: '0',
-      position: 'absolute',
-      top: '0',
-      width: '100%'
-    },
-    ...iframeSizes[state.size]
-  }}
->
-  <iframe src="http://localhost:3001/" />
-</Flex>
- */

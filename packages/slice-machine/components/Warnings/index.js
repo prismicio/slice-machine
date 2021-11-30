@@ -1,10 +1,5 @@
 import { Box, Flex, Heading, useThemeUI, Text } from "theme-ui";
 import { NewVersionAvailable, ClientError, NotConnected } from "./Errors";
-import {
-  StorybookNotInstalled,
-  StorybookNotRunning,
-  StorybookNotInManifest,
-} from "./Storybook";
 import ConfigErrors from "../ConfigErrors";
 
 import { warningStates } from "lib/consts";
@@ -12,9 +7,6 @@ import { FiZap } from "react-icons/fi";
 
 const Renderers = {
   [warningStates.NOT_CONNECTED]: NotConnected,
-  [warningStates.STORYBOOK_NOT_IN_MANIFEST]: StorybookNotInManifest,
-  [warningStates.STORYBOOK_NOT_INSTALLED]: StorybookNotInstalled,
-  [warningStates.STORYBOOK_NOT_RUNNING]: StorybookNotRunning,
   [warningStates.CLIENT_ERROR]: ClientError,
   [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable,
 };
@@ -44,6 +36,9 @@ const Warnings = ({ list, configErrors, priority }) => {
       <Box p={3} sx={{ overflow: "auto" }}>
         {orderedList.map((warning) => {
           const Component = Renderers[warning.key];
+          if (!Component) {
+            return null;
+          }
           return (
             <Component
               key={warning.key}

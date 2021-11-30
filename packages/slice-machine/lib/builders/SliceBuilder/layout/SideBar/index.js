@@ -3,11 +3,8 @@ import { Box, Flex, Card as ThemeCard, Heading } from "theme-ui";
 
 import Card from "components/Card/";
 
-import Storybook from "./icons/storybook.svg";
-import StorybookGrey from "./icons/storybookGrey.svg";
 import Li from "./components/Li";
 import ImagePreview from "./components/ImagePreview";
-import { storybookWarningStates } from "@lib/consts";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -19,15 +16,12 @@ const SideBar = ({
   imageLoading,
   onScreenshot,
   onHandleFile,
-  storybookUrl,
 }) => {
   const {
     infos: { previewUrls },
   } = Model;
 
-  const storybookError = warnings.find((w) =>
-    storybookWarningStates.includes(w.key)
-  );
+  console.log("IMPLEMENT preventScreenshot");
 
   return (
     <Box
@@ -43,30 +37,10 @@ const SideBar = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={!!storybookError}
+          preventScreenshot={false}
         />
       </Card>
-      <ThemeCard mt={3}>
-        {storybookError ? (
-          <Li
-            title={storybookError.title}
-            hasError
-            description={storybookError.description}
-            Icon={StorybookGrey}
-            onClick={() => openPanel(storybookError)}
-            sx={{ cursor: "pointer" }}
-          />
-        ) : (
-          <Li
-            title="Open in Storybook"
-            description="Work locally with your component"
-            Icon={Storybook}
-            as="a"
-            href={storybookUrl}
-            target="_blank"
-          />
-        )}
-      </ThemeCard>
+      <ThemeCard mt={3}>Card</ThemeCard>
     </Box>
   );
 };

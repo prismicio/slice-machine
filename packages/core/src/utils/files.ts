@@ -29,6 +29,10 @@ const Files = {
       );
   },
 
+  readBuffer(pathToFile: string): Buffer {
+    return fs.readFileSync(pathToFile);
+  },
+
   readString(pathToFile: string): string {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
@@ -36,11 +40,11 @@ const Files = {
     pathToFile: string,
     validate: (payload: unknown) => Error | T
   ): Error | T {
-    const entity = this.safeReadJson(pathToFile)
+    const entity = this.safeReadJson(pathToFile);
     if (entity) {
       return validate(entity);
     }
-    return new Error(`Could not parse file "${path.basename(pathToFile)}"`)
+    return new Error(`Could not parse file "${path.basename(pathToFile)}"`);
   },
   safeReadEntity<T>(
     pathToFile: string,
@@ -48,15 +52,15 @@ const Files = {
   ): null | T {
     try {
       const result = this.readEntity(pathToFile, validate);
-      if(result instanceof Error) return null
-      return result
+      if (result instanceof Error) return null;
+      return result;
     } catch (e) {
       return null;
     }
   },
 
   readJson(pathToFile: string): unknown {
-    return JSON.parse(this.readString(pathToFile)) as unknown
+    return JSON.parse(this.readString(pathToFile)) as unknown;
   },
   safeReadJson(pathToFile: string): unknown | null {
     try {

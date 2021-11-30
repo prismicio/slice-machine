@@ -7,8 +7,6 @@ import { handleRemoteResponse } from "src/ToastProvider/utils";
 
 import { SliceContext } from "src/models/slice/context";
 
-import { createStorybookUrl } from "@lib/utils";
-
 import { Box } from "theme-ui";
 
 import { FlexEditor, SideBar, Header } from "./layout";
@@ -20,9 +18,7 @@ import { MdViewSidebar } from "react-icons/md";
 
 const Builder = ({ openPanel }) => {
   const {
-    env: {
-      userConfig: { storybook: storybookBaseUrl },
-    },
+    env: { userConfig },
     warnings,
   } = useSelector((store) => ({
     env: getEnvironment(store),
@@ -54,13 +50,6 @@ const Builder = ({ openPanel }) => {
       openLoginModal();
     }
   };
-
-  const storybookUrl = createStorybookUrl({
-    storybook: storybookBaseUrl,
-    libraryName: from,
-    sliceName,
-    variationId: variation.id,
-  });
 
   useEffect(() => {
     if (isTouched) {
@@ -102,7 +91,6 @@ const Builder = ({ openPanel }) => {
             warnings={warnings}
             openPanel={openPanel}
             previewUrl={previewUrls[variation.id]}
-            storybookUrl={storybookUrl}
             onScreenshot={() =>
               store
                 .variation(variation.id)

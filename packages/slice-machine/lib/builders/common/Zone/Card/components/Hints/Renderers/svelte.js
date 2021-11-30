@@ -36,11 +36,17 @@ const codeByWidgetType = (Widgets) => ({
     `<span style={\`color: \${${fieldText}};\`}>Some Text</span>`,
 });
 
-export default ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
+export default function renderSvelte({
+  Widgets,
+  item,
+  typeName,
+  renderHintBase,
+  isRepeatable,
+}) {
   const hintBase = renderHintBase({ item });
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName];
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : null;
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code;
 
   return <CodeBlock className="language-html">{withRepeat}</CodeBlock>;
-};
+}
