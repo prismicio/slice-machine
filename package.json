@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
     "test": "lerna run test",
+    "lint": "lerna run lint",
     "lint-staged": "lint-staged",
     "build": "npm run test && lerna run build --stream --parallel",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
