@@ -20,6 +20,9 @@ type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
 export const getEnvironment = (store: SliceMachineStoreType) =>
   store.environment.env;
 
+export const selectIsThePreviewSetUp = (store: SliceMachineStoreType) =>
+  !!store.environment.env?.userConfig.localSliceCanvasURL;
+
 export const getWarnings = (store: SliceMachineStoreType) =>
   store.environment.warnings;
 

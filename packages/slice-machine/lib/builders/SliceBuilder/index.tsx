@@ -13,8 +13,9 @@ import SideBar from "./SideBar";
 import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import Drawer from "rc-drawer";
 import SetupDrawer from "@builders/SliceBuilder/SetupDrawer";
+import { useSelector } from "react-redux";
+import { selectIsThePreviewSetUp } from "@src/modules/environment";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -33,6 +34,7 @@ const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: React.FunctionComponent = () => {
+  const isThePreviewSetup = useSelector(selectIsThePreviewSetUp);
   const [isSetupDrawerOpen, setSetupDrawerState] = useState<boolean>(false);
 
   const { Model, store, variation } = useContext(SliceContext);
@@ -94,6 +96,7 @@ const SliceBuilder: React.FunctionComponent = () => {
             Model={Model}
             variation={variation}
             openSetupPreview={openSetupDrawer}
+            isPreviewRunning={isThePreviewSetup}
             onScreenshot={() =>
               store
                 .variation(variation.id)

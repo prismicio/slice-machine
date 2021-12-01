@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Prism from "@theme-ui/prism";
 
 import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
