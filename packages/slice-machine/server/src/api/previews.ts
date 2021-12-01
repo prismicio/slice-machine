@@ -2,9 +2,12 @@ import type { Models } from "@slicemachine/core";
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
-import { createScreenshotUrl } from "@lib/utils";
 import { handleStorybookPreview } from "./common/storybook";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import {
+  createScreenshotUI,
+  ScreenshotUI,
+} from "@lib/models/common/ComponentUI";
 
 type Screenshots = Record<Models.VariationAsObject["id"], Models.Screenshot>;
 
@@ -45,9 +48,9 @@ export default {
     libraryName: string,
     sliceName: string,
     variationId: string
-  ): Promise<Error | Models.Screenshot> {
+  ): Promise<Error | ScreenshotUI> {
     console.log("refactor createScreenshotUrl");
-    const screenshotUrl = createScreenshotUrl();
+    const screenshotUrl = "⚠ The URL of slice-canvas based on params";
     const pathToFile = GeneratedPaths(env.cwd)
       .library(libraryName)
       .slice(sliceName)
@@ -62,12 +65,7 @@ export default {
       return maybeError;
     }
 
-    return {
-      exists: true,
-      path: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-        pathToFile
-      )}&uniq=${Math.random()}`,
-    };
+    return createScreenshotUI(env.baseUrl, pathToFile);
   },
 
   mergeWithCustomScreenshots(

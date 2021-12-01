@@ -9,10 +9,7 @@ interface SliceState extends ComponentUI {
   initialVariations: ReadonlyArray<Models.VariationAsArray>;
   variations: ReadonlyArray<Models.VariationAsArray>;
 
-  initialPreviewUrls?: {
-    [variationId: string]: ScreenshotUI;
-  };
-  previewUrls?: {
+  initialScreenshotUrls?: {
     [variationId: string]: ScreenshotUI;
   };
 

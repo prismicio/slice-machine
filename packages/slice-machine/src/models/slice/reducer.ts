@@ -12,7 +12,10 @@ import { ActionType as VariationActions } from "./variation/actions";
 
 import { ActionType as SliceActions } from "./actions";
 
-import { LibStatus } from "../../../lib/models/common/ComponentUI";
+import {
+  LibStatus,
+  ScreenshotUI,
+} from "../../../lib/models/common/ComponentUI";
 import { compareVariations } from "../../../lib/utils";
 
 export function reducer(
@@ -33,7 +36,7 @@ export function reducer(
       case SliceActions.Push:
         return {
           ...prevState,
-          initialPreviewUrls: prevState.previewUrls,
+          initialScreenshotUrls: prevState.screenshotUrls,
           remoteVariations: prevState.variations,
         };
       case SliceActions.UpdateMetadata:
@@ -60,31 +63,28 @@ export function reducer(
       case VariationActions.GenerateCustomScreenShot: {
         const { variationId, preview } = action.payload as {
           variationId: string;
-          preview: Models.Screenshot;
+          preview: ScreenshotUI;
         };
 
-        const previewsByVariation = prevState.variations.reduce(
-          (acc, variation) => {
-            if (variation.id === variationId) {
-              return {
-                ...acc,
-                [variationId]: preview,
-              };
-            }
-            if (prevState.previewUrls?.[variation.id]) {
-              return {
-                ...acc,
-                [variation.id]: prevState.previewUrls?.[variation.id],
-              };
-            }
-            return acc;
-          },
-          {}
-        );
+        const screenshots = prevState.variations.reduce((acc, variation) => {
+          if (variation.id === variationId) {
+            return {
+              ...acc,
+              [variationId]: preview,
+            };
+          }
+          if (prevState.screenshotUrls?.[variation.id]) {
+            return {
+              ...acc,
+              [variation.id]: prevState.screenshotUrls?.[variation.id],
+            };
+          }
+          return acc;
+        }, {});
 
         return {
           ...prevState,
-          previewUrls: previewsByVariation,
+          screenshotUrls: screenshots,
           infos: prevState.infos,
         };
       }
@@ -210,7 +210,7 @@ export function reducer(
       );
     })(),
     __status: (() => {
-      return !equal(result.previewUrls, result.initialPreviewUrls) ||
+      return !equal(result.screenshotUrls, result.initialScreenshotUrls) ||
         !compareVariations(result.remoteVariations, result.initialVariations)
         ? LibStatus.Modified
         : LibStatus.Synced;

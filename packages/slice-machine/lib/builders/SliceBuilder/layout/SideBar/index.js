@@ -21,11 +21,7 @@ const SideBar = ({
   onScreenshot,
   onHandleFile,
 }) => {
-  const {
-    infos: { previewUrls },
-    isTouched,
-    __status,
-  } = Model;
+  const { screenshotUrls, isTouched, __status } = Model;
 
   console.log("IMPLEMENT preventScreenshot");
 
@@ -39,7 +35,7 @@ const SideBar = ({
     >
       <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
         <MemoizedImagePreview
-          src={previewUrls[variation.id] && previewUrls[variation.id].url}
+          src={screenshotUrls[variation.id] && screenshotUrls[variation.id].url}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}

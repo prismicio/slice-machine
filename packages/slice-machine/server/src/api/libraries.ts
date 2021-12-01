@@ -33,7 +33,7 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
     );
 
     const withFlags = libraries.map((lib) =>
-      LibraryUI.build(lib, remoteSlices)
+      LibraryUI.build(lib, remoteSlices, env)
     );
     return { clientError, libraries: withFlags, remoteSlices };
   } catch (e) {

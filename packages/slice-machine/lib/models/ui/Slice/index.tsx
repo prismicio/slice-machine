@@ -73,11 +73,11 @@ const SliceVariations = ({
 
 const SliceThumbnail = ({
   heightInPx,
-  previewUrl,
+  screenshotUrl,
   withShadow = true,
 }: {
   heightInPx: string;
-  previewUrl?: string;
+  screenshotUrl?: string;
   withShadow: boolean;
 }) => {
   return (
@@ -104,7 +104,9 @@ const SliceThumbnail = ({
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
-          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : "none",
+          backgroundImage: screenshotUrl
+            ? "url(" + `${screenshotUrl}` + ")"
+            : "none",
         }}
       ></Box>
     </Box>
@@ -142,7 +144,7 @@ export const SharedSlice = {
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const previewUrl = slice?.screenshotUrls?.[variationId]?.path;
+    const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
 
     console.log({ slice, preview: slice?.screenshotUrls?.[variationId] });
 
@@ -155,7 +157,7 @@ export const SharedSlice = {
         >
           <SliceThumbnail
             withShadow={false}
-            previewUrl={previewUrl}
+            screenshotUrl={screenshotUrl}
             heightInPx={thumbnailHeightPx}
           />
           <Flex

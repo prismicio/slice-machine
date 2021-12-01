@@ -8,6 +8,7 @@ import { pascalize } from "../../utils/str";
 import { ComponentUI } from "./ComponentUI";
 import Files from "@lib/utils/files";
 import { getOrElseW } from "fp-ts/lib/Either";
+import Environment from "./Environment";
 
 const LibraryUIMeta = {
   pkgReader: t.exact(
@@ -47,10 +48,11 @@ export interface LibraryUI extends Models.Library<ComponentUI> {
 export const LibraryUI = {
   build(
     lib: Models.Library<Models.Component>,
-    remoteSlices: ReadonlyArray<Models.SliceAsObject>
+    remoteSlices: ReadonlyArray<Models.SliceAsObject>,
+    env: Environment
   ): LibraryUI {
     const components = lib.components.map((c) =>
-      ComponentUI.build(c, remoteSlices)
+      ComponentUI.build(c, remoteSlices, env)
     );
     const meta = LibraryUIMeta.build(lib.name, lib.path, lib.isLocal);
 

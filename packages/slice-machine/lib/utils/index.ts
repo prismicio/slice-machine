@@ -90,8 +90,3 @@ export const sanitizeSbId = (str: string) => {
     .replace(/^-+/, "")
     .replace(/-+$/, "");
 };
-
-export const createScreenshotUrl = () => {
-  console.log("TODO");
-  return "/hi";
-};

@@ -1,6 +1,50 @@
 import type { Models } from "@slicemachine/core";
 import { ComponentInfo } from "@slicemachine/core/build/src/models/Library";
 import { compareVariations } from "../../utils";
+import Environment from "./Environment";
+
+export const createScreenshotUrl = (
+  baseUrl: string,
+  pathToScreenshot: string
+) =>
+  `${baseUrl}/api/__preview?q=${encodeURIComponent(
+    pathToScreenshot
+  )}&uniq=${Math.random()}`;
+
+export const createScreenshotUI = (
+  baseUrl: string,
+  pathToScreenshot: string
+): ScreenshotUI => ({
+  exists: true,
+  path: pathToScreenshot,
+  url: `${baseUrl}/api/__preview?q=${encodeURIComponent(
+    pathToScreenshot
+  )}&uniq=${Math.random()}`,
+});
+
+export const buildScreenshotUrls = (
+  screenshotPaths:
+    | {
+        [variationId: string]: Models.Screenshot;
+      }
+    | undefined,
+  baseUrl: string
+) => {
+  if (!screenshotPaths) {
+    return {};
+  }
+  return Object.entries(screenshotPaths).reduce(
+    (acc, [variationId, screenshot]) => {
+      return screenshot.path
+        ? {
+            ...acc,
+            [variationId]: createScreenshotUI(baseUrl, screenshot.path),
+          }
+        : acc;
+    },
+    {}
+  );
+};
 
 export enum LibStatus {
   Modified = "MODIFIED",
@@ -22,11 +66,15 @@ export interface ComponentUI extends Models.Component {
 export const ComponentUI = {
   build(
     component: Models.Component,
-    remoteSlices: ReadonlyArray<Models.SliceAsObject>
+    remoteSlices: ReadonlyArray<Models.SliceAsObject>,
+    env: Environment
   ): ComponentUI {
     return {
       ...component,
-      screenshotUrls: {},
+      screenshotUrls: buildScreenshotUrls(
+        component.infos.screenshotPaths,
+        env.baseUrl
+      ),
       __status: computeStatus(component, remoteSlices),
     };
   },

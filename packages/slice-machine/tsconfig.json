@@ -33,6 +33,6 @@
       "@components/*": ["components/*"]
     }
   },
-  "exclude": ["node_modules", "templates", "tests/project"],
+  "exclude": [".next", "out", "node_modules", "templates", "tests/project"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"]
 }
