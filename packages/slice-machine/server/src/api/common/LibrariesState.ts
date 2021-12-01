@@ -1,10 +1,10 @@
 import type { Models } from "@slicemachine/core";
-
 import Environment from "@lib/models/common/Environment";
-import Files from "@slicemachine/core/build/src/utils/files";
-import { LibrariesStatePath } from "@slicemachine/core/build/src/filesystem/index";
-import { handleLibraryPath } from "@slicemachine/core/build/src/libraries/index";
+import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
+const { handleLibraryPath } = Libraries;
+const { LibrariesStatePath } = FileSystem;
+const { Files } = Utils;
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,

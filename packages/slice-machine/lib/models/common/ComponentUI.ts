@@ -1,5 +1,4 @@
-import type { Models } from "@slicemachine/core";
-import { ComponentInfo } from "@slicemachine/core/build/src/models/Library";
+import { Models } from "@slicemachine/core";
 import { compareVariations } from "../../utils";
 import Environment from "./Environment";
 
@@ -82,7 +81,9 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
-  const previewMissing = ComponentInfo.hasPreviewsMissing(component.infos);
+  const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
+    component.infos
+  );
   if (previewMissing) return LibStatus.PreviewMissing;
 
   const slice = remoteSlices.find((s) => component.model.id === s.id);
