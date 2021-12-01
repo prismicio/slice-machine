@@ -1,17 +1,20 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
 
 import { handleRemoteResponse } from "src/ToastProvider/utils";
-
 import { SliceContext } from "src/models/slice/context";
 
 import { Box } from "theme-ui";
 
-import { FlexEditor, SideBar, Header } from "./layout";
-
 import FieldZones from "./FieldZones";
+import FlexEditor from "./FlexEditor";
+import SideBar from "./SideBar";
+import Header from "./Header";
+
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import Drawer from "rc-drawer";
+import SetupDrawer from "@builders/SliceBuilder/SetupDrawer";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -30,6 +33,8 @@ const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: React.FunctionComponent = () => {
+  const [isSetupDrawerOpen, setSetupDrawerState] = useState<boolean>(false);
+
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal } = useSliceMachineActions();
 
@@ -47,6 +52,8 @@ const SliceBuilder: React.FunctionComponent = () => {
       openLoginModal();
     }
   };
+
+  const openSetupDrawer = () => setSetupDrawerState(true);
 
   useEffect(() => {
     if (Model.isTouched && isMounted) {
@@ -86,6 +93,7 @@ const SliceBuilder: React.FunctionComponent = () => {
           <SideBar
             Model={Model}
             variation={variation}
+            openSetupPreview={openSetupDrawer}
             onScreenshot={() =>
               store
                 .variation(variation.id)
@@ -107,6 +115,10 @@ const SliceBuilder: React.FunctionComponent = () => {
       >
         <FieldZones Model={Model} store={store} variation={variation} />
       </FlexEditor>
+      <SetupDrawer
+        isOpen={isSetupDrawerOpen}
+        onClose={() => setSetupDrawerState(false)}
+      />
     </Box>
   );
 };

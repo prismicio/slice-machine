@@ -29,7 +29,7 @@ type FieldZonesProps = {
   store: SliceStore;
 };
 
-const Zones: React.FunctionComponent<FieldZonesProps> = ({
+const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   Model,
   store,
   variation,
@@ -153,4 +153,4 @@ const Zones: React.FunctionComponent<FieldZonesProps> = ({
   );
 };
 
-export default Zones;
+export default FieldZones;

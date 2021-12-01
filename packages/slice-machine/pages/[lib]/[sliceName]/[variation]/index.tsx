@@ -1,6 +1,6 @@
 import Builder from "@builders/SliceBuilder";
 
-const SliceEditor: React.FunctionComponent = ({}) => {
+const SliceEditor: React.FunctionComponent = () => {
   return <Builder />;
 };
 

@@ -5,7 +5,7 @@ import { FiLayers } from "react-icons/fi";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import * as Links from "../../links";
+import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 
 import SaveButton from "./SaveButton";

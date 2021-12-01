@@ -15,10 +15,10 @@ import ConfigErrors from "../components/ConfigErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
-import "lib/builders/SliceBuilder/layout/Drawer/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
+import "src/css/drawer.css";
 
 import ServerState from "@lib/models/server/ServerState";
 import AppState from "@lib/models/common/AppState";

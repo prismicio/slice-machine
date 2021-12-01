@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Box, Button, Card as ThemeCard, Flex, Heading, Text } from "theme-ui";
 
-import Card from "components/Card/";
+import Card from "@components/Card";
 
 import ImagePreview from "./components/ImagePreview";
 import SliceState from "@models/ui/SliceState";
@@ -15,6 +15,7 @@ type SideBarProps = {
   imageLoading: boolean;
   onScreenshot: () => void;
   onHandleFile: (file: any) => void;
+  openSetupPreview: () => void;
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
@@ -23,6 +24,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   imageLoading,
   onScreenshot,
   onHandleFile,
+  openSetupPreview,
 }) => {
   const {
     infos: { previewUrls },
@@ -71,7 +73,9 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             <Text as="p" variant="xs" sx={{ mb: 2 }}>
               You can preview your slices and view changes instantly
             </Text>
-            <Button variant={"small"}>Setup the preview</Button>
+            <Button variant={"small"} onClick={openSetupPreview}>
+              Setup the preview
+            </Button>
           </Box>
         </Flex>
       </ThemeCard>
