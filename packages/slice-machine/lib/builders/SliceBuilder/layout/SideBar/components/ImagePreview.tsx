@@ -1,23 +1,36 @@
-import { memo, useState, useRef, Fragment } from "react";
+import React, { memo, useState, useRef, Fragment } from "react";
 import { Label, Flex, Image, Button, Text, Spinner } from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
-import InfoOutlined from "../icons/infoOutlined.svg";
+import { MdInfoOutline } from "react-icons/md";
 
-const MemoedImage = memo(({ src }) => <Image src={src} alt="Preview image" />);
+const DefaultImage: React.FC<{ src: string | undefined }> = ({ src }) => (
+  <Image src={src} alt="Preview image" />
+);
+const MemoedImage = memo(DefaultImage);
 
-const ImagePreview = ({
+interface ImagePreviewProps {
+  src?: string;
+  onScreenshot: () => {};
+  imageLoading: boolean;
+  onHandleFile: (file: any) => {};
+  preventScreenshot: boolean;
+}
+
+const ImagePreview: React.FC<ImagePreviewProps> = ({
   src,
   onScreenshot,
   imageLoading,
   onHandleFile,
   preventScreenshot,
 }) => {
-  const inputFile = useRef(null);
+  const inputFile = useRef<HTMLInputElement>(null);
   const [display, setDisplay] = useState(false);
 
-  const handleFile = (file) => {
-    onHandleFile(file);
-    inputFile.current.value = "";
+  const handleFile = (file: File | undefined) => {
+    if (inputFile?.current) {
+      onHandleFile(file);
+      inputFile.current.value = "";
+    }
   };
 
   return (
@@ -28,7 +41,9 @@ const ImagePreview = ({
         ref={inputFile}
         style={{ display: "none" }}
         accept={acceptedImagesTypes.map((type) => `image/${type}`).join(",")}
-        onChange={(e) => handleFile(e.target.files[0])}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleFile(e.target.files?.[0])
+        }
       />
       <Flex
         sx={{
@@ -95,7 +110,7 @@ const ImagePreview = ({
               alignItems: "center",
             }}
           >
-            <InfoOutlined />
+            <MdInfoOutline />
             You have no screenshot yet.
           </Text>
         )}
