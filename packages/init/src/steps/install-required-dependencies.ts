@@ -2,6 +2,27 @@ import path from "path";
 import { execCommand } from "../utils";
 import { Utils, FileSystem } from "@slicemachine/core";
 
+function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
+  const packages = [];
+
+  if (
+    framework === Utils.Framework.FrameworkEnum.react ||
+    framework === Utils.Framework.FrameworkEnum.next
+  ) {
+    packages.push(Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME, "@prismicio/client");
+  }
+
+  if (framework === Utils.Framework.FrameworkEnum.next) {
+    packages.push("next-slicezone");
+  }
+
+  if (framework === Utils.Framework.FrameworkEnum.svelte) {
+    packages.push(Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME, "@prismicio/client");
+  }
+
+  return packages.join(" ");
+}
+
 export async function installRequiredDependencies(
   cwd: string,
   framework: Utils.Framework.FrameworkEnum
@@ -10,7 +31,7 @@ export async function installRequiredDependencies(
   const installDevDependencyCommand = yarnLock
     ? "yarn add -D"
     : "npm install --save-dev";
-  const installDependencyCommand = yarnLock ? "yarn add" : "npm install";
+  const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
 
   const spinner = Utils.spinner("Downloading Prismic Visual Builder");
   spinner.start();
@@ -19,19 +40,8 @@ export async function installRequiredDependencies(
     `${installDevDependencyCommand} ${Utils.CONSTS.SM_PACKAGE_NAME}`
   );
 
-  switch (framework) {
-    case Utils.Framework.FrameworkEnum.react:
-    case Utils.Framework.FrameworkEnum.next:
-      await execCommand(
-        `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME}`
-      );
-      break;
-    case Utils.Framework.FrameworkEnum.svelte:
-      await execCommand(
-        `${installDependencyCommand} ${Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME}`
-      );
-      break;
-  }
+  const deps = depsForFramework(framework);
+  if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
 
   const pathToPkg = path.join(
     FileSystem.PackagePaths(cwd).value(),
