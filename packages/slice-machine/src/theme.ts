@@ -152,7 +152,6 @@ const AppTheme = (): Theme =>
         variant: "prism",
         fontFamily: "monospace",
         fontSize: 1,
-        p: 2,
         my: 1,
         color: "text",
         bg: "borders",

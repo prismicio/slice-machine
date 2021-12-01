@@ -62,9 +62,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             textDecoration: "none",
             color: "inherit",
             position: "relative",
-            cursor: "pointer",
           }}
-          onClick={() => null}
         >
           <Box>
             <Heading as="h5" sx={{ color: "text", mb: 2 }}>
@@ -73,7 +71,11 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             <Text as="p" variant="xs" sx={{ mb: 2 }}>
               You can preview your slices and view changes instantly
             </Text>
-            <Button variant={"small"} onClick={openSetupPreview}>
+            <Button
+              variant={"small"}
+              sx={{ cursor: "pointer" }}
+              onClick={openSetupPreview}
+            >
               Setup the preview
             </Button>
           </Box>
