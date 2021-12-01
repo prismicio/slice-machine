@@ -188,7 +188,7 @@ export default async function getEnv(
       mockConfig,
       hasGeneratedStoriesPath,
       framework: defineFramework(manifestState.content as Manifest, cwd),
-      baseUrl: `http://localhost:${process.env.PORT}`,
+      baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },
   };

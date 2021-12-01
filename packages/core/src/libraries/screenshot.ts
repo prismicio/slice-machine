@@ -19,7 +19,7 @@ export function createPathToScreenshot({
   sliceName: string;
   variationId: string;
   extension: Extensions;
-}) {
+}): string {
   return path.join(
     filePath,
     from,

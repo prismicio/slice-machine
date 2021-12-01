@@ -1,29 +1,43 @@
 const TMP = "/tmp";
 import fs from "fs";
 import { Volume } from "memfs";
+import { IUnionFs, ufs } from "unionfs";
 
-import { libraries } from "../../../src/libraries"
+import { libraries } from "../../../src/libraries";
 
-import slice from "../../_misc/validSliceModel.json"
-const model = JSON.stringify(slice)
+import slice from "../../_misc/validSliceModel.json";
+const model = JSON.stringify(slice);
 
-console.log(model)
+jest.spyOn(console, "error").mockImplementationOnce(() => null);
+
+interface IUnionFsWithReset extends Omit<IUnionFs, "use"> {
+  fss: unknown;
+  reset(): void;
+  use(vol: unknown): this;
+}
+
+const unionedFs = fs as unknown as IUnionFsWithReset;
 
 jest.mock(`fs`, () => {
-  const fs = jest.requireActual(`fs`);
-  const unionfs = require(`unionfs`).default;
+  const realFs: typeof fs = jest.requireActual(`fs`);
+  const unionfs = ufs as IUnionFsWithReset;
   unionfs.reset = () => {
-    unionfs.fss = [fs];
+    unionfs.fss = [realFs];
   };
   return unionfs.use(fs);
 });
 
 afterEach(() => {
-  fs.reset();
+  unionedFs.reset();
 });
 
-const commonExpect = async (cwd, configLibs, libName, href) => {
-  const result = await libraries(cwd, configLibs);
+const commonExpect = (
+  cwd: string,
+  configLibs: Array<string>,
+  libName: string,
+  href?: string
+) => {
+  const result = libraries(cwd, configLibs);
 
   expect(result.length).toEqual(1);
   expect(result[0].isLocal).toEqual(true);
@@ -42,9 +56,9 @@ const commonExpect = async (cwd, configLibs, libName, href) => {
   return result;
 };
 
-const testPrefix = async (prefix) => {
+const testPrefix = (prefix: string) => {
   const libName = "slices";
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "slices/CallToAction/model.json": `${model}`,
@@ -54,17 +68,16 @@ const testPrefix = async (prefix) => {
     )
   );
 
-  const libs = [`${prefix}${libName}`]
-  const result = await commonExpect(TMP, libs, libName);
+  const libs = [`${prefix}${libName}`];
+  const result = commonExpect(TMP, libs, libName);
   const [component] = result[0].components;
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
-}
+  return component;
+};
 
-test("it finds slice in local library", async () => {
+test("it finds slice in local library", () => {
   const libName = "slices";
   const prefix = "@/";
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "slices/CallToAction/model.json": model,
@@ -73,26 +86,32 @@ test("it finds slice in local library", async () => {
     )
   );
 
-  const libs = [`${prefix}${libName}`]
-  await commonExpect(TMP, libs, libName);
+  const libs = [`${prefix}${libName}`];
+  const res = commonExpect(TMP, libs, libName);
+  expect(res).toBeDefined();
 });
 
-test("it finds slice component in local library", async () => {
-  await testPrefix("@/")
+test("it finds slice component in local library", () => {
+  const component = testPrefix("@/");
+  expect(component.infos.fileName).toEqual("index");
+  expect(component.infos.extension).toEqual("svelte");
 });
 
-test("it finds slice component in ~ library", async () => {
-  await testPrefix("~/")
+test("it finds slice component in ~ library", () => {
+  const component = testPrefix("~/");
+  expect(component.infos.fileName).toEqual("index");
+  expect(component.infos.extension).toEqual("svelte");
 });
 
-test("it finds slice component in / library", async () => {
-  await testPrefix("/")
+test("it finds slice component in / library", () => {
+  const component = testPrefix("/");
+  expect(component.infos.fileName).toEqual("index");
+  expect(component.infos.extension).toEqual("svelte");
 });
 
-
-test("it ignores non slice folders", async () => {
+test("it ignores non slice folders", () => {
   const libName = "~/slices";
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "slices/NonSlice/ex.json": model,
@@ -103,13 +122,13 @@ test("it ignores non slice folders", async () => {
     )
   );
 
-  const result = await libraries(TMP, [libName])
+  const result = libraries(TMP, [libName]);
   expect(result[0].components.length).toEqual(1);
 });
 
-test("it handles nested library info", async () => {
+test("it handles nested library info", () => {
   const libName = "slices/src/slices";
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "slices/src/slices/CallToAction/model.json": model,
@@ -117,13 +136,19 @@ test("it handles nested library info", async () => {
       TMP
     )
   );
-  await commonExpect(TMP, ["~/slices/src/slices"], libName, "slices--src--slices");
+  const res = commonExpect(
+    TMP,
+    ["~/slices/src/slices"],
+    libName,
+    "slices--src--slices"
+  );
+  expect(res).toBeDefined();
 });
 
-test("it finds non local libs", async () => {
+test("it finds non local libs", () => {
   const libName = "vue-essential-slices";
   const pathToSlice = `node_modules/${libName}/slices/CallToAction/model.json`;
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "package.json": "{}",
@@ -133,16 +158,16 @@ test("it finds non local libs", async () => {
     )
   );
 
-  const result = await libraries(TMP, [libName]);
+  const result = libraries(TMP, [libName]);
   expect(result[0].isLocal).toEqual(false);
   expect(result[0].components[0].pathToSlice).toEqual(`${libName}/slices`);
 });
 
-test("it rejects invalid JSON models", async () => {
+test("it rejects invalid JSON models", () => {
   const libName = "vue-essential-slices";
-  const pathToSlice = (slice) =>
+  const pathToSlice = (slice: string) =>
     `node_modules/${libName}/slices/${slice}/model.json`;
-  fs.use(
+  unionedFs.use(
     Volume.fromJSON(
       {
         "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
@@ -154,13 +179,13 @@ test("it rejects invalid JSON models", async () => {
     )
   );
 
-  const result = await libraries(TMP, [libName]);
+  const result = libraries(TMP, [libName]);
   expect(result[0].isLocal).toEqual(false);
   expect(result[0].components.length).toEqual(1);
 });
 
-test("it filters non existing libs", async () => {
-  fs.use(
+test("it filters non existing libs", () => {
+  unionedFs.use(
     Volume.fromJSON(
       {
         "package.json": "{}",
@@ -169,27 +194,6 @@ test("it filters non existing libs", async () => {
     )
   );
 
-  const result = await libraries(TMP, ["vue-essential-slices"]);
+  const result = libraries(TMP, ["vue-essential-slices"]);
   expect(result).toEqual([]);
-});
-
-
-test("test custom sm.json in library", async () => {
-  fs.use(
-    Volume.fromJSON(
-      {
-        "slices/sm.json": '{ "slicesFolder": "custom_folder" }',
-        "slices/NonSlice/ex.json": model,
-        "slices/CallToAction1/model.json": model,
-        "slices/CallToAction/something.else": "const a = 'a'",
-        "slices/custom_folder/CallToAction1/model.json": model,
-        "slices/custom_folder/CallToAction/something.else": "const a = 'a'",
-      },
-      TMP
-    )
-  );
-
-  const result = await libraries(TMP, ["/slices"]);
-  console.log({ result })
-  // expect(result).toEqual([]);
 });

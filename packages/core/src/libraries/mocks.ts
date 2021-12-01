@@ -12,7 +12,7 @@ export function createPathToMock({
   path: string;
   from: string;
   sliceName: string;
-}) {
+}): string {
   return path.join(filePath, from, sliceName, "mocks.json");
 }
 

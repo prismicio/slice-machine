@@ -86,11 +86,10 @@ function splitExtension(str: string): {
 }
 
 function fromJsonFile<T extends unknown>(
-  slicePath: string,
-  filePath: string,
+  pathToFile: string,
   validate: (payload: unknown) => Error | T
 ): T | Error | null {
-  const fullPath = path.join(slicePath, filePath);
+  const fullPath = path.join(pathToFile);
   const hasFile = Files.exists(fullPath);
 
   if (hasFile) {
@@ -151,20 +150,20 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const model = fromJsonFile(slicePath, "model.json", (payload) =>
+  const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
     getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
       Slice(AsObject).decode(payload)
     )
   );
+  if (!model) {
+    return;
+  }
   if (model instanceof Error) {
     console.error(
       `Could not parse model ${path.basename(
         slicePath
       )}\nFull error: ${model.toString()}`
     );
-    return;
-  }
-  if (!model) {
     return;
   }
 
