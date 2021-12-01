@@ -1,34 +1,18 @@
 const TMP = "/tmp";
-import fs from "fs";
-import { Volume } from "memfs";
-import { IUnionFs, ufs } from "unionfs";
-
+import { vol } from "memfs";
 import { libraries } from "../../../src/libraries";
-
 import slice from "../../_misc/validSliceModel.json";
+
 const model = JSON.stringify(slice);
 
 jest.spyOn(console, "error").mockImplementationOnce(() => null);
 
-interface IUnionFsWithReset extends Omit<IUnionFs, "use"> {
-  fss: unknown;
-  reset(): void;
-  use(vol: unknown): this;
-}
-
-const unionedFs = fs as unknown as IUnionFsWithReset;
-
 jest.mock(`fs`, () => {
-  const realFs: typeof fs = jest.requireActual(`fs`);
-  const unionfs = ufs as IUnionFsWithReset;
-  unionfs.reset = () => {
-    unionfs.fss = [realFs];
-  };
-  return unionfs.use(fs);
+  return vol;
 });
 
 afterEach(() => {
-  unionedFs.reset();
+  vol.reset();
 });
 
 const commonExpect = (
@@ -58,14 +42,12 @@ const commonExpect = (
 
 const testPrefix = (prefix: string) => {
   const libName = "slices";
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "slices/CallToAction/model.json": `${model}`,
-        "slices/CallToAction/index.svelte": "const a = 1",
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "slices/CallToAction/model.json": `${model}`,
+      "slices/CallToAction/index.svelte": "const a = 1",
+    },
+    TMP
   );
 
   const libs = [`${prefix}${libName}`];
@@ -77,13 +59,11 @@ const testPrefix = (prefix: string) => {
 test("it finds slice in local library", () => {
   const libName = "slices";
   const prefix = "@/";
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "slices/CallToAction/model.json": model,
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "slices/CallToAction/model.json": model,
+    },
+    TMP
   );
 
   const libs = [`${prefix}${libName}`];
@@ -111,15 +91,13 @@ test("it finds slice component in / library", () => {
 
 test("it ignores non slice folders", () => {
   const libName = "~/slices";
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "slices/NonSlice/ex.json": model,
-        "slices/CallToAction1/model.json": model,
-        "slices/CallToAction/something.else": "const a = 'a'",
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "slices/NonSlice/ex.json": model,
+      "slices/CallToAction1/model.json": model,
+      "slices/CallToAction/something.else": "const a = 'a'",
+    },
+    TMP
   );
 
   const result = libraries(TMP, [libName]);
@@ -128,13 +106,11 @@ test("it ignores non slice folders", () => {
 
 test("it handles nested library info", () => {
   const libName = "slices/src/slices";
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "slices/src/slices/CallToAction/model.json": model,
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "slices/src/slices/CallToAction/model.json": model,
+    },
+    TMP
   );
   const res = commonExpect(
     TMP,
@@ -148,14 +124,12 @@ test("it handles nested library info", () => {
 test("it finds non local libs", () => {
   const libName = "vue-essential-slices";
   const pathToSlice = `node_modules/${libName}/slices/CallToAction/model.json`;
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "package.json": "{}",
-        [pathToSlice]: model,
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "package.json": "{}",
+      [pathToSlice]: model,
+    },
+    TMP
   );
 
   const result = libraries(TMP, [libName]);
@@ -167,16 +141,14 @@ test("it rejects invalid JSON models", () => {
   const libName = "vue-essential-slices";
   const pathToSlice = (slice: string) =>
     `node_modules/${libName}/slices/${slice}/model.json`;
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
-        "package.json": "{}",
-        [pathToSlice("CallToAction")]: "const invalid = true",
-        [pathToSlice("CallToAction2")]: model,
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "sm.json": `{ "apiEndpoint": "http://api.prismic.io/api/v2", "libraries": ["${libName}"] }`,
+      "package.json": "{}",
+      [pathToSlice("CallToAction")]: "const invalid = true",
+      [pathToSlice("CallToAction2")]: model,
+    },
+    TMP
   );
 
   const result = libraries(TMP, [libName]);
@@ -185,15 +157,12 @@ test("it rejects invalid JSON models", () => {
 });
 
 test("it filters non existing libs", () => {
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "package.json": "{}",
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "package.json": "{}",
+    },
+    TMP
   );
-
   const result = libraries(TMP, ["vue-essential-slices"]);
   expect(result).toEqual([]);
 });

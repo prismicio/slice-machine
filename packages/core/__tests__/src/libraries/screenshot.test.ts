@@ -1,10 +1,6 @@
 const TMP = "/tmp";
-
-import fs from "fs";
 import path from "path";
-
-import { Volume } from "memfs";
-import { IUnionFs, ufs } from "unionfs";
+import { vol } from "memfs";
 
 import {
   Extensions,
@@ -13,40 +9,21 @@ import {
 
 jest.spyOn(console, "error").mockImplementationOnce(() => null);
 
-interface IUnionFsWithReset extends Omit<IUnionFs, "use"> {
-  fss: unknown;
-  reset(): void;
-  use(vol: unknown): this;
-}
-
-const unionedFs = fs as unknown as IUnionFsWithReset;
-
 jest.mock(`fs`, () => {
-  const realFs: typeof fs = jest.requireActual(`fs`);
-  const unionfs = ufs as IUnionFsWithReset;
-  unionfs.reset = () => {
-    unionfs.fss = [realFs];
-  };
-  return unionfs.use(fs);
+  return vol;
 });
 
 afterEach(() => {
-  unionedFs.reset();
-});
-
-afterEach(() => {
-  unionedFs.reset();
+  vol.reset();
 });
 
 const testAcceptedTypes = (type: Extensions) => {
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        [`.slicemachine/assets/slices/SliceName/variation/preview.${type}`]:
-          "123",
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      [`.slicemachine/assets/slices/SliceName/variation/preview.${type}`]:
+        "123",
+    },
+    TMP
   );
 
   const result = resolvePathsToScreenshot({
@@ -66,14 +43,12 @@ test("it finds preview per type", () => {
 });
 
 test("it prioritizes custom preview path", () => {
-  unionedFs.use(
-    Volume.fromJSON(
-      {
-        "slices/SliceName/variation/preview.png": "456",
-        ".slicemachine/assets/slices/SliceName/variation/preview.png": "123",
-      },
-      TMP
-    )
+  vol.fromJSON(
+    {
+      "slices/SliceName/variation/preview.png": "456",
+      ".slicemachine/assets/slices/SliceName/variation/preview.png": "123",
+    },
+    TMP
   );
 
   const result = resolvePathsToScreenshot({
