@@ -2,25 +2,25 @@ import path from "path";
 import { execCommand } from "../utils";
 import { Utils, FileSystem } from "@slicemachine/core";
 
+const {
+  PRISMIC_CLIENT,
+  PRISMIC_DOM_PACKAGE_NAME,
+  PRISMIC_REACT_PACKAGE_NAME,
+  NEXT_SLICEZONE,
+  SM_PACKAGE_NAME,
+} = Utils.CONSTS;
+
 function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
-  const packages = [];
-
-  if (
-    framework === Utils.Framework.FrameworkEnum.react ||
-    framework === Utils.Framework.FrameworkEnum.next
-  ) {
-    packages.push(Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME, "@prismicio/client");
+  switch (framework) {
+    case Utils.Framework.FrameworkEnum.react:
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
+    case Utils.Framework.FrameworkEnum.next:
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE}`;
+    case Utils.Framework.FrameworkEnum.svelte:
+      return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
+    default:
+      return "";
   }
-
-  if (framework === Utils.Framework.FrameworkEnum.next) {
-    packages.push("next-slicezone");
-  }
-
-  if (framework === Utils.Framework.FrameworkEnum.svelte) {
-    packages.push(Utils.CONSTS.PRISMIC_DOM_PACKAGE_NAME, "@prismicio/client");
-  }
-
-  return packages.join(" ");
 }
 
 export async function installRequiredDependencies(
@@ -37,7 +37,7 @@ export async function installRequiredDependencies(
   spinner.start();
 
   const { stderr } = await execCommand(
-    `${installDevDependencyCommand} ${Utils.CONSTS.SM_PACKAGE_NAME}`
+    `${installDevDependencyCommand} ${SM_PACKAGE_NAME}`
   );
 
   const deps = depsForFramework(framework);
@@ -45,7 +45,7 @@ export async function installRequiredDependencies(
 
   const pathToPkg = path.join(
     FileSystem.PackagePaths(cwd).value(),
-    Utils.CONSTS.SM_PACKAGE_NAME
+    SM_PACKAGE_NAME
   );
   const isPackageInstalled = Utils.Files.exists(pathToPkg);
 
@@ -56,6 +56,6 @@ export async function installRequiredDependencies(
 
   spinner.fail();
   Utils.writeWarning(
-    `could not install ${Utils.CONSTS.SM_PACKAGE_NAME}. Please do it manually!`
+    `could not install ${SM_PACKAGE_NAME}. Please do it manually!`
   );
 }
