@@ -24,7 +24,8 @@
     "audit": "better-npm-audit audit -l high -p",
     "prepublishOnly": "npm run test && npm run build",
     "audit-fix": "npm audit fix",
-    "test": "jest"
+    "test": "jest",
+    "posttest": "npm run build"
   },
   "peerDependencies": {
     "ora": "^5.4.1"

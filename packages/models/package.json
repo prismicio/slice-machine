@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 0",
-    "build": "tsc --project tsconfig.json"
+    "build": "tsc --project tsconfig.json",
+    "posttest": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/prismicio/slice-machine/issues"
