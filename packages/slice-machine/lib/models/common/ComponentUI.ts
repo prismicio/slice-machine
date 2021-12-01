@@ -1,4 +1,4 @@
-import { Models } from "@slicemachine/core";
+import { Models } from "@slicemachine/models";
 import { compareVariations } from "../../utils";
 import Environment from "./Environment";
 

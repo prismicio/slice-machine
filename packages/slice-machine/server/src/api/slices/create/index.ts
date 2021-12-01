@@ -1,6 +1,6 @@
 declare let appRoot: string;
 
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import path from "path";
 import { promisify } from "util";
 

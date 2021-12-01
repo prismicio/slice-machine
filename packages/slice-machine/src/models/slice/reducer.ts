@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import { Variation } from "../../../lib/models/common/Variation";
 import equal from "fast-deep-equal";
 import SliceState from "../../../lib/models/ui/SliceState";

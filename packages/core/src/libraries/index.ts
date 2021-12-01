@@ -4,12 +4,13 @@ import path from "path";
 import Files from "../utils/files";
 import { getInfoFromPath } from "../utils/lib";
 import { getComponentInfo } from "./component";
-import { Library, Component } from "../models/Library";
+// import { Library, Component } from "../models/Library";
+import { Models } from "@slicemachine/models";
 
 export function handleLibraryPath(
   cwd: string,
   libPath: string
-): Library<Component> | undefined {
+): Models.Library<Models.Component> | undefined {
   const { from, isLocal, pathExists, pathToSlices, pathToLib } =
     getInfoFromPath(cwd, libPath);
 
@@ -33,8 +34,8 @@ export function handleLibraryPath(
     .slice(1)
     .join("")}`;
 
-  const allComponents: Component[] = pathsToComponents.reduce(
-    (acc: Component[], curr: string) => {
+  const allComponents: Models.Component[] = pathsToComponents.reduce(
+    (acc: Models.Component[], curr: string) => {
       const componentInfo = getComponentInfo(curr, { cwd, from });
       if (!componentInfo) {
         return acc;
@@ -66,10 +67,10 @@ export function handleLibraryPath(
 export function libraries(
   cwd: string,
   libraries: ReadonlyArray<string>
-): ReadonlyArray<Library<Component>> {
+): ReadonlyArray<Models.Library<Models.Component>> {
   return (libraries || [])
     .map((lib) => handleLibraryPath(cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Library<Component>>;
+    .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 }
 
 export * from "./screenshot";

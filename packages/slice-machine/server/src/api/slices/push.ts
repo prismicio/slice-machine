@@ -1,12 +1,12 @@
 import path from "path";
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import { snakelize } from "@lib/utils/str";
 
 import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 import Files from "@lib/utils/files";
 
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import { Libraries } from "@slicemachine/core";
 
 import { onError } from "../common/error";
 import { purge, upload } from "../upload";
@@ -54,7 +54,7 @@ export async function handler(
     for (let i = 0; i < variationIds.length; i += 1) {
       const variationId = variationIds[i];
 
-      const screenshot = resolvePathsToScreenshot({
+      const screenshot = Libraries.resolvePathsToScreenshot({
         paths: [env.cwd, path.join(env.cwd, ".slicemchine/assets")],
         from,
         sliceName,

@@ -1,10 +1,4 @@
-import type { Models } from "@slicemachine/core";
-import {
-  VariationAsArray,
-  VariationAsObject,
-} from "@slicemachine/core/build/src/models";
-("./CustomType/fields");
-
+import type { Models } from "@slicemachine/models";
 import camelCase from "lodash/camelCase";
 
 export const Variation = {
@@ -121,7 +115,7 @@ export const Variation = {
     };
   },
 
-  copyValue<T extends VariationAsObject | VariationAsArray>(
+  copyValue<T extends Models.VariationAsObject | Models.VariationAsArray>(
     variation: T,
     key: string,
     name: string

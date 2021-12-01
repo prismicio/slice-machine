@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import { Variation } from "./Variation";
 
 const Slice = {

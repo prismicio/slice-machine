@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import Environment from "@lib/models/common/Environment";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";

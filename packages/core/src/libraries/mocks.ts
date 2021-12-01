@@ -2,7 +2,7 @@ import path from "path";
 import { isRight } from "fp-ts/Either";
 
 import { Files } from "../utils";
-import { SliceMock } from "../models/Slice";
+import { Models } from "@slicemachine/models";
 
 export function createPathToMock({
   path: filePath,
@@ -24,13 +24,13 @@ export function resolvePathsToMock({
   paths: Array<string>;
   from: string;
   sliceName: string;
-}): { path: string; value: SliceMock | undefined } | undefined {
+}): { path: string; value: Models.SliceMock | undefined } | undefined {
   const possiblePaths = paths.map((base) =>
     createPathToMock({ path: base, from, sliceName })
   );
-  return Files.readFirstOf<SliceMock | undefined>(possiblePaths)(
+  return Files.readFirstOf<Models.SliceMock | undefined>(possiblePaths)(
     (v: string) => {
-      const res = SliceMock.decode(JSON.parse(v));
+      const res = Models.SliceMock.decode(JSON.parse(v));
       if (isRight(res)) {
         return res.right;
       }

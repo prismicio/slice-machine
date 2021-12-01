@@ -1,11 +1,7 @@
 import getEnv from "./services/getEnv";
 import Files from "@lib/utils/files";
+import { Libraries } from "@slicemachine/core";
 
-import {
-  resolvePathsToScreenshot,
-  createPathToScreenshot,
-  Extensions,
-} from "@slicemachine/core/build/src/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,
@@ -21,7 +17,7 @@ export default async function handler(
 ): Promise<ScreenshotUI> {
   const { env } = await getEnv();
 
-  const maybeCustomScreenshot = resolvePathsToScreenshot({
+  const maybeCustomScreenshot = Libraries.resolvePathsToScreenshot({
     paths: [env.cwd],
     from,
     sliceName,
@@ -31,12 +27,12 @@ export default async function handler(
     Files.remove(maybeCustomScreenshot.path);
   }
 
-  const pathToScreenshot = createPathToScreenshot({
+  const pathToScreenshot = Libraries.createPathToScreenshot({
     path: env.cwd,
     from,
     sliceName,
     variationId,
-    extension: file.type.split("/")[1] as Extensions,
+    extension: file.type.split("/")[1] as Libraries.Extensions,
   });
 
   Files.copy(file.path, pathToScreenshot, { recursive: true });

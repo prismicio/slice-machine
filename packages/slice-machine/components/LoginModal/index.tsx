@@ -13,6 +13,7 @@ import {
 import SliceMachineModal from "@components/SliceMachineModal";
 import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
+// TODO: don't import from build?
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
 import { AxiosResponse } from "axios";

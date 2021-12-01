@@ -1,10 +1,6 @@
 import path from "path";
 import * as t from "io-ts";
-import {
-  ComponentInfo,
-  ComponentMetadata,
-  Screenshot,
-} from "../models/Library";
+import { Models } from "@slicemachine/models";
 
 import { pascalize } from "../utils/str";
 
@@ -12,12 +8,10 @@ import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { resolvePathsToMock } from "./mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice, SliceAsObject } from "../models/Slice";
-import { VariationAsObject, AsObject } from "../models/Variation";
 
 import Errors from "../utils/errors";
 
-function getMeta(model: SliceAsObject): ComponentMetadata {
+function getMeta(model: Models.SliceAsObject): Models.ComponentMetadata {
   return {
     id: model.id,
     name: model.name,
@@ -126,7 +120,7 @@ function getFileInfoFromPath(
 export function getComponentInfo(
   slicePath: string,
   { cwd, from }: { cwd: string; from: string }
-): ComponentInfo | undefined {
+): Models.ComponentInfo | undefined {
   const sliceName = getComponentName(slicePath);
 
   if (!sliceName || !sliceName.length) {
@@ -152,7 +146,7 @@ export function getComponentInfo(
 
   const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
     getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
-      Slice(AsObject).decode(payload)
+      Models.Slice(Models.AsObject).decode(payload)
     )
   );
   if (!model) {
@@ -168,7 +162,7 @@ export function getComponentInfo(
   }
 
   const screenshotPaths = (model.variations || [])
-    .map((v: VariationAsObject) => {
+    .map((v: Models.VariationAsObject) => {
       const activeScreenshot = resolvePathsToScreenshot({
         paths: [cwd],
         from,
@@ -183,8 +177,10 @@ export function getComponentInfo(
     })
     .reduce(
       (
-        acc: { [variationId: string]: Screenshot },
-        variationPreview: { [variationId: string]: Screenshot } | undefined
+        acc: { [variationId: string]: Models.Screenshot },
+        variationPreview:
+          | { [variationId: string]: Models.Screenshot }
+          | undefined
       ) => {
         return { ...acc, ...variationPreview };
       },

@@ -1,9 +1,9 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import { handleStorybookPreview } from "./common/storybook";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import { Libraries } from "@slicemachine/core";
 import {
   createScreenshotUI,
   ScreenshotUI,
@@ -76,7 +76,7 @@ export default {
   ): Screenshots {
     const entries = Object.entries(screenshotPaths).map(
       ([variationId, screenshot]) => {
-        const maybePreviewPath = resolvePathsToScreenshot({
+        const maybePreviewPath = Libraries.resolvePathsToScreenshot({
           paths: [env.cwd],
           from,
           sliceName,

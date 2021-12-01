@@ -41,6 +41,7 @@
     "@prismicio/slice-canvas-com": "^0.0.4",
     "@reach/menu-button": "^0.16.2",
     "@slicemachine/core": "1.0.1-slicecanvas.3",
+    "@slicemachine/models": "1.0.0",
     "@svgr/webpack": "^5.4.0",
     "analytics-node": "^6.0.0",
     "atob": "^2.1.2",

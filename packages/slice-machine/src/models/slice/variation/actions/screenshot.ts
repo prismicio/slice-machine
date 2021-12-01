@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type { Models } from "@slicemachine/models";
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
 

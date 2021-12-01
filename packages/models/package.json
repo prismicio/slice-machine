@@ -1,0 +1,37 @@
+{
+  "name": "@slicemachine/models",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "MarcMcIntosh <marcmcintosh1987@gmail.com>",
+  "homepage": "https://github.com/prismicio/slice-machine#readme",
+  "license": "ISC",
+  "main": "build/index.js",
+  "directories": {
+    "build": "build",
+    "test": "__tests__"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prismicio/slice-machine.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc --project tsconfig.json"
+  },
+  "bugs": {
+    "url": "https://github.com/prismicio/slice-machine/issues"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "io-ts": "^2.2.16"
+  }
+}
