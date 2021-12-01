@@ -22,7 +22,7 @@
     "url": "git+https://github.com/prismicio/slice-machine.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
+    "test": "echo \"Error: run tests from root\" && exit 0",
     "build": "tsc --project tsconfig.json"
   },
   "bugs": {
