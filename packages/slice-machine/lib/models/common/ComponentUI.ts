@@ -17,9 +17,7 @@ export const createScreenshotUI = (
 ): ScreenshotUI => ({
   exists: true,
   path: pathToScreenshot,
-  url: `${baseUrl}/api/__preview?q=${encodeURIComponent(
-    pathToScreenshot
-  )}&uniq=${Math.random()}`,
+  url: createScreenshotUrl(baseUrl, pathToScreenshot),
 });
 
 export const buildScreenshotUrls = (

@@ -146,8 +146,6 @@ export const SharedSlice = {
 
     const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
 
-    console.log({ slice, preview: slice?.screenshotUrls?.[variationId] });
-
     return (
       <CardWrapper link={link} slice={slice}>
         <Themecard
