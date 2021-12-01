@@ -60,6 +60,15 @@ app.use("/warnings", async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, "warnings.html"));
 });
 
+app.use(
+  "/:lib/:sliceName/:variation/preview",
+  async function sliceRoute(_, res) {
+    return res.sendFile(
+      path.join(out, "[lib]/[sliceName]/[variation]/preview.html")
+    );
+  }
+);
+
 app.use("/:lib/:sliceName/:variation", async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, "[lib]/[sliceName]/[variation].html"));
 });
