@@ -11,7 +11,7 @@ import { Framework } from "../../lib/models/common/Framework";
 import UpdateModal from "../../components/UpdateVersionModal";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { EnvironmentStoreType } from "@src/modules/environment/types";
-import Tracker from "@lib/models/common/tracker";
+import { TrackerBuilder } from "@lib/models/common/tracker";
 import Environment from "@lib/models/common/Environment";
 
 jest.mock("next/router", () => ({
@@ -66,7 +66,13 @@ const FAKE_ENVIRONMENT = {
     framework: Framework.next,
     baseUrl: "http://localhost:9999",
     client: new FakeClient(),
-    tracker: new Tracker("fake tracker", "test-version"),
+    tracker: new TrackerBuilder(
+      "fake tracker",
+      "test-version",
+      { userId: "fakeId" },
+      "sm-env-example",
+      {}
+    ).build(),
   } as Environment,
 };
 

@@ -8,6 +8,7 @@ export default class extends Document {
   }
 
   render() {
+    const segmentScript = ``;
     return (
       <Html>
         <Head />

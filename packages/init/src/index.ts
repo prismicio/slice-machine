@@ -30,7 +30,7 @@ async function init() {
   await loginOrBypass(base);
 
   // retrieve tokens for api calls
-  const config = FileSystem.getOrCreateAuthConfig();
+  const config = FileSystem.PrismicSharedConfigManager.get();
 
   // detect the framework used by the project
   const frameworkResult = await detectFramework(cwd);

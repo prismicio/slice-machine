@@ -1,4 +1,4 @@
-import { FileSystem } from "@slicemachine/core";
+import { FileSystem, Utils } from "@slicemachine/core";
 
 type StartResponse = {
   err?: Error;
@@ -7,7 +7,9 @@ type StartResponse = {
 export default async function handler(): Promise<StartResponse> {
   try {
     // Reset the prismic auth cookie
-    FileSystem.setAuthConfig([]);
+    FileSystem.PrismicSharedConfigManager.setProps({
+      cookies: Utils.Cookie.serializeCookies([]),
+    });
     return {};
   } catch (e) {
     return {

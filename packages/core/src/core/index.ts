@@ -1,13 +1,9 @@
-import {
-  Manifest,
-  removeAuthConfig,
-  getOrCreateAuthConfig,
-  AuthConfig,
-} from "../filesystem";
+import { Manifest } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
 import { Poll, Endpoints, Framework } from "../utils";
 
 import * as Communication from "./communication";
+import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
 export * as Communication from "./communication";
 
 export interface Core {
@@ -107,11 +103,11 @@ export const Auth = {
       onLoginFail();
     }
   },
-  logout: (): void => removeAuthConfig(),
+  logout: (): void => PrismicSharedConfigManager.remove(),
   validateSession: async (
     requiredBase: string
   ): Promise<Communication.UserInfo | null> => {
-    const config: AuthConfig = getOrCreateAuthConfig();
+    const config = PrismicSharedConfigManager.get();
 
     if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
     if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.

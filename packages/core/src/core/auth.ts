@@ -1,7 +1,8 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
 import { CONSTS, bold, underline, spinner, writeError } from "../utils";
-import { setAuthConfig } from "../filesystem";
+import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
+import { Cookie } from "../utils";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
@@ -131,7 +132,10 @@ export async function startServerAndOpenBrowser(
 
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
-    setAuthConfig(data.cookies, base);
+    PrismicSharedConfigManager.setProps({
+      cookies: Cookie.serializeCookies(data.cookies),
+      base,
+    });
   }
 
   function onFail(): void {
