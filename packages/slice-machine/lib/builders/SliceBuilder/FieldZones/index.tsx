@@ -120,7 +120,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
         onDragEnd={_onDragEnd(WidgetsArea.Primary)}
-        // @ts-expect-error
         poolOfFieldsToCheck={variation.primary || []}
         renderHintBase={({ item }) =>
           `slice.primary${transformKeyAccessor(item.key)}`
@@ -144,7 +143,6 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onSave={_onSave(WidgetsArea.Items)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
         onDragEnd={_onDragEnd(WidgetsArea.Items)}
-        // @ts-expect-error
         poolOfFieldsToCheck={variation.items || []}
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
         renderFieldAccessor={(key) =>

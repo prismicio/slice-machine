@@ -6,7 +6,7 @@ import Link from "next/link";
 import Card from "@components/Card";
 
 import ImagePreview from "./components/ImagePreview";
-import SliceState from "@models/ui/SliceState";
+import SliceState from "@lib/models/ui/SliceState";
 import { useRouter } from "next/router";
 
 const MemoizedImagePreview = memo(ImagePreview);
@@ -30,9 +30,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   onHandleFile,
   openSetupPreview,
 }) => {
-  const {
-    infos: { previewUrls },
-  } = Model;
+  const { screenshotUrls } = Model;
 
   const router = useRouter();
 
@@ -47,9 +45,9 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
         <MemoizedImagePreview
           src={
-            previewUrls &&
-            previewUrls[variation.id] &&
-            previewUrls[variation.id].url
+            screenshotUrls &&
+            screenshotUrls[variation.id] &&
+            screenshotUrls[variation.id].url
           }
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
