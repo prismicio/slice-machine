@@ -2,6 +2,8 @@ import { jest, describe, afterEach, test, expect } from "@jest/globals";
 import * as Core from "@slicemachine/core";
 import * as initUtils from "../src/utils";
 import { installRequiredDependencies } from "../src/steps";
+import path from "path";
+import os from "os";
 
 type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
 
@@ -79,5 +81,68 @@ describe("install required dependency", () => {
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
+  });
+
+  test("when using react it should install @prismicio/client and prismic-reactjs", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    fileExistsMock.mockReturnValueOnce(false);
+    fileExistsMock.mockReturnValueOnce(true);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    await installRequiredDependencies(
+      fakedir,
+      Core.Utils.Framework.FrameworkEnum.react
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save prismic-reactjs @prismicio/client"
+    );
+  });
+
+  test("when using next it should install react deps and next-slicezone", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    fileExistsMock.mockReturnValueOnce(false);
+    fileExistsMock.mockReturnValueOnce(true);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    await installRequiredDependencies(
+      fakedir,
+      Core.Utils.Framework.FrameworkEnum.next
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save prismic-reactjs @prismicio/client next-slicezone"
+    );
+  });
+
+  test("when using svelte it should install prismic-dom", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    fileExistsMock.mockReturnValueOnce(false);
+    fileExistsMock.mockReturnValueOnce(true);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    await installRequiredDependencies(
+      fakedir,
+      Core.Utils.Framework.FrameworkEnum.svelte
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save prismic-dom @prismicio/client"
+    );
   });
 });
