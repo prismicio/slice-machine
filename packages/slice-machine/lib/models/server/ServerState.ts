@@ -19,7 +19,7 @@ export interface ServerState {
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteSlices: ReadonlyArray<Slice<AsObject>>;
   clientError: ErrorWithStatus | undefined;
-  configErrors: ConfigErrors | undefined;
+  configErrors: ConfigErrors;
   env: FrontEndEnvironment;
   warnings: ReadonlyArray<Warning>;
   isFake: boolean;

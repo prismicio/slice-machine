@@ -1,6 +1,5 @@
 import PrismicData from "./PrismicData";
 import UserConfig from "./UserConfig";
-import Chromatic from "./Chromatic";
 import { Framework } from "./Framework";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
@@ -13,7 +12,13 @@ export interface UpdateVersionInfo {
   updateAvailable: boolean;
 }
 
-export default interface BackendEnvironment extends FrontEndEnvironment {
+export default interface BackendEnvironment {
+  userConfig: UserConfig;
+  repo?: string;
+  updateVersionInfo: UpdateVersionInfo;
+  mockConfig: any;
+  framework: Framework;
+  baseUrl: string;
   cwd: string;
   prismicData: PrismicData;
   client: DefaultClient | FakeClient;
@@ -22,13 +27,9 @@ export default interface BackendEnvironment extends FrontEndEnvironment {
 export interface FrontEndEnvironment {
   userConfig: UserConfig;
   repo?: string;
-  chromatic?: Chromatic;
   updateVersionInfo: UpdateVersionInfo;
   mockConfig: any;
   framework: Framework;
-  baseUrl: string;
-  hasGeneratedStoriesPath: boolean;
-  prismicData: {
-    base: string;
-  };
+  sliceMachineAPIUrl: string;
+  prismicAPIUrl: string;
 }

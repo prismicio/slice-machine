@@ -146,12 +146,11 @@ export const getBackendState = async () => {
 
 export default async function handler(): Promise<ServerState> {
   const state = await getBackendState();
-  const { client, cwd, prismicData, ...frontEnv } = state.env;
+  const { client, cwd, prismicData, baseUrl, ...frontEnv } = state.env;
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
-    prismicData: {
-      base: prismicData.base,
-    },
+    sliceMachineAPIUrl: baseUrl,
+    prismicAPIUrl: prismicData.base,
   };
 
   return {
