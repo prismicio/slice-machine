@@ -1,41 +1,33 @@
-import path from "path";
-import * as t from "io-ts";
 import type Models from "@slicemachine/core/build/src/models";
 
 // @ts-ignore
 import { pascalize } from "../../utils/str";
 
 import { ComponentUI } from "./ComponentUI";
-import Files from "@lib/utils/files";
-import { getOrElseW } from "fp-ts/lib/Either";
 import Environment from "./Environment";
 
 const LibraryUIMeta = {
-  pkgReader: t.exact(
-    t.type({
-      name: t.string,
-    })
-  ),
-  build(technicalName: string, libPath: string, isLocal: boolean) {
-    const pkgValue = Files.safeReadEntity(
-      path.join(libPath, "package.json"),
-      (payload) => {
-        return getOrElseW(() => null)(LibraryUIMeta.pkgReader.decode(payload));
-      }
-    );
-    const libName = pkgValue?.name;
+  build(isLocal: boolean, libMeta?: Models.LibraryMeta) {
+    const libName = libMeta?.displayName;
 
-    return {
+    const baseMeta = {
       isNodeModule: !isLocal,
       isDownloaded: isLocal && Boolean(libName),
       isManual: isLocal && !Boolean(libName),
-      name: libName || technicalName,
+    };
+
+    if (!libMeta) return baseMeta;
+
+    return {
+      ...libMeta,
+      isNodeModule: !isLocal,
+      isDownloaded: isLocal && Boolean(libMeta.displayName),
+      isManual: isLocal && !Boolean(libMeta.displayName),
     };
   },
 };
 
-interface LibraryUIMeta {
-  name: string;
+interface LibraryUIMeta extends Models.LibraryMeta {
   isNodeModule: boolean;
   isDownloaded: boolean;
   isManual: boolean;
@@ -54,7 +46,7 @@ export const LibraryUI = {
     const components = lib.components.map((c) =>
       ComponentUI.build(c, remoteSlices, env)
     );
-    const meta = LibraryUIMeta.build(lib.name, lib.path, lib.isLocal);
+    const meta = LibraryUIMeta.build(lib.isLocal, lib.meta);
 
     return {
       ...lib,

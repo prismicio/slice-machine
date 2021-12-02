@@ -4,7 +4,7 @@ import path from "path";
 import Files from "../utils/files";
 import { getInfoFromPath } from "../utils/lib";
 import { getComponentInfo } from "./component";
-import { Library, Component } from "../models/Library";
+import { Library, Component, LibraryMeta } from "../models/Library";
 
 export function handleLibraryPath(
   cwd: string,
@@ -55,11 +55,14 @@ export function handleLibraryPath(
     []
   );
 
+  const meta = LibraryMeta.build(pathToLib);
+
   return {
     path: pathToLib,
     isLocal,
     name: from,
     components: allComponents,
+    meta,
   };
 }
 

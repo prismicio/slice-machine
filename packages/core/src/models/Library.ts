@@ -1,3 +1,7 @@
+import * as t from "io-ts";
+import { getOrElseW } from "fp-ts/lib/Either";
+import path from "path";
+import Files from "../utils/files";
 import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 
@@ -52,9 +56,35 @@ export interface Screenshot {
   path?: string;
 }
 
+export const LibraryMeta = {
+  reader: t.exact(
+    t.partial({
+      displayName: t.string,
+      version: t.string,
+    })
+  ),
+  build(libPath: string) {
+    const meta = Files.safeReadEntity(
+      path.join(libPath, "meta.json"),
+      (payload) => {
+        return getOrElseW(() => null)(LibraryMeta.reader.decode(payload));
+      }
+    );
+    if (!meta) return;
+
+    return {
+      displayName: meta.displayName,
+      version: meta.version,
+    };
+  },
+};
+
+export type LibraryMeta = t.TypeOf<typeof LibraryMeta.reader>;
+
 export interface Library<C extends Component> {
   name: string;
   path: string;
   isLocal: boolean;
   components: ReadonlyArray<C>;
+  meta?: LibraryMeta;
 }
