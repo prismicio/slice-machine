@@ -81,7 +81,6 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
-  console.log({ Models });
   const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
     component.infos
   );
