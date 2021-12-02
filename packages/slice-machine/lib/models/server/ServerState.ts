@@ -24,11 +24,3 @@ export interface ServerState {
   warnings: ReadonlyArray<Warning>;
   isFake: boolean;
 }
-
-export interface AppPayload {
-  env: FrontEndEnvironment;
-  libraries?: ReadonlyArray<Library>;
-  customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteSlices?: ReadonlyArray<Slice<AsObject>>;
-}

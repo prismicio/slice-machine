@@ -20,7 +20,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 
-import { AppPayload, ServerState } from "@lib/models/server/ServerState";
+import { ServerState } from "@lib/models/server/ServerState";
 import ServerError from "@lib/models/server/ServerError";
 import { Library } from "@lib/models/common/Library";
 import Head from "next/head";
@@ -80,8 +80,7 @@ function MyApp({
 
   const [state, setRenderer] = useState<{
     Renderer: (props: any) => JSX.Element;
-    payload: AppPayload | null;
-  }>({ Renderer: RenderStates.Loading, payload: null });
+  }>({ Renderer: RenderStates.Loading });
 
   useEffect(() => {
     if (!serverState) {
@@ -96,7 +95,7 @@ function MyApp({
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default, payload: serverState });
+    setRenderer({ Renderer: RenderStates.Default });
     const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
     console.log("Loaded libraries: ", { libraries });
@@ -105,7 +104,7 @@ function MyApp({
     console.log("------ End of log ------");
   }, [serverState]);
 
-  const { Renderer, payload } = state;
+  const { Renderer } = state;
 
   return (
     <>
@@ -117,7 +116,6 @@ function MyApp({
           <SliceMachineApp
             theme={theme}
             serverState={serverState}
-            payload={payload}
             pageProps={pageProps}
             Component={Component}
             Renderer={Renderer}
