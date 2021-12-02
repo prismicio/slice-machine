@@ -1,5 +1,5 @@
 import React from "react";
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{

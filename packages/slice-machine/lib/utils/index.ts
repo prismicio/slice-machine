@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import * as yup from "yup";
 import equal from "fast-deep-equal";
 

@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import { ComponentUI, LibStatus, ScreenshotUI } from "../common/ComponentUI";
 
 interface SliceState extends ComponentUI {

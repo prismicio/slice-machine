@@ -1,5 +1,5 @@
 import path from "path";
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import { snakelize } from "@lib/utils/str";
 
 import getEnv from "../services/getEnv";

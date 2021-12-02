@@ -3,7 +3,7 @@ declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
 
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import getEnv from "../services/getEnv";
 import mock from "@lib/mock/Slice";
 import { insert as insertMockConfig } from "@lib/mock/misc/fs";

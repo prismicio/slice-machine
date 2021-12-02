@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import Environment from "@lib/models/common/Environment";
 import Files from "@slicemachine/core/build/src/utils/files";
 import { FileSystem, Libraries } from "@slicemachine/core";

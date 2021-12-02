@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import Environment from "@lib/models/common/Environment";

@@ -1,6 +1,6 @@
 import path from "path";
 import upload from "./upload";
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
 import {
   ReviewTrackingEvent,

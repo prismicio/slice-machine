@@ -1,4 +1,4 @@
-import { Models } from "@slicemachine/core";
+import * as Models from "@slicemachine/core/build/src/models/index";
 import { compareVariations } from "../../utils";
 import Environment from "./Environment";
 
@@ -81,6 +81,7 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
+  console.log({ Models });
   const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
     component.infos
   );

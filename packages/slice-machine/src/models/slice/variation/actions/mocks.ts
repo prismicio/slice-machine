@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
 import { ActionType } from "./ActionType";
 

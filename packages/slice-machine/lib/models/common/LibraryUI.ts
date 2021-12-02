@@ -1,6 +1,6 @@
 import path from "path";
 import * as t from "io-ts";
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 
 // @ts-ignore
 import { pascalize } from "../../utils/str";

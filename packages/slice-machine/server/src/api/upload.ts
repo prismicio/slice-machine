@@ -1,4 +1,4 @@
-import type { Models } from "@slicemachine/core";
+import type Models from "@slicemachine/core/build/src/models";
 // @ts-ignore
 import { snakelize } from "@lib/utils/str";
 import path from "path";

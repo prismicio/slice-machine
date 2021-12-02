@@ -27,7 +27,7 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
       return { remoteSlices: r };
     })();
 
-    const libraries = await Libraries.libraries(
+    const libraries = Libraries.libraries(
       env.cwd,
       env.userConfig.libraries || []
     );
