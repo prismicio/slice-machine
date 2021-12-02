@@ -7,6 +7,10 @@ export const PRISMIC_REACT_PACKAGE_NAME = "prismic-reactjs";
 export const PRISMIC_DOM_PACKAGE_NAME = "prismic-dom";
 export const PRISMIC_CLIENT = "@prismicio/client";
 export const NEXT_SLICEZONE = "next-slicezone";
+export const NUXT_PRISMIC = "@nuxtjs/prismic";
+export const NUXT_SM = "nuxt-sm";
+export const VUE_SLICEZONE = "vue-slicezone";
+export const PRISMIC_VUE = "@prismicio/vue";
 
 export const MANIFEST_FILE_NAME = "sm.json";
 export const DEFAULT_SERVER_PORT = 5555;

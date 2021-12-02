@@ -8,6 +8,10 @@ const {
   PRISMIC_REACT_PACKAGE_NAME,
   NEXT_SLICEZONE,
   SM_PACKAGE_NAME,
+  NUXT_PRISMIC,
+  NUXT_SM,
+  VUE_SLICEZONE,
+  PRISMIC_VUE,
 } = Utils.CONSTS;
 
 function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
@@ -18,6 +22,10 @@ function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE}`;
     case Utils.Framework.FrameworkEnum.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
+    case Utils.Framework.FrameworkEnum.nuxt:
+      return `${NUXT_PRISMIC} ${NUXT_SM} ${VUE_SLICEZONE}`;
+    case Utils.Framework.FrameworkEnum.vue:
+      return `${PRISMIC_VUE} ${PRISMIC_CLIENT} ${PRISMIC_DOM_PACKAGE_NAME} ${VUE_SLICEZONE}`;
     default:
       return "";
   }

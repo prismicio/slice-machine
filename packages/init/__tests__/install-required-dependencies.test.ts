@@ -145,4 +145,46 @@ describe("install required dependency", () => {
       "npm install --save prismic-dom @prismicio/client"
     );
   });
+
+  test("when using nuxt is should install @nuxtjs/prismic vue-slicezone nuxt-sm", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    fileExistsMock.mockReturnValueOnce(false);
+    fileExistsMock.mockReturnValueOnce(true);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    await installRequiredDependencies(
+      fakedir,
+      Core.Utils.Framework.FrameworkEnum.nuxt
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone"
+    );
+  });
+
+  test("when using vue is should install @prismicio/vue @prismicio/client prismic-dom vue-slicezone", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    fileExistsMock.mockReturnValueOnce(false);
+    fileExistsMock.mockReturnValueOnce(true);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    await installRequiredDependencies(
+      fakedir,
+      Core.Utils.Framework.FrameworkEnum.vue
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      "npm install --save @prismicio/vue @prismicio/client prismic-dom vue-slicezone"
+    );
+  });
 });
