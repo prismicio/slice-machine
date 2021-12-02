@@ -30,7 +30,6 @@ export class TrackerBuilder {
     readonly options: TrackerOptions
   ) {
     if (!key) throw new Error("Missing write key for tracker.");
-    console.log({ credentials });
 
     this.analytics = new Analytics(key, this.options);
     this.slicemachineVersion = smVersion || "default"; //default will be logged if we can't parse package.json
@@ -61,29 +60,24 @@ export class TrackerBuilder {
       libraries: (libs: readonly LibraryUI[]) => {
         const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
-        this.analytics.group(
-          {
-            ...(this.credentials.userId
-              ? { userId: this.credentials.userId }
-              : {}),
-            ...(this.credentials.anonymousId
-              ? { anonymousId: this.credentials.anonymousId }
-              : {}),
-            groupId: validRepo,
-            traits: {
-              manualLibsCount: libs.filter((l) => l.meta.isManual).length,
-              downloadedLibsCount: downloadedLibs.length,
-              npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-              downloadedLibs: downloadedLibs.map(
-                (l) => l.meta.displayName || "Unknown"
-              ),
-              slicemachineVersion: this.slicemachineVersion,
-            },
+        this.analytics.group({
+          ...(this.credentials.userId
+            ? { userId: this.credentials.userId }
+            : {}),
+          ...(this.credentials.anonymousId
+            ? { anonymousId: this.credentials.anonymousId }
+            : {}),
+          groupId: validRepo,
+          traits: {
+            manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+            downloadedLibsCount: downloadedLibs.length,
+            npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+            downloadedLibs: downloadedLibs.map(
+              (l) => l.meta.displayName || "Unknown"
+            ),
+            slicemachineVersion: this.slicemachineVersion,
           },
-          (err: any, data?: unknown) => {
-            console.log({ err, data: JSON.stringify(data) });
-          }
-        );
+        });
       },
     };
   };

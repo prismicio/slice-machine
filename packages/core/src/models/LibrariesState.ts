@@ -40,7 +40,11 @@ export const Component = t.intersection([
 export type Component = t.TypeOf<typeof Component>;
 
 // dictionnary of componentId -> component
-export const Library = t.record(t.string, Component);
+export const Library = t.type({
+  name: t.union([t.string, t.undefined]),
+  version: t.union([t.string, t.undefined]),
+  components: t.record(t.string, Component),
+});
 export type Library = t.TypeOf<typeof Library>;
 
 // dictionnary of libraryId -> components
