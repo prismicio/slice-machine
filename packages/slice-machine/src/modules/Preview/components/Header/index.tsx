@@ -15,6 +15,7 @@ type PropTypes = {
   Model: SliceState;
   variation: Models.VariationAsArray | undefined;
   handleScreenSizeChange: Function;
+  canvasUrl: string;
   size: Size;
 };
 
@@ -40,6 +41,7 @@ export default function Header({
   Model,
   variation,
   handleScreenSizeChange,
+  canvasUrl,
   size,
 }: PropTypes) {
   return (
@@ -81,7 +83,10 @@ export default function Header({
           justifyContent: "end",
         }}
       >
-        <Button onClick={() => redirect(Model, variation)}>Leave</Button>
+        <p>{canvasUrl}</p>
+        <Button ml={2} onClick={() => redirect(Model, variation)}>
+          Leave
+        </Button>
       </Flex>
     </Box>
   );
