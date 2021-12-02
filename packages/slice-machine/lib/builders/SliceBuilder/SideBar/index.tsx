@@ -1,5 +1,5 @@
-import React from "react";
-import { memo } from "react";
+import React, { memo } from "react";
+import type Models from "@slicemachine/core/build/src/models";
 import { Box, Button, Card as ThemeCard, Flex, Heading, Text } from "theme-ui";
 import Link from "next/link";
 
@@ -7,14 +7,13 @@ import Card from "@components/Card";
 
 import ImagePreview from "./components/ImagePreview";
 import SliceState from "@models/ui/SliceState";
-import { AsArray, Variation } from "@models/common/Variation";
 import { useRouter } from "next/router";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
 type SideBarProps = {
   Model: SliceState;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
   imageLoading: boolean;
   isPreviewRunning: boolean;
   onScreenshot: () => void;

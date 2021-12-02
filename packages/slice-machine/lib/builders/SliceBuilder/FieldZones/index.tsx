@@ -5,13 +5,14 @@ import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
+import type Models from "@slicemachine/core/build/src/models";
+import { WidgetsArea } from "@slicemachine/core/build/src/models/Variation";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
 import { SliceMockConfig } from "@models/common/MockConfig";
 import SliceState from "@models/ui/SliceState";
-import { AsArray, Variation, WidgetsArea } from "@models/common/Variation";
 import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
 
@@ -25,7 +26,7 @@ const dataTipText2: string = `The repeatable zone is for a group<br/>
 
 type FieldZonesProps = {
   Model: SliceState;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
   store: SliceStore;
 };
 
@@ -34,7 +35,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   store,
   variation,
 }) => {
-  const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
+  const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
     store
       .variation(variation.id)
       .deleteWidgetMockConfig(Model.mockConfig, widgetArea, key);
@@ -42,7 +43,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   };
 
   const _getFieldMockConfig =
-    (widgetArea: WidgetsArea) =>
+    (widgetArea: Models.WidgetsArea) =>
     ({ apiId }: { apiId: string }) => {
       return SliceMockConfig.getFieldMockConfig(
         Model.mockConfig,
@@ -53,7 +54,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     };
 
   const _onSave =
-    (widgetArea: WidgetsArea) =>
+    (widgetArea: Models.WidgetsArea) =>
     ({ apiId: previousKey, newKey, value, mockValue }: any) => {
       if (mockValue) {
         store
@@ -76,7 +77,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     };
 
   const _onSaveNewField =
-    (widgetArea: WidgetsArea) =>
+    (widgetArea: Models.WidgetsArea) =>
     ({ id, widgetTypeName }: { id: string; widgetTypeName: string }) => {
       // @ts-expect-error
       const widget = Widgets[widgetTypeName];
@@ -90,18 +91,19 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         .addWidget(widgetArea, id, widget.create(id));
     };
 
-  const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {
-    if (ensureDnDDestination(result)) {
-      return;
-    }
-    store
-      .variation(variation.id)
-      .reorderWidget(
-        widgetArea,
-        result.source.index,
-        result.destination && result.destination.index
-      );
-  };
+  const _onDragEnd =
+    (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
+      if (ensureDnDDestination(result)) {
+        return;
+      }
+      store
+        .variation(variation.id)
+        .reorderWidget(
+          widgetArea,
+          result.source.index,
+          result.destination && result.destination.index
+        );
+    };
 
   return (
     <>
