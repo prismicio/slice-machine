@@ -51,7 +51,7 @@ export const PrismicSharedConfigManager = {
     Files.write(PrismicConfigPath, config, { recursive: false });
   },
 
-  setProps(
+  setProperties(
     props: Partial<PrismicSharedConfig>,
     baseConfig?: PrismicSharedConfig
   ): void {
@@ -73,7 +73,10 @@ export const PrismicSharedConfigManager = {
       )
     );
 
-    PrismicSharedConfigManager.setProps({ cookies: serializedCookies }, config);
+    PrismicSharedConfigManager.setProperties(
+      { cookies: serializedCookies },
+      config
+    );
   },
 
   setAuthCookie(authToken: string): void {

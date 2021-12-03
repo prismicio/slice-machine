@@ -21,7 +21,7 @@ export default function handler(
       err: new Error("Invalid auth payload"),
     }),
     (authRequest: AuthRequest) => {
-      FileSystem.PrismicSharedConfigManager.setProps({
+      FileSystem.PrismicSharedConfigManager.setProperties({
         cookies: Utils.Cookie.serializeCookies(authRequest.cookies),
       });
       return {};

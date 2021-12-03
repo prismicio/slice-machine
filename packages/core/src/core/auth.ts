@@ -132,7 +132,7 @@ export async function startServerAndOpenBrowser(
 
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
-    PrismicSharedConfigManager.setProps({
+    PrismicSharedConfigManager.setProperties({
       cookies: Cookie.serializeCookies(data.cookies),
       base,
     });

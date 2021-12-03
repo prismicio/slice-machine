@@ -230,7 +230,7 @@ router.post(
     const profile = await DefaultClient.profile(req.env.baseUrl, updatedToken);
     if (profile instanceof Error) return res.status(500).json({});
 
-    PrismicSharedConfigManager.setProps({ userId: profile.userId });
+    PrismicSharedConfigManager.setProperties({ userId: profile.userId });
     req.tracker.resolveUser(profile.userId, req.anonymousId);
 
     return res.status(200).json({});

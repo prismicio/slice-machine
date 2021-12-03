@@ -1,5 +1,5 @@
 import Analytics from "analytics-node";
-import { LibraryUI } from "./LibraryUI";
+import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 
 export interface TrackerOptions {
   flushAt?: number | undefined;

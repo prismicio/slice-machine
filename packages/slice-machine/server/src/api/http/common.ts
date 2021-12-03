@@ -2,7 +2,7 @@ import express from "express";
 import getEnv from "../services/getEnv";
 import Environment from "@lib/models/common/Environment";
 import ServerError from "@lib/models/server/ServerError";
-import { TrackerBuilder, Tracker } from "@lib/models/common/tracker";
+import { TrackerBuilder, Tracker } from "../services/tracker";
 
 function stripQuotes(str?: string | undefined): string | undefined {
   if (!str) return;

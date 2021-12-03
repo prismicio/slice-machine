@@ -33,7 +33,6 @@ const testAcceptedTypes = (type: Extensions) => {
     variationId: "variation",
   });
   expect(result).toBeDefined();
-  expect(result?.value).toEqual("123");
   expect(result?.exists).toEqual(true);
 };
 
@@ -58,6 +57,5 @@ test("it prioritizes custom preview path", () => {
     variationId: "variation",
   });
   expect(result).toBeDefined();
-  expect(result?.value).toEqual("456");
   expect(result?.exists).toEqual(true);
 });

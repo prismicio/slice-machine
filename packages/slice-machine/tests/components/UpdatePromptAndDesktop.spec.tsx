@@ -9,9 +9,7 @@ import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
 import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Framework } from "../../lib/models/common/Framework";
 import UpdateModal from "../../components/UpdateVersionModal";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { EnvironmentStoreType } from "@src/modules/environment/types";
-import { TrackerBuilder } from "@lib/models/common/tracker";
+import { TrackerBuilder } from "../../server/src/api/services/tracker";
 import Environment from "@lib/models/common/Environment";
 
 jest.mock("next/router", () => ({
