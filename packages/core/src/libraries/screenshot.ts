@@ -61,7 +61,7 @@ export function resolvePathsToScreenshot({
   from: string;
   sliceName: string;
   variationId: string;
-}): { path: string; value: string; exists: boolean } | undefined {
+}): { path: string; exists: boolean } | undefined {
   const possiblePaths = paths
     .map((base) => {
       return generatePathsToScreenshot({
@@ -77,7 +77,15 @@ export function resolvePathsToScreenshot({
       }));
     })
     .flat();
-  return Files.readFirstOf<string, { exists: boolean }>(possiblePaths)(
-    (v: string) => v
-  );
+
+  const screenshot = Files.readFirstOf<string, { exists: boolean }>(
+    possiblePaths
+  )((v: string) => v);
+
+  if (!screenshot) return screenshot;
+
+  return {
+    path: screenshot.path,
+    exists: screenshot.exists,
+  };
 }

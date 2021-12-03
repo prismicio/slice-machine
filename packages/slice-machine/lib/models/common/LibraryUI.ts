@@ -8,7 +8,7 @@ import Environment from "./Environment";
 
 const LibraryUIMeta = {
   build(isLocal: boolean, libMeta?: Models.LibraryMeta) {
-    const libName = libMeta?.displayName;
+    const libName = libMeta?.name;
 
     const baseMeta = {
       isNodeModule: !isLocal,
@@ -21,8 +21,8 @@ const LibraryUIMeta = {
     return {
       ...libMeta,
       isNodeModule: !isLocal,
-      isDownloaded: isLocal && Boolean(libMeta.displayName),
-      isManual: isLocal && !Boolean(libMeta.displayName),
+      isDownloaded: isLocal && Boolean(libMeta.name),
+      isManual: isLocal && !Boolean(libMeta.name),
     };
   },
 };

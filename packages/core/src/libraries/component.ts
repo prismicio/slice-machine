@@ -170,7 +170,7 @@ export function getComponentInfo(
   const screenshotPaths = (model.variations || [])
     .map((v: VariationAsObject) => {
       const activeScreenshot = resolvePathsToScreenshot({
-        paths: [cwd],
+        paths: [cwd, path.join(cwd, ".slicemachine/assets")],
         from,
         sliceName,
         variationId: v.id,

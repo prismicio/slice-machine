@@ -59,7 +59,7 @@ export interface Screenshot {
 export const LibraryMeta = {
   reader: t.exact(
     t.partial({
-      displayName: t.string,
+      name: t.string,
       version: t.string,
     })
   ),
@@ -73,7 +73,7 @@ export const LibraryMeta = {
     if (!meta) return;
 
     return {
-      displayName: meta.displayName,
+      name: meta.name,
       version: meta.version,
     };
   },

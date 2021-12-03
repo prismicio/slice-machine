@@ -42,7 +42,7 @@ export function formatLibrary(
   );
 
   return {
-    name: library.meta?.displayName,
+    name: library.meta?.name,
     version: library.meta?.version,
     components,
   };
