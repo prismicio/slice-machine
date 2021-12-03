@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.0.1-slicecanvas.3",
+  "version": "1.0.2-alpha.4",
   "license": "MIT",
   "description": "The easiest way to add Slice Machine to your project",
   "bin": {
@@ -42,7 +42,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@slicemachine/core": "1.0.1-slicecanvas.3",
+    "@slicemachine/core": "1.0.2-alpha.4",
     "fp-ts": "^2.11.5",
     "inquirer": "^8.2.0",
     "io-ts": "^2.2.16"
