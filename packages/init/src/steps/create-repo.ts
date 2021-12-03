@@ -3,7 +3,7 @@ import { Communication, Utils, FileSystem } from "@slicemachine/core";
 export function createRepository(
   domain: string,
   framework: Utils.Framework.FrameworkEnum,
-  config: FileSystem.AuthConfig
+  config: FileSystem.PrismicSharedConfig
 ): Promise<void> {
   const spinner = Utils.spinner("Creating Prismic Repository");
   spinner.start();

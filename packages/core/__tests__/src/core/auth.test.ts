@@ -3,9 +3,10 @@ import * as authHelpers from "../../../src/core/auth";
 import { Auth } from "../../../src/core";
 import * as Utils from "../../../src/utils";
 import * as communication from "../../../src/core/communication";
-import * as filesystem from "../../../src/filesystem";
+import { PrismicSharedConfigManager } from "../../../src/filesystem/PrismicSharedConfig";
 
 jest.mock("../../../src/filesystem");
+jest.mock("../../../src/filesystem/PrismicSharedConfig");
 jest.mock("../../../src/core/communication");
 jest.mock("../../../src/utils/poll");
 
@@ -78,7 +79,7 @@ describe("communication", () => {
   });
 
   test("validate session should return null if there is no cookies", async () => {
-    const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
+    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({ base: fakeBase, cookies: "" });
 
     const mockedValidate = communication.validateSession as jest.Mock;
@@ -98,7 +99,7 @@ describe("communication", () => {
   });
 
   test("validate session should return null if there is different bases", async () => {
-    const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
+    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: "other base",
       cookies: "that's some real cookie data",
@@ -121,7 +122,7 @@ describe("communication", () => {
   });
 
   test("validate session should return null when validate session reject the promise", async () => {
-    const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
+    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: fakeBase,
       cookies: "that's some real cookie data",
@@ -144,7 +145,7 @@ describe("communication", () => {
       },
     };
 
-    const mockedConfig = filesystem.getOrCreateAuthConfig as jest.Mock;
+    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: fakeBase,
       cookies: "that's some real cookie data",

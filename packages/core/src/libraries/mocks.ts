@@ -21,7 +21,7 @@ export function resolvePathsToMock({
   from,
   sliceName,
 }: {
-  paths: Array<string>;
+  paths: ReadonlyArray<string>;
   from: string;
   sliceName: string;
 }): { path: string; value: SliceMock | undefined } | undefined {

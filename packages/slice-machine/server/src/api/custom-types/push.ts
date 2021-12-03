@@ -11,6 +11,7 @@ import FakeClient from "@lib/models/common/http/FakeClient";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
 import { CustomType } from "@lib/models/common/CustomType";
+import { RequestWithEnv } from "../http/common";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
@@ -23,10 +24,10 @@ const createOrUpdate = (
   return client.insertCustomType(model);
 };
 
-export default async function handler(query: { id: string }) {
-  const { id } = query;
+export default async function handler(req: RequestWithEnv) {
+  const { id } = req.query;
 
-  const state = await fetchState();
+  const state = await fetchState(req);
 
   if (state.clientError || state.isFake) {
     const isAnAuthenticationError =

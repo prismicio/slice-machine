@@ -22,11 +22,14 @@ import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 import onboarding from "./tracking/onboarding";
+import { RequestWithEnv, WithEnv } from "./http/common";
 
 import {
   TrackingReviewRequest,
   TrackingReviewResponse,
 } from "@lib/models/common/TrackingEvent";
+import DefaultClient from "@lib/models/common/http/DefaultClient";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/src/filesystem/PrismicSharedConfig";
 
 router.use(
   "/__preview",
@@ -48,13 +51,13 @@ router.use(
 
 router.get(
   "/state",
-  async function (_req: express.Request, res: express.Response) {
-    const payload = await state();
+  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+    const payload = await state(req);
     if (payload.clientError) {
       return res.status(payload.clientError.status).json(payload);
     }
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.post(
@@ -169,13 +172,13 @@ router.post(
 
 router.get(
   "/custom-types/push",
-  async function (req: express.Request, res: express.Response) {
-    const payload = await pushCustomType(req.query);
+  WithEnv(async function (req: express.Request, res: express.Response) {
+    const payload = await pushCustomType(req);
     if (payload.err) {
       return res.status(payload.status).json(payload);
     }
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.get(
@@ -213,13 +216,25 @@ router.post(
 
 router.post(
   "/auth",
-  async function (req: express.Request, res: express.Response) {
-    const payload = await postAuth(req.body);
+  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+    const body = req.body;
+
+    const payload = postAuth(body);
     if (payload.err) {
-      return res.status(500).json(req.body);
+      console.error(body);
+      return res.status(500).json(body);
     }
+
+    const updatedToken = PrismicSharedConfigManager.getAuth();
+
+    const profile = await DefaultClient.profile(req.env.baseUrl, updatedToken);
+    if (profile instanceof Error) return res.status(500).json({});
+
+    PrismicSharedConfigManager.setProperties({ userId: profile.userId });
+    req.tracker.resolveUser(profile.userId, req.anonymousId);
+
     return res.status(200).json({});
-  }
+  })
 );
 
 router.use("*", async function (req: express.Request, res: express.Response) {

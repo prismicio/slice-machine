@@ -72,6 +72,7 @@ function start({ cwd, port }, callback) {
       ...process.env,
       CWD: cwd,
       PORT: port,
+      SEGMENT_WRITE_KEY: "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
     },
   });
 
@@ -97,7 +98,7 @@ async function handleManifestState(manifestState, cwd) {
     console.log(
       boxen(
         `🔴 A configuration error was detected!
-        
+
 Error Message:
 "${manifestState.message}"
 
