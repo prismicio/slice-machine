@@ -57,7 +57,6 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                 <Renderer
                   Component={Component}
                   pageProps={pageProps}
-                  {...serverState}
                 />
               ) : (
                 <ToastProvider>
@@ -75,7 +74,6 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                           <Renderer
                             Component={Component}
                             pageProps={pageProps}
-                            {...serverState}
                           />
                         </SliceHandler>
                       </AppLayout>
