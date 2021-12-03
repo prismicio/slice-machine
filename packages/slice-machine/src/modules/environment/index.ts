@@ -2,6 +2,9 @@ import { Reducer } from "redux";
 import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
+import Environment, { UpdateVersionInfo } from "@models/common/Environment";
+import Warning from "@models/common/Warning";
+import { ConfigErrors } from "@models/server/ServerState";
 
 const initialState: EnvironmentStoreType = {
   warnings: [],
@@ -17,19 +20,24 @@ export const getEnvironmentCreator = createAction(
 type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
 
 // Selectors
-export const getEnvironment = (store: SliceMachineStoreType) =>
-  store.environment.env;
+export const getEnvironment = (
+  store: SliceMachineStoreType
+): Environment | null => store.environment.env;
 
-export const selectIsThePreviewSetUp = (store: SliceMachineStoreType) =>
-  !!store.environment.env?.userConfig.localSliceCanvasURL;
+export const selectIsThePreviewSetUp = (
+  store: SliceMachineStoreType
+): boolean => !!store.environment.env?.userConfig.localSliceCanvasURL;
 
-export const getWarnings = (store: SliceMachineStoreType) =>
-  store.environment.warnings;
+export const getWarnings = (
+  store: SliceMachineStoreType
+): ReadonlyArray<Warning> => store.environment.warnings;
 
-export const getConfigErrors = (store: SliceMachineStoreType) =>
+export const getConfigErrors = (store: SliceMachineStoreType): ConfigErrors =>
   store.environment.configErrors;
 
-export const getUpdateVersionInfo = (store: SliceMachineStoreType) => {
+export const getUpdateVersionInfo = (
+  store: SliceMachineStoreType
+): UpdateVersionInfo | null => {
   if (!store.environment.env) {
     return null;
   }

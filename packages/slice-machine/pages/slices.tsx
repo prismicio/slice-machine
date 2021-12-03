@@ -1,25 +1,25 @@
 import React, { useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
-import { getFormattedLibIdentifier } from "@lib/utils/lib";
-import Container from "../components/Container";
+import { getFormattedLibIdentifier } from "lib/utils/lib";
+import Container from "components/Container";
 
-import { LibrariesContext } from "../src/models/libraries/context";
-import Environment from "@lib/models/common/Environment";
+import { LibrariesContext } from "src/models/libraries/context";
+import Environment from "lib/models/common/Environment";
 
 import { GoPlus } from "react-icons/go";
 
-import CreateSliceModal from "@components/Forms/CreateSliceModal";
+import CreateSliceModal from "components/Forms/CreateSliceModal";
 
-import { fetchApi } from "@lib/builders/common/fetch";
+import { fetchApi } from "lib/builders/common/fetch";
 
-import Header from "../components/Header";
-import Grid from "../components/Grid";
+import Header from "components/Header";
+import Grid from "components/Grid";
 
-import LibraryState from "@lib/models/ui/LibraryState";
-import SliceState from "@lib/models/ui/SliceState";
-import { SharedSlice } from "@lib/models/ui/Slice";
-import EmptyState from "@components/EmptyState";
+import LibraryState from "lib/models/ui/LibraryState";
+import SliceState from "lib/models/ui/SliceState";
+import { SharedSlice } from "lib/models/ui/Slice";
+import EmptyState from "components/EmptyState";
 
 const CreateSliceButton = ({
   onClick,

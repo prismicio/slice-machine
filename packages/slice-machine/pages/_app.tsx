@@ -1,17 +1,18 @@
-import { Provider } from "react-redux";
-import configureStore from "src/redux/store";
 import React, { ReactPropTypes, useEffect, useState } from "react";
+import { Provider } from "react-redux";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
 
-import theme from "../src/theme";
+import configureStore from "src/redux/store";
+
+import theme from "src/theme";
 // @ts-ignore
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
-import LoadingPage from "../components/LoadingPage";
-import SliceMachineApp from "../components/App";
-import ConfigErrors from "../components/ConfigErrors";
+import LoadingPage from "components/LoadingPage";
+import SliceMachineApp from "components/App";
+import ConfigErrors from "components/ConfigErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -20,11 +21,11 @@ import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
 
-import ServerState from "@lib/models/server/ServerState";
-import AppState from "@lib/models/common/AppState";
-import ServerError from "@lib/models/server/ServerError";
+import ServerState from "lib/models/server/ServerState";
+import AppState from "lib/models/common/AppState";
+import ServerError from "lib/models/server/ServerError";
 
-import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { LibraryUI } from "lib/models/common/LibraryUI";
 import Head from "next/head";
 
 async function fetcher(url: string): Promise<any> {
