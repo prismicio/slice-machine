@@ -1,22 +1,15 @@
-import { AsArray, AsObject, Variation } from "./Variation";
-
-interface Slice<F extends AsArray | AsObject> {
-  id: string;
-  type: "SharedSlice";
-  name: string;
-  description?: string;
-  variations: ReadonlyArray<Variation<F>>;
-}
+import type Models from "@slicemachine/core/build/src/models";
+import { Variation } from "./Variation";
 
 const Slice = {
-  toObject(slice: Slice<AsArray>): Slice<AsObject> {
+  toObject(slice: Models.SliceAsArray): Models.SliceAsObject {
     return {
       ...slice,
       variations: slice.variations.map(Variation.toObject),
     };
   },
 
-  toArray(slice: Slice<AsObject>): Slice<AsArray> {
+  toArray(slice: Models.SliceAsObject): Models.SliceAsArray {
     return {
       ...slice,
       variations: slice.variations.map(Variation.toArray),

@@ -1,12 +1,10 @@
 import React from "react";
+import type Models from "@slicemachine/core/build/src/models";
 import { useModelReducer } from "../slice/context";
 
 import Environment from "../../../lib/models/common/Environment";
-import { Library } from "../../../lib/models/common/Library";
-import Slice from "../../../lib/models/common/Slice";
-import { AsObject } from "../../../lib/models/common/Variation";
-
 import LibraryState from "../../../lib/models/ui/LibraryState";
+import { LibraryUI } from "../../../lib/models/common/LibraryUI";
 
 import { SliceMockConfig } from "../../../lib/models/common/MockConfig";
 
@@ -15,9 +13,9 @@ export const LibrariesContext = React.createContext<
 >([]);
 
 type LibraryHandlerProps = {
-  libraries: ReadonlyArray<Library>;
+  libraries: ReadonlyArray<LibraryUI>;
   env: Environment;
-  remoteSlices?: ReadonlyArray<Slice<AsObject>>;
+  remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
 };
 
 const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({

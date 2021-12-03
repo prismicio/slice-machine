@@ -1,13 +1,12 @@
 import path from "path";
 import upload from "./upload";
+import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
 import {
   ReviewTrackingEvent,
   OnboardingTrackingEvent,
   TrackingEventId,
 } from "@lib/models/common/TrackingEvent";
-import { AsObject } from "@lib/models/common/Variation";
-import Slice from "@lib/models/common/Slice";
 
 interface ApiSettings {
   STAGE: string;
@@ -48,7 +47,7 @@ function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
   return PROD;
 }
 
-type Body = Slice<AsObject> | Record<string, unknown> | string;
+type Body = Models.SliceAsObject | Record<string, unknown> | string;
 
 function createFetcher(
   apiUrl: string,

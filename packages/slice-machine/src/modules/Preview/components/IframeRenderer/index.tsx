@@ -19,23 +19,27 @@ function useRendererClient(): readonly [
     setClient(undefined);
     if (element != null) {
       clientRef.current = new RendererClient(element);
-      await clientRef.current.connect();
-      setClient(clientRef.current);
-      const reconnect = async () => {
-        setClient(undefined);
-        await clientRef.current?.connect(true);
+      try {
+        await clientRef.current.connect();
         setClient(clientRef.current);
-      };
-      observerRef.current = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "src") {
-            reconnect().catch((error) => {
-              throw error;
-            });
-          }
+        const reconnect = async () => {
+          setClient(undefined);
+          await clientRef.current?.connect(true);
+          setClient(clientRef.current);
+        };
+        observerRef.current = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "src") {
+              reconnect().catch((error) => {
+                throw error;
+              });
+            }
+          });
         });
-      });
-      observerRef.current.observe(element, { attributeFilter: ["src"] });
+        observerRef.current.observe(element, { attributeFilter: ["src"] });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, []);
   return [client, iframeRef];
@@ -43,9 +47,11 @@ function useRendererClient(): readonly [
 
 export default function IframeRenderer({
   size,
+  canvasUrl,
   sliceView,
 }: {
   size: Size;
+  canvasUrl: string;
   sliceView: SliceView;
 }) {
   const [client, ref] = useRendererClient();
@@ -76,7 +82,7 @@ export default function IframeRenderer({
     >
       <iframe
         ref={ref}
-        src="http://localhost:3001/_canvas"
+        src={canvasUrl}
         style={{
           border: "none",
           height: "100%",

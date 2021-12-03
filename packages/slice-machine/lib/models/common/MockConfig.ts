@@ -1,21 +1,4 @@
-import { WidgetsArea } from "./Variation";
-
-// interface SliceMockConfig {
-//   [variationId: string]: {
-//     primary?: {
-//       [fieldId: string]: {
-//         config?: any,
-//         content?: any
-//       }
-//     },
-//     items?: {
-//       [fieldId: string]: {
-//         config?: any,
-//         content?: any
-//       }
-//     },
-//   }
-// }
+import type Models from "@slicemachine/core/build/src/models";
 
 export interface SliceMockConfig {
   [x: string]: any;
@@ -42,7 +25,7 @@ export const SliceMockConfig = {
   getFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     fieldId: string
   ) {
     return (
@@ -54,7 +37,7 @@ export const SliceMockConfig = {
   deleteFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     fieldId: string
   ) {
     return {
@@ -73,7 +56,7 @@ export const SliceMockConfig = {
   updateFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     previousKey: string,
     fieldId: string,
     value: any

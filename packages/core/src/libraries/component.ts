@@ -1,12 +1,16 @@
 import path from "path";
 import * as t from "io-ts";
-import { ComponentInfo, ComponentMetadata, Preview } from "../models/Library";
+import {
+  ComponentInfo,
+  ComponentMetadata,
+  Screenshot,
+} from "../models/Library";
 
 import { pascalize } from "../utils/str";
 
-import { getPathToScreenshot } from "./screenshot";
+import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../utils/files";
-import { sliceMocks } from "../mocks";
+import { resolvePathsToMock } from "./mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { Slice, SliceAsObject } from "../models/Slice";
 import { VariationAsObject, AsObject } from "../models/Variation";
@@ -82,11 +86,10 @@ function splitExtension(str: string): {
 }
 
 function fromJsonFile<T extends unknown>(
-  slicePath: string,
-  filePath: string,
+  pathToFile: string,
   validate: (payload: unknown) => Error | T
 ): T | Error | null {
-  const fullPath = path.join(slicePath, filePath);
+  const fullPath = path.join(pathToFile);
   const hasFile = Files.exists(fullPath);
 
   if (hasFile) {
@@ -147,11 +150,14 @@ export function getComponentInfo(
 
   const { fileName, extension, isDirectory } = fileInfo;
 
-  const model = fromJsonFile(slicePath, "model.json", (payload) =>
+  const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
     getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
       Slice(AsObject).decode(payload)
     )
   );
+  if (!model) {
+    return;
+  }
   if (model instanceof Error) {
     console.error(
       `Could not parse model ${path.basename(
@@ -160,32 +166,25 @@ export function getComponentInfo(
     );
     return;
   }
-  if (!model) {
-    return;
-  }
 
-  const previewUrls = (model.variations || [])
+  const screenshotPaths = (model.variations || [])
     .map((v: VariationAsObject) => {
-      const activeScreenshot = getPathToScreenshot({
-        cwd,
+      const activeScreenshot = resolvePathsToScreenshot({
+        paths: [cwd],
         from,
         sliceName,
         variationId: v.id,
       });
-      return activeScreenshot && activeScreenshot.path
+      return activeScreenshot
         ? {
-            [v.id]: {
-              hasPreview: !!activeScreenshot,
-              isCustomPreview: activeScreenshot.isCustom,
-              path: activeScreenshot.path,
-            },
+            [v.id]: activeScreenshot,
           }
         : undefined;
     })
     .reduce(
       (
-        acc: { [variationId: string]: Preview },
-        variationPreview: { [variationId: string]: Preview } | undefined
+        acc: { [variationId: string]: Screenshot },
+        variationPreview: { [variationId: string]: Screenshot } | undefined
       ) => {
         return { ...acc, ...variationPreview };
       },
@@ -195,6 +194,13 @@ export function getComponentInfo(
   const nameConflict =
     sliceName !== pascalize(model.id) ? { sliceName, id: model.id } : null;
 
+  /* This illustrates the requirement for apps to pass paths to mocks */
+  const maybeMock = resolvePathsToMock({
+    paths: [cwd, path.join(cwd, ".slicemachine/assets")],
+    from,
+    sliceName,
+  });
+
   return {
     sliceName,
     fileName,
@@ -202,8 +208,8 @@ export function getComponentInfo(
     extension,
     model,
     meta: getMeta(model),
-    mock: sliceMocks(cwd, from, sliceName),
+    mock: maybeMock?.value,
     nameConflict,
-    previewUrls,
+    screenshotPaths,
   };
 }

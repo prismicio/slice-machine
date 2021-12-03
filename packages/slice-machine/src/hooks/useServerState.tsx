@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { ServerState } from "@lib/models/server/ServerState";
+import ServerState from "@lib/models/server/ServerState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const useServerState = (serverState: ServerState | undefined) => {

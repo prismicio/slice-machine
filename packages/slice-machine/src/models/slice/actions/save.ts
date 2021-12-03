@@ -1,7 +1,7 @@
+import type Models from "@slicemachine/core/build/src/models";
 import { Variation } from "../../../../lib/models/common/Variation";
 import { fetchApi } from "../../../../lib/builders/common/fetch";
 import SliceState from "../../../../lib/models/ui/SliceState";
-import { Preview } from "../../../../lib/models/common/Component";
 import { ActionType } from "./ActionType";
 import { ToastPayload } from "../../../../src/ToastProvider/utils";
 
@@ -20,7 +20,7 @@ export default function save(
           sliceName: slice.infos.sliceName,
           from: slice.from,
           model: {
-            ...slice.jsonModel,
+            ...slice.model,
             variations: slice.variations.map(Variation.toObject),
           },
           mockConfig: slice.mockConfig,
@@ -31,7 +31,7 @@ export default function save(
       onSuccess({
         previewUrls,
       }: {
-        previewUrls: { [variationId: string]: Preview };
+        previewUrls: { [variationId: string]: Models.Screenshot };
       }) {
         const savedState = {
           ...slice,

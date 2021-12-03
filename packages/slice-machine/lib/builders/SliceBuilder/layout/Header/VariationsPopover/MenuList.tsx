@@ -1,12 +1,11 @@
 import React from "react";
-
-import { Variation, AsArray } from "../../../../../models/common/Variation";
+import type Models from "@slicemachine/core/build/src/models";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{
-  defaultValue: Variation<AsArray>;
-  variations: ReadonlyArray<Variation<AsArray>>;
-  onChange: (selected: Variation<AsArray>) => void;
+  defaultValue: Models.VariationAsArray;
+  variations: ReadonlyArray<Models.VariationAsArray>;
+  onChange: (selected: Models.VariationAsArray) => void;
   MenuItemAction?: React.ReactElement;
 }> = ({ defaultValue, variations, MenuItemAction, onChange }) => {
   return (
@@ -55,9 +54,9 @@ const MenuList: React.FunctionComponent<{
 export default MenuList;
 
 const MenuItem: React.FunctionComponent<{
-  value: Variation<AsArray>;
+  value: Models.VariationAsArray;
   isActive: boolean;
-  onClick: ((v: Variation<AsArray>) => void) | Function;
+  onClick: ((v: Models.VariationAsArray) => void) | Function;
 }> = ({ value, isActive, onClick }) => {
   return (
     <Box

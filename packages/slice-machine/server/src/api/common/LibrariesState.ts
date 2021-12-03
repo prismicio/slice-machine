@@ -1,7 +1,10 @@
+import type Models from "@slicemachine/core/build/src/models";
 import Environment from "@lib/models/common/Environment";
-import type { Models } from "@slicemachine/core";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
+const { handleLibraryPath } = Libraries;
+const { LibrariesStatePath } = FileSystem;
+const { Files } = Utils;
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,
@@ -10,26 +13,25 @@ const DEFAULT_IMAGE_DIMENSIONS = {
 
 export function generateState(env: Environment): void {
   const libraries = (env.userConfig.libraries || [])
-    .map((lib) => Libraries.handleLibraryPath(env.cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Models.Library.Library>;
+    .map((lib) => handleLibraryPath(env.cwd, lib))
+    .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 
   const state = formatLibraries(libraries);
-  Utils.Files.write(FileSystem.LibrariesStatePath(env.cwd), state);
+  Files.write(LibrariesStatePath(env.cwd), state);
 }
 
 export function formatLibraries(
-  libraries: ReadonlyArray<Models.Library.Library>
+  libraries: ReadonlyArray<Models.Library<Models.Component>>
 ): Models.LibrariesState.Libraries {
-  const t = libraries.reduce((acc, library) => {
+  return libraries.reduce<Models.LibrariesState.Libraries>((acc, library) => {
     return { ...acc, [library.name]: formatLibrary(library) };
   }, {});
-  return t;
 }
 
 export function formatLibrary(
-  library: Models.Library.Library
+  library: Models.Library<Models.Component>
 ): Models.LibrariesState.Library {
-  return library.components.reduce(
+  return library.components.reduce<Models.LibrariesState.Library>(
     (acc, component) => ({
       ...acc,
       [component.model.id]: formatComponent(component),
@@ -39,10 +41,9 @@ export function formatLibrary(
 }
 
 function getImageDimensions(imagePath: string | undefined) {
-  if (!imagePath || !Utils.Files.exists(imagePath))
-    return DEFAULT_IMAGE_DIMENSIONS;
+  if (!imagePath || Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
 
-  const imageBuffer = Utils.Files.readBuffer(imagePath);
+  const imageBuffer = Files.readBuffer(imagePath);
   const result = probe.sync(imageBuffer);
 
   if (!result) return DEFAULT_IMAGE_DIMENSIONS;
@@ -51,7 +52,7 @@ function getImageDimensions(imagePath: string | undefined) {
 }
 
 export function formatComponent(
-  slice: Models.Library.Component
+  slice: Models.Component
 ): Models.LibrariesState.Component {
   return {
     library: slice.from,
@@ -73,18 +74,18 @@ export function formatComponent(
       isDirectory: slice.infos.isDirectory,
       extension: slice.infos.extension,
     },
-    previewUrls: !slice.infos.previewUrls
+    screenshotPaths: !slice.infos.screenshotPaths
       ? {}
       : Object.entries(
-          slice.infos.previewUrls
-        ).reduce<Models.LibrariesState.ComponentPreviews>(
-          (acc, [variationId, preview]) => {
+          slice.infos.screenshotPaths
+        ).reduce<Models.LibrariesState.ComponentScreenshots>(
+          (acc, [variationId, screenshot]) => {
             return {
               ...acc,
               [variationId]: {
-                hasPreview: preview.hasPreview,
-                path: preview.path,
-                ...getImageDimensions(preview.path),
+                exists: screenshot.exists,
+                path: screenshot.path,
+                ...getImageDimensions(screenshot.path),
               },
             };
           },

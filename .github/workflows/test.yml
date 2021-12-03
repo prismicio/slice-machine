@@ -17,6 +17,9 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm i
+      - name: Build slice machine core
+        working-directory: ./packages/core
+        run: npm run build
       - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
@@ -27,9 +30,6 @@ jobs:
         run: lerna run lint
       - name: Audit
         run: lerna run audit
-      - name: Build slice machine core
-        working-directory: ./packages/core
-        run: npm run build
       - name: Build slice machine init
         working-directory: ./packages/init
         run: npm run build

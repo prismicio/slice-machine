@@ -10,7 +10,7 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint-staged": "lint-staged",
-    "build": "npm run test && lerna run build --stream --parallel",
+    "build": "lerna run build && npm run test",
     "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",

@@ -1,5 +1,5 @@
+import type Models from "@slicemachine/core/build/src/models";
 import getEnv from "./services/getEnv";
-import { Preview } from "@lib/models/common/Component";
 import Previews from "./previews";
 
 export default async function handler({
@@ -11,23 +11,20 @@ export default async function handler({
 }): Promise<{
   err: Error | undefined;
   reason: string | undefined;
-  previews: ReadonlyArray<Preview>;
+  previews: Record<string, Models.Screenshot>;
 }> {
   const { env } = await getEnv();
-  const generatedPreviews = await Previews.generateForSlice(
+  const [failedPreviews, generatedPreviews] = await Previews.generateForSlice(
     env,
     from,
     sliceName
   );
-  const failedPreviewsIds = generatedPreviews
-    .filter((p) => !p.hasPreview)
-    .map((p) => p.variationId);
 
   let err, reason;
-  if (failedPreviewsIds?.length) {
-    const message = `Could not generate previews for variations: ${failedPreviewsIds.join(
-      " | "
-    )}`;
+  if (failedPreviews.length) {
+    const message = `Could not generate previews for variations: ${failedPreviews
+      .map((f) => f.variationId)
+      .join(" | ")}`;
     err = new Error(message);
     reason = message;
   }
@@ -42,8 +39,12 @@ export default async function handler({
   return {
     err,
     reason,
-    previews: mergedPreviews.filter(
-      (p) => p.hasPreview
-    ) as ReadonlyArray<Preview>,
+    previews: Object.entries(mergedPreviews).reduce((acc, [variationId, p]) => {
+      if (!p.exists) return acc;
+      return {
+        ...acc,
+        [variationId]: p,
+      };
+    }, {}),
   };
 }

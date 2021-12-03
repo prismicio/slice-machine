@@ -1,10 +1,13 @@
 import { memo } from "react";
+import Link from "next/link";
 import { Box, Flex, Card as ThemeCard, Heading } from "theme-ui";
 
 import Card from "components/Card/";
 
 import Li from "./components/Li";
 import ImagePreview from "./components/ImagePreview";
+
+import * as Links from "@builders/SliceBuilder/links";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -17,11 +20,16 @@ const SideBar = ({
   onScreenshot,
   onHandleFile,
 }) => {
-  const {
-    infos: { previewUrls },
-  } = Model;
+  const { screenshotUrls } = Model;
 
-  console.log("IMPLEMENT preventScreenshot");
+  console.log("IMPLEMENT preventScreenshot", variation, Model);
+
+  const { as, href } = Links.variation({
+    lib: Model.href,
+    sliceName: Model.infos.sliceName,
+    variationId: variation.id,
+    isPreview: true,
+  });
 
   return (
     <Box
@@ -33,14 +41,18 @@ const SideBar = ({
     >
       <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
         <MemoizedImagePreview
-          src={previewUrls[variation.id] && previewUrls[variation.id].url}
+          src={screenshotUrls[variation.id] && screenshotUrls[variation.id].url}
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
           preventScreenshot={false}
         />
       </Card>
-      <ThemeCard mt={3}>Card</ThemeCard>
+      <ThemeCard mt={3}>
+        <Link as={as} href={href} passHref>
+          <a target="_blank">Open Preview</a>
+        </Link>
+      </ThemeCard>
     </Box>
   );
 };

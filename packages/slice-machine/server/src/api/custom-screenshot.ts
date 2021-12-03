@@ -1,13 +1,15 @@
-import { getPathToScreenshot } from "@lib/queries/screenshot";
 import getEnv from "./services/getEnv";
-import { CustomPaths } from "@lib/models/paths";
 import Files from "@lib/utils/files";
 
-type CustomScreenshotResponse = {
-  isCustomPreview: boolean;
-  hasPreview: boolean;
-  url: string;
-};
+import {
+  resolvePathsToScreenshot,
+  createPathToScreenshot,
+  Extensions,
+} from "@slicemachine/core/build/src/libraries/screenshot";
+import {
+  createScreenshotUI,
+  ScreenshotUI,
+} from "@lib/models/common/ComponentUI";
 
 export default async function handler(
   file: File & { path: string },
@@ -16,32 +18,28 @@ export default async function handler(
     sliceName,
     variationId,
   }: { from: string; sliceName: string; variationId: string }
-): Promise<CustomScreenshotResponse> {
+): Promise<ScreenshotUI> {
   const { env } = await getEnv();
 
-  const activeScreenshot = getPathToScreenshot({
-    cwd: env.cwd,
+  const maybeCustomScreenshot = resolvePathsToScreenshot({
+    paths: [env.cwd],
     from,
     sliceName,
     variationId,
   });
-  if (activeScreenshot && activeScreenshot.isCustom) {
-    Files.remove(activeScreenshot.path);
+  if (maybeCustomScreenshot) {
+    Files.remove(maybeCustomScreenshot.path);
   }
 
-  const previewPath = CustomPaths(env.cwd)
-    .library(from)
-    .slice(sliceName)
-    .variation(variationId)
-    .preview(`preview.${file.type.split("/")[1]}`);
+  const pathToScreenshot = createPathToScreenshot({
+    path: env.cwd,
+    from,
+    sliceName,
+    variationId,
+    extension: file.type.split("/")[1] as Extensions,
+  });
 
-  Files.copy(file.path, previewPath, { recursive: true });
+  Files.copy(file.path, pathToScreenshot, { recursive: true });
 
-  return {
-    isCustomPreview: true,
-    hasPreview: true,
-    url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-      previewPath
-    )}&uniq=${Math.random()}`,
-  };
+  return createScreenshotUI(env.baseUrl, pathToScreenshot);
 }

@@ -1,4 +1,4 @@
-import { WidgetsArea } from "../../../../../lib/models/common/Variation";
+import type Models from "@slicemachine/core/build/src/models";
 import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
 import { ActionType } from "./ActionType";
 
@@ -8,7 +8,7 @@ export function updateWidgetMockConfig(
   return (_variationId: string) => {
     return (
       sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
+      widgetArea: Models.WidgetsArea,
       previousKey: string,
       fieldId: string,
       value: any
@@ -36,7 +36,7 @@ export function deleteWidgetMockConfig(
   return (_variationId: string) => {
     return (
       sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
+      widgetArea: Models.WidgetsArea,
       fieldId: string
     ): any => {
       if (!sliceMockConfig) return;

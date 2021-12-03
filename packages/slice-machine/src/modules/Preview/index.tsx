@@ -27,6 +27,10 @@ export default function Preview() {
     { sliceID: Model.infos.model.id, variationID: variation.id },
   ];
 
+  const canvasUrl = `http://localhost:${
+    process.env.NODE_ENV === "development" ? "3001" : "3000"
+  }/_canvas`;
+
   return (
     <div>
       <Header
@@ -34,9 +38,14 @@ export default function Preview() {
         Model={Model}
         variation={variation}
         handleScreenSizeChange={handleScreenSizeChange}
+        canvasUrl={canvasUrl}
         size={state.size}
       />
-      <IframeRenderer size={state.size} sliceView={sliceView} />
+      <IframeRenderer
+        size={state.size}
+        canvasUrl={canvasUrl}
+        sliceView={sliceView}
+      />
     </div>
   );
 }

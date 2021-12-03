@@ -1,10 +1,9 @@
 import router from "next/router";
 import { Box, Text, Flex, Button } from "theme-ui";
+import * as Models from "@slicemachine/core/build/src/models";
 
 import VarationsPopover from "@builders/SliceBuilder/layout/Header/VariationsPopover";
 
-import { Variation } from "@lib/models/common/Variation";
-import { AsArray } from "@lib/models/common/Variation";
 import SliceState from "@lib/models/ui/SliceState";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
@@ -14,8 +13,9 @@ import * as Links from "@builders/SliceBuilder/links";
 type PropTypes = {
   title: string;
   Model: SliceState;
-  variation: Variation<AsArray> | undefined;
+  variation: Models.VariationAsArray | undefined;
   handleScreenSizeChange: Function;
+  canvasUrl: string;
   size: Size;
 };
 
@@ -41,6 +41,7 @@ export default function Header({
   Model,
   variation,
   handleScreenSizeChange,
+  canvasUrl,
   size,
 }: PropTypes) {
   return (
@@ -82,7 +83,10 @@ export default function Header({
           justifyContent: "end",
         }}
       >
-        <Button onClick={() => redirect(Model, variation)}>Leave</Button>
+        <p>{canvasUrl}</p>
+        <Button ml={2} onClick={() => redirect(Model, variation)}>
+          Leave
+        </Button>
       </Flex>
     </Box>
   );

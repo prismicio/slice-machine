@@ -1,43 +1,46 @@
+import type Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
 import Environment from "@lib/models/common/Environment";
-import { Preview } from "@lib/models/common/Component";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
-import { createScreenshotUrl } from "@lib/utils";
 import { handleStorybookPreview } from "./common/storybook";
-import { getPathToScreenshot } from "@lib/queries/screenshot";
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import {
+  createScreenshotUI,
+  ScreenshotUI,
+} from "@lib/models/common/ComponentUI";
 
-type Previews = ReadonlyArray<
-  { variationId: string; hasPreview: boolean; error: Error } | Preview
->;
+type Screenshots = Record<Models.VariationAsObject["id"], Models.Screenshot>;
 
 export default {
   async generateForSlice(
     env: Environment,
     libraryName: string,
     sliceName: string
-  ): Promise<
-    ReadonlyArray<
-      { variationId: string; error: Error; hasPreview: boolean } | Preview
-    >
-  > {
-    let result: Previews = [];
+  ): Promise<[{ error: Error; variationId: string }[], Screenshots]> {
+    let result: Screenshots = {};
+    let failures: { error: Error; variationId: string }[] = [];
 
     const model = Files.readJson(
       CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
     );
     for (let i = 0; i < model.variations.length; i += 1) {
       const variation = model.variations[i];
-      result = result.concat([
-        await this.generateForVariation(
-          env,
-          libraryName,
-          sliceName,
-          variation.id
-        ),
-      ]);
+      const generateResult = await this.generateForVariation(
+        env,
+        libraryName,
+        sliceName,
+        variation.id
+      );
+      if (generateResult instanceof Error) {
+        failures = failures.concat([
+          { error: generateResult, variationId: variation.id },
+        ]);
+      } else {
+        result = { ...result, [variation.id]: generateResult };
+      }
     }
 
-    return result;
+    return [failures, result];
   },
 
   async generateForVariation(
@@ -45,11 +48,9 @@ export default {
     libraryName: string,
     sliceName: string,
     variationId: string
-  ): Promise<
-    { variationId: string; hasPreview: boolean; error: Error } | Preview
-  > {
-    console.log("Todo createScreenshotUrl");
-    const screenshotUrl = createScreenshotUrl();
+  ): Promise<Error | ScreenshotUI> {
+    console.log("refactor createScreenshotUrl");
+    const screenshotUrl = "⚠ The URL of slice-canvas based on params";
     const pathToFile = GeneratedPaths(env.cwd)
       .library(libraryName)
       .slice(sliceName)
@@ -60,47 +61,41 @@ export default {
       screenshotUrl,
       pathToFile,
     });
-    if (maybeError)
-      return {
-        variationId,
-        error: new Error(maybeError as string),
-        hasPreview: false,
-      };
+    if (maybeError instanceof Error) {
+      return maybeError;
+    }
 
-    return {
-      variationId,
-      isCustomPreview: false,
-      hasPreview: true,
-      url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-        pathToFile
-      )}&uniq=${Math.random()}`,
-    };
+    return createScreenshotUI(env.baseUrl, pathToFile);
   },
 
   mergeWithCustomScreenshots(
-    previewUrls: Previews,
+    screenshotPaths: Screenshots,
     env: Environment,
     from: string,
     sliceName: string
-  ) {
-    return previewUrls.map((p) => {
-      const maybePreviewPath = getPathToScreenshot({
-        cwd: env.cwd,
-        from,
-        sliceName,
-        variationId: p.variationId,
-      });
-      if (maybePreviewPath?.isCustom) {
-        return {
-          variationId: p.variationId,
-          isCustomPreview: true,
-          hasPreview: true,
-          url: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-            maybePreviewPath.path
-          )}&uniq=${Math.random()}`,
-        };
+  ): Screenshots {
+    const entries = Object.entries(screenshotPaths).map(
+      ([variationId, screenshot]) => {
+        const maybePreviewPath = resolvePathsToScreenshot({
+          paths: [env.cwd],
+          from,
+          sliceName,
+          variationId: variationId,
+        });
+        if (maybePreviewPath) {
+          return [
+            variationId,
+            {
+              exists: true,
+              path: `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
+                maybePreviewPath.path
+              )}&uniq=${Math.random()}`,
+            },
+          ];
+        }
+        return [variationId, screenshot];
       }
-      return p;
-    });
+    );
+    return Object.fromEntries(entries);
   },
 };

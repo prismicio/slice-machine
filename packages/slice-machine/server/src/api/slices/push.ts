@@ -1,17 +1,17 @@
+import path from "path";
+import type Models from "@slicemachine/core/build/src/models";
 import { snakelize } from "@lib/utils/str";
 
 import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 import Files from "@lib/utils/files";
 
-import { getPathToScreenshot } from "@lib/queries/screenshot";
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 
 import { onError } from "../common/error";
 import { purge, upload } from "../upload";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
-import { Variation, AsObject } from "@lib/models/common/Variation";
-import Slice from "@lib/models/common/Slice";
 import { CustomPaths } from "@lib/models/paths";
 import Environment from "@lib/models/common/Environment";
 
@@ -21,9 +21,9 @@ const createOrUpdate = async ({
   model,
   client,
 }: {
-  slices: ReadonlyArray<Slice<AsObject>>;
+  slices: ReadonlyArray<Models.SliceAsObject>;
   sliceName: string;
-  model: Slice<AsObject>;
+  model: Models.SliceAsObject;
   client: DefaultClient | FakeClient;
 }) => {
   if (slices.find((e) => e.id === snakelize(sliceName))) {
@@ -35,7 +35,7 @@ const createOrUpdate = async ({
 
 export async function handler(
   env: Environment,
-  slices: ReadonlyArray<Slice<AsObject>>,
+  slices: ReadonlyArray<Models.SliceAsObject>,
   { sliceName, from }: { sliceName: string; from: string }
 ) {
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
@@ -46,15 +46,16 @@ export async function handler(
     if (err) return err;
 
     const variationIds = jsonModel.variations.map(
-      (v: Variation<AsObject>) => v.id
+      (v: Models.VariationAsObject) => v.id
     );
 
     const imageUrlsByVariation: { [variationId: string]: string | null } = {};
 
     for (let i = 0; i < variationIds.length; i += 1) {
       const variationId = variationIds[i];
-      const screenshot = getPathToScreenshot({
-        cwd: env.cwd,
+
+      const screenshot = resolvePathsToScreenshot({
+        paths: [env.cwd, path.join(env.cwd, ".slicemchine/assets")],
         from,
         sliceName,
         variationId,
@@ -80,10 +81,12 @@ export async function handler(
 
     console.log("[slice/push]: pushing slice model to Prismic");
 
-    const variations = jsonModel.variations.map((v: Variation<AsObject>) => ({
-      ...v,
-      imageUrl: imageUrlsByVariation[v.id],
-    }));
+    const variations = jsonModel.variations.map(
+      (v: Models.VariationAsObject) => ({
+        ...v,
+        imageUrl: imageUrlsByVariation[v.id],
+      })
+    );
 
     const res = await createOrUpdate({
       slices,
@@ -105,7 +108,10 @@ export async function handler(
     return {};
   } catch (e) {
     console.log(e);
-    return onError(e, "An unexpected error occurred while pushing slice");
+    return onError(
+      e as Response,
+      "An unexpected error occurred while pushing slice"
+    );
   }
 }
 

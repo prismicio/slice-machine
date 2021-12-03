@@ -10,7 +10,7 @@ import {
 } from "theme-ui";
 
 import SliceState from "../SliceState";
-import { LibStatus } from "../../common/Library";
+import { LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
@@ -73,11 +73,11 @@ const SliceVariations = ({
 
 const SliceThumbnail = ({
   heightInPx,
-  previewUrl,
+  screenshotUrl,
   withShadow = true,
 }: {
   heightInPx: string;
-  previewUrl?: string;
+  screenshotUrl?: string;
   withShadow: boolean;
 }) => {
   return (
@@ -104,7 +104,9 @@ const SliceThumbnail = ({
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
-          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : "none",
+          backgroundImage: screenshotUrl
+            ? "url(" + `${screenshotUrl}` + ")"
+            : "none",
         }}
       ></Box>
     </Box>
@@ -138,15 +140,11 @@ export const SharedSlice = {
       return null;
     }
     const variationId = defaultVariation.id;
-    const link = LinkUtil.variation(
-      slice.href,
-      slice.jsonModel.name,
-      variationId
-    );
+    const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url;
+    const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
 
     return (
       <CardWrapper link={link} slice={slice}>
@@ -157,7 +155,7 @@ export const SharedSlice = {
         >
           <SliceThumbnail
             withShadow={false}
-            previewUrl={previewUrl}
+            screenshotUrl={screenshotUrl}
             heightInPx={thumbnailHeightPx}
           />
           <Flex

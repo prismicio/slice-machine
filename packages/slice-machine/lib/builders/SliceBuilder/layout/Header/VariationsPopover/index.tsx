@@ -1,7 +1,7 @@
+import type Models from "@slicemachine/core/build/src/models";
 import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 
-import { Variation, AsArray } from "../../../../../models/common/Variation";
 import MenuList from "./MenuList";
 
 import { Button, Box, ThemeUICSSObject } from "theme-ui";
@@ -10,13 +10,13 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
-  defaultValue?: Variation<AsArray>;
+  defaultValue?: Models.VariationAsArray;
   onNewVariation?: Function;
-  variations: ReadonlyArray<Variation<AsArray>>;
-  onChange: (selected: Variation<AsArray>) => void;
+  variations: ReadonlyArray<Models.VariationAsArray>;
+  onChange: (selected: Models.VariationAsArray) => void;
 }> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [current, setCurrent] = useState<Variation<AsArray>>(
+  const [current, setCurrent] = useState<Models.VariationAsArray>(
     defaultValue || variations[0]
   );
 
@@ -27,7 +27,7 @@ const VarationsPopover: React.FunctionComponent<{
   }, [defaultValue]);
 
   const TRANSITION_DURATION = 200; //ms
-  const handleChange = function (variation: Variation<AsArray>) {
+  const handleChange = function (variation: Models.VariationAsArray) {
     setIsOpen(false);
     setCurrent(variation);
     setTimeout(() => onChange(variation), TRANSITION_DURATION + 10); // time to properly close the popover with transition

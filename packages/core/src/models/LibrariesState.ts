@@ -12,16 +12,16 @@ export const ComponentMeta = t.type({
 });
 export type ComponentMeta = t.TypeOf<typeof ComponentMeta>;
 
-const ComponentPreviews = t.record(
+const ComponentScreenshots = t.record(
   t.string,
   t.type({
-    hasPreview: t.boolean,
+    exists: t.boolean,
     path: t.union([t.string, t.undefined]),
     width: t.union([t.number, t.undefined]),
     height: t.union([t.number, t.undefined]),
   })
 );
-export type ComponentPreviews = t.TypeOf<typeof ComponentPreviews>;
+export type ComponentScreenshots = t.TypeOf<typeof ComponentScreenshots>;
 
 export const Component = t.intersection([
   t.type({
@@ -32,7 +32,7 @@ export const Component = t.intersection([
     meta: ComponentMeta,
   }),
   t.partial({
-    previewUrls: ComponentPreviews,
+    screenshotPaths: ComponentScreenshots,
     name: t.string,
     description: t.string,
   }),

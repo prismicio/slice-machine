@@ -25,7 +25,9 @@ export const findIndexFile = (libPath: string): string | null => {
   }
 };
 
-export const getFormattedLibIdentifier = (libPath: string): {
+export const getFormattedLibIdentifier = (
+  libPath: string
+): {
   isLocal: boolean;
   identifier: string | undefined;
   from: string;
@@ -43,12 +45,15 @@ export const getFormattedLibIdentifier = (libPath: string): {
   };
 };
 
-export function getInfoFromPath(libPath: string, startPath: string): {
-  isLocal: boolean,
-  from: string,
-  pathExists: boolean,
-  pathToLib: string,
-  pathToSlices: string,
+export function getInfoFromPath(
+  startPath: string,
+  libPath: string
+): {
+  isLocal: boolean;
+  from: string;
+  pathExists: boolean;
+  pathToLib: string;
+  pathToSlices: string;
 } {
   const { isLocal, from } = getFormattedLibIdentifier(libPath);
   const pathToLib = path.join(
@@ -58,7 +63,7 @@ export function getInfoFromPath(libPath: string, startPath: string): {
   );
 
   const pathExists = Files.exists(pathToLib);
-  const pathToSlices = path.join(pathToLib, isLocal ? "." : "slices")
+  const pathToSlices = path.join(pathToLib, isLocal ? "." : "slices");
 
   return {
     isLocal,
@@ -68,4 +73,3 @@ export function getInfoFromPath(libPath: string, startPath: string): {
     pathToSlices,
   };
 }
-
