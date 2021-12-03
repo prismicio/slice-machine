@@ -4,7 +4,7 @@ import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-import NuxtSetupSteps from "@builders/SliceBuilder/SetupDrawer/NuxtSetupSteps";
+import NextSetupSteps from "@builders/SliceBuilder/SetupDrawer/NextSetupSteps";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -48,7 +48,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             borderBottom: (t) => `1px solid ${t.colors?.borders}`,
           }}
         >
-          <Text sx={{ fontSize: 3 }}>Setup Slice Canvas</Text>
+          <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
           <Close color={"#4E4E55"} onClick={onClose} />
         </Flex>
         <Flex
@@ -61,7 +61,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            <NuxtSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+            <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
           </Flex>
         </Flex>
         <HelpSection />
