@@ -10,7 +10,6 @@ import theme from "src/theme";
 
 import LoadingPage from "components/LoadingPage";
 import SliceMachineApp from "components/App";
-import ConfigErrors from "components/ConfigErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -22,7 +21,6 @@ import "src/css/drawer.css";
 import "highlight.js/styles/atom-one-dark.css";
 
 import ServerState from "lib/models/server/ServerState";
-import ServerError from "lib/models/server/ServerError";
 import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import Head from "next/head";
@@ -57,11 +55,6 @@ const RenderStates = {
     pageProps: any;
     rest: any;
   }) => <Component {...pageProps} {...rest} />,
-  ConfigError: ({
-    configErrors,
-  }: {
-    configErrors: { [errorKey: string]: ServerError };
-  }) => <ConfigErrors errors={configErrors} />,
 };
 
 const { store, persistor } = configureStore();
