@@ -1,18 +1,6 @@
 import path from "path";
 import Files from "./files";
 
-enum Prefix {
-  A = "@/",
-  B = "~/",
-  C = "/",
-}
-
-const Identifiers: Record<Prefix, number> = {
-  "@/": 2,
-  "~/": 2,
-  "/": 1,
-};
-
 export const findIndexFile = (libPath: string): string | null => {
   try {
     const dir = Files.readDirectory(libPath);
@@ -23,20 +11,4 @@ export const findIndexFile = (libPath: string): string | null => {
   } catch (e) {
     return null;
   }
-};
-
-export const getFormattedLibIdentifier = (
-  libPath: string
-): { identifier: string | undefined; from: string; isLocal: boolean } => {
-  const maybeIdentifier = Object.keys(Identifiers).find(
-    (e) => libPath.indexOf(e) === 0
-  );
-  const isLocal = !!maybeIdentifier;
-  return {
-    isLocal,
-    identifier: maybeIdentifier,
-    from: isLocal
-      ? libPath.slice(Identifiers[maybeIdentifier as Prefix])
-      : libPath,
-  };
 };
