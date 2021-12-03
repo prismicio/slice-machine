@@ -57,7 +57,7 @@ export function resolvePathsToScreenshot({
   sliceName,
   variationId,
 }: {
-  paths: Array<string>;
+  paths: ReadonlyArray<string>;
   from: string;
   sliceName: string;
   variationId: string;

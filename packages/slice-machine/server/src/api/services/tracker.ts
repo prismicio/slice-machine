@@ -4,8 +4,6 @@ import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 export interface TrackerOptions {
   flushAt?: number | undefined;
   flushInterval?: number | undefined;
-  host?: string | undefined;
-  enable?: boolean | undefined;
   timeout?: number | string | undefined;
 }
 

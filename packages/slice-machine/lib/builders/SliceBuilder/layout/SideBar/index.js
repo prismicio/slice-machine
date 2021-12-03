@@ -23,8 +23,6 @@ const SideBar = ({
 }) => {
   const { screenshotUrls, isTouched, __status } = Model;
 
-  console.log("IMPLEMENT preventScreenshot");
-
   return (
     <Box
       sx={{
