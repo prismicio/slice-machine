@@ -16,7 +16,7 @@ import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import UpdateVersionModal from "../UpdateVersionModal";
 
-const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
+const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   const { setColorMode } = useThemeUI();
   useEffect(() => {
     if (setColorMode) {
@@ -24,23 +24,18 @@ const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
     }
   }, []);
 
-  return children;
+  return <>{children}</>;
 };
 
 type AppProps = {
   theme: () => Theme;
   serverState: ServerState | undefined;
-  pageProps: any; // This is coming from next
-  Component: (props: any) => JSX.Element;
-  Renderer: (props: any) => JSX.Element;
 };
 
 const SliceMachineApp: React.FunctionComponent<AppProps> = ({
   theme,
   serverState,
-  pageProps,
-  Component,
-  Renderer,
+  children,
 }) => {
   useOnboardingRedirection();
   useServerState(serverState);
@@ -50,14 +45,11 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
       <BaseStyles>
         <RemoveDarkMode>
           {!serverState ? (
-            <Renderer {...serverState} />
+            <>{children}</>
           ) : (
             <>
               {!serverState || !serverState.libraries ? (
-                <Renderer
-                  Component={Component}
-                  pageProps={pageProps}
-                />
+                <>{children}</>
               ) : (
                 <ToastProvider>
                   <LibrariesProvider
@@ -70,12 +62,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                       remoteCustomTypes={serverState.remoteCustomTypes}
                     >
                       <AppLayout>
-                        <SliceHandler {...serverState}>
-                          <Renderer
-                            Component={Component}
-                            pageProps={pageProps}
-                          />
-                        </SliceHandler>
+                        <SliceHandler {...serverState}>{children}</SliceHandler>
                       </AppLayout>
                       <UpdateVersionModal />
                       <LoginModal />
