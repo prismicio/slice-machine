@@ -115,7 +115,7 @@ function MyApp({
   return (
     <>
       <Head>
-        <title>SliceMachine3</title>
+        <title>SliceMachine</title>
         <script type="text/javascript" src="/segment-script.js" />
       </Head>
       <Provider store={store}>
