@@ -3,10 +3,10 @@ import { Card as ThemeCard, ThemeUIStyleObject } from "theme-ui";
 import { CardBox, CardBoxProps } from "./CardBox";
 
 interface CardProps extends Omit<CardBoxProps, "withRadius"> {
-  Header?: React.FC<{ radius: string }>;
-  SubHeader?: React.FC<{ radius: string }>;
-  Body?: React.FC;
-  Footer?: React.FC;
+  Header?: React.FC<{ radius: string }> | null;
+  SubHeader?: React.FC<{ radius: string }> | null;
+  Body?: React.FC | null;
+  Footer?: React.FC | JSX.Element | null;
   borderFooter?: boolean;
   bodySx?: ThemeUIStyleObject;
   footerSx?: ThemeUIStyleObject;
