@@ -18,6 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
+import "highlight.js/styles/github.css";
 
 import ServerState from "lib/models/server/ServerState";
 import AppState from "lib/models/common/AppState";

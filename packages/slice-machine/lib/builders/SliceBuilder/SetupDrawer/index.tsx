@@ -4,7 +4,7 @@ import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-import NextSetupSteps from "@builders/SliceBuilder/SetupDrawer/NextSetupSteps";
+import NextSetupSteps from "./NextSetupSteps";
 
 type SetupDrawerProps = {
   isOpen: boolean;

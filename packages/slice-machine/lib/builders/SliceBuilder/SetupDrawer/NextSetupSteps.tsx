@@ -3,6 +3,25 @@ import React from "react";
 import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
+import hljs from "highlight.js";
+
+const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
+  const text = hljs.highlightAuto(children, [
+    "javascript",
+    "bash",
+    "xml",
+    "html",
+  ]).value;
+  return (
+    <Flex as="pre">
+      <code
+        className="hljs"
+        style={{ overflowX: "auto", padding: "16px 0" }}
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
+    </Flex>
+  );
+};
 
 type NextSetupStepProps = {
   activeStep: number;
@@ -47,7 +66,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         </Text>
         <Flex>
           <pre style={{ overflowX: "auto", padding: "16px 0" }}>
-            {SliceCanvasPageCreationInstruction}
+            <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
           </pre>
         </Flex>
       </Flex>
@@ -64,12 +83,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           property <Text variant={"pre"}>localSliceCanvasURL</Text> in the shape
           of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
         </Text>
-        <Flex>
-          <pre style={{ overflowX: "auto", padding: "16px 0" }}>
-            {"// eg:\n" +
-              '"localSliceCanvasURL": "http://localhost:3000/_canvas"'}
-          </pre>
-        </Flex>
+        <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
       </Flex>
     </StepSection>
     <StepSection

@@ -66,6 +66,7 @@
     "formdata-node": "^2.4.0",
     "fp-ts": "^2.11.5",
     "glob": "^7.1.6",
+    "highlight.js": "^11.3.1",
     "io-ts": "^2.2.16",
     "lodash": "^4.17.21",
     "lorem-ipsum": "^2.0.3",
