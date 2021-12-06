@@ -1,6 +1,5 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import getEnv from "./services/getEnv";
 import { warningStates } from "@lib/consts";
 
 import Environment from "@lib/models/common/Environment";
@@ -11,6 +10,7 @@ import ServerError from "@lib/models/server/ServerError";
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { FileSystem } from "@slicemachine/core";
+import { RequestWithEnv } from "./http/common";
 
 export async function createWarnings(
   env: Environment,
@@ -48,8 +48,8 @@ export async function createWarnings(
   ) as ReadonlyArray<Warning>;
 }
 
-export default async function handler() {
-  const { env, errors: configErrors } = await getEnv();
+export default async function handler(req: RequestWithEnv) {
+  const { errors: configErrors, env } = req;
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
     env
@@ -68,7 +68,7 @@ export default async function handler() {
         Math.floor(newTokenResponse.status / 100) === 2
       ) {
         const newtToken = await newTokenResponse.text();
-        FileSystem.updateAuthCookie(newtToken);
+        FileSystem.PrismicSharedConfigManager.setAuthCookie(newtToken);
       }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);
@@ -78,7 +78,7 @@ export default async function handler() {
   const warnings = await createWarnings(env, configErrors, clientError);
 
   await generate(env, libraries);
-  // env.tracker.Repository(env.repo)?.libraries(libraries);
+  req.tracker.libraries(libraries);
 
   return {
     libraries,

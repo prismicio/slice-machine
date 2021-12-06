@@ -1,4 +1,5 @@
 import path from "path";
+import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
@@ -7,6 +8,8 @@ import {
   OnboardingTrackingEvent,
   TrackingEventId,
 } from "@lib/models/common/TrackingEvent";
+
+import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
 
 interface ApiSettings {
   STAGE: string;
@@ -130,6 +133,28 @@ export default class DefaultClient {
         method: "GET",
       }
     );
+  }
+
+  static async profile(
+    base: string,
+    auth: string
+  ): Promise<Error | UserProfile> {
+    try {
+      const result = await fetch(
+        `${createApiUrl(base, AuthApi)}${ValidatePrefix}?token=${auth}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const jsResult = await result.json();
+
+      return getOrElseW(
+        () => new Error(`Unable to parse profile: ${jsResult}`)
+      )(UserProfile.decode(jsResult));
+    } catch (e) {
+      return e as Error;
+    }
   }
 
   constructor(

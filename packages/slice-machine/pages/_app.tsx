@@ -116,6 +116,7 @@ function MyApp({
     <>
       <Head>
         <title>SliceMachine</title>
+        <script type="text/javascript" src="/segment-script.js" />
       </Head>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>

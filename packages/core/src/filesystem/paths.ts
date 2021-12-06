@@ -93,8 +93,7 @@ export const SMConfigPath = (cwd: string): string => path.join(cwd, "sm.json");
 export const LibrariesStatePath = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "libraries-state.json");
 
-export const PrismicConfigPath = (dir = os.homedir()): string =>
-  path.join(dir, ".prismic");
+export const PrismicConfigPath = path.join(os.homedir(), ".prismic");
 
 export const SliceTemplateConfigPath = (
   cwd: string,

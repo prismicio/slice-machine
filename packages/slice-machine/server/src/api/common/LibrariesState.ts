@@ -31,13 +31,21 @@ export function formatLibraries(
 export function formatLibrary(
   library: Models.Library<Models.Component>
 ): Models.LibrariesState.Library {
-  return library.components.reduce<Models.LibrariesState.Library>(
+  const components = library.components.reduce<
+    Models.LibrariesState.Library["components"]
+  >(
     (acc, component) => ({
       ...acc,
       [component.model.id]: formatComponent(component),
     }),
     {}
   );
+
+  return {
+    name: library.meta?.name,
+    version: library.meta?.version,
+    components,
+  };
 }
 
 function getImageDimensions(imagePath: string | undefined) {

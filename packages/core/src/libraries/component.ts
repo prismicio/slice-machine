@@ -125,7 +125,8 @@ function getFileInfoFromPath(
 
 export function getComponentInfo(
   slicePath: string,
-  { cwd, from }: { cwd: string; from: string }
+  assetsPaths: ReadonlyArray<string>,
+  from: string
 ): ComponentInfo | undefined {
   const sliceName = getComponentName(slicePath);
 
@@ -170,7 +171,7 @@ export function getComponentInfo(
   const screenshotPaths = (model.variations || [])
     .map((v: VariationAsObject) => {
       const activeScreenshot = resolvePathsToScreenshot({
-        paths: [cwd],
+        paths: assetsPaths,
         from,
         sliceName,
         variationId: v.id,
@@ -196,7 +197,7 @@ export function getComponentInfo(
 
   /* This illustrates the requirement for apps to pass paths to mocks */
   const maybeMock = resolvePathsToMock({
-    paths: [cwd, path.join(cwd, ".slicemachine/assets")],
+    paths: assetsPaths,
     from,
     sliceName,
   });

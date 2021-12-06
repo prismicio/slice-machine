@@ -1,12 +1,11 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { FileSystem } from "@slicemachine/core";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
 export default async function handler(): Promise<CheckAuthStatusResponse> {
   try {
-    const authConfig = FileSystem.getOrCreateAuthConfig();
-    const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);
+    const authToken = FileSystem.PrismicSharedConfigManager.getAuth();
     return {
-      status: !!authResult ? "ok" : "pending",
+      status: !!authToken ? "ok" : "pending",
     };
   } catch (e) {
     return {
