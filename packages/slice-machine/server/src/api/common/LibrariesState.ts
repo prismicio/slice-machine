@@ -49,7 +49,7 @@ export function formatLibrary(
 }
 
 function getImageDimensions(imagePath: string | undefined) {
-  if (!imagePath || Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
+  if (!imagePath || !Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
 
   const imageBuffer = Files.readBuffer(imagePath);
   const result = probe.sync(imageBuffer);
