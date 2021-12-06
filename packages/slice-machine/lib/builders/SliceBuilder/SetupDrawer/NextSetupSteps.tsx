@@ -40,7 +40,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       onOpenStep={onOpenStep(2)}
     >
       <Flex sx={{ flexDirection: "column" }}>
-        <Text sx={{ color: (t) => t.colors?.textClear, mb: 2 }}>
+        <Text sx={{ color: "textClear", mb: 2 }}>
           In your “pages” directory, create a file called _canvas.jsx and add
           the following code. This page is the route you hit to preview and
           develop your components.
@@ -59,7 +59,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       onOpenStep={onOpenStep(3)}
     >
       <Flex sx={{ flexDirection: "column" }}>
-        <Text sx={{ color: (t) => t.colors?.textClear, mb: 2 }}>
+        <Text sx={{ color: "textClear", mb: 2 }}>
           Update your <Text variant={"pre"}>sm.json</Text> file with the
           property <Text variant={"pre"}>localSliceCanvasURL</Text> in the shape
           of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
@@ -79,7 +79,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       onOpenStep={onOpenStep(4)}
     >
       <Flex>
-        <Text sx={{ color: (t) => t.colors?.textClear }}>
+        <Text sx={{ color: "textClear" }}>
           After you’ve done the previous steps, we need to check that everything
           works in order.
         </Text>
