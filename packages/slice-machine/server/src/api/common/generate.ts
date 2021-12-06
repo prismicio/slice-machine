@@ -1,7 +1,7 @@
 import mock from "@lib/mock/Slice";
 import * as LibrariesState from "./LibrariesState";
 
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import Files from "@lib/utils/files";
@@ -10,7 +10,7 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { getConfig as getGobalMockConfig } from "@lib/mock/misc/fs";
 
 export async function generate(
-  env: Environment,
+  env: BackendEnvironment,
   libraries: ReadonlyArray<LibraryUI>
 ): Promise<void> {
   try {

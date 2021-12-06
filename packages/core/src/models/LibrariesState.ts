@@ -21,6 +21,7 @@ const ComponentScreenshots = t.record(
     height: t.union([t.number, t.undefined]),
   })
 );
+
 export type ComponentScreenshots = t.TypeOf<typeof ComponentScreenshots>;
 
 export const Component = t.intersection([

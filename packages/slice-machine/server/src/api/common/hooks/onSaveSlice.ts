@@ -2,7 +2,7 @@ import path from "path";
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
 import { findIndexFile } from "@lib/utils/lib";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import { Framework } from "@lib/models/common/Framework";
 import * as LibrariesState from "../LibrariesState";
@@ -30,14 +30,16 @@ const createIndexFileForSvelte = (lib: Models.Library<Models.Component>) => {
 };
 
 const createIndexFileForFrameWork = (
-  env: Environment,
+  env: BackendEnvironment,
   lib: Models.Library<Models.Component>
 ) => {
   if (env.framework === Framework.svelte) return createIndexFileForSvelte(lib);
   return createIndexFile(lib);
 };
 
-export default async function onSaveSlice(env: Environment): Promise<void> {
+export default async function onSaveSlice(
+  env: BackendEnvironment
+): Promise<void> {
   const libraries = await Libraries.libraries(
     env.cwd,
     (env.userConfig.libraries || []) as string[]

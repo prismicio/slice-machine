@@ -4,7 +4,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import { pascalize } from "../../utils/str";
 
 import { ComponentUI } from "./ComponentUI";
-import Environment from "./Environment";
+import { BackendEnvironment } from "./Environment";
 
 const LibraryUIMeta = {
   build(isLocal: boolean, libMeta?: Models.LibraryMeta) {
@@ -41,7 +41,7 @@ export const LibraryUI = {
   build(
     lib: Models.Library<Models.Component>,
     remoteSlices: ReadonlyArray<Models.SliceAsObject>,
-    env: Environment
+    env: BackendEnvironment
   ): LibraryUI {
     const components = lib.components.map((c) =>
       ComponentUI.build(c, remoteSlices, env)

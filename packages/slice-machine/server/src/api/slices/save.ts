@@ -10,7 +10,7 @@ import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import Previews from "../previews";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
@@ -23,7 +23,7 @@ interface Body {
 }
 
 export async function handler(
-  env: Environment,
+  env: BackendEnvironment,
   { sliceName, from, model, mockConfig }: Body
 ): Promise<{
   previewUrls: Record<string, Models.Screenshot>;

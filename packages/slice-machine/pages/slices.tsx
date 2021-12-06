@@ -5,7 +5,7 @@ import { getFormattedLibIdentifier } from "lib/utils/lib";
 import Container from "components/Container";
 
 import { LibrariesContext } from "src/models/libraries/context";
-import Environment from "lib/models/common/Environment";
+import { FrontEndEnvironment } from "lib/models/common/Environment";
 
 import { GoPlus } from "react-icons/go";
 
@@ -43,7 +43,7 @@ const CreateSliceButton = ({
   </Button>
 );
 
-const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
+const SlicesIndex: React.FunctionComponent<{ env: FrontEndEnvironment }> = ({
   env,
 }) => {
   const libraries = useContext(LibrariesContext);

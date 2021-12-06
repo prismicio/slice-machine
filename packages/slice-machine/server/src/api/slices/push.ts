@@ -13,7 +13,7 @@ import { purge, upload } from "../upload";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
 import { CustomPaths } from "@lib/models/paths";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 const createOrUpdate = async ({
   slices,
@@ -34,7 +34,7 @@ const createOrUpdate = async ({
 };
 
 export async function handler(
-  env: Environment,
+  env: BackendEnvironment,
   slices: ReadonlyArray<Models.SliceAsObject>,
   { sliceName, from }: { sliceName: string; from: string }
 ) {
