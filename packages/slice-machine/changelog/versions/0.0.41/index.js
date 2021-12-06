@@ -29,7 +29,10 @@ module.exports = {
           });
           const json = JSON.parse(fs.readFileSync(pathToSmFile, "utf-8"));
           (json.libraries || []).forEach((lib) => {
-            const { isLocal, pathExists, pathToSlices } = getInfoFromPath(cwd, lib);
+            const { isLocal, pathExists, pathToSlices } = getInfoFromPath(
+              cwd,
+              lib
+            );
             if (isLocal && pathExists) {
               const matches = glob.sync(
                 `${slash(pathToSlices)}/**/preview.png`

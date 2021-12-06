@@ -63,7 +63,7 @@ export const LibraryMeta = {
       version: t.string,
     })
   ),
-  build(libPath: string) {
+  build(libPath: string): t.TypeOf<typeof this.reader> | undefined {
     const meta = Files.safeReadEntity(
       path.join(libPath, "meta.json"),
       (payload) => {
