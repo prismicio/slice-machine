@@ -26,11 +26,12 @@ type userContextActions = ActionType<
 >;
 
 // Selectors
-export const userHasSendAReview = (state: SliceMachineStoreType) =>
+export const userHasSendAReview = (state: SliceMachineStoreType): boolean =>
   state.userContext.hasSendAReview;
 
-export const userHasDoneTheOnboarding = (state: SliceMachineStoreType) =>
-  state.userContext.isOnboarded;
+export const userHasDoneTheOnboarding = (
+  state: SliceMachineStoreType
+): boolean => state.userContext.isOnboarded;
 
 // Reducer
 export const userContextReducer: Reducer<

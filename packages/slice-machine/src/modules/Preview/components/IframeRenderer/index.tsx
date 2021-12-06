@@ -45,17 +45,19 @@ function useRendererClient(): readonly [
   return [client, iframeRef];
 }
 
-export default function IframeRenderer({
-  size,
-  canvasUrl,
-  sliceView,
-}: {
+type IframeRendererProps = {
   size: Size;
   canvasUrl: string;
   sliceView: SliceView;
-}) {
+};
+
+const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
+  size,
+  canvasUrl,
+  sliceView,
+}) => {
   const [client, ref] = useRendererClient();
-  useEffect(() => {
+  useEffect((): void => {
     if (client !== undefined) {
       if (client.connected) {
         const updateSliceZone = async () => {
@@ -91,4 +93,6 @@ export default function IframeRenderer({
       />
     </Flex>
   );
-}
+};
+
+export default IframeRenderer;

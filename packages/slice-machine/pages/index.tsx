@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState, Fragment } from "react";
+import { GoPlus } from "react-icons/go";
 import {
   Box,
   Flex,
@@ -11,18 +12,14 @@ import {
   Heading,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
-import { CustomTypesContext } from "../src/models/customTypes/context";
 
-import { GoPlus } from "react-icons/go";
+import { CustomTypesContext } from "src/models/customTypes/context";
 
-import Container from "@components/Container";
-
-import Grid from "@components/Grid";
-
-import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
-
-import Header from "@components/Header";
-import EmptyState from "@components/EmptyState";
+import Container from "components/Container";
+import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
+import Grid from "components/Grid";
+import Header from "components/Header";
+import EmptyState from "components/EmptyState";
 
 interface CtPayload {
   repeatable: boolean;

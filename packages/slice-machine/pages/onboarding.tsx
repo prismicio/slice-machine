@@ -16,13 +16,13 @@ import {
   OnboardingSkipEvent,
   OnboardingContinueEvent,
   OnboardingContinueWithVideoEvent,
-} from "@lib/models/common/TrackingEvent";
+} from "lib/models/common/TrackingEvent";
 import router from "next/router";
+import { Video as CldVideo } from "cloudinary-react";
 
 import { BiChevronLeft } from "react-icons/bi";
-import { Video as CldVideo } from "cloudinary-react";
-import { sendTrackingOnboarding } from "@src/apiClient";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { sendTrackingOnboarding } from "src/apiClient";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 

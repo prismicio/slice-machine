@@ -8,7 +8,7 @@ import { Box, Label, Input, Heading, Button } from "theme-ui";
 
 import { Flex as FlexGrid, Col } from "components/Flex";
 
-import Card from "components/Card/WithTabs/index";
+import Card from "@components/Card/WithTabs/index";
 
 Modal.setAppElement("#__next");
 

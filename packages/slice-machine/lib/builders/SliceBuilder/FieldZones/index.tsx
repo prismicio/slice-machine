@@ -5,22 +5,37 @@ import { transformKeyAccessor } from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
+import type { Models } from "@slicemachine/core";
+import { WidgetsArea } from "@slicemachine/core/build/src/models/Variation";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
 import { SliceMockConfig } from "@models/common/MockConfig";
+import SliceState from "@models/ui/SliceState";
+import SliceStore from "@src/models/slice/store";
+import { DropResult } from "react-beautiful-dnd";
 
-const dataTipText = ` The non-repeatable zone
+const dataTipText: string = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
   section title.
 `;
-const dataTipText2 = `The repeatable zone is for a group<br/>
+const dataTipText2: string = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
 
-const Zones = ({ Model, store, variation, showHints }) => {
-  const _onDeleteItem = (widgetArea) => (key) => {
+type FieldZonesProps = {
+  Model: SliceState;
+  variation: Models.VariationAsArray;
+  store: SliceStore;
+};
+
+const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
+  Model,
+  store,
+  variation,
+}) => {
+  const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
     store
       .variation(variation.id)
       .deleteWidgetMockConfig(Model.mockConfig, widgetArea, key);
@@ -28,8 +43,8 @@ const Zones = ({ Model, store, variation, showHints }) => {
   };
 
   const _getFieldMockConfig =
-    (widgetArea) =>
-    ({ apiId }) => {
+    (widgetArea: Models.WidgetsArea) =>
+    ({ apiId }: { apiId: string }) => {
       return SliceMockConfig.getFieldMockConfig(
         Model.mockConfig,
         variation.id,
@@ -39,8 +54,8 @@ const Zones = ({ Model, store, variation, showHints }) => {
     };
 
   const _onSave =
-    (widgetArea) =>
-    ({ apiId: previousKey, newKey, value, mockValue }) => {
+    (widgetArea: Models.WidgetsArea) =>
+    ({ apiId: previousKey, newKey, value, mockValue }: any) => {
       if (mockValue) {
         store
           .variation(variation.id)
@@ -62,25 +77,33 @@ const Zones = ({ Model, store, variation, showHints }) => {
     };
 
   const _onSaveNewField =
-    (fieldType) =>
-    ({ id, widgetTypeName }) => {
+    (widgetArea: Models.WidgetsArea) =>
+    ({ id, widgetTypeName }: { id: string; widgetTypeName: string }) => {
+      // @ts-expect-error
       const widget = Widgets[widgetTypeName];
       if (!widget) {
         console.log(
           `Could not find widget with type name "${widgetTypeName}". Please contact us!`
         );
       }
-      store.variation(variation.id).addWidget(fieldType, id, widget.create(id));
+      store
+        .variation(variation.id)
+        .addWidget(widgetArea, id, widget.create(id));
     };
 
-  const _onDragEnd = (fieldType) => (result) => {
-    if (ensureDnDDestination(result)) {
-      return;
-    }
-    store
-      .variation(variation.id)
-      .reorderWidget(fieldType, result.source.index, result.destination.index);
-  };
+  const _onDragEnd =
+    (widgetArea: Models.WidgetsArea) => (result: DropResult) => {
+      if (ensureDnDDestination(result)) {
+        return;
+      }
+      store
+        .variation(variation.id)
+        .reorderWidget(
+          widgetArea,
+          result.source.index,
+          result.destination && result.destination.index
+        );
+    };
 
   return (
     <>
@@ -88,15 +111,15 @@ const Zones = ({ Model, store, variation, showHints }) => {
         Model={Model}
         title="Non-Repeatable zone"
         dataTip={dataTipText}
+        // @ts-expect-error
         fields={variation.primary}
-        showHints={showHints}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
-        getFieldMockConfig={_getFieldMockConfig("primary")}
-        onDeleteItem={_onDeleteItem("primary")}
-        onSave={_onSave("primary")}
-        onSaveNewField={_onSaveNewField("primary")}
-        onDragEnd={_onDragEnd("primary")}
+        getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Primary)}
+        onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
+        onSave={_onSave(WidgetsArea.Primary)}
+        onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
+        onDragEnd={_onDragEnd(WidgetsArea.Primary)}
         poolOfFieldsToCheck={variation.primary || []}
         renderHintBase={({ item }) =>
           `slice.primary${transformKeyAccessor(item.key)}`
@@ -112,14 +135,14 @@ const Zones = ({ Model, store, variation, showHints }) => {
         title="Repeatable zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
+        // @ts-expect-error
         fields={variation.items}
-        showHints={showHints}
         EditModal={EditModal}
-        getFieldMockConfig={_getFieldMockConfig("items")}
-        onDeleteItem={_onDeleteItem("items")}
-        onSave={_onSave("items")}
-        onSaveNewField={_onSaveNewField("items")}
-        onDragEnd={_onDragEnd("items")}
+        getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Items)}
+        onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
+        onSave={_onSave(WidgetsArea.Items)}
+        onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
+        onDragEnd={_onDragEnd(WidgetsArea.Items)}
         poolOfFieldsToCheck={variation.items || []}
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
         renderFieldAccessor={(key) =>
@@ -130,4 +153,4 @@ const Zones = ({ Model, store, variation, showHints }) => {
   );
 };
 
-export default Zones;
+export default FieldZones;
