@@ -1,5 +1,4 @@
 import path from "path";
-import { exec } from "child_process";
 import {
   parseDomain,
   fromUrl,
@@ -17,9 +16,7 @@ import { defineFramework, isValidFramework } from "@lib/env/framework";
 import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
-import Environment from "@lib/models/common/Environment";
-import ServerError from "@lib/models/server/ServerError";
-import Chromatic from "@lib/models/common/Chromatic";
+import BackendEnvironment from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import UserConfig from "@lib/models/common/UserConfig";
 import { SMConfig } from "@lib/models/paths";
@@ -65,49 +62,9 @@ function extractRepo(parsedRepo: ParseResult): string | undefined {
   }
 }
 
-function handleBranch(): Promise<{ branch?: string; err?: Error }> {
-  return new Promise((resolve) => {
-    exec("git rev-parse --abbrev-ref HEAD", (err: any, stdout: string) => {
-      if (err) {
-        resolve({ err });
-      }
-      resolve({ branch: stdout.trim() });
-    });
-  });
-}
-
-function createChromaticUrls({
-  branch,
-  appId,
-  err,
-}: {
-  branch?: string;
-  appId?: string;
-  err?: Error;
-}): Chromatic | undefined {
-  if (err || !branch || !appId) {
-    return;
-  }
-  return {
-    storybook: `https://${branch}--${appId}.chromatic.com`,
-    library: `https://chromatic.com/library?appId=${appId}&branch=${branch}`,
-  };
-}
-
-function parseStorybookConfiguration(cwd: string) {
-  const pathsToFile = [
-    path.join(cwd, ".storybook/main.js"),
-    path.join(cwd, ".storybook/main.cjs"),
-    path.join(cwd, "nuxt.config.js"),
-  ];
-  const f = Files.readFirstOf(pathsToFile)((v) => v);
-  const file = (f?.value as string) || "";
-  return file.includes("getStoriesPaths") || file.includes(".slicemachine");
-}
-
 export default async function getEnv(
   maybeCustomCwd?: string
-): Promise<{ errors?: { [errorKey: string]: ServerError }; env: Environment }> {
+): Promise<{ errors: ConfigErrors; env: BackendEnvironment }> {
   const cwd = maybeCustomCwd || process.env.CWD || process.cwd();
   if (!cwd) {
     const message =
@@ -143,16 +100,8 @@ export default async function getEnv(
   const userConfig = manifestState.content as UserConfig;
 
   const maybeErrors = validate(userConfig);
-  const hasGeneratedStoriesPath = parseStorybookConfiguration(cwd);
   const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint));
   const repo = extractRepo(parsedRepo);
-
-  const branchInfo = await handleBranch();
-  const chromatic = createChromaticUrls({
-    ...branchInfo,
-    appId: userConfig.chromaticAppId,
-  });
-
   const mockConfig = getMockConfig(cwd);
 
   const client = initClient(
@@ -168,9 +117,7 @@ export default async function getEnv(
       cwd,
       repo,
       userConfig,
-      hasConfigFile: true,
       prismicData: prismicData.value,
-      chromatic,
       updateVersionInfo: {
         currentVersion: npmCompare.currentVersion,
         latestVersion: npmCompare.onlinePackage?.version || "",
@@ -179,7 +126,6 @@ export default async function getEnv(
         updateAvailable: npmCompare.updateAvailable,
       },
       mockConfig,
-      hasGeneratedStoriesPath,
       framework: defineFramework(manifestState.content as Manifest, cwd),
       baseUrl: `http://localhost:${process.env.PORT}`,
       client,

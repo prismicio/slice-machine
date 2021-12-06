@@ -3,7 +3,9 @@ import fetchCustomTypes from "./custom-types/index";
 import getEnv from "./services/getEnv";
 import { warningStates, warningTwoLiners } from "@lib/consts";
 import { fetchStorybookUrl } from "./common/storybook";
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment, {
+  FrontEndEnvironment,
+} from "@lib/models/common/Environment";
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "@lib/models/server/ServerError";
@@ -11,6 +13,7 @@ import Files from "@lib/utils/files";
 import { Pkg } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { FileSystem } from "@slicemachine/core";
+import { ServerState } from "@models/server/ServerState";
 
 const hasStorybookScript = (cwd: string) => {
   const pathToManifest = Pkg(cwd);
@@ -23,7 +26,7 @@ const hasStorybookScript = (cwd: string) => {
 };
 
 export async function createWarnings(
-  env: Environment,
+  env: BackendEnvironment,
   configErrors?: { [errorKey: string]: ServerError },
   clientError?: ErrorWithStatus
 ): Promise<ReadonlyArray<Warning>> {
@@ -99,7 +102,7 @@ export async function createWarnings(
   ) as ReadonlyArray<Warning>;
 }
 
-export default async function handler() {
+export const getBackendState = async () => {
   const { env, errors: configErrors } = await getEnv();
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
@@ -138,5 +141,20 @@ export default async function handler() {
     configErrors,
     env,
     warnings,
+  };
+};
+
+export default async function handler(): Promise<ServerState> {
+  const state = await getBackendState();
+  const { client, cwd, prismicData, baseUrl, ...frontEnv } = state.env;
+  const frontEndEnv: FrontEndEnvironment = {
+    ...frontEnv,
+    sliceMachineAPIUrl: baseUrl,
+    prismicAPIUrl: prismicData.base,
+  };
+
+  return {
+    ...state,
+    env: frontEndEnv,
   };
 }

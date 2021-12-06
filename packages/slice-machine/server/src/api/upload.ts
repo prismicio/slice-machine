@@ -3,14 +3,14 @@ import { snakelize } from "@lib/utils/str";
 import path from "path";
 import uniqid from "uniqid";
 
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import Slice from "@lib/models/common/Slice";
 import { AsObject } from "@lib/models/common/Variation";
 
 import { s3DefaultPrefix } from "@lib/consts";
 
 export async function purge(
-  env: Environment,
+  env: BackendEnvironment,
   slices: ReadonlyArray<Slice<AsObject>>,
   sliceName: string,
   onError: (error?: any, msg?: string) => any
@@ -32,7 +32,7 @@ export async function purge(
 }
 
 export async function upload(
-  env: Environment,
+  env: BackendEnvironment,
   sliceName: string,
   variationId: string,
   filePath: string,

@@ -2,7 +2,7 @@ import path from "path";
 import { Library } from "@lib/models/common/Library";
 import Files from "@lib/utils/files";
 import { findIndexFile } from "@lib/utils/lib";
-import Environment from "@lib/models/common/Environment";
+import BackendEnvironment from "@lib/models/common/Environment";
 import { listComponentsByLibrary } from "@lib/queries/listComponents";
 import { Framework } from "@lib/models/common/Framework";
 
@@ -27,12 +27,14 @@ const createIndexFileForSvelte = (lib: Library) => {
   return f;
 };
 
-const createIndexFileForFrameWork = (env: Environment, lib: Library) => {
+const createIndexFileForFrameWork = (env: BackendEnvironment, lib: Library) => {
   if (env.framework === Framework.svelte) return createIndexFileForSvelte(lib);
   return createIndexFile(lib);
 };
 
-export default async function onSaveSlice(env: Environment): Promise<void> {
+export default async function onSaveSlice(
+  env: BackendEnvironment
+): Promise<void> {
   const libraries = await listComponentsByLibrary(env);
   const localLibs = libraries.filter((e) => e.isLocal);
 

@@ -1,4 +1,4 @@
-import fetchState from "../state";
+import { getBackendState } from "../state";
 import { handler as pushSlice } from "../slices/push";
 import { handler as saveSlice } from "../slices/save";
 
@@ -26,7 +26,7 @@ const createOrUpdate = (
 export default async function handler(query: { id: string }) {
   const { id } = query;
 
-  const state = await fetchState();
+  const state = await getBackendState();
 
   if (state.clientError || state.isFake) {
     const isAnAuthenticationError =
