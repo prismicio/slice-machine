@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { userHasDoneTheOnboarding } from "@src/modules/userContext";
 import { useRouter } from "next/router";
 
-const useOnboardingRedirection: void = () => {
+const useOnboardingRedirection = (): void => {
   const router = useRouter();
 
   const isOnboarded = useSelector(userHasDoneTheOnboarding);

@@ -25,7 +25,8 @@ const redirect = (
   isPreview?: boolean
 ): void => {
   if (!variation) {
-    return router.push(`/${model.href}/${model.infos.sliceName}`);
+    router.push(`/${model.href}/${model.infos.sliceName}`);
+    return;
   }
   const params = Links.variation({
     lib: model.href,

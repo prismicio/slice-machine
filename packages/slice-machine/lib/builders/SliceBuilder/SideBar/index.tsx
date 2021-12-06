@@ -61,13 +61,16 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             pathname: `${router.pathname}/preview`,
             query: router.query,
           }}
+          passHref
         >
-          <Button
-            variant={"secondary"}
-            sx={{ cursor: "pointer", width: "100%", mt: 3 }}
-          >
-            Open Slice Preview
-          </Button>
+          <a target={"_blank"}>
+            <Button
+              variant={"secondary"}
+              sx={{ cursor: "pointer", width: "100%", mt: 3 }}
+            >
+              Open Slice Preview
+            </Button>
+          </a>
         </Link>
       ) : (
         <ThemeCard mt={3}>
