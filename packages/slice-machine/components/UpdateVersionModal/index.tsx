@@ -33,7 +33,7 @@ const UpdateVersionModal: React.FC = () => {
   React.useEffect(() => {
     if (!updateVersionInfo) return;
     if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
-  }, [updateVersionInfo]);
+  }, [updateVersionInfo?.updateAvailable]);
 
   const copy = () => {
     ref.current?.textContent &&
