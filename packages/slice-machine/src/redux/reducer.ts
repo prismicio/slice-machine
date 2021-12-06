@@ -3,7 +3,7 @@
  * If we were to do this in store.js, reducers wouldn't be hot reloadable.
  */
 
-import { combineReducers } from "redux";
+import { combineReducers, Reducer } from "redux";
 import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
@@ -12,7 +12,7 @@ import { environmentReducer } from "@src/modules/environment";
 /**
  * Creates the main reducer
  */
-const createReducer = () =>
+const createReducer = (): Reducer =>
   combineReducers({
     modal: modalReducer,
     loading: loadingReducer,

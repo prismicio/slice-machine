@@ -14,7 +14,7 @@ type PropTypes = {
   title: string;
   Model: SliceState;
   variation: Models.VariationAsArray | undefined;
-  handleScreenSizeChange: Function;
+  handleScreenSizeChange: (screen: { size: Size }) => void;
   canvasUrl: string;
   size: Size;
 };
@@ -23,7 +23,7 @@ const redirect = (
   model: SliceState,
   variation: { id: string } | undefined,
   isPreview?: boolean
-) => {
+): void => {
   if (!variation) {
     return router.push(`/${model.href}/${model.infos.sliceName}`);
   }
@@ -36,14 +36,14 @@ const redirect = (
   router.push(params.href, params.as, params.options);
 };
 
-export default function Header({
+const Header: React.FunctionComponent<PropTypes> = ({
   title,
   Model,
   variation,
   handleScreenSizeChange,
   canvasUrl,
   size,
-}: PropTypes) {
+}) => {
   return (
     <Box
       sx={{
@@ -90,4 +90,6 @@ export default function Header({
       </Flex>
     </Box>
   );
-}
+};
+
+export default Header;

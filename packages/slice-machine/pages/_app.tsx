@@ -7,8 +7,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import configureStore from "src/redux/store";
 
 import theme from "src/theme";
-// @ts-ignore
-import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
 import LoadingPage from "components/LoadingPage";
 import SliceMachineApp from "components/App";
