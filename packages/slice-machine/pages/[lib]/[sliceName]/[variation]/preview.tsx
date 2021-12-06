@@ -1,3 +1,3 @@
-import Preview from "src/modules/Preview";
+import Preview from "components/Preview";
 
 export default Preview;
