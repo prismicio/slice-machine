@@ -76,6 +76,8 @@ function MyApp({
     fetcher
   );
 
+  // Technical Debt : This internal state is used for forcing React to reload all the app,
+  // to remove it we should change how the slice store is handled
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
   const [state, setRenderer] = useState<{
