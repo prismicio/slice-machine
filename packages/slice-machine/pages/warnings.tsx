@@ -1,17 +1,17 @@
 import { Box, Flex, Text } from "@theme-ui/components";
-import Container from "../components/Container";
-import ConfigErrors from "../components/ConfigErrors";
+import Container from "components/Container";
+import ConfigErrors from "components/ConfigErrors";
 import {
   NewVersionAvailable,
   ClientError,
   NotConnected,
-} from "../components/Warnings/Errors";
+} from "components/Warnings/Errors";
 import { warningStates } from "lib/consts";
 
 import { FiZap } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getConfigErrors, getWarnings } from "@src/modules/environment";
+import { SliceMachineStoreType } from "src/redux/type";
+import { getConfigErrors, getWarnings } from "src/modules/environment";
 
 const WarningsPage: React.FunctionComponent = () => {
   const { warnings, configErrors } = useSelector(

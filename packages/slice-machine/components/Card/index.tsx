@@ -1,30 +1,18 @@
-import { Box, Card as ThemeCard } from "theme-ui";
+import React from "react";
+import { Card as ThemeCard, ThemeUIStyleObject } from "theme-ui";
+import { CardBox, CardBoxProps } from "./CardBox";
 
-const CardBox = ({
-  bg,
-  background,
-  sx,
-  children = null,
-  withRadius,
-  radius,
-}) => (
-  <Box
-    sx={{
-      p: 4,
-      bg: bg || background,
-      ...(withRadius
-        ? {
-            borderBottomLeftRadius: radius,
-            borderBottomRightRadius: radius,
-          }
-        : null),
-      ...sx,
-    }}
-  >
-    {children}
-  </Box>
-);
-const Card = ({
+interface CardProps extends Omit<CardBoxProps, "withRadius"> {
+  Header?: React.FC<{ radius: string }>;
+  SubHeader?: React.FC<{ radius: string }>;
+  Body?: React.FC;
+  Footer?: React.FC;
+  borderFooter?: boolean;
+  bodySx?: ThemeUIStyleObject;
+  footerSx?: ThemeUIStyleObject;
+}
+
+const Card: React.FC<CardProps> = ({
   Header = null,
   SubHeader = null,
   Body = null,
@@ -34,9 +22,9 @@ const Card = ({
   bodySx = {},
   footerSx = {},
   sx = null,
-  bg = null,
-  children = null,
-  background = null,
+  bg,
+  background,
+  children,
   ...rest
 }) => (
   <ThemeCard
@@ -60,7 +48,7 @@ const Card = ({
         sx={{
           ...(borderFooter
             ? {
-                borderTop: ({ colors }) => `1px solid ${colors.borders}`,
+                borderTop: ({ colors }) => `1px solid ${colors?.borders}`,
               }
             : null),
           ...footerSx,

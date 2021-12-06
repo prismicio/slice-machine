@@ -10,9 +10,9 @@ const MemoedImage = memo(DefaultImage);
 
 interface ImagePreviewProps {
   src?: string;
-  onScreenshot: () => {};
+  onScreenshot: () => void;
   imageLoading: boolean;
-  onHandleFile: (file: any) => {};
+  onHandleFile: (file: any) => void;
   preventScreenshot: boolean;
 }
 

@@ -51,7 +51,10 @@ router.use(
 
 router.get(
   "/state",
-  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await state(req);
     if (payload.clientError) {
       return res.status(payload.clientError.status).json(payload);
@@ -65,7 +68,7 @@ router.post(
   async function (
     req: express.Request<TrackingReviewRequest>,
     res: express.Response<TrackingReviewResponse>
-  ) {
+  ): Promise<Express.Response> {
     const payload = await trackReview(req.body);
     return res.status(payload.status).json({});
   }
@@ -73,7 +76,10 @@ router.post(
 
 router.post(
   "/tracking/onboarding",
-  async (req: express.Request, res: express.Response) => {
+  async (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> => {
     const result = await onboarding(req.body);
     if (result.err) {
       const status = result.err.status || 400;
@@ -85,7 +91,10 @@ router.post(
 
 router.get(
   "/screenshot",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await screenshot(req.query);
     if (payload.err) {
       return res.status(400).json(payload);
@@ -96,7 +105,7 @@ router.get(
 
 router.post(
   "/custom-screenshot",
-  async function (req: any, res: express.Response) {
+  async function (req: any, res: express.Response): Promise<Express.Response> {
     const payload = await customScreenshot(req.files.file, req.body);
     if (payload.err) {
       return res.status(400).json(payload);
@@ -107,7 +116,10 @@ router.post(
 
 router.post(
   "/parse-oembed",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await parseOembed(req.body.url);
     if (payload.err) {
       return res.status(400).json(payload);
@@ -120,7 +132,10 @@ router.post(
 
 router.post(
   "/slices/save",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await saveSlice(req);
     if (payload.err) {
       return res.status(400).json(payload);
@@ -131,7 +146,10 @@ router.post(
 
 router.use(
   "/slices/create",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     let payload;
     if (req.method === "POST") {
       payload = await createSlice(req.body);
@@ -148,7 +166,10 @@ router.use(
 
 router.get(
   "/slices/push",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await pushSlice(req.query);
     if (payload.err) {
       return res.status(payload.status).json(payload);
@@ -161,7 +182,10 @@ router.get(
 
 router.post(
   "/custom-types/save",
-  async function (req: express.Request, res: express.Response) {
+  async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await saveCustomType(req);
     if (payload.err) {
       return res.status(400).json(payload);
@@ -172,7 +196,10 @@ router.post(
 
 router.get(
   "/custom-types/push",
-  WithEnv(async function (req: express.Request, res: express.Response) {
+  WithEnv(async function (
+    req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await pushCustomType(req);
     if (payload.err) {
       return res.status(payload.status).json(payload);
@@ -183,7 +210,10 @@ router.get(
 
 router.get(
   "/auth/validate",
-  async function (_req: express.Request, res: express.Response) {
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await validateAuth();
     if (payload.err) {
       return res.status(400).json(payload);
@@ -194,7 +224,10 @@ router.get(
 
 router.post(
   "/auth/start",
-  async function (_req: express.Request, res: express.Response) {
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await startAuth();
     if (payload.err) {
       return res.status(500).json({});
@@ -205,7 +238,10 @@ router.post(
 
 router.post(
   "/auth/status",
-  async function (_req: express.Request, res: express.Response) {
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
     const payload = await statusAuth();
     if (payload.status === "error") {
       return res.status(500).json(payload);
@@ -216,7 +252,10 @@ router.post(
 
 router.post(
   "/auth",
-  WithEnv(async function (req: RequestWithEnv, res: express.Response) {
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
     const body = req.body;
 
     const payload = postAuth(body);

@@ -48,6 +48,7 @@ const AppTheme = (): Theme =>
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
+      grey01: "#F3F5F7",
       textGray: "#667587",
       borders: "#C9D0D8",
       deep: "#0E2150",
@@ -152,10 +153,10 @@ const AppTheme = (): Theme =>
         variant: "prism",
         fontFamily: "monospace",
         fontSize: 1,
-        p: 2,
         my: 1,
-        color: "text",
-        bg: "borders",
+        color: "textClear",
+        bg: "grey01",
+        p: "2px",
         overflow: "auto",
         code: {
           color: "inherit",
@@ -263,6 +264,17 @@ const AppTheme = (): Theme =>
           bg: darken("secondary", 0.06),
           outline: "none",
         },
+      },
+
+      small: {
+        bg: "primary",
+        borderRadius: "4px",
+        pl: 2,
+        pr: 2,
+        pb: 1,
+        pt: 1,
+        fontSize: "12px",
+        fontWeight: "body",
       },
 
       darkSmall: {

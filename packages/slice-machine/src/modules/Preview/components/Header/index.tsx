@@ -2,7 +2,7 @@ import router from "next/router";
 import { Box, Text, Flex, Button } from "theme-ui";
 import * as Models from "@slicemachine/core/build/src/models";
 
-import VarationsPopover from "@builders/SliceBuilder/layout/Header/VariationsPopover";
+import VarationsPopover from "@builders/SliceBuilder/Header/VariationsPopover";
 
 import SliceState from "@lib/models/ui/SliceState";
 
@@ -14,7 +14,7 @@ type PropTypes = {
   title: string;
   Model: SliceState;
   variation: Models.VariationAsArray | undefined;
-  handleScreenSizeChange: Function;
+  handleScreenSizeChange: (screen: { size: Size }) => void;
   canvasUrl: string;
   size: Size;
 };
@@ -23,9 +23,10 @@ const redirect = (
   model: SliceState,
   variation: { id: string } | undefined,
   isPreview?: boolean
-) => {
+): void => {
   if (!variation) {
-    return router.push(`/${model.href}/${model.infos.sliceName}`);
+    router.push(`/${model.href}/${model.infos.sliceName}`);
+    return;
   }
   const params = Links.variation({
     lib: model.href,
@@ -36,14 +37,14 @@ const redirect = (
   router.push(params.href, params.as, params.options);
 };
 
-export default function Header({
+const Header: React.FunctionComponent<PropTypes> = ({
   title,
   Model,
   variation,
   handleScreenSizeChange,
   canvasUrl,
   size,
-}: PropTypes) {
+}) => {
   return (
     <Box
       sx={{
@@ -90,4 +91,6 @@ export default function Header({
       </Flex>
     </Box>
   );
-}
+};
+
+export default Header;
