@@ -2,7 +2,10 @@ import { Reducer } from "redux";
 import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
-import Environment, { UpdateVersionInfo } from "@models/common/Environment";
+import {
+  FrontEndEnvironment,
+  UpdateVersionInfo,
+} from "@models/common/Environment";
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 
@@ -22,7 +25,7 @@ type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
 // Selectors
 export const getEnvironment = (
   store: SliceMachineStoreType
-): Environment | null => store.environment.env;
+): FrontEndEnvironment | null => store.environment.env;
 
 export const selectIsThePreviewSetUp = (
   store: SliceMachineStoreType

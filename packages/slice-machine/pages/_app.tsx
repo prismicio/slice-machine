@@ -20,10 +20,9 @@ import "src/css/tabs.css";
 import "src/css/drawer.css";
 
 import ServerState from "lib/models/server/ServerState";
-import AppState from "lib/models/common/AppState";
 import ServerError from "lib/models/server/ServerError";
-
 import { LibraryUI } from "lib/models/common/LibraryUI";
+
 import Head from "next/head";
 
 async function fetcher(url: string): Promise<any> {
@@ -77,21 +76,19 @@ function MyApp({
     fetcher
   );
 
+  // Technical Debt : This internal state is used for forcing React to reload all the app,
+  // to remove it we should change how the slice store is handled
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
   const [state, setRenderer] = useState<{
     Renderer: (props: any) => JSX.Element;
-    payload: AppState | null;
-  }>({ Renderer: RenderStates.Loading, payload: null });
+  }>({ Renderer: RenderStates.Loading });
 
   useEffect(() => {
     if (!serverState) {
       return;
     }
-
-    const appState = AppState.filter(serverState);
-
-    const newSliceMap = mapSlices(appState.libraries);
+    const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {
       Object.keys(newSliceMap).forEach((key) => {
         if (!sliceMap[key]) {
@@ -100,7 +97,7 @@ function MyApp({
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default, payload: appState });
+    setRenderer({ Renderer: RenderStates.Default });
     const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
     console.log("Loaded libraries: ", { libraries });
@@ -109,7 +106,7 @@ function MyApp({
     console.log("------ End of log ------");
   }, [serverState]);
 
-  const { Renderer, payload } = state;
+  const { Renderer } = state;
 
   return (
     <>
@@ -122,7 +119,6 @@ function MyApp({
           <SliceMachineApp
             theme={theme}
             serverState={serverState}
-            payload={payload}
             pageProps={pageProps}
             Component={Component}
             Renderer={Renderer}

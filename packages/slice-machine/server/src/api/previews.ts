@@ -1,6 +1,6 @@
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import { handleStorybookPreview } from "./common/storybook";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
@@ -13,7 +13,7 @@ type Screenshots = Record<Models.VariationAsObject["id"], Models.Screenshot>;
 
 export default {
   async generateForSlice(
-    env: Environment,
+    env: BackendEnvironment,
     libraryName: string,
     sliceName: string
   ): Promise<[{ error: Error; variationId: string }[], Screenshots]> {
@@ -44,7 +44,7 @@ export default {
   },
 
   async generateForVariation(
-    env: Environment,
+    env: BackendEnvironment,
     libraryName: string,
     sliceName: string,
     variationId: string
@@ -70,7 +70,7 @@ export default {
 
   mergeWithCustomScreenshots(
     screenshotPaths: Screenshots,
-    env: Environment,
+    env: BackendEnvironment,
     from: string,
     sliceName: string
   ): Screenshots {

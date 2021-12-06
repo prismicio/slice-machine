@@ -4,12 +4,12 @@ import { snakelize } from "@lib/utils/str";
 import path from "path";
 import uniqid from "uniqid";
 
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import { s3DefaultPrefix } from "@lib/consts";
 
 export async function purge(
-  env: Environment,
+  env: BackendEnvironment,
   slices: ReadonlyArray<Models.SliceAsObject>,
   sliceName: string,
   onError: (error?: any, msg?: string) => any
@@ -31,7 +31,7 @@ export async function purge(
 }
 
 export async function upload(
-  env: Environment,
+  env: BackendEnvironment,
   sliceName: string,
   variationId: string,
   filePath: string,
@@ -44,7 +44,7 @@ export async function upload(
   if (maybeErrorMessage) {
     const msg =
       maybeErrorMessage ||
-      "An error occured while creating ACL - please contact support";
+      "An error occurred while creating ACL - please contact support";
     console.error(msg);
     console.error(`Full error: ${JSON.stringify(aclResponse)}`);
     return onError(aclResponse, msg);

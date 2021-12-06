@@ -1,8 +1,10 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
 import { warningStates } from "@lib/consts";
-
-import Environment from "@lib/models/common/Environment";
+import {
+  BackendEnvironment,
+  FrontEndEnvironment,
+} from "@lib/models/common/Environment";
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "@lib/models/server/ServerError";
@@ -11,15 +13,12 @@ import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
+import ServerState from "@models/server/ServerState";
 
 export async function createWarnings(
-  env: Environment,
-  configErrors?: { [errorKey: string]: ServerError },
+  env: BackendEnvironment,
   clientError?: ErrorWithStatus
 ): Promise<ReadonlyArray<Warning>> {
-  console.log("Update config errors");
-  configErrors;
-
   const newVersion =
     env.updateVersionInfo && env.updateVersionInfo.updateAvailable
       ? {
@@ -48,8 +47,10 @@ export async function createWarnings(
   ) as ReadonlyArray<Warning>;
 }
 
-export default async function handler(req: RequestWithEnv) {
-  const { errors: configErrors, env } = req;
+export const getBackendState = async (
+  configErrors: Record<string, ServerError>,
+  env: BackendEnvironment
+) => {
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
     env
@@ -75,10 +76,9 @@ export default async function handler(req: RequestWithEnv) {
     }
   }
 
-  const warnings = await createWarnings(env, configErrors, clientError);
+  const warnings = await createWarnings(env, clientError);
 
   await generate(env, libraries);
-  req.tracker.libraries(libraries);
 
   return {
     libraries,
@@ -90,5 +90,25 @@ export default async function handler(req: RequestWithEnv) {
     configErrors,
     env,
     warnings,
+  };
+};
+
+export default async function handler(
+  req: RequestWithEnv
+): Promise<ServerState> {
+  const { errors: configErrors, env } = req;
+  const serverState = await getBackendState(configErrors, env);
+  const { client, cwd, prismicData, baseUrl, ...frontEnv } = serverState.env;
+  const frontEndEnv: FrontEndEnvironment = {
+    ...frontEnv,
+    sliceMachineAPIUrl: baseUrl,
+    prismicAPIUrl: prismicData.base,
+  };
+
+  req.tracker.libraries(serverState.libraries);
+
+  return {
+    ...serverState,
+    env: frontEndEnv,
   };
 }

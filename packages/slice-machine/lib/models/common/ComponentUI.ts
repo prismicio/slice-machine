@@ -1,6 +1,6 @@
 import * as Models from "@slicemachine/core/build/src/models/index";
 import { compareVariations } from "../../utils";
-import Environment from "./Environment";
+import { BackendEnvironment } from "./Environment";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -64,7 +64,7 @@ export const ComponentUI = {
   build(
     component: Models.Component,
     remoteSlices: ReadonlyArray<Models.SliceAsObject>,
-    env: Environment
+    env: BackendEnvironment
   ): ComponentUI {
     return {
       ...component,
