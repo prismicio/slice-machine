@@ -1,25 +1,12 @@
 import { getOrElseW } from "fp-ts/lib/Either";
-import * as t from "io-ts";
 import { Files, Cookie } from "../utils";
 import { PrismicConfigPath } from "./paths";
+import { PrismicSharedConfig } from "../models/PrismicSharedConfig";
 
 export const DEFAULT_CONFIG: PrismicSharedConfig = {
   base: "https://prismic.io",
   cookies: "",
 };
-
-export const PrismicSharedConfig = t.intersection([
-  t.type({
-    base: t.string,
-    cookies: t.string,
-  }),
-  t.partial({
-    userId: t.union([t.string, t.undefined]),
-    oauthAccessToken: t.string,
-    authUrl: t.string,
-  }),
-]);
-export type PrismicSharedConfig = t.TypeOf<typeof PrismicSharedConfig>;
 
 export const PrismicSharedConfigManager = {
   default(): PrismicSharedConfig {

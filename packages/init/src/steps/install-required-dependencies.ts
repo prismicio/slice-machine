@@ -1,6 +1,6 @@
 import path from "path";
 import { execCommand } from "../utils";
-import { Utils, FileSystem } from "@slicemachine/core";
+import { Utils, FileSystem, Models } from "@slicemachine/core";
 
 const {
   PRISMIC_CLIENT,
@@ -14,17 +14,17 @@ const {
   PRISMIC_VUE,
 } = Utils.CONSTS;
 
-function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
+function depsForFramework(framework: Models.Frameworks): string {
   switch (framework) {
-    case Utils.Framework.FrameworkEnum.react:
+    case Models.Frameworks.react:
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
-    case Utils.Framework.FrameworkEnum.next:
+    case Models.Frameworks.next:
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE}`;
-    case Utils.Framework.FrameworkEnum.svelte:
+    case Models.Frameworks.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
-    case Utils.Framework.FrameworkEnum.nuxt:
+    case Models.Frameworks.nuxt:
       return `${NUXT_PRISMIC} ${NUXT_SM} ${VUE_SLICEZONE}`;
-    case Utils.Framework.FrameworkEnum.vue:
+    case Models.Frameworks.vue:
       return `${PRISMIC_VUE} ${PRISMIC_CLIENT} ${PRISMIC_DOM_PACKAGE_NAME} ${VUE_SLICEZONE}`;
     default:
       return "";
@@ -33,7 +33,7 @@ function depsForFramework(framework: Utils.Framework.FrameworkEnum): string {
 
 export async function installRequiredDependencies(
   cwd: string,
-  framework: Utils.Framework.FrameworkEnum
+  framework: Models.Frameworks
 ): Promise<void> {
   const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
   const installDevDependencyCommand = yarnLock

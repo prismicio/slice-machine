@@ -29,7 +29,7 @@ export const getEnvironment = (
 
 export const selectIsThePreviewSetUp = (
   store: SliceMachineStoreType
-): boolean => !!store.environment.env?.userConfig.localSliceCanvasURL;
+): boolean => !!store.environment.env?.manifest.localSliceCanvasURL;
 
 export const getWarnings = (
   store: SliceMachineStoreType

@@ -114,7 +114,7 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.repo).toEqual("api");
-    expect(env.userConfig.apiEndpoint).toEqual("https://api.wroom.io/api/v2");
+    expect(env.manifest.apiEndpoint).toEqual("https://api.wroom.io/api/v2");
     expect(env.framework).toEqual(Framework.vanillajs);
   });
 

@@ -2,10 +2,9 @@ import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
 import { mocked } from "ts-jest/utils";
 import { detectFramework } from "../src/steps";
-import { Utils } from "@slicemachine/core";
+import { Utils, Models } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
-import { Framework } from "@slicemachine/core/src/utils";
 
 jest.mock("fs");
 
@@ -20,7 +19,7 @@ describe("detect-framework", () => {
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
         dependencies: {
-          [Utils.Framework.FrameworkEnum.next]: "beta",
+          [Models.Frameworks.next]: "beta",
         },
       })
     );
@@ -30,7 +29,7 @@ describe("detect-framework", () => {
     stderr.stop();
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(result).toEqual({
-      value: Utils.Framework.FrameworkEnum.next,
+      value: Models.Frameworks.next,
       manuallyAdded: false,
     });
   });
@@ -45,7 +44,7 @@ describe("detect-framework", () => {
 
     jest.spyOn(inquirer, "prompt").mockReturnValue(
       Promise.resolve({
-        framework: Utils.Framework.FrameworkEnum.next,
+        framework: Models.Frameworks.next,
       }) as ReturnType<typeof inquirer.prompt>
     );
 
@@ -57,7 +56,7 @@ describe("detect-framework", () => {
     const result = await detectFramework(__dirname);
     stderr.stop();
     expect(result).toEqual({
-      value: Utils.Framework.FrameworkEnum.next,
+      value: Models.Frameworks.next,
       manuallyAdded: true,
     });
     expect(fs.lstatSync).toHaveBeenCalled();
@@ -92,8 +91,8 @@ describe("detect-framework", () => {
     jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
       JSON.stringify({
         dependencies: {
-          [Framework.FrameworkEnum.gatsby]: "beta",
-          [Framework.FrameworkEnum.react]: "beta",
+          [Models.Frameworks.gatsby]: "beta",
+          [Models.Frameworks.react]: "beta",
         },
       })
     );

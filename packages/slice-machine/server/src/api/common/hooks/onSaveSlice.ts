@@ -1,10 +1,9 @@
 import path from "path";
-import type Models from "@slicemachine/core/build/src/models";
+import Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
 import { findIndexFile } from "@lib/utils/lib";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
-import { Framework } from "@lib/models/common/Framework";
 import * as LibrariesState from "../LibrariesState";
 import { Libraries } from "@slicemachine/core";
 
@@ -33,7 +32,8 @@ const createIndexFileForFrameWork = (
   env: BackendEnvironment,
   lib: Models.Library<Models.Component>
 ) => {
-  if (env.framework === Framework.svelte) return createIndexFileForSvelte(lib);
+  if (env.framework === Models.Frameworks.svelte)
+    return createIndexFileForSvelte(lib);
   return createIndexFile(lib);
 };
 
@@ -42,7 +42,7 @@ export default async function onSaveSlice(
 ): Promise<void> {
   const libraries = await Libraries.libraries(
     env.cwd,
-    (env.userConfig.libraries || []) as string[]
+    (env.manifest.libraries || []) as string[]
   );
   const localLibs = libraries.filter((e) => e.isLocal);
 

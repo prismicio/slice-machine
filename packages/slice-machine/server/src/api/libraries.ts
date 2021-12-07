@@ -29,7 +29,7 @@ export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
 
     const libraries = Libraries.libraries(
       env.cwd,
-      env.userConfig.libraries || []
+      env.manifest.libraries || []
     );
 
     const withFlags = libraries.map((lib) =>

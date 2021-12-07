@@ -2,8 +2,8 @@ import path from "path";
 import TemplateEngine from "ejs";
 
 import Files from "@lib/utils/files";
-import { Framework } from "@lib/models/common/Framework";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
+import { Models } from "@slicemachine/core";
 
 import { createStorybookId } from "@lib/utils/str";
 
@@ -14,19 +14,19 @@ const Paths = {
     path.join(appRoot, "templates/storybook/next.template.ejs"),
   svelteTemplate: (appRoot: string) =>
     path.join(appRoot, "templates/storybook/svelte.template.ejs"),
-  getTemplate(appRoot: string, framework: Framework) {
+  getTemplate(appRoot: string, framework: Models.Frameworks) {
     switch (framework) {
-      case Framework.nuxt:
+      case Models.Frameworks.nuxt:
         return Paths.nuxtTemplate(appRoot);
-      case Framework.vue:
+      case Models.Frameworks.vue:
         return Paths.nuxtTemplate(appRoot);
-      case Framework.next:
+      case Models.Frameworks.next:
         return Paths.nextTemplate(appRoot);
-      case Framework.react:
+      case Models.Frameworks.react:
         return Paths.nextTemplate(appRoot);
-      case Framework.svelte:
+      case Models.Frameworks.svelte:
         return Paths.svelteTemplate(appRoot);
-      case Framework.vanillajs:
+      case Models.Frameworks.vanillajs:
         return Paths.nextTemplate(appRoot);
       default:
         return null;
@@ -37,7 +37,7 @@ const Paths = {
 export default {
   generateStories(
     appRoot: string,
-    framework: Framework,
+    framework: Models.Frameworks,
     cwd: string,
     libraryName: string,
     sliceName: string
@@ -111,7 +111,9 @@ export default {
         .library(libraryName)
         .slice(sliceName)
         .stories(
-          framework === Framework.svelte ? "index.stories.svelte" : undefined
+          framework === Models.Frameworks.svelte
+            ? "index.stories.svelte"
+            : undefined
         ),
       stories
     );

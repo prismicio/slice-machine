@@ -9,7 +9,7 @@ import {
 import * as communication from "../../../src/core/communication";
 import { roles } from "../../../src/utils";
 import nock from "nock";
-import { Framework } from "../../../src/utils";
+import { Frameworks } from "../../../src/models/Framework";
 
 describe("communication", () => {
   afterEach(() => {
@@ -205,7 +205,7 @@ describe("communication", () => {
     test("with default arguments it should call the prismic.io endpoint to create a new repo", async () => {
       const formData = {
         domain: repoName,
-        framework: Framework.FrameworkEnum.vanillajs,
+        framework: Frameworks.vanillajs,
         plan: "personal",
         isAnnual: "false",
         role: "developer",
@@ -221,7 +221,7 @@ describe("communication", () => {
 
     test("with framework and different base", async () => {
       const fakeBase = "https://example.com";
-      const framework = Framework.FrameworkEnum.next;
+      const framework = Frameworks.next;
 
       const formData = {
         domain: repoName,

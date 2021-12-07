@@ -47,10 +47,7 @@ describe("install required dependency", () => {
     fileExistsMock.mockReturnValueOnce(true); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installRequiredDependencies(
-      fakeCWD,
-      Core.Utils.Framework.FrameworkEnum.nuxt
-    );
+    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -69,10 +66,7 @@ describe("install required dependency", () => {
     fileExistsMock.mockReturnValueOnce(false); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installRequiredDependencies(
-      fakeCWD,
-      Core.Utils.Framework.FrameworkEnum.nuxt
-    );
+    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -93,10 +87,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(
-      fakedir,
-      Core.Utils.Framework.FrameworkEnum.react
-    );
+    await installRequiredDependencies(fakedir, Core.Models.Frameworks.react);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -114,10 +105,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(
-      fakedir,
-      Core.Utils.Framework.FrameworkEnum.next
-    );
+    await installRequiredDependencies(fakedir, Core.Models.Frameworks.next);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -135,10 +123,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(
-      fakedir,
-      Core.Utils.Framework.FrameworkEnum.svelte
-    );
+    await installRequiredDependencies(fakedir, Core.Models.Frameworks.svelte);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -156,10 +141,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(
-      fakedir,
-      Core.Utils.Framework.FrameworkEnum.nuxt
-    );
+    await installRequiredDependencies(fakedir, Core.Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -177,10 +159,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(
-      fakedir,
-      Core.Utils.Framework.FrameworkEnum.vue
-    );
+    await installRequiredDependencies(fakedir, Core.Models.Frameworks.vue);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
