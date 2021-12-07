@@ -5,11 +5,14 @@ import * as core from "@slicemachine/core";
 import { createRepository } from "../src/steps/create-repo";
 import { stdout, stderr } from "stdout-stderr";
 
-import { Models } from "@slicemachine/core";
-
 jest.mock("@slicemachine/core", () => ({
   Communication: {
     createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
+  },
+  Models: {
+    Frameworks: {
+      next: "next",
+    },
   },
   Utils: {
     spinner: jest.fn().mockReturnValue({
@@ -34,7 +37,7 @@ describe("mocking the core example: not advised", () => {
       .mockImplementationOnce(() => undefined as never);
     stderr.start();
     stdout.start();
-    await createRepository("foo-bar", Models.Frameworks.next, {
+    await createRepository("foo-bar", core.Models.Frameworks.next, {
       base: "https://prismic.io",
       cookies: "prismic-auth=abcd",
     });
