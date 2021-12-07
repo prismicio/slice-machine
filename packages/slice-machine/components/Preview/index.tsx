@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useContext } from "react";
 
-import { SliceContext } from "src/models/slice/context";
+import { SliceContext } from "@src/models/slice/context";
 
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
