@@ -11,6 +11,7 @@ const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
     "bash",
     "xml",
     "html",
+    "json",
   ]).value;
   return (
     <Flex as="pre">
