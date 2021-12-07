@@ -2,14 +2,24 @@ import React from "react";
 import { Flex } from "theme-ui";
 import hljs from "highlight.js";
 
-const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
-  const text = hljs.highlightAuto(children, [
-    "javascript",
-    "bash",
-    "xml",
-    "html",
-    "json",
-  ]).value;
+type language = "javascript" | "bash" | "xml" | "html" | "json";
+
+const DEFAULT_LANGUAGES: Array<language> = [
+  "javascript",
+  "bash",
+  "xml",
+  "html",
+  "json",
+];
+
+const CodeBlock: React.FC<{ children: string; lang?: language }> = ({
+  children,
+  lang,
+}) => {
+  const text = lang
+    ? hljs.highlight(children, { language: lang }).value
+    : hljs.highlightAuto(children, DEFAULT_LANGUAGES).value;
+
   return (
     <Flex as="pre">
       <code

@@ -26,12 +26,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           Slice Canvas is used to develop your components with mock data, run
           the following command to install it with npm
         </Text>
-        <Flex>
-          <pre style={{ overflowX: "auto", padding: "16px 0" }}>
-            npm install --save next-slicezone prismic-reactjs
-            @prismicio/slice-canvas-renderer-react
-          </pre>
-        </Flex>
+        <CodeBlock>
+          npm install --save next-slicezone prismic-reactjs
+          @prismicio/slice-canvas-renderer-react
+        </CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
