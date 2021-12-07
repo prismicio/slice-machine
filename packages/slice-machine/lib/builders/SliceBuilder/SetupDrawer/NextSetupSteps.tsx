@@ -64,11 +64,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           the following code. This page is the route you hit to preview and
           develop your components.
         </Text>
-        <Flex>
-          <pre style={{ overflowX: "auto", padding: "16px 0" }}>
-            <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
-          </pre>
-        </Flex>
+        <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
@@ -83,7 +79,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           property <Text variant={"pre"}>localSliceCanvasURL</Text> in the shape
           of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
         </Text>
-        <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
+        <CodeBlock>
+          {"// eg:\n" +
+            '"localSliceCanvasURL": "http://localhost:3000/_canvas"'}
+        </CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
