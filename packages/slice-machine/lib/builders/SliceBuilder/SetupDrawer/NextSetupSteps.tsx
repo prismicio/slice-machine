@@ -3,26 +3,7 @@ import React from "react";
 import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
-import hljs from "highlight.js";
-
-const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
-  const text = hljs.highlightAuto(children, [
-    "javascript",
-    "bash",
-    "xml",
-    "html",
-    "json",
-  ]).value;
-  return (
-    <Flex as="pre">
-      <code
-        className="hljs"
-        style={{ overflowX: "auto", padding: "16px 0" }}
-        dangerouslySetInnerHTML={{ __html: text }}
-      />
-    </Flex>
-  );
-};
+import CodeBlock from "../../../../components/CodeBlock";
 
 type NextSetupStepProps = {
   activeStep: number;

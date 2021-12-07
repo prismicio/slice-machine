@@ -19,22 +19,7 @@ import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
 
-// Code block styles (pick one)
-import "highlight.js/styles/base16/material-lighter.css";
-// import "highlight.js/styles/github.css";
-// import "highlight.js/styles/base16/default-light.css"
-// import "highlight.js/styles/base16/edge-light.css"
-// import "highlight.js/styles/base16/github.css"
-// import "highlight.js/styles/base16/google.css"
-// import "highlight.js/base16/harmonic16-light.css"
-// import "highlight.js/styles/base16/humanoid-light.css"
-// import "highlight.js/styles/base16/one-light.css"
-// import "highlight.js/styles/base16/summerfruit-light.css"
-// import "highlight.js/styles/tomorrow-night-bright"
-// import "highlight.js/styles/github.css"
-// import "highlight.js/styles/docco.css"
-// import "highlight.js/styles/stackoverflow-light.css"
-// import "highlight.js/styles/atom-one-light.css"
+import "highlight.js/styles/atom-one-dark.css";
 
 import ServerState from "lib/models/server/ServerState";
 import AppState from "lib/models/common/AppState";
