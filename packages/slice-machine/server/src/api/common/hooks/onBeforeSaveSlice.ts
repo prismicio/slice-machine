@@ -1,5 +1,5 @@
 import type Models from "@slicemachine/core/build/src/models";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import { GeneratedPaths } from "@lib/models/paths";
 
@@ -10,7 +10,7 @@ export default async function onBeforeSaveSlice(
     from,
     sliceName,
   }: { from: string; sliceName: string; model: Models.SliceAsObject },
-  env: Environment
+  env: BackendEnvironment
 ): Promise<void> {
   const pathToSliceAssets = GeneratedPaths(env.cwd)
     .library(from)

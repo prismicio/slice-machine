@@ -1,12 +1,12 @@
 import { Libraries, Models } from "@slicemachine/core";
 
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 
-export async function getLibrariesWithFlags(env: Environment): Promise<{
+export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<LibraryUI>;
@@ -45,7 +45,7 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
   }
 }
 
-export default async function handler(env: Environment): Promise<{
+export default async function handler(env: BackendEnvironment): Promise<{
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<LibraryUI>;

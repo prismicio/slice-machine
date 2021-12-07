@@ -7,7 +7,7 @@ import { promisify } from "util";
 // @ts-ignore
 import cpy from "copy-template-dir";
 
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
@@ -30,7 +30,7 @@ const IndexFiles = {
 };
 
 const copyTemplate = async (
-  env: Environment,
+  env: BackendEnvironment,
   templatePath: string,
   from: string,
   sliceName: string
@@ -53,7 +53,7 @@ const copyTemplate = async (
 };
 
 const fromTemplate = async (
-  env: Environment,
+  env: BackendEnvironment,
   from: string,
   sliceName: string
 ) => {

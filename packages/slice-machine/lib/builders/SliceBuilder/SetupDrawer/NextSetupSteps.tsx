@@ -28,8 +28,8 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         </Text>
         <Flex>
           <pre style={{ overflowX: "auto", padding: "16px 0" }}>
-            npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic
-            @prismicio/slice-canvas-renderer-vue
+            npm install --save next-slicezone prismic-reactjs
+            @prismicio/slice-canvas-renderer-react
           </pre>
         </Flex>
       </Flex>

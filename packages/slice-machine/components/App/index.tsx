@@ -12,7 +12,6 @@ import ToastProvider from "../../src/ToastProvider";
 import LoginModal from "@components/LoginModal";
 import ReviewModal from "@components/ReviewModal";
 import ServerState from "@models/server/ServerState";
-import AppState from "@models/common/AppState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import UpdateVersionModal from "../UpdateVersionModal";
@@ -31,7 +30,6 @@ const RemoveDarkMode = ({ children }: { children: React.ReactElement }) => {
 type AppProps = {
   theme: () => Theme;
   serverState: ServerState | undefined;
-  payload: AppState | null;
   pageProps: any; // This is coming from next
   Component: (props: any) => JSX.Element;
   Renderer: (props: any) => JSX.Element;
@@ -40,7 +38,6 @@ type AppProps = {
 const SliceMachineApp: React.FunctionComponent<AppProps> = ({
   theme,
   serverState,
-  payload,
   pageProps,
   Component,
   Renderer,
@@ -53,32 +50,32 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
       <BaseStyles>
         <RemoveDarkMode>
           {!serverState ? (
-            <Renderer {...payload} />
+            <Renderer {...serverState} />
           ) : (
             <>
-              {!payload || !payload.libraries ? (
+              {!serverState || !serverState.libraries ? (
                 <Renderer
                   Component={Component}
                   pageProps={pageProps}
-                  {...payload}
+                  {...serverState}
                 />
               ) : (
                 <ToastProvider>
                   <LibrariesProvider
-                    remoteSlices={payload.remoteSlices}
-                    libraries={payload.libraries}
-                    env={payload.env}
+                    remoteSlices={serverState.remoteSlices}
+                    libraries={serverState.libraries}
+                    env={serverState.env}
                   >
                     <CustomTypesProvider
-                      customTypes={payload.customTypes}
-                      remoteCustomTypes={payload.remoteCustomTypes}
+                      customTypes={serverState.customTypes}
+                      remoteCustomTypes={serverState.remoteCustomTypes}
                     >
                       <AppLayout>
-                        <SliceHandler {...payload}>
+                        <SliceHandler {...serverState}>
                           <Renderer
                             Component={Component}
                             pageProps={pageProps}
-                            {...payload}
+                            {...serverState}
                           />
                         </SliceHandler>
                       </AppLayout>

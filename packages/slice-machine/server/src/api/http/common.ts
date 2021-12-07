@@ -1,6 +1,6 @@
 import express from "express";
 import getEnv from "../services/getEnv";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 import ServerError from "@lib/models/server/ServerError";
 import { TrackerBuilder, Tracker } from "../services/tracker";
 
@@ -13,8 +13,8 @@ function stripQuotes(str?: string | undefined): string | undefined {
 export interface RequestWithEnv extends express.Request {
   tracker: Tracker;
   anonymousId?: string;
-  env: Environment;
-  errors?: { [errorKey: string]: ServerError };
+  env: BackendEnvironment;
+  errors: Record<string, ServerError>;
 }
 
 export function WithEnv(

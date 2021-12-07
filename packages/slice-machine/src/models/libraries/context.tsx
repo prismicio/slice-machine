@@ -2,11 +2,11 @@ import React from "react";
 import type Models from "@slicemachine/core/build/src/models";
 import { useModelReducer } from "../slice/context";
 
-import Environment from "../../../lib/models/common/Environment";
-import LibraryState from "../../../lib/models/ui/LibraryState";
-import { LibraryUI } from "../../../lib/models/common/LibraryUI";
+import { FrontEndEnvironment } from "lib/models/common/Environment";
+import LibraryState from "lib/models/ui/LibraryState";
+import { LibraryUI } from "lib/models/common/LibraryUI";
 
-import { SliceMockConfig } from "../../../lib/models/common/MockConfig";
+import { SliceMockConfig } from "lib/models/common/MockConfig";
 
 export const LibrariesContext = React.createContext<
   Partial<ReadonlyArray<LibraryState>>
@@ -14,7 +14,7 @@ export const LibrariesContext = React.createContext<
 
 type LibraryHandlerProps = {
   libraries: ReadonlyArray<LibraryUI>;
-  env: Environment;
+  env: FrontEndEnvironment;
   remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
 };
 
