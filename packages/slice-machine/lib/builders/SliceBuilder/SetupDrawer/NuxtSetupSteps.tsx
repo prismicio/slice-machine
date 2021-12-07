@@ -125,38 +125,39 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
   </>
 );
 
-const SliceCanvasPageCreationInstruction =
-  "<template>\n" +
-  '  <SliceCanvasRenderer :state="state" #default="props">\n' +
-  '    <SliceZone v-bind="props" />\n' +
-  "  </SliceCanvasRenderer>\n" +
-  "</template>\n" +
-  "\n" +
-  "<script>\n" +
-  'import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-vue";\n' +
-  'import SliceZone from "vue-slicezone";\n' +
-  "\n" +
-  'import state from "~/.slicemachine/libraries-state.json";\n' +
-  "\n" +
-  "export default {\n" +
-  "  components: {\n" +
-  "    SliceCanvasRenderer,\n" +
-  "    SliceZone\n" +
-  "  },\n" +
-  "  data() {\n" +
-  "    return { state };\n" +
-  "  }\n" +
-  "}\n" +
-  "</script>";
-const NuxtConfigInstructions =
-  "// Modules: https://go.nuxtjs.dev/config-modules\n" +
-  'modules: [["@nuxtjs/prismic", {\n' +
-  '    endpoint: smConfig.apiEndpoint|| ""\n' +
-  '}], ["nuxt-sm"]],\n' +
-  "\n" +
-  "// Build Configuration: https://go.nuxtjs.dev/config-build\n" +
-  "build: {\n" +
-  '    transpile: ["vue-slicezone", "nuxt-sm"]\n' +
-  "}";
+const SliceCanvasPageCreationInstruction = `<template>
+  <SliceCanvasRenderer :state="state" #default="props">
+    <SliceZone v-bind="props" />
+  </SliceCanvasRenderer>
+</template>
+
+<script>
+import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-vue";
+import SliceZone from "vue-slicezone";
+
+import state from "~/.slicemachine/libraries-state.json";
+
+export default {
+  components: {
+    SliceCanvasRenderer,
+    SliceZone
+  },
+  data() {
+    return { state };
+  }
+}
+</script>
+`;
+
+const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
+modules: [["@nuxtjs/prismic", {
+  endpoint: smConfig.apiEndpoint|| ""
+}], ["nuxt-sm"]],
+
+// Build Configuration: https://go.nuxtjs.dev/config-build
+build: {
+  transpile: ["vue-slicezone", "nuxt-sm"]
+}
+`;
 
 export default NuxtSetupSteps;
