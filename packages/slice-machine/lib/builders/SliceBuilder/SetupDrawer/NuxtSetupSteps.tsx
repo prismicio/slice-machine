@@ -4,12 +4,12 @@ import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 
-type NextSetupStepProps = {
+type NuxtSetupStepProps = {
   activeStep: number;
   onOpenStep: (stepNumber: number) => () => void;
 };
 
-const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
+const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
   onOpenStep,
   activeStep,
 }) => (
@@ -29,17 +29,48 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           <pre
             style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
           >
-            npm install --save next-slicezone prismic-reactjs
-            @prismicio/slice-canvas-renderer-react
+            npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic
+            @prismicio/slice-canvas-renderer-vue
           </pre>
         </Flex>
       </Flex>
     </StepSection>
     <StepSection
       stepNumber={2}
-      title={"Create a page for Slice Canvas"}
+      title={"Update your Nuxt config"}
       isOpen={activeStep === 2}
       onOpenStep={onOpenStep(2)}
+    >
+      <Flex sx={{ flexDirection: "column" }}>
+        <Text sx={{ color: "textClear", mb: 2 }}>
+          In your nuxt.config.js file, you need to add at the beginning the
+          following line:
+        </Text>
+        <Flex sx={{ mb: 2 }}>
+          <pre
+            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
+          >
+            import smConfig from "./sm.json"
+          </pre>
+        </Flex>
+        <Text sx={{ color: "textClear", mb: 2 }}>
+          In your nuxt.config.js file, you need to add at the beginning the
+          following line:
+        </Text>
+        <Flex>
+          <pre
+            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
+          >
+            {NuxtConfigInstructions}
+          </pre>
+        </Flex>
+      </Flex>
+    </StepSection>
+    <StepSection
+      stepNumber={3}
+      title={"Create a page for Slice Canvas"}
+      isOpen={activeStep === 3}
+      onOpenStep={onOpenStep(3)}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -57,10 +88,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       </Flex>
     </StepSection>
     <StepSection
-      stepNumber={3}
+      stepNumber={4}
       title={"Update sm.json"}
-      isOpen={activeStep === 3}
-      onOpenStep={onOpenStep(3)}
+      isOpen={activeStep === 4}
+      onOpenStep={onOpenStep(4)}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -79,10 +110,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       </Flex>
     </StepSection>
     <StepSection
-      stepNumber={4}
+      stepNumber={5}
       title={"Check configuration"}
-      isOpen={activeStep === 4}
-      onOpenStep={onOpenStep(4)}
+      isOpen={activeStep === 5}
+      onOpenStep={onOpenStep(5)}
     >
       <Flex>
         <Text sx={{ color: "textClear" }}>
@@ -94,20 +125,39 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
   </>
 );
 
-const SliceCanvasPageCreationInstruction = `import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-react";
-import SliceZone from "next-slicezone";
+const SliceCanvasPageCreationInstruction = `<template>
+  <SliceCanvasRenderer :state="state" #default="props">
+    <SliceZone v-bind="props" />
+  </SliceCanvasRenderer>
+</template>
 
-import state from "../.slicemachine/libraries-state.json";
+<script>
+import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-vue";
+import SliceZone from "vue-slicezone";
 
-import * as Slices from "../slices";
-const resolver = ({ sliceName }) => Slices[sliceName];
+import state from "~/.slicemachine/libraries-state.json";
 
-const SliceCanvas = () => (<SliceCanvasRenderer
-\t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
-\tsliceZone={(slices) => <SliceZone slices={slices} resolver={resolver} />}
-\tstate={state}
-/>);
+export default {
+  components: {
+    SliceCanvasRenderer,
+    SliceZone
+  },
+  data() {
+    return { state };
+  }
+}
+</script>
+`;
 
-export default SliceCanvas;`;
+const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
+modules: [["@nuxtjs/prismic", {
+  endpoint: smConfig.apiEndpoint|| ""
+}], ["nuxt-sm"]],
 
-export default NextSetupSteps;
+// Build Configuration: https://go.nuxtjs.dev/config-build
+build: {
+  transpile: ["vue-slicezone", "nuxt-sm"]
+}
+`;
+
+export default NuxtSetupSteps;

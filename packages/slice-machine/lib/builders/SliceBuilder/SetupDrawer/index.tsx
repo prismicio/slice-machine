@@ -4,7 +4,12 @@ import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-import NextSetupSteps from "@builders/SliceBuilder/SetupDrawer/NextSetupSteps";
+import NextSetupSteps from "./NextSetupSteps";
+import NuxtSetupSteps from "./NuxtSetupSteps";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getFramework } from "@src/modules/environment";
+import { Framework } from "@models/common/Framework";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -16,6 +21,10 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   onClose,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
+
+  const { framework } = useSelector((state: SliceMachineStoreType) => ({
+    framework: getFramework(state),
+  }));
 
   const onOpenStep = (stepNumber: number) => () => {
     if (stepNumber === activeStep) {
@@ -61,7 +70,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+            {framework === Framework.nuxt && (
+              <NuxtSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+            )}
+            {framework === Framework.next && (
+              <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+            )}
           </Flex>
         </Flex>
         <HelpSection />
