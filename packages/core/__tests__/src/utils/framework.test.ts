@@ -16,7 +16,10 @@ describe("framework.detectFramework", () => {
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ dependencies: {} }));
 
-    const result = FrameworkUtils.detectFramework(__dirname);
+    const result = FrameworkUtils.detectFramework(
+      __dirname,
+      Object.values(Frameworks)
+    );
 
     expect(mockedFs.lstatSync).toHaveBeenCalled();
     expect(result).toEqual(Frameworks.vanillajs);
@@ -38,7 +41,10 @@ describe("framework.detectFramework", () => {
       })
     );
 
-    const result = FrameworkUtils.detectFramework(__dirname);
+    const result = FrameworkUtils.detectFramework(
+      __dirname,
+      Object.values(Frameworks)
+    );
     expect(result).toEqual(Frameworks.gatsby);
   });
   valuesToCheck.forEach((value) => {
@@ -61,7 +67,10 @@ describe("framework.detectFramework", () => {
         ? value
         : fallback;
 
-      const result = FrameworkUtils.detectFramework(__dirname);
+      const result = FrameworkUtils.detectFramework(
+        __dirname,
+        Object.values(Frameworks)
+      );
       expect(mockedFs.lstatSync).toHaveBeenCalled();
       expect(result).toEqual(wanted);
     });
@@ -76,7 +85,9 @@ describe("framework.detectFramework", () => {
     const spy = jest
       .spyOn(console, "error")
       .mockImplementationOnce(() => undefined);
-    expect(() => FrameworkUtils.detectFramework(__dirname)).toThrow(wanted);
+    expect(() =>
+      FrameworkUtils.detectFramework(__dirname, Object.values(Frameworks))
+    ).toThrow(wanted);
     expect(spy).toHaveBeenCalledWith(wanted);
   });
 });

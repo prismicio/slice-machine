@@ -22,7 +22,10 @@ export function fancyName(str: Frameworks): string {
   }
 }
 
-export function detectFramework(cwd: string): Frameworks {
+export function detectFramework(
+  cwd: string,
+  supportedFrameworks: Frameworks[]
+): Frameworks {
   const pkg = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) {
     const message =
@@ -34,9 +37,9 @@ export function detectFramework(cwd: string): Frameworks {
   const { dependencies, devDependencies, peerDependencies } = pkg.content;
   const deps = { ...peerDependencies, ...devDependencies, ...dependencies };
 
-  const frameworkEntry: Frameworks | undefined = Object.values(Frameworks).find(
-    (f) => deps[f] && deps[f].length
-  );
+  const frameworkEntry: Frameworks | undefined = Object.values(
+    supportedFrameworks
+  ).find((f) => deps[f] && deps[f].length);
   return frameworkEntry || Frameworks.vanillajs;
 }
 
@@ -46,11 +49,12 @@ export function isValidFramework(framework: Frameworks): boolean {
 
 export function defineFramework(
   manifest: Manifest | null,
-  cwd: string
+  cwd: string,
+  supportedFrameworks: Frameworks[]
 ): Frameworks {
   const userDefinedFramework: Frameworks | null =
     manifest?.framework && isValidFramework(manifest.framework)
       ? manifest.framework
       : null;
-  return userDefinedFramework || detectFramework(cwd);
+  return userDefinedFramework || detectFramework(cwd, supportedFrameworks);
 }

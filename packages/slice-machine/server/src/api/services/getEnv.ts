@@ -125,7 +125,11 @@ export default async function getEnv(
         updateAvailable: npmCompare.updateAvailable,
       },
       mockConfig,
-      framework: Utils.Framework.defineFramework(manifestInfo.content, cwd),
+      framework: Utils.Framework.defineFramework(
+        manifestInfo.content,
+        cwd,
+        Models.SupportedFrameworks
+      ),
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },

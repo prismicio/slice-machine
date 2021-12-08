@@ -45,7 +45,10 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const maybeFramework = Utils.Framework.detectFramework(cwd);
+    const maybeFramework = Utils.Framework.detectFramework(
+      cwd,
+      Object.values(Models.Frameworks)
+    );
     spinner.stop();
 
     if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
