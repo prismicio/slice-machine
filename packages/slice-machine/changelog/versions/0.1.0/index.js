@@ -9,9 +9,11 @@ const {
 const { default: Files } = require("../../../build/lib/utils/files");
 const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
 const {
-  detectFramework,
   SupportedFrameworks,
 } = require("@slicemachine/core/build/src/models/Framework");
+const {
+  detectFramework,
+} = require("@slicemachine/core/build/src/utils/framework");
 const {
   default: storybook,
 } = require("../../../build/server/src/api/storybook");

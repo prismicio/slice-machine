@@ -1,5 +1,5 @@
 import path from "path";
-import Models from "@slicemachine/core/build/src/models";
+import { Models } from "@slicemachine/core";
 import Files from "@lib/utils/files";
 import { findIndexFile } from "@lib/utils/lib";
 import { BackendEnvironment } from "@lib/models/common/Environment";
