@@ -11,23 +11,24 @@ const buttonIconStyle = {
   top: "3px",
 };
 
-const CodeBlock = ({ docs, ...props }) => {
-  const ref = useRef(null);
+const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
+  const ref = useRef<HTMLDivElement>();
   const { theme } = useThemeUI();
 
   const [isCopied, setIsCopied] = useState(false);
 
-  const copy = () => {
-    const text = ref.current.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      setIsCopied(true);
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 1200);
-    });
+  const copy = (): void => {
+    const text = ref?.current?.textContent;
+    text &&
+      navigator.clipboard.writeText(text).then(() => {
+        setIsCopied(true);
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 1200);
+      });
   };
 
-  return props.children ? (
+  return children ? (
     <Flex
       sx={{
         p: 2,
@@ -47,16 +48,15 @@ const CodeBlock = ({ docs, ...props }) => {
       >
         <BsCode
           size={26}
-          color={theme.colors.icons}
-          mr={2}
+          color={theme?.colors?.icons as string | undefined}
           style={{
             border: "1px solid",
-            borderColor: theme.colors.borders,
+            borderColor: theme?.colors?.borders as any,
             borderRadius: "3px",
             padding: "4px",
           }}
         />
-        <Code {...props} />
+        <Code>{children}</Code>
       </Flex>
       <Box>
         <Button onClick={copy} variant="textButton">
