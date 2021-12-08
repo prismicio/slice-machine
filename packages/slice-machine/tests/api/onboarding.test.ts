@@ -1,9 +1,9 @@
 // We mock the getEnv service
-jest.mock("../server/src/api/services/getEnv");
+jest.mock("../../server/src/api/services/getEnv");
 
-import onboarding from "../server/src/api/tracking/onboarding";
+import onboarding from "../../server/src/api/tracking/onboarding";
 import { TrackingEventId } from "@models/common/TrackingEvent";
-import getEnv from "../server/src/api/services/getEnv";
+import getEnv from "../../server/src/api/services/getEnv";
 
 describe("onboarding tracking", () => {
   test("it should return no error on 200 status from the tracking service", async () => {
