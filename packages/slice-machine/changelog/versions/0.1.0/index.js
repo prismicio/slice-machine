@@ -8,7 +8,10 @@ const {
 } = require("../../../build/lib/models/paths");
 const { default: Files } = require("../../../build/lib/utils/files");
 const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
-const { detectFramework } = require("../../../build/lib/env/framework");
+const {
+  detectFramework,
+  SupportedFrameworks,
+} = require("@slicemachine/core/build/src/models/Framework");
 const {
   default: storybook,
 } = require("../../../build/server/src/api/storybook");
@@ -68,7 +71,7 @@ function moveStories(cwd, libraryName, sliceName) {
   Files.remove(customStoriesPath);
   storybook.generateStories(
     path.join(__dirname, "../../../"),
-    detectFramework(cwd),
+    detectFramework(cwd, SupportedFrameworks),
     cwd,
     libraryName,
     sliceName
