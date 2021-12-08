@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
-// import Prism from "@theme-ui/prism";
 
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
