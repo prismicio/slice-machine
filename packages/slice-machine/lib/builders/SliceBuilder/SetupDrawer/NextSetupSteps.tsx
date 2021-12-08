@@ -22,7 +22,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       onOpenStep={onOpenStep(1)}
     >
       <Flex sx={{ flexDirection: "column" }}>
-        <Text sx={{ color: (t) => t.colors?.textClear, mb: 2 }}>
+        <Text sx={{ color: "textClear", mb: 2 }}>
           Slice Canvas is used to develop your components with mock data, run
           the following command to install it with npm
         </Text>
@@ -81,21 +81,20 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
   </>
 );
 
-const SliceCanvasPageCreationInstruction =
-  'import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-react";\n' +
-  'import SliceZone from "next-slicezone";\n' +
-  "\n" +
-  'import state from "../.slicemachine/libraries-state.json";\n' +
-  "\n" +
-  'import * as Slices from "../slices";\n' +
-  "const resolver = ({ sliceName }) => Slices[sliceName];\n" +
-  "\n" +
-  "const SliceCanvas = () => (<SliceCanvasRenderer\n" +
-  "\t// The `sliceZone` prop should be a function receiving slices and rendering them using your `SliceZone` component.\n" +
-  "\tsliceZone={(slices) => <SliceZone slices={slices} resolver={resolver} />}\n" +
-  "\tstate={state}\n" +
-  "/>);\n" +
-  "\n" +
-  "export default SliceCanvas;";
+const SliceCanvasPageCreationInstruction = `import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-react";
+import SliceZone from "next-slicezone";
+
+import state from "../.slicemachine/libraries-state.json";
+
+import * as Slices from "../slices";
+const resolver = ({ sliceName }) => Slices[sliceName];
+
+const SliceCanvas = () => (<SliceCanvasRenderer
+\t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
+\tsliceZone={(slices) => <SliceZone slices={slices} resolver={resolver} />}
+\tstate={state}
+/>);
+
+export default SliceCanvas;`;
 
 export default NextSetupSteps;
