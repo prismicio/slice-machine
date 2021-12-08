@@ -18,6 +18,7 @@ export default async function (
 
   try {
     const res = await env.client.sendOnboarding(query);
+
     if (res.status && Math.floor(res.status / 100) !== 2) {
       return { err: res };
     }

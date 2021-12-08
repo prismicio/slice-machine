@@ -9,8 +9,7 @@ import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
 import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Framework } from "../../lib/models/common/Framework";
 import UpdateModal from "../../components/UpdateVersionModal";
-import { TrackerBuilder } from "../../server/src/api/services/tracker";
-import Environment from "@lib/models/common/Environment";
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
 
 jest.mock("next/router", () => ({
   useRouter() {
@@ -30,7 +29,7 @@ const App = () => (
   </>
 );
 
-const FAKE_ENVIRONMENT = {
+const FAKE_ENVIRONMENT: FrontEndEnvironment = {
   warnings: [],
   configErrors: {},
   env: {
@@ -48,10 +47,6 @@ const FAKE_ENVIRONMENT = {
       base: "",
       auth: "",
     },
-    chromatic: {
-      storybook: "",
-      library: "",
-    },
     updateVersionInfo: {
       currentVersion: "0.1.1",
       latestVersion: "0.1.1",
@@ -64,19 +59,13 @@ const FAKE_ENVIRONMENT = {
     framework: Framework.next,
     baseUrl: "http://localhost:9999",
     client: new FakeClient(),
-    tracker: new TrackerBuilder(
-      "fake tracker",
-      "test-version",
-      { userId: "fakeId" },
-      "sm-env-example",
-      {}
-    ).build(),
-  } as Environment,
+  },
 };
 
 const STATE_FOR_UPDATE = {
   environment: FAKE_ENVIRONMENT,
 };
+
 test.skip("when not up to date it should open a model and provided update instructions", async () => {
   const result = render(<App />, { preloadedState: STATE_FOR_UPDATE });
   const text = "npm i --save-dev slice-machine-ui";
