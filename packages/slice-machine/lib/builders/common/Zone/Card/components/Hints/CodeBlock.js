@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
-import Prism from "@theme-ui/prism";
+// import Prism from "@theme-ui/prism";
 
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
+import Code from "../../../../../../../components/CodeBlock";
 
 const buttonIconStyle = {
   position: "relative",
@@ -56,19 +57,7 @@ const CodeBlock = ({ docs, ...props }) => {
             padding: "4px",
           }}
         />
-        <Text
-          theme={theme}
-          as="code"
-          variant="hint"
-          ref={ref}
-          sx={{
-            py: "2px",
-            maxWidth: "100%",
-            overflow: "auto",
-          }}
-        >
-          <Prism {...props} />
-        </Text>
+        <Code {...props} />
       </Flex>
       <Box>
         <Button onClick={copy} variant="textButton">
