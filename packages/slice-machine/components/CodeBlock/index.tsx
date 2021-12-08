@@ -12,16 +12,17 @@ const DEFAULT_LANGUAGES: Array<Language> = [
   "json",
 ];
 
-const CodeBlock: React.FC<{ children: string; lang?: Language }> = ({
-  children,
-  lang,
-}) => {
+const CodeBlock: React.FC<{
+  children: string;
+  lang?: Language;
+  style?: React.CSSProperties;
+}> = ({ children, lang, style }) => {
   const text = lang
     ? hljs.highlight(children, { language: lang }).value
     : hljs.highlightAuto(children, DEFAULT_LANGUAGES).value;
 
   return (
-    <Flex as="pre">
+    <Flex as="pre" style={style}>
       <code
         className="hljs"
         style={{ overflowX: "auto", padding: "3px 5px" }}

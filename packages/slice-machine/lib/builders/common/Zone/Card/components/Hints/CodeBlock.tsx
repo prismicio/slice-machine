@@ -58,9 +58,20 @@ const CodeBlock: React.FC<{
             borderColor: theme?.colors?.borders as any,
             borderRadius: "3px",
             padding: "4px",
+            marginRight: "2px",
           }}
         />
-        <Code lang={lang}>{children}</Code>
+        <Code
+          style={{
+            margin: "1px 3px",
+            border: "1px solid",
+            borderRadius: "3px",
+            borderColor: theme?.colors?.borders as any,
+          }}
+          lang={lang}
+        >
+          {children}
+        </Code>
       </Flex>
       <Box>
         <Button onClick={copy} variant="textButton">
