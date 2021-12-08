@@ -5,13 +5,17 @@ import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
 import Code from "../../../../../../../components/CodeBlock";
+import type { Language } from "../../../../../../../components/CodeBlock";
 
-const buttonIconStyle = {
+const buttonIconStyle: React.CSSProperties = {
   position: "relative",
   top: "3px",
 };
 
-const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
+const CodeBlock: React.FC<{
+  children: string | null | undefined;
+  lang?: Language;
+}> = ({ children, lang }) => {
   const ref = useRef<HTMLDivElement>();
   const { theme } = useThemeUI();
 
@@ -56,14 +60,14 @@ const CodeBlock: React.FC<{ children: string }> = ({ children }) => {
             padding: "4px",
           }}
         />
-        <Code>{children}</Code>
+        <Code lang={lang}>{children}</Code>
       </Flex>
       <Box>
         <Button onClick={copy} variant="textButton">
           {isCopied ? (
             <MdCheck
               size={16}
-              color={theme.colors.success}
+              color={theme?.colors?.success as string | undefined}
               style={buttonIconStyle}
             />
           ) : (

@@ -1,3 +1,4 @@
+import React from "react";
 import * as Renderers from "./Renderers";
 
 import { SupportedFrameworks } from "../../../../../../consts";
@@ -11,7 +12,15 @@ const FrameworkRenderers = {
   vanillajs: Renderers.vanillajs,
 };
 
-const Hint = ({ framework, show, Widgets, ...rest }) => {
+const Hint: React.FC<{
+  framework: string;
+  show: boolean;
+  Widgets: any;
+  item: any;
+  typeName: string;
+  renderHintBase: any;
+  isRepeatable: boolean;
+}> = ({ framework, show, Widgets, ...rest }) => {
   if (FrameworkRenderers[framework]) {
     const Render = FrameworkRenderers[framework];
     return (

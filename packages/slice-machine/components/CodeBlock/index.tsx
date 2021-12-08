@@ -2,9 +2,9 @@ import React from "react";
 import { Flex } from "theme-ui";
 import hljs from "highlight.js";
 
-type language = "javascript" | "bash" | "xml" | "html" | "json";
+export type Language = "javascript" | "bash" | "xml" | "html" | "json";
 
-const DEFAULT_LANGUAGES: Array<language> = [
+const DEFAULT_LANGUAGES: Array<Language> = [
   "javascript",
   "bash",
   "xml",
@@ -12,7 +12,7 @@ const DEFAULT_LANGUAGES: Array<language> = [
   "json",
 ];
 
-const CodeBlock: React.FC<{ children: string; lang?: language }> = ({
+const CodeBlock: React.FC<{ children: string; lang?: Language }> = ({
   children,
   lang,
 }) => {
