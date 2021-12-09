@@ -7,7 +7,8 @@ export function configureProject(
   cwd: string,
   base: Base,
   repository: string,
-  framework: FrameworkResult
+  framework: FrameworkResult,
+  sliceLibPath: string[]
 ): void {
   const spinner = Utils.spinner(
     `Configuring your ${framework.value} & Prismic project...`
@@ -20,7 +21,7 @@ export function configureProject(
     const manifestUpdated: FileSystem.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
-      libraries: ["@/slices"],
+      libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
     };
 
