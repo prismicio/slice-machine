@@ -1,4 +1,4 @@
-import getEnv from "./services/getEnv";
+import getEnv from "../services/getEnv";
 import Files from "@lib/utils/files";
 
 import {
@@ -11,14 +11,18 @@ import {
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
 
+type TmpFile = File & { path: string };
+interface CustomScreenshotBody {
+  from: string;
+  sliceName: string;
+  variationId: string;
+}
+
 export default async function handler(
-  file: File & { path: string },
-  {
-    from,
-    sliceName,
-    variationId,
-  }: { from: string; sliceName: string; variationId: string }
+  file: TmpFile,
+  body: CustomScreenshotBody
 ): Promise<ScreenshotUI> {
+  const { from, sliceName, variationId } = body;
   const { env } = await getEnv();
 
   const maybeCustomScreenshot = resolvePathsToScreenshot({
@@ -27,9 +31,7 @@ export default async function handler(
     sliceName,
     variationId,
   });
-  if (maybeCustomScreenshot) {
-    Files.remove(maybeCustomScreenshot.path);
-  }
+  if (maybeCustomScreenshot) Files.remove(maybeCustomScreenshot.path);
 
   const pathToScreenshot = createPathToScreenshot({
     path: env.cwd,

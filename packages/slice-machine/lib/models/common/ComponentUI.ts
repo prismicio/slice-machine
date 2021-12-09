@@ -14,7 +14,6 @@ export const createScreenshotUI = (
   baseUrl: string,
   pathToScreenshot: string
 ): ScreenshotUI => ({
-  exists: true,
   path: pathToScreenshot,
   url: createScreenshotUrl(baseUrl, pathToScreenshot),
 });
@@ -81,13 +80,14 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
-  const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
-    component.infos
-  );
-  if (previewMissing) return LibStatus.PreviewMissing;
-
   const slice = remoteSlices.find((s) => component.model.id === s.id);
   if (!slice) return LibStatus.NewSlice;
+
+  const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
+    component.infos,
+    slice.variations
+  );
+  if (previewMissing) return LibStatus.PreviewMissing;
 
   const sameVersion = !compareVariations(
     component.model.variations,

@@ -45,12 +45,9 @@ export function generateCustomScreenShot(
       file: Blob
     ) => {
       const form = new FormData();
-      Object.entries({
-        sliceName,
-        variationId,
-        from: libFrom,
-      }).forEach(([key, value]) => form.append(key, value));
-
+      form.append("sliceName", sliceName);
+      form.append("variationId", variationId);
+      form.append("from", libFrom);
       form.append("file", file);
 
       fetchApi({
@@ -67,12 +64,10 @@ export function generateCustomScreenShot(
         },
         successMessage: "New screenshot added!",
         onSuccess(preview: Models.Screenshot) {
-          if (preview.exists) {
-            dispatch({
-              type: ActionType.GenerateCustomScreenShot,
-              payload: { variationId, preview },
-            });
-          }
+          dispatch({
+            type: ActionType.GenerateCustomScreenShot,
+            payload: { variationId, preview },
+          });
         },
       });
     };

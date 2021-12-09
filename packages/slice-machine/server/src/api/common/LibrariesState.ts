@@ -91,7 +91,6 @@ export function formatComponent(
             return {
               ...acc,
               [variationId]: {
-                exists: screenshot.exists,
                 path: screenshot.path,
                 ...getImageDimensions(screenshot.path),
               },

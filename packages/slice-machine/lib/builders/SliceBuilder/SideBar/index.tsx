@@ -15,7 +15,7 @@ type SideBarProps = {
   Model: SliceState;
   variation: Models.VariationAsArray;
   imageLoading: boolean;
-  isPreviewRunning: boolean;
+  isPreviewSetup: boolean;
   onScreenshot: () => void;
   onHandleFile: (file: any) => void;
   openSetupPreview: () => void;
@@ -25,7 +25,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   Model,
   variation,
   imageLoading,
-  isPreviewRunning,
+  isPreviewSetup,
   onScreenshot,
   onHandleFile,
   openSetupPreview,
@@ -52,10 +52,10 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={false}
+          preventScreenshot={!isPreviewSetup}
         />
       </Card>
-      {isPreviewRunning ? (
+      {isPreviewSetup ? (
         <Link
           href={{
             pathname: `${router.pathname}/preview`,

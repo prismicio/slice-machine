@@ -96,7 +96,7 @@ const SliceBuilder: React.FunctionComponent = () => {
             Model={Model}
             variation={variation}
             openSetupPreview={openSetupDrawer}
-            isPreviewRunning={isThePreviewSetup}
+            isPreviewSetup={isThePreviewSetup}
             onScreenshot={() =>
               store
                 .variation(variation.id)
