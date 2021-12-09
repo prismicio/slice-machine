@@ -37,7 +37,12 @@ const handleEmbedCode = (fieldText: string, useKey?: boolean): string =>
 
 const appendKey = (id: string): string => `key={\`${id}-\${i}\`}`;
 
-const codeByWidgetType = (Widgets: any): Record<string, any> => ({
+const codeByWidgetType = (
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+): Record<
+  string,
+  (fieldText: string, useKey?: boolean | undefined) => string
+> => ({
   [Widgets.ContentRelationship?.CUSTOM_NAME]: (
     fieldText: string,
     useKey?: boolean
@@ -87,7 +92,7 @@ const codeByWidgetType = (Widgets: any): Record<string, any> => ({
 });
 
 const toReact: React.FC<{
-  Widgets: any;
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
   item: any;
   typeName: string;
   renderHintBase: any;

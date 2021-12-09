@@ -19,7 +19,9 @@ const createDefaultField =
   (fieldText: string) =>
     `<${tag}>{{ ${fieldText} }}</${tag}>`;
 
-const codeByWidgetType = (Widgets: any): Record<string, any> => ({
+const codeByWidgetType = (
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+): Record<string, (str: string) => string> => ({
   [Widgets.ContentRelationship?.CUSTOM_NAME]: createPrismicLink,
   [Widgets.LinkToMedia?.CUSTOM_NAME]: createPrismicLink,
   [Widgets.UID?.TYPE_NAME]: (fieldText: string) =>
@@ -42,7 +44,7 @@ const codeByWidgetType = (Widgets: any): Record<string, any> => ({
 });
 
 const toVue: React.FC<{
-  Widgets: any;
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
   item: any;
   typeName: string;
   renderHintBase: any;

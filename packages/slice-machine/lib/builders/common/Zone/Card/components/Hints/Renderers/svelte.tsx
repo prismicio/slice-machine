@@ -16,7 +16,9 @@ const dateCode = (fieldText: string): string =>
 const defaultCode = (fieldText: string): string =>
   `<span>{ ${fieldText} }</span>`;
 
-const codeByWidgetType = (Widgets: any): Record<string, any> => ({
+const codeByWidgetType = (
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+): Record<string, (str: string) => string> => ({
   [Widgets.UID?.TYPE_NAME]: defaultCode,
   [Widgets.Text?.TYPE_NAME]: defaultCode,
   [Widgets.Select?.TYPE_NAME]: defaultCode,
@@ -40,7 +42,7 @@ const codeByWidgetType = (Widgets: any): Record<string, any> => ({
 });
 
 const renderSvelte: React.FC<{
-  Widgets: any;
+  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
   item: any;
   typeName: string;
   renderHintBase: any;
