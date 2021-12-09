@@ -3,6 +3,7 @@ import React from "react";
 import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
+import CodeBlock from "components/CodeBlock";
 
 type NuxtSetupStepProps = {
   activeStep: number;
@@ -25,14 +26,10 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           Slice Canvas is used to develop your components with mock data, run
           the following command to install it with npm
         </Text>
-        <Flex>
-          <pre
-            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
-          >
-            npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic
-            @prismicio/slice-canvas-renderer-vue
-          </pre>
-        </Flex>
+        <CodeBlock>
+          npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic
+          @prismicio/slice-canvas-renderer-vue
+        </CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
@@ -46,24 +43,12 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           In your nuxt.config.js file, you need to add at the beginning the
           following line:
         </Text>
-        <Flex sx={{ mb: 2 }}>
-          <pre
-            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
-          >
-            import smConfig from "./sm.json"
-          </pre>
-        </Flex>
+        <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
         <Text sx={{ color: "textClear", mb: 2 }}>
           In your nuxt.config.js file, you need to add at the beginning the
           following line:
         </Text>
-        <Flex>
-          <pre
-            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
-          >
-            {NuxtConfigInstructions}
-          </pre>
-        </Flex>
+        <CodeBlock>{NuxtConfigInstructions}</CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
@@ -78,13 +63,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           the following code. This page is the route you hit to preview and
           develop your components.
         </Text>
-        <Flex>
-          <pre
-            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
-          >
-            {SliceCanvasPageCreationInstruction}
-          </pre>
-        </Flex>
+        <CodeBlock>{SliceCanvasPageCreationInstruction}</CodeBlock>
       </Flex>
     </StepSection>
     <StepSection
@@ -99,14 +78,10 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           property <Text variant={"pre"}>localSliceCanvasURL</Text> in the shape
           of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
         </Text>
-        <Flex>
-          <pre
-            style={{ overflowX: "auto", padding: 8, border: "solid 1px grey" }}
-          >
-            {"// eg:\n" +
-              '"localSliceCanvasURL": "http://localhost:3000/_canvas"'}
-          </pre>
-        </Flex>
+        <CodeBlock>
+          {"// eg:\n" +
+            '"localSliceCanvasURL": "http://localhost:3000/_canvas"'}
+        </CodeBlock>
       </Flex>
     </StepSection>
     <StepSection

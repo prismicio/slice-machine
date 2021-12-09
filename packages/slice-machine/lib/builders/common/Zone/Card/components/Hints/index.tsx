@@ -1,4 +1,7 @@
+import React from "react";
 import * as Renderers from "./Renderers";
+
+import type { Item, RenderHintBaseFN, WidgetsType } from "./CodeBlock";
 
 import { SupportedFrameworks } from "../../../../../../consts";
 
@@ -11,7 +14,15 @@ const FrameworkRenderers = {
   vanillajs: Renderers.vanillajs,
 };
 
-const Hint = ({ framework, show, Widgets, ...rest }) => {
+const Hint: React.FC<{
+  framework: string;
+  show: boolean;
+  Widgets: WidgetsType;
+  item: Item;
+  typeName: string;
+  renderHintBase: RenderHintBaseFN;
+  isRepeatable: boolean;
+}> = ({ framework, show, Widgets, ...rest }) => {
   if (FrameworkRenderers[framework]) {
     const Render = FrameworkRenderers[framework];
     return (
