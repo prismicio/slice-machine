@@ -26,7 +26,10 @@ const downloadFile = async (reqUrl: string): Promise<string> => {
   });
 };
 
-export async function installLib(libGithubPath: string): Promise<string[]> {
+export async function installLib(
+  cwd: string,
+  libGithubPath: string
+): Promise<string[]> {
   const spinner = Utils.spinner(
     `Installing the ${libGithubPath} lib in your project...`
   );
@@ -57,17 +60,24 @@ export async function installLib(libGithubPath: string): Promise<string[]> {
 
     const name = packageFile.name;
 
-    // We copy all the slices into the the user project
-    fsExtra.moveSync(
-      path.join(projectPath, "src"),
-      path.join(process.cwd(), name)
-    );
+    const libDestinationFolder = path.join(cwd, name);
 
-    spinner.succeed(`Slice library "${libGithubPath}" installed!`);
+    // How we handle the lib already installed ?
+    if (fs.existsSync(libDestinationFolder)) {
+      spinner.succeed(`Lib "${libGithubPath}" was already installed (skipped)`);
+      return [`~/${name}/slices`];
+    }
+
+    // We copy all the slices into the the user project
+    fsExtra.moveSync(path.join(projectPath, "src"), libDestinationFolder);
+
+    spinner.succeed(
+      `Slice library "${libGithubPath}" was installed successfully`
+    );
 
     // If the libs have multiple slice libs here we are grouping them into one
     return [`~/${name}/slices`];
-  } catch (e) {
+  } catch {
     spinner.fail(`Error installing ${libGithubPath} lib!`);
     process.exit(-1);
 

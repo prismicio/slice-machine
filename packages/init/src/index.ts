@@ -54,7 +54,7 @@ async function init() {
   let sliceLibPath: string[] = [];
 
   if (lib) {
-    sliceLibPath = await installLib(lib);
+    sliceLibPath = await installLib(cwd, lib);
   }
 
   // configure the SM.json file and the json package file of the project..
