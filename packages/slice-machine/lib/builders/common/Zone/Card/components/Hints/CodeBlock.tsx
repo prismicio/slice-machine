@@ -80,10 +80,11 @@ const CodeBlock: React.FC<{
         />
         <Code
           style={{
-            margin: "1px 3px",
+            margin: "0px 8px",
             border: "1px solid",
             borderRadius: "3px",
             borderColor: theme?.colors?.borders as string | undefined,
+            fontSize: "13px",
           }}
           lang={lang}
         >

@@ -613,57 +613,11 @@ const AppTheme = (): Theme =>
       li: {
         listStyleType: "none",
       },
-      // code: {
-      //   display: "inline-block",
-      //   backgroundColor: (t) => t?.colors?.gray,
-      //   border: (t: MyTheme) => `1px solid ${t.codeColor.border}`,
-      //   borderRadius: "3px",
-      //   boxSizing: "border-box",
-      //   fontSize: "13px",
-      //   margin: "0 8px",
-      // },
       hint: {
         display: "block",
         fontStyle: "normal",
         fontWeight: "normal",
       },
-      // ".prism-code": {
-      //   margin: "1px 3px",
-      //   ".tag": {
-      //     color: (t: MyTheme) => t.codeColor.blue,
-      //   },
-      //   ".punctuation, .attr-value.punctuation": {
-      //     color: (t: MyTheme) => t.codeColor.gray, // dark-gray
-      //   },
-      //   ".attr-name": {
-      //     color: (t: MyTheme) => t.codeColor.orange,
-      //   },
-      //   ".attr-value, .property-access": {
-      //     // add .plain to highligh vue.
-      //     color: (t: MyTheme) => t.codeColor.green, // green
-      //   },
-      // },
-      // ".prism-code.language-jsx": {
-      //   ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation":
-      //     {
-      //       color: (t: MyTheme) => t.codeColor.gray,
-      //     },
-      //   ".language-javascript, .plain": {
-      //     color: (t: MyTheme) => t.codeColor.green,
-      //   },
-      // },
-      // ".prism-code.language-javascript": {
-      //   ".punctuation": {
-      //     color: (t: MyTheme) => t.codeColor.gray,
-      //   },
-      //   ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access":
-      //     {
-      //       color: (t: MyTheme) => t.codeColor.blue, // blue
-      //     },
-      //   ".property-access, .plain": {
-      //     color: (t: MyTheme) => t.codeColor.green, // green
-      //   },
-      // },
       inlineCode: {
         fontFamily: "monospace",
         color: "error",
@@ -710,24 +664,6 @@ const AppTheme = (): Theme =>
         bg: "muted",
       },
     },
-    // prism: {
-    //   ".comment,.prolog,.doctype,.cdata,.punctuation,.operator,.entity,.url": {
-    //     color: "gray",
-    //   },
-    //   ".comment": {
-    //     fontStyle: "italic",
-    //   },
-    //   ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable":
-    //     {
-    //       color: "purple",
-    //     },
-    //   ".atrule,.attr-value,.keyword": {
-    //     color: "primary",
-    //   },
-    //   ".selector,.attr-name,.string,.char,.builtin,.inserted": {
-    //     color: "error",
-    //   },
-    // },
   } as MyTheme);
 
 export default AppTheme;
