@@ -1,5 +1,5 @@
 import React from "react";
-import CodeBlock from "../CodeBlock";
+import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
 const wrapRepeatable = (code: string): string =>
   `{#each slices.item as item} {${code}} {/each}`;
@@ -17,7 +17,7 @@ const defaultCode = (fieldText: string): string =>
   `<span>{ ${fieldText} }</span>`;
 
 const codeByWidgetType = (
-  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+  Widgets: WidgetsType
 ): Record<string, (str: string) => string> => ({
   [Widgets.UID?.TYPE_NAME]: defaultCode,
   [Widgets.Text?.TYPE_NAME]: defaultCode,
@@ -43,9 +43,9 @@ const codeByWidgetType = (
 
 const renderSvelte: React.FC<{
   Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
-  item: any;
+  item: Item;
   typeName: string;
-  renderHintBase: any;
+  renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
 }> = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item });

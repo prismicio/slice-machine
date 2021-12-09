@@ -1,5 +1,5 @@
 import React from "react";
-import CodeBlock from "../CodeBlock";
+import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
 const wrapRepeatable = (code: string): string =>
   `
@@ -20,7 +20,7 @@ const createDefaultField =
     `<${tag}>{{ ${fieldText} }}</${tag}>`;
 
 const codeByWidgetType = (
-  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+  Widgets: WidgetsType
 ): Record<string, (str: string) => string> => ({
   [Widgets.ContentRelationship?.CUSTOM_NAME]: createPrismicLink,
   [Widgets.LinkToMedia?.CUSTOM_NAME]: createPrismicLink,
@@ -44,12 +44,13 @@ const codeByWidgetType = (
 });
 
 const toVue: React.FC<{
-  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
-  item: any;
+  Widgets: WidgetsType;
+  item: Item;
   typeName: string;
-  renderHintBase: any;
+  renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
 }> = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
+  console.log({ item, renderHintBase });
   const hintBase = renderHintBase({ item });
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName];
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : "";

@@ -1,5 +1,5 @@
 import React from "react";
-import CodeBlock from "../CodeBlock";
+import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
 // const DOCS_README = 'https://github.com/prismicio/prismic-reactjs';
 
@@ -38,7 +38,7 @@ const handleEmbedCode = (fieldText: string, useKey?: boolean): string =>
 const appendKey = (id: string): string => `key={\`${id}-\${i}\`}`;
 
 const codeByWidgetType = (
-  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>
+  Widgets: WidgetsType
 ): Record<
   string,
   (fieldText: string, useKey?: boolean | undefined) => string
@@ -92,10 +92,10 @@ const codeByWidgetType = (
 });
 
 const toReact: React.FC<{
-  Widgets: Record<string, { CUSTOM_NAME: string; TYPE_NAME: string }>;
-  item: any;
+  Widgets: WidgetsType;
+  item: Item;
   typeName: string;
-  renderHintBase: any;
+  renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
 }> = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
   const hintBase = renderHintBase({ item });

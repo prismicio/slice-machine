@@ -6,11 +6,28 @@ import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
 import Code from "../../../../../../../components/CodeBlock";
 import type { Language } from "../../../../../../../components/CodeBlock";
+import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 
 const buttonIconStyle: React.CSSProperties = {
   position: "relative",
   top: "3px",
 };
+
+export interface Item {
+  key: string;
+  value: {
+    config: Record<string, unknown>;
+    fields?: Array<unknown>;
+    type: string;
+  };
+}
+
+export type RenderHintBaseFN = (args: { item: Item }) => string;
+
+export type WidgetsType = Record<
+  string,
+  { CUSTOM_NAME: string; TYPE_NAME: string }
+>;
 
 const CodeBlock: React.FC<{
   children: string | null | undefined;
@@ -55,7 +72,7 @@ const CodeBlock: React.FC<{
           color={theme?.colors?.icons as string | undefined}
           style={{
             border: "1px solid",
-            borderColor: theme?.colors?.borders as any,
+            borderColor: theme?.colors?.borders as string | undefined,
             borderRadius: "3px",
             padding: "4px",
             marginRight: "2px",
@@ -66,7 +83,7 @@ const CodeBlock: React.FC<{
             margin: "1px 3px",
             border: "1px solid",
             borderRadius: "3px",
-            borderColor: theme?.colors?.borders as any,
+            borderColor: theme?.colors?.borders as string | undefined,
           }}
           lang={lang}
         >
