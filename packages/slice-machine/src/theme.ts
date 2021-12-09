@@ -150,19 +150,6 @@ const AppTheme = (): Theme =>
         margin: 0,
         pl: 2,
       },
-      // pre: {
-      //   variant: "prism",
-      //   fontFamily: "monospace",
-      //   fontSize: 1,
-      //   my: 1,
-      //   color: "textClear",
-      //   bg: "grey01",
-      //   p: "2px",
-      //   overflow: "auto",
-      //   code: {
-      //     color: "inherit",
-      //   },
-      // },
     },
     badges: {
       PUBLISHED: {
