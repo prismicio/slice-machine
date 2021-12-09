@@ -50,7 +50,6 @@ const toVue: React.FC<{
   renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
 }> = ({ Widgets, item, typeName, renderHintBase, isRepeatable }) => {
-  console.log({ item, renderHintBase });
   const hintBase = renderHintBase({ item });
   const maybeCodeRenderer = codeByWidgetType(Widgets)[typeName];
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : "";
