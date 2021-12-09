@@ -4,8 +4,7 @@ import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
 import { BsCode } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
-import Code from "../../../../../../../components/CodeBlock";
-import type { Language } from "../../../../../../../components/CodeBlock";
+import Code, { Language } from "@components/CodeBlock";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 
 const buttonIconStyle: React.CSSProperties = {
