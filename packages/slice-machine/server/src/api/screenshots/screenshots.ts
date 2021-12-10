@@ -3,21 +3,20 @@ import getEnv from "../services/getEnv";
 import { generateScreenshotAndRemoveCustom } from "./generate";
 
 interface ScreenshotBody {
-  from: string;
+  libraryName: string;
   sliceName: string;
 }
 
 interface ScreenshotResponse {
   err: Error | null;
   reason: string | null;
-  previews: Record<string, Models.Screenshot>;
+  screenshots: Record<string, Models.Screenshot>;
 }
 
 export default async function handler({
-  from,
+  libraryName,
   sliceName,
 }: ScreenshotBody): Promise<ScreenshotResponse> {
-  console.log("TAKING REGULAR SCREENSHOT");
   const { env } = await getEnv();
   if (!env.manifest.localSliceCanvasURL) {
     const reason =
@@ -26,13 +25,13 @@ export default async function handler({
     return {
       err: new Error(reason),
       reason,
-      previews: {},
+      screenshots: {},
     };
   }
 
   const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
     env,
-    from,
+    libraryName,
     sliceName
   );
 
@@ -42,11 +41,9 @@ export default async function handler({
         .join(" | ")}`
     : null;
 
-  console.log("DONE");
-
   return {
     err: message ? new Error(message) : null,
     reason: message,
-    previews: screenshots,
+    screenshots,
   };
 }

@@ -1,32 +1,33 @@
+import { ScreenshotUI } from "lib/models/common/ComponentUI";
 import type Models from "@slicemachine/core/build/src/models";
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
+
+type GenerateScreenShotResponse = {
+  screenshots: Record<string, Models.Screenshot>;
+};
 
 export function generateScreenShot(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (_variationId: string) => {
     return async (
-      libFrom: string,
+      libraryName: string,
       sliceName: string,
       setData: (data: object) => void
     ) => {
       fetchApi({
-        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}`,
+        url: `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
         setData,
         data: {
           onLoad: { imageLoading: true },
           onResponse: { imageLoading: false },
         },
-        successMessage: "Storybook screenshot was saved to FileSystem",
-        onSuccess({
-          previews,
-        }: {
-          previews: Record<string, Models.Screenshot>;
-        }) {
+        successMessage: "Screenshots were saved to FileSystem",
+        onSuccess({ screenshots }: GenerateScreenShotResponse) {
           dispatch({
             type: ActionType.GenerateScreenShot,
-            payload: { previews },
+            payload: { screenshots },
           });
         },
       });
@@ -39,16 +40,16 @@ export function generateCustomScreenShot(
 ) {
   return (variationId: string) => {
     return async (
-      libFrom: string,
+      libraryName: string,
       sliceName: string,
       setData: (data: object) => void,
       file: Blob
     ) => {
       const form = new FormData();
+      form.append("file", file);
+      form.append("libraryName", libraryName);
       form.append("sliceName", sliceName);
       form.append("variationId", variationId);
-      form.append("from", libFrom);
-      form.append("file", file);
 
       fetchApi({
         url: "/api/custom-screenshot",
@@ -63,10 +64,10 @@ export function generateCustomScreenShot(
           onResponse: { imageLoading: false },
         },
         successMessage: "New screenshot added!",
-        onSuccess(preview: Models.Screenshot) {
+        onSuccess(screenshot: ScreenshotUI) {
           dispatch({
             type: ActionType.GenerateCustomScreenShot,
-            payload: { variationId, preview },
+            payload: { variationId, screenshot },
           });
         },
       });

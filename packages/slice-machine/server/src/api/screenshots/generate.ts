@@ -20,7 +20,7 @@ interface ScreenshotResults {
   failure: FailedScreenshot[];
 }
 
-export async function generateScreenshotAndRemoveCustom(
+export async function generateScreenshot(
   env: BackendEnvironment,
   libraryName: string,
   sliceName: string
@@ -31,13 +31,27 @@ export async function generateScreenshotAndRemoveCustom(
     sliceName
   );
 
+  return {
+    screenshots: screenshots,
+    failure: failure,
+  };
+}
+
+export async function generateScreenshotAndRemoveCustom(
+  env: BackendEnvironment,
+  libraryName: string,
+  sliceName: string
+): Promise<ScreenshotResults> {
+  const { screenshots, failure } = await generateScreenshot(
+    env,
+    libraryName,
+    sliceName
+  );
+
   // Remove custom screenshot of success
   Object.keys(screenshots).forEach((variationId) =>
     removeCustomScreenshot(env, libraryName, sliceName, variationId)
   );
-
-  console.log(`Screenshots: ${JSON.stringify(screenshots)}`);
-  console.log(`Failure: ${JSON.stringify(failure)}`);
 
   return {
     screenshots: screenshots,
@@ -106,8 +120,6 @@ async function generateForVariation(
   }?lid=${encodeURIComponent(libraryName)}&sid=${encodeURIComponent(
     slice.id
   )}&vid=${encodeURIComponent(variationId)}`;
-
-  console.log(screenshotUrl);
 
   const pathToFile = FileSystem.GeneratedPaths(env.cwd)
     .library(libraryName)

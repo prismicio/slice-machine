@@ -1,3 +1,4 @@
+import { Screenshot } from "models";
 import path from "path";
 import Files from "../utils/files";
 
@@ -61,31 +62,23 @@ export function resolvePathsToScreenshot({
   from: string;
   sliceName: string;
   variationId: string;
-}): { path: string; exists: boolean } | undefined {
+}): Screenshot | undefined {
   const possiblePaths = paths
-    .map((base) => {
-      return generatePathsToScreenshot({
+    .map((base) =>
+      generatePathsToScreenshot({
         base,
         from,
         sliceName,
         variationId,
-      }).map((e) => ({
-        path: e,
-        options: {
-          exists: true,
-        },
-      }));
-    })
+      })
+    )
     .flat();
 
-  const screenshot = Files.readFirstOf<string, { exists: boolean }>(
-    possiblePaths
-  )((v: string) => v);
+  const screenshot = Files.readFirstOf<string>(possiblePaths)((v: string) => v);
 
   if (!screenshot) return screenshot;
 
   return {
     path: screenshot.path,
-    exists: screenshot.exists,
   };
 }

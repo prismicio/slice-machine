@@ -9,10 +9,7 @@ import mock from "@lib/mock/Slice";
 import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import {
-  Screenshots,
-  generateScreenshotAndRemoveCustom,
-} from "../screenshots/generate";
+import { Screenshots, generateScreenshot } from "../screenshots/generate";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
@@ -95,7 +92,7 @@ async function generateScreenshotsWithLogs(
   }
 
   console.log("[slice/save]: Generating screenshots previews");
-  const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
+  const { screenshots, failure } = await generateScreenshot(
     env,
     from,
     sliceName

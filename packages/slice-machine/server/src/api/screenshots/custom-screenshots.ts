@@ -13,7 +13,7 @@ import {
 
 type TmpFile = File & { path: string };
 interface CustomScreenshotBody {
-  from: string;
+  libraryName: string;
   sliceName: string;
   variationId: string;
 }
@@ -22,12 +22,12 @@ export default async function handler(
   file: TmpFile,
   body: CustomScreenshotBody
 ): Promise<ScreenshotUI> {
-  const { from, sliceName, variationId } = body;
+  const { libraryName, sliceName, variationId } = body;
   const { env } = await getEnv();
 
   const maybeCustomScreenshot = resolvePathsToScreenshot({
     paths: [env.cwd],
-    from,
+    from: libraryName,
     sliceName,
     variationId,
   });
@@ -35,7 +35,7 @@ export default async function handler(
 
   const pathToScreenshot = createPathToScreenshot({
     path: env.cwd,
-    from,
+    from: libraryName,
     sliceName,
     variationId,
     extension: file.type.split("/")[1] as Extensions,

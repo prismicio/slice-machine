@@ -2,7 +2,7 @@ import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 import path from "path";
 import Files from "../utils/files";
-import { VariationAsObject, VariationMock } from "./Variation";
+import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
@@ -16,7 +16,7 @@ export interface ComponentInfo {
     id: string;
   } | null;
 
-  screenshotPaths?: {
+  screenshotPaths: {
     [variationId: string]: Screenshot;
   };
   meta: ComponentMetadata;
@@ -24,14 +24,12 @@ export interface ComponentInfo {
 }
 
 export const ComponentInfo = {
-  hasPreviewsMissing(
-    infos: ComponentInfo,
-    variations: VariationAsObject[]
-  ): boolean {
-    const { screenshotPaths } = infos;
+  hasPreviewsMissing(info: ComponentInfo): boolean {
+    const { screenshotPaths, model } = info;
     if (!screenshotPaths) return true;
-    if (Object.keys(screenshotPaths).length != variations.length) return true; // missing at least one screenshot.
-    return false;
+    return model.variations
+      .map((v) => v.id)
+      .some((variationId) => !screenshotPaths[variationId]);
   },
 };
 
@@ -50,7 +48,7 @@ export interface Component {
 }
 
 export interface Screenshot {
-  path?: string;
+  path: string;
 }
 
 export const LibraryMeta = {

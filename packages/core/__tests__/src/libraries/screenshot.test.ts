@@ -17,28 +17,24 @@ afterEach(() => {
   vol.reset();
 });
 
-const testAcceptedTypes = (type: Extensions) => {
-  vol.fromJSON(
-    {
-      [`.slicemachine/assets/slices/SliceName/variation/preview.${type}`]:
-        "123",
-    },
-    TMP
-  );
-
-  const result = resolvePathsToScreenshot({
-    paths: [TMP, path.join(TMP, ".slicemachine/assets")],
-    from: "slices",
-    sliceName: "SliceName",
-    variationId: "variation",
-  });
-  expect(result).toBeDefined();
-  expect(result?.exists).toEqual(true);
-};
-
 test("it finds preview per type", () => {
-  Object.values(Extensions).forEach((type) => testAcceptedTypes(type));
-  expect(true).toBe(true);
+  Object.values(Extensions).forEach((type) => {
+    vol.fromJSON(
+      {
+        [`.slicemachine/assets/slices/SliceName/variation/preview.${type}`]:
+          "123",
+      },
+      TMP
+    );
+
+    const result = resolvePathsToScreenshot({
+      paths: [TMP, path.join(TMP, ".slicemachine/assets")],
+      from: "slices",
+      sliceName: "SliceName",
+      variationId: "variation",
+    });
+    expect(result).toBeDefined();
+  });
 });
 
 test("it prioritizes custom preview path", () => {
@@ -57,5 +53,4 @@ test("it prioritizes custom preview path", () => {
     variationId: "variation",
   });
   expect(result).toBeDefined();
-  expect(result?.exists).toEqual(true);
 });

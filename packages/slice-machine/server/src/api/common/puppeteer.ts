@@ -25,7 +25,16 @@ export default {
       });
     const puppeteerBrowser = await puppeteerBrowserPromise;
 
-    return generateScreenshot(puppeteerBrowser, screenshotUrl, pathToFile);
+    return generateScreenshot(
+      puppeteerBrowser,
+      screenshotUrl,
+      pathToFile
+    ).catch(
+      () =>
+        new Error(
+          `Unable to generate screenshot for this page: ${screenshotUrl}`
+        )
+    );
   },
 };
 
@@ -43,7 +52,7 @@ const generateScreenshot = async (
       waitUntil: "networkidle0",
     });
 
-    await page.waitForSelector("#root");
+    await page.waitForSelector("#root", { timeout: 2000 });
     const element = await page.$("#root");
 
     if (element) {
