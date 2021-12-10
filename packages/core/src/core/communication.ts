@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Cookie, CONSTS, roles, Framework } from "../utils";
+import { Cookie, CONSTS, roles } from "../utils";
+import { Frameworks } from "../models/Framework";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
@@ -152,7 +153,7 @@ export type CreateRepositoryResponse = Promise<
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = Framework.FrameworkEnum.vanillajs,
+  framework = Frameworks.vanillajs,
   base = DEFAULT_BASE
 ): CreateRepositoryResponse {
   const data = {

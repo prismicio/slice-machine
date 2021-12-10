@@ -176,11 +176,7 @@ export function getComponentInfo(
         sliceName,
         variationId: v.id,
       });
-      return activeScreenshot
-        ? {
-            [v.id]: activeScreenshot,
-          }
-        : undefined;
+      return activeScreenshot && { [v.id]: activeScreenshot };
     })
     .reduce(
       (

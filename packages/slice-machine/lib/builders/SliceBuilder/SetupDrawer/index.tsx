@@ -9,7 +9,7 @@ import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getFramework } from "@src/modules/environment";
-import { Framework } from "@models/common/Framework";
+import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -70,10 +70,10 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            {framework === Framework.nuxt && (
+            {framework === Frameworks.nuxt && (
               <NuxtSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
             )}
-            {framework === Framework.next && (
+            {framework === Frameworks.next && (
               <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
             )}
           </Flex>

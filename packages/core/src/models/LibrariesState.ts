@@ -15,7 +15,6 @@ export type ComponentMeta = t.TypeOf<typeof ComponentMeta>;
 const ComponentScreenshots = t.record(
   t.string,
   t.type({
-    exists: t.boolean,
     path: t.union([t.string, t.undefined]),
     width: t.union([t.number, t.undefined]),
     height: t.union([t.number, t.undefined]),

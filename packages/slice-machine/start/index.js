@@ -11,7 +11,7 @@ if (parseInt(nodeVersion) < 12) {
 const path = require("path");
 const pkg = require("../package.json");
 
-const { Utils } = require("@slicemachine/core");
+const { Utils, Models } = require("@slicemachine/core");
 const moduleAlias = require("module-alias");
 
 const LIB_PATH = path.join(__dirname, "..", "build", "lib");
@@ -37,7 +37,7 @@ const infobox = require("./info");
 const compareVersions = require("../build/lib/env/semver").default;
 const {
   default: handleManifest,
-  ManifestStates,
+  ManifestState,
 } = require("../build/lib/env/manifest");
 
 const { argv } = require("yargs");
@@ -93,8 +93,8 @@ function start({ cwd, port }, callback) {
   });
 }
 
-async function handleManifestState(manifestState, cwd) {
-  if (manifestState.state !== ManifestStates.Valid) {
+async function handleManifestState(manifestState) {
+  if (manifestState.state !== ManifestState.Valid) {
     console.log(
       boxen(
         `🔴 A configuration error was detected!
@@ -111,9 +111,9 @@ See below for more info 👇`,
   }
 
   switch (manifestState.state) {
-    case ManifestStates.Valid:
+    case ManifestState.Valid:
       return { exit: false };
-    case ManifestStates.NotFound: {
+    case ManifestState.NotFound: {
       console.log(
         `Run ${Utils.bold(
           `"${Utils.CONSTS.INIT_COMMAND}"`
@@ -122,17 +122,17 @@ See below for more info 👇`,
 
       return { exit: true };
     }
-    case ManifestStates.MissingEndpoint:
+    case ManifestState.MissingEndpoint:
       console.log(
         'Add a property "apiEndpoint" to your config.\nExample: https://my-repo.prismic.io/api/v2\n\n'
       );
       return { exit: true };
-    case ManifestStates.InvalidEndpoint:
+    case ManifestState.InvalidEndpoint:
       console.log(
         "Update your config file with a valid Prismic endpoint.\nExample: https://my-repo.prismic.io/api/v2\n\n"
       );
       return { exit: true };
-    case ManifestStates.InvalidJson: {
+    case ManifestState.InvalidJson: {
       console.log("Update your config file with a valid JSON structure.");
       return { exit: true };
     }
@@ -150,8 +150,8 @@ async function run() {
     await handleMigration(cwd);
   }
 
-  const userConfig = handleManifest(cwd);
-  const { exit } = await handleManifestState(userConfig, cwd);
+  const manifestInfo = handleManifest(cwd);
+  const { exit } = await handleManifestState(manifestInfo);
   if (exit) {
     console.log("");
     process.exit(0);
@@ -160,7 +160,11 @@ async function run() {
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
-  const framework = Utils.Framework.defineFramework(userConfig.content, cwd);
+  const framework = Utils.Framework.defineFramework(
+    manifestInfo.content,
+    cwd,
+    Models.SupportedFrameworks
+  );
 
   const validateRes = await validateUserAuth();
 

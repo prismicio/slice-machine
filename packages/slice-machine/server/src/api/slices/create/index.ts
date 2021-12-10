@@ -27,6 +27,7 @@ const IndexFiles = {
   vue: "index.vue",
   vanillajs: "index.js",
   svelte: "index.svelte",
+  gatsby: null, // unused for now
 };
 
 const copyTemplate = async (

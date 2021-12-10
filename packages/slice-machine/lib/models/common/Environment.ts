@@ -1,6 +1,5 @@
 import PrismicData from "./PrismicData";
-import UserConfig from "./UserConfig";
-import { Framework } from "./Framework";
+import type { Models } from "@slicemachine/core";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
 
@@ -15,21 +14,21 @@ export interface UpdateVersionInfo {
 export interface BackendEnvironment {
   cwd: string;
   prismicData: PrismicData;
-  userConfig: UserConfig;
+  manifest: Models.Manifest;
   repo?: string;
   updateVersionInfo: UpdateVersionInfo;
   mockConfig: any;
-  framework: Framework;
+  framework: Models.Frameworks;
   baseUrl: string;
   client: DefaultClient | FakeClient;
 }
 
 export interface FrontEndEnvironment {
-  userConfig: UserConfig;
+  manifest: Models.Manifest;
   repo?: string;
   updateVersionInfo: UpdateVersionInfo;
   mockConfig: any;
-  framework: Framework;
+  framework: Models.Frameworks;
   sliceMachineAPIUrl: string;
   prismicAPIUrl: string;
 }

@@ -3,36 +3,42 @@ import * as Renderers from "./Renderers";
 
 import type { Item, RenderHintBaseFN, WidgetsType } from "./CodeBlock";
 
-import { SupportedFrameworks } from "../../../../../../consts";
+import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 const FrameworkRenderers = {
-  [SupportedFrameworks.nuxt]: Renderers.nuxt,
-  [SupportedFrameworks.next]: Renderers.next,
-  [SupportedFrameworks.vue]: Renderers.vue,
-  [SupportedFrameworks.react]: Renderers.react,
-  [SupportedFrameworks.svelte]: Renderers.svelte,
-  vanillajs: Renderers.vanillajs,
+  [Frameworks.nuxt]: Renderers.nuxt,
+  [Frameworks.next]: Renderers.next,
+  [Frameworks.vue]: Renderers.vue,
+  [Frameworks.react]: Renderers.react,
+  [Frameworks.svelte]: Renderers.svelte,
+  [Frameworks.vanillajs]: Renderers.vanillajs,
+  [Frameworks.none]: null,
+  [Frameworks.gatsby]: null,
 };
 
-const Hint: React.FC<{
-  framework: string;
+interface HintProps {
+  framework: Frameworks;
   show: boolean;
   Widgets: WidgetsType;
   item: Item;
   typeName: string;
   renderHintBase: RenderHintBaseFN;
   isRepeatable: boolean;
-}> = ({ framework, show, Widgets, ...rest }) => {
-  if (FrameworkRenderers[framework]) {
-    const Render = FrameworkRenderers[framework];
-    return (
-      <div style={{ display: show ? "initial" : "none" }}>
-        <Render Widgets={Widgets} {...rest} />
-      </div>
-    );
+}
+
+const Hint: React.FC<HintProps> = ({ framework, show, Widgets, ...rest }) => {
+  const Render = FrameworkRenderers[framework];
+
+  if (!Render) {
+    console.error(`Framework "${framework}" not supported`);
+    return null;
   }
-  console.error(`Framework "${framework}" not supported`);
-  return null;
+
+  return (
+    <div style={{ display: show ? "initial" : "none" }}>
+      <Render Widgets={Widgets} {...rest} />
+    </div>
+  );
 };
 
 export default Hint;

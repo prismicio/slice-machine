@@ -10,22 +10,20 @@ import getPrismicData from "./getPrismicData";
 
 import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
-import { SupportedFrameworks } from "@lib/consts";
 import { createComparator } from "@lib/env/semver";
-import { defineFramework, isValidFramework } from "@lib/env/framework";
-import handleManifest, { ManifestStates, Manifest } from "@lib/env/manifest";
+import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
-import UserConfig from "@lib/models/common/UserConfig";
 import { SMConfig } from "@lib/models/paths";
+import { Models, Utils } from "@slicemachine/core";
 
 declare let appRoot: string;
 
 const compareNpmVersions = createComparator(path.join(appRoot, "package.json"));
 
-function validate(config: Manifest): ConfigErrors {
+function validate(config: Models.Manifest): ConfigErrors {
   const errors: ConfigErrors = {};
   if (!config.storybook) {
     errors.storybook = {
@@ -35,8 +33,11 @@ function validate(config: Manifest): ConfigErrors {
     };
   }
 
-  if (config.framework && !isValidFramework(config.framework)) {
-    const options = Object.values(SupportedFrameworks);
+  if (
+    config.framework &&
+    !Utils.Framework.isValidFramework(Models.Frameworks[config.framework])
+  ) {
+    const options = Object.values(Models.SupportedFrameworks);
 
     errors.framework = {
       message: `The framework set in sm.json is invalid`,
@@ -91,16 +92,14 @@ export default async function getEnv(
 
   const npmCompare = await compareNpmVersions({ cwd });
 
-  const manifestState = handleManifest(cwd);
-  if (manifestState.state !== ManifestStates.Valid) {
-    console.error(manifestState.message);
-    throw new Error(manifestState.message);
+  const manifestInfo: ManifestInfo = handleManifest(cwd);
+  if (manifestInfo.state !== ManifestState.Valid || !manifestInfo.content) {
+    console.error(manifestInfo.message);
+    throw new Error(manifestInfo.message);
   }
 
-  const userConfig = manifestState.content as UserConfig;
-
-  const maybeErrors = validate(userConfig);
-  const parsedRepo = parseDomain(fromUrl(userConfig.apiEndpoint));
+  const maybeErrors = validate(manifestInfo.content);
+  const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));
   const repo = extractRepo(parsedRepo);
   const mockConfig = getMockConfig(cwd);
 
@@ -116,7 +115,7 @@ export default async function getEnv(
     env: {
       cwd,
       repo,
-      userConfig,
+      manifest: manifestInfo.content,
       prismicData: prismicData.value,
       updateVersionInfo: {
         currentVersion: npmCompare.currentVersion,
@@ -126,7 +125,11 @@ export default async function getEnv(
         updateAvailable: npmCompare.updateAvailable,
       },
       mockConfig,
-      framework: defineFramework(manifestState.content as Manifest, cwd),
+      framework: Utils.Framework.defineFramework(
+        manifestInfo.content,
+        cwd,
+        Models.SupportedFrameworks
+      ),
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },

@@ -3,14 +3,13 @@ import { describe, expect, test, jest } from "@jest/globals";
 import nock from "nock";
 import { createRepository } from "../src/steps/create-repo";
 import { stderr, stdout } from "stdout-stderr";
-import { Utils } from "@slicemachine/core";
-import { Framework } from "@slicemachine/core/src/utils";
+import { Models } from "@slicemachine/core";
 
 describe("createRepository", () => {
   test("when successful it will have called the endpoint and displayed a success message", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Framework.FrameworkEnum.svelte;
+    const framework = Models.Frameworks.svelte;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)
@@ -28,7 +27,7 @@ describe("createRepository", () => {
   test("success without domain in the response", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Framework.FrameworkEnum.next;
+    const framework = Models.Frameworks.next;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)
@@ -46,7 +45,7 @@ describe("createRepository", () => {
   test("when a error code is returned it will inform the user that their was an error", async () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
-    const framework = Utils.Framework.FrameworkEnum.vanillajs;
+    const framework = Models.Frameworks.vanillajs;
     const cookies = "prismic-auth=biscuits;";
 
     nock(base)

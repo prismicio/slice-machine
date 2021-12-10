@@ -14,7 +14,6 @@ export const createScreenshotUI = (
   baseUrl: string,
   pathToScreenshot: string
 ): ScreenshotUI => ({
-  exists: true,
   path: pathToScreenshot,
   url: createScreenshotUrl(baseUrl, pathToScreenshot),
 });

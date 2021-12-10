@@ -85,7 +85,7 @@ const SlicesIndex: React.FunctionComponent<{ env: FrontEndEnvironment }> = ({
     ? libraries.filter((e) => e && e.isLocal)
     : [];
   const hasLocalLibs = localLibs.length;
-  const configLocalLibs = (env.userConfig.libraries || []).reduce<
+  const configLocalLibs = (env.manifest.libraries || []).reduce<
     ReadonlyArray<{ name: string }>
   >((acc, curr) => {
     const { isLocal, from } = getFormattedLibIdentifier(curr);

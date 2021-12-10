@@ -1,7 +1,6 @@
-import { Manifest } from "../filesystem";
 import { startServerAndOpenBrowser } from "./auth";
-import { Poll, Endpoints, Framework } from "../utils";
-
+import { Poll, Endpoints } from "../utils";
+import type { Manifest, Frameworks } from "../models";
 import * as Communication from "./communication";
 import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
 export * as Communication from "./communication";
@@ -31,7 +30,7 @@ export interface Core {
     create: (
       apiEndpoint: string,
       token: string,
-      framework: Framework.FrameworkEnum
+      framework: Frameworks
     ) => Communication.CreateRepositoryResponse;
     validateName: (name: string, existingRepo?: boolean) => Promise<string>;
   };
@@ -57,7 +56,7 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
       create: async (
         domain: string,
         token: string,
-        framework: Framework.FrameworkEnum
+        framework: Frameworks
       ): Communication.CreateRepositoryResponse =>
         Communication.createRepository(domain, token, framework, base),
     },
