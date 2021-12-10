@@ -1,16 +1,14 @@
-import React, { ReactPropTypes, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
+import configureStore from "src/redux/store";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
-
-import configureStore from "src/redux/store";
 
 import theme from "src/theme";
 
 import LoadingPage from "components/LoadingPage";
 import SliceMachineApp from "components/App";
-import ConfigErrors from "components/ConfigErrors";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -22,10 +20,10 @@ import "src/css/drawer.css";
 import "highlight.js/styles/atom-one-dark.css";
 
 import ServerState from "lib/models/server/ServerState";
-import ServerError from "lib/models/server/ServerError";
 import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import Head from "next/head";
+import { AppInitialProps } from "next/dist/shared/lib/utils";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -46,33 +44,9 @@ function mapSlices(libraries: ReadonlyArray<LibraryUI> | undefined) {
   }, {});
 }
 
-const RenderStates = {
-  Loading: () => <LoadingPage />,
-  Default: ({
-    Component,
-    pageProps,
-    ...rest
-  }: {
-    Component: (props: ReactPropTypes) => JSX.Element;
-    pageProps: any;
-    rest: any;
-  }) => <Component {...pageProps} {...rest} />,
-  ConfigError: ({
-    configErrors,
-  }: {
-    configErrors: { [errorKey: string]: ServerError };
-  }) => <ConfigErrors errors={configErrors} />,
-};
-
 const { store, persistor } = configureStore();
 
-function MyApp({
-  Component,
-  pageProps,
-}: {
-  Component: (props: any) => JSX.Element;
-  pageProps: any;
-}) {
+function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   const { data: serverState }: { data?: ServerState } = useSwr(
     "/api/state",
     fetcher
@@ -82,9 +56,7 @@ function MyApp({
   // to remove it we should change how the slice store is handled
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
-  const [state, setRenderer] = useState<{
-    Renderer: (props: any) => JSX.Element;
-  }>({ Renderer: RenderStates.Loading });
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
     if (!serverState) {
@@ -99,7 +71,7 @@ function MyApp({
       });
     }
     setSliceMap(newSliceMap);
-    setRenderer({ Renderer: RenderStates.Default });
+    setIsLoadingData(false);
     const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
     console.log("Loaded libraries: ", { libraries });
@@ -107,8 +79,6 @@ function MyApp({
     console.log("Warnings: ", { warnings });
     console.log("------ End of log ------");
   }, [serverState]);
-
-  const { Renderer } = state;
 
   return (
     <>
@@ -121,10 +91,9 @@ function MyApp({
           <SliceMachineApp
             theme={theme}
             serverState={serverState}
-            pageProps={pageProps}
-            Component={Component}
-            Renderer={Renderer}
-          />
+          >
+            {isLoadingData ? <LoadingPage /> : <Component {...pageProps} />}
+          </SliceMachineApp>
         </PersistGate>
       </Provider>
     </>

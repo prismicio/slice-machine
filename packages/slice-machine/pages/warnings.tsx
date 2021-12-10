@@ -9,9 +9,11 @@ import {
 import { warningStates } from "lib/consts";
 
 import { FiZap } from "react-icons/fi";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "src/redux/type";
-import { getConfigErrors, getWarnings } from "src/modules/environment";
+import { useSelector } from "react-redux"
+
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getConfigErrors, getWarnings } from "@src/modules/environment";
+import Warning from "@models/common/Warning";
 
 const WarningsPage: React.FunctionComponent = () => {
   const { warnings, configErrors } = useSelector(
@@ -42,18 +44,17 @@ const WarningsPage: React.FunctionComponent = () => {
           <FiZap /> <Text ml={2}>Warnings</Text>
         </Flex>
         <Box>
-          {(warnings || []).map((warning) => {
+          {warnings.map((warning: Warning) => {
             const Component = Renderers[warning.key];
             return <Component errorType={warning.title} {...warning} />;
           })}
         </Box>
         <Box>
-          {Object.entries(configErrors || {}).length ? (
+          {Object.entries(configErrors).length ? (
             <ConfigErrors errors={configErrors} />
           ) : null}
         </Box>
-        {(!warnings || !warnings.length) &&
-        (!configErrors || Object.keys(configErrors).length === 0) ? (
+        {!warnings.length && Object.keys(configErrors).length === 0 ? (
           <Box>
             <Text>Your project is correctly configured. Well done!</Text>
           </Box>
