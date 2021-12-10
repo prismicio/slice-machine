@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
@@ -8,7 +8,7 @@ import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getFramework } from "@src/modules/environment";
+import { getFramework,selectIsPreviewAvailableForFramework } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 type SetupDrawerProps = {
@@ -22,9 +22,13 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
 
-  const { framework } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
-  }));
+  const { framework, isPreviewAvailableForFramework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      framework: getFramework(state),
+      isPreviewAvailableForFramework:
+        selectIsPreviewAvailableForFramework(state),
+    })
+  );
 
   const onOpenStep = (stepNumber: number) => () => {
     if (stepNumber === activeStep) {
@@ -34,6 +38,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 
     setActiveStep(stepNumber);
   };
+
+  // We close the drawer if the framework cannot handle the preview
+  useEffect(() => {
+    if (isPreviewAvailableForFramework) return;
+    onClose();
+  }, [isPreviewAvailableForFramework]);
 
   return (
     <Drawer
