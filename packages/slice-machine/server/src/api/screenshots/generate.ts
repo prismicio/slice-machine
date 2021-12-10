@@ -2,7 +2,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { FileSystem } from "@slicemachine/core";
-import Puppeteer from "../common/puppeteer";
+import Puppeteer from "./puppeteer";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 import {
   createScreenshotUI,

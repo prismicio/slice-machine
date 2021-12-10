@@ -15,9 +15,7 @@ export default {
     pathToFile,
   }: PuppeteerHandleProps): Promise<void | Error> => {
     const { warning } = await testUrl(screenshotUrl);
-    if (warning) {
-      return Error(warning);
-    }
+    if (warning) return Error(warning);
 
     if (!puppeteerBrowserPromise)
       puppeteerBrowserPromise = puppeteer.launch({

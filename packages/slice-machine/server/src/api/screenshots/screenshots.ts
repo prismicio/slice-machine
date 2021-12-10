@@ -1,22 +1,14 @@
-import type Models from "@slicemachine/core/build/src/models";
 import getEnv from "../services/getEnv";
 import { generateScreenshotAndRemoveCustom } from "./generate";
-
-interface ScreenshotBody {
-  libraryName: string;
-  sliceName: string;
-}
-
-interface ScreenshotResponse {
-  err: Error | null;
-  reason: string | null;
-  screenshots: Record<string, Models.Screenshot>;
-}
+import {
+  ScreenshotRequest,
+  ScreenshotResponse,
+} from "@models/common/Screenshots";
 
 export default async function handler({
   libraryName,
   sliceName,
-}: ScreenshotBody): Promise<ScreenshotResponse> {
+}: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
   if (!env.manifest.localSliceCanvasURL) {
     const reason =

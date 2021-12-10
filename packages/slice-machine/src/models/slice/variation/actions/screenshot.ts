@@ -1,11 +1,7 @@
 import { ScreenshotUI } from "lib/models/common/ComponentUI";
-import type Models from "@slicemachine/core/build/src/models";
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
-
-type GenerateScreenShotResponse = {
-  screenshots: Record<string, Models.Screenshot>;
-};
+import { ScreenshotResponse } from "@models/common/Screenshots";
 
 export function generateScreenShot(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
@@ -24,7 +20,7 @@ export function generateScreenShot(
           onResponse: { imageLoading: false },
         },
         successMessage: "Screenshots were saved to FileSystem",
-        onSuccess({ screenshots }: GenerateScreenShotResponse) {
+        onSuccess({ screenshots }: ScreenshotResponse) {
           dispatch({
             type: ActionType.GenerateScreenShot,
             payload: { screenshots },

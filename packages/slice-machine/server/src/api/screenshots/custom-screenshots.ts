@@ -10,17 +10,11 @@ import {
   createScreenshotUI,
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
-
-type TmpFile = File & { path: string };
-interface CustomScreenshotBody {
-  libraryName: string;
-  sliceName: string;
-  variationId: string;
-}
+import { TmpFile, CustomScreenshotRequest } from "@models/common/Screenshots";
 
 export default async function handler(
   file: TmpFile,
-  body: CustomScreenshotBody
+  body: CustomScreenshotRequest
 ): Promise<ScreenshotUI> {
   const { libraryName, sliceName, variationId } = body;
   const { env } = await getEnv();
