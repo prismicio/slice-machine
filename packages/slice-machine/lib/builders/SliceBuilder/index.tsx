@@ -13,7 +13,7 @@ import SideBar from "./SideBar";
 import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import SetupDrawer from "@builders/SliceBuilder/SetupDrawer";
+import SetupDrawer from "./SetupDrawer";
 import { useSelector } from "react-redux";
 import { selectIsThePreviewSetUp } from "@src/modules/environment";
 

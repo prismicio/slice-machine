@@ -2,13 +2,12 @@ import router from "next/router";
 import { Box, Text, Flex, Button } from "theme-ui";
 import * as Models from "@slicemachine/core/build/src/models";
 
-import VarationsPopover from "@builders/SliceBuilder/Header/VariationsPopover";
+import VarationsPopover from "lib/builders/SliceBuilder/Header/VariationsPopover";
+import * as Links from "lib/builders/SliceBuilder/links";
 
-import SliceState from "@lib/models/ui/SliceState";
+import SliceState from "lib/models/ui/SliceState";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
-
-import * as Links from "@builders/SliceBuilder/links";
 
 type PropTypes = {
   title: string;

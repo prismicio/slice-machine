@@ -19,6 +19,8 @@ import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
 
+import "highlight.js/styles/atom-one-dark.css";
+
 import ServerState from "lib/models/server/ServerState";
 import ServerError from "lib/models/server/ServerError";
 import { LibraryUI } from "lib/models/common/LibraryUI";

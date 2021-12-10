@@ -1,5 +1,8 @@
 import React from "react";
 import * as Renderers from "./Renderers";
+
+import type { Item, RenderHintBaseFN, WidgetsType } from "./CodeBlock";
+
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 const FrameworkRenderers = {
@@ -16,7 +19,11 @@ const FrameworkRenderers = {
 interface HintProps {
   framework: Frameworks;
   show: boolean;
-  Widgets: JSX.Element[];
+  Widgets: WidgetsType;
+  item: Item;
+  typeName: string;
+  renderHintBase: RenderHintBaseFN;
+  isRepeatable: boolean;
 }
 
 const Hint: React.FC<HintProps> = ({ framework, show, Widgets, ...rest }) => {
@@ -29,7 +36,6 @@ const Hint: React.FC<HintProps> = ({ framework, show, Widgets, ...rest }) => {
 
   return (
     <div style={{ display: show ? "initial" : "none" }}>
-      {/* @ts-ignore: Properties missmatch */}
       <Render Widgets={Widgets} {...rest} />
     </div>
   );

@@ -8,6 +8,7 @@ import {
 } from "@models/common/Environment";
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
+import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 const initialState: EnvironmentStoreType = {
   warnings: [],
@@ -30,6 +31,21 @@ export const getEnvironment = (
 export const selectIsThePreviewSetUp = (
   store: SliceMachineStoreType
 ): boolean => !!store.environment.env?.manifest.localSliceCanvasURL;
+
+export const getFramework = (
+  store: SliceMachineStoreType
+): Frameworks | undefined => store.environment.env?.framework;
+
+export const selectIsPreviewAvailableForFramework = (
+  store: SliceMachineStoreType
+): boolean => {
+  if (!store.environment.env) return false;
+
+  return (
+    Frameworks.next === store.environment.env.framework ||
+    Frameworks.nuxt === store.environment.env.framework
+  );
+};
 
 export const getWarnings = (
   store: SliceMachineStoreType

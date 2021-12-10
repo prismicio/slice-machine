@@ -1,4 +1,4 @@
-import useWindowSize from "../../../hooks/useWindowSize";
+import useWindowSize from "src/hooks/useWindowSize";
 
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
