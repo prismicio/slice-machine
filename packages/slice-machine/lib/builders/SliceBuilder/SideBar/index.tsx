@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
+import { checkPreviewSetup } from "@src/apiClient";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -29,49 +30,6 @@ type BottomStateProps = {
   isPreviewSetup: boolean;
   openSetupPreview: () => void;
   router: NextRouter;
-};
-
-const PreviewState: React.FunctionComponent<BottomStateProps> = ({
-  isPreviewSetup,
-  openSetupPreview,
-  router,
-}) => {
-  return isPreviewSetup ? (
-    <Link
-      href={{
-        pathname: `${router.pathname}/preview`,
-        query: router.query,
-      }}
-      passHref
-    >
-      <a target="_blank">
-        <Button
-          variant="secondary"
-          sx={{ cursor: "pointer", width: "100%", mt: 3 }}
-        >
-          Open Slice Preview
-        </Button>
-      </a>
-    </Link>
-  ) : (
-    <InformationBox>
-      <>
-        <Heading as="h5" sx={{ color: "text", mb: 2 }}>
-          Configure slice preview
-        </Heading>
-        <Text as="p" variant="xs" sx={{ mb: 2 }}>
-          You can preview your slices and view changes instantly
-        </Text>
-        <Button
-          variant={"small"}
-          sx={{ cursor: "pointer" }}
-          onClick={openSetupPreview}
-        >
-          Setup the preview
-        </Button>
-      </>
-    </InformationBox>
-  );
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
@@ -93,6 +51,10 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         selectIsPreviewAvailableForFramework(state),
     })
   );
+
+  const onOpenPreview = async () => {
+    await checkPreviewSetup();
+  };
 
   return (
     <Box
@@ -126,33 +88,16 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           </Text>
         </>
       ) : (
-        <PreviewState
-          isPreviewSetup={isPreviewSetup}
-          openSetupPreview={openSetupPreview}
-          router={router}
-        />
+        <Button
+          onClick={onOpenPreview}
+          variant={"secondary"}
+          sx={{ cursor: "pointer", width: "100%", mt: 3 }}
+        >
+          Open Slice Preview
+        </Button>
       )}
     </Box>
   );
 };
-
-const InformationBox: React.FunctionComponent = ({ children }) => (
-  <ThemeCard mt={3}>
-    <Flex
-      as="li"
-      sx={{
-        p: 3,
-        borderBottom: "1px solid",
-        borderColor: "borders",
-        alignItems: "center",
-        textDecoration: "none",
-        color: "inherit",
-        position: "relative",
-      }}
-    >
-      <Box>{children}</Box>
-    </Flex>
-  </ThemeCard>
-);
 
 export default SideBar;

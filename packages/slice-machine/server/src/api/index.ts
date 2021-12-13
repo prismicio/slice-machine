@@ -13,6 +13,7 @@ const customScreenshot = require("./screenshots/custom-screenshots").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
 const trackReview = require("./tracking/review").default;
+const checkPreview = require("./preview").default;
 
 const saveCustomType = require("./custom-types/save").default;
 const pushCustomType = require("./custom-types/push").default;
@@ -215,6 +216,20 @@ router.get(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await validateAuth();
+    if (payload.err) {
+      return res.status(400).json(payload);
+    }
+    return res.status(200).json(payload);
+  }
+);
+
+router.get(
+  "/preview/check",
+  async function (
+    _req: express.Request,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await checkPreview();
     if (payload.err) {
       return res.status(400).json(payload);
     }

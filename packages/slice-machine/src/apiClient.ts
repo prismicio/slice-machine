@@ -47,3 +47,7 @@ export const sendTrackingOnboarding = (
     | OnboardingContinueWithVideoEvent
 ): Promise<AxiosResponse<TrackingReviewResponse>> =>
   axios.post(`/api/tracking/onboarding`, onboardingEvent, defaultAxiosConfig);
+
+/** Preview Routes **/
+
+export const checkPreviewSetup = () => axios.get(`/api/preview/check`);
