@@ -91,7 +91,7 @@ const resolver = ({ sliceName }) => Slices[sliceName];
 
 const SliceCanvas = () => (<SliceCanvasRenderer
 \t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
-\tsliceZone={(slices) => <SliceZone slices={slices} resolver={resolver} />}
+\tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
 \tstate={state}
 />);
 
