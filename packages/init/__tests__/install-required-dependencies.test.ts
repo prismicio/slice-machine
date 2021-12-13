@@ -109,7 +109,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client next-slicezone"
+      "npm install --save prismic-reactjs @prismicio/client next-slicezone @prismicio/slice-canvas-renderer-react"
     );
   });
 
@@ -145,7 +145,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone"
+      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone @prismicio/slice-canvas-renderer-vue"
     );
   });
 

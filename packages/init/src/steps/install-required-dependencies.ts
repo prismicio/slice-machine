@@ -12,6 +12,8 @@ const {
   NUXT_SM,
   VUE_SLICEZONE,
   PRISMIC_VUE,
+  SLICE_CANVAS_REACT,
+  SLICE_CANVAS_VUE,
 } = Utils.CONSTS;
 
 function depsForFramework(framework: Models.Frameworks): string {
@@ -19,11 +21,11 @@ function depsForFramework(framework: Models.Frameworks): string {
     case Models.Frameworks.react:
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.next:
-      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE}`;
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE} ${SLICE_CANVAS_REACT}`;
     case Models.Frameworks.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.nuxt:
-      return `${NUXT_PRISMIC} ${NUXT_SM} ${VUE_SLICEZONE}`;
+      return `${NUXT_PRISMIC} ${NUXT_SM} ${VUE_SLICEZONE} ${SLICE_CANVAS_VUE}`;
     case Models.Frameworks.vue:
       return `${PRISMIC_VUE} ${PRISMIC_CLIENT} ${PRISMIC_DOM_PACKAGE_NAME} ${VUE_SLICEZONE}`;
     default:

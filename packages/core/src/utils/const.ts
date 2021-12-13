@@ -11,6 +11,8 @@ export const NUXT_PRISMIC = "@nuxtjs/prismic";
 export const NUXT_SM = "nuxt-sm";
 export const VUE_SLICEZONE = "vue-slicezone";
 export const PRISMIC_VUE = "@prismicio/vue";
+export const SLICE_CANVAS_REACT = "@prismicio/slice-canvas-renderer-react";
+export const SLICE_CANVAS_VUE = "@prismicio/slice-canvas-renderer-vue";
 
 export const MANIFEST_FILE_NAME = "sm.json";
 export const DEFAULT_SERVER_PORT = 5555;
