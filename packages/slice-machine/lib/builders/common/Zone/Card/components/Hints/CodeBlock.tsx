@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useThemeUI, Text, Button, Flex, Box } from "theme-ui";
 
 import { BsCode } from "react-icons/bs";
@@ -28,19 +28,18 @@ export type WidgetsType = Record<
   { CUSTOM_NAME: string; TYPE_NAME: string }
 >;
 
-const CodeBlock: React.FC<{
-  children: string | null | undefined;
+type CodeBlockProps = {
+  code: string | null | undefined;
   lang?: Language;
-}> = ({ children, lang }) => {
-  const ref = useRef<HTMLDivElement>();
+};
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
   const { theme } = useThemeUI();
 
   const [isCopied, setIsCopied] = useState(false);
 
   const copy = (): void => {
-    const text = ref?.current?.textContent;
-    text &&
-      navigator.clipboard.writeText(text).then(() => {
+    code &&
+      navigator.clipboard.writeText(code).then(() => {
         setIsCopied(true);
         setTimeout(() => {
           setIsCopied(false);
@@ -48,7 +47,7 @@ const CodeBlock: React.FC<{
       });
   };
 
-  return children ? (
+  return code ? (
     <Flex
       sx={{
         p: 2,
@@ -87,7 +86,7 @@ const CodeBlock: React.FC<{
           }}
           lang={lang}
         >
-          {children}
+          {code}
         </Code>
       </Flex>
       <Box>

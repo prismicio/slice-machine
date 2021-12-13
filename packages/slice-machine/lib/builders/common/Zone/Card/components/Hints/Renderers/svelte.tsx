@@ -53,7 +53,7 @@ const renderSvelte: React.FC<{
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : "";
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code;
 
-  return <CodeBlock lang="html">{withRepeat}</CodeBlock>;
+  return <CodeBlock lang="html" code={withRepeat} />;
 };
 
 export default renderSvelte;

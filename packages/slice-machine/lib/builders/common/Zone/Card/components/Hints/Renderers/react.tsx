@@ -104,7 +104,7 @@ const toReact: React.FC<{
   const code = maybeCodeRenderer ? maybeCodeRenderer(hintBase) : "";
   const withRepeat = isRepeatable ? wrapRepeatable(code) : code;
 
-  return <CodeBlock>{withRepeat}</CodeBlock>;
+  return <CodeBlock code={withRepeat} />;
 };
 
 export default toReact;
