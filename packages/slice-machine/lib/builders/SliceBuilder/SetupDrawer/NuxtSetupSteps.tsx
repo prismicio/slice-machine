@@ -59,7 +59,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
-          In your “pages” directory, create a file called _canvas.jsx and add
+          In your “pages” directory, create a file called _canvas.vue and add
           the following code. This page is the route you hit to preview and
           develop your components.
         </Text>
