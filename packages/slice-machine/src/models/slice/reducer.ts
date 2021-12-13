@@ -85,7 +85,6 @@ export function reducer(
         return {
           ...prevState,
           screenshotUrls: screenshots,
-          infos: prevState.infos,
         };
       }
       case VariationActions.GenerateScreenShot: {
