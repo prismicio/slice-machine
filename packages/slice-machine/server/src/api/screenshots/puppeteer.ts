@@ -46,11 +46,7 @@ const generateScreenshot = async (
     const page = await browser.newPage();
     await page.goto(screenshotUrl);
 
-    await page.waitForNavigation({
-      waitUntil: "networkidle0",
-    });
-
-    await page.waitForSelector("#root", { timeout: 2000 });
+    await page.waitForSelector("#root", { visible: true, timeout: 20000 }); // wait 20 secs top.
     const element = await page.$("#root");
     if (element) await element.screenshot({ path: pathToFile });
 
