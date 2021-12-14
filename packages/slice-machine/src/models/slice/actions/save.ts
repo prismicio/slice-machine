@@ -35,10 +35,7 @@ export default function save(
       }) {
         const savedState = {
           ...slice,
-          infos: {
-            ...slice.infos,
-            previewUrls,
-          },
+          screenshotUrls: previewUrls,
           initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations,
         };
