@@ -20,6 +20,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Install Slice Canvas"}
       isOpen={activeStep === 1}
       onOpenStep={onOpenStep(1)}
+      status={"complete"}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -37,6 +38,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Update your Nuxt config"}
       isOpen={activeStep === 2}
       onOpenStep={onOpenStep(2)}
+      status={"warning"}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Flex, Text } from "theme-ui";
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdCheck } from "react-icons/md";
+import { RiErrorWarningLine } from "react-icons/ri";
 import { ThemeUIStyleObject } from "@theme-ui/css";
 
 type StepSectionProps = {
@@ -8,6 +9,7 @@ type StepSectionProps = {
   title: string;
   isOpen: boolean;
   onOpenStep: () => void;
+  status?: null | "complete" | "warning";
 };
 
 const StepSection: React.FunctionComponent<StepSectionProps> = ({
@@ -16,12 +18,21 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
   isOpen,
   onOpenStep,
   children,
+  status = null,
 }) => {
   const stepSectionContainer = useRef<HTMLDivElement>(null);
   const contentHeight: number =
     !!stepSectionContainer && !!stepSectionContainer.current
       ? stepSectionContainer.current.scrollHeight
       : 0;
+
+  const additionalStepTitleStyle: ThemeUIStyleObject =
+    status === "complete"
+      ? {
+          textDecoration: "line-through",
+          color: "grey04",
+        }
+      : {};
 
   return (
     <Flex
@@ -43,8 +54,12 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
         onClick={onOpenStep}
       >
         <Flex sx={{ alignItems: "center" }}>
-          <StepNumber stepNumber={stepNumber} sx={{ mr: 2 }} />
-          <Text sx={{ fontWeight: 500, fontSize: 2 }}>{title}</Text>
+          <StepNumber status={status} stepNumber={stepNumber} sx={{ mr: 2 }} />
+          <Text
+            sx={{ fontWeight: 500, fontSize: 2, ...additionalStepTitleStyle }}
+          >
+            {title}
+          </Text>
         </Flex>
         <Flex
           sx={{
@@ -72,28 +87,57 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
   );
 };
 
-type StepNumberProps = { stepNumber: number; sx: ThemeUIStyleObject };
+type StepNumberProps = {
+  stepNumber: number;
+  sx: ThemeUIStyleObject;
+  status: null | "complete" | "warning";
+};
 
 const StepNumber: React.FunctionComponent<StepNumberProps> = ({
   stepNumber,
   sx,
-}) => (
-  <Flex
-    sx={{
-      height: 20,
-      width: 20,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: "50%",
-      borderStyle: "solid",
-      borderColor: (t) => t.colors?.textGray,
-      borderWidth: 1,
-      color: (t) => t.colors?.textGray,
-      ...sx,
-    }}
-  >
-    {stepNumber}
-  </Flex>
-);
+  status = null,
+}) => {
+  let style: ThemeUIStyleObject = {
+    height: 20,
+    width: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "50%",
+    borderStyle: "solid",
+    borderColor: (t) => t.colors?.textGray,
+    borderWidth: 1,
+    color: (t) => t.colors?.textGray,
+    ...sx,
+  };
+
+  switch (status) {
+    case "complete":
+      style = {
+        ...style,
+        backgroundColor: "greenLighter",
+        borderColor: "greenLighter",
+      };
+      break;
+    case "warning":
+      style = {
+        ...style,
+        backgroundColor: "orangeLighter",
+        borderColor: "orangeLighter",
+      };
+      break;
+    case null:
+    default:
+      break;
+  }
+
+  return (
+    <Flex sx={style}>
+      {!status && `${stepNumber}`}
+      {status === "complete" && <MdCheck color="#3AB97A" />}
+      {status === "warning" && <RiErrorWarningLine color="#F2994A" />}
+    </Flex>
+  );
+};
 
 export default StepSection;
