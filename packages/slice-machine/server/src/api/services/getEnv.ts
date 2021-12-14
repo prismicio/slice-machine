@@ -65,6 +65,12 @@ export default async function getEnv(
     throw new Error(message);
   }
 
+  const manifestInfo: ManifestInfo = handleManifest(cwd);
+  if (manifestInfo.state !== ManifestState.Valid || !manifestInfo.content) {
+    console.error(manifestInfo.message);
+    throw new Error(manifestInfo.message);
+  }
+
   const prismicData = getPrismicData();
 
   if (!prismicData.isOk()) {
@@ -75,12 +81,6 @@ export default async function getEnv(
   }
 
   const npmCompare = await compareNpmVersions({ cwd });
-
-  const manifestInfo: ManifestInfo = handleManifest(cwd);
-  if (manifestInfo.state !== ManifestState.Valid || !manifestInfo.content) {
-    console.error(manifestInfo.message);
-    throw new Error(manifestInfo.message);
-  }
 
   const maybeErrors = validate(manifestInfo.content);
   const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));

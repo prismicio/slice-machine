@@ -7,7 +7,8 @@ import {
   ParseResult,
 } from "parse-domain";
 import { Models } from "@slicemachine/core";
-import { isRight } from "fp-ts/lib/Either";
+import { fold } from "fp-ts/Either";
+import { pipe } from "fp-ts/function";
 
 export interface ManifestInfo {
   state: ManifestState;
@@ -118,10 +119,18 @@ function handleManifest(cwd: string): ManifestInfo {
   try {
     const f = fs.readFileSync(pathToSm, "utf-8");
     const json = JSON.parse(f);
-    const res = Models.Manifest.decode(json);
 
-    if (isRight(res)) return validate(res.right);
-    else throw new Error();
+    return pipe(
+      Models.Manifest.decode(json),
+      fold(
+        // failure handler
+        () => {
+          throw new Error();
+        },
+        // success handler
+        (manifest) => validate(manifest)
+      )
+    );
   } catch (e) {
     return {
       state: ManifestState.InvalidJson,

@@ -81,24 +81,6 @@ describe("getEnv", () => {
     await expect(getEnv(TMP)).rejects.toThrow();
   });
 
-  test("it generates warning for missing storybook config", async () => {
-    fs.use(
-      Volume.fromJSON(
-        {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2" }`,
-          "package.json": "{}",
-        },
-        TMP
-      )
-    );
-
-    const { errors } = await getEnv(TMP);
-    expect(errors).toHaveProperty("storybook");
-    expect(errors.storybook.message).toEqual(
-      "Could not find storybook property in sm.json"
-    );
-  });
-
   test("it validates stories path", async () => {
     fs.use(
       Volume.fromJSON(

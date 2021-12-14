@@ -13,17 +13,6 @@ describe("tracking/onboarding", () => {
     lstat.mockReturnValueOnce(true);
 
     const readFileSync = jest.spyOn(fs, "readFileSync");
-    const base = "https://prismic.io";
-    const cookies = "SESSION=abd; prismic-auth=xyz";
-    readFileSync.mockReturnValueOnce(JSON.stringify({ base, cookies }));
-
-    lstat.mockReturnValueOnce(true);
-
-    const version = "0.0.0";
-    readFileSync.mockReturnValueOnce(JSON.stringify({ version, name }));
-    nock("https://unpkg.com")
-      .get(`/${name}/package.json`)
-      .reply(200, { version });
 
     lstat.mockReturnValueOnce(true);
     const existsSync = jest.spyOn(fs, "existsSync");
@@ -34,6 +23,16 @@ describe("tracking/onboarding", () => {
         apiEndpoint: "https://fake.prismic.io/api/v2",
       })
     );
+
+    const base = "https://prismic.io";
+    const cookies = "SESSION=abd; prismic-auth=xyz";
+    readFileSync.mockReturnValueOnce(JSON.stringify({ base, cookies }));
+
+    const version = "0.0.0";
+    readFileSync.mockReturnValueOnce(JSON.stringify({ version, name }));
+    nock("https://unpkg.com")
+      .get(`/${name}/package.json`)
+      .reply(200, { version });
 
     nock("https://tracking.prismic.io")
       .post("/", (body) => body.id === TrackingEventId.ONBOARDING_START)

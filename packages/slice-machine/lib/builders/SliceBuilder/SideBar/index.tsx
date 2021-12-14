@@ -1,8 +1,6 @@
 import React, { memo } from "react";
 import type Models from "@slicemachine/core/build/src/models";
-import { Box, Button, Card as ThemeCard, Flex, Heading, Text } from "theme-ui";
-import Link from "next/link";
-import { NextRouter } from "next/router";
+import { Box, Button, Text } from "theme-ui";
 
 import Card from "@components/Card";
 
@@ -13,6 +11,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
 import { checkPreviewSetup } from "@src/apiClient";
+import { useToasts } from "react-toast-notifications";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -24,12 +23,6 @@ type SideBarProps = {
   onScreenshot: () => void;
   onHandleFile: (file: any) => void;
   openSetupPreview: () => void;
-};
-
-type BottomStateProps = {
-  isPreviewSetup: boolean;
-  openSetupPreview: () => void;
-  router: NextRouter;
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
@@ -44,6 +37,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   const { screenshotUrls } = Model;
 
   const router = useRouter();
+  const { addToast } = useToasts();
 
   const { isPreviewAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -53,7 +47,19 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   );
 
   const onOpenPreview = async () => {
-    await checkPreviewSetup();
+    try {
+      await checkPreviewSetup();
+      window.open(`${router.asPath}/preview`);
+    } catch (e) {
+      // Setup not valid
+      if (e.response.status === 400) {
+        openSetupPreview();
+      }
+      // Server crash
+      if (e.response.status === 500) {
+        addToast(e.response.data.err, { appearance: "error" });
+      }
+    }
   };
 
   return (
