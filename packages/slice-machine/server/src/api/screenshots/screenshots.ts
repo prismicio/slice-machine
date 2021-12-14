@@ -4,13 +4,23 @@ import {
   ScreenshotRequest,
   ScreenshotResponse,
 } from "@models/common/Screenshots";
+import { previewIsSupported } from "@lib/utils";
+import { Frameworks } from "@slicemachine/core/build/src/models";
 
-export default async function handler({
-  libraryName,
-  sliceName,
-}: ScreenshotRequest): Promise<ScreenshotResponse> {
-  const { env } = await getEnv();
-  if (!env.manifest.localSliceCanvasURL) {
+export function validateEnv(
+  framework: Frameworks,
+  canvasUrl: string | undefined
+) {
+  if (!previewIsSupported(framework)) {
+    const reason = "Could not generate preview: framework is not supported";
+
+    return {
+      err: new Error(reason),
+      reason,
+      screenshots: {},
+    };
+  }
+  if (!canvasUrl) {
     const reason =
       "Could not generate preview: localSliceCanvasUrl undefined in sm.json file";
 
@@ -19,6 +29,18 @@ export default async function handler({
       reason,
       screenshots: {},
     };
+  }
+}
+
+export default async function handler({
+  libraryName,
+  sliceName,
+}: ScreenshotRequest): Promise<ScreenshotResponse> {
+  const { env } = await getEnv();
+
+  const maybeErr = validateEnv(env.framework, env.manifest.localSliceCanvasURL);
+  if (maybeErr) {
+    return maybeErr;
   }
 
   const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
