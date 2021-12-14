@@ -9,6 +9,7 @@ import {
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { previewIsSupported } from "@lib/utils";
 
 const initialState: EnvironmentStoreType = {
   warnings: [],
@@ -41,10 +42,7 @@ export const selectIsPreviewAvailableForFramework = (
 ): boolean => {
   if (!store.environment.env) return false;
 
-  return (
-    Frameworks.next === store.environment.env.framework ||
-    Frameworks.nuxt === store.environment.env.framework
-  );
+  return previewIsSupported(store.environment.env.framework);
 };
 
 export const getWarnings = (
