@@ -45,8 +45,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
         </Text>
         <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
         <Text sx={{ color: "textClear", mb: 2 }}>
-          In your nuxt.config.js file, you need to add at the beginning the
-          following line:
+          In your nuxt.config.js file, you need to update your "modules" and
+          "build" keys with the following:
         </Text>
         <CodeBlock>{NuxtConfigInstructions}</CodeBlock>
       </Flex>
