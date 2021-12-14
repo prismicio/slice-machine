@@ -4,6 +4,8 @@ import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
 import { FieldType } from "../models/common/CustomType/fields";
+import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 
@@ -89,4 +91,8 @@ export const sanitizeSbId = (str: string) => {
     .replace(/-+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
+};
+
+export const previewIsSupported = (framework: Frameworks) => {
+  return [Frameworks.next, Frameworks.nuxt].includes(framework);
 };

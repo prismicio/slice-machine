@@ -78,14 +78,16 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
             {display ? (
               <Fragment>
                 <Flex sx={{ flexDirection: "column" }}>
-                  <Button
-                    sx={{ mb: 3 }}
-                    variant={preventScreenshot ? "disabled" : "primary"}
-                    disabled={preventScreenshot}
-                    onClick={onScreenshot}
-                  >
-                    Take screenshot
-                  </Button>
+                  {!preventScreenshot ? (
+                    <Button
+                      sx={{ mb: 3 }}
+                      variant="primary"
+                      disabled={preventScreenshot}
+                      onClick={onScreenshot}
+                    >
+                      Take screenshot
+                    </Button>
+                  ) : null}
                   <Label
                     htmlFor="input-file"
                     variant="buttons.primary"
