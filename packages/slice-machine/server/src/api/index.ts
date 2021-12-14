@@ -225,16 +225,16 @@ router.get(
 
 router.get(
   "/preview/check",
-  async function (
-    _req: express.Request,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await checkPreview();
+    const payload = await checkPreview(req);
     if (payload.err) {
       return res.status(400).json(payload);
     }
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.post(
