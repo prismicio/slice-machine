@@ -82,7 +82,6 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
                     <Button
                       sx={{ mb: 3 }}
                       variant="primary"
-                      disabled={preventScreenshot}
                       onClick={onScreenshot}
                     >
                       Take screenshot

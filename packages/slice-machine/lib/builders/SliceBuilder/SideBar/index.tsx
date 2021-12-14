@@ -120,7 +120,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           <Button variant="disabled" sx={{ width: "100%", mt: 3 }}>
             Open Slice Preview
           </Button>
-          <Text as="p" sx={{ textAlign: "center", mt: 3, color: "#667587" }}>
+          <Text as="p" sx={{ textAlign: "center", mt: 3, color: "textGray" }}>
             Framework does not support Slice Preview. You can install Storybook
             instead.
           </Text>

@@ -8,7 +8,10 @@ import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getFramework,selectIsPreviewAvailableForFramework } from "@src/modules/environment";
+import {
+  getFramework,
+  selectIsPreviewAvailableForFramework,
+} from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 type SetupDrawerProps = {
@@ -119,7 +122,7 @@ const HelpSection = () => (
             mr: 2,
           }}
         >
-          <FaRegQuestionCircle size={20} color={"#667587"} />
+          <FaRegQuestionCircle size={20} color="textGray" />
         </Flex>
         <Text sx={{ fontSize: 2, fontWeight: 500 }}>Help Section</Text>
       </Flex>
