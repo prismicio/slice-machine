@@ -1,22 +1,20 @@
 import path from "path";
 import {
-  parseDomain,
   fromUrl,
-  ParseResultType,
+  parseDomain,
   ParseResult,
+  ParseResultType,
 } from "parse-domain";
 
 import getPrismicData from "./getPrismicData";
 
 import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
-import Files from "@lib/utils/files";
 import { createComparator } from "@lib/env/semver";
 import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
-import { SMConfig } from "@lib/models/paths";
 import { Models, Utils } from "@slicemachine/core";
 
 declare let appRoot: string;
@@ -25,13 +23,6 @@ const compareNpmVersions = createComparator(path.join(appRoot, "package.json"));
 
 function validate(config: Models.Manifest): ConfigErrors {
   const errors: ConfigErrors = {};
-  if (!config.storybook) {
-    errors.storybook = {
-      message: `Could not find storybook property in sm.json`,
-      example: "http://localhost:STORYBOOK_PORT",
-      run: 'Add "storybook" property with a localhost url',
-    };
-  }
 
   if (
     config.framework &&
@@ -70,13 +61,6 @@ export default async function getEnv(
   if (!cwd) {
     const message =
       "[api/env]: Unrecoverable error. Could not find cwd. Exiting..";
-    console.error(message);
-    throw new Error(message);
-  }
-
-  if (!Files.exists(SMConfig(cwd))) {
-    const message =
-      "[api/env]: Unrecoverable error. Could not find sm.json in your project. Exiting..";
     console.error(message);
     throw new Error(message);
   }
