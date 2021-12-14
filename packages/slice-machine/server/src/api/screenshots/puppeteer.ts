@@ -46,7 +46,11 @@ const generateScreenshot = async (
     const page = await browser.newPage();
     await page.goto(screenshotUrl);
 
-    await page.waitForSelector("#root", { visible: true, timeout: 20000 }); // wait 20 secs top.
+    await page.waitForNavigation({
+      waitUntil: "networkidle2", // websocket open for webpack in nuxt.
+    });
+
+    await page.waitForSelector("#root", { timeout: 2000 });
     const element = await page.$("#root");
     if (element) await element.screenshot({ path: pathToFile });
 
