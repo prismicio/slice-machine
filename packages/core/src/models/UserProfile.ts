@@ -3,6 +3,9 @@ import * as t from "io-ts";
 export const UserProfile = t.exact(
   t.type({
     userId: t.string,
+    email: t.string,
+    firstName: t.string,
+    lastName: t.string,
   })
 );
 

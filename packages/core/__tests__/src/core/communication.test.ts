@@ -74,21 +74,16 @@ describe("communication", () => {
   });
 
   test("listRepositories", async () => {
-    const base = "https://prismic.io";
-    const responseData = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {
-        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
-      },
-    };
+    const responseData = [
+      { domain: "foo-repo", name: "foo-repo" },
+      { domain: "qwerty", name: "qwerty" },
+    ];
     nock("https://auth.prismic.io")
       .get("/validate?token=biscuits")
       .reply(200, responseData);
 
-    const result = await communication.listRepositories(fakeCookie, base);
-    expect(result).toEqual(responseData.repositories);
+    const result = await communication.listRepositories(fakeCookie);
+    expect(result).toEqual(responseData);
   });
 
   describe("validateRepositoryName", () => {
