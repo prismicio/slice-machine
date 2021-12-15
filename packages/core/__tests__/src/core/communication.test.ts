@@ -75,11 +75,11 @@ describe("communication", () => {
 
   test("listRepositories", async () => {
     const responseData = [
-      { domain: "foo-repo", name: "foo-repo" },
-      { domain: "qwerty", name: "qwerty" },
+      { domain: "foo-repo", name: "foo-repo", role: "Administrator" },
+      { domain: "qwerty", name: "qwerty", role: "Administrator" },
     ];
-    nock("https://auth.prismic.io")
-      .get("/validate?token=biscuits")
+    nock("https://user.internal-prismic.io")
+      .get("/repositories")
       .reply(200, responseData);
 
     const result = await communication.listRepositories(fakeCookie);
