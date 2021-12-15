@@ -79,9 +79,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, lang }) => {
         <Code
           style={{
             margin: "0px 8px",
-            border: "1px solid",
+            border: "none",
             borderRadius: "3px",
-            borderColor: theme?.colors?.borders as string | undefined,
             fontSize: "13px",
           }}
           lang={lang}

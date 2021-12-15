@@ -3,7 +3,7 @@ import React from "react";
 import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
-import CodeBlock from "components/CodeBlock";
+import CodeBlock from "./components/CodeBlockWithCopy";
 
 type NextSetupStepProps = {
   activeStep: number;

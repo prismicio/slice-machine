@@ -71,7 +71,8 @@ const VarationsPopover: React.FunctionComponent<{
         <Button
           sx={{
             fontSize: 14,
-            padding: 2,
+            p: 2,
+            pl: 3,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

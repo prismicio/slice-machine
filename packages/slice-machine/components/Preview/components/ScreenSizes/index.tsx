@@ -1,4 +1,9 @@
-import { Button } from "theme-ui";
+import { Button, Flex } from "theme-ui";
+import { FiSmartphone } from "react-icons/fi";
+import { MdComputer } from "react-icons/md";
+import { FaTabletAlt } from "react-icons/fa";
+
+import { darken } from "@theme-ui/color";
 
 export enum Size {
   FULL = "FULL",
@@ -8,15 +13,15 @@ export enum Size {
 
 const screens = [
   {
-    Icon: <span>A</span>,
+    Icon: <MdComputer size={20} />,
     size: Size.FULL,
   },
   {
-    Icon: <span>B</span>,
+    Icon: <FaTabletAlt size={20} />,
     size: Size.TABLET,
   },
   {
-    Icon: <span>C</span>,
+    Icon: <FiSmartphone size={20} />,
     size: Size.PHONE,
   },
 ];
@@ -28,35 +33,49 @@ export const iframeSizes = {
   },
   [Size.TABLET]: {
     width: "50vw",
-    mt: 4,
-    border: "2px solid #111",
+    pt: 4,
     height: "calc(600px)",
   },
   [Size.PHONE]: {
     width: "340px",
-    mt: 4,
-    border: "2px solid #111",
+    pt: 4,
     height: "calc(600px)",
   },
 };
 
 const ScreenSizes = ({ size, onClick }: { size: Size; onClick: Function }) => {
   return (
-    <div>
+    <Flex sx={{ flexDirection: "row" }}>
       {screens.map((screen, i) => (
         <Button
           onClick={() => onClick(screen)}
           key={screen.size}
+          variant="buttons.screenSize"
           sx={{
-            bg: size === screen.size ? "black" : "initial",
             mr: screens[i + 1] ? 2 : 0,
-            color: size === screen.size ? "white" : "#111",
+            ...(size !== screen.size
+              ? {
+                  color: "text",
+                  bg: "secondary",
+                }
+              : null),
+            "&:hover": {
+              ...(size === screen.size
+                ? {
+                    color: "white",
+                    bg: "text",
+                  }
+                : {
+                    color: "text",
+                    bg: darken("secondary", 0.05),
+                  }),
+            },
           }}
         >
           {screen.Icon}
         </Button>
       ))}
-    </div>
+    </Flex>
   );
 };
 
