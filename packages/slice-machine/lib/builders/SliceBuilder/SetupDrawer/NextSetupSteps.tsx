@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Flex, Text } from "theme-ui";
+import { Button, Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
@@ -108,6 +108,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         onOpenStep={onOpenStep(4)}
       >
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
+          <Text sx={{ color: "textClear", mb: 2 }}>
+            After you’ve done the previous steps, we need to check that
+            everything works in order.
+          </Text>
           {userHasAtLeastOneError && (
             <WarningSection
               title={"We are running into some errors"}
@@ -117,10 +121,13 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
               Preview. Please check step 3 and 4 for more information.
             </WarningSection>
           )}
-          <Text sx={{ color: "textClear" }}>
-            After you’ve done the previous steps, we need to check that
-            everything works in order.
-          </Text>
+          <Button
+            sx={{
+              alignSelf: "flex-start",
+            }}
+          >
+            Check configuration
+          </Button>
         </Flex>
       </StepSection>
     </>
