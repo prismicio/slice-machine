@@ -131,10 +131,7 @@ async function generateForVariation(
     screenshotUrl,
     pathToFile,
   });
-  if (maybeError instanceof Error) {
-    return maybeError;
-  }
-
+  if (maybeError instanceof Error) return maybeError;
   return createScreenshotUI(env.baseUrl, pathToFile);
 }
 

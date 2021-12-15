@@ -44,15 +44,18 @@ const generateScreenshot = async (
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
     const page = await browser.newPage();
-    await page.goto(screenshotUrl);
 
-    await page.waitForNavigation({
-      waitUntil: "networkidle0",
+    /* We use the waitUntil option in order for the component to be rendered properly.
+     ** The value networkidle2 is required because Nuxt has an open socket with Webpack.
+     */
+    await page.goto(screenshotUrl, {
+      waitUntil: "networkidle2",
     });
 
     await page.waitForSelector("#root", { timeout: 2000 });
     const element = await page.$("#root");
     if (element) await element.screenshot({ path: pathToFile });
+    await page.close();
 
     return;
   } catch (err) {

@@ -66,15 +66,16 @@ export async function handler(
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
+  console.log("[slice/save]: Slice was saved!");
+
+  await onSaveSlice(env);
+  console.log("[slice/save]: Libraries index files regenerated!");
+
   const { previewUrls, warning } = await generateScreenshotsWithLogs(
     env,
     from,
     sliceName
   );
-  console.log("[slice/save]: Slice was saved!");
-
-  await onSaveSlice(env);
-  console.log("[slice/save]: Libraries index files regenerated!");
 
   return { previewUrls, warning };
 }

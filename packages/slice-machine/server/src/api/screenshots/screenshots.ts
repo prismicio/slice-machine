@@ -22,7 +22,7 @@ export function validateEnv(
   }
   if (!canvasUrl) {
     const reason =
-      "Could not generate preview: localSliceCanvasUrl undefined in sm.json file";
+      "Could not generate screenshots: localSliceCanvasUrl undefined in sm.json file";
 
     return {
       err: new Error(reason),
@@ -50,7 +50,7 @@ export default async function handler({
   );
 
   const message: string | null = failure.length
-    ? `Could not generate previews for variations: ${failure
+    ? `Could not generate screenshots for variations: ${failure
         .map((f) => f.variationId)
         .join(" | ")}`
     : null;
