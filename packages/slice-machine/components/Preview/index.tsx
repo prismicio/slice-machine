@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useContext } from "react";
 
-import { Box } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { SliceContext } from "@src/models/slice/context";
 
@@ -34,7 +34,7 @@ export default function Preview() {
   }/_canvas`;
 
   return (
-    <Box>
+    <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
         title={Model.infos.sliceName}
         Model={Model}
@@ -47,6 +47,6 @@ export default function Preview() {
         canvasUrl={canvasUrl}
         sliceView={sliceView}
       />
-    </Box>
+    </Flex>
   );
 }

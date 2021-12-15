@@ -332,6 +332,14 @@ const AppTheme = (): Theme =>
         cursor: "not-allowed",
         borderColor: "transparent",
       },
+      disabledSecondary: {
+        bg: "#F9F9FA",
+        fontSize: "1",
+        color: "#C9D0D8",
+        cursor: "not-allowed",
+        border: "1px solid",
+        borderColor: "1px solid rgba(62, 62, 72, 0.15)",
+      },
       transparent: {
         background: "transparent",
         border: "none",

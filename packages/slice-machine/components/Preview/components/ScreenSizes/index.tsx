@@ -45,7 +45,7 @@ export const iframeSizes = {
 
 const ScreenSizes = ({ size, onClick }: { size: Size; onClick: Function }) => {
   return (
-    <Flex sx={{ flexDirection: "row" }}>
+    <Flex>
       {screens.map((screen, i) => (
         <Button
           onClick={() => onClick(screen)}

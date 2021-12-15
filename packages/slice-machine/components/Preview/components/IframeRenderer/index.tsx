@@ -73,7 +73,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   }, [client, size, sliceView]);
 
   return (
-    <Box sx={{ minHeight: "calc(100vh - 67px)", bg: "grey01" }}>
+    <Box sx={{ flex: "1", bg: "grey01" }}>
       <Flex
         sx={{
           justifyContent: "center",

@@ -117,7 +117,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       </Card>
       {!isPreviewAvailableForFramework ? (
         <>
-          <Button variant="disabled" sx={{ width: "100%", mt: 3 }}>
+          <Button variant="disabledSecondary" sx={{ width: "100%", mt: 3 }}>
             Open Slice Preview
           </Button>
           <Text as="p" sx={{ textAlign: "center", mt: 3, color: "textGray" }}>
