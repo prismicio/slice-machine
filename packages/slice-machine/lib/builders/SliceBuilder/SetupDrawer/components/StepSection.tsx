@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { Flex, Text } from "theme-ui";
 import { MdArrowBackIos, MdCheck } from "react-icons/md";
-import { RiErrorWarningLine } from "react-icons/ri";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import WarningBadge from "./WarningBadge";
 
 type StepSectionProps = {
   stepNumber?: number;
@@ -86,24 +86,7 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
               <MdCheck color="#3AB97A" />
             </Flex>
           )}
-          {status === "ko" && (
-            <Flex
-              sx={{
-                height: 20,
-                width: 20,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "50%",
-                borderStyle: "solid",
-                backgroundColor: "orangeLighter",
-                borderColor: "orangeLighter",
-                borderWidth: 1,
-                mr: 2,
-              }}
-            >
-              <RiErrorWarningLine color="#F2994A" />
-            </Flex>
-          )}
+          {status === "ko" && <WarningBadge sx={{ mr: 2 }} />}
           <Flex
             sx={{
               transform: isOpen
