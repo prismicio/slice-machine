@@ -36,10 +36,10 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           {previewSetupStatus.dependencies === "ko" && (
             <WarningSection
               title={"Some dependencies are missing"}
-              sx={{ mb: 2 }}
+              sx={{ mb: 3 }}
             />
           )}
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             Slice Canvas is used to develop your components with mock data, run
             the following command to install it with npm
           </Text>
@@ -57,12 +57,12 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
         status={previewSetupStatus.iframe}
       >
         <Flex sx={{ flexDirection: "column" }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             In your nuxt.config.js file, you need to add at the beginning the
             following line:
           </Text>
           <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", my: 3 }}>
             In your nuxt.config.js file, you need to update your "modules" and
             "build" keys with the following:
           </Text>
@@ -77,7 +77,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
         status={previewSetupStatus.iframe}
       >
         <Flex sx={{ flexDirection: "column" }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             In your “pages” directory, create a file called _canvas.vue and add
             the following code. This page is the route you hit to preview and
             develop your components.
@@ -102,7 +102,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
           </WarningSection>
         )}
         <Flex sx={{ flexDirection: "column" }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
             property <Text variant={"pre"}>localSliceCanvasURL</Text> in the
             shape of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
@@ -119,14 +119,14 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
         onOpenStep={onOpenStep(5)}
       >
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             After you’ve done the previous steps, we need to check that
             everything works in order.
           </Text>
           {userHasAtLeastOneError && (
             <WarningSection
               title={"We are running into some errors"}
-              sx={{ mb: 2 }}
+              sx={{ mb: 3 }}
             >
               We ran into some issues while checking your configuration of Slice
               Preview. Please check step 3 and 4 for more information.

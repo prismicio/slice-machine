@@ -60,13 +60,13 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
           {previewSetupStatus.iframe === "ko" && (
             <WarningSection
               title={"We can’t connect to the preview page"}
-              sx={{ mb: 2 }}
+              sx={{ mb: 3 }}
             >
               We cannot connect to “localhost:3000/_canvas“ and found the slice
               preview page. Learn more
             </WarningSection>
           )}
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             In your “pages” directory, create a file called _canvas.jsx and add
             the following code. This page is the route you hit to preview and
             develop your components.
@@ -84,14 +84,14 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         {previewSetupStatus.manifest === "ko" && (
           <WarningSection
             title={"We can’t connect to the preview page"}
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
           >
             Looks like we can’t find the “localSliceCanvasURL“ property in your
             sm.json file.
           </WarningSection>
         )}
         <Flex sx={{ flexDirection: "column" }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
             property <Text variant={"pre"}>localSliceCanvasURL</Text> in the
             shape of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
@@ -108,14 +108,14 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         onOpenStep={onOpenStep(4)}
       >
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text sx={{ color: "textClear", mb: 3 }}>
             After you’ve done the previous steps, we need to check that
             everything works in order.
           </Text>
           {userHasAtLeastOneError && (
             <WarningSection
               title={"We are running into some errors"}
-              sx={{ mb: 2 }}
+              sx={{ mb: 3 }}
             >
               We ran into some issues while checking your configuration of Slice
               Preview. Please check step 3 and 4 for more information.
