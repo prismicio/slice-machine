@@ -14,19 +14,23 @@ import {
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { PreviewSetupStatus } from "@builders/SliceBuilder";
+import { selectIsSetupDrawerOpen } from "@src/modules/preview";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 type SetupDrawerProps = {
-  isOpen: boolean;
-  onClose: () => void;
   previewSetupStatus: PreviewSetupStatus;
 };
 
 const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
-  isOpen,
-  onClose,
   previewSetupStatus,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
+
+  const { isSetupDrawerOpen } = useSelector((state: SliceMachineStoreType) => ({
+    isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
+  }));
+
+  const { closeSetupDrawerDrawer } = useSliceMachineActions();
 
   const { framework, isPreviewAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -48,15 +52,15 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
     if (isPreviewAvailableForFramework) return;
-    onClose();
+    closeSetupDrawerDrawer();
   }, [isPreviewAvailableForFramework]);
 
   return (
     <Drawer
       placement="right"
-      open={isOpen}
+      open={isSetupDrawerOpen}
       level={null}
-      onClose={onClose}
+      onClose={closeSetupDrawerDrawer}
       width={492}
     >
       <Flex
@@ -74,7 +78,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
-          <Close color={"#4E4E55"} onClick={onClose} />
+          <Close color={"#4E4E55"} onClick={closeSetupDrawerDrawer} />
         </Flex>
         <Flex
           sx={{

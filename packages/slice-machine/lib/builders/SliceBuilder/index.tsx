@@ -38,7 +38,6 @@ const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: React.FunctionComponent = () => {
-  const [isSetupDrawerOpen, setSetupDrawerState] = useState<boolean>(false);
   const [previewSetupStatus, setPreviewSetupStatus] =
     useState<PreviewSetupStatus>({
       dependencies: null,
@@ -63,8 +62,6 @@ const SliceBuilder: React.FunctionComponent = () => {
       openLoginModal();
     }
   };
-
-  const openSetupDrawer = () => setSetupDrawerState(true);
 
   useEffect(() => {
     if (Model.isTouched && isMounted) {
@@ -104,7 +101,6 @@ const SliceBuilder: React.FunctionComponent = () => {
           <SideBar
             Model={Model}
             variation={variation}
-            openSetupPreview={openSetupDrawer}
             setPreviewSetupStatus={setPreviewSetupStatus}
             onScreenshot={() =>
               store
@@ -127,11 +123,7 @@ const SliceBuilder: React.FunctionComponent = () => {
       >
         <FieldZones Model={Model} store={store} variation={variation} />
       </FlexEditor>
-      <SetupDrawer
-        previewSetupStatus={previewSetupStatus}
-        isOpen={isSetupDrawerOpen}
-        onClose={() => setSetupDrawerState(false)}
-      />
+      <SetupDrawer previewSetupStatus={previewSetupStatus} />
     </Box>
   );
 };

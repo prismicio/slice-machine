@@ -13,6 +13,7 @@ import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
 import { checkPreviewSetup } from "@src/apiClient";
 import { useToasts } from "react-toast-notifications";
 import { PreviewSetupStatus } from "@builders/SliceBuilder";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -23,7 +24,6 @@ type SideBarProps = {
   onScreenshot: () => void;
   setPreviewSetupStatus: (previewSetupStatus: PreviewSetupStatus) => void;
   onHandleFile: (file: any) => void;
-  openSetupPreview: () => void;
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
@@ -32,10 +32,11 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   imageLoading,
   onScreenshot,
   onHandleFile,
-  openSetupPreview,
   setPreviewSetupStatus,
 }) => {
   const { screenshotUrls } = Model;
+
+  const { openSetupDrawerDrawer } = useSliceMachineActions();
 
   const router = useRouter();
   const { addToast } = useToasts();
@@ -61,7 +62,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       }
 
       setPreviewSetupStatus({ iframe: null, ...previewSetupState });
-      openSetupPreview();
+      openSetupDrawerDrawer();
     } catch (e) {
       // Server crash
       if (e.response.status === 500) {

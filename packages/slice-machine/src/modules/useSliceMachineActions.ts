@@ -12,10 +12,19 @@ import {
   skipReviewCreator,
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
+import {
+  openSetupPreviewDrawerCreator,
+  closeSetupPreviewDrawerCreator,
+} from "@src/modules/preview";
 import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
+
+  // Preview store
+  const openSetupDrawerDrawer = () => dispatch(openSetupPreviewDrawerCreator());
+  const closeSetupDrawerDrawer = () =>
+    dispatch(closeSetupPreviewDrawerCreator());
 
   // Modal store
   const closeLoginModal = () =>
@@ -54,6 +63,8 @@ const useSliceMachineActions = () => {
   };
 
   return {
+    closeSetupDrawerDrawer,
+    openSetupDrawerDrawer,
     getEnvironment,
     finishOnboarding,
     openLoginModal,
