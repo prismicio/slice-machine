@@ -4,15 +4,18 @@ import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
+import { PreviewSetupStatus } from "@builders/SliceBuilder";
 
 type NuxtSetupStepProps = {
   activeStep: number;
   onOpenStep: (stepNumber: number) => () => void;
+  previewSetupStatus: PreviewSetupStatus;
 };
 
 const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
   onOpenStep,
   activeStep,
+  previewSetupStatus,
 }) => (
   <>
     <StepSection
@@ -20,7 +23,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Install Slice Canvas"}
       isOpen={activeStep === 1}
       onOpenStep={onOpenStep(1)}
-      status={"complete"}
+      status={previewSetupStatus.dependencies}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -38,7 +41,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Update your Nuxt config"}
       isOpen={activeStep === 2}
       onOpenStep={onOpenStep(2)}
-      status={"warning"}
+      status={previewSetupStatus.iframe}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -58,6 +61,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Create a page for Slice Canvas"}
       isOpen={activeStep === 3}
       onOpenStep={onOpenStep(3)}
+      status={previewSetupStatus.iframe}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -73,6 +77,7 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       title={"Update sm.json"}
       isOpen={activeStep === 4}
       onOpenStep={onOpenStep(4)}
+      status={previewSetupStatus.manifest}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -87,7 +92,6 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       </Flex>
     </StepSection>
     <StepSection
-      stepNumber={5}
       title={"Check configuration"}
       isOpen={activeStep === 5}
       onOpenStep={onOpenStep(5)}

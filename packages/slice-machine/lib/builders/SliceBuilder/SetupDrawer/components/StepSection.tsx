@@ -5,11 +5,11 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import { ThemeUIStyleObject } from "@theme-ui/css";
 
 type StepSectionProps = {
-  stepNumber: number;
+  stepNumber?: number;
   title: string;
   isOpen: boolean;
   onOpenStep: () => void;
-  status?: null | "complete" | "warning";
+  status?: null | "ok" | "ko";
 };
 
 const StepSection: React.FunctionComponent<StepSectionProps> = ({
@@ -27,7 +27,7 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
       : 0;
 
   const additionalStepTitleStyle: ThemeUIStyleObject =
-    status === "complete"
+    status === "ok"
       ? {
           textDecoration: "line-through",
           color: "grey04",
@@ -54,7 +54,9 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
         onClick={onOpenStep}
       >
         <Flex sx={{ alignItems: "center" }}>
-          <StepNumber status={status} stepNumber={stepNumber} sx={{ mr: 2 }} />
+          {!!stepNumber && (
+            <StepNumber stepNumber={stepNumber} sx={{ mr: 2 }} />
+          )}
           <Text
             sx={{ fontWeight: 500, fontSize: 2, ...additionalStepTitleStyle }}
           >
@@ -63,11 +65,55 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
         </Flex>
         <Flex
           sx={{
-            transform: isOpen ? "rotate(90deg)" : "rotate(-90deg)",
-            transition: "200ms",
+            justifyContent: "center",
           }}
         >
-          <MdArrowBackIos color={"#4E4E55"} />
+          {status === "ok" && (
+            <Flex
+              sx={{
+                height: 20,
+                width: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+                borderStyle: "solid",
+                backgroundColor: "greenLighter",
+                borderColor: "greenLighter",
+                borderWidth: 1,
+                mr: 2,
+              }}
+            >
+              <MdCheck color="#3AB97A" />
+            </Flex>
+          )}
+          {status === "ko" && (
+            <Flex
+              sx={{
+                height: 20,
+                width: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+                borderStyle: "solid",
+                backgroundColor: "orangeLighter",
+                borderColor: "orangeLighter",
+                borderWidth: 1,
+                mr: 2,
+              }}
+            >
+              <RiErrorWarningLine color="#F2994A" />
+            </Flex>
+          )}
+          <Flex
+            sx={{
+              transform: isOpen
+                ? "rotate(90deg) translate(5px)"
+                : "rotate(-90deg) translate(5px)",
+              transition: "all 0.2s ease-out",
+            }}
+          >
+            <MdArrowBackIos color={"#4E4E55"} />
+          </Flex>
         </Flex>
       </Flex>
       <Flex
@@ -90,54 +136,28 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
 type StepNumberProps = {
   stepNumber: number;
   sx: ThemeUIStyleObject;
-  status: null | "complete" | "warning";
 };
 
 const StepNumber: React.FunctionComponent<StepNumberProps> = ({
   stepNumber,
   sx,
-  status = null,
-}) => {
-  let style: ThemeUIStyleObject = {
-    height: 20,
-    width: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "50%",
-    borderStyle: "solid",
-    borderColor: (t) => t.colors?.textGray,
-    borderWidth: 1,
-    color: (t) => t.colors?.textGray,
-    ...sx,
-  };
-
-  switch (status) {
-    case "complete":
-      style = {
-        ...style,
-        backgroundColor: "greenLighter",
-        borderColor: "greenLighter",
-      };
-      break;
-    case "warning":
-      style = {
-        ...style,
-        backgroundColor: "orangeLighter",
-        borderColor: "orangeLighter",
-      };
-      break;
-    case null:
-    default:
-      break;
-  }
-
-  return (
-    <Flex sx={style}>
-      {!status && `${stepNumber}`}
-      {status === "complete" && <MdCheck color="#3AB97A" />}
-      {status === "warning" && <RiErrorWarningLine color="#F2994A" />}
-    </Flex>
-  );
-};
+}) => (
+  <Flex
+    sx={{
+      height: 20,
+      width: 20,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: "50%",
+      borderStyle: "solid",
+      borderColor: (t) => t.colors?.textGray,
+      borderWidth: 1,
+      color: (t) => t.colors?.textGray,
+      ...sx,
+    }}
+  >
+    {stepNumber}
+  </Flex>
+);
 
 export default StepSection;

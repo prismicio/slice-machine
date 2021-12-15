@@ -4,15 +4,18 @@ import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
+import { PreviewSetupStatus } from "@builders/SliceBuilder";
 
 type NextSetupStepProps = {
   activeStep: number;
   onOpenStep: (stepNumber: number) => () => void;
+  previewSetupStatus: PreviewSetupStatus;
 };
 
 const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
   onOpenStep,
   activeStep,
+  previewSetupStatus,
 }) => (
   <>
     <StepSection
@@ -20,6 +23,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       title={"Install Slice Canvas"}
       isOpen={activeStep === 1}
       onOpenStep={onOpenStep(1)}
+      status={previewSetupStatus.dependencies}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -37,6 +41,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       title={"Create a page for Slice Canvas"}
       isOpen={activeStep === 2}
       onOpenStep={onOpenStep(2)}
+      status={previewSetupStatus.iframe}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -52,6 +57,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       title={"Update sm.json"}
       isOpen={activeStep === 3}
       onOpenStep={onOpenStep(3)}
+      status={previewSetupStatus.manifest}
     >
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 2 }}>
@@ -66,7 +72,6 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
       </Flex>
     </StepSection>
     <StepSection
-      stepNumber={4}
       title={"Check configuration"}
       isOpen={activeStep === 4}
       onOpenStep={onOpenStep(4)}

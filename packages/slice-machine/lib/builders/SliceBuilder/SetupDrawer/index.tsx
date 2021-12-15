@@ -13,15 +13,18 @@ import {
   selectIsPreviewAvailableForFramework,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { PreviewSetupStatus } from "@builders/SliceBuilder";
 
 type SetupDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
+  previewSetupStatus: PreviewSetupStatus;
 };
 
 const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   isOpen,
   onClose,
+  previewSetupStatus,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
 
@@ -84,10 +87,18 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
             {framework === Frameworks.nuxt && (
-              <NuxtSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+              <NuxtSetupSteps
+                activeStep={activeStep}
+                onOpenStep={onOpenStep}
+                previewSetupStatus={previewSetupStatus}
+              />
             )}
             {framework === Frameworks.next && (
-              <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
+              <NextSetupSteps
+                activeStep={activeStep}
+                onOpenStep={onOpenStep}
+                previewSetupStatus={previewSetupStatus}
+              />
             )}
           </Flex>
         </Flex>

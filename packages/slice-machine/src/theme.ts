@@ -55,7 +55,6 @@ const AppTheme = (): Theme =>
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",
-      deep1: "#A0ADE7",
       greenLighter: "#EBF8F1",
       orangeLighter: "#FDF4EC",
       error: "#E55737",

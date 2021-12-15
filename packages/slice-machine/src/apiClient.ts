@@ -8,6 +8,7 @@ import {
   TrackingReviewResponse,
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { PreviewCheckResponse } from "@models/common/Preview";
 
 const defaultAxiosConfig = {
   headers: {
@@ -50,4 +51,6 @@ export const sendTrackingOnboarding = (
 
 /** Preview Routes **/
 
-export const checkPreviewSetup = () => axios.get(`/api/preview/check`);
+export const checkPreviewSetup = (): Promise<
+  AxiosResponse<PreviewCheckResponse>
+> => axios.get(`/api/preview/check`);

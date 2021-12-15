@@ -12,6 +12,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
 import { checkPreviewSetup } from "@src/apiClient";
 import { useToasts } from "react-toast-notifications";
+import { PreviewSetupStatus } from "@builders/SliceBuilder";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -20,6 +21,7 @@ type SideBarProps = {
   variation: Models.VariationAsArray;
   imageLoading: boolean;
   onScreenshot: () => void;
+  setPreviewSetupStatus: (previewSetupStatus: PreviewSetupStatus) => void;
   onHandleFile: (file: any) => void;
   openSetupPreview: () => void;
 };
@@ -31,6 +33,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   onScreenshot,
   onHandleFile,
   openSetupPreview,
+  setPreviewSetupStatus,
 }) => {
   const { screenshotUrls } = Model;
 
@@ -46,13 +49,20 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 
   const onOpenPreview = async () => {
     try {
-      await checkPreviewSetup();
-      window.open(`${router.asPath}/preview`);
-    } catch (e) {
-      // Setup not valid
-      if (e.response.status === 400) {
-        openSetupPreview();
+      const { data: previewSetupState } = await checkPreviewSetup();
+
+      // All the backend checks are ok
+      if (
+        "ok" === previewSetupState.manifest &&
+        "ok" === previewSetupState.dependencies
+      ) {
+        window.open(`${router.asPath}/preview`);
+        return;
       }
+
+      setPreviewSetupStatus({ iframe: null, ...previewSetupState });
+      openSetupPreview();
+    } catch (e) {
       // Server crash
       if (e.response.status === 500) {
         addToast(e.response.data.err, { appearance: "error" });
