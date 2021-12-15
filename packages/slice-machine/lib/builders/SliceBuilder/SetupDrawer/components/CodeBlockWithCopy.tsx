@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Flex, Text, Button, useThemeUI, Box } from "theme-ui";
+import { Button, useThemeUI, Box } from "theme-ui";
 
 import { BiCopy } from "react-icons/bi";
 import { MdCheck } from "react-icons/md";
