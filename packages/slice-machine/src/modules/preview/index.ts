@@ -7,8 +7,10 @@ import {
   getType,
 } from "typesafe-actions";
 import { PreviewStoreType, SetupStatus } from "./types";
-import { call, fork, put, takeLatest } from "redux-saga/effects";
+import { call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
+import { getFramework } from "@src/modules/environment";
+import { Frameworks } from "@slicemachine/core/build/src/models";
 
 const NoStepSelected: number = 0;
 
@@ -27,7 +29,9 @@ export const initialState: PreviewStoreType = {
 // Actions Creators
 export const openSetupPreviewDrawerCreator = createAction(
   "PREVIEW/OPEN_SETUP_DRAWER"
-)();
+)<{
+  stepToOpen?: number;
+}>();
 
 export const checkPreviewSetupCreator = createAsyncAction(
   "PREVIEW/CHECK_SETUP.REQUEST",
@@ -90,6 +94,9 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
         setupDrawer: {
           ...state.setupDrawer,
           isOpen: true,
+          ...(!!action.payload.stepToOpen
+            ? { openedStep: action.payload.stepToOpen }
+            : null),
         },
       };
     case getType(toggleSetupDrawerStepCreator):
@@ -129,6 +136,10 @@ export function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
+    const framework: Frameworks | undefined = yield select(getFramework);
+
+    if (!framework) return;
+
     const { data: setupStatus } = yield call(checkPreviewSetup);
 
     // All the backend checks are ok
@@ -138,7 +149,11 @@ export function* checkSetupSaga(
     }
 
     yield put(checkPreviewSetupCreator.success({ setupStatus }));
-    yield put(openSetupPreviewDrawerCreator());
+    yield put(
+      openSetupPreviewDrawerCreator({
+        stepToOpen: framework === Frameworks.nuxt ? 5 : 4,
+      })
+    );
   } catch (error) {
     yield put(checkPreviewSetupCreator.failure(error));
   }

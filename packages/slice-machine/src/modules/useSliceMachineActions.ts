@@ -26,7 +26,8 @@ const useSliceMachineActions = () => {
   // Preview store
   const checkPreviewSetup = (redirectUrl: string) =>
     dispatch(checkPreviewSetupCreator.request({ redirectUrl }));
-  const openSetupDrawerDrawer = () => dispatch(openSetupPreviewDrawerCreator());
+  const openSetupDrawerDrawer = () =>
+    dispatch(openSetupPreviewDrawerCreator({}));
   const closeSetupDrawerDrawer = () =>
     dispatch(closeSetupPreviewDrawerCreator());
   const toggleSetupDrawerStep = (stepNumber: number) =>
