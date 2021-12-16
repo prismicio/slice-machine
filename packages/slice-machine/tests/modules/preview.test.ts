@@ -22,22 +22,6 @@ describe("[Preview module]", () => {
       );
     });
 
-    it("should update the state when given openSetupPreviewDrawerCreator action", () => {
-      const initialState: PreviewStoreType = dummyPreviewState;
-
-      const action = openSetupPreviewDrawerCreator();
-
-      const expectedState: PreviewStoreType = {
-        ...dummyPreviewState,
-        setupDrawer: {
-          ...dummyPreviewState.setupDrawer,
-          isOpen: true,
-        },
-      };
-
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
-    });
-
     it("should update the state when given checkPreviewSetupCreator.success action", () => {
       const initialState: PreviewStoreType = dummyPreviewState;
       const setupStatusResponse: SetupStatus = {
@@ -55,6 +39,39 @@ describe("[Preview module]", () => {
         setupStatus: {
           ...dummyPreviewState.setupStatus,
           ...setupStatusResponse,
+        },
+      };
+
+      expect(previewReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should update the state when given openSetupPreviewDrawerCreator action", () => {
+      const initialState: PreviewStoreType = dummyPreviewState;
+
+      const action = openSetupPreviewDrawerCreator({});
+
+      const expectedState: PreviewStoreType = {
+        ...dummyPreviewState,
+        setupDrawer: {
+          ...dummyPreviewState.setupDrawer,
+          isOpen: true,
+        },
+      };
+
+      expect(previewReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should update the state when given openSetupPreviewDrawerCreator action with a step to open", () => {
+      const initialState: PreviewStoreType = dummyPreviewState;
+
+      const action = openSetupPreviewDrawerCreator({ stepToOpen: 2 });
+
+      const expectedState: PreviewStoreType = {
+        ...dummyPreviewState,
+        setupDrawer: {
+          ...dummyPreviewState.setupDrawer,
+          openedStep: 2,
+          isOpen: true,
         },
       };
 

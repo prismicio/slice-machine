@@ -13,11 +13,12 @@ import {
   selectUserHasAtLeastOneStepMissing,
 } from "@src/modules/preview";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useRouter } from "next/router";
 
-type NuxtSetupStepProps = {};
+const NuxtSetupSteps: React.FunctionComponent = () => {
+  const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
+  const router = useRouter();
 
-const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({}) => {
-  const { toggleSetupDrawerStep } = useSliceMachineActions();
   const { openedStep, setupStatus, userHasAtLeastOneStepMissing } = useSelector(
     (state: SliceMachineStoreType) => ({
       openedStep: selectOpenedStep(state),
@@ -25,6 +26,12 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({}) => {
       userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     })
   );
+
+  const StepNumberWithErrors = [
+    ...(setupStatus.dependencies === "ko" ? ["1"] : []),
+    ...(setupStatus.iframe === "ko" ? ["2 and 3"] : []),
+    ...(setupStatus.manifest === "ko" ? ["4"] : []),
+  ];
 
   return (
     <>
@@ -128,17 +135,19 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({}) => {
           </Text>
           {userHasAtLeastOneStepMissing && (
             <WarningSection
-              title={"We are running into some errors"}
+              title={"We are running into some issues"}
               sx={{ mb: 3 }}
             >
               We ran into some issues while checking your configuration of Slice
-              Preview. Please check step 3 and 4 for more information.
+              Preview. Please check step {StepNumberWithErrors.join("and")} for
+              more information.
             </WarningSection>
           )}
           <Button
             sx={{
               alignSelf: "flex-start",
             }}
+            onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
           >
             Check configuration
           </Button>

@@ -13,9 +13,11 @@ import {
   selectSetupStatus,
   selectUserHasAtLeastOneStepMissing,
 } from "@src/modules/preview";
+import { useRouter } from "next/router";
 
-const NextSetupSteps: React.FunctionComponent = ({}) => {
-  const { toggleSetupDrawerStep } = useSliceMachineActions();
+const NextSetupSteps: React.FunctionComponent = () => {
+  const router = useRouter();
+  const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const { openedStep, setupStatus, userHasAtLeastOneStepMissing } = useSelector(
     (state: SliceMachineStoreType) => ({
       openedStep: selectOpenedStep(state),
@@ -23,6 +25,12 @@ const NextSetupSteps: React.FunctionComponent = ({}) => {
       userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     })
   );
+
+  const StepNumberWithErrors = [
+    ...(setupStatus.dependencies === "ko" ? ["1"] : []),
+    ...(setupStatus.iframe === "ko" ? ["2"] : []),
+    ...(setupStatus.manifest === "ko" ? ["3"] : []),
+  ];
 
   return (
     <>
@@ -115,17 +123,19 @@ const NextSetupSteps: React.FunctionComponent = ({}) => {
           </Text>
           {userHasAtLeastOneStepMissing && (
             <WarningSection
-              title={"We are running into some errors"}
+              title={"We are running into some issues"}
               sx={{ mb: 3 }}
             >
               We ran into some issues while checking your configuration of Slice
-              Preview. Please check step 3 and 4 for more information.
+              Preview. Please check step {StepNumberWithErrors.join(" and ")}{" "}
+              for more information.
             </WarningSection>
           )}
           <Button
             sx={{
               alignSelf: "flex-start",
             }}
+            onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
           >
             Check configuration
           </Button>
