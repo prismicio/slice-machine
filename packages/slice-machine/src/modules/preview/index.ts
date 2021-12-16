@@ -13,6 +13,7 @@ import { getFramework } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { PreviewCheckResponse } from "@models/common/Preview";
 
 const NoStepSelected: number = 0;
 
@@ -42,6 +43,7 @@ export const checkPreviewSetupCreator = createAsyncAction(
 )<
   {
     redirectUrl: string;
+    withFirstVisitCheck: boolean;
   },
   {
     setupStatus: SetupStatus;
@@ -77,9 +79,9 @@ export const selectSetupStatus = (state: SliceMachineStoreType): SetupStatus =>
 export const selectUserHasAtLeastOneStepMissing = (
   state: SliceMachineStoreType
 ): boolean =>
-  state.preview.setupStatus.dependencies !== "ok" ||
-  state.preview.setupStatus.iframe !== "ok" ||
-  state.preview.setupStatus.manifest !== "ok";
+  state.preview.setupStatus.dependencies === "ko" ||
+  state.preview.setupStatus.iframe === "ko" ||
+  state.preview.setupStatus.manifest === "ko";
 
 export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.preview.setupDrawer.openedStep;
@@ -142,7 +144,9 @@ export function* checkSetupSaga(
 
     if (!framework) return;
 
-    const { data: setupStatus } = yield call(checkPreviewSetup);
+    const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
+      checkPreviewSetup
+    );
 
     // All the backend checks are ok
     if ("ok" === setupStatus.manifest && "ok" === setupStatus.dependencies) {
@@ -150,7 +154,20 @@ export function* checkSetupSaga(
       return;
     }
 
-    yield put(checkPreviewSetupCreator.success({ setupStatus }));
+    const isTheFirstTime =
+      "ko" === setupStatus.manifest &&
+      "ko" === setupStatus.dependencies &&
+      action.payload.withFirstVisitCheck;
+    if (isTheFirstTime) {
+      yield put(openSetupPreviewDrawerCreator({}));
+      return;
+    }
+
+    yield put(
+      checkPreviewSetupCreator.success({
+        setupStatus: { iframe: null, ...setupStatus },
+      })
+    );
     yield put(
       openSetupPreviewDrawerCreator({
         stepToOpen: framework === Frameworks.nuxt ? 5 : 4,

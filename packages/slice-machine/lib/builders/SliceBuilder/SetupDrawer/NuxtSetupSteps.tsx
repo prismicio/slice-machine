@@ -109,16 +109,16 @@ const NuxtSetupSteps: React.FunctionComponent = () => {
         onOpenStep={() => toggleSetupDrawerStep(4)}
         status={setupStatus.manifest}
       >
-        {setupStatus.manifest === "ko" && (
-          <WarningSection
-            title={"Some dependencies are missing"}
-            sx={{ mb: 2 }}
-          >
-            Looks like we can’t find the “localSliceCanvasURL“ property in your
-            sm.json file.
-          </WarningSection>
-        )}
         <Flex sx={{ flexDirection: "column" }}>
+          {setupStatus.manifest === "ko" && (
+            <WarningSection
+              title={"Some dependencies are missing"}
+              sx={{ mb: 2 }}
+            >
+              Looks like we can’t find the “localSliceCanvasURL“ property in
+              your sm.json file.
+            </WarningSection>
+          )}
           <Text sx={{ color: "textClear", mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
             property <Text variant={"pre"}>localSliceCanvasURL</Text> in the
@@ -146,8 +146,8 @@ const NuxtSetupSteps: React.FunctionComponent = () => {
               sx={{ mb: 3 }}
             >
               We ran into some issues while checking your configuration of Slice
-              Preview. Please check step {StepNumberWithErrors.join("and")} for
-              more information.
+              Preview. Please check step {StepNumberWithErrors.join(" and ")}{" "}
+              for more information.
             </WarningSection>
           )}
           <SliceMachineButton
@@ -155,7 +155,7 @@ const NuxtSetupSteps: React.FunctionComponent = () => {
               minWidth: 155,
             }}
             isLoading={isCheckingSetup}
-            onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
+            onClick={() => checkPreviewSetup(`${router.asPath}/preview`, false)}
           >
             Check configuration
           </SliceMachineButton>

@@ -23,7 +23,7 @@ const SliceMachineButton: React.FunctionComponent<SliceMachineButtonProps> = ({
       }}
       onClick={onClick}
     >
-      {isLoading ? <Spinner color="#F7F7F7" size={18} mr={2} /> : children}
+      {isLoading ? <Spinner color="#F7F7F7" size={14} mr={2} /> : children}
     </Button>
   );
 };

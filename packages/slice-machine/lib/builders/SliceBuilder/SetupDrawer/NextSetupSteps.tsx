@@ -97,16 +97,16 @@ const NextSetupSteps: React.FunctionComponent = () => {
         onOpenStep={() => toggleSetupDrawerStep(3)}
         status={setupStatus.manifest}
       >
-        {setupStatus.manifest === "ko" && (
-          <WarningSection
-            title={"We can’t connect to the preview page"}
-            sx={{ mb: 3 }}
-          >
-            Looks like we can’t find the “localSliceCanvasURL“ property in your
-            sm.json file.
-          </WarningSection>
-        )}
         <Flex sx={{ flexDirection: "column" }}>
+          {setupStatus.manifest === "ko" && (
+            <WarningSection
+              title={"We can’t connect to the preview page"}
+              sx={{ mb: 3 }}
+            >
+              Looks like we can’t find the “localSliceCanvasURL“ property in
+              your sm.json file.
+            </WarningSection>
+          )}
           <Text sx={{ color: "textClear", mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
             property <Text variant={"pre"}>localSliceCanvasURL</Text> in the
@@ -143,7 +143,7 @@ const NextSetupSteps: React.FunctionComponent = () => {
               minWidth: 155,
             }}
             isLoading={isCheckingSetup}
-            onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
+            onClick={() => checkPreviewSetup(`${router.asPath}/preview`, false)}
           >
             Check configuration
           </SliceMachineButton>
