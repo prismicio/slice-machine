@@ -3,6 +3,7 @@ import Separator from "inquirer/lib/objects/separator";
 import { Communication, Utils, FileSystem } from "@slicemachine/core";
 import { Repositories } from "@slicemachine/core/src/models/Repositories";
 import { Repository } from "@slicemachine/core/src/models/Repository";
+import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
@@ -115,11 +116,12 @@ export function sortReposForPrompt(
 }
 
 export async function maybeExistingRepo(
-  cookie: string,
+  cookies: string,
   cwd: string,
   base = DEFAULT_BASE
 ): Promise<{ name: string; existing: boolean }> {
-  const repos = await Communication.listRepositories(cookie);
+  const token = parsePrismicAuthToken(cookies);
+  const repos = await Communication.listRepositories(token);
 
   if (repos.length === 0) {
     const name = await promptForRepoName(base);
