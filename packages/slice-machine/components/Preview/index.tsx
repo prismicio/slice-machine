@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useContext } from "react";
 
+import { Flex } from "theme-ui";
+
 import { SliceContext } from "@src/models/slice/context";
 
 import Header from "./components/Header";
@@ -32,13 +34,12 @@ export default function Preview() {
   }/_canvas`;
 
   return (
-    <div>
+    <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
         title={Model.infos.sliceName}
         Model={Model}
         variation={variation}
         handleScreenSizeChange={handleScreenSizeChange}
-        canvasUrl={canvasUrl}
         size={state.size}
       />
       <IframeRenderer
@@ -46,6 +47,6 @@ export default function Preview() {
         canvasUrl={canvasUrl}
         sliceView={sliceView}
       />
-    </div>
+    </Flex>
   );
 }

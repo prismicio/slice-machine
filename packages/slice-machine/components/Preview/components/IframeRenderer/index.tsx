@@ -1,6 +1,6 @@
 import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
-import { Flex } from "theme-ui";
+import { Box, Flex } from "theme-ui";
 
 import { RendererClient } from "@prismicio/slice-canvas-com";
 import { Size, iframeSizes } from "../ScreenSizes";
@@ -73,25 +73,27 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   }, [client, size, sliceView]);
 
   return (
-    <Flex
-      sx={{
-        justifyContent: "center",
-        borderTop: "1px solid #F1F1F1",
-        margin: "0 auto",
-        overflow: "auto",
-        ...iframeSizes[size],
-      }}
-    >
-      <iframe
-        ref={ref}
-        src={canvasUrl}
-        style={{
-          border: "none",
-          height: "100%",
-          width: "100%",
+    <Box sx={{ flex: "1", bg: "grey01" }}>
+      <Flex
+        sx={{
+          justifyContent: "center",
+          borderTop: "1px solid #F1F1F1",
+          margin: "0 auto",
+          overflow: "auto",
+          ...iframeSizes[size],
         }}
-      />
-    </Flex>
+      >
+        <iframe
+          ref={ref}
+          src={canvasUrl}
+          style={{
+            border: "none",
+            height: "100%",
+            width: "100%",
+          }}
+        />
+      </Flex>
+    </Box>
   );
 };
 

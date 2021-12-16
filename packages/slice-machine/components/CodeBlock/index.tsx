@@ -1,6 +1,8 @@
 import React from "react";
-import { Flex } from "theme-ui";
+import { Flex, useThemeUI } from "theme-ui";
 import hljs from "highlight.js";
+
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 export type Language = "javascript" | "bash" | "xml" | "html" | "json";
 
@@ -15,17 +17,26 @@ const DEFAULT_LANGUAGES: Array<Language> = [
 const CodeBlock: React.FC<{
   children: string;
   lang?: Language;
-  style?: React.CSSProperties;
-}> = ({ children, lang, style }) => {
+  sx?: ThemeUIStyleObject;
+  codeStyle?: React.CSSProperties;
+}> = ({ children, lang, sx, codeStyle }) => {
+  const { theme } = useThemeUI();
   const text = lang
     ? hljs.highlight(children, { language: lang }).value
     : hljs.highlightAuto(children, DEFAULT_LANGUAGES).value;
 
   return (
-    <Flex as="pre" style={style}>
+    <Flex as="pre" sx={sx}>
       <code
         className="hljs"
-        style={{ overflowX: "auto", padding: "3px 5px" }}
+        style={{
+          overflowX: "auto",
+          padding: "3px 5px",
+          borderRadius: "6px",
+          border: "1px solid",
+          borderColor: theme.colors?.textClear as string,
+          ...codeStyle,
+        }}
         dangerouslySetInnerHTML={{ __html: text }}
       />
     </Flex>

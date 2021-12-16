@@ -1,11 +1,11 @@
 import router from "next/router";
-import { Box, Text, Flex, Button } from "theme-ui";
+import { Box, Text, Flex } from "theme-ui";
 import * as Models from "@slicemachine/core/build/src/models";
 
-import VarationsPopover from "lib/builders/SliceBuilder/Header/VariationsPopover";
-import * as Links from "lib/builders/SliceBuilder/links";
+import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
+import * as Links from "@lib/builders/SliceBuilder/links";
 
-import SliceState from "lib/models/ui/SliceState";
+import SliceState from "@lib/models/ui/SliceState";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
 
@@ -14,7 +14,6 @@ type PropTypes = {
   Model: SliceState;
   variation: Models.VariationAsArray | undefined;
   handleScreenSizeChange: (screen: { size: Size }) => void;
-  canvasUrl: string;
   size: Size;
 };
 
@@ -41,7 +40,6 @@ const Header: React.FunctionComponent<PropTypes> = ({
   Model,
   variation,
   handleScreenSizeChange,
-  canvasUrl,
   size,
 }) => {
   return (
@@ -76,17 +74,6 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <ScreenSizes size={size} onClick={handleScreenSizeChange} />
-      </Flex>
-      <Flex
-        sx={{
-          alignItems: "center",
-          justifyContent: "end",
-        }}
-      >
-        <p>{canvasUrl}</p>
-        <Button ml={2} onClick={() => redirect(Model, variation)}>
-          Leave
-        </Button>
       </Flex>
     </Box>
   );

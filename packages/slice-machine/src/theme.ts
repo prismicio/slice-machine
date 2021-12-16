@@ -42,6 +42,7 @@ const AppTheme = (): Theme =>
           color: "#F2994A",
         },
       },
+      codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
       highlight: "hsl(10, 40%, 90%)",
       purple: "hsl(250, 60%, 30%)",
@@ -233,6 +234,19 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
+      screenSize: {
+        p: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "32px",
+        width: "32px",
+        bg: "text",
+        color: "white",
+        cursor: "pointer",
+        boxShadow:
+          "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      },
       secondary: {
         bg: "secondary",
         fontWeight: "body",
@@ -253,7 +267,6 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
-
       small: {
         bg: "primary",
         borderRadius: "4px",
@@ -318,6 +331,14 @@ const AppTheme = (): Theme =>
         color: "white",
         cursor: "not-allowed",
         borderColor: "transparent",
+      },
+      disabledSecondary: {
+        bg: "#F9F9FA",
+        fontSize: "1",
+        color: "#C9D0D8",
+        cursor: "not-allowed",
+        border: "1px solid",
+        borderColor: "1px solid rgba(62, 62, 72, 0.15)",
       },
       transparent: {
         background: "transparent",
