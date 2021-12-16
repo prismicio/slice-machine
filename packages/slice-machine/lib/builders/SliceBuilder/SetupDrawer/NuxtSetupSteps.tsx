@@ -6,18 +6,23 @@ import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
 import { PreviewSetupStatus } from "@builders/SliceBuilder";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectOpenedStep } from "@src/modules/preview";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 type NuxtSetupStepProps = {
-  activeStep: number;
-  onOpenStep: (stepNumber: number) => () => void;
   previewSetupStatus: PreviewSetupStatus;
 };
 
 const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
-  onOpenStep,
-  activeStep,
   previewSetupStatus,
 }) => {
+  const { toggleSetupDrawerStep } = useSliceMachineActions();
+  const { openedStep } = useSelector((state: SliceMachineStoreType) => ({
+    openedStep: selectOpenedStep(state),
+  }));
+
   const userHasAtLeastOneError =
     previewSetupStatus.dependencies !== "ok" ||
     previewSetupStatus.iframe !== "ok" ||
@@ -28,8 +33,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       <StepSection
         stepNumber={1}
         title={"Install Slice Canvas"}
-        isOpen={activeStep === 1}
-        onOpenStep={onOpenStep(1)}
+        isOpen={openedStep === 1}
+        onOpenStep={() => toggleSetupDrawerStep(1)}
         status={previewSetupStatus.dependencies}
       >
         <Flex sx={{ flexDirection: "column" }}>
@@ -52,8 +57,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       <StepSection
         stepNumber={2}
         title={"Update your Nuxt config"}
-        isOpen={activeStep === 2}
-        onOpenStep={onOpenStep(2)}
+        isOpen={openedStep === 2}
+        onOpenStep={() => toggleSetupDrawerStep(2)}
         status={previewSetupStatus.iframe}
       >
         <Flex sx={{ flexDirection: "column" }}>
@@ -72,8 +77,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       <StepSection
         stepNumber={3}
         title={"Create a page for Slice Canvas"}
-        isOpen={activeStep === 3}
-        onOpenStep={onOpenStep(3)}
+        isOpen={openedStep === 3}
+        onOpenStep={() => toggleSetupDrawerStep(3)}
         status={previewSetupStatus.iframe}
       >
         <Flex sx={{ flexDirection: "column" }}>
@@ -88,8 +93,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       <StepSection
         stepNumber={4}
         title={"Update sm.json"}
-        isOpen={activeStep === 4}
-        onOpenStep={onOpenStep(4)}
+        isOpen={openedStep === 4}
+        onOpenStep={() => toggleSetupDrawerStep(4)}
         status={previewSetupStatus.manifest}
       >
         {previewSetupStatus.manifest === "ko" && (
@@ -115,8 +120,8 @@ const NuxtSetupSteps: React.FunctionComponent<NuxtSetupStepProps> = ({
       </StepSection>
       <StepSection
         title={"Check configuration"}
-        isOpen={activeStep === 5}
-        onOpenStep={onOpenStep(5)}
+        isOpen={openedStep === 5}
+        onOpenStep={() => toggleSetupDrawerStep(5)}
       >
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
           <Text sx={{ color: "textClear", mb: 3 }}>

@@ -15,6 +15,7 @@ import { getEnvironmentCreator } from "@src/modules/environment";
 import {
   openSetupPreviewDrawerCreator,
   closeSetupPreviewDrawerCreator,
+  toggleSetupDrawerStepCreator,
 } from "@src/modules/preview";
 import ServerState from "@models/server/ServerState";
 
@@ -25,6 +26,8 @@ const useSliceMachineActions = () => {
   const openSetupDrawerDrawer = () => dispatch(openSetupPreviewDrawerCreator());
   const closeSetupDrawerDrawer = () =>
     dispatch(closeSetupPreviewDrawerCreator());
+  const toggleSetupDrawerStep = (stepNumber: number) =>
+    dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
   // Modal store
   const closeLoginModal = () =>
@@ -63,6 +66,7 @@ const useSliceMachineActions = () => {
   };
 
   return {
+    toggleSetupDrawerStep,
     closeSetupDrawerDrawer,
     openSetupDrawerDrawer,
     getEnvironment,

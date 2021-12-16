@@ -24,8 +24,6 @@ type SetupDrawerProps = {
 const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   previewSetupStatus,
 }) => {
-  const [activeStep, setActiveStep] = useState<number>(0);
-
   const { isSetupDrawerOpen } = useSelector((state: SliceMachineStoreType) => ({
     isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
   }));
@@ -39,15 +37,6 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
         selectIsPreviewAvailableForFramework(state),
     })
   );
-
-  const onOpenStep = (stepNumber: number) => () => {
-    if (stepNumber === activeStep) {
-      setActiveStep(0);
-      return;
-    }
-
-    setActiveStep(stepNumber);
-  };
 
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
@@ -91,18 +80,10 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
             {framework === Frameworks.nuxt && (
-              <NuxtSetupSteps
-                activeStep={activeStep}
-                onOpenStep={onOpenStep}
-                previewSetupStatus={previewSetupStatus}
-              />
+              <NuxtSetupSteps previewSetupStatus={previewSetupStatus} />
             )}
             {framework === Frameworks.next && (
-              <NextSetupSteps
-                activeStep={activeStep}
-                onOpenStep={onOpenStep}
-                previewSetupStatus={previewSetupStatus}
-              />
+              <NextSetupSteps previewSetupStatus={previewSetupStatus} />
             )}
           </Flex>
         </Flex>

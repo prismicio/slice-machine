@@ -3,6 +3,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { PreviewStoreType } from "./types";
 
+const NoStepSelected: number = 0;
+
 export const initialState: PreviewStoreType = {
   setupStatus: {
     manifest: null,
@@ -11,7 +13,7 @@ export const initialState: PreviewStoreType = {
   },
   setupDrawer: {
     isOpen: false,
-    openedStep: 0,
+    openedStep: NoStepSelected,
   },
 };
 
@@ -24,14 +26,25 @@ export const closeSetupPreviewDrawerCreator = createAction(
   "PREVIEW/CLOSE_SETUP_DRAWER"
 )();
 
+export const toggleSetupDrawerStepCreator = createAction(
+  "PREVIEW/TOGGLE_SETUP_DRAWER_STEP"
+)<{
+  stepNumber: number;
+}>();
+
 type PreviewActions = ActionType<
-  typeof openSetupPreviewDrawerCreator | typeof closeSetupPreviewDrawerCreator
+  | typeof openSetupPreviewDrawerCreator
+  | typeof closeSetupPreviewDrawerCreator
+  | typeof toggleSetupDrawerStepCreator
 >;
 
 // Selectors
 export const selectIsSetupDrawerOpen = (
   state: SliceMachineStoreType
 ): boolean => state.preview.setupDrawer.isOpen;
+
+export const selectOpenedStep = (state: SliceMachineStoreType): number =>
+  state.preview.setupDrawer.openedStep;
 
 // Reducer
 export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
@@ -47,11 +60,22 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
           isOpen: true,
         },
       };
-    case getType(closeSetupPreviewDrawerCreator):
+    case getType(toggleSetupDrawerStepCreator):
       return {
         ...state,
         setupDrawer: {
           ...state.setupDrawer,
+          openedStep:
+            state.setupDrawer.openedStep === action.payload.stepNumber
+              ? NoStepSelected
+              : action.payload.stepNumber,
+        },
+      };
+    case getType(closeSetupPreviewDrawerCreator):
+      return {
+        ...state,
+        setupDrawer: {
+          openedStep: NoStepSelected,
           isOpen: false,
         },
       };
