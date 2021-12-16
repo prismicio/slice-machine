@@ -50,15 +50,15 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function ({ name, role }: Repository): RepoPrompt {
+  return function ({ name, domain, role }: Repository): RepoPrompt {
     const address = new URL(base);
-    address.hostname = `${name}.${address.hostname}`;
+    address.hostname = `${domain}.${address.hostname}`;
     if (Utils.roles.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           name
         )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
-        value: name,
+        value: domain,
         disabled: "Unauthorized",
       };
     }
