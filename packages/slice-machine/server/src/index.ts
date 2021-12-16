@@ -12,6 +12,7 @@ import bodyParser from "body-parser";
 import moduleAlias from "module-alias";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
+import proxy from "express-http-proxy";
 
 declare let global: {
   fetch: any;
@@ -46,9 +47,16 @@ const formDataOptions = {
 };
 
 app.use(formData.parse(formDataOptions));
-app.use(serveStatic(out));
 
 app.use("/api", api);
+
+// For local env (SM), all the requests are forwarded to the next dev server
+// For production, all the requests are forwarded to the next build directory
+if (process.env.ENV === "SM") {
+  app.use(proxy("localhost:3000"));
+} else {
+  app.use(serveStatic(out));
+}
 
 app.use("/migration", async function sliceRoute(_, res) {
   return res.sendFile(path.join(out, "migration.html"));
@@ -90,7 +98,7 @@ app.use("/onboarding", async function sliceRoute(_, res) {
 const PORT = process.env.PORT || "9999";
 app.listen(PORT, () => {
   const p = `http://localhost:${PORT}`;
-  console.log(`p=${p}`);
+  console.log(`Server running : ${p}`);
 });
 
 process.on("SIGINT", () => {
