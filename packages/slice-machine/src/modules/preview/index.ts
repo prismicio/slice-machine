@@ -3,7 +3,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { PreviewStoreType } from "./types";
 
-const initialState: PreviewStoreType = {
+export const initialState: PreviewStoreType = {
   setupStatus: {
     manifest: null,
     iframe: null,

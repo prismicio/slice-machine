@@ -3,20 +3,26 @@ import {
   startLoadingActionCreator,
   stopLoadingActionCreator,
 } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { LoadingKeysEnum, LoadingStoreType } from "@src/modules/loading/types";
+import { initialState } from "@src/modules/preview";
+
+const dummyLoadingState: LoadingStoreType = initialState;
 
 describe("[Loading module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
-      expect(loadingReducer({}, {})).toEqual({});
+      expect(loadingReducer(dummyLoadingState, {})).toEqual(dummyLoadingState);
     });
 
     it("should return the initial state if no matching action", () => {
-      expect(loadingReducer({}, { type: "NO.MATCH" })).toEqual({});
+      expect(loadingReducer(dummyLoadingState, { type: "NO.MATCH" })).toEqual(
+        dummyLoadingState
+      );
     });
 
-    it("should update state to true when given LOADING/START action", () => {
+    it("should update the state to true when given startLoadingActionCreator action", () => {
       const initialState = {
+        ...dummyLoadingState,
         [LoadingKeysEnum.LOGIN]: false,
       };
 
@@ -25,14 +31,16 @@ describe("[Loading module]", () => {
       });
 
       const expectedState = {
+        ...dummyLoadingState,
         [LoadingKeysEnum.LOGIN]: true,
       };
 
       expect(loadingReducer(initialState, action)).toEqual(expectedState);
     });
 
-    it("should update state to false when given LOADING/STOP action", () => {
+    it("should update the state to false when given stopLoadingActionCreator action", () => {
       const initialState = {
+        ...dummyLoadingState,
         [LoadingKeysEnum.LOGIN]: true,
       };
 
@@ -41,6 +49,7 @@ describe("[Loading module]", () => {
       });
 
       const expectedState = {
+        ...dummyLoadingState,
         [LoadingKeysEnum.LOGIN]: false,
       };
 

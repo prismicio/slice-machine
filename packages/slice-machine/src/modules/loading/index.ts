@@ -4,7 +4,7 @@ import { SliceMachineStoreType } from "src/redux/type";
 import { LoadingStoreType, LoadingKeysEnum } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
-const initialState: LoadingStoreType = {
+export const initialState: LoadingStoreType = {
   ...(mapValues(LoadingKeysEnum, () => false) as Record<
     LoadingKeysEnum,
     boolean
