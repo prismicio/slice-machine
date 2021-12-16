@@ -23,12 +23,6 @@ type SliceBuilderState = {
   status: number | null;
 };
 
-export type PreviewSetupStatus = {
-  dependencies: "ok" | "ko" | null;
-  manifest: "ok" | "ko" | null;
-  iframe: "ok" | "ko" | null;
-};
-
 const initialState: SliceBuilderState = {
   imageLoading: false,
   loading: false,
@@ -38,13 +32,6 @@ const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: React.FunctionComponent = () => {
-  const [previewSetupStatus, setPreviewSetupStatus] =
-    useState<PreviewSetupStatus>({
-      dependencies: null,
-      manifest: null,
-      iframe: null,
-    });
-
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal } = useSliceMachineActions();
 
@@ -101,7 +88,6 @@ const SliceBuilder: React.FunctionComponent = () => {
           <SideBar
             Model={Model}
             variation={variation}
-            setPreviewSetupStatus={setPreviewSetupStatus}
             onScreenshot={() =>
               store
                 .variation(variation.id)
@@ -123,7 +109,7 @@ const SliceBuilder: React.FunctionComponent = () => {
       >
         <FieldZones Model={Model} store={store} variation={variation} />
       </FlexEditor>
-      <SetupDrawer previewSetupStatus={previewSetupStatus} />
+      <SetupDrawer />
     </Box>
   );
 };

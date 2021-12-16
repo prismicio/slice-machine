@@ -4,29 +4,25 @@ import { Button, Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
-import { PreviewSetupStatus } from "@builders/SliceBuilder";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectOpenedStep } from "@src/modules/preview";
+import {
+  selectOpenedStep,
+  selectSetupStatus,
+  selectUserHasAtLeastOneStepMissing,
+} from "@src/modules/preview";
 
-type NextSetupStepProps = {
-  previewSetupStatus: PreviewSetupStatus;
-};
-
-const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
-  previewSetupStatus,
-}) => {
+const NextSetupSteps: React.FunctionComponent = ({}) => {
   const { toggleSetupDrawerStep } = useSliceMachineActions();
-  const { openedStep } = useSelector((state: SliceMachineStoreType) => ({
-    openedStep: selectOpenedStep(state),
-  }));
-
-  const userHasAtLeastOneError =
-    previewSetupStatus.dependencies !== "ok" ||
-    previewSetupStatus.iframe !== "ok" ||
-    previewSetupStatus.manifest !== "ok";
+  const { openedStep, setupStatus, userHasAtLeastOneStepMissing } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      openedStep: selectOpenedStep(state),
+      setupStatus: selectSetupStatus(state),
+      userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
+    })
+  );
 
   return (
     <>
@@ -35,10 +31,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         title={"Install Slice Canvas"}
         isOpen={openedStep === 1}
         onOpenStep={() => toggleSetupDrawerStep(1)}
-        status={previewSetupStatus.dependencies}
+        status={setupStatus.dependencies}
       >
         <Flex sx={{ flexDirection: "column" }}>
-          {previewSetupStatus.dependencies === "ko" && (
+          {setupStatus.dependencies === "ko" && (
             <WarningSection
               title={"Some dependencies are missing"}
               sx={{ mb: 2 }}
@@ -59,10 +55,10 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         title={"Create a page for Slice Canvas"}
         isOpen={openedStep === 2}
         onOpenStep={() => toggleSetupDrawerStep(2)}
-        status={previewSetupStatus.iframe}
+        status={setupStatus.iframe}
       >
         <Flex sx={{ flexDirection: "column" }}>
-          {previewSetupStatus.iframe === "ko" && (
+          {setupStatus.iframe === "ko" && (
             <WarningSection
               title={"We can’t connect to the preview page"}
               sx={{ mb: 3 }}
@@ -84,9 +80,9 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
         title={"Update sm.json"}
         isOpen={openedStep === 3}
         onOpenStep={() => toggleSetupDrawerStep(3)}
-        status={previewSetupStatus.manifest}
+        status={setupStatus.manifest}
       >
-        {previewSetupStatus.manifest === "ko" && (
+        {setupStatus.manifest === "ko" && (
           <WarningSection
             title={"We can’t connect to the preview page"}
             sx={{ mb: 3 }}
@@ -117,7 +113,7 @@ const NextSetupSteps: React.FunctionComponent<NextSetupStepProps> = ({
             After you’ve done the previous steps, we need to check that
             everything works in order.
           </Text>
-          {userHasAtLeastOneError && (
+          {userHasAtLeastOneStepMissing && (
             <WarningSection
               title={"We are running into some errors"}
               sx={{ mb: 3 }}

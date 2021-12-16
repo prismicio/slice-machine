@@ -4,8 +4,9 @@ import {
   openSetupPreviewDrawerCreator,
   closeSetupPreviewDrawerCreator,
   toggleSetupDrawerStepCreator,
+  checkPreviewSetupCreator,
 } from "@src/modules/preview";
-import { PreviewStoreType } from "@src/modules/preview/types";
+import { PreviewStoreType, SetupStatus } from "@src/modules/preview/types";
 
 const dummyPreviewState: PreviewStoreType = initialState;
 
@@ -31,6 +32,29 @@ describe("[Preview module]", () => {
         setupDrawer: {
           ...dummyPreviewState.setupDrawer,
           isOpen: true,
+        },
+      };
+
+      expect(previewReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should update the state when given checkPreviewSetupCreator.success action", () => {
+      const initialState: PreviewStoreType = dummyPreviewState;
+      const setupStatusResponse: SetupStatus = {
+        manifest: "ok",
+        iframe: null,
+        dependencies: "ko",
+      };
+
+      const action = checkPreviewSetupCreator.success({
+        setupStatus: setupStatusResponse,
+      });
+
+      const expectedState: PreviewStoreType = {
+        ...dummyPreviewState,
+        setupStatus: {
+          ...dummyPreviewState.setupStatus,
+          ...setupStatusResponse,
         },
       };
 

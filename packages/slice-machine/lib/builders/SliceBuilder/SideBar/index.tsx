@@ -10,9 +10,6 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
-import { checkPreviewSetup } from "@src/apiClient";
-import { useToasts } from "react-toast-notifications";
-import { PreviewSetupStatus } from "@builders/SliceBuilder";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const MemoizedImagePreview = memo(ImagePreview);
@@ -22,7 +19,6 @@ type SideBarProps = {
   variation: Models.VariationAsArray;
   imageLoading: boolean;
   onScreenshot: () => void;
-  setPreviewSetupStatus: (previewSetupStatus: PreviewSetupStatus) => void;
   onHandleFile: (file: any) => void;
 };
 
@@ -32,14 +28,12 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   imageLoading,
   onScreenshot,
   onHandleFile,
-  setPreviewSetupStatus,
 }) => {
   const { screenshotUrls } = Model;
 
-  const { openSetupDrawerDrawer } = useSliceMachineActions();
+  const { checkPreviewSetup } = useSliceMachineActions();
 
   const router = useRouter();
-  const { addToast } = useToasts();
 
   const { isPreviewAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -47,29 +41,6 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         selectIsPreviewAvailableForFramework(state),
     })
   );
-
-  const onOpenPreview = async () => {
-    try {
-      const { data: previewSetupState } = await checkPreviewSetup();
-
-      // All the backend checks are ok
-      if (
-        "ok" === previewSetupState.manifest &&
-        "ok" === previewSetupState.dependencies
-      ) {
-        window.open(`${router.asPath}/preview`);
-        return;
-      }
-
-      setPreviewSetupStatus({ iframe: null, ...previewSetupState });
-      openSetupDrawerDrawer();
-    } catch (e) {
-      // Server crash
-      if (e.response.status === 500) {
-        addToast(e.response.data.err, { appearance: "error" });
-      }
-    }
-  };
 
   return (
     <Box
@@ -104,7 +75,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         </>
       ) : (
         <Button
-          onClick={onOpenPreview}
+          onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
           variant={"secondary"}
           sx={{ cursor: "pointer", width: "100%", mt: 3 }}
         >

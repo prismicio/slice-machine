@@ -1,7 +1,14 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { ActionType, createAction, getType } from "typesafe-actions";
-import { PreviewStoreType } from "./types";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
+import { PreviewStoreType, SetupStatus } from "./types";
+import { call, fork, put, takeLatest } from "redux-saga/effects";
+import { checkPreviewSetup } from "@src/apiClient";
 
 const NoStepSelected: number = 0;
 
@@ -22,6 +29,20 @@ export const openSetupPreviewDrawerCreator = createAction(
   "PREVIEW/OPEN_SETUP_DRAWER"
 )();
 
+export const checkPreviewSetupCreator = createAsyncAction(
+  "PREVIEW/CHECK_SETUP.REQUEST",
+  "PREVIEW/CHECK_SETUP.SUCCESS",
+  "PREVIEW/CHECK_SETUP.FAILURE"
+)<
+  {
+    redirectUrl: string;
+  },
+  {
+    setupStatus: SetupStatus;
+  },
+  Error
+>();
+
 export const closeSetupPreviewDrawerCreator = createAction(
   "PREVIEW/CLOSE_SETUP_DRAWER"
 )();
@@ -36,12 +57,23 @@ type PreviewActions = ActionType<
   | typeof openSetupPreviewDrawerCreator
   | typeof closeSetupPreviewDrawerCreator
   | typeof toggleSetupDrawerStepCreator
+  | typeof checkPreviewSetupCreator.success
 >;
 
 // Selectors
 export const selectIsSetupDrawerOpen = (
   state: SliceMachineStoreType
 ): boolean => state.preview.setupDrawer.isOpen;
+
+export const selectSetupStatus = (state: SliceMachineStoreType): SetupStatus =>
+  state.preview.setupStatus;
+
+export const selectUserHasAtLeastOneStepMissing = (
+  state: SliceMachineStoreType
+): boolean =>
+  state.preview.setupStatus.dependencies !== "ok" ||
+  state.preview.setupStatus.iframe !== "ok" ||
+  state.preview.setupStatus.manifest !== "ok";
 
 export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.preview.setupDrawer.openedStep;
@@ -71,6 +103,14 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
               : action.payload.stepNumber,
         },
       };
+    case getType(checkPreviewSetupCreator.success):
+      return {
+        ...state,
+        setupStatus: {
+          ...state.setupStatus,
+          ...action.payload.setupStatus,
+        },
+      };
     case getType(closeSetupPreviewDrawerCreator):
       return {
         ...state,
@@ -83,3 +123,33 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
       return state;
   }
 };
+
+// Sagas
+export function* checkSetupSaga(
+  action: ReturnType<typeof checkPreviewSetupCreator.request>
+) {
+  try {
+    const { data: setupStatus } = yield call(checkPreviewSetup);
+
+    // All the backend checks are ok
+    if ("ok" === setupStatus.manifest && "ok" === setupStatus.dependencies) {
+      window.open(action.payload.redirectUrl);
+      return;
+    }
+
+    yield put(checkPreviewSetupCreator.success({ setupStatus }));
+    yield put(openSetupPreviewDrawerCreator());
+  } catch (error) {
+    yield put(checkPreviewSetupCreator.failure(error));
+  }
+}
+
+// Saga watchers
+function* watchCheckSetup() {
+  yield takeLatest(getType(checkPreviewSetupCreator.request), checkSetupSaga);
+}
+
+// Saga Exports
+export function* watchPreviewSagas() {
+  yield fork(watchCheckSetup);
+}

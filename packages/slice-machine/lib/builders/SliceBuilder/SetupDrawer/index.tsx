@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
@@ -13,17 +13,10 @@ import {
   selectIsPreviewAvailableForFramework,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
-import { PreviewSetupStatus } from "@builders/SliceBuilder";
 import { selectIsSetupDrawerOpen } from "@src/modules/preview";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-type SetupDrawerProps = {
-  previewSetupStatus: PreviewSetupStatus;
-};
-
-const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
-  previewSetupStatus,
-}) => {
+const SetupDrawer: React.FunctionComponent = ({}) => {
   const { isSetupDrawerOpen } = useSelector((state: SliceMachineStoreType) => ({
     isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
   }));
@@ -79,12 +72,8 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            {framework === Frameworks.nuxt && (
-              <NuxtSetupSteps previewSetupStatus={previewSetupStatus} />
-            )}
-            {framework === Frameworks.next && (
-              <NextSetupSteps previewSetupStatus={previewSetupStatus} />
-            )}
+            {framework === Frameworks.nuxt && <NuxtSetupSteps />}
+            {framework === Frameworks.next && <NextSetupSteps />}
           </Flex>
         </Flex>
         <HelpSection />
