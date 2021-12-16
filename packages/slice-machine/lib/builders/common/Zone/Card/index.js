@@ -12,7 +12,7 @@ import * as Widgets from "@lib/models/common/widgets/withGroup";
 
 import Li from "components/Li";
 import { useSelector } from "react-redux";
-import { getEnvironment } from "@src/modules/environment";
+import { getFramework } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
@@ -30,10 +30,8 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable,
 }) => {
-  const {
-    env: { framework },
-  } = useSelector((store) => ({
-    env: getEnvironment(store),
+  const { framework } = useSelector((store) => ({
+    framework: getFramework(store),
   }));
 
   return (

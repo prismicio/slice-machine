@@ -11,6 +11,8 @@ import { call, fork, put, select, takeLatest } from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
 import { getFramework } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models";
+import { withLoader } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const NoStepSelected: number = 0;
 
@@ -161,7 +163,10 @@ export function* checkSetupSaga(
 
 // Saga watchers
 function* watchCheckSetup() {
-  yield takeLatest(getType(checkPreviewSetupCreator.request), checkSetupSaga);
+  yield takeLatest(
+    getType(checkPreviewSetupCreator.request),
+    withLoader(checkSetupSaga, LoadingKeysEnum.CHECK_PREVIEW)
+  );
 }
 
 // Saga Exports

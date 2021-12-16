@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Flex, Text } from "theme-ui";
+import { Flex, Text } from "theme-ui";
 
 import StepSection from "./components/StepSection";
 import CodeBlock from "./components/CodeBlockWithCopy";
@@ -14,18 +14,25 @@ import {
 } from "@src/modules/preview";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import SliceMachineButton from "@components/SliceMachineButton";
 
 const NuxtSetupSteps: React.FunctionComponent = () => {
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const router = useRouter();
 
-  const { openedStep, setupStatus, userHasAtLeastOneStepMissing } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      openedStep: selectOpenedStep(state),
-      setupStatus: selectSetupStatus(state),
-      userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
-    })
-  );
+  const {
+    openedStep,
+    setupStatus,
+    userHasAtLeastOneStepMissing,
+    isCheckingSetup,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    openedStep: selectOpenedStep(state),
+    setupStatus: selectSetupStatus(state),
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+    userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
+  }));
 
   const StepNumberWithErrors = [
     ...(setupStatus.dependencies === "ko" ? ["1"] : []),
@@ -143,14 +150,15 @@ const NuxtSetupSteps: React.FunctionComponent = () => {
               more information.
             </WarningSection>
           )}
-          <Button
+          <SliceMachineButton
             sx={{
-              alignSelf: "flex-start",
+              minWidth: 155,
             }}
+            isLoading={isCheckingSetup}
             onClick={() => checkPreviewSetup(`${router.asPath}/preview`)}
           >
             Check configuration
-          </Button>
+          </SliceMachineButton>
         </Flex>
       </StepSection>
     </>
