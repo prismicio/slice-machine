@@ -12,7 +12,7 @@ const DEFAULT_IMAGE_DIMENSIONS = {
 };
 
 export function generateState(env: BackendEnvironment): void {
-  const libraries = (env.userConfig.libraries || [])
+  const libraries = (env.manifest.libraries || [])
     .map((lib) => handleLibraryPath(env.cwd, lib))
     .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 
@@ -91,7 +91,6 @@ export function formatComponent(
             return {
               ...acc,
               [variationId]: {
-                exists: screenshot.exists,
                 path: screenshot.path,
                 ...getImageDimensions(screenshot.path),
               },

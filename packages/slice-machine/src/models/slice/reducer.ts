@@ -61,16 +61,16 @@ export function reducer(
         };
       }
       case VariationActions.GenerateCustomScreenShot: {
-        const { variationId, preview } = action.payload as {
+        const { variationId, screenshot } = action.payload as {
           variationId: string;
-          preview: ScreenshotUI;
+          screenshot: ScreenshotUI;
         };
 
         const screenshots = prevState.variations.reduce((acc, variation) => {
           if (variation.id === variationId) {
             return {
               ...acc,
-              [variationId]: preview,
+              [variationId]: screenshot,
             };
           }
           if (prevState.screenshotUrls?.[variation.id]) {
@@ -85,23 +85,15 @@ export function reducer(
         return {
           ...prevState,
           screenshotUrls: screenshots,
-          infos: prevState.infos,
         };
       }
       case VariationActions.GenerateScreenShot: {
-        const { previews } = action.payload as {
-          variationId: string;
-          previews: Record<string, Models.Screenshot>;
+        const { screenshots } = action.payload as {
+          screenshots: Record<string, ScreenshotUI>;
         };
         return {
           ...prevState,
-          infos: {
-            ...prevState.infos,
-            screenshotPaths: {
-              ...prevState.infos.screenshotPaths,
-              ...previews,
-            },
-          },
+          screenshotUrls: screenshots,
         };
       }
       case VariationActions.AddWidget: {

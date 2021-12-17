@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
-import { getFormattedLibIdentifier } from "lib/utils/lib";
 import Container from "components/Container";
 
 import { LibrariesContext } from "src/models/libraries/context";
-import { FrontEndEnvironment } from "lib/models/common/Environment";
 
 import { GoPlus } from "react-icons/go";
 
@@ -43,9 +41,7 @@ const CreateSliceButton = ({
   </Button>
 );
 
-const SlicesIndex: React.FunctionComponent<{ env: FrontEndEnvironment }> = ({
-  env,
-}) => {
+const SlicesIndex: React.FunctionComponent = () => {
   const libraries = useContext(LibrariesContext);
   const [isCreatingSlice, setIsCreatingSlice] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -85,15 +81,18 @@ const SlicesIndex: React.FunctionComponent<{ env: FrontEndEnvironment }> = ({
     ? libraries.filter((e) => e && e.isLocal)
     : [];
   const hasLocalLibs = localLibs.length;
-  const configLocalLibs = (env.userConfig.libraries || []).reduce<
+  const configLocalLibs = (libraries || []).reduce<
     ReadonlyArray<{ name: string }>
-  >((acc, curr) => {
-    const { isLocal, from } = getFormattedLibIdentifier(curr);
-    if (!isLocal) {
+  >((acc, lib) => {
+    if (!lib) return acc;
+
+    if (!lib.isLocal) {
       return acc;
     }
-    return [...acc, { name: from }];
+
+    return [...acc, { name: lib.name }];
   }, []);
+
   const hasConfigLocalLibs = configLocalLibs.length;
 
   const sliceCount =

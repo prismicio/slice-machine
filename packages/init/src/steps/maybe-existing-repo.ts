@@ -1,7 +1,9 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
 import { Communication, Utils, FileSystem } from "@slicemachine/core";
-import { RepoData } from "@slicemachine/core/src/core/communication";
+import { Repositories } from "@slicemachine/core/src/models/Repositories";
+import { Repository } from "@slicemachine/core/src/models/Repository";
+import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
@@ -48,30 +50,24 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function (
-    arg: [
-      string,
-      { role: Utils.roles.Roles | Record<string, Utils.roles.Roles> }
-    ]
-  ): RepoPrompt {
-    const [repoName, { role }] = arg;
+  return function ({ name, domain, role }: Repository): RepoPrompt {
     const address = new URL(base);
-    address.hostname = `${repoName}.${address.hostname}`;
+    address.hostname = `${domain}.${address.hostname}`;
     if (Utils.roles.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
-          repoName
+          name
         )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
-        value: repoName,
+        value: domain,
         disabled: "Unauthorized",
       };
     }
 
     return {
-      name: `${Utils.purple("Use")} ${Utils.bold(repoName)} ${Utils.purple(
+      name: `${Utils.purple("Use")} ${Utils.bold(name)} ${Utils.purple(
         `"${address.hostname}"`
       )}`,
-      value: repoName,
+      value: name,
     };
   };
 }
@@ -97,7 +93,7 @@ export function maybeStickTheRepoToTheTopOfTheList(repoName?: string | null) {
 }
 
 export function sortReposForPrompt(
-  repos: RepoData,
+  repos: Repositories,
   base: string,
   cwd: string
 ): RepoPrompts {
@@ -110,7 +106,7 @@ export function sortReposForPrompt(
 
   const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
 
-  return Object.entries(repos)
+  return repos
     .reverse()
     .map(makeReposPretty(base))
     .reduce(maybeStickTheRepoToTheTopOfTheList(maybeConfiguredRepoName), [
@@ -120,13 +116,14 @@ export function sortReposForPrompt(
 }
 
 export async function maybeExistingRepo(
-  cookie: string,
+  cookies: string,
   cwd: string,
   base = DEFAULT_BASE
 ): Promise<{ name: string; existing: boolean }> {
-  const repos = await Communication.listRepositories(cookie, base);
+  const token = parsePrismicAuthToken(cookies);
+  const repos = await Communication.listRepositories(token);
 
-  if (Object.keys(repos).length === 0) {
+  if (repos.length === 0) {
     const name = await promptForRepoName(base);
     return { existing: false, name };
   }

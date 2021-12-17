@@ -8,8 +8,8 @@ const pushSlice = require("./slices/push").default;
 const saveSlice = require("./slices/save").default;
 const createSlice = require("./slices/create/index").default;
 
-const screenshot = require("./screenshot").default;
-const customScreenshot = require("./custom-screenshot").default;
+const screenshot = require("./screenshots/screenshots").default;
+const customScreenshot = require("./screenshots/custom-screenshots").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
 const trackReview = require("./tracking/review").default;

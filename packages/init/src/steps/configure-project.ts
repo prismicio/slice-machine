@@ -1,4 +1,5 @@
 import { FileSystem, Utils } from "@slicemachine/core";
+import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 
 type Base = Utils.Endpoints.Base;
@@ -18,7 +19,7 @@ export function configureProject(
   try {
     const manifest = FileSystem.retrieveManifest(cwd);
 
-    const manifestUpdated: FileSystem.Manifest = {
+    const manifestUpdated: Models.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
       libraries: ["@/slices", ...sliceLibPath],

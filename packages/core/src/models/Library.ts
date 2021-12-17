@@ -16,7 +16,7 @@ export interface ComponentInfo {
     id: string;
   } | null;
 
-  screenshotPaths?: {
+  screenshotPaths: {
     [variationId: string]: Screenshot;
   };
   meta: ComponentMetadata;
@@ -24,16 +24,12 @@ export interface ComponentInfo {
 }
 
 export const ComponentInfo = {
-  hasPreviewsMissing(infos: ComponentInfo): boolean {
-    const { screenshotPaths } = infos;
+  hasPreviewsMissing(info: ComponentInfo): boolean {
+    const { screenshotPaths, model } = info;
     if (!screenshotPaths) return true;
-
-    return Object.entries(screenshotPaths).reduce(
-      (acc: boolean, [, screenshot]: [string, Screenshot]) => {
-        return Boolean(!screenshot) || (acc && screenshot?.exists);
-      },
-      false
-    );
+    return model.variations
+      .map((v) => v.id)
+      .some((variationId) => !screenshotPaths[variationId]);
   },
 };
 
@@ -52,8 +48,7 @@ export interface Component {
 }
 
 export interface Screenshot {
-  exists: boolean;
-  path?: string;
+  path: string;
 }
 
 export const LibraryMeta = {

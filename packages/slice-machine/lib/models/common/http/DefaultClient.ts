@@ -28,6 +28,11 @@ const AuthApi = {
   PROD: "https://auth.prismic.io/",
 };
 
+const UserService = {
+  STAGE: "https://user.wroom.io/",
+  PROD: "https://user.internal-prismic.io/",
+};
+
 const TrackingApi = {
   STAGE: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
   PROD: "https://tracking.prismic.io",
@@ -140,12 +145,12 @@ export default class DefaultClient {
     auth: string
   ): Promise<Error | UserProfile> {
     try {
-      const result = await fetch(
-        `${createApiUrl(base, AuthApi)}${ValidatePrefix}?token=${auth}`,
-        {
-          method: "GET",
-        }
-      );
+      const result = await fetch(`${createApiUrl(base, UserService)}profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
+      });
 
       const jsResult = await result.json();
 

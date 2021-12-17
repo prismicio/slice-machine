@@ -21,3 +21,12 @@ clean_workspace:
 check_deps:
 	@# Checks that Node is installed
 	@node -v > /dev/null 2>&1 || (echo -e 'node is not installed\n' && exit 42)
+
+
+build_core: 
+	pushd packages/core && npm run build && popd
+
+build: build_core
+	pushd packages/slice-machine && npm run build && npm run export-build
+
+  

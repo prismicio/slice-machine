@@ -2,8 +2,7 @@ import fs from "fs";
 import { Volume } from "memfs";
 
 import getEnv from "../server/src/api/services/getEnv";
-import { SupportedFrameworks } from "../lib/consts";
-import { Framework } from "@models/common/Framework";
+import { Models } from "@slicemachine/core";
 
 const TMP = "/tmp";
 
@@ -114,8 +113,8 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.repo).toEqual("api");
-    expect(env.userConfig.apiEndpoint).toEqual("https://api.wroom.io/api/v2");
-    expect(env.framework).toEqual(Framework.vanillajs);
+    expect(env.manifest.apiEndpoint).toEqual("https://api.wroom.io/api/v2");
+    expect(env.framework).toEqual(Models.Frameworks.vanillajs);
   });
 
   test("it finds the right Prismic repo", async () => {
@@ -174,25 +173,23 @@ describe("getEnv", () => {
    none: null
 
    */
-  test("it finds the right framework in manifest", async () => {
-    const frameworkEntries = Object.entries(SupportedFrameworks);
-
-    for await (const framework of frameworkEntries) {
+  test("it finds the right framework in package.json", async () => {
+    for await (const framework of Models.SupportedFrameworks) {
       fs.reset();
-      const [key, value] = framework;
       fs.use(
         Volume.fromJSON(
           {
             "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
-            "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "${key}": "1.1.0" } }`,
+            "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "${framework}": "1.1.0" } }`,
             "nuxt.config.js": `stories: [".slicemachine/assets"]`,
             ".slicemachine/mock-config.json": `{ "field": "value" }`,
           },
           TMP
         )
       );
+
       const { env } = await getEnv(TMP);
-      expect(env.framework).toEqual(value);
+      expect(env.framework).toEqual(framework);
     }
   });
 

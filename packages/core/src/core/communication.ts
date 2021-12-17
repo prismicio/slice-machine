@@ -1,12 +1,14 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Cookie, CONSTS, roles, Framework } from "../utils";
+import { Cookie, CONSTS, roles } from "../utils";
+import { Frameworks } from "../models/Framework";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
-import { fold } from "fp-ts/Either";
+import { fold, getOrElseW } from "fp-ts/Either";
+import { Repositories } from "../models/Repositories";
 
 export type { AxiosError } from "axios";
 
-const { DEFAULT_BASE } = CONSTS;
+const { DEFAULT_BASE, USER_SERVICE_BASE } = CONSTS;
 
 /**
  *
@@ -85,13 +87,17 @@ export async function validateSession(
     });
 }
 
-export async function listRepositories(
-  token: string,
-  base = DEFAULT_BASE
-): Promise<RepoData> {
-  return validateSession(token, base).then((data) => {
-    return data.repositories;
-  });
+export async function listRepositories(token: string): Promise<Repositories> {
+  return axios
+    .get<Repositories>(`${USER_SERVICE_BASE}/repositories`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      return getOrElseW(() => {
+        console.error("Unable to parse user repositories.");
+        return [];
+      })(Repositories.decode(res.data));
+    });
 }
 
 export async function validateRepositoryName(
@@ -152,7 +158,7 @@ export type CreateRepositoryResponse = Promise<
 export async function createRepository(
   domain: string,
   cookies: string,
-  framework = Framework.FrameworkEnum.vanillajs,
+  framework = Frameworks.vanillajs,
   base = DEFAULT_BASE
 ): CreateRepositoryResponse {
   const data = {

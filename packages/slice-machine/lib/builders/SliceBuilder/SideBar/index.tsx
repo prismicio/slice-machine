@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import type Models from "@slicemachine/core/build/src/models";
 import { Box, Button, Card as ThemeCard, Flex, Heading, Text } from "theme-ui";
 import Link from "next/link";
+import { NextRouter } from "next/router";
 
 import Card from "@components/Card";
 
@@ -18,17 +19,66 @@ type SideBarProps = {
   Model: SliceState;
   variation: Models.VariationAsArray;
   imageLoading: boolean;
-  isPreviewRunning: boolean;
+  isPreviewSetup: boolean;
   onScreenshot: () => void;
   onHandleFile: (file: any) => void;
   openSetupPreview: () => void;
+};
+
+type BottomStateProps = {
+  isPreviewSetup: boolean;
+  openSetupPreview: () => void;
+  router: NextRouter;
+};
+
+const PreviewState: React.FunctionComponent<BottomStateProps> = ({
+  isPreviewSetup,
+  openSetupPreview,
+  router,
+}) => {
+  return isPreviewSetup ? (
+    <Link
+      href={{
+        pathname: `${router.pathname}/preview`,
+        query: router.query,
+      }}
+      passHref
+    >
+      <a target="_blank">
+        <Button
+          variant="secondary"
+          sx={{ cursor: "pointer", width: "100%", mt: 3 }}
+        >
+          Open Slice Preview
+        </Button>
+      </a>
+    </Link>
+  ) : (
+    <InformationBox>
+      <>
+        <Heading as="h5" sx={{ color: "text", mb: 2 }}>
+          Configure slice preview
+        </Heading>
+        <Text as="p" variant="xs" sx={{ mb: 2 }}>
+          You can preview your slices and view changes instantly
+        </Text>
+        <Button
+          variant={"small"}
+          sx={{ cursor: "pointer" }}
+          onClick={openSetupPreview}
+        >
+          Setup the preview
+        </Button>
+      </>
+    </InformationBox>
+  );
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
   Model,
   variation,
   imageLoading,
-  isPreviewRunning,
+  isPreviewSetup,
   onScreenshot,
   onHandleFile,
   openSetupPreview,
@@ -62,50 +112,25 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={false}
+          preventScreenshot={!isPreviewSetup}
         />
       </Card>
       {!isPreviewAvailableForFramework ? (
-        <InformationBox>
-          <Text as="p" variant="xs" sx={{ mb: 2 }}>
-            Slice preview is not available for this framework
+        <>
+          <Button variant="disabledSecondary" sx={{ width: "100%", mt: 3 }}>
+            Open Slice Preview
+          </Button>
+          <Text as="p" sx={{ textAlign: "center", mt: 3, color: "textGray" }}>
+            Slice Preview is not supported by your framework. You can use
+            Storybook instead.
           </Text>
-        </InformationBox>
-      ) : isPreviewRunning ? (
-        <Link
-          href={{
-            pathname: `${router.pathname}/preview`,
-            query: router.query,
-          }}
-          passHref
-        >
-          <a target={"_blank"}>
-            <Button
-              variant={"secondary"}
-              sx={{ cursor: "pointer", width: "100%", mt: 3 }}
-            >
-              Open Slice Preview
-            </Button>
-          </a>
-        </Link>
+        </>
       ) : (
-        <InformationBox>
-          <>
-            <Heading as="h5" sx={{ color: "text", mb: 2 }}>
-              Configure slice preview
-            </Heading>
-            <Text as="p" variant="xs" sx={{ mb: 2 }}>
-              You can preview your slices and view changes instantly
-            </Text>
-            <Button
-              variant={"small"}
-              sx={{ cursor: "pointer" }}
-              onClick={openSetupPreview}
-            >
-              Setup the preview
-            </Button>
-          </>
-        </InformationBox>
+        <PreviewState
+          isPreviewSetup={isPreviewSetup}
+          openSetupPreview={openSetupPreview}
+          router={router}
+        />
       )}
     </Box>
   );

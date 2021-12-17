@@ -7,7 +7,7 @@ import React from "react";
 import { render, fireEvent } from "../test-utils";
 import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
 import FakeClient from "../../lib/models/common/http/FakeClient";
-import { Framework } from "../../lib/models/common/Framework";
+import { Models } from "@slicemachine/core";
 import UpdateModal from "../../components/UpdateVersionModal";
 import { TrackerBuilder } from "../../server/src/api/services/tracker";
 import Environment from "@lib/models/common/Environment";
@@ -61,7 +61,7 @@ const FAKE_ENVIRONMENT = {
     },
     mockConfig: {},
     hasGeneratedStoriesPath: true,
-    framework: Framework.next,
+    framework: Models.Frameworks.next,
     baseUrl: "http://localhost:9999",
     client: new FakeClient(),
     tracker: new TrackerBuilder(

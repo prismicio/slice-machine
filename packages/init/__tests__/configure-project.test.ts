@@ -60,7 +60,7 @@ describe("configure-project", () => {
   const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
-    value: Core.Utils.Framework.FrameworkEnum.react,
+    value: Core.Utils.Framework.Frameworks.react,
     manuallyAdded: false,
   };
 
@@ -91,7 +91,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.FrameworkEnum.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
@@ -114,7 +114,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.FrameworkEnum.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
@@ -174,7 +174,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.FrameworkEnum.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     patchManifestMock.mockImplementation(() => {
