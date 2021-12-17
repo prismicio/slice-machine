@@ -5,6 +5,7 @@ import { Box, Flex } from "theme-ui";
 import { RendererClient } from "@prismicio/slice-canvas-com";
 import { Size, iframeSizes } from "../ScreenSizes";
 import { SliceView } from "../..";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 function useRendererClient(): readonly [
   RendererClient | undefined,
@@ -57,9 +58,12 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   sliceView,
 }) => {
   const [client, ref] = useRendererClient();
+  const { connectToPreviewSuccess, connectToPreviewFailure } =
+    useSliceMachineActions();
   useEffect((): void => {
     if (client !== undefined) {
       if (client.connected) {
+        connectToPreviewSuccess();
         const updateSliceZone = async () => {
           await client.setSliceZoneFromSliceIDs(sliceView);
         };
@@ -67,8 +71,11 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           console.log({ error });
         });
       } else {
+        connectToPreviewFailure();
         console.warn("Trying to use a disconnected renderer client.");
       }
+    } else {
+      connectToPreviewFailure();
     }
   }, [client, size, sliceView]);
 

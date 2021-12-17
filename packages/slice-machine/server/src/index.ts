@@ -58,41 +58,36 @@ if (process.env.ENV === "SM") {
   app.use(serveStatic(out));
 }
 
-app.use("/migration", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "migration.html"));
+app.use("/migration", (_, res) => {
+  res.sendFile(path.join(out, "migration.html"));
 });
 
-app.use("/changelog", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "changelog.html"));
+app.use("/changelog", (_, res) => {
+  res.sendFile(path.join(out, "changelog.html"));
 });
 
-app.use("/warnings", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "warnings.html"));
+app.use("/warnings", (_, res) => {
+  res.sendFile(path.join(out, "warnings.html"));
 });
 
-app.use(
-  "/:lib/:sliceName/:variation/preview",
-  async function sliceRoute(_, res) {
-    return res.sendFile(
-      path.join(out, "[lib]/[sliceName]/[variation]/preview.html")
-    );
-  }
-);
-
-app.use("/:lib/:sliceName/:variation", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "[lib]/[sliceName]/[variation].html"));
+app.use("/:lib/:sliceName/:variation/preview", (_, res) => {
+  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/preview.html"));
 });
 
-app.use("/:cts/:id", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "cts/[ct].html"));
+app.use("/:lib/:sliceName/:variation", (_, res) => {
+  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation].html"));
 });
 
-app.use("/slices", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "slices.html"));
+app.use("/:cts/:id", (_, res) => {
+  res.sendFile(path.join(out, "cts/[ct].html"));
 });
 
-app.use("/onboarding", async function sliceRoute(_, res) {
-  return res.sendFile(path.join(out, "onboarding.html"));
+app.use("/slices", (_, res) => {
+  res.sendFile(path.join(out, "slices.html"));
+});
+
+app.use("/onboarding", (_, res) => {
+  res.sendFile(path.join(out, "onboarding.html"));
 });
 
 const PORT = process.env.PORT || "9999";

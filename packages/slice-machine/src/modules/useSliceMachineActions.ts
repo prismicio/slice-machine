@@ -17,6 +17,8 @@ import {
   closeSetupPreviewDrawerCreator,
   toggleSetupDrawerStepCreator,
   checkPreviewSetupCreator,
+  connectToPreviewFailureCreator,
+  connectToPreviewSuccessCreator,
 } from "@src/modules/preview";
 import ServerState from "@models/server/ServerState";
 
@@ -33,6 +35,10 @@ const useSliceMachineActions = () => {
     );
   const openSetupDrawerDrawer = () =>
     dispatch(openSetupPreviewDrawerCreator({}));
+  const connectToPreviewFailure = () =>
+    dispatch(connectToPreviewFailureCreator());
+  const connectToPreviewSuccess = () =>
+    dispatch(connectToPreviewSuccessCreator());
   const closeSetupDrawerDrawer = () =>
     dispatch(closeSetupPreviewDrawerCreator());
   const toggleSetupDrawerStep = (stepNumber: number) =>
@@ -76,6 +82,8 @@ const useSliceMachineActions = () => {
 
   return {
     checkPreviewSetup,
+    connectToPreviewFailure,
+    connectToPreviewSuccess,
     toggleSetupDrawerStep,
     closeSetupDrawerDrawer,
     openSetupDrawerDrawer,
