@@ -38,6 +38,14 @@ jest.mock("@slicemachine/core", () => {
     },
     Utils: {
       ...actualCore.Utils,
+      Files: {
+        ...actualCore.Utils.Files,
+        exists: jest.fn<boolean, [pathToFile: string]>(),
+        mkdir: jest.fn<
+          string | undefined,
+          [target: string, option: { resursive: boolean }]
+        >(),
+      },
       spinner: () => ({
         start: startFn,
         succeed: successFn,
@@ -69,6 +77,10 @@ describe("configure-project", () => {
   const patchManifestMock = Core.FileSystem.patchManifest as jest.Mock;
   const addJsonPackageSmScriptMock = Core.FileSystem
     .addJsonPackageSmScript as jest.Mock;
+
+  const { exists, mkdir } = Core.Utils.Files;
+  const fileExistsMock = exists as jest.Mock;
+  const mkdirMock = mkdir as jest.Mock;
 
   test("it should create a new manifest if it doesn't exist yet", () => {
     retrieveManifestMock.mockReturnValue({
@@ -180,5 +192,36 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
+  });
+
+  test("it should create a slice folder if it doesnt exists.", () => {
+    // situation where the SM.Json doesn't exists.
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    // only called to verify if slice folder exists.
+    fileExistsMock.mockReturnValue(false);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(mkdirMock).toHaveBeenCalled();
+  });
+
+  test("it shouldn' create a slice folder if it exists.", () => {
+    // situation where the SM.Json doesn't exists.
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+    // only called to verify if slice folder exists.
+    fileExistsMock.mockReturnValue(true);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(mkdirMock).not.toHaveBeenCalled();
   });
 });
