@@ -55,6 +55,14 @@ export const closeSetupPreviewDrawerCreator = createAction(
   "PREVIEW/CLOSE_SETUP_DRAWER"
 )();
 
+export const connectToPreviewSuccessCreator = createAction(
+  "PREVIEW/CONNECT_TO_PREVIEW.SUCCESS"
+)();
+
+export const connectToPreviewFailureCreator = createAction(
+  "PREVIEW/CONNECT_TO_PREVIEW.FAILURE"
+)();
+
 export const toggleSetupDrawerStepCreator = createAction(
   "PREVIEW/TOGGLE_SETUP_DRAWER_STEP"
 )<{
@@ -65,6 +73,8 @@ type PreviewActions = ActionType<
   | typeof openSetupPreviewDrawerCreator
   | typeof closeSetupPreviewDrawerCreator
   | typeof toggleSetupDrawerStepCreator
+  | typeof connectToPreviewSuccessCreator
+  | typeof connectToPreviewFailureCreator
   | typeof checkPreviewSetupCreator.success
 >;
 
@@ -101,6 +111,22 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
           ...(!!action.payload.stepToOpen
             ? { openedStep: action.payload.stepToOpen }
             : null),
+        },
+      };
+    case getType(connectToPreviewSuccessCreator):
+      return {
+        ...state,
+        setupStatus: {
+          ...state.setupStatus,
+          iframe: "ok",
+        },
+      };
+    case getType(connectToPreviewFailureCreator):
+      return {
+        ...state,
+        setupStatus: {
+          ...state.setupStatus,
+          iframe: "ko",
         },
       };
     case getType(toggleSetupDrawerStepCreator):

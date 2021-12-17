@@ -8,12 +8,18 @@ import { SliceContext } from "@src/models/slice/context";
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCanvasUrl } from "@src/modules/environment";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Preview() {
   const { Model, variation } = useContext(SliceContext);
+  const { canvasUrl } = useSelector((state: SliceMachineStoreType) => ({
+    canvasUrl: selectCanvasUrl(state),
+  }));
 
   const [state, setState] = useState({ size: Size.FULL });
 
@@ -28,10 +34,6 @@ export default function Preview() {
   const sliceView: SliceView = [
     { sliceID: Model.infos.model.id, variationID: variation.id },
   ];
-
-  const canvasUrl = `http://localhost:${
-    process.env.NODE_ENV === "development" ? "3001" : "3000"
-  }/_canvas`;
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
