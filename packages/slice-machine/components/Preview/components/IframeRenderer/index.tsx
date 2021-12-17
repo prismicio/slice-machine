@@ -66,9 +66,9 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       return;
     }
 
-    if (client.connected) {
-      console.warn("Trying to use a disconnected renderer client.");
+    if (!client.connected) {
       connectToPreviewFailure();
+      console.warn("Trying to use a disconnected renderer client.");
       return;
     }
 

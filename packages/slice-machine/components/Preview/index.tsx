@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useContext } from "react";
 
 import { Flex } from "theme-ui";
@@ -31,9 +31,10 @@ export default function Preview() {
     return <div />;
   }
 
-  const sliceView: SliceView = [
-    { sliceID: Model.infos.model.id, variationID: variation.id },
-  ];
+  const sliceView = useMemo(
+    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
+    [Model.infos.model.id, variation.id]
+  );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
