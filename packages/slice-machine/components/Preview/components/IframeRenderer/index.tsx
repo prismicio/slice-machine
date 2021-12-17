@@ -61,22 +61,24 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   const { connectToPreviewSuccess, connectToPreviewFailure } =
     useSliceMachineActions();
   useEffect((): void => {
-    if (client !== undefined) {
-      if (client.connected) {
-        connectToPreviewSuccess();
-        const updateSliceZone = async () => {
-          await client.setSliceZoneFromSliceIDs(sliceView);
-        };
-        updateSliceZone().catch((error) => {
-          console.log({ error });
-        });
-      } else {
-        connectToPreviewFailure();
-        console.warn("Trying to use a disconnected renderer client.");
-      }
-    } else {
+    if (client === undefined) {
       connectToPreviewFailure();
+      return;
     }
+
+    if (client.connected) {
+      console.warn("Trying to use a disconnected renderer client.");
+      connectToPreviewFailure();
+      return;
+    }
+
+    connectToPreviewSuccess();
+    const updateSliceZone = async () => {
+      await client.setSliceZoneFromSliceIDs(sliceView);
+    };
+    updateSliceZone().catch((error) => {
+      console.log({ error });
+    });
   }, [client, size, sliceView]);
 
   return (
