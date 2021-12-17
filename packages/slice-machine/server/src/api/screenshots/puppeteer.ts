@@ -41,9 +41,13 @@ const generateScreenshot = async (
   screenshotUrl: string,
   pathToFile: string
 ): Promise<void | Error> => {
+  // Create an incognito contexte to isolate screenshots.
+  const context = await browser.createIncognitoBrowserContext();
+  // Create a new page in the context.
+  const page = await context.newPage();
+
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });
-    const page = await browser.newPage();
 
     /* We use the waitUntil option in order for the component to be rendered properly.
      ** The value networkidle2 is required because Nuxt has an open socket with Webpack.
@@ -55,10 +59,11 @@ const generateScreenshot = async (
     await page.waitForSelector("#root", { timeout: 2000 });
     const element = await page.$("#root");
     if (element) await element.screenshot({ path: pathToFile });
-    await page.close();
 
+    await context.close();
     return;
   } catch (err) {
+    await context.close();
     return err as Error;
   }
 };
