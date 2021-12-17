@@ -121,8 +121,8 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             Open Slice Preview
           </Button>
           <Text as="p" sx={{ textAlign: "center", mt: 3, color: "textGray" }}>
-            Framework does not support Slice Preview. You can install Storybook
-            instead.
+            Slice Preview is not supported by your framework. You can use
+            Storybook instead.
           </Text>
         </>
       ) : (

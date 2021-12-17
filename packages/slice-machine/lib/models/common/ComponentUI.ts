@@ -5,7 +5,7 @@ import { BackendEnvironment } from "./Environment";
 export const createScreenshotUrl = (
   baseUrl: string,
   pathToScreenshot: string
-) =>
+): string =>
   `${baseUrl}/api/__preview?q=${encodeURIComponent(
     pathToScreenshot
   )}&uniq=${Math.random()}`;
@@ -80,11 +80,6 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
-  const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
-    component.infos
-  );
-  if (previewMissing) return LibStatus.PreviewMissing;
-
   const slice = remoteSlices.find((s) => component.model.id === s.id);
   if (!slice) return LibStatus.NewSlice;
 
