@@ -189,7 +189,7 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
 };
 
 // Sagas
-export function* checkSetupSaga(
+function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
@@ -205,13 +205,13 @@ export function* checkSetupSaga(
         })
       );
       yield put(connectToPreviewIframeCreator.request());
-      const { timeout, iFrameCheckKO, iFrameCheckOk } = yield race({
-        iFrameCheckOk: take(getType(connectToPreviewIframeCreator.success)),
-        iFrameCheckKO: take(getType(connectToPreviewIframeCreator.failure)),
+      const { timeout, iframeCheckKO, iframeCheckOk } = yield race({
+        iframeCheckOk: take(getType(connectToPreviewIframeCreator.success)),
+        iframeCheckKO: take(getType(connectToPreviewIframeCreator.failure)),
         timeout: delay(2500),
       });
 
-      if (iFrameCheckOk && action.payload.callback) {
+      if (iframeCheckOk && action.payload.callback) {
         action.payload.callback();
         return;
       }
@@ -222,7 +222,7 @@ export function* checkSetupSaga(
         return;
       }
 
-      if (iFrameCheckKO) {
+      if (iframeCheckKO) {
         yield call(failCheckSetupSaga);
         return;
       }
@@ -251,7 +251,7 @@ export function* checkSetupSaga(
   }
 }
 
-export function* failCheckSetupSaga() {
+function* failCheckSetupSaga() {
   const framework: Frameworks | undefined = yield select(getFramework);
 
   if (!framework) return;

@@ -29,7 +29,7 @@
     "export-build": "next export && npm run clean-build",
     "bundle": "npm run build && npm run test && npm run export-build",
     "slicemachine": "start-slicemachine --port 9999",
-    "lint": "eslint --max-warnings 1086 --ext .ts,.tsx .",
+    "lint": "eslint --max-warnings 1081 --ext .ts,.tsx .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p -x 1002475,1006754",
     "audit-fix": "npm audit fix"
