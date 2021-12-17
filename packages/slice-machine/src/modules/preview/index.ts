@@ -56,8 +56,8 @@ export const checkPreviewSetupCreator = createAsyncAction(
   "PREVIEW/CHECK_SETUP.FAILURE"
 )<
   {
-    redirectUrl: string;
     withFirstVisitCheck: boolean;
+    callback?: () => void;
   },
   {
     setupStatus: SetupStatus;
@@ -70,18 +70,6 @@ export const connectToPreviewIframeCreator = createAsyncAction(
   "PREVIEW/CONNECT_TO_PREVIEW_IFRAME.SUCCESS",
   "PREVIEW/CONNECT_TO_PREVIEW_IFRAME.FAILURE"
 )<undefined, undefined, undefined>();
-
-export const connectToPreviewRequestCreator = createAction(
-  "PREVIEW/CONNECT_TO_PREVIEW.REQUEST"
-)();
-
-export const connectToPreviewSuccessCreator = createAction(
-  "PREVIEW/CONNECT_TO_PREVIEW.SUCCESS"
-)();
-
-export const connectToPreviewFailureCreator = createAction(
-  "PREVIEW/CONNECT_TO_PREVIEW.FAILURE"
-)();
 
 export const toggleSetupDrawerStepCreator = createAction(
   "PREVIEW/TOGGLE_SETUP_DRAWER_STEP"
@@ -117,6 +105,13 @@ export const selectUserHasAtLeastOneStepMissing = (
   state.preview.setupStatus.dependencies === "ko" ||
   state.preview.setupStatus.iframe === "ko" ||
   state.preview.setupStatus.manifest === "ko";
+
+export const selectUserHasConfiguredAllSteps = (
+  state: SliceMachineStoreType
+): boolean =>
+  state.preview.setupStatus.dependencies === "ok" &&
+  state.preview.setupStatus.iframe === "ok" &&
+  state.preview.setupStatus.manifest === "ok";
 
 export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.preview.setupDrawer.openedStep;
@@ -204,9 +199,11 @@ export function* checkSetupSaga(
 
     // All the backend checks are ok ask for the frontend Iframe check
     if ("ok" === setupStatus.manifest && "ok" === setupStatus.dependencies) {
-      checkPreviewSetupCreator.success({
-        setupStatus: { iframe: null, ...setupStatus },
-      });
+      yield put(
+        checkPreviewSetupCreator.success({
+          setupStatus: { iframe: null, ...setupStatus },
+        })
+      );
       yield put(connectToPreviewIframeCreator.request());
       const { timeout, iFrameCheckKO, iFrameCheckOk } = yield race({
         iFrameCheckOk: take(getType(connectToPreviewIframeCreator.success)),
@@ -214,8 +211,8 @@ export function* checkSetupSaga(
         timeout: delay(2500),
       });
 
-      if (iFrameCheckOk) {
-        window.open(action.payload.redirectUrl);
+      if (iFrameCheckOk && action.payload.callback) {
+        action.payload.callback();
         return;
       }
 

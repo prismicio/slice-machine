@@ -4,8 +4,7 @@ import {
   openSetupPreviewDrawerCreator,
   closeSetupPreviewDrawerCreator,
   toggleSetupDrawerStepCreator,
-  connectToPreviewSuccessCreator,
-  connectToPreviewFailureCreator,
+  connectToPreviewIframeCreator,
   checkPreviewSetupCreator,
 } from "@src/modules/preview";
 import { PreviewStoreType, SetupStatus } from "@src/modules/preview/types";
@@ -47,10 +46,10 @@ describe("[Preview module]", () => {
       expect(previewReducer(initialState, action)).toEqual(expectedState);
     });
 
-    it("should update the state when given connectToPreviewSuccessCreator action", () => {
+    it("should update the state when given connectToPreviewIframeCreator.success action", () => {
       const initialState: PreviewStoreType = dummyPreviewState;
 
-      const action = connectToPreviewSuccessCreator();
+      const action = connectToPreviewIframeCreator.success();
 
       const expectedState: PreviewStoreType = {
         ...dummyPreviewState,
@@ -63,10 +62,10 @@ describe("[Preview module]", () => {
       expect(previewReducer(initialState, action)).toEqual(expectedState);
     });
 
-    it("should update the state when given connectToPreviewFailureCreator action", () => {
+    it("should update the state when given connectToPreviewIframeCreator.failure action", () => {
       const initialState: PreviewStoreType = dummyPreviewState;
 
-      const action = connectToPreviewFailureCreator();
+      const action = connectToPreviewIframeCreator.failure();
 
       const expectedState: PreviewStoreType = {
         ...dummyPreviewState,

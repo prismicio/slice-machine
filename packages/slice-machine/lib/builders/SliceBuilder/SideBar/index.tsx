@@ -77,7 +77,11 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         </>
       ) : (
         <Button
-          onClick={() => checkPreviewSetup(`${router.asPath}/preview`, true)}
+          onClick={() =>
+            checkPreviewSetup(true, () =>
+              window.open(`${router.asPath}/preview`)
+            )
+          }
           variant={"secondary"}
           sx={{ cursor: "pointer", width: "100%", mt: 3 }}
         >

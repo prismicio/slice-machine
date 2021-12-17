@@ -77,8 +77,8 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
                 alignItems: "center",
                 borderRadius: "50%",
                 borderStyle: "solid",
-                backgroundColor: "greenLighter",
-                borderColor: "greenLighter",
+                backgroundColor: "lightGreen",
+                borderColor: "lightGreen",
                 borderWidth: 1,
                 mr: 2,
               }}

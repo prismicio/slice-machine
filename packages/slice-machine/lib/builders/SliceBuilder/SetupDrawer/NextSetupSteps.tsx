@@ -12,25 +12,27 @@ import {
   selectOpenedStep,
   selectSetupStatus,
   selectUserHasAtLeastOneStepMissing,
+  selectUserHasConfiguredAllSteps,
 } from "@src/modules/preview";
-import { useRouter } from "next/router";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import SliceMachineButton from "@components/SliceMachineButton";
+import SuccessSection from "./components/SuccessSection";
 
 const NextSetupSteps: React.FunctionComponent = () => {
-  const router = useRouter();
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const {
     openedStep,
     setupStatus,
     userHasAtLeastOneStepMissing,
+    userHasConfiguredAllSteps,
     isCheckingSetup,
   } = useSelector((state: SliceMachineStoreType) => ({
     openedStep: selectOpenedStep(state),
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
     setupStatus: selectSetupStatus(state),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
+    userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
   const StepNumberWithErrors = [
@@ -138,15 +140,19 @@ const NextSetupSteps: React.FunctionComponent = () => {
               for more information.
             </WarningSection>
           )}
-          <SliceMachineButton
-            sx={{
-              minWidth: 155,
-            }}
-            isLoading={isCheckingSetup}
-            onClick={() => checkPreviewSetup(`${router.asPath}/preview`, false)}
-          >
-            Check configuration
-          </SliceMachineButton>
+          {userHasConfiguredAllSteps ? (
+            <SuccessSection />
+          ) : (
+            <SliceMachineButton
+              sx={{
+                minWidth: 155,
+              }}
+              isLoading={isCheckingSetup}
+              onClick={() => checkPreviewSetup(false)}
+            >
+              Check configuration
+            </SliceMachineButton>
+          )}
         </Flex>
       </StepSection>
     </>

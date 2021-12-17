@@ -26,11 +26,11 @@ const useSliceMachineActions = () => {
 
   // Preview store
   const checkPreviewSetup = (
-    redirectUrl: string,
-    withFirstVisitCheck: boolean
+    withFirstVisitCheck: boolean,
+    callback?: () => void
   ) =>
     dispatch(
-      checkPreviewSetupCreator.request({ redirectUrl, withFirstVisitCheck })
+      checkPreviewSetupCreator.request({ withFirstVisitCheck, callback })
     );
   const openSetupDrawerDrawer = () =>
     dispatch(openSetupPreviewDrawerCreator({}));

@@ -11,27 +11,29 @@ import {
   selectOpenedStep,
   selectSetupStatus,
   selectUserHasAtLeastOneStepMissing,
+  selectUserHasConfiguredAllSteps,
 } from "@src/modules/preview";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { useRouter } from "next/router";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import SliceMachineButton from "@components/SliceMachineButton";
+import SuccessSection from "./components/SuccessSection";
 
 const NuxtSetupSteps: React.FunctionComponent = () => {
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
-  const router = useRouter();
 
   const {
     openedStep,
     setupStatus,
     userHasAtLeastOneStepMissing,
+    userHasConfiguredAllSteps,
     isCheckingSetup,
   } = useSelector((state: SliceMachineStoreType) => ({
     openedStep: selectOpenedStep(state),
     setupStatus: selectSetupStatus(state),
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
+    userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
   const StepNumberWithErrors = [
@@ -150,15 +152,19 @@ const NuxtSetupSteps: React.FunctionComponent = () => {
               for more information.
             </WarningSection>
           )}
-          <SliceMachineButton
-            sx={{
-              minWidth: 155,
-            }}
-            isLoading={isCheckingSetup}
-            onClick={() => checkPreviewSetup(`${router.asPath}/preview`, false)}
-          >
-            Check configuration
-          </SliceMachineButton>
+          {userHasConfiguredAllSteps ? (
+            <SuccessSection />
+          ) : (
+            <SliceMachineButton
+              sx={{
+                minWidth: 155,
+              }}
+              isLoading={isCheckingSetup}
+              onClick={() => checkPreviewSetup(false)}
+            >
+              Check configuration
+            </SliceMachineButton>
+          )}
         </Flex>
       </StepSection>
     </>
