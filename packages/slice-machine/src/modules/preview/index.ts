@@ -7,7 +7,16 @@ import {
   getType,
 } from "typesafe-actions";
 import { PreviewStoreType, SetupStatus } from "./types";
-import { call, fork, put, select, takeLatest } from "redux-saga/effects";
+import {
+  call,
+  fork,
+  put,
+  select,
+  takeLatest,
+  race,
+  take,
+  delay,
+} from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
 import { getFramework } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models";
@@ -56,8 +65,14 @@ export const checkPreviewSetupCreator = createAsyncAction(
   Error
 >();
 
-export const waitingForIFrameCheckCreator = createAction(
-  "PREVIEW/WAITING_FOR_IFRAME_CHECK"
+export const connectToPreviewIframeCreator = createAsyncAction(
+  "PREVIEW/CONNECT_TO_PREVIEW_IFRAME.REQUEST",
+  "PREVIEW/CONNECT_TO_PREVIEW_IFRAME.SUCCESS",
+  "PREVIEW/CONNECT_TO_PREVIEW_IFRAME.FAILURE"
+)<undefined, undefined, undefined>();
+
+export const connectToPreviewRequestCreator = createAction(
+  "PREVIEW/CONNECT_TO_PREVIEW.REQUEST"
 )();
 
 export const connectToPreviewSuccessCreator = createAction(
@@ -78,9 +93,9 @@ type PreviewActions = ActionType<
   | typeof openSetupPreviewDrawerCreator
   | typeof closeSetupPreviewDrawerCreator
   | typeof toggleSetupDrawerStepCreator
-  | typeof connectToPreviewSuccessCreator
-  | typeof waitingForIFrameCheckCreator
-  | typeof connectToPreviewFailureCreator
+  | typeof connectToPreviewIframeCreator.success
+  | typeof connectToPreviewIframeCreator.request
+  | typeof connectToPreviewIframeCreator.failure
   | typeof checkPreviewSetupCreator.success
 >;
 
@@ -123,12 +138,12 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
             : null),
         },
       };
-    case getType(waitingForIFrameCheckCreator):
+    case getType(connectToPreviewIframeCreator.request):
       return {
         ...state,
         isWaitingForIframeCheck: true,
       };
-    case getType(connectToPreviewSuccessCreator):
+    case getType(connectToPreviewIframeCreator.success):
       return {
         ...state,
         setupStatus: {
@@ -137,7 +152,7 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
         },
         isWaitingForIframeCheck: false,
       };
-    case getType(connectToPreviewFailureCreator):
+    case getType(connectToPreviewIframeCreator.failure):
       return {
         ...state,
         setupStatus: {
@@ -192,7 +207,28 @@ export function* checkSetupSaga(
       checkPreviewSetupCreator.success({
         setupStatus: { iframe: null, ...setupStatus },
       });
-      yield put(waitingForIFrameCheckCreator());
+      yield put(connectToPreviewIframeCreator.request());
+      const { timeout, iFrameCheckKO, iFrameCheckOk } = yield race({
+        iFrameCheckOk: take(getType(connectToPreviewIframeCreator.success)),
+        iFrameCheckKO: take(getType(connectToPreviewIframeCreator.failure)),
+        timeout: delay(2500),
+      });
+
+      if (iFrameCheckOk) {
+        window.open(action.payload.redirectUrl);
+        return;
+      }
+
+      if (timeout) {
+        yield put(connectToPreviewIframeCreator.failure());
+        yield call(failCheckSetupSaga);
+        return;
+      }
+
+      if (iFrameCheckKO) {
+        yield call(failCheckSetupSaga);
+        return;
+      }
       return;
     }
 
@@ -201,12 +237,12 @@ export function* checkSetupSaga(
       "ko" === setupStatus.manifest &&
       "ko" === setupStatus.dependencies &&
       action.payload.withFirstVisitCheck;
+
     if (isTheFirstTime) {
       yield put(openSetupPreviewDrawerCreator({}));
       return;
     }
 
-    // At this stage there is some checks that are
     yield put(
       checkPreviewSetupCreator.success({
         setupStatus: { iframe: null, ...setupStatus },
@@ -238,12 +274,7 @@ function* watchCheckSetup() {
   );
 }
 
-function* watchCheckIframeFailure() {
-  yield takeLatest(getType(connectToPreviewFailureCreator), failCheckSetupSaga);
-}
-
 // Saga Exports
 export function* watchPreviewSagas() {
   yield fork(watchCheckSetup);
-  yield fork(watchCheckIframeFailure);
 }

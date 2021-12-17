@@ -64,7 +64,6 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     useSliceMachineActions();
   useEffect((): void => {
     if (client === undefined) {
-      connectToPreviewFailure();
       return;
     }
 

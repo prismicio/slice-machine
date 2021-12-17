@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import type Models from "@slicemachine/core/build/src/models";
-import { Box, Button, Text } from "theme-ui";
+import { Box, Button, Spinner, Text } from "theme-ui";
 
 import Card from "@components/Card";
 
@@ -10,7 +10,9 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
+import { isLoading } from "@src/modules/loading";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -35,12 +37,12 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 
   const router = useRouter();
 
-  const { isPreviewAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
+  const { isPreviewAvailableForFramework, isCheckingPreviewSetup } =
+    useSelector((state: SliceMachineStoreType) => ({
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
-    })
-  );
+      isCheckingPreviewSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+    }));
 
   return (
     <Box
@@ -79,7 +81,11 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           variant={"secondary"}
           sx={{ cursor: "pointer", width: "100%", mt: 3 }}
         >
-          Open Slice Preview
+          {isCheckingPreviewSetup ? (
+            <Spinner size={12} />
+          ) : (
+            "Open Slice Preview"
+          )}
         </Button>
       )}
     </Box>
