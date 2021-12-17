@@ -39,7 +39,7 @@ const initialState: SliceBuilderState = {
 
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLoginModal } = useSliceMachineActions();
+  const { openLoginModal, checkPreviewSetup } = useSliceMachineActions();
   const { canvasUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
       canvasUrl: selectCanvasUrl(state),
@@ -87,6 +87,14 @@ const SliceBuilder: React.FunctionComponent = () => {
     [Model.infos.model.id, variation.id]
   );
 
+  const onTakingCustomScreenshot = () => {
+    checkPreviewSetup(true, () =>
+      store
+        .variation(variation.id)
+        .generateScreenShot(Model.from, Model.infos.sliceName, setData)
+    );
+  };
+
   return (
     <Box sx={{ flex: 1 }}>
       <Header
@@ -105,11 +113,7 @@ const SliceBuilder: React.FunctionComponent = () => {
           <SideBar
             Model={Model}
             variation={variation}
-            onScreenshot={() =>
-              store
-                .variation(variation.id)
-                .generateScreenShot(Model.from, Model.infos.sliceName, setData)
-            }
+            onScreenshot={onTakingCustomScreenshot}
             onHandleFile={(file) =>
               store
                 .variation(variation.id)
