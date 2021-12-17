@@ -4,6 +4,7 @@ export type PreviewStoreType = {
     isOpen: boolean;
     openedStep: number;
   };
+  isWaitingForIframeCheck: boolean;
 };
 
 export type SetupStatus = {

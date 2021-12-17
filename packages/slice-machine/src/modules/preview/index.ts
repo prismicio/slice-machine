@@ -27,6 +27,7 @@ export const initialState: PreviewStoreType = {
     isOpen: false,
     openedStep: NoStepSelected,
   },
+  isWaitingForIframeCheck: false,
 };
 
 // Actions Creators
@@ -35,6 +36,10 @@ export const openSetupPreviewDrawerCreator = createAction(
 )<{
   stepToOpen?: number;
 }>();
+
+export const closeSetupPreviewDrawerCreator = createAction(
+  "PREVIEW/CLOSE_SETUP_DRAWER"
+)();
 
 export const checkPreviewSetupCreator = createAsyncAction(
   "PREVIEW/CHECK_SETUP.REQUEST",
@@ -51,8 +56,8 @@ export const checkPreviewSetupCreator = createAsyncAction(
   Error
 >();
 
-export const closeSetupPreviewDrawerCreator = createAction(
-  "PREVIEW/CLOSE_SETUP_DRAWER"
+export const waitingForIFrameCheckCreator = createAction(
+  "PREVIEW/WAITING_FOR_IFRAME_CHECK"
 )();
 
 export const connectToPreviewSuccessCreator = createAction(
@@ -74,6 +79,7 @@ type PreviewActions = ActionType<
   | typeof closeSetupPreviewDrawerCreator
   | typeof toggleSetupDrawerStepCreator
   | typeof connectToPreviewSuccessCreator
+  | typeof waitingForIFrameCheckCreator
   | typeof connectToPreviewFailureCreator
   | typeof checkPreviewSetupCreator.success
 >;
@@ -85,6 +91,10 @@ export const selectIsSetupDrawerOpen = (
 
 export const selectSetupStatus = (state: SliceMachineStoreType): SetupStatus =>
   state.preview.setupStatus;
+
+export const selectIsWaitingForIFrameCheck = (
+  state: SliceMachineStoreType
+): boolean => state.preview.isWaitingForIframeCheck;
 
 export const selectUserHasAtLeastOneStepMissing = (
   state: SliceMachineStoreType
@@ -113,6 +123,11 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
             : null),
         },
       };
+    case getType(waitingForIFrameCheckCreator):
+      return {
+        ...state,
+        isWaitingForIframeCheck: true,
+      };
     case getType(connectToPreviewSuccessCreator):
       return {
         ...state,
@@ -120,6 +135,7 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
           ...state.setupStatus,
           iframe: "ok",
         },
+        isWaitingForIframeCheck: false,
       };
     case getType(connectToPreviewFailureCreator):
       return {
@@ -128,6 +144,7 @@ export const previewReducer: Reducer<PreviewStoreType, PreviewActions> = (
           ...state.setupStatus,
           iframe: "ko",
         },
+        isWaitingForIframeCheck: false,
       };
     case getType(toggleSetupDrawerStepCreator):
       return {
@@ -166,20 +183,20 @@ export function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
-    const framework: Frameworks | undefined = yield select(getFramework);
-
-    if (!framework) return;
-
     const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
       checkPreviewSetup
     );
 
-    // All the backend checks are ok
+    // All the backend checks are ok ask for the frontend Iframe check
     if ("ok" === setupStatus.manifest && "ok" === setupStatus.dependencies) {
-      window.open(action.payload.redirectUrl);
+      checkPreviewSetupCreator.success({
+        setupStatus: { iframe: null, ...setupStatus },
+      });
+      yield put(waitingForIFrameCheckCreator());
       return;
     }
 
+    // All the backend checks are ko and the request is coming from the "start"
     const isTheFirstTime =
       "ko" === setupStatus.manifest &&
       "ko" === setupStatus.dependencies &&
@@ -189,19 +206,28 @@ export function* checkSetupSaga(
       return;
     }
 
+    // At this stage there is some checks that are
     yield put(
       checkPreviewSetupCreator.success({
         setupStatus: { iframe: null, ...setupStatus },
       })
     );
-    yield put(
-      openSetupPreviewDrawerCreator({
-        stepToOpen: framework === Frameworks.nuxt ? 5 : 4,
-      })
-    );
+    yield call(failCheckSetupSaga);
   } catch (error) {
     yield put(checkPreviewSetupCreator.failure(error));
   }
+}
+
+export function* failCheckSetupSaga() {
+  const framework: Frameworks | undefined = yield select(getFramework);
+
+  if (!framework) return;
+
+  yield put(
+    openSetupPreviewDrawerCreator({
+      stepToOpen: framework === Frameworks.nuxt ? 5 : 4,
+    })
+  );
 }
 
 // Saga watchers
@@ -212,7 +238,12 @@ function* watchCheckSetup() {
   );
 }
 
+function* watchCheckIframeFailure() {
+  yield takeLatest(getType(connectToPreviewFailureCreator), failCheckSetupSaga);
+}
+
 // Saga Exports
 export function* watchPreviewSagas() {
   yield fork(watchCheckSetup);
+  yield fork(watchCheckIframeFailure);
 }

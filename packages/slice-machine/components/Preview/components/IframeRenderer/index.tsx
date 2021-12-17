@@ -50,12 +50,14 @@ type IframeRendererProps = {
   size: Size;
   canvasUrl: string;
   sliceView: SliceView;
+  dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   size,
   canvasUrl,
   sliceView,
+  dryRun = false,
 }) => {
   const [client, ref] = useRendererClient();
   const { connectToPreviewSuccess, connectToPreviewFailure } =
@@ -72,17 +74,27 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       return;
     }
 
-    connectToPreviewSuccess();
     const updateSliceZone = async () => {
       await client.setSliceZoneFromSliceIDs(sliceView);
     };
-    updateSliceZone().catch((error) => {
-      console.log({ error });
-    });
+    updateSliceZone()
+      .then(() => {
+        connectToPreviewSuccess();
+      })
+      .catch((error) => {
+        connectToPreviewFailure();
+        console.log({ error });
+      });
   }, [client, size, sliceView]);
 
   return (
-    <Box sx={{ flex: "1", bg: "grey01" }}>
+    <Box
+      sx={{
+        flex: "1",
+        bg: "grey01",
+        ...(dryRun ? { visibility: "hidden" } : {}),
+      }}
+    >
       <Flex
         sx={{
           justifyContent: "center",

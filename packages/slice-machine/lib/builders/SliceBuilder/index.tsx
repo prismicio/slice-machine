@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
 
@@ -14,6 +14,12 @@ import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import SetupDrawer from "./SetupDrawer";
+import IframeRenderer from "@components/Preview/components/IframeRenderer";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCanvasUrl } from "@src/modules/environment";
+import { Size } from "@components/Preview/components/ScreenSizes";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -34,6 +40,12 @@ const initialState: SliceBuilderState = {
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal } = useSliceMachineActions();
+  const { canvasUrl, isWaitingForIframeCheck } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      canvasUrl: selectCanvasUrl(state),
+      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+    })
+  );
 
   if (!store || !Model || !variation) return null;
 
@@ -69,6 +81,11 @@ const SliceBuilder: React.FunctionComponent = () => {
 
     return () => store.reset();
   }, []);
+
+  const sliceView = useMemo(
+    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
+    [Model.infos.model.id, variation.id]
+  );
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -110,6 +127,14 @@ const SliceBuilder: React.FunctionComponent = () => {
         <FieldZones Model={Model} store={store} variation={variation} />
       </FlexEditor>
       <SetupDrawer />
+      {isWaitingForIframeCheck && (
+        <IframeRenderer
+          size={Size.FULL}
+          canvasUrl={canvasUrl}
+          sliceView={sliceView}
+          dryRun={true}
+        />
+      )}
     </Box>
   );
 };
