@@ -2,8 +2,8 @@ import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
 import Files from "./files";
 export const PackageJson = t.exact(
-  t.type({
-    name: t.string,
+  t.partial({
+    name: t.union([t.string, t.void]),
     dependencies: t.record(t.string, t.string),
   })
 );

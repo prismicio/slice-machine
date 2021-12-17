@@ -46,7 +46,6 @@ export async function installLib(
   try {
     spinner.start();
 
-    // How to handle vs main/master ?
     const [githubUserName, githubProjectName] = libGithubPath.split("/");
     const source = `https://codeload.github.com/${libGithubPath}/zip/${branch}`;
 
@@ -54,17 +53,16 @@ export async function installLib(
     const outputFolder = `${githubProjectName}-${branch}`;
     const projectPath = path.join(zipFilePath, outputFolder);
 
-    // Which name we want to use for the lib ?
     const name = `${githubUserName}-${githubProjectName}`;
     const libDestinationFolder = path.join(cwd, name);
 
-    // How we handle the lib already installed ?
+    // We should be able to offer the ability to override or not an existing library
     if (fs.existsSync(libDestinationFolder)) {
       spinner.succeed(`Lib "${libGithubPath}" was already installed (skipped)`);
       return;
     }
 
-    // We copy all the slices into the the user project
+    // We copy all the slices into the the user project minus the src folder
     fsExtra.moveSync(path.join(projectPath, "src"), libDestinationFolder);
 
     // handle dependencies
@@ -74,8 +72,15 @@ export async function installLib(
     );
     if (pkgJson instanceof Error) throw pkgJson;
 
-    pkgManager.install(Dependencies.fromPkgFormat(pkgJson.dependencies));
+    const dependencies = Dependencies.fromPkgFormat(pkgJson.dependencies);
+    if (dependencies) await pkgManager.install(dependencies);
 
+    // generate meta file
+    Files.write(path.join(libDestinationFolder, "meta.json"), {
+      name: pkgJson.name,
+    });
+
+    // retrieve all slices lib paths
     const manifest = Files.readEntity<Error | Manifest>(
       path.join(projectPath, "sm.json"),
       (payload: unknown) => {
