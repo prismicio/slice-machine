@@ -101,7 +101,6 @@ export async function installLib(
       `Slice library "${libGithubPath}" was installed successfully`
     );
 
-    // If the libs have multiple slice libs here we are grouping them into one
     return localLibs;
   } catch {
     spinner.fail(`Error installing ${libGithubPath} lib!`);
