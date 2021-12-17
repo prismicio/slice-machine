@@ -46,6 +46,7 @@ export default async function handler(
       : [
           Utils.CONSTS.SLICE_CANVAS_VUE,
           Utils.CONSTS.NUXT_SM,
+          Utils.CONSTS.VUE_SLICEZONE,
           Utils.CONSTS.NUXT_PRISMIC,
         ];
 

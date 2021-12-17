@@ -5,7 +5,7 @@ import onboarding from "../../server/src/api/tracking/onboarding";
 import { TrackingEventId } from "@models/common/TrackingEvent";
 import getEnv from "../../server/src/api/services/getEnv";
 
-describe("onboarding tracking", () => {
+describe("onboarding tracking controller", () => {
   test("it should return no error on 200 status from the tracking service", async () => {
     const onboardingResponse = {
       status: 200,

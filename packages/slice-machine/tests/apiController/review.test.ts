@@ -4,7 +4,7 @@ jest.mock("../../server/src/api/services/getEnv");
 import reviewHandler from "../../server/src/api/tracking/review";
 import getEnv from "../../server/src/api/services/getEnv";
 
-describe("review tracking", () => {
+describe("review tracking controller", () => {
   test("it should return no error on 200 status from the tracking service", async () => {
     const onboardingResponse = {
       status: 200,
