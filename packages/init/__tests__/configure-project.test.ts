@@ -23,16 +23,16 @@ jest.mock("@slicemachine/core", () => {
     FileSystem: {
       ...actualCore.FileSystem,
       retrieveManifest: jest.fn<
-        Core.FileSystem.FileContent<Core.FileSystem.Manifest>,
+        Core.FileSystem.FileContent<Core.Models.Manifest>,
         [{ cwd: string }]
       >(),
       createManifest: jest.fn<
         void,
-        [{ cwd: string; manifest: Core.FileSystem.Manifest }]
+        [{ cwd: string; manifest: Core.Models.Manifest }]
       >(),
       patchManifest: jest.fn<
         boolean,
-        [{ cwd: string; data: Partial<Core.FileSystem.Manifest> }]
+        [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
       addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     },

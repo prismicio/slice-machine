@@ -6,6 +6,14 @@ import axios from "axios";
 
 import fs from "fs";
 import path from "path";
+import { getOrElseW } from "fp-ts/Either";
+import { PackageManager, Dependencies } from "../utils/PackageManager";
+import { PackageJsonHelper } from "@slicemachine/core/build/src/utils/PackageJson";
+import {
+  Manifest,
+  ManifestHelper,
+} from "@slicemachine/core/build/src/models/Manifest";
+import Files from "@slicemachine/core/build/src/utils/files";
 
 const downloadFile = async (reqUrl: string): Promise<string> => {
   const res = await axios({
@@ -28,8 +36,9 @@ const downloadFile = async (reqUrl: string): Promise<string> => {
 
 export async function installLib(
   cwd: string,
-  libGithubPath: string
-): Promise<string[]> {
+  libGithubPath: string,
+  branch: string | undefined = "main"
+): Promise<string[] | undefined> {
   const spinner = Utils.spinner(
     `Installing the ${libGithubPath} lib in your project...`
   );
@@ -38,49 +47,59 @@ export async function installLib(
     spinner.start();
 
     // How to handle vs main/master ?
-    const mainBranchName = "main";
-    const source = `https://codeload.github.com/${libGithubPath}/zip/${mainBranchName}`;
+    const [githubUserName, githubProjectName] = libGithubPath.split("/");
+    const source = `https://codeload.github.com/${libGithubPath}/zip/${branch}`;
 
     const zipFilePath = await downloadFile(source);
-    const projectPath = path.join(
-      zipFilePath,
-      `${libGithubPath.split("/")[1]}-${mainBranchName}`
-    );
+    const outputFolder = `${githubProjectName}-${branch}`;
+    const projectPath = path.join(zipFilePath, outputFolder);
 
     // Which name we want to use for the lib ?
-    const pathToPkg = path.join(projectPath, "package.json");
-    const packageFile: { name?: string } = JSON.parse(
-      fs.readFileSync(pathToPkg, "utf-8")
-    ) as { name?: string };
-
-    if (!packageFile.name) {
-      spinner.fail(`Error installing ${libGithubPath} lib!`);
-      process.exit(-1);
-    }
-
-    const name = packageFile.name;
-
+    const name = `${githubUserName}-${githubProjectName}`;
     const libDestinationFolder = path.join(cwd, name);
 
     // How we handle the lib already installed ?
     if (fs.existsSync(libDestinationFolder)) {
       spinner.succeed(`Lib "${libGithubPath}" was already installed (skipped)`);
-      return [`~/${name}/slices`];
+      return;
     }
 
     // We copy all the slices into the the user project
     fsExtra.moveSync(path.join(projectPath, "src"), libDestinationFolder);
+
+    // handle dependencies
+    const pkgManager = PackageManager.get(cwd);
+    const pkgJson = PackageJsonHelper.fromPath(
+      path.join(projectPath, "package.json")
+    );
+    if (pkgJson instanceof Error) throw pkgJson;
+
+    pkgManager.install(Dependencies.fromPkgFormat(pkgJson.dependencies));
+
+    const manifest = Files.readEntity<Error | Manifest>(
+      path.join(projectPath, "sm.json"),
+      (payload: unknown) => {
+        return getOrElseW(
+          () => new Error(`Unable to parse sm.json from lib ${libGithubPath}`)
+        )(Manifest.decode(payload));
+      }
+    );
+    if (manifest instanceof Error) throw manifest;
+
+    const localLibs = ManifestHelper.localLibraries(manifest).map(
+      ({ path }) => {
+        return `~/${name}/${path.replace("src/", "")}`;
+      }
+    );
 
     spinner.succeed(
       `Slice library "${libGithubPath}" was installed successfully`
     );
 
     // If the libs have multiple slice libs here we are grouping them into one
-    return [`~/${name}/slices`];
+    return localLibs;
   } catch {
     spinner.fail(`Error installing ${libGithubPath} lib!`);
     process.exit(-1);
-
-    return [];
   }
 }

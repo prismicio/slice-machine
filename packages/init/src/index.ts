@@ -17,7 +17,8 @@ import { findArgument } from "./utils";
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
-  const lib: string | null = findArgument(process.argv, "lib") || null;
+  const lib: string | undefined = findArgument(process.argv, "library");
+  const branch: string | undefined = findArgument(process.argv, "branch");
 
   console.log(
     Utils.purple(
@@ -51,11 +52,11 @@ async function init() {
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
 
-  let sliceLibPath: string[] = [];
-
-  if (lib) {
-    sliceLibPath = await installLib(cwd, lib);
-  }
+  const sliceLibPath = await (() => {
+    if (lib) {
+      return installLib(cwd, lib, branch);
+    }
+  })();
 
   // configure the SM.json file and the json package file of the project..
   configureProject(cwd, base, name, frameworkResult, sliceLibPath);

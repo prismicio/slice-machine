@@ -9,7 +9,7 @@ export function configureProject(
   base: Base,
   repository: string,
   framework: FrameworkResult,
-  sliceLibPath: string[]
+  sliceLibPath: string[] = []
 ): void {
   const spinner = Utils.spinner(
     `Configuring your ${framework.value} & Prismic project...`
