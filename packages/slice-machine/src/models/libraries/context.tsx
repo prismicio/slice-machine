@@ -9,13 +9,13 @@ import { LibraryUI } from "lib/models/common/LibraryUI";
 import { SliceMockConfig } from "lib/models/common/MockConfig";
 
 export const LibrariesContext = React.createContext<
-  Partial<ReadonlyArray<LibraryState>>
->([]);
+  ReadonlyArray<LibraryState> | undefined
+>(undefined);
 
 type LibraryHandlerProps = {
-  libraries: ReadonlyArray<LibraryUI>;
+  libraries: ReadonlyArray<LibraryUI> | undefined;
   env: FrontEndEnvironment;
-  remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
 };
 
 const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
@@ -24,23 +24,25 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
   remoteSlices,
   env,
 }) => {
-  const models: ReadonlyArray<LibraryState> = libraries.map((lib) => {
-    return {
-      name: lib.name,
-      isLocal: lib.isLocal,
-      components: lib.components.map((component) =>
-        useModelReducer({
-          slice: component,
-          mockConfig: SliceMockConfig.getSliceMockConfig(
-            env.mockConfig,
-            lib.name,
-            component.infos.sliceName
-          ),
-          remoteSlice: remoteSlices?.find((e) => e.id === component.model.id),
-        })
-      ),
-    };
-  });
+  const models: ReadonlyArray<LibraryState> | undefined = libraries?.map(
+    (lib) => {
+      return {
+        name: lib.name,
+        isLocal: lib.isLocal,
+        components: lib.components.map((component) =>
+          useModelReducer({
+            slice: component,
+            mockConfig: SliceMockConfig.getSliceMockConfig(
+              env.mockConfig,
+              lib.name,
+              component.infos.sliceName
+            ),
+            remoteSlice: remoteSlices?.find((e) => e.id === component.model.id),
+          })
+        ),
+      };
+    }
+  );
 
   return (
     <LibrariesContext.Provider value={models}>
