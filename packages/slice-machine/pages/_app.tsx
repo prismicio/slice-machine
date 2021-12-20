@@ -29,7 +29,7 @@ async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function mapSlices(libraries: ReadonlyArray<LibraryUI> | undefined) {
+function mapSlices(libraries: ReadonlyArray<LibraryUI> | null) {
   return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,
@@ -88,10 +88,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       </Head>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <SliceMachineApp
-            theme={theme}
-            serverState={serverState}
-          >
+          <SliceMachineApp theme={theme} serverState={serverState}>
             {isLoadingData ? <LoadingPage /> : <Component {...pageProps} />}
           </SliceMachineApp>
         </PersistGate>

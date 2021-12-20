@@ -134,7 +134,7 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          customTypes.length ? (
+          customTypes.length === 0 ? (
             <Button
               onClick={() => setIsOpen(true)}
               sx={{
@@ -157,7 +157,7 @@ const CustomTypes: React.FunctionComponent = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? (
+      {customTypes.length === 0 ? (
         <EmptyState
           title={"Create your first Custom Type"}
           explanations={[

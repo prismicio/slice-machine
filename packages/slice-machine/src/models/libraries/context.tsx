@@ -8,12 +8,11 @@ import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import { SliceMockConfig } from "lib/models/common/MockConfig";
 
-export const LibrariesContext = React.createContext<
-  ReadonlyArray<LibraryState> | undefined
->(undefined);
+export const LibrariesContext =
+  React.createContext<ReadonlyArray<LibraryState> | null>(null);
 
 type LibraryHandlerProps = {
-  libraries: ReadonlyArray<LibraryUI> | undefined;
+  libraries: ReadonlyArray<LibraryUI> | null;
   env: FrontEndEnvironment;
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
 };
@@ -24,8 +23,9 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
   remoteSlices,
   env,
 }) => {
-  const models: ReadonlyArray<LibraryState> | undefined = libraries?.map(
-    (lib) => {
+  const models: ReadonlyArray<LibraryState> | null =
+    libraries &&
+    libraries.map((lib) => {
       return {
         name: lib.name,
         isLocal: lib.isLocal,
@@ -41,8 +41,7 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
           })
         ),
       };
-    }
-  );
+    });
 
   return (
     <LibrariesContext.Provider value={models}>
