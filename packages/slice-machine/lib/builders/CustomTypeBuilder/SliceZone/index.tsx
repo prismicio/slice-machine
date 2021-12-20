@@ -91,10 +91,7 @@ const SliceZone = ({
   const libraries = useContext(LibrariesContext);
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
-    ? mapAvailableAndSharedSlices(
-        sliceZone,
-        libraries as ReadonlyArray<LibraryState>
-      )
+    ? mapAvailableAndSharedSlices(sliceZone, libraries)
     : { availableSlices: [], slicesInSliceZone: [], notFound: [] };
 
   useEffect(() => {

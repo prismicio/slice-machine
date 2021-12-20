@@ -12,11 +12,11 @@ export interface ConfigErrors {
 
 export default interface ServerState {
   env: FrontEndEnvironment;
-  libraries?: ReadonlyArray<LibraryUI>;
-  customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteSlices?: ReadonlyArray<Models.SliceAsObject>;
-  clientError?: ErrorWithStatus;
+  libraries: ReadonlyArray<LibraryUI> | undefined;
+  customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  clientError: ErrorWithStatus | undefined;
   configErrors: ConfigErrors;
   warnings: ReadonlyArray<Warning>;
 }

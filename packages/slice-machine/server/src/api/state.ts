@@ -78,7 +78,7 @@ export const getBackendState = async (
 
   const warnings = await createWarnings(env, clientError);
 
-  await generate(env, libraries);
+  if (libraries) await generate(env, libraries);
 
   return {
     libraries,
@@ -105,7 +105,7 @@ export default async function handler(
     prismicAPIUrl: prismicData.base,
   };
 
-  req.tracker.libraries(serverState.libraries);
+  if (serverState.libraries) req.tracker.libraries(serverState.libraries);
 
   return {
     ...serverState,
