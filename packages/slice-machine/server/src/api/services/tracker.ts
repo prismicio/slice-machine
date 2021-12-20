@@ -1,85 +1,79 @@
-import Analytics from "analytics-node";
+import ServerAnalytics from "analytics-node";
 import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 
-export interface TrackerOptions {
-  flushAt?: number | undefined;
-  flushInterval?: number | undefined;
-  timeout?: number | string | undefined;
+export enum EventType {
+  Demo = "Demo Event",
 }
 
-// the default tracker should do nothing if parts are missing, it's a placeholder to prevent runtime errors in the meantime
-const DEFAULT_TRACKER: Tracker = {
-  libraries() {},
-  resolveUser: () => {},
-};
-
-export class TrackerBuilder {
-  readonly analytics: Analytics;
-  readonly slicemachineVersion: string;
-
+export class ServerTracker {
   constructor(
-    readonly key: string | undefined,
-    readonly smVersion: string | undefined,
-    readonly credentials: {
-      readonly userId?: string | undefined;
-      readonly anonymousId?: string | undefined;
-    },
-    readonly repo: string | undefined,
-    readonly options: TrackerOptions
-  ) {
-    if (!key) throw new Error("Missing write key for tracker.");
+    readonly analytics: ServerAnalytics,
+    readonly repo: string,
+    readonly identifier: { userId: string } | { anonymousId: string }
+  ) {}
 
-    this.analytics = new Analytics(key, this.options);
-    this.slicemachineVersion = smVersion || "default"; //default will be logged if we can't parse package.json
+  static build(
+    writeKey: string,
+    repo: string | undefined,
+    identifier: { userId: string } | { anonymousId: string }
+  ): ServerTracker | undefined {
+    try {
+      if (!repo) return;
+      const analytics = new ServerAnalytics(writeKey);
+      return new ServerTracker(analytics, repo, identifier);
+    } catch (error) {
+      console.warn(error);
+      return;
+    }
   }
 
-  build: () => Tracker = () => {
-    //TODO: see how we should handle these cases
-    if (
-      (!this.credentials.userId && !this.credentials.anonymousId) || // no one is authenticated and segment hasn't set an anonymousId yet.
-      !this.repo // we can't track as long as we're not tied to a repo.
-    )
-      return DEFAULT_TRACKER;
+  private trackEvent(
+    eventType: EventType,
+    attributes: Record<string, unknown> = {}
+  ): void {
+    this.analytics.track({
+      event: `[SliceMachine] ${eventType}`,
+      ...this.identifier,
+      ...attributes,
+    });
+  }
 
-    const validRepo = this.repo;
+  private groupEvent(traits: Record<string, unknown>): void {
+    this.analytics.group({
+      ...this.identifier,
+      groupId: this.repo,
+      traits,
+    });
+  }
 
-    return {
-      resolveUser: (userId: string, anonymousId?: string | undefined) => {
-        if (!anonymousId) {
-          console.log("Missing anonymousId, Unable to resolve user session.");
-          return;
-        }
-        this.analytics.alias({
-          userId,
-          previousId: anonymousId,
-        });
-      },
-
-      libraries: (libs: readonly LibraryUI[]) => {
-        const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
-
-        this.analytics.group({
-          ...(this.credentials.userId
-            ? { userId: this.credentials.userId }
-            : {}),
-          ...(this.credentials.anonymousId
-            ? { anonymousId: this.credentials.anonymousId }
-            : {}),
-          groupId: validRepo,
-          traits: {
-            manualLibsCount: libs.filter((l) => l.meta.isManual).length,
-            downloadedLibsCount: downloadedLibs.length,
-            npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-            downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
-            slicemachineVersion: this.slicemachineVersion,
-          },
-        });
-      },
-    };
+  Track = {
+    demoEvent: (attribute: string) => {
+      this.trackEvent(EventType.Demo, { attribute });
+    },
   };
-}
 
-export interface Tracker {
-  libraries: (libs: readonly LibraryUI[]) => void;
-  resolveUser: (userId: string, anonymousId?: string | undefined) => void;
+  Group = {
+    libraries: (libs: readonly LibraryUI[], smVersion: string) => {
+      const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+
+      this.groupEvent({
+        manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+        downloadedLibsCount: downloadedLibs.length,
+        npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+        downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+        slicemachineVersion: smVersion,
+      });
+    },
+  };
+
+  resolveUser = (userId: string, anonymousId?: string | undefined) => {
+    if (!anonymousId) {
+      console.log("Missing anonymousId, Unable to resolve user session.");
+      return;
+    }
+    this.analytics.alias({
+      userId,
+      previousId: anonymousId,
+    });
+  };
 }

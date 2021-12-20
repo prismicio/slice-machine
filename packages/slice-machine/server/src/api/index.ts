@@ -270,7 +270,7 @@ router.post(
     if (profile instanceof Error) return res.status(500).json({});
 
     PrismicSharedConfigManager.setProperties({ userId: profile.userId });
-    req.tracker.resolveUser(profile.userId, req.anonymousId);
+    req.tracker?.resolveUser(profile.userId, req.anonymousId);
 
     return res.status(200).json({});
   })

@@ -105,7 +105,11 @@ export default async function handler(
     prismicAPIUrl: prismicData.base,
   };
 
-  if (serverState.libraries) req.tracker.libraries(serverState.libraries);
+  if (serverState.libraries)
+    req.tracker?.Group.libraries(
+      serverState.libraries,
+      env.updateVersionInfo.currentVersion
+    );
 
   return {
     ...serverState,
