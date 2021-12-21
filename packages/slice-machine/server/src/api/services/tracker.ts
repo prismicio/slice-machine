@@ -2,7 +2,7 @@ import ServerAnalytics from "analytics-node";
 import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 
 export enum EventType {
-  Demo = "Demo Event",
+  Demo = "demo_event",
 }
 
 export class ServerTracker {
@@ -32,9 +32,9 @@ export class ServerTracker {
     attributes: Record<string, unknown> = {}
   ): void {
     this.analytics.track({
-      event: `[SliceMachine] ${eventType}`,
+      event: `slicemachine_${eventType}`,
       ...this.identifier,
-      ...attributes,
+      properties: attributes,
     });
   }
 
