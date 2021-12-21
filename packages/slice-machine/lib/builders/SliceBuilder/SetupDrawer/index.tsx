@@ -25,11 +25,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
 
-  const { framework, isPreviewAvailableForFramework } = useSelector(
+  const { storybook, framework, isPreviewAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
       framework: getFramework(state),
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
+      storybook: state.environment.env?.manifest.storybook,
     })
   );
 
@@ -92,17 +93,20 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           </Flex>
         </Flex>
         <HelpSection />
+        {!!storybook === false &&
+          (framework === Frameworks.next || framework === Frameworks.nuxt) && (
+            <StorybookSection framework={framework}></StorybookSection>
+          )}
       </Flex>
     </Drawer>
   );
 };
 
-const HelpSection = () => (
-  <Flex
-    sx={{
-      padding: "16px 20px",
-    }}
-  >
+const Section: React.FC<{
+  children: React.ReactNode;
+  heading: React.ReactNode;
+}> = ({ children, heading }) => (
+  <Flex sx={{ padding: "16px 20px" }}>
     <Flex
       sx={{
         padding: 3,
@@ -111,30 +115,46 @@ const HelpSection = () => (
         flexDirection: "column",
       }}
     >
-      <Flex
-        sx={{
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Flex
-          sx={{
-            mr: 2,
-          }}
-        >
+      <Flex sx={{ alignItems: "center", mb: 3 }}>
+        <Flex sx={{ mr: 2 }}>
           <FaRegQuestionCircle size={20} color="textGray" />
         </Flex>
-        <Text sx={{ fontSize: 2, fontWeight: 500 }}>Help Section</Text>
+        <Text sx={{ fontSize: 2, fontWeight: 500 }}>{heading}</Text>
       </Flex>
-      <Text sx={{ color: (t) => t.colors?.textClear }}>
-        Are you having difficulties setting up the preview? You can check{" "}
-        <Link target={"_blank"} href={"https://prismic.io"}>
-          the documentation
-        </Link>{" "}
-        for more info to set it up correctly.
-      </Text>
+      <Text sx={{ color: (t) => t.colors?.textClear }}>{children}</Text>
     </Flex>
   </Flex>
+);
+
+const HelpSection = () => (
+  <Section heading="Help Section">
+    Are you having difficulties setting up the preview? You can check{" "}
+    <Link target={"_blank"} href={"https://prismic.io"}>
+      the documentation
+    </Link>{" "}
+    for more info to set it up correctly.
+  </Section>
+);
+
+function linkToDocsForFramework(framework: Frameworks): string {
+  switch (framework) {
+    case Frameworks.next:
+      return "https://prismic.io/docs/technologies/storybook-nextjs";
+    case Frameworks.nuxt:
+      return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
+    default:
+      return "https://prismic.io/docs";
+  }
+}
+
+const StorybookSection: React.FC<{
+  framework: Frameworks;
+}> = ({ framework }) => (
+  <Section heading="Already using Storybook">
+    Want to still use Storybook for your project? You can check the{" "}
+    <Link href={linkToDocsForFramework(framework)}>documentation</Link> for more
+    info to update your configuration.
+  </Section>
 );
 
 export default SetupDrawer;
