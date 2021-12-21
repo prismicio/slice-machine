@@ -15,6 +15,7 @@ import ServerState from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import UpdateVersionModal from "../UpdateVersionModal";
+import { MissingLibraries } from "@components/MissingLibraries";
 
 const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   const { setColorMode } = useThemeUI();
@@ -45,33 +46,33 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
       <BaseStyles>
         <RemoveDarkMode>
           {!serverState ? (
-            <>{children}</>
+            children
           ) : (
-            <>
-              {!serverState || !serverState.libraries ? (
-                <>{children}</>
-              ) : (
-                <ToastProvider>
-                  <LibrariesProvider
-                    remoteSlices={serverState.remoteSlices}
-                    libraries={serverState.libraries}
-                    env={serverState.env}
-                  >
-                    <CustomTypesProvider
-                      customTypes={serverState.customTypes}
-                      remoteCustomTypes={serverState.remoteCustomTypes}
-                    >
-                      <AppLayout>
-                        <SliceHandler {...serverState}>{children}</SliceHandler>
-                      </AppLayout>
-                      <UpdateVersionModal />
-                      <LoginModal />
-                      <ReviewModal />
-                    </CustomTypesProvider>
-                  </LibrariesProvider>
-                </ToastProvider>
-              )}
-            </>
+            <ToastProvider>
+              <LibrariesProvider
+                remoteSlices={serverState.remoteSlices}
+                libraries={serverState.libraries}
+                env={serverState.env}
+              >
+                <CustomTypesProvider
+                  customTypes={serverState.customTypes}
+                  remoteCustomTypes={serverState.remoteCustomTypes}
+                >
+                  <AppLayout>
+                    <SliceHandler {...serverState}>
+                      {serverState.libraries?.length ? (
+                        <>{children}</>
+                      ) : (
+                        <MissingLibraries />
+                      )}
+                    </SliceHandler>
+                  </AppLayout>
+                  <UpdateVersionModal />
+                  <LoginModal />
+                  <ReviewModal />
+                </CustomTypesProvider>
+              </LibrariesProvider>
+            </ToastProvider>
           )}
         </RemoveDarkMode>
       </BaseStyles>

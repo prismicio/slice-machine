@@ -134,19 +134,21 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          <Button
-            onClick={() => setIsOpen(true)}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: "50%",
-              height: "48px",
-              width: "48px",
-            }}
-          >
-            <GoPlus size={"2em"} />
-          </Button>
+          customTypes.length === 0 ? (
+            <Button
+              onClick={() => setIsOpen(true)}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+                height: "48px",
+                width: "48px",
+              }}
+            >
+              <GoPlus size={"2em"} />
+            </Button>
+          ) : undefined
         }
         MainBreadcrumb={
           <Fragment>
@@ -155,7 +157,7 @@ const CustomTypes: React.FunctionComponent = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? (
+      {customTypes.length === 0 ? (
         <EmptyState
           title={"Create your first Custom Type"}
           explanations={[

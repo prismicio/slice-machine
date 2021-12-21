@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.0.2-alpha.17",
+  "version": "1.0.2-alpha.18",
   "license": "MIT",
   "description": "The easiest way to add Slice Machine to your project",
   "bin": {
@@ -47,7 +47,7 @@
   "dependencies": {
     "adm-zip": "^0.5.9",
     "axios": "^0.24.0",
-    "@slicemachine/core": "1.0.2-alpha.17",
+    "@slicemachine/core": "1.0.2-alpha.18",
     "fp-ts": "^2.11.5",
     "fs-extra": "^10.0.0",
     "inquirer": "^8.2.0",

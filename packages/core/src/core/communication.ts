@@ -6,8 +6,6 @@ import { pipe } from "fp-ts/function";
 import { fold, getOrElseW } from "fp-ts/Either";
 import { Repositories } from "../models/Repositories";
 
-export type { AxiosError } from "axios";
-
 const { DEFAULT_BASE, USER_SERVICE_BASE } = CONSTS;
 
 /**

@@ -6,11 +6,15 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 
-export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
+interface LibrariesResult {
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<LibraryUI>;
-}> {
+  libraries: ReadonlyArray<LibraryUI> | null;
+}
+
+export default async function handler(
+  env: BackendEnvironment
+): Promise<LibrariesResult> {
   try {
     const res = await env.client.getSlice();
     const { remoteSlices, clientError } = await (async () => {
@@ -27,10 +31,10 @@ export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
       return { remoteSlices: r };
     })();
 
-    const libraries = Libraries.libraries(
-      env.cwd,
-      env.manifest.libraries || []
-    );
+    if (!env.manifest.libraries)
+      return { remoteSlices, libraries: null, clientError };
+
+    const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
 
     const withFlags = libraries.map((lib) =>
       LibraryUI.build(lib, remoteSlices, env)
@@ -43,12 +47,4 @@ export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
       remoteSlices: [],
     };
   }
-}
-
-export default async function handler(env: BackendEnvironment): Promise<{
-  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
-  clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<LibraryUI>;
-}> {
-  return getLibrariesWithFlags(env);
 }

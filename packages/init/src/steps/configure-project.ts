@@ -29,6 +29,14 @@ export function configureProject(
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
     else FileSystem.patchManifest(cwd, manifestUpdated);
 
+    // create the default slices folder if it doesn't exist.
+    const pathToSlicesFolder = FileSystem.CustomPaths(cwd)
+      .library("slices")
+      .value();
+    if (!Utils.Files.exists(pathToSlicesFolder))
+      Utils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+
+    // add slicemachine script to package.json.
     FileSystem.addJsonPackageSmScript(cwd);
 
     spinner.succeed("Project configured! Ready to start");
