@@ -81,15 +81,13 @@ const SlicesIndex: React.FunctionComponent = () => {
     (l) => l.isLocal
   );
 
-  const sliceCount = libraries?.length
-    ? libraries.reduce((count, lib) => {
-        if (!lib) {
-          return count;
-        }
+  const sliceCount = (libraries || []).reduce((count, lib) => {
+    if (!lib) {
+      return count;
+    }
 
-        return count + lib.components.length;
-      }, 0)
-    : 0;
+    return count + lib.components.length;
+  }, 0);
 
   return (
     <>
@@ -109,7 +107,7 @@ const SlicesIndex: React.FunctionComponent = () => {
         >
           <Header
             ActionButton={
-              localLibraries?.length && sliceCount != 0 ? (
+              localLibraries?.length != 0 && sliceCount != 0 ? (
                 <CreateSliceButton
                   onClick={() => setIsOpen(true)}
                   loading={isCreatingSlice}
@@ -203,7 +201,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           )}
         </Box>
       </Container>
-      {localLibraries?.length ? (
+      {localLibraries && localLibraries.length > 0 && (
         <CreateSliceModal
           isOpen={isOpen}
           close={() => setIsOpen(false)}
@@ -216,7 +214,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             from: string;
           }) => _onCreate({ sliceName, from })}
         />
-      ) : null}
+      )}
     </>
   );
 };

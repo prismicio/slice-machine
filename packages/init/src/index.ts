@@ -10,12 +10,15 @@ import {
   configureProject,
   displayFinalMessage,
   detectFramework,
+  installLib,
 } from "./steps";
 import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const lib: string | undefined = findArgument(process.argv, "library");
+  const branch: string | undefined = findArgument(process.argv, "branch");
 
   console.log(
     Utils.purple(
@@ -49,8 +52,10 @@ async function init() {
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
 
+  const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
+
   // configure the SM.json file and the json package file of the project..
-  configureProject(cwd, base, name, frameworkResult);
+  configureProject(cwd, base, name, frameworkResult, sliceLibPath);
 
   // ask the user to run slice-machine.
   displayFinalMessage(cwd);

@@ -61,7 +61,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
                   <AppLayout>
                     <SliceHandler {...serverState}>
                       {serverState.libraries?.length ? (
-                        children
+                        <>{children}</>
                       ) : (
                         <MissingLibraries />
                       )}

@@ -9,7 +9,7 @@ import {
 import { warningStates } from "lib/consts";
 
 import { FiZap } from "react-icons/fi";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getConfigErrors, getWarnings } from "@src/modules/environment";

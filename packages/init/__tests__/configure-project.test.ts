@@ -68,7 +68,7 @@ describe("configure-project", () => {
   const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
-    value: Core.Models.Frameworks.react,
+    value: Core.Utils.Framework.Frameworks.react,
     manuallyAdded: false,
   };
 
@@ -89,7 +89,7 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -103,16 +103,45 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Models.Frameworks.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toBeCalled();
+    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+      apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
+      framework: "react",
+      libraries: ["@/slices"],
+    });
+
+    expect(successFn).toHaveBeenCalled();
+    expect(failFn).not.toHaveBeenCalled();
+  });
+
+  test("it should patch the existing manifest with external lib", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: true,
+      content: {
+        framework: Core.Utils.Framework.Frameworks.react,
+      },
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, [
+      "@/material/slices",
+    ]);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).not.toBeCalled();
+    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+      apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
+      framework: "react",
+      libraries: ["@/slices", "@/material/slices"],
+    });
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
@@ -124,7 +153,7 @@ describe("configure-project", () => {
     });
 
     // process.exit should throw
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -143,7 +172,7 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -157,14 +186,14 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Models.Frameworks.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     patchManifestMock.mockImplementation(() => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -184,7 +213,7 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();

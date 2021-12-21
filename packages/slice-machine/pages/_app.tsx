@@ -30,7 +30,7 @@ async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-function mapSlices(libraries: ReadonlyArray<LibraryUI> | undefined) {
+function mapSlices(libraries: ReadonlyArray<LibraryUI> | null) {
   return (libraries || []).reduce((acc, lib) => {
     return {
       ...acc,

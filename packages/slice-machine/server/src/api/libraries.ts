@@ -9,7 +9,7 @@ import { LibraryUI } from "@lib/models/common/LibraryUI";
 interface LibrariesResult {
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<LibraryUI> | undefined;
+  libraries: ReadonlyArray<LibraryUI> | null;
 }
 
 export default async function handler(
@@ -32,7 +32,7 @@ export default async function handler(
     })();
 
     if (!env.manifest.libraries)
-      return { remoteSlices, libraries: undefined, clientError };
+      return { remoteSlices, libraries: null, clientError };
 
     const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
 

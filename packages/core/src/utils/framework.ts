@@ -2,6 +2,8 @@ import { retrieveJsonPackage } from "../filesystem";
 import { Frameworks, SupportedFrameworks } from "../models/Framework";
 import { Manifest } from "../models/Manifest";
 
+export { Frameworks } from "../models/Framework";
+
 export const UnsupportedFrameWorks = Object.values(Frameworks).filter(
   (framework) => SupportedFrameworks.includes(framework) === false
 );
