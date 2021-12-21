@@ -3,7 +3,7 @@ import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 
 export type EnvironmentStoreType = {
-  env: FrontEndEnvironment | null;
+  env: FrontEndEnvironment;
   warnings: ReadonlyArray<Warning>;
   configErrors: ConfigErrors;
 };

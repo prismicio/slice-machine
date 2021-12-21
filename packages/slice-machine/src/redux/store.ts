@@ -1,5 +1,6 @@
 import { createStore, compose, Store } from "redux";
 import createReducer from "./reducer";
+import { EnvironmentStoreType } from "@src/modules/environment/types";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -17,7 +18,9 @@ declare const window: {
 };
 
 export default function configureStore(
-  preloadedState: Partial<SliceMachineStoreType> = {}
+  preloadedState: {
+    environment: EnvironmentStoreType;
+  } & Partial<SliceMachineStoreType>
 ): { store: Store; persistor: Persistor } {
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
@@ -26,7 +29,7 @@ export default function configureStore(
       ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       : compose;
 
-  const rootReducer = createReducer();
+  const rootReducer = createReducer(preloadedState.environment);
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);
   const store: Store<SliceMachineStoreType> = createStore(

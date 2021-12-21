@@ -11,12 +11,6 @@ import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { previewIsSupported } from "@lib/utils";
 
-const initialState: EnvironmentStoreType = {
-  warnings: [],
-  configErrors: {},
-  env: null,
-};
-
 // Action Creators
 export const getEnvironmentCreator = createAction(
   "ENVIRONMENT/GET.RESPONSE"
@@ -27,7 +21,7 @@ type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
 // Selectors
 export const getEnvironment = (
   store: SliceMachineStoreType
-): FrontEndEnvironment | null => store.environment.env;
+): FrontEndEnvironment => store.environment.env;
 
 export const selectIsThePreviewSetUp = (
   store: SliceMachineStoreType
@@ -63,17 +57,18 @@ export const getUpdateVersionInfo = (
 };
 
 // Reducer
-export const environmentReducer: Reducer<
-  EnvironmentStoreType,
-  EnvironmentActions
-> = (state = initialState, action) => {
-  switch (action.type) {
-    case getType(getEnvironmentCreator):
-      return {
-        ...state,
-        ...action.payload,
-      };
-    default:
-      return state;
-  }
+export const environmentReducer = (
+  environment: EnvironmentStoreType
+): Reducer<EnvironmentStoreType, EnvironmentActions> => {
+  return (_state, action) => {
+    switch (action.type) {
+      case getType(getEnvironmentCreator):
+        return {
+          ...environment,
+          ...action.payload,
+        };
+      default:
+        return environment;
+    }
+  };
 };

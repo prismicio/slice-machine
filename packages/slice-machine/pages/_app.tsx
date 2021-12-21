@@ -44,8 +44,6 @@ function mapSlices(libraries: ReadonlyArray<LibraryUI> | null) {
   }, {});
 }
 
-const { store, persistor } = configureStore();
-
 function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   const { data: serverState }: { data?: ServerState } = useSwr(
     "/api/state",
@@ -79,6 +77,20 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     console.log("Warnings: ", { warnings });
     console.log("------ End of log ------");
   }, [serverState]);
+
+  console.log({ serverState });
+  if (!serverState)
+    return (
+      <>
+        <Head>
+          <title>SliceMachine</title>
+        </Head>
+        <LoadingPage />
+      </>
+    );
+  const { store, persistor } = configureStore({
+    environment: { env: serverState.env, warnings: [], configErrors: {} },
+  });
 
   return (
     <>

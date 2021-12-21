@@ -8,16 +8,17 @@ import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
-
+import { EnvironmentStoreType } from "@src/modules/environment/types";
 /**
  * Creates the main reducer
  */
-const createReducer = (): Reducer =>
-  combineReducers({
+const createReducer = (environment: EnvironmentStoreType): Reducer => {
+  return combineReducers({
     modal: modalReducer,
     loading: loadingReducer,
     userContext: userContextReducer,
-    environment: environmentReducer,
+    environment: environmentReducer(environment),
   });
+};
 
 export default createReducer;
