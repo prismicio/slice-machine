@@ -16,3 +16,20 @@ export const Manifest = t.intersection([
 ]);
 
 export type Manifest = t.TypeOf<typeof Manifest>;
+
+export const ManifestHelper = {
+  localLibraries(
+    manifest: Manifest
+  ): ReadonlyArray<{ prefix: string; path: string }> {
+    return (manifest.libraries || [])
+      .filter((l) => l.startsWith("~/") || l.startsWith("@/"))
+      .map((lib) => {
+        const prefix = lib.indexOf("~") != -1 ? `~` : `@`;
+        return {
+          prefix,
+          path: lib.replace(`${prefix}/`, ""),
+          fullPath: lib,
+        };
+      });
+  },
+};

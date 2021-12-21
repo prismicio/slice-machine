@@ -1,15 +1,15 @@
 import util from "util";
 import { exec } from "child_process";
 
-export function findArgument(args: string[], name: string): string | null {
+export function findArgument(args: string[], name: string): string | undefined {
   const flagIndex: number = args.indexOf(`--${name}`);
 
-  if (flagIndex === -1) return null;
-  if (args.length < flagIndex + 2) return null;
+  if (flagIndex === -1) return;
+  if (args.length < flagIndex + 2) return;
 
   const flagValue = args[flagIndex + 1];
 
-  if (flagValue.startsWith("--")) return null;
+  if (flagValue.startsWith("--")) return;
   return flagValue;
 }
 
