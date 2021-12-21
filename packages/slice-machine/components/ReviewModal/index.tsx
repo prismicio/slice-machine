@@ -19,14 +19,15 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
+import { TrackerContext } from "@src/utils/tracker";
 import {
   userHasDoneTheOnboarding,
   userHasSendAReview,
 } from "@src/modules/userContext";
 import { useToasts } from "react-toast-notifications";
-import { sendTrackingReview } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getEnvironment } from "@src/modules/environment";
 
 Modal.setAppElement("#__next");
 
@@ -65,12 +66,16 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
+  const tracker = useContext(TrackerContext);
+
   const {
+    env,
     isReviewLoading,
     isLoginModalOpen,
     hasSendAReview,
     hasDoneTheOnboarding,
   } = useSelector((store: SliceMachineStoreType) => ({
+    env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
@@ -108,7 +113,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   ): Promise<void> => {
     try {
       startLoadingReview();
-      await sendTrackingReview(rating, comment);
+      tracker?.Track.review(env.framework, rating, comment);
       sendAReview();
       stopLoadingReview();
     } catch (error) {

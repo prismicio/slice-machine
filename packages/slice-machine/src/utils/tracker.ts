@@ -4,6 +4,7 @@ import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 
 export enum EventType {
+  Review = "review",
   Demo = "Demo Event",
 }
 
@@ -28,8 +29,7 @@ export class ClientTracker {
     attributes: Record<string, unknown> = {}
   ): void {
     this.analytics
-      .track(`[SliceMachine] ${eventType}`, {
-        userId: "dd",
+      .track(`slicemachine_${eventType}`, {
         ...attributes,
       })
       .catch(() => console.error(`Couldn't report event ${eventType}`));
@@ -40,8 +40,8 @@ export class ClientTracker {
   }
 
   Track = {
-    demoEvent: (attribute: string) => {
-      this.trackEvent(EventType.Demo, { attribute });
+    review: (framework: string, rating: number, comment: string) => {
+      this.trackEvent(EventType.Review, { rating, comment, framework });
     },
   };
 
@@ -52,4 +52,6 @@ export class ClientTracker {
   };
 }
 
-export const AppContext = createContext<ClientTracker | undefined>(undefined);
+export const TrackerContext = createContext<ClientTracker | undefined>(
+  undefined
+);
