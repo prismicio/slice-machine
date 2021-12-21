@@ -52,11 +52,7 @@ async function init() {
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
 
-  const sliceLibPath = await (() => {
-    if (lib) {
-      return installLib(cwd, lib, branch);
-    }
-  })();
+  const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
 
   // configure the SM.json file and the json package file of the project..
   configureProject(cwd, base, name, frameworkResult, sliceLibPath);
