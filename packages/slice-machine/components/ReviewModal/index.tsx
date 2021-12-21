@@ -113,7 +113,8 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   ): Promise<void> => {
     try {
       startLoadingReview();
-      tracker?.Track.review(env.framework, rating, comment);
+      // env should never be undefined or null
+      env?.framework && tracker?.Track.review(env.framework, rating, comment);
       sendAReview();
       stopLoadingReview();
     } catch (error) {
