@@ -47,6 +47,7 @@ export class ServerTracker {
   }
 
   Track = {
+    // not called, for demo only
     demoEvent: (attribute: string) => {
       this.trackEvent(EventType.Demo, { attribute });
     },

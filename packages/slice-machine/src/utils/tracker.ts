@@ -5,7 +5,6 @@ import { AnalyticsBrowser } from "@segment/analytics-next";
 
 export enum EventType {
   Review = "review",
-  Demo = "Demo Event",
 }
 
 export class ClientTracker {
@@ -46,6 +45,7 @@ export class ClientTracker {
   };
 
   Group = {
+    // for demo only, it's not called
     demoGroup: (demoTraits: Record<string, unknown>) => {
       this.groupEvent(demoTraits);
     },

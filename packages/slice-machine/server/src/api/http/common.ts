@@ -27,7 +27,7 @@ export function WithEnv(
     const tracker =
       identifier &&
       ServerTracker.build(
-        process.env.SEGMENT_WRITE_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
         env.repo,
         identifier
       );
