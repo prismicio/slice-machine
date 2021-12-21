@@ -133,10 +133,10 @@ const SliceBuilder: React.FunctionComponent = () => {
       <SetupDrawer />
       {isWaitingForIframeCheck && (
         <IframeRenderer
+          dryRun
           size={Size.FULL}
           canvasUrl={canvasUrl}
           sliceView={sliceView}
-          dryRun={true}
         />
       )}
     </Box>

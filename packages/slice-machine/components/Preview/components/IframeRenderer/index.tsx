@@ -80,9 +80,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       .then(() => {
         connectToPreviewSuccess();
       })
-      .catch((error) => {
+      .catch(() => {
         connectToPreviewFailure();
-        console.log({ error });
       });
   }, [client, size, sliceView]);
 
@@ -101,6 +100,14 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           margin: "0 auto",
           overflow: "auto",
           ...iframeSizes[size],
+          ...(dryRun
+            ? {
+                position: "absolute",
+                top: "0",
+                width: "0",
+                height: "0",
+              }
+            : {}),
         }}
       >
         <iframe
