@@ -11,7 +11,11 @@ import SliceState from "@lib/models/ui/SliceState";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
+import {
+  selectIsPreviewAvailableForFramework,
+  getFramework,
+  getStorybookUrl,
+} from "@src/modules/environment";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -87,10 +91,12 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 
   const router = useRouter();
 
-  const { isPreviewAvailableForFramework } = useSelector(
+  const { isPreviewAvailableForFramework, framework, storybook } = useSelector(
     (state: SliceMachineStoreType) => ({
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
+      framework: getFramework(state),
+      storybook: getStorybookUrl(state),
     })
   );
 
@@ -116,15 +122,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         />
       </Card>
       {!isPreviewAvailableForFramework ? (
-        <>
-          <Button variant="disabledSecondary" sx={{ width: "100%", mt: 3 }}>
-            Open Slice Preview
-          </Button>
-          <Text as="p" sx={{ textAlign: "center", mt: 3, color: "textGray" }}>
-            Slice Preview is not supported by your framework. You can use
-            Storybook instead.
-          </Text>
-        </>
+        <StoryBookOrPreview linkToStorybook={storybook} framework={framework} />
       ) : (
         <PreviewState
           isPreviewSetup={isPreviewSetup}
@@ -133,6 +131,57 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         />
       )}
     </Box>
+  );
+};
+
+function storyBookInstallLink(framework?: string) {
+  switch (framework) {
+    case "react":
+      return "https://storybook.js.org/docs/react/get-started/install";
+    case "vue":
+      return "https://storybook.js.org/docs/vue/get-started/install";
+    case "svelte":
+      return "https://storybook.js.org/docs/svelte/get-started/install";
+    default:
+      return "https://storybook.js.org/";
+  }
+}
+
+const StoryBookOrPreview: React.FC<{
+  linkToStorybook: string | null;
+  framework?: string;
+}> = ({ linkToStorybook, framework }) => {
+  if (linkToStorybook) {
+    return (
+      <Link href={linkToStorybook}>
+        <Button sx={{ width: "100%", mt: 3 }}>Open Storybook</Button>
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      <Button variant="disabledSecondary" sx={{ width: "100%", mt: 3 }}>
+        Open Slice Preview
+      </Button>
+      <Text
+        as="p"
+        sx={{
+          textAlign: "center",
+          mt: 3,
+          color: "textGray",
+          "::first-letter": {
+            "text-transform": "uppercase",
+          },
+        }}
+      >
+        {framework
+          ? `${framework} does not support Slice Preview.`
+          : "Slice Preview is not supported by your framework."}{" "}
+        You can <a href={storyBookInstallLink(framework)}>install Storybook</a>{" "}
+        instead.
+      </Text>
+    </>
   );
 };
 
