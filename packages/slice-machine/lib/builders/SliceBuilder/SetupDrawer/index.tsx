@@ -93,11 +93,9 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           </Flex>
         </Flex>
         {!!storybook === false &&
-        (framework === Frameworks.next || framework === Frameworks.nuxt) ? (
-          <StorybookSection framework={framework}></StorybookSection>
-        ) : (
-          <HelpSection />
-        )}
+          (framework === Frameworks.next || framework === Frameworks.nuxt) && (
+            <StorybookSection framework={framework}></StorybookSection>
+          )}
       </Flex>
     </Drawer>
   );
@@ -125,16 +123,6 @@ const Section: React.FC<{
       <Text sx={{ color: (t) => t.colors?.textClear }}>{children}</Text>
     </Flex>
   </Flex>
-);
-
-const HelpSection = () => (
-  <Section heading="Help Section">
-    Are you having difficulties setting up the preview? You can check{" "}
-    <Link target={"_blank"} href={"https://prismic.io"}>
-      the documentation
-    </Link>{" "}
-    for more info to set it up correctly.
-  </Section>
 );
 
 function linkToDocsForFramework(framework: Frameworks): string {
