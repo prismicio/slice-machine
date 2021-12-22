@@ -11,7 +11,11 @@ import SliceState from "@lib/models/ui/SliceState";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectIsPreviewAvailableForFramework } from "@src/modules/environment";
+import {
+  selectIsPreviewAvailableForFramework,
+  getFramework,
+  getStorybookUrl,
+} from "@src/modules/environment";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -91,8 +95,8 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
     (state: SliceMachineStoreType) => ({
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
-      framework: state.environment.env?.framework,
-      storybook: state.environment.env?.manifest.storybook,
+      framework: getFramework(state),
+      storybook: getStorybookUrl(state),
     })
   );
 
@@ -118,11 +122,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         />
       </Card>
       {!isPreviewAvailableForFramework ? (
-        <StoryBookOrPreview
-          hasStorybook={!!storybook}
-          linkToStorybook={storybook}
-          framework={framework}
-        />
+        <StoryBookOrPreview linkToStorybook={storybook} framework={framework} />
       ) : (
         <PreviewState
           isPreviewSetup={isPreviewSetup}
@@ -148,11 +148,10 @@ function storyBookInstallLink(framework?: string) {
 }
 
 const StoryBookOrPreview: React.FC<{
-  hasStorybook: boolean;
-  linkToStorybook?: string;
+  linkToStorybook: string | null;
   framework?: string;
-}> = ({ hasStorybook, linkToStorybook, framework }) => {
-  if (hasStorybook && linkToStorybook) {
+}> = ({ linkToStorybook, framework }) => {
+  if (linkToStorybook) {
     return (
       <Link href={linkToStorybook}>
         <Button sx={{ width: "100%", mt: 3 }}>Open Storybook</Button>

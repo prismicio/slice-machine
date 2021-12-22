@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Drawer from "rc-drawer";
-import { Close, Flex, Link, Text } from "theme-ui";
-import { FaRegQuestionCircle } from "react-icons/fa";
+import { Close, Flex, Text } from "theme-ui";
 
 import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
@@ -11,8 +10,10 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
+  getStorybookUrl,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import StorybookSection from "./components/StorybookSection";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -30,7 +31,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
       framework: getFramework(state),
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
-      storybook: state.environment.env?.manifest.storybook,
+      storybook: getStorybookUrl(state),
     })
   );
 
@@ -92,58 +93,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             )}
           </Flex>
         </Flex>
-        {!!storybook === false &&
-          (framework === Frameworks.next || framework === Frameworks.nuxt) && (
-            <StorybookSection framework={framework}></StorybookSection>
-          )}
+        {!!storybook === false && !!framework && (
+          <StorybookSection framework={framework} />
+        )}
       </Flex>
     </Drawer>
   );
 };
-
-const Section: React.FC<{
-  children: React.ReactNode;
-  heading: React.ReactNode;
-}> = ({ children, heading }) => (
-  <Flex sx={{ padding: "16px 20px" }}>
-    <Flex
-      sx={{
-        padding: 3,
-        backgroundColor: (t) => `${t.colors?.gray}`,
-        borderRadius: 8,
-        flexDirection: "column",
-      }}
-    >
-      <Flex sx={{ alignItems: "center", mb: 3 }}>
-        <Flex sx={{ mr: 2 }}>
-          <FaRegQuestionCircle size={20} color="textGray" />
-        </Flex>
-        <Text sx={{ fontSize: 2, fontWeight: 500 }}>{heading}</Text>
-      </Flex>
-      <Text sx={{ color: (t) => t.colors?.textClear }}>{children}</Text>
-    </Flex>
-  </Flex>
-);
-
-function linkToDocsForFramework(framework: Frameworks): string {
-  switch (framework) {
-    case Frameworks.next:
-      return "https://prismic.io/docs/technologies/storybook-nextjs";
-    case Frameworks.nuxt:
-      return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
-    default:
-      return "https://prismic.io/docs";
-  }
-}
-
-const StorybookSection: React.FC<{
-  framework: Frameworks;
-}> = ({ framework }) => (
-  <Section heading="Already using Storybook">
-    Want to still use Storybook for your project? You can check the{" "}
-    <Link href={linkToDocsForFramework(framework)}>documentation</Link> for more
-    info to update your configuration.
-  </Section>
-);
 
 export default SetupDrawer;
