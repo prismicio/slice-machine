@@ -10,7 +10,7 @@ const Section: React.FC<{
     <Flex
       sx={{
         padding: 3,
-        backgroundColor: (t) => `${t.colors?.gray}`,
+        backgroundColor: (t) => t.colors?.gray,
         borderRadius: 8,
         flexDirection: "column",
       }}

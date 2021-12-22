@@ -11,7 +11,11 @@ const buttonIconStyle: React.CSSProperties = {
   top: "3px",
 };
 
-export default function CodeBlockWithCopy({ children }: { children: string }) {
+export default function CodeBlockWithCopy({
+  children,
+}: {
+  children: string;
+}): React.ReactNode {
   const { theme } = useThemeUI();
   const [isCopied, setIsCopied] = useState(false);
 

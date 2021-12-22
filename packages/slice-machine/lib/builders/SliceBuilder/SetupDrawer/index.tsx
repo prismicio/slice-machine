@@ -69,7 +69,9 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           sx={{
             p: 20,
             justifyContent: "space-between",
-            borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+            borderBottomStyle: "solid",
+            borderBottomWidth: "1px",
+            borderBottomColor: (t) => t.colors?.borders,
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
