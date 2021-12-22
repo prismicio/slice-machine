@@ -92,11 +92,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             )}
           </Flex>
         </Flex>
-        <HelpSection />
         {!!storybook === false &&
-          (framework === Frameworks.next || framework === Frameworks.nuxt) && (
-            <StorybookSection framework={framework}></StorybookSection>
-          )}
+        (framework === Frameworks.next || framework === Frameworks.nuxt) ? (
+          <StorybookSection framework={framework}></StorybookSection>
+        ) : (
+          <HelpSection />
+        )}
       </Flex>
     </Drawer>
   );
