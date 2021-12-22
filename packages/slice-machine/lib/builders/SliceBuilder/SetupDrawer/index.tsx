@@ -4,17 +4,16 @@ import Drawer from "rc-drawer";
 import { Close, Flex, Link, Text } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-import NextSetupSteps from "./NextSetupSteps";
-import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
 } from "@src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { selectIsSetupDrawerOpen } from "@src/modules/preview";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
+import Stepper from "./Stepper";
 
 const SetupDrawer: React.FunctionComponent = ({}) => {
   const { isSetupDrawerOpen } = useSelector((state: SliceMachineStoreType) => ({
@@ -72,8 +71,7 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            {framework === Frameworks.nuxt && <NuxtSetupSteps />}
-            {framework === Frameworks.next && <NextSetupSteps />}
+            <Stepper framework={framework} />
           </Flex>
         </Flex>
         <HelpSection />

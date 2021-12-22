@@ -24,6 +24,8 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PreviewCheckResponse } from "@models/common/Preview";
 
+import * as previewSteps from "@builders/SliceBuilder/SetupDrawer/steps";
+
 const NoStepSelected: number = 0;
 
 export const initialState: PreviewStoreType = {
@@ -254,11 +256,16 @@ function* checkSetupSaga(
 function* failCheckSetupSaga() {
   const framework: Frameworks | undefined = yield select(getFramework);
 
-  if (!framework) return;
+  if (!framework || ![Frameworks.next, Frameworks.nuxt].includes(framework)) {
+    return;
+  }
+
+  const { length } =
+    previewSteps[framework as Frameworks.next | Frameworks.nuxt];
 
   yield put(
     openSetupPreviewDrawerCreator({
-      stepToOpen: framework === Frameworks.nuxt ? 5 : 4,
+      stepToOpen: length,
     })
   );
 }
