@@ -62,7 +62,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={false}
+          preventScreenshot={!isPreviewAvailableForFramework}
         />
       </Card>
       {!isPreviewAvailableForFramework ? (

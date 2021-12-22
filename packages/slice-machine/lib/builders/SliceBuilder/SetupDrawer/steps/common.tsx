@@ -46,7 +46,7 @@ export const InstallSliceCanvas =
         <Flex sx={{ flexDirection: "column" }}>
           {setupStatus.dependencies === "ko" && (
             <WarningSection
-              title={"Some dependencies are missing"}
+              title="Some dependencies are missing"
               sx={{ mb: 2 }}
             />
           )}
@@ -65,7 +65,7 @@ interface CreatePageProps extends DefaultStepProps {
   instructions: string | React.ReactElement;
 }
 interface CreatePageCompProps extends DefaultStepCompProps {
-  canvasUrl: string;
+  canvasUrl: string | undefined;
 }
 
 export const CreatePage =
@@ -95,8 +95,8 @@ export const CreatePage =
               title={"We can’t connect to the preview page"}
               sx={{ mb: 3 }}
             >
-              We cannot connect to "{canvasUrl}" and found the slice preview
-              page. Learn more
+              We cannot connect to {canvasUrl || "canvas URL"} and found the
+              slice preview page. Learn more
             </WarningSection>
           )}
           <Text sx={{ color: "textClear", mb: 3 }}>{instructions}</Text>

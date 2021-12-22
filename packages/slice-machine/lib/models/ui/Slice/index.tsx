@@ -18,7 +18,6 @@ import { WrapperType, WrapperByType } from "./wrappers";
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
   [LibStatus.Synced]: "Synced",
-  [LibStatus.PreviewMissing]: "Preview missing",
   [LibStatus.Invalid]: "Contains errors",
   [LibStatus.NewSlice]: "New",
 };

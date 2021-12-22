@@ -29,17 +29,10 @@ export const getEnvironment = (
   store: SliceMachineStoreType
 ): FrontEndEnvironment | null => store.environment.env;
 
-export const selectCanvasUrl = (store: SliceMachineStoreType): string => {
-  const defaultCanvasUrl = `http://localhost:${
-    process.env.NODE_ENV === "development" ? "3001" : "3000"
-  }/_canvas`;
-
-  if (!store.environment.env) return defaultCanvasUrl;
-
-  if (!store.environment.env.manifest.localSliceCanvasURL)
-    return defaultCanvasUrl;
-
-  return store.environment.env.manifest.localSliceCanvasURL;
+export const selectCanvasUrl = (
+  store: SliceMachineStoreType
+): string | undefined => {
+  return store.environment.env?.manifest.localSliceCanvasURL;
 };
 
 export const getFramework = (

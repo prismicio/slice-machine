@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function Stepper({ framework }: Props): React.ReactElement {
-  if (!framework || ![Frameworks.next, Frameworks.nuxt].includes(framework)) {
+  if (framework !== Frameworks.next && framework !== Frameworks.nuxt) {
     return (
       <p>
         Framework {framework || "undefined"} is not supported yet. Please use
@@ -30,7 +30,7 @@ export default function Stepper({ framework }: Props): React.ReactElement {
     );
   }
 
-  const currentSteps = steps[framework as Frameworks.next | Frameworks.nuxt];
+  const currentSteps = steps[framework];
 
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const {

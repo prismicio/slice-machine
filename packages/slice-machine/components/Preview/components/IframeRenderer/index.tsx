@@ -48,7 +48,7 @@ function useRendererClient(): readonly [
 
 type IframeRendererProps = {
   size: Size;
-  canvasUrl: string;
+  canvasUrl: string | undefined;
   sliceView: SliceView;
   dryRun?: boolean;
 };
@@ -63,6 +63,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   const { connectToPreviewSuccess, connectToPreviewFailure } =
     useSliceMachineActions();
   useEffect((): void => {
+    if (!canvasUrl) {
+      connectToPreviewFailure();
+      return;
+    }
     if (client === undefined) {
       return;
     }
@@ -110,15 +114,17 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             : {}),
         }}
       >
-        <iframe
-          ref={ref}
-          src={canvasUrl}
-          style={{
-            border: "none",
-            height: "100%",
-            width: "100%",
-          }}
-        />
+        {canvasUrl ? (
+          <iframe
+            ref={ref}
+            src={canvasUrl}
+            style={{
+              border: "none",
+              height: "100%",
+              width: "100%",
+            }}
+          />
+        ) : null}
       </Flex>
     </Box>
   );

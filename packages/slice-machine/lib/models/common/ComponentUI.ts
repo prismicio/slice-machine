@@ -45,7 +45,6 @@ export const buildScreenshotUrls = (
 export enum LibStatus {
   Modified = "MODIFIED",
   Synced = "SYNCED",
-  PreviewMissing = "PREVIEW_MISSING",
   Invalid = "INVALID",
   NewSlice = "NEW_SLICE",
 }
@@ -80,11 +79,6 @@ function computeStatus(
   component: Models.Component,
   remoteSlices: ReadonlyArray<Models.SliceAsObject>
 ): LibStatus {
-  const previewMissing = Models.ComponentInfo.hasPreviewsMissing(
-    component.infos
-  );
-  if (previewMissing) return LibStatus.PreviewMissing;
-
   const slice = remoteSlices.find((s) => component.model.id === s.id);
   if (!slice) return LibStatus.NewSlice;
 
