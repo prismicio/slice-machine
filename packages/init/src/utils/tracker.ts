@@ -9,7 +9,7 @@
 import ServerAnalytics from "analytics-node";
 
 export enum EventType {
-  DownloadLibrary = "download_library",
+  DownloadLibrary = "SliceMachine Download Library",
 }
 
 export class Tracker {
@@ -39,7 +39,7 @@ export class Tracker {
     attributes: Record<string, unknown> = {}
   ): void {
     this.analytics.track({
-      event: `slicemachine_${eventType}`,
+      event: eventType,
       ...this.identifier,
       properties: attributes,
     });

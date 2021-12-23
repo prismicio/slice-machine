@@ -3,8 +3,15 @@ import { createContext } from "react";
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 
+// These events should be sync with the tracking Plan on segment.
 export enum EventType {
-  Review = "review",
+  Review = "SliceMachine Review",
+  OnboardingStart = "SliceMachine Onboarding Start",
+  OnboardingSkip = "SliceMachine Onboarding Skip",
+  OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
+  OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
+  OnboardingContinueScreen2 = "SliceMachine Onboarding Continue Screen 2",
+  OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
 }
 
 export class ClientTracker {
@@ -28,7 +35,7 @@ export class ClientTracker {
     attributes: Record<string, unknown> = {}
   ): void {
     this.analytics
-      .track(`slicemachine_${eventType}`, {
+      .track(eventType, {
         ...attributes,
       })
       .catch(() => console.error(`Couldn't report event ${eventType}`));

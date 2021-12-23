@@ -1,8 +1,11 @@
 import ServerAnalytics from "analytics-node";
 import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
 
+// These events should be sync with the tracking Plan on segment.
 export enum EventType {
   Demo = "demo_event",
+  SignedIn = "Signed In",
+  SignedUp = "Signed Up",
 }
 
 export class ServerTracker {
@@ -32,7 +35,7 @@ export class ServerTracker {
     attributes: Record<string, unknown> = {}
   ): void {
     this.analytics.track({
-      event: `slicemachine_${eventType}`,
+      event: eventType,
       ...this.identifier,
       properties: attributes,
     });
