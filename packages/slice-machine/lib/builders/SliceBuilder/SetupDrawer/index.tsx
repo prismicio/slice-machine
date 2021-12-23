@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Drawer from "rc-drawer";
-import { Close, Flex, Link, Text } from "theme-ui";
-import { FaRegQuestionCircle } from "react-icons/fa";
+import { Close, Flex, Text } from "theme-ui";
 
 import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
@@ -11,8 +10,10 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
+  getStorybookUrl,
 } from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import StorybookSection from "./components/StorybookSection";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -25,11 +26,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
 
-  const { framework, isPreviewAvailableForFramework } = useSelector(
+  const { storybook, framework, isPreviewAvailableForFramework } = useSelector(
     (state: SliceMachineStoreType) => ({
       framework: getFramework(state),
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
+      storybook: getStorybookUrl(state),
     })
   );
 
@@ -67,7 +69,9 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           sx={{
             p: 20,
             justifyContent: "space-between",
-            borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+            borderBottomStyle: "solid",
+            borderBottomWidth: "1px",
+            borderBottomColor: (t) => t.colors?.borders,
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
@@ -91,50 +95,12 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             )}
           </Flex>
         </Flex>
-        <HelpSection />
+        {!!storybook === false && !!framework && (
+          <StorybookSection framework={framework} />
+        )}
       </Flex>
     </Drawer>
   );
 };
-
-const HelpSection = () => (
-  <Flex
-    sx={{
-      padding: "16px 20px",
-    }}
-  >
-    <Flex
-      sx={{
-        padding: 3,
-        backgroundColor: (t) => `${t.colors?.gray}`,
-        borderRadius: 8,
-        flexDirection: "column",
-      }}
-    >
-      <Flex
-        sx={{
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Flex
-          sx={{
-            mr: 2,
-          }}
-        >
-          <FaRegQuestionCircle size={20} color="textGray" />
-        </Flex>
-        <Text sx={{ fontSize: 2, fontWeight: 500 }}>Help Section</Text>
-      </Flex>
-      <Text sx={{ color: (t) => t.colors?.textClear }}>
-        Are you having difficulties setting up the preview? You can check{" "}
-        <Link target={"_blank"} href={"https://prismic.io"}>
-          the documentation
-        </Link>{" "}
-        for more info to set it up correctly.
-      </Text>
-    </Flex>
-  </Flex>
-);
 
 export default SetupDrawer;

@@ -49,15 +49,27 @@ export default async function handler({
     sliceName
   );
 
-  const message: string | null = failure.length
-    ? `Could not generate screenshots for variations: ${failure
-        .map((f) => f.variationId)
-        .join(" | ")}`
-    : null;
+  if (failure.length > 0) {
+    const message:
+      | string
+      | null = `Could not generate screenshots for variations: ${failure
+      .map((f) => f.variationId)
+      .join(" | ")}`;
+
+    /* We display an error if no screenshot has been taken */
+    const isError = Object.keys(screenshots).length === 0;
+
+    return {
+      err: isError ? new Error(message) : null,
+      reason: isError ? message : null,
+      warning: isError ? null : message,
+      screenshots,
+    };
+  }
 
   return {
-    err: message ? new Error(message) : null,
-    reason: message,
+    err: null,
+    reason: null,
     screenshots,
   };
 }

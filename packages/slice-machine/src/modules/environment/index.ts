@@ -62,6 +62,9 @@ export const getUpdateVersionInfo = (
   return store.environment.env.updateVersionInfo;
 };
 
+export const getStorybookUrl = (state: SliceMachineStoreType) => {
+  return state.environment.env?.manifest.storybook || null;
+};
 // Reducer
 export const environmentReducer: Reducer<
   EnvironmentStoreType,
