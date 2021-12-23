@@ -14,6 +14,7 @@ import {
   ManifestHelper,
 } from "@slicemachine/core/build/src/models/Manifest";
 import Files from "@slicemachine/core/build/src/utils/files";
+import { Tracker } from "../utils/tracker";
 
 const downloadFile = async (reqUrl: string): Promise<string> => {
   const res = await axios({
@@ -35,6 +36,7 @@ const downloadFile = async (reqUrl: string): Promise<string> => {
 };
 
 export async function installLib(
+  tracker: Tracker | undefined,
   cwd: string,
   libGithubPath: string,
   branch: string | undefined = "main"
@@ -101,6 +103,7 @@ export async function installLib(
       `Slice library "${libGithubPath}" was installed successfully`
     );
 
+    tracker?.Track.downloadLibrary(libGithubPath);
     return localLibs;
   } catch {
     spinner.fail(`Error installing ${libGithubPath} lib!`);

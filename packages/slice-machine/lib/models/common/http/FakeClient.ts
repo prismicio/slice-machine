@@ -66,12 +66,6 @@ export default class FakeClient {
     return this.mutate();
   }
 
-  async sendReview() {
-    return {
-      status: 403,
-    };
-  }
-
   async sendOnboarding(): Promise<FakeResponse> {
     return {
       status: 200,
