@@ -14,9 +14,8 @@ import {
 } from "../src/steps/maybe-existing-repo";
 
 import nock from "nock";
-import { Utils } from "@slicemachine/core";
 
-const { Roles } = Utils.roles;
+import { Roles } from "@slicemachine/core/build/src/prismic";
 
 import * as fs from "fs";
 import { Repositories } from "@slicemachine/core/build/src/models/Repositories";

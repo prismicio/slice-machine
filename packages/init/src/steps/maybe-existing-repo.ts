@@ -1,16 +1,29 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Communication, Utils, FileSystem } from "@slicemachine/core";
-import { Repositories } from "@slicemachine/core/src/models/Repositories";
-import { Repository } from "@slicemachine/core/src/models/Repository";
-import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
+
+import { Repositories, Repository } from "@slicemachine/core/src/models";
+
+import { DEFAULT_BASE } from "@slicemachine/core/build/src/defaults";
+import {
+  listRepositories,
+  canUpdateCustomTypes,
+  validateRepositoryName,
+} from "@slicemachine/core/build/src/prismic";
+import { maybeRepoNameFromSMFile } from "@slicemachine/core/build/src/fs-utils";
+import { parsePrismicAuthToken } from "@slicemachine/core/build/src/auth/cookie";
+import {
+  cyan,
+  dim,
+  bold,
+  purple,
+  writeInfo,
+} from "@slicemachine/core/build/src/internals";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
-const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  return `${Utils.cyan.dim(`${address.protocol}//`)}${repoName}${Utils.cyan.dim(
+  const repoName = value ? cyan(value) : dim.cyan("repo-name");
+  return `${cyan.dim(`${address.protocol}//`)}${repoName}${cyan.dim(
     `.${address.hostname}`
   )}`;
 }
@@ -18,7 +31,7 @@ export function prettyRepoName(address: URL, value?: string): string {
 export async function promptForRepoName(base: string): Promise<string> {
   const address = new URL(base);
 
-  Utils.writeInfo(
+  writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
   );
 
@@ -31,11 +44,7 @@ export async function promptForRepoName(base: string): Promise<string> {
         required: true,
         transformer: (value) => prettyRepoName(address, String(value)),
         async validate(name) {
-          const result = await Communication.validateRepositoryName(
-            name,
-            base,
-            false
-          );
+          const result = await validateRepositoryName(name, base, false);
           return result === name || result;
         },
       },
@@ -53,20 +62,18 @@ export function makeReposPretty(base: string) {
   return function ({ name, domain, role }: Repository): RepoPrompt {
     const address = new URL(base);
     address.hostname = `${domain}.${address.hostname}`;
-    if (Utils.roles.canUpdateCustomTypes(role) === false) {
+    if (canUpdateCustomTypes(role) === false) {
       return {
-        name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
-          name
-        )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
+        name: `${purple.dim("Use")} ${bold.dim(name)} ${purple.dim(
+          `"${address.hostname}"`
+        )}`,
         value: domain,
         disabled: "Unauthorized",
       };
     }
 
     return {
-      name: `${Utils.purple("Use")} ${Utils.bold(name)} ${Utils.purple(
-        `"${address.hostname}"`
-      )}`,
+      name: `${purple("Use")} ${bold(name)} ${purple(`"${address.hostname}"`)}`,
       value: name,
     };
   };
@@ -98,13 +105,11 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${Utils.purple("Create a")} ${Utils.bold("new")} ${Utils.purple(
-      "Repository"
-    )}`,
+    name: `${purple("Create a")} ${bold("new")} ${purple("Repository")}`,
     value: CREATE_REPO,
   };
 
-  const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
+  const maybeConfiguredRepoName = maybeRepoNameFromSMFile(cwd, base);
 
   return repos
     .reverse()
@@ -121,7 +126,7 @@ export async function maybeExistingRepo(
   base = DEFAULT_BASE
 ): Promise<{ name: string; existing: boolean }> {
   const token = parsePrismicAuthToken(cookies);
-  const repos = await Communication.listRepositories(token);
+  const repos = await listRepositories(token);
 
   if (repos.length === 0) {
     const name = await promptForRepoName(base);

@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import Files from "../utils/files";
-import { getInfoFromPath } from "../utils/lib";
+import { Files } from "../internals";
+import { getInfoFromPath } from "./path";
 import { getComponentInfo } from "./component";
 import { Library, Component, LibraryMeta } from "../models/Library";
 

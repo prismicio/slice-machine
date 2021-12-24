@@ -1,6 +1,6 @@
 import { Screenshot } from "models";
 import path from "path";
-import Files from "../utils/files";
+import { Files } from "../internals";
 
 export enum Extensions {
   jpeg = "jpeg",

@@ -1,5 +1,5 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
-import { maybeRepoNameFromSMFile } from "../../../src/filesystem/manifest";
+import { maybeRepoNameFromSMFile } from "../../../src/fs-utils/manifest";
 
 import * as fs from "fs";
 

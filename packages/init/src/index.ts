@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+import { DEFAULT_BASE } from "@slicemachine/core/build/src/defaults";
+import { writeError, purple } from "@slicemachine/core/build/src/internals";
+import { SharedConfigManager } from "@slicemachine/core/build/src/prismic";
 
-import { Utils, FileSystem } from "@slicemachine/core";
 import {
   installRequiredDependencies,
   validatePkg,
@@ -15,12 +17,10 @@ import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
-  const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const base = findArgument(process.argv, "base") || DEFAULT_BASE;
 
   console.log(
-    Utils.purple(
-      "You're about to configure Slicemachine... Press ctrl + C to cancel"
-    )
+    purple("You're about to configure Slicemachine... Press ctrl + C to cancel")
   );
 
   // verify package.json file exist
@@ -30,7 +30,7 @@ async function init() {
   await loginOrBypass(base);
 
   // retrieve tokens for api calls
-  const config = FileSystem.PrismicSharedConfigManager.get();
+  const config = SharedConfigManager.get();
 
   // detect the framework used by the project
   const frameworkResult = await detectFramework(cwd);
@@ -59,6 +59,6 @@ async function init() {
 try {
   void init();
 } catch (error) {
-  if (error instanceof Error) Utils.writeError(error.message);
+  if (error instanceof Error) writeError(error.message);
   else console.error(error);
 }

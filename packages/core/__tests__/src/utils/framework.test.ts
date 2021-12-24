@@ -1,8 +1,10 @@
-import { describe, expect, test, jest, afterEach } from "@jest/globals";
-import { Frameworks } from "../../../src/models/Framework";
-import * as FrameworkUtils from "../../../src/utils/framework";
 import * as fs from "fs";
 import { mocked } from "ts-jest/utils";
+import { describe, expect, test, jest, afterEach } from "@jest/globals";
+
+import { Frameworks } from "../../../src/models";
+import { isValidFramework } from "../../../src/utils";
+import { detectFramework } from "../../../src/fs-utils";
 
 jest.mock("fs");
 
@@ -16,10 +18,7 @@ describe("framework.detectFramework", () => {
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ dependencies: {} }));
 
-    const result = FrameworkUtils.detectFramework(
-      __dirname,
-      Object.values(Frameworks)
-    );
+    const result = detectFramework(__dirname, Object.values(Frameworks));
 
     expect(mockedFs.lstatSync).toHaveBeenCalled();
     expect(result).toEqual(Frameworks.vanillajs);
@@ -41,10 +40,7 @@ describe("framework.detectFramework", () => {
       })
     );
 
-    const result = FrameworkUtils.detectFramework(
-      __dirname,
-      Object.values(Frameworks)
-    );
+    const result = detectFramework(__dirname, Object.values(Frameworks));
     expect(result).toEqual(Frameworks.gatsby);
   });
   valuesToCheck.forEach((value) => {
@@ -63,14 +59,9 @@ describe("framework.detectFramework", () => {
       const fallback =
         value === Frameworks.gatsby ? Frameworks.gatsby : Frameworks.vanillajs;
 
-      const wanted = FrameworkUtils.isValidFramework(value as Frameworks)
-        ? value
-        : fallback;
+      const wanted = isValidFramework(value as Frameworks) ? value : fallback;
 
-      const result = FrameworkUtils.detectFramework(
-        __dirname,
-        Object.values(Frameworks)
-      );
+      const result = detectFramework(__dirname, Object.values(Frameworks));
       expect(mockedFs.lstatSync).toHaveBeenCalled();
       expect(result).toEqual(wanted);
     });
@@ -85,25 +76,9 @@ describe("framework.detectFramework", () => {
     const spy = jest
       .spyOn(console, "error")
       .mockImplementationOnce(() => undefined);
-    expect(() =>
-      FrameworkUtils.detectFramework(__dirname, Object.values(Frameworks))
-    ).toThrow(wanted);
+    expect(() => detectFramework(__dirname, Object.values(Frameworks))).toThrow(
+      wanted
+    );
     expect(spy).toHaveBeenCalledWith(wanted);
-  });
-});
-
-describe("framework.fancyName", () => {
-  test("next should be Next.js", () => {
-    const wanted = "Next.js";
-    const result = FrameworkUtils.fancyName(Frameworks.next);
-    expect(result).toBe(wanted);
-  });
-
-  test("else the first letter should be capitalised", () => {
-    const values = Object.values(Frameworks);
-    values.forEach((value) => {
-      const result = FrameworkUtils.fancyName(value).charAt(0);
-      expect(result).toBe(result.toUpperCase());
-    });
   });
 });

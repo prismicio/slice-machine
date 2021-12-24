@@ -3,7 +3,7 @@ import {
   parsePrismicAuthToken,
   serializeCookie,
   serializeCookies,
-} from "../../../src/utils/cookie";
+} from "../../../src/auth/cookie";
 
 describe("cookie", () => {
   afterEach(() => {

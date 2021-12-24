@@ -1,6 +1,6 @@
-export * as FileSystem from "./src/filesystem";
+export * as FsUtils from "./src/fs-utils";
 export * as Utils from "./src/utils";
-export * from "./src/core";
 export * as Models from "./src/models";
-export * as Libraries from "./src/libraries";
-export * as Mocks from "./src/libraries/mocks";
+
+// this is just for tests to pass
+export * as Internals from "./src/internals";

@@ -1,14 +1,24 @@
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Files, Cookie } from "../utils";
-import { PrismicConfigPath } from "./paths";
+
+import {
+  parse,
+  serializeCookie,
+  serializeCookies,
+  parsePrismicAuthToken,
+} from "../auth/cookie";
+import { AUTH_KEY } from "../defaults";
+
+import { PrismicConfigPath } from "../fs-utils/paths";
 import { PrismicSharedConfig } from "../models/PrismicSharedConfig";
+
+import { Files } from "../internals";
 
 export const DEFAULT_CONFIG: PrismicSharedConfig = {
   base: "https://prismic.io",
   cookies: "",
 };
 
-export const PrismicSharedConfigManager = {
+export const SharedConfigManager = {
   default(): PrismicSharedConfig {
     Files.write(PrismicConfigPath, JSON.stringify(DEFAULT_CONFIG, null, "\t"), {
       recursive: false,
@@ -17,8 +27,7 @@ export const PrismicSharedConfigManager = {
   },
 
   get: (): PrismicSharedConfig => {
-    if (!Files.exists(PrismicConfigPath))
-      return PrismicSharedConfigManager.default();
+    if (!Files.exists(PrismicConfigPath)) return SharedConfigManager.default();
 
     const conf = Files.safeReadEntity<PrismicSharedConfig>(
       PrismicConfigPath,
@@ -30,8 +39,8 @@ export const PrismicSharedConfigManager = {
   },
 
   getAuth(): string {
-    const config = PrismicSharedConfigManager.get();
-    return Cookie.parsePrismicAuthToken(config.cookies);
+    const config = SharedConfigManager.get();
+    return parsePrismicAuthToken(config.cookies);
   },
 
   set(config: PrismicSharedConfig): void {
@@ -42,32 +51,27 @@ export const PrismicSharedConfigManager = {
     props: Partial<PrismicSharedConfig>,
     baseConfig?: PrismicSharedConfig
   ): void {
-    const config = baseConfig || PrismicSharedConfigManager.get();
+    const config = baseConfig || SharedConfigManager.get();
 
     const updated = { ...config, ...props };
-    PrismicSharedConfigManager.set(updated);
+    SharedConfigManager.set(updated);
   },
 
   setCookie(cookie: { [key: string]: string }): void {
-    const config = PrismicSharedConfigManager.get();
-    const cookiesMap = Cookie.parse(config.cookies);
+    const config = SharedConfigManager.get();
+    const cookiesMap = parse(config.cookies);
 
     const updatedCookiesMap = { ...cookiesMap, ...cookie };
 
-    const serializedCookies = Cookie.serializeCookies(
-      Object.entries(updatedCookiesMap).map(([k, v]) =>
-        Cookie.serializeCookie(k, v)
-      )
+    const serializedCookies = serializeCookies(
+      Object.entries(updatedCookiesMap).map(([k, v]) => serializeCookie(k, v))
     );
 
-    PrismicSharedConfigManager.setProperties(
-      { cookies: serializedCookies },
-      config
-    );
+    SharedConfigManager.setProperties({ cookies: serializedCookies }, config);
   },
 
   setAuthCookie(authToken: string): void {
-    PrismicSharedConfigManager.setCookie({ [Cookie.AUTH_KEY]: authToken });
+    SharedConfigManager.setCookie({ [AUTH_KEY]: authToken });
   },
 
   remove(): void {
@@ -75,6 +79,6 @@ export const PrismicSharedConfigManager = {
   },
 
   reset(): void {
-    return PrismicSharedConfigManager.set(DEFAULT_CONFIG);
+    return SharedConfigManager.set(DEFAULT_CONFIG);
   },
 };

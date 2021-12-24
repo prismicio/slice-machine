@@ -8,22 +8,35 @@ import {
 } from "@jest/globals";
 import * as Core from "@slicemachine/core";
 import { configureProject } from "../src/steps";
+import { addJsonPackageSmScript } from "../src/steps/configure-project";
 
-type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
+type SpinnerReturnType = ReturnType<typeof Core.Internals.spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
+
+jest.mock("../src/steps/configure-project", () => {
+  // @ts-expect-error typeof something
+  const actual = jest.requireActual("../src/steps/configure-project") as {
+    addJsonPackageSmScript: function;
+  };
+
+  return {
+    ...actual,
+    addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
+  };
+});
 
 jest.mock("@slicemachine/core", () => {
   const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
 
   return {
     ...actualCore,
-    FileSystem: {
-      ...actualCore.FileSystem,
+    FsUtils: {
+      ...actualCore.FsUtils,
       retrieveManifest: jest.fn<
-        Core.FileSystem.FileContent<Core.Models.Manifest>,
+        Core.FsUtils.FileContent<Core.Models.Manifest>,
         [{ cwd: string }]
       >(),
       createManifest: jest.fn<
@@ -34,10 +47,9 @@ jest.mock("@slicemachine/core", () => {
         boolean,
         [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
-      addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     },
-    Utils: {
-      ...actualCore.Utils,
+    Internals: {
+      ...actualCore.Internals,
       spinner: () => ({
         start: startFn,
         succeed: successFn,
@@ -57,18 +69,17 @@ describe("configure-project", () => {
   });
 
   const fakeCwd = "./";
-  const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
+  const fakeBase = "https://music.to.my.hears.io";
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
     value: Core.Models.Frameworks.react,
     manuallyAdded: false,
   };
 
-  const retrieveManifestMock = Core.FileSystem.retrieveManifest as jest.Mock;
-  const createManifestMock = Core.FileSystem.createManifest as jest.Mock;
-  const patchManifestMock = Core.FileSystem.patchManifest as jest.Mock;
-  const addJsonPackageSmScriptMock = Core.FileSystem
-    .addJsonPackageSmScript as jest.Mock;
+  const retrieveManifestMock = Core.FsUtils.retrieveManifest as jest.Mock;
+  const createManifestMock = Core.FsUtils.createManifest as jest.Mock;
+  const patchManifestMock = Core.FsUtils.patchManifest as jest.Mock;
+  const addJsonPackageSmScriptMock = addJsonPackageSmScript as jest.Mock;
 
   test("it should create a new manifest if it doesn't exist yet", () => {
     retrieveManifestMock.mockReturnValue({

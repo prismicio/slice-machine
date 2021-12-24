@@ -1,14 +1,14 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { Cookie, CONSTS, roles } from "../utils";
-import { Frameworks } from "../models/Framework";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold, getOrElseW } from "fp-ts/Either";
-import { Repositories } from "../models/Repositories";
+import axios, { AxiosError, AxiosResponse } from "axios";
+
+import { Roles, RolesValidator } from "./roles";
+import { parsePrismicAuthToken } from "../auth/cookie";
+import { DEFAULT_BASE, USER_SERVICE_BASE } from "../defaults";
 
 export type { AxiosError } from "axios";
-
-const { DEFAULT_BASE, USER_SERVICE_BASE } = CONSTS;
+import { Frameworks, Repositories } from "../models";
 
 /**
  *
@@ -34,19 +34,19 @@ export async function refreshSession(
   cookies: string,
   base?: string
 ): Promise<string> {
-  const token = Cookie.parsePrismicAuthToken(cookies);
+  const token = parsePrismicAuthToken(cookies);
   const url = toAuthUrl("refreshtoken", token, base);
   return axios.get<string>(url).then((res) => res.data);
 }
 
 export type RepoData = Record<
   string,
-  { role: roles.Roles | Record<string, roles.Roles>; dbid: string }
+  { role: Roles | Record<string, Roles>; dbid: string }
 >;
 const RepoDataValidator = t.record(
   t.string,
   t.type({
-    role: roles.RolesValidator,
+    role: RolesValidator,
     dbid: t.string,
   })
 );
@@ -74,7 +74,7 @@ export async function validateSession(
   cookies: string,
   base?: string
 ): Promise<UserInfo> {
-  const token = Cookie.parsePrismicAuthToken(cookies);
+  const token = parsePrismicAuthToken(cookies);
   const url = toAuthUrl("validate", token, base);
   return axios
     .get<{ email: string; type: string; repositories?: string }>(url)

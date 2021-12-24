@@ -1,8 +1,18 @@
 import path from "path";
 import { execCommand } from "../utils";
-import { Utils, FileSystem, Models } from "@slicemachine/core";
 
-const {
+import { Models } from "@slicemachine/core";
+import {
+  Files,
+  writeWarning,
+  spinner,
+} from "@slicemachine/core/build/src/internals";
+import {
+  YarnLockPath,
+  PackagePaths,
+} from "@slicemachine/core/build/src/fs-utils";
+
+import {
   PRISMIC_CLIENT,
   PRISMIC_DOM_PACKAGE_NAME,
   PRISMIC_REACT_PACKAGE_NAME,
@@ -14,7 +24,7 @@ const {
   PRISMIC_VUE,
   SLICE_CANVAS_REACT,
   SLICE_CANVAS_VUE,
-} = Utils.CONSTS;
+} from "@slicemachine/core/build/src/defaults";
 
 function depsForFramework(framework: Models.Frameworks): string {
   switch (framework) {
@@ -37,14 +47,14 @@ export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks
 ): Promise<void> {
-  const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
+  const yarnLock = Files.exists(YarnLockPath(cwd));
   const installDevDependencyCommand = yarnLock
     ? "yarn add -D"
     : "npm install --save-dev";
   const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
 
-  const spinner = Utils.spinner("Downloading Prismic Visual Builder");
-  spinner.start();
+  const spin = spinner("Downloading Prismic Visual Builder");
+  spin.start();
 
   const { stderr } = await execCommand(
     `${installDevDependencyCommand} ${SM_PACKAGE_NAME}`
@@ -53,19 +63,14 @@ export async function installRequiredDependencies(
   const deps = depsForFramework(framework);
   if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
 
-  const pathToPkg = path.join(
-    FileSystem.PackagePaths(cwd).value(),
-    SM_PACKAGE_NAME
-  );
-  const isPackageInstalled = Utils.Files.exists(pathToPkg);
+  const pathToPkg = path.join(PackagePaths(cwd).value(), SM_PACKAGE_NAME);
+  const isPackageInstalled = Files.exists(pathToPkg);
 
   if (isPackageInstalled || !stderr.length) {
-    spinner.succeed("The Prismic Visual Builder was installed successfully");
+    spin.succeed("The Prismic Visual Builder was installed successfully");
     return;
   }
 
-  spinner.fail();
-  Utils.writeWarning(
-    `could not install ${SM_PACKAGE_NAME}. Please do it manually!`
-  );
+  spin.fail();
+  writeWarning(`could not install ${SM_PACKAGE_NAME}. Please do it manually!`);
 }

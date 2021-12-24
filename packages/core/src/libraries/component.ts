@@ -1,21 +1,24 @@
 import path from "path";
 import * as t from "io-ts";
+import { getOrElseW } from "fp-ts/lib/Either";
+
 import {
-  ComponentInfo,
-  ComponentMetadata,
+  Slice,
+  AsObject,
   Screenshot,
-} from "../models/Library";
+  ComponentInfo,
+  SliceAsObject,
+  ComponentMetadata,
+  VariationAsObject,
+} from "../models";
 
 import { pascalize } from "../utils/str";
 
 import { resolvePathsToScreenshot } from "./screenshot";
-import Files from "../utils/files";
+import { Files } from "../internals";
 import { resolvePathsToMock } from "./mocks";
-import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice, SliceAsObject } from "../models/Slice";
-import { VariationAsObject, AsObject } from "../models/Variation";
 
-import Errors from "../utils/errors";
+import Errors from "../internals/errors";
 
 function getMeta(model: SliceAsObject): ComponentMetadata {
   return {

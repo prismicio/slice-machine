@@ -1,10 +1,15 @@
-import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
-import { mocked } from "ts-jest/utils";
-import { detectFramework } from "../src/steps";
-import { Utils, Models } from "@slicemachine/core";
-import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
+
+import { stderr } from "stdout-stderr";
+import { mocked } from "ts-jest/utils";
+import { describe, expect, test, jest, afterEach } from "@jest/globals";
+
+import { detectFramework } from "../src/steps";
+import { Models } from "@slicemachine/core";
+import { bold, error } from "@slicemachine/core/build/src/internals";
+
+import { fancyName } from "../src/steps/detect-framework";
 
 jest.mock("fs");
 
@@ -61,7 +66,7 @@ describe("detect-framework", () => {
     });
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(fakeError).toBeCalledWith(
-      `${Utils.error("Error!")} Framework not detected`
+      `${error("Error!")} Framework not detected`
     );
   });
 
@@ -114,12 +119,26 @@ describe("detect-framework", () => {
 
     expect(exitSpy).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalledWith(
-      `${Utils.error("Error!")} Gatsby is currently not supported`
+      `${error("Error!")} Gatsby is currently not supported`
     );
     expect(logSpy).toHaveBeenCalledWith(
-      `Please run ${Utils.bold(
-        "npx slicemachine init"
-      )} in a Nuxt or Next.js project`
+      `Please run ${bold("npx slicemachine init")} in a Nuxt or Next.js project`
     );
+  });
+});
+
+describe("framework.fancyName", () => {
+  test("next should be Next.js", () => {
+    const wanted = "Next.js";
+    const result = fancyName(Models.Frameworks.next);
+    expect(result).toBe(wanted);
+  });
+
+  test("else the first letter should be capitalised", () => {
+    const values = Object.values(Models.Frameworks);
+    values.forEach((value) => {
+      const result = fancyName(value).charAt(0);
+      expect(result).toBe(result.toUpperCase());
+    });
   });
 });

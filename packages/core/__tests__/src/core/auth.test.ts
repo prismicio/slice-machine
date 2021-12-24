@@ -1,16 +1,19 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
-import * as authHelpers from "../../../src/core/auth";
-import { Auth } from "../../../src/core";
-import * as Utils from "../../../src/utils";
-import * as communication from "../../../src/core/communication";
-import { PrismicSharedConfigManager } from "../../../src/filesystem/PrismicSharedConfig";
 
-jest.mock("../../../src/filesystem");
-jest.mock("../../../src/filesystem/PrismicSharedConfig");
-jest.mock("../../../src/core/communication");
-jest.mock("../../../src/utils/poll");
+import {
+  Roles,
+  validateSession,
+  SharedConfigManager,
+} from "../../../src/prismic";
 
-const { Roles } = Utils.roles;
+import { Auth } from "../../../src/auth";
+import * as authHelpers from "../../../src/auth/helpers";
+import { buildEndpoints } from "../../../src/prismic";
+
+jest.mock("../../../src/auth/poll");
+jest.mock("../../../src/fs-utils");
+jest.mock("../../../src/prismic/SharedConfig");
+jest.mock("../../../src/prismic/communication");
 
 describe("communication", () => {
   afterEach(() => {
@@ -18,7 +21,7 @@ describe("communication", () => {
   });
 
   const fakeBase = "https://fake.io";
-  const endpoints = Utils.Endpoints.buildEndpoints(fakeBase);
+  const endpoints = buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
     const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");
@@ -79,10 +82,10 @@ describe("communication", () => {
   });
 
   test("validate session should return null if there is no cookies", async () => {
-    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
+    const mockedConfig = SharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({ base: fakeBase, cookies: "" });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = validateSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -99,13 +102,13 @@ describe("communication", () => {
   });
 
   test("validate session should return null if there is different bases", async () => {
-    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
+    const mockedConfig = SharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: "other base",
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = validateSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -122,13 +125,13 @@ describe("communication", () => {
   });
 
   test("validate session should return null when validate session reject the promise", async () => {
-    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
+    const mockedConfig = SharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: fakeBase,
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = validateSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.reject("unauthorized"));
 
     const result = await Auth.validateSession(fakeBase);
@@ -145,13 +148,13 @@ describe("communication", () => {
       },
     };
 
-    const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
+    const mockedConfig = SharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({
       base: fakeBase,
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = validateSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.resolve(userInfo));
 
     const result = await Auth.validateSession(fakeBase);

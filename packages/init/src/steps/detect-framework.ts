@@ -1,16 +1,36 @@
-import { Utils } from "@slicemachine/core";
 import { Models } from "@slicemachine/core";
 import * as inquirer from "inquirer";
+
+import { isUnsupported } from "@slicemachine/core/build/src/utils";
+import { detectFramework as detectMaybeFramework } from "@slicemachine/core/build/src/fs-utils";
+import {
+  spinner,
+  bold,
+  writeError,
+  writeCheck,
+} from "@slicemachine/core/build/src/internals";
 
 export type FrameworkResult = {
   value: Models.Frameworks;
   manuallyAdded: boolean;
 };
 
+function capitaliseFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+export function fancyName(str: Models.Frameworks): string {
+  switch (str) {
+    case Models.Frameworks.next:
+      return "Next.js";
+    default:
+      return capitaliseFirstLetter(str);
+  }
+}
+
 export async function promptForFramework(): Promise<FrameworkResult> {
   const choices = Models.SupportedFrameworks.map((framework) => {
     return {
-      name: Utils.Framework.fancyName(framework),
+      name: fancyName(framework),
       value: framework,
     };
   });
@@ -34,47 +54,45 @@ export async function promptForFramework(): Promise<FrameworkResult> {
 }
 
 export async function detectFramework(cwd: string): Promise<FrameworkResult> {
-  const failMessage = `Please run ${Utils.bold(
+  const failMessage = `Please run ${bold(
     "npx slicemachine init"
   )} in a Nuxt or Next.js project`;
 
-  const spinner = Utils.spinner(
-    "Detecting framework to install correct dependencies"
-  );
+  const spin = spinner("Detecting framework to install correct dependencies");
 
-  spinner.start();
+  spin.start();
 
   try {
-    const maybeFramework = Utils.Framework.detectFramework(
+    const maybeFramework = detectMaybeFramework(
       cwd,
       Object.values(Models.Frameworks)
     );
-    spinner.stop();
+    spin.stop();
 
     if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
-      Utils.writeError("Framework not detected");
+      writeError("Framework not detected");
       return await promptForFramework();
     }
 
-    const nameToPrint = Utils.Framework.fancyName(maybeFramework);
+    const nameToPrint = fancyName(maybeFramework);
 
-    if (Utils.Framework.isUnsupported(maybeFramework)) {
-      Utils.writeError(`${nameToPrint} is currently not supported`);
+    if (isUnsupported(maybeFramework)) {
+      writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
     }
 
-    Utils.writeCheck(`${nameToPrint} detected`);
+    writeCheck(`${nameToPrint} detected`);
 
     return {
       value: maybeFramework,
       manuallyAdded: false,
     };
   } catch (error) {
-    spinner.fail("package.json not found");
+    spin.fail("package.json not found");
 
     if (error instanceof Error && error.message) {
-      Utils.writeError(error.message);
+      writeError(error.message);
     } else {
       console.log(failMessage);
     }

@@ -1,8 +1,8 @@
 import path from "path";
 import { isRight } from "fp-ts/Either";
 
-import { Files } from "../utils";
-import { SliceMock } from "../models/Slice";
+import { Files } from "../internals";
+import { SliceMock } from "../models";
 
 export function createPathToMock({
   path: filePath,

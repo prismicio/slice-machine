@@ -1,3 +1,6 @@
+export type Base = string;
+export type ApiEndpoint = string;
+
 interface Endpoints {
   Dashboard: {
     index: string;
@@ -8,7 +11,6 @@ interface Endpoints {
 
 export function buildEndpoints(base: string): Endpoints {
   const endpoint = (path: string) => `${base}${path}`;
-
   return {
     Dashboard: {
       index: endpoint("/dashboard"),
@@ -18,8 +20,6 @@ export function buildEndpoints(base: string): Endpoints {
   };
 }
 
-export type Base = string;
-export type ApiEndpoint = string;
 export function extractDomainFromBase(base: Base): string {
   const withoutHttp = base.split("://")[1];
   const result = withoutHttp.split("/")[0];

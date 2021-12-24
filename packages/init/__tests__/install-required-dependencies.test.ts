@@ -1,33 +1,35 @@
 import { jest, describe, afterEach, test, expect } from "@jest/globals";
-import * as Core from "@slicemachine/core";
 import * as initUtils from "../src/utils";
 import { installRequiredDependencies } from "../src/steps";
 import path from "path";
 import os from "os";
 
-type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
+import { Internals } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import { SM_PACKAGE_NAME } from "@slicemachine/core/build/src/defaults";
+import { spinner, Files } from "@slicemachine/core/build/src/internals";
+
+type SpinnerReturnType = ReturnType<typeof spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
 
-jest.mock("@slicemachine/core", () => {
-  const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
-
+jest.mock("@slicemachine/core/build/src/internals", () => {
+  const actualInternals = jest.requireActual(
+    "@slicemachine/core/build/src/internals"
+  ) as typeof Internals;
   return {
-    ...actualCore,
-    Utils: {
-      ...actualCore.Utils,
-      Files: {
-        ...actualCore.Utils.Files,
-        exists: jest.fn(),
-      },
-      spinner: () => ({
-        start: startFn,
-        succeed: successFn,
-        fail: failFn,
-      }),
+    ...actualInternals,
+    Files: {
+      ...actualInternals.Files,
+      exists: jest.fn(),
     },
+    spinner: () => ({
+      start: startFn,
+      succeed: successFn,
+      fail: failFn,
+    }),
   };
 });
 
@@ -37,7 +39,7 @@ describe("install required dependency", () => {
   });
 
   const fakeCWD = "..";
-  const fileExistsMock = Core.Utils.Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
+  const fileExistsMock = Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
 
   test("it should use yarn to install the builder", async () => {
     const spy = jest
@@ -47,12 +49,10 @@ describe("install required dependency", () => {
     fileExistsMock.mockReturnValueOnce(true); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith(
-      `yarn add -D ${Core.Utils.CONSTS.SM_PACKAGE_NAME}`
-    );
+    expect(spy).toHaveBeenCalledWith(`yarn add -D ${SM_PACKAGE_NAME}`);
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
@@ -66,11 +66,11 @@ describe("install required dependency", () => {
     fileExistsMock.mockReturnValueOnce(false); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
-    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      `npm install --save-dev ${Core.Utils.CONSTS.SM_PACKAGE_NAME}`
+      `npm install --save-dev ${SM_PACKAGE_NAME}`
     );
 
     expect(successFn).toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.react);
+    await installRequiredDependencies(fakedir, Models.Frameworks.react);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -105,7 +105,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.next);
+    await installRequiredDependencies(fakedir, Models.Frameworks.next);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -123,7 +123,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.svelte);
+    await installRequiredDependencies(fakedir, Models.Frameworks.svelte);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -141,7 +141,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakedir, Models.Frameworks.nuxt);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
@@ -159,7 +159,7 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.vue);
+    await installRequiredDependencies(fakedir, Models.Frameworks.vue);
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(

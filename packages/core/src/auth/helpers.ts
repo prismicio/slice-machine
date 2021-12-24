@@ -1,8 +1,10 @@
-import * as hapi from "@hapi/hapi";
 import open from "open";
-import { CONSTS, bold, underline, spinner, writeError } from "../utils";
-import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
-import { Cookie } from "../utils";
+import * as hapi from "@hapi/hapi";
+
+import { serializeCookies } from "./cookie";
+import { SharedConfigManager } from "../prismic/SharedConfig";
+import { DEFAULT_BASE, DEFAULT_SERVER_PORT } from "../defaults";
+import { bold, underline, spinner, writeError } from "../internals/logs";
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
@@ -110,8 +112,8 @@ export function askSingleChar(title: string): Promise<string> {
 export async function startServerAndOpenBrowser(
   url: string,
   action: "login" | "signup",
-  base: string = CONSTS.DEFAULT_BASE,
-  port: number = CONSTS.DEFAULT_SERVER_PORT
+  base: string = DEFAULT_BASE,
+  port: number = DEFAULT_SERVER_PORT
 ): Promise<{
   onLoginFail: () => void;
 }> {
@@ -132,8 +134,8 @@ export async function startServerAndOpenBrowser(
 
   function onSuccess(data: HandlerData) {
     s.succeed(`Logged in as ${bold(data.email)}`).stop();
-    PrismicSharedConfigManager.setProperties({
-      cookies: Cookie.serializeCookies(data.cookies),
+    SharedConfigManager.setProperties({
+      cookies: serializeCookies(data.cookies),
       base,
     });
   }

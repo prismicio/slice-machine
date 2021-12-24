@@ -5,7 +5,7 @@ const ERROR_CODES = {
   ENOENT: "ENOENT",
 };
 
-const Files = {
+export const Files = {
   _format: "utf8" as BufferEncoding,
 
   write(
@@ -151,5 +151,3 @@ const Files = {
     } catch (e) {}
   },
 };
-
-export default Files;

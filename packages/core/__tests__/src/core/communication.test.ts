@@ -6,10 +6,11 @@ import {
   afterEach,
   jest,
 } from "@jest/globals";
-import * as communication from "../../../src/core/communication";
-import { roles } from "../../../src/utils";
 import nock from "nock";
-import { Frameworks } from "../../../src/models/Framework";
+
+import { Roles } from "../../../src/prismic";
+import { Frameworks } from "../../../src/models";
+import * as communication from "../../../src/prismic/communication";
 
 describe("communication", () => {
   afterEach(() => {
@@ -26,8 +27,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: Roles.OWNER },
+        qwerty: { dbid: "efgh", role: Roles.WRITER },
       },
     };
     nock("https://auth.prismic.io")
@@ -44,8 +45,8 @@ describe("communication", () => {
       email: "fake@prismic.io",
       type: "USER",
       repositories: {
-        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
+        "foo-repo": { dbid: "abcd", role: Roles.OWNER },
+        qwerty: { dbid: "efgh", role: Roles.WRITER },
       },
     };
     nock("https://auth.wroom.io")
@@ -244,10 +245,10 @@ describe("communication", () => {
 describe("maybeParseRepoData", () => {
   test("with repos as a string", () => {
     const repos = JSON.stringify({
-      foo: { role: roles.Roles.ADMIN, dbid: "foo" },
+      foo: { role: Roles.ADMIN, dbid: "foo" },
     });
     const result = communication.maybeParseRepoData(repos);
     expect(result.foo).toBeDefined();
-    expect(result.foo.role).toEqual(roles.Roles.ADMIN);
+    expect(result.foo.role).toEqual(Roles.ADMIN);
   });
 });

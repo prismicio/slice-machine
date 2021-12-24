@@ -1,14 +1,13 @@
-import { Utils, FileSystem } from "@slicemachine/core";
+import { YarnLockPath } from "@slicemachine/core/build/src/fs-utils";
+import { Files } from "@slicemachine/core/build/src/internals";
+import { SCRIPT_NAME } from "@slicemachine/core/build/src/defaults";
+import { white, purple } from "@slicemachine/core/build/src/internals";
 
 export function displayFinalMessage(cwd: string): void {
-  const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
-  const command = `${yarnLock ? "yarn" : "npm"} run ${
-    Utils.CONSTS.SCRIPT_NAME
-  }`;
+  const yarnLock = Files.exists(YarnLockPath(cwd));
+  const command = `${yarnLock ? "yarn" : "npm"} run ${SCRIPT_NAME}`;
 
   console.log(
-    `${Utils.white("■")} Run ${Utils.purple(
-      command
-    )} to now launch your Local Builder`
+    `${white("■")} Run ${purple(command)} to now launch your Local Builder`
   );
 }

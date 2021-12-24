@@ -1,8 +1,36 @@
-import { FileSystem, Utils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 
-type Base = Utils.Endpoints.Base;
+import {
+  retrieveJsonPackage,
+  patchJsonPackage,
+  patchManifest,
+  retrieveManifest,
+  createManifest,
+} from "@slicemachine/core/build/src/fs-utils";
+
+import {
+  Base,
+  buildRepositoryEndpoint,
+} from "@slicemachine/core/build/src/prismic";
+import { spinner } from "@slicemachine/core/build/src/internals";
+import {
+  SCRIPT_NAME,
+  SCRIPT_VALUE,
+} from "@slicemachine/core/build/src/defaults";
+
+export function addJsonPackageSmScript(cwd: string): boolean {
+  const pkg = retrieveJsonPackage(cwd);
+  if (!pkg.exists || !pkg.content) return false;
+
+  const { scripts = {} } = pkg.content;
+
+  if (scripts[SCRIPT_NAME]) return false;
+
+  return patchJsonPackage(cwd, {
+    scripts: { ...scripts, [SCRIPT_NAME]: SCRIPT_VALUE },
+  });
+}
 
 export function configureProject(
   cwd: string,
@@ -10,29 +38,29 @@ export function configureProject(
   repository: string,
   framework: FrameworkResult
 ): void {
-  const spinner = Utils.spinner(
+  const spin = spinner(
     `Configuring your ${framework.value} & Prismic project...`
   );
-  spinner.start();
+  spin.start();
 
   try {
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = retrieveManifest(cwd);
 
     const manifestUpdated: Models.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
-      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
+      apiEndpoint: buildRepositoryEndpoint(base, repository),
       libraries: ["@/slices"],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
     };
 
-    if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
-    else FileSystem.patchManifest(cwd, manifestUpdated);
+    if (!manifest.exists) createManifest(cwd, manifestUpdated);
+    else patchManifest(cwd, manifestUpdated);
 
-    FileSystem.addJsonPackageSmScript(cwd);
+    addJsonPackageSmScript(cwd);
 
-    spinner.succeed("Project configured! Ready to start");
+    spin.succeed("Project configured! Ready to start");
   } catch {
-    spinner.fail("Failed to configure your Prismic Local Builder");
+    spin.fail("Failed to configure your Prismic Local Builder");
     process.exit(-1);
   }
 }

@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 import path from "path";
-import Files from "../utils/files";
+import { Files } from "../internals";
 import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 

@@ -1,0 +1,4 @@
+{
+  "apiEndpoint": "https://testing-repo.music.to.my.hears.io/api/v2",
+  "libraries": ["@/slices"]
+}
