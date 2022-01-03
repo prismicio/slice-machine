@@ -8,7 +8,7 @@ import { SliceContext } from "@src/models/slice/context";
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
-import { TrackerContext } from "@src/utils/tracker";
+import Tracker from "@src/tracker";
 import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
@@ -22,8 +22,6 @@ export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Preview() {
   const { Model, variation } = useContext(SliceContext);
-  const tracker = useContext(TrackerContext);
-  const [sentTrackingEvent, setSentTrackingEvent] = useState(false);
 
   const { framework, version, previewUrl } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -34,11 +32,8 @@ export default function Preview() {
   );
 
   useEffect(() => {
-    if (sentTrackingEvent === false && tracker) {
-      tracker.Track.SlicePreview({ framework, version });
-      setSentTrackingEvent(true);
-    }
-  }, [tracker]);
+    Tracker.OpenSlicePreview(framework, version);
+  }, []);
 
   const [state, setState] = useState({ size: Size.FULL });
 

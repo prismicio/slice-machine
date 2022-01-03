@@ -10,7 +10,7 @@ import theme from "src/theme";
 
 import LoadingPage from "components/LoadingPage";
 import SliceMachineApp from "components/App";
-import { ClientTracker, TrackerContext } from "src/utils/tracker";
+import Tracker from "@src/tracker";
 
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
@@ -69,7 +69,6 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   // to remove it we should change how the slice store is handled
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
-  const [tracker, setTracker] = useState<ClientTracker | undefined>(undefined);
   const [storeInitiated, setStoreInitiated] = useState<boolean>(false);
   const [smStore, setSMStore] = useState<{
     store: Store;
@@ -89,16 +88,10 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       setSMStore({ store, persistor });
     }
 
-    serverState.env.repo &&
-      ClientTracker.build(
-        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
-        serverState.env.repo,
-        serverState.env.manifest.tracking
-      )
-        .then((tracker) => setTracker(tracker))
-        .catch(() => {
-          console.log("Cannot initialize tracker.");
-        });
+    Tracker.initialize(
+      "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      serverState.env.manifest.tracking
+    );
 
     const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {
@@ -130,11 +123,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
             ) : (
               <Provider store={smStore.store}>
                 <PersistGate loading={null} persistor={smStore.persistor}>
-                  <TrackerContext.Provider value={tracker}>
-                    <SliceMachineApp serverState={serverState}>
-                      <Component {...pageProps} />
-                    </SliceMachineApp>
-                  </TrackerContext.Provider>
+                  <SliceMachineApp serverState={serverState}>
+                    <Component {...pageProps} />
+                  </SliceMachineApp>
                 </PersistGate>
               </Provider>
             )}

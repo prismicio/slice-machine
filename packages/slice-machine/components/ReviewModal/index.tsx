@@ -19,7 +19,6 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
 import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
-import { TrackerContext } from "@src/utils/tracker";
 import {
   userHasDoneTheOnboarding,
   userHasSendAReview,
@@ -27,6 +26,7 @@ import {
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
+import Tracker from "@src/tracker";
 
 Modal.setAppElement("#__next");
 
@@ -66,7 +66,6 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
-  const tracker = useContext(TrackerContext);
 
   const {
     env,
@@ -102,7 +101,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
-    tracker?.Track.review(env.framework, rating, comment);
+    Tracker.trackReview(env.framework, rating, comment);
     sendAReview();
     stopLoadingReview();
   };

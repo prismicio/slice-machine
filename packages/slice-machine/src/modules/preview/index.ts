@@ -20,6 +20,7 @@ import {
 } from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
 import {
+  getCurrentVersion,
   getFramework,
   selectIsPreviewAvailableForFramework,
 } from "@src/modules/environment";
@@ -29,6 +30,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PreviewCheckResponse } from "@models/common/Preview";
 
 import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
+import Tracker from "@src/tracker";
 
 const NoStepSelected = 0;
 
@@ -199,6 +201,10 @@ function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
+    const framework: Frameworks = yield select(getFramework);
+    const version: string = yield select(getCurrentVersion);
+
+    Tracker.SlicePreviewSetup(framework, version)
     const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
       checkPreviewSetup
     );
