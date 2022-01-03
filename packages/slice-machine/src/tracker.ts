@@ -3,16 +3,22 @@ import { AnalyticsBrowser } from "@segment/analytics-next";
 import {Frameworks} from "@slicemachine/core/build/src/models";
 
 // These events should be sync with the tracking Plan on segment.
-export enum EventType {
+
+type AllSliceMachineEventType = EventType | ContinueOnboardingType;
+
+enum EventType {
   Review = "SliceMachine Review",
   OnboardingStart = "SliceMachine Onboarding Start",
   OnboardingSkip = "SliceMachine Onboarding Skip",
+  SlicePreviewSetup = "Slice Preview Setup",
+  SlicePreview = "Slice Preview",
+}
+
+export enum ContinueOnboardingType {
   OnboardingContinueIntro = "SliceMachine Onboarding Continue Screen Intro",
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
   OnboardingContinueScreen2 = "SliceMachine Onboarding Continue Screen 2",
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
-  SlicePreviewSetup = "Slice Preview Setup",
-  SlicePreview = "Slice Preview",
 }
 
 let _client: ClientAnalytics | null = null;
@@ -20,7 +26,7 @@ let _isTrackingActive: boolean = true;
 
 // Track event method
 const _trackEvent = (
-  eventType: EventType,
+  eventType: AllSliceMachineEventType,
   attributes: Record<string, unknown> = {}
 ): void => {
   if(_isTrackingActive) return;
@@ -63,9 +69,33 @@ export const OpenSlicePreview = (framework: Frameworks, version: string): void =
   return this.trackEvent(EventType.SlicePreview, { version, framework });
 }
 
+const trackOnboardingStart = () => {
+  _trackEvent(EventType.OnboardingStart);
+};
+
+const trackOnboardingContinue = (
+  continueOnboardingEventType: ContinueOnboardingType,
+  onboardingVideoCompleted?: boolean
+) => {
+  _trackEvent(continueOnboardingEventType, { onboardingVideoCompleted });
+};
+
+const trackOnboardingSkip = (
+  screenSkipped: number,
+  onboardingVideoCompleted?: boolean
+) => {
+  _trackEvent(EventType.OnboardingSkip, {
+    screenSkipped,
+    onboardingVideoCompleted,
+  });
+};
+
 export default {
   initialize,
   trackReview,
   SlicePreviewSetup,
   OpenSlicePreview
+  trackOnboardingSkip,
+  trackOnboardingStart,
+  trackOnboardingContinue
 };

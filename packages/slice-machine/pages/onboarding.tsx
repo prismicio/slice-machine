@@ -1,28 +1,22 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Grid,
   Box,
   Button,
   Flex,
-  Paragraph,
+  Grid,
   Heading,
-  Image,
   HeadingProps,
-  ParagraphProps,
   IconButton,
+  Image,
+  Paragraph,
+  ParagraphProps,
 } from "theme-ui";
-import {
-  TrackingEventId,
-  OnboardingSkipEvent,
-  OnboardingContinueEvent,
-  OnboardingContinueWithVideoEvent,
-} from "lib/models/common/TrackingEvent";
 import router from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
 
 import { BiChevronLeft } from "react-icons/bi";
-import { sendTrackingOnboarding } from "src/apiClient";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import Tracker, { ContinueOnboardingType } from "@src/tracker";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -154,22 +148,16 @@ const StepIndicator = ({
   );
 };
 
-function idFromStep(
-  step: number
-):
-  | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
-  | TrackingEventId.ONBOARDING_FIRST
-  | TrackingEventId.ONBOARDING_SECOND
-  | TrackingEventId.ONBOARDING_THIRD {
+function idFromStep(step: number): ContinueOnboardingType {
   switch (step) {
     case 0:
-      return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO;
+      return ContinueOnboardingType.OnboardingContinueIntro;
     case 1:
-      return TrackingEventId.ONBOARDING_FIRST;
+      return ContinueOnboardingType.OnboardingContinueScreen1;
     case 2:
-      return TrackingEventId.ONBOARDING_SECOND;
+      return ContinueOnboardingType.OnboardingContinueScreen2;
     default:
-      return TrackingEventId.ONBOARDING_THIRD;
+      return ContinueOnboardingType.OnboardingContinueScreen3;
   }
 }
 
@@ -187,27 +175,25 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    sendTrackingOnboarding({
-      id: TrackingEventId.ONBOARDING_START,
-    }).catch(console.error);
+    Tracker.trackOnboardingStart();
 
+    // on unmount
     return () => {
-      // on unmount
       const { maxSteps, step, videoCompleted } = state.current;
 
-      const data: OnboardingSkipEvent | OnboardingContinueWithVideoEvent =
-        step < maxSteps - 1
-          ? {
-              id: TrackingEventId.ONBOARDING_SKIP,
-              screenSkipped: step,
-              ...(step > 0 ? { onboardingVideoCompleted: videoCompleted } : {}),
-            }
-          : {
-              id: TrackingEventId.ONBOARDING_THIRD,
-              onboardingVideoCompleted: videoCompleted,
-            };
+      const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
+      if (hasTheUserSkippedTheOnboarding) {
+        Tracker.trackOnboardingSkip(
+          step,
+          step > 0 ? videoCompleted : undefined
+        );
+        return;
+      }
 
-      sendTrackingOnboarding(data).catch(console.error);
+      Tracker.trackOnboardingContinue(
+        ContinueOnboardingType.OnboardingContinueScreen3,
+        videoCompleted
+      );
     };
   }, []);
 }
@@ -244,15 +230,10 @@ export default function Onboarding(): JSX.Element {
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
-    const id = idFromStep(state.step);
-    const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
-      id,
-      ...(state.step > 0
-        ? { onboardingVideoCompleted: state.videoCompleted }
-        : {}),
-    };
-
-    sendTrackingOnboarding(data).catch(console.error);
+    Tracker.trackOnboardingContinue(
+      idFromStep(state.step),
+      state.step > 0 ? state.videoCompleted : undefined
+    );
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
