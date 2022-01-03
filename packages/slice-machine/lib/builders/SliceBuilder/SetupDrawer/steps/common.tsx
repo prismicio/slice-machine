@@ -160,7 +160,6 @@ export const CheckSetup =
   ({
     isOpen,
     onOpenStep,
-    stepNumber,
     userHasAtLeastOneStepMissing,
     userHasConfiguredAllSteps,
     checkPreviewSetup,
@@ -168,12 +167,7 @@ export const CheckSetup =
     isCheckingSetup,
   }: CheckSetupComProps): React.ReactElement => {
     return (
-      <StepSection
-        stepNumber={stepNumber}
-        title={title}
-        isOpen={isOpen}
-        onOpenStep={onOpenStep}
-      >
+      <StepSection title={title} isOpen={isOpen} onOpenStep={onOpenStep}>
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
           <Text sx={{ color: "textClear", mb: 3 }}>
             After you’re done the previous steps, we need to check that
