@@ -1,5 +1,4 @@
 export enum TrackingEventId {
-  REVIEW = "slicemachine_review",
   ONBOARDING_START = "slicemachine_onboarding_start",
   ONBOARDING_SKIP = "slicemachine_onboarding_skip",
   ONBOARDING_CONTINUE_SCREEN_INTRO = "slicemachine_onboarding_continue_screen_intro",
@@ -11,24 +10,9 @@ export enum TrackingEventId {
 export type TrackingEvent = {
   id: string;
 };
-
-/** Tracking review routes SM API contract */
-
-export type TrackingReviewRequest = {
-  rating: number;
-  comment: string;
-};
-
-export type TrackingReviewResponse = {};
+export type TrackingResponse = {};
 
 /** Tracking review routes Tracking API contract */
-
-export type ReviewTrackingEvent = TrackingEvent & {
-  id: TrackingEventId.REVIEW;
-  framework: string;
-  rating: number;
-  comment: string;
-};
 
 export type OnboardingEventIds =
   | TrackingEventId.ONBOARDING_START

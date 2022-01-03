@@ -29,6 +29,17 @@ export default async function handler(req: RequestWithEnv) {
 
   const state = await getBackendState(req.errors, req.env);
 
+  if (!state.libraries) {
+    const code = 400;
+    const message = `Error ${code}: Slice libraries needs to be define in your sm.json file.`;
+
+    return {
+      err: new Error(message),
+      reason: message,
+      status: code,
+    };
+  }
+
   if (state.clientError || state.isFake) {
     const isAnAuthenticationError =
       state.isFake || (state.clientError && state.clientError.status === 403);

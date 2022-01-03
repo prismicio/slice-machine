@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Utils, FileSystem } from "@slicemachine/core";
+import { Tracker } from "./utils/tracker";
 import {
   installRequiredDependencies,
   validatePkg,
@@ -10,12 +11,15 @@ import {
   configureProject,
   displayFinalMessage,
   detectFramework,
+  installLib,
 } from "./steps";
 import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const lib: string | undefined = findArgument(process.argv, "library");
+  const branch: string | undefined = findArgument(process.argv, "branch");
 
   console.log(
     Utils.purple(
@@ -27,7 +31,8 @@ async function init() {
   validatePkg(cwd);
 
   // login
-  await loginOrBypass(base);
+  const user = await loginOrBypass(base);
+  if (!user) throw new Error("The user should be logged in!");
 
   // retrieve tokens for api calls
   const config = FileSystem.PrismicSharedConfigManager.get();
@@ -46,11 +51,19 @@ async function init() {
     await createRepository(name, frameworkResult.value, config);
   }
 
+  const tracker = Tracker.build("JfTfmHaATChc4xueS7RcCBsixI71dJIJ", name, {
+    userId: user.userId,
+  });
+
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
 
+  const sliceLibPath = lib
+    ? await installLib(tracker, cwd, lib, branch)
+    : undefined;
+
   // configure the SM.json file and the json package file of the project..
-  configureProject(cwd, base, name, frameworkResult);
+  configureProject(cwd, base, name, frameworkResult, sliceLibPath);
 
   // ask the user to run slice-machine.
   displayFinalMessage(cwd);

@@ -15,6 +15,8 @@ import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 
+let temp_first_start_flag = true;
+
 export async function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
@@ -78,7 +80,7 @@ export const getBackendState = async (
 
   const warnings = await createWarnings(env, clientError);
 
-  await generate(env, libraries);
+  if (libraries) await generate(env, libraries);
 
   return {
     libraries,
@@ -105,7 +107,21 @@ export default async function handler(
     prismicAPIUrl: prismicData.base,
   };
 
-  req.tracker.libraries(serverState.libraries);
+  /*
+   * TEMPORARY
+   * Today, we need to have access to the cookie to get the anonymousID from segment but
+   * we want to log that event only at start time. Because of the necessity to access the cookies,
+   * we can't put that code on the start script just yet.
+   * We need to define a potential alternative for this event.
+   * In the meantime, this flag prevent the event flood
+   */
+  if (temp_first_start_flag && serverState.libraries) {
+    req.tracker?.Group.libraries(
+      serverState.libraries,
+      env.updateVersionInfo.currentVersion
+    );
+    temp_first_start_flag = false;
+  }
 
   return {
     ...serverState,

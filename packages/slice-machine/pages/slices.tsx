@@ -77,34 +77,17 @@ const SlicesIndex: React.FunctionComponent = () => {
     });
   };
 
-  const localLibs = libraries.length
-    ? libraries.filter((e) => e && e.isLocal)
-    : [];
-  const hasLocalLibs = localLibs.length;
-  const configLocalLibs = (libraries || []).reduce<
-    ReadonlyArray<{ name: string }>
-  >((acc, lib) => {
-    if (!lib) return acc;
+  const localLibraries: LibraryState[] | undefined = libraries?.filter(
+    (l) => l.isLocal
+  );
 
-    if (!lib.isLocal) {
-      return acc;
+  const sliceCount = (libraries || []).reduce((count, lib) => {
+    if (!lib) {
+      return count;
     }
 
-    return [...acc, { name: lib.name }];
-  }, []);
-
-  const hasConfigLocalLibs = configLocalLibs.length;
-
-  const sliceCount =
-    libraries && libraries.length
-      ? libraries.reduce((count, lib) => {
-          if (!lib) {
-            return count;
-          }
-
-          return count + lib.components.length;
-        }, 0)
-      : 0;
+    return count + lib.components.length;
+  }, 0);
 
   return (
     <>
@@ -124,7 +107,7 @@ const SlicesIndex: React.FunctionComponent = () => {
         >
           <Header
             ActionButton={
-              hasLocalLibs ? (
+              localLibraries?.length != 0 && sliceCount != 0 ? (
                 <CreateSliceButton
                   onClick={() => setIsOpen(true)}
                   loading={isCreatingSlice}
@@ -138,19 +121,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             }
             breadrumbHref="/slices"
           />
-          {!hasConfigLocalLibs && (
-            <Box>
-              <p>
-                We could not find any local library in your project.
-                <br />
-                Please update your `sm.json` file with a path to slices, eg:
-              </p>
-              <p>
-                <pre>{`{ "libraries": ["@/slices"] }`}</pre>
-              </p>
-            </Box>
-          )}
-          {!!hasConfigLocalLibs && (
+          {libraries && (
             <Box
               sx={{
                 flex: 1,
@@ -182,11 +153,8 @@ const SlicesIndex: React.FunctionComponent = () => {
                   }
                 />
               ) : (
-                libraries.map((maybelib: LibraryState | undefined) => {
-                  if (!maybelib) {
-                    return null;
-                  }
-                  const { name, isLocal, components } = maybelib;
+                libraries.map((lib: LibraryState) => {
+                  const { name, isLocal, components } = lib;
                   return (
                     <Flex
                       key={name}
@@ -233,11 +201,11 @@ const SlicesIndex: React.FunctionComponent = () => {
           )}
         </Box>
       </Container>
-      {!!configLocalLibs.length && (
+      {localLibraries && localLibraries.length > 0 && (
         <CreateSliceModal
           isOpen={isOpen}
           close={() => setIsOpen(false)}
-          libraries={configLocalLibs}
+          libraries={localLibraries}
           onSubmit={({
             sliceName,
             from,

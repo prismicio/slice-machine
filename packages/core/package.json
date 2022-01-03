@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.0.2-alpha.17",
+  "version": "1.0.2-alpha.22",
   "private": false,
   "main": "./build/index.js",
   "exports": {
@@ -45,6 +45,7 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
+    "@types/axios": "^0.14.0",
     "@types/cookie": "^0.4.1",
     "@types/fs-extra": "^9.0.13",
     "@types/hapi__hapi": "^20.0.9",

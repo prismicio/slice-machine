@@ -8,7 +8,8 @@ export function configureProject(
   cwd: string,
   base: Base,
   repository: string,
-  framework: FrameworkResult
+  framework: FrameworkResult,
+  sliceLibPath: string[] = []
 ): void {
   const spinner = Utils.spinner(
     `Configuring your ${framework.value} & Prismic project...`
@@ -21,13 +22,21 @@ export function configureProject(
     const manifestUpdated: Models.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
-      libraries: ["@/slices"],
+      libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
     };
 
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
     else FileSystem.patchManifest(cwd, manifestUpdated);
 
+    // create the default slices folder if it doesn't exist.
+    const pathToSlicesFolder = FileSystem.CustomPaths(cwd)
+      .library("slices")
+      .value();
+    if (!Utils.Files.exists(pathToSlicesFolder))
+      Utils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+
+    // add slicemachine script to package.json.
     FileSystem.addJsonPackageSmScript(cwd);
 
     spinner.succeed("Project configured! Ready to start");

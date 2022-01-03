@@ -12,7 +12,6 @@ const screenshot = require("./screenshots/screenshots").default;
 const customScreenshot = require("./screenshots/custom-screenshots").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
-const trackReview = require("./tracking/review").default;
 const checkPreview = require("./preview").default;
 
 const saveCustomType = require("./custom-types/save").default;
@@ -24,13 +23,6 @@ import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 import onboarding from "./tracking/onboarding";
 import { RequestWithEnv, WithEnv } from "./http/common";
-
-import {
-  TrackingReviewRequest,
-  TrackingReviewResponse,
-} from "@lib/models/common/TrackingEvent";
-import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/src/filesystem/PrismicSharedConfig";
 
 router.use(
   "/__preview",
@@ -62,17 +54,6 @@ router.get(
     }
     return res.status(200).json(payload);
   })
-);
-
-router.post(
-  "/tracking/review",
-  async function (
-    req: express.Request<TrackingReviewRequest>,
-    res: express.Response<TrackingReviewResponse>
-  ): Promise<Express.Response> {
-    const payload = await trackReview(req.body);
-    return res.status(payload.status).json({});
-  }
 );
 
 router.post(
@@ -251,16 +232,16 @@ router.post(
 
 router.post(
   "/auth/status",
-  async function (
-    _req: express.Request,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await statusAuth();
+    const payload = await statusAuth(req);
     if (payload.status === "error") {
       return res.status(500).json(payload);
     }
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.post(
@@ -276,15 +257,6 @@ router.post(
       console.error(body);
       return res.status(500).json(body);
     }
-
-    const updatedToken = PrismicSharedConfigManager.getAuth();
-
-    const profile = await DefaultClient.profile(req.env.baseUrl, updatedToken);
-    if (profile instanceof Error) return res.status(500).json({});
-
-    PrismicSharedConfigManager.setProperties({ userId: profile.userId });
-    req.tracker.resolveUser(profile.userId, req.anonymousId);
-
     return res.status(200).json({});
   })
 );
