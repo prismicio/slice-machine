@@ -31,17 +31,13 @@ const UpdateVersionModal: React.FC = () => {
     useSliceMachineActions();
 
   React.useEffect(() => {
-    if (!updateVersionInfo) return;
     if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
-  }, [updateVersionInfo?.updateAvailable]);
+  }, [updateVersionInfo.updateAvailable]);
 
   const copy = () => {
     ref.current?.textContent &&
       navigator.clipboard.writeText(ref.current.textContent);
   };
-
-  // if the data is not loaded
-  if (!updateVersionInfo) return null;
 
   return (
     <SliceMachineModal

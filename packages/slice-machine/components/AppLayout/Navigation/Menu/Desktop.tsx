@@ -15,7 +15,6 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
-  getEnvironment,
   getUpdateVersionInfo,
   getWarnings,
 } from "@src/modules/environment";
@@ -80,9 +79,8 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { env, warnings, configErrors, updateVersionInfo } = useSelector(
+  const { warnings, configErrors, updateVersionInfo } = useSelector(
     (store: SliceMachineStoreType) => ({
-      env: getEnvironment(store),
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
       updateVersionInfo: getUpdateVersionInfo(store),
@@ -100,7 +98,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Logo />
         <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {updateVersionInfo?.updateAvailable && (
+          {updateVersionInfo.updateAvailable && (
             <UpdateInfo onClick={openUpdateVersionModal} />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
@@ -112,7 +110,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
           />
           <VersionBadge
             label="Version"
-            version={env ? env.updateVersionInfo.currentVersion : ""}
+            version={updateVersionInfo.currentVersion}
           />
         </Box>
       </Box>

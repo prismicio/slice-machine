@@ -34,9 +34,7 @@ const Mobile: React.FunctionComponent<{ links: LinkProps[] }> = ({ links }) => {
         <Box>
           <ItemsList mt={4} links={links} />
           <Box sx={{ textAlign: "right" }}>
-            <VersionBadge
-              version={env ? env.updateVersionInfo.currentVersion : ""}
-            />
+            <VersionBadge version={env.updateVersionInfo.currentVersion} />
           </Box>
         </Box>
       ) : null}

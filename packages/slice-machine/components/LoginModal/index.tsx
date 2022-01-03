@@ -44,13 +44,10 @@ const LoginModal: React.FunctionComponent = () => {
     useSliceMachineActions();
 
   const { addToast } = useToasts();
-  const prismicBase = !!env ? env.prismicAPIUrl : "https://prismic.io";
-  const loginRedirectUrl = !!env
-    ? `${buildEndpoints(prismicBase).Dashboard.cliLogin}&port=${
-        new URL(env.sliceMachineAPIUrl).port
-      }&path=/api/auth`
-    : "";
-
+  const prismicBase = env.prismicAPIUrl;
+  const loginRedirectUrl = `${
+    buildEndpoints(prismicBase).Dashboard.cliLogin
+  }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;
   const onClick = async () => {
     if (!loginRedirectUrl) {
       return;

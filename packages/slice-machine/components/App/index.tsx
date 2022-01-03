@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-
-import { ThemeProvider, BaseStyles, useThemeUI, Theme } from "theme-ui";
+import React from "react";
 
 import LibrariesProvider from "@src/models/libraries/context";
 import CustomTypesProvider from "@src/models/customTypes/context";
@@ -17,66 +15,45 @@ import useServerState from "@src/hooks/useServerState";
 import UpdateVersionModal from "../UpdateVersionModal";
 import { MissingLibraries } from "@components/MissingLibraries";
 
-const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
-  const { setColorMode } = useThemeUI();
-  useEffect(() => {
-    if (setColorMode) {
-      setColorMode("light");
-    }
-  }, []);
-
-  return <>{children}</>;
-};
-
 type AppProps = {
-  theme: () => Theme;
   serverState: ServerState | undefined;
 };
 
 const SliceMachineApp: React.FunctionComponent<AppProps> = ({
-  theme,
   serverState,
   children,
 }) => {
   useOnboardingRedirection();
   useServerState(serverState);
 
+  if (!serverState) return <>{children}</>;
+
   return (
-    <ThemeProvider theme={theme}>
-      <BaseStyles>
-        <RemoveDarkMode>
-          {!serverState ? (
-            children
-          ) : (
-            <ToastProvider>
-              <LibrariesProvider
-                remoteSlices={serverState.remoteSlices}
-                libraries={serverState.libraries}
-                env={serverState.env}
-              >
-                <CustomTypesProvider
-                  customTypes={serverState.customTypes}
-                  remoteCustomTypes={serverState.remoteCustomTypes}
-                >
-                  <AppLayout>
-                    <SliceHandler {...serverState}>
-                      {serverState.libraries?.length ? (
-                        <>{children}</>
-                      ) : (
-                        <MissingLibraries />
-                      )}
-                    </SliceHandler>
-                  </AppLayout>
-                  <UpdateVersionModal />
-                  <LoginModal />
-                  <ReviewModal />
-                </CustomTypesProvider>
-              </LibrariesProvider>
-            </ToastProvider>
-          )}
-        </RemoveDarkMode>
-      </BaseStyles>
-    </ThemeProvider>
+    <ToastProvider>
+      <LibrariesProvider
+        remoteSlices={serverState.remoteSlices}
+        libraries={serverState.libraries}
+        env={serverState.env}
+      >
+        <CustomTypesProvider
+          customTypes={serverState.customTypes}
+          remoteCustomTypes={serverState.remoteCustomTypes}
+        >
+          <AppLayout>
+            <SliceHandler {...serverState}>
+              {serverState.libraries?.length ? (
+                <>{children}</>
+              ) : (
+                <MissingLibraries />
+              )}
+            </SliceHandler>
+          </AppLayout>
+          <UpdateVersionModal />
+          <LoginModal />
+          <ReviewModal />
+        </CustomTypesProvider>
+      </LibrariesProvider>
+    </ToastProvider>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import type Models from "@slicemachine/core/build/src/models";
+import type { Models } from "@slicemachine/core";
 import { Box, Button, Card as ThemeCard, Flex, Heading, Text } from "theme-ui";
 import Link from "next/link";
 import { NextRouter } from "next/router";
@@ -134,7 +134,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   );
 };
 
-function storyBookInstallLink(framework?: string) {
+function storyBookInstallLink(framework: Models.Frameworks) {
   switch (framework) {
     case "react":
       return "https://storybook.js.org/docs/react/get-started/install";
@@ -149,7 +149,7 @@ function storyBookInstallLink(framework?: string) {
 
 const StoryBookOrPreview: React.FC<{
   linkToStorybook: string | null;
-  framework?: string;
+  framework: Models.Frameworks;
 }> = ({ linkToStorybook, framework }) => {
   if (linkToStorybook) {
     return (
@@ -175,11 +175,8 @@ const StoryBookOrPreview: React.FC<{
           },
         }}
       >
-        {framework
-          ? `${framework} does not support Slice Preview.`
-          : "Slice Preview is not supported by your framework."}{" "}
-        You can <a href={storyBookInstallLink(framework)}>install Storybook</a>{" "}
-        instead.
+        {`${framework} does not support Slice Preview.`} You can{" "}
+        <a href={storyBookInstallLink(framework)}>install Storybook</a> instead.
       </Text>
     </>
   );
