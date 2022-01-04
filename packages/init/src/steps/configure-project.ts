@@ -54,7 +54,9 @@ export function configureProject(
     };
 
     if (!manifest.exists) createManifest(cwd, manifestUpdated);
-    else patchManifest(cwd, manifestUpdated);
+    else if (manifest.content === null) {
+      throw new Error("Could not parse sm.json");
+    } else patchManifest(cwd, manifestUpdated);
 
     addJsonPackageSmScript(cwd);
 
