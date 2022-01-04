@@ -20,12 +20,12 @@ import { getUpdateVersionInfo } from "@src/modules/environment";
 const UpdateVersionModal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { updateVersionInfo } = useSelector((store: SliceMachineStoreType) => ({
-    updateVersionInfo: getUpdateVersionInfo(store),
-    isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
-  }));
-
-  const isOpen = false;
+  const { isOpen, updateVersionInfo } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      updateVersionInfo: getUpdateVersionInfo(store),
+      isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
+    })
+  );
 
   const { closeUpdateVersionModal, openUpdateVersionModal } =
     useSliceMachineActions();

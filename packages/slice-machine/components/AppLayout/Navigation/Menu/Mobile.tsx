@@ -10,11 +10,11 @@ import ItemsList from "./Navigation/List";
 import { LinkProps } from "..";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getEnvironment } from "@src/modules/environment";
+import { getUpdateVersionInfo } from "@src/modules/environment";
 
 const Mobile: React.FunctionComponent<{ links: LinkProps[] }> = ({ links }) => {
-  const { env } = useSelector((store: SliceMachineStoreType) => ({
-    env: getEnvironment(store),
+  const { updateVersionInfo } = useSelector((store: SliceMachineStoreType) => ({
+    updateVersionInfo: getUpdateVersionInfo(store),
   }));
 
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ const Mobile: React.FunctionComponent<{ links: LinkProps[] }> = ({ links }) => {
         <Box>
           <ItemsList mt={4} links={links} />
           <Box sx={{ textAlign: "right" }}>
-            <VersionBadge version={env.updateVersionInfo.currentVersion} />
+            <VersionBadge version={updateVersionInfo.currentVersion} />
           </Box>
         </Box>
       ) : null}
