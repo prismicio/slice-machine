@@ -43,7 +43,13 @@ export const iframeSizes = {
   },
 };
 
-const ScreenSizes = ({ size, onClick }: { size: Size; onClick: Function }) => {
+const ScreenSizes = ({
+  size,
+  onClick,
+}: {
+  size: Size;
+  onClick: (screen: { Icon: JSX.Element; size: Size }) => void;
+}) => {
   return (
     <Flex>
       {screens.map((screen, i) => (

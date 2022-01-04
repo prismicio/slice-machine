@@ -7,8 +7,8 @@ const Grid = ({
 }: {
   elems: any;
   gridTemplateMinPx?: string;
-  renderElem: Function;
-}) => {
+  renderElem: (elem: any, i: number) => React.ReactElement | null;
+}): React.ReactElement => {
   return (
     <Box
       as="section"

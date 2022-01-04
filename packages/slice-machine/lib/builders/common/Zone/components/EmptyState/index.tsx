@@ -5,7 +5,7 @@ const ZoneEmptyState = ({
   onEnterSelectMode,
   zoneName,
 }: {
-  onEnterSelectMode: Function;
+  onEnterSelectMode: () => void;
   zoneName: string;
 }) => (
   <Box sx={{ textAlign: "center", my: 4 }}>

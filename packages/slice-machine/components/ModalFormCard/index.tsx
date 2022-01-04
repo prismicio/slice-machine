@@ -21,12 +21,12 @@ const ModalCard = ({
   omitFooter,
 }: {
   children: any;
-  close: Function;
+  close: () => void;
   isOpen: boolean;
   formId: string;
   validate?: Function;
   widthInPx?: string;
-  onSubmit: Function;
+  onSubmit: (v: any) => void;
   initialValues?: any;
   content: { title: string };
   cardProps?: {};

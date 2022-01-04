@@ -20,6 +20,7 @@ import UpdateModal, {
 } from "../TabModal/update";
 import CustomTypeStore from "src/models/customType/store";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
+import { TabAsArray } from "@lib/models/common/CustomType/tab";
 
 enum ModalType {
   CREATE = "create",
@@ -64,7 +65,7 @@ const CtTabs = ({
   sx?: any;
   Model: CustomTypeState;
   store: CustomTypeStore;
-  renderTab: Function;
+  renderTab: (tab: TabAsArray) => React.ReactElement;
 }) => {
   const { theme } = useThemeUI();
 

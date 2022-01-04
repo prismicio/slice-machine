@@ -91,7 +91,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       errors: { sliceName?: string };
       touched: { sliceName?: string };
       values: any;
-      setFieldValue: Function;
+      setFieldValue: (f: string, v: any) => void;
     }) => (
       <Box>
         <InputBox

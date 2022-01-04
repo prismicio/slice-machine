@@ -17,7 +17,7 @@ const Form = ({
 }: {
   isOpen: boolean;
   formId: string;
-  close: Function;
+  close: () => void;
   onSubmit: Function;
   availableSlices: ReadonlyArray<SliceState>;
   slicesInSliceZone: ReadonlyArray<SliceState>;

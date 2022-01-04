@@ -16,7 +16,7 @@ const Error = ({ msg }: { msg?: string }) => (
 );
 const VariationModal: React.FunctionComponent<{
   isOpen: boolean;
-  onClose: () => any;
+  onClose: () => unknown;
   onSubmit: (
     id: string,
     name: string,
@@ -100,7 +100,7 @@ const VariationModal: React.FunctionComponent<{
     reset();
   }, [initialVariation, isOpen]);
 
-  async function handleSubmit() {
+  function handleSubmit() {
     const data = { id: generatedId, name, origin };
     const errors = validateForm(data);
     if (Object.keys(errors).length) setErrors(errors);

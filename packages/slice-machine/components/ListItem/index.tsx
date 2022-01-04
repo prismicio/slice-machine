@@ -13,7 +13,35 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 
 import { FaBars } from "react-icons/fa";
 
-const ListItem = (props: any) => {
+interface Props {
+  item: {
+    key: string;
+    value: {
+      config: any;
+    };
+  };
+  index: number;
+  deleteItem: (p: string) => void;
+  enterEditMode: (a: Array<any>, b: string, c: number) => void;
+  modelFieldName: string;
+  renderFieldAccessor: (p: string) => void;
+
+  HintElement: React.ReactElement;
+
+  CustomEditElement: React.ReactElement;
+  CustomEditElements: React.ReactElement;
+  widget: {
+    Meta: {
+      icon: React.ReactElement;
+    };
+  };
+
+  draggableId: string;
+
+  children: React.ReactElement;
+}
+
+const ListItem = (props: Props) => {
   const {
     item,
     index,

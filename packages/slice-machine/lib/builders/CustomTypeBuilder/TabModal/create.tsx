@@ -41,7 +41,7 @@ const CreateCustomtypeForm = ({
   title: string;
   isOpen: boolean;
   onSubmit: Function;
-  close: Function;
+  close: () => void;
   tabIds: ReadonlyArray<string>;
 }) => {
   return (

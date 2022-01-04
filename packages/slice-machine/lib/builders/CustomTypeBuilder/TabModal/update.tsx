@@ -20,7 +20,7 @@ const InputBox = ({
   placeholder: string;
   error?: string;
   [x: string]: any;
-}) => (
+}): React.ReactElement => (
   <Box mb={3}>
     <Label htmlFor={name} mb={2}>
       {label}
@@ -49,8 +49,8 @@ const CreateCustomtypeForm = ({
 }: {
   title: string;
   isOpen: boolean;
-  onSubmit: Function;
-  close: Function;
+  onSubmit: (v: any) => void;
+  close: () => void;
   tabIds: ReadonlyArray<string>;
   allowDelete: boolean;
 }) => {
@@ -92,7 +92,7 @@ const CreateCustomtypeForm = ({
       }: {
         errors: { id?: string };
         values: { id: string };
-        setFieldValue: Function;
+        setFieldValue: (a: string, b: any) => void;
       }) => (
         <Box>
           <Box sx={{ px: 4, py: 4 }}>

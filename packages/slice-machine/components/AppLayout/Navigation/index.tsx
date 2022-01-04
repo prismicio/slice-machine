@@ -28,7 +28,7 @@ export interface LinkProps {
   title: string;
   delimiter?: boolean;
   href: string;
-  match: Function;
+  match: (p: string) => boolean;
   Icon: IconType;
 }
 

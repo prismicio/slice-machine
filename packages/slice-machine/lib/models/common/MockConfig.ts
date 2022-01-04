@@ -13,7 +13,7 @@ export const SliceMockConfig = {
     globalMockConfig: GlobalMockConfig,
     libName: string,
     sliceName: string
-  ) {
+  ): SliceMockConfig | {} {
     return globalMockConfig?.[libName]?.[sliceName] || {};
   },
   getVariationMockConfig(

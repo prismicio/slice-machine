@@ -96,8 +96,8 @@ const SelectRepeatable = () => {
 
 type CreateCustomTypeModalProps = {
   isOpen: boolean;
-  onSubmit: Function;
-  close: Function;
+  onSubmit: (values: any) => void;
+  close: () => void;
   customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
 };
 

@@ -16,11 +16,11 @@ import SliceState from "@models/ui/SliceState";
 import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
 
-const dataTipText: string = ` The non-repeatable zone
+const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
   section title.
 `;
-const dataTipText2: string = `The repeatable zone is for a group<br/>
+const dataTipText2 = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
 
@@ -79,8 +79,8 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   const _onSaveNewField =
     (widgetArea: Models.WidgetsArea) =>
     ({ id, widgetTypeName }: { id: string; widgetTypeName: string }) => {
-      // @ts-expect-error
-      const widget = Widgets[widgetTypeName];
+      // @ts-expect-error enforce type of type name
+      const widget: { create: (id: string) => void } = Widgets[widgetTypeName];
       if (!widget) {
         console.log(
           `Could not find widget with type name "${widgetTypeName}". Please contact us!`
@@ -111,7 +111,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         Model={Model}
         title="Non-Repeatable zone"
         dataTip={dataTipText}
-        // @ts-expect-error
+        // @ts-expect-error wrong type fields
         fields={variation.primary}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
@@ -121,7 +121,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
         onDragEnd={_onDragEnd(WidgetsArea.Primary)}
         poolOfFieldsToCheck={variation.primary || []}
-        renderHintBase={({ item }) =>
+        renderHintBase={({ item }: { item: { key: string } }) =>
           `slice.primary${transformKeyAccessor(item.key)}`
         }
         renderFieldAccessor={(key) =>
@@ -135,7 +135,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         title="Repeatable zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
-        // @ts-expect-error
+        // @ts-expect-error same issue
         fields={variation.items}
         EditModal={EditModal}
         getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Items)}
