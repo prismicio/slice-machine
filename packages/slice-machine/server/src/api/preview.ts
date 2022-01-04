@@ -17,7 +17,6 @@ export default async function handler(
   };
 
   if (!previewIsSupported(req.env.framework)) {
-    if (log) console.log("1");
     const message =
       "[api/env]: Unrecoverable error. The framework doesn't support the preview. Exiting..";
     console.error(message);
@@ -25,12 +24,10 @@ export default async function handler(
   }
 
   if (!req.env.manifest.localSliceCanvasURL) {
-    if (log) console.log("2");
     response.manifest = "ko";
   }
   const packageJson = retrieveJsonPackage(cwd);
   if (!packageJson.exists || !packageJson.content) {
-    if (log) console.log("5");
     const message =
       "[api/env]: Unrecoverable error. Could not find package.json. Exiting..";
     console.error(message);
@@ -53,9 +50,6 @@ export default async function handler(
           CONSTS.NUXT_PRISMIC,
         ];
 
-  if (log) {
-    console.log({ deps, requiredDeps });
-  }
   Object.keys(deps).forEach((dep: string) => {
     const depIndex = requiredDeps.indexOf(dep);
     if (-1 !== depIndex) {
@@ -64,7 +58,6 @@ export default async function handler(
   });
 
   if (requiredDeps.length !== 0) {
-    if (log) console.log("6");
     response.dependencies = "ko";
   }
   return response;

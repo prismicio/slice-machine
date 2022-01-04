@@ -80,8 +80,7 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithCanvasUrl,
-      true
+      requestWithCanvasUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
     expect(previewCheckResponse.dependencies).toBe("ok");
