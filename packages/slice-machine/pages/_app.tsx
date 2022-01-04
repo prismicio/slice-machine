@@ -26,6 +26,10 @@ import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
+import { Store } from "redux";
+import { Persistor } from "redux-persist/es/types";
+
+let _storeInitiated = false;
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -68,11 +72,24 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
   const [tracker, setTracker] = useState<ClientTracker | undefined>(undefined);
+  const [smStore, setSMStore] = useState<{
+    store: Store;
+    persistor: Persistor;
+  } | null>(null);
 
   useEffect(() => {
     if (!serverState) {
       return;
     }
+
+    if (!_storeInitiated) {
+      const { store, persistor } = configureStore({
+        environment: { env: serverState.env, warnings: [], configErrors: {} },
+      });
+      _storeInitiated = true;
+      setSMStore({ store, persistor });
+    }
+
     serverState.env.repo &&
       ClientTracker.build(
         "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
@@ -100,27 +117,6 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     console.log("------ End of log ------");
   }, [serverState]);
 
-  if (!serverState) {
-    return (
-      <>
-        <Head>
-          <title>SliceMachine</title>
-        </Head>
-        <ThemeProvider theme={theme}>
-          <BaseStyles>
-            <RemoveDarkMode>
-              <LoadingPage />
-            </RemoveDarkMode>
-          </BaseStyles>
-        </ThemeProvider>
-      </>
-    );
-  }
-
-  const { store, persistor } = configureStore({
-    environment: { env: serverState.env, warnings: [], configErrors: {} },
-  });
-
   return (
     <>
       <Head>
@@ -129,15 +125,19 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       <ThemeProvider theme={theme}>
         <BaseStyles>
           <RemoveDarkMode>
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <TrackerContext.Provider value={tracker}>
-                  <SliceMachineApp serverState={serverState}>
-                    <Component {...pageProps} />
-                  </SliceMachineApp>
-                </TrackerContext.Provider>
-              </PersistGate>
-            </Provider>
+            {!smStore || !serverState ? (
+              <LoadingPage />
+            ) : (
+              <Provider store={smStore.store}>
+                <PersistGate loading={null} persistor={smStore.persistor}>
+                  <TrackerContext.Provider value={tracker}>
+                    <SliceMachineApp serverState={serverState}>
+                      <Component {...pageProps} />
+                    </SliceMachineApp>
+                  </TrackerContext.Provider>
+                </PersistGate>
+              </Provider>
+            )}
           </RemoveDarkMode>
         </BaseStyles>
       </ThemeProvider>

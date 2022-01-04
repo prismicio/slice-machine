@@ -12,7 +12,7 @@ import * as Widgets from "@lib/models/common/widgets/withGroup";
 
 import Li from "components/Li";
 import { useSelector } from "react-redux";
-import { getEnvironment, getFramework } from "@src/modules/environment";
+import { getFramework } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
