@@ -29,8 +29,6 @@ import { AppInitialProps } from "next/dist/shared/lib/utils";
 import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 
-let _storeInitiated = false;
-
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
@@ -72,6 +70,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
   const [tracker, setTracker] = useState<ClientTracker | undefined>(undefined);
+  const [storeInitiated, setStoreInitiated] = useState<boolean>(false);
   const [smStore, setSMStore] = useState<{
     store: Store;
     persistor: Persistor;
@@ -82,11 +81,11 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       return;
     }
 
-    if (!_storeInitiated) {
+    if (!storeInitiated) {
       const { store, persistor } = configureStore({
         environment: { env: serverState.env, warnings: [], configErrors: {} },
       });
-      _storeInitiated = true;
+      setStoreInitiated(true);
       setSMStore({ store, persistor });
     }
 
