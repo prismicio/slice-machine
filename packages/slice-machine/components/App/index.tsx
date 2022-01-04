@@ -16,7 +16,7 @@ import UpdateVersionModal from "../UpdateVersionModal";
 import { MissingLibraries } from "@components/MissingLibraries";
 
 type AppProps = {
-  serverState: ServerState | undefined;
+  serverState: ServerState;
 };
 
 const SliceMachineApp: React.FunctionComponent<AppProps> = ({
@@ -25,8 +25,6 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
 }) => {
   useOnboardingRedirection();
   useServerState(serverState);
-
-  if (!serverState) return <>{children}</>;
 
   return (
     <ToastProvider>
