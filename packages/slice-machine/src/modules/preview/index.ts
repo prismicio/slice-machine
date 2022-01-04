@@ -26,7 +26,7 @@ import { PreviewCheckResponse } from "@models/common/Preview";
 
 import * as previewSteps from "@builders/SliceBuilder/SetupDrawer/steps";
 
-const NoStepSelected: number = 0;
+const NoStepSelected = 0;
 
 export const initialState: PreviewStoreType = {
   setupStatus: {

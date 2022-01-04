@@ -4,10 +4,20 @@ import { ActionType } from "./ActionType";
 import { ScreenshotResponse } from "@models/common/Screenshots";
 
 export function generateScreenShot(
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
+  dispatch: ({
+    type,
+    payload,
+  }: {
+    type: string;
+    payload?: { screenshots: Record<string, ScreenshotUI> };
+  }) => void
 ) {
-  return (_variationId: string) => {
-    return async (
+  return (): ((
+    libraryName: string,
+    sliceName: string,
+    setData: (data: object) => void
+  ) => void) => {
+    return (
       libraryName: string,
       sliceName: string,
       setData: (data: object) => void
@@ -32,10 +42,16 @@ export function generateScreenShot(
 }
 
 export function generateCustomScreenShot(
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
+  dispatch: ({
+    type,
+    payload,
+  }: {
+    type: string;
+    payload?: { variationId: string; screenshot: ScreenshotUI };
+  }) => void
 ) {
   return (variationId: string) => {
-    return async (
+    return (
       libraryName: string,
       sliceName: string,
       setData: (data: object) => void,
