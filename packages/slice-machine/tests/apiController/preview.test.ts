@@ -1,33 +1,26 @@
-// We mock the getEnv service
-import * as Core from "@slicemachine/core";
-
 import previewHandler from "../../server/src/api/preview";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 import { PreviewCheckResponse } from "../../lib/models/common/Preview";
+import { RequestWithEnv } from "server/src/api/http/common";
 
-jest.mock("@slicemachine/core", () => {
-  const actualCore = jest.requireActual("@slicemachine/core");
+import { retrieveJsonPackage } from "@slicemachine/core/build/src/fs-utils";
 
-  return {
-    ...actualCore,
-    FileSystem: {
-      retrieveJsonPackage: jest.fn<boolean, [{ cwd: string }]>(),
-    },
-  };
-});
+jest.mock("@slicemachine/core/build/src/fs-utils", () => ({
+  __esModule: true,
+  retrieveJsonPackage: jest.fn(),
+}));
 
 describe("preview controller", () => {
-  const retrieveJsonPackage = Core.FileSystem.retrieveJsonPackage as jest.Mock;
-
+  const retrieveJsonPackageMocked = retrieveJsonPackage as jest.Mock;
   test("it should return all checks ko when no canvas url is sent", async () => {
     const requestWithoutCanvasUrl = {
       env: {
         framework: Frameworks.next,
         manifest: {},
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
+    retrieveJsonPackageMocked.mockReturnValue({
       exists: true,
       content: {
         dependencies: {},
@@ -49,9 +42,9 @@ describe("preview controller", () => {
           localSliceCanvasURL: "http://localhost:3001/_canvas",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
+    retrieveJsonPackageMocked.mockReturnValue({
       exists: true,
       content: {
         dependencies: {},
@@ -73,9 +66,9 @@ describe("preview controller", () => {
           localSliceCanvasURL: "http://localhost:3001/_canvas",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
+    retrieveJsonPackageMocked.mockReturnValue({
       exists: true,
       content: {
         dependencies: {
@@ -87,7 +80,8 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithCanvasUrl
+      requestWithCanvasUrl,
+      true
     );
     expect(previewCheckResponse.manifest).toBe("ok");
     expect(previewCheckResponse.dependencies).toBe("ok");
@@ -101,9 +95,9 @@ describe("preview controller", () => {
           localSliceCanvasURL: "http://localhost:3001/_canvas",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
+    retrieveJsonPackageMocked.mockReturnValue({
       exists: true,
       content: {
         dependencies: {

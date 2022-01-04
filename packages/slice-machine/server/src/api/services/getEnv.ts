@@ -15,7 +15,10 @@ import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
-import { Models, Utils } from "@slicemachine/core";
+
+import { Models } from "@slicemachine/core";
+import { defineFramework } from "@slicemachine/core/build/src/fs-utils";
+import { isValidFramework } from "@slicemachine/core/build/src/utils";
 
 declare let appRoot: string;
 
@@ -26,7 +29,7 @@ function validate(config: Models.Manifest): ConfigErrors {
 
   if (
     config.framework &&
-    !Utils.Framework.isValidFramework(Models.Frameworks[config.framework])
+    !isValidFramework(Models.Frameworks[config.framework])
   ) {
     const options = Object.values(Models.SupportedFrameworks);
 
@@ -109,7 +112,7 @@ export default async function getEnv(
         updateAvailable: npmCompare.updateAvailable,
       },
       mockConfig,
-      framework: Utils.Framework.defineFramework(
+      framework: defineFramework(
         manifestInfo.content,
         cwd,
         Models.SupportedFrameworks
