@@ -20,28 +20,24 @@ import { getUpdateVersionInfo } from "@src/modules/environment";
 const UpdateVersionModal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { updateVersionInfo } = useSelector((store: SliceMachineStoreType) => ({
-    updateVersionInfo: getUpdateVersionInfo(store),
-    isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
-  }));
-
-  const isOpen = false;
+  const { isOpen, updateVersionInfo } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      updateVersionInfo: getUpdateVersionInfo(store),
+      isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
+    })
+  );
 
   const { closeUpdateVersionModal, openUpdateVersionModal } =
     useSliceMachineActions();
 
   React.useEffect(() => {
-    if (!updateVersionInfo) return;
     if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
-  }, [updateVersionInfo?.updateAvailable]);
+  }, [updateVersionInfo.updateAvailable]);
 
   const copy = () => {
     ref.current?.textContent &&
       navigator.clipboard.writeText(ref.current.textContent);
   };
-
-  // if the data is not loaded
-  if (!updateVersionInfo) return null;
 
   return (
     <SliceMachineModal

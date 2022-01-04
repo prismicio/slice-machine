@@ -95,9 +95,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             )}
           </Flex>
         </Flex>
-        {!!storybook === false && !!framework && (
-          <StorybookSection framework={framework} />
-        )}
+        {!storybook && <StorybookSection framework={framework} />}
       </Flex>
     </Drawer>
   );

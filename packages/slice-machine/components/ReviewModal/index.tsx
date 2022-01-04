@@ -40,10 +40,11 @@ const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
 const SelectReviewComponent = ({ field, form }: FieldProps) => {
   return (
     <Box sx={{ mb: 3 }}>
-      {ratingSelectable.map((rating) => (
+      {ratingSelectable.map((rating, index) => (
         <Button
           variant="secondary"
           type="button"
+          key={index}
           onClick={() => form.setFieldValue("rating", rating)}
           className={field.value === rating ? "selected" : ""}
           sx={{
@@ -113,8 +114,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   ): Promise<void> => {
     try {
       startLoadingReview();
-      // env should never be undefined or null
-      env?.framework && tracker?.Track.review(env.framework, rating, comment);
+      tracker?.Track.review(env.framework, rating, comment);
       sendAReview();
       stopLoadingReview();
     } catch (error) {
