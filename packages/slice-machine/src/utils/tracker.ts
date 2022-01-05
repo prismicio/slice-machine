@@ -12,6 +12,9 @@ export enum EventType {
   OnboardingContinueScreen1 = "SliceMachine Onboarding Continue Screen 1",
   OnboardingContinueScreen2 = "SliceMachine Onboarding Continue Screen 2",
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
+  // not in sync
+  SlicePreviewSetup = "Slice Preview Setup",
+  SlicePreview = "Slice Preview",
 }
 
 export class ClientTracker {
@@ -46,8 +49,24 @@ export class ClientTracker {
   }
 
   Track = {
-    review: (framework: string, rating: number, comment: string) => {
+    review: (framework: string, rating: number, comment: string): void => {
       this.trackEvent(EventType.Review, { rating, comment, framework });
+    },
+
+    SlicePreviewSetup: (args: {
+      framework: string;
+      version: string;
+      userId: string | null;
+    }): void => {
+      return this.trackEvent(EventType.SlicePreviewSetup, args);
+    },
+
+    SlicePreview: (args: {
+      framework: string;
+      version: string;
+      userId: string | null;
+    }): void => {
+      return this.trackEvent(EventType.SlicePreview, args);
     },
   };
 

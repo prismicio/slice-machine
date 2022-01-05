@@ -31,4 +31,5 @@ export interface FrontEndEnvironment {
   framework: Models.Frameworks;
   sliceMachineAPIUrl: string;
   prismicAPIUrl: string;
+  userId: PrismicData["userId"];
 }
