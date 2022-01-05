@@ -10,7 +10,7 @@ export default function save(
 ) {
   return (
     customType: CustomTypeState,
-    setData: (data: ToastPayload) => void
+    setData?: (data: ToastPayload) => void
   ): void => {
     fetchApi({
       url: "/api/custom-types/save",

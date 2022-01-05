@@ -8,7 +8,7 @@ import { ToastPayload } from "../../../../src/ToastProvider/utils";
 export default function save(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return (slice: SliceState, setData: (data: ToastPayload) => void): void => {
+  return (slice: SliceState, setData?: (data: ToastPayload) => void): void => {
     fetchApi({
       url: "/api/slices/save",
       params: {

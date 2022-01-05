@@ -13,8 +13,8 @@ import {
 import SliceMachineModal from "@components/SliceMachineModal";
 import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
-import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
-import { startPolling } from "@slicemachine/core/build/src/utils/poll";
+import { buildEndpoints } from "@slicemachine/core/build/src/prismic/endpoints";
+import { startPolling } from "@slicemachine/core/build/src/auth/poll";
 import { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { useSelector } from "react-redux";
