@@ -68,7 +68,6 @@ test("Should send event when loaded", async () => {
     preloadedState: stubState,
   });
 
-  result.debug();
   expect(AnalyticsBrowser.standalone).toHaveBeenCalled();
   // @ts-expect-error
   expect(AnalyticsBrowser.track).toHaveBeenCalledWith("Slice Preview", {

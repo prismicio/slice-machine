@@ -4,7 +4,7 @@ import { Store, AnyAction } from "redux";
 
 import { Provider } from "react-redux";
 import type { SliceMachineStoreType } from "../src/redux/type";
-import configureStore from "@src/redux/store";
+import configureStore from "../src/redux/store";
 
 export type RenderArgs = Partial<
   {
