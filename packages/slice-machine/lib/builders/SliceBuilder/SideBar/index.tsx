@@ -171,7 +171,7 @@ const StoryBookOrPreview: React.FC<{
           mt: 3,
           color: "textGray",
           "::first-letter": {
-            "text-transform": "uppercase",
+            textTransform: "uppercase",
           },
         }}
       >
