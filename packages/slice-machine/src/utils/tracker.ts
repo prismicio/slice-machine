@@ -81,3 +81,5 @@ export class ClientTracker {
 export const TrackerContext = createContext<ClientTracker | undefined>(
   undefined
 );
+
+TrackerContext.displayName = "TrackerContext";

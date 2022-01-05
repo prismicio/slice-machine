@@ -6,18 +6,20 @@ import { Provider } from "react-redux";
 import type { SliceMachineStoreType } from "../src/redux/type";
 import configureStore from "@src/redux/store";
 
+export type RenderArgs = Partial<
+  {
+    preloadedState: Partial<SliceMachineStoreType>;
+    store: Store<SliceMachineStoreType, AnyAction>;
+  } & RenderOptions
+>;
+
 function render(
   ui: any,
   {
     preloadedState,
     store = configureStore(preloadedState).store,
     ...renderOptions
-  }: Partial<
-    {
-      preloadedState: Partial<SliceMachineStoreType>;
-      store: Store<SliceMachineStoreType, AnyAction>;
-    } & RenderOptions
-  > = {}
+  }: RenderArgs = {}
 ) {
   function Wrapper({ children }: { children: any }) {
     return <Provider store={store}>{children}</Provider>;
