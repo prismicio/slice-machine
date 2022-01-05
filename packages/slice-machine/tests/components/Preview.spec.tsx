@@ -62,7 +62,7 @@ jest.mock("@segment/analytics-next", () => {
 test("Should send event when loaded", async () => {
   const tracker = await ClientTracker.build("foo", "bar");
 
-  const result = renderWithContext(<Preview />, {
+  renderWithContext(<Preview />, {
     trackerContext: tracker,
     sliceContext: StubSliceContext as ContextProps,
     preloadedState: stubState,
