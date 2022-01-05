@@ -1,26 +1,28 @@
 const path = require("path");
 const compareVersions = require("compare-versions");
-const { SMConfig, Pkg } = require("../build/lib/models/paths");
+const { Pkg } = require("../build/lib/models/paths");
 const { default: Files } = require("../build/lib/utils/files");
 const MIGRATIONS = require("./versions");
 
-// on postinstall of slicemachine UI, set the _latest the the current version if doesn't exist yet.
+const { SMConfigPath } = require("@slicemachine/core/build/src/fs-utils/paths")(
+  // on postinstall of slicemachine UI, set the _latest the the current version if doesn't exist yet.
 
-(function validateMigrations() {
-  MIGRATIONS.forEach((m) => {
-    if (!m.version)
-      throw new Error(
-        `Each migration should contain a field "version" corresponding to the SM UI package version at the time of the migration.`
-      );
-    if (!m.main)
-      throw new Error(
-        `The migration ${m.version} doesn't have a main function, we cannot run this migration properly.`
-      );
-  });
-})();
+  function validateMigrations() {
+    MIGRATIONS.forEach((m) => {
+      if (!m.version)
+        throw new Error(
+          `Each migration should contain a field "version" corresponding to the SM UI package version at the time of the migration.`
+        );
+      if (!m.main)
+        throw new Error(
+          `The migration ${m.version} doesn't have a main function, we cannot run this migration properly.`
+        );
+    });
+  }
+)();
 
 function retrieveConfigFiles(projectCWD, smModuleCWD) {
-  const smPath = SMConfig(projectCWD);
+  const smPath = SMConfigPath(projectCWD);
   const smValue = Files.exists(smPath) && Files.readJson(smPath);
 
   const pkgPath = Pkg(smModuleCWD);
