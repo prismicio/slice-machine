@@ -3,11 +3,7 @@ import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
-import {
-  ReviewTrackingEvent,
-  OnboardingTrackingEvent,
-  TrackingEventId,
-} from "@lib/models/common/TrackingEvent";
+import { OnboardingTrackingEvent } from "@lib/models/common/TrackingEvent";
 
 import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
 
@@ -233,14 +229,6 @@ export default class DefaultClient {
 
   async updateSlice(body: Body): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
-  }
-
-  async sendReview(review: Omit<ReviewTrackingEvent, "id">): Promise<Response> {
-    const payload: ReviewTrackingEvent = {
-      ...review,
-      id: TrackingEventId.REVIEW,
-    };
-    return this.trackingFetcher("", payload, "", "post");
   }
 
   async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {

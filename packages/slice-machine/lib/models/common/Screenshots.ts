@@ -1,4 +1,7 @@
 import { ScreenshotUI } from "./ComponentUI";
+import type { Models } from "@slicemachine/core";
+
+export type Screenshots = Record<Models.VariationAsObject["id"], ScreenshotUI>;
 
 export interface ScreenshotRequest {
   libraryName: string;
@@ -8,7 +11,8 @@ export interface ScreenshotRequest {
 export interface ScreenshotResponse {
   err: Error | null;
   reason: string | null;
-  screenshots: Record<string, ScreenshotUI>;
+  warning?: string | null;
+  screenshots: Screenshots;
 }
 
 export type TmpFile = File & { path: string };

@@ -7,38 +7,21 @@ import {
   createScreenshotUI,
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
+import { Screenshots } from "@lib/models/common/Screenshots";
 
 import {
   CustomPaths,
   GeneratedPaths,
 } from "@slicemachine/core/build/src/fs-utils";
 
-export type Screenshots = Record<Models.VariationAsObject["id"], ScreenshotUI>;
 type FailedScreenshot = {
-  error: Error;
   variationId: Models.VariationAsObject["id"];
+  error: Error;
 };
 
-interface ScreenshotResults {
+export interface ScreenshotResults {
   screenshots: Screenshots;
   failure: FailedScreenshot[];
-}
-
-export async function generateScreenshot(
-  env: BackendEnvironment,
-  libraryName: string,
-  sliceName: string
-): Promise<ScreenshotResults> {
-  const { screenshots, failure } = await generateForSlice(
-    env,
-    libraryName,
-    sliceName
-  );
-
-  return {
-    screenshots: screenshots,
-    failure: failure,
-  };
 }
 
 export async function generateScreenshotAndRemoveCustom(
@@ -63,7 +46,7 @@ export async function generateScreenshotAndRemoveCustom(
   };
 }
 
-async function generateForSlice(
+export async function generateScreenshot(
   env: BackendEnvironment,
   libraryName: string,
   sliceName: string

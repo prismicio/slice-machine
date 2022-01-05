@@ -5,7 +5,7 @@ import { BackendEnvironment } from "./Environment";
 export const createScreenshotUrl = (
   baseUrl: string,
   pathToScreenshot: string
-) =>
+): string =>
   `${baseUrl}/api/__preview?q=${encodeURIComponent(
     pathToScreenshot
   )}&uniq=${Math.random()}`;

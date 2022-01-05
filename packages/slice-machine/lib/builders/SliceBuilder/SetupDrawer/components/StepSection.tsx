@@ -38,7 +38,9 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
     <Flex
       sx={{
         flexDirection: "column",
-        borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+        borderBottomWidth: "1px",
+        borderBottomStyle: "solid",
+        borderBottomColor: (t) => t.colors?.borders,
         overflow: "hidden",
         pb: isOpen ? 24 : 0,
       }}

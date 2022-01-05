@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.2.0-alpha.10",
+  "version": "0.2.0-alpha.15",
   "private": false,
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
@@ -29,7 +29,7 @@
     "export-build": "next export && npm run clean-build",
     "bundle": "npm run build && npm run test && npm run export-build",
     "slicemachine": "start-slicemachine --port 9999",
-    "lint": "eslint --max-warnings 1081 --ext .ts,.tsx .",
+    "lint": "eslint --max-warnings 1067 --ext .ts,.tsx .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p -x 1002475,1006754",
     "audit-fix": "npm audit fix"
@@ -41,7 +41,8 @@
     "@babel/register": "^7.11.5",
     "@prismicio/slice-canvas-com": "^0.0.4",
     "@reach/menu-button": "^0.16.2",
-    "@slicemachine/core": "1.0.2-alpha.17",
+    "@segment/analytics-next": "^1.33.0",
+    "@slicemachine/core": "1.0.2-alpha.22",
     "@svgr/webpack": "^5.4.0",
     "analytics-node": "^6.0.0",
     "atob": "^2.1.2",

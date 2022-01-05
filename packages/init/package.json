@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.0.2-alpha.17",
+  "version": "1.0.2-alpha.22",
   "license": "MIT",
   "description": "The easiest way to add Slice Machine to your project",
   "bin": {
@@ -24,8 +24,12 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
+    "@types/adm-zip": "^0.4.34",
+    "@types/analytics-node": "^3.1.7",
+    "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.1.3",
     "@types/jest": "^27.0.2",
+    "@types/tmp": "^0.2.2",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "babel-jest": "^27.0.2",
@@ -44,9 +48,14 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@slicemachine/core": "1.0.2-alpha.17",
+    "@slicemachine/core": "1.0.2-alpha.22",
+    "adm-zip": "^0.5.9",
+    "analytics-node": "^6.0.0",
+    "axios": "^0.24.0",
     "fp-ts": "^2.11.5",
+    "fs-extra": "^10.0.0",
     "inquirer": "^8.2.0",
-    "io-ts": "^2.2.16"
+    "io-ts": "^2.2.16",
+    "tmp": "^0.2.1"
   }
 }

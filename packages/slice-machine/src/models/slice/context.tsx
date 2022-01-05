@@ -87,7 +87,7 @@ export const SliceHandler = ({
     else return l;
   })();
 
-  const lib = libraries.find((l) => l?.name === libParam.replace(/--/g, "/"));
+  const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
   if (!lib) {
     router.replace("/");
     return null;

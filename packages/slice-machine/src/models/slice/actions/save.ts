@@ -1,9 +1,9 @@
-import type Models from "@slicemachine/core/build/src/models";
 import { Variation } from "../../../../lib/models/common/Variation";
 import { fetchApi } from "../../../../lib/builders/common/fetch";
 import SliceState from "../../../../lib/models/ui/SliceState";
 import { ActionType } from "./ActionType";
 import { ToastPayload } from "../../../../src/ToastProvider/utils";
+import { SliceSaveResponse } from "@lib/models/common/Slice";
 
 export default function save(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
@@ -29,14 +29,10 @@ export default function save(
           return {};
         },
       successMessage: "Model & mocks have been generated successfully!",
-      onSuccess({
-        previewUrls,
-      }: {
-        previewUrls: { [variationId: string]: Models.Screenshot };
-      }) {
+      onSuccess({ screenshots }: SliceSaveResponse) {
         const savedState = {
           ...slice,
-          screenshotUrls: previewUrls,
+          screenshotUrls: screenshots,
           initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations,
         };

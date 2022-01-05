@@ -14,7 +14,7 @@ global.process = { ...realProcess, exit: exitMock };
 jest.spyOn(console, "error").mockImplementationOnce(() => null);
 
 jest.mock(`fs`, () => {
-  return vol;
+  return { ...fs, ...vol };
 });
 
 afterEach(() => {

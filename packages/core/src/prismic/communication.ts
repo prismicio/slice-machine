@@ -50,7 +50,12 @@ const RepoDataValidator = t.record(
     dbid: t.string,
   })
 );
-export type UserInfo = { email: string; type: string; repositories: RepoData };
+export type UserInfo = {
+  userId: string;
+  email: string;
+  type: string;
+  repositories: RepoData;
+};
 
 export function maybeParseRepoData(repos?: string | RepoData): RepoData {
   if (!repos) throw new Error("Did not receive repository data");
@@ -77,7 +82,12 @@ export async function validateSession(
   const token = parsePrismicAuthToken(cookies);
   const url = toAuthUrl("validate", token, base);
   return axios
-    .get<{ email: string; type: string; repositories?: string }>(url)
+    .get<{
+      userId: string;
+      email: string;
+      type: string;
+      repositories?: string;
+    }>(url)
     .then((res) => {
       const repositories = maybeParseRepoData(res.data.repositories);
       return {

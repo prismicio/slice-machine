@@ -8,6 +8,7 @@ import {
   Flex,
   Badge,
 } from "theme-ui";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import SliceState from "../SliceState";
 import { LibStatus } from "../../common/ComponentUI";
@@ -32,8 +33,8 @@ const StatusBadge = ({ libStatus }: { libStatus: LibStatus }) => {
   );
 };
 
-const borderedSx = (sx: any) => ({
-  border: (t: Theme) => `1px solid ${t.colors?.border}`,
+const borderedSx = (sx: ThemeUIStyleObject) => ({
+  border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
   p: 3,
@@ -41,11 +42,11 @@ const borderedSx = (sx: any) => ({
   "&:hover": {
     transition: "all 200ms ease-out",
     bg: "sidebar",
-    border: (t: Theme) => `1px solid ${t.colors?.sidebar}`,
+    border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
   },
 });
 
-const defaultSx = (sx: any) => ({
+const defaultSx = (sx: ThemeUIStyleObject) => ({
   bg: "transparent",
   border: "none",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
@@ -92,7 +93,7 @@ const SliceThumbnail = ({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: (t) => `1px solid ${t.colors?.borders}`,
+        border: (t) => `1px solid ${t.colors?.borders as string}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -107,7 +108,7 @@ const SliceThumbnail = ({
             ? "url(" + `${screenshotUrl}` + ")"
             : "none",
         }}
-      ></Box>
+      />
     </Box>
   );
 };

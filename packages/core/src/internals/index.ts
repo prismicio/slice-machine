@@ -1,3 +1,4 @@
 export * from "./errors";
-export * from "./files";
+import * as Files from "./files";
 export * from "./logs";
+export { Files };

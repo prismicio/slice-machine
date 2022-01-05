@@ -23,9 +23,9 @@ export interface SliceZoneSlice {
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SliceZoneAsArray,
-  libraries: ReadonlyArray<LibraryState> = []
+  libraries: ReadonlyArray<LibraryState> | null
 ) => {
-  const availableSlices = libraries.reduce(
+  const availableSlices = (libraries || []).reduce(
     (acc: ReadonlyArray<SliceState>, curr: LibraryState) => {
       return [...acc, ...curr.components.map((e) => e[0])];
     },
@@ -91,10 +91,7 @@ const SliceZone = ({
   const libraries = useContext(LibrariesContext);
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
-    ? mapAvailableAndSharedSlices(
-        sliceZone,
-        libraries as ReadonlyArray<LibraryState>
-      )
+    ? mapAvailableAndSharedSlices(sliceZone, libraries)
     : { availableSlices: [], slicesInSliceZone: [], notFound: [] };
 
   useEffect(() => {
