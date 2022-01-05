@@ -8,11 +8,11 @@ import { ToastPayload } from "@src/ToastProvider/utils";
 export default function save(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return async (
+  return (
     customType: CustomTypeState,
-    setData: (data: ToastPayload) => void = () => null
-  ) => {
-    await fetchApi({
+    setData: (data: ToastPayload) => void
+  ): void => {
+    fetchApi({
       url: "/api/custom-types/save",
       params: {
         method: "POST",
@@ -22,11 +22,17 @@ export default function save(
           mockConfig: customType.mockConfig,
         }),
       },
-      setData,
+      setData:
+        setData ||
+        function () {
+          return {};
+        },
       successMessage: "Model & mocks have been generated successfully!",
       onSuccess() {
         dispatch({ type: ActionType.Save, payload: { state: customType } });
       },
+    }).catch((err) => {
+      console.warn(err);
     });
   };
 }

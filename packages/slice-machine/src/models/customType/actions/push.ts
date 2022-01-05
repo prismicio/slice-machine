@@ -6,8 +6,8 @@ import { ToastPayload } from "@src/ToastProvider/utils";
 export default function push(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return async (ct: CustomTypeState, setData: (data: ToastPayload) => void) => {
-    await fetchApi({
+  return (ct: CustomTypeState, setData: (data: ToastPayload) => void): void => {
+    fetchApi({
       url: `/api/custom-types/push?id=${ct.current.id}`,
       setData,
       successMessage: "Model was correctly saved to Prismic!",

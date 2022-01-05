@@ -11,6 +11,7 @@ import * as Widgets from "../../../lib/models/common/widgets";
 import { ActionType as VariationActions } from "./variation/actions";
 
 import { ActionType as SliceActions } from "./actions";
+import { AnyObjectSchema } from "yup";
 
 import {
   LibStatus,
@@ -106,7 +107,9 @@ export function reducer(
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
-            CurrentWidget.schema.validateSync(value, { stripUnknown: false });
+            (CurrentWidget.schema as AnyObjectSchema).validateSync(value, {
+              stripUnknown: false,
+            });
             return SliceState.updateVariation(
               prevState,
               variationId

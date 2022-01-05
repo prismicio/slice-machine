@@ -8,10 +8,7 @@ import { ToastPayload } from "../../../../src/ToastProvider/utils";
 export default function save(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return async (
-    slice: SliceState,
-    setData: (data: ToastPayload) => void = () => {}
-  ) => {
+  return (slice: SliceState, setData: (data: ToastPayload) => void): void => {
     fetchApi({
       url: "/api/slices/save",
       params: {
@@ -26,7 +23,11 @@ export default function save(
           mockConfig: slice.mockConfig,
         }),
       },
-      setData,
+      setData:
+        setData ||
+        function () {
+          return {};
+        },
       successMessage: "Model & mocks have been generated successfully!",
       onSuccess({
         previewUrls,
@@ -41,6 +42,8 @@ export default function save(
         };
         dispatch({ type: ActionType.Save, payload: { state: savedState } });
       },
+    }).catch((err) => {
+      console.warn(err);
     });
   };
 }

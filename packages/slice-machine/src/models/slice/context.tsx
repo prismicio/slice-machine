@@ -69,7 +69,11 @@ const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
   );
 };
 
-export const SliceHandler = ({ children }: { children: any }) => {
+export const SliceHandler = ({
+  children,
+}: {
+  children: React.ReactElement | null;
+}) => {
   const router = useRouter();
   const libraries = useContext(LibrariesContext);
 
@@ -77,7 +81,7 @@ export const SliceHandler = ({ children }: { children: any }) => {
     return children;
   }
 
-  const libParam: string = (() => {
+  const libParam: string = ((): string => {
     const l = router.query.lib;
     if (l instanceof Array) return l[0];
     else return l;
@@ -98,11 +102,12 @@ export const SliceHandler = ({ children }: { children: any }) => {
     return null;
   }
 
-  const variationParam: string | undefined = (() => {
+  const variationParam = ((): string | undefined => {
     const l = router.query.variation;
     if (l instanceof Array) return l[0];
     else return l;
   })();
+
   const variation = (() => {
     if (variationParam) {
       const maybeVariation = SliceState.variation(slice[0], variationParam);
@@ -112,6 +117,7 @@ export const SliceHandler = ({ children }: { children: any }) => {
       return SliceState.variation(slice[0]);
     }
   })();
+
   if (!variation) {
     router.replace("/");
     return null;

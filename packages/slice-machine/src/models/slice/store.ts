@@ -43,7 +43,7 @@ export default class SliceStore implements Store {
 
   variation = (variationId: string): Record<string, Function> => {
     return {
-      generateScreenShot: generateScreenShot(this.dispatch)(variationId),
+      generateScreenShot: generateScreenShot(this.dispatch)(),
       generateCustomScreenShot: generateCustomScreenShot(this.dispatch)(
         variationId
       ),

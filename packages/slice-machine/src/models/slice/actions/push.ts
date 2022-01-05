@@ -6,7 +6,7 @@ import { ToastPayload } from "../../../../src/ToastProvider/utils";
 export default function push(
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
-  return async (slice: SliceState, setData: (data: ToastPayload) => void) => {
+  return (slice: SliceState, setData: (data: ToastPayload) => void): void => {
     fetchApi({
       url: `/api/slices/push?sliceName=${slice.infos.sliceName}&from=${slice.from}`,
       setData,
@@ -14,6 +14,8 @@ export default function push(
       onSuccess() {
         dispatch({ type: ActionType.Push });
       },
+    }).catch((err) => {
+      console.warn(err);
     });
   };
 }
