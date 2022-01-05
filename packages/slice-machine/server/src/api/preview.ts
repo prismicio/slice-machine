@@ -7,8 +7,7 @@ import * as CONSTS from "@slicemachine/core/build/src/defaults";
 import { retrieveJsonPackage } from "@slicemachine/core/build/src/fs-utils";
 
 export default async function handler(
-  req: RequestWithEnv,
-  log?: boolean
+  req: RequestWithEnv
 ): Promise<PreviewCheckResponse> {
   const cwd = process.env.CWD || process.cwd();
   let response: PreviewCheckResponse = {

@@ -11,9 +11,10 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem } from "@slicemachine/core";
+
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
+import { SharedConfigManager } from "@slicemachine/core/build/src/prismic";
 
 export async function createWarnings(
   env: BackendEnvironment,
@@ -69,7 +70,7 @@ export const getBackendState = async (
         Math.floor(newTokenResponse.status / 100) === 2
       ) {
         const newtToken = await newTokenResponse.text();
-        FileSystem.PrismicSharedConfigManager.setAuthCookie(newtToken);
+        SharedConfigManager.setAuthCookie(newtToken);
       }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);

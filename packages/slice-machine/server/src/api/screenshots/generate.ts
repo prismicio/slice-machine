@@ -1,13 +1,17 @@
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "@lib/utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { FileSystem } from "@slicemachine/core";
 import Puppeteer from "./puppeteer";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
+
+import {
+  CustomPaths,
+  GeneratedPaths,
+} from "@slicemachine/core/build/src/fs-utils";
 
 export type Screenshots = Record<Models.VariationAsObject["id"], ScreenshotUI>;
 type FailedScreenshot = {
@@ -65,10 +69,7 @@ async function generateForSlice(
   sliceName: string
 ): Promise<ScreenshotResults> {
   const slice: Models.SliceAsObject = Files.readJson(
-    FileSystem.CustomPaths(env.cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .model()
+    CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
   );
 
   const variationIds: Models.VariationAsObject["id"][] = slice.variations.map(
@@ -121,7 +122,7 @@ async function generateForVariation(
     slice.id
   )}&vid=${encodeURIComponent(variationId)}`;
 
-  const pathToFile = FileSystem.GeneratedPaths(env.cwd)
+  const pathToFile = GeneratedPaths(env.cwd)
     .library(libraryName)
     .slice(slice.name)
     .variation(variationId)

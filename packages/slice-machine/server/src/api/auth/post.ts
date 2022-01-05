@@ -1,6 +1,8 @@
 import * as t from "io-ts";
 import { fold } from "fp-ts/Either";
-import { FileSystem, Utils } from "@slicemachine/core";
+
+import { serializeCookies } from "@slicemachine/core/build/src/auth/cookie";
+import { SharedConfigManager } from "@slicemachine/core/build/src/prismic";
 
 const AuthRequest = t.type({
   email: t.string,
@@ -21,8 +23,8 @@ export default function handler(
       err: new Error("Invalid auth payload"),
     }),
     (authRequest: AuthRequest) => {
-      FileSystem.PrismicSharedConfigManager.setProperties({
-        cookies: Utils.Cookie.serializeCookies(authRequest.cookies),
+      SharedConfigManager.setProperties({
+        cookies: serializeCookies(authRequest.cookies),
       });
       return {};
     }

@@ -1,9 +1,10 @@
-import { FileSystem } from "@slicemachine/core";
+import { SharedConfigManager } from "@slicemachine/core/build/src/prismic";
+
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 
 export default async function handler(): Promise<CheckAuthStatusResponse> {
   try {
-    const authToken = FileSystem.PrismicSharedConfigManager.getAuth();
+    const authToken = SharedConfigManager.getAuth();
     return {
       status: !!authToken ? "ok" : "pending",
     };

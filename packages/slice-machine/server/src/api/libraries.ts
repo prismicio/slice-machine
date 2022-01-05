@@ -1,4 +1,5 @@
-import { Libraries, Models } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import { libraries as getLibraries } from "@slicemachine/core/build/src/libraries";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
@@ -27,10 +28,7 @@ export async function getLibrariesWithFlags(env: BackendEnvironment): Promise<{
       return { remoteSlices: r };
     })();
 
-    const libraries = Libraries.libraries(
-      env.cwd,
-      env.manifest.libraries || []
-    );
+    const libraries = getLibraries(env.cwd, env.manifest.libraries || []);
 
     const withFlags = libraries.map((lib) =>
       LibraryUI.build(lib, remoteSlices, env)
