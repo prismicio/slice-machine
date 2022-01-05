@@ -30,7 +30,7 @@ import {
   TrackingReviewResponse,
 } from "@lib/models/common/TrackingEvent";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/src/filesystem/PrismicSharedConfig";
+import { SharedConfigManager } from "@slicemachine/core/build/src/prismic";
 
 router.use(
   "/__preview",
@@ -277,12 +277,12 @@ router.post(
       return res.status(500).json(body);
     }
 
-    const updatedToken = PrismicSharedConfigManager.getAuth();
+    const updatedToken = SharedConfigManager.getAuth();
 
     const profile = await DefaultClient.profile(req.env.baseUrl, updatedToken);
     if (profile instanceof Error) return res.status(500).json({});
 
-    PrismicSharedConfigManager.setProperties({ userId: profile.userId });
+    SharedConfigManager.setProperties({ userId: profile.userId });
     req.tracker.resolveUser(profile.userId, req.anonymousId);
 
     return res.status(200).json({});
