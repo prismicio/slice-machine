@@ -3,7 +3,9 @@ const path = require("path");
 const glob = require("glob");
 const slash = require("slash");
 const { shouldIRun } = require("../../common");
-const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
+const {
+  getInfoFromPath,
+} = require("@slicemachine/core/build/src/libraries/path");
 
 module.exports = {
   version: "0.0.41",

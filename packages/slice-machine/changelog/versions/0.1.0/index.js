@@ -7,7 +7,9 @@ const {
   GeneratedPaths,
 } = require("../../../build/lib/models/paths");
 const { default: Files } = require("../../../build/lib/utils/files");
-const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
+const {
+  getInfoFromPath,
+} = require("@slicemachine/core/build/src/libraries/path");
 const {
   SupportedFrameworks,
 } = require("@slicemachine/core/build/src/models/Framework");
