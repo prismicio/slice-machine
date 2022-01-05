@@ -11,8 +11,12 @@ if (parseInt(nodeVersion) < 12) {
 const path = require("path");
 const pkg = require("../package.json");
 
-const { Utils, Models } = require("@slicemachine/core");
+const { Models } = require("@slicemachine/core");
 const moduleAlias = require("module-alias");
+
+const { INIT_COMMAND } = require("@slicemachine/core/build/src/defaults");
+const { bold } = require("@slicemachine/core/build/src/internals");
+const { defineFramework } = require("@slicemachine/core/build/src/fs-utils");
 
 const LIB_PATH = path.join(__dirname, "..", "build", "lib");
 
@@ -115,9 +119,7 @@ See below for more info 👇`,
       return { exit: false };
     case ManifestState.NotFound: {
       console.log(
-        `Run ${Utils.bold(
-          `"${Utils.CONSTS.INIT_COMMAND}"`
-        )} command to configure your project`
+        `Run ${bold(`"${INIT_COMMAND}"`)} command to configure your project`
       );
 
       return { exit: true };
@@ -160,7 +162,7 @@ async function run() {
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
-  const framework = Utils.Framework.defineFramework(
+  const framework = defineFramework(
     manifestInfo.content,
     cwd,
     Models.SupportedFrameworks
