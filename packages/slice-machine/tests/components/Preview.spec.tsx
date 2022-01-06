@@ -15,7 +15,7 @@ import { ThemeProvider } from "theme-ui";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import theme from "../../src/theme";
 
-const StubSliceContext = require("../__mockData__/sliceContext.json");
+import StubSliceContext from "../__mockData__/sliceContext";
 
 const renderWithContext = (
   ui: any,

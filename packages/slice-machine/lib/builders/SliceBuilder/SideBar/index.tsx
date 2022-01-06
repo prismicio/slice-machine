@@ -67,6 +67,7 @@ const PreviewState: React.FunctionComponent<BottomStateProps> = ({
           You can preview your slices and view changes instantly
         </Text>
         <Button
+          data-testid="open-set-up-preview"
           variant={"small"}
           sx={{ cursor: "pointer" }}
           onClick={openSetupPreview}

@@ -4,17 +4,17 @@ import { Close, Flex, Text } from "theme-ui";
 import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
+import { SliceMachineStoreType } from "../../../../src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
   getStorybookUrl,
   getCurrentVersion,
   getUserID,
-} from "@src/modules/environment";
+} from "../../../../src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import StorybookSection from "./components/StorybookSection";
-import { TrackerContext } from "@src/utils/tracker";
+import { TrackerContext } from "../../../../src/utils/tracker";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -26,7 +26,6 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   onClose,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [trackingSent, setTrackingSent] = useState<boolean>(false);
   const tracker = useContext(TrackerContext);
 
   const {
@@ -44,10 +43,6 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   }));
 
   const onOpenStep = (stepNumber: number) => () => {
-    if (trackingSent === false) {
-      tracker?.Track.SlicePreviewSetup({ framework, version, userId });
-      tracker && setTrackingSent(true);
-    }
     if (stepNumber === activeStep) {
       setActiveStep(0);
       return;
@@ -55,6 +50,10 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 
     setActiveStep(stepNumber);
   };
+
+  useEffect(() => {
+    tracker?.Track.SlicePreviewSetup({ framework, version, userId });
+  }, []);
 
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
@@ -87,7 +86,11 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
-          <Close color={"#4E4E55"} onClick={onClose} />
+          <Close
+            data-testid="close-set-up-preview"
+            color={"#4E4E55"}
+            onClick={onClose}
+          />
         </Flex>
         <Flex
           sx={{
