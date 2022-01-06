@@ -30,8 +30,6 @@ const groupHandler = (
   return items;
 };
 
-const sliceZoneHandler = () => {};
-
 const createEmptyMock = (type: string) => ({
   id: faker.datatype.uuid(),
   uid: null,
@@ -39,14 +37,14 @@ const createEmptyMock = (type: string) => ({
   data: {},
 });
 
-export default async function MockCustomType(
+export default function MockCustomType(
   model: CustomType<ObjectTabs>,
   mockConfig: CustomTypeMockConfig
-) {
+): Mock {
   const customTypeMock: Mock = createEmptyMock(model.id);
   const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
     const maybeWidgetUid = Object.entries(curr[1]).find(
-      ([_, e]) => e.type === "UID"
+      ([, e]) => e.type === "UID"
     );
     if (!acc && maybeWidgetUid) {
       return curr;
@@ -59,7 +57,7 @@ export default async function MockCustomType(
   }
 
   for (const [, tab] of Object.entries(model.tabs)) {
-    const { fields, groups, sliceZone } = Tab.organiseFields(tab);
+    const { fields, groups } = Tab.organiseFields(tab);
 
     const mockedFields = fieldsHandler(
       fields.map((e) => [e.key, e.value]),
@@ -78,10 +76,6 @@ export default async function MockCustomType(
       const groupFields = groupHandler(value, groupMockConfig);
       customTypeMock.data[key] = groupFields;
     });
-
-    if (sliceZone) {
-      sliceZoneHandler();
-    }
   }
   return customTypeMock;
 }

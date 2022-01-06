@@ -1,7 +1,12 @@
 import * as Yup from "yup";
 import { FormTypes } from "./types";
 
-const handleDefaultValue = (field: { type: FormTypes; defaultValue: any }) => {
+type DefaultValReturn = string | number | [] | boolean | undefined;
+
+const handleDefaultValue = (field: {
+  type: FormTypes;
+  defaultValue: DefaultValReturn;
+}): DefaultValReturn => {
   if (field.defaultValue === null) {
     return undefined;
   }
@@ -20,10 +25,10 @@ const handleDefaultValue = (field: { type: FormTypes; defaultValue: any }) => {
   return undefined;
 };
 
-export const createFieldNameFromKey = (key: string) =>
+export const createFieldNameFromKey = (key: string): string =>
   key === "id" ? "id" : `config.${key}`;
 
-export const createValidationArgs = (args: any, defaultArgs: any) => {
+export const createValidationArgs = (args: unknown, defaultArgs: unknown) => {
   if (Array.isArray(args)) {
     return args;
   }

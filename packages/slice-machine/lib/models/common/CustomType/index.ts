@@ -55,6 +55,7 @@ export const CustomType = {
     };
   },
   toJsonModel(ct: CustomType<ObjectTabs>): CustomTypeJsonModel {
+    // eslint no-unused-vars: ["error", { "ignoreRestSiblings": true }]
     const { tabs, previewUrl, ...rest } = ct;
     return {
       ...rest,

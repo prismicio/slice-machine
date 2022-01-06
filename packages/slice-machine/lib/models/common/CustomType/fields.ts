@@ -30,5 +30,5 @@ export const SimpleField = {
 export interface Field {
   type: FieldType | SliceZoneType;
   fieldset?: string;
-  config: {};
+  config: Record<string, unknown>;
 }
