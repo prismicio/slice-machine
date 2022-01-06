@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import { PackageManager, Dependencies } from "../utils/PackageManager";
-import { PackageJsonHelper } from "@slicemachine/core/build/src/utils/PackageJson";
+import { retrieveJsonPackage } from "@slicemachine/core/build/src/fs-utils";
 import { Manifest, ManifestHelper } from "@slicemachine/core/build/src/models";
 import { Tracker } from "../utils/tracker";
 
@@ -65,10 +65,16 @@ export async function installLib(
 
     // handle dependencies
     const pkgManager = PackageManager.get(cwd);
-    const pkgJson = PackageJsonHelper.fromPath(
+    const { exists, content: pkgJson } = retrieveJsonPackage(
       path.join(projectPath, "package.json")
     );
-    if (pkgJson instanceof Error) throw pkgJson;
+
+    if (!exists) {
+      throw new Error("File package.json not found");
+    }
+    if (!pkgJson) {
+      throw new Error("Could not parse package.json");
+    }
 
     const dependencies = Dependencies.fromPkgFormat(pkgJson.dependencies);
     if (dependencies) await pkgManager.install(dependencies);

@@ -7,8 +7,8 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import {
   DEFAULT_CONFIG,
   SharedConfigManager,
+  parsePrismicAuthToken,
 } from "@slicemachine/core/build/src/prismic";
-import { parsePrismicAuthToken } from "@slicemachine/core/build/src/auth/cookie";
 
 export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {

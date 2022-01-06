@@ -1,12 +1,6 @@
 import * as cookie from "cookie";
-import { AUTH_KEY } from "../defaults";
 
 const noEscape = (str: string) => str;
-
-export function parsePrismicAuthToken(cookieString: string): string {
-  const parsed = parse(cookieString);
-  return parsed[AUTH_KEY] ? parsed[AUTH_KEY] : "";
-}
 
 export function parse(cookieString: string): { [key: string]: string } {
   return cookie.parse(cookieString, { decode: noEscape });

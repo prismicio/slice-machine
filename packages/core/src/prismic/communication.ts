@@ -4,7 +4,7 @@ import { fold, getOrElseW } from "fp-ts/Either";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 import { Roles, RolesValidator } from "./roles";
-import { parsePrismicAuthToken } from "../auth/cookie";
+import { parsePrismicAuthToken } from "../prismic/cookie";
 import { DEFAULT_BASE, USER_SERVICE_BASE } from "../defaults";
 
 export type { AxiosError } from "axios";

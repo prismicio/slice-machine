@@ -3,9 +3,7 @@ import type { PackageJson } from "types-package-json";
 import { JsonPackagePath, FileContent } from "./paths";
 import { Files } from "../internals";
 
-export type JsonPackage = PackageJson;
-
-export function retrieveJsonPackage(cwd: string): FileContent<JsonPackage> {
+export function retrieveJsonPackage(cwd: string): FileContent<PackageJson> {
   const pkgPath = JsonPackagePath(cwd);
 
   if (!Files.exists(pkgPath)) {
@@ -15,9 +13,9 @@ export function retrieveJsonPackage(cwd: string): FileContent<JsonPackage> {
     };
   }
 
-  const content: JsonPackage | null = Files.safeReadJson(
+  const content: PackageJson | null = Files.safeReadJson(
     pkgPath
-  ) as JsonPackage | null;
+  ) as PackageJson | null;
   return {
     exists: true,
     content,
@@ -26,9 +24,9 @@ export function retrieveJsonPackage(cwd: string): FileContent<JsonPackage> {
 
 export function patchJsonPackage(
   cwd: string,
-  data: Partial<JsonPackage>
+  data: Partial<PackageJson>
 ): boolean {
-  const pkg: FileContent<JsonPackage> = retrieveJsonPackage(cwd);
+  const pkg: FileContent<PackageJson> = retrieveJsonPackage(cwd);
   if (!pkg.exists || !pkg.content) return false;
 
   const updatedPkg = {

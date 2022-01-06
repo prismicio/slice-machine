@@ -9,3 +9,5 @@ export * from "./UserProfile";
 export * from "./Framework";
 export * from "./Manifest";
 export * from "./PrismicSharedConfig";
+
+export type { PackageJson } from "types-package-json";

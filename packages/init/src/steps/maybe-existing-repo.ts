@@ -7,10 +7,10 @@ import { DEFAULT_BASE } from "@slicemachine/core/build/src/defaults";
 import {
   listRepositories,
   canUpdateCustomTypes,
+  parsePrismicAuthToken,
   validateRepositoryName,
 } from "@slicemachine/core/build/src/prismic";
 import { maybeRepoNameFromSMFile } from "@slicemachine/core/build/src/fs-utils";
-import { parsePrismicAuthToken } from "@slicemachine/core/build/src/auth/cookie";
 import {
   cyan,
   dim,

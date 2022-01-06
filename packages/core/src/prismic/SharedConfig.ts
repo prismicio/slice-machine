@@ -1,11 +1,7 @@
 import { getOrElseW } from "fp-ts/lib/Either";
 
-import {
-  parse,
-  serializeCookie,
-  serializeCookies,
-  parsePrismicAuthToken,
-} from "../auth/cookie";
+import { parse, serializeCookie, serializeCookies } from "../auth/cookie";
+import { parsePrismicAuthToken } from "./cookie";
 import { AUTH_KEY } from "../defaults";
 
 import { PrismicConfigPath } from "../fs-utils/paths";
