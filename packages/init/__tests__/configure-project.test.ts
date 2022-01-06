@@ -70,4 +70,27 @@ describe("configure-project", () => {
     expect(manifest.libraries).toContain("@/slices");
     expect(manifest.chromaticAppId).toContain("VALUE");
   });
+
+  test("it should create a slice folder if it does not exist", () => {
+    vol.fromJSON(
+      {
+        "sm.json": `{"chromaticAppId": "VALUE" }`,
+      },
+      TMP
+    );
+    configureProject(TMP, BASE, REPO, MAN);
+    expect(fs.lstatSync(path.join(TMP, "slices")).isDirectory()).toBe(true);
+  });
+
+  test("it should not create a slice folder if it exists", () => {
+    vol.fromJSON(
+      {
+        "sm.json": `{"chromaticAppId": "VALUE" }`,
+        "slices/key.txt": "content",
+      },
+      TMP
+    );
+    configureProject(TMP, BASE, REPO, MAN);
+    expect(fs.existsSync(path.join(TMP, "slices/key.txt"))).toBe(true);
+  });
 });
