@@ -19,8 +19,8 @@ jest.mock("@slicemachine/core", () => {
 describe("preview controller", () => {
   const retrieveJsonPackage = Core.FileSystem.retrieveJsonPackage as jest.Mock;
 
-  test("it should return all checks ko when no canvas url is sent", async () => {
-    const requestWithoutCanvasUrl = {
+  test("it should return all checks ko when no preview url is sent", async () => {
+    const requestWithoutPreviewUrl = {
       env: {
         framework: Frameworks.next,
         manifest: {},
@@ -35,18 +35,18 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithoutCanvasUrl
+      requestWithoutPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ko");
     expect(previewCheckResponse.dependencies).toBe("ko");
   });
 
   test("it should return ok on manifest if an url is present", async () => {
-    const requestWithCanvasUrl = {
+    const requestWithPreviewUrl = {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSliceCanvasURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     };
@@ -59,18 +59,18 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithCanvasUrl
+      requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
     expect(previewCheckResponse.dependencies).toBe("ko");
   });
 
   test("it should return ok when all the next required deps are installed", async () => {
-    const requestWithCanvasUrl = {
+    const requestWithPreviewUrl = {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSliceCanvasURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     };
@@ -87,18 +87,18 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithCanvasUrl
+      requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
     expect(previewCheckResponse.dependencies).toBe("ok");
   });
 
   test("it should return ok when all the nuxt required deps are installed", async () => {
-    const requestWithCanvasUrl = {
+    const requestWithPreviewUrl = {
       env: {
         framework: Frameworks.nuxt,
         manifest: {
-          localSliceCanvasURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     };
@@ -116,7 +116,7 @@ describe("preview controller", () => {
       },
     });
     const previewCheckResponse: PreviewCheckResponse = await previewHandler(
-      requestWithCanvasUrl
+      requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
     expect(previewCheckResponse.dependencies).toBe("ok");

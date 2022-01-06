@@ -14,7 +14,7 @@ import {
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { selectCanvasUrl } from "@src/modules/environment";
+import { selectPreviewUrl } from "@src/modules/environment";
 
 interface Props {
   framework: Frameworks | undefined;
@@ -34,7 +34,7 @@ export default function Stepper({ framework }: Props): React.ReactElement {
 
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const {
-    canvasUrl,
+    previewUrl,
     openedStep,
     setupStatus,
     userHasAtLeastOneStepMissing,
@@ -44,7 +44,7 @@ export default function Stepper({ framework }: Props): React.ReactElement {
     openedStep: selectOpenedStep(state),
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
     setupStatus: selectSetupStatus(state),
-    canvasUrl: selectCanvasUrl(state),
+    previewUrl: selectPreviewUrl(state),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
@@ -65,7 +65,7 @@ export default function Stepper({ framework }: Props): React.ReactElement {
             onOpenStep={() => toggleSetupDrawerStep(i + 1)}
             key={`next-step-${i + 1}`}
             {...{
-              canvasUrl,
+              previewUrl,
               openedStep,
               setupStatus,
               userHasAtLeastOneStepMissing,

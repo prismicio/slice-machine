@@ -29,10 +29,10 @@ export const getEnvironment = (
   store: SliceMachineStoreType
 ): FrontEndEnvironment | null => store.environment.env;
 
-export const selectCanvasUrl = (
+export const selectPreviewUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env?.manifest.localSliceCanvasURL;
+  return store.environment.env?.manifest.localSlicePreviewURL;
 };
 
 export const getFramework = (

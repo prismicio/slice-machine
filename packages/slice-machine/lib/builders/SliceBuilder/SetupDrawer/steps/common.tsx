@@ -23,12 +23,12 @@ export interface DefaultStepCompProps {
   setupStatus: SetupStatus;
 }
 
-interface InstallSliceCanvasProps extends DefaultStepProps {
+interface InstallSlicePreviewProps extends DefaultStepProps {
   code: string;
 }
 
-export const InstallSliceCanvas =
-  ({ title = "Install Slice Canvas", code }: InstallSliceCanvasProps) =>
+export const InstallSlicePreview =
+  ({ title = "Install dependencies", code }: InstallSlicePreviewProps) =>
   ({
     isOpen,
     onOpenStep,
@@ -51,8 +51,8 @@ export const InstallSliceCanvas =
             />
           )}
           <Text sx={{ color: "textClear", mb: 2 }}>
-            Slice Canvas is used to develop your components with mock data, run
-            the following command to install it with npm
+            Slice Preview requires the following dependencies, run the following
+            command to install them.
           </Text>
           <CodeBlock>{code}</CodeBlock>
         </Flex>
@@ -65,12 +65,12 @@ interface CreatePageProps extends DefaultStepProps {
   instructions: string | React.ReactElement;
 }
 interface CreatePageCompProps extends DefaultStepCompProps {
-  canvasUrl: string | undefined;
+  previewUrl: string | undefined;
 }
 
 export const CreatePage =
   ({
-    title = "Create a page for Slice Canvas",
+    title = "Create a page for Slice Preview",
     code,
     instructions,
   }: CreatePageProps) =>
@@ -79,7 +79,7 @@ export const CreatePage =
     onOpenStep,
     stepNumber,
     setupStatus,
-    canvasUrl,
+    previewUrl,
   }: CreatePageCompProps): React.ReactElement => {
     return (
       <StepSection
@@ -95,8 +95,8 @@ export const CreatePage =
               title={"We can’t connect to the preview page"}
               sx={{ mb: 3 }}
             >
-              We cannot connect to {canvasUrl || "canvas URL"} and found the
-              slice preview page. Learn more
+              We cannot connect to {previewUrl || "preview URL"}. <br />{" "}
+              Struggling to fix this issue? See our troubleshooting page.
             </WarningSection>
           )}
           <Text sx={{ color: "textClear", mb: 3 }}>{instructions}</Text>
@@ -109,7 +109,7 @@ export const CreatePage =
 export const UpdateSmJson =
   ({
     title = "Update sm.json",
-    code = `"localSliceCanvasURL": "http://localhost:3000/_canvas"`,
+    code = `"localSlicePreviewURL": "http://localhost:3000/_preview"`,
   }: DefaultStepProps) =>
   ({
     isOpen,
@@ -128,16 +128,16 @@ export const UpdateSmJson =
         <Flex sx={{ flexDirection: "column" }}>
           {setupStatus.manifest === "ko" && (
             <WarningSection
-              title={"We can’t connect to the preview page"}
+              title={"Can’t find “localSlicePreviewURL”"}
               sx={{ mb: 3 }}
             >
-              Looks like we can’t find the “localSliceCanvasURL“ property in
+              Looks like we can’t find the “localSlicePreviewURL“ property in
               your sm.json file.
             </WarningSection>
           )}
           <Text sx={{ color: "textClear", mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
-            property <Text variant={"pre"}>localSliceCanvasURL</Text> in the
+            property <Text variant={"pre"}>localSlicePreviewURL</Text> in the
             shape of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
             Eg:
           </Text>

@@ -48,14 +48,14 @@ function useRendererClient(): readonly [
 
 type IframeRendererProps = {
   size: Size;
-  canvasUrl: string | undefined;
+  previewUrl: string | undefined;
   sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   size,
-  canvasUrl,
+  previewUrl,
   sliceView,
   dryRun = false,
 }) => {
@@ -63,7 +63,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   const { connectToPreviewSuccess, connectToPreviewFailure } =
     useSliceMachineActions();
   useEffect((): void => {
-    if (!canvasUrl) {
+    if (!previewUrl) {
       connectToPreviewFailure();
       return;
     }
@@ -114,10 +114,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             : {}),
         }}
       >
-        {canvasUrl ? (
+        {previewUrl ? (
           <iframe
             ref={ref}
-            src={canvasUrl}
+            src={previewUrl}
             style={{
               border: "none",
               height: "100%",
