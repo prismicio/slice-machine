@@ -23,6 +23,7 @@ export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 export default function Preview() {
   const { Model, variation } = useContext(SliceContext);
   const tracker = useContext(TrackerContext);
+  const [sentTrackingEvent, setSentTrackingEvent] = useState(false);
 
   const { userId, framework, version } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -33,8 +34,11 @@ export default function Preview() {
   );
 
   useEffect(() => {
-    tracker?.Track.SlicePreview({ framework, userId, version });
-  }, [userId, framework, version]);
+    if (sentTrackingEvent === false && tracker) {
+      tracker.Track.SlicePreview({ framework, userId, version });
+      setSentTrackingEvent(true);
+    }
+  }, [tracker]);
 
   const [state, setState] = useState({ size: Size.FULL });
 
