@@ -31,7 +31,6 @@ const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
 type AppProps = {
   theme: () => Theme;
   serverState: ServerState | undefined;
-  children: React.ReactElement;
 };
 
 const SliceMachineApp: React.FunctionComponent<AppProps> = ({

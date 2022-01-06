@@ -17,8 +17,7 @@
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix",
-    "test": "jest",
-    "slicemachine": "start-slicemachine"
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

@@ -69,16 +69,12 @@ const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
   );
 };
 
-export const SliceHandler = ({
-  children,
-}: {
-  children: React.ReactElement | null;
-}) => {
+export const SliceHandler: React.FunctionComponent = ({ children }) => {
   const router = useRouter();
   const libraries = useContext(LibrariesContext);
 
   if (!router.query || !router.query.lib || !router.query.sliceName) {
-    return children;
+    return <>{children}</>;
   }
 
   const libParam: string = ((): string => {

@@ -41,7 +41,7 @@ interface Props {
   children: React.ReactElement;
 }
 
-const ListItem = (props: Props) => {
+const ListItem: React.FunctionComponent<Props> = (props) => {
   const {
     item,
     index,

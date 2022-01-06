@@ -8,19 +8,21 @@ export enum ActionType {
   DELETE = "delete",
 }
 
-const InputBox = ({
-  name,
-  label,
-  placeholder,
-  error,
-  ...rest
-}: {
+interface InputBoxProps {
   name: string;
   label: string;
   placeholder: string;
   error?: string;
   [x: string]: any;
-}): React.ReactElement => (
+}
+
+const InputBox: React.FunctionComponent<InputBoxProps> = ({
+  name,
+  label,
+  placeholder,
+  error,
+  ...rest
+}) => (
   <Box mb={3}>
     <Label htmlFor={name} mb={2}>
       {label}
