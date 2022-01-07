@@ -19,7 +19,7 @@ const defaultAxiosConfig = {
 
 /** Auth Routes **/
 
-export const startAuth = (): Promise<AxiosResponse<{}>> =>
+export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
   axios.post("/api/auth/start", {}, defaultAxiosConfig);
 
 export const checkAuthStatus = (): Promise<

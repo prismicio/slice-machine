@@ -16,6 +16,7 @@ import {
   race,
   take,
   delay,
+  CallEffect,
 } from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
 import {
@@ -27,9 +28,9 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PreviewCheckResponse } from "@models/common/Preview";
 
-import * as previewSteps from "@builders/SliceBuilder/SetupDrawer/steps";
+import { getStepByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 
-const NoStepSelected: number = 0;
+const NoStepSelected = 0;
 
 export const initialState: PreviewStoreType = {
   setupStatus: {
@@ -210,7 +211,15 @@ function* checkSetupSaga(
         })
       );
       yield put(connectToPreviewIframeCreator.request());
-      const { timeout, iframeCheckKO, iframeCheckOk } = yield race({
+      const {
+        timeout,
+        iframeCheckKO,
+        iframeCheckOk,
+      }: {
+        iframeCheckOk: ReturnType<typeof connectToPreviewIframeCreator.success>;
+        iframeCheckKO: ReturnType<typeof connectToPreviewIframeCreator.failure>;
+        timeout: CallEffect<true>;
+      } = yield race({
         iframeCheckOk: take(getType(connectToPreviewIframeCreator.success)),
         iframeCheckKO: take(getType(connectToPreviewIframeCreator.failure)),
         timeout: delay(2500),
@@ -266,8 +275,7 @@ function* failCheckSetupSaga() {
     return;
   }
 
-  const { length } =
-    previewSteps[framework as Frameworks.next | Frameworks.nuxt];
+  const { length } = getStepByFramework(framework);
 
   yield put(
     openSetupPreviewDrawerCreator({

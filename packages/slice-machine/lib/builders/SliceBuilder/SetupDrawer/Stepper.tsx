@@ -1,4 +1,4 @@
-import * as steps from "./steps";
+import { getStepByFramework } from "./steps";
 
 import React from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -34,7 +34,7 @@ export default function Stepper({
     );
   }
 
-  const currentSteps = steps[framework];
+  const currentSteps = getStepByFramework(framework);
 
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const {

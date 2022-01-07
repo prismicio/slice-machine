@@ -7,7 +7,7 @@ import SuccessSection from "../components/SuccessSection";
 import CodeBlock from "../components/CodeBlockWithCopy";
 import WarningSection from "../components/WarningSection";
 
-import SliceMachineButton from "@components/SliceMachineButton";
+import Button from "@components/Button";
 
 import { SetupStatus } from "@src/modules/preview/types";
 
@@ -173,7 +173,7 @@ export const CheckSetup =
           {userHasConfiguredAllSteps ? (
             <SuccessSection />
           ) : (
-            <SliceMachineButton
+            <Button
               sx={{
                 minWidth: 155,
               }}
@@ -181,7 +181,7 @@ export const CheckSetup =
               onClick={() => checkPreviewSetup(false)}
             >
               Check configuration
-            </SliceMachineButton>
+            </Button>
           )}
         </Flex>
       </StepSection>

@@ -2,6 +2,7 @@ import { createContext } from "react";
 
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
+import { Frameworks } from "@slicemachine/core/build/src/models";
 
 // These events should be sync with the tracking Plan on segment.
 export enum EventType {
@@ -46,7 +47,7 @@ export class ClientTracker {
   }
 
   Track = {
-    review: (framework: string, rating: number, comment: string) => {
+    review: (framework: Frameworks, rating: number, comment: string) => {
       this.trackEvent(EventType.Review, { rating, comment, framework });
     },
   };

@@ -51,7 +51,9 @@ export const getUpdateVersionInfo = (
   return store.environment.env.updateVersionInfo;
 };
 
-export const getStorybookUrl = (state: SliceMachineStoreType) => {
+export const getStorybookUrl = (
+  state: SliceMachineStoreType
+): string | null => {
   return state.environment.env.manifest.storybook || null;
 };
 

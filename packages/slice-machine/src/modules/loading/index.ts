@@ -4,6 +4,7 @@ import { SliceMachineStoreType } from "src/redux/type";
 import { LoadingStoreType, LoadingKeysEnum } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { call, put } from "redux-saga/effects";
+import { Saga } from "redux-saga";
 
 export const initialState: LoadingStoreType = {
   ...(mapValues(LoadingKeysEnum, () => false) as Record<
@@ -53,7 +54,7 @@ export const loadingReducer: Reducer<LoadingStoreType, LoadingActions> = (
 };
 
 // Saga decorator
-export const withLoader = (saga: any, loadingKey: LoadingKeysEnum) =>
+export const withLoader = (saga: any, loadingKey: LoadingKeysEnum): Saga<any> =>
   function* (...args: any[]) {
     yield put(startLoadingActionCreator({ loadingKey }));
     yield call(
