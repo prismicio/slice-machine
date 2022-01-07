@@ -8,7 +8,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
-  getStorybookUrl,
+  getLinkToStorybookDocs,
 } from "@src/modules/environment";
 import StorybookSection from "./components/StorybookSection";
 import { selectIsSetupDrawerOpen } from "@src/modules/preview";
@@ -17,20 +17,19 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Stepper from "./Stepper";
 
 const SetupDrawer: React.FunctionComponent = ({}) => {
-  const { isSetupDrawerOpen } = useSelector((state: SliceMachineStoreType) => ({
-    isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
-  }));
-
   const { closeSetupDrawerDrawer } = useSliceMachineActions();
 
-  const { storybook, framework, isPreviewAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      isPreviewAvailableForFramework:
-        selectIsPreviewAvailableForFramework(state),
-      storybook: getStorybookUrl(state),
-    })
-  );
+  const {
+    isSetupDrawerOpen,
+    linkToStorybookDocs,
+    framework,
+    isPreviewAvailableForFramework,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
+    linkToStorybookDocs: getLinkToStorybookDocs(state),
+    framework: getFramework(state),
+    isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
+  }));
 
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
@@ -78,9 +77,7 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
             <Stepper framework={framework} />
           </Flex>
         </Flex>
-        {!storybook && !!framework && (
-          <StorybookSection framework={framework} />
-        )}
+        <StorybookSection linkToStorybookDocs={linkToStorybookDocs} />
       </Flex>
     </Drawer>
   );

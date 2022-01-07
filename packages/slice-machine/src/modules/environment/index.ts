@@ -67,6 +67,27 @@ export const getUpdateVersionInfo = (
 export const getStorybookUrl = (state: SliceMachineStoreType) => {
   return state.environment.env?.manifest.storybook || null;
 };
+
+export const getLinkToStorybookDocs = (
+  state: SliceMachineStoreType
+): string => {
+  const framework = getFramework(state);
+  switch (framework) {
+    case Frameworks.next:
+      return "https://prismic.io/docs/technologies/storybook-nextjs";
+    case Frameworks.nuxt:
+      return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
+    case Frameworks.react:
+      return "https://storybook.js.org/docs/react/get-started/install";
+    case Frameworks.vue:
+      return "https://storybook.js.org/docs/vue/get-started/install";
+    case Frameworks.svelte:
+      return "https://storybook.js.org/docs/svelte/get-started/install";
+    default:
+      return "https://prismic.io/docs";
+  }
+};
+
 // Reducer
 export const environmentReducer: Reducer<
   EnvironmentStoreType,

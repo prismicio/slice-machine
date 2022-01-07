@@ -17,6 +17,7 @@ import {
   selectIsPreviewAvailableForFramework,
   getFramework,
   getStorybookUrl,
+  getLinkToStorybookDocs,
 } from "@src/modules/environment";
 
 const MemoizedImagePreview = memo(ImagePreview);
@@ -45,13 +46,15 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   const {
     isCheckingPreviewSetup,
     isPreviewAvailableForFramework,
+    linkToStorybookDocs,
     framework,
-    storybook,
+    storybookUrl,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
+    linkToStorybookDocs: getLinkToStorybookDocs(state),
     isCheckingPreviewSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
     isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
-    storybook: getStorybookUrl(state),
+    storybookUrl: getStorybookUrl(state),
   }));
 
   return (
@@ -75,77 +78,48 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           preventScreenshot={!isPreviewAvailableForFramework}
         />
       </Card>
-      {!isPreviewAvailableForFramework ? (
-        <StoryBookOrPreview linkToStorybook={storybook} framework={framework} />
-      ) : (
-        <Button
-          onClick={() =>
-            checkPreviewSetup(true, () =>
-              window.open(`${router.asPath}/preview`)
-            )
-          }
-          variant={"secondary"}
-          sx={{ cursor: "pointer", width: "100%", mt: 3 }}
+      <Button
+        disabled={!isPreviewAvailableForFramework}
+        onClick={() =>
+          checkPreviewSetup(true, () => window.open(`${router.asPath}/preview`))
+        }
+        variant={
+          isPreviewAvailableForFramework ? "secondary" : "disabledSecondary"
+        }
+        sx={{ cursor: "pointer", width: "100%", mt: 3 }}
+      >
+        {isCheckingPreviewSetup ? <Spinner size={12} /> : "Open Slice Preview"}
+      </Button>
+      {storybookUrl && (
+        <Link href={storybookUrl}>
+          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
+            Open Storybook
+          </Button>
+        </Link>
+      )}
+      {!storybookUrl && !isPreviewAvailableForFramework && (
+        <Text
+          as="p"
+          sx={{
+            textAlign: "center",
+            mt: 3,
+            color: "textGray",
+            "::first-letter": {
+              "text-transform": "uppercase",
+            },
+          }}
         >
-          {isCheckingPreviewSetup ? (
-            <Spinner size={12} />
-          ) : (
-            "Open Slice Preview"
-          )}
-        </Button>
+          {framework
+            ? `${framework} does not support Slice Preview.`
+            : "Slice Preview is not supported by your framework."}{" "}
+          You can{" "}
+          <a target={"_blank"} href={linkToStorybookDocs}>
+            install Storybook
+          </a>{" "}
+          instead.
+        </Text>
       )}
     </Box>
-  );
-};
-
-function storyBookInstallLink(framework?: string) {
-  switch (framework) {
-    case "react":
-      return "https://storybook.js.org/docs/react/get-started/install";
-    case "vue":
-      return "https://storybook.js.org/docs/vue/get-started/install";
-    case "svelte":
-      return "https://storybook.js.org/docs/svelte/get-started/install";
-    default:
-      return "https://storybook.js.org/";
-  }
-}
-
-const StoryBookOrPreview: React.FC<{
-  linkToStorybook: string | null;
-  framework?: string;
-}> = ({ linkToStorybook, framework }) => {
-  if (linkToStorybook) {
-    return (
-      <Link href={linkToStorybook}>
-        <Button sx={{ width: "100%", mt: 3 }}>Open Storybook</Button>
-      </Link>
-    );
-  }
-
-  return (
-    <>
-      <Button variant="disabledSecondary" sx={{ width: "100%", mt: 3 }}>
-        Open Slice Preview
-      </Button>
-      <Text
-        as="p"
-        sx={{
-          textAlign: "center",
-          mt: 3,
-          color: "textGray",
-          "::first-letter": {
-            "text-transform": "uppercase",
-          },
-        }}
-      >
-        {framework
-          ? `${framework} does not support Slice Preview.`
-          : "Slice Preview is not supported by your framework."}{" "}
-        You can <a href={storyBookInstallLink(framework)}>install Storybook</a>{" "}
-        instead.
-      </Text>
-    </>
   );
 };
 
