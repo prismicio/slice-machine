@@ -254,9 +254,9 @@ function* checkSetupSaga(
 }
 
 function* failCheckSetupSaga() {
-  const framework: Frameworks | undefined = yield select(getFramework);
+  const framework: Frameworks = yield select(getFramework);
 
-  if (!framework || ![Frameworks.next, Frameworks.nuxt].includes(framework)) {
+  if (![Frameworks.next, Frameworks.nuxt].includes(framework)) {
     return;
   }
 

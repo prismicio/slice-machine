@@ -23,7 +23,7 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
       env: getEnvironment(store),
     }));
     const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(
-      env?.mockConfig || {},
+      env.mockConfig,
       customType.id
     );
     const [Model, store] = useModelReducer({

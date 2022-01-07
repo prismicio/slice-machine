@@ -11,12 +11,6 @@ import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { previewIsSupported } from "@lib/utils";
 
-const initialState: EnvironmentStoreType = {
-  warnings: [],
-  configErrors: {},
-  env: null,
-};
-
 // Action Creators
 export const getEnvironmentCreator = createAction(
   "ENVIRONMENT/GET.RESPONSE"
@@ -27,23 +21,20 @@ type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
 // Selectors
 export const getEnvironment = (
   store: SliceMachineStoreType
-): FrontEndEnvironment | null => store.environment.env;
+): FrontEndEnvironment => store.environment.env;
 
 export const selectPreviewUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env?.manifest.localSlicePreviewURL;
+  return store.environment.env.manifest.localSlicePreviewURL;
 };
 
-export const getFramework = (
-  store: SliceMachineStoreType
-): Frameworks | undefined => store.environment.env?.framework;
+export const getFramework = (store: SliceMachineStoreType): Frameworks =>
+  store.environment.env.framework;
 
 export const selectIsPreviewAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
-  if (!store.environment.env) return false;
-
   return previewIsSupported(store.environment.env.framework);
 };
 
@@ -56,16 +47,12 @@ export const getConfigErrors = (store: SliceMachineStoreType): ConfigErrors =>
 
 export const getUpdateVersionInfo = (
   store: SliceMachineStoreType
-): UpdateVersionInfo | null => {
-  if (!store.environment.env) {
-    return null;
-  }
-
+): UpdateVersionInfo => {
   return store.environment.env.updateVersionInfo;
 };
 
 export const getStorybookUrl = (state: SliceMachineStoreType) => {
-  return state.environment.env?.manifest.storybook || null;
+  return state.environment.env.manifest.storybook || null;
 };
 
 export const getLinkToStorybookDocs = (
@@ -89,10 +76,13 @@ export const getLinkToStorybookDocs = (
 };
 
 // Reducer
+// This reducer is preloaded by a state coming from the /state call in the _app component
 export const environmentReducer: Reducer<
-  EnvironmentStoreType,
+  EnvironmentStoreType | null,
   EnvironmentActions
-> = (state = initialState, action) => {
+> = (state, action) => {
+  if (!state) return null;
+
   switch (action.type) {
     case getType(getEnvironmentCreator):
       return {

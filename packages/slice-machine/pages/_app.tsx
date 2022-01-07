@@ -4,6 +4,7 @@ import configureStore from "src/redux/store";
 import useSwr from "swr";
 import App, { AppContext } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
 import theme from "src/theme";
 
@@ -25,6 +26,8 @@ import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
+import { Store } from "redux";
+import { Persistor } from "redux-persist/es/types";
 
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
@@ -45,7 +48,16 @@ function mapSlices(libraries: ReadonlyArray<LibraryUI> | null) {
   }, {});
 }
 
-const { store, persistor } = configureStore();
+const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
+  const { setColorMode } = useThemeUI();
+  useEffect(() => {
+    if (setColorMode) {
+      setColorMode("light");
+    }
+  }, []);
+
+  return <>{children}</>;
+};
 
 function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   const { data: serverState }: { data?: ServerState } = useSwr(
@@ -57,13 +69,26 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
   // to remove it we should change how the slice store is handled
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
-  const [isLoadingData, setIsLoadingData] = useState(true);
   const [tracker, setTracker] = useState<ClientTracker | undefined>(undefined);
+  const [storeInitiated, setStoreInitiated] = useState<boolean>(false);
+  const [smStore, setSMStore] = useState<{
+    store: Store;
+    persistor: Persistor;
+  } | null>(null);
 
   useEffect(() => {
     if (!serverState) {
       return;
     }
+
+    if (!storeInitiated) {
+      const { store, persistor } = configureStore({
+        environment: { env: serverState.env, warnings: [], configErrors: {} },
+      });
+      setStoreInitiated(true);
+      setSMStore({ store, persistor });
+    }
+
     serverState.env.repo &&
       ClientTracker.build(
         "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
@@ -83,7 +108,6 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       });
     }
     setSliceMap(newSliceMap);
-    setIsLoadingData(false);
     const { env, configErrors, warnings, libraries } = serverState;
     console.log("------ SliceMachine log ------");
     console.log("Loaded libraries: ", { libraries });
@@ -97,15 +121,25 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       <Head>
         <title>SliceMachine</title>
       </Head>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <TrackerContext.Provider value={tracker}>
-            <SliceMachineApp theme={theme} serverState={serverState}>
-              {isLoadingData ? <LoadingPage /> : <Component {...pageProps} />}
-            </SliceMachineApp>
-          </TrackerContext.Provider>
-        </PersistGate>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <BaseStyles>
+          <RemoveDarkMode>
+            {!smStore || !serverState ? (
+              <LoadingPage />
+            ) : (
+              <Provider store={smStore.store}>
+                <PersistGate loading={null} persistor={smStore.persistor}>
+                  <TrackerContext.Provider value={tracker}>
+                    <SliceMachineApp serverState={serverState}>
+                      <Component {...pageProps} />
+                    </SliceMachineApp>
+                  </TrackerContext.Provider>
+                </PersistGate>
+              </Provider>
+            )}
+          </RemoveDarkMode>
+        </BaseStyles>
+      </ThemeProvider>
     </>
   );
 }
