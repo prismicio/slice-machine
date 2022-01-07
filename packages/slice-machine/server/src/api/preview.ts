@@ -22,7 +22,7 @@ export default async function handler(
     throw new Error(message);
   }
 
-  if (!req.env.manifest.localSliceCanvasURL) {
+  if (!req.env.manifest.localSlicePreviewURL) {
     response.manifest = "ko";
   }
   const packageJson = retrieveJsonPackage(cwd);

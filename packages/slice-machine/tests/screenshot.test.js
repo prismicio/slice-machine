@@ -6,7 +6,7 @@ describe("screenshots", () => {
     expect(res).toBeDefined();
     expect(res.err).toBeDefined();
   });
-  test("it should error when no localCanvasUrl is passed", async () => {
+  test("it should error when no localPreviewUrl is passed", async () => {
     const res = validateEnv("next");
     expect(res).toBeDefined();
     expect(res.err).toBeDefined();

@@ -1,5 +1,5 @@
 import {
-  InstallSliceCanvas,
+  InstallSlicePreview,
   CreatePage,
   UpdateSmJson,
   CheckSetup,
@@ -21,7 +21,7 @@ build: {
 }
 `;
 
-const SliceCanvasPageCreationInstruction = `<template>
+const SlicePreviewPageCreationInstruction = `<template>
   <SliceCanvasRenderer :state="state" #default="props">
     <SliceZone v-bind="props" />
   </SliceCanvasRenderer>
@@ -50,13 +50,12 @@ const UpdateNuxtConfig = (props: DefaultStepCompProps): React.ReactElement => {
     <StepSection title="Update your Nuxt config" {...props}>
       <Flex sx={{ flexDirection: "column" }}>
         <Text sx={{ color: "textClear", mb: 3 }}>
-          In your nuxt.config.js file, you need to add at the beginning the
-          following line:
+          In your <Text variant={"pre"}>nuxt.config.js</Text> file, you need to
+          add at the beginning the following line:
         </Text>
         <CodeBlock>import smConfig from "./sm.json"</CodeBlock>
         <Text sx={{ color: "textClear", my: 3 }}>
-          In your nuxt.config.js file, you need to update your "modules" and
-          "build" keys with the following:
+          Inside of the export statement, add these two properties
         </Text>
         <CodeBlock>{NuxtConfigInstructions}</CodeBlock>
       </Flex>
@@ -64,15 +63,15 @@ const UpdateNuxtConfig = (props: DefaultStepCompProps): React.ReactElement => {
   );
 };
 export const steps = [
-  InstallSliceCanvas({
+  InstallSlicePreview({
     code: `npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic @prismicio/slice-canvas-renderer-vue`,
   }),
   UpdateNuxtConfig,
   CreatePage({
-    instructions: `In your "pages" directory, create a file called _canvas.vue and add
+    instructions: `In your "pages" directory, create a file called _preview.vue and add
 the following code. This page is the route you hit to preview and
 develop your components.`,
-    code: SliceCanvasPageCreationInstruction,
+    code: SlicePreviewPageCreationInstruction,
   }),
   UpdateSmJson({}),
   CheckSetup({}),

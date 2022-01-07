@@ -39,7 +39,7 @@ describe("preview controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     } as RequestWithEnv;
@@ -63,7 +63,7 @@ describe("preview controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     } as RequestWithEnv;
@@ -91,7 +91,7 @@ describe("preview controller", () => {
       env: {
         framework: Frameworks.nuxt,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_canvas",
+          localSlicePreviewURL: "http://localhost:3001/_preview",
         },
       },
     } as RequestWithEnv;

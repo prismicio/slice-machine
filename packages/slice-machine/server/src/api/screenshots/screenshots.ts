@@ -9,7 +9,7 @@ import { Frameworks } from "@slicemachine/core/build/src/models";
 
 export function validateEnv(
   framework: Frameworks,
-  canvasUrl: string | undefined
+  previewUrl: string | undefined
 ) {
   if (!previewIsSupported(framework)) {
     const reason = "Could not generate preview: framework is not supported";
@@ -20,9 +20,9 @@ export function validateEnv(
       screenshots: {},
     };
   }
-  if (!canvasUrl) {
+  if (!previewUrl) {
     const reason =
-      "Could not generate screenshots: localSliceCanvasUrl undefined in sm.json file";
+      "Could not generate screenshots: localSlicePreviewURL undefined in sm.json file";
 
     return {
       err: new Error(reason),
@@ -38,7 +38,10 @@ export default async function handler({
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 
-  const maybeErr = validateEnv(env.framework, env.manifest.localSliceCanvasURL);
+  const maybeErr = validateEnv(
+    env.framework,
+    env.manifest.localSlicePreviewURL
+  );
   if (maybeErr) {
     return maybeErr;
   }

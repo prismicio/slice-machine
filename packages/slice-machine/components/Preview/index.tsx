@@ -10,15 +10,15 @@ import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectCanvasUrl } from "@src/modules/environment";
+import { selectPreviewUrl } from "@src/modules/environment";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Preview() {
   const { Model, variation } = useContext(SliceContext);
-  const { canvasUrl } = useSelector((state: SliceMachineStoreType) => ({
-    canvasUrl: selectCanvasUrl(state),
+  const { previewUrl } = useSelector((state: SliceMachineStoreType) => ({
+    previewUrl: selectPreviewUrl(state),
   }));
 
   const [state, setState] = useState({ size: Size.FULL });
@@ -47,7 +47,7 @@ export default function Preview() {
       />
       <IframeRenderer
         size={state.size}
-        canvasUrl={canvasUrl}
+        previewUrl={previewUrl}
         sliceView={sliceView}
       />
     </Flex>

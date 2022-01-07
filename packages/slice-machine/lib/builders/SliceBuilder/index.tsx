@@ -17,7 +17,7 @@ import SetupDrawer from "./SetupDrawer";
 import IframeRenderer from "@components/Preview/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectCanvasUrl } from "@src/modules/environment";
+import { selectPreviewUrl } from "@src/modules/environment";
 import { Size } from "@components/Preview/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
 
@@ -40,9 +40,9 @@ const initialState: SliceBuilderState = {
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
   const { openLoginModal, checkPreviewSetup } = useSliceMachineActions();
-  const { canvasUrl, isWaitingForIframeCheck } = useSelector(
+  const { previewUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
-      canvasUrl: selectCanvasUrl(state),
+      previewUrl: selectPreviewUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
     })
   );
@@ -135,7 +135,7 @@ const SliceBuilder: React.FunctionComponent = () => {
         <IframeRenderer
           dryRun
           size={Size.FULL}
-          canvasUrl={canvasUrl}
+          previewUrl={previewUrl}
           sliceView={sliceView}
         />
       )}
