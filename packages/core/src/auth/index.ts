@@ -52,8 +52,9 @@ export const Auth = {
     if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
     if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
 
-    return Communication.validateSession(config.cookies, requiredBase).catch(
-      () => null
-    );
+    return Communication.validateCookieSession(
+      config.cookies,
+      requiredBase
+    ).catch(() => null);
   },
 };

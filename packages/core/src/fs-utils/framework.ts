@@ -4,6 +4,8 @@ import { Manifest } from "../models/Manifest";
 
 import { isValidFramework } from "../utils/framework";
 
+import { SupportedFrameworks } from "../models/Framework";
+
 export function detectFramework(
   cwd: string,
   supportedFrameworks: Frameworks[]
@@ -35,4 +37,8 @@ export function defineFramework(
       ? manifest.framework
       : null;
   return userDefinedFramework || detectFramework(cwd, supportedFrameworks);
+}
+
+export function autodetectFramework(cwd: string): Frameworks {
+  return detectFramework(cwd, SupportedFrameworks);
 }

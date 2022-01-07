@@ -2,7 +2,7 @@ import { describe, expect, test, afterEach, jest } from "@jest/globals";
 
 import {
   Roles,
-  validateSession,
+  validateCookieSession,
   SharedConfigManager,
 } from "../../../src/prismic";
 
@@ -85,7 +85,7 @@ describe("communication", () => {
     const mockedConfig = SharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({ base: fakeBase, cookies: "" });
 
-    const mockedValidate = validateSession as jest.Mock;
+    const mockedValidate = validateCookieSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -108,7 +108,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = validateSession as jest.Mock;
+    const mockedValidate = validateCookieSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -131,7 +131,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = validateSession as jest.Mock;
+    const mockedValidate = validateCookieSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.reject("unauthorized"));
 
     const result = await Auth.validateSession(fakeBase);
@@ -154,7 +154,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = validateSession as jest.Mock;
+    const mockedValidate = validateCookieSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.resolve(userInfo));
 
     const result = await Auth.validateSession(fakeBase);

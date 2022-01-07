@@ -75,7 +75,7 @@ export function maybeParseRepoData(repos?: string | RepoData): RepoData {
   return repos;
 }
 
-export async function validateSession(
+export async function validateCookieSession(
   cookies: string,
   base?: string
 ): Promise<UserInfo> {

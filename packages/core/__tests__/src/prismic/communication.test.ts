@@ -22,7 +22,7 @@ describe("communication", () => {
   });
 
   const fakeCookie = "prismic-auth=biscuits;";
-  test("validateSession, default base", async () => {
+  test("validateCookieSession, default base", async () => {
     const responseData = {
       email: "fake@prismic.io",
       type: "USER",
@@ -35,12 +35,12 @@ describe("communication", () => {
       .get("/validate?token=biscuits")
       .reply(200, responseData);
 
-    return communication.validateSession(fakeCookie).then((data) => {
+    return communication.validateCookieSession(fakeCookie).then((data) => {
       expect(data).toEqual(responseData);
     });
   });
 
-  test("validateSession, custom base", async () => {
+  test("validateCookieSession, custom base", async () => {
     const responseData = {
       email: "fake@prismic.io",
       type: "USER",
@@ -54,7 +54,7 @@ describe("communication", () => {
       .reply(200, responseData);
 
     return communication
-      .validateSession(fakeCookie, "https://wroom.io")
+      .validateCookieSession(fakeCookie, "https://wroom.io")
       .then((data) => {
         expect(data).toEqual(responseData);
       });
