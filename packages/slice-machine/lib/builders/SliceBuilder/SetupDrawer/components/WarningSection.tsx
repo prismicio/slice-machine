@@ -38,7 +38,11 @@ const WarningSection: React.FunctionComponent<WarningSectionProps> = ({
         {title}
       </Text>
     </Flex>
-    {!!children && <Text sx={{ color: "textClear", mt: 2 }}>{children}</Text>}
+    {!!children && (
+      <Text variant={"xs"} sx={{ mt: 2 }}>
+        {children}
+      </Text>
+    )}
   </Flex>
 );
 

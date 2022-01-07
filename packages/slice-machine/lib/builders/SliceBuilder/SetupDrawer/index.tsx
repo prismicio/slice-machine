@@ -69,8 +69,8 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
             flex: 1,
             overflow: "auto",
             flexDirection: "column",
-            pl: 4,
-            pr: 4,
+            pl: 24,
+            pr: 24,
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>

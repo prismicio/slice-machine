@@ -14,7 +14,7 @@ import {
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { selectPreviewUrl } from "@src/modules/environment";
+import { getFramework, selectPreviewUrl } from "@src/modules/environment";
 
 interface Props {
   framework: Frameworks | undefined;
@@ -45,13 +45,18 @@ export default function Stepper({ framework }: Props): React.ReactElement {
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
     setupStatus: selectSetupStatus(state),
     previewUrl: selectPreviewUrl(state),
+    framework: getFramework(state),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
   const stepNumberWithErrors = [
     ...(setupStatus.dependencies === "ko" ? ["1"] : []),
-    ...(setupStatus.iframe === "ko" ? ["2"] : []),
+    ...(setupStatus.iframe === "ko"
+      ? framework === Frameworks.nuxt
+        ? ["2 and 3"]
+        : ["2"]
+      : []),
     ...(setupStatus.manifest === "ko" ? ["3"] : []),
   ];
 

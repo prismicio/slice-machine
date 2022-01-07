@@ -21,6 +21,12 @@ export interface DefaultStepCompProps {
   onOpenStep: () => void;
   stepNumber: number;
   setupStatus: SetupStatus;
+  previewUrl: string | undefined;
+  userHasAtLeastOneStepMissing: boolean;
+  userHasConfiguredAllSteps: boolean;
+  checkPreviewSetup: (b: boolean) => void;
+  stepNumberWithErrors: string[];
+  isCheckingSetup: boolean;
 }
 
 interface InstallSlicePreviewProps extends DefaultStepProps {
@@ -28,13 +34,11 @@ interface InstallSlicePreviewProps extends DefaultStepProps {
 }
 
 export const InstallSlicePreview =
-  ({ title = "Install dependencies", code }: InstallSlicePreviewProps) =>
   ({
-    isOpen,
-    onOpenStep,
-    stepNumber,
-    setupStatus,
-  }: DefaultStepCompProps): React.ReactElement => {
+    title = "Install dependencies",
+    code,
+  }: InstallSlicePreviewProps): React.FunctionComponent<DefaultStepCompProps> =>
+  ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (
       <StepSection
         stepNumber={stepNumber}
@@ -50,7 +54,7 @@ export const InstallSlicePreview =
               sx={{ mb: 2 }}
             />
           )}
-          <Text sx={{ color: "textClear", mb: 2 }}>
+          <Text variant={"xs"} sx={{ mb: 3 }}>
             Slice Preview requires the following dependencies, run the following
             command to install them.
           </Text>
@@ -64,23 +68,14 @@ interface CreatePageProps extends DefaultStepProps {
   code: string;
   instructions: string | React.ReactElement;
 }
-interface CreatePageCompProps extends DefaultStepCompProps {
-  previewUrl: string | undefined;
-}
 
 export const CreatePage =
   ({
     title = "Create a page for Slice Preview",
     code,
     instructions,
-  }: CreatePageProps) =>
-  ({
-    isOpen,
-    onOpenStep,
-    stepNumber,
-    setupStatus,
-    previewUrl,
-  }: CreatePageCompProps): React.ReactElement => {
+  }: CreatePageProps): React.FunctionComponent<DefaultStepCompProps> =>
+  ({ isOpen, onOpenStep, stepNumber, setupStatus, previewUrl }) => {
     return (
       <StepSection
         stepNumber={stepNumber}
@@ -99,7 +94,9 @@ export const CreatePage =
               Struggling to fix this issue? See our troubleshooting page.
             </WarningSection>
           )}
-          <Text sx={{ color: "textClear", mb: 3 }}>{instructions}</Text>
+          <Text variant={"xs"} sx={{ mb: 3 }}>
+            {instructions}
+          </Text>
           <CodeBlock>{code}</CodeBlock>
         </Flex>
       </StepSection>
@@ -110,13 +107,8 @@ export const UpdateSmJson =
   ({
     title = "Update sm.json",
     code = `"localSlicePreviewURL": "http://localhost:3000/_preview"`,
-  }: DefaultStepProps) =>
-  ({
-    isOpen,
-    onOpenStep,
-    stepNumber,
-    setupStatus,
-  }: DefaultStepCompProps): React.ReactElement => {
+  }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
+  ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (
       <StepSection
         stepNumber={stepNumber}
@@ -135,7 +127,7 @@ export const UpdateSmJson =
               your sm.json file.
             </WarningSection>
           )}
-          <Text sx={{ color: "textClear", mb: 3 }}>
+          <Text variant={"xs"} sx={{ mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
             property <Text variant={"pre"}>localSlicePreviewURL</Text> in the
             shape of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
@@ -147,16 +139,10 @@ export const UpdateSmJson =
     );
   };
 
-interface CheckSetupComProps extends DefaultStepCompProps {
-  userHasAtLeastOneStepMissing: boolean;
-  userHasConfiguredAllSteps: boolean;
-  checkPreviewSetup: (b: boolean) => void;
-  stepNumberWithErrors: string[];
-  isCheckingSetup: boolean;
-}
-
 export const CheckSetup =
-  ({ title = "Check configuration" }: DefaultStepProps) =>
+  ({
+    title = "Check configuration",
+  }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   ({
     isOpen,
     onOpenStep,
@@ -165,19 +151,23 @@ export const CheckSetup =
     checkPreviewSetup,
     stepNumberWithErrors,
     isCheckingSetup,
-  }: CheckSetupComProps): React.ReactElement => {
+  }) => {
     return (
       <StepSection title={title} isOpen={isOpen} onOpenStep={onOpenStep}>
         <Flex sx={{ flexDirection: "column", mx: -24 }}>
-          <Text sx={{ color: "textClear", mb: 3 }}>
-            After you’re done the previous steps, we need to check that
-            everything runs smoothly.
+          <Text variant={"xs"} sx={{ mb: 3 }}>
+            Once you’ve completed the previous steps, click the button below to
+            verify that your configuration is correct.
           </Text>
           {userHasAtLeastOneStepMissing && (
-            <WarningSection title={""} sx={{ mb: 3 }}>
-              We ran into some issues while checking your configuration of Slice
-              Preview. Please check step {stepNumberWithErrors.join(" and ")}{" "}
-              for more information.
+            <WarningSection
+              title={"We are running into some errors"}
+              sx={{ mb: 3 }}
+            >
+              We ran into some issues while checking your configuration.
+              <br />
+              Please check step {stepNumberWithErrors.join(" and ")} for more
+              information.
             </WarningSection>
           )}
           {userHasConfiguredAllSteps ? (
