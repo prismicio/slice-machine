@@ -17,11 +17,15 @@ import { Frameworks } from "@slicemachine/core/build/src/models";
 import { getFramework, selectPreviewUrl } from "@src/modules/environment";
 
 interface Props {
-  framework: Frameworks | undefined;
+  framework: Frameworks;
+  isPreviewAvailableForFramework: boolean;
 }
 
-export default function Stepper({ framework }: Props): React.ReactElement {
-  if (framework !== Frameworks.next && framework !== Frameworks.nuxt) {
+export default function Stepper({
+  framework,
+  isPreviewAvailableForFramework,
+}: Props): React.ReactElement {
+  if (!isPreviewAvailableForFramework) {
     return (
       <p>
         Framework {framework || "undefined"} is not supported yet. Please use

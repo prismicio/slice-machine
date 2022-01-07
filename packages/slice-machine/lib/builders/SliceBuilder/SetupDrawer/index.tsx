@@ -54,7 +54,7 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
       >
         <Flex
           sx={{
-            p: 20,
+            p: "20px",
             justifyContent: "space-between",
             borderBottomStyle: "solid",
             borderBottomWidth: "1px",
@@ -69,12 +69,15 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
             flex: 1,
             overflow: "auto",
             flexDirection: "column",
-            pl: 24,
-            pr: 24,
+            pl: "24px",
+            pr: "24px",
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            <Stepper framework={framework} />
+            <Stepper
+              framework={framework}
+              isPreviewAvailableForFramework={isPreviewAvailableForFramework}
+            />
           </Flex>
         </Flex>
         <StorybookSection linkToStorybookDocs={linkToStorybookDocs} />

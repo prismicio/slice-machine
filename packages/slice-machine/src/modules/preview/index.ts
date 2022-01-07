@@ -18,7 +18,10 @@ import {
   delay,
 } from "redux-saga/effects";
 import { checkPreviewSetup } from "@src/apiClient";
-import { getFramework } from "@src/modules/environment";
+import {
+  getFramework,
+  selectIsPreviewAvailableForFramework,
+} from "@src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
@@ -255,8 +258,11 @@ function* checkSetupSaga(
 
 function* failCheckSetupSaga() {
   const framework: Frameworks = yield select(getFramework);
+  const isPreviewAvailableForFramework: boolean = yield select(
+    selectIsPreviewAvailableForFramework
+  );
 
-  if (![Frameworks.next, Frameworks.nuxt].includes(framework)) {
+  if (!isPreviewAvailableForFramework) {
     return;
   }
 
