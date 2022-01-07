@@ -53,19 +53,11 @@ export class ClientTracker {
       this.trackEvent(EventType.Review, { rating, comment, framework });
     },
 
-    SlicePreviewSetup: (args: {
-      framework: string;
-      version: string;
-      userId: string | null;
-    }): void => {
+    SlicePreviewSetup: (args: { framework: string; version: string }): void => {
       return this.trackEvent(EventType.SlicePreviewSetup, args);
     },
 
-    SlicePreview: (args: {
-      framework: string;
-      version: string;
-      userId: string | null;
-    }): void => {
+    SlicePreview: (args: { framework: string; version: string }): void => {
       return this.trackEvent(EventType.SlicePreview, args);
     },
   };

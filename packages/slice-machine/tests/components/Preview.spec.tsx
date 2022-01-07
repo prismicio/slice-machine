@@ -40,7 +40,6 @@ const renderWithContext = (
 const stubState = {
   environment: {
     env: {
-      userId: "Marc",
       repo: "sm-env-example",
       framework: "next",
       updateVersionInfo: {
@@ -60,11 +59,11 @@ jest.mock("@segment/analytics-next", () => {
 });
 
 test("Should send event when loaded", async () => {
-  const tracker = await ClientTracker.build("foo", "bar");
+  const tracker = (await ClientTracker.build("foo", "bar")) as ClientTracker;
 
   renderWithContext(<Preview />, {
     trackerContext: tracker,
-    sliceContext: StubSliceContext as ContextProps,
+    sliceContext: StubSliceContext as unknown as ContextProps,
     preloadedState: stubState,
   });
 
@@ -72,7 +71,6 @@ test("Should send event when loaded", async () => {
   // @ts-expect-error
   expect(AnalyticsBrowser.track).toHaveBeenCalledWith("Slice Preview", {
     framework: "next",
-    userId: "Marc",
     version: "0.2.0-alpha.17",
   });
 });

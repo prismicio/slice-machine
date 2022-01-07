@@ -15,6 +15,7 @@ import ToastProvider from "../../../src/ToastProvider";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 
 import StubSliceContext from "../../__mockData__/sliceContext";
+import { EnvironmentStoreType } from "@src/modules/environment/types";
 
 const renderWithContext = (
   ui: any,
@@ -72,15 +73,14 @@ test("when setup drawer is open it should call the tracking service, once only",
   div.setAttribute("id", "__next");
   document.body.appendChild(div);
 
-  const tracker = await ClientTracker.build("foo", "bar");
+  const tracker = (await ClientTracker.build("foo", "bar")) as ClientTracker;
 
   renderWithContext(<SliceBuilder />, {
     trackerContext: tracker,
-    sliceContext: StubSliceContext as ContextProps,
+    sliceContext: StubSliceContext as unknown as ContextProps,
     preloadedState: {
       environment: {
         env: {
-          userId: "Marc",
           framework: "next",
           updateVersionInfo: {
             currentVersion: "0.2.0-alpha.17",
@@ -89,7 +89,7 @@ test("when setup drawer is open it should call the tracking service, once only",
             localSliceCanvasURL: "",
           },
         },
-      },
+      } as unknown as EnvironmentStoreType,
     },
   });
 
@@ -106,7 +106,6 @@ test("when setup drawer is open it should call the tracking service, once only",
   // @ts-expect-error
   expect(AnalyticsBrowser.track).toHaveBeenCalledWith("Slice Preview Setup", {
     framework: "next",
-    userId: "Marc",
     version: "0.2.0-alpha.17",
   });
 });

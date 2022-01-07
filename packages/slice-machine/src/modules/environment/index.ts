@@ -60,10 +60,6 @@ export const getStorybookUrl = (
   return store.environment.env.manifest.storybook || null;
 };
 
-export const getUserID = (store: SliceMachineStoreType): string | null => {
-  return store.environment.env.userId || null;
-};
-
 // Reducer
 // This reducer is preloaded by a state coming from the /state call in the _app component
 export const environmentReducer: Reducer<

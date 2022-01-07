@@ -10,7 +10,6 @@ import {
   selectIsPreviewAvailableForFramework,
   getStorybookUrl,
   getCurrentVersion,
-  getUserID,
 } from "../../../../src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import StorybookSection from "./components/StorybookSection";
@@ -28,19 +27,14 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   const [activeStep, setActiveStep] = useState<number>(0);
   const tracker = useContext(TrackerContext);
 
-  const {
-    storybook,
-    framework,
-    isPreviewAvailableForFramework,
-    version,
-    userId,
-  } = useSelector((state: SliceMachineStoreType) => ({
-    framework: getFramework(state),
-    isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
-    storybook: getStorybookUrl(state),
-    version: getCurrentVersion(state),
-    userId: getUserID(state),
-  }));
+  const { storybook, framework, isPreviewAvailableForFramework, version } =
+    useSelector((state: SliceMachineStoreType) => ({
+      framework: getFramework(state),
+      isPreviewAvailableForFramework:
+        selectIsPreviewAvailableForFramework(state),
+      storybook: getStorybookUrl(state),
+      version: getCurrentVersion(state),
+    }));
 
   const onOpenStep = (stepNumber: number) => () => {
     if (stepNumber === activeStep) {
@@ -52,7 +46,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   };
 
   useEffect(() => {
-    tracker?.Track.SlicePreviewSetup({ framework, version, userId });
+    tracker?.Track.SlicePreviewSetup({ framework, version });
   }, []);
 
   // We close the drawer if the framework cannot handle the preview
