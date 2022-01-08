@@ -8,12 +8,18 @@ import { SliceContext } from "@src/models/slice/context";
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { useSelector } from "react-redux";
+import { getCanvasUrl } from "@src/modules/environment";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
-export default function Preview() {
+export default function Preview(): JSX.Element {
   const { Model, variation } = useContext(SliceContext);
+  const { canvasUrl } = useSelector((store: SliceMachineStoreType) => ({
+    canvasUrl: getCanvasUrl(store),
+  }));
 
   const [state, setState] = useState({ size: Size.FULL });
 
@@ -29,10 +35,6 @@ export default function Preview() {
     { sliceID: Model.infos.model.id, variationID: variation.id },
   ];
 
-  const canvasUrl = `http://localhost:${
-    process.env.NODE_ENV === "development" ? "3001" : "3000"
-  }/_canvas`;
-
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
@@ -42,11 +44,17 @@ export default function Preview() {
         handleScreenSizeChange={handleScreenSizeChange}
         size={state.size}
       />
-      <IframeRenderer
-        size={state.size}
-        canvasUrl={canvasUrl}
-        sliceView={sliceView}
-      />
+      {canvasUrl ? (
+        <IframeRenderer
+          size={state.size}
+          canvasUrl={canvasUrl}
+          sliceView={sliceView}
+        />
+      ) : (
+        <div>
+          It seems that your canvas Url is not configured yet in the manifest.
+        </div>
+      )}
     </Flex>
   );
 }
