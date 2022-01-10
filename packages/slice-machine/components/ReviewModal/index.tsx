@@ -24,7 +24,6 @@ import {
   userHasDoneTheOnboarding,
   userHasSendAReview,
 } from "@src/modules/userContext";
-import { useToasts } from "react-toast-notifications";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
@@ -83,15 +82,8 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
   }));
 
-  const {
-    skipReview,
-    sendAReview,
-    openLoginModal,
-    startLoadingReview,
-    stopLoadingReview,
-  } = useSliceMachineActions();
-
-  const { addToast } = useToasts();
+  const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
+    useSliceMachineActions();
 
   const sliceCount =
     libraries && libraries.length
@@ -108,24 +100,11 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
 
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
-  const onSendAReview = async (
-    rating: number,
-    comment: string
-  ): Promise<void> => {
-    try {
-      startLoadingReview();
-      tracker?.Track.review(env.framework, rating, comment);
-      sendAReview();
-      stopLoadingReview();
-    } catch (error) {
-      stopLoadingReview();
-      if (403 === error.response?.status) {
-        openLoginModal();
-      }
-      if (401 === error.response?.status) {
-        addToast("You don't have access to the repo", { appearance: "error" });
-      }
-    }
+  const onSendAReview = (rating: number, comment: string): void => {
+    startLoadingReview();
+    tracker?.Track.review(env.framework, rating, comment);
+    sendAReview();
+    stopLoadingReview();
   };
 
   const validateReview = ({ rating }: { rating: number; comment: string }) => {

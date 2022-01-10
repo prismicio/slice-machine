@@ -5,6 +5,7 @@ import { Box, Flex } from "theme-ui";
 import { RendererClient } from "@prismicio/slice-canvas-com";
 import { Size, iframeSizes } from "../ScreenSizes";
 import { SliceView } from "../..";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 function useRendererClient(): readonly [
   RendererClient | undefined,
@@ -47,33 +48,55 @@ function useRendererClient(): readonly [
 
 type IframeRendererProps = {
   size: Size;
-  canvasUrl: string;
+  previewUrl: string | undefined;
   sliceView: SliceView;
+  dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   size,
-  canvasUrl,
+  previewUrl,
   sliceView,
+  dryRun = false,
 }) => {
   const [client, ref] = useRendererClient();
+  const { connectToPreviewSuccess, connectToPreviewFailure } =
+    useSliceMachineActions();
   useEffect((): void => {
-    if (client !== undefined) {
-      if (client.connected) {
-        const updateSliceZone = async () => {
-          await client.setSliceZoneFromSliceIDs(sliceView);
-        };
-        updateSliceZone().catch((error) => {
-          console.log({ error });
-        });
-      } else {
-        console.warn("Trying to use a disconnected renderer client.");
-      }
+    if (!previewUrl) {
+      connectToPreviewFailure();
+      return;
     }
+    if (client === undefined) {
+      return;
+    }
+
+    if (!client.connected) {
+      connectToPreviewFailure();
+      console.warn("Trying to use a disconnected renderer client.");
+      return;
+    }
+
+    const updateSliceZone = async () => {
+      await client.setSliceZoneFromSliceIDs(sliceView);
+    };
+    updateSliceZone()
+      .then(() => {
+        connectToPreviewSuccess();
+      })
+      .catch(() => {
+        connectToPreviewFailure();
+      });
   }, [client, size, sliceView]);
 
   return (
-    <Box sx={{ flex: "1", bg: "grey01" }}>
+    <Box
+      sx={{
+        flex: "1",
+        bg: "grey01",
+        ...(dryRun ? { visibility: "hidden" } : {}),
+      }}
+    >
       <Flex
         sx={{
           justifyContent: "center",
@@ -81,17 +104,27 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           margin: "0 auto",
           overflow: "auto",
           ...iframeSizes[size],
+          ...(dryRun
+            ? {
+                position: "absolute",
+                top: "0",
+                width: "0",
+                height: "0",
+              }
+            : {}),
         }}
       >
-        <iframe
-          ref={ref}
-          src={canvasUrl}
-          style={{
-            border: "none",
-            height: "100%",
-            width: "100%",
-          }}
-        />
+        {previewUrl ? (
+          <iframe
+            ref={ref}
+            src={previewUrl}
+            style={{
+              border: "none",
+              height: "100%",
+              width: "100%",
+            }}
+          />
+        ) : null}
       </Flex>
     </Box>
   );

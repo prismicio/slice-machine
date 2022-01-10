@@ -45,6 +45,9 @@ const stubState = {
       updateVersionInfo: {
         currentVersion: "0.2.0-alpha.17",
       },
+      manifest: {
+        localSlicePreviewURL: "localhost:3000/_preview",
+      },
     },
   },
 } as SliceMachineStoreType;

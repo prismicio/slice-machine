@@ -1,0 +1,84 @@
+import { getStepperConfigurationByFramework } from "./steps";
+
+import React from "react";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import {
+  selectOpenedStep,
+  selectSetupStatus,
+  selectUserHasAtLeastOneStepMissing,
+  selectUserHasConfiguredAllSteps,
+} from "@src/modules/preview";
+
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { Frameworks } from "@slicemachine/core/build/src/models";
+import { getFramework, selectPreviewUrl } from "@src/modules/environment";
+
+interface Props {
+  framework: Frameworks;
+  isPreviewAvailableForFramework: boolean;
+}
+
+export default function Stepper({
+  framework,
+  isPreviewAvailableForFramework,
+}: Props): React.ReactElement {
+  if (!isPreviewAvailableForFramework) {
+    return (
+      <p>
+        Framework {framework || "undefined"} is not supported yet. Please use
+        Storybook instead.
+      </p>
+    );
+  }
+
+  const stepperConfiguration = getStepperConfigurationByFramework(framework);
+
+  const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
+  const {
+    previewUrl,
+    openedStep,
+    setupStatus,
+    userHasAtLeastOneStepMissing,
+    userHasConfiguredAllSteps,
+    isCheckingSetup,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    openedStep: selectOpenedStep(state),
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+    setupStatus: selectSetupStatus(state),
+    previewUrl: selectPreviewUrl(state),
+    framework: getFramework(state),
+    userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
+    userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
+  }));
+
+  const stepNumberWithErrors =
+    stepperConfiguration.getStepNumberWithErrors(setupStatus);
+
+  return (
+    <div>
+      {stepperConfiguration.steps.map((Step, i) => {
+        return (
+          <Step
+            stepNumber={i + 1}
+            isOpen={openedStep === i + 1}
+            onOpenStep={() => toggleSetupDrawerStep(i + 1)}
+            key={`next-step-${i + 1}`}
+            {...{
+              previewUrl,
+              openedStep,
+              setupStatus,
+              userHasAtLeastOneStepMissing,
+              userHasConfiguredAllSteps,
+              checkPreviewSetup,
+              isCheckingSetup,
+              stepNumberWithErrors,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}

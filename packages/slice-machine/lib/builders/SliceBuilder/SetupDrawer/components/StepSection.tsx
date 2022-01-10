@@ -1,13 +1,15 @@
 import React, { useRef } from "react";
 import { Flex, Text } from "theme-ui";
-import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowBackIos, MdCheck } from "react-icons/md";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import WarningBadge from "./WarningBadge";
 
 type StepSectionProps = {
-  stepNumber: number;
+  stepNumber?: number;
   title: string;
   isOpen: boolean;
   onOpenStep: () => void;
+  status?: null | "ok" | "ko";
 };
 
 const StepSection: React.FunctionComponent<StepSectionProps> = ({
@@ -16,12 +18,21 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
   isOpen,
   onOpenStep,
   children,
+  status = null,
 }) => {
   const stepSectionContainer = useRef<HTMLDivElement>(null);
   const contentHeight: number =
     !!stepSectionContainer && !!stepSectionContainer.current
       ? stepSectionContainer.current.scrollHeight
       : 0;
+
+  const additionalStepTitleStyle: ThemeUIStyleObject =
+    status === "ok"
+      ? {
+          textDecoration: "line-through",
+          color: "grey04",
+        }
+      : {};
 
   return (
     <Flex
@@ -45,16 +56,49 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
         onClick={onOpenStep}
       >
         <Flex sx={{ alignItems: "center" }}>
-          <StepNumber stepNumber={stepNumber} sx={{ mr: 2 }} />
-          <Text sx={{ fontWeight: 500, fontSize: 2 }}>{title}</Text>
+          {!!stepNumber && (
+            <StepNumber stepNumber={stepNumber} sx={{ mr: 2 }} />
+          )}
+          <Text
+            sx={{ fontWeight: 500, fontSize: 2, ...additionalStepTitleStyle }}
+          >
+            {title}
+          </Text>
         </Flex>
         <Flex
           sx={{
-            transform: isOpen ? "rotate(90deg)" : "rotate(-90deg)",
-            transition: "200ms",
+            justifyContent: "center",
           }}
         >
-          <MdArrowBackIos color={"#4E4E55"} />
+          {status === "ok" && (
+            <Flex
+              sx={{
+                height: 20,
+                width: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+                borderStyle: "solid",
+                backgroundColor: "lightGreen",
+                borderColor: "lightGreen",
+                borderWidth: 1,
+                mr: 2,
+              }}
+            >
+              <MdCheck color="#3AB97A" />
+            </Flex>
+          )}
+          {status === "ko" && <WarningBadge sx={{ mr: 2 }} />}
+          <Flex
+            sx={{
+              transform: isOpen
+                ? "rotate(90deg) translate(5px)"
+                : "rotate(-90deg) translate(5px)",
+              transition: "all 0.2s ease-out",
+            }}
+          >
+            <MdArrowBackIos color={"#4E4E55"} />
+          </Flex>
         </Flex>
       </Flex>
       <Flex
@@ -74,7 +118,10 @@ const StepSection: React.FunctionComponent<StepSectionProps> = ({
   );
 };
 
-type StepNumberProps = { stepNumber: number; sx: ThemeUIStyleObject };
+type StepNumberProps = {
+  stepNumber: number;
+  sx: ThemeUIStyleObject;
+};
 
 const StepNumber: React.FunctionComponent<StepNumberProps> = ({
   stepNumber,

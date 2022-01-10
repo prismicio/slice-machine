@@ -67,7 +67,6 @@ export const CustomPaths = (cwd: string): Record<string, Function> =>
   paths(cwd, "");
 export const PackagePaths = (cwd: string): Record<string, Function> =>
   paths(cwd, "node_modules");
-export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
 export const LibrariesStatePath = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "libraries-state.json");
 export const PrismicConfig = (cwd: string): string =>

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
 
@@ -14,8 +14,12 @@ import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import SetupDrawer from "./SetupDrawer";
+import IframeRenderer from "@components/Preview/components/IframeRenderer";
 import { useSelector } from "react-redux";
-import { selectIsThePreviewSetUp } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectPreviewUrl } from "@src/modules/environment";
+import { Size } from "@components/Preview/components/ScreenSizes";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -34,11 +38,14 @@ const initialState: SliceBuilderState = {
 };
 
 const SliceBuilder: React.FunctionComponent = () => {
-  const isThePreviewSetup = useSelector(selectIsThePreviewSetUp);
-  const [isSetupDrawerOpen, setSetupDrawerState] = useState<boolean>(false);
-
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLoginModal } = useSliceMachineActions();
+  const { openLoginModal, checkPreviewSetup } = useSliceMachineActions();
+  const { previewUrl, isWaitingForIframeCheck } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      previewUrl: selectPreviewUrl(state),
+      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+    })
+  );
 
   if (!store || !Model || !variation) return null;
 
@@ -54,8 +61,6 @@ const SliceBuilder: React.FunctionComponent = () => {
       openLoginModal();
     }
   };
-
-  const openSetupDrawer = () => setSetupDrawerState(true);
 
   useEffect(() => {
     if (Model.isTouched && isMounted) {
@@ -77,6 +82,19 @@ const SliceBuilder: React.FunctionComponent = () => {
     return () => store.reset();
   }, []);
 
+  const sliceView = useMemo(
+    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
+    [Model.infos.model.id, variation.id]
+  );
+
+  const onTakingCustomScreenshot = () => {
+    checkPreviewSetup(true, () =>
+      store
+        .variation(variation.id)
+        .generateScreenShot(Model.from, Model.infos.sliceName, setData)
+    );
+  };
+
   return (
     <Box sx={{ flex: 1 }}>
       <Header
@@ -95,13 +113,7 @@ const SliceBuilder: React.FunctionComponent = () => {
           <SideBar
             Model={Model}
             variation={variation}
-            openSetupPreview={openSetupDrawer}
-            isPreviewSetup={isThePreviewSetup}
-            onScreenshot={() =>
-              store
-                .variation(variation.id)
-                .generateScreenShot(Model.from, Model.infos.sliceName, setData)
-            }
+            onScreenshot={onTakingCustomScreenshot}
             onHandleFile={(file) =>
               store
                 .variation(variation.id)
@@ -118,10 +130,15 @@ const SliceBuilder: React.FunctionComponent = () => {
       >
         <FieldZones Model={Model} store={store} variation={variation} />
       </FlexEditor>
-      <SetupDrawer
-        isOpen={isSetupDrawerOpen}
-        onClose={() => setSetupDrawerState(false)}
-      />
+      <SetupDrawer />
+      {isWaitingForIframeCheck && (
+        <IframeRenderer
+          dryRun
+          size={Size.FULL}
+          previewUrl={previewUrl}
+          sliceView={sliceView}
+        />
+      )}
     </Box>
   );
 };

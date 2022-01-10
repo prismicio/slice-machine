@@ -1,7 +1,11 @@
-import React, { memo, useState, useRef, Fragment } from "react";
-import { Label, Flex, Image, Button, Text, Spinner } from "theme-ui";
+import React, { Fragment, memo, useRef, useState } from "react";
+import { Button, Flex, Image, Label, Spinner, Text } from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
 import { MdInfoOutline } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const DefaultImage: React.FC<{ src: string | undefined }> = ({ src }) => (
   <Image src={src} alt="Preview image" />
@@ -24,6 +28,9 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   preventScreenshot,
 }) => {
   const inputFile = useRef<HTMLInputElement>(null);
+  const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+  }));
   const [display, setDisplay] = useState(false);
 
   const handleFile = (file: File | undefined) => {
@@ -63,7 +70,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
         onMouseEnter={() => setDisplay(true)}
         onMouseLeave={() => setDisplay(false)}
       >
-        {display || imageLoading ? (
+        {display || imageLoading || isCheckingSetup ? (
           <Flex
             sx={{
               width: "100%",
