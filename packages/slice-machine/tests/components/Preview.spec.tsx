@@ -58,6 +58,10 @@ jest.mock("@segment/analytics-next", () => {
   };
 });
 
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
 test("Should send event when loaded", async () => {
   const tracker = (await ClientTracker.build("foo", "bar")) as ClientTracker;
 
@@ -73,4 +77,22 @@ test("Should send event when loaded", async () => {
     framework: "next",
     version: "0.2.0-alpha.17",
   });
+});
+
+test("Should not send an event when traking is set to false", async () => {
+  const tracker = (await ClientTracker.build(
+    "foo",
+    "bar",
+    false
+  )) as ClientTracker;
+
+  renderWithContext(<Preview />, {
+    trackerContext: tracker,
+    sliceContext: StubSliceContext as unknown as ContextProps,
+    preloadedState: stubState,
+  });
+
+  expect(AnalyticsBrowser.standalone).toHaveBeenCalled();
+  // @ts-expect-error
+  expect(AnalyticsBrowser.track).not.toHaveBeenCalled();
 });

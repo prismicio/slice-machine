@@ -68,6 +68,10 @@ jest.mock("@segment/analytics-next", () => {
   };
 });
 
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
 test("when setup drawer is open it should call the tracking service, once only", async () => {
   const div = document.createElement("div");
   div.setAttribute("id", "__next");
@@ -108,4 +112,46 @@ test("when setup drawer is open it should call the tracking service, once only",
     framework: "next",
     version: "0.2.0-alpha.17",
   });
+});
+
+test("when setup drawer is open, but trakcing is set to false it should not call tracking", async () => {
+  const div = document.createElement("div");
+  div.setAttribute("id", "__next");
+  document.body.appendChild(div);
+
+  const tracker = (await ClientTracker.build(
+    "foo",
+    "bar",
+    false
+  )) as ClientTracker;
+
+  renderWithContext(<SliceBuilder />, {
+    trackerContext: tracker,
+    sliceContext: StubSliceContext as unknown as ContextProps,
+    preloadedState: {
+      environment: {
+        env: {
+          framework: "next",
+          updateVersionInfo: {
+            currentVersion: "0.2.0-alpha.17",
+          },
+          manifest: {
+            localSliceCanvasURL: "",
+            tracking: false,
+          },
+        },
+      } as unknown as EnvironmentStoreType,
+    },
+  });
+
+  expect(AnalyticsBrowser.standalone).toHaveBeenCalled();
+
+  const getOpenButton = () => screen.getByTestId("open-set-up-preview");
+  const getCloseButton = () => screen.getByTestId("close-set-up-preview");
+  fireEvent.click(getOpenButton());
+  fireEvent.click(getCloseButton());
+  fireEvent.click(getOpenButton());
+
+  // @ts-expect-error
+  expect(AnalyticsBrowser.track).not.toHaveBeenCalled();
 });
