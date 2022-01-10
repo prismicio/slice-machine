@@ -20,6 +20,8 @@ async function init() {
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
   const lib: string | undefined = findArgument(process.argv, "library");
   const branch: string | undefined = findArgument(process.argv, "branch");
+  const tracking =
+    findArgument(process.argv, "tracking") === "false" ? false : true;
 
   console.log(
     Utils.purple(
@@ -51,9 +53,14 @@ async function init() {
     await createRepository(name, frameworkResult.value, config);
   }
 
-  const tracker = Tracker.build("JfTfmHaATChc4xueS7RcCBsixI71dJIJ", name, {
-    userId: user.userId,
-  });
+  const tracker = Tracker.build(
+    "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+    name,
+    {
+      userId: user.userId,
+    },
+    tracking
+  );
 
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
