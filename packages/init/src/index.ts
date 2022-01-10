@@ -70,7 +70,7 @@ async function init() {
     : undefined;
 
   // configure the SM.json file and the json package file of the project..
-  configureProject(cwd, base, name, frameworkResult, sliceLibPath);
+  configureProject(cwd, base, name, frameworkResult, sliceLibPath, tracking);
 
   // ask the user to run slice-machine.
   displayFinalMessage(cwd);
