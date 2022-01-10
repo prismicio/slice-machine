@@ -10,8 +10,6 @@ import { Flex as FlexGrid, Col } from "components/Flex";
 
 import Card from "@components/Card/WithTabs/index";
 
-Modal.setAppElement("#__next");
-
 const FORM_ID = "metadata-modal-form";
 
 const InputBox = ({ name, label, placeholder }) => (
@@ -24,6 +22,8 @@ const InputBox = ({ name, label, placeholder }) => (
 );
 
 const MetaDataModal = ({ close, isOpen, Model }) => {
+  Modal.setAppElement("#__next");
+
   const onUpdateField = (value) => {
     store.updateMetadata(Model, value);
     close();

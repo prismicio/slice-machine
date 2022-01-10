@@ -79,6 +79,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         />
       </Card>
       <Button
+        data-testid="open-set-up-preview"
         disabled={!isPreviewAvailableForFramework}
         onClick={() =>
           checkPreviewSetup(true, () => window.open(`${router.asPath}/preview`))

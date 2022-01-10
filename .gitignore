@@ -19,6 +19,7 @@ composer.lock
 *.sublime-workspace
 *.swp
 *.swo
+.metals
 
 # Project Specific
 node_modules

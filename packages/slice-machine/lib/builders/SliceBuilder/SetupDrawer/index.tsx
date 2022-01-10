@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 import Drawer from "rc-drawer";
 import { Close, Flex, Text } from "theme-ui";
 
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { TrackerContext } from "@src/utils/tracker";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
   getLinkToStorybookDocs,
+  getCurrentVersion,
 } from "@src/modules/environment";
 import StorybookSection from "./components/StorybookSection";
 import { selectIsSetupDrawerOpen } from "@src/modules/preview";
@@ -16,20 +18,27 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import Stepper from "./Stepper";
 
-const SetupDrawer: React.FunctionComponent = ({}) => {
+const SetupDrawer: React.FunctionComponent = () => {
   const { closeSetupDrawerDrawer } = useSliceMachineActions();
+  const tracker = useContext(TrackerContext);
 
   const {
     isSetupDrawerOpen,
     linkToStorybookDocs,
     framework,
     isPreviewAvailableForFramework,
+    version,
   } = useSelector((state: SliceMachineStoreType) => ({
     isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
-    linkToStorybookDocs: getLinkToStorybookDocs(state),
     framework: getFramework(state),
+    linkToStorybookDocs: getLinkToStorybookDocs(state),
     isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
+    version: getCurrentVersion(state),
   }));
+
+  useEffect(() => {
+    tracker?.Track.SlicePreviewSetup({ framework, version });
+  }, []);
 
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
@@ -62,7 +71,11 @@ const SetupDrawer: React.FunctionComponent = ({}) => {
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
-          <Close color={"#4E4E55"} onClick={closeSetupDrawerDrawer} />
+          <Close
+            data-testid="close-set-up-preview"
+            color={"#4E4E55"}
+            onClick={closeSetupDrawerDrawer}
+          />
         </Flex>
         <Flex
           sx={{

@@ -51,10 +51,15 @@ export const getUpdateVersionInfo = (
   return store.environment.env.updateVersionInfo;
 };
 
+export const getCurrentVersion = (store: SliceMachineStoreType): string => {
+  const { currentVersion } = getUpdateVersionInfo(store);
+  return currentVersion;
+};
+
 export const getStorybookUrl = (
-  state: SliceMachineStoreType
+  store: SliceMachineStoreType
 ): string | null => {
-  return state.environment.env.manifest.storybook || null;
+  return store.environment.env.manifest.storybook || null;
 };
 
 export const getLinkToStorybookDocs = (

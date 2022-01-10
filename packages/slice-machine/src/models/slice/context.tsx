@@ -10,13 +10,13 @@ import SliceState from "@lib/models/ui/SliceState";
 import Slice from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-type ContextProps = {
+export type ContextProps = {
   Model: SliceState;
   store: SliceStore;
   variation: Models.VariationAsArray;
 };
 export const SliceContext = React.createContext<Partial<ContextProps>>({});
-
+SliceContext.displayName = "SliceContext";
 /**
  * remoteSlicesState
  * fsSlicesState
