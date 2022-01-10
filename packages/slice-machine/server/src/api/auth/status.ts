@@ -18,7 +18,6 @@ export default async function handler(
     if (profile instanceof Error) return { status: "error" };
 
     PrismicSharedConfigManager.setProperties({
-      userId: profile.userId,
       shortId: profile.shortId,
     });
     req.tracker?.resolveUser(profile.shortId, req.anonymousId);
