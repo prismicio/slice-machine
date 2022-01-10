@@ -1,49 +1,40 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
+
 import Drawer from "rc-drawer";
 import { Close, Flex, Text } from "theme-ui";
-import NextSetupSteps from "./NextSetupSteps";
-import NuxtSetupSteps from "./NuxtSetupSteps";
+
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "../../../../src/redux/type";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { TrackerContext } from "@src/utils/tracker";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
-  getStorybookUrl,
+  getLinkToStorybookDocs,
   getCurrentVersion,
-} from "../../../../src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+} from "@src/modules/environment";
 import StorybookSection from "./components/StorybookSection";
-import { TrackerContext } from "../../../../src/utils/tracker";
+import { selectIsSetupDrawerOpen } from "@src/modules/preview";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-type SetupDrawerProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+import Stepper from "./Stepper";
 
-const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
-  isOpen,
-  onClose,
-}) => {
-  const [activeStep, setActiveStep] = useState<number>(0);
+const SetupDrawer: React.FunctionComponent = () => {
+  const { closeSetupDrawerDrawer } = useSliceMachineActions();
   const tracker = useContext(TrackerContext);
 
-  const { storybook, framework, isPreviewAvailableForFramework, version } =
-    useSelector((state: SliceMachineStoreType) => ({
-      framework: getFramework(state),
-      isPreviewAvailableForFramework:
-        selectIsPreviewAvailableForFramework(state),
-      storybook: getStorybookUrl(state),
-      version: getCurrentVersion(state),
-    }));
-
-  const onOpenStep = (stepNumber: number) => () => {
-    if (stepNumber === activeStep) {
-      setActiveStep(0);
-      return;
-    }
-
-    setActiveStep(stepNumber);
-  };
+  const {
+    isSetupDrawerOpen,
+    linkToStorybookDocs,
+    framework,
+    isPreviewAvailableForFramework,
+    version,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
+    framework: getFramework(state),
+    linkToStorybookDocs: getLinkToStorybookDocs(state),
+    isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
+    version: getCurrentVersion(state),
+  }));
 
   useEffect(() => {
     tracker?.Track.SlicePreviewSetup({ framework, version });
@@ -52,15 +43,15 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
     if (isPreviewAvailableForFramework) return;
-    onClose();
+    closeSetupDrawerDrawer();
   }, [isPreviewAvailableForFramework]);
 
   return (
     <Drawer
       placement="right"
-      open={isOpen}
+      open={isSetupDrawerOpen}
       level={null}
-      onClose={onClose}
+      onClose={closeSetupDrawerDrawer}
       width={492}
     >
       <Flex
@@ -72,7 +63,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
       >
         <Flex
           sx={{
-            p: 20,
+            p: "20px",
             justifyContent: "space-between",
             borderBottomStyle: "solid",
             borderBottomWidth: "1px",
@@ -83,7 +74,7 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           <Close
             data-testid="close-set-up-preview"
             color={"#4E4E55"}
-            onClick={onClose}
+            onClick={closeSetupDrawerDrawer}
           />
         </Flex>
         <Flex
@@ -91,20 +82,18 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
             flex: 1,
             overflow: "auto",
             flexDirection: "column",
-            pl: 4,
-            pr: 4,
+            pl: "24px",
+            pr: "24px",
           }}
         >
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
-            {framework === Frameworks.nuxt && (
-              <NuxtSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
-            )}
-            {framework === Frameworks.next && (
-              <NextSetupSteps activeStep={activeStep} onOpenStep={onOpenStep} />
-            )}
+            <Stepper
+              framework={framework}
+              isPreviewAvailableForFramework={isPreviewAvailableForFramework}
+            />
           </Flex>
         </Flex>
-        {!storybook && <StorybookSection framework={framework} />}
+        <StorybookSection linkToStorybookDocs={linkToStorybookDocs} />
       </Flex>
     </Drawer>
   );

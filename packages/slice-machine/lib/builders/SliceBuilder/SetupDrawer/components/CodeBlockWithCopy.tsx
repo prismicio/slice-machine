@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { Button, useThemeUI, Box } from "theme-ui";
 
-import { BiCopy } from "react-icons/bi";
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdContentCopy } from "react-icons/md";
 
 import CodeBlock from "@components/CodeBlock";
-
-const buttonIconStyle: React.CSSProperties = {
-  position: "relative",
-  top: "3px",
-};
 
 const CodeBlockWithCopy: React.FC<{ children: string }> = ({ children }) => {
   const { theme } = useThemeUI();
@@ -36,17 +30,21 @@ const CodeBlockWithCopy: React.FC<{ children: string }> = ({ children }) => {
           position: "absolute",
           top: "4px",
           right: "4px",
-          p: 2,
+          width: 24,
+          height: 24,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          p: 0,
         }}
       >
         {isCopied ? (
           <MdCheck
             size={16}
             color={theme?.colors?.success as string | undefined}
-            style={buttonIconStyle}
           />
         ) : (
-          <BiCopy size={16} style={buttonIconStyle} />
+          <MdContentCopy size={14} />
         )}
       </Button>
     </Box>

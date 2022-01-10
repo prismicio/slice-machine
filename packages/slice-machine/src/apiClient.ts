@@ -7,6 +7,7 @@ import {
   TrackingResponse,
 } from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { PreviewCheckResponse } from "@models/common/Preview";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -18,7 +19,7 @@ const defaultAxiosConfig = {
 
 /** Auth Routes **/
 
-export const startAuth = (): Promise<AxiosResponse<{}>> =>
+export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
   axios.post("/api/auth/start", {}, defaultAxiosConfig);
 
 export const checkAuthStatus = (): Promise<
@@ -35,3 +36,9 @@ export const sendTrackingOnboarding = (
     | OnboardingContinueWithVideoEvent
 ): Promise<AxiosResponse<TrackingResponse>> =>
   axios.post(`/api/tracking/onboarding`, onboardingEvent, defaultAxiosConfig);
+
+/** Preview Routes **/
+
+export const checkPreviewSetup = (): Promise<
+  AxiosResponse<PreviewCheckResponse>
+> => axios.get(`/api/preview/check`);

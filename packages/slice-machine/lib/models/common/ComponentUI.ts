@@ -45,7 +45,6 @@ export const buildScreenshotUrls = (
 export enum LibStatus {
   Modified = "MODIFIED",
   Synced = "SYNCED",
-  PreviewMissing = "PREVIEW_MISSING",
   Invalid = "INVALID",
   NewSlice = "NEW_SLICE",
 }

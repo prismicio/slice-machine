@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useContext } from "react";
 
 import { Flex } from "theme-ui";
@@ -10,7 +10,11 @@ import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
 import { TrackerContext } from "@src/utils/tracker";
 import { useSelector } from "react-redux";
-import { getCurrentVersion, getFramework } from "@src/modules/environment";
+import {
+  getCurrentVersion,
+  getFramework,
+  selectPreviewUrl,
+} from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 
 export type SliceView = SliceViewItem[];
@@ -21,9 +25,10 @@ export default function Preview() {
   const tracker = useContext(TrackerContext);
   const [sentTrackingEvent, setSentTrackingEvent] = useState(false);
 
-  const { framework, version } = useSelector(
+  const { framework, version, previewUrl } = useSelector(
     (state: SliceMachineStoreType) => ({
       framework: getFramework(state),
+      previewUrl: selectPreviewUrl(state),
       version: getCurrentVersion(state),
     })
   );
@@ -45,13 +50,10 @@ export default function Preview() {
     return <div />;
   }
 
-  const sliceView: SliceView = [
-    { sliceID: Model.infos.model.id, variationID: variation.id },
-  ];
-
-  const canvasUrl = `http://localhost:${
-    process.env.NODE_ENV === "development" ? "3001" : "3000"
-  }/_canvas`;
+  const sliceView = useMemo(
+    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
+    [Model.infos.model.id, variation.id]
+  );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
@@ -64,7 +66,7 @@ export default function Preview() {
       />
       <IframeRenderer
         size={state.size}
-        canvasUrl={canvasUrl}
+        previewUrl={previewUrl}
         sliceView={sliceView}
       />
     </Flex>

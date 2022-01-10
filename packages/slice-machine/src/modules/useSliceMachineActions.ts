@@ -12,10 +12,36 @@ import {
   skipReviewCreator,
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
+import {
+  openSetupPreviewDrawerCreator,
+  closeSetupPreviewDrawerCreator,
+  toggleSetupDrawerStepCreator,
+  checkPreviewSetupCreator,
+  connectToPreviewIframeCreator,
+} from "@src/modules/preview";
 import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
+
+  // Preview store
+  const checkPreviewSetup = (
+    withFirstVisitCheck: boolean,
+    callback?: () => void
+  ) =>
+    dispatch(
+      checkPreviewSetupCreator.request({ withFirstVisitCheck, callback })
+    );
+  const openSetupDrawerDrawer = () =>
+    dispatch(openSetupPreviewDrawerCreator({}));
+  const connectToPreviewFailure = () =>
+    dispatch(connectToPreviewIframeCreator.failure());
+  const connectToPreviewSuccess = () =>
+    dispatch(connectToPreviewIframeCreator.success());
+  const closeSetupDrawerDrawer = () =>
+    dispatch(closeSetupPreviewDrawerCreator());
+  const toggleSetupDrawerStep = (stepNumber: number) =>
+    dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
   // Modal store
   const closeLoginModal = () =>
@@ -54,6 +80,12 @@ const useSliceMachineActions = () => {
   };
 
   return {
+    checkPreviewSetup,
+    connectToPreviewFailure,
+    connectToPreviewSuccess,
+    toggleSetupDrawerStep,
+    closeSetupDrawerDrawer,
+    openSetupDrawerDrawer,
     getEnvironment,
     finishOnboarding,
     openLoginModal,

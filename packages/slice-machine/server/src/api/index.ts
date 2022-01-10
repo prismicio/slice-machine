@@ -12,6 +12,7 @@ const screenshot = require("./screenshots/screenshots").default;
 const customScreenshot = require("./screenshots/custom-screenshots").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
+const checkPreview = require("./preview").default;
 
 const saveCustomType = require("./custom-types/save").default;
 const pushCustomType = require("./custom-types/push").default;
@@ -203,6 +204,18 @@ router.get(
   }
 );
 
+router.get(
+  "/preview/check",
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await checkPreview(req);
+
+    return res.status(200).json(payload);
+  })
+);
+
 router.post(
   "/auth/start",
   async function (
@@ -226,20 +239,6 @@ router.post(
     const payload = await statusAuth(req);
     if (payload.status === "error") {
       return res.status(500).json(payload);
-    }
-    return res.status(200).json(payload);
-  })
-);
-
-router.get(
-  "/state",
-  WithEnv(async function (
-    req: RequestWithEnv,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const payload = await state(req);
-    if (payload.clientError) {
-      return res.status(payload.clientError.status).json(payload);
     }
     return res.status(200).json(payload);
   })
