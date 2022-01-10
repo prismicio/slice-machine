@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useContext } from "react";
 import Drawer from "rc-drawer";
 import { Close, Flex, Text } from "theme-ui";
-
 import NextSetupSteps from "./NextSetupSteps";
 import NuxtSetupSteps from "./NuxtSetupSteps";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
+import { SliceMachineStoreType } from "../../../../src/redux/type";
 import {
   getFramework,
   selectIsPreviewAvailableForFramework,
   getStorybookUrl,
-} from "@src/modules/environment";
+  getCurrentVersion,
+} from "../../../../src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import StorybookSection from "./components/StorybookSection";
+import { TrackerContext } from "../../../../src/utils/tracker";
 
 type SetupDrawerProps = {
   isOpen: boolean;
@@ -25,15 +25,16 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
   onClose,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
+  const tracker = useContext(TrackerContext);
 
-  const { storybook, framework, isPreviewAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
+  const { storybook, framework, isPreviewAvailableForFramework, version } =
+    useSelector((state: SliceMachineStoreType) => ({
       framework: getFramework(state),
       isPreviewAvailableForFramework:
         selectIsPreviewAvailableForFramework(state),
       storybook: getStorybookUrl(state),
-    })
-  );
+      version: getCurrentVersion(state),
+    }));
 
   const onOpenStep = (stepNumber: number) => () => {
     if (stepNumber === activeStep) {
@@ -43,6 +44,10 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
 
     setActiveStep(stepNumber);
   };
+
+  useEffect(() => {
+    tracker?.Track.SlicePreviewSetup({ framework, version });
+  }, []);
 
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
@@ -75,7 +80,11 @@ const SetupDrawer: React.FunctionComponent<SetupDrawerProps> = ({
           }}
         >
           <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
-          <Close color={"#4E4E55"} onClick={onClose} />
+          <Close
+            data-testid="close-set-up-preview"
+            color={"#4E4E55"}
+            onClick={onClose}
+          />
         </Flex>
         <Flex
           sx={{
