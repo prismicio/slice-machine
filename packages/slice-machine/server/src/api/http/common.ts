@@ -29,7 +29,8 @@ export function WithEnv(
       ServerTracker.build(
         "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
         env.repo,
-        identifier
+        identifier,
+        env.manifest.tracking
       );
 
     const reqWithEnv = (() => {

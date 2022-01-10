@@ -18,15 +18,20 @@ export enum EventType {
 }
 
 export class ClientTracker {
-  constructor(readonly analytics: ClientAnalytics, readonly repo: string) {}
+  constructor(
+    readonly analytics: ClientAnalytics,
+    readonly repo: string,
+    readonly tracking = true
+  ) {}
 
   static async build(
     writeKey: string,
-    repo: string
+    repo: string,
+    tracking = true
   ): Promise<ClientTracker | undefined> {
     try {
       const analytics = await AnalyticsBrowser.standalone(writeKey);
-      return new ClientTracker(analytics, repo);
+      return new ClientTracker(analytics, repo, tracking);
     } catch (error) {
       console.warn(error);
       return;
@@ -37,6 +42,7 @@ export class ClientTracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
+    if (this.tracking === false) return void 0;
     this.analytics
       .track(eventType, {
         ...attributes,
@@ -45,6 +51,7 @@ export class ClientTracker {
   }
 
   private groupEvent(traits: Record<string, unknown>): void {
+    if (this.tracking === false) return void 0;
     this.analytics.group(this.repo, traits);
   }
 

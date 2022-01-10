@@ -12,18 +12,20 @@ export class ServerTracker {
   constructor(
     readonly analytics: ServerAnalytics,
     readonly repo: string,
-    readonly identifier: { userId: string } | { anonymousId: string }
+    readonly identifier: { userId: string } | { anonymousId: string },
+    readonly tracking = true
   ) {}
 
   static build(
     writeKey: string,
     repo: string | undefined,
-    identifier: { userId: string } | { anonymousId: string }
+    identifier: { userId: string } | { anonymousId: string },
+    tracking = true
   ): ServerTracker | undefined {
     try {
       if (!repo) return;
       const analytics = new ServerAnalytics(writeKey);
-      return new ServerTracker(analytics, repo, identifier);
+      return new ServerTracker(analytics, repo, identifier, tracking);
     } catch (error) {
       console.warn(error);
       return;
@@ -34,6 +36,8 @@ export class ServerTracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
+    if (this.tracking === false) return void 0;
+
     this.analytics.track({
       event: eventType,
       ...this.identifier,
@@ -42,6 +46,7 @@ export class ServerTracker {
   }
 
   private groupEvent(traits: Record<string, unknown>): void {
+    if (this.tracking === false) return void 0;
     this.analytics.group({
       ...this.identifier,
       groupId: this.repo,

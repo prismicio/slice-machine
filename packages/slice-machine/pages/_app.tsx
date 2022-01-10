@@ -92,7 +92,8 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     serverState.env.repo &&
       ClientTracker.build(
         "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
-        serverState.env.repo
+        serverState.env.repo,
+        serverState.env.manifest.tracking
       )
         .then((tracker) => setTracker(tracker))
         .catch(() => {
