@@ -28,7 +28,7 @@ import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PreviewCheckResponse } from "@models/common/Preview";
 
-import { getStepByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
+import { getStepperConfigurationByFramework } from "@lib/builders/SliceBuilder/SetupDrawer/steps";
 
 const NoStepSelected = 0;
 
@@ -275,7 +275,7 @@ function* failCheckSetupSaga() {
     return;
   }
 
-  const { length } = getStepByFramework(framework);
+  const { length } = getStepperConfigurationByFramework(framework).steps;
 
   yield put(
     openSetupPreviewDrawerCreator({

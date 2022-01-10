@@ -11,6 +11,11 @@ import Button from "@components/Button";
 
 import { SetupStatus } from "@src/modules/preview/types";
 
+export interface SetupStepperConfiguration {
+  steps: React.FunctionComponent<DefaultStepCompProps>[];
+  getStepNumberWithErrors: (setupStatus: SetupStatus) => string[];
+}
+
 interface DefaultStepProps {
   title?: string;
   code?: string;

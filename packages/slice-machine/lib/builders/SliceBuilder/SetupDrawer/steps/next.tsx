@@ -3,8 +3,10 @@ import {
   CreatePage,
   UpdateSmJson,
   CheckSetup,
+  SetupStepperConfiguration,
 } from "./common";
 import { Text } from "theme-ui";
+import { SetupStatus } from "@src/modules/preview/types";
 
 const CreatePageInstructions = {
   code: `import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-react";
@@ -31,7 +33,7 @@ export default SlicePreview;`,
   ),
 };
 
-export const steps = [
+const steps = [
   InstallSlicePreview({
     code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-canvas-renderer-react`,
   }),
@@ -39,3 +41,16 @@ export const steps = [
   UpdateSmJson({}),
   CheckSetup({}),
 ];
+
+const getStepNumberWithErrors = (setupStatus: SetupStatus) => [
+  ...(setupStatus.dependencies === "ko" ? ["1"] : []),
+  ...(setupStatus.iframe === "ko" ? ["2"] : []),
+  ...(setupStatus.manifest === "ko" ? ["3"] : []),
+];
+
+const NextStepper: SetupStepperConfiguration = {
+  steps,
+  getStepNumberWithErrors,
+};
+
+export default NextStepper;

@@ -3,6 +3,7 @@ import {
   CreatePage,
   UpdateSmJson,
   CheckSetup,
+  SetupStepperConfiguration,
 } from "./common";
 import type { DefaultStepCompProps } from "./common";
 
@@ -11,6 +12,7 @@ import CodeBlock from "../components/CodeBlockWithCopy";
 import { Flex, Text } from "theme-ui";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
 import React from "react";
+import { SetupStatus } from "@src/modules/preview/types";
 
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
 modules: [["@nuxtjs/prismic", {
@@ -97,3 +99,16 @@ export const steps = [
   UpdateSmJson({}),
   CheckSetup({}),
 ];
+
+const getStepNumberWithErrors = (setupStatus: SetupStatus) => [
+  ...(setupStatus.dependencies === "ko" ? ["1"] : []),
+  ...(setupStatus.iframe === "ko" ? ["2 and 3"] : []),
+  ...(setupStatus.manifest === "ko" ? ["4"] : []),
+];
+
+const NuxtStepper: SetupStepperConfiguration = {
+  steps,
+  getStepNumberWithErrors,
+};
+
+export default NuxtStepper;

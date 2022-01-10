@@ -1,4 +1,4 @@
-import { getStepByFramework } from "./steps";
+import { getStepperConfigurationByFramework } from "./steps";
 
 import React from "react";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -34,7 +34,7 @@ export default function Stepper({
     );
   }
 
-  const currentSteps = getStepByFramework(framework);
+  const stepperConfiguration = getStepperConfigurationByFramework(framework);
 
   const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
   const {
@@ -54,19 +54,12 @@ export default function Stepper({
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
 
-  const stepNumberWithErrors = [
-    ...(setupStatus.dependencies === "ko" ? ["1"] : []),
-    ...(setupStatus.iframe === "ko"
-      ? framework === Frameworks.nuxt
-        ? ["2 and 3"]
-        : ["2"]
-      : []),
-    ...(setupStatus.manifest === "ko" ? ["3"] : []),
-  ];
+  const stepNumberWithErrors =
+    stepperConfiguration.getStepNumberWithErrors(setupStatus);
 
   return (
     <div>
-      {currentSteps.map((Step, i) => {
+      {stepperConfiguration.steps.map((Step, i) => {
         return (
           <Step
             stepNumber={i + 1}

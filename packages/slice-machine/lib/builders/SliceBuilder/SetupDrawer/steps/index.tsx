@@ -1,18 +1,18 @@
 import { Frameworks } from "@slicemachine/core/build/src/models";
 
-import { steps as nuxtSteps } from "./nuxt";
-import { steps as nextSteps } from "./next";
-import { DefaultStepCompProps } from "@builders/SliceBuilder/SetupDrawer/steps/common";
+import NextSetupStepperConfiguration from "./next";
+import NuxtSetupStepperConfiguration from "./nuxt";
+import { SetupStepperConfiguration } from "@builders/SliceBuilder/SetupDrawer/steps/common";
 
-export const getStepByFramework = (
+export const getStepperConfigurationByFramework = (
   framework: Frameworks
-): React.FunctionComponent<DefaultStepCompProps>[] => {
+): SetupStepperConfiguration => {
   switch (framework) {
     case Frameworks.nuxt:
-      return nuxtSteps;
+      return NextSetupStepperConfiguration;
     case Frameworks.next:
-      return nextSteps;
+      return NuxtSetupStepperConfiguration;
     default:
-      return [];
+      throw new Error(`${framework} : doesn't support preview`);
   }
 };
