@@ -9,9 +9,9 @@ export const getStepperConfigurationByFramework = (
 ): SetupStepperConfiguration => {
   switch (framework) {
     case Frameworks.nuxt:
-      return NextSetupStepperConfiguration;
-    case Frameworks.next:
       return NuxtSetupStepperConfiguration;
+    case Frameworks.next:
+      return NextSetupStepperConfiguration;
     default:
       throw new Error(`${framework} : doesn't support preview`);
   }
