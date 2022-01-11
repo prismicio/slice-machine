@@ -110,9 +110,9 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             },
           }}
         >
-          {framework
-            ? `${framework} does not support Slice Preview.`
-            : "Slice Preview is not supported by your framework."}{" "}
+          {`Slice Preview does not support ${
+            framework || "your"
+          } framework yet.`}{" "}
           You can{" "}
           <a target={"_blank"} href={linkToStorybookDocs}>
             install Storybook
