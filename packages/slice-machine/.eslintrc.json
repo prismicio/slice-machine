@@ -33,7 +33,6 @@
     "@typescript-eslint/unbound-method": "warn",
     "@typescript-eslint/prefer-regexp-exec": "warn",
     "@typescript-eslint/no-empty-function": "warn",
-    "prefer-const": "warn",
     "no-var": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
     "jest/no-identical-title": "warn",
