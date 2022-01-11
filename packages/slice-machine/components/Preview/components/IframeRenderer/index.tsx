@@ -6,6 +6,7 @@ import { RendererClient } from "@prismicio/slice-canvas-com";
 import { Size, iframeSizes } from "../ScreenSizes";
 import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SetupError } from "../SetupError";
 
 function useRendererClient(): readonly [
   RendererClient | undefined,
@@ -124,7 +125,9 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
               width: "100%",
             }}
           />
-        ) : null}
+        ) : (
+          <SetupError />
+        )}
       </Flex>
     </Box>
   );
