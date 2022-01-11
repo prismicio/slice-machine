@@ -10,7 +10,7 @@ export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
 
     const prismicData: PrismicData = {
       base: prismicConfig.base,
-      userId: prismicConfig.userId,
+      shortId: prismicConfig.shortId,
     };
 
     if (prismicConfig.cookies === FileSystem.DEFAULT_CONFIG.cookies) {
