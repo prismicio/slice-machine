@@ -16,6 +16,7 @@ import {
   selectPreviewUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { SetupError } from "./components/SetupError";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
