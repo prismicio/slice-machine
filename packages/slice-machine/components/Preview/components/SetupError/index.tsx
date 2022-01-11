@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 import React from "react";
 import { Button, Flex } from "theme-ui";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -23,25 +22,23 @@ export const SetupError: React.FC = () => {
         We couldn't not find a Slice Preview URL in your sm.json. Please set-up
         your Slice Preview first.
       </span>
-      <Link
-        href={{
-          pathname: "/[lib]/[sliceName]/[variation]",
-          query: router.query,
+      <Button
+        sx={{
+          marginTop: "40px",
         }}
-        passHref
+        ml={2}
+        type="button"
+        variant="primary"
+        onClick={() => {
+          openSetupPreviewDrawer();
+          void router.push({
+            pathname: "/[lib]/[sliceName]/[variation]",
+            query: router.query,
+          });
+        }}
       >
-        <Button
-          sx={{
-            marginTop: "40px",
-          }}
-          ml={2}
-          type="button"
-          variant="primary"
-          onClick={openSetupPreviewDrawer}
-        >
-          Set up Slice Preview
-        </Button>
-      </Link>
+        Set up Slice Preview
+      </Button>
     </Flex>
   );
 };
