@@ -16,7 +16,7 @@ interface ImagePreviewProps {
   src?: string;
   onScreenshot: () => void;
   imageLoading: boolean;
-  onHandleFile: (file: any) => void;
+  onHandleFile: (file: File) => void;
   preventScreenshot: boolean;
 }
 
@@ -35,7 +35,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
 
   const handleFile = (file: File | undefined) => {
     if (inputFile?.current) {
-      onHandleFile(file);
+      file && onHandleFile(file);
       inputFile.current.value = "";
     }
   };
@@ -85,15 +85,14 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
             {display ? (
               <Fragment>
                 <Flex sx={{ flexDirection: "column" }}>
-                  {!preventScreenshot ? (
-                    <Button
-                      sx={{ mb: 3 }}
-                      variant="primary"
-                      onClick={onScreenshot}
-                    >
-                      Take screenshot
-                    </Button>
-                  ) : null}
+                  <Button
+                    sx={{ mb: 3 }}
+                    onClick={onScreenshot}
+                    disabled={preventScreenshot}
+                    variant={preventScreenshot ? "disabled" : "primary"}
+                  >
+                    Take screenshot
+                  </Button>
                   <Label
                     htmlFor="input-file"
                     variant="buttons.primary"
