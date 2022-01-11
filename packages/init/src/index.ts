@@ -20,7 +20,7 @@ async function init() {
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
   const lib: string | undefined = findArgument(process.argv, "library");
   const branch: string | undefined = findArgument(process.argv, "branch");
-  const tracking =
+  const isTrackingAvailable =
     findArgument(process.argv, "tracking") === "false" ? false : true;
 
   console.log(
@@ -59,7 +59,7 @@ async function init() {
     {
       userId: user.userId,
     },
-    tracking
+    isTrackingAvailable
   );
 
   // install the required dependencies in the project.
@@ -70,7 +70,14 @@ async function init() {
     : undefined;
 
   // configure the SM.json file and the json package file of the project..
-  configureProject(cwd, base, name, frameworkResult, sliceLibPath, tracking);
+  configureProject(
+    cwd,
+    base,
+    name,
+    frameworkResult,
+    sliceLibPath,
+    isTrackingAvailable
+  );
 
   // ask the user to run slice-machine.
   displayFinalMessage(cwd);
