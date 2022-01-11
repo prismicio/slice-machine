@@ -8,7 +8,7 @@ export default async function handler(
   req: RequestWithEnv
 ): Promise<PreviewCheckResponse> {
   const cwd = process.env.CWD || process.cwd();
-  let response: PreviewCheckResponse = {
+  const response: PreviewCheckResponse = {
     manifest: "ok",
     dependencies: "ok",
   };

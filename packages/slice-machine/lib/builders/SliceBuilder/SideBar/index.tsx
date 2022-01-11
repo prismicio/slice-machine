@@ -91,14 +91,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       >
         {isCheckingPreviewSetup ? <Spinner size={12} /> : "Open Slice Preview"}
       </Button>
-      {storybookUrl && (
-        <Link href={storybookUrl}>
-          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
-            Open Storybook
-          </Button>
-        </Link>
-      )}
-      {!storybookUrl && !isPreviewAvailableForFramework && (
+      {!isPreviewAvailableForFramework && (
         <Text
           as="p"
           sx={{
@@ -112,13 +105,26 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         >
           {`Slice Preview does not support ${
             framework || "your"
-          } framework yet.`}{" "}
-          You can{" "}
-          <a target={"_blank"} href={linkToStorybookDocs}>
-            install Storybook
-          </a>{" "}
-          instead.
+          } framework yet.`}
+          &nbsp;
+          {!storybookUrl ? (
+            <>
+              You can{" "}
+              <a target={"_blank"} href={linkToStorybookDocs}>
+                install Storybook
+              </a>{" "}
+              instead.
+            </>
+          ) : null}
         </Text>
+      )}
+
+      {storybookUrl && (
+        <Link href={storybookUrl}>
+          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
+            Open Storybook
+          </Button>
+        </Link>
       )}
     </Box>
   );

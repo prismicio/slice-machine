@@ -32,13 +32,13 @@ const useSliceMachineActions = () => {
     dispatch(
       checkPreviewSetupCreator.request({ withFirstVisitCheck, callback })
     );
-  const openSetupDrawerDrawer = () =>
+  const openSetupPreviewDrawer = () =>
     dispatch(openSetupPreviewDrawerCreator({}));
   const connectToPreviewFailure = () =>
     dispatch(connectToPreviewIframeCreator.failure());
   const connectToPreviewSuccess = () =>
     dispatch(connectToPreviewIframeCreator.success());
-  const closeSetupDrawerDrawer = () =>
+  const closeSetupPreviewDrawer = () =>
     dispatch(closeSetupPreviewDrawerCreator());
   const toggleSetupDrawerStep = (stepNumber: number) =>
     dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
@@ -84,8 +84,8 @@ const useSliceMachineActions = () => {
     connectToPreviewFailure,
     connectToPreviewSuccess,
     toggleSetupDrawerStep,
-    closeSetupDrawerDrawer,
-    openSetupDrawerDrawer,
+    closeSetupPreviewDrawer,
+    openSetupPreviewDrawer,
     getEnvironment,
     finishOnboarding,
     openLoginModal,

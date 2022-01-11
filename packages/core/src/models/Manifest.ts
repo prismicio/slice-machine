@@ -12,6 +12,7 @@ export const Manifest = t.intersection([
     framework: FrameworksC,
     chromaticAppId: t.string,
     _latest: t.string,
+    tracking: t.boolean,
   }),
 ]);
 

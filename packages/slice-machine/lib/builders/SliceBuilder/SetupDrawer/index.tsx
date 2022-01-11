@@ -19,7 +19,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Stepper from "./Stepper";
 
 const SetupDrawer: React.FunctionComponent = () => {
-  const { closeSetupDrawerDrawer } = useSliceMachineActions();
+  const { closeSetupPreviewDrawer } = useSliceMachineActions();
   const tracker = useContext(TrackerContext);
 
   const {
@@ -43,7 +43,7 @@ const SetupDrawer: React.FunctionComponent = () => {
   // We close the drawer if the framework cannot handle the preview
   useEffect(() => {
     if (isPreviewAvailableForFramework) return;
-    closeSetupDrawerDrawer();
+    closeSetupPreviewDrawer();
   }, [isPreviewAvailableForFramework]);
 
   return (
@@ -51,7 +51,7 @@ const SetupDrawer: React.FunctionComponent = () => {
       placement="right"
       open={isSetupDrawerOpen}
       level={null}
-      onClose={closeSetupDrawerDrawer}
+      onClose={closeSetupPreviewDrawer}
       width={492}
     >
       <Flex
@@ -74,7 +74,7 @@ const SetupDrawer: React.FunctionComponent = () => {
           <Close
             data-testid="close-set-up-preview"
             color={"#4E4E55"}
-            onClick={closeSetupDrawerDrawer}
+            onClick={closeSetupPreviewDrawer}
           />
         </Flex>
         <Flex

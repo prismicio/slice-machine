@@ -29,11 +29,13 @@ export function WithEnv(
       ServerTracker.build(
         "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
         env.repo,
-        identifier
+        identifier,
+        env.manifest.tracking
       );
 
     const reqWithEnv = (() => {
-      let r = req as any;
+      // TODO: this mutates req, so why not assign to req directly ?
+      const r = req as any;
       r.env = env;
       r.errors = errors;
       r.tracker = tracker;
