@@ -20,6 +20,8 @@ async function init() {
   const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
   const lib: string | undefined = findArgument(process.argv, "library");
   const branch: string | undefined = findArgument(process.argv, "branch");
+  const isTrackingAvailable =
+    findArgument(process.argv, "tracking") === "false" ? false : true;
 
   console.log(
     Utils.purple(
@@ -51,9 +53,14 @@ async function init() {
     await createRepository(name, frameworkResult.value, config);
   }
 
-  const tracker = Tracker.build("JfTfmHaATChc4xueS7RcCBsixI71dJIJ", name, {
-    userId: user.userId,
-  });
+  const tracker = Tracker.build(
+    "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+    name,
+    {
+      userId: user.userId,
+    },
+    isTrackingAvailable
+  );
 
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
@@ -63,7 +70,14 @@ async function init() {
     : undefined;
 
   // configure the SM.json file and the json package file of the project..
-  configureProject(cwd, base, name, frameworkResult, sliceLibPath);
+  configureProject(
+    cwd,
+    base,
+    name,
+    frameworkResult,
+    sliceLibPath,
+    isTrackingAvailable
+  );
 
   // ask the user to run slice-machine.
   displayFinalMessage(cwd);

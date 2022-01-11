@@ -19,15 +19,20 @@ export enum EventType {
 }
 
 export class ClientTracker {
-  constructor(readonly analytics: ClientAnalytics, readonly repo: string) {}
+  constructor(
+    readonly analytics: ClientAnalytics,
+    readonly repo: string,
+    readonly tracking = true
+  ) {}
 
   static async build(
     writeKey: string,
-    repo: string
+    repo: string,
+    tracking = true
   ): Promise<ClientTracker | undefined> {
     try {
       const analytics = await AnalyticsBrowser.standalone(writeKey);
-      return new ClientTracker(analytics, repo);
+      return new ClientTracker(analytics, repo, tracking);
     } catch (error) {
       console.warn(error);
       return;
@@ -38,15 +43,16 @@ export class ClientTracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
-    this.analytics
-      .track(eventType, {
-        ...attributes,
-      })
-      .catch(() => console.error(`Couldn't report event ${eventType}`));
+    this.tracking &&
+      this.analytics
+        .track(eventType, {
+          ...attributes,
+        })
+        .catch(() => console.error(`Couldn't report event ${eventType}`));
   }
 
   private groupEvent(traits: Record<string, unknown>): void {
-    this.analytics.group(this.repo, traits);
+    this.tracking && this.analytics.group(this.repo, traits);
   }
 
   Track = {
@@ -65,7 +71,7 @@ export class ClientTracker {
 
   Group = {
     // for demo only, it's not called
-    demoGroup: (demoTraits: Record<string, unknown>) => {
+    demoGroup: (demoTraits: Record<string, unknown>): void => {
       this.groupEvent(demoTraits);
     },
   };
