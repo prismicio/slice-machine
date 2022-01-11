@@ -77,11 +77,8 @@ function start({ cwd, port }, callback) {
   });
 
   smServer.stdout.on("data", function (data) {
-    const lns = data.toString().split("=");
+    const lns = data.toString().split("Server running");
     if (lns.length === 2) {
-      // server was launched
-      if (callback) {
-      }
       callback(lns[1].replace(/\\n/, "").trim());
     } else {
       console.log(data.toString());
