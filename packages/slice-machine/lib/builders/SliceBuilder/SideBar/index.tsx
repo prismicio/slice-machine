@@ -92,21 +92,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       >
         {isCheckingPreviewSetup ? <Spinner size={12} /> : "Open Slice Preview"}
       </Button>
-      {storybookUrl && (
-        <Link
-          href={createStorybookUrl({
-            storybook: storybookUrl,
-            libraryName: Model.from,
-            sliceName: Model.infos.sliceName,
-            variationId: variation.id,
-          })}
-        >
-          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
-            Open Storybook
-          </Button>
-        </Link>
-      )}
-      {!storybookUrl && !isPreviewAvailableForFramework && (
+      {!isPreviewAvailableForFramework && (
         <Text
           as="p"
           sx={{
@@ -120,13 +106,35 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         >
           {framework
             ? `${framework} does not support Slice Preview.`
-            : "Slice Preview is not supported by your framework."}{" "}
-          You can{" "}
-          <a target={"_blank"} href={linkToStorybookDocs}>
-            install Storybook
-          </a>{" "}
-          instead.
+            : "Slice Preview is not supported by your framework."}
+          &nbsp;
+          {!storybookUrl ? (
+            <>
+              You can{" "}
+              <a target={"_blank"} href={linkToStorybookDocs}>
+                install Storybook
+              </a>{" "}
+              instead.
+            </>
+          ) : null}
         </Text>
+      )}
+
+      {storybookUrl && (
+        <Link
+          href={
+            createStorybookUrl({
+              storybook: storybookUrl,
+              libraryName: Model.from,
+              sliceName: Model.infos.sliceName,
+              variationId: variation.id,
+            })
+          }
+         >
+          <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
+            Open Storybook
+          </Button>
+        </Link>
       )}
     </Box>
   );

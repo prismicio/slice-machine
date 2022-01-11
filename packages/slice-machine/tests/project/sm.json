@@ -4,8 +4,10 @@
     "@/slices2/src/slices"
   ],
   "apiEndpoint": "https://sm-env-example.prismic.io/api/v2",
-  "storybook": "http://localhost:6006",
+  "_storybook": "http://localhost:6006",
   "chromaticAppId": "5f5b34f06f304800225c4e17",
+  "framework": "next",
+  "tracking": false,
   "localSlicePreviewURL": "http://localhost:3001/_preview",
   "_latest": "0.1.0"
 }

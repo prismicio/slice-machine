@@ -16,18 +16,20 @@ export class Tracker {
   constructor(
     readonly analytics: ServerAnalytics,
     readonly repo: string,
-    readonly identifier: { userId: string } | { anonymousId: string }
+    readonly identifier: { userId: string } | { anonymousId: string },
+    readonly tracking = true
   ) {}
 
   static build(
     writeKey: string,
     repo: string | undefined,
-    identifier: { userId: string } | { anonymousId: string }
+    identifier: { userId: string } | { anonymousId: string },
+    tracking = true
   ): Tracker | undefined {
     try {
       if (!repo) return;
       const analytics = new ServerAnalytics(writeKey);
-      return new Tracker(analytics, repo, identifier);
+      return new Tracker(analytics, repo, identifier, tracking);
     } catch (error) {
       console.warn(error);
       return;
@@ -38,16 +40,17 @@ export class Tracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
-    this.analytics.track({
-      event: eventType,
-      ...this.identifier,
-      properties: attributes,
-    });
+    this.tracking &&
+      this.analytics.track({
+        event: eventType,
+        ...this.identifier,
+        properties: attributes,
+      });
   }
 
   Track = {
     // not called, for demo only
-    downloadLibrary: (library: string) => {
+    downloadLibrary: (library: string): void => {
       this.trackEvent(EventType.DownloadLibrary, { library });
     },
   };

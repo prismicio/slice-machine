@@ -71,6 +71,8 @@ export const LibrariesStatePath = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "libraries-state.json");
 export const PrismicConfig = (cwd: string): string =>
   path.join(cwd, ".prismic");
+// This function is used in the changelog/migrate.js / don't remove it
+export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
 export const SliceTemplateConfig = (
   cwd: string,
   customPathToTemplate?: string
