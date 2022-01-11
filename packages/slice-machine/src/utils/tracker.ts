@@ -43,17 +43,16 @@ export class ClientTracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
-    if (this.tracking === false) return void 0;
-    this.analytics
-      .track(eventType, {
-        ...attributes,
-      })
-      .catch(() => console.error(`Couldn't report event ${eventType}`));
+    this.tracking &&
+      this.analytics
+        .track(eventType, {
+          ...attributes,
+        })
+        .catch(() => console.error(`Couldn't report event ${eventType}`));
   }
 
   private groupEvent(traits: Record<string, unknown>): void {
-    if (this.tracking === false) return void 0;
-    this.analytics.group(this.repo, traits);
+    this.tracking && this.analytics.group(this.repo, traits);
   }
 
   Track = {
@@ -72,7 +71,7 @@ export class ClientTracker {
 
   Group = {
     // for demo only, it's not called
-    demoGroup: (demoTraits: Record<string, unknown>) => {
+    demoGroup: (demoTraits: Record<string, unknown>): void => {
       this.groupEvent(demoTraits);
     },
   };

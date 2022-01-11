@@ -40,17 +40,17 @@ export class Tracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
-    if (this.tracking === false) return void 0;
-    this.analytics.track({
-      event: eventType,
-      ...this.identifier,
-      properties: attributes,
-    });
+    this.tracking &&
+      this.analytics.track({
+        event: eventType,
+        ...this.identifier,
+        properties: attributes,
+      });
   }
 
   Track = {
     // not called, for demo only
-    downloadLibrary: (library: string) => {
+    downloadLibrary: (library: string): void => {
       this.trackEvent(EventType.DownloadLibrary, { library });
     },
   };

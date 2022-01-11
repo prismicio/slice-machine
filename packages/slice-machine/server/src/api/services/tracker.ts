@@ -36,27 +36,26 @@ export class ServerTracker {
     eventType: EventType,
     attributes: Record<string, unknown> = {}
   ): void {
-    if (this.tracking === false) return void 0;
-
-    this.analytics.track({
-      event: eventType,
-      ...this.identifier,
-      properties: attributes,
-    });
+    this.tracking &&
+      this.analytics.track({
+        event: eventType,
+        ...this.identifier,
+        properties: attributes,
+      });
   }
 
   private groupEvent(traits: Record<string, unknown>): void {
-    if (this.tracking === false) return void 0;
-    this.analytics.group({
-      ...this.identifier,
-      groupId: this.repo,
-      traits,
-    });
+    this.tracking &&
+      this.analytics.group({
+        ...this.identifier,
+        groupId: this.repo,
+        traits,
+      });
   }
 
   Track = {
     // not called, for demo only
-    demoEvent: (attribute: string) => {
+    demoEvent: (attribute: string): void => {
       this.trackEvent(EventType.Demo, { attribute });
     },
   };
