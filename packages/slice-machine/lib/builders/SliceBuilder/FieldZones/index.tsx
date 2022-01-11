@@ -16,11 +16,11 @@ import SliceState from "@models/ui/SliceState";
 import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
 
-const dataTipText: string = ` The non-repeatable zone
+const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
   section title.
 `;
-const dataTipText2: string = `The repeatable zone is for a group<br/>
+const dataTipText2 = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
 
