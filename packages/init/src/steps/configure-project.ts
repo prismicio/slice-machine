@@ -25,7 +25,7 @@ export function configureProject(
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
-      ...(tracking === false ? { tracking } : {}),
+      ...(!tracking ? { tracking } : {}),
     };
 
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
