@@ -17,9 +17,9 @@ export function WithEnv(
   return async function (req: express.Request, res: express.Response) {
     const { env, errors } = await getEnv();
     const anonymousId = req.cookies.ajs_anonymous_id;
-    const userId = env.prismicData.userId;
+    const shortId = env.prismicData.shortId;
     const identifier = (() => {
-      if (userId) return { userId };
+      if (shortId) return { userId: shortId };
       if (anonymousId) return { anonymousId };
       return;
     })();

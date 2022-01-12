@@ -17,8 +17,10 @@ export default async function handler(
     const profile = await DefaultClient.profile(req.env.baseUrl, authToken);
     if (profile instanceof Error) return { status: "error" };
 
-    PrismicSharedConfigManager.setProperties({ userId: profile.userId });
-    req.tracker?.resolveUser(profile.userId, req.anonymousId);
+    PrismicSharedConfigManager.setProperties({
+      shortId: profile.shortId,
+    });
+    req.tracker?.resolveUser(profile.shortId, req.anonymousId);
 
     // tracker
     return { status: "ok" };
