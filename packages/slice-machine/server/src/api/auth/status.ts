@@ -23,7 +23,7 @@ export default async function handler(
     req.tracker?.resolveUser(profile.shortId, req.anonymousId);
 
     // tracker
-    return { status: "ok" };
+    return { status: "ok", userId: profile.userId };
   } catch (e) {
     return { status: "error" };
   }

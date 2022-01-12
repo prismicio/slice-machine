@@ -79,9 +79,9 @@ export class ServerTracker {
       console.log("Missing anonymousId, Unable to resolve user session.");
       return;
     }
-    this.analytics.alias({
+    this.analytics.identify({
       userId,
-      previousId: anonymousId,
+      anonymousId,
     });
   };
 }

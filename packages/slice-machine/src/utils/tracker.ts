@@ -75,6 +75,10 @@ export class ClientTracker {
       this.groupEvent(demoTraits);
     },
   };
+
+  resolveUser = (userId: string) => {
+    this.analytics.identify(userId);
+  };
 }
 
 export const TrackerContext = createContext<ClientTracker | undefined>(
