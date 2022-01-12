@@ -1,9 +1,7 @@
 import { FileSystem } from "@slicemachine/core";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { RequestWithEnv } from "../http/common";
-
-import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/src/filesystem/PrismicSharedConfig";
+import { setShortId } from "../services/setShortId";
 
 export default async function handler(
   req: RequestWithEnv
@@ -14,12 +12,9 @@ export default async function handler(
       return { status: "pending" };
     }
 
-    const profile = await DefaultClient.profile(req.env.baseUrl, authToken);
+    const profile = await setShortId(req.env, authToken);
     if (profile instanceof Error) return { status: "error" };
 
-    PrismicSharedConfigManager.setProperties({
-      shortId: profile.shortId,
-    });
     req.tracker?.resolveUser(profile.shortId, req.anonymousId);
 
     // tracker

@@ -14,6 +14,7 @@ import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
+import { setShortId } from "./services/setShortId";
 
 let temp_first_start_flag = true;
 
@@ -74,14 +75,7 @@ export const getBackendState = async (
         FileSystem.PrismicSharedConfigManager.setAuthCookie(newToken);
 
         // set the short ID if it doesn't exist yet.
-        if (!env.prismicData.shortId) {
-          const profile = await DefaultClient.profile(env.baseUrl, newToken);
-          if (!(profile instanceof Error)) {
-            FileSystem.PrismicSharedConfigManager.setProperties({
-              shortId: profile.shortId,
-            });
-          }
-        }
+        if (!env.prismicData.shortId) await setShortId(env, newToken);
       }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);
