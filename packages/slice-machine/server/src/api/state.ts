@@ -70,8 +70,18 @@ export const getBackendState = async (
         newTokenResponse.status &&
         Math.floor(newTokenResponse.status / 100) === 2
       ) {
-        const newtToken = await newTokenResponse.text();
-        FileSystem.PrismicSharedConfigManager.setAuthCookie(newtToken);
+        const newToken = await newTokenResponse.text();
+        FileSystem.PrismicSharedConfigManager.setAuthCookie(newToken);
+
+        // set the short ID if it doesn't exist yet.
+        if (!env.prismicData.shortId) {
+          const profile = await DefaultClient.profile(env.baseUrl, newToken);
+          if (!(profile instanceof Error)) {
+            FileSystem.PrismicSharedConfigManager.setProperties({
+              shortId: profile.shortId,
+            });
+          }
+        }
       }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);
