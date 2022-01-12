@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.0.2-alpha.32",
+  "version": "1.0.2-alpha.33",
   "private": false,
   "main": "./build/index.js",
   "exports": {
