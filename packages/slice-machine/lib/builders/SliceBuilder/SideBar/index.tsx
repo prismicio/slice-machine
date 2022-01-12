@@ -19,7 +19,7 @@ import {
   getStorybookUrl,
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
-import { createStorybookUrl } from "@lib/utils/storybook";
+import { createStorybookUrl } from "@src/utils/storybook";
 
 const MemoizedImagePreview = memo(ImagePreview);
 

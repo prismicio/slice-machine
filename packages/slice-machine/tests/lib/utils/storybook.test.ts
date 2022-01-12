@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { createStorybookUrl } from "@lib/utils/storybook";
+import { createStorybookUrl } from "@src/utils/storybook";
 
 const storybook = "http://localhost:6006";
 const slices = "slices";
