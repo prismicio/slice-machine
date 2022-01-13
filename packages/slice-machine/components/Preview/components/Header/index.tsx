@@ -23,7 +23,7 @@ const redirect = (
   isPreview?: boolean
 ): void => {
   if (!variation) {
-    router.push(`/${model.href}/${model.infos.sliceName}`);
+    void router.push(`/${model.href}/${model.infos.sliceName}`);
     return;
   }
   const params = Links.variation({
@@ -32,7 +32,7 @@ const redirect = (
     variationId: variation?.id,
     isPreview,
   });
-  router.push(params.href, params.as, params.options);
+  void router.push(params.href, params.as, params.options);
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({

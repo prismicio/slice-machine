@@ -20,8 +20,9 @@ import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
 import Grid from "components/Grid";
 import Header from "components/Header";
 import EmptyState from "components/EmptyState";
+import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 
-interface CtPayload {
+export interface CtPayload {
   repeatable: boolean;
   id: string;
   previewUrl: string;
@@ -181,11 +182,11 @@ const CustomTypes: React.FunctionComponent = () => {
           }
         />
       ) : (
-        <Grid
+        <Grid // The CtPayload should be used here once the Context has been changed.
           elems={customTypes}
-          renderElem={(ct: CtPayload) => (
+          renderElem={(ct: CustomType<ObjectTabs>) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-              <Card ct={ct} />
+              <Card ct={ct as CtPayload} />
             </Link>
           )}
         />
