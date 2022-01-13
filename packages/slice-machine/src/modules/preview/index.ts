@@ -204,7 +204,7 @@ function* checkSetupSaga(
     const framework: Frameworks = yield select(getFramework);
     const version: string = yield select(getCurrentVersion);
 
-    Tracker.SlicePreviewSetup(framework, version)
+    Tracker.trackSlicePreviewSetup(framework, version);
     const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
       checkPreviewSetup
     );

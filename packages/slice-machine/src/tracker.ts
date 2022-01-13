@@ -1,9 +1,8 @@
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
-import {Frameworks} from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/src/models";
 
 // These events should be sync with the tracking Plan on segment.
-
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
 
 enum EventType {
@@ -22,28 +21,48 @@ export enum ContinueOnboardingType {
 }
 
 let _client: ClientAnalytics | null = null;
-let _isTrackingActive: boolean = true;
+let _isTrackingActive = true;
 
-// Track event method
+/** Private methods **/
+
+// Native client event method (don't expose these functions)
 const _trackEvent = (
   eventType: AllSliceMachineEventType,
   attributes: Record<string, unknown> = {}
 ): void => {
-  if(_isTrackingActive) return;
-
-  if (!_client) {
-    console.warn(`Couldn't report event ${eventType} : Client tracker not defined`);
+  if (!_isTrackingPossible(_client)) {
     return;
   }
 
   _client
     .track(eventType, attributes)
-    .catch(() => console.warn(`Couldn't report event ${eventType}: Tracking error`));
+    .catch(() =>
+      console.warn(`Couldn't report event ${eventType}: Tracking error`)
+    );
 };
 
-export const initialize = async (segmentKey: string, isTrackingActive: boolean = true): Promise<void> => {
+const _identify = (userId: string): void => {
+  if (!_isTrackingPossible(_client)) {
+    return;
+  }
+
+  _client
+    .identify(userId)
+    .catch(() => console.warn(`Couldn't report identify: Tracking error`));
+};
+
+const _isTrackingPossible = (
+  client: ClientAnalytics | null
+): client is ClientAnalytics => _isTrackingActive && !!client;
+
+/** Public methods **/
+
+const initialize = async (
+  segmentKey: string,
+  isTrackingActive = true
+): Promise<void> => {
   try {
-    _isTrackingActive = isTrackingActive
+    _isTrackingActive = isTrackingActive;
     // We avoid rewriting a new client if we have already one
     if (!!_client) return;
     _client = await AnalyticsBrowser.standalone(segmentKey);
@@ -53,49 +72,61 @@ export const initialize = async (segmentKey: string, isTrackingActive: boolean =
   }
 };
 
-export const trackReview = (
+const identifyUser = (userId: string): void => {
+  _identify(userId);
+};
+
+const trackReview = (
   framework: Frameworks,
   rating: number,
   comment: string
-) => {
+): void => {
   _trackEvent(EventType.Review, { rating, comment, framework });
 };
 
-export const SlicePreviewSetup = (framework: Frameworks, version: string): void => {
-  return this.trackEvent(EventType.SlicePreviewSetup, { version, framework });
-}
+const trackSlicePreviewSetup = (
+  framework: Frameworks,
+  version: string
+): void => {
+  _trackEvent(EventType.SlicePreviewSetup, { version, framework });
+};
 
-export const OpenSlicePreview = (framework: Frameworks, version: string): void => {
-  return this.trackEvent(EventType.SlicePreview, { version, framework });
-}
+const trackOpenSlicePreview = (
+  framework: Frameworks,
+  version: string
+): void => {
+  _trackEvent(EventType.SlicePreview, { version, framework });
+};
 
-const trackOnboardingStart = () => {
+const trackOnboardingStart = (): void => {
   _trackEvent(EventType.OnboardingStart);
 };
 
 const trackOnboardingContinue = (
   continueOnboardingEventType: ContinueOnboardingType,
   onboardingVideoCompleted?: boolean
-) => {
+): void => {
   _trackEvent(continueOnboardingEventType, { onboardingVideoCompleted });
 };
 
 const trackOnboardingSkip = (
   screenSkipped: number,
   onboardingVideoCompleted?: boolean
-) => {
+): void => {
   _trackEvent(EventType.OnboardingSkip, {
     screenSkipped,
     onboardingVideoCompleted,
   });
 };
 
+// Don't expose native tracking functions
 export default {
   initialize,
+  identifyUser,
   trackReview,
-  SlicePreviewSetup,
-  OpenSlicePreview
+  trackSlicePreviewSetup,
+  trackOpenSlicePreview,
   trackOnboardingSkip,
   trackOnboardingStart,
-  trackOnboardingContinue
+  trackOnboardingContinue,
 };
