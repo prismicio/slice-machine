@@ -43,7 +43,6 @@
     "@reach/menu-button": "^0.16.2",
     "@slicemachine/core": "1.0.2-alpha.35",
     "@svgr/webpack": "^5.4.0",
-    "analytics-node": "^6.0.0",
     "atob": "^2.1.2",
     "axios": "^0.24.0",
     "babel-plugin-module-resolver": "^4.0.0",

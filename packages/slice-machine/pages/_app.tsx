@@ -92,7 +92,12 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
       serverState.env.repo,
       serverState.env.manifest.tracking
-    );
+    ).then(() => {
+      Tracker.groupLibraries(
+        serverState.libraries || [],
+        serverState.env.updateVersionInfo.currentVersion
+      );
+    });
 
     const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {

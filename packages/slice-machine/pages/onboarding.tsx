@@ -173,7 +173,7 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
     // on unmount
     return () => {
-      const { maxSteps, step, videoCompleted } = state.current;
+      const { maxSteps, step } = state.current;
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
@@ -216,11 +216,11 @@ export default function Onboarding(): JSX.Element {
     if (state.step === STEPS.length - 1) return finish();
     Tracker.trackOnboardingContinue(idFromStep(state.step));
 
-    return setState({ ...state, step: state.step + 1, videoCompleted: false });
+    return setState({ ...state, step: state.step + 1 });
   }
 
   function prevSlide() {
-    return setState({ ...state, step: state.step - 1, videoCompleted: false });
+    return setState({ ...state, step: state.step - 1 });
   }
 
   return (

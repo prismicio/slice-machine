@@ -25,6 +25,16 @@ let _client: ClientAnalytics | null = null;
 let _isTrackingActive = true;
 let _repoName: string | null = null;
 
+/*
+ * TEMPORARY
+ * Today, we need to have access to the cookie to get the anonymousID from segment but
+ * we want to log that event only at start time. Because of the necessity to access the cookies,
+ * we can't put that code on the start script just yet.
+ * We need to define a potential alternative for this event.
+ * In the meantime, this flag prevents the event flood
+ */
+let _temp_first_start_flag = true;
+
 /** Private methods **/
 
 // Native client event method (don't expose these functions)
@@ -97,7 +107,21 @@ const identifyUser = (userId: string): void => {
 };
 
 const groupLibraries = (libs: readonly LibraryUI[], version: string): void => {
-  _group({ libs, version });
+  if (!_temp_first_start_flag) {
+    return;
+  }
+
+  _temp_first_start_flag = false;
+
+  const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+
+  _group({
+    manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+    downloadedLibsCount: downloadedLibs.length,
+    npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+    downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+    slicemachineVersion: version,
+  });
 };
 
 const trackReview = (

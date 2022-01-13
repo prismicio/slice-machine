@@ -137,8 +137,11 @@ describe("tracker", () => {
     await Tracker.initialize(dumpSegmentKey, dumpRepoKey);
     Tracker.groupLibraries([], "0.2.0");
     expect(AnalyticsBrowser.group).toHaveBeenCalledWith(dumpRepoKey, {
-      libs: [],
-      version: "0.2.0",
+      downloadedLibs: [],
+      downloadedLibsCount: 0,
+      manualLibsCount: 0,
+      npmLibsCount: 0,
+      slicemachineVersion: "0.2.0",
     });
   });
 
