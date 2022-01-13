@@ -1,14 +1,15 @@
-import { Utils, Auth } from "@slicemachine/core";
-import { UserInfo } from "@slicemachine/core/build/src/core/communication";
+import { Utils, Auth, Communication } from "@slicemachine/core";
 
-export async function loginOrBypass(base: string): Promise<UserInfo | null> {
-  const user = await Auth.validateSession(base);
+export async function loginOrBypass(
+  base: string
+): Promise<(Communication.UserInfo & Communication.UserProfile) | null> {
+  const user = await Auth.validateSessionAndGetProfile(base);
   if (user) {
     Utils.writeCheck(`Logged in as ${Utils.bold(user.email)}`);
     return user;
   } else {
     await Auth.login(base);
-    const user = await Auth.validateSession(base);
+    const user = await Auth.validateSessionAndGetProfile(base);
     return user;
   }
 }

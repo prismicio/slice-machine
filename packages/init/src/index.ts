@@ -57,7 +57,7 @@ async function init() {
     "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
     name,
     {
-      userId: user.userId,
+      userId: user.shortId,
     },
     isTrackingAvailable
   );

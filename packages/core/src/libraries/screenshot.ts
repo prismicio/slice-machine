@@ -1,4 +1,4 @@
-import { Screenshot } from "models";
+import { Screenshot } from "../models";
 import path from "path";
 import Files from "../utils/files";
 

@@ -116,4 +116,26 @@ export const Auth = {
       () => null
     );
   },
+
+  validateSessionAndGetProfile: async function (
+    requiredBase: string
+  ): Promise<(Communication.UserInfo & Communication.UserProfile) | null> {
+    const config = PrismicSharedConfigManager.get();
+
+    if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
+    if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't
+
+    return Promise.all([
+      Communication.validateSession(config.cookies, requiredBase),
+      Communication.getUserProfile(config.cookies, requiredBase),
+    ])
+      .then((res) => {
+        const [userInfo, userProfile] = res;
+        return { ...userInfo, ...userProfile };
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  },
 };
