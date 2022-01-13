@@ -38,6 +38,7 @@ export interface ComponentMetadata {
   name?: string;
   description?: string;
 }
+
 export interface Component {
   from: string;
   href: string;

@@ -1,6 +1,7 @@
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/src/models";
+import { LibraryUI } from "@models/common/LibraryUI";
 
 // These events should be sync with the tracking Plan on segment.
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
@@ -22,6 +23,7 @@ export enum ContinueOnboardingType {
 
 let _client: ClientAnalytics | null = null;
 let _isTrackingActive = true;
+let _repoName: string | null = null;
 
 /** Private methods **/
 
@@ -51,6 +53,22 @@ const _identify = (userId: string): void => {
     .catch(() => console.warn(`Couldn't report identify: Tracking error`));
 };
 
+const _group = (attributes: Record<string, unknown> = {}): void => {
+  if (!_isTrackingPossible(_client)) {
+    return;
+  }
+
+  if (!_repoName) {
+    return;
+  }
+
+  try {
+    _client.group(_repoName, attributes);
+  } catch {
+    console.warn(`Couldn't report group: Tracking error`);
+  }
+};
+
 const _isTrackingPossible = (
   client: ClientAnalytics | null
 ): client is ClientAnalytics => _isTrackingActive && !!client;
@@ -59,10 +77,12 @@ const _isTrackingPossible = (
 
 const initialize = async (
   segmentKey: string,
+  repoName: string | null = null,
   isTrackingActive = true
 ): Promise<void> => {
   try {
     _isTrackingActive = isTrackingActive;
+    _repoName = repoName;
     // We avoid rewriting a new client if we have already one
     if (!!_client) return;
     _client = await AnalyticsBrowser.standalone(segmentKey);
@@ -74,6 +94,10 @@ const initialize = async (
 
 const identifyUser = (userId: string): void => {
   _identify(userId);
+};
+
+const groupLibraries = (libs: readonly LibraryUI[], version: string): void => {
+  _group({ libs, version });
 };
 
 const trackReview = (
@@ -124,4 +148,5 @@ export default {
   trackOnboardingSkip,
   trackOnboardingStart,
   trackOnboardingContinue,
+  groupLibraries,
 };

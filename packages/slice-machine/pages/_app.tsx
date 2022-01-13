@@ -90,6 +90,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
     Tracker.initialize(
       "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      serverState.env.repo,
       serverState.env.manifest.tracking
     );
 
