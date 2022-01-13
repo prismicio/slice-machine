@@ -103,19 +103,14 @@ const trackOnboardingStart = (): void => {
 };
 
 const trackOnboardingContinue = (
-  continueOnboardingEventType: ContinueOnboardingType,
-  onboardingVideoCompleted?: boolean
+  continueOnboardingEventType: ContinueOnboardingType
 ): void => {
-  _trackEvent(continueOnboardingEventType, { onboardingVideoCompleted });
+  _trackEvent(continueOnboardingEventType);
 };
 
-const trackOnboardingSkip = (
-  screenSkipped: number,
-  onboardingVideoCompleted?: boolean
-): void => {
+const trackOnboardingSkip = (screenSkipped: number): void => {
   _trackEvent(EventType.OnboardingSkip, {
     screenSkipped,
-    onboardingVideoCompleted,
   });
 };
 

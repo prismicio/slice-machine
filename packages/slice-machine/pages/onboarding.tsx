@@ -60,8 +60,6 @@ const SubHeader = (props: ParagraphProps) => (
   />
 );
 
-type WithOnEnded = { onEnded: () => void };
-
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
     <Image sx={{ display: "block", ...imageSx }} src="/SM-LOGO.svg" />
@@ -72,32 +70,32 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-const BuildSlicesSlide = ({ onEnded }: WithOnEnded) => (
+const BuildSlicesSlide = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video publicId="SMONBOARDING/BUILD_SLICE" />
   </>
 );
 
-const CreatePageTypesSlide = ({ onEnded }: WithOnEnded) => (
+const CreatePageTypesSlide = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
   </>
 );
 
-const PushPagesSlide = ({ onEnded }: WithOnEnded) => (
+const PushPagesSlide = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
   </>
 );
 
@@ -161,11 +159,7 @@ function idFromStep(step: number): ContinueOnboardingType {
   }
 }
 
-function handleTracking(props: {
-  step: number;
-  maxSteps: number;
-  videoCompleted: boolean;
-}): void {
+function handleTracking(props: { step: number; maxSteps: number }): void {
   const state = useRef(props);
 
   useEffect(() => {
@@ -183,16 +177,12 @@ function handleTracking(props: {
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
-        Tracker.trackOnboardingSkip(
-          step,
-          step > 0 ? videoCompleted : undefined
-        );
+        Tracker.trackOnboardingSkip(step);
         return;
       }
 
       Tracker.trackOnboardingContinue(
-        ContinueOnboardingType.OnboardingContinueScreen3,
-        videoCompleted
+        ContinueOnboardingType.OnboardingContinueScreen3
       );
     };
   }, []);
@@ -201,26 +191,20 @@ function handleTracking(props: {
 export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide onEnded={handleOnVideoEnd} />,
-    <CreatePageTypesSlide onEnded={handleOnVideoEnd} />,
-    <PushPagesSlide onEnded={handleOnVideoEnd} />,
+    <BuildSlicesSlide />,
+    <CreatePageTypesSlide />,
+    <PushPagesSlide />,
   ];
 
   const { finishOnboarding } = useSliceMachineActions();
 
   const [state, setState] = useState({
     step: 0,
-    videoCompleted: false,
   });
-
-  function handleOnVideoEnd() {
-    return setState({ ...state, videoCompleted: true });
-  }
 
   handleTracking({
     ...state,
     maxSteps: STEPS.length,
-    videoCompleted: state.videoCompleted,
   });
 
   const finish = () => {
@@ -230,10 +214,7 @@ export default function Onboarding(): JSX.Element {
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
-    Tracker.trackOnboardingContinue(
-      idFromStep(state.step),
-      state.step > 0 ? state.videoCompleted : undefined
-    );
+    Tracker.trackOnboardingContinue(idFromStep(state.step));
 
     return setState({ ...state, step: state.step + 1, videoCompleted: false });
   }
