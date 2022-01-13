@@ -7,6 +7,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
+    "audit": "lerna run audit",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint-staged": "lint-staged",
