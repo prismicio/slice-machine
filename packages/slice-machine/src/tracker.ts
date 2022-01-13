@@ -10,8 +10,8 @@ enum EventType {
   Review = "SliceMachine Review",
   OnboardingStart = "SliceMachine Onboarding Start",
   OnboardingSkip = "SliceMachine Onboarding Skip",
-  SlicePreviewSetup = "Slice Preview Setup",
-  SlicePreview = "Slice Preview",
+  SlicePreviewSetup = "SliceMachine Slice Preview Setup",
+  SlicePreviewOpen = "SliceMachine Slice Preview Open",
 }
 
 export enum ContinueOnboardingType {
@@ -119,7 +119,7 @@ const trackOpenSlicePreview = (
   framework: Frameworks,
   version: string
 ): void => {
-  _trackEvent(EventType.SlicePreview, { version, framework });
+  _trackEvent(EventType.SlicePreviewOpen, { version, framework });
 };
 
 const trackOnboardingStart = (): void => {

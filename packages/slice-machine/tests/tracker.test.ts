@@ -68,19 +68,25 @@ describe("tracker", () => {
   test("should send a slice preview setup event", async () => {
     await Tracker.initialize(dumpSegmentKey, dumpRepoKey);
     Tracker.trackSlicePreviewSetup(Frameworks.next, "0.2.0");
-    expect(AnalyticsBrowser.track).toHaveBeenCalledWith("Slice Preview Setup", {
-      framework: "next",
-      version: "0.2.0",
-    });
+    expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
+      "SliceMachine Slice Preview Setup",
+      {
+        framework: "next",
+        version: "0.2.0",
+      }
+    );
   });
 
   test("should send a open slice preview event", async () => {
     await Tracker.initialize(dumpSegmentKey, dumpRepoKey);
     Tracker.trackOpenSlicePreview(Frameworks.next, "0.2.0");
-    expect(AnalyticsBrowser.track).toHaveBeenCalledWith("Slice Preview", {
-      framework: "next",
-      version: "0.2.0",
-    });
+    expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
+      "SliceMachine Slice Preview Open",
+      {
+        framework: "next",
+        version: "0.2.0",
+      }
+    );
   });
 
   test("should send a onboarding continue intro event", async () => {
