@@ -19,6 +19,7 @@ import {
   getStorybookUrl,
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
+import { createStorybookUrl } from "@lib/utils/storybook";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
@@ -120,7 +121,14 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
       )}
 
       {storybookUrl && (
-        <Link href={storybookUrl}>
+        <Link
+          href={createStorybookUrl({
+            storybook: storybookUrl,
+            libraryName: Model.from,
+            sliceName: Model.infos.sliceName,
+            variationId: variation.id,
+          })}
+        >
           <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
             Open Storybook
           </Button>

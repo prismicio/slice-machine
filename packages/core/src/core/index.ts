@@ -64,44 +64,49 @@ export default function createCore({ cwd, base, manifest }: CoreParams): Core {
   };
 }
 
+async function startAuth({
+  base,
+  url,
+  action,
+}: {
+  base: string;
+  url: string;
+  action: "signup" | "login";
+}): Promise<void> {
+  const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
+  try {
+    // We wait 3 minutes before timeout
+    await Poll.startPolling<
+      Communication.UserInfo | null,
+      Communication.UserInfo
+    >(
+      () => Auth.validateSession(base),
+      (user): user is Communication.UserInfo => !!user,
+      3000,
+      60
+    );
+    return;
+  } catch (e) {
+    onLoginFail();
+  }
+}
+
 export const Auth = {
   login: async (base: string): Promise<void> => {
     const endpoints = Endpoints.buildEndpoints(base);
-    const { onLoginFail } = await startServerAndOpenBrowser(
-      endpoints.Dashboard.cliLogin,
-      "login",
-      base
-    );
-    try {
-      // We wait 3 minutes before timeout
-      return await Poll.startPolling<Communication.UserInfo | null>(
-        () => Auth.validateSession(base),
-        (user) => !!user,
-        3000,
-        60
-      );
-    } catch (e) {
-      onLoginFail();
-    }
+    return startAuth({
+      base,
+      url: endpoints.Dashboard.cliLogin,
+      action: "login",
+    });
   },
   signup: async (base: string): Promise<void> => {
     const endpoints = Endpoints.buildEndpoints(base);
-    const { onLoginFail } = await startServerAndOpenBrowser(
-      endpoints.Dashboard.cliSignup,
-      "signup",
-      base
-    );
-    try {
-      // We wait 3 minutes before timeout
-      return await Poll.startPolling<Communication.UserInfo | null>(
-        () => Auth.validateSession(base),
-        (user) => !!user,
-        3000,
-        60
-      );
-    } catch (e) {
-      onLoginFail();
-    }
+    return startAuth({
+      base,
+      url: endpoints.Dashboard.cliSignup,
+      action: "signup",
+    });
   },
   logout: (): void => PrismicSharedConfigManager.remove(),
   validateSession: async (

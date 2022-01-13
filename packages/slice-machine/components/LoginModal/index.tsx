@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Button,
   Card,
@@ -15,7 +15,6 @@ import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
-import { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { useSelector } from "react-redux";
 import { isModalOpen } from "@src/modules/modal";
@@ -25,13 +24,17 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { TrackerContext } from "@src/utils/tracker";
 
 Modal.setAppElement("#__next");
 
-const isAuthStatusOk = (response: AxiosResponse<CheckAuthStatusResponse>) =>
-  response.data.status === "ok";
+interface ValidAuthStatus extends CheckAuthStatusResponse {
+  status: "ok";
+  userId: string;
+}
 
 const LoginModal: React.FunctionComponent = () => {
+  const tracker = useContext(TrackerContext);
   const { env, isOpen, isLoginLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
       isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
@@ -57,12 +60,17 @@ const LoginModal: React.FunctionComponent = () => {
       startLoadingLogin();
       await startAuth();
       window.open(loginRedirectUrl, "_blank");
-      await startPolling<AxiosResponse<CheckAuthStatusResponse>>(
+      const { userId } = await startPolling<
+        CheckAuthStatusResponse,
+        ValidAuthStatus
+      >(
         checkAuthStatus,
-        isAuthStatusOk,
+        (status: CheckAuthStatusResponse): status is ValidAuthStatus =>
+          status.status === "ok" && Boolean(status.userId),
         3000,
         60
       );
+      tracker?.resolveUser(userId);
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();

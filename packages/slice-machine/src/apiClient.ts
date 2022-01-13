@@ -22,9 +22,10 @@ const defaultAxiosConfig = {
 export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
   axios.post("/api/auth/start", {}, defaultAxiosConfig);
 
-export const checkAuthStatus = (): Promise<
-  AxiosResponse<CheckAuthStatusResponse>
-> => axios.post("/api/auth/status", {}, defaultAxiosConfig);
+export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
+  axios
+    .post<CheckAuthStatusResponse>("/api/auth/status", {}, defaultAxiosConfig)
+    .then((r) => r.data);
 
 /** Tracking Routes **/
 
