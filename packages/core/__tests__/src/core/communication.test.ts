@@ -239,28 +239,6 @@ describe("communication", () => {
       expect(result.data.domain).toEqual(repoName);
     });
   });
-
-  describe("#getUserPrfile", () => {
-    test("when called with cookies it should fetch the user profile form 'https://user.prismic.io/profile`", async () => {
-      const token = "biscuits";
-      const cookie = `prismic-auth=${token}`;
-
-      nock("https://user.prismic.io")
-        .matchHeader("Authorization", `Bearer Token ${token}`)
-        .get("/profile")
-        .reply(200, {
-          userId: "1234",
-          shortId: "12",
-          email: "batman@example.com",
-          firstName: "Bat",
-          lastName: "Man",
-        });
-
-      const result = await communication.getUserProfile(cookie);
-
-      expect(result.shortId).toEqual("12");
-    });
-  });
 });
 
 describe("maybeParseRepoData", () => {

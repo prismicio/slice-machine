@@ -57,7 +57,7 @@ async function init() {
     "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
     name,
     {
-      userId: user.shortId,
+      userId: user.profile?.shortId || user.info.userId,
     },
     isTrackingAvailable
   );
