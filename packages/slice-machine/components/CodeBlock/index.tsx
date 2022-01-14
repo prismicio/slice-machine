@@ -34,7 +34,7 @@ const CodeBlock: React.FC<{
           padding: "3px 5px",
           borderRadius: "6px",
           border: "1px solid",
-          borderColor: theme.colors?.textClear as string,
+          borderColor: String(theme.colors?.textClear),
           ...codeStyle,
         }}
         dangerouslySetInnerHTML={{ __html: text }}

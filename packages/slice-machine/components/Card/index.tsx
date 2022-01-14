@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({
 }) => (
   <ThemeCard
     sx={{
-      border: (t) => `1px solid ${t.colors?.borders}`,
+      border: (t) => `1px solid ${String(t.colors?.borders)}`,
       borderRadius: radius,
       ...sx,
     }}
@@ -48,7 +48,8 @@ const Card: React.FC<CardProps> = ({
         sx={{
           ...(borderFooter
             ? {
-                borderTop: ({ colors }) => `1px solid ${colors?.borders}`,
+                borderTop: ({ colors }) =>
+                  `1px solid ${String(colors?.borders)}`,
               }
             : null),
           ...footerSx,

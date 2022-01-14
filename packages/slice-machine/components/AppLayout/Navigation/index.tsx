@@ -1,3 +1,4 @@
+import React from "react";
 import useWindowSize from "src/hooks/useWindowSize";
 
 import Desktop from "./Menu/Desktop";
@@ -5,7 +6,15 @@ import Mobile from "./Menu/Mobile";
 import { FiLayers, FiLayout } from "react-icons/fi";
 import { IconType } from "react-icons/lib";
 
-const links = [
+export interface LinkProps {
+  title: string;
+  href: string;
+  match: (pathname: string) => boolean;
+  Icon: IconType;
+  delimiter?: boolean;
+}
+
+const links: LinkProps[] = [
   {
     title: "Custom Types",
     href: "/",
@@ -24,15 +33,7 @@ const links = [
   },
 ];
 
-export interface LinkProps {
-  title: string;
-  delimiter?: boolean;
-  href: string;
-  match: Function;
-  Icon: IconType;
-}
-
-const Navigation: React.FunctionComponent = () => {
+const Navigation: React.FC = () => {
   const viewport = useWindowSize();
   return (viewport.width as number) < 640 ? (
     <Mobile links={links} />

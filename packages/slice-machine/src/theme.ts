@@ -262,7 +262,7 @@ const AppTheme = (): Theme =>
         fontWeight: "body",
         fontSize: "1",
         color: "textClear",
-        border: (t) => `1px solid ${t?.colors?.borders}`,
+        border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         "&:hover": {
           bg: darken("secondary", 0.02),
           cursor: "pointer",
@@ -520,7 +520,7 @@ const AppTheme = (): Theme =>
           pb: "6px",
           px: 1,
           borderRadius: "3px",
-          border: (t) => `1px solid ${t?.colors?.borders}`,
+          border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         },
       },
     },

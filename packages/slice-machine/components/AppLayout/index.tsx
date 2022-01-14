@@ -8,9 +8,7 @@ const AsIs: { [x: string]: boolean } = {
   "/[lib]/[sliceName]/[variation]/preview": true,
 };
 
-type AppLayoutProps = {};
-
-const AppLayout: React.FunctionComponent<AppLayoutProps> = ({ children }) => {
+const AppLayout: React.FC = ({ children }) => {
   const router = useRouter();
   if (AsIs[router.asPath] || AsIs[router.pathname]) {
     return <main>{children}</main>;

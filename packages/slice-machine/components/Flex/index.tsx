@@ -1,14 +1,12 @@
 import React from "react";
-import { Box } from "theme-ui";
+import { Box, ThemeUIStyleObject } from "theme-ui";
 
-export const Flex = ({
-  children,
-  sx,
-  ...rest
-}: {
+interface FlexProps {
   children: React.ReactNode;
-  sx?: any;
-}) => (
+  sx?: ThemeUIStyleObject;
+}
+
+export const Flex: React.FC<FlexProps> = ({ children, sx, ...rest }) => (
   <Box
     sx={{
       display: ["block", "block", "flex"],
@@ -22,10 +20,11 @@ export const Flex = ({
   </Box>
 );
 
-export const Col = ({
-  children,
-  cols = 2,
-}: {
+interface ColProps {
   children: React.ReactNode;
   cols?: number;
-}) => <Box sx={{ flex: `0 ${100 / cols - 1}%`, mb: 1 }}>{children}</Box>;
+}
+
+export const Col: React.FC<ColProps> = ({ children, cols = 2 }) => (
+  <Box sx={{ flex: `0 ${100 / cols - 1}%`, mb: 1 }}>{children}</Box>
+);

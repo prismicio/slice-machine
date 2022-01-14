@@ -1,9 +1,14 @@
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Box, Link as ThemeLink } from "theme-ui";
 import { LinkProps } from "components/AppLayout/Navigation";
 
-const Item = ({ link }: { link: LinkProps }) => {
+interface itemProps {
+  link: LinkProps;
+}
+
+const Item: React.FC<itemProps> = ({ link }) => {
   const router = useRouter();
   return (
     <Box as="li" key={link.title}>

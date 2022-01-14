@@ -106,7 +106,7 @@ const LoginModal: React.FunctionComponent = () => {
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: "8px 8px 0px 0px",
-            borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+            borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
           }}
         >
           <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>
