@@ -76,8 +76,8 @@ export class ClientTracker {
     },
   };
 
-  resolveUser = (userId: string) => {
-    this.analytics.identify(userId);
+  resolveUser = (userId: string): void => {
+    void this.analytics.identify(userId);
   };
 }
 
