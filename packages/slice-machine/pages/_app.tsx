@@ -88,16 +88,18 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       setSMStore({ store, persistor });
     }
 
-    Tracker.initialize(
-      "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
-      serverState.env.repo,
-      serverState.env.manifest.tracking
-    ).then(() => {
-      Tracker.groupLibraries(
-        serverState.libraries || [],
-        serverState.env.updateVersionInfo.currentVersion
-      );
-    });
+    Tracker.get()
+      .initialize(
+        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+        serverState.env.repo,
+        serverState.env.manifest.tracking
+      )
+      .then(() => {
+        Tracker.get().groupLibraries(
+          serverState.libraries || [],
+          serverState.env.updateVersionInfo.currentVersion
+        );
+      });
 
     const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {

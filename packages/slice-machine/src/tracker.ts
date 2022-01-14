@@ -21,10 +21,6 @@ export enum ContinueOnboardingType {
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
 }
 
-let _client: ClientAnalytics | null = null;
-let _isTrackingActive = true;
-let _repoName: string | null = null;
-
 /*
  * TEMPORARY
  * Today, we need to have access to the cookie to get the anonymousID from segment but
@@ -35,142 +31,142 @@ let _repoName: string | null = null;
  */
 let _temp_first_start_flag = true;
 
-/** Private methods **/
+export class SMTracker {
+  #client: ClientAnalytics | null = null;
+  #isTrackingActive = true;
+  #repoName: string | null = null;
+  constructor() {}
 
-// Native client event method (don't expose these functions)
-const _trackEvent = (
-  eventType: AllSliceMachineEventType,
-  attributes: Record<string, unknown> = {}
-): void => {
-  if (!_isTrackingPossible(_client)) {
-    return;
+  async initialize(
+    segmentKey: string,
+    repoName: string | null = null,
+    isTrackingActive = true
+  ): Promise<void> {
+    try {
+      this.#isTrackingActive = isTrackingActive;
+      this.#repoName = repoName;
+      // We avoid rewriting a new client if we have already one
+      if (!!this.#client) return;
+      this.#client = await AnalyticsBrowser.standalone(segmentKey);
+    } catch (error) {
+      // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
+      console.warn(error);
+    }
   }
 
-  _client
-    .track(eventType, attributes)
-    .catch(() =>
-      console.warn(`Couldn't report event ${eventType}: Tracking error`)
-    );
-};
+  /** Private methods **/
 
-const _identify = (userId: string): void => {
-  if (!_isTrackingPossible(_client)) {
-    return;
+  #trackEvent(
+    eventType: AllSliceMachineEventType,
+    attributes: Record<string, unknown> = {}
+  ): void {
+    if (!this.#isTrackingPossible(this.#client)) {
+      return;
+    }
+
+    this.#client
+      .track(eventType, attributes)
+      .catch(() =>
+        console.warn(`Couldn't report event ${eventType}: Tracking error`)
+      );
   }
 
-  _client
-    .identify(userId)
-    .catch(() => console.warn(`Couldn't report identify: Tracking error`));
-};
+  #identify(userId: string): void {
+    if (!this.#isTrackingPossible(this.#client)) {
+      return;
+    }
 
-const _group = (attributes: Record<string, unknown> = {}): void => {
-  if (!_isTrackingPossible(_client)) {
-    return;
+    this.#client
+      .identify(userId)
+      .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
 
-  if (!_repoName) {
-    return;
+  #group(attributes: Record<string, unknown> = {}): void {
+    if (!this.#isTrackingPossible(this.#client)) {
+      return;
+    }
+
+    if (!this.#repoName) {
+      return;
+    }
+
+    try {
+      this.#client.group(this.#repoName, attributes);
+    } catch {
+      console.warn(`Couldn't report group: Tracking error`);
+    }
   }
 
-  try {
-    _client.group(_repoName, attributes);
-  } catch {
-    console.warn(`Couldn't report group: Tracking error`);
-  }
-};
-
-const _isTrackingPossible = (
-  client: ClientAnalytics | null
-): client is ClientAnalytics => _isTrackingActive && !!client;
-
-/** Public methods **/
-
-const initialize = async (
-  segmentKey: string,
-  repoName: string | null = null,
-  isTrackingActive = true
-): Promise<void> => {
-  try {
-    _isTrackingActive = isTrackingActive;
-    _repoName = repoName;
-    // We avoid rewriting a new client if we have already one
-    if (!!_client) return;
-    _client = await AnalyticsBrowser.standalone(segmentKey);
-  } catch (error) {
-    // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
-    console.warn(error);
-  }
-};
-
-const identifyUser = (userId: string): void => {
-  _identify(userId);
-};
-
-const groupLibraries = (libs: readonly LibraryUI[], version: string): void => {
-  if (!_temp_first_start_flag) {
-    return;
+  #isTrackingPossible(
+    client: ClientAnalytics | null
+  ): client is ClientAnalytics {
+    return this.#isTrackingActive && !!client;
   }
 
-  _temp_first_start_flag = false;
+  /** Public methods **/
 
-  const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
+  identifyUser(userId: string): void {
+    this.#identify(userId);
+  }
 
-  _group({
-    manualLibsCount: libs.filter((l) => l.meta.isManual).length,
-    downloadedLibsCount: downloadedLibs.length,
-    npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-    downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
-    slicemachineVersion: version,
-  });
-};
+  groupLibraries(libs: readonly LibraryUI[], version: string): void {
+    if (!_temp_first_start_flag) {
+      return;
+    }
 
-const trackReview = (
-  framework: Frameworks,
-  rating: number,
-  comment: string
-): void => {
-  _trackEvent(EventType.Review, { rating, comment, framework });
-};
+    _temp_first_start_flag = false;
 
-const trackSlicePreviewSetup = (
-  framework: Frameworks,
-  version: string
-): void => {
-  _trackEvent(EventType.SlicePreviewSetup, { version, framework });
-};
+    const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
-const trackOpenSlicePreview = (
-  framework: Frameworks,
-  version: string
-): void => {
-  _trackEvent(EventType.SlicePreviewOpen, { version, framework });
-};
+    this.#group({
+      manualLibsCount: libs.filter((l) => l.meta.isManual).length,
+      downloadedLibsCount: downloadedLibs.length,
+      npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
+      downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+      slicemachineVersion: version,
+    });
+  }
 
-const trackOnboardingStart = (): void => {
-  _trackEvent(EventType.OnboardingStart);
-};
+  trackReview(framework: Frameworks, rating: number, comment: string): void {
+    this.#trackEvent(EventType.Review, { rating, comment, framework });
+  }
 
-const trackOnboardingContinue = (
-  continueOnboardingEventType: ContinueOnboardingType
-): void => {
-  _trackEvent(continueOnboardingEventType);
-};
+  trackSlicePreviewSetup(framework: Frameworks, version: string): void {
+    this.#trackEvent(EventType.SlicePreviewSetup, { version, framework });
+  }
 
-const trackOnboardingSkip = (screenSkipped: number): void => {
-  _trackEvent(EventType.OnboardingSkip, {
-    screenSkipped,
-  });
-};
+  trackOpenSlicePreview(framework: Frameworks, version: string): void {
+    this.#trackEvent(EventType.SlicePreviewOpen, { version, framework });
+  }
 
-// Don't expose native tracking functions
-export default {
-  initialize,
-  identifyUser,
-  trackReview,
-  trackSlicePreviewSetup,
-  trackOpenSlicePreview,
-  trackOnboardingSkip,
-  trackOnboardingStart,
-  trackOnboardingContinue,
-  groupLibraries,
-};
+  trackOnboardingStart(): void {
+    this.#trackEvent(EventType.OnboardingStart);
+  }
+
+  trackOnboardingContinue(
+    continueOnboardingEventType: ContinueOnboardingType
+  ): void {
+    this.#trackEvent(continueOnboardingEventType);
+  }
+
+  trackOnboardingSkip(screenSkipped: number): void {
+    this.#trackEvent(EventType.OnboardingSkip, {
+      screenSkipped,
+    });
+  }
+}
+
+const Tracker = (() => {
+  let smTrackerInstance: SMTracker;
+
+  const init = () => new SMTracker();
+
+  return {
+    get() {
+      if (!smTrackerInstance) smTrackerInstance = init();
+      return smTrackerInstance;
+    },
+  };
+})();
+
+export default Tracker;

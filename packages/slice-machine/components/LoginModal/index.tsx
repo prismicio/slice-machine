@@ -69,7 +69,7 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      Tracker.identifyUser(userId);
+      Tracker.get().identifyUser(userId);
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();

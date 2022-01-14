@@ -169,7 +169,7 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
   useEffect(() => {
     // on mount
-    Tracker.trackOnboardingStart();
+    Tracker.get().trackOnboardingStart();
 
     // on unmount
     return () => {
@@ -177,11 +177,11 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
-        Tracker.trackOnboardingSkip(step);
+        Tracker.get().trackOnboardingSkip(step);
         return;
       }
 
-      Tracker.trackOnboardingContinue(
+      Tracker.get().trackOnboardingContinue(
         ContinueOnboardingType.OnboardingContinueScreen3
       );
     };
@@ -214,7 +214,7 @@ export default function Onboarding(): JSX.Element {
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
-    Tracker.trackOnboardingContinue(idFromStep(state.step));
+    Tracker.get().trackOnboardingContinue(idFromStep(state.step));
 
     return setState({ ...state, step: state.step + 1 });
   }

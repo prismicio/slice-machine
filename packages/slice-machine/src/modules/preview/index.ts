@@ -286,11 +286,11 @@ function* failCheckSetupSaga() {
   );
 }
 
-function* trackOpenSetupDrawer() {
+function* trackOpenSetupDrawerSaga() {
   const framework: Frameworks = yield select(getFramework);
   const version: string = yield select(getCurrentVersion);
 
-  Tracker.trackSlicePreviewSetup(framework, version);
+  Tracker.get().trackSlicePreviewSetup(framework, version);
 }
 
 // Saga watchers
@@ -301,7 +301,7 @@ function* watchCheckSetup() {
   );
   yield takeLatest(
     getType(openSetupPreviewDrawerCreator),
-    trackOpenSetupDrawer
+    trackOpenSetupDrawerSaga
   );
 }
 

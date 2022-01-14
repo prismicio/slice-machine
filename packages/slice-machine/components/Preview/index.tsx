@@ -32,7 +32,7 @@ export default function Preview() {
   );
 
   useEffect(() => {
-    Tracker.trackOpenSlicePreview(framework, version);
+    Tracker.get().trackOpenSlicePreview(framework, version);
   }, []);
 
   const [state, setState] = useState({ size: Size.FULL });

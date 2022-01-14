@@ -101,7 +101,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
-    Tracker.trackReview(env.framework, rating, comment);
+    Tracker.get().trackReview(env.framework, rating, comment);
     sendAReview();
     stopLoadingReview();
   };
