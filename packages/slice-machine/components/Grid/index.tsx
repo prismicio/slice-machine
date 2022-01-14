@@ -4,6 +4,7 @@ import { Box } from "theme-ui";
 interface GridProps<T> {
   elems: readonly (T | undefined)[];
   renderElem: (elem: T, index: number) => JSX.Element | null;
+  defineElementKey: (elem: T) => string;
   gridTemplateMinPx?: string;
 }
 
@@ -11,6 +12,7 @@ function Grid<T extends unknown>({
   elems,
   gridTemplateMinPx = "320px",
   renderElem,
+  defineElementKey,
 }: GridProps<T>): JSX.Element {
   return (
     <Box
@@ -25,7 +27,9 @@ function Grid<T extends unknown>({
     >
       {elems.map((elem: T | undefined, i: number) =>
         elem ? (
-          <span key={`list-item-${i + 1}`}>{renderElem(elem, i)}</span>
+          <span key={`${defineElementKey(elem)}-${i + 1}`}>
+            {renderElem(elem, i)}
+          </span>
         ) : null
       )}
     </Box>

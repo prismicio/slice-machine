@@ -184,6 +184,7 @@ const CustomTypes: React.FunctionComponent = () => {
       ) : (
         <Grid // The CtPayload should be used here once the Context has been changed.
           elems={customTypes}
+          defineElementKey={(ct: CustomType<ObjectTabs>) => ct.id}
           renderElem={(ct: CustomType<ObjectTabs>) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
               <Card ct={ct as CtPayload} />

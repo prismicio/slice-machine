@@ -186,6 +186,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                       </Flex>
                       <Grid
                         elems={components.map(([e]) => e)}
+                        defineElementKey={(slice: SliceState) =>
+                          slice.infos.sliceName
+                        }
                         renderElem={(slice: SliceState) => {
                           return SharedSlice.render({
                             displayStatus: true,

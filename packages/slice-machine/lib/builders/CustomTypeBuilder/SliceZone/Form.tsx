@@ -43,6 +43,7 @@ const Form = ({
               <Grid
                 gridTemplateMinPx="200px"
                 elems={availableSlices}
+                defineElementKey={(slice: SliceState) => slice.infos.sliceName}
                 renderElem={(slice: SliceState) => {
                   return SharedSlice.render({
                     bordered: true,
