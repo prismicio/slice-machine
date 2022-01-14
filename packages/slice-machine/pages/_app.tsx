@@ -29,6 +29,16 @@ import { AppInitialProps } from "next/dist/shared/lib/utils";
 import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 
+/*
+ * TEMPORARY
+ * Today, we need to have access to the cookie to get the anonymousID from segment but
+ * we want to log that event only at start time. Because of the necessity to access the cookies,
+ * we can't put that code on the start script just yet.
+ * We need to define a potential alternative for this event.
+ * In the meantime, this flag prevents the event flood
+ */
+let _temp_first_start_flag = true;
+
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
@@ -95,6 +105,12 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
         serverState.env.manifest.tracking
       )
       .then(() => {
+        if (!_temp_first_start_flag) {
+          return;
+        }
+
+        _temp_first_start_flag = false;
+
         Tracker.get().groupLibraries(
           serverState.libraries || [],
           serverState.env.updateVersionInfo.currentVersion
