@@ -64,6 +64,11 @@ export async function validateSessionAndGetProfile(
     const profile = await getUserProfile(config.cookies, base).catch(
       () => null
     );
+    if (profile?.shortId) {
+      FileSystem.PrismicSharedConfigManager.setProperties({
+        shortId: profile.shortId,
+      });
+    }
     return { info, profile };
   } catch {
     return null;

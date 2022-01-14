@@ -9,6 +9,8 @@ import {
 
 import nock from "nock";
 import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 import { Utils } from "@slicemachine/core";
 import * as communication from "../src/utils/communication";
 
@@ -59,12 +61,23 @@ describe("communication.getUserPrfile", () => {
 });
 
 describe("communication.validateSessionAndGetProfile", () => {
-  test("if base does not match the base in the config it should return null", async () => {
-    const fakeToken = "biscuits";
-    const fakeCookie = `prismic-auth=${fakeToken}`;
-    const fakeBase = "https://wroom.io";
+  const fakeToken = "biscuits";
+  const fakeCookie = `prismic-auth=${fakeToken}`;
+  const fakeBase = "https://prismic.io";
 
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+  const firstName = "bat";
+  const lastName = "man";
+  const email = "batman@example.com";
+  const userId = "1234567";
+  const shortId = "12";
+  const type = "USER";
+  const repositories = {
+    "foo-repo": { dbid: "abcd", role: Utils.roles.Roles.OWNER },
+    qwerty: { dbid: "efgh", role: Utils.roles.Roles.WRITER },
+  };
+
+  test("if base does not match the base in the config it should return null", async () => {
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
 
     jest
       .spyOn(fs, "readFileSync")
@@ -78,38 +91,24 @@ describe("communication.validateSessionAndGetProfile", () => {
   });
 
   test("when there are no cookies it should return null", async () => {
-    const base = "https://prismic.io";
-
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
 
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify({ base }));
+      .mockReturnValue(JSON.stringify({ base: fakeBase }));
 
-    const result = await communication.validateSessionAndGetProfile(base);
+    const result = await communication.validateSessionAndGetProfile(fakeBase);
 
     expect(result).toBeNull();
   });
 
   test("when network error it should return null", async () => {
-    const fakeToken = "biscuits";
-    const fakeCookie = `prismic-auth=${fakeToken}`;
-    const fakeBase = "https://prismic.io";
-    const email = "batman@example.com";
-    const userId = "1234567";
-    const type = "USER";
-    const repositories = {
-      "foo-repo": { dbid: "abcd", role: Utils.roles.Roles.OWNER },
-      qwerty: { dbid: "efgh", role: Utils.roles.Roles.WRITER },
-    };
-
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
+    jest.spyOn(fs, "writeFileSync");
 
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(
-        JSON.stringify({ cookies: fakeCookie, base: fakeBase })
-      );
+      .mockReturnValue(JSON.stringify({ cookies: fakeCookie, base: fakeBase }));
 
     nock("https://auth.prismic.io")
       .get(`/validate?token=${fakeToken}`)
@@ -131,28 +130,12 @@ describe("communication.validateSessionAndGetProfile", () => {
   });
 
   test("is should validate the session and get the users profile", async () => {
-    const fakeToken = "biscuits";
-    const fakeCookie = `prismic-auth=${fakeToken}`;
-    const fakeBase = "https://prismic.io";
-
-    const firstName = "bat";
-    const lastName = "man";
-    const email = "batman@example.com";
-    const userId = "1234567";
-    const shortId = "12";
-    const type = "USER";
-    const repositories = {
-      "foo-repo": { dbid: "abcd", role: Utils.roles.Roles.OWNER },
-      qwerty: { dbid: "efgh", role: Utils.roles.Roles.WRITER },
-    };
-
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
+    jest.spyOn(fs, "writeFileSync");
 
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(
-        JSON.stringify({ cookies: fakeCookie, base: fakeBase })
-      );
+      .mockReturnValue(JSON.stringify({ cookies: fakeCookie, base: fakeBase }));
 
     nock("https://auth.prismic.io")
       .get(`/validate?token=${fakeToken}`)
@@ -182,5 +165,11 @@ describe("communication.validateSessionAndGetProfile", () => {
     expect(result?.info.email).toEqual(email);
     expect(result?.profile?.shortId).toEqual(shortId);
     expect(result?.profile?.userId).toEqual(userId);
+
+    expect(fs.writeFileSync).toHaveBeenLastCalledWith(
+      path.join(os.homedir(), ".prismic"),
+      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      "utf8"
+    );
   });
 });

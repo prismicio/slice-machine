@@ -11,6 +11,8 @@ import { loginOrBypass } from "../src/steps/loginOrBypass";
 import nock from "nock";
 import * as fs from "fs";
 import { stderr } from "stdout-stderr";
+import * as path from "path";
+import * as os from "os";
 
 jest.mock("fs");
 
@@ -39,13 +41,12 @@ describe("loginOrBypass", () => {
   };
 
   test("is should validate the session and get the users profile", async () => {
-    jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
+    jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
+    jest.spyOn(fs, "writeFileSync");
 
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(
-        JSON.stringify({ cookies: fakeCookie, base: fakeBase })
-      );
+      .mockReturnValue(JSON.stringify({ cookies: fakeCookie, base: fakeBase }));
 
     nock("https://auth.prismic.io")
       .get(`/validate?token=${fakeToken}`)
@@ -80,6 +81,12 @@ describe("loginOrBypass", () => {
     expect(result?.profile?.userId).toEqual(userId);
 
     expect(stderr.output).toContain(email);
+
+    expect(fs.writeFileSync).toHaveBeenLastCalledWith(
+      path.join(os.homedir(), ".prismic"),
+      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      "utf8"
+    );
   });
 
   test("user hasn't logged in for a few days", async () => {
@@ -94,6 +101,8 @@ describe("loginOrBypass", () => {
       .reply(403);
 
     jest.spyOn(Auth, "login").mockResolvedValue();
+
+    jest.spyOn(fs, "writeFileSync");
 
     nock("https://auth.prismic.io")
       .get(`/validate?token=${fakeToken}`)
@@ -120,5 +129,10 @@ describe("loginOrBypass", () => {
     expect(result).not.toBeNull();
     expect(result?.info).not.toBeNull();
     expect(result?.profile?.shortId).toEqual(shortId);
+    expect(fs.writeFileSync).toBeCalledWith(
+      path.join(os.homedir(), ".prismic"),
+      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      "utf8"
+    );
   });
 });
