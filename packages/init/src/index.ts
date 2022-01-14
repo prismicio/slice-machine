@@ -53,14 +53,16 @@ async function init() {
     await createRepository(name, frameworkResult.value, config);
   }
 
-  const tracker = Tracker.build(
-    "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
-    name,
-    {
-      userId: user.profile?.shortId || user.info.userId,
-    },
-    isTrackingAvailable
-  );
+  const tracker = user.profile?.shortId
+    ? Tracker.build(
+        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+        name,
+        {
+          userId: user.profile.shortId,
+        },
+        isTrackingAvailable
+      )
+    : undefined;
 
   // install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
