@@ -201,10 +201,6 @@ function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
-    const framework: Frameworks = yield select(getFramework);
-    const version: string = yield select(getCurrentVersion);
-
-    Tracker.trackSlicePreviewSetup(framework, version);
     const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
       checkPreviewSetup
     );
@@ -290,11 +286,22 @@ function* failCheckSetupSaga() {
   );
 }
 
+function* trackOpenSetupDrawer() {
+  const framework: Frameworks = yield select(getFramework);
+  const version: string = yield select(getCurrentVersion);
+
+  Tracker.trackSlicePreviewSetup(framework, version);
+}
+
 // Saga watchers
 function* watchCheckSetup() {
   yield takeLatest(
     getType(checkPreviewSetupCreator.request),
     withLoader(checkSetupSaga, LoadingKeysEnum.CHECK_PREVIEW)
+  );
+  yield takeLatest(
+    getType(openSetupPreviewDrawerCreator),
+    trackOpenSetupDrawer
   );
 }
 
