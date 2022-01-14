@@ -1,5 +1,4 @@
 import cors from "cors";
-import cookieParser from "cookie-parser";
 
 require("@babel/register");
 
@@ -35,7 +34,6 @@ Object.entries(pkg._moduleAliases).forEach(([key]) => {
 const api = require("./api");
 
 const app = express();
-app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.json({ limit: "64mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
