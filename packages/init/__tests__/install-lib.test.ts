@@ -57,13 +57,15 @@ describe("install-lib", () => {
 
     // stderr.start();
     // stdout.start();
-    const libs = await installLib(undefined, fakeCWD, gitpath);
+    // const libs = await installLib(undefined, fakeCWD, gitpath);
+    await installLib(undefined, fakeCWD, gitpath);
+
     // stderr.stop();
     // stdout.stop();
 
-    expect(libs).toContain(
-      path.posix.join("~", `${user}-${project}`, "slices")
-    );
+    // expect(libs).toContain(
+    //   path.posix.join("~", `${user}-${project}`, "slices")
+    // );
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
@@ -100,13 +102,14 @@ describe("install-lib", () => {
 
     // stderr.start();
     // stdout.start();
-    const libs = await installLib(undefined, fakeCWD, gitpath);
+    // const libs = await installLib(undefined, fakeCWD, gitpath);
+    await installLib(undefined, fakeCWD, gitpath);
     // stderr.stop();
     // stderr.stop();
 
-    expect(libs).toContain(
-      path.posix.join("~", `${user}-${project}`, "slices")
-    );
+    // expect(libs).toContain(
+    //   path.posix.join("~", `${user}-${project}`, "slices")
+    // );
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
@@ -139,15 +142,15 @@ describe("install-lib", () => {
 
     // stderr.start();
     // stdout.start();
-    const libs = await installLib(undefined, fakeCWD, gitpath, branch);
+    // const libs = await installLib(undefined, fakeCWD, gitpath, branch);
+    await installLib(undefined, fakeCWD, gitpath);
     // stderr.stop();
     // stderr.stop();
 
-    expect(libs).toContain(
-      path.posix.join("~", `${user}-${project}`, "slices")
-    );
+    // expect(libs).toContain(
+    //   path.posix.join("~", `${user}-${project}`, "slices")
+    // );
 
-    expect(libs).toBeUndefined();
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
