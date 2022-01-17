@@ -5,12 +5,11 @@ import {
   test,
   jest,
   afterEach,
-  // beforeEach,
   beforeAll,
 } from "@jest/globals";
 import nock from "nock";
 import { installLib } from "../src/steps/install-lib";
-// import { stderr, stdout } from "stdout-stderr";
+import { stderr, stdout } from "stdout-stderr";
 import path from "path";
 import os from "os";
 import fs from "fs";
@@ -56,23 +55,22 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    // stderr.start();
-    // stdout.start();
-    // const libs = await installLib(undefined, fakeCWD, gitpath);
-    await installLib(undefined, fakeCWD, gitpath);
+    stderr.start();
+    stdout.start();
+    const libs = await installLib(undefined, fakeCWD, gitpath);
 
-    // stderr.stop();
-    // stdout.stop();
+    stderr.stop();
+    stdout.stop();
 
-    // expect(libs).toContain(
-    //   path.posix.join("~", `${user}-${project}`, "slices")
-    // );
+    expect(libs).toContain(
+      path.posix.join("~", `${user}-${project}`, "slices")
+    );
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    // expect(stderr.output).toContain(
-    //   'Slice library "prismicio/foo" was installed successfully'
-    // );
+    expect(stderr.output).toContain(
+      'Slice library "prismicio/foo" was installed successfully'
+    );
   });
 
   test("when main is not found it should try to download from master", async () => {
@@ -101,22 +99,21 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    // stderr.start();
-    // stdout.start();
-    // const libs = await installLib(undefined, fakeCWD, gitpath);
-    await installLib(undefined, fakeCWD, gitpath);
-    // stderr.stop();
-    // stderr.stop();
+    stderr.start();
+    stdout.start();
+    const libs = await installLib(undefined, fakeCWD, gitpath);
+    stderr.stop();
+    stderr.stop();
 
-    // expect(libs).toContain(
-    //   path.posix.join("~", `${user}-${project}`, "slices")
-    // );
+    expect(libs).toContain(
+      path.posix.join("~", `${user}-${project}`, "slices")
+    );
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    // expect(stderr.output).toContain(
-    //   'Slice library "prismicio/bar" was installed successfully'
-    // );
+    expect(stderr.output).toContain(
+      'Slice library "prismicio/bar" was installed successfully'
+    );
   });
 
   test("it can take a branch as an argument", async () => {
@@ -141,22 +138,21 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    // stderr.start();
-    // stdout.start();
-    // const libs = await installLib(undefined, fakeCWD, gitpath, branch);
-    await installLib(undefined, fakeCWD, gitpath, branch);
-    // stderr.stop();
-    // stderr.stop();
+    stderr.start();
+    stdout.start();
+    const libs = await installLib(undefined, fakeCWD, gitpath, branch);
+    stderr.stop();
+    stderr.stop();
 
-    // expect(libs).toContain(
-    //   path.posix.join("~", `${user}-${project}`, "slices")
-    // );
+    expect(libs).toContain(
+      path.posix.join("~", `${user}-${project}`, "slices")
+    );
 
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    // expect(stderr.output).toContain(
-    //   'Slice library "prismicio/baz" was installed successfully'
-    // );
+    expect(stderr.output).toContain(
+      'Slice library "prismicio/baz" was installed successfully'
+    );
   });
 });

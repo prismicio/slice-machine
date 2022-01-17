@@ -132,8 +132,8 @@ export async function installLib(
 
     tracker?.Track.downloadLibrary(libGithubPath);
     return localLibs;
-  } catch (e) {
-    console.error(e);
+  } catch {
+    // TODO: not info on error?
     spinner.fail(`Error installing ${libGithubPath} lib!`);
     process.exit(-1);
   }
