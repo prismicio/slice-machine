@@ -2,7 +2,10 @@ import "@testing-library/jest-dom";
 import { expect, test } from "@jest/globals";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 
-import { ContinueOnboardingType, SMTracker } from "@src/tracker";
+import TrackerSingleton, {
+  ContinueOnboardingType,
+  SMTracker,
+} from "@src/tracker";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 
 jest.mock("@segment/analytics-next", () => {
@@ -19,22 +22,28 @@ jest.mock("@segment/analytics-next", () => {
 const dumpSegmentKey = "dumpSegmentKey";
 const dumpRepoKey = "dumpSegmentKey";
 
-describe("tracker", () => {
+describe("Tracker Singleton", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+  test("should init only one SMTracker instance", async () => {
+    const smTracker = TrackerSingleton.get();
+    expect(smTracker).toBeInstanceOf(SMTracker);
+    const smTracker2 = TrackerSingleton.get();
+    expect(smTracker).toBe(smTracker2);
+  });
+});
 
-  test("should init the native client", async () => {
-    const smTracker = new SMTracker();
-    await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
-    // We can do this assertion only as standalone function won't be called on other initialize calls (singleton)
-    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
+describe("SMTracker", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test("should send a identify event", async () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.identifyUser("userId");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.identify).toHaveBeenCalledTimes(1);
     expect(AnalyticsBrowser.identify).toHaveBeenCalledWith("userId");
   });
@@ -43,6 +52,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.trackReview(Frameworks.next, 3, "comment");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith("SliceMachine Review", {
       comment: "comment",
       framework: "next",
@@ -54,6 +64,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.trackOnboardingSkip(1);
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Skip",
       { screenSkipped: 1 }
@@ -64,6 +75,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.trackOnboardingStart();
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Start",
       {}
@@ -74,6 +86,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.trackSlicePreviewSetup(Frameworks.next, "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Slice Preview Setup",
       {
@@ -87,6 +100,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.trackOpenSlicePreview(Frameworks.next, "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Slice Preview Open",
       {
@@ -102,6 +116,7 @@ describe("tracker", () => {
     smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueIntro
     );
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen Intro",
       {}
@@ -114,6 +129,7 @@ describe("tracker", () => {
     smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen1
     );
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 1",
       {}
@@ -126,6 +142,7 @@ describe("tracker", () => {
     smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen2
     );
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 2",
       {}
@@ -138,6 +155,7 @@ describe("tracker", () => {
     smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen3
     );
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 3",
       {}
@@ -148,6 +166,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     smTracker.groupLibraries([], "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.group).toHaveBeenCalledWith(dumpRepoKey, {
       downloadedLibs: [],
       downloadedLibsCount: 0,
@@ -161,6 +180,7 @@ describe("tracker", () => {
     const smTracker = new SMTracker();
     await smTracker.initialize(dumpSegmentKey);
     smTracker.groupLibraries([], "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.group).toHaveBeenCalledTimes(0);
   });
 
@@ -186,6 +206,7 @@ describe("tracker", () => {
     smTracker.trackOpenSlicePreview(Frameworks.next, "0.2.0");
     smTracker.trackSlicePreviewSetup(Frameworks.next, "0.2.0");
     smTracker.groupLibraries([], "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(AnalyticsBrowser.track).toHaveBeenCalledTimes(0);
     expect(AnalyticsBrowser.identify).toHaveBeenCalledTimes(0);
     expect(AnalyticsBrowser.group).toHaveBeenCalledTimes(0);
