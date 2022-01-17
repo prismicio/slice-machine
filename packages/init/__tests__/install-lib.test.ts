@@ -5,7 +5,8 @@ import {
   test,
   jest,
   afterEach,
-  beforeEach,
+  // beforeEach,
+  beforeAll,
 } from "@jest/globals";
 import nock from "nock";
 import { installLib } from "../src/steps/install-lib";
@@ -24,7 +25,7 @@ describe("install-lib", () => {
     jest.clearAllMocks();
   });
 
-  beforeEach(() => {
+  beforeAll(() => {
     if (fs.existsSync(fakeCWD)) {
       fs.rmSync(fakeCWD, { recursive: true, force: true });
     }
@@ -143,7 +144,7 @@ describe("install-lib", () => {
     // stderr.start();
     // stdout.start();
     // const libs = await installLib(undefined, fakeCWD, gitpath, branch);
-    await installLib(undefined, fakeCWD, gitpath);
+    await installLib(undefined, fakeCWD, gitpath, branch);
     // stderr.stop();
     // stderr.stop();
 
