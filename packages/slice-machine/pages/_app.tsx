@@ -98,24 +98,19 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       setSMStore({ store, persistor });
     }
 
-    Tracker.get()
-      .initialize(
-        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
-        serverState.env.repo,
-        serverState.env.manifest.tracking
-      )
-      .then(() => {
-        if (!_temp_first_start_flag) {
-          return;
-        }
+    Tracker.get().initialize(
+      "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      serverState.env.repo,
+      serverState.env.manifest.tracking
+    );
 
-        _temp_first_start_flag = false;
-
-        Tracker.get().groupLibraries(
-          serverState.libraries || [],
-          serverState.env.updateVersionInfo.currentVersion
-        );
-      });
+    if (_temp_first_start_flag) {
+      _temp_first_start_flag = false;
+      Tracker.get().groupLibraries(
+        serverState.libraries || [],
+        serverState.env.updateVersionInfo.currentVersion
+      );
+    }
 
     const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {

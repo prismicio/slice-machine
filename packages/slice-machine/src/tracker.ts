@@ -22,7 +22,7 @@ export enum ContinueOnboardingType {
 }
 
 export class SMTracker {
-  #client: ClientAnalytics | null = null;
+  #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
   #repoName: string | null = null;
   constructor() {}
@@ -37,7 +37,7 @@ export class SMTracker {
       this.#repoName = repoName;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
-      this.#client = await AnalyticsBrowser.standalone(segmentKey);
+      this.#client = AnalyticsBrowser.standalone(segmentKey);
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
       console.warn(error);
@@ -55,7 +55,9 @@ export class SMTracker {
     }
 
     this.#client
-      .track(eventType, attributes)
+      .then((client) => {
+        client.track(eventType, attributes);
+      })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
       );
@@ -67,7 +69,9 @@ export class SMTracker {
     }
 
     this.#client
-      .identify(userId)
+      .then((client) => {
+        client.identify(userId);
+      })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
 
@@ -76,20 +80,22 @@ export class SMTracker {
       return;
     }
 
-    if (!this.#repoName) {
+    const repoName = this.#repoName;
+
+    if (!repoName) {
       return;
     }
 
-    try {
-      this.#client.group(this.#repoName, attributes);
-    } catch {
-      console.warn(`Couldn't report group: Tracking error`);
-    }
+    this.#client
+      .then((client) => {
+        client.group(repoName, attributes);
+      })
+      .catch(() => console.warn(`Couldn't report group: Tracking error`));
   }
 
   #isTrackingPossible(
-    client: ClientAnalytics | null
-  ): client is ClientAnalytics {
+    client: Promise<ClientAnalytics> | null
+  ): client is Promise<ClientAnalytics> {
     return this.#isTrackingActive && !!client;
   }
 
