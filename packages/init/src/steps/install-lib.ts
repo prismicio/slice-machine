@@ -75,7 +75,7 @@ export async function installLib(
     if (pkgJson instanceof Error) throw pkgJson;
 
     const dependencies = Dependencies.fromPkgFormat(pkgJson.dependencies);
-    if (dependencies) await pkgManager.install(dependencies);
+    if (dependencies) await pkgManager.install(dependencies); // TODO: what about dev-deps?, why call npm install directly in the project?
 
     // generate meta file
     Files.write(path.join(libDestinationFolder, "meta.json"), {
