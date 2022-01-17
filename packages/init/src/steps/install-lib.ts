@@ -35,11 +35,34 @@ const downloadFile = async (reqUrl: string): Promise<string> => {
   });
 };
 
+function toGithubSource(githubPath: string, branch: string): string {
+  return `https://codeload.github.com/${githubPath}/zip/${branch}`;
+}
+
+function checkMainOrMasterBranch(githubPath: string): Promise<string> {
+  const main = toGithubSource(githubPath, "main");
+  const master = toGithubSource(githubPath, "master");
+
+  return axios
+    .head(main)
+    .then(() => main)
+    .catch(() => {
+      return axios.head(master).then(() => master);
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        const err = new Error(`Could not resolve ${main} or ${master}`);
+        throw err;
+      }
+      throw error;
+    });
+}
+
 export async function installLib(
   tracker: Tracker | undefined,
   cwd: string,
   libGithubPath: string,
-  branch: string | undefined = "main"
+  maybeBranch?: string
 ): Promise<string[] | undefined> {
   const spinner = Utils.spinner(
     `Installing the ${libGithubPath} lib in your project...`
@@ -49,7 +72,11 @@ export async function installLib(
     spinner.start();
 
     const [githubUserName, githubProjectName] = libGithubPath.split("/");
-    const source = `https://codeload.github.com/${libGithubPath}/zip/${branch}`;
+    const source = maybeBranch
+      ? toGithubSource(libGithubPath, maybeBranch)
+      : await checkMainOrMasterBranch(libGithubPath);
+
+    const branch = source.substring(source.lastIndexOf("/") + 1, source.length);
 
     const zipFilePath = await downloadFile(source);
     const outputFolder = `${githubProjectName}-${branch}`;
