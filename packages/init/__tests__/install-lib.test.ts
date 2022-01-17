@@ -55,11 +55,11 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    stderr.start();
-    stdout.start();
+    // stderr.start();
+    // stdout.start();
     const libs = await installLib(undefined, fakeCWD, gitpath);
-    stderr.stop();
-    stdout.stop();
+    // stderr.stop();
+    // stdout.stop();
 
     expect(libs).toContain(
       path.posix.join("~", `${user}-${project}`, "slices")
@@ -67,9 +67,9 @@ describe("install-lib", () => {
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    expect(stderr.output).toContain(
-      'Slice library "prismicio/foo" was installed successfully'
-    );
+    // expect(stderr.output).toContain(
+    //   'Slice library "prismicio/foo" was installed successfully'
+    // );
   });
 
   test("when main is not found it should try to download from master", async () => {
@@ -98,11 +98,11 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    stderr.start();
-    stdout.start();
+    // stderr.start();
+    // stdout.start();
     const libs = await installLib(undefined, fakeCWD, gitpath);
-    stderr.stop();
-    stderr.stop();
+    // stderr.stop();
+    // stderr.stop();
 
     expect(libs).toContain(
       path.posix.join("~", `${user}-${project}`, "slices")
@@ -110,9 +110,9 @@ describe("install-lib", () => {
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    expect(stderr.output).toContain(
-      'Slice library "prismicio/bar" was installed successfully'
-    );
+    // expect(stderr.output).toContain(
+    //   'Slice library "prismicio/bar" was installed successfully'
+    // );
   });
 
   test("it can take a branch as an argument", async () => {
@@ -137,20 +137,22 @@ describe("install-lib", () => {
 
     jest.spyOn(child_process, "exec");
 
-    stderr.start();
-    stdout.start();
+    // stderr.start();
+    // stdout.start();
     const libs = await installLib(undefined, fakeCWD, gitpath, branch);
-    stderr.stop();
-    stderr.stop();
+    // stderr.stop();
+    // stderr.stop();
 
     expect(libs).toContain(
       path.posix.join("~", `${user}-${project}`, "slices")
     );
+
+    expect(libs).toBeUndefined();
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    expect(stderr.output).toContain(
-      'Slice library "prismicio/baz" was installed successfully'
-    );
+    // expect(stderr.output).toContain(
+    //   'Slice library "prismicio/baz" was installed successfully'
+    // );
   });
 });
