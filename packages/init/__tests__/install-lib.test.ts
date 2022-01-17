@@ -9,7 +9,7 @@ import {
 } from "@jest/globals";
 import nock from "nock";
 import { installLib } from "../src/steps/install-lib";
-import { stderr, stdout } from "stdout-stderr";
+// import { stderr, stdout } from "stdout-stderr";
 import path from "path";
 import os from "os";
 import fs from "fs";
