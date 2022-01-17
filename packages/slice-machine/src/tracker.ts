@@ -25,13 +25,12 @@ export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
   #repoName: string | null = null;
-  constructor() {}
 
-  async initialize(
+  initialize(
     segmentKey: string,
     repoName: string | null = null,
     isTrackingActive = true
-  ): Promise<void> {
+  ): void {
     try {
       this.#isTrackingActive = isTrackingActive;
       this.#repoName = repoName;
@@ -46,16 +45,16 @@ export class SMTracker {
 
   /** Private methods **/
 
-  #trackEvent(
+  async #trackEvent(
     eventType: AllSliceMachineEventType,
     attributes: Record<string, unknown> = {}
-  ): void {
+  ): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
-    this.#client
-      .then((client) => {
+    return this.#client
+      .then((client): void => {
         client.track(eventType, attributes);
       })
       .catch(() =>
@@ -63,19 +62,19 @@ export class SMTracker {
       );
   }
 
-  #identify(userId: string): void {
+  async #identify(userId: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
-    this.#client
-      .then((client) => {
+    return this.#client
+      .then((client): void => {
         client.identify(userId);
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
 
-  #group(attributes: Record<string, unknown> = {}): void {
+  async #group(attributes: Record<string, unknown> = {}): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
@@ -86,8 +85,8 @@ export class SMTracker {
       return;
     }
 
-    this.#client
-      .then((client) => {
+    return this.#client
+      .then((client): void => {
         client.group(repoName, attributes);
       })
       .catch(() => console.warn(`Couldn't report group: Tracking error`));
@@ -101,14 +100,17 @@ export class SMTracker {
 
   /** Public methods **/
 
-  identifyUser(userId: string): void {
-    this.#identify(userId);
+  async identifyUser(userId: string): Promise<void> {
+    await this.#identify(userId);
   }
 
-  groupLibraries(libs: readonly LibraryUI[], version: string): void {
+  async groupLibraries(
+    libs: readonly LibraryUI[],
+    version: string
+  ): Promise<void> {
     const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
-    this.#group({
+    await this.#group({
       manualLibsCount: libs.filter((l) => l.meta.isManual).length,
       downloadedLibsCount: downloadedLibs.length,
       npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
@@ -117,30 +119,43 @@ export class SMTracker {
     });
   }
 
-  trackReview(framework: Frameworks, rating: number, comment: string): void {
-    this.#trackEvent(EventType.Review, { rating, comment, framework });
+  async trackReview(
+    framework: Frameworks,
+    rating: number,
+    comment: string
+  ): Promise<void> {
+    return this.#trackEvent(EventType.Review, { rating, comment, framework });
   }
 
-  trackSlicePreviewSetup(framework: Frameworks, version: string): void {
-    this.#trackEvent(EventType.SlicePreviewSetup, { version, framework });
+  async trackSlicePreviewSetup(
+    framework: Frameworks,
+    version: string
+  ): Promise<void> {
+    return this.#trackEvent(EventType.SlicePreviewSetup, {
+      version,
+      framework,
+    });
   }
 
-  trackOpenSlicePreview(framework: Frameworks, version: string): void {
-    this.#trackEvent(EventType.SlicePreviewOpen, { version, framework });
+  async trackOpenSlicePreview(
+    framework: Frameworks,
+    version: string
+  ): Promise<void> {
+    return this.#trackEvent(EventType.SlicePreviewOpen, { version, framework });
   }
 
-  trackOnboardingStart(): void {
-    this.#trackEvent(EventType.OnboardingStart);
+  async trackOnboardingStart(): Promise<void> {
+    return this.#trackEvent(EventType.OnboardingStart);
   }
 
-  trackOnboardingContinue(
+  async trackOnboardingContinue(
     continueOnboardingEventType: ContinueOnboardingType
-  ): void {
-    this.#trackEvent(continueOnboardingEventType);
+  ): Promise<void> {
+    return this.#trackEvent(continueOnboardingEventType);
   }
 
-  trackOnboardingSkip(screenSkipped: number): void {
-    this.#trackEvent(EventType.OnboardingSkip, {
+  trackOnboardingSkip(screenSkipped: number): Promise<void> {
+    return this.#trackEvent(EventType.OnboardingSkip, {
       screenSkipped,
     });
   }
