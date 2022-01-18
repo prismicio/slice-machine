@@ -155,4 +155,55 @@ describe("install-lib", () => {
       'Slice library "prismicio/baz" was installed successfully'
     );
   });
+
+  test("when main and master branches don't exist.", async () => {
+    const user = "prismicio";
+    const project = "batman";
+    const gitpath = path.posix.join(user, project);
+
+    nock("https://codeload.github.com")
+      .head(`/${gitpath}/zip/main`)
+      .reply(404)
+      .head(`/${gitpath}/zip/master`)
+      .reply(404);
+
+    jest.spyOn(child_process, "exec");
+
+    jest.spyOn(console, "error").mockImplementation(() => jest.fn());
+
+    stderr.start();
+    stdout.start();
+    await installLib(undefined, fakeCWD, gitpath);
+    stderr.stop();
+    stderr.stop();
+
+    expect(console.error).toHaveBeenLastCalledWith(
+      "Could not resolve https://codeload.github.com/prismicio/batman/zip/main or https://codeload.github.com/prismicio/batman/zip/master"
+    );
+  });
+
+  test("when given branch does not exist.", async () => {
+    const user = "prismicio";
+    const project = "batman";
+    const gitpath = path.posix.join(user, project);
+    const branch = "nannannan";
+
+    nock("https://codeload.github.com")
+      .get(`/${gitpath}/zip/${branch}`)
+      .reply(404);
+
+    jest.spyOn(child_process, "exec");
+
+    jest.spyOn(console, "error").mockImplementation(() => jest.fn());
+
+    stderr.start();
+    stdout.start();
+    await installLib(undefined, fakeCWD, gitpath, branch);
+    stderr.stop();
+    stderr.stop();
+
+    expect(console.error).toHaveBeenLastCalledWith(
+      "Request failed with status code 404"
+    );
+  });
 });
