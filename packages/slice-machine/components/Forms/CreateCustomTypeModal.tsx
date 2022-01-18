@@ -12,23 +12,28 @@ type CreateCustomTypeModalProps = {
   onSubmit: (values: CtPayload) => void;
   close: () => void;
   customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
+  dataCy: string;
 };
 
 const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps> =
-  ({ isOpen, onSubmit, close, customTypes }) => {
+  ({ isOpen, onSubmit, close, customTypes, dataCy }) => {
     return (
       <ModalFormCard
+        dataCy={dataCy}
         isOpen={isOpen}
         widthInPx="530px"
         formId="create-custom-type"
         close={() => close()}
         onSubmit={(values: CtPayload) => {
-          onSubmit(values);
+          onSubmit({ ...values, label: values.label || values.id });
         }}
         initialValues={{
           repeatable: true,
         }}
         validate={({ id }: { id: string }) => {
+          if (!id || !id.length) {
+            return { id: "ID cannot be empty" };
+          }
           if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
             return { id: "Invalid id: No special characters allowed" };
           }

@@ -138,8 +138,9 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          customTypes.length === 0 ? (
+          customTypes.length ? (
             <Button
+              data-cy="create-ct"
               onClick={() => setIsOpen(true)}
               sx={{
                 display: "flex",
@@ -197,6 +198,7 @@ const CustomTypes: React.FunctionComponent = () => {
       )}
       <CreateCustomTypeModal
         isOpen={isOpen}
+        dataCy="create-ct-modal"
         onSubmit={_onCreate}
         customTypes={customTypes}
         close={() => setIsOpen(false)}
