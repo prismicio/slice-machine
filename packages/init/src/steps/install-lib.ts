@@ -17,11 +17,7 @@ import Files from "@slicemachine/core/build/src/utils/files";
 import { Tracker } from "../utils/tracker";
 
 const downloadFile = async (reqUrl: string): Promise<string> => {
-  const res = await axios({
-    method: "GET",
-    url: reqUrl,
-    responseType: "arraybuffer",
-  });
+  const res = await axios.get<Buffer>(reqUrl, { responseType: "arraybuffer" });
 
   return new Promise((resolve, reject) => {
     if (res.status == 200) {
