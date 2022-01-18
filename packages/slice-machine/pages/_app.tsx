@@ -110,6 +110,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
         serverState.libraries || [],
         serverState.env.updateVersionInfo.currentVersion
       );
+
+      serverState.env.shortId &&
+        Tracker.get().identifyUser(serverState.env.shortId);
     }
 
     const newSliceMap = mapSlices(serverState.libraries);

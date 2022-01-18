@@ -106,6 +106,7 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
+    shortId: prismicData.shortId,
     prismicAPIUrl: prismicData.base,
   };
 

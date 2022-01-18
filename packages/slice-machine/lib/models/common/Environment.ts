@@ -24,6 +24,7 @@ export interface BackendEnvironment {
 }
 
 export interface FrontEndEnvironment {
+  shortId?: string;
   manifest: Models.Manifest;
   repo?: string;
   updateVersionInfo: UpdateVersionInfo;
