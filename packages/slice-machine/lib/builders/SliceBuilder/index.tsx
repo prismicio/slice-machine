@@ -17,7 +17,7 @@ import SetupDrawer from "./SetupDrawer";
 import IframeRenderer from "@components/Preview/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectPreviewUrl } from "@src/modules/environment";
+import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Preview/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
 
@@ -39,10 +39,10 @@ const initialState: SliceBuilderState = {
 
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLoginModal, checkPreviewSetup } = useSliceMachineActions();
-  const { previewUrl, isWaitingForIframeCheck } = useSelector(
+  const { openLoginModal, checkSimulatorSetup } = useSliceMachineActions();
+  const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
-      previewUrl: selectPreviewUrl(state),
+      simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
     })
   );
@@ -88,7 +88,7 @@ const SliceBuilder: React.FunctionComponent = () => {
   );
 
   const onTakingCustomScreenshot = () => {
-    checkPreviewSetup(true, () =>
+    checkSimulatorSetup(true, () =>
       store
         .variation(variation.id)
         .generateScreenShot(Model.from, Model.infos.sliceName, setData)
@@ -135,7 +135,7 @@ const SliceBuilder: React.FunctionComponent = () => {
         <IframeRenderer
           dryRun
           size={Size.FULL}
-          previewUrl={previewUrl}
+          simulatorUrl={simulatorUrl}
           sliceView={sliceView}
         />
       )}

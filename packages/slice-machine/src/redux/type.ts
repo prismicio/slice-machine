@@ -2,12 +2,12 @@ import { ModalStoreType } from "@src/modules/modal/types";
 import { LoadingStoreType } from "@src/modules/loading/types";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 import { EnvironmentStoreType } from "@src/modules/environment/types";
-import { PreviewStoreType } from "@src/modules/preview/types";
+import { SimulatorStoreType } from "@src/modules/preview/types";
 
 export type SliceMachineStoreType = {
   modal: ModalStoreType;
   loading: LoadingStoreType;
   userContext: UserContextStoreType;
   environment: EnvironmentStoreType;
-  preview: PreviewStoreType;
+  simulator: SimulatorStoreType;
 };

@@ -1,4 +1,4 @@
-export type PreviewStoreType = {
+export type SimulatorStoreType = {
   setupStatus: SetupStatus;
   setupDrawer: {
     isOpen: boolean;

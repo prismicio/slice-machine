@@ -26,23 +26,23 @@ export interface DefaultStepCompProps {
   onOpenStep: () => void;
   stepNumber: number;
   setupStatus: SetupStatus;
-  previewUrl: string | undefined;
+  simulatorUrl: string | undefined;
   userHasAtLeastOneStepMissing: boolean;
   userHasConfiguredAllSteps: boolean;
-  checkPreviewSetup: (b: boolean) => void;
+  checkSimulatorSetup: (b: boolean) => void;
   stepNumberWithErrors: string[];
   isCheckingSetup: boolean;
 }
 
-interface InstallSlicePreviewProps extends DefaultStepProps {
+interface InstallSliceSimulatorProps extends DefaultStepProps {
   code: string;
 }
 
-export const InstallSlicePreview =
+export const InstallSliceSimulator =
   ({
     title = "Install dependencies",
     code,
-  }: InstallSlicePreviewProps): React.FunctionComponent<DefaultStepCompProps> =>
+  }: InstallSliceSimulatorProps): React.FunctionComponent<DefaultStepCompProps> =>
   ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (
       <StepSection
@@ -60,8 +60,8 @@ export const InstallSlicePreview =
             />
           )}
           <Text variant={"xs"} sx={{ mb: 3 }}>
-            Slice Preview requires the following dependencies, run the following
-            command to install them.
+            Slice Simulator requires the following dependencies, run the
+            following command to install them.
           </Text>
           <CodeBlock>{code}</CodeBlock>
         </Flex>
@@ -76,11 +76,11 @@ interface CreatePageProps extends DefaultStepProps {
 
 export const CreatePage =
   ({
-    title = "Create a page for Slice Preview",
+    title = "Create a page for Slice Simulator",
     code,
     instructions,
   }: CreatePageProps): React.FunctionComponent<DefaultStepCompProps> =>
-  ({ isOpen, onOpenStep, stepNumber, setupStatus, previewUrl }) => {
+  ({ isOpen, onOpenStep, stepNumber, setupStatus, simulatorUrl }) => {
     return (
       <StepSection
         stepNumber={stepNumber}
@@ -92,10 +92,10 @@ export const CreatePage =
         <Flex sx={{ flexDirection: "column" }}>
           {setupStatus.iframe === "ko" && (
             <WarningSection
-              title={"We can’t connect to the preview page"}
+              title={"We can’t connect to the simulator page"}
               sx={{ mb: 3 }}
             >
-              We cannot connect to {previewUrl || "preview URL"}. <br />{" "}
+              We cannot connect to {simulatorUrl || "simulator URL"}. <br />{" "}
               Struggling to fix this issue? See our troubleshooting page.
             </WarningSection>
           )}
@@ -111,7 +111,7 @@ export const CreatePage =
 export const UpdateSmJson =
   ({
     title = "Update sm.json",
-    code = `"localSlicePreviewURL": "http://localhost:3000/_preview"`,
+    code = `"localSliceSimulatorURL": "http://localhost:3000/_simulator"`,
   }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (
@@ -125,16 +125,16 @@ export const UpdateSmJson =
         <Flex sx={{ flexDirection: "column" }}>
           {setupStatus.manifest === "ko" && (
             <WarningSection
-              title={"Can’t find “localSlicePreviewURL”"}
+              title={"Can’t find “localSliceSimulatorURL”"}
               sx={{ mb: 3 }}
             >
-              Looks like we can’t find the “localSlicePreviewURL“ property in
+              Looks like we can’t find the “localSliceSimulatorURL“ property in
               your sm.json file.
             </WarningSection>
           )}
           <Text variant={"xs"} sx={{ mb: 3 }}>
             Update your <Text variant={"pre"}>sm.json</Text> file with the
-            property <Text variant={"pre"}>localSlicePreviewURL</Text> in the
+            property <Text variant={"pre"}>localSliceSimulatorURL</Text> in the
             shape of <Text variant={"pre"}>http://localhost:PORT/PATH</Text>.
             Eg:
           </Text>
@@ -153,7 +153,7 @@ export const CheckSetup =
     onOpenStep,
     userHasAtLeastOneStepMissing,
     userHasConfiguredAllSteps,
-    checkPreviewSetup,
+    checkSimulatorSetup,
     stepNumberWithErrors,
     isCheckingSetup,
   }) => {
@@ -183,7 +183,7 @@ export const CheckSetup =
                 minWidth: 155,
               }}
               isLoading={isCheckingSetup}
-              onClick={() => checkPreviewSetup(false)}
+              onClick={() => checkSimulatorSetup(false)}
             >
               Check configuration
             </Button>

@@ -14,18 +14,18 @@ import {
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { getFramework, selectPreviewUrl } from "@src/modules/environment";
+import { getFramework, selectSimulatorUrl } from "@src/modules/environment";
 
 interface Props {
   framework: Frameworks;
-  isPreviewAvailableForFramework: boolean;
+  isSimulatorAvailableForFramework: boolean;
 }
 
 export default function Stepper({
   framework,
-  isPreviewAvailableForFramework,
+  isSimulatorAvailableForFramework,
 }: Props): React.ReactElement {
-  if (!isPreviewAvailableForFramework) {
+  if (!isSimulatorAvailableForFramework) {
     return (
       <p>
         Framework {framework || "undefined"} is not supported yet. Please use
@@ -36,9 +36,10 @@ export default function Stepper({
 
   const stepperConfiguration = getStepperConfigurationByFramework(framework);
 
-  const { toggleSetupDrawerStep, checkPreviewSetup } = useSliceMachineActions();
+  const { toggleSetupDrawerStep, checkSimulatorSetup } =
+    useSliceMachineActions();
   const {
-    previewUrl,
+    simulatorUrl,
     openedStep,
     setupStatus,
     userHasAtLeastOneStepMissing,
@@ -46,9 +47,9 @@ export default function Stepper({
     isCheckingSetup,
   } = useSelector((state: SliceMachineStoreType) => ({
     openedStep: selectOpenedStep(state),
-    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
     setupStatus: selectSetupStatus(state),
-    previewUrl: selectPreviewUrl(state),
+    simulatorUrl: selectSimulatorUrl(state),
     framework: getFramework(state),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
@@ -67,12 +68,12 @@ export default function Stepper({
             onOpenStep={() => toggleSetupDrawerStep(i + 1)}
             key={`next-step-${i + 1}`}
             {...{
-              previewUrl,
+              simulatorUrl,
               openedStep,
               setupStatus,
               userHasAtLeastOneStepMissing,
               userHasConfiguredAllSteps,
-              checkPreviewSetup,
+              checkSimulatorSetup,
               isCheckingSetup,
               stepNumberWithErrors,
             }}

@@ -1,9 +1,9 @@
 // We mock the getEnv service
 import * as Core from "@slicemachine/core";
 
-import previewHandler from "../../server/src/api/preview";
+import simulatorHandler from "../../server/src/api/simulator";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { PreviewCheckResponse } from "../../lib/models/common/Preview";
+import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 jest.mock("@slicemachine/core", () => {
   const actualCore = jest.requireActual("@slicemachine/core");
@@ -16,7 +16,7 @@ jest.mock("@slicemachine/core", () => {
   };
 });
 
-describe("preview controller", () => {
+describe("simulator controller", () => {
   const retrieveJsonPackage = Core.FileSystem.retrieveJsonPackage as jest.Mock;
 
   test("it should return all checks ko when no preview url is sent", async () => {
@@ -34,7 +34,7 @@ describe("preview controller", () => {
         devDependencies: {},
       },
     });
-    const previewCheckResponse: PreviewCheckResponse = await previewHandler(
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithoutPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ko");
@@ -58,7 +58,7 @@ describe("preview controller", () => {
         devDependencies: {},
       },
     });
-    const previewCheckResponse: PreviewCheckResponse = await previewHandler(
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
@@ -86,7 +86,7 @@ describe("preview controller", () => {
         devDependencies: {},
       },
     });
-    const previewCheckResponse: PreviewCheckResponse = await previewHandler(
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");
@@ -115,7 +115,7 @@ describe("preview controller", () => {
         devDependencies: {},
       },
     });
-    const previewCheckResponse: PreviewCheckResponse = await previewHandler(
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
     expect(previewCheckResponse.manifest).toBe("ok");

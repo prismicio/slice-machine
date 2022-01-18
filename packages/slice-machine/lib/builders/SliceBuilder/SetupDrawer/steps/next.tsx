@@ -1,5 +1,5 @@
 import {
-  InstallSlicePreview,
+  InstallSliceSimulator,
   CreatePage,
   UpdateSmJson,
   CheckSetup,
@@ -9,7 +9,7 @@ import { Text } from "theme-ui";
 import { SetupStatus } from "@src/modules/preview/types";
 
 const CreatePageInstructions = {
-  code: `import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-react";
+  code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
 import SliceZone from "next-slicezone";
 
 import state from "../.slicemachine/libraries-state.json";
@@ -17,25 +17,25 @@ import state from "../.slicemachine/libraries-state.json";
 import * as Slices from "../slices";
 const resolver = ({ sliceName }) => Slices[sliceName];
 
-const SlicePreview = () => (<SliceCanvasRenderer
+const Simulator = () => (<SliceSimulator
 \t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
 \tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
 \tstate={state}
 />);
 
-export default SlicePreview;`,
+export default Simulator;`,
   instructions: (
     <>
       In your “pages” directory, create a file called{" "}
-      <Text variant={"pre"}>_preview.jsx</Text> and add the following code. This
-      page is the route you hit to preview and develop your components.
+      <Text variant={"pre"}>_simulator.jsx</Text> and add the following code.
+      This page is the route you hit to simulator and develop your components.
     </>
   ),
 };
 
 const steps = [
-  InstallSlicePreview({
-    code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-canvas-renderer-react`,
+  InstallSliceSimulator({
+    code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),

@@ -2,13 +2,13 @@ import { FileSystem, Utils } from "@slicemachine/core";
 import { previewIsSupported } from "@lib/utils";
 import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
-import { PreviewCheckResponse } from "@models/common/Preview";
+import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 export default async function handler(
   req: RequestWithEnv
-): Promise<PreviewCheckResponse> {
+): Promise<SimulatorCheckResponse> {
   const cwd = process.env.CWD || process.cwd();
-  const response: PreviewCheckResponse = {
+  const response: SimulatorCheckResponse = {
     manifest: "ok",
     dependencies: "ok",
   };
@@ -20,7 +20,7 @@ export default async function handler(
     throw new Error(message);
   }
 
-  if (!req.env.manifest.localSlicePreviewURL) {
+  if (!req.env.manifest.localSliceSimulatorURL) {
     response.manifest = "ko";
   }
 

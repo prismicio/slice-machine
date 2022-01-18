@@ -5,7 +5,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 export const SetupError: React.FC = () => {
   const router = useRouter();
-  const { openSetupPreviewDrawer } = useSliceMachineActions();
+  const { openSetupDrawer } = useSliceMachineActions();
 
   return (
     <Flex
@@ -17,10 +17,10 @@ export const SetupError: React.FC = () => {
         margin: "80px auto",
       }}
     >
-      <h3>Couldn't load Slice Preview</h3>
+      <h3>Couldn't load Slice Simulator</h3>
       <span>
-        We couldn't not find a Slice Preview URL in your sm.json. Please set-up
-        your Slice Preview first.
+        We couldn't not find a Slice Simulator URL in your sm.json. Please
+        set-up your Slice Simulator first.
       </span>
       <Button
         sx={{
@@ -30,14 +30,14 @@ export const SetupError: React.FC = () => {
         type="button"
         variant="primary"
         onClick={() => {
-          openSetupPreviewDrawer();
+          openSetupDrawer();
           void router.push({
             pathname: "/[lib]/[sliceName]/[variation]",
             query: router.query,
           });
         }}
       >
-        Set up Slice Preview
+        Set up Slice Simulator
       </Button>
     </Flex>
   );

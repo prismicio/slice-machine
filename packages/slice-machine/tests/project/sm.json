@@ -8,6 +8,6 @@
   "chromaticAppId": "5f5b34f06f304800225c4e17",
   "framework": "next",
   "tracking": false,
-  "localSlicePreviewURL": "http://localhost:3001/_preview",
+  "localSliceSimulatorURL": "http://localhost:3001/_simulator",
   "_latest": "0.1.0"
 }

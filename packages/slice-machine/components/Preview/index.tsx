@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
   getFramework,
-  selectPreviewUrl,
+  selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 
@@ -23,10 +23,10 @@ export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 export default function Preview() {
   const { Model, variation } = useContext(SliceContext);
 
-  const { framework, version, previewUrl } = useSelector(
+  const { framework, version, simulatorUrl } = useSelector(
     (state: SliceMachineStoreType) => ({
       framework: getFramework(state),
-      previewUrl: selectPreviewUrl(state),
+      simulatorUrl: selectSimulatorUrl(state),
       version: getCurrentVersion(state),
     })
   );
@@ -61,7 +61,7 @@ export default function Preview() {
       />
       <IframeRenderer
         size={state.size}
-        previewUrl={previewUrl}
+        simulatorUrl={simulatorUrl}
         sliceView={sliceView}
       />
     </Flex>

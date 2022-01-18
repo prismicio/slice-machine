@@ -23,16 +23,16 @@ export const getEnvironment = (
   store: SliceMachineStoreType
 ): FrontEndEnvironment => store.environment.env;
 
-export const selectPreviewUrl = (
+export const selectSimulatorUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env.manifest.localSlicePreviewURL;
+  return store.environment.env.manifest.localSliceSimulatorURL;
 };
 
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
   store.environment.env.framework;
 
-export const selectIsPreviewAvailableForFramework = (
+export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
   return previewIsSupported(store.environment.env.framework);

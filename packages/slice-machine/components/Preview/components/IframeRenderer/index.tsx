@@ -2,25 +2,25 @@ import { RefCallback, useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, Flex } from "theme-ui";
 
-import { RendererClient } from "@prismicio/slice-canvas-com";
+import { SimulatorClient } from "@prismicio/slice-simulator-com";
 import { Size, iframeSizes } from "../ScreenSizes";
 import { SliceView } from "../..";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SetupError } from "../SetupError";
 
-function useRendererClient(): readonly [
-  RendererClient | undefined,
+function useSimulatorClient(): readonly [
+  SimulatorClient | undefined,
   RefCallback<HTMLIFrameElement>
 ] {
-  const [client, setClient] = useState<RendererClient | undefined>();
-  const clientRef = useRef<RendererClient>();
+  const [client, setClient] = useState<SimulatorClient | undefined>();
+  const clientRef = useRef<SimulatorClient>();
   const observerRef = useRef<MutationObserver>();
   const iframeRef = useCallback(async (element: HTMLIFrameElement | null) => {
     clientRef.current?.disconnect();
     observerRef.current?.disconnect();
     setClient(undefined);
     if (element != null) {
-      clientRef.current = new RendererClient(element);
+      clientRef.current = new SimulatorClient(element);
       try {
         await clientRef.current.connect();
         setClient(clientRef.current);
@@ -49,23 +49,23 @@ function useRendererClient(): readonly [
 
 type IframeRendererProps = {
   size: Size;
-  previewUrl: string | undefined;
+  simulatorUrl: string | undefined;
   sliceView: SliceView;
   dryRun?: boolean;
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
   size,
-  previewUrl,
+  simulatorUrl,
   sliceView,
   dryRun = false,
 }) => {
-  const [client, ref] = useRendererClient();
-  const { connectToPreviewSuccess, connectToPreviewFailure } =
+  const [client, ref] = useSimulatorClient();
+  const { connectToSimulatorSuccess, connectToSimulatorFailure } =
     useSliceMachineActions();
   useEffect((): void => {
-    if (!previewUrl) {
-      connectToPreviewFailure();
+    if (!simulatorUrl) {
+      connectToSimulatorFailure();
       return;
     }
     if (client === undefined) {
@@ -73,8 +73,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     if (!client.connected) {
-      connectToPreviewFailure();
-      console.warn("Trying to use a disconnected renderer client.");
+      connectToSimulatorFailure();
+      console.warn("Trying to use a disconnected simulator client.");
       return;
     }
 
@@ -83,10 +83,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     };
     updateSliceZone()
       .then(() => {
-        connectToPreviewSuccess();
+        connectToSimulatorSuccess();
       })
       .catch(() => {
-        connectToPreviewFailure();
+        connectToSimulatorFailure();
       });
   }, [client, size, sliceView]);
 
@@ -115,10 +115,10 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
             : {}),
         }}
       >
-        {previewUrl ? (
+        {simulatorUrl ? (
           <iframe
             ref={ref}
-            src={previewUrl}
+            src={simulatorUrl}
             style={{
               border: "none",
               height: "100%",

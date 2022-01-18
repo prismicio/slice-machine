@@ -40,7 +40,7 @@ export default async function handler({
 
   const maybeErr = validateEnv(
     env.framework,
-    env.manifest.localSlicePreviewURL
+    env.manifest.localSliceSimulatorURL
   );
   if (maybeErr) {
     return maybeErr;
