@@ -1,6 +1,6 @@
 import { createStorybookId } from "@lib/utils/str";
 
-function camelCaseToDash(v: any): string {
+export function camelCaseToDash(v: any): string {
   let ret = "",
     prevLowercase = false,
     prevIsNumber = false,
