@@ -10,8 +10,8 @@ enum EventType {
   Review = "SliceMachine Review",
   OnboardingStart = "SliceMachine Onboarding Start",
   OnboardingSkip = "SliceMachine Onboarding Skip",
-  SlicePreviewSetup = "SliceMachine Slice Preview Setup",
-  SlicePreviewOpen = "SliceMachine Slice Preview Open",
+  SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
+  SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
 }
 
 export enum ContinueOnboardingType {
@@ -127,21 +127,24 @@ export class SMTracker {
     return this.#trackEvent(EventType.Review, { rating, comment, framework });
   }
 
-  async trackSlicePreviewSetup(
+  async trackSliceSimulatorSetup(
     framework: Frameworks,
     version: string
   ): Promise<void> {
-    return this.#trackEvent(EventType.SlicePreviewSetup, {
+    return this.#trackEvent(EventType.SliceSimulatorSetup, {
       version,
       framework,
     });
   }
 
-  async trackOpenSlicePreview(
+  async trackOpenSliceSimulator(
     framework: Frameworks,
     version: string
   ): Promise<void> {
-    return this.#trackEvent(EventType.SlicePreviewOpen, { version, framework });
+    return this.#trackEvent(EventType.SliceSimulatorOpen, {
+      version,
+      framework,
+    });
   }
 
   async trackOnboardingStart(): Promise<void> {

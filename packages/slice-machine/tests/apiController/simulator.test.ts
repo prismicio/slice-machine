@@ -46,7 +46,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_preview",
+          localSliceSimulatorURL: "http://localhost:3000/_simulator",
         },
       },
     };
@@ -70,7 +70,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_preview",
+          localSliceSimulatorURL: "http://localhost:3000/_simulator",
         },
       },
     };
@@ -79,7 +79,7 @@ describe("simulator controller", () => {
       exists: true,
       content: {
         dependencies: {
-          "@prismicio/slice-canvas-renderer-react": "^2.6.12",
+          "@prismicio/slice-simulator-react": "^2.6.12",
           "prismic-reactjs": "^0.3.0",
           "next-slicezone": "^0.0.28",
         },
@@ -98,7 +98,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.nuxt,
         manifest: {
-          localSlicePreviewURL: "http://localhost:3001/_preview",
+          localSliceSimulatorURL: "http://localhost:3001/_simulator",
         },
       },
     };
@@ -107,7 +107,7 @@ describe("simulator controller", () => {
       exists: true,
       content: {
         dependencies: {
-          "@prismicio/slice-canvas-renderer-vue": "^2.6.12",
+          "@prismicio/slice-simulator-vue": "^2.6.12",
           "nuxt-sm": "^0.3.0",
           "vue-slicezone": "^0.0.28",
           "@nuxtjs/prismic": "^0.0.28",

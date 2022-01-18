@@ -294,7 +294,7 @@ function* trackOpenSetupDrawerSaga() {
   const framework: Frameworks = yield select(getFramework);
   const version: string = yield select(getCurrentVersion);
 
-  Tracker.get().trackSlicePreviewSetup(framework, version);
+  Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
 // Saga watchers

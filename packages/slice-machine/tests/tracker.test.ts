@@ -90,10 +90,10 @@ describe("SMTracker", () => {
   test("should send a slice preview setup event", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey, dumpRepoKey);
-    await smTracker.trackSlicePreviewSetup(Frameworks.next, "0.2.0");
+    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
-      "SliceMachine Slice Preview Setup",
+      "SliceMachine Slice Simulator Setup",
       {
         framework: "next",
         version: "0.2.0",
@@ -104,10 +104,10 @@ describe("SMTracker", () => {
   test("should send a open slice preview event", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey, dumpRepoKey);
-    await smTracker.trackOpenSlicePreview(Frameworks.next, "0.2.0");
+    await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
-      "SliceMachine Slice Preview Open",
+      "SliceMachine Slice Simulator Open",
       {
         framework: "next",
         version: "0.2.0",
@@ -208,8 +208,8 @@ describe("SMTracker", () => {
       ContinueOnboardingType.OnboardingContinueScreen3
     );
     await smTracker.trackOnboardingStart();
-    await smTracker.trackOpenSlicePreview(Frameworks.next, "0.2.0");
-    await smTracker.trackSlicePreviewSetup(Frameworks.next, "0.2.0");
+    await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
+    await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
     await smTracker.groupLibraries([], "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledTimes(0);
