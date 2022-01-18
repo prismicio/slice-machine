@@ -5,7 +5,6 @@ import * as Communication from "./communication";
 import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
 import { Repositories } from "../models/Repositories";
 export * as Communication from "./communication";
-
 export interface Core {
   cwd: string;
   base: string;

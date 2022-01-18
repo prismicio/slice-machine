@@ -122,15 +122,13 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 
       {storybookUrl && (
         <Link
-          href={
-            createStorybookUrl({
-              storybook: storybookUrl,
-              libraryName: Model.from,
-              sliceName: Model.infos.sliceName,
-              variationId: variation.id,
-            })
-          }
-         >
+          href={createStorybookUrl({
+            storybook: storybookUrl,
+            libraryName: Model.from,
+            sliceName: Model.infos.sliceName,
+            variationId: variation.id,
+          })}
+        >
           <Button variant={"secondary"} sx={{ width: "100%", mt: 3 }}>
             Open Storybook
           </Button>
