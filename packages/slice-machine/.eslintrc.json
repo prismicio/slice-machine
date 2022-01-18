@@ -27,12 +27,11 @@
     "@typescript-eslint/require-await": "warn",
     "@typescript-eslint/ban-types": "warn",
     "@typescript-eslint/no-floating-promises": "warn",
-    "@typescript-eslint/restrict-plus-operands": "warn",
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/unbound-method": "warn",
     "@typescript-eslint/no-empty-function": "warn",
-    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
     "@typescript-eslint/await-thenable": "warn",
-    "@typescript-eslint/no-misused-promises": "warn"
+    "@typescript-eslint/no-misused-promises": "warn",
+    "@typescript-eslint/no-unsafe-argument": "warn"
   }
 }

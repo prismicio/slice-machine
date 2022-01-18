@@ -32,10 +32,7 @@ const Files = {
   readString(pathToFile: string) {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
-  readEntity<T extends any>(
-    pathToFile: string,
-    validate: (payload: any) => Error | T
-  ) {
+  readEntity<T>(pathToFile: string, validate: (payload: any) => Error | T) {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
   safeReadEntity<T>(pathToFile: string, validate: (payload: any) => null | T) {
