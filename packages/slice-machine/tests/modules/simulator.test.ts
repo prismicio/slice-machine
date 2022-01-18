@@ -1,28 +1,28 @@
 import {
   initialState,
-  previewReducer,
+  simulatorReducer,
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
   toggleSetupDrawerStepCreator,
   connectToSimulatorIframeCreator,
   checkSimulatorSetupCreator,
-} from "@src/modules/preview";
-import { SimulatorStoreType, SetupStatus } from "@src/modules/preview/types";
+} from "@src/modules/simulator";
+import { SimulatorStoreType, SetupStatus } from "@src/modules/simulator/types";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
 describe("[Simulator module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
-      expect(previewReducer(dummySimulatorState, {})).toEqual(
+      expect(simulatorReducer(dummySimulatorState, {})).toEqual(
         dummySimulatorState
       );
     });
 
     it("should return the initial state if no matching action", () => {
-      expect(previewReducer(dummySimulatorState, { type: "NO.MATCH" })).toEqual(
-        dummySimulatorState
-      );
+      expect(
+        simulatorReducer(dummySimulatorState, { type: "NO.MATCH" })
+      ).toEqual(dummySimulatorState);
     });
 
     it("should update the state when given checkSimulatorSetupCreator.success action", () => {
@@ -45,7 +45,7 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update the state when given connectToSimulatorIframeCreator.success action", () => {
@@ -61,7 +61,7 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update the state when given connectToSimulatorIframeCreator.failure action", () => {
@@ -77,7 +77,7 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update the state when given openSetupDrawerCreator action", () => {
@@ -93,7 +93,7 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update the state when given openSetupDrawerCreator action with a step to open", () => {
@@ -110,7 +110,7 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
     });
 
     it("should update the state to false when given closeSetupSimulatorDrawerCreator action", () => {
@@ -124,7 +124,9 @@ describe("[Simulator module]", () => {
 
       const action = closeSetupDrawerCreator();
 
-      expect(previewReducer(initialState, action)).toEqual(dummySimulatorState);
+      expect(simulatorReducer(initialState, action)).toEqual(
+        dummySimulatorState
+      );
     });
 
     it("should update the state to false when given toggleSetupDrawerStepCreator action", () => {
@@ -140,9 +142,9 @@ describe("[Simulator module]", () => {
         },
       };
 
-      expect(previewReducer(initialState, action)).toEqual(expectedState);
+      expect(simulatorReducer(initialState, action)).toEqual(expectedState);
       // We check that if we call again the toggle action we go back to the initial state
-      expect(previewReducer(expectedState, action)).toEqual(initialState);
+      expect(simulatorReducer(expectedState, action)).toEqual(initialState);
     });
   });
 });

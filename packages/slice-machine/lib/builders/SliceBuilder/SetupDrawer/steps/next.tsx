@@ -6,7 +6,7 @@ import {
   SetupStepperConfiguration,
 } from "./common";
 import { Text } from "theme-ui";
-import { SetupStatus } from "@src/modules/preview/types";
+import { SetupStatus } from "@src/modules/simulator/types";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";

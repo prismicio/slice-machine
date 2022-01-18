@@ -125,7 +125,7 @@ export const selectOpenedStep = (state: SliceMachineStoreType): number =>
   state.simulator.setupDrawer.openedStep;
 
 // Reducer
-export const previewReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
+export const simulatorReducer: Reducer<SimulatorStoreType, SimulatorActions> = (
   state = initialState,
   action
 ) => {
@@ -307,6 +307,6 @@ function* watchCheckSetup() {
 }
 
 // Saga Exports
-export function* watchPreviewSagas() {
+export function* watchSimulatorSagas() {
   yield fork(watchCheckSetup);
 }

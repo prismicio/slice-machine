@@ -11,7 +11,7 @@ import {
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
 import StorybookSection from "./components/StorybookSection";
-import { selectIsSetupDrawerOpen } from "@src/modules/preview";
+import { selectIsSetupDrawerOpen } from "@src/modules/simulator";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import Stepper from "./Stepper";

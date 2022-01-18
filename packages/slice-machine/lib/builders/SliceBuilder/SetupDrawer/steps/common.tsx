@@ -9,7 +9,7 @@ import WarningSection from "../components/WarningSection";
 
 import Button from "@components/Button";
 
-import { SetupStatus } from "@src/modules/preview/types";
+import { SetupStatus } from "@src/modules/simulator/types";
 
 export interface SetupStepperConfiguration {
   steps: React.FunctionComponent<DefaultStepCompProps>[];

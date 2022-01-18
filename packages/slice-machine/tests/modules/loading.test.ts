@@ -4,7 +4,7 @@ import {
   stopLoadingActionCreator,
 } from "@src/modules/loading";
 import { LoadingKeysEnum, LoadingStoreType } from "@src/modules/loading/types";
-import { initialState } from "@src/modules/preview";
+import { initialState } from "@src/modules/loading";
 
 const dummyLoadingState: LoadingStoreType = initialState;
 

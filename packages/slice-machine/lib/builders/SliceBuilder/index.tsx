@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Preview/components/ScreenSizes";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 
 type SliceBuilderState = {
   imageLoading: boolean;

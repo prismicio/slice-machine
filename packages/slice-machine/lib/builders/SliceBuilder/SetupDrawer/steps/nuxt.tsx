@@ -12,7 +12,7 @@ import CodeBlock from "../components/CodeBlockWithCopy";
 import { Flex, Text } from "theme-ui";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
 import React from "react";
-import { SetupStatus } from "@src/modules/preview/types";
+import { SetupStatus } from "@src/modules/simulator/types";
 
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
 modules: [["@nuxtjs/prismic", {

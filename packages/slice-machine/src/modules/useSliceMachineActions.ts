@@ -18,7 +18,7 @@ import {
   toggleSetupDrawerStepCreator,
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
-} from "@src/modules/preview";
+} from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {

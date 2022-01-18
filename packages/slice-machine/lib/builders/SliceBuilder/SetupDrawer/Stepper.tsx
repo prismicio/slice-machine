@@ -9,7 +9,7 @@ import {
   selectSetupStatus,
   selectUserHasAtLeastOneStepMissing,
   selectUserHasConfiguredAllSteps,
-} from "@src/modules/preview";
+} from "@src/modules/simulator";
 
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
