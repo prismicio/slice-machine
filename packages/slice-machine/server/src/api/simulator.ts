@@ -39,12 +39,12 @@ export default async function handler(
   const requiredDeps =
     req.env.framework === Frameworks.next
       ? [
-          Utils.CONSTS.SLICE_CANVAS_REACT,
+          Utils.CONSTS.SLICE_SIMULATOR_REACT,
           Utils.CONSTS.NEXT_SLICEZONE,
           Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME,
         ]
       : [
-          Utils.CONSTS.SLICE_CANVAS_VUE,
+          Utils.CONSTS.SLICE_SIMULATOR_VUE,
           Utils.CONSTS.NUXT_SM,
           Utils.CONSTS.VUE_SLICEZONE,
           Utils.CONSTS.NUXT_PRISMIC,

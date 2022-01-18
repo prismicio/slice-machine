@@ -1,3 +1,3 @@
-import Preview from "@components/Preview";
+import Simulator from "@components/Simulator";
 
-export default Preview;
+export default Simulator;

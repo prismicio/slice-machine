@@ -16,9 +16,9 @@ export function variation({
   options: object;
   all: [string, string, object];
 } {
-  const href = `/[lib]/[sliceName]/[variation]${isPreview ? "/preview" : ""}`;
+  const href = `/[lib]/[sliceName]/[variation]${isPreview ? "/simulator" : ""}`;
   const as = `/${lib}/${sliceName}/${variationId}${
-    isPreview ? "/preview" : ""
+    isPreview ? "/simulator" : ""
   }`;
 
   return {

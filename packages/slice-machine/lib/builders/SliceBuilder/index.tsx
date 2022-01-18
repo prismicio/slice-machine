@@ -14,11 +14,11 @@ import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import SetupDrawer from "./SetupDrawer";
-import IframeRenderer from "@components/Preview/components/IframeRenderer";
+import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
-import { Size } from "@components/Preview/components/ScreenSizes";
+import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 
 type SliceBuilderState = {
