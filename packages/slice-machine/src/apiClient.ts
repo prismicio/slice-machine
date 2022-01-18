@@ -1,11 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import {
-  OnboardingContinueEvent,
-  OnboardingContinueWithVideoEvent,
-  OnboardingSkipEvent,
-  OnboardingStartEvent,
-  TrackingResponse,
-} from "@models/common/TrackingEvent";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { PreviewCheckResponse } from "@models/common/Preview";
 
@@ -26,17 +19,6 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
   axios
     .post<CheckAuthStatusResponse>("/api/auth/status", {}, defaultAxiosConfig)
     .then((r) => r.data);
-
-/** Tracking Routes **/
-
-export const sendTrackingOnboarding = (
-  onboardingEvent:
-    | OnboardingStartEvent
-    | OnboardingSkipEvent
-    | OnboardingContinueEvent
-    | OnboardingContinueWithVideoEvent
-): Promise<AxiosResponse<TrackingResponse>> =>
-  axios.post(`/api/tracking/onboarding`, onboardingEvent, defaultAxiosConfig);
 
 /** Preview Routes **/
 

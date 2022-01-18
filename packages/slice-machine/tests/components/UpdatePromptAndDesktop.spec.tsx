@@ -9,7 +9,6 @@ import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
 import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Models } from "@slicemachine/core";
 import UpdateModal from "../../components/UpdateVersionModal";
-import { ServerTracker } from "../../server/src/api/services/tracker";
 import Environment from "@lib/models/common/Environment";
 
 jest.mock("next/router", () => ({
@@ -64,9 +63,6 @@ const FAKE_ENVIRONMENT = {
     framework: Models.Frameworks.next,
     baseUrl: "http://localhost:9999",
     client: new FakeClient(),
-    tracker: ServerTracker.build("fake tracker", "sm-env-example", {
-      userId: "fakeId",
-    }),
   } as Environment,
 };
 

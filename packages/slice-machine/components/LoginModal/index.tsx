@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React, { useContext } from "react";
+import React from "react";
 import {
   Button,
   Card,
@@ -24,7 +24,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { TrackerContext } from "@src/utils/tracker";
+import Tracker from "@src/tracker";
 
 Modal.setAppElement("#__next");
 
@@ -34,7 +34,6 @@ interface ValidAuthStatus extends CheckAuthStatusResponse {
 }
 
 const LoginModal: React.FunctionComponent = () => {
-  const tracker = useContext(TrackerContext);
   const { env, isOpen, isLoginLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
       isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
@@ -70,7 +69,7 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      tracker?.resolveUser(userId);
+      Tracker.get().identifyUser(userId);
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();

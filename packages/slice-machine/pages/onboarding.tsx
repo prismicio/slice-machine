@@ -1,28 +1,22 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Grid,
   Box,
   Button,
   Flex,
-  Paragraph,
+  Grid,
   Heading,
-  Image,
   HeadingProps,
-  ParagraphProps,
   IconButton,
+  Image,
+  Paragraph,
+  ParagraphProps,
 } from "theme-ui";
-import {
-  TrackingEventId,
-  OnboardingSkipEvent,
-  OnboardingContinueEvent,
-  OnboardingContinueWithVideoEvent,
-} from "lib/models/common/TrackingEvent";
 import router from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
 
 import { BiChevronLeft } from "react-icons/bi";
-import { sendTrackingOnboarding } from "src/apiClient";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import Tracker, { ContinueOnboardingType } from "@src/tracker";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -66,8 +60,6 @@ const SubHeader = (props: ParagraphProps) => (
   />
 );
 
-type WithOnEnded = { onEnded: () => void };
-
 const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
   <>
     <Image sx={{ display: "block", ...imageSx }} src="/SM-LOGO.svg" />
@@ -78,32 +70,32 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
     </Button>
   </>
 );
-const BuildSlicesSlide = ({ onEnded }: WithOnEnded) => (
+const BuildSlicesSlide = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video publicId="SMONBOARDING/BUILD_SLICE" />
   </>
 );
 
-const CreatePageTypesSlide = ({ onEnded }: WithOnEnded) => (
+const CreatePageTypesSlide = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
   </>
 );
 
-const PushPagesSlide = ({ onEnded }: WithOnEnded) => (
+const PushPagesSlide = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video onEnded={onEnded} publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
   </>
 );
 
@@ -154,30 +146,20 @@ const StepIndicator = ({
   );
 };
 
-function idFromStep(
-  step: number
-):
-  | TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO
-  | TrackingEventId.ONBOARDING_FIRST
-  | TrackingEventId.ONBOARDING_SECOND
-  | TrackingEventId.ONBOARDING_THIRD {
+function idFromStep(step: number): ContinueOnboardingType {
   switch (step) {
     case 0:
-      return TrackingEventId.ONBOARDING_CONTINUE_SCREEN_INTRO;
+      return ContinueOnboardingType.OnboardingContinueIntro;
     case 1:
-      return TrackingEventId.ONBOARDING_FIRST;
+      return ContinueOnboardingType.OnboardingContinueScreen1;
     case 2:
-      return TrackingEventId.ONBOARDING_SECOND;
+      return ContinueOnboardingType.OnboardingContinueScreen2;
     default:
-      return TrackingEventId.ONBOARDING_THIRD;
+      return ContinueOnboardingType.OnboardingContinueScreen3;
   }
 }
 
-function handleTracking(props: {
-  step: number;
-  maxSteps: number;
-  videoCompleted: boolean;
-}): void {
+function handleTracking(props: { step: number; maxSteps: number }): void {
   const state = useRef(props);
 
   useEffect(() => {
@@ -187,27 +169,21 @@ function handleTracking(props: {
 
   useEffect(() => {
     // on mount
-    sendTrackingOnboarding({
-      id: TrackingEventId.ONBOARDING_START,
-    }).catch(console.error);
+    Tracker.get().trackOnboardingStart();
 
+    // on unmount
     return () => {
-      // on unmount
-      const { maxSteps, step, videoCompleted } = state.current;
+      const { maxSteps, step } = state.current;
 
-      const data: OnboardingSkipEvent | OnboardingContinueWithVideoEvent =
-        step < maxSteps - 1
-          ? {
-              id: TrackingEventId.ONBOARDING_SKIP,
-              screenSkipped: step,
-              ...(step > 0 ? { onboardingVideoCompleted: videoCompleted } : {}),
-            }
-          : {
-              id: TrackingEventId.ONBOARDING_THIRD,
-              onboardingVideoCompleted: videoCompleted,
-            };
+      const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
+      if (hasTheUserSkippedTheOnboarding) {
+        Tracker.get().trackOnboardingSkip(step);
+        return;
+      }
 
-      sendTrackingOnboarding(data).catch(console.error);
+      Tracker.get().trackOnboardingContinue(
+        ContinueOnboardingType.OnboardingContinueScreen3
+      );
     };
   }, []);
 }
@@ -215,26 +191,20 @@ function handleTracking(props: {
 export default function Onboarding(): JSX.Element {
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide onEnded={handleOnVideoEnd} />,
-    <CreatePageTypesSlide onEnded={handleOnVideoEnd} />,
-    <PushPagesSlide onEnded={handleOnVideoEnd} />,
+    <BuildSlicesSlide />,
+    <CreatePageTypesSlide />,
+    <PushPagesSlide />,
   ];
 
   const { finishOnboarding } = useSliceMachineActions();
 
   const [state, setState] = useState({
     step: 0,
-    videoCompleted: false,
   });
-
-  function handleOnVideoEnd() {
-    return setState({ ...state, videoCompleted: true });
-  }
 
   handleTracking({
     ...state,
     maxSteps: STEPS.length,
-    videoCompleted: state.videoCompleted,
   });
 
   const finish = () => {
@@ -244,21 +214,13 @@ export default function Onboarding(): JSX.Element {
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
-    const id = idFromStep(state.step);
-    const data: OnboardingContinueEvent | OnboardingContinueWithVideoEvent = {
-      id,
-      ...(state.step > 0
-        ? { onboardingVideoCompleted: state.videoCompleted }
-        : {}),
-    };
+    Tracker.get().trackOnboardingContinue(idFromStep(state.step));
 
-    sendTrackingOnboarding(data).catch(console.error);
-
-    return setState({ ...state, step: state.step + 1, videoCompleted: false });
+    return setState({ ...state, step: state.step + 1 });
   }
 
   function prevSlide() {
-    return setState({ ...state, step: state.step - 1, videoCompleted: false });
+    return setState({ ...state, step: state.step - 1 });
   }
 
   return (

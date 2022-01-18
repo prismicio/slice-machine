@@ -3,7 +3,6 @@ import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
 import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
-import { OnboardingTrackingEvent } from "@lib/models/common/TrackingEvent";
 
 import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
 
@@ -27,11 +26,6 @@ const AuthApi = {
 const UserService = {
   STAGE: "https://user.wroom.io/",
   PROD: "https://user.internal-prismic.io/",
-};
-
-const TrackingApi = {
-  STAGE: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
-  PROD: "https://tracking.prismic.io",
 };
 
 const AclProviderApi = {
@@ -106,12 +100,6 @@ export default class DefaultClient {
     method?: string
   ) => Promise<Response>;
   aclFetcher: (
-    prefix: string,
-    body?: Body,
-    action?: string,
-    method?: string
-  ) => Promise<Response>;
-  trackingFetcher: (
     prefix: string,
     body?: Body,
     action?: string,
@@ -194,13 +182,6 @@ export default class DefaultClient {
       repo,
       auth
     );
-    this.trackingFetcher = initFetcher(
-      base,
-      TrackingApi,
-      devConfig.aclProviderApi,
-      repo,
-      auth
-    );
   }
 
   isFake(): boolean {
@@ -229,10 +210,6 @@ export default class DefaultClient {
 
   async updateSlice(body: Body): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
-  }
-
-  async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {
-    return this.trackingFetcher("", onboardingEvent, "", "post");
   }
 
   images = {
