@@ -27,7 +27,7 @@ function readString(pathToFile: string): string {
   return fs.readFileSync(pathToFile, { encoding: _format });
 }
 
-function readEntity<T extends unknown>(
+function readEntity<T>(
   pathToFile: string,
   validate: (payload: unknown) => Error | T
 ): Error | T {

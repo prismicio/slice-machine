@@ -85,7 +85,7 @@ function splitExtension(str: string): {
   };
 }
 
-function fromJsonFile<T extends unknown>(
+function fromJsonFile<T>(
   pathToFile: string,
   validate: (payload: unknown) => Error | T
 ): T | Error | null {
