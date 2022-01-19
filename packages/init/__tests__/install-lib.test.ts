@@ -1,4 +1,3 @@
-/* Pretty important feature not to have a test */
 import {
   describe,
   expect,
