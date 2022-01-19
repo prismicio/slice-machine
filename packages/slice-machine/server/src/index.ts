@@ -68,8 +68,8 @@ app.use("/warnings", (_, res) => {
   res.sendFile(path.join(out, "warnings.html"));
 });
 
-app.use("/:lib/:sliceName/:variation/preview", (_, res) => {
-  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/preview.html"));
+app.use("/:lib/:sliceName/:variation/simulator", (_, res) => {
+  res.sendFile(path.join(out, "[lib]/[sliceName]/[variation]/simulator.html"));
 });
 
 app.use("/:lib/:sliceName/:variation", (_, res) => {
