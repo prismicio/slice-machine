@@ -15,6 +15,7 @@ enum Apperance {
 }
 
 export const handleRemoteResponse =
+  // eslint-disable-next-line @typescript-eslint/ban-types
   (addToast: Function) => (payload: ToastPayload) => {
     if (payload.done) {
       addToast(payload.message, {

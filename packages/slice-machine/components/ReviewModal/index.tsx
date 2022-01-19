@@ -31,6 +31,7 @@ import Tracker from "@src/tracker";
 Modal.setAppElement("#__next");
 
 type ReviewModalProps = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   cardProps?: {};
 };
 
@@ -101,6 +102,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
 
   const onSendAReview = (rating: number, comment: string): void => {
     startLoadingReview();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Tracker.get().trackReview(env.framework, rating, comment);
     sendAReview();
     stopLoadingReview();
@@ -166,6 +168,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   borderRadius: "8px 8px 0px 0px",
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                   borderBottom: (t) => `1px solid ${t.colors?.borders}`,
                 }}
               >

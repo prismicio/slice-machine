@@ -11,6 +11,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
   defaultValue?: Models.VariationAsArray;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onNewVariation?: Function;
   variations: ReadonlyArray<Models.VariationAsArray>;
   onChange: (selected: Models.VariationAsArray) => void;

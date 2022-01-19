@@ -71,6 +71,7 @@ const SliceBuilder: React.FunctionComponent = () => {
   // activate/deactivate Success message
   useEffect(() => {
     if (data.done && isMounted) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       handleRemoteResponse(addToast)(data);
     }
@@ -89,6 +90,7 @@ const SliceBuilder: React.FunctionComponent = () => {
 
   const onTakingCustomScreenshot = () => {
     checkPreviewSetup(true, () =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       store
         .variation(variation.id)
         .generateScreenShot(Model.from, Model.infos.sliceName, setData)
@@ -101,8 +103,10 @@ const SliceBuilder: React.FunctionComponent = () => {
         Model={Model}
         store={store}
         variation={variation}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         onPush={() => store.push(Model, onPush)}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         onSave={() => store.save(Model, setData)}
         isLoading={data.loading}
@@ -115,6 +119,7 @@ const SliceBuilder: React.FunctionComponent = () => {
             variation={variation}
             onScreenshot={onTakingCustomScreenshot}
             onHandleFile={(file) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
               store
                 .variation(variation.id)
                 .generateCustomScreenShot(

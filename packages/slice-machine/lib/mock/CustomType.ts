@@ -27,9 +27,11 @@ const groupHandler = (
   for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
     items.push(fieldsHandler(entries, mockConfig));
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return items;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const sliceZoneHandler = () => {};
 
 const createEmptyMock = (type: string) => ({
@@ -39,6 +41,7 @@ const createEmptyMock = (type: string) => ({
   data: {},
 });
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function MockCustomType(
   model: CustomType<ObjectTabs>,
   mockConfig: CustomTypeMockConfig
@@ -46,6 +49,7 @@ export default async function MockCustomType(
   const customTypeMock: Mock = createEmptyMock(model.id);
   const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
     const maybeWidgetUid = Object.entries(curr[1]).find(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-member-access
       ([_, e]) => e.type === "UID"
     );
     if (!acc && maybeWidgetUid) {
@@ -61,20 +65,24 @@ export default async function MockCustomType(
   for (const [, tab] of Object.entries(model.tabs)) {
     const { fields, groups, sliceZone } = Tab.organiseFields(tab);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const mockedFields = fieldsHandler(
       fields.map((e) => [e.key, e.value]),
       mockConfig
     );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     customTypeMock.data = {
       ...customTypeMock.data,
       ...mockedFields,
     };
     groups.forEach((group) => {
       const { key, value } = group;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
       const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(
         mockConfig,
         key
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const groupFields = groupHandler(value, groupMockConfig);
       customTypeMock.data[key] = groupFields;
     });

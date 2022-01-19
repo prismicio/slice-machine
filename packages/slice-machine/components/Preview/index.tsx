@@ -32,6 +32,7 @@ export default function Preview() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Tracker.get().trackOpenSlicePreview(framework, version);
   }, []);
 

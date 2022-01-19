@@ -14,23 +14,28 @@ import formData from "express-form-data";
 import proxy from "express-http-proxy";
 
 declare let global: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetch: any;
   appRoot: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 global.fetch = require("node-fetch");
 global.appRoot = path.join(__dirname, "../../../");
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const pkg = require(global.appRoot + "package.json");
 const LIB_PATH = path.join(global.appRoot, "build", "lib");
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
 Object.entries(pkg._moduleAliases).forEach(([key]) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore As the 2.1 typing is not available yet and solve this problem
   moduleAlias.addAlias(key, (fromPath: string) => {
     return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
   });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const api = require("./api");
 
 const app = express();
@@ -46,6 +51,7 @@ const formDataOptions = {
 
 app.use(formData.parse(formDataOptions));
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 app.use("/api", api);
 
 // For local env (SM), all the requests are forwarded to the next dev server

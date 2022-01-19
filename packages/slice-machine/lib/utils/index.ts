@@ -10,6 +10,7 @@ import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { [prop]: __removed, ...rest } = obj;
   return rest;
 };
@@ -28,9 +29,11 @@ export const ensureDnDDestination = (result: {
 };
 
 export const ensureWidgetTypeExistence = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   Widgets: { [x: string]: Widget<any, any> },
   type: string
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   const widget: Widget<any, any> = Widgets[type];
   if (!widget) {
     console.log(`Could not find widget with type name "${type}".`);
@@ -50,6 +53,7 @@ export const compareVariations = (
 };
 export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
   TYPE_NAME,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields: DefaultFields,
   schema: yup.object().shape({
     type: yup.string().test({
@@ -58,25 +62,30 @@ export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
         return value === TYPE_NAME;
       },
     }),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     config: createValidationSchema(removeProp(DefaultFields, "id")),
   }),
   create: () => ({
     type: TYPE_NAME,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     config: createInitialValues(removeProp(DefaultFields, "id")),
   }),
 });
 
 export const createDefaultHandleMockContentFunction = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   widget: Widget<any, any>,
   TYPE_NAME: string,
   checkFn: ({}, {}) => boolean
 ) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/ban-types
   return function handleMockContent(mockContent: {}, config: {}) {
     if (!checkFn(mockContent, config)) {
       console.error(
         `Type check for type "${TYPE_NAME}" failed. Using default mock configuration`
       );
       if (widget.handleMockConfig) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return widget.handleMockConfig(null, config);
       }
     }

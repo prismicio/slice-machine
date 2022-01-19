@@ -118,6 +118,7 @@ function handleManifest(cwd: string): ManifestInfo {
 
   try {
     const f = fs.readFileSync(pathToSm, "utf-8");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const json = JSON.parse(f);
 
     return pipe(

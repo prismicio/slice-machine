@@ -28,6 +28,7 @@ type SideBarProps = {
   variation: Models.VariationAsArray;
   imageLoading: boolean;
   onScreenshot: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onHandleFile: (file: any) => void;
 };
 

@@ -45,7 +45,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   const _getFieldMockConfig =
     (widgetArea: Models.WidgetsArea) =>
     ({ apiId }: { apiId: string }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return SliceMockConfig.getFieldMockConfig(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
         Model.mockConfig,
         variation.id,
         widgetArea,
@@ -55,6 +57,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   const _onSave =
     (widgetArea: Models.WidgetsArea) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ({ apiId: previousKey, newKey, value, mockValue }: any) => {
       if (mockValue) {
         store
@@ -79,7 +82,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   const _onSaveNewField =
     (widgetArea: Models.WidgetsArea) =>
     ({ id, widgetTypeName }: { id: string; widgetTypeName: string }) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const widget = Widgets[widgetTypeName];
       if (!widget) {
         console.log(
@@ -88,6 +93,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       }
       store
         .variation(variation.id)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         .addWidget(widgetArea, id, widget.create(id));
     };
 
@@ -111,6 +117,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         Model={Model}
         title="Non-Repeatable zone"
         dataTip={dataTipText}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         fields={variation.primary}
         EditModal={EditModal}
@@ -122,9 +129,11 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onDragEnd={_onDragEnd(WidgetsArea.Primary)}
         poolOfFieldsToCheck={variation.primary || []}
         renderHintBase={({ item }) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           `slice.primary${transformKeyAccessor(item.key)}`
         }
         renderFieldAccessor={(key) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
       />
@@ -135,6 +144,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         title="Repeatable zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         fields={variation.items}
         EditModal={EditModal}
@@ -144,8 +154,10 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
         onDragEnd={_onDragEnd(WidgetsArea.Items)}
         poolOfFieldsToCheck={variation.items || []}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
         renderFieldAccessor={(key) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.items[i]${transformKeyAccessor(key)}`
         }
       />

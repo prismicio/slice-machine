@@ -29,6 +29,7 @@ const CustomTypeHeader = ({
     if (Model.isTouched) {
       return {
         onClick: () => {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           store.save(Model);
         },
         children: <span>Save to File System</span>,
@@ -43,6 +44,7 @@ const CustomTypeHeader = ({
         onClick: () => {
           if (!isLoading) {
             setIsLoading(true);
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             store.push(Model, (data: ToastPayload): void => {
               if (!data.done) {
                 return;

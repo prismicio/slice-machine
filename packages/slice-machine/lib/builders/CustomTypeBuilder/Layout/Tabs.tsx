@@ -61,9 +61,11 @@ const CtTabs = ({
   store,
   renderTab,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sx?: any;
   Model: CustomTypeState;
   store: CustomTypeStore;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   renderTab: Function;
 }) => {
   const { theme } = useThemeUI();
@@ -73,6 +75,7 @@ const CtTabs = ({
 
   return (
     <Box sx={{ bg: "backgroundClear" }}>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       <FlexWrapper sx={sx}>
         <Tabs
           selectedIndex={tabIndex}
@@ -159,6 +162,7 @@ const CtTabs = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
               return store.tab(state.key).update(id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
