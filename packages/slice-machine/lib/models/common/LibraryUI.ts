@@ -1,8 +1,4 @@
 import type Models from "@slicemachine/core/build/src/models";
-
-// @ts-ignore
-import { pascalize } from "../../utils/str";
-
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 
