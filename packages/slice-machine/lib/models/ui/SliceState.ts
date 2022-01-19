@@ -2,7 +2,9 @@ import type Models from "@slicemachine/core/build/src/models";
 import { ComponentUI, LibStatus, ScreenshotUI } from "../common/ComponentUI";
 
 interface SliceState extends ComponentUI {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMockConfig: any;
 
   remoteVariations: ReadonlyArray<Models.VariationAsArray>;
