@@ -3,14 +3,19 @@ import { createPortal } from "react-dom";
 
 // Thank you David! https://codepen.io/davidgilbertson/pen/xPVMqp
 function copyStyles(sourceDoc, targetDoc) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     if (styleSheet.cssRules) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       const newStyleEl = sourceDoc.createElement("style");
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       Array.from(styleSheet.cssRules).forEach((cssRule) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));
       });
-
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       targetDoc.head.appendChild(newStyleEl);
     }
   });
@@ -26,7 +31,9 @@ const WindowPortal = ({ children, onClose }) => {
   const _onClose = () => {
     if (win) {
       setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         win.close();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         onClose();
       }, 100); // quick-fix safari
     }
@@ -39,15 +46,18 @@ const WindowPortal = ({ children, onClose }) => {
   useEffect(() => {
     if (win) {
       copyStyles(document, win.document);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       win.document.body.appendChild(state.container);
       setState({ ...state, isAppended: true });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       win.addEventListener("beforeunload", _onClose);
       return () =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         (win && win.removeEventListener("beforeunload", _onClose)) ||
         _onClose();
     }
   }, [win]);
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   return state.isAppended ? createPortal(children, state.container) : null;
 };
 

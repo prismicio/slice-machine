@@ -24,12 +24,16 @@ const DefaultCard = ({
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           borderBottom: (t) => `1px solid ${t.colors?.borders}`,
           ...headerSx,
         }}
       >
         {HeaderContent}
-        {close ? <Close onClick={close} type="button" /> : null}
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          close ? <Close onClick={close} type="button" /> : null
+        }
       </Flex>
     )}
     Footer={

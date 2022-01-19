@@ -5,11 +5,13 @@ const ItemHeader = ({ text, sliceFieldName, theme, WidgetIcon }) => (
     <WidgetIcon
       size={28}
       style={{
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         color: theme.colors.primary,
         marginRight: "8px",
         borderRadius: "4px",
         padding: "4px",
         border: "2px solid",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         borderColor: theme.colors.primary,
       }}
     />

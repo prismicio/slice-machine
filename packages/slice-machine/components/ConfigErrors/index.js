@@ -14,6 +14,7 @@ const ConfigErrors = ({ errors }) => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
@@ -21,22 +22,43 @@ const ConfigErrors = ({ errors }) => (
       </Flex>
     )}
   >
-    {Object.entries(errors).map(([key, value]) => (
-      <Li Component={Box} key={key} sx={{ m: 0, p: 1 }}>
-        <Text>
-          - <b>{key}</b>
-        </Text>
-        <br />
-        <Text>{value.message}</Text>
-        <br />
-        {value.run ? (
-          <Text mt={1}>
-            Try running: <Text variant="pre">{value.run}</Text>
+    {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      Object.entries(errors).map(([key, value]) => (
+        <Li Component={Box} key={key} sx={{ m: 0, p: 1 }}>
+          <Text>
+            - <b>{key}</b>
           </Text>
-        ) : null}
-        {value.do ? <Text mt={1}>Todo: {value.do}</Text> : null}
-      </Li>
-    ))}
+          <br />
+          <Text>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              value.message
+            }
+          </Text>
+          <br />
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            value.run ? (
+              <Text mt={1}>
+                Try running:{" "}
+                <Text variant="pre">
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    value.run
+                  }
+                </Text>
+              </Text>
+            ) : null
+          }
+
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+            value.do ? <Text mt={1}>Todo: {value.do}</Text> : null
+          }
+        </Li>
+      ))
+    }
   </Card>
 );
 
