@@ -23,8 +23,8 @@ export async function startPolling<
           reject(new Error("AsyncPoller: reached timeout"));
         }
       })
-      .catch((err) => {
-        reject(err);
+      .catch((error: Error) => {
+        reject(error);
       });
   };
 

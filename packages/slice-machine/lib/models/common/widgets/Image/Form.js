@@ -87,9 +87,9 @@ const Form = (props) => {
                   />
                   {thumbnails.map((e, i) => (
                     <ThumbnailButton
-                      key={`thumbnail-button-${i + 1}`}
+                      key={`thumbnail-button-${+i + 1}`}
                       sx={{ mr: 3 }}
-                      active={thumbI === i + 1}
+                      active={thumbI === +i + 1}
                       text={thumbText(e)}
                       error={
                         errors.thumbnails &&
@@ -99,7 +99,7 @@ const Form = (props) => {
                         errors.thumbnails[i]
                       }
                       onDelete={() => remove(i)}
-                      onClick={() => setThumbI(i + 1)}
+                      onClick={() => setThumbI(+i + 1)}
                     />
                   ))}
                   <AddThumbnailButton
@@ -117,8 +117,8 @@ const Form = (props) => {
                   <ConstraintForm
                     {...props}
                     required
-                    key={`thumbnail-${i + 1}`}
-                    display={thumbI === i + 1}
+                    key={`thumbnail-${+i + 1}`}
+                    display={thumbI === +i + 1}
                     prefix={`config.thumbnails[${i}]`}
                   />
                 ))}

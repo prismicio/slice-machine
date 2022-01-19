@@ -8,7 +8,7 @@ interface GridProps<T> {
   gridTemplateMinPx?: string;
 }
 
-function Grid<T extends unknown>({
+function Grid<T>({
   elems,
   gridTemplateMinPx = "320px",
   renderElem,

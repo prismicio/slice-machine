@@ -30,7 +30,7 @@ export async function promptForRepoName(base: string): Promise<string> {
         type: "input",
         required: true,
         transformer: (value) => prettyRepoName(address, String(value)),
-        async validate(name) {
+        async validate(name: string) {
           const result = await Communication.validateRepositoryName(
             name,
             base,

@@ -46,7 +46,7 @@ const FormFieldArray = ({
           <div>
             {field.value && field.value.length > 0
               ? field.value.map((opt, i) => (
-                  <Flex key={`${fieldName}-${i + 1}`} my={2}>
+                  <Flex key={`${fieldName}-${+i + 1}`} my={2}>
                     <Input
                       placeholder={inputPlaceholder}
                       name={`${fieldName}.${i}`}

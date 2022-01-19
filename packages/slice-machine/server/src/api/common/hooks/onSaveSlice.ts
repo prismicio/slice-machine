@@ -42,7 +42,7 @@ export default async function onSaveSlice(
 ): Promise<void> {
   const libraries = await Libraries.libraries(
     env.cwd,
-    (env.manifest.libraries || []) as string[]
+    env.manifest.libraries || []
   );
   const localLibs = libraries.filter((e) => e.isLocal);
 
