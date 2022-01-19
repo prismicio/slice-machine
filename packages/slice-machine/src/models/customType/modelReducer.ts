@@ -13,6 +13,7 @@ export function useModelReducer({
 }: {
   customType: CustomType<ObjectTabs>;
   remoteCustomType: CustomType<ObjectTabs> | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMockConfig: any;
 }): [CustomTypeState, CustomTypeStore] {
   const current = CustomType.toArray(customType);
@@ -35,7 +36,9 @@ export function useModelReducer({
     current,
     initialCustomType: current,
     remoteCustomType,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     mockConfig: initialMockConfig,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialMockConfig,
     poolOfFieldsToCheck: CustomTypeState.getPool(current.tabs),
     __status,
