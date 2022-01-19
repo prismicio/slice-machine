@@ -30,14 +30,18 @@ const Meta = {
 };
 
 const FormFields = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder_false: Input(
     "False Placeholder",
     { required: false },
     null,
     "false"
   ),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder_true: Input(
     "True Placeholder",
     { required: false },
@@ -52,6 +56,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Boolean$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 

@@ -21,6 +21,7 @@ import { createValidationSchema } from "../../../../forms";
 import { Widget } from "../Widget";
 import { FieldType } from "../../CustomType/fields";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;
 
 const schema = yup.object().shape({
@@ -28,6 +29,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Text$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
@@ -45,5 +47,6 @@ export const TextWidget: Widget<TextField, typeof schema> = {
   Meta,
   schema,
   TYPE_NAME: FieldType.Text,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
 };

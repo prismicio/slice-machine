@@ -27,6 +27,7 @@ const Meta = {
   description: "Define content relations & internal links",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const contentRelationShipConfigSchema = linkConfigSchema.shape({
   label: yup.string().max(35, "String is too long. Max: 35"),
   select: yup
@@ -41,6 +42,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Link$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   config: contentRelationShipConfigSchema,
 });
 

@@ -61,6 +61,7 @@ const Meta = {
   description: "A link to web, media or Prismic document",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 export const linkConfigSchema = yup
   .object()
   .shape({
@@ -86,6 +87,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Link$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   config: linkConfigSchema.optional(),
 });
 
@@ -94,6 +96,7 @@ export const LinkWidget: Widget<LinkField, typeof schema> = {
   handleMockContent,
   MockConfigForm,
   Meta,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   schema,
   Form,
