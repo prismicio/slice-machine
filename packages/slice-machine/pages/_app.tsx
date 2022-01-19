@@ -39,6 +39,7 @@ import { Persistor } from "redux-persist/es/types";
  */
 let _temp_first_start_flag = true;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
@@ -70,6 +71,7 @@ const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
 };
 
 function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data: serverState }: { data?: ServerState } = useSwr(
     "/api/state",
     fetcher
@@ -77,6 +79,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
   // Technical Debt : This internal state is used for forcing React to reload all the app,
   // to remove it we should change how the slice store is handled
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   const [sliceMap, setSliceMap] = useState<any | null>(null);
 
   const [storeInitiated, setStoreInitiated] = useState<boolean>(false);
@@ -106,6 +109,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
     if (_temp_first_start_flag) {
       _temp_first_start_flag = false;
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Tracker.get().groupLibraries(
         serverState.libraries || [],
         serverState.env.updateVersionInfo.currentVersion
@@ -118,6 +122,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     const newSliceMap = mapSlices(serverState.libraries);
     if (sliceMap !== null) {
       Object.keys(newSliceMap).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (!sliceMap[key]) {
           return (window.location.href = `/slices`);
         }

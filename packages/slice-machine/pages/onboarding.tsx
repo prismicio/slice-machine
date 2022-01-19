@@ -169,6 +169,7 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
   useEffect(() => {
     // on mount
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Tracker.get().trackOnboardingStart();
 
     // on unmount
@@ -177,10 +178,12 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
       const hasTheUserSkippedTheOnboarding = step < maxSteps - 1;
       if (hasTheUserSkippedTheOnboarding) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         Tracker.get().trackOnboardingSkip(step);
         return;
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Tracker.get().trackOnboardingContinue(
         ContinueOnboardingType.OnboardingContinueScreen3
       );
@@ -209,11 +212,13 @@ export default function Onboarding(): JSX.Element {
 
   const finish = () => {
     finishOnboarding();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.push("/");
   };
 
   function nextSlide() {
     if (state.step === STEPS.length - 1) return finish();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Tracker.get().trackOnboardingContinue(idFromStep(state.step));
 
     return setState({ ...state, step: state.step + 1 });

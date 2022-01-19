@@ -72,6 +72,7 @@ const CTThumbnail = ({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         border: (t) => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
@@ -83,6 +84,7 @@ const CTThumbnail = ({
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           backgroundImage: "url(" + `${preview?.url}` + ")",
         }}
       />
@@ -127,6 +129,7 @@ const CustomTypes: React.FunctionComponent = () => {
         repeatable,
       });
       setIsOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       router.push(`/cts/${id}`);
     }
   };

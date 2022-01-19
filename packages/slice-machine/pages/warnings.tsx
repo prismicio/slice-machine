@@ -23,6 +23,7 @@ const WarningsPage: React.FunctionComponent = () => {
     })
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Renderers: Record<string, React.FunctionComponent<any>> = {
     [warningStates.NOT_CONNECTED]: NotConnected,
     [warningStates.CLIENT_ERROR]: ClientError,
