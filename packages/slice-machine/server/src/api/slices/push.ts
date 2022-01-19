@@ -38,49 +38,63 @@ export async function handler(
   slices: ReadonlyArray<Models.SliceAsObject>,
   { sliceName, from }: { sliceName: string; from: string }
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const jsonModel = Files.readJson(modelPath);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { err } = await purge(env, slices, sliceName, onError);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
-
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const variationIds = jsonModel.variations.map(
       (v: Models.VariationAsObject) => v.id
     );
 
     const imageUrlsByVariation: { [variationId: string]: string | null } = {};
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     for (let i = 0; i < variationIds.length; i += 1) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const variationId = variationIds[i];
 
       const screenshot = resolvePathsToScreenshot({
         paths: [env.cwd, path.join(env.cwd, ".slicemchine/assets")],
         from,
         sliceName,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         variationId,
       });
 
       if (screenshot) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const { err, s3ImageUrl } = await upload(
           env,
           sliceName,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           variationId,
           screenshot.path,
           onError
         );
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         if (err) throw new Error(err.reason);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         imageUrlsByVariation[variationId] = s3ImageUrl;
       } else {
         console.error(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions
           `--- Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`
         );
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         imageUrlsByVariation[variationId] = null;
       }
     }
 
     console.log("[slice/push]: pushing slice model to Prismic");
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const variations = jsonModel.variations.map(
       (v: Models.VariationAsObject) => ({
         ...v,
@@ -91,8 +105,10 @@ export async function handler(
     const res = await createOrUpdate({
       slices,
       sliceName,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       model: {
         ...jsonModel,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         variations,
       },
       client: env.client,
@@ -142,7 +158,8 @@ export default async function apiHandler(query: {
     const errorExplanation =
       err.status === 403
         ? "Please log in to Prismic!"
-        : `You don\'t have access to the repo \"${env.repo}\"`;
+        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `You don\'t have access to the repo \"${env.repo}\"`;
 
     return onError(
       err,

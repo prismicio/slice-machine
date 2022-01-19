@@ -4,6 +4,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import path from "path";
 import { promisify } from "util";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import cpy from "copy-template-dir";
 
@@ -17,6 +18,7 @@ import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
 
 const IndexFiles = {
@@ -43,6 +45,7 @@ const copyTemplate = async (
       variationId: "default-slice",
     });
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const message = `[create] Could not copy template. Full error: ${e}`;
     console.error(message);
     return {
@@ -82,6 +85,7 @@ export default async function handler({
 }) {
   const { env } = await getEnv();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();
 
   if (!values) {
@@ -99,17 +103,22 @@ export default async function handler({
   } else {
     const fileName = IndexFiles[env.framework] || "index.js";
     const pathToIndexFile = path.join(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       paths(env.cwd, "").library(from).slice(sliceName).value(),
       fileName
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     Files.write(pathToModel, JSON.stringify(values.model, null, 2));
     Files.write(pathToIndexFile, values.componentCode);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   if (Files.exists(pathToModel)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const model = Files.readJson(pathToModel);
     const res = await save({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       body: { sliceName, from, model, mockConfig: {} },
     });
     return {

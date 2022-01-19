@@ -15,6 +15,7 @@ export const getSlices = async (
     if (res.status !== 200) {
       return { err: res, slices: [] };
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const slices: Models.SliceAsObject[] = await res.json();
     return { err: null, slices };
   } catch (e) {
