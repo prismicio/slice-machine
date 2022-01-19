@@ -40,6 +40,7 @@ const createIndexFileForFrameWork = (
 export default async function onSaveSlice(
   env: BackendEnvironment
 ): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   const libraries = await Libraries.libraries(
     env.cwd,
     env.manifest.libraries || []
@@ -49,6 +50,7 @@ export default async function onSaveSlice(
   for (const lib of localLibs) {
     if (lib.components.length) {
       const { pathToSlice: relativePathToLib } = lib.components[0];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const file = createIndexFileForFrameWork(env, lib);
 
