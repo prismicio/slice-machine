@@ -6,6 +6,7 @@ import ActionType from "./";
 import { ToastPayload } from "@src/ToastProvider/utils";
 
 export default function save(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return async (
@@ -19,6 +20,7 @@ export default function save(
         body: JSON.stringify({
           ...customType,
           model: CustomType.toObject(customType.current),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: customType.mockConfig,
         }),
       },

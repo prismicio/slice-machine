@@ -4,6 +4,7 @@ import ActionType from "./";
 import { ToastPayload } from "@src/ToastProvider/utils";
 
 export default function push(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return async (ct: CustomTypeState, setData: (data: ToastPayload) => void) => {

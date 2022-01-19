@@ -7,7 +7,9 @@ export const CustomTypesContext = React.createContext<
   Partial<{
     customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
     remoteCustomTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onCreate: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     onSave: Function;
   }>
 >({ customTypes: [], remoteCustomTypes: [] });
@@ -17,6 +19,7 @@ export default function Provider({
   customTypes = [],
   remoteCustomTypes = [],
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>> | undefined;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>> | undefined;
