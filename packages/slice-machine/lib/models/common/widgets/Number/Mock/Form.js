@@ -7,15 +7,19 @@ import { initialValues } from ".";
 import { MockConfigKey } from "../../../../../consts";
 
 const Form = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const contentValue = values[MockConfigKey]?.content;
 
   const onUpdate = (value) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (!value || !value.length) {
       return setFieldValue(MockConfigKey, {});
     }
     setFieldValue(MockConfigKey, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       content: parseInt(value),
     });
   };
@@ -32,6 +36,7 @@ const Form = () => {
       >
         <Text as="span">Number value</Text>
         <Input
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
           placeholder="1995"
           type="number"
@@ -50,6 +55,7 @@ const Form = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 Form.initialValues = initialValues;
 
 export const MockConfigForm = Form;
