@@ -37,15 +37,15 @@ const boxen = require("boxen");
 const spawn = require("child_process").spawn;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const migrate = require("../changelog/migrate");
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const validateUserAuth =
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access
   require("../build/server/src/api/services/validateUserAuth").validateUserAuth;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const infobox = require("./info");
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
 const compareVersions = require("../build/lib/env/semver").default;
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
