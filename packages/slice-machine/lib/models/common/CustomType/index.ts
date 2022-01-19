@@ -55,6 +55,7 @@ export const CustomType = {
     };
   },
   toJsonModel(ct: CustomType<ObjectTabs>): CustomTypeJsonModel {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
     const { tabs, previewUrl, ...rest } = ct;
     return {
       ...rest,
