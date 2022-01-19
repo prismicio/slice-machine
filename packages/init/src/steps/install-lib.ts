@@ -31,11 +31,15 @@ const downloadFile = async (reqUrl: string): Promise<string> => {
   });
 };
 
+function toGithubSource(githubPath: string, branch: string): string {
+  return `https://codeload.github.com/${githubPath}/zip/${branch}`;
+}
+
 export async function installLib(
   tracker: Tracker | undefined,
   cwd: string,
   libGithubPath: string,
-  branch: string | undefined = "main"
+  branch = "HEAD"
 ): Promise<string[] | undefined> {
   const spinner = Utils.spinner(
     `Installing the ${libGithubPath} lib in your project...`
@@ -45,7 +49,7 @@ export async function installLib(
     spinner.start();
 
     const [githubUserName, githubProjectName] = libGithubPath.split("/");
-    const source = `https://codeload.github.com/${libGithubPath}/zip/${branch}`;
+    const source = toGithubSource(libGithubPath, branch);
 
     const zipFilePath = await downloadFile(source);
     const outputFolder = `${githubProjectName}-${branch}`;
@@ -101,8 +105,11 @@ export async function installLib(
 
     tracker?.Track.downloadLibrary(libGithubPath);
     return localLibs;
-  } catch {
+  } catch (error) {
     spinner.fail(`Error installing ${libGithubPath} lib!`);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     process.exit(-1);
   }
 }
