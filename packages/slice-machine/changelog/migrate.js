@@ -2,9 +2,9 @@
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const compareVersions = require("compare-versions");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { SMConfig, Pkg } = require("../build/lib/models/paths");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { default: Files } = require("../build/lib/utils/files");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MIGRATIONS = require("./versions");
@@ -25,13 +25,13 @@ const MIGRATIONS = require("./versions");
 })();
 
 function retrieveConfigFiles(projectCWD, smModuleCWD) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const smPath = SMConfig(projectCWD);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const smValue = Files.exists(smPath) && Files.readJson(smPath);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const pkgPath = Pkg(smModuleCWD);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pkgValue = Files.exists(pkgPath) && Files.readJson(pkgPath);
   return {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
