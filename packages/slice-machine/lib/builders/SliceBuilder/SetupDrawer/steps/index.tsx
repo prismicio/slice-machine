@@ -13,6 +13,6 @@ export const getStepperConfigurationByFramework = (
     case Frameworks.next:
       return NextSetupStepperConfiguration;
     default:
-      throw new Error(`${framework} : doesn't support preview`);
+      throw new Error(`${framework} : doesn't support simulator`);
   }
 };

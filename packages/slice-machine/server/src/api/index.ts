@@ -12,7 +12,7 @@ const screenshot = require("./screenshots/screenshots").default;
 const customScreenshot = require("./screenshots/custom-screenshots").default;
 const parseOembed = require("./parse-oembed").default;
 const state = require("./state").default;
-const checkPreview = require("./preview").default;
+const checkSimulator = require("./simulator").default;
 
 const saveCustomType = require("./custom-types/save").default;
 const pushCustomType = require("./custom-types/push").default;
@@ -189,12 +189,12 @@ router.get(
 );
 
 router.get(
-  "/preview/check",
+  "/simulator/check",
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await checkPreview(req);
+    const payload = await checkSimulator(req);
 
     return res.status(200).json(payload);
   })

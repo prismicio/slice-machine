@@ -7,42 +7,43 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
   getFramework,
-  selectIsPreviewAvailableForFramework,
+  selectIsSimulatorAvailableForFramework,
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
 import StorybookSection from "./components/StorybookSection";
-import { selectIsSetupDrawerOpen } from "@src/modules/preview";
+import { selectIsSetupDrawerOpen } from "@src/modules/simulator";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import Stepper from "./Stepper";
 
 const SetupDrawer: React.FunctionComponent = () => {
-  const { closeSetupPreviewDrawer } = useSliceMachineActions();
+  const { closeSetupDrawer } = useSliceMachineActions();
 
   const {
     isSetupDrawerOpen,
     linkToStorybookDocs,
     framework,
-    isPreviewAvailableForFramework,
+    isSimulatorAvailableForFramework,
   } = useSelector((state: SliceMachineStoreType) => ({
     isSetupDrawerOpen: selectIsSetupDrawerOpen(state),
     framework: getFramework(state),
     linkToStorybookDocs: getLinkToStorybookDocs(state),
-    isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
+    isSimulatorAvailableForFramework:
+      selectIsSimulatorAvailableForFramework(state),
   }));
 
-  // We close the drawer if the framework cannot handle the preview
+  // We close the drawer if the framework cannot handle the simulator
   useEffect(() => {
-    if (isPreviewAvailableForFramework) return;
-    closeSetupPreviewDrawer();
-  }, [isPreviewAvailableForFramework]);
+    if (isSimulatorAvailableForFramework) return;
+    closeSetupDrawer();
+  }, [isSimulatorAvailableForFramework]);
 
   return (
     <Drawer
       placement="right"
       open={isSetupDrawerOpen}
       level={null}
-      onClose={closeSetupPreviewDrawer}
+      onClose={closeSetupDrawer}
       width={492}
     >
       <Flex
@@ -61,11 +62,11 @@ const SetupDrawer: React.FunctionComponent = () => {
             borderBottomColor: (t) => t.colors?.borders,
           }}
         >
-          <Text sx={{ fontSize: 3 }}>Setup Slice Preview</Text>
+          <Text sx={{ fontSize: 3 }}>Setup Slice Simulator</Text>
           <Close
-            data-testid="close-set-up-preview"
+            data-testid="close-set-up-simulator"
             color={"#4E4E55"}
-            onClick={closeSetupPreviewDrawer}
+            onClick={closeSetupDrawer}
           />
         </Flex>
         <Flex
@@ -80,7 +81,9 @@ const SetupDrawer: React.FunctionComponent = () => {
           <Flex as={"section"} sx={{ flexDirection: "column" }}>
             <Stepper
               framework={framework}
-              isPreviewAvailableForFramework={isPreviewAvailableForFramework}
+              isSimulatorAvailableForFramework={
+                isSimulatorAvailableForFramework
+              }
             />
           </Flex>
         </Flex>

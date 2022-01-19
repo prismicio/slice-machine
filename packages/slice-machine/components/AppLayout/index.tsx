@@ -5,7 +5,7 @@ import Navigation from "./Navigation";
 
 const AsIs: { [x: string]: boolean } = {
   "/onboarding": true,
-  "/[lib]/[sliceName]/[variation]/preview": true,
+  "/[lib]/[sliceName]/[variation]/simulator": true,
 };
 
 const AppLayout: React.FC = ({ children }) => {

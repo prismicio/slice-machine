@@ -8,7 +8,7 @@ import { modalReducer } from "@src/modules/modal";
 import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
-import { previewReducer } from "@src/modules/preview";
+import { simulatorReducer } from "@src/modules/simulator";
 
 /**
  * Creates the main reducer
@@ -19,7 +19,7 @@ const createReducer = (): Reducer =>
     loading: loadingReducer,
     userContext: userContextReducer,
     environment: environmentReducer,
-    preview: previewReducer,
+    simulator: simulatorReducer,
   });
 
 export default createReducer;

@@ -13,33 +13,31 @@ import {
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
 import {
-  openSetupPreviewDrawerCreator,
-  closeSetupPreviewDrawerCreator,
+  openSetupDrawerCreator,
+  closeSetupDrawerCreator,
   toggleSetupDrawerStepCreator,
-  checkPreviewSetupCreator,
-  connectToPreviewIframeCreator,
-} from "@src/modules/preview";
+  checkSimulatorSetupCreator,
+  connectToSimulatorIframeCreator,
+} from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Preview store
-  const checkPreviewSetup = (
+  // Simulator store
+  const checkSimulatorSetup = (
     withFirstVisitCheck: boolean,
     callback?: () => void
   ) =>
     dispatch(
-      checkPreviewSetupCreator.request({ withFirstVisitCheck, callback })
+      checkSimulatorSetupCreator.request({ withFirstVisitCheck, callback })
     );
-  const openSetupPreviewDrawer = () =>
-    dispatch(openSetupPreviewDrawerCreator({}));
-  const connectToPreviewFailure = () =>
-    dispatch(connectToPreviewIframeCreator.failure());
-  const connectToPreviewSuccess = () =>
-    dispatch(connectToPreviewIframeCreator.success());
-  const closeSetupPreviewDrawer = () =>
-    dispatch(closeSetupPreviewDrawerCreator());
+  const openSetupDrawer = () => dispatch(openSetupDrawerCreator({}));
+  const closeSetupDrawer = () => dispatch(closeSetupDrawerCreator());
+  const connectToSimulatorFailure = () =>
+    dispatch(connectToSimulatorIframeCreator.failure());
+  const connectToSimulatorSuccess = () =>
+    dispatch(connectToSimulatorIframeCreator.success());
   const toggleSetupDrawerStep = (stepNumber: number) =>
     dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
@@ -80,12 +78,12 @@ const useSliceMachineActions = () => {
   };
 
   return {
-    checkPreviewSetup,
-    connectToPreviewFailure,
-    connectToPreviewSuccess,
+    checkSimulatorSetup,
+    connectToSimulatorFailure,
+    connectToSimulatorSuccess,
     toggleSetupDrawerStep,
-    closeSetupPreviewDrawer,
-    openSetupPreviewDrawer,
+    closeSetupDrawer,
+    openSetupDrawer,
     getEnvironment,
     finishOnboarding,
     openLoginModal,

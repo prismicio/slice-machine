@@ -1,5 +1,5 @@
 import {
-  InstallSlicePreview,
+  InstallSliceSimulator,
   CreatePage,
   UpdateSmJson,
   CheckSetup,
@@ -12,7 +12,7 @@ import CodeBlock from "../components/CodeBlockWithCopy";
 import { Flex, Text } from "theme-ui";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
 import React from "react";
-import { SetupStatus } from "@src/modules/preview/types";
+import { SetupStatus } from "@src/modules/simulator/types";
 
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
 modules: [["@nuxtjs/prismic", {
@@ -25,21 +25,21 @@ build: {
 }
 `;
 
-const SlicePreviewPageCreationInstruction = `<template>
-  <SliceCanvasRenderer :state="state" #default="props">
+const SliceSimulatorPageCreationInstruction = `<template>
+  <SliceSimulator :state="state" #default="props">
     <SliceZone v-bind="props" />
-  </SliceCanvasRenderer>
+  </SliceSimulator>
 </template>
 
 <script>
-import { SliceCanvasRenderer } from "@prismicio/slice-canvas-renderer-vue";
+import { SliceSimulator } from "@prismicio/slice-simulator-vue";
 import SliceZone from "vue-slicezone";
 
 import state from "~/.slicemachine/libraries-state.json";
 
 export default {
   components: {
-    SliceCanvasRenderer,
+    SliceSimulator,
     SliceZone
   },
   data() {
@@ -61,10 +61,10 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = (
       <Flex sx={{ flexDirection: "column" }}>
         {props.setupStatus.iframe === "ko" && (
           <WarningSection
-            title={"We can’t connect to the preview page"}
+            title={"We can’t connect to the simulator page"}
             sx={{ mb: 3 }}
           >
-            We cannot connect to {props.previewUrl || "preview URL"}. <br />{" "}
+            We cannot connect to {props.simulatorUrl || "simulator URL"}. <br />{" "}
             Struggling to fix this issue? See our troubleshooting page.
           </WarningSection>
         )}
@@ -82,19 +82,19 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = (
   );
 };
 export const steps = [
-  InstallSlicePreview({
-    code: `npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic @prismicio/slice-canvas-renderer-vue`,
+  InstallSliceSimulator({
+    code: `npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic @prismicio/slice-simulator-vue`,
   }),
   UpdateNuxtConfig,
   CreatePage({
     instructions: (
       <>
         In your "pages" directory, create a file called{" "}
-        <Text variant={"pre"}>_preview.vue</Text> and add the following code.
-        This page is the route you hit to preview and develop your components.
+        <Text variant={"pre"}>_simulator.vue</Text> and add the following code.
+        This page is the route you hit to simulator and develop your components.
       </>
     ),
-    code: SlicePreviewPageCreationInstruction,
+    code: SliceSimulatorPageCreationInstruction,
   }),
   UpdateSmJson({}),
   CheckSetup({}),

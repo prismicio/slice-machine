@@ -7,7 +7,7 @@ export const Manifest = t.intersection([
   }),
   t.partial({
     storybook: t.string,
-    localSlicePreviewURL: t.string,
+    localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),
     framework: FrameworksC,
     chromaticAppId: t.string,

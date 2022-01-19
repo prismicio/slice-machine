@@ -99,7 +99,7 @@ async function generateForVariation(
   variationId: string
 ): Promise<ScreenshotUI | Error> {
   const screenshotUrl = `${
-    env.manifest.localSlicePreviewURL
+    env.manifest.localSliceSimulatorURL
   }?lid=${encodeURIComponent(libraryName)}&sid=${encodeURIComponent(
     slice.id
   )}&vid=${encodeURIComponent(variationId)}`;

@@ -95,7 +95,7 @@ describe("install required dependency", () => {
     );
   });
 
-  test("when using next it should install react deps and next-slicezone", async () => {
+  test("when using next it should install next deps and next-slicezone", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -109,7 +109,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client next-slicezone @prismicio/slice-canvas-renderer-react"
+      "npm install --save prismic-reactjs @prismicio/client@v5.1.1 next-slicezone @prismicio/slice-simulator-react"
     );
   });
 
@@ -145,7 +145,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone @prismicio/slice-canvas-renderer-vue"
+      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone @prismicio/slice-simulator-vue"
     );
   });
 
@@ -163,7 +163,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @prismicio/vue @prismicio/client prismic-dom vue-slicezone"
+      "npm install --save @prismicio/vue @prismicio/client@v5.1.1 prismic-dom vue-slicezone"
     );
   });
 });

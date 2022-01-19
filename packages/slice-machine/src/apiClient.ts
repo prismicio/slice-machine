@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
-import { PreviewCheckResponse } from "@models/common/Preview";
+import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -20,8 +20,8 @@ export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
     .post<CheckAuthStatusResponse>("/api/auth/status", {}, defaultAxiosConfig)
     .then((r) => r.data);
 
-/** Preview Routes **/
+/** Simulator Routes **/
 
-export const checkPreviewSetup = (): Promise<
-  AxiosResponse<PreviewCheckResponse>
-> => axios.get(`/api/preview/check`);
+export const checkSimulatorSetup = (): Promise<
+  AxiosResponse<SimulatorCheckResponse>
+> => axios.get(`/api/simulator/check`);
