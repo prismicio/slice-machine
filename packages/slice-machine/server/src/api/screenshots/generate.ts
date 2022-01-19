@@ -47,6 +47,7 @@ export async function generateScreenshot(
   libraryName: string,
   sliceName: string
 ): Promise<ScreenshotResults> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice: Models.SliceAsObject = Files.readJson(
     FileSystem.CustomPaths(env.cwd)
       .library(libraryName)
@@ -99,6 +100,7 @@ async function generateForVariation(
   variationId: string
 ): Promise<ScreenshotUI | Error> {
   const screenshotUrl = `${
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     env.manifest.localSlicePreviewURL
   }?lid=${encodeURIComponent(libraryName)}&sid=${encodeURIComponent(
     slice.id
