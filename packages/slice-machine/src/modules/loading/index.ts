@@ -54,7 +54,9 @@ export const loadingReducer: Reducer<LoadingStoreType, LoadingActions> = (
 };
 
 // Saga decorator
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const withLoader = (saga: any, loadingKey: LoadingKeysEnum): Saga<any> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function* (...args: any[]) {
     yield put(startLoadingActionCreator({ loadingKey }));
     yield call(

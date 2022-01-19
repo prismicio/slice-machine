@@ -201,6 +201,7 @@ function* checkSetupSaga(
   action: ReturnType<typeof checkPreviewSetupCreator.request>
 ) {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { data: setupStatus }: { data: PreviewCheckResponse } = yield call(
       checkPreviewSetup
     );
@@ -213,6 +214,7 @@ function* checkSetupSaga(
         })
       );
       yield put(connectToPreviewIframeCreator.request());
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const {
         timeout,
         iframeCheckKO,
@@ -263,12 +265,15 @@ function* checkSetupSaga(
     );
     yield call(failCheckSetupSaga);
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     yield put(checkPreviewSetupCreator.failure(error));
   }
 }
 
 function* failCheckSetupSaga() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const framework: Frameworks = yield select(getFramework);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const isPreviewAvailableForFramework: boolean = yield select(
     selectIsPreviewAvailableForFramework
   );
@@ -287,9 +292,12 @@ function* failCheckSetupSaga() {
 }
 
 function* trackOpenSetupDrawerSaga() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const framework: Frameworks = yield select(getFramework);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const version: string = yield select(getCurrentVersion);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   Tracker.get().trackSlicePreviewSetup(framework, version);
 }
 
