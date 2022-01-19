@@ -136,9 +136,11 @@ export default class DefaultClient {
         },
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const jsResult = await result.json();
 
       return getOrElseW(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         () => new Error(`Unable to parse profile: ${jsResult}`)
       )(UserProfile.decode(jsResult));
     } catch (e) {
