@@ -16,6 +16,7 @@ import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
@@ -102,6 +103,7 @@ export default async function handler(
 ): Promise<ServerState> {
   const { errors: configErrors, env } = req;
   const serverState = await getBackendState(configErrors, env);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
   const { client, cwd, prismicData, baseUrl, ...frontEnv } = serverState.env;
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
