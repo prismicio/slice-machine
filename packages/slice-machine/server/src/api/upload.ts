@@ -47,6 +47,7 @@ export async function upload(
   const aclResponse: any = await (await env.client.images.createAcl()).json();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
   const maybeErrorMessage =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
     aclResponse.error || aclResponse.Message || aclResponse.message;
   if (maybeErrorMessage) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -55,7 +56,7 @@ export async function upload(
       "An error occurred while creating ACL - please contact support";
     console.error(msg);
     console.error(`Full error: ${JSON.stringify(aclResponse)}`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
     return onError(aclResponse, msg);
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -65,7 +66,7 @@ export async function upload(
   } = aclResponse;
 
   const filename = path.basename(filePath);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions
   const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(
     sliceName
   )}/${snakelize(variationId)}-${uniqid()}/${filename}`;
