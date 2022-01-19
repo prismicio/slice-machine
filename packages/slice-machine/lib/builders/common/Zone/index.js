@@ -31,12 +31,17 @@ const Zone = ({
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const hasUid = !!Object.entries(poolOfFieldsToCheck).find(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       ([, { value }]) => value.type === "UID"
     );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return hasUid
-      ? widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID")
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID")
       : widgetsArray;
   })();
 
@@ -46,6 +51,7 @@ const Zone = ({
   const [newFieldData, setNewFieldData] = useState(null);
 
   const enterEditMode = (field) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
   };
   const enterSelectMode = () => {
@@ -58,6 +64,7 @@ const Zone = ({
   const closeSelectModal = () => setSelectModalData({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
     setNewFieldData({ widgetTypeName, fields });
     setSelectModalData({ isOpen: false });
   };
@@ -69,6 +76,7 @@ const Zone = ({
       <ZoneHeader
         Heading={<Heading as="h6">{title}</Heading>}
         Actions={
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           fields.length ? (
             <Fragment>
               <Button
@@ -102,33 +110,49 @@ const Zone = ({
           ) : null
         }
       />
-      {!fields.length && !newFieldData && (
-        <EmptyState
-          onEnterSelectMode={() => enterSelectMode()}
-          zoneName={isRepeatable ? "repeatable" : "static"}
-        />
-      )}
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        !fields.length && !newFieldData && (
+          <EmptyState
+            onEnterSelectMode={() => enterSelectMode()}
+            zoneName={isRepeatable ? "repeatable" : "static"}
+          />
+        )
+      }
       <Card
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         isRepeatable={isRepeatable}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
         showHints={showHints}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         store={store}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         Model={Model}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dataTip={dataTip}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         title={title}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         renderFieldAccessor={renderFieldAccessor}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         renderHintBase={renderHintBase}
         enterEditMode={enterEditMode}
         enterSelectMode={enterSelectMode}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         onDragEnd={onDragEnd}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         onDeleteItem={onDeleteItem}
         NewFieldC={() =>
           newFieldData && (
             <NewField
               {...newFieldData}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
               fields={poolOfFieldsToCheck || fields}
               onSave={(...args) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 onSaveNewField(...args);
                 setNewFieldData(null);
               }}
@@ -138,17 +162,22 @@ const Zone = ({
         }
       />
       <EditModal
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         Model={Model}
         data={editModalData}
         close={closeEditModal}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         onSave={onSave}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         getFieldMockConfig={getFieldMockConfig}
       />
       <SelectFieldTypeModal
         data={selectModalData}
         close={closeSelectModal}
         onSelect={onSelectFieldType}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         widgetsArray={widgetsArrayWithCondUid}
       />
     </Fragment>

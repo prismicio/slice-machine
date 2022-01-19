@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Fragment } from "react";
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
@@ -14,10 +15,20 @@ const FORM_ID = "metadata-modal-form";
 
 const InputBox = ({ name, label, placeholder }) => (
   <Box mb={2}>
-    <Label htmlFor={name} mb={1}>
+    <Label
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+      htmlFor={name}
+      mb={1}
+    >
       {label}
     </Label>
-    <Field name={name} type="text" placeholder={placeholder} as={Input} />
+    <Field
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+      name={name}
+      type="text"
+      placeholder={placeholder}
+      as={Input}
+    />
   </Box>
 );
 
@@ -25,25 +36,32 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
   Modal.setAppElement("#__next");
 
   const onUpdateField = (value) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     store.updateMetadata(Model, value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     close();
   };
 
   return (
     <SliceMachineModal
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       isOpen={isOpen}
       shouldCloseOnOverlayClick
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onRequestClose={close}
       contentLabel="MetaData Form Modal"
     >
       <Formik
         validateOnChange
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         initialValues={Model.meta}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars
         onSubmit={(values, _) => {
           onUpdateField(values);
         }}
       >
         {(props) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
           const { values, errors, isValid, isSubmitting } = props;
           return (
             <Form id={FORM_ID}>
@@ -54,6 +72,7 @@ const MetaDataModal = ({ close, isOpen, Model }) => {
                     <Button
                       mr={2}
                       type="button"
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       onClick={close}
                       variant="secondary"
                     >

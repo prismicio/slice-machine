@@ -10,15 +10,19 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         alignItems: "center",
         cursor: "pointer",
         borderRadius: "3px",
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         border: (t) => `1px solid ${t.colors?.borders}`,
         "&:hover": {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           border: ({ colors }) => `1px solid ${colors.primary}`,
           boxShadow: "0 0 0 3px rgba(81, 99, 186, 0.2)",
         },
       }}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onClick={onSelect}
     >
       <WidgetIcon
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions
         label={`Select field of type "${title}"`}
         style={{
           color: theme.colors.primary,

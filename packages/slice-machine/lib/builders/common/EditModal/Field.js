@@ -12,7 +12,9 @@ import { FormTypes } from "../../../forms/types";
 import { Box } from "theme-ui";
 
 const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [field, meta, helpers] = useField(fieldName);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const MaybeCustomComponent = formField.component;
 
   return (
@@ -20,6 +22,7 @@ const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
       sx={{
         mt: 2,
         alignItems: "center",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         ...(formField.type === FormTypes.CHECKBOX
           ? {
               display: "flex",
@@ -33,31 +36,47 @@ const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
           meta={meta}
           field={field}
           helpers={helpers}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           fieldName={fieldName}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           formField={formField}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           initialValues={initialValues}
         />
       ) : (
         <Fragment>
-          {formField.type === FormTypes.INPUT ? (
-            <FormFieldInput
-              meta={meta}
-              field={field}
-              fields={fields}
-              formField={formField}
-              fieldName={fieldName}
-              initialValues={initialValues}
-            />
-          ) : null}
-          {formField.type === FormTypes.CHECKBOX && (
-            <FormFieldCheckbox
-              meta={meta}
-              label={formField.label}
-              fieldName={fieldName}
-              initialValues={initialValues}
-              onChange={(value) => helpers.setValue(value)}
-            />
-          )}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formField.type === FormTypes.INPUT ? (
+              <FormFieldInput
+                meta={meta}
+                field={field}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                fields={fields}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                formField={formField}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+                fieldName={fieldName}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                initialValues={initialValues}
+              />
+            ) : null
+          }
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formField.type === FormTypes.CHECKBOX && (
+              <FormFieldCheckbox
+                meta={meta}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                label={formField.label}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+                fieldName={fieldName}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                initialValues={initialValues}
+                onChange={(value) => helpers.setValue(value)}
+              />
+            )
+          }
         </Fragment>
       )}
     </Box>

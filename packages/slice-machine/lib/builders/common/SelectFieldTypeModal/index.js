@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!data.isOpen) {
     return null;
   }
@@ -20,6 +21,7 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
     <SliceMachineModal
       isOpen
       shouldCloseOnOverlayClick
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onRequestClose={close}
       contentLabel="Widget Form Modal"
     >
@@ -38,28 +40,39 @@ const SelectFieldTypeModal = ({ data, close, onSelect, widgetsArray }) => {
               justifyContent: "space-between",
               borderTopLeftRadius: radius,
               borderTopRightRadius: radius,
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               borderBottom: (t) => `1px solid ${t.colors?.borders}`,
             }}
           >
             <Heading>Add a new field</Heading>
-            <Close onClick={close} />
+
+            <Close // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+              onClick={close}
+            />
           </Flex>
         )}
       >
         <FlexGrid>
-          {widgetsArray
-            .filter((e) => e)
-            .map((widget) => {
-              const { Meta, TYPE_NAME, CUSTOM_NAME } = widget;
-              return (
-                <Col key={CUSTOM_NAME || TYPE_NAME}>
-                  <FieldTypeCard
-                    {...Meta}
-                    onSelect={() => onSelect(CUSTOM_NAME || TYPE_NAME)}
-                  />
-                </Col>
-              );
-            })}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            widgetsArray
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+              .filter((e) => e)
+              .map((widget) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                const { Meta, TYPE_NAME, CUSTOM_NAME } = widget;
+                return (
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+                  <Col key={CUSTOM_NAME || TYPE_NAME}>
+                    <FieldTypeCard
+                      {...Meta}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+                      onSelect={() => onSelect(CUSTOM_NAME || TYPE_NAME)}
+                    />
+                  </Col>
+                );
+              })
+          }
         </FlexGrid>
       </Card>
     </SliceMachineModal>

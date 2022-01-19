@@ -2,6 +2,7 @@ import { Flex, Box } from "theme-ui";
 
 const FlexEditor = ({ children, SideBar, sx, ...rest }) => (
   <Flex
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     sx={{
       display: "flex",
       flexWrap: "wrap",
