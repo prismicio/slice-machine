@@ -6,12 +6,16 @@ import { ToastPayload } from "../../../../src/ToastProvider/utils";
 import { SliceSaveResponse } from "@lib/models/common/Slice";
 
 export default function save(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return async (
     slice: SliceState,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setData: (data: ToastPayload) => void = () => {}
+    //    eslint-disable-next-line @typescript-eslint/require-await
   ) => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-floating-promises
     fetchApi({
       url: "/api/slices/save",
       params: {
@@ -21,8 +25,10 @@ export default function save(
           from: slice.from,
           model: {
             ...slice.model,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             variations: slice.variations.map(Variation.toObject),
           },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: slice.mockConfig,
         }),
       },
@@ -32,6 +38,7 @@ export default function save(
         const savedState = {
           ...slice,
           screenshotUrls: screenshots,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations,
         };

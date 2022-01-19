@@ -32,7 +32,9 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
         components: lib.components.map((component) =>
           useModelReducer({
             slice: component,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             mockConfig: SliceMockConfig.getSliceMockConfig(
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
               env.mockConfig,
               lib.name,
               component.infos.sliceName
