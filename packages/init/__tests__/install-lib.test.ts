@@ -13,7 +13,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import AdmZip from "adm-zip";
-import child_process from "child_process";
+import * as utils from "../src/utils";
 
 describe("install-lib", () => {
   const fakeCWD = path.join(os.tmpdir(), "install-lib-test");
@@ -50,7 +50,10 @@ describe("install-lib", () => {
         "content-length": zip.length.toString(),
       });
 
-    jest.spyOn(child_process, "exec");
+    // quick fix, I would rather mock child_process.exec
+    jest
+      .spyOn(utils, "execCommand")
+      .mockResolvedValue({ stderr: "", stdout: "" });
 
     stderr.start();
     stdout.start();
@@ -59,14 +62,15 @@ describe("install-lib", () => {
     stderr.stop();
     stdout.stop();
 
-    expect(libs).toContain(
-      path.posix.join("~", `${user}-${project}`, "slices")
-    );
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
+
     expect(stderr.output).toContain(
       'Slice library "prismicio/foo" was installed successfully'
+    );
+    expect(libs).toContain(
+      path.posix.join("~", `${user}-${project}`, "slices")
     );
   });
 
@@ -90,7 +94,10 @@ describe("install-lib", () => {
         "content-length": zip.length.toString(),
       });
 
-    jest.spyOn(child_process, "exec");
+    // quick fix, I would rather mock child_process.exec
+    jest
+      .spyOn(utils, "execCommand")
+      .mockResolvedValue({ stderr: "", stdout: "" });
 
     stderr.start();
     stdout.start();
@@ -98,15 +105,16 @@ describe("install-lib", () => {
     stderr.stop();
     stderr.stop();
 
-    expect(libs).toContain(
-      path.posix.join("~", `${user}-${project}`, "slices")
+    expect(stderr.output).toContain(
+      'Slice library "prismicio/baz" was installed successfully'
     );
 
     expect(
       fs.existsSync(path.join(fakeCWD, `${user}-${project}`, "meta.json"))
     ).toBeTruthy();
-    expect(stderr.output).toContain(
-      'Slice library "prismicio/baz" was installed successfully'
+
+    expect(libs).toContain(
+      path.posix.join("~", `${user}-${project}`, "slices")
     );
   });
 
@@ -120,7 +128,10 @@ describe("install-lib", () => {
       .get(`/${gitpath}/zip/${branch}`)
       .reply(404);
 
-    jest.spyOn(child_process, "exec");
+    // quick fix, I would rather mock child_process.exec
+    jest
+      .spyOn(utils, "execCommand")
+      .mockResolvedValue({ stderr: "", stdout: "" });
 
     jest.spyOn(console, "error").mockImplementation(() => jest.fn());
 
