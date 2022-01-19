@@ -8,23 +8,31 @@ const mime = require("mime");
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const pushSlice = require("./slices/push").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const saveSlice = require("./slices/save").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const createSlice = require("./slices/create/index").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const screenshot = require("./screenshots/screenshots").default;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const customScreenshot = require("./screenshots/custom-screenshots").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const parseOembed = require("./parse-oembed").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const state = require("./state").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const checkPreview = require("./preview").default;
+const checkSimulator = require("./simulator").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const saveCustomType = require("./custom-types/save").default;
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
 const pushCustomType = require("./custom-types/push").default;
 
@@ -240,14 +248,14 @@ router.get(
 );
 
 router.get(
-  "/preview/check",
+  "/simulator/check",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const payload = await checkPreview(req);
+    const payload = await checkSimulator(req);
 
     return res.status(200).json(payload);
   })

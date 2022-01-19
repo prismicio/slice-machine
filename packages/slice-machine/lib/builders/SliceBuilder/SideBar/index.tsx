@@ -14,7 +14,7 @@ import { isLoading } from "@src/modules/loading";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
-  selectIsPreviewAvailableForFramework,
+  selectIsSimulatorAvailableForFramework,
   getFramework,
   getStorybookUrl,
   getLinkToStorybookDocs,
@@ -41,21 +41,22 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
 }) => {
   const { screenshotUrls } = Model;
 
-  const { checkPreviewSetup } = useSliceMachineActions();
+  const { checkSimulatorSetup } = useSliceMachineActions();
 
   const router = useRouter();
 
   const {
-    isCheckingPreviewSetup,
-    isPreviewAvailableForFramework,
+    isCheckingSimulatorSetup,
+    isSimulatorAvailableForFramework,
     linkToStorybookDocs,
     framework,
     storybookUrl,
   } = useSelector((state: SliceMachineStoreType) => ({
     framework: getFramework(state),
     linkToStorybookDocs: getLinkToStorybookDocs(state),
-    isCheckingPreviewSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
-    isPreviewAvailableForFramework: selectIsPreviewAvailableForFramework(state),
+    isCheckingSimulatorSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
+    isSimulatorAvailableForFramework:
+      selectIsSimulatorAvailableForFramework(state),
     storybookUrl: getStorybookUrl(state),
   }));
 
@@ -77,23 +78,29 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           imageLoading={imageLoading}
           onScreenshot={onScreenshot}
           onHandleFile={onHandleFile}
-          preventScreenshot={!isPreviewAvailableForFramework}
+          preventScreenshot={!isSimulatorAvailableForFramework}
         />
       </Card>
       <Button
-        data-testid="open-set-up-preview"
-        disabled={!isPreviewAvailableForFramework}
+        data-testid="open-set-up-simulator"
+        disabled={!isSimulatorAvailableForFramework}
         onClick={() =>
-          checkPreviewSetup(true, () => window.open(`${router.asPath}/preview`))
+          checkSimulatorSetup(true, () =>
+            window.open(`${router.asPath}/simulator`)
+          )
         }
         variant={
-          isPreviewAvailableForFramework ? "secondary" : "disabledSecondary"
+          isSimulatorAvailableForFramework ? "secondary" : "disabledSecondary"
         }
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
-        {isCheckingPreviewSetup ? <Spinner size={12} /> : "Open Slice Preview"}
+        {isCheckingSimulatorSetup ? (
+          <Spinner size={12} />
+        ) : (
+          "Open Slice Simulator"
+        )}
       </Button>
-      {!isPreviewAvailableForFramework && (
+      {!isSimulatorAvailableForFramework && (
         <Text
           as="p"
           sx={{
@@ -105,7 +112,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             },
           }}
         >
-          {`Slice Preview does not support ${
+          {`Slice Simulator does not support ${
             framework || "your"
           } framework yet.`}
           &nbsp;

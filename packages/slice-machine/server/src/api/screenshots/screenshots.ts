@@ -4,14 +4,14 @@ import {
   ScreenshotRequest,
   ScreenshotResponse,
 } from "@models/common/Screenshots";
-import { previewIsSupported } from "@lib/utils";
+import { simulatorIsSupported } from "@lib/utils";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 
 export function validateEnv(
   framework: Frameworks,
   previewUrl: string | undefined
 ) {
-  if (!previewIsSupported(framework)) {
+  if (!simulatorIsSupported(framework)) {
     const reason = "Could not generate preview: framework is not supported";
 
     return {
@@ -40,7 +40,7 @@ export default async function handler({
 
   const maybeErr = validateEnv(
     env.framework,
-    env.manifest.localSlicePreviewURL
+    env.manifest.localSliceSimulatorURL
   );
   if (maybeErr) {
     return maybeErr;

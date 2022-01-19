@@ -14,12 +14,12 @@ import Header from "./Header";
 
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import SetupDrawer from "./SetupDrawer";
-import IframeRenderer from "@components/Preview/components/IframeRenderer";
+import IframeRenderer from "@components/Simulator/components/IframeRenderer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectPreviewUrl } from "@src/modules/environment";
-import { Size } from "@components/Preview/components/ScreenSizes";
-import { selectIsWaitingForIFrameCheck } from "@src/modules/preview";
+import { selectSimulatorUrl } from "@src/modules/environment";
+import { Size } from "@components/Simulator/components/ScreenSizes";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -39,10 +39,10 @@ const initialState: SliceBuilderState = {
 
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLoginModal, checkPreviewSetup } = useSliceMachineActions();
-  const { previewUrl, isWaitingForIframeCheck } = useSelector(
+  const { openLoginModal, checkSimulatorSetup } = useSliceMachineActions();
+  const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
-      previewUrl: selectPreviewUrl(state),
+      simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
     })
   );
@@ -89,7 +89,7 @@ const SliceBuilder: React.FunctionComponent = () => {
   );
 
   const onTakingCustomScreenshot = () => {
-    checkPreviewSetup(true, () =>
+    checkSimulatorSetup(true, () =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       store
         .variation(variation.id)
@@ -140,7 +140,7 @@ const SliceBuilder: React.FunctionComponent = () => {
         <IframeRenderer
           dryRun
           size={Size.FULL}
-          previewUrl={previewUrl}
+          simulatorUrl={simulatorUrl}
           sliceView={sliceView}
         />
       )}

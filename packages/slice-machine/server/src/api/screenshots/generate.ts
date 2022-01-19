@@ -101,7 +101,7 @@ async function generateForVariation(
 ): Promise<ScreenshotUI | Error> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    env.manifest.localSlicePreviewURL
+    env.manifest.localSliceSimulatorURL
   }?lid=${encodeURIComponent(libraryName)}&sid=${encodeURIComponent(
     slice.id
   )}&vid=${encodeURIComponent(variationId)}`;

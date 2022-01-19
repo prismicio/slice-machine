@@ -29,7 +29,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
 }) => {
   const inputFile = useRef<HTMLInputElement>(null);
   const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
-    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_PREVIEW),
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
   }));
   const [display, setDisplay] = useState(false);
 

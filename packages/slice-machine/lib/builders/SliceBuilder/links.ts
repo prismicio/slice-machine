@@ -3,22 +3,24 @@ export function variation({
   sliceName,
   variationId,
   options = {},
-  isPreview,
+  isSimulator,
 }: {
   lib: string;
   sliceName: string;
   variationId: string;
   options?: object;
-  isPreview?: boolean;
+  isSimulator?: boolean;
 }): {
   href: string;
   as: string;
   options: object;
   all: [string, string, object];
 } {
-  const href = `/[lib]/[sliceName]/[variation]${isPreview ? "/preview" : ""}`;
+  const href = `/[lib]/[sliceName]/[variation]${
+    isSimulator ? "/simulator" : ""
+  }`;
   const as = `/${lib}/${sliceName}/${variationId}${
-    isPreview ? "/preview" : ""
+    isSimulator ? "/simulator" : ""
   }`;
 
   return {

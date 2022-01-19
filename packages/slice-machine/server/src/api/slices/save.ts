@@ -80,8 +80,8 @@ async function generateScreenshotsWithLogs(
   from: string,
   sliceName: string
 ): Promise<SliceSaveResponse> {
-  if (!env.manifest.localSlicePreviewURL) {
-    const message = "localSlicePreviewURL not configured on sm.json file";
+  if (!env.manifest.localSliceSimulatorURL) {
+    const message = "localSliceSimulatorURL not configured on sm.json file";
     console.log(`[slice/save]: Cannot not generate screenshots: ${message}`);
 
     return Promise.resolve({ screenshots: {}, warning: message });

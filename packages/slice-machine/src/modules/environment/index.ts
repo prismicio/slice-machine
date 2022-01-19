@@ -9,7 +9,7 @@ import {
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
-import { previewIsSupported } from "@lib/utils";
+import { simulatorIsSupported } from "@lib/utils";
 
 // Action Creators
 export const getEnvironmentCreator = createAction(
@@ -23,19 +23,19 @@ export const getEnvironment = (
   store: SliceMachineStoreType
 ): FrontEndEnvironment => store.environment.env;
 
-export const selectPreviewUrl = (
+export const selectSimulatorUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env.manifest.localSlicePreviewURL;
+  return store.environment.env.manifest.localSliceSimulatorURL;
 };
 
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
   store.environment.env.framework;
 
-export const selectIsPreviewAvailableForFramework = (
+export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
-  return previewIsSupported(store.environment.env.framework);
+  return simulatorIsSupported(store.environment.env.framework);
 };
 
 export const getWarnings = (
