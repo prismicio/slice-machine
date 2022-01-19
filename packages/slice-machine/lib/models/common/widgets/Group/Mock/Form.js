@@ -7,12 +7,15 @@ import { initialValues } from ".";
 import { MockConfigKey } from "../../../../../consts";
 
 const Form = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const contentValue = values[MockConfigKey]?.content || null;
 
   const onUpdate = (value) => {
     setFieldValue(MockConfigKey, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       content: value,
     });
   };
@@ -29,6 +32,7 @@ const Form = () => {
       >
         <Text as="span">Link value</Text>
         <Input
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
           placeholder="https://prismic.io"
           onFocus={(e) => e.target.focus()}
@@ -40,6 +44,7 @@ const Form = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 Form.initialValues = initialValues;
 
 export const MockConfigForm = Form;
