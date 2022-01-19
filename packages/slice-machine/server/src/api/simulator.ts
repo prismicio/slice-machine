@@ -1,5 +1,5 @@
 import { FileSystem, Utils } from "@slicemachine/core";
-import { previewIsSupported } from "@lib/utils";
+import { simulatorIsSupported } from "@lib/utils";
 import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
@@ -13,7 +13,7 @@ export default async function handler(
     dependencies: "ok",
   };
 
-  if (!previewIsSupported(req.env.framework)) {
+  if (!simulatorIsSupported(req.env.framework)) {
     const message =
       "[api/env]: Unrecoverable error. The framework doesn't support the preview. Exiting..";
     console.error(message);

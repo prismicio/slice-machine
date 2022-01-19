@@ -1,4 +1,4 @@
-import { validateEnv } from "../server/src/api/screenshots/screenshots";
+import { validateEnv } from "../../server/src/api/screenshots/screenshots";
 
 describe("screenshots", () => {
   test("it should error when unsupported framework is passed", async () => {

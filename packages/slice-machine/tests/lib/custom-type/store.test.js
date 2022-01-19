@@ -6,10 +6,10 @@ import { renderHook, act } from "@testing-library/react-hooks";
 
 import equal from "fast-deep-equal";
 
-import { useModelReducer } from "../../src/models/customType/modelReducer";
-import { CustomType } from "../../lib/models/common/CustomType";
+import { useModelReducer } from "@src/models/customType/modelReducer";
+import { CustomType } from "@lib/models/common/CustomType";
 
-import * as widgets from "../../lib/models/common/widgets/withGroup";
+import * as widgets from "@lib/models/common/widgets/withGroup";
 
 import jsonModel from "./__mockData__/model.json";
 

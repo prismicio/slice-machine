@@ -20,7 +20,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
-export default function Preview() {
+export default function Simulator() {
   const { Model, variation } = useContext(SliceContext);
 
   const { framework, version, simulatorUrl } = useSelector(

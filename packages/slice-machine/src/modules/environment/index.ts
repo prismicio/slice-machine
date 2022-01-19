@@ -9,7 +9,7 @@ import {
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
-import { previewIsSupported } from "@lib/utils";
+import { simulatorIsSupported } from "@lib/utils";
 
 // Action Creators
 export const getEnvironmentCreator = createAction(
@@ -35,7 +35,7 @@ export const getFramework = (store: SliceMachineStoreType): Frameworks =>
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
-  return previewIsSupported(store.environment.env.framework);
+  return simulatorIsSupported(store.environment.env.framework);
 };
 
 export const getWarnings = (

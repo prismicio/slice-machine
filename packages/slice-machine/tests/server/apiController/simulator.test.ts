@@ -1,7 +1,8 @@
 // We mock the getEnv service
 import * as Core from "@slicemachine/core";
 
-import simulatorHandler from "../../server/src/api/simulator";
+import simulatorHandler from "../../../server/src/api/simulator";
+import "@testing-library/jest-dom";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 

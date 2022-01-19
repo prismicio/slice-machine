@@ -1,6 +1,6 @@
 import equal from "fast-deep-equal";
 
-import { CustomType } from "../../lib/models/common/CustomType";
+import { CustomType } from "@lib/models/common/CustomType";
 
 import jsonModel from "./__mockData__/model.json";
 

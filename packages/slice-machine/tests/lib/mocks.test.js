@@ -1,5 +1,5 @@
-import * as Widgets from "../lib/models/common/widgets";
-import { handleFields } from "../lib/mock/misc/handlers";
+import * as Widgets from "@models/common/widgets";
+import { handleFields } from "@lib/mock/misc/handlers";
 import { ColorWidget } from "@models/common/widgets/Color";
 import { BooleanWidget } from "@models/common/widgets/Boolean";
 import { ImageWidget } from "@models/common/widgets/Image";

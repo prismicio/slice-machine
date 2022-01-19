@@ -93,6 +93,6 @@ export const sanitizeSbId = (str: string) => {
     .replace(/-+$/, "");
 };
 
-export const previewIsSupported = (framework: Frameworks) => {
+export const simulatorIsSupported = (framework: Frameworks) => {
   return [Frameworks.next, Frameworks.nuxt].includes(framework);
 };

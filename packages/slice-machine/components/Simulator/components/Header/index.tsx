@@ -20,7 +20,7 @@ type PropTypes = {
 const redirect = (
   model: SliceState,
   variation: { id: string } | undefined,
-  isPreview?: boolean
+  isSimulator?: boolean
 ): void => {
   if (!variation) {
     void router.push(`/${model.href}/${model.infos.sliceName}`);
@@ -30,7 +30,7 @@ const redirect = (
     lib: model.href,
     sliceName: model.infos.sliceName,
     variationId: variation?.id,
-    isPreview,
+    isSimulator,
   });
   void router.push(params.href, params.as, params.options);
 };

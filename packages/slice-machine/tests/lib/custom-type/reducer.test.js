@@ -4,9 +4,9 @@
 
 import { renderHook } from "@testing-library/react-hooks";
 
-import { useModelReducer } from "../../src/models/customType/modelReducer";
-import { CustomTypeStatus } from "../../lib/models/ui/CustomTypeState";
-import { CustomType } from "../../lib/models/common/CustomType";
+import { useModelReducer } from "@src/models/customType/modelReducer";
+import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
+import { CustomType } from "@lib/models/common/CustomType";
 
 import jsonModel from "./__mockData__/model.json";
 

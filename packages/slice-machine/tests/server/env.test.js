@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Volume } from "memfs";
 
-import getEnv from "../server/src/api/services/getEnv";
+import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
 
 const TMP = "/tmp";
