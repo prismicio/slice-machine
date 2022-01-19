@@ -43,11 +43,13 @@ export const iframeSizes = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const ScreenSizes = ({ size, onClick }: { size: Size; onClick: Function }) => {
   return (
     <Flex>
       {screens.map((screen, i) => (
         <Button
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onClick={() => onClick(screen)}
           key={screen.size}
           variant="buttons.screenSize"

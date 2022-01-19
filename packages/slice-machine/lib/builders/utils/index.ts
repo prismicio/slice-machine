@@ -7,10 +7,12 @@ interface Widgets {
 
 export const findWidgetByConfigOrType = (
   widgets: Widgets,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config: any,
   type: string
 ) => {
   if (type === "Link") {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     switch (config?.select) {
       case Media.document:
         return widgets.ContentRelationship;

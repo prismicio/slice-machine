@@ -73,7 +73,7 @@ export const fetchApi = ({
       message: warning || successMessage || reason,
       ...(data.onResponse ? data.onResponse : {}),
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     onSuccess(jsonResponse);
   });
 };

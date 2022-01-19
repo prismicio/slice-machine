@@ -39,8 +39,14 @@ const Form = ({
         title: "Update SliceZone",
       }}
     >
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      {({ values }: { values: { sliceKeys: any } }) => (
+      {({
+        values,
+      }: {
+        values: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sliceKeys: any;
+        };
+      }) => (
         <FieldArray
           name="sliceKeys"
           render={(arrayHelpers) => {

@@ -86,8 +86,12 @@ const ModalCard = ({
                 }}
               >
                 <Heading sx={{ fontSize: "20px" }}>{title}</Heading>
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                <Close type="button" onClick={() => close()} />
+
+                <Close
+                  type="button"
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+                  onClick={() => close()}
+                />
               </Flex>
             )}
             Footer={
@@ -97,7 +101,7 @@ const ModalCard = ({
                   <Button
                     mr={2}
                     type="button"
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-return
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                     onClick={() => close()}
                     variant="secondary"
                   >

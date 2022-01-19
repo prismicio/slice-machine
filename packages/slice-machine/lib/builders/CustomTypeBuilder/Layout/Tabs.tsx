@@ -75,8 +75,10 @@ const CtTabs = ({
 
   return (
     <Box sx={{ bg: "backgroundClear" }}>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      <FlexWrapper sx={sx}>
+      <FlexWrapper
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        sx={sx}
+      >
         <Tabs
           selectedIndex={tabIndex}
           onSelect={(index) => setTabIndex(index)}
