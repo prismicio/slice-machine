@@ -29,12 +29,12 @@ const {
 } = require("../../../build/server/src/api/storybook");
 
 function scopePreviewToDefaultVariation(cwd, libraryName, sliceName) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const slicePath = GeneratedPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .value();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const generatedSlicePreview = Files.readFirstOf([
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     path.join(slicePath, "preview.png"),
@@ -53,44 +53,47 @@ function scopePreviewToDefaultVariation(cwd, libraryName, sliceName) {
     "default-slice",
     fileName
   );
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   Files.mkdir(path.dirname(generatedVariationPreviewPath), { recursive: true });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   fs.renameSync(generatedSlicePreview.path, generatedVariationPreviewPath);
 }
 
 function moveMocks(cwd, libraryName, sliceName) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const customMocksPath = CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .mocks();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
   const customMocks =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     Files.exists(customMocksPath) && Files.readString(customMocksPath);
   if (!customMocks) return;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const generatedMocksPath = GeneratedPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .mocks();
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   Files.write(generatedMocksPath, customMocks);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   Files.remove(customMocksPath);
 }
 
 function moveStories(cwd, libraryName, sliceName) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const customStoriesPath = CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .stories();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const customStories =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     Files.exists(customStoriesPath) && Files.readString(customStoriesPath);
   if (!customStories) return;
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   Files.remove(customStoriesPath);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   storybook.generateStories(
@@ -116,9 +119,12 @@ module.exports = {
   main: async function main(ignorePrompt, { cwd, pathToSmFile }) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const pathToOldMocks = path.join(cwd, ".slicemachine", "mocks.json");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (Files.exists(pathToOldMocks)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       Files.remove(pathToOldMocks);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (Files.exists(pathToSmFile)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
       const json = JSON.parse(fs.readFileSync(pathToSmFile, "utf-8"));
