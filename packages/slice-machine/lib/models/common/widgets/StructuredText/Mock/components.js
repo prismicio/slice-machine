@@ -25,16 +25,24 @@ export const PatternCard = ({
       <Flex sx={{ p: 2 }}>
         <Radio
           name="pattern"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={patternKey}
           disabled={!isAllowed}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
           onChange={() => onUpdate(patternKey, false)}
           checked={currentKey === patternKey}
         />
-        {Patterns[patternKey].title}
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          Patterns[patternKey].title
+        }
       </Flex>
       <Box sx={{ p: 2, pt: 0, mt: 0 }}>
         <Text sx={{ as: "p", fontSize: 1 }}>
-          {Patterns[patternKey].description}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            Patterns[patternKey].description
+          }
         </Text>
       </Box>
     </Label>
@@ -43,11 +51,14 @@ export const PatternCard = ({
 
 export const NumberOfBlocks = ({ currentValue, onUpdate }) => {
   const _onUpdate = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {
       target: { value },
     } = e;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const val = parseInt(value);
     if (val) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       onUpdate(val);
     }
   };
@@ -58,6 +69,7 @@ export const NumberOfBlocks = ({ currentValue, onUpdate }) => {
         sx={{ maxWidth: "440px", bg: "headSection" }}
         type="number"
         onChange={_onUpdate}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         value={currentValue}
       />
     </Box>
@@ -84,8 +96,10 @@ const PreTab = ({ content }) => (
 
 export const HandleMinMax = ({ title, value, moreInfo, onUpdate }) => {
   const _onUpdate = (key, val) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     onUpdate({
       ...value,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       [key]: parseInt(val),
     });
   };
@@ -103,6 +117,7 @@ export const HandleMinMax = ({ title, value, moreInfo, onUpdate }) => {
           <Input
             type="number"
             onChange={(e) => _onUpdate("min", e.target.value)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             value={value.min}
             sx={{
               bg: "backgroundClear",
@@ -125,6 +140,7 @@ export const HandleMinMax = ({ title, value, moreInfo, onUpdate }) => {
           <Input
             type="number"
             onChange={(e) => _onUpdate("max", e.target.value)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             value={value.max}
             sx={{
               bg: "backgroundClear",
