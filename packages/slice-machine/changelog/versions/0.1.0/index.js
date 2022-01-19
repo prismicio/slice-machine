@@ -3,29 +3,29 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const glob = require("glob");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const slash = require("slash");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const {
   CustomPaths,
   GeneratedPaths,
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("../../../build/lib/models/paths");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { default: Files } = require("../../../build/lib/utils/files");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { getInfoFromPath } = require("@slicemachine/core/build/src/utils/lib");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
   SupportedFrameworks,
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("@slicemachine/core/build/src/models/Framework");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
-  detectFramework,
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 } = require("@slicemachine/core/build/src/utils/framework");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
-  default: storybook,
-  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires, @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 } = require("../../../build/server/src/api/storybook");
 
 function scopePreviewToDefaultVariation(cwd, libraryName, sliceName) {
@@ -92,9 +92,11 @@ function moveStories(cwd, libraryName, sliceName) {
   if (!customStories) return;
 
   Files.remove(customStoriesPath);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   storybook.generateStories(
     path.join(__dirname, "../../../"),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     detectFramework(cwd, SupportedFrameworks),
     cwd,
     libraryName,

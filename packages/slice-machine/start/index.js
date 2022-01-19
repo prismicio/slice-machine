@@ -47,13 +47,14 @@ const infobox = require("./info");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const compareVersions = require("../build/lib/env/semver").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
   default: handleManifest,
   ManifestState,
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("../build/lib/env/manifest");
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { argv } = require("yargs");
 
 async function handleChangelog(params) {
@@ -140,8 +141,10 @@ See below for more info 👇`,
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   switch (manifestState.state) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     case ManifestState.Valid:
       return { exit: false };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     case ManifestState.NotFound: {
       console.log(
         `Run ${Utils.bold(
@@ -151,16 +154,19 @@ See below for more info 👇`,
 
       return { exit: true };
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     case ManifestState.MissingEndpoint:
       console.log(
         'Add a property "apiEndpoint" to your config.\nExample: https://my-repo.prismic.io/api/v2\n\n'
       );
       return { exit: true };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     case ManifestState.InvalidEndpoint:
       console.log(
         "Update your config file with a valid Prismic endpoint.\nExample: https://my-repo.prismic.io/api/v2\n\n"
       );
       return { exit: true };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     case ManifestState.InvalidJson: {
       console.log("Update your config file with a valid JSON structure.");
       return { exit: true };
@@ -178,7 +184,7 @@ async function run() {
   if (!argv.skipMigration) {
     await handleMigration(cwd);
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const manifestInfo = handleManifest(cwd);
   const { exit } = await handleManifestState(manifestInfo);
   if (exit) {
@@ -187,15 +193,16 @@ async function run() {
   }
 
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
   const framework = Utils.Framework.defineFramework(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     manifestInfo.content,
     cwd,
     Models.SupportedFrameworks
   );
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const validateRes = await validateUserAuth();
 
   start({ cwd, port }, (url) => {
