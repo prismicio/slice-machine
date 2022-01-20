@@ -22,12 +22,15 @@ const ImageSelection = ({ value, onUpdate }) => {
   const [imagesSet, setImagesSet] = useState({ images: null, name: null });
 
   const onChange = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     onUpdate(e.target.src);
     setImagesSet({ images: null, name: null });
   };
 
   const onSelect = (set) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     setImagesSet({ images: dataset[set], name: set });
   };
 
@@ -44,6 +47,7 @@ const ImageSelection = ({ value, onUpdate }) => {
           <ImagesList
             listName={imagesSet.name}
             images={imagesSet.images}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             value={value}
             onChange={onChange}
           />
@@ -76,24 +80,35 @@ const InputSrc = ({ value, onUpdate, onReset }) => {
       </Label>
       <Box sx={{ position: "relative" }}>
         <Input
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={value || ""}
           placeholder="https://images.prismic.io/..."
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
           onChange={(e) => onUpdate(e.target.value)}
         />
-        <InputDeleteIcon sx={{ top: "4px" }} onClick={onReset} />
+
+        <InputDeleteIcon
+          sx={{ top: "4px" }}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+          onClick={onReset}
+        />
       </Box>
     </Box>
   );
 };
 
 const Form = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const contentValue = values[MockConfigKey]?.content || null;
 
   const onUpdate = (value) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const clean = value.split("?")[0];
     setFieldValue(MockConfigKey, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       content: clean,
     });
   };
@@ -104,14 +119,24 @@ const Form = () => {
 
   return (
     <Box>
-      <InputSrc value={contentValue} onUpdate={onUpdate} onReset={onReset} />
+      <InputSrc
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value={contentValue}
+        onUpdate={onUpdate}
+        onReset={onReset}
+      />
       <Box mt={3}>
-        <ImageSelection value={contentValue} onUpdate={onUpdate} />
+        <ImageSelection
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          value={contentValue}
+          onUpdate={onUpdate}
+        />
       </Box>
     </Box>
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 Form.initialValues = initialValues;
 
 export const MockConfigForm = Form;

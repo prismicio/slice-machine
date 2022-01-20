@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const slice = yup
   .object()
   .shape({
@@ -12,6 +13,7 @@ export const slice = yup
     migrated: yup.boolean().required(),
     mock: yup.object().shape({}),
     // slice_type: yup.string().required(),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     model: yup
       .object()
       .shape({
@@ -33,6 +35,7 @@ export const libraries = yup
     yup.array().test({
       name: "example text",
       message: "${path} is not right",
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       test: function (value) {
         return true;
       },

@@ -15,6 +15,7 @@ export interface NonSharedSliceInSliceZone {
   key: string;
   value: {
     type: SliceType.Slice;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [x: string]: any;
   };
 }

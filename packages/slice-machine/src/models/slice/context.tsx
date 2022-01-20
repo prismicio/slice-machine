@@ -29,6 +29,7 @@ export function useModelReducer({
 }: {
   slice: ComponentUI;
   remoteSlice?: Models.SliceAsObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
 }): [SliceState, SliceStore] {
   const { model, ...rest } = slice;
@@ -38,7 +39,9 @@ export function useModelReducer({
     model,
     ...rest,
     variations,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     mockConfig,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialMockConfig: mockConfig,
     remoteVariations: remoteSlice ? Slice.toArray(remoteSlice).variations : [],
     initialScreenshotUrls: rest.screenshotUrls,
@@ -52,6 +55,7 @@ export function useModelReducer({
 }
 
 type SliceProviderProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
   variation: Models.VariationAsArray;
 };
@@ -61,19 +65,22 @@ const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
   value,
   variation,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [Model, store] = value;
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
     <SliceContext.Provider value={{ Model, store, variation }}>
       {typeof children === "function" ? children(value) : children}
     </SliceContext.Provider>
   );
 };
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter();
   const libraries = useContext(LibrariesContext);
 
   if (!router.query || !router.query.lib || !router.query.sliceName) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return children;
   }
 
@@ -85,6 +92,7 @@ export const SliceHandler = ({ children }: { children: any }) => {
 
   const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
   if (!lib) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
@@ -94,6 +102,7 @@ export const SliceHandler = ({ children }: { children: any }) => {
   );
 
   if (!slice) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
@@ -113,12 +122,14 @@ export const SliceHandler = ({ children }: { children: any }) => {
     }
   })();
   if (!variation) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
 
   // variation not in the URL but a default variation was found
   if (!variationParam) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`);
   }
 

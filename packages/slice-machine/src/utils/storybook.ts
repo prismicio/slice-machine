@@ -1,5 +1,6 @@
 import { createStorybookId } from "@lib/utils/str";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function camelCaseToDash(v: any): string {
   let ret = "",
     prevLowercase = false,
@@ -7,7 +8,9 @@ export function camelCaseToDash(v: any): string {
     isFirstChar = true;
 
   for (const s of v) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const isUppercase = s.toUpperCase() === s;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const isNumber = !isNaN(s);
 
     if (isNumber && !prevIsNumber && !isFirstChar) {

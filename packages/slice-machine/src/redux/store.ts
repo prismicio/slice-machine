@@ -26,6 +26,7 @@ export default function configureStore(
   const middlewares = [sagaMiddleware];
   const enhancers = [applyMiddleware(...middlewares)];
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
@@ -39,6 +40,7 @@ export default function configureStore(
   const store: Store<SliceMachineStoreType> = createStore(
     persistedReducer,
     preloadedState,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
     composeEnhancers(...enhancers)
   );
   const persistor = persistStore(store);

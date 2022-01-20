@@ -58,6 +58,7 @@ const SliceVariations = ({
   variations,
 }: {
   hideVariations: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variations: ReadonlyArray<any>;
 }) => {
   return !hideVariations ? (
@@ -128,11 +129,14 @@ export const SharedSlice = {
     bordered?: boolean;
     displayStatus?: boolean;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomStatus?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Wrapper?: any /* ? */;
     slice: SliceState;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
   }) {
     const defaultVariation = SliceState.variation(slice);
@@ -142,6 +146,7 @@ export const SharedSlice = {
     const variationId = defaultVariation.id;
     const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
     const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
@@ -151,6 +156,7 @@ export const SharedSlice = {
         <Themecard
           role="button"
           aria-pressed="false"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
           <SliceThumbnail
@@ -197,16 +203,19 @@ export const NonSharedSlice = {
     sx,
   }: {
     bordered: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice: { key: string; value: any };
     displayStatus?: boolean;
     thumbnailHeightPx?: string;
     wrapperType?: WrapperType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
   }) {
     const Wrapper = WrapperByType[wrapperType];
 
     return (
       <Wrapper link={undefined}>
+        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
           <SliceThumbnail withShadow={false} heightInPx={thumbnailHeightPx} />
           <Flex
@@ -220,6 +229,7 @@ export const NonSharedSlice = {
                 </Badge>
               ) : null}
               <Heading sx={{ flex: 1 }} as="h6">
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
                 {slice?.value?.fieldset || slice.key}
               </Heading>
             </Flex>

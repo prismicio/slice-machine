@@ -4,6 +4,7 @@ import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export default async function handler(
   req: RequestWithEnv
 ): Promise<SimulatorCheckResponse> {
@@ -33,7 +34,9 @@ export default async function handler(
     throw new Error(message);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { dependencies, devDependencies } = packageJson.content;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deps: Record<string, string> = { ...dependencies, ...devDependencies };
 
   const requiredDeps =

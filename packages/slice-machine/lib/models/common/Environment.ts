@@ -17,6 +17,7 @@ export interface BackendEnvironment {
   manifest: Models.Manifest;
   repo?: string;
   updateVersionInfo: UpdateVersionInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   framework: Models.Frameworks;
   baseUrl: string;
@@ -28,6 +29,7 @@ export interface FrontEndEnvironment {
   manifest: Models.Manifest;
   repo?: string;
   updateVersionInfo: UpdateVersionInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   framework: Models.Frameworks;
   sliceMachineAPIUrl: string;

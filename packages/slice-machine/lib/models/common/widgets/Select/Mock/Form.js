@@ -8,22 +8,28 @@ import { MockConfigKey } from "../../../../../consts";
 const RAND = "Random";
 
 const Form = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const contentValue =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     values[MockConfigKey]?.content !== null
-      ? values[MockConfigKey].content
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        values[MockConfigKey].content
       : null;
 
   const onSelect = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (e.target.value === RAND) {
       return setFieldValue(MockConfigKey, {});
     }
     setFieldValue(MockConfigKey, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       content: e.target.value,
     });
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const options = [RAND, ...values.config.options];
 
   return (
@@ -32,16 +38,23 @@ const Form = () => {
         <Text as="p" mb={1}>
           Select value
         </Text>
-        <Select onChange={onSelect} value={contentValue || RAND}>
-          {options.map((o) => (
-            <option key={o}>{o}</option>
-          ))}
+        <Select
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          onChange={onSelect}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          value={contentValue || RAND}
+        >
+          {options.map((o) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            return <option key={o}>{o}</option>;
+          })}
         </Select>
       </Label>
     </Box>
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 Form.initialValues = initialValues;
 
 export const MockConfigForm = Form;

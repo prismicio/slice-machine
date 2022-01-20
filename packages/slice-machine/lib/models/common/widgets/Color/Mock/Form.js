@@ -23,7 +23,14 @@ export const SelectionCard = ({ name, checked, onSelect, children }) => {
       }}
     >
       <Flex sx={{ p: 2 }}>
-        <Radio name={name} onChange={onSelect} checked={checked} />
+        <Radio
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          name={name}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+          onChange={onSelect}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+          checked={checked}
+        />
         {children}
       </Flex>
     </Label>
@@ -31,15 +38,19 @@ export const SelectionCard = ({ name, checked, onSelect, children }) => {
 };
 
 const Form = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const contentValue = values[MockConfigKey]?.content || null;
   const [transitionPreserved, preserveTransition] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
   const [lastValue, setLastValue] = useState(contentValue);
 
   const onChange = (color) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     setLastValue(color.hex);
     setFieldValue(MockConfigKey, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       content: color.hex,
     });
   };
@@ -59,6 +70,7 @@ const Form = () => {
           Color value
         </Text>
         <SelectionCard
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue}
           name={RAND}
           onSelect={reset}
@@ -68,7 +80,9 @@ const Form = () => {
         </SelectionCard>
         <SelectionCard
           name="custom"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           onSelect={() => onChange({ hex: lastValue || "#111" })}
           checked={contentValue !== null}
         >
@@ -76,6 +90,7 @@ const Form = () => {
         </SelectionCard>
         {contentValue || transitionPreserved ? (
           <BlockPicker
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
             color={contentValue || lastValue}
             onChangeComplete={onChange}
             onChange={startPreserveTransition}
@@ -86,6 +101,7 @@ const Form = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 Form.initialValues = initialValues;
 
 export const MockConfigForm = Form;

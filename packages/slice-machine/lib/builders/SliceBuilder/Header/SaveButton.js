@@ -1,7 +1,9 @@
 import { Flex, Button, Spinner } from "theme-ui";
 
 const SaveButton = ({ __status, isTouched, onSave, onPush, isLoading }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const onClick = isTouched ? onSave : onPush;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   const unsynced = ["MODIFIED", "NEW_SLICE"].indexOf(__status) !== -1;
 
   const text = (() => {
@@ -27,6 +29,7 @@ const SaveButton = ({ __status, isTouched, onSave, onPush, isLoading }) => {
       }}
       variant={isTouched || unsynced ? "buttons.primary" : "buttons.disabled"}
       disabled={!isTouched && !unsynced}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onClick={onClick}
     >
       {isLoading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null} {text}

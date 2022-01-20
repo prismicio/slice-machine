@@ -17,7 +17,9 @@ import { FieldType } from "../../CustomType/fields";
 } */
 
 const FormFields = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
 };
 
@@ -26,6 +28,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^GeoPoint$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   config: yup
     .object()
     .shape({

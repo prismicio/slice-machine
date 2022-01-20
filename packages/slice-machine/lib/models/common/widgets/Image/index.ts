@@ -39,6 +39,7 @@ const schema = yup.object().shape({
       excludeEmptyString: true,
     })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 

@@ -15,6 +15,7 @@ import { FieldType } from "../../CustomType/fields";
   }
 } */
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const { FormFields, schema } = createDefaultWidgetValues(FieldType.Date);
 
 const Meta = {
@@ -28,6 +29,7 @@ export const DateWidget: Widget<DateField, typeof schema> = {
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: FieldType.Date,
   schema,

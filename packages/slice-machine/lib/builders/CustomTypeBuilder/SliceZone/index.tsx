@@ -83,8 +83,11 @@ const SliceZone = ({
 }: {
   tabId: string;
   sliceZone: SliceZoneAsArray;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onRemoveSharedSlice: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onCreateSliceZone: Function;
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
@@ -156,6 +159,7 @@ const SliceZone = ({
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
         onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
         close={() => setFormIsOpen(false)}

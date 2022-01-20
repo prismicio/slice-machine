@@ -15,8 +15,11 @@ export const validateId = ({
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DefaultFields: any = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   label: Input("Label", { required: "This field is required", max: true }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   id: Input(
     "API ID*",
     {
@@ -30,6 +33,7 @@ export const DefaultFields: any = {
     },
     validateId
   ),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder: Input("Placeholder", {
     required: "This field is required",
     max: true,

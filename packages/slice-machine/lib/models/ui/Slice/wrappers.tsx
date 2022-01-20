@@ -6,6 +6,7 @@ export const LinkCardWrapper = ({
   children,
 }: {
   link: { as: string } | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
 }) => {
   return (
@@ -23,6 +24,7 @@ export const LinkCardWrapper = ({
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NonClickableCardWrapper = ({ children }: { children: any }) => {
   return <div style={{ cursor: "not-allowed" }}>{children}</div>;
 };

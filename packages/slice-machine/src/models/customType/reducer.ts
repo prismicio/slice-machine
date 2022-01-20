@@ -30,6 +30,7 @@ export default function reducer(
         return {
           ...prevState,
           current: prevState.initialCustomType,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: prevState.initialMockConfig,
         };
       }
@@ -75,6 +76,7 @@ export default function reducer(
         return {
           ...state,
           initialCustomType: state.current,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           initialMockConfig: state.mockConfig,
         };
       }
@@ -93,6 +95,7 @@ export default function reducer(
         try {
           if (field.type !== sliceZoneType) {
             const CurrentWidget: AnyWidget = Widgets[field.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(field, { stripUnknown: false });
             return CustomTypeState.updateTab(
               prevState,
@@ -102,6 +105,7 @@ export default function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/addWidget] Model is invalid for widget "${field.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -124,6 +128,7 @@ export default function reducer(
         try {
           if (value.type !== sliceZoneType) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
             return CustomTypeState.updateTab(
               prevState,
@@ -133,6 +138,7 @@ export default function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -194,6 +200,7 @@ export default function reducer(
           prevState,
           tabId
         )((tab) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
             SliceZone.addSharedSlice(sliceZone, sliceKey)
           )
@@ -209,6 +216,7 @@ export default function reducer(
           prevState,
           tabId
         )((tab) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
             SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)
           )
@@ -223,6 +231,7 @@ export default function reducer(
           prevState,
           tabId
         )((tab) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
             SliceZone.removeSharedSlice(sliceZone, sliceKey)
           )
@@ -231,12 +240,14 @@ export default function reducer(
       case Actions.UpdateWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
 
       case Actions.DeleteWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
       case Actions.GroupAddWidget: {

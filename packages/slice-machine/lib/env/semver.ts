@@ -1,6 +1,7 @@
 import path from "path";
 import fetch from "node-fetch";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import semver from "semver";
 import Files from "../utils/files";
@@ -40,6 +41,7 @@ async function fetchJsonPackage(packageName: string): Promise<Manifest> {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return await response.json();
 }
 
@@ -51,6 +53,7 @@ export const createComparator =
         return DefaultComparison;
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const manifest: Manifest = Files.readJson(pathToPkg);
       const onlinePackage = await fetchJsonPackage(manifest.name);
       const updateAvailable = semver.lt(

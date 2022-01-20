@@ -15,6 +15,7 @@ const CustomTypeBuilder = ({
 }: {
   Model: CustomTypeState;
   store: CustomTypeStore;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onLeave: Function;
 }) => {
   const modelRef = useRef(Model);
@@ -43,15 +44,19 @@ const CustomTypeBuilder = ({
           sliceZone,
           key,
         }: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value: any;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           sliceZone: any;
           key: string;
         }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={value}
               Model={Model}
               store={store}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               sliceZone={sliceZone}
               showHints={true}
               tabId={key}

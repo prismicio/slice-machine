@@ -17,6 +17,7 @@ const Meta = {
   description: "A link to files, document and media",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const linkToMediaConfigSchema = linkConfigSchema.shape({
   select: yup
     .string()
@@ -29,6 +30,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Link$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   config: linkToMediaConfigSchema.optional(),
 });
 
@@ -37,6 +39,7 @@ export const LinkToMediaWidget: Widget<LinkToMediaField, typeof schema> = {
   handleMockContent,
   MockConfigForm,
   Meta,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   schema,
   Form,

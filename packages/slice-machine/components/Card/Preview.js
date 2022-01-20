@@ -11,12 +11,14 @@ const PreviewCard = ({
 }) => (
   <Card
     variant={variant}
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     sx={{
       mb: 2,
       p: 2,
       bg: "headSection",
       cursor: "pointer",
       "&:hover": {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         border: ({ colors }) => `2px solid ${colors.primary}`,
         boxShadow: "0 0 0 3px rgba(81, 99, 186, 0.2)",
       },
@@ -28,13 +30,18 @@ const PreviewCard = ({
     {...rest}
   >
     <Flex sx={{ alignItems: "center", justifyContent: "space-between", p: 2 }}>
-      <Heading as="h3" sx={titleSx}>
+      <Heading
+        as="h3"
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        sx={titleSx}
+      >
         {title}
       </Heading>
       <Box
         sx={{
           width: "44px",
           height: "44px",
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           backgroundImage: `url("${imageUrl}")`,
           backgroundPosition: "center",
           backgroundSize: "cover",

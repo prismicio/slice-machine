@@ -28,6 +28,7 @@ const schema = yup.object().shape({
 
 export const GroupWidget: Widget<GroupField<AsArray>, typeof schema> = {
   Meta,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields: DefaultFields,
   schema,
   create: (label: string) => new GroupField({ label }),

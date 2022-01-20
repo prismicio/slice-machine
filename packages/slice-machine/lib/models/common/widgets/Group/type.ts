@@ -9,6 +9,7 @@ interface GroupConfig<T extends AsObject | AsArray> {
   placeholder: string;
   fields: T;
 }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 const defaultConfig = { label: "", placeholder: "", fields: [] as any };
 
 export class GroupField<T extends AsObject | AsArray> implements Field {

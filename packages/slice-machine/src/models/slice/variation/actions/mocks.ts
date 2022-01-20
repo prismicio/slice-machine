@@ -3,6 +3,7 @@ import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
 import { ActionType } from "./ActionType";
 
 export function updateWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (_variationId: string) => {
@@ -11,7 +12,9 @@ export function updateWidgetMockConfig(
       widgetArea: Models.WidgetsArea,
       previousKey: string,
       fieldId: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): any => {
       const updatedConfig = SliceMockConfig.updateFieldMockConfig(
         sliceMockConfig,
@@ -31,6 +34,7 @@ export function updateWidgetMockConfig(
 }
 
 export function deleteWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (_variationId: string) => {
@@ -38,6 +42,7 @@ export function deleteWidgetMockConfig(
       sliceMockConfig: SliceMockConfig,
       widgetArea: Models.WidgetsArea,
       fieldId: string
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): any => {
       if (!sliceMockConfig) return;
 

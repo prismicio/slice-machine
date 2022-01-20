@@ -5,6 +5,7 @@ const ZoneEmptyState = ({
   onEnterSelectMode,
   zoneName,
 }: {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onEnterSelectMode: Function;
   zoneName: string;
 }) => (
@@ -18,6 +19,7 @@ const ZoneEmptyState = ({
     <Button
       mt={3}
       variant="buttons.darkSmall"
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       onClick={() => onEnterSelectMode()}
     >
       <FaPlus

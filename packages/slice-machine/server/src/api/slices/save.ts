@@ -21,6 +21,7 @@ export async function handler(
 ): Promise<SliceSaveResponse> {
   await onBeforeSaveSlice({ from, sliceName, model }, env);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const updatedMockConfig = insertMockConfig(env.cwd, {
     key: sliceName,
     prefix: from,
@@ -29,24 +30,30 @@ export async function handler(
 
   console.log("\n\n[slice/save]: Updating slice model");
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   Files.write(modelPath, model);
 
   const hasCustomMocks = Files.exists(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
   );
 
   if (!hasCustomMocks) {
     console.log("[slice/save]: Generating mocks");
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const mocks = await mock(
       sliceName,
       model,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );
     Files.write(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       mocks
     );
   }

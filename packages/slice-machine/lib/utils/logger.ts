@@ -16,6 +16,7 @@ export const colors = {
 export const logger = {
   info: (message: string): void => npmLog.info("", message),
   plain: (message: string): void => console.log(message),
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   line: (count = 1): void => console.log(`${Array(count - 1).fill("\n")}`),
   warn: (message: string): void => npmLog.warn("", message),
   error: (message: string): void => npmLog.error("", message),

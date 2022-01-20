@@ -32,9 +32,11 @@ const Files = {
   readString(pathToFile: string) {
     return fs.readFileSync(pathToFile, { encoding: Files._format });
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readEntity<T>(pathToFile: string, validate: (payload: any) => Error | T) {
     return validate(JSON.parse(this.readString(pathToFile)));
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   safeReadEntity<T>(pathToFile: string, validate: (payload: any) => null | T) {
     try {
       const result = this.readEntity(pathToFile, validate);
@@ -46,10 +48,12 @@ const Files = {
   },
 
   readJson(pathToFile: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(this.readString(pathToFile));
   },
   safeReadJson(pathToFile: string) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return JSON.parse(this.readString(pathToFile));
     } catch (e) {
       return null;

@@ -106,6 +106,7 @@ export function reducer(
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
             return SliceState.updateVariation(
               prevState,
@@ -115,6 +116,7 @@ export function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -132,6 +134,7 @@ export function reducer(
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
             return SliceState.updateVariation(
               prevState,
@@ -149,6 +152,7 @@ export function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -180,12 +184,14 @@ export function reducer(
       case VariationActions.UpdateWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
 
       case VariationActions.DeleteWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
 

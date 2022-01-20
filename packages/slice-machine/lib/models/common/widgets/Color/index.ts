@@ -21,6 +21,7 @@ const Meta = {
   description: "A color picker",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
   FieldType.Color
 );
@@ -30,6 +31,7 @@ export const ColorWidget: Widget<ColorField, typeof schema> = {
   handleMockConfig,
   create: (label: string) => new ColorField({ label }),
   MockConfigForm,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME,
   schema,

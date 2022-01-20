@@ -201,6 +201,7 @@ function* checkSetupSaga(
   action: ReturnType<typeof checkSimulatorSetupCreator.request>
 ) {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { data: setupStatus }: { data: SimulatorCheckResponse } = yield call(
       checkSimulatorSetup
     );
@@ -213,6 +214,7 @@ function* checkSetupSaga(
         })
       );
       yield put(connectToSimulatorIframeCreator.request());
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const {
         timeout,
         iframeCheckKO,
@@ -267,12 +269,15 @@ function* checkSetupSaga(
     );
     yield call(failCheckSetupSaga);
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     yield put(checkSimulatorSetupCreator.failure(error));
   }
 }
 
 function* failCheckSetupSaga() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const framework: Frameworks = yield select(getFramework);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const isPreviewAvailableForFramework: boolean = yield select(
     selectIsSimulatorAvailableForFramework
   );
@@ -291,9 +296,12 @@ function* failCheckSetupSaga() {
 }
 
 function* trackOpenSetupDrawerSaga() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const framework: Frameworks = yield select(getFramework);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const version: string = yield select(getCurrentVersion);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 

@@ -18,6 +18,7 @@ export default class CustomTypeStore implements Store {
       payload,
     }: {
       type: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       payload?: any;
     }) => void
   ) {}
@@ -34,6 +35,7 @@ export default class CustomTypeStore implements Store {
   deleteWidgetMockConfig = deleteWidgetMockConfig(this.dispatch);
   updateWidgetGroupMockConfig = updateWidgetGroupMockConfig(this.dispatch);
   deleteWidgetGroupMockConfig = deleteWidgetGroupMockConfig(this.dispatch);
+  // eslint-disable-next-line @typescript-eslint/ban-types
   tab(tabId: string): Record<string, Function> {
     return {
       update: (newKey: string): void => {
@@ -94,6 +96,7 @@ export default class CustomTypeStore implements Store {
           payload: { tabId, sliceKey },
         });
       },
+      // eslint-disable-next-line @typescript-eslint/ban-types
       group: (groupId: string): Record<string, Function> => {
         return {
           addWidget: (id: string, field: Field): void => {

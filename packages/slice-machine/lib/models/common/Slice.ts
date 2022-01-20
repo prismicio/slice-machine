@@ -7,6 +7,7 @@ const Slice = {
   toObject(slice: Models.SliceAsArray): Models.SliceAsObject {
     return {
       ...slice,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       variations: slice.variations.map(Variation.toObject),
     };
   },
@@ -14,6 +15,7 @@ const Slice = {
   toArray(slice: Models.SliceAsObject): Models.SliceAsArray {
     return {
       ...slice,
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       variations: slice.variations.map(Variation.toArray),
     };
   },

@@ -21,19 +21,24 @@ import { UIDField } from "./type";
 import { FieldType } from "../../CustomType/fields";
 
 const FormFields = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     ...DefaultFields.id,
     validate: {
       required: "This field is required",
       matches: [/^uid$/, "Api ID must be 'uid' for this field."],
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   placeholder: DefaultFields.placeholder,
 };
 
 const schema = yup.object().shape({
   type: yup.string().matches(/^UID$/, { excludeEmptyString: true }).required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 

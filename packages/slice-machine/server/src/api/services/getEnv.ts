@@ -85,6 +85,7 @@ export default async function getEnv(
   const maybeErrors = validate(manifestInfo.content);
   const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));
   const repo = extractRepo(parsedRepo);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mockConfig = getMockConfig(cwd);
 
   const client = initClient(
@@ -108,6 +109,7 @@ export default async function getEnv(
         updateCommand: npmCompare.updateCommand,
         updateAvailable: npmCompare.updateAvailable,
       },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
       framework: Utils.Framework.defineFramework(
         manifestInfo.content,

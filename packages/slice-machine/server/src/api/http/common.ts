@@ -9,6 +9,7 @@ export interface RequestWithEnv extends express.Request {
 }
 
 export function WithEnv(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handler: (req: RequestWithEnv, res: express.Response) => Promise<any>
 ) {
   return async function (req: express.Request, res: express.Response) {
@@ -16,8 +17,11 @@ export function WithEnv(
 
     const reqWithEnv = (() => {
       // TODO: this mutates req, so why not assign to req directly ?
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       const r = req as any;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       r.env = env;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       r.errors = errors;
       return r as RequestWithEnv;
     })();

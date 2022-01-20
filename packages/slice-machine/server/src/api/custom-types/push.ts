@@ -15,12 +15,16 @@ import { RequestWithEnv } from "../http/common";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   model: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   remoteCustomType: any
 ) => {
   if (remoteCustomType) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return client.updateCustomType(model);
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
   return client.insertCustomType(model);
 };
 
@@ -45,7 +49,8 @@ export default async function handler(req: RequestWithEnv) {
       state.isFake || (state.clientError && state.clientError.status === 403);
     const errorExplanation = isAnAuthenticationError
       ? "Please log in to Prismic!"
-      : `You don\'t have access to the repo \"${state.env.repo}\"`;
+      : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `You don\'t have access to the repo \"${state.env.repo}\"`;
 
     const errorCode = state.isFake
       ? 403
@@ -61,12 +66,15 @@ export default async function handler(req: RequestWithEnv) {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomTypesPaths(state.env.cwd).customType(id).model();
 
   let model;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     model = Files.readJson(modelPath);
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;
     console.error(msg);
     return onError(null, msg);
@@ -75,6 +83,7 @@ export default async function handler(req: RequestWithEnv) {
   const remoteCustomType = state.remoteCustomTypes.find(
     (e: { id: string }) => e.id === id
   );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
     const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`;
     console.error(msg);
@@ -83,6 +92,7 @@ export default async function handler(req: RequestWithEnv) {
 
   const sliceKeysToPush: string[] = [];
   for (const [, tab] of Object.entries(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     CustomType.fromJsonModel(model.id, model).tabs
   )) {
     const { sliceZone } = Tab.organiseFields(tab);
@@ -123,6 +133,7 @@ export default async function handler(req: RequestWithEnv) {
           from: slice.from,
         });
       } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         console.error(`[custom-types/push] Full error: ${e}`);
       }
     }
@@ -138,6 +149,7 @@ export default async function handler(req: RequestWithEnv) {
     return onError(null, msg);
   }
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`[custom-types/push] Custom Type ${id} was pushed!`);
   return {};
 }

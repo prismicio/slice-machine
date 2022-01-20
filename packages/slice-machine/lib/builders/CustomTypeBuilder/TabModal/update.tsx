@@ -19,6 +19,7 @@ const InputBox = ({
   label: string;
   placeholder: string;
   error?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }) => (
   <Box mb={3}>
@@ -49,7 +50,9 @@ const CreateCustomtypeForm = ({
 }: {
   title: string;
   isOpen: boolean;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onSubmit: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   close: Function;
   tabIds: ReadonlyArray<string>;
   allowDelete: boolean;
@@ -60,8 +63,10 @@ const CreateCustomtypeForm = ({
       isOpen={isOpen}
       widthInPx="530px"
       formId={formId}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       close={() => close()}
       cardProps={{ bodySx: { p: 0 } }}
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onSubmit={(values: {}) => {
         onSubmit(values);
       }}
@@ -92,6 +97,7 @@ const CreateCustomtypeForm = ({
       }: {
         errors: { id?: string };
         values: { id: string };
+        // eslint-disable-next-line @typescript-eslint/ban-types
         setFieldValue: Function;
       }) => (
         <Box>
@@ -126,6 +132,7 @@ const CreateCustomtypeForm = ({
             as="hr"
             sx={{
               borderBottom: "none",
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               borderTop: (theme) => `1px solid ${theme?.colors?.borders}`,
             }}
           />

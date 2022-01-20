@@ -4,14 +4,18 @@ import { ActionType } from "./ActionType";
 import { ScreenshotResponse } from "@models/common/Screenshots";
 
 export function generateScreenShot(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return (_variationId: string) => {
     return async (
       libraryName: string,
       sliceName: string,
       setData: (data: object) => void
+      // eslint-disable-next-line @typescript-eslint/require-await
     ) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchApi({
         url: `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
         setData,
@@ -32,6 +36,7 @@ export function generateScreenShot(
 }
 
 export function generateCustomScreenShot(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (variationId: string) => {
@@ -40,6 +45,7 @@ export function generateCustomScreenShot(
       sliceName: string,
       setData: (data: object) => void,
       file: Blob
+      // eslint-disable-next-line @typescript-eslint/require-await
     ) => {
       const form = new FormData();
       form.append("file", file);
@@ -47,6 +53,7 @@ export function generateCustomScreenShot(
       form.append("sliceName", sliceName);
       form.append("variationId", variationId);
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchApi({
         url: "/api/custom-screenshot",
         setData,

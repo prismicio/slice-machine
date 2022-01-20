@@ -20,6 +20,7 @@ export default class SliceStore implements Store {
       payload,
     }: {
       type: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       payload?: any;
     }) => void
   ) {}
@@ -41,6 +42,7 @@ export default class SliceStore implements Store {
       payload: { key, name, copied },
     });
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   variation = (variationId: string): Record<string, Function> => {
     return {
       generateScreenShot: generateScreenShot(this.dispatch)(variationId),

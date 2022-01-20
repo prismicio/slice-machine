@@ -55,6 +55,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         client.track(eventType, attributes);
       })
       .catch(() =>
@@ -69,6 +70,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         client.identify(userId);
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
@@ -87,6 +89,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         client.group(repoName, attributes);
       })
       .catch(() => console.warn(`Couldn't report group: Tracking error`));

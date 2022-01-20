@@ -16,22 +16,32 @@ const ImageInput = ({ src, onChange, selected }) => (
         ? "5px solid rgba(81, 99, 186, 1)"
         : "5px solid transparent",
     }}
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     onClick={onChange}
     type="image"
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     src={src}
   />
 );
 
 const RenderCol = ({ elements, cols, onSelect }) => (
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   <Col cols={cols}>
-    {elements.map(([key, value]) => (
-      <PreviewCard
-        key={key}
-        title={key}
-        imageUrl={`${value[0].raw}&q=20&w=120`}
-        onClick={() => onSelect(key)}
-      />
-    ))}
+    {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      elements.map(([key, value]) => (
+        <PreviewCard
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+          key={key}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          title={key}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+          imageUrl={`${value[0].raw}&q=20&w=120`}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+          onClick={() => onSelect(key)}
+        />
+      ))
+    }
   </Col>
 );
 
@@ -45,9 +55,24 @@ export const ImagesListCards = ({ onSelect }) => {
 
   return (
     <FlexGrid mt={3} px={0} sx={{ display: "flex" }}>
-      <RenderCol onSelect={onSelect} cols={3} elements={Cols[0]} />
-      <RenderCol onSelect={onSelect} cols={3} elements={Cols[1]} />
-      <RenderCol onSelect={onSelect} cols={3} elements={Cols[2]} />
+      <RenderCol
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        onSelect={onSelect}
+        cols={3}
+        elements={Cols[0]}
+      />
+      <RenderCol
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        onSelect={onSelect}
+        cols={3}
+        elements={Cols[1]}
+      />
+      <RenderCol
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        onSelect={onSelect}
+        cols={3}
+        elements={Cols[2]}
+      />
     </FlexGrid>
   );
 };
@@ -63,6 +88,7 @@ export const ImagesList = ({ listName, images, value, onChange }) => {
           display: "flex",
           background: theme.colors.background,
           padding: "0 8px",
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           borderBottom: `1px solid ${theme.colors.borders}`,
         }}
       >
@@ -82,14 +108,21 @@ export const ImagesList = ({ listName, images, value, onChange }) => {
             marginBottom: "4px",
           }}
         >
-          {images.slice(0, images.length / 2).map((image) => (
-            <ImageInput
-              key={image.raw}
-              src={`${image.raw}&q=80&w=400`}
-              onChange={onChange}
-              selected={image.raw.indexOf(value) === 0}
-            />
-          ))}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+            images.slice(0, images.length / 2).map((image) => (
+              <ImageInput
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                key={image.raw}
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                src={`${image.raw}&q=80&w=400`}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                onChange={onChange}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                selected={image.raw.indexOf(value) === 0}
+              />
+            ))
+          }
         </div>
         <div
           style={{
@@ -97,14 +130,21 @@ export const ImagesList = ({ listName, images, value, onChange }) => {
             marginBottom: "4px",
           }}
         >
-          {images.slice(images.length / 2).map((image) => (
-            <ImageInput
-              key={image.raw}
-              src={`${image.raw}&q=80&w=400`}
-              onChange={onChange}
-              selected={image.raw.indexOf(value) === 0}
-            />
-          ))}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+            images.slice(images.length / 2).map((image) => (
+              <ImageInput
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                key={image.raw}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                src={`${image.raw}&q=80&w=400`}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                onChange={onChange}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                selected={image.raw.indexOf(value) === 0}
+              />
+            ))
+          }
         </div>
       </div>
     </Fragment>

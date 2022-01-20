@@ -16,6 +16,7 @@ const Error = ({ msg }: { msg?: string }) => (
 );
 const VariationModal: React.FunctionComponent<{
   isOpen: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: () => any;
   onSubmit: (
     id: string,
@@ -100,6 +101,7 @@ const VariationModal: React.FunctionComponent<{
     reset();
   }, [initialVariation, isOpen]);
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async function handleSubmit() {
     const data = { id: generatedId, name, origin };
     const errors = validateForm(data);
@@ -126,6 +128,7 @@ const VariationModal: React.FunctionComponent<{
       }}
     >
       <Formik
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         initialValues={{ id: generatedId, name, origin } as any}
         onSubmit={handleSubmit}
       >
@@ -134,6 +137,7 @@ const VariationModal: React.FunctionComponent<{
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
+              // eslint-disable-next-line @typescript-eslint/no-floating-promises
               handleSubmit();
             }
           }}

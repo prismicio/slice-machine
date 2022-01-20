@@ -58,6 +58,7 @@ function ListItem<F extends Field, S extends AnyObjectSchema>({
   const { theme } = useThemeUI();
   const {
     key,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     value: { config },
   } = item;
 
@@ -103,6 +104,7 @@ function ListItem<F extends Field, S extends AnyObjectSchema>({
                   >
                     <ItemHeader
                       theme={theme}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                       text={config?.label || key}
                       sliceFieldName={
                         renderFieldAccessor && renderFieldAccessor(key)

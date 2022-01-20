@@ -7,8 +7,11 @@ const FormFieldCheckbox = ({ meta, label, fieldName, onChange, ...rest }) => {
       <Field
         as={Checkbox}
         type="checkbox"
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         name={fieldName}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         onChange={() => onChange(!meta.value)}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         checked={meta.value}
       />
       {label}

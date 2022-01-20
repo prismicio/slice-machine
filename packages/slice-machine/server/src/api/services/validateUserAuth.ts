@@ -27,10 +27,12 @@ export async function validateUserAuth() {
     };
   }
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const body = await res.json();
     return {
       connected: true,
       reason: "",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       body,
     };
   } catch (e) {

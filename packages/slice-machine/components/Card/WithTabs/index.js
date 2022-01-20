@@ -18,17 +18,29 @@ const WithTabs = ({
   return (
     <Card
       borderFooter
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       footerSx={{ p: 0, ...footerSx }}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       bodySx={{ p: 0, ...bodySx }}
       sx={{ border: "none" }}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       Header={Header}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       Footer={Footer}
     >
       <Tabs defaultIndex={defaultIndex} onSelect={(i) => setCurrentIndex(i)}>
         <TabList>
-          {(tabs || []).map((tab) => (
-            <Tab key={tab}>{tab}</Tab>
-          ))}
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            (tabs || []).map((tab) => (
+              <Tab
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                key={tab}
+              >
+                {tab}
+              </Tab>
+            ))
+          }
         </TabList>
         {Children.map(children, (Child, i) => (
           <Box
