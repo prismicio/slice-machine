@@ -1,6 +1,7 @@
+import { SliceCreateBody } from "@models/common/Slice";
+
 declare let appRoot: string;
 
-import type Models from "@slicemachine/core/build/src/models";
 import path from "path";
 import { promisify } from "util";
 
@@ -78,11 +79,7 @@ export default async function handler({
   sliceName,
   from,
   values,
-}: {
-  sliceName: string;
-  from: string;
-  values?: { componentCode: string; model: Models.SliceAsObject };
-}) {
+}: SliceCreateBody) {
   const { env } = await getEnv();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

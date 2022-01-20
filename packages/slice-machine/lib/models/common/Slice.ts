@@ -21,6 +21,12 @@ const Slice = {
   },
 };
 
+export interface SliceCreateBody {
+  sliceName: string;
+  from: string;
+  values?: { componentCode: string; model: Models.SliceAsObject };
+}
+
 export interface SliceSaveBody {
   sliceName: string;
   from: string;

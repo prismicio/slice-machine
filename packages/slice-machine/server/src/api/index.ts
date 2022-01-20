@@ -6,41 +6,24 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const mime = require("mime");
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const pushSlice = require("./slices/push").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const saveSlice = require("./slices/save").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const createSlice = require("./slices/create/index").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const screenshot = require("./screenshots/screenshots").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const customScreenshot = require("./screenshots/custom-screenshots").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const parseOembed = require("./parse-oembed").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const state = require("./state").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const checkSimulator = require("./simulator").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const saveCustomType = require("./custom-types/save").default;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-const pushCustomType = require("./custom-types/push").default;
-
+import pushSlice from "./slices/push";
+import saveSlice from "./slices/save";
+import createSlice from "./slices/create/index";
+import screenshot from "./screenshots/screenshots";
+import customScreenshot from "./screenshots/custom-screenshots";
+import parseOembed from "./parse-oembed";
+import state from "./state";
+import checkSimulator from "./simulator";
+import saveCustomType from "./custom-types/save";
+import pushCustomType from "./custom-types/push";
 import validateAuth from "./auth/validate";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
+
 import { RequestWithEnv, WithEnv } from "./http/common";
+import { CustomScreenshotRequest, TmpFile } from "@models/common/Screenshots";
+import { SliceCreateBody } from "@models/common/Slice";
 
 router.use(
   "/__preview",
@@ -107,8 +90,13 @@ router.post(
   "/custom-screenshot",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-misused-promises, @typescript-eslint/no-explicit-any
   async function (req: any, res: express.Response): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    const payload = await customScreenshot(req.files.file, req.body);
+    /* eslint-disable */
+    const payload = await customScreenshot(
+      req.files.file as TmpFile,
+      req.body as CustomScreenshotRequest
+    );
+    /* eslint-enable */
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (payload.err) {
       return res.status(400).json(payload);
@@ -125,7 +113,7 @@ router.post(
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-misused-promises, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const payload = await parseOembed(req.body.url);
+    const payload = await parseOembed(req.body.url as string);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (payload.err) {
       return res.status(400).json(payload);
@@ -162,11 +150,9 @@ router.use(
   ): Promise<Express.Response> {
     let payload;
     if (req.method === "POST") {
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      payload = await createSlice(req.body);
+      payload = await createSlice(req.body as SliceCreateBody);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      payload = await createSlice(req.query);
+      payload = await createSlice(req.query as SliceCreateBody);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
