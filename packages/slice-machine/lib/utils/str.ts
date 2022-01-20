@@ -32,31 +32,3 @@ export function createStorybookId(str: string): string {
   const camel = camelCase(str);
   return `_${camel[0].toUpperCase()}${camel.slice(1)}`;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function camelCaseToDash(v: any): string {
-  let ret = "",
-    prevLowercase = false,
-    prevIsNumber = false,
-    isFirstChar = true;
-
-  for (const s of v) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const isUppercase = s.toUpperCase() === s;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const isNumber = !isNaN(s);
-
-    if (isNumber && !prevIsNumber && !isFirstChar) {
-      ret += "-";
-    } else {
-      if (isUppercase && !isNumber && (prevLowercase || prevIsNumber)) {
-        ret += "-";
-      }
-    }
-    ret += s;
-    prevLowercase = !isUppercase;
-    prevIsNumber = isNumber;
-    isFirstChar = false;
-  }
-  return ret.replace(/-+/g, "-").toLowerCase();
-}
