@@ -1,6 +1,14 @@
 
 describe("onboarding finish", () => {
 
+  before(() => {
+    cy.clearLocalStorageSnapshot();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+  });
+
   it('begin button and continue button eventually redirect to /', () => {
 
     const ids = [
@@ -34,7 +42,5 @@ describe("onboarding finish", () => {
     }
   
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
-  
   })
-  
 })

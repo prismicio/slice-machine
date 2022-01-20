@@ -7,10 +7,6 @@ describe("Custom Types specs", () => {
     cy.restoreLocalStorage();
   });
 
-  afterEach(() => {
-    cy.saveLocalStorage();
-  });
-
   it('A user can create a custom type', () => {
     cy.setupSliceMachineUserContext()
     cy.visit('/')

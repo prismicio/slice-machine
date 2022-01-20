@@ -10,10 +10,6 @@ describe('onboarding redirects and local storage', () => {
     cy.restoreLocalStorage();
   });
 
-  afterEach(() => {
-    cy.saveLocalStorage();
-  });
-
   it('should redirect to /onboarding when is-onboarded is not in local storage', () => {
     cy.intercept('POST', '/api/tracking/onboarding', ({body}) => {
       expect(body.id).equal("slicemachine_onboarding_start")
