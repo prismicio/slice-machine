@@ -96,7 +96,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
         }, 0)
       : 0;
 
-  const customTypeCount = !!customTypes ? customTypes.length : 0;
+  const customTypeCount = customTypes.length;
 
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 

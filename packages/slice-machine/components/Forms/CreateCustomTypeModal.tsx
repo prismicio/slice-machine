@@ -12,14 +12,13 @@ type CreateCustomTypeModalProps = {
   onSubmit: (values: CtPayload) => void;
   close: () => void;
   customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
-  dataCy: string;
 };
 
 const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps> =
-  ({ isOpen, onSubmit, close, customTypes, dataCy }) => {
+  ({ isOpen, onSubmit, close, customTypes }) => {
     return (
       <ModalFormCard
-        dataCy={dataCy}
+        dataCy="create-ct-modal"
         isOpen={isOpen}
         widthInPx="530px"
         formId="create-custom-type"
@@ -51,10 +50,12 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
             <InputBox
               name="label"
               label="Custom Type Name"
+              dataCy="ct-name-input"
               placeholder="My Custom Type"
             />
             <InputBox
               name="id"
+              dataCy="ct-id-input"
               label="Custom Type ID"
               placeholder="my-custom-type"
               error={errors.id}

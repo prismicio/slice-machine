@@ -120,7 +120,7 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { customTypes = [], onCreate } = useContext(CustomTypesContext);
+  const { customTypes, onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     if (onCreate) {
@@ -198,7 +198,6 @@ const CustomTypes: React.FunctionComponent = () => {
       )}
       <CreateCustomTypeModal
         isOpen={isOpen}
-        dataCy="create-ct-modal"
         onSubmit={_onCreate}
         customTypes={customTypes}
         close={() => setIsOpen(false)}

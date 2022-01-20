@@ -25,7 +25,7 @@ describe('onboarding redirects and local storage', () => {
   })
 
   it('when is-onboarded is in local storage it should not redirect', () => {
-    cy.setLocalStorage("persist:root", JSON.stringify({userContext: JSON.stringify({isOnboarded: true})}))
+    cy.setupSliceMachineUserContext()
     cy.visit('/')
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
   })
