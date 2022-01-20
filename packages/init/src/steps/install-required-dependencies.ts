@@ -21,13 +21,13 @@ function depsForFramework(framework: Models.Frameworks): string {
     case Models.Frameworks.react:
       return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.next:
-      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}@v5.1.1 ${NEXT_SLICEZONE} ${SLICE_SIMULATOR_REACT}`;
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${NEXT_SLICEZONE} ${SLICE_SIMULATOR_REACT}`;
     case Models.Frameworks.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.nuxt:
       return `${NUXT_PRISMIC} ${NUXT_SM} ${VUE_SLICEZONE} ${SLICE_SIMULATOR_VUE}`;
     case Models.Frameworks.vue:
-      return `${PRISMIC_VUE} ${PRISMIC_CLIENT}@v5.1.1 ${PRISMIC_DOM_PACKAGE_NAME} ${VUE_SLICEZONE}`;
+      return `${PRISMIC_VUE} ${PRISMIC_CLIENT} ${PRISMIC_DOM_PACKAGE_NAME} ${VUE_SLICEZONE}`;
     default:
       return "";
   }
