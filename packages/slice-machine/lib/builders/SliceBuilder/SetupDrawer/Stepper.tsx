@@ -14,7 +14,11 @@ import {
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { getFramework, selectSimulatorUrl } from "@src/modules/environment";
+import {
+  getFramework,
+  getLinkToTroubleshootingDocs,
+  selectSimulatorUrl,
+} from "@src/modules/environment";
 
 interface Props {
   framework: Frameworks;
@@ -44,6 +48,7 @@ export default function Stepper({
     setupStatus,
     userHasAtLeastOneStepMissing,
     userHasConfiguredAllSteps,
+    linkToTroubleshootingDocs,
     isCheckingSetup,
   } = useSelector((state: SliceMachineStoreType) => ({
     openedStep: selectOpenedStep(state),
@@ -51,6 +56,7 @@ export default function Stepper({
     setupStatus: selectSetupStatus(state),
     simulatorUrl: selectSimulatorUrl(state),
     framework: getFramework(state),
+    linkToTroubleshootingDocs: getLinkToTroubleshootingDocs(state),
     userHasAtLeastOneStepMissing: selectUserHasAtLeastOneStepMissing(state),
     userHasConfiguredAllSteps: selectUserHasConfiguredAllSteps(state),
   }));
@@ -67,6 +73,7 @@ export default function Stepper({
             isOpen={openedStep === i + 1}
             onOpenStep={() => toggleSetupDrawerStep(i + 1)}
             key={`next-step-${i + 1}`}
+            linkToTroubleshootingDocs={linkToTroubleshootingDocs}
             {...{
               simulatorUrl,
               openedStep,
