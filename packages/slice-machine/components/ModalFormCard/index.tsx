@@ -19,6 +19,7 @@ const ModalCard = ({
   content: { title },
   cardProps,
   omitFooter,
+  dataCy,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
@@ -38,6 +39,7 @@ const ModalCard = ({
   // eslint-disable-next-line @typescript-eslint/ban-types
   cardProps?: {};
   omitFooter?: boolean;
+  dataCy?: string;
 }) => (
   <SliceMachineModal
     isOpen={isOpen}
@@ -64,7 +66,7 @@ const ModalCard = ({
       }}
     >
       {({ isValid, isSubmitting, values, errors, touched, setFieldValue }) => (
-        <Form id={formId}>
+        <Form id={formId} {...(dataCy ? { "data-cy": dataCy } : null)}>
           <Card
             borderFooter
             footerSx={{ p: 3 }}

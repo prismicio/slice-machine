@@ -1,5 +1,13 @@
 describe("onboarding skip", () => {
 
+  before(() => {
+    cy.clearLocalStorageSnapshot();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+  });
+
   it('tracking events sent when the user skips the onboarding', () => {
     const ids = [
       "slicemachine_onboarding_start",
@@ -20,6 +28,5 @@ describe("onboarding skip", () => {
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
   
     cy.getLocalStorage("persist:root").should('eq', '{"userContext":"{\\"hasSendAReview\\":false,\\"isOnboarded\\":true}","_persist":"{\\"version\\":-1,\\"rehydrated\\":true}"}')
-
   })
 })

@@ -18,17 +18,21 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
   ({ isOpen, onSubmit, close, customTypes }) => {
     return (
       <ModalFormCard
+        dataCy="create-ct-modal"
         isOpen={isOpen}
         widthInPx="530px"
         formId="create-custom-type"
         close={() => close()}
         onSubmit={(values: CtPayload) => {
-          onSubmit(values);
+          onSubmit({ ...values, label: values.label || values.id });
         }}
         initialValues={{
           repeatable: true,
         }}
         validate={({ id }: { id: string }) => {
+          if (!id || !id.length) {
+            return { id: "ID cannot be empty" };
+          }
           if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
             return { id: "Invalid id: No special characters allowed" };
           }
@@ -46,10 +50,12 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
             <InputBox
               name="label"
               label="Custom Type Name"
+              dataCy="ct-name-input"
               placeholder="My Custom Type"
             />
             <InputBox
               name="id"
+              dataCy="ct-id-input"
               label="Custom Type ID"
               placeholder="my-custom-type"
               error={errors.id}
