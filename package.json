@@ -12,7 +12,8 @@
     "lint": "lerna run lint",
     "lint-staged": "lint-staged",
     "build": "lerna run build && npm run test",
-    "publish:alpha": "lerna publish --yes --canary --no-push --no-git-tag-version --dist-tag alpha",
+    "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
+    "publish:production": "NEXT_PUBLIC_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package --no-verify-access",
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "prepare": "husky install"

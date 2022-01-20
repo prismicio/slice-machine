@@ -102,7 +102,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     }
 
     Tracker.get().initialize(
-      "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      process.env.NEXT_PUBLIC_SEGMENT_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
       serverState.env.repo,
       serverState.env.manifest.tracking
     );
