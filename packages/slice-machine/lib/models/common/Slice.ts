@@ -21,20 +21,16 @@ const Slice = {
   },
 };
 
-export interface SliceCreateBody {
+export interface SliceBody {
   sliceName: string;
   from: string;
+}
+
+export interface SliceCreateBody extends SliceBody {
   values?: { componentCode: string; model: Models.SliceAsObject };
 }
 
-export interface SlicePushBody {
-  sliceName: string;
-  from: string;
-}
-
-export interface SliceSaveBody {
-  sliceName: string;
-  from: string;
+export interface SliceSaveBody extends SliceBody {
   model: Models.SliceAsObject;
   mockConfig?: SliceMockConfig;
 }

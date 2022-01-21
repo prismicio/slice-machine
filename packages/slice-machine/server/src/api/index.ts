@@ -22,8 +22,11 @@ import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 
 import { RequestWithEnv, WithEnv } from "./http/common";
-import { ScreenshotRequest } from "@models/common/Screenshots";
-import { SliceCreateBody, SlicePushBody } from "@models/common/Slice";
+import {
+  ScreenshotRequest,
+  ScreenshotResponse,
+} from "@models/common/Screenshots";
+import { SliceCreateBody, SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
 
 router.use(
@@ -74,7 +77,12 @@ router.get(
   "/screenshot",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request<undefined, undefined, undefined, ScreenshotRequest>,
+    req: express.Request<
+      Record<string, never>,
+      ScreenshotResponse,
+      Record<string, never>,
+      ScreenshotRequest
+    >,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -158,7 +166,12 @@ router.get(
   "/slices/push",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request<undefined, undefined, undefined, SlicePushBody>,
+    req: express.Request<
+      Record<string, never>,
+      Record<string, never>,
+      unknown,
+      SliceBody
+    >,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call

@@ -14,6 +14,7 @@ import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
 import { CustomPaths } from "@lib/models/paths";
 import { BackendEnvironment } from "@lib/models/common/Environment";
+import { SliceBody } from "@models/common/Slice";
 
 const createOrUpdate = async ({
   slices,
@@ -131,10 +132,7 @@ export async function handler(
   }
 }
 
-export default async function apiHandler(query: {
-  sliceName: string;
-  from: string;
-}) {
+export default async function apiHandler(query: SliceBody) {
   const { sliceName, from } = query;
   const { env } = await getEnv();
 
