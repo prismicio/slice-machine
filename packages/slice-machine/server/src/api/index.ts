@@ -22,8 +22,9 @@ import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
 
 import { RequestWithEnv, WithEnv } from "./http/common";
-import { CustomScreenshotRequest, TmpFile } from "@models/common/Screenshots";
-import { SliceCreateBody } from "@models/common/Slice";
+import { ScreenshotRequest } from "@models/common/Screenshots";
+import { SliceCreateBody, SlicePushBody } from "@models/common/Slice";
+import { SaveCustomTypeBody } from "@models/common/CustomType";
 
 router.use(
   "/__preview",
@@ -73,7 +74,7 @@ router.get(
   "/screenshot",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request,
+    req: express.Request<undefined, undefined, undefined, ScreenshotRequest>,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -91,16 +92,9 @@ router.post(
   // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-misused-promises, @typescript-eslint/no-explicit-any
   async function (req: any, res: express.Response): Promise<Express.Response> {
     /* eslint-disable */
-    const payload = await customScreenshot(
-      req.files.file as TmpFile,
-      req.body as CustomScreenshotRequest
-    );
+    const payload = await customScreenshot(req.files.file, req.body);
     /* eslint-enable */
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      return res.status(400).json(payload);
-    }
     return res.status(200).json(payload);
   }
 );
@@ -112,7 +106,7 @@ router.post(
     req: express.Request,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-misused-promises, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const payload = await parseOembed(req.body.url as string);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (payload.err) {
@@ -133,10 +127,6 @@ router.post(
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await saveSlice(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      return res.status(400).json(payload);
-    }
     return res.status(200).json(payload);
   }
 );
@@ -145,20 +135,21 @@ router.use(
   "/slices/create",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request,
+    req: express.Request<
+      undefined,
+      undefined,
+      SliceCreateBody,
+      SliceCreateBody
+    >,
     res: express.Response
   ): Promise<Express.Response> {
     let payload;
     if (req.method === "POST") {
-      payload = await createSlice(req.body as SliceCreateBody);
+      payload = await createSlice(req.body);
     } else {
-      payload = await createSlice(req.query as SliceCreateBody);
+      payload = await createSlice(req.query);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      return res.status(400).json(payload);
-    }
     return res.status(200).json(payload);
   }
 );
@@ -167,7 +158,7 @@ router.get(
   "/slices/push",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request,
+    req: express.Request<undefined, undefined, undefined, SlicePushBody>,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -187,15 +178,11 @@ router.post(
   "/custom-types/save",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request,
+    req: express.Request<undefined, undefined, SaveCustomTypeBody>,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await saveCustomType(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      return res.status(400).json(payload);
-    }
     return res.status(200).json(payload);
   }
 );
@@ -204,7 +191,7 @@ router.get(
   "/custom-types/push",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-misused-promises
   WithEnv(async function (
-    req: express.Request,
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call

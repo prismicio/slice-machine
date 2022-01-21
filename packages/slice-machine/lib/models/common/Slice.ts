@@ -27,6 +27,11 @@ export interface SliceCreateBody {
   values?: { componentCode: string; model: Models.SliceAsObject };
 }
 
+export interface SlicePushBody {
+  sliceName: string;
+  from: string;
+}
+
 export interface SliceSaveBody {
   sliceName: string;
   from: string;

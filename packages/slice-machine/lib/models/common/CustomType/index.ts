@@ -1,6 +1,12 @@
 import { Tab, TabAsArray, TabAsObject } from "./tab";
 import { SliceZone, SliceZoneAsArray } from "./sliceZone";
 import { Field } from "./fields";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
+
+export interface SaveCustomTypeBody {
+  model: CustomType<ObjectTabs>;
+  mockConfig: CustomTypeMockConfig;
+}
 
 export type ObjectTabs = {
   [key: string]: TabAsObject;
