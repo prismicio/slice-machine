@@ -11,7 +11,7 @@ export function preferWroomBase(smApiUrl: string, baseUrl: string): string {
       urlFromSmJson.hostname = "wroom.io";
       return urlFromSmJson.origin;
     } else if (urlFromSmJson.hostname.endsWith(".wroom.test")) {
-      urlFromSmJson.pathname = "wroom.test";
+      urlFromSmJson.hostname = "wroom.test";
       return urlFromSmJson.origin;
     }
     return baseUrl;
