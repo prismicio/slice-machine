@@ -1,4 +1,7 @@
 module.exports = {
+  clearMocks: true,
+  collectCoverage: true,
+  coverageDirectory: "coverage",
   globals: {
     appRoot: "..",
   },
@@ -13,13 +16,13 @@ module.exports = {
       { configFile: "./babel.next.config.js" },
     ],
   },
-  coverageThreshold: {
-    "./lib/widgets": {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
+  // coverageThreshold: {
+  //   "./lib/widgets": {
+  //     branches: 100,
+  //     functions: 100,
+  //     lines: 100,
+  //     statements: 100,
+  //   },
+  // },
   testPathIgnorePatterns: ["node_modules", "cypress"],
 };

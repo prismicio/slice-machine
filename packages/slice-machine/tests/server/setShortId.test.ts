@@ -1,5 +1,5 @@
-import MockedUserProfile from "../__mockData__/userProfile";
-import MockedBackendEnv from "../__mockData__/envBackend";
+import MockedUserProfile from "../__mocks__/userProfile";
+import MockedBackendEnv from "../__mocks__/envBackend";
 import { setShortId } from "../../server/src/api/services/setShortId";
 import { vol } from "memfs";
 import * as os from "os";
