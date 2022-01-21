@@ -15,6 +15,7 @@ import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
+import { preferWroomBase } from "./common/utils";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function createWarnings(
@@ -59,8 +60,9 @@ export const getBackendState = async (
   );
 
   const base = preferWroomBase(env.manifest.apiEndpoint, env.prismicData.base);
-  if (base !== env.prismicData.base)
+  if (base !== env.prismicData.base) {
     FileSystem.PrismicSharedConfigManager.setProperties({ base });
+  }
 
   // Refresh auth
   if (!isFake && env.prismicData.auth) {
@@ -101,22 +103,6 @@ export const getBackendState = async (
     warnings,
   };
 };
-
-function preferWroomBase(smApiUrl: string, baseUrl: string): string {
-  try {
-    const urlFromSmJson = new URL(smApiUrl);
-    if (urlFromSmJson.hostname.endsWith(".wroom.io")) {
-      urlFromSmJson.hostname = "wroom.io";
-      return urlFromSmJson.origin;
-    } else if (urlFromSmJson.hostname.endsWith(".wroom.test")) {
-      urlFromSmJson.pathname = "wroom.test";
-      return urlFromSmJson.origin;
-    }
-    return baseUrl;
-  } catch {
-    return baseUrl;
-  }
-}
 
 export default async function handler(
   req: RequestWithEnv
