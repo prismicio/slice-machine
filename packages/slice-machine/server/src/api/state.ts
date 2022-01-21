@@ -58,11 +58,15 @@ export const getBackendState = async (
     env
   );
 
+  const base = preferWroomBase(env.manifest.apiEndpoint, env.prismicData.base);
+  if (base !== env.prismicData.base)
+    FileSystem.PrismicSharedConfigManager.setProperties({ base });
+
   // Refresh auth
   if (!isFake && env.prismicData.auth) {
     try {
       const newTokenResponse: Response = await DefaultClient.refreshToken(
-        env.prismicData.base,
+        base,
         env.prismicData.auth
       );
 
@@ -98,6 +102,22 @@ export const getBackendState = async (
   };
 };
 
+function preferWroomBase(smApiUrl: string, baseUrl: string): string {
+  try {
+    const urlFromSmJson = new URL(smApiUrl);
+    if (urlFromSmJson.hostname.endsWith(".wroom.io")) {
+      urlFromSmJson.hostname = "wroom.io";
+      return urlFromSmJson.origin;
+    } else if (urlFromSmJson.hostname.endsWith(".wroom.test")) {
+      urlFromSmJson.pathname = "wroom.test";
+      return urlFromSmJson.origin;
+    }
+    return baseUrl;
+  } catch {
+    return baseUrl;
+  }
+}
+
 export default async function handler(
   req: RequestWithEnv
 ): Promise<ServerState> {
@@ -109,7 +129,10 @@ export default async function handler(
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
     shortId: prismicData.shortId,
-    prismicAPIUrl: prismicData.base,
+    prismicAPIUrl: preferWroomBase(
+      serverState.env.manifest.apiEndpoint,
+      prismicData.base
+    ),
   };
 
   return {
