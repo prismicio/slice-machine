@@ -9,7 +9,10 @@ export async function setShortId(
   authToken: string
 ): Promise<UserProfile | Error> {
   const base = preferWroomBase(env.manifest.apiEndpoint, env.prismicData.base);
+
+  // TODO: find out why not handle errors normally here
   const profile = await DefaultClient.profile(base, authToken);
+
   if (profile instanceof Error) return profile;
 
   FileSystem.PrismicSharedConfigManager.setProperties({
