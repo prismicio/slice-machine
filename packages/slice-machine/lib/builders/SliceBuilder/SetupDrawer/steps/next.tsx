@@ -17,18 +17,19 @@ import state from "../.slicemachine/libraries-state.json";
 import * as Slices from "../slices";
 const resolver = ({ sliceName }) => Slices[sliceName];
 
-const Simulator = () => (<SliceSimulator
+const SliceSimulatorPage = () => (<SliceSimulator
 \t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
 \tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
 \tstate={state}
 />);
 
-export default Simulator;`,
+export default SliceSimulatorPage;`,
   instructions: (
     <>
       In your “pages” directory, create a file called{" "}
-      <Text variant={"pre"}>_simulator.jsx</Text> and add the following code.
-      This page is the route you hit to simulator and develop your components.
+      <Text variant={"pre"}>slice-simulator.jsx</Text> and add the following
+      code. This page is the route you hit to simulator and develop your
+      components.
     </>
   ),
 };

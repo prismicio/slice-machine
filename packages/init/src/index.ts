@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { Utils, FileSystem } from "@slicemachine/core";
 import { Tracker } from "./utils/tracker";
 import {

@@ -94,8 +94,9 @@ export const steps = [
     instructions: (
       <>
         In your "pages" directory, create a file called{" "}
-        <Text variant={"pre"}>_simulator.vue</Text> and add the following code.
-        This page is the route you hit to simulator and develop your components.
+        <Text variant={"pre"}>slice-simulator.vue</Text> and add the following
+        code. This page is the route you hit to simulator and develop your
+        components.
       </>
     ),
     code: SliceSimulatorPageCreationInstruction,
