@@ -114,10 +114,7 @@ export default async function handler(
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
     shortId: prismicData.shortId,
-    prismicAPIUrl: preferWroomBase(
-      serverState.env.manifest.apiEndpoint,
-      prismicData.base
-    ),
+    prismicAPIUrl: prismicData.base,
   };
 
   return {
