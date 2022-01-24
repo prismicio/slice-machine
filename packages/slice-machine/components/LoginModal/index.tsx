@@ -73,8 +73,9 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      Tracker.get().identifyUser(userId);
+
+      void Tracker.get().identifyUser(userId);
+
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();
