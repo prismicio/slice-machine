@@ -17,11 +17,10 @@ import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
 import preferWroomBase from "../../../src/utils/preferWroomBase";
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function createWarnings(
+function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
-): Promise<ReadonlyArray<Warning>> {
+): ReadonlyArray<Warning> {
   const newVersion =
     env.updateVersionInfo && env.updateVersionInfo.updateAvailable
       ? {
@@ -87,7 +86,7 @@ export const getBackendState = async (
     }
   }
 
-  const warnings = await createWarnings(env, clientError);
+  const warnings = createWarnings(env, clientError);
 
   if (libraries) await generate(env, libraries);
 
