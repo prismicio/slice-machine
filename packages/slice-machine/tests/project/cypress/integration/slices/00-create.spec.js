@@ -7,7 +7,7 @@ describe("Create Slices", () => {
     cy.restoreLocalStorage();
   });
 
-  it('A user can create a custom type', () => {
+  it('A user can create a slice', () => {
     cy.setupSliceMachineUserContext()
     cy.visit('/slices')
     cy.get('[data-cy=create-slice]').click()
