@@ -29,7 +29,10 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
         initialValues={{
           repeatable: true,
         }}
-        validate={({ id }: { id: string }) => {
+        validate={({ id, label }: { id: string; label: string }) => {
+          if (!label || !label.length) {
+            return { label: "Cannot be empty" };
+          }
           if (!id || !id.length) {
             return { id: "ID cannot be empty" };
           }
@@ -44,7 +47,7 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
           title: "Create a new custom type",
         }}
       >
-        {({ errors }: { errors: { id?: string } }) => (
+        {({ errors }: { errors: { id?: string; label?: string } }) => (
           <Box>
             <SelectRepeatable />
             <InputBox
@@ -52,6 +55,7 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
               label="Custom Type Name"
               dataCy="ct-name-input"
               placeholder="My Custom Type"
+              error={errors.label}
             />
             <InputBox
               name="id"
