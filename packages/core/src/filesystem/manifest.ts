@@ -1,14 +1,6 @@
-import { Framework, Files } from "../utils";
+import { Files } from "../utils";
 import { FileContent, SMConfigPath } from "./paths";
-
-export interface Manifest {
-  apiEndpoint: string;
-  storybook?: string;
-  libraries?: string[];
-  framework?: Framework.FrameworkEnum;
-  chromaticAppId?: string;
-  _latest?: string;
-}
+import { Manifest } from "../models/Manifest";
 
 export function createManifest(cwd: string, manifest: Manifest): void {
   const manifestPath = SMConfigPath(cwd);

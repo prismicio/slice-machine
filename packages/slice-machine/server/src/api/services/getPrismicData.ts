@@ -6,17 +6,20 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {
-    const authConfig = FileSystem.getOrCreateAuthConfig();
+    const prismicConfig = FileSystem.PrismicSharedConfigManager.get();
 
     const prismicData: PrismicData = {
-      base: authConfig.base,
+      base: prismicConfig.base,
+      shortId: prismicConfig.shortId,
     };
 
-    if (authConfig.cookies === FileSystem.DEFAULT_CONFIG.cookies) {
+    if (prismicConfig.cookies === FileSystem.DEFAULT_CONFIG.cookies) {
       return ok(prismicData);
     }
 
-    const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);
+    const authResult = Utils.Cookie.parsePrismicAuthToken(
+      prismicConfig.cookies
+    );
 
     return ok({
       ...prismicData,

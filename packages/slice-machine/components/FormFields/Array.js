@@ -13,16 +13,21 @@ const FormFieldArray = ({
   inputPlaceholder,
   buttonLabel,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const [prevLen, setPrevLen] = useState(meta.value.length);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
   const refs = useRef(new Array(meta.value.length));
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     refs.current = refs.current.slice(0, meta.value.length);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }, [meta.value.length]);
 
   useEffect(() => {
     const len = refs.current.length;
     if (focusOnNewEntry && len > prevLen) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       refs.current[len - 1].focus();
     }
     setPrevLen(len);
@@ -30,46 +35,70 @@ const FormFieldArray = ({
 
   return (
     <Fragment>
-      <Label variant="label.primary" htmlFor={fieldName}>
+      <Label
+        variant="label.primary"
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        htmlFor={fieldName}
+      >
         {label}
-        {meta.touched && meta.error ? (
-          <Text as="span" variant="text.labelError">
-            {meta.error}
-          </Text>
-        ) : null}
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+          meta.touched && meta.error ? (
+            <Text as="span" variant="text.labelError">
+              {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                meta.error
+              }
+            </Text>
+          ) : null
+        }
       </Label>
       <FieldArray
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         name={fieldName}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id={fieldName}
         {...field}
         render={(arrayHelpers) => (
           <div>
-            {field.value && field.value.length > 0
-              ? field.value.map((opt, i) => (
-                  <Flex key={`${fieldName}-${i + 1}`} my={2}>
-                    <Input
-                      placeholder={inputPlaceholder}
-                      name={`${fieldName}.${i}`}
-                      value={opt}
-                      ref={(el) => (refs.current[i] = el)}
-                      onChange={({ target: { value } }) =>
-                        arrayHelpers.replace(i, value)
-                      }
-                    />
-                    <Button
-                      xs
-                      ml={2}
-                      type="button"
-                      variant="secondary"
-                      onClick={() => arrayHelpers.remove(i)}
-                    >
-                      -
-                    </Button>
-                  </Flex>
-                ))
-              : null}
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+              field.value && field.value.length > 0
+                ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                  field.value.map((opt, i) => (
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    <Flex key={`${fieldName}-${+i + 1}`} my={2}>
+                      <Input
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        placeholder={inputPlaceholder}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/restrict-template-expressions
+                        name={`${fieldName}.${i}`}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        value={opt}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                        ref={(el) => (refs.current[i] = el)}
+                        onChange={({ target: { value } }) =>
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                          arrayHelpers.replace(i, value)
+                        }
+                      />
+                      <Button
+                        xs
+                        ml={2}
+                        type="button"
+                        variant="secondary"
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+                        onClick={() => arrayHelpers.remove(i)}
+                      >
+                        -
+                      </Button>
+                    </Flex>
+                  ))
+                : null
+            }
             <Button
               type="button"
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
               onClick={() => arrayHelpers.insert(field.value.length, "")}
             >
               {buttonLabel}

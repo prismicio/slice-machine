@@ -15,7 +15,6 @@ import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
-import { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { useSelector } from "react-redux";
 import { isModalOpen } from "@src/modules/modal";
@@ -25,11 +24,14 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import Tracker from "@src/tracker";
 
 Modal.setAppElement("#__next");
 
-const isAuthStatusOk = (response: AxiosResponse<CheckAuthStatusResponse>) =>
-  response.data.status === "ok";
+interface ValidAuthStatus extends CheckAuthStatusResponse {
+  status: "ok";
+  userId: string;
+}
 
 const LoginModal: React.FunctionComponent = () => {
   const { env, isOpen, isLoginLoading } = useSelector(
@@ -44,13 +46,10 @@ const LoginModal: React.FunctionComponent = () => {
     useSliceMachineActions();
 
   const { addToast } = useToasts();
-  const prismicBase = !!env ? env.prismicData.base : "https://prismic.io";
-  const loginRedirectUrl = !!env
-    ? `${buildEndpoints(prismicBase).Dashboard.cliLogin}&port=${
-        new URL(env.baseUrl).port
-      }&path=/api/auth`
-    : "";
-
+  const prismicBase = env.prismicAPIUrl;
+  const loginRedirectUrl = `${
+    buildEndpoints(prismicBase).Dashboard.cliLogin
+  }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;
   const onClick = async () => {
     if (!loginRedirectUrl) {
       return;
@@ -60,12 +59,18 @@ const LoginModal: React.FunctionComponent = () => {
       startLoadingLogin();
       await startAuth();
       window.open(loginRedirectUrl, "_blank");
-      await startPolling<AxiosResponse<CheckAuthStatusResponse>>(
+      const { userId } = await startPolling<
+        CheckAuthStatusResponse,
+        ValidAuthStatus
+      >(
         checkAuthStatus,
-        isAuthStatusOk,
+        (status: CheckAuthStatusResponse): status is ValidAuthStatus =>
+          status.status === "ok" && Boolean(status.userId),
         3000,
         60
       );
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      Tracker.get().identifyUser(userId);
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();
@@ -101,7 +106,7 @@ const LoginModal: React.FunctionComponent = () => {
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: "8px 8px 0px 0px",
-            borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+            borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
           }}
         >
           <Heading sx={{ fontSize: "16px" }}>You're not connected</Heading>

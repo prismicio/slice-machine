@@ -7,6 +7,7 @@ const InputDeleteIcon = ({ sx, size = 22, ...rest }) => {
   return (
     <IconButton
       type="button"
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       sx={{
         position: "absolute",
         top: "29px",

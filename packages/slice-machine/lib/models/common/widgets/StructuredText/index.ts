@@ -35,6 +35,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^StructuredText$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
@@ -43,6 +44,7 @@ export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
     create: (label: string) => new StructuredTextField({ label }),
     handleMockConfig,
     handleMockContent,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     FormFields,
     Meta,
     schema,

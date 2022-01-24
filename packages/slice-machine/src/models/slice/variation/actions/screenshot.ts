@@ -1,28 +1,33 @@
+import { ScreenshotUI } from "lib/models/common/ComponentUI";
 import { fetchApi } from "../../../../../lib/builders/common/fetch";
 import { ActionType } from "./ActionType";
-import { Preview } from "../../../../../lib/models/common/Component";
+import { ScreenshotResponse } from "@models/common/Screenshots";
 
 export function generateScreenShot(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return (_variationId: string) => {
     return async (
-      libFrom: string,
+      libraryName: string,
       sliceName: string,
       setData: (data: object) => void
+      // eslint-disable-next-line @typescript-eslint/require-await
     ) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchApi({
-        url: `/api/screenshot?sliceName=${sliceName}&from=${libFrom}`,
+        url: `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
         setData,
         data: {
           onLoad: { imageLoading: true },
           onResponse: { imageLoading: false },
         },
-        successMessage: "Storybook screenshot was saved to FileSystem",
-        onSuccess({ previews }: { previews: ReadonlyArray<Preview> }) {
+        successMessage: "Screenshots were saved to FileSystem",
+        onSuccess({ screenshots }: ScreenshotResponse) {
           dispatch({
             type: ActionType.GenerateScreenShot,
-            payload: { previews },
+            payload: { screenshots },
           });
         },
       });
@@ -31,24 +36,24 @@ export function generateScreenShot(
 }
 
 export function generateCustomScreenShot(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (variationId: string) => {
     return async (
-      libFrom: string,
+      libraryName: string,
       sliceName: string,
       setData: (data: object) => void,
       file: Blob
+      // eslint-disable-next-line @typescript-eslint/require-await
     ) => {
       const form = new FormData();
-      Object.entries({
-        sliceName,
-        variationId,
-        from: libFrom,
-      }).forEach(([key, value]) => form.append(key, value));
-
       form.append("file", file);
+      form.append("libraryName", libraryName);
+      form.append("sliceName", sliceName);
+      form.append("variationId", variationId);
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchApi({
         url: "/api/custom-screenshot",
         setData,
@@ -62,13 +67,11 @@ export function generateCustomScreenShot(
           onResponse: { imageLoading: false },
         },
         successMessage: "New screenshot added!",
-        onSuccess(preview: Preview) {
-          if (preview.hasPreview) {
-            dispatch({
-              type: ActionType.GenerateCustomScreenShot,
-              payload: { variationId, preview },
-            });
-          }
+        onSuccess(screenshot: ScreenshotUI) {
+          dispatch({
+            type: ActionType.GenerateCustomScreenShot,
+            payload: { variationId, screenshot },
+          });
         },
       });
     };

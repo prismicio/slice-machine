@@ -30,5 +30,6 @@ export const SimpleField = {
 export interface Field {
   type: FieldType | SliceZoneType;
   fieldset?: string;
-  config: {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  config: any;
 }

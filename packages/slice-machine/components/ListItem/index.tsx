@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
 
@@ -12,30 +12,53 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 import { FaBars } from "react-icons/fa";
+import { Widget } from "@lib/models/common/widgets/Widget";
+import { Field } from "@lib/models/common/CustomType/fields";
+import { AnyObjectSchema } from "yup";
 
-const ListItem = (props: any) => {
-  const {
-    item,
-    index,
-    deleteItem,
-    enterEditMode,
-    modelFieldName,
-    renderFieldAccessor,
+type Item<F extends Field> = { key: string; value: F };
 
-    HintElement,
+interface ListItemProps<F extends Field, S extends AnyObjectSchema> {
+  item: Item<F>;
+  index: number;
+  deleteItem: (key: string) => void;
+  enterEditMode: (
+    itemInfo: [string, F],
+    modelFieldName: string | undefined,
+    index: number
+  ) => void;
+  modelFieldName?: string;
+  renderFieldAccessor?: (key: string) => string;
+  HintElement?: JSX.Element;
+  CustomEditElement?: JSX.Element;
+  CustomEditElements?: JSX.Element[];
+  widget: Widget<F, S>;
+  draggableId: string;
+  children: React.ReactNode;
+}
 
-    CustomEditElement,
-    CustomEditElements,
-    widget,
+function ListItem<F extends Field, S extends AnyObjectSchema>({
+  item,
+  index,
+  deleteItem,
+  enterEditMode,
+  modelFieldName,
+  renderFieldAccessor,
 
-    draggableId,
+  HintElement,
 
-    children,
-  } = props;
+  CustomEditElement,
+  CustomEditElements,
+  widget,
 
+  draggableId,
+
+  children,
+}: ListItemProps<F, S>): JSX.Element {
   const { theme } = useThemeUI();
   const {
     key,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     value: { config },
   } = item;
 
@@ -68,7 +91,7 @@ const ListItem = (props: any) => {
                     bg: "headSection",
                     width: "100%",
                     borderRadius: "3px",
-                    border: (t) => `1px solid ${t.colors?.borders}`,
+                    border: (t) => `1px solid ${String(t.colors?.borders)}`,
                   }}
                 >
                   <Flex
@@ -81,8 +104,11 @@ const ListItem = (props: any) => {
                   >
                     <ItemHeader
                       theme={theme}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                       text={config?.label || key}
-                      sliceFieldName={renderFieldAccessor(key)}
+                      sliceFieldName={
+                        renderFieldAccessor && renderFieldAccessor(key)
+                      }
                       WidgetIcon={widget.Meta.icon}
                     />
                     <Flex>
@@ -152,6 +178,6 @@ const ListItem = (props: any) => {
       </Draggable>
     </Fragment>
   );
-};
+}
 
 export default ListItem;

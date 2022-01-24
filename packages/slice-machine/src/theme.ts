@@ -42,16 +42,21 @@ const AppTheme = (): Theme =>
           color: "#F2994A",
         },
       },
+      codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
       highlight: "hsl(10, 40%, 90%)",
       purple: "hsl(250, 60%, 30%)",
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
+      grey01: "#F3F5F7",
+      grey04: "#9AA4AF",
       textGray: "#667587",
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",
+      lightGreen: "#EBF8F1",
+      lightOrange: "#FDF4EC",
       error: "#E55737",
       success: "#3AB97A",
       headSection: "#fff",
@@ -66,6 +71,7 @@ const AppTheme = (): Theme =>
         orange: "#EA6D46",
         green: "#3AB97A",
       },
+
       modes: {
         dark: {
           text: "#fff",
@@ -149,17 +155,11 @@ const AppTheme = (): Theme =>
         pl: 2,
       },
       pre: {
-        variant: "prism",
-        fontFamily: "monospace",
         fontSize: 1,
-        p: 2,
-        my: 1,
-        color: "text",
-        bg: "borders",
-        overflow: "auto",
-        code: {
-          color: "inherit",
-        },
+        fontWeight: "400",
+        color: "textClear",
+        bg: "grey01",
+        p: "2px",
       },
     },
     badges: {
@@ -244,12 +244,25 @@ const AppTheme = (): Theme =>
           outline: "none",
         },
       },
+      screenSize: {
+        p: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "32px",
+        width: "32px",
+        bg: "text",
+        color: "white",
+        cursor: "pointer",
+        boxShadow:
+          "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
+      },
       secondary: {
         bg: "secondary",
         fontWeight: "body",
         fontSize: "1",
         color: "textClear",
-        border: (t) => `1px solid ${t?.colors?.borders}`,
+        border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         "&:hover": {
           bg: darken("secondary", 0.02),
           cursor: "pointer",
@@ -263,6 +276,16 @@ const AppTheme = (): Theme =>
           bg: darken("secondary", 0.06),
           outline: "none",
         },
+      },
+      small: {
+        bg: "primary",
+        borderRadius: "4px",
+        pl: 2,
+        pr: 2,
+        pb: 1,
+        pt: 1,
+        fontSize: "12px",
+        fontWeight: "body",
       },
 
       darkSmall: {
@@ -313,22 +336,19 @@ const AppTheme = (): Theme =>
       },
 
       disabled: {
-        bg: "borders",
+        bg: "#D6CEFC",
         fontSize: "1",
-        color: "rgba(1, 1, 1, .6)",
+        color: "white",
         cursor: "not-allowed",
         borderColor: "transparent",
-        "&:focus": {
-          bg: "borders",
-          borderColor: "transparent",
-          outline: "none",
-        },
-        "&:hover": {
-          bg: "borders",
-          cursor: "not-allowed",
-          borderColor: "transparent",
-          outline: "none",
-        },
+      },
+      disabledSecondary: {
+        bg: "#F9F9FA",
+        fontSize: "1",
+        color: "#C9D0D8",
+        cursor: "not-allowed",
+        border: "1px solid",
+        borderColor: "1px solid rgba(62, 62, 72, 0.15)",
       },
       transparent: {
         background: "transparent",
@@ -500,7 +520,7 @@ const AppTheme = (): Theme =>
           pb: "6px",
           px: 1,
           borderRadius: "3px",
-          border: (t) => `1px solid ${t?.colors?.borders}`,
+          border: (t) => `1px solid ${String(t?.colors?.borders)}`,
         },
       },
     },
@@ -611,56 +631,10 @@ const AppTheme = (): Theme =>
       li: {
         listStyleType: "none",
       },
-      code: {
-        display: "inline-block",
-        backgroundColor: (t) => t?.colors?.gray,
-        border: (t: MyTheme) => `1px solid ${t.codeColor.border}`,
-        borderRadius: "3px",
-        boxSizing: "border-box",
-        fontSize: "13px",
-        margin: "0 8px",
-      },
       hint: {
         display: "block",
         fontStyle: "normal",
         fontWeight: "normal",
-      },
-      ".prism-code": {
-        margin: "1px 3px",
-        ".tag": {
-          color: (t: MyTheme) => t.codeColor.blue,
-        },
-        ".punctuation, .attr-value.punctuation": {
-          color: (t: MyTheme) => t.codeColor.gray, // dark-gray
-        },
-        ".attr-name": {
-          color: (t: MyTheme) => t.codeColor.orange,
-        },
-        ".attr-value, .property-access": {
-          // add .plain to highligh vue.
-          color: (t: MyTheme) => t.codeColor.green, // green
-        },
-      },
-      ".prism-code.language-jsx": {
-        ".language-javascript.punctuation, .language-javascript.script-punctuation.punctuation":
-          {
-            color: (t: MyTheme) => t.codeColor.gray,
-          },
-        ".language-javascript, .plain": {
-          color: (t: MyTheme) => t.codeColor.green,
-        },
-      },
-      ".prism-code.language-javascript": {
-        ".punctuation": {
-          color: (t: MyTheme) => t.codeColor.gray,
-        },
-        ".known-class-name, .maybe-class-name, .maybe-class-name.property-access, .method.function.property-access":
-          {
-            color: (t: MyTheme) => t.codeColor.blue, // blue
-          },
-        ".property-access, .plain": {
-          color: (t: MyTheme) => t.codeColor.green, // green
-        },
       },
       inlineCode: {
         fontFamily: "monospace",
@@ -706,24 +680,6 @@ const AppTheme = (): Theme =>
       muted: {
         color: "text",
         bg: "muted",
-      },
-    },
-    prism: {
-      ".comment,.prolog,.doctype,.cdata,.punctuation,.operator,.entity,.url": {
-        color: "gray",
-      },
-      ".comment": {
-        fontStyle: "italic",
-      },
-      ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable":
-        {
-          color: "purple",
-        },
-      ".atrule,.attr-value,.keyword": {
-        color: "primary",
-      },
-      ".selector,.attr-name,.string,.char,.builtin,.inserted": {
-        color: "error",
       },
     },
   } as MyTheme);

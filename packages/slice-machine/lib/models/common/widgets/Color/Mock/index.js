@@ -19,5 +19,6 @@ export const handleMockConfig = () => {
 export const handleMockContent = createDefaultHandleMockContentFunction(
   { handleMockConfig },
   "Color",
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   (v) => v.indexOf("#") === 0 && v.length === 7
 );

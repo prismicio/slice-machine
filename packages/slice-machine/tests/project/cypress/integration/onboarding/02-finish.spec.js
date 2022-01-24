@@ -1,20 +1,11 @@
 
 describe("onboarding finish", () => {
+  beforeEach(() => {
+    cy.clearLocalStorageSnapshot();
+    cy.cleanSliceMachineUserContext();
+  });
 
   it('begin button and continue button eventually redirect to /', () => {
-
-    const ids = [
-      "slicemachine_onboarding_start",
-      "slicemachine_onboarding_continue_screen_intro",
-      "slicemachine_onboarding_continue_screen_1",
-      "slicemachine_onboarding_continue_screen_2",
-      "slicemachine_onboarding_continue_screen_3",
-    ]
-
-    cy.intercept('POST', '/api/tracking/onboarding', ({body}) => {
-      expect(body.id).equal(ids.shift())
-    })
-  
     const closeReviewSelector = '[data-cy=close-review]'
   
     cy.visit('/onboarding')
@@ -34,7 +25,5 @@ describe("onboarding finish", () => {
     }
   
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
-  
   })
-  
 })

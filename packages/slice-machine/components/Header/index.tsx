@@ -1,20 +1,22 @@
 import Link from "next/link";
 import { Flex, Box, Link as ThemeLink } from "theme-ui";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
-const Header = ({
+type HeaderProps = {
+  ActionButton?: React.ReactElement;
+  MainBreadcrumb: React.ReactElement;
+  SecondaryBreadcrumb?: React.ReactElement;
+  breadrumbHref: string;
+  sx?: ThemeUIStyleObject;
+};
+
+const Header: React.FunctionComponent<HeaderProps> = ({
   ActionButton,
   MainBreadcrumb,
   SecondaryBreadcrumb,
   breadrumbHref,
   children,
   sx,
-}: {
-  ActionButton?: React.ReactElement;
-  MainBreadcrumb: React.ReactElement;
-  SecondaryBreadcrumb?: React.ReactElement;
-  breadrumbHref: string;
-  children?: React.ReactElement;
-  sx?: any;
 }) => (
   <Flex sx={{ justifyContent: "space-between", alignItems: "start", ...sx }}>
     <Flex sx={{ flexDirection: "column" }}>

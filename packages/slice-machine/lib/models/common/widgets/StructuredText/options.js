@@ -3,8 +3,10 @@ import { BsListOl } from "react-icons/bs";
 
 const Icon =
   (v) =>
-  ({ size }) =>
-    <span style={{ fontSize: size }}>{v}</span>;
+  ({ size }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    return <span style={{ fontSize: size }}>{v}</span>;
+  };
 
 const options = [
   {

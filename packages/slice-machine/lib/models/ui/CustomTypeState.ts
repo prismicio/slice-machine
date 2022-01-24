@@ -14,7 +14,9 @@ export interface CustomTypeState {
   current: CustomType<ArrayTabs>;
   initialCustomType: CustomType<ArrayTabs>;
   remoteCustomType: CustomType<ArrayTabs> | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMockConfig: any;
   poolOfFieldsToCheck: PoolOfFields;
   isTouched?: boolean;

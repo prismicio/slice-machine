@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Formik, Form, Field } from "formik";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Box, Input, Flex, Text, Button, Label, useThemeUI } from "theme-ui";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DefaultFields, validateId } from "@lib/forms/defaults";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
 
@@ -11,38 +13,45 @@ import { FieldType } from "@lib/models/common/CustomType/fields";
 import ErrorTooltip from "./ErrorTooltip";
 
 const RefInput = (args) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   return <Input {...args} ref={args.innerRef} />;
 };
 
 const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
   const fieldRef = useRef(null);
   const { theme } = useThemeUI();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const widget = Widgets[widgetTypeName];
   if (!widget) {
     console.error(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `Widget of type "${widgetTypeName}" not found. This is a problem on our side!`
     );
     return <div>Unexpected error. Contact us for more info.</div>;
   }
-
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-assignment
   const {
     Meta: { icon: WidgetIcon },
     FormFields: widgetFormFields,
   } = widget;
 
   const FormFields = {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     id: widgetFormFields.id,
   };
 
   const initialValues = {
     ...createInitialValues(FormFields),
     ...(widgetTypeName === FieldType.UID ? { id: "uid" } : {}),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     widgetTypeName,
   };
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const validationSchema = createValidationSchema(FormFields);
 
   useEffect(() => {
     if (fieldRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       fieldRef.current.focus();
     }
   }, [fieldRef]);
@@ -50,7 +59,9 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
   return (
     <Formik
       validateOnChange
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
       onSubmit={onSave}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       validationSchema={validationSchema}
       initialValues={initialValues}
     >
@@ -65,6 +76,7 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
               ml: "34px",
               alignItems: "center",
               variant: "styles.listItem",
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               border: (t) => `1px solid ${t.colors?.borders}`,
             }}
           >
@@ -99,7 +111,9 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                   type="text"
                   validate={(value) =>
                     validateId({
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       value,
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       fields,
                       initialId: null,
                     })
@@ -110,7 +124,8 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                     border: ({ colors }) =>
                       errors.id
                         ? `1px solid tomato`
-                        : `1px solid ${colors.primary}`,
+                        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                          `1px solid ${colors.primary}`,
                     "&:focus": {
                       border: errors.id
                         ? `1px solid tomato`
@@ -123,6 +138,7 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
             </Flex>
             <Box>
               <Button
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 onClick={onCancelNewField}
                 variant="secondary"
                 type="button"

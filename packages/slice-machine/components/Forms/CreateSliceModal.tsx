@@ -1,52 +1,29 @@
-import { Field } from "formik";
-import { Box, Label, Input, Text } from "theme-ui";
+import { Box, Label } from "theme-ui";
 
 import Select from "react-select";
 
 import ModalFormCard from "@components/ModalFormCard";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
-
-type InputBoxProps = {
-  name: string;
-  label: string;
-  placeholder: string;
-  error?: string | null;
-};
-
-const InputBox: React.FunctionComponent<InputBoxProps> = ({
-  name,
-  label,
-  placeholder,
-  error,
-}) => (
-  <Box mb={3}>
-    <Label htmlFor={name} mb={2}>
-      {label}
-    </Label>
-    <Field
-      name={name}
-      type="text"
-      placeholder={placeholder}
-      as={Input}
-      autoComplete="off"
-    />
-    {error ? (
-      <Text as="p" sx={{ color: "error", mt: 1 }}>
-        {error}
-      </Text>
-    ) : null}
-  </Box>
-);
+import { InputBox } from "./components/InputBox";
 
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
   isOpen: boolean;
-  onSubmit: Function;
-  close: Function;
+  onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
+  close: () => void;
   libraries: ReadonlyArray<{ name: string }>;
 };
+
+type FormValues = { sliceName: string; from: string };
+
+interface ModalInternalProps {
+  errors: { sliceName?: string };
+  touched: { sliceName?: string };
+  values: FormValues;
+  setFieldValue: (key: string, value: string) => void;
+}
 
 const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   isOpen,
@@ -55,13 +32,12 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   libraries,
 }) => (
   <ModalFormCard
+    dataCy={"create-slice-modal"}
     isOpen={isOpen}
     widthInPx="530px"
     formId={formId}
     close={() => close()}
-    onSubmit={(values: {}) => {
-      onSubmit(values);
-    }}
+    onSubmit={(values: FormValues) => onSubmit(values)}
     initialValues={{
       sliceName: "",
       from: libraries[0].name,
@@ -82,23 +58,14 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       title: "Create a new slice",
     }}
   >
-    {({
-      errors,
-      touched,
-      values,
-      setFieldValue,
-    }: {
-      errors: { sliceName?: string };
-      touched: { sliceName?: string };
-      values: any;
-      setFieldValue: Function;
-    }) => (
+    {({ touched, values, setFieldValue, errors }: ModalInternalProps) => (
       <Box>
         <InputBox
           name="sliceName"
           label="Slice Name"
           placeholder="MySlice"
-          error={touched.sliceName ? errors.sliceName : null}
+          error={touched.sliceName ? errors.sliceName : undefined}
+          dataCy={"slice-name-input"}
         />
         <Label htmlFor="origin" sx={{ mb: 2 }}>
           Target Library
@@ -106,11 +73,9 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
         <Select
           name="origin"
           options={libraries.map((v) => ({ value: v.name, label: v.name }))}
-          onChange={(v: { label: string; value: string } | null) => {
-            if (v) {
-              setFieldValue("from", v.value);
-            }
-          }}
+          onChange={(v: { label: string; value: string } | null) =>
+            v ? setFieldValue("from", v.value) : null
+          }
           defaultValue={{ value: values.from, label: values.from }}
           theme={(theme) => {
             return {

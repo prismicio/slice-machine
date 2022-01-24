@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState, Fragment } from "react";
+import { GoPlus } from "react-icons/go";
 import {
   Box,
   Flex,
@@ -11,20 +12,17 @@ import {
   Heading,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
-import { CustomTypesContext } from "../src/models/customTypes/context";
 
-import { GoPlus } from "react-icons/go";
+import { CustomTypesContext } from "src/models/customTypes/context";
 
-import Container from "@components/Container";
+import Container from "components/Container";
+import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
+import Grid from "components/Grid";
+import Header from "components/Header";
+import EmptyState from "components/EmptyState";
+import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 
-import Grid from "@components/Grid";
-
-import CreateCustomTypeModal from "@components/Forms/CreateCustomTypeModal";
-
-import Header from "@components/Header";
-import EmptyState from "@components/EmptyState";
-
-interface CtPayload {
+export interface CtPayload {
   repeatable: boolean;
   id: string;
   previewUrl: string;
@@ -74,6 +72,7 @@ const CTThumbnail = ({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         border: (t) => `1px solid ${t.colors?.borders}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
@@ -85,6 +84,7 @@ const CTThumbnail = ({
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           backgroundImage: "url(" + `${preview?.url}` + ")",
         }}
       />
@@ -120,7 +120,7 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { customTypes = [], onCreate } = useContext(CustomTypesContext);
+  const { customTypes, onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     if (onCreate) {
@@ -129,6 +129,7 @@ const CustomTypes: React.FunctionComponent = () => {
         repeatable,
       });
       setIsOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       router.push(`/cts/${id}`);
     }
   };
@@ -137,19 +138,22 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          <Button
-            onClick={() => setIsOpen(true)}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: "50%",
-              height: "48px",
-              width: "48px",
-            }}
-          >
-            <GoPlus size={"2em"} />
-          </Button>
+          customTypes.length ? (
+            <Button
+              data-cy="create-ct"
+              onClick={() => setIsOpen(true)}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+                height: "48px",
+                width: "48px",
+              }}
+            >
+              <GoPlus size={"2em"} />
+            </Button>
+          ) : undefined
         }
         MainBreadcrumb={
           <Fragment>
@@ -158,7 +162,7 @@ const CustomTypes: React.FunctionComponent = () => {
         }
         breadrumbHref="/"
       />
-      {!customTypes.length ? (
+      {customTypes.length === 0 ? (
         <EmptyState
           title={"Create your first Custom Type"}
           explanations={[
@@ -182,11 +186,12 @@ const CustomTypes: React.FunctionComponent = () => {
           }
         />
       ) : (
-        <Grid
+        <Grid // The CtPayload should be used here once the Context has been changed.
           elems={customTypes}
-          renderElem={(ct: CtPayload) => (
+          defineElementKey={(ct: CustomType<ObjectTabs>) => ct.id}
+          renderElem={(ct: CustomType<ObjectTabs>) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-              <Card ct={ct} />
+              <Card ct={ct as CtPayload} />
             </Link>
           )}
         />

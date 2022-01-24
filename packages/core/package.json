@@ -1,13 +1,15 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.0.1",
+  "version": "1.0.2-alpha.51",
   "private": false,
   "main": "./build/index.js",
   "exports": {
     ".": "./build/index.js",
     "./core": "./build/src/core/index.js",
     "./utils": "./build/src/utils/index.js",
-    "./filesystem": "./build/src/filesystem/index.js"
+    "./filesystem": "./build/src/filesystem/index.js",
+    "./build/*": "./build/*.js",
+    "./package.json": "./package.json"
   },
   "engines": {
     "node": ">=12"
@@ -43,13 +45,14 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
+    "@types/axios": "^0.14.0",
     "@types/cookie": "^0.4.1",
     "@types/fs-extra": "^9.0.13",
     "@types/hapi__hapi": "^20.0.9",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
     "babel-jest": "^27.2.4",
     "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
@@ -58,10 +61,11 @@
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
     "jest": "^27.2.4",
+    "memfs": "^3.3.0",
     "nock": "^13.1.3",
     "ts-jest": "^27.0.5",
     "types-package-json": "^2.0.39",
-    "typescript": "^4.4.3"
-  },
-  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d"
+    "typescript": "^4.4.3",
+    "unionfs": "^4.4.0"
+  }
 }

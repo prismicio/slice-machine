@@ -14,6 +14,7 @@ import { getEnvironment } from "@src/modules/environment";
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomType<ObjectTabs>;
   remoteCustomType?: CustomType<ObjectTabs>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onLeave: Function;
 };
 
@@ -22,13 +23,16 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
     const { env } = useSelector((store: SliceMachineStoreType) => ({
       env: getEnvironment(store),
     }));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(
-      env?.mockConfig || {},
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      env.mockConfig,
       customType.id
     );
     const [Model, store] = useModelReducer({
       customType,
       remoteCustomType,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       initialMockConfig,
     });
     return <CustomTypeBuilder Model={Model} store={store} onLeave={onLeave} />;
@@ -44,6 +48,7 @@ const CustomTypeBuilderWithRouter = () => {
     (e) => e && e.id === router.query.ct
   );
   if (!customType) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
@@ -52,6 +57,7 @@ const CustomTypeBuilderWithRouter = () => {
     <CustomTypeBuilderWithProvider
       customType={customType}
       remoteCustomType={remoteCustomType}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       onLeave={onSave || function () {}}
     />
   );

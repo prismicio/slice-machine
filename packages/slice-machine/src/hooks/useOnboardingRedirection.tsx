@@ -4,13 +4,14 @@ import { useSelector } from "react-redux";
 import { userHasDoneTheOnboarding } from "@src/modules/userContext";
 import { useRouter } from "next/router";
 
-const useOnboardingRedirection = () => {
+const useOnboardingRedirection = (): void => {
   const router = useRouter();
 
   const isOnboarded = useSelector(userHasDoneTheOnboarding);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (!isOnboarded && router.pathname !== "/onboarding") {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       router.replace("/onboarding");
     }
   }, []);

@@ -31,17 +31,13 @@ const UpdateVersionModal: React.FC = () => {
     useSliceMachineActions();
 
   React.useEffect(() => {
-    if (!updateVersionInfo) return;
     if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
-  }, [updateVersionInfo]);
+  }, [updateVersionInfo.updateAvailable]);
 
   const copy = () => {
     ref.current?.textContent &&
       navigator.clipboard.writeText(ref.current.textContent);
   };
-
-  // if the data is not loaded
-  if (!updateVersionInfo) return null;
 
   return (
     <SliceMachineModal
@@ -74,6 +70,7 @@ const UpdateVersionModal: React.FC = () => {
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: "8px 8px 0px 0px",
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             borderBottom: (t) => `1px solid ${t.colors?.borders}`,
           }}
         >

@@ -2,6 +2,7 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import Actions from "./";
 
 export function updateWidgetGroupMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (
@@ -9,6 +10,7 @@ export function updateWidgetGroupMockConfig(
     groupId: string,
     previousFieldId: string,
     fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ): void => {
     const updatedConfig = CustomTypeMockConfig.updateGroupFieldMockConfig(
@@ -23,12 +25,14 @@ export function updateWidgetGroupMockConfig(
   };
 }
 export function updateWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
     previousFieldId: string,
     fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ): void => {
     if (!customTypeMockConfig) return;
@@ -43,6 +47,7 @@ export function updateWidgetMockConfig(
 }
 
 export function deleteWidgetGroupMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (
@@ -63,6 +68,7 @@ export function deleteWidgetGroupMockConfig(
 }
 
 export function deleteWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (

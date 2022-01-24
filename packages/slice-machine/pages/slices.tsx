@@ -1,25 +1,23 @@
 import React, { useState, useContext } from "react";
 import { FiLayers } from "react-icons/fi";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
-import { getFormattedLibIdentifier } from "@lib/utils/lib";
-import Container from "../components/Container";
+import Container from "components/Container";
 
-import { LibrariesContext } from "../src/models/libraries/context";
-import Environment from "@lib/models/common/Environment";
+import { LibrariesContext } from "src/models/libraries/context";
 
 import { GoPlus } from "react-icons/go";
 
-import CreateSliceModal from "@components/Forms/CreateSliceModal";
+import CreateSliceModal from "components/Forms/CreateSliceModal";
 
-import { fetchApi } from "@lib/builders/common/fetch";
+import { fetchApi } from "lib/builders/common/fetch";
 
-import Header from "../components/Header";
-import Grid from "../components/Grid";
+import Header from "components/Header";
+import Grid from "components/Grid";
 
-import LibraryState from "@lib/models/ui/LibraryState";
-import SliceState from "@lib/models/ui/SliceState";
-import { SharedSlice } from "@lib/models/ui/Slice";
-import EmptyState from "@components/EmptyState";
+import LibraryState from "lib/models/ui/LibraryState";
+import SliceState from "lib/models/ui/SliceState";
+import { SharedSlice } from "lib/models/ui/Slice";
+import EmptyState from "components/EmptyState";
 
 const CreateSliceButton = ({
   onClick,
@@ -30,6 +28,7 @@ const CreateSliceButton = ({
 }) => (
   <Button
     onClick={() => onClick()}
+    data-cy="create-slice"
     sx={{
       display: "flex",
       justifyContent: "center",
@@ -43,9 +42,7 @@ const CreateSliceButton = ({
   </Button>
 );
 
-const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
-  env,
-}) => {
+const SlicesIndex: React.FunctionComponent = () => {
   const libraries = useContext(LibrariesContext);
   const [isCreatingSlice, setIsCreatingSlice] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -81,31 +78,17 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
     });
   };
 
-  const localLibs = libraries.length
-    ? libraries.filter((e) => e && e.isLocal)
-    : [];
-  const hasLocalLibs = localLibs.length;
-  const configLocalLibs = (env.userConfig.libraries || []).reduce<
-    ReadonlyArray<{ name: string }>
-  >((acc, curr) => {
-    const { isLocal, from } = getFormattedLibIdentifier(curr);
-    if (!isLocal) {
-      return acc;
+  const localLibraries: LibraryState[] | undefined = libraries?.filter(
+    (l) => l.isLocal
+  );
+
+  const sliceCount = (libraries || []).reduce((count, lib) => {
+    if (!lib) {
+      return count;
     }
-    return [...acc, { name: from }];
-  }, []);
-  const hasConfigLocalLibs = configLocalLibs.length;
 
-  const sliceCount =
-    libraries && libraries.length
-      ? libraries.reduce((count, lib) => {
-          if (!lib) {
-            return count;
-          }
-
-          return count + lib.components.length;
-        }, 0)
-      : 0;
+    return count + lib.components.length;
+  }, 0);
 
   return (
     <>
@@ -125,7 +108,7 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
         >
           <Header
             ActionButton={
-              hasLocalLibs ? (
+              localLibraries?.length != 0 && sliceCount != 0 ? (
                 <CreateSliceButton
                   onClick={() => setIsOpen(true)}
                   loading={isCreatingSlice}
@@ -139,19 +122,7 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
             }
             breadrumbHref="/slices"
           />
-          {!hasConfigLocalLibs && (
-            <Box>
-              <p>
-                We could not find any local library in your project.
-                <br />
-                Please update your `sm.json` file with a path to slices, eg:
-              </p>
-              <p>
-                <pre>{`{ "libraries": ["@/slices"] }`}</pre>
-              </p>
-            </Box>
-          )}
-          {!!hasConfigLocalLibs && (
+          {libraries && (
             <Box
               sx={{
                 flex: 1,
@@ -183,11 +154,8 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
                   }
                 />
               ) : (
-                libraries.map((maybelib: LibraryState | undefined) => {
-                  if (!maybelib) {
-                    return null;
-                  }
-                  const { name, isLocal, components } = maybelib;
+                libraries.map((lib: LibraryState) => {
+                  const { name, isLocal, components } = lib;
                   return (
                     <Flex
                       key={name}
@@ -219,6 +187,9 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
                       </Flex>
                       <Grid
                         elems={components.map(([e]) => e)}
+                        defineElementKey={(slice: SliceState) =>
+                          slice.infos.sliceName
+                        }
                         renderElem={(slice: SliceState) => {
                           return SharedSlice.render({
                             displayStatus: true,
@@ -234,18 +205,12 @@ const SlicesIndex: React.FunctionComponent<{ env: Environment }> = ({
           )}
         </Box>
       </Container>
-      {!!configLocalLibs.length && (
+      {localLibraries && localLibraries.length > 0 && (
         <CreateSliceModal
           isOpen={isOpen}
           close={() => setIsOpen(false)}
-          libraries={configLocalLibs}
-          onSubmit={({
-            sliceName,
-            from,
-          }: {
-            sliceName: string;
-            from: string;
-          }) => _onCreate({ sliceName, from })}
+          libraries={localLibraries}
+          onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
         />
       )}
     </>

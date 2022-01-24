@@ -18,8 +18,8 @@ export function buildEndpoints(base: string): Endpoints {
   };
 }
 
-export type Base = `${"http" | "https"}://${string}${"/" | ""}`;
-
+export type Base = string;
+export type ApiEndpoint = string;
 export function extractDomainFromBase(base: Base): string {
   const withoutHttp = base.split("://")[1];
   const result = withoutHttp.split("/")[0];

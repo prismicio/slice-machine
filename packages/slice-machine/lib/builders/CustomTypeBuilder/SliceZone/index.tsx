@@ -23,9 +23,9 @@ export interface SliceZoneSlice {
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SliceZoneAsArray,
-  libraries: ReadonlyArray<LibraryState> = []
+  libraries: ReadonlyArray<LibraryState> | null
 ) => {
-  const availableSlices = libraries.reduce(
+  const availableSlices = (libraries || []).reduce(
     (acc: ReadonlyArray<SliceState>, curr: LibraryState) => {
       return [...acc, ...curr.components.map((e) => e[0])];
     },
@@ -83,18 +83,18 @@ const SliceZone = ({
 }: {
   tabId: string;
   sliceZone: SliceZoneAsArray;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onRemoveSharedSlice: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onCreateSliceZone: Function;
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const libraries = useContext(LibrariesContext);
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
-    ? mapAvailableAndSharedSlices(
-        sliceZone,
-        libraries as ReadonlyArray<LibraryState>
-      )
+    ? mapAvailableAndSharedSlices(sliceZone, libraries)
     : { availableSlices: [], slicesInSliceZone: [], notFound: [] };
 
   useEffect(() => {
@@ -159,6 +159,7 @@ const SliceZone = ({
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
         onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
         close={() => setFormIsOpen(false)}

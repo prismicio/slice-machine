@@ -17,7 +17,9 @@ const Form = ({
 }: {
   isOpen: boolean;
   formId: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   close: Function;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onSubmit: Function;
   availableSlices: ReadonlyArray<SliceState>;
   slicesInSliceZone: ReadonlyArray<SliceState>;
@@ -26,7 +28,9 @@ const Form = ({
     <ModalFormCard
       isOpen={isOpen}
       formId={formId}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       close={() => close()}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
       onSubmit={(values: any) => onSubmit(values)}
       initialValues={{
         sliceKeys: slicesInSliceZone.map((slice) => slice.infos.meta.id),
@@ -35,7 +39,14 @@ const Form = ({
         title: "Update SliceZone",
       }}
     >
-      {({ values }: { values: { sliceKeys: any } }) => (
+      {({
+        values,
+      }: {
+        values: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sliceKeys: any;
+        };
+      }) => (
         <FieldArray
           name="sliceKeys"
           render={(arrayHelpers) => {
@@ -43,6 +54,7 @@ const Form = ({
               <Grid
                 gridTemplateMinPx="200px"
                 elems={availableSlices}
+                defineElementKey={(slice: SliceState) => slice.infos.sliceName}
                 renderElem={(slice: SliceState) => {
                   return SharedSlice.render({
                     bordered: true,
@@ -54,17 +66,20 @@ const Form = ({
                       children,
                     }: {
                       slice: SliceState;
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       children: any;
                     }) => {
                       return (
                         <div
                           style={{ cursor: "pointer" }}
                           onClick={() => {
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                             const isInSliceZone = values.sliceKeys.includes(
                               slice.infos.meta.id
                             );
                             if (isInSliceZone) {
                               return arrayHelpers.remove(
+                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                                 values.sliceKeys.indexOf(slice.infos.meta.id)
                               );
                             }
@@ -77,6 +92,7 @@ const Form = ({
                       );
                     },
                     CustomStatus: ({ slice }: { slice: SliceState }) => {
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                       const isInSliceZone = values.sliceKeys.includes(
                         slice.infos.meta.id
                       );

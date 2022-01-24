@@ -37,6 +37,7 @@ export const CustomTab = ({ children, ...otherProps }) => {
         borderRadius: "0",
         ...(otherProps.selected
           ? {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               borderBottom: `3px solid ${theme.colors.primary}`,
               color: theme.colors.text,
               fontWeight: "500",

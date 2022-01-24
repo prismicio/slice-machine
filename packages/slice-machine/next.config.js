@@ -1,9 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const withPlugins = require("next-compose-plugins");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
 const withMDX = require("@next/mdx")();
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const withCustomBabelConfigFile = require("next-plugin-custom-babel-config");
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const withVideos = require("next-videos");
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 module.exports = withPlugins(
   [
     [
@@ -17,9 +23,10 @@ module.exports = withPlugins(
         },
         webpack: (config, { isServer }) => {
           if (!isServer) {
-            config.node = { fs: "empty" };
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            config.node = { fs: "empty", child_process: "empty" };
           }
-
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           config.module.rules.push({
             test: /\.svg$/,
             issuer: {
@@ -28,6 +35,7 @@ module.exports = withPlugins(
             use: ["@svgr/webpack"],
           });
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return config;
         },
       },

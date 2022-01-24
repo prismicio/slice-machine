@@ -25,7 +25,7 @@ type ModalActions = ActionType<
 export const isModalOpen = (
   state: SliceMachineStoreType,
   dialog: ModalKeysEnum
-) => state.modal[dialog];
+): boolean => state.modal[dialog];
 
 // Reducer
 export const modalReducer: Reducer<ModalStoreType, ModalActions> = (

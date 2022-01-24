@@ -45,14 +45,19 @@ export const fetchApi = ({
     },
     ...params,
   }).then(async (res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonResponse = await res.json();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { err, reason, warning, status } = jsonResponse;
     if (res.status > 209) {
       return setData({
         loading: false,
         done: true,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         error: err,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         status,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         message: errorMessage || reason,
         ...(data.onResponse ? data.onResponse : {}),
       });
@@ -62,10 +67,13 @@ export const fetchApi = ({
       done: true,
       error: null,
       warning: !!warning,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       status,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       message: warning || successMessage || reason,
       ...(data.onResponse ? data.onResponse : {}),
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     onSuccess(jsonResponse);
   });
 };

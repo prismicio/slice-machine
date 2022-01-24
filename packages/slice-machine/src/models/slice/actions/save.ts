@@ -1,17 +1,21 @@
 import { Variation } from "../../../../lib/models/common/Variation";
 import { fetchApi } from "../../../../lib/builders/common/fetch";
 import SliceState from "../../../../lib/models/ui/SliceState";
-import { Preview } from "../../../../lib/models/common/Component";
 import { ActionType } from "./ActionType";
 import { ToastPayload } from "../../../../src/ToastProvider/utils";
+import { SliceSaveResponse } from "@lib/models/common/Slice";
 
 export default function save(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return async (
     slice: SliceState,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setData: (data: ToastPayload) => void = () => {}
+    //    eslint-disable-next-line @typescript-eslint/require-await
   ) => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-floating-promises
     fetchApi({
       url: "/api/slices/save",
       params: {
@@ -20,25 +24,21 @@ export default function save(
           sliceName: slice.infos.sliceName,
           from: slice.from,
           model: {
-            ...slice.jsonModel,
+            ...slice.model,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             variations: slice.variations.map(Variation.toObject),
           },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: slice.mockConfig,
         }),
       },
       setData,
       successMessage: "Model & mocks have been generated successfully!",
-      onSuccess({
-        previewUrls,
-      }: {
-        previewUrls: { [variationId: string]: Preview };
-      }) {
+      onSuccess({ screenshots }: SliceSaveResponse) {
         const savedState = {
           ...slice,
-          infos: {
-            ...slice.infos,
-            previewUrls,
-          },
+          screenshotUrls: screenshots,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations,
         };

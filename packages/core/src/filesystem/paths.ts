@@ -23,7 +23,7 @@ export interface Paths {
       model: () => string;
       variation: (variationId: string) => {
         value: () => string;
-        preview: (filename: string) => string;
+        preview: (filename?: string) => string;
       };
     };
   };
@@ -90,9 +90,10 @@ export const CustomTypesPaths = (cwd: string): Paths =>
 export const CustomPaths = (cwd: string): Paths => Paths(cwd, "");
 export const PackagePaths = (cwd: string): Paths => Paths(cwd, "node_modules");
 export const SMConfigPath = (cwd: string): string => path.join(cwd, "sm.json");
+export const LibrariesStatePath = (cwd: string): string =>
+  path.join(cwd, ".slicemachine", "libraries-state.json");
 
-export const PrismicConfigPath = (dir = os.homedir()): string =>
-  path.join(dir, ".prismic");
+export const PrismicConfigPath = path.join(os.homedir(), ".prismic");
 
 export const SliceTemplateConfigPath = (
   cwd: string,

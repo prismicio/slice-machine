@@ -8,9 +8,10 @@ import {
   Flex,
   Badge,
 } from "theme-ui";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 import SliceState from "../SliceState";
-import { LibStatus } from "../../common/Library";
+import { LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
@@ -18,7 +19,6 @@ import { WrapperType, WrapperByType } from "./wrappers";
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
   [LibStatus.Synced]: "Synced",
-  [LibStatus.PreviewMissing]: "Preview missing",
   [LibStatus.Invalid]: "Contains errors",
   [LibStatus.NewSlice]: "New",
 };
@@ -33,8 +33,8 @@ const StatusBadge = ({ libStatus }: { libStatus: LibStatus }) => {
   );
 };
 
-const borderedSx = (sx: any) => ({
-  border: (t: Theme) => `1px solid ${t.colors?.border}`,
+const borderedSx = (sx: ThemeUIStyleObject) => ({
+  border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
   p: 3,
@@ -42,11 +42,11 @@ const borderedSx = (sx: any) => ({
   "&:hover": {
     transition: "all 200ms ease-out",
     bg: "sidebar",
-    border: (t: Theme) => `1px solid ${t.colors?.sidebar}`,
+    border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
   },
 });
 
-const defaultSx = (sx: any) => ({
+const defaultSx = (sx: ThemeUIStyleObject) => ({
   bg: "transparent",
   border: "none",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
@@ -58,6 +58,7 @@ const SliceVariations = ({
   variations,
 }: {
   hideVariations: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variations: ReadonlyArray<any>;
 }) => {
   return !hideVariations ? (
@@ -73,11 +74,11 @@ const SliceVariations = ({
 
 const SliceThumbnail = ({
   heightInPx,
-  previewUrl,
+  screenshotUrl,
   withShadow = true,
 }: {
   heightInPx: string;
-  previewUrl?: string;
+  screenshotUrl?: string;
   withShadow: boolean;
 }) => {
   return (
@@ -93,7 +94,7 @@ const SliceThumbnail = ({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "6px",
-        border: (t) => `1px solid ${t.colors?.borders}`,
+        border: (t) => `1px solid ${t.colors?.borders as string}`,
         boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
       }}
     >
@@ -104,9 +105,11 @@ const SliceThumbnail = ({
           backgroundSize: "contain",
           backgroundPosition: "50%",
           backgroundRepeat: "no-repeat",
-          backgroundImage: previewUrl ? "url(" + `${previewUrl}` + ")" : "none",
+          backgroundImage: screenshotUrl
+            ? "url(" + `${screenshotUrl}` + ")"
+            : "none",
         }}
-      ></Box>
+      />
     </Box>
   );
 };
@@ -126,11 +129,14 @@ export const SharedSlice = {
     bordered?: boolean;
     displayStatus?: boolean;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomStatus?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Wrapper?: any /* ? */;
     slice: SliceState;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
   }) {
     const defaultVariation = SliceState.variation(slice);
@@ -138,26 +144,24 @@ export const SharedSlice = {
       return null;
     }
     const variationId = defaultVariation.id;
-    const link = LinkUtil.variation(
-      slice.href,
-      slice.jsonModel.name,
-      variationId
-    );
+    const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const previewUrl = slice.infos?.previewUrls?.[variationId]?.url;
+    const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
 
     return (
       <CardWrapper link={link} slice={slice}>
         <Themecard
           role="button"
           aria-pressed="false"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
           <SliceThumbnail
             withShadow={false}
-            previewUrl={previewUrl}
+            screenshotUrl={screenshotUrl}
             heightInPx={thumbnailHeightPx}
           />
           <Flex
@@ -199,16 +203,19 @@ export const NonSharedSlice = {
     sx,
   }: {
     bordered: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice: { key: string; value: any };
     displayStatus?: boolean;
     thumbnailHeightPx?: string;
     wrapperType?: WrapperType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
   }) {
     const Wrapper = WrapperByType[wrapperType];
 
     return (
       <Wrapper link={undefined}>
+        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
           <SliceThumbnail withShadow={false} heightInPx={thumbnailHeightPx} />
           <Flex
@@ -222,6 +229,7 @@ export const NonSharedSlice = {
                 </Badge>
               ) : null}
               <Heading sx={{ flex: 1 }} as="h6">
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
                 {slice?.value?.fieldset || slice.key}
               </Heading>
             </Flex>

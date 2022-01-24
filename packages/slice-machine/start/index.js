@@ -8,38 +8,53 @@ if (parseInt(nodeVersion) < 12) {
   process.exit(-1);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("../package.json");
 
-const { Utils } = require("@slicemachine/core");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { Utils, Models } = require("@slicemachine/core");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const moduleAlias = require("module-alias");
 
 const LIB_PATH = path.join(__dirname, "..", "build", "lib");
 
 Object.entries(pkg._moduleAliases).forEach(([key]) => {
   moduleAlias.addAlias(key, (fromPath) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
   });
 });
 
 global.fetch = require("node-fetch");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require("fs");
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const boxen = require("boxen");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const spawn = require("child_process").spawn;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const migrate = require("../changelog/migrate");
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const validateUserAuth =
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access
   require("../build/server/src/api/services/validateUserAuth").validateUserAuth;
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const infobox = require("./info");
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
 const compareVersions = require("../build/lib/env/semver").default;
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const {
   default: handleManifest,
-  ManifestStates,
+  ManifestState,
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
 } = require("../build/lib/env/manifest");
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
 const { argv } = require("yargs");
 
 async function handleChangelog(params) {
@@ -49,57 +64,72 @@ async function handleChangelog(params) {
     console.error(
       "An error occurred while migrating file system. Continuing..."
     );
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     console.error(`Full error: ${e}`);
     return;
   }
 }
 
 async function handleMigration(cwd) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const pathToPkg = path.join(cwd, "package.json");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const pathToSmFile = path.join(cwd, "sm.json");
   if (!fs.existsSync(pathToSmFile)) {
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   return handleChangelog({ cwd, pathToPkg, pathToSmFile });
 }
 
 function start({ cwd, port }, callback) {
   const smServer = spawn("node", ["../build/server/src/index.js"], {
     cwd: __dirname,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     port,
     env: {
       ...process.env,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
       CWD: cwd,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       PORT: port,
+      SEGMENT_WRITE_KEY: "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   smServer.stdout.on("data", function (data) {
-    const lns = data.toString().split("=");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const lns = data.toString().split("Server running");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     if (lns.length === 2) {
-      // server was launched
-      if (callback) {
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       callback(lns[1].replace(/\\n/, "").trim());
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       console.log(data.toString());
     }
   });
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   smServer.stderr.on("data", function (data) {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     console.log("[slice-machine] " + data.toString());
   });
 }
-
-async function handleManifestState(manifestState, cwd) {
-  if (manifestState.state !== ManifestStates.Valid) {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/require-await
+async function handleManifestState(manifestState) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (manifestState.state !== ManifestState.Valid) {
     console.log(
       boxen(
         `🔴 A configuration error was detected!
-        
+
 Error Message:
-"${manifestState.message}"
+"${
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+          manifestState.message
+        }"
 
 See below for more info 👇`,
         { padding: 1, borderColor: "red" }
@@ -109,10 +139,13 @@ See below for more info 👇`,
     console.log("\n--- ℹ️  How to solve this: ---\n");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   switch (manifestState.state) {
-    case ManifestStates.Valid:
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    case ManifestState.Valid:
       return { exit: false };
-    case ManifestStates.NotFound: {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    case ManifestState.NotFound: {
       console.log(
         `Run ${Utils.bold(
           `"${Utils.CONSTS.INIT_COMMAND}"`
@@ -121,17 +154,20 @@ See below for more info 👇`,
 
       return { exit: true };
     }
-    case ManifestStates.MissingEndpoint:
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    case ManifestState.MissingEndpoint:
       console.log(
         'Add a property "apiEndpoint" to your config.\nExample: https://my-repo.prismic.io/api/v2\n\n'
       );
       return { exit: true };
-    case ManifestStates.InvalidEndpoint:
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    case ManifestState.InvalidEndpoint:
       console.log(
         "Update your config file with a valid Prismic endpoint.\nExample: https://my-repo.prismic.io/api/v2\n\n"
       );
       return { exit: true };
-    case ManifestStates.InvalidJson: {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    case ManifestState.InvalidJson: {
       console.log("Update your config file with a valid JSON structure.");
       return { exit: true };
     }
@@ -148,31 +184,42 @@ async function run() {
   if (!argv.skipMigration) {
     await handleMigration(cwd);
   }
-
-  const userConfig = handleManifest(cwd);
-  const { exit } = await handleManifestState(userConfig, cwd);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+  const manifestInfo = handleManifest(cwd);
+  const { exit } = await handleManifestState(manifestInfo);
   if (exit) {
     console.log("");
     process.exit(0);
   }
 
   const SmDirectory = path.resolve(__dirname, ".."); // directory of the module
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
-  const framework = Utils.Framework.defineFramework(userConfig.content, cwd);
-
+  const framework = Utils.Framework.defineFramework(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    manifestInfo.content,
+    cwd,
+    Models.SupportedFrameworks
+  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const validateRes = await validateUserAuth();
 
   start({ cwd, port }, (url) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const email =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       validateRes && validateRes.body ? validateRes.body.email : null;
     infobox(npmCompareData, url, framework, email);
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
+// eslint-disable-next-line @typescript-eslint/require-await
 async function main() {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     run();
   } catch (err) {
     console.error(`[slice-machine] An unexpected error occurred. Exiting...`);

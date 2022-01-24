@@ -23,14 +23,15 @@ import {
   userHasDoneTheOnboarding,
   userHasSendAReview,
 } from "@src/modules/userContext";
-import { useToasts } from "react-toast-notifications";
-import { sendTrackingReview } from "@src/apiClient";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { getEnvironment } from "@src/modules/environment";
+import Tracker from "@src/tracker";
 
 Modal.setAppElement("#__next");
 
 type ReviewModalProps = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   cardProps?: {};
 };
 
@@ -39,10 +40,11 @@ const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
 const SelectReviewComponent = ({ field, form }: FieldProps) => {
   return (
     <Box sx={{ mb: 3 }}>
-      {ratingSelectable.map((rating) => (
+      {ratingSelectable.map((rating, index) => (
         <Button
           variant="secondary"
           type="button"
+          key={index}
           onClick={() => form.setFieldValue("rating", rating)}
           className={field.value === rating ? "selected" : ""}
           sx={{
@@ -65,27 +67,23 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
   const { customTypes } = useContext(CustomTypesContext);
   const libraries = useContext(LibrariesContext);
+
   const {
+    env,
     isReviewLoading,
     isLoginModalOpen,
     hasSendAReview,
     hasDoneTheOnboarding,
   } = useSelector((store: SliceMachineStoreType) => ({
+    env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
   }));
 
-  const {
-    skipReview,
-    sendAReview,
-    openLoginModal,
-    startLoadingReview,
-    stopLoadingReview,
-  } = useSliceMachineActions();
-
-  const { addToast } = useToasts();
+  const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
+    useSliceMachineActions();
 
   const sliceCount =
     libraries && libraries.length
@@ -98,28 +96,16 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
         }, 0)
       : 0;
 
-  const customTypeCount = !!customTypes ? customTypes.length : 0;
+  const customTypeCount = customTypes.length;
 
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 
-  const onSendAReview = async (
-    rating: number,
-    comment: string
-  ): Promise<void> => {
-    try {
-      startLoadingReview();
-      await sendTrackingReview(rating, comment);
-      sendAReview();
-      stopLoadingReview();
-    } catch (error) {
-      stopLoadingReview();
-      if (403 === error.response?.status) {
-        openLoginModal();
-      }
-      if (401 === error.response?.status) {
-        addToast("You don't have access to the repo", { appearance: "error" });
-      }
-    }
+  const onSendAReview = (rating: number, comment: string): void => {
+    startLoadingReview();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    Tracker.get().trackReview(env.framework, rating, comment);
+    sendAReview();
+    stopLoadingReview();
   };
 
   const validateReview = ({ rating }: { rating: number; comment: string }) => {
@@ -182,6 +168,7 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   borderRadius: "8px 8px 0px 0px",
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                   borderBottom: (t) => `1px solid ${t.colors?.borders}`,
                 }}
               >

@@ -1,19 +1,23 @@
-import { listComponentsByLibrary } from "@lib/queries/listComponents";
+import { Libraries, Models } from "@slicemachine/core";
 
-import Environment from "@lib/models/common/Environment";
-import { Library } from "@lib/models/common/Library";
-import Slice from "@lib/models/common/Slice";
-import { AsObject } from "@lib/models/common/Variation";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-export async function getLibrariesWithFlags(env: Environment): Promise<{
-  remoteSlices: ReadonlyArray<Slice<AsObject>>;
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+
+interface LibrariesResult {
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<Library>;
-}> {
+  libraries: ReadonlyArray<LibraryUI> | null;
+}
+
+export default async function handler(
+  env: BackendEnvironment
+): Promise<LibrariesResult> {
   try {
     const res = await env.client.getSlice();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { remoteSlices, clientError } = await (async () => {
       if (res.status > 209) {
         return {
@@ -24,15 +28,23 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
       if (env.client.isFake()) {
         return { remoteSlices: [] };
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const r = await (res.json ? res.json() : Promise.resolve([]));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       return { remoteSlices: r };
     })();
 
-    const libraries = await listComponentsByLibrary(env);
+    if (!env.manifest.libraries)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      return { remoteSlices, libraries: null, clientError };
+
+    const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
 
     const withFlags = libraries.map((lib) =>
-      Library.withStatus(lib, remoteSlices)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      LibraryUI.build(lib, remoteSlices, env)
     );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return { clientError, libraries: withFlags, remoteSlices };
   } catch (e) {
     return {
@@ -41,12 +53,4 @@ export async function getLibrariesWithFlags(env: Environment): Promise<{
       remoteSlices: [],
     };
   }
-}
-
-export default async function handler(env: Environment): Promise<{
-  remoteSlices: ReadonlyArray<Slice<AsObject>>;
-  clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<Library>;
-}> {
-  return getLibrariesWithFlags(env);
 }

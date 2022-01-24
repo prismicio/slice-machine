@@ -17,7 +17,9 @@ import {
 } from "./components";
 
 const FormFields = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
 };
 
@@ -27,11 +29,13 @@ const EMPTY_THUMBNAIL = {
   height: "",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
 const thumbText = ({ width, height } = {}, allowAuto) => {
   if (allowAuto && !width && !height) {
     return "auto";
   }
   if (width || height) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/restrict-template-expressions
     return `${width ? width : "auto"}x${height ? height : "auto"}`;
   }
   return "...";
@@ -39,14 +43,18 @@ const thumbText = ({ width, height } = {}, allowAuto) => {
 
 const Form = (props) => {
   const [thumbI, setThumbI] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { initialValues, values: formValues, errors, fields, touched } = props;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
     config: { thumbnails, constraint },
   } = formValues;
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     setThumbI(thumbnails.length);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }, [thumbnails.length]);
 
   return (
@@ -55,8 +63,11 @@ const Form = (props) => {
         <Col key={key}>
           <WidgetFormField
             fieldName={createFieldNameFromKey(key)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             formField={field}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             fields={fields}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             initialValues={initialValues}
           />
         </Col>
@@ -81,27 +92,38 @@ const Form = (props) => {
                 <Flex mb={3}>
                   <ThumbnailButton
                     active={thumbI === 0}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     text={thumbText(constraint, true)}
                     sx={{ mr: 2 }}
                     onClick={() => setThumbI(0)}
                   />
-                  {thumbnails.map((e, i) => (
-                    <ThumbnailButton
-                      key={`thumbnail-button-${i + 1}`}
-                      sx={{ mr: 3 }}
-                      active={thumbI === i + 1}
-                      text={thumbText(e)}
-                      error={
-                        errors.thumbnails &&
-                        touched.thumbnails &&
-                        touched.thumbnails[i] &&
-                        errors.thumbnails &&
-                        errors.thumbnails[i]
-                      }
-                      onDelete={() => remove(i)}
-                      onClick={() => setThumbI(i + 1)}
-                    />
-                  ))}
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                    thumbnails.map((e, i) => (
+                      <ThumbnailButton
+                        key={`thumbnail-button-${+i + 1}`}
+                        sx={{ mr: 3 }}
+                        active={thumbI === +i + 1}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                        text={thumbText(e)}
+                        error={
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                          errors.thumbnails &&
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                          touched.thumbnails &&
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+                          touched.thumbnails[i] &&
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                          errors.thumbnails &&
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+                          errors.thumbnails[i]
+                        }
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+                        onDelete={() => remove(i)}
+                        onClick={() => setThumbI(+i + 1)}
+                      />
+                    ))
+                  }
                   <AddThumbnailButton
                     onClick={() => {
                       push(EMPTY_THUMBNAIL);
@@ -113,15 +135,19 @@ const Form = (props) => {
                   display={thumbI === 0}
                   prefix="config.constraint"
                 />
-                {thumbnails.map((_, i) => (
-                  <ConstraintForm
-                    {...props}
-                    required
-                    key={`thumbnail-${i + 1}`}
-                    display={thumbI === i + 1}
-                    prefix={`config.thumbnails[${i}]`}
-                  />
-                ))}
+                {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                  thumbnails.map((_, i) => (
+                    <ConstraintForm
+                      {...props}
+                      required
+                      key={`thumbnail-${+i + 1}`}
+                      display={thumbI === +i + 1}
+                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                      prefix={`config.thumbnails[${i}]`}
+                    />
+                  ))
+                }
               </Fragment>
             )}
           />

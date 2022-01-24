@@ -15,6 +15,7 @@ import { FieldType } from "../../CustomType/fields";
     }
   } */
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const { FormFields, schema } = createDefaultWidgetValues(FieldType.Number);
 
 const Meta = {
@@ -28,6 +29,7 @@ export const NumberWidget: Widget<NumberField, typeof schema> = {
   MockConfigForm,
   handleMockConfig,
   handleMockContent,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: FieldType.Number,
   schema,

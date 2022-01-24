@@ -11,6 +11,13 @@ import { NonSharedSliceInSliceZone } from "@lib/models/common/CustomType/sliceZo
 const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
   <Grid
     elems={slices}
+    defineElementKey={(slice: SliceZoneSlice) => {
+      if (slice.type === SliceType.Slice) {
+        // NonsharedSlice
+        return (slice.payload as NonSharedSliceInSliceZone).key;
+      }
+      return (slice.payload as SliceState).infos.sliceName;
+    }}
     renderElem={(slice: SliceZoneSlice) => {
       if (slice.type === SliceType.Slice) {
         return NonSharedSlice.render({

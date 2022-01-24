@@ -74,6 +74,7 @@ export const Tab = {
     }
     return { key: tab.key, value: tabValue };
   },
+  // eslint-disable-next-line @typescript-eslint/ban-types
   updateSliceZone(tab: TabAsArray): Function {
     return (mutate: (v: SliceZoneAsArray) => TabAsArray) => {
       return {

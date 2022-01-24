@@ -5,13 +5,12 @@ import Navigation from "./Navigation";
 
 const AsIs: { [x: string]: boolean } = {
   "/onboarding": true,
+  "/[lib]/[sliceName]/[variation]/simulator": true,
 };
 
-type AppLayoutProps = {};
-
-const AppLayout: React.FunctionComponent<AppLayoutProps> = ({ children }) => {
+const AppLayout: React.FC = ({ children }) => {
   const router = useRouter();
-  if (AsIs[router.asPath]) {
+  if (AsIs[router.asPath] || AsIs[router.pathname]) {
     return <main>{children}</main>;
   }
 

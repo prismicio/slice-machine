@@ -18,6 +18,7 @@ const AuthInstructions = () => (
           justifyContent: "space-between",
           borderTopLeftRadius: radius,
           borderTopRightRadius: radius,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >

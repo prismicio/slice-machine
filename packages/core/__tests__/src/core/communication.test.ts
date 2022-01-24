@@ -9,7 +9,7 @@ import {
 import * as communication from "../../../src/core/communication";
 import { roles } from "../../../src/utils";
 import nock from "nock";
-import { Framework } from "../../../src/utils";
+import { Frameworks } from "../../../src/models/Framework";
 
 describe("communication", () => {
   afterEach(() => {
@@ -74,21 +74,16 @@ describe("communication", () => {
   });
 
   test("listRepositories", async () => {
-    const base = "https://prismic.io";
-    const responseData = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {
-        "foo-repo": { dbid: "abcd", role: roles.Roles.OWNER },
-        qwerty: { dbid: "efgh", role: roles.Roles.WRITER },
-      },
-    };
-    nock("https://auth.prismic.io")
-      .get("/validate?token=biscuits")
+    const responseData = [
+      { domain: "foo-repo", name: "foo-repo", role: "Administrator" },
+      { domain: "qwerty", name: "qwerty", role: "Administrator" },
+    ];
+    nock("https://user.internal-prismic.io")
+      .get("/repositories")
       .reply(200, responseData);
 
-    const result = await communication.listRepositories(fakeCookie, base);
-    expect(result).toEqual(responseData.repositories);
+    const result = await communication.listRepositories(fakeCookie);
+    expect(result).toEqual(responseData);
   });
 
   describe("validateRepositoryName", () => {
@@ -205,7 +200,7 @@ describe("communication", () => {
     test("with default arguments it should call the prismic.io endpoint to create a new repo", async () => {
       const formData = {
         domain: repoName,
-        framework: Framework.FrameworkEnum.vanillajs,
+        framework: Frameworks.vanillajs,
         plan: "personal",
         isAnnual: "false",
         role: "developer",
@@ -221,7 +216,7 @@ describe("communication", () => {
 
     test("with framework and different base", async () => {
       const fakeBase = "https://example.com";
-      const framework = Framework.FrameworkEnum.next;
+      const framework = Frameworks.next;
 
       const formData = {
         domain: repoName,

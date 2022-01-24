@@ -18,6 +18,7 @@ import { Widget } from "../Widget";
 import { TimestampField } from "./type";
 import { FieldType } from "../../CustomType/fields";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;
 
 const schema = yup.object().shape({
@@ -25,6 +26,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Timestamp$/, { excludeEmptyString: true })
     .required(),
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
@@ -40,6 +42,7 @@ export const TimestampWidget: Widget<TimestampField, typeof schema> = {
   MockConfigForm,
   create: (label: string) => new TimestampField({ label }),
   schema,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: FieldType.Timestamp,
   Meta,

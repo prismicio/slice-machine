@@ -1,27 +1,12 @@
-import { WidgetsArea } from "./Variation";
-
-// interface SliceMockConfig {
-//   [variationId: string]: {
-//     primary?: {
-//       [fieldId: string]: {
-//         config?: any,
-//         content?: any
-//       }
-//     },
-//     items?: {
-//       [fieldId: string]: {
-//         config?: any,
-//         content?: any
-//       }
-//     },
-//   }
-// }
+import type Models from "@slicemachine/core/build/src/models";
 
 export interface SliceMockConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
 export interface GlobalMockConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
@@ -31,21 +16,25 @@ export const SliceMockConfig = {
     libName: string,
     sliceName: string
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return globalMockConfig?.[libName]?.[sliceName] || {};
   },
   getVariationMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return sliceMockConfig[variationId] || {};
   },
   getFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     fieldId: string
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.getVariationMockConfig(sliceMockConfig, variationId)[widgetArea]?.[
         fieldId
       ] || {}
@@ -54,14 +43,17 @@ export const SliceMockConfig = {
   deleteFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     fieldId: string
   ) {
     return {
       ...sliceMockConfig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       [variationId]: {
         ...this.getVariationMockConfig(sliceMockConfig, variationId),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         [widgetArea]: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           ...this.getVariationMockConfig(sliceMockConfig, variationId)[
             widgetArea
           ],
@@ -73,25 +65,31 @@ export const SliceMockConfig = {
   updateFieldMockConfig(
     sliceMockConfig: SliceMockConfig,
     variationId: string,
-    widgetArea: WidgetsArea,
+    widgetArea: Models.WidgetsArea,
     previousKey: string,
     fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ) {
     return {
       ...sliceMockConfig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       [variationId]: {
         ...this.getVariationMockConfig(sliceMockConfig, variationId),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         [widgetArea]: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           ...this.getVariationMockConfig(sliceMockConfig, variationId)[
             widgetArea
           ],
           ...(fieldId !== previousKey
             ? {
                 [previousKey]: undefined,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 [fieldId]: value,
               }
             : {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 [fieldId]: value,
               }),
         },
@@ -101,14 +99,17 @@ export const SliceMockConfig = {
 };
 
 export interface CustomTypeMockConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
 export const CustomTypeMockConfig = {
   getCustomTypeMockConfig(globalMockConfig: GlobalMockConfig, ctId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return globalMockConfig?._cts?.[ctId] || {};
   },
   getFieldMockConfig(ctMockConfig: CustomTypeMockConfig, fieldId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return ctMockConfig[fieldId] || {};
   },
   deleteFieldMockConfig(ctMockConfig: CustomTypeMockConfig, fieldId: string) {
@@ -121,6 +122,7 @@ export const CustomTypeMockConfig = {
     ctMockConfig: CustomTypeMockConfig,
     previousFieldId: string,
     fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ) {
     return {
@@ -128,9 +130,11 @@ export const CustomTypeMockConfig = {
       ...(previousFieldId !== fieldId
         ? {
             [previousFieldId]: undefined,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [fieldId]: value,
           }
         : {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [fieldId]: value,
           }),
     };
@@ -140,18 +144,22 @@ export const CustomTypeMockConfig = {
     groupId: string,
     previousFieldId: string,
     fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
     value: any
   ) {
     return {
       ...ctMockConfig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       [groupId]: {
         ...this.getFieldMockConfig(ctMockConfig, groupId),
         ...(previousFieldId !== fieldId
           ? {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
               [fieldId]: value,
               [previousFieldId]: undefined,
             }
           : {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
               [fieldId]: value,
             }),
       },
@@ -164,6 +172,7 @@ export const CustomTypeMockConfig = {
   ) {
     return {
       ...ctMockConfig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       [groupId]: {
         ...this.getFieldMockConfig(ctMockConfig, groupId),
         [fieldId]: undefined,

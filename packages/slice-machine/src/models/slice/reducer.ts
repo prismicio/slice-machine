@@ -1,11 +1,7 @@
+import type Models from "@slicemachine/core/build/src/models";
+import { Variation } from "../../../lib/models/common/Variation";
 import equal from "fast-deep-equal";
-import { Variation, AsArray } from "../../../lib/models/common/Variation";
 import SliceState from "../../../lib/models/ui/SliceState";
-import { WidgetsArea } from "../../../lib/models/common/Variation";
-import {
-  ComponentMetadata,
-  Preview,
-} from "../../../lib/models/common/Component";
 
 import { Field, FieldType } from "../../../lib/models/common/CustomType/fields";
 import { sliceZoneType } from "../../../lib/models/common/CustomType/sliceZone";
@@ -16,7 +12,10 @@ import { ActionType as VariationActions } from "./variation/actions";
 
 import { ActionType as SliceActions } from "./actions";
 
-import { LibStatus } from "../../../lib/models/common/Library";
+import {
+  LibStatus,
+  ScreenshotUI,
+} from "../../../lib/models/common/ComponentUI";
 import { compareVariations } from "../../../lib/utils";
 
 export function reducer(
@@ -37,7 +36,7 @@ export function reducer(
       case SliceActions.Push:
         return {
           ...prevState,
-          initialPreviewUrls: prevState.infos.previewUrls,
+          initialScreenshotUrls: prevState.screenshotUrls,
           remoteVariations: prevState.variations,
         };
       case SliceActions.UpdateMetadata:
@@ -45,86 +44,69 @@ export function reducer(
           ...prevState,
           infos: {
             ...prevState.infos,
-            ...(action.payload as ComponentMetadata),
+            ...(action.payload as Models.ComponentMetadata),
           },
         };
       case SliceActions.CopyVariation: {
         const { key, name, copied } = action.payload as {
           key: string;
           name: string;
-          copied: Variation<AsArray>;
+          copied: Models.VariationAsArray;
         };
         return {
           ...prevState,
           variations: prevState.variations.concat([
-            Variation.copyValue(copied, key, name),
+            Variation.copyValue<Models.VariationAsArray>(copied, key, name),
           ]),
         };
       }
       case VariationActions.GenerateCustomScreenShot: {
-        const { variationId, preview } = action.payload as {
+        const { variationId, screenshot } = action.payload as {
           variationId: string;
-          preview: Preview;
+          screenshot: ScreenshotUI;
         };
 
-        const previewsByVariation = prevState.variations.reduce(
-          (acc, variation) => {
-            if (variation.id === variationId) {
-              return {
-                ...acc,
-                [variationId]: preview,
-              };
-            }
-            if (prevState.infos.previewUrls?.[variation.id]) {
-              return {
-                ...acc,
-                [variation.id]: prevState.infos.previewUrls?.[variation.id],
-              };
-            }
-            return acc;
-          },
-          {}
-        );
+        const screenshots = prevState.variations.reduce((acc, variation) => {
+          if (variation.id === variationId) {
+            return {
+              ...acc,
+              [variationId]: screenshot,
+            };
+          }
+          if (prevState.screenshotUrls?.[variation.id]) {
+            return {
+              ...acc,
+              [variation.id]: prevState.screenshotUrls?.[variation.id],
+            };
+          }
+          return acc;
+        }, {});
 
         return {
           ...prevState,
-          infos: {
-            ...prevState.infos,
-            previewUrls: previewsByVariation,
-          },
+          screenshotUrls: screenshots,
         };
       }
       case VariationActions.GenerateScreenShot: {
-        const { previews } = action.payload as {
-          variationId: string;
-          previews: ReadonlyArray<Preview>;
+        const { screenshots } = action.payload as {
+          screenshots: Record<string, ScreenshotUI>;
         };
-        const previewsByVariation = previews.reduce(
-          (acc, p) => ({ ...acc, [p.variationId]: p }),
-          {}
-        );
-
         return {
           ...prevState,
-          infos: {
-            ...prevState.infos,
-            previewUrls: {
-              ...prevState.infos.previewUrls,
-              ...previewsByVariation,
-            },
-          },
+          screenshotUrls: screenshots,
         };
       }
       case VariationActions.AddWidget: {
         const { variationId, widgetsArea, key, value } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           key: string;
           value: Field;
         };
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
             return SliceState.updateVariation(
               prevState,
@@ -134,6 +116,7 @@ export function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/addWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -143,7 +126,7 @@ export function reducer(
         const { variationId, widgetsArea, previousKey, newKey, value } =
           action.payload as {
             variationId: string;
-            widgetsArea: WidgetsArea;
+            widgetsArea: Models.WidgetsArea;
             previousKey: string;
             newKey: string;
             value: Field;
@@ -151,6 +134,7 @@ export function reducer(
         try {
           if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
             return SliceState.updateVariation(
               prevState,
@@ -168,6 +152,7 @@ export function reducer(
           return prevState;
         } catch (err) {
           console.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `[store/replaceWidget] Model is invalid for widget "${value.type}".\nFull error: ${err}`
           );
           return prevState;
@@ -176,7 +161,7 @@ export function reducer(
       case VariationActions.ReorderWidget: {
         const { variationId, widgetsArea, start, end } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           start: number;
           end: number;
         };
@@ -188,7 +173,7 @@ export function reducer(
       case VariationActions.RemoveWidget: {
         const { variationId, widgetsArea, key } = action.payload as {
           variationId: string;
-          widgetsArea: WidgetsArea;
+          widgetsArea: Models.WidgetsArea;
           key: string;
         };
         return SliceState.updateVariation(
@@ -199,12 +184,14 @@ export function reducer(
       case VariationActions.UpdateWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
 
       case VariationActions.DeleteWidgetMockConfig:
         return {
           ...prevState,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           mockConfig: action.payload as any,
         };
 
@@ -221,7 +208,7 @@ export function reducer(
       );
     })(),
     __status: (() => {
-      return !equal(result.infos.previewUrls, result.initialPreviewUrls) ||
+      return !equal(result.screenshotUrls, result.initialScreenshotUrls) ||
         !compareVariations(result.remoteVariations, result.initialVariations)
         ? LibStatus.Modified
         : LibStatus.Synced;

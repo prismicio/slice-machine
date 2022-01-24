@@ -12,10 +12,34 @@ import {
   skipReviewCreator,
 } from "@src/modules/userContext";
 import { getEnvironmentCreator } from "@src/modules/environment";
-import { ServerState } from "@models/server/ServerState";
+import {
+  openSetupDrawerCreator,
+  closeSetupDrawerCreator,
+  toggleSetupDrawerStepCreator,
+  checkSimulatorSetupCreator,
+  connectToSimulatorIframeCreator,
+} from "@src/modules/simulator";
+import ServerState from "@models/server/ServerState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
+
+  // Simulator store
+  const checkSimulatorSetup = (
+    withFirstVisitCheck: boolean,
+    callback?: () => void
+  ) =>
+    dispatch(
+      checkSimulatorSetupCreator.request({ withFirstVisitCheck, callback })
+    );
+  const openSetupDrawer = () => dispatch(openSetupDrawerCreator({}));
+  const closeSetupDrawer = () => dispatch(closeSetupDrawerCreator());
+  const connectToSimulatorFailure = () =>
+    dispatch(connectToSimulatorIframeCreator.failure());
+  const connectToSimulatorSuccess = () =>
+    dispatch(connectToSimulatorIframeCreator.success());
+  const toggleSetupDrawerStep = (stepNumber: number) =>
+    dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
   // Modal store
   const closeLoginModal = () =>
@@ -54,6 +78,12 @@ const useSliceMachineActions = () => {
   };
 
   return {
+    checkSimulatorSetup,
+    connectToSimulatorFailure,
+    connectToSimulatorSuccess,
+    toggleSetupDrawerStep,
+    closeSetupDrawer,
+    openSetupDrawer,
     getEnvironment,
     finishOnboarding,
     openLoginModal,

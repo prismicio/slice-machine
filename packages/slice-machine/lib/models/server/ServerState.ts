@@ -1,32 +1,22 @@
-import Environment from "@lib/models/common/Environment";
-import Slice from "@lib/models/common/Slice";
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
-import { Library } from "@lib/models/common/Library";
-import { AsObject } from "@lib/models/common/Variation";
-
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
-
 import ServerError from "./ServerError";
+import { FrontEndEnvironment } from "@models/common/Environment";
+import { LibraryUI } from "@models/common/LibraryUI";
+import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { Models } from "@slicemachine/core";
 
 export interface ConfigErrors {
   [errorKey: string]: ServerError;
 }
 
-export interface ServerState {
-  libraries: ReadonlyArray<Library>;
+export default interface ServerState {
+  env: FrontEndEnvironment;
+  libraries: ReadonlyArray<LibraryUI> | null;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteSlices: ReadonlyArray<Slice<AsObject>>;
-  clientError?: ErrorWithStatus;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  clientError: ErrorWithStatus | undefined;
   configErrors: ConfigErrors;
-  env: Environment;
   warnings: ReadonlyArray<Warning>;
-}
-
-export interface AppPayload {
-  env: Environment;
-  libraries?: ReadonlyArray<Library>;
-  customTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes?: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteSlices?: ReadonlyArray<Slice<AsObject>>;
 }

@@ -14,11 +14,12 @@ import {
 } from "../src/steps/maybe-existing-repo";
 
 import nock from "nock";
-import { Communication, Utils } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 
 const { Roles } = Utils.roles;
 
 import * as fs from "fs";
+import { Repositories } from "@slicemachine/core/build/src/models/Repositories";
 
 jest.mock("fs");
 
@@ -46,14 +47,10 @@ describe("maybe-existing-repo", () => {
   test("if user has no repos it asks them to create a repo", async () => {
     const repoName = "test";
     const base = "https://prismic.io";
-    const authUrl = "https://auth.prismic.io";
     const cookies = "prismic-auth=biscuits;";
+    const userServiceURL = "https://user.internal-prismic.io";
 
-    nock(authUrl).get("/validate?token=biscuits").reply(200, {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: "{}",
-    });
+    nock(userServiceURL).get("/repositories").reply(200, []);
 
     jest
       .spyOn(inquirer, "prompt")
@@ -72,18 +69,12 @@ describe("maybe-existing-repo", () => {
   test("it allows a user to create a new repo", async () => {
     const repoName = "test";
     const base = "https://prismic.io";
-    const authUrl = "https://auth.prismic.io";
+    const userServiceURL = "https://user.internal-prismic.io";
     const cookies = "prismic-auth=biscuits;";
 
-    nock(authUrl)
-      .get("/validate?token=biscuits")
-      .reply(200, {
-        email: "fake@prismic.io",
-        type: "USER",
-        repositories: JSON.stringify({
-          foo: { dbid: "foo", role: Roles.OWNER },
-        }),
-      });
+    nock(userServiceURL)
+      .get("/repositories")
+      .reply(200, [{ domain: "foo", name: "foo", role: Roles.OWNER }]);
 
     jest
       .spyOn(inquirer, "prompt")
@@ -124,7 +115,11 @@ describe("prettyRepoName", () => {
 describe("makeReposPretty", () => {
   test("unauthorized role", () => {
     const base = "https://prismic.io";
-    const result = makeReposPretty(base)(["foo-bar", { role: Roles.WRITER }]);
+    const result = makeReposPretty(base)({
+      name: "foo-bar",
+      domain: "foo-bar",
+      role: Roles.WRITER,
+    });
 
     expect(result.name).toContain("foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
@@ -133,7 +128,11 @@ describe("makeReposPretty", () => {
 
   test("authorized role", () => {
     const base = "https://prismic.io";
-    const result = makeReposPretty(base)(["foo-bar", { role: Roles.OWNER }]);
+    const result = makeReposPretty(base)({
+      name: "foo-bar",
+      domain: "foo-bar",
+      role: Roles.OWNER,
+    });
 
     expect(result.name).toContain("foo-bar.prismic.io");
     expect(result.value).toBe("foo-bar");
@@ -231,16 +230,10 @@ describe("maybeStickTheRepoToTheTopOfTheList", () => {
 
 describe("sortReposForPrompt", () => {
   test("sort without pre-configured repo-name", () => {
-    const repos: Communication.RepoData = {
-      "foo-bar": {
-        role: Roles.WRITER,
-        dbid: "foobar",
-      },
-      qwerty: {
-        role: Roles.ADMIN,
-        dbid: "qwerty",
-      },
-    };
+    const repos: Repositories = [
+      { name: "foo-bar", domain: "foo-bar", role: Roles.WRITER },
+      { name: "qwerty", domain: "qwerty", role: Roles.ADMIN },
+    ];
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
 
@@ -256,16 +249,10 @@ describe("sortReposForPrompt", () => {
   });
 
   test("sort with pre-configure repo-name", () => {
-    const repos: Communication.RepoData = {
-      "foo-bar": {
-        role: Roles.OWNER,
-        dbid: "foobar",
-      },
-      qwerty: {
-        role: Roles.ADMIN,
-        dbid: "qwerty",
-      },
-    };
+    const repos: Repositories = [
+      { name: "foo-bar", domain: "foo-bar", role: Roles.WRITER },
+      { name: "qwerty", domain: "qwerty", role: Roles.ADMIN },
+    ];
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
 

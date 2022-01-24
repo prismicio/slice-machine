@@ -8,28 +8,20 @@ import mock from "@lib/mock/Slice";
 import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { Preview } from "@lib/models/common/Component";
-import Previews from "../previews";
-import Environment from "@lib/models/common/Environment";
-import { AsObject } from "@lib/models/common/Variation";
-import Slice from "@lib/models/common/Slice";
+import { generateScreenshot } from "../screenshots/generate";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
-
-interface Body {
-  sliceName: string;
-  from: string;
-  model: Slice<AsObject>;
-  mockConfig: SliceMockConfig;
-}
+import { SliceSaveBody, SliceSaveResponse } from "@lib/models/common/Slice";
 
 export async function handler(
-  env: Environment,
-  { sliceName, from, model, mockConfig }: Body
-): Promise<{ previewUrls: Record<string, Preview>; warning: string | null }> {
+  env: BackendEnvironment,
+  { sliceName, from, model, mockConfig }: SliceSaveBody
+): Promise<SliceSaveResponse> {
   await onBeforeSaveSlice({ from, sliceName, model }, env);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const updatedMockConfig = insertMockConfig(env.cwd, {
     key: sliceName,
     prefix: from,
@@ -38,93 +30,89 @@ export async function handler(
 
   console.log("\n\n[slice/save]: Updating slice model");
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   Files.write(modelPath, model);
 
   const hasCustomMocks = Files.exists(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     CustomPaths(env.cwd).library(from).slice(sliceName).mocks()
   );
 
   if (!hasCustomMocks) {
     console.log("[slice/save]: Generating mocks");
 
-    const mockedSlice = await mock(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const mocks = await mock(
       sliceName,
       model,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );
     Files.write(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       GeneratedPaths(env.cwd).library(from).slice(sliceName).mocks(),
-      mockedSlice
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      mocks
     );
   }
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
-  let warning: string | null = null;
-  const previewUrls: { [variationId: string]: Preview } = {};
-
-  console.log("[slice/save]: Generating screenshots previews");
-  const generatedPreviews = await Previews.generateForSlice(
-    env,
-    from,
-    sliceName
-  );
-
-  const failedPreviewsIds = generatedPreviews
-    .filter((p) => !p.hasPreview)
-    .map((p) => p.variationId);
-
-  const mergedPreviews = Previews.mergeWithCustomScreenshots(
-    generatedPreviews,
-    env,
-    from,
-    sliceName
-  );
-
-  mergedPreviews.forEach((p) => {
-    if (!p.hasPreview) {
-      const noPreview = p as {
-        variationId: string;
-        error: Error;
-        hasPreview: boolean;
-      };
-      warning = noPreview.error.message;
-      console.log(
-        `[slice/save][Slice: ${sliceName}][variation: ${p.variationId}]: ${noPreview.error.message}`
-      );
-      previewUrls[noPreview.variationId] = {
-        variationId: noPreview.variationId,
-        isCustomPreview: false,
-        hasPreview: false,
-      };
-    }
-
-    const preview = p as Preview;
-    previewUrls[preview.variationId] = {
-      variationId: preview.variationId,
-      isCustomPreview: false,
-      hasPreview: true,
-      url: preview.url,
-    };
-  });
-
-  if (failedPreviewsIds.length) {
-    warning = `Cannot generate previews for variations: ${failedPreviewsIds.join(
-      " | "
-    )}`;
-  }
   console.log("[slice/save]: Slice was saved!");
 
   await onSaveSlice(env);
   console.log("[slice/save]: Libraries index files regenerated!");
 
-  return { previewUrls, warning };
+  const { screenshots, warning } = await generateScreenshotsWithLogs(
+    env,
+    from,
+    sliceName
+  );
+
+  return { screenshots, warning };
 }
 
-export default async function apiHandler(req: { body: Body }) {
+async function generateScreenshotsWithLogs(
+  env: BackendEnvironment,
+  from: string,
+  sliceName: string
+): Promise<SliceSaveResponse> {
+  if (!env.manifest.localSliceSimulatorURL) {
+    const message = "localSliceSimulatorURL not configured on sm.json file";
+    console.log(`[slice/save]: Cannot not generate screenshots: ${message}`);
+
+    return Promise.resolve({ screenshots: {}, warning: message });
+  }
+
+  console.log("[slice/save]: Generating screenshots previews");
+  const { screenshots, failure } = await generateScreenshot(
+    env,
+    from,
+    sliceName
+  );
+
+  if (failure.length) {
+    failure.forEach((f) => {
+      console.log(
+        `[slice/save][Slice: ${sliceName}][variation: ${f.variationId}]: ${f.error.message}`
+      );
+    });
+
+    return {
+      screenshots,
+      warning: `Could not generate previews for variations: ${failure
+        .map((f) => f.variationId)
+        .join(" | ")}`,
+    };
+  }
+
+  return { screenshots, warning: null };
+}
+
+export default async function apiHandler(req: { body: SliceSaveBody }) {
   const { env } = await getEnv();
   return handler(env, req.body);
 }

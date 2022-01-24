@@ -1,13 +1,14 @@
 import { Utils } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
 import * as inquirer from "inquirer";
 
 export type FrameworkResult = {
-  value: Utils.Framework.FrameworkEnum;
+  value: Models.Frameworks;
   manuallyAdded: boolean;
 };
 
 export async function promptForFramework(): Promise<FrameworkResult> {
-  const choices = Utils.Framework.SupportedFrameworks.map((framework) => {
+  const choices = Models.SupportedFrameworks.map((framework) => {
     return {
       name: Utils.Framework.fancyName(framework),
       value: framework,
@@ -15,7 +16,7 @@ export async function promptForFramework(): Promise<FrameworkResult> {
   });
 
   return inquirer
-    .prompt<{ framework: Utils.Framework.FrameworkEnum }>([
+    .prompt<{ framework: Models.Frameworks }>([
       {
         name: "framework",
         type: "list",
@@ -44,13 +45,13 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const maybeFramework = Utils.Framework.detectFramework(cwd);
+    const maybeFramework = Utils.Framework.detectFramework(
+      cwd,
+      Object.values(Models.Frameworks)
+    );
     spinner.stop();
 
-    if (
-      !maybeFramework ||
-      maybeFramework === Utils.Framework.FrameworkEnum.vanillajs
-    ) {
+    if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
       Utils.writeError("Framework not detected");
       return await promptForFramework();
     }

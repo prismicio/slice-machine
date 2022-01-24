@@ -13,7 +13,9 @@ import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 
 const FormFields = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
   customtypes: {
     validate: () => yup.array().of(yup.string()),
@@ -34,6 +36,7 @@ const WidgetForm = ({
     value: ct?.id,
     label: ct?.label,
   }));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const selectValues = formValues.config.customtypes.map((id) => {
     const ct = customTypes.find((e) => e && e.id === id);
     return { value: ct?.id, label: ct?.label };
@@ -47,8 +50,11 @@ const WidgetForm = ({
           <Col key={key}>
             <WidgetFormField
               fieldName={createFieldNameFromKey(key)}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               formField={field}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={fields}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               initialValues={initialValues}
             />
           </Col>
@@ -69,12 +75,15 @@ const WidgetForm = ({
             options={options}
             onChange={(v) => {
               if (v) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 setFieldValue(
                   "config.customtypes",
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   v.map(({ value }) => value)
                 );
               }
             }}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
             value={selectValues}
             theme={(theme) => {
               return {

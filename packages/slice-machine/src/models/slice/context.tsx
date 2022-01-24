@@ -1,23 +1,22 @@
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
-
+import type Models from "@slicemachine/core/build/src/models";
 import { LibrariesContext } from "../libraries/context";
 import { useContext } from "react";
 import SliceStore from "./store";
 import { reducer } from "./reducer";
 
 import SliceState from "@lib/models/ui/SliceState";
-import { ComponentWithLibStatus } from "@lib/models/common/Library";
 import Slice from "@lib/models/common/Slice";
-import { Variation, AsArray, AsObject } from "@lib/models/common/Variation";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-type ContextProps = {
-  Model: ComponentWithLibStatus;
+export type ContextProps = {
+  Model: SliceState;
   store: SliceStore;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
 };
 export const SliceContext = React.createContext<Partial<ContextProps>>({});
-
+SliceContext.displayName = "SliceContext";
 /**
  * remoteSlicesState
  * fsSlicesState
@@ -28,21 +27,24 @@ export function useModelReducer({
   remoteSlice,
   mockConfig,
 }: {
-  slice: ComponentWithLibStatus;
-  remoteSlice?: Slice<AsObject>;
+  slice: ComponentUI;
+  remoteSlice?: Models.SliceAsObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
 }): [SliceState, SliceStore] {
   const { model, ...rest } = slice;
 
   const variations = Slice.toArray(model).variations;
   const initialState: SliceState = {
-    jsonModel: model,
+    model,
     ...rest,
     variations,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     mockConfig,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialMockConfig: mockConfig,
     remoteVariations: remoteSlice ? Slice.toArray(remoteSlice).variations : [],
-    initialPreviewUrls: rest.infos.previewUrls,
+    initialScreenshotUrls: rest.screenshotUrls,
     initialVariations: variations,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -53,8 +55,9 @@ export function useModelReducer({
 }
 
 type SliceProviderProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
-  variation: Variation<AsArray>;
+  variation: Models.VariationAsArray;
 };
 
 const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
@@ -62,19 +65,22 @@ const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
   value,
   variation,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [Model, store] = value;
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
     <SliceContext.Provider value={{ Model, store, variation }}>
       {typeof children === "function" ? children(value) : children}
     </SliceContext.Provider>
   );
 };
-
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter();
   const libraries = useContext(LibrariesContext);
 
   if (!router.query || !router.query.lib || !router.query.sliceName) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return children;
   }
 
@@ -84,8 +90,9 @@ export const SliceHandler = ({ children }: { children: any }) => {
     else return l;
   })();
 
-  const lib = libraries.find((l) => l?.name === libParam.replace(/--/g, "/"));
+  const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
   if (!lib) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
@@ -95,6 +102,7 @@ export const SliceHandler = ({ children }: { children: any }) => {
   );
 
   if (!slice) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
@@ -114,12 +122,14 @@ export const SliceHandler = ({ children }: { children: any }) => {
     }
   })();
   if (!variation) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace("/");
     return null;
   }
 
   // variation not in the URL but a default variation was found
   if (!variationParam) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`);
   }
 

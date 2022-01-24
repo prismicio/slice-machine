@@ -6,35 +6,24 @@ import {
   ParseResultType,
   ParseResult,
 } from "parse-domain";
-import { Framework } from "@lib/models/common/Framework";
+import { Models } from "@slicemachine/core";
+import { fold } from "fp-ts/Either";
+import { pipe } from "fp-ts/function";
 
-export interface Manifest {
-  apiEndpoint: string;
-  storybook?: string;
-  framework?: Framework;
-  chromaticAppId?: string;
-  _latest: string;
+export interface ManifestInfo {
+  state: ManifestState;
+  message: string;
+  content: Models.Manifest | null;
+  repo?: string;
 }
 
-enum ManifestState {
+export enum ManifestState {
   Valid = "Valid",
   NotFound = "NotFound",
   MissingEndpoint = "MissingEndpoint",
   InvalidEndpoint = "InvalidEndpoint",
   InvalidJson = "InvalidJson",
 }
-
-interface ManifestStates {
-  [x: string]: string;
-}
-
-export const ManifestStates: ManifestStates = {
-  Valid: "Valid",
-  NotFound: "NotFound",
-  MissingEndpoint: "MissingEndpoint",
-  InvalidEndpoint: "InvalidEndpoint",
-  InvalidJson: "InvalidJson",
-};
 
 const Messages = {
   [ManifestState.Valid]: "Manifest is correctly setup.",
@@ -60,7 +49,7 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
   }
 }
 
-function validateEndpoint(endpoint: string, parsedRepo: ParseResult) {
+function validateEndpoint(endpoint: string, parsedRepo: ParseResult): boolean {
   try {
     switch (parsedRepo.type) {
       case ParseResultType.Listed: {
@@ -84,7 +73,7 @@ function validateEndpoint(endpoint: string, parsedRepo: ParseResult) {
   }
 }
 
-function validate(manifest: Manifest) {
+function validate(manifest: Models.Manifest): ManifestInfo {
   if (!manifest.apiEndpoint) {
     return {
       state: ManifestState.MissingEndpoint,
@@ -117,7 +106,7 @@ function validate(manifest: Manifest) {
   };
 }
 
-function handleManifest(cwd: string) {
+function handleManifest(cwd: string): ManifestInfo {
   const pathToSm = path.join(cwd, "sm.json");
   if (!fs.existsSync(pathToSm)) {
     return {
@@ -127,29 +116,29 @@ function handleManifest(cwd: string) {
     };
   }
 
-  const { userConfig, err } = (() => {
-    try {
-      const f = fs.readFileSync(pathToSm, "utf-8");
-      return {
-        userConfig: JSON.parse(f),
-        err: null,
-      };
-    } catch (e) {
-      return {
-        userConfig: null,
-        err: e,
-      };
-    }
-  })();
+  try {
+    const f = fs.readFileSync(pathToSm, "utf-8");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const json = JSON.parse(f);
 
-  if (err) {
+    return pipe(
+      Models.Manifest.decode(json),
+      fold(
+        // failure handler
+        () => {
+          throw new Error();
+        },
+        // success handler
+        (manifest) => validate(manifest)
+      )
+    );
+  } catch (e) {
     return {
       state: ManifestState.InvalidJson,
       message: Messages[ManifestState.InvalidJson],
       content: null,
     };
   }
-  return validate(userConfig);
 }
 
 export default handleManifest;

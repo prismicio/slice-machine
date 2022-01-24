@@ -9,7 +9,7 @@ export enum Media {
 interface LinkFieldConfig {
   label: string;
   placeholder: string;
-  select: Media;
+  select?: Media;
   allowTargetBlank: boolean;
   useAsTitle?: boolean;
   customtypes?: ReadonlyArray<string>;
@@ -19,7 +19,6 @@ interface LinkFieldConfig {
 
 const defaultConfig = {
   ...SimpleField.default,
-  select: Media.web,
   allowTargetBlank: false,
 };
 

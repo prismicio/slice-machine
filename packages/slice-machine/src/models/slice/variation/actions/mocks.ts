@@ -1,17 +1,20 @@
-import { WidgetsArea } from "../../../../../lib/models/common/Variation";
+import type Models from "@slicemachine/core/build/src/models";
 import { SliceMockConfig } from "../../../../../lib/models/common/MockConfig";
 import { ActionType } from "./ActionType";
 
 export function updateWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (_variationId: string) => {
     return (
       sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
+      widgetArea: Models.WidgetsArea,
       previousKey: string,
       fieldId: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): any => {
       const updatedConfig = SliceMockConfig.updateFieldMockConfig(
         sliceMockConfig,
@@ -31,13 +34,15 @@ export function updateWidgetMockConfig(
 }
 
 export function deleteWidgetMockConfig(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: ({ type, payload }: { type: string; payload?: any }) => void
 ) {
   return (_variationId: string) => {
     return (
       sliceMockConfig: SliceMockConfig,
-      widgetArea: WidgetsArea,
+      widgetArea: Models.WidgetsArea,
       fieldId: string
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): any => {
       if (!sliceMockConfig) return;
 

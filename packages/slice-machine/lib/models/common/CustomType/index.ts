@@ -1,6 +1,12 @@
 import { Tab, TabAsArray, TabAsObject } from "./tab";
 import { SliceZone, SliceZoneAsArray } from "./sliceZone";
 import { Field } from "./fields";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
+
+export interface SaveCustomTypeBody {
+  model: CustomType<ObjectTabs>;
+  mockConfig: CustomTypeMockConfig;
+}
 
 export type ObjectTabs = {
   [key: string]: TabAsObject;
@@ -55,6 +61,7 @@ export const CustomType = {
     };
   },
   toJsonModel(ct: CustomType<ObjectTabs>): CustomTypeJsonModel {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
     const { tabs, previewUrl, ...rest } = ct;
     return {
       ...rest,

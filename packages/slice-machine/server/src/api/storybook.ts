@@ -2,8 +2,8 @@ import path from "path";
 import TemplateEngine from "ejs";
 
 import Files from "@lib/utils/files";
-import { Framework } from "@lib/models/common/Framework";
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
+import { Models } from "@slicemachine/core";
 
 import { createStorybookId } from "@lib/utils/str";
 
@@ -14,19 +14,19 @@ const Paths = {
     path.join(appRoot, "templates/storybook/next.template.ejs"),
   svelteTemplate: (appRoot: string) =>
     path.join(appRoot, "templates/storybook/svelte.template.ejs"),
-  getTemplate(appRoot: string, framework: Framework) {
+  getTemplate(appRoot: string, framework: Models.Frameworks) {
     switch (framework) {
-      case Framework.nuxt:
+      case Models.Frameworks.nuxt:
         return Paths.nuxtTemplate(appRoot);
-      case Framework.vue:
+      case Models.Frameworks.vue:
         return Paths.nuxtTemplate(appRoot);
-      case Framework.next:
+      case Models.Frameworks.next:
         return Paths.nextTemplate(appRoot);
-      case Framework.react:
+      case Models.Frameworks.react:
         return Paths.nextTemplate(appRoot);
-      case Framework.svelte:
+      case Models.Frameworks.svelte:
         return Paths.svelteTemplate(appRoot);
-      case Framework.vanillajs:
+      case Models.Frameworks.vanillajs:
         return Paths.nextTemplate(appRoot);
       default:
         return null;
@@ -37,31 +37,36 @@ const Paths = {
 export default {
   generateStories(
     appRoot: string,
-    framework: Framework,
+    framework: Models.Frameworks,
     cwd: string,
     libraryName: string,
     sliceName: string
   ): void {
     if (
       Files.exists(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         CustomPaths(cwd).library(libraryName).slice(sliceName).stories()
       )
     )
       return;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const generatedMocksPath = GeneratedPaths(cwd)
       .library(libraryName)
       .slice(sliceName)
       .mocks();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const customMocksPath = CustomPaths(cwd)
       .library(libraryName)
       .slice(sliceName)
       .mocks();
 
     // the output type should be Mocks but it's not typed yet
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
     const mocks = Files.readFirstOf<any, {}>([
       customMocksPath,
       generatedMocksPath,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     ])((value: string) => JSON.parse(value));
     if (!mocks) {
       console.error(`No mocks available, cannot generate stories`);
@@ -78,9 +83,12 @@ export default {
 
     const template = Files.readString(templatePath);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
     const withPascalizedIds = (mocks.value || []).map((m: any) => {
       // use underscore to prevent invalid variable names
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
       const id = createStorybookId(m.variation || m.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return {
         ...m,
         id,
@@ -91,7 +99,9 @@ export default {
       .join(
         "..",
         path.relative(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           GeneratedPaths(cwd).library(libraryName).value(),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           CustomPaths(cwd).library(libraryName).value()
         ),
         sliceName
@@ -101,17 +111,21 @@ export default {
 
     const componentTitle = `${libraryName}/${sliceName}`;
     const stories = TemplateEngine.render(template, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mocks: withPascalizedIds,
       componentPath,
       componentTitle,
     });
 
     Files.write(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       GeneratedPaths(cwd)
         .library(libraryName)
         .slice(sliceName)
         .stories(
-          framework === Framework.svelte ? "index.stories.svelte" : undefined
+          framework === Models.Frameworks.svelte
+            ? "index.stories.svelte"
+            : undefined
         ),
       stories
     );

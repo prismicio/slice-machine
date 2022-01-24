@@ -14,6 +14,7 @@ const ItemHeader = ({
     <SliceMachineIconButton
       label="Reorder slice field (drag and drop)"
       Icon={FaBars}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       color={theme.colors.icons}
       mr={1}
       {...iconButtonProps}
@@ -21,11 +22,13 @@ const ItemHeader = ({
     <WidgetIcon
       size={28}
       style={{
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         color: theme.colors.primary,
         marginRight: "8px",
         borderRadius: "4px",
         padding: "4px",
         border: "2px solid",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         borderColor: theme.colors.primary,
       }}
     />

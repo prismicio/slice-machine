@@ -1,7 +1,5 @@
 import PrismicData from "./PrismicData";
-import UserConfig from "./UserConfig";
-import Chromatic from "./Chromatic";
-import { Framework } from "./Framework";
+import type { Models } from "@slicemachine/core";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
 
@@ -13,17 +11,27 @@ export interface UpdateVersionInfo {
   updateAvailable: boolean;
 }
 
-export default interface Environment {
+export interface BackendEnvironment {
   cwd: string;
-  userConfig: UserConfig;
-  hasConfigFile: boolean;
-  repo?: string;
   prismicData: PrismicData;
-  chromatic?: Chromatic;
+  manifest: Models.Manifest;
+  repo?: string;
   updateVersionInfo: UpdateVersionInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
-  framework: Framework;
+  framework: Models.Frameworks;
   baseUrl: string;
-  hasGeneratedStoriesPath: boolean;
   client: DefaultClient | FakeClient;
+}
+
+export interface FrontEndEnvironment {
+  shortId?: string;
+  manifest: Models.Manifest;
+  repo?: string;
+  updateVersionInfo: UpdateVersionInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mockConfig: any;
+  framework: Models.Frameworks;
+  sliceMachineAPIUrl: string;
+  prismicAPIUrl: string;
 }

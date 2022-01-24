@@ -49,4 +49,3 @@ Then open http://localhost:9999 to see the Slice Machine.
 <p align='center'>
     <img src='https://raw.githubusercontent.com/prismicio/slice-machine/master/.github/init-preview.png' width='600'>
 </p>
-

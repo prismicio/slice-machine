@@ -1,16 +1,22 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { FileSystem } from "@slicemachine/core";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { RequestWithEnv } from "../http/common";
+import { setShortId } from "../services/setShortId";
 
-export default async function handler(): Promise<CheckAuthStatusResponse> {
+export default async function handler(
+  req: RequestWithEnv
+): Promise<CheckAuthStatusResponse> {
   try {
-    const authConfig = FileSystem.getOrCreateAuthConfig();
-    const authResult = Utils.Cookie.parsePrismicAuthToken(authConfig.cookies);
-    return {
-      status: !!authResult ? "ok" : "pending",
-    };
+    const authToken = FileSystem.PrismicSharedConfigManager.getAuth();
+    if (!Boolean(authToken)) {
+      return { status: "pending" };
+    }
+
+    const profile = await setShortId(req.env, authToken);
+    if (profile instanceof Error) return { status: "error" };
+
+    return { status: "ok", userId: profile.userId };
   } catch (e) {
-    return {
-      status: "error",
-    };
+    return { status: "error" };
   }
 }

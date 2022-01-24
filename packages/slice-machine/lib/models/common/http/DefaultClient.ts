@@ -1,13 +1,10 @@
 import path from "path";
+import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
+import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
-import {
-  ReviewTrackingEvent,
-  OnboardingTrackingEvent,
-  TrackingEventId,
-} from "@lib/models/common/TrackingEvent";
-import { AsObject } from "@lib/models/common/Variation";
-import Slice from "@lib/models/common/Slice";
+
+import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
 
 interface ApiSettings {
   STAGE: string;
@@ -26,9 +23,9 @@ const AuthApi = {
   PROD: "https://auth.prismic.io/",
 };
 
-const TrackingApi = {
-  STAGE: "https://2p29q0kam4.execute-api.us-east-1.amazonaws.com/stage/",
-  PROD: "https://tracking.prismic.io",
+const UserService = {
+  STAGE: "https://user.wroom.io/",
+  PROD: "https://user.internal-prismic.io/",
 };
 
 const AclProviderApi = {
@@ -48,7 +45,7 @@ function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
   return PROD;
 }
 
-type Body = Slice<AsObject> | Record<string, unknown> | string;
+type Body = Models.SliceAsObject | Record<string, unknown> | string;
 
 function createFetcher(
   apiUrl: string,
@@ -108,12 +105,6 @@ export default class DefaultClient {
     action?: string,
     method?: string
   ) => Promise<Response>;
-  trackingFetcher: (
-    prefix: string,
-    body?: Body,
-    action?: string,
-    method?: string
-  ) => Promise<Response>;
 
   static validate(base: string, auth: string): Promise<Response> {
     return fetch(
@@ -131,6 +122,30 @@ export default class DefaultClient {
         method: "GET",
       }
     );
+  }
+
+  static async profile(
+    base: string,
+    auth: string
+  ): Promise<Error | UserProfile> {
+    try {
+      const result = await fetch(`${createApiUrl(base, UserService)}profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const jsResult = await result.json();
+
+      return getOrElseW(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        () => new Error(`Unable to parse profile: ${jsResult}`)
+      )(UserProfile.decode(jsResult));
+    } catch (e) {
+      return e as Error;
+    }
   }
 
   constructor(
@@ -169,13 +184,6 @@ export default class DefaultClient {
       repo,
       auth
     );
-    this.trackingFetcher = initFetcher(
-      base,
-      TrackingApi,
-      devConfig.aclProviderApi,
-      repo,
-      auth
-    );
   }
 
   isFake(): boolean {
@@ -204,18 +212,6 @@ export default class DefaultClient {
 
   async updateSlice(body: Body): Promise<Response> {
     return this.apiFetcher(SlicesPrefix, body, "update", "post");
-  }
-
-  async sendReview(review: Omit<ReviewTrackingEvent, "id">): Promise<Response> {
-    const payload: ReviewTrackingEvent = {
-      ...review,
-      id: TrackingEventId.REVIEW,
-    };
-    return this.trackingFetcher("", payload, "", "post");
-  }
-
-  async sendOnboarding(onboardingEvent: OnboardingTrackingEvent) {
-    return this.trackingFetcher("", onboardingEvent, "", "post");
   }
 
   images = {

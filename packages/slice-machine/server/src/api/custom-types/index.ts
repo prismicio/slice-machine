@@ -1,6 +1,6 @@
 import path from "path";
 import glob from "glob";
-import Environment from "@lib/models/common/Environment";
+import { BackendEnvironment } from "@lib/models/common/Environment";
 import {
   CustomType,
   CustomTypeJsonModel,
@@ -9,11 +9,12 @@ import {
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 
-const handleMatch = (matches: string[], env: Environment) => {
+const handleMatch = (matches: string[], env: BackendEnvironment) => {
   return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
     const key = path.basename(path.dirname(p));
     const pathToPreview = path.join(path.dirname(p), "index.png");
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const jsonCustomType: CustomTypeJsonModel = Files.readJson(p);
       return [
         ...acc,
@@ -33,7 +34,7 @@ const handleMatch = (matches: string[], env: Environment) => {
 };
 
 const fetchRemoteCustomTypes = async (
-  env: Environment
+  env: BackendEnvironment
 ): Promise<{ remoteCustomTypes: CustomTypeJsonModel[]; isFake?: boolean }> => {
   if (env.client.isFake()) {
     return { remoteCustomTypes: [], isFake: true };
@@ -46,9 +47,11 @@ const fetchRemoteCustomTypes = async (
       if (res.status > 209) {
         return { remoteCustomTypes: [] };
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const remoteCustomTypes = await (res.json
         ? res.json()
         : Promise.resolve([]));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       return { remoteCustomTypes };
     })();
     return { remoteCustomTypes };
@@ -62,17 +65,20 @@ const saveCustomTypes = (
   cwd: string
 ) => {
   for (const ct of cts) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     Files.write(CustomTypesPaths(cwd).customType(ct.id).model(), ct);
   }
 };
 
-export default async function handler(env: Environment): Promise<{
+export default async function handler(env: BackendEnvironment): Promise<{
   isFake: boolean;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 }> {
   const { cwd } = env;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const pathToCustomTypes = CustomTypesPaths(cwd).value();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const folderExists = Files.exists(pathToCustomTypes);
 
   const { remoteCustomTypes, isFake } = await fetchRemoteCustomTypes(env);
@@ -80,11 +86,14 @@ export default async function handler(env: Environment): Promise<{
   if (!folderExists) {
     saveCustomTypes(remoteCustomTypes, cwd);
   }
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`);
   return {
     isFake: !!isFake,
     customTypes: handleMatch(matches, env),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     remoteCustomTypes: remoteCustomTypes.map((ct: any) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
       CustomType.fromJsonModel(ct.id, ct)
     ),
   };

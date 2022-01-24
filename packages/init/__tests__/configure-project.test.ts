@@ -23,21 +23,29 @@ jest.mock("@slicemachine/core", () => {
     FileSystem: {
       ...actualCore.FileSystem,
       retrieveManifest: jest.fn<
-        Core.FileSystem.FileContent<Core.FileSystem.Manifest>,
+        Core.FileSystem.FileContent<Core.Models.Manifest>,
         [{ cwd: string }]
       >(),
       createManifest: jest.fn<
         void,
-        [{ cwd: string; manifest: Core.FileSystem.Manifest }]
+        [{ cwd: string; manifest: Core.Models.Manifest }]
       >(),
       patchManifest: jest.fn<
         boolean,
-        [{ cwd: string; data: Partial<Core.FileSystem.Manifest> }]
+        [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
       addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     },
     Utils: {
       ...actualCore.Utils,
+      Files: {
+        ...actualCore.Utils.Files,
+        exists: jest.fn<boolean, [pathToFile: string]>(),
+        mkdir: jest.fn<
+          string | undefined,
+          [target: string, option: { resursive: boolean }]
+        >(),
+      },
       spinner: () => ({
         start: startFn,
         succeed: successFn,
@@ -60,7 +68,7 @@ describe("configure-project", () => {
   const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
-    value: Core.Utils.Framework.FrameworkEnum.react,
+    value: Core.Utils.Framework.Frameworks.react,
     manuallyAdded: false,
   };
 
@@ -70,6 +78,10 @@ describe("configure-project", () => {
   const addJsonPackageSmScriptMock = Core.FileSystem
     .addJsonPackageSmScript as jest.Mock;
 
+  const { exists, mkdir } = Core.Utils.Files;
+  const fileExistsMock = exists as jest.Mock;
+  const mkdirMock = mkdir as jest.Mock;
+
   test("it should create a new manifest if it doesn't exist yet", () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
@@ -77,7 +89,7 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -91,16 +103,45 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.FrameworkEnum.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toBeCalled();
+    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+      apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
+      framework: "react",
+      libraries: ["@/slices"],
+    });
+
+    expect(successFn).toHaveBeenCalled();
+    expect(failFn).not.toHaveBeenCalled();
+  });
+
+  test("it should patch the existing manifest with external lib", () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: true,
+      content: {
+        framework: Core.Utils.Framework.Frameworks.react,
+      },
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, [
+      "@/material/slices",
+    ]);
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).not.toBeCalled();
+    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+      apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
+      framework: "react",
+      libraries: ["@/slices", "@/material/slices"],
+    });
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
@@ -112,7 +153,7 @@ describe("configure-project", () => {
     });
 
     // process.exit should throw
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -131,7 +172,7 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -145,14 +186,14 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.FrameworkEnum.react,
+        framework: Core.Utils.Framework.Frameworks.react,
       },
     });
     patchManifestMock.mockImplementation(() => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -172,7 +213,7 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -180,5 +221,36 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
+  });
+
+  test("it should create a slice folder if it doesnt exists.", () => {
+    // situation where the SM.Json doesn't exists.
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    // only called to verify if slice folder exists.
+    fileExistsMock.mockReturnValue(false);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(mkdirMock).toHaveBeenCalled();
+  });
+
+  test("it shouldn' create a slice folder if it exists.", () => {
+    // situation where the SM.Json doesn't exists.
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+    // only called to verify if slice folder exists.
+    fileExistsMock.mockReturnValue(true);
+
+    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+
+    expect(mkdirMock).not.toHaveBeenCalled();
   });
 });

@@ -1,21 +1,19 @@
 import { Box, Flex, Text } from "@theme-ui/components";
-import Container from "../components/Container";
-import ConfigErrors from "../components/ConfigErrors";
+import Container from "components/Container";
+import ConfigErrors from "components/ConfigErrors";
 import {
   NewVersionAvailable,
   ClientError,
   NotConnected,
-} from "../components/Warnings/Errors";
+} from "components/Warnings/Errors";
 import { warningStates } from "lib/consts";
-import {
-  StorybookNotInstalled,
-  StorybookNotRunning,
-  StorybookNotInManifest,
-} from "../components/Warnings/Storybook";
+
 import { FiZap } from "react-icons/fi";
 import { useSelector } from "react-redux";
+
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getConfigErrors, getWarnings } from "@src/modules/environment";
+import Warning from "@models/common/Warning";
 
 const WarningsPage: React.FunctionComponent = () => {
   const { warnings, configErrors } = useSelector(
@@ -25,11 +23,9 @@ const WarningsPage: React.FunctionComponent = () => {
     })
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Renderers: Record<string, React.FunctionComponent<any>> = {
     [warningStates.NOT_CONNECTED]: NotConnected,
-    [warningStates.STORYBOOK_NOT_IN_MANIFEST]: StorybookNotInManifest,
-    [warningStates.STORYBOOK_NOT_INSTALLED]: StorybookNotInstalled,
-    [warningStates.STORYBOOK_NOT_RUNNING]: StorybookNotRunning,
     [warningStates.CLIENT_ERROR]: ClientError,
     [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable,
   };
@@ -49,18 +45,17 @@ const WarningsPage: React.FunctionComponent = () => {
           <FiZap /> <Text ml={2}>Warnings</Text>
         </Flex>
         <Box>
-          {warnings.map((warning) => {
+          {warnings.map((warning: Warning) => {
             const Component = Renderers[warning.key];
             return <Component errorType={warning.title} {...warning} />;
           })}
         </Box>
         <Box>
-          {Object.entries(configErrors || {}).length ? (
+          {Object.entries(configErrors).length ? (
             <ConfigErrors errors={configErrors} />
           ) : null}
         </Box>
-        {(!warnings || !warnings.length) &&
-        Object.keys(configErrors).length === 0 ? (
+        {!warnings.length && Object.keys(configErrors).length === 0 ? (
           <Box>
             <Text>Your project is correctly configured. Well done!</Text>
           </Box>
