@@ -1,23 +1,15 @@
 /// <reference types="cypress" />
 
 describe('onboarding redirects and local storage', () => {
-
-  before(() => {
+  beforeEach(() => {
     cy.clearLocalStorageSnapshot();
   });
 
-  beforeEach(() => {
-    cy.restoreLocalStorage();
-  });
-
   it('should redirect to /onboarding when is-onboarded is not in local storage', () => {
-    cy.intercept('POST', '/api/tracking/onboarding', ({body}) => {
-      expect(body.id).equal("slicemachine_onboarding_start")
-    })
-    
+    cy.cleanSliceMachineUserContext();
     cy.visit('/')
 
-    cy.location('pathname', {timeout: 1000}).should('eq', '/onboarding')
+    cy.location('pathname', {timeout: 5000}).should('eq', '/onboarding')
   })
 
   it('when is-onboarded is in local storage it should not redirect', () => {

@@ -1,10 +1,7 @@
 describe("Custom Types specs", () => {
-  before(() => {
-    cy.clearLocalStorageSnapshot();
-  });
-
   beforeEach(() => {
-    cy.restoreLocalStorage();
+    cy.clearLocalStorageSnapshot();
+    cy.cleanSliceMachineUserContext();
   });
 
   it('A user can create a custom type', () => {
