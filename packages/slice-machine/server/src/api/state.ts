@@ -15,7 +15,7 @@ import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
-import { preferWroomBase } from "./common/utils";
+import preferWroomBase from "../../../src/utils/preferWroomBase";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function createWarnings(
