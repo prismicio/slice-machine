@@ -69,7 +69,8 @@ const FAKE_ENVIRONMENT = {
 const STATE_FOR_UPDATE = {
   environment: FAKE_ENVIRONMENT,
 };
-test.skip("when not up to date it should open a model and provided update instructions", async () => {
+
+test("when not up to date it should open a model and provided update instructions", async () => {
   const result = render(<App />, { preloadedState: STATE_FOR_UPDATE });
   const text = "npm i --save-dev slice-machine-ui";
 
