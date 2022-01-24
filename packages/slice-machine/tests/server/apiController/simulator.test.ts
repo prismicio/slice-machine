@@ -47,7 +47,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSliceSimulatorURL: "http://localhost:3000/_simulator",
+          localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
         },
       },
     };
@@ -71,7 +71,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.next,
         manifest: {
-          localSliceSimulatorURL: "http://localhost:3000/_simulator",
+          localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
         },
       },
     };
@@ -99,7 +99,7 @@ describe("simulator controller", () => {
       env: {
         framework: Frameworks.nuxt,
         manifest: {
-          localSliceSimulatorURL: "http://localhost:3001/_simulator",
+          localSliceSimulatorURL: "http://localhost:3001/slice-simulator",
         },
       },
     };

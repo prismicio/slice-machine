@@ -123,7 +123,7 @@ export const CreatePage =
 export const UpdateSmJson =
   ({
     title = "Update sm.json",
-    code = `"localSliceSimulatorURL": "http://localhost:3000/_simulator"`,
+    code = `"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"`,
   }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (
