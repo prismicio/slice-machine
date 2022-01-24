@@ -41,7 +41,7 @@ const generateScreenshot = async (
   screenshotUrl: string,
   pathToFile: string
 ): Promise<void | Error> => {
-  // Create an incognito contexte to isolate screenshots.
+  // Create an incognito context to isolate screenshots.
   const context = await browser.createIncognitoBrowserContext();
   // Create a new page in the context.
   const page = await context.newPage();

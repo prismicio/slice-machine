@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Flex, Text } from "theme-ui";
+import { Flex, Text, Link } from "theme-ui";
 
 import StepSection from "../components/StepSection";
 import SuccessSection from "../components/SuccessSection";
@@ -32,6 +32,7 @@ export interface DefaultStepCompProps {
   checkSimulatorSetup: (b: boolean) => void;
   stepNumberWithErrors: string[];
   isCheckingSetup: boolean;
+  linkToTroubleshootingDocs: string;
 }
 
 interface InstallSliceSimulatorProps extends DefaultStepProps {
@@ -80,7 +81,14 @@ export const CreatePage =
     code,
     instructions,
   }: CreatePageProps): React.FunctionComponent<DefaultStepCompProps> =>
-  ({ isOpen, onOpenStep, stepNumber, setupStatus, simulatorUrl }) => {
+  ({
+    isOpen,
+    onOpenStep,
+    stepNumber,
+    setupStatus,
+    simulatorUrl,
+    linkToTroubleshootingDocs,
+  }) => {
     return (
       <StepSection
         stepNumber={stepNumber}
@@ -96,7 +104,11 @@ export const CreatePage =
               sx={{ mb: 3 }}
             >
               We cannot connect to {simulatorUrl || "simulator URL"}. <br />{" "}
-              Struggling to fix this issue? See our troubleshooting page.
+              Struggling to fix this issue? See our{" "}
+              <Link target={"_blank"} href={linkToTroubleshootingDocs}>
+                troubleshooting page
+              </Link>
+              .
             </WarningSection>
           )}
           <Text variant={"xs"} sx={{ mb: 3 }}>
@@ -111,7 +123,7 @@ export const CreatePage =
 export const UpdateSmJson =
   ({
     title = "Update sm.json",
-    code = `"localSliceSimulatorURL": "http://localhost:3000/_simulator"`,
+    code = `"localSliceSimulatorURL": "http://localhost:3000/slice-simulator"`,
   }: DefaultStepProps): React.FunctionComponent<DefaultStepCompProps> =>
   ({ isOpen, onOpenStep, stepNumber, setupStatus }) => {
     return (

@@ -28,6 +28,7 @@ const CreateSliceButton = ({
 }) => (
   <Button
     onClick={() => onClick()}
+    data-cy="create-slice"
     sx={{
       display: "flex",
       justifyContent: "center",

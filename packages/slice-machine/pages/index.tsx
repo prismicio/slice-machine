@@ -120,7 +120,7 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { customTypes = [], onCreate } = useContext(CustomTypesContext);
+  const { customTypes, onCreate } = useContext(CustomTypesContext);
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     if (onCreate) {
@@ -138,8 +138,9 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          customTypes.length === 0 ? (
+          customTypes.length ? (
             <Button
+              data-cy="create-ct"
               onClick={() => setIsOpen(true)}
               sx={{
                 display: "flex",

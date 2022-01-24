@@ -9,7 +9,7 @@ import type { DefaultStepCompProps } from "./common";
 
 import StepSection from "../components/StepSection";
 import CodeBlock from "../components/CodeBlockWithCopy";
-import { Flex, Text } from "theme-ui";
+import { Flex, Link, Text } from "theme-ui";
 import WarningSection from "@builders/SliceBuilder/SetupDrawer/components/WarningSection";
 import React from "react";
 import { SetupStatus } from "@src/modules/simulator/types";
@@ -65,7 +65,11 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = (
             sx={{ mb: 3 }}
           >
             We cannot connect to {props.simulatorUrl || "simulator URL"}. <br />{" "}
-            Struggling to fix this issue? See our troubleshooting page.
+            Struggling to fix this issue? See our{" "}
+            <Link target={"_blank"} href={props.linkToTroubleshootingDocs}>
+              troubleshooting page
+            </Link>
+            .
           </WarningSection>
         )}
         <Text variant={"xs"} sx={{ mb: 3 }}>
@@ -90,8 +94,9 @@ export const steps = [
     instructions: (
       <>
         In your "pages" directory, create a file called{" "}
-        <Text variant={"pre"}>_simulator.vue</Text> and add the following code.
-        This page is the route you hit to simulator and develop your components.
+        <Text variant={"pre"}>slice-simulator.vue</Text> and add the following
+        code. This page is the route you hit to simulator and develop your
+        components.
       </>
     ),
     code: SliceSimulatorPageCreationInstruction,

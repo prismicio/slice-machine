@@ -62,6 +62,20 @@ export const getStorybookUrl = (
   return store.environment.env.manifest.storybook || null;
 };
 
+export const getLinkToTroubleshootingDocs = (
+  state: SliceMachineStoreType
+): string => {
+  const framework = getFramework(state);
+  switch (framework) {
+    case Frameworks.next:
+      return "https://prismic.io/docs/technologies/setup-slice-simulator-nextjs";
+    case Frameworks.nuxt:
+      return "https://prismic.io/docs/technologies/setup-slice-simulator-nuxtjs";
+    default:
+      return "https://prismic.io/docs";
+  }
+};
+
 export const getLinkToStorybookDocs = (
   state: SliceMachineStoreType
 ): string => {

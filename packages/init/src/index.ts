@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { Utils, FileSystem } from "@slicemachine/core";
 import { Tracker } from "./utils/tracker";
 import {
@@ -55,7 +53,8 @@ async function init() {
 
   const tracker = user.profile?.shortId
     ? Tracker.build(
-        "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+        process.env.NEXT_PUBLIC_SEGMENT_KEY ||
+          "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
         name,
         {
           userId: user.profile.shortId,

@@ -6,13 +6,9 @@ import { insert as insertMockConfig } from "@lib/mock/misc/fs";
 
 import mock from "@lib/mock/CustomType";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
+import { CustomType, SaveCustomTypeBody } from "@lib/models/common/CustomType";
 
-interface Body {
-  model: CustomType<ObjectTabs>;
-  mockConfig: CustomTypeMockConfig;
-}
-export default async function handler(req: { body: Body }) {
+export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
   const { model, mockConfig } = req.body;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
