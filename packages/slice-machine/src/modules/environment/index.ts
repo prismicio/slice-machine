@@ -113,7 +113,9 @@ export const environmentReducer: Reducer<
     case getType(getStateCreator):
       return {
         ...state,
-        ...action.payload,
+        env: action.payload.env,
+        warnings: action.payload.warnings,
+        configErrors: action.payload.configErrors,
       };
     default:
       return state;

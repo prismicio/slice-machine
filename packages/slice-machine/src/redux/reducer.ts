@@ -9,7 +9,7 @@ import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
-import { customTypesReducer } from "@src/modules/customType";
+import { customTypesReducer } from "@src/modules/customTypes";
 
 /**
  * Creates the main reducer
