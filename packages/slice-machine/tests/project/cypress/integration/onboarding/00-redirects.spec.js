@@ -8,7 +8,7 @@ describe('onboarding redirects and local storage', () => {
   it('should redirect to /onboarding when is-onboarded is not in local storage', () => {
     cy.cleanSliceMachineUserContext();
     cy.visit('/')
-    cy.waitUntil(() => cy.get('[data-cy=get-started]'))
+    cy.waitUntil(() => cy.get('[data-cy=get-started]').should('not.exist'))
     cy.location('pathname', {timeout: 5000}).should('eq', '/onboarding')
   })
 
