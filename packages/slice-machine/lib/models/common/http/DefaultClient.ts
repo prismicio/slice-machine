@@ -130,7 +130,7 @@ export default class DefaultClient {
     auth: string
   ): Promise<Error | UserProfile> {
     try {
-      const result = await axios.get<UserProfile>(
+      const result = await axios.get(
         `${createApiUrl(base, UserService)}profile`,
         {
           headers: {
@@ -144,7 +144,7 @@ export default class DefaultClient {
         () => new Error(`Unable to parse profile: ${result.data}`)
       )(UserProfile.decode(result.data));
     } catch (e) {
-      // TODO: why not throw?
+      if (axios.isAxiosError(e)) throw e;
       return e as Error;
     }
   }
