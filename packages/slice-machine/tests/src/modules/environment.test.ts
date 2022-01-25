@@ -1,32 +1,9 @@
 import { environmentReducer, getStateCreator } from "@src/modules/environment";
 import { EnvironmentStoreType } from "@src/modules/environment/types";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { dummyServerState } from "./__mocks__/serverState";
 
 const dummyEnvironmentState: EnvironmentStoreType = {
-  env: {
-    repo: "sm-env-example",
-    manifest: {
-      libraries: ["~/slices"],
-      apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
-      storybook: "http://localhost:6006",
-      chromaticAppId: "5f5b34f06f304800225c4e17",
-      framework: "next",
-      tracking: false,
-      localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
-    },
-    updateVersionInfo: {
-      currentVersion: "0.2.0",
-      latestVersion: "0.1.2",
-      packageManager: "npm",
-      updateCommand: "npm i --save-dev slice-machine-ui",
-      updateAvailable: false,
-    },
-    mockConfig: {},
-    framework: Frameworks.next,
-    sliceMachineAPIUrl: "http://localhost:9999",
-    shortId: "shortId",
-    prismicAPIUrl: "https://prismic.io",
-  },
+  env: dummyServerState.env,
   warnings: [],
   configErrors: {},
 };
@@ -47,13 +24,14 @@ describe("[Environment module]", () => {
 
     it("should update the environment state given STATE/GET.RESPONSE action", () => {
       const action = getStateCreator({
-        ...dummyEnvironmentState,
         env: {
-          ...dummyEnvironmentState.env,
+          ...dummyServerState.env,
           repo: "newUrl",
         },
-        remoteCustomTypes: [],
-        localCustomTypes: [],
+        configErrors: dummyServerState.configErrors,
+        warnings: dummyServerState.warnings,
+        remoteCustomTypes: dummyServerState.remoteCustomTypes,
+        localCustomTypes: dummyServerState.customTypes,
       });
 
       expect(environmentReducer(dummyEnvironmentState, action)).toEqual({
