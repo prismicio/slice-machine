@@ -58,7 +58,7 @@ export const getBackendState = async (
     env
   );
 
-  const base = preferWroomBase(env.manifest.apiEndpoint, env.prismicData.base);
+  const base = preferWroomBase(env.manifest.apiEndpoint);
   if (base !== env.prismicData.base) {
     FileSystem.PrismicSharedConfigManager.setProperties({ base });
   }

@@ -47,10 +47,7 @@ const LoginModal: React.FunctionComponent = () => {
     useSliceMachineActions();
 
   const { addToast } = useToasts();
-  const prismicBase = preferWroomBase(
-    env.manifest.apiEndpoint,
-    env.prismicAPIUrl
-  );
+  const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
     buildEndpoints(prismicBase).Dashboard.cliLogin
   }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;

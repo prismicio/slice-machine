@@ -1,7 +1,4 @@
-export default function preferWroomBase(
-  smApiUrl: string,
-  baseUrl: string
-): string {
+export default function preferWroomBase(smApiUrl: string): string {
   try {
     const urlFromSmJson = new URL(smApiUrl);
     if (urlFromSmJson.hostname.endsWith(".wroom.io")) {
@@ -11,8 +8,8 @@ export default function preferWroomBase(
       urlFromSmJson.hostname = "wroom.test";
       return urlFromSmJson.origin;
     }
-    return baseUrl;
+    return "https://prismic.io";
   } catch {
-    return baseUrl;
+    return "https://prismic.io";
   }
 }

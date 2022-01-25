@@ -8,7 +8,7 @@ export async function setShortId(
   env: BackendEnvironment,
   authToken: string
 ): Promise<UserProfile | Error> {
-  const base = preferWroomBase(env.manifest.apiEndpoint, env.prismicData.base);
+  const base = preferWroomBase(env.manifest.apiEndpoint);
 
   // TODO: find out why not handle errors normally here
   const profile = await DefaultClient.profile(base, authToken);
