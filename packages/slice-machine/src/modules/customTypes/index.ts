@@ -32,15 +32,10 @@ type CustomTypesActions =
   | ActionType<typeof createCustomTypesCreator>;
 
 // Selectors
-export const getLocalCustomTypes = (store: SliceMachineStoreType) =>
+export const selectLocalCustomTypes = (store: SliceMachineStoreType) =>
   store.customTypes.localCustomTypes;
 
-export const getLocalCustomTypesCount = (store: SliceMachineStoreType) =>
-  !!store.customTypes.localCustomTypes
-    ? store.customTypes.localCustomTypes.length
-    : 0;
-
-export const getRemoteCustomTypes = (store: SliceMachineStoreType) =>
+export const selectRemoteCustomTypes = (store: SliceMachineStoreType) =>
   store.customTypes.remoteCustomTypes;
 
 // Factory

@@ -20,6 +20,11 @@ import {
   connectToSimulatorIframeCreator,
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
+import {
+  createCustomTypesCreator,
+  saveCustomTypesCreator,
+} from "@src/modules/customTypes";
+import { CustomTypeState } from "@models/ui/CustomTypeState";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -66,6 +71,12 @@ const useSliceMachineActions = () => {
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
 
+  // Custom types Store));
+  const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
+    dispatch(createCustomTypesCreator({ id, label, repeatable }));
+  const saveCustomTypes = (modelPayload: CustomTypeState) =>
+    dispatch(saveCustomTypesCreator({ modelPayload }));
+
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {
     if (!serverState) return;
@@ -96,6 +107,8 @@ const useSliceMachineActions = () => {
     stopLoadingLogin,
     stopLoadingReview,
     startLoadingReview,
+    createCustomTypes,
+    saveCustomTypes,
     sendAReview,
     skipReview,
     closeUpdateVersionModal,

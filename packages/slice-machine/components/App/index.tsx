@@ -1,7 +1,6 @@
 import React from "react";
 
 import LibrariesProvider from "@src/models/libraries/context";
-import CustomTypesProvider from "@src/models/customTypes/context";
 import { SliceHandler } from "@src/models/slice/context";
 
 import AppLayout from "../AppLayout";
@@ -33,23 +32,18 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
         libraries={serverState.libraries}
         env={serverState.env}
       >
-        <CustomTypesProvider
-          customTypes={serverState.customTypes}
-          remoteCustomTypes={serverState.remoteCustomTypes}
-        >
-          <AppLayout>
-            <SliceHandler {...serverState}>
-              {serverState.libraries?.length ? (
-                <>{children}</>
-              ) : (
-                <MissingLibraries />
-              )}
-            </SliceHandler>
-          </AppLayout>
-          <UpdateVersionModal />
-          <LoginModal />
-          <ReviewModal />
-        </CustomTypesProvider>
+        <AppLayout>
+          <SliceHandler {...serverState}>
+            {serverState.libraries?.length ? (
+              <>{children}</>
+            ) : (
+              <MissingLibraries />
+            )}
+          </SliceHandler>
+        </AppLayout>
+        <UpdateVersionModal />
+        <LoginModal />
+        <ReviewModal />
       </LibrariesProvider>
     </ToastProvider>
   );

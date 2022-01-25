@@ -1,9 +1,6 @@
 import * as yup from "yup";
 import Select from "react-select";
-import { useContext } from "react";
 import { Label, Box } from "theme-ui";
-
-import { CustomTypesContext } from "src/models/customTypes/context";
 
 import { DefaultFields } from "@lib/forms/defaults";
 
@@ -11,6 +8,8 @@ import WidgetFormField from "@lib/builders/common/EditModal/Field";
 
 import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
+import { useSelector } from "react-redux";
+import { selectLocalCustomTypes } from "@src/modules/customTypes";
 
 const FormFields = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -28,9 +27,9 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }) => {
-  const { customTypes } = useContext(CustomTypesContext);
-
-  // const { errors, Model, fieldType } = rest
+  const { customTypes } = useSelector((store) => ({
+    customTypes: selectLocalCustomTypes(store),
+  }));
 
   const options = customTypes.map((ct) => ({
     value: ct?.id,

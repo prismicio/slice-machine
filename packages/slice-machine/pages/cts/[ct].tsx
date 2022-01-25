@@ -1,7 +1,4 @@
 import { useRouter } from "next/router";
-import { useContext } from "react";
-
-import { CustomTypesContext } from "src/models/customTypes/context";
 
 import { useModelReducer } from "src/models/customType/modelReducer";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
@@ -10,6 +7,11 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
+import {
+  selectLocalCustomTypes,
+  selectRemoteCustomTypes,
+} from "@src/modules/customTypes";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomType<ObjectTabs>;
@@ -40,16 +42,21 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
 
 const CustomTypeBuilderWithRouter = () => {
   const router = useRouter();
-  const { customTypes, remoteCustomTypes, onSave } =
-    useContext(CustomTypesContext);
+  const { saveCustomTypes } = useSliceMachineActions();
+  const { customTypes, remoteCustomTypes } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      customTypes: selectLocalCustomTypes(store),
+      remoteCustomTypes: selectRemoteCustomTypes(store),
+    })
+  );
 
   const customType = customTypes?.find((e) => e && e.id === router.query.ct);
   const remoteCustomType = remoteCustomTypes?.find(
     (e) => e && e.id === router.query.ct
   );
+
   if (!customType) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.replace("/");
+    void router.replace("/");
     return null;
   }
 
@@ -57,8 +64,7 @@ const CustomTypeBuilderWithRouter = () => {
     <CustomTypeBuilderWithProvider
       customType={customType}
       remoteCustomType={remoteCustomType}
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      onLeave={onSave || function () {}}
+      onLeave={saveCustomTypes}
     />
   );
 };
