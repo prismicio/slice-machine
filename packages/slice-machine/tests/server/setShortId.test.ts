@@ -66,10 +66,34 @@ describe("setShortId", () => {
       reqheaders: { Authorization: `Bearer ${fakeCookie}` },
     })
       .get("/profile")
-      .reply(403);
+      .reply(200, {});
 
     const res = await setShortId(MockedBackendEnv, fakeCookie);
     expect(res instanceof Error).toBe(true);
-    expect((res as Error).message).toBe("Request failed with status code 403");
+    expect((res as Error).message).toBe(
+      "Unable to parse profile: [object Object]"
+    );
+  });
+
+  test("on network issues should throw an error", async () => {
+    const fakeCookie = "biscuits";
+    const sharedConfig: PrismicSharedConfig = {
+      base: "fakeBase",
+      cookies: `prismic-auth=${fakeCookie}`,
+    };
+    vol.fromJSON(
+      { ".prismic": JSON.stringify(sharedConfig, null, "\t") },
+      os.homedir()
+    );
+
+    nock("https://user.internal-prismic.io/", {
+      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
+    })
+      .get("/profile")
+      .reply(403);
+
+    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
+      "Request failed with status code 403"
+    );
   });
 });
