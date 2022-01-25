@@ -11,7 +11,7 @@ import {
   sendAReviewCreator,
   skipReviewCreator,
 } from "@src/modules/userContext";
-import { getEnvironmentCreator } from "@src/modules/environment";
+import { getStateCreator } from "@src/modules/environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
@@ -65,14 +65,18 @@ const useSliceMachineActions = () => {
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
-  const getEnvironment = (serverState: ServerState | undefined) => {
+
+  // State Action (used by multiple stores)
+  const getState = (serverState: ServerState | undefined) => {
     if (!serverState) return;
 
     dispatch(
-      getEnvironmentCreator({
+      getStateCreator({
         env: serverState.env,
         warnings: serverState.warnings,
         configErrors: serverState.configErrors,
+        remoteCustomTypes: serverState.remoteCustomTypes,
+        localCustomTypes: serverState.customTypes,
       })
     );
   };
@@ -84,7 +88,7 @@ const useSliceMachineActions = () => {
     toggleSetupDrawerStep,
     closeSetupDrawer,
     openSetupDrawer,
-    getEnvironment,
+    getState,
     finishOnboarding,
     openLoginModal,
     closeLoginModal,

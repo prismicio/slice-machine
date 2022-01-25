@@ -9,6 +9,7 @@ import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
+import { customTypesReducer } from "@src/modules/customType";
 
 /**
  * Creates the main reducer
@@ -20,6 +21,7 @@ const createReducer = (): Reducer =>
     userContext: userContextReducer,
     environment: environmentReducer,
     simulator: simulatorReducer,
+    customTypes: customTypesReducer,
   });
 
 export default createReducer;
