@@ -25,7 +25,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Tracker from "@src/tracker";
-import preferWroomBase from "../../src/utils/preferWroomBase";
+import preferWroomBase from "../../lib/utils/preferWroomBase";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";

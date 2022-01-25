@@ -15,7 +15,7 @@ import { FileSystem } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
-import preferWroomBase from "../../../src/utils/preferWroomBase";
+import preferWroomBase from "../../../lib/utils/preferWroomBase";
 
 function createWarnings(
   env: BackendEnvironment,
