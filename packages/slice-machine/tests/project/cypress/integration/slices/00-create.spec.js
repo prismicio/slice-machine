@@ -1,15 +1,13 @@
 describe("Create Slices", () => {
-  before(() => {
-    cy.clearLocalStorageSnapshot();
-  });
-
   beforeEach(() => {
-    cy.restoreLocalStorage();
+    cy.clearLocalStorageSnapshot();
+    cy.cleanSliceMachineUserContext();
   });
 
   it('A user can create a slice', () => {
     cy.setupSliceMachineUserContext()
     cy.visit('/slices')
+    cy.waitUntil(() => cy.get('[data-cy=create-slice]'))
     cy.get('[data-cy=create-slice]').click()
     cy
       .get('[data-cy=create-slice-modal]')
