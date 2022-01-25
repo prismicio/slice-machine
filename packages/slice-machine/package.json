@@ -23,7 +23,8 @@
     "compile": "tsc --project server/tsconfig.json && node build/server/src/index.js",
     "dev-server": "cross-env PORT=9999 CWD=./tests/project ENV=SM nodemon -e ts,js --watch server --watch lib --ignore build/ --exec \"npm run compile\"",
     "prod-server": "cross-env PORT=9999 CWD=./tests/project nodemon -e ts,js --watch server --watch lib --ignore build/ --exec \"npm run compile\"",
-    "build": "npm run build-server && npm run build-next-app",
+    "build": "npm run build-common && npm run build-server && npm run build-next-app",
+    "build-common": "tsc --project scripts/tsconfig.json",
     "build-server": "tsc --project server/tsconfig.json",
     "build-next-app": "cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "export-build": "next export && npm run clean-build",
@@ -35,7 +36,7 @@
     "audit-fix": "npm audit fix"
   },
   "bin": {
-    "start-slicemachine": "start/index.js"
+    "start-slicemachine": "bins/start.js"
   },
   "dependencies": {
     "@babel/register": "^7.11.5",
@@ -100,6 +101,7 @@
     "@testing-library/react-hooks": "^7.0.0",
     "@theme-ui/color": "0.8.4",
     "@types/cors": "^2.8.12",
+    "@types/dedent": "^0.7.0",
     "@types/ejs": "^3.0.6",
     "@types/express": "^4.17.13",
     "@types/express-form-data": "^2.0.2",
