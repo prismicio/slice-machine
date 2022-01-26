@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const TMP = "/tmp";
 import { vol } from "memfs";
 import { getComponentInfo } from "../../../src/libraries/component";
@@ -16,6 +15,7 @@ describe("libaries/component", () => {
   describe("#getComponentInfo", () => {
     test("model with intergratoin fields", () => {
       const model =
+        /* eslint-disable-next-line @typescript-eslint/no-var-requires */
         require("./__fixtures__/ProductListWithCta/model.json") as unknown;
       vol.fromJSON(
         {
