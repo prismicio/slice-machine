@@ -6,10 +6,11 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { render, fireEvent } from "../test-utils";
 import Desktop from "../../components/AppLayout/Navigation/Menu/Desktop";
-import FakeClient from "../../lib/models/common/http/FakeClient";
 import { Models } from "@slicemachine/core";
 import UpdateModal from "../../components/UpdateVersionModal";
-import Environment from "@lib/models/common/Environment";
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
+import { Frameworks } from "@slicemachine/core/build/src/models";
+import { EnvironmentStoreType } from "@src/modules/environment/types";
 
 jest.mock("next/router", () => ({
   useRouter() {
@@ -29,41 +30,33 @@ const App = () => (
   </>
 );
 
-const FAKE_ENVIRONMENT = {
+const FAKE_ENVIRONMENT: EnvironmentStoreType = {
   warnings: [],
   configErrors: {},
   env: {
-    cwd: "./tests/project",
     repo: "sm-env-example",
-    userConfig: {
-      libraries: ["~/slices", "@/slices2/src/slices"],
-      apiEndpoint: "",
-      storybook: "",
-      chromaticAppId: "",
-      _latest: "0.1.0",
-    },
-    hasConfigFile: true,
-    prismicData: {
-      base: "",
-      auth: "",
-    },
-    chromatic: {
-      storybook: "",
-      library: "",
+    manifest: {
+      libraries: ["~/slices"],
+      apiEndpoint: "https://sm-env-example.prismic.io/api/v2",
+      storybook: "http://localhost:6006",
+      chromaticAppId: "5f5b34f06f304800225c4e17",
+      framework: "next",
+      tracking: false,
+      localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
     },
     updateVersionInfo: {
-      currentVersion: "0.1.1",
-      latestVersion: "0.1.1",
-      packageManager: "npm" as "npm" | "yarn",
+      currentVersion: "0.2.0",
+      latestVersion: "0.1.2",
+      packageManager: "npm",
       updateCommand: "npm i --save-dev slice-machine-ui",
-      updateAvailable: true,
+      updateAvailable: false,
     },
     mockConfig: {},
-    hasGeneratedStoriesPath: true,
-    framework: Models.Frameworks.next,
-    baseUrl: "http://localhost:9999",
-    client: new FakeClient(),
-  } as Environment,
+    framework: Frameworks.next,
+    sliceMachineAPIUrl: "http://localhost:9999",
+    shortId: "shortId",
+    prismicAPIUrl: "https://prismic.io",
+  },
 };
 
 const STATE_FOR_UPDATE = {

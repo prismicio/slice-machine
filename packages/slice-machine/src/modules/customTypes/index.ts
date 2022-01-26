@@ -17,6 +17,7 @@ import { saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
+import { createCustomType } from "@src/modules/customTypes/factory";
 
 const initialState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -56,24 +57,6 @@ export const selectLocalCustomTypes = (store: SliceMachineStoreType) =>
 
 export const selectRemoteCustomTypes = (store: SliceMachineStoreType) =>
   store.customTypes.remoteCustomTypes;
-
-// Factory
-const createCustomType = (
-  id: string,
-  label: string,
-  repeatable: boolean
-): CustomType<ObjectTabs> => ({
-  id,
-  label,
-  repeatable,
-  tabs: {
-    Main: {
-      key: "Main",
-      value: {},
-    },
-  },
-  status: true,
-});
 
 // Reducer
 export const customTypesReducer: Reducer<

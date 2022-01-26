@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+
 import { environmentReducer, getStateCreator } from "@src/modules/environment";
 import { EnvironmentStoreType } from "@src/modules/environment/types";
 import { dummyServerState } from "./__mocks__/serverState";

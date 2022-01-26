@@ -1,7 +1,9 @@
 import { customTypesReducer } from "@src/modules/customTypes";
 import { CustomTypesStoreType } from "@src/modules/customTypes/types";
 import { getStateCreator } from "@src/modules/environment";
-import { dummyServerState } from "./__mocks__/serverState";
+import "@testing-library/jest-dom";
+
+import { dummyServerState } from "../__mocks__/serverState";
 
 const dummyCustomTypesState: CustomTypesStoreType = {
   localCustomTypes: [],
