@@ -7,17 +7,13 @@ import preferWroomBase from "../../../../lib/utils/preferWroomBase";
 export async function setShortId(
   env: BackendEnvironment,
   authToken: string
-): Promise<UserProfile | Error> {
+): Promise<UserProfile> {
   const base = preferWroomBase(env.manifest.apiEndpoint);
 
-  // TODO: find out why not handle errors normally here
-  const profile = await DefaultClient.profile(base, authToken);
-
-  if (profile instanceof Error) return profile;
-
-  FileSystem.PrismicSharedConfigManager.setProperties({
-    shortId: profile.shortId,
+  return DefaultClient.profile(base, authToken).then((profile) => {
+    FileSystem.PrismicSharedConfigManager.setProperties({
+      shortId: profile.shortId,
+    });
+    return profile;
   });
-
-  return profile;
 }

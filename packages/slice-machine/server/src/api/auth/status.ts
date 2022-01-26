@@ -13,7 +13,6 @@ export default async function handler(
     }
 
     const profile = await setShortId(req.env, authToken);
-    if (profile instanceof Error) return { status: "error" };
 
     return { status: "ok", userId: profile.userId };
   } catch (e) {

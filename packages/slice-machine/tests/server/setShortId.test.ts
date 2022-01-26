@@ -35,7 +35,6 @@ describe("setShortId", () => {
       .reply(200, JSON.stringify(MockedUserProfile));
 
     const res = await setShortId(MockedBackendEnv, fakeCookie);
-    expect(res instanceof Error).toBe(false);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -68,10 +67,8 @@ describe("setShortId", () => {
       .get("/profile")
       .reply(200, {});
 
-    const res = await setShortId(MockedBackendEnv, fakeCookie);
-    expect(res instanceof Error).toBe(true);
-    expect((res as Error).message).toBe(
-      "Unable to parse profile: [object Object]"
+    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
+      "Unable to parse profile: {}"
     );
   });
 

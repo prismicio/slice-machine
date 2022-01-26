@@ -40,10 +40,8 @@ describe("DefaultClient", () => {
         .get("/profile")
         .reply(200, response);
 
-      const result = await DefaultClient.profile(base, token);
-      expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toEqual(
-        "Unable to parse profile: [object Object]"
+      expect(() => DefaultClient.profile(base, token)).rejects.toThrow(
+        "Unable to parse profile: {}"
       );
     });
 
