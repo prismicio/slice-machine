@@ -17,8 +17,7 @@ const Form = ({
 }: {
   isOpen: boolean;
   formId: string;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  close: Function;
+  close: () => void;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSubmit: Function;
   availableSlices: ReadonlyArray<SliceState>;
@@ -39,14 +38,7 @@ const Form = ({
         title: "Update SliceZone",
       }}
     >
-      {({
-        values,
-      }: {
-        values: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          sliceKeys: any;
-        };
-      }) => (
+      {({ values }) => (
         <FieldArray
           name="sliceKeys"
           render={(arrayHelpers) => {

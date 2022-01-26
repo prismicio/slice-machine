@@ -52,8 +52,7 @@ const CreateCustomtypeForm = ({
   isOpen: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSubmit: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  close: Function;
+  close: () => void;
   tabIds: ReadonlyArray<string>;
   allowDelete: boolean;
 }) => {
@@ -63,8 +62,7 @@ const CreateCustomtypeForm = ({
       isOpen={isOpen}
       widthInPx="530px"
       formId={formId}
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      close={() => close()}
+      close={close}
       cardProps={{ bodySx: { p: 0 } }}
       // eslint-disable-next-line @typescript-eslint/ban-types
       onSubmit={(values: {}) => {
@@ -74,7 +72,7 @@ const CreateCustomtypeForm = ({
         id: "",
         actionType: null,
       }}
-      validate={({ id }: { id: string }) => {
+      validate={({ id }) => {
         if (!id) {
           return {
             id: "Tab ID is required",
@@ -90,16 +88,7 @@ const CreateCustomtypeForm = ({
         title,
       }}
     >
-      {({
-        errors,
-        values,
-        setFieldValue,
-      }: {
-        errors: { id?: string };
-        values: { id: string };
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        setFieldValue: Function;
-      }) => (
+      {({ errors, values, setFieldValue }) => (
         <Box>
           <Box sx={{ px: 4, py: 4 }}>
             <InputBox

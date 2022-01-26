@@ -22,15 +22,6 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { selectLocalCustomTypes } from "@src/modules/customTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { isModalOpen } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-
-export interface CtPayload {
-  repeatable: boolean;
-  id: string;
-  previewUrl: string;
-  label: string;
-}
 
 // To isolate later
 const CTName: React.FunctionComponent<{ ctName: string }> = ({ ctName }) => {
@@ -95,7 +86,9 @@ const CTThumbnail = ({
   );
 };
 // To isolate later
-const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
+const Card: React.FunctionComponent<{ ct: CustomType<ObjectTabs> }> = ({
+  ct,
+}) => (
   <Link href={`/cts/${ct.id}`} passHref>
     <ThemeLink variant="links.invisible">
       <ThemeCard
@@ -107,7 +100,10 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
           transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
         }}
       >
-        <CTThumbnail preview={{ url: ct.previewUrl }} heightInPx="287px" />
+        <CTThumbnail
+          preview={{ url: ct.previewUrl || "" }}
+          heightInPx="287px"
+        />
         <Flex
           mt={3}
           sx={{ alignItems: "center", justifyContent: "space-between" }}
@@ -121,24 +117,10 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 );
 
 const CustomTypes: React.FunctionComponent = () => {
-  const {
-    createCustomTypes,
-    openCreateCustomTypeModal,
-    closeCreateCustomTypeModal,
-  } = useSliceMachineActions();
-  const { customTypes, isCreateCustomTypeModalOpen } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      customTypes: selectLocalCustomTypes(store),
-      isCreateCustomTypeModalOpen: isModalOpen(
-        store,
-        ModalKeysEnum.CREATE_CUSTOM_TYPE
-      ),
-    })
-  );
-
-  const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
-    createCustomTypes(id, label, repeatable);
-  };
+  const { openCreateCustomTypeModal } = useSliceMachineActions();
+  const { customTypes } = useSelector((store: SliceMachineStoreType) => ({
+    customTypes: selectLocalCustomTypes(store),
+  }));
 
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -197,17 +179,12 @@ const CustomTypes: React.FunctionComponent = () => {
           defineElementKey={(ct: CustomType<ObjectTabs>) => ct.id}
           renderElem={(ct: CustomType<ObjectTabs>) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-              <Card ct={ct as CtPayload} />
+              <Card ct={ct} />
             </Link>
           )}
         />
       )}
-      <CreateCustomTypeModal
-        isOpen={isCreateCustomTypeModalOpen}
-        onSubmit={_onCreate}
-        customTypes={customTypes}
-        close={closeCreateCustomTypeModal}
-      />
+      <CreateCustomTypeModal />
     </Container>
   );
 };

@@ -1,34 +1,61 @@
 import { Box } from "theme-ui";
 
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
-
 import ModalFormCard from "@components/ModalFormCard";
-import { CtPayload } from "pages";
 import { InputBox } from "./components/InputBox";
 import { SelectRepeatable } from "./components/SelectRepeatable";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import { isModalOpen } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
-type CreateCustomTypeModalProps = {
-  isOpen: boolean;
-  onSubmit: (values: CtPayload) => void;
-  close: () => void;
-  customTypes: Partial<ReadonlyArray<CustomType<ObjectTabs>>>;
+type FormValues = {
+  repeatable: boolean;
+  id: string;
+  label: string;
 };
 
-const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps> =
-  ({ isOpen, onSubmit, close, customTypes }) => (
+const CreateCustomTypeModal: React.FunctionComponent = () => {
+  const { createCustomTypes, closeCreateCustomTypeModal } =
+    useSliceMachineActions();
+
+  const { customTypes, isCreateCustomTypeModalOpen, isCreatingCustomType } =
+    useSelector((store: SliceMachineStoreType) => ({
+      customTypes: selectLocalCustomTypes(store),
+      isCreateCustomTypeModalOpen: isModalOpen(
+        store,
+        ModalKeysEnum.CREATE_CUSTOM_TYPE
+      ),
+      isCreatingCustomType: isLoading(
+        store,
+        LoadingKeysEnum.CREATE_CUSTOM_TYPE
+      ),
+    }));
+
+  return (
     <ModalFormCard
       dataCy="create-ct-modal"
-      isOpen={isOpen}
+      isOpen={isCreateCustomTypeModalOpen}
       widthInPx="530px"
       formId="create-custom-type"
-      close={() => close()}
-      onSubmit={(values: CtPayload) => {
-        onSubmit({ ...values, label: values.label || values.id });
+      close={closeCreateCustomTypeModal}
+      onSubmit={(values: FormValues) => {
+        createCustomTypes(
+          values.id,
+          values.label || values.id,
+          values.repeatable
+        );
       }}
+      isLoading={isCreatingCustomType}
       initialValues={{
         repeatable: true,
+        id: "",
+        label: "",
       }}
-      validate={({ id, label }: { id: string; label: string }) => {
+      validate={({ id, label }) => {
         if (!label || !label.length) {
           return { label: "Cannot be empty" };
         }
@@ -46,7 +73,7 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
         title: "Create a new custom type",
       }}
     >
-      {({ errors }: { errors: { id?: string; label?: string } }) => (
+      {({ errors }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
@@ -67,5 +94,6 @@ const CreateCustomTypeModal: React.FunctionComponent<CreateCustomTypeModalProps>
       )}
     </ModalFormCard>
   );
+};
 
 export default CreateCustomTypeModal;

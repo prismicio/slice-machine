@@ -18,13 +18,6 @@ type CreateSliceModalProps = {
 
 type FormValues = { sliceName: string; from: string };
 
-interface ModalInternalProps {
-  errors: { sliceName?: string };
-  touched: { sliceName?: string };
-  values: FormValues;
-  setFieldValue: (key: string, value: string) => void;
-}
-
 const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   isOpen,
   onSubmit,
@@ -42,7 +35,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       sliceName: "",
       from: libraries[0].name,
     }}
-    validate={({ sliceName }: { sliceName: string }) => {
+    validate={({ sliceName }) => {
       if (!sliceName) {
         return { sliceName: "Cannot be empty" };
       }
@@ -58,7 +51,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       title: "Create a new slice",
     }}
   >
-    {({ touched, values, setFieldValue, errors }: ModalInternalProps) => (
+    {({ touched, values, setFieldValue, errors }) => (
       <Box>
         <InputBox
           name="sliceName"
