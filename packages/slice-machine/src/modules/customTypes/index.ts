@@ -19,11 +19,6 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
 
-const initialState: CustomTypesStoreType = {
-  localCustomTypes: [],
-  remoteCustomTypes: [],
-};
-
 // Action Creators
 export const saveCustomTypesCreator = createAction(
   "CUSTOM_TYPES/SAVE.REQUEST"
@@ -60,9 +55,11 @@ export const selectRemoteCustomTypes = (store: SliceMachineStoreType) =>
 
 // Reducer
 export const customTypesReducer: Reducer<
-  CustomTypesStoreType,
+  CustomTypesStoreType | null,
   CustomTypesActions
-> = (state = initialState, action) => {
+> = (state, action) => {
+  if (!state) return null;
+
   switch (action.type) {
     case getType(getStateCreator):
       return {

@@ -31,7 +31,7 @@ const UpdateVersionModal: React.FC = () => {
     useSliceMachineActions();
 
   React.useEffect(() => {
-    if (updateVersionInfo.updateAvailable) openUpdateVersionModal();
+    if (updateVersionInfo.updateAvailable && !isOpen) openUpdateVersionModal();
   }, [updateVersionInfo.updateAvailable]);
 
   const copy = () => {
