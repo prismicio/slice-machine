@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { Fragment } from "react";
 import { GoPlus } from "react-icons/go";
 import {
@@ -122,7 +121,6 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 );
 
 const CustomTypes: React.FunctionComponent = () => {
-  const router = useRouter();
   const {
     createCustomTypes,
     openCreateCustomTypeModal,
@@ -140,7 +138,6 @@ const CustomTypes: React.FunctionComponent = () => {
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     createCustomTypes(id, label, repeatable);
-    void router.push(`/cts/${id}`);
   };
 
   return (

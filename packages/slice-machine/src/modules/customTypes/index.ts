@@ -16,6 +16,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { push } from "connected-next-router";
 
 const initialState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -120,6 +121,7 @@ function* createCustomTypeSaga({
   yield call(saveCustomType, newCustomType, {});
   yield put(createCustomTypesCreator.success({ newCustomType }));
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+  yield put(push(`/cts/${payload.id}`));
 }
 
 // Saga watchers
