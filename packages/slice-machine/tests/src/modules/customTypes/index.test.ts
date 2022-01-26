@@ -50,7 +50,7 @@ describe("[Custom types module]", () => {
     });
   });
 
-  describe("createCustomTypeSaga", () => {
+  describe("[createCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions", () => {
       const actionPayload = { id: "id", label: "label", repeatable: true };
       const customTypeCreated = createCustomType(

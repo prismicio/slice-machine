@@ -14,14 +14,17 @@ jest.mock("react-redux", () => ({
   useDispatch: () => mockDispatch,
 }));
 
+const useSelectorMock = useSelector as jest.Mock;
+const useDispatchMock = useDispatch() as jest.Mock;
+
 describe("UpdateVersionModal", () => {
   beforeEach(() => {
-    useSelector.mockClear();
-    useDispatch().mockClear();
+    useSelectorMock.mockClear();
+    useDispatchMock.mockClear();
   });
   test("when no up to date it should dispatch an open update version modal action and not display the modal", async () => {
     const mockedDispatch = jest.fn();
-    useSelector.mockImplementation(() => ({
+    useSelectorMock.mockImplementation(() => ({
       isOpen: false,
       updateVersionInfo: {
         currentVersion: "0.2.0",
@@ -31,7 +34,7 @@ describe("UpdateVersionModal", () => {
         updateAvailable: true,
       },
     }));
-    useDispatch().mockReturnValue(mockedDispatch);
+    useDispatchMock.mockReturnValue(mockedDispatch);
     const result = render(<UpdateVersionModal />);
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "MODAL/OPEN",
@@ -43,7 +46,7 @@ describe("UpdateVersionModal", () => {
   });
   test("when up to date it shouldn't dispatch an open update version modal action and not display the modal", async () => {
     const mockedDispatch = jest.fn();
-    useSelector.mockImplementation(() => ({
+    useSelectorMock.mockImplementation(() => ({
       isOpen: false,
       updateVersionInfo: {
         currentVersion: "0.2.2",
@@ -53,14 +56,14 @@ describe("UpdateVersionModal", () => {
         updateAvailable: false,
       },
     }));
-    useDispatch().mockReturnValue(mockedDispatch);
+    useDispatchMock.mockReturnValue(mockedDispatch);
     const result = render(<UpdateVersionModal />);
     expect(mockDispatch).toHaveBeenCalledTimes(0);
     expect(await result.queryByText("Update Available")).toBeNull();
   });
   test("when no up to date it should display the modal", async () => {
     const mockedDispatch = jest.fn();
-    useSelector.mockImplementation(() => ({
+    useSelectorMock.mockImplementation(() => ({
       isOpen: true,
       updateVersionInfo: {
         currentVersion: "0.2.0",
@@ -70,7 +73,7 @@ describe("UpdateVersionModal", () => {
         updateAvailable: true,
       },
     }));
-    useDispatch().mockReturnValue(mockedDispatch);
+    useDispatchMock.mockReturnValue(mockedDispatch);
     const result = render(<UpdateVersionModal />);
     expect(mockDispatch).toHaveBeenCalledTimes(0);
     expect(
