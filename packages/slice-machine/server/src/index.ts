@@ -95,6 +95,19 @@ app.use("/onboarding", (_, res) => {
 });
 
 const PORT = process.env.PORT || "9999";
+
+app.use(
+  (
+    err: Error,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction
+  ) => {
+    console.error(err);
+    res.status(500).send(err.message || "Something broke!");
+  }
+);
+
 app.listen(PORT, () => {
   const p = `http://localhost:${PORT}`;
   console.log(`Server running : ${p}`);
