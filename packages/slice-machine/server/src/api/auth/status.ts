@@ -16,6 +16,7 @@ export default async function handler(
 
     return { status: "ok", userId: profile.userId };
   } catch (e) {
+    console.error(e);
     return { status: "error" };
   }
 }
