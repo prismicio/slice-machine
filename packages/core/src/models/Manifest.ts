@@ -1,20 +1,32 @@
 import * as t from "io-ts";
 import { FrameworksC } from "./Framework";
 
-const apiEndpoint = new t.Type<string, string, unknown>(
-  "apiEndpoint",
-  (input: unknown): input is string => typeof input === "string",
-  (input, context) => {
-    if (typeof input !== "string") return t.failure(input, context);
-    const regx = new RegExp(
-      "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9].(prismic.io|wroom.io|wroom.test)/api/v2/?$",
-      "i"
+class ApiEndPointType extends t.Type<string> {
+  constructor() {
+    super(
+      "apiEndpoint",
+      (input: unknown): input is string => typeof input === "string",
+      (input, context) => {
+        if (typeof input !== "string") return t.failure(input, context);
+        const regx = new RegExp(
+          "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9].(prismic.io|wroom.io|wroom.test)/api/v2/?$",
+          "i"
+        );
+        const result = regx.test(input);
+        return result
+          ? t.success(input)
+          : t.failure(
+              input,
+              context,
+              `apiEndpoint should match ${regx.source}`
+            );
+      },
+      t.identity
     );
-    const result = regx.test(input);
-    return result ? t.success(input) : t.failure(input, context);
-  },
-  t.identity
-);
+  }
+}
+
+const apiEndpoint = new ApiEndPointType();
 
 export const Manifest = t.intersection([
   t.type({

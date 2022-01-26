@@ -71,7 +71,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api" }`,
+          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api" }`,
           "package.json": "{}",
         },
         TMP
@@ -85,7 +85,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2" }`,
+          "sm.json": `{ "apiEndpoint": "https://test.wroom.io/api/v2" }`,
           "package.json": "{}",
           ".storybook/main.js": `import { getStoriesPaths } from '...'`,
         },
@@ -94,8 +94,8 @@ describe("getEnv", () => {
     );
 
     const { env } = await getEnv(TMP);
-    expect(env.repo).toEqual("api");
-    expect(env.manifest.apiEndpoint).toEqual("https://api.wroom.io/api/v2");
+    expect(env.repo).toEqual("test");
+    expect(env.manifest.apiEndpoint).toEqual("https://test.wroom.io/api/v2");
     expect(env.framework).toEqual(Models.Frameworks.vanillajs);
   });
 
@@ -103,7 +103,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2" }`,
+          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
         },
@@ -112,14 +112,14 @@ describe("getEnv", () => {
     );
 
     const { env } = await getEnv(TMP);
-    expect(env.repo).toEqual("api");
+    expect(env.repo).toEqual("api-1");
   });
 
   test("it creates empty mock config", async () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2" }`,
+          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
         },
@@ -135,7 +135,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2" }`,
+          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
           ".slicemachine/mock-config.json": `{ "field": "value" }`,
@@ -161,7 +161,7 @@ describe("getEnv", () => {
       fs.use(
         Volume.fromJSON(
           {
-            "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
+            "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2", "storybook": "localhost:6666" }`,
             "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "${framework}": "1.1.0" } }`,
             "nuxt.config.js": `stories: [".slicemachine/assets"]`,
             ".slicemachine/mock-config.json": `{ "field": "value" }`,
@@ -181,7 +181,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "framework": "${key}", "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
+          "sm.json": `{ "framework": "${key}", "apiEndpoint": "https://api-1.wroom.io/api/v2", "storybook": "localhost:6666" }`,
           "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "react": "1.1.0" } }`,
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
           ".slicemachine/mock-config.json": `{ "field": "value" }`,
@@ -198,7 +198,7 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api.wroom.io/api/v2", "storybook": "localhost:6666" }`,
+          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2", "storybook": "localhost:6666" }`,
           "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "unknown": "1.1.0" } }`,
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
           ".slicemachine/mock-config.json": `{ "field": "value" }`,
