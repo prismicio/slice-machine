@@ -16,5 +16,7 @@ describe("Custom Types specs", () => {
     cy.get('input[data-cy=ct-id-input]').type('my-custom-type')
     cy.get('[data-cy=create-ct-modal]').submit()
     cy.location('pathname', {timeout: 5000}).should('eq', '/cts/my-custom-type')
+    cy.visit('/cts/my-custom-type')
+    cy.location('pathname', {timeout: 5000}).should('eq', '/cts/my-custom-type')
   })
 })

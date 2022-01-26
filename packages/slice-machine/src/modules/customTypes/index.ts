@@ -25,7 +25,7 @@ const initialState: CustomTypesStoreType = {
 
 // Action Creators
 export const saveCustomTypesCreator = createAction(
-  "CUSTOM_TYPES/SAVE.RESPONSE"
+  "CUSTOM_TYPES/SAVE.REQUEST"
 )<{
   modelPayload: CustomTypeState;
 }>();

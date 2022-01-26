@@ -14,5 +14,7 @@ describe("Create Slices", () => {
     cy.get('input[data-cy=slice-name-input]').type('MySlice')
     cy.get('[data-cy=create-slice-modal]').submit()
     cy.location('pathname', {timeout: 5000}).should('eq', '/slices/MySlice/default-slice')
+    cy.visit('/slices/MySlice/default-slice')
+    cy.location('pathname', {timeout: 5000}).should('eq', '/slices/MySlice/default-slice')
   })
 })

@@ -97,6 +97,10 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     if (!storeInitiated) {
       const { store, persistor } = configureStore({
         environment: { env: serverState.env, warnings: [], configErrors: {} },
+        customTypes: {
+          localCustomTypes: serverState.customTypes,
+          remoteCustomTypes: serverState.remoteCustomTypes,
+        },
       });
       setStoreInitiated(true);
       setSMStore({ store, persistor });

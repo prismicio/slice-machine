@@ -50,8 +50,8 @@ const CustomTypeBuilderWithRouter = () => {
     })
   );
 
-  const customType = customTypes?.find((e) => e && e.id === router.query.ct);
-  const remoteCustomType = remoteCustomTypes?.find(
+  const customType = customTypes.find((e) => e && e.id === router.query.ct);
+  const remoteCustomType = remoteCustomTypes.find(
     (e) => e && e.id === router.query.ct
   );
 
