@@ -48,7 +48,6 @@ describe("DefaultClient", () => {
     test("bad response", async () => {
       const token = "biscuits";
       const base = "https://prismic.io";
-      const response = {};
 
       nock("https://user.internal-prismic.io", {
         reqheaders: {
