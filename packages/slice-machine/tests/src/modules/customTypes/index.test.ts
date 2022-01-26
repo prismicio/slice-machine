@@ -14,6 +14,7 @@ import { createCustomType } from "@src/modules/customTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { CustomType, ObjectTabs } from "@models/common/CustomType";
 
 const dummyCustomTypesState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -46,6 +47,32 @@ describe("[Custom types module]", () => {
       expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
         ...dummyCustomTypesState,
         localCustomTypes: dummyServerState.customTypes,
+      });
+    });
+    it("should update the custom types state given CUSTOM_TYPES/CREATE.SUCCESS action", () => {
+      const createdCustomType: CustomType<ObjectTabs> = {
+        id: "id",
+        label: "lama",
+        repeatable: false,
+        status: true,
+        tabs: {
+          Main: {
+            key: "Main",
+            value: {},
+          },
+        },
+      };
+
+      const action = createCustomTypesCreator.success({
+        newCustomType: createdCustomType,
+      });
+
+      expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
+        ...dummyCustomTypesState,
+        localCustomTypes: [
+          createdCustomType,
+          ...dummyCustomTypesState.localCustomTypes,
+        ],
       });
     });
   });
