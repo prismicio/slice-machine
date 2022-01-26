@@ -40,8 +40,7 @@ const CreateCustomtypeForm = ({
 }: {
   title: string;
   isOpen: boolean;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onSubmit: Function;
+  onSubmit: (values: { id: string }) => void;
   close: () => void;
   tabIds: ReadonlyArray<string>;
 }) => {
@@ -51,8 +50,7 @@ const CreateCustomtypeForm = ({
       widthInPx="530px"
       formId={formId}
       close={close}
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      onSubmit={(values: {}) => {
+      onSubmit={(values) => {
         onSubmit(values);
       }}
       initialValues={{

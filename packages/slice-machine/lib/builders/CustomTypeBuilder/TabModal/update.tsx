@@ -64,8 +64,7 @@ const CreateCustomtypeForm = ({
       formId={formId}
       close={close}
       cardProps={{ bodySx: { p: 0 } }}
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      onSubmit={(values: {}) => {
+      onSubmit={(values) => {
         onSubmit(values);
       }}
       initialValues={{

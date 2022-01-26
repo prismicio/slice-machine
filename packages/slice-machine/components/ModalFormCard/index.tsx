@@ -30,10 +30,9 @@ type ModalCardProps<T> = {
   onSubmit: (values: T) => void;
   initialValues: T;
   content: { title: string };
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  cardProps?: {};
+  cardProps?: React.ComponentProps<typeof Card>;
   omitFooter?: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
   dataCy?: string;
 };
 
@@ -56,8 +55,7 @@ function ModalCard<Values>({
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      onRequestClose={() => close()}
+      onRequestClose={close}
       contentLabel={title}
       style={{
         content: {
