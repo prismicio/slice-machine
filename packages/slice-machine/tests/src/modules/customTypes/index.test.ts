@@ -1,9 +1,19 @@
-import { customTypesReducer } from "@src/modules/customTypes";
+import {
+  createCustomTypeSaga,
+  createCustomTypesCreator,
+  customTypesReducer,
+} from "@src/modules/customTypes";
+import { testSaga } from "redux-saga-test-plan";
 import { CustomTypesStoreType } from "@src/modules/customTypes/types";
 import { getStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
+import { saveCustomType } from "@src/apiClient";
+import { createCustomType } from "@src/modules/customTypes/factory";
+import { push } from "connected-next-router";
+import { modalCloseCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 
 const dummyCustomTypesState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -37,6 +47,33 @@ describe("[Custom types module]", () => {
         ...dummyCustomTypesState,
         localCustomTypes: dummyServerState.customTypes,
       });
+    });
+  });
+
+  describe("createCustomTypeSaga", () => {
+    it("should call the api and dispatch the good actions", () => {
+      const actionPayload = { id: "id", label: "label", repeatable: true };
+      const customTypeCreated = createCustomType(
+        actionPayload.id,
+        actionPayload.label,
+        actionPayload.repeatable
+      );
+      const saga = testSaga(
+        createCustomTypeSaga,
+        createCustomTypesCreator.request(actionPayload)
+      );
+
+      saga.next().call(saveCustomType, customTypeCreated, {});
+      saga
+        .next()
+        .put(
+          createCustomTypesCreator.success({ newCustomType: customTypeCreated })
+        );
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+      saga.next().put(push("/cts/id"));
+      saga.next().isDone();
     });
   });
 });

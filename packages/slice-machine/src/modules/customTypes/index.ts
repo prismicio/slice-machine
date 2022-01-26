@@ -90,7 +90,7 @@ export const customTypesReducer: Reducer<
   }
 };
 
-function* createCustomTypeSaga({
+export function* createCustomTypeSaga({
   payload,
 }: ReturnType<typeof createCustomTypesCreator.request>) {
   const newCustomType = createCustomType(
