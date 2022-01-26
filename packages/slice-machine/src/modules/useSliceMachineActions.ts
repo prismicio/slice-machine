@@ -75,7 +75,7 @@ const useSliceMachineActions = () => {
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
 
-  // Custom types Store));
+  // Custom types Store
   const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
   const saveCustomTypes = (modelPayload: CustomTypeState) =>
