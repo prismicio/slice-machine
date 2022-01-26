@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import { GoPlus } from "react-icons/go";
 import {
   Box,
-  Flex,
   Button,
-  Text,
   Card as ThemeCard,
-  Link as ThemeLink,
+  Flex,
   Heading,
+  Link as ThemeLink,
+  Text,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
 
@@ -23,6 +23,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { selectLocalCustomTypes } from "@src/modules/customTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { isModalOpen } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 
 export interface CtPayload {
   repeatable: boolean;
@@ -121,15 +123,23 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 
 const CustomTypes: React.FunctionComponent = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { createCustomTypes } = useSliceMachineActions();
-  const { customTypes } = useSelector((store: SliceMachineStoreType) => ({
-    customTypes: selectLocalCustomTypes(store),
-  }));
+  const {
+    createCustomTypes,
+    openCreateCustomTypeModal,
+    closeCreateCustomTypeModal,
+  } = useSliceMachineActions();
+  const { customTypes, isCreateCustomTypeModalOpen } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      customTypes: selectLocalCustomTypes(store),
+      isCreateCustomTypeModalOpen: isModalOpen(
+        store,
+        ModalKeysEnum.CREATE_CUSTOM_TYPE
+      ),
+    })
+  );
 
   const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
     createCustomTypes(id, label, repeatable);
-    setIsOpen(false);
     void router.push(`/cts/${id}`);
   };
 
@@ -140,7 +150,7 @@ const CustomTypes: React.FunctionComponent = () => {
           customTypes.length ? (
             <Button
               data-cy="create-ct"
-              onClick={() => setIsOpen(true)}
+              onClick={openCreateCustomTypeModal}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -168,7 +178,7 @@ const CustomTypes: React.FunctionComponent = () => {
             "Click the + button on the top right to create your first custom type.",
             "It will be stored locally. You will then be able to push it to Prismic.",
           ]}
-          onCreateNew={() => setIsOpen(true)}
+          onCreateNew={openCreateCustomTypeModal}
           buttonText={"Create your first Custom Type"}
           documentationComponent={
             <>
@@ -196,10 +206,10 @@ const CustomTypes: React.FunctionComponent = () => {
         />
       )}
       <CreateCustomTypeModal
-        isOpen={isOpen}
+        isOpen={isCreateCustomTypeModalOpen}
         onSubmit={_onCreate}
         customTypes={customTypes}
-        close={() => setIsOpen(false)}
+        close={closeCreateCustomTypeModal}
       />
     </Container>
   );

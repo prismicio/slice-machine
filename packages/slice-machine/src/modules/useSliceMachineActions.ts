@@ -51,6 +51,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeCreateCustomTypeModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+  const openCreateCustomTypeModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const closeUpdateVersionModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
   const openUpdateVersionModal = () =>
@@ -73,7 +77,7 @@ const useSliceMachineActions = () => {
 
   // Custom types Store));
   const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypesCreator({ id, label, repeatable }));
+    dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
   const saveCustomTypes = (modelPayload: CustomTypeState) =>
     dispatch(saveCustomTypesCreator({ modelPayload }));
 
@@ -113,6 +117,8 @@ const useSliceMachineActions = () => {
     skipReview,
     closeUpdateVersionModal,
     openUpdateVersionModal,
+    closeCreateCustomTypeModal,
+    openCreateCustomTypeModal,
   };
 };
 

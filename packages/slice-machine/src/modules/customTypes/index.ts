@@ -1,10 +1,21 @@
 import { Reducer } from "redux";
 import { CustomTypesStoreType } from "./types";
-import { ActionType, createAction, getType } from "typesafe-actions";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { getStateCreator } from "@src/modules/environment";
+import { call, fork, put, takeLatest } from "redux-saga/effects";
+import { withLoader } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { saveCustomType } from "@src/apiClient";
+import { modalCloseCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
 
 const initialState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -18,13 +29,20 @@ export const saveCustomTypesCreator = createAction(
   modelPayload: CustomTypeState;
 }>();
 
-export const createCustomTypesCreator = createAction(
-  "CUSTOM_TYPES/CREATE.RESPONSE"
-)<{
-  id: string;
-  label: string;
-  repeatable: boolean;
-}>();
+export const createCustomTypesCreator = createAsyncAction(
+  "CUSTOM_TYPES/CREATE.REQUEST",
+  "CUSTOM_TYPES/CREATE.RESPONSE",
+  "CUSTOM_TYPES/CREATE.FAILURE"
+)<
+  {
+    id: string;
+    label: string;
+    repeatable: boolean;
+  },
+  {
+    newCustomType: CustomType<ObjectTabs>;
+  }
+>();
 
 type CustomTypesActions =
   | ActionType<typeof getStateCreator>
@@ -78,15 +96,11 @@ export const customTypesReducer: Reducer<
           return ct;
         }),
       };
-    case getType(createCustomTypesCreator):
+    case getType(createCustomTypesCreator.success):
       return {
         ...state,
         localCustomTypes: [
-          createCustomType(
-            action.payload.id,
-            action.payload.label,
-            action.payload.repeatable
-          ),
+          action.payload.newCustomType,
           ...state.localCustomTypes,
         ],
       };
@@ -94,3 +108,29 @@ export const customTypesReducer: Reducer<
       return state;
   }
 };
+
+function* createCustomTypeSaga({
+  payload,
+}: ReturnType<typeof createCustomTypesCreator.request>) {
+  const newCustomType = createCustomType(
+    payload.id,
+    payload.label,
+    payload.repeatable
+  );
+  yield call(saveCustomType, newCustomType, {});
+  yield put(createCustomTypesCreator.success({ newCustomType }));
+  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+}
+
+// Saga watchers
+function* watchCreateCustomType() {
+  yield takeLatest(
+    getType(createCustomTypesCreator.request),
+    withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE)
+  );
+}
+
+// Saga Exports
+export function* watchCustomTypeSagas() {
+  yield fork(watchCreateCustomType);
+}
