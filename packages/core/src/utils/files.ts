@@ -98,7 +98,11 @@ function readFirstOf<
 }
 
 function isDirectory(source: string): boolean {
-  return fs.lstatSync(source).isDirectory();
+  try {
+    return fs.lstatSync(source).isDirectory();
+  } catch (e) {
+    return false;
+  }
 }
 
 function isFile(source: string): boolean {
