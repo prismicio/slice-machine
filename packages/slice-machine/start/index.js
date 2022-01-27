@@ -14,7 +14,7 @@ const path = require("path");
 const pkg = require("../package.json");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Utils, Models } = require("@slicemachine/core");
+const { Utils } = require("@slicemachine/core");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const moduleAlias = require("module-alias");
 
@@ -196,12 +196,11 @@ async function run() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
-  const framework = Utils.Framework.defineFramework(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    manifestInfo.content,
+  const framework = Utils.Framework.defineFramework({
     cwd,
-    Models.SupportedFrameworks
-  );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    manifest: manifestInfo.content,
+  });
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const validateRes = await validateUserAuth();
 
