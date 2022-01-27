@@ -74,7 +74,7 @@ export class InitTracker {
   }
 
   _createSegmentIdentifier(): SegmentIdentifier {
-    return this.#userId
+    return !!this.#userId
       ? { userId: this.#userId }
       : { anonymousId: this.#anonymousId };
   }
