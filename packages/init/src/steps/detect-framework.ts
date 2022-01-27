@@ -45,10 +45,11 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const maybeFramework = Utils.Framework.detectFramework(
+    const maybeFramework = Utils.Framework.defineFramework({
       cwd,
-      Object.values(Models.Frameworks)
-    );
+      supportedFrameworks: Object.values(Models.Frameworks),
+    });
+
     spinner.stop();
 
     if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
@@ -58,7 +59,7 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
 
     const nameToPrint = Utils.Framework.fancyName(maybeFramework);
 
-    if (Utils.Framework.isUnsupported(maybeFramework)) {
+    if (!Utils.Framework.isFrameworkSupported(maybeFramework)) {
       Utils.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);

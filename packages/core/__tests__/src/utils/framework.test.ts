@@ -6,7 +6,7 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("fs");
 
-describe("framework.detectFramework", () => {
+describe("framework.defineFrameworks", () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -16,10 +16,7 @@ describe("framework.detectFramework", () => {
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
     mockedFs.readFileSync.mockReturnValue(JSON.stringify({ dependencies: {} }));
 
-    const result = FrameworkUtils.detectFramework(
-      __dirname,
-      Object.values(Frameworks)
-    );
+    const result = FrameworkUtils.defineFramework({ cwd: __dirname });
 
     expect(mockedFs.lstatSync).toHaveBeenCalled();
     expect(result).toEqual(Frameworks.vanillajs);
@@ -41,12 +38,14 @@ describe("framework.detectFramework", () => {
       })
     );
 
-    const result = FrameworkUtils.detectFramework(
-      __dirname,
-      Object.values(Frameworks)
-    );
+    // supported frameworks is all frameworks as gatsby is not yet supported.
+    const result = FrameworkUtils.defineFramework({
+      cwd: __dirname,
+      supportedFrameworks: Object.values(Frameworks),
+    });
     expect(result).toEqual(Frameworks.gatsby);
   });
+
   valuesToCheck.forEach((value) => {
     test("it will return a support framework when a support framework is found in the package.json", () => {
       const mockedFs = mocked(fs, true);
@@ -60,17 +59,12 @@ describe("framework.detectFramework", () => {
         })
       );
 
-      const fallback =
-        value === Frameworks.gatsby ? Frameworks.gatsby : Frameworks.vanillajs;
-
-      const wanted = FrameworkUtils.isValidFramework(value as Frameworks)
+      // if framework is not supported, vanillajs should always be sent back.
+      const wanted = FrameworkUtils.isFrameworkSupported(value as Frameworks)
         ? value
-        : fallback;
+        : Frameworks.vanillajs;
 
-      const result = FrameworkUtils.detectFramework(
-        __dirname,
-        Object.values(Frameworks)
-      );
+      const result = FrameworkUtils.defineFramework({ cwd: __dirname });
       expect(mockedFs.lstatSync).toHaveBeenCalled();
       expect(result).toEqual(wanted);
     });
@@ -85,9 +79,9 @@ describe("framework.detectFramework", () => {
     const spy = jest
       .spyOn(console, "error")
       .mockImplementationOnce(() => undefined);
-    expect(() =>
-      FrameworkUtils.detectFramework(__dirname, Object.values(Frameworks))
-    ).toThrow(wanted);
+    expect(() => FrameworkUtils.defineFramework({ cwd: __dirname })).toThrow(
+      wanted
+    );
     expect(spy).toHaveBeenCalledWith(wanted);
   });
 });

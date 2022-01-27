@@ -26,7 +26,7 @@ function validate(config: Models.Manifest): ConfigErrors {
 
   if (
     config.framework &&
-    !Utils.Framework.isValidFramework(Models.Frameworks[config.framework])
+    !Utils.Framework.isFrameworkSupported(Models.Frameworks[config.framework])
   ) {
     const options = Object.values(Models.SupportedFrameworks);
 
@@ -111,11 +111,11 @@ export default async function getEnv(
       },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
-      framework: Utils.Framework.defineFramework(
-        manifestInfo.content,
+      framework: Utils.Framework.defineFramework({
         cwd,
-        Models.SupportedFrameworks
-      ),
+        supportedFrameworks: Models.SupportedFrameworks,
+        manifest: manifestInfo.content,
+      }),
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },
