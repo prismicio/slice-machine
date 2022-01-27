@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.1.0",
+  "version": "1.1.1-alpha.0",
   "license": "MIT",
   "description": "The easiest way to add Slice Machine to your project",
   "bin": {
@@ -17,7 +17,7 @@
     "watch": "siroc build --watch"
   },
   "dependencies": {
-    "@slicemachine/core": "1.1.0",
+    "@slicemachine/core": "1.1.1-alpha.0",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",
     "axios": "^0.24.0",
