@@ -25,12 +25,12 @@ afterAll(() => {
 });
 
 describe("communication.getUserPrfile", () => {
-  test("when called with cookies it should fetch the user profile form 'https://user.prismic.io/profile`", async () => {
+  test("when called with cookies it should fetch the user profile form 'https://user.internal-prismic.io/profile`", async () => {
     const token = "biscuits";
     const cookie = `prismic-auth=${token}`;
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${token}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${token}`)
       .get("/profile")
       .reply(200, {
         userId: "1234",
@@ -49,8 +49,8 @@ describe("communication.getUserPrfile", () => {
     const token = "biscuits";
     const cookie = `prismic-auth=${token}`;
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${token}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${token}`)
       .get("/profile")
       .reply(200, {});
 
@@ -119,8 +119,8 @@ describe("communication.validateSessionAndGetProfile", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(403);
 
@@ -146,8 +146,8 @@ describe("communication.validateSessionAndGetProfile", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(200, {
         userId,
