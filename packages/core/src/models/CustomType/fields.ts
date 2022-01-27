@@ -18,6 +18,7 @@ export enum FieldType {
   Embed = "Embed",
   Number = "Number",
   UID = "UID",
+  IntegrationFields = "IntegrationFields",
 }
 
 export const FieldTypeCodec = t.keyof({
