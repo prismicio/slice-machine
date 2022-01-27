@@ -21,7 +21,7 @@ const defaultAxiosConfig = {
 export const saveCustomType = (
   customType: CustomType<ObjectTabs>,
   mockConfig: CustomTypeMockConfig
-): Promise<AxiosResponse<Record<string, never>>> => {
+): Promise<AxiosResponse> => {
   const requestBody: SaveCustomTypeBody = {
     model: customType,
     mockConfig: mockConfig,

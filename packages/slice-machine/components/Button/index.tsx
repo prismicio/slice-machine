@@ -5,7 +5,7 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 
 export type SliceMachineButtonProps = {
   form?: string;
-  type?: "submit" | "reset" | "button" | undefined;
+  type?: "submit" | "reset" | "button";
   isLoading?: boolean;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;

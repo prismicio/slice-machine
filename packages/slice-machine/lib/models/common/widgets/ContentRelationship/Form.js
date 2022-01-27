@@ -27,9 +27,7 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }) => {
-  const { customTypes } = useSelector((store) => ({
-    customTypes: selectLocalCustomTypes(store),
-  }));
+  const customTypes = useSelector(selectLocalCustomTypes);
 
   const options = customTypes.map((ct) => ({
     value: ct?.id,

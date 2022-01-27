@@ -12,12 +12,6 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 
-type FormValues = {
-  repeatable: boolean;
-  id: string;
-  label: string;
-};
-
 const CreateCustomTypeModal: React.FunctionComponent = () => {
   const { createCustomTypes, closeCreateCustomTypeModal } =
     useSliceMachineActions();
@@ -42,7 +36,7 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
       widthInPx="530px"
       formId="create-custom-type"
       close={closeCreateCustomTypeModal}
-      onSubmit={(values: FormValues) => {
+      onSubmit={(values) => {
         createCustomTypes(
           values.id,
           values.label || values.id,
