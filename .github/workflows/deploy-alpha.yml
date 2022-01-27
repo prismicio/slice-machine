@@ -15,6 +15,7 @@ jobs:
     environment: alpha
     steps: 
       - uses: actions/checkout@v2
+        with: ${{ github.event.workflow_run.head_branch }}
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
