@@ -10,13 +10,18 @@ import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
+import { CustomType, ObjectTabs } from "@models/common/CustomType";
 
 // Action Creators
-export const getEnvironmentCreator = createAction(
-  "ENVIRONMENT/GET.RESPONSE"
-)<EnvironmentStoreType>();
+export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
+  env: FrontEndEnvironment;
+  warnings: ReadonlyArray<Warning>;
+  configErrors: ConfigErrors;
+  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+}>();
 
-type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
+type EnvironmentActions = ActionType<typeof getStateCreator>;
 
 // Selectors
 export const getEnvironment = (
@@ -105,10 +110,12 @@ export const environmentReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getEnvironmentCreator):
+    case getType(getStateCreator):
       return {
         ...state,
-        ...action.payload,
+        env: action.payload.env,
+        warnings: action.payload.warnings,
+        configErrors: action.payload.configErrors,
       };
     default:
       return state;
