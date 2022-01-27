@@ -5,6 +5,7 @@ import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/lib/storage";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Persistor } from "redux-persist/es/types"; // defaults to localStorage for web
+import { createRouterMiddleware } from "connected-next-router";
 import rootSaga from "./saga";
 
 const persistConfig = {
@@ -13,6 +14,7 @@ const persistConfig = {
   whitelist: ["userContext"],
 };
 
+const routerMiddleware = createRouterMiddleware();
 const sagaMiddleware = createSagaMiddleware();
 
 declare const window: {
@@ -23,7 +25,7 @@ declare const window: {
 export default function configureStore(
   preloadedState: Partial<SliceMachineStoreType> = {}
 ): { store: Store; persistor: Persistor } {
-  const middlewares = [sagaMiddleware];
+  const middlewares = [sagaMiddleware, routerMiddleware];
   const enhancers = [applyMiddleware(...middlewares)];
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

@@ -274,7 +274,7 @@ function* checkSetupSaga(
   }
 }
 
-function* failCheckSetupSaga() {
+export function* failCheckSetupSaga() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const framework: Frameworks = yield select(getFramework);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

@@ -1,19 +1,16 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useContext, useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import { GoPlus } from "react-icons/go";
 import {
   Box,
-  Flex,
   Button,
-  Text,
   Card as ThemeCard,
-  Link as ThemeLink,
+  Flex,
   Heading,
+  Link as ThemeLink,
+  Text,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
-
-import { CustomTypesContext } from "src/models/customTypes/context";
 
 import Container from "components/Container";
 import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
@@ -21,13 +18,10 @@ import Grid from "components/Grid";
 import Header from "components/Header";
 import EmptyState from "components/EmptyState";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
-
-export interface CtPayload {
-  repeatable: boolean;
-  id: string;
-  previewUrl: string;
-  label: string;
-}
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 // To isolate later
 const CTName: React.FunctionComponent<{ ctName: string }> = ({ ctName }) => {
@@ -92,7 +86,9 @@ const CTThumbnail = ({
   );
 };
 // To isolate later
-const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
+const Card: React.FunctionComponent<{ ct: CustomType<ObjectTabs> }> = ({
+  ct,
+}) => (
   <Link href={`/cts/${ct.id}`} passHref>
     <ThemeLink variant="links.invisible">
       <ThemeCard
@@ -104,7 +100,10 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
           transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
         }}
       >
-        <CTThumbnail preview={{ url: ct.previewUrl }} heightInPx="287px" />
+        <CTThumbnail
+          preview={{ url: ct.previewUrl || "" }}
+          heightInPx="287px"
+        />
         <Flex
           mt={3}
           sx={{ alignItems: "center", justifyContent: "space-between" }}
@@ -118,21 +117,10 @@ const Card: React.FunctionComponent<{ ct: CtPayload }> = ({ ct }) => (
 );
 
 const CustomTypes: React.FunctionComponent = () => {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { customTypes, onCreate } = useContext(CustomTypesContext);
-
-  const _onCreate = ({ id, label, repeatable }: CtPayload): void => {
-    if (onCreate) {
-      onCreate(id, {
-        label,
-        repeatable,
-      });
-      setIsOpen(false);
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      router.push(`/cts/${id}`);
-    }
-  };
+  const { openCreateCustomTypeModal } = useSliceMachineActions();
+  const { customTypes } = useSelector((store: SliceMachineStoreType) => ({
+    customTypes: selectLocalCustomTypes(store),
+  }));
 
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -141,7 +129,7 @@ const CustomTypes: React.FunctionComponent = () => {
           customTypes.length ? (
             <Button
               data-cy="create-ct"
-              onClick={() => setIsOpen(true)}
+              onClick={openCreateCustomTypeModal}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -169,7 +157,7 @@ const CustomTypes: React.FunctionComponent = () => {
             "Click the + button on the top right to create your first custom type.",
             "It will be stored locally. You will then be able to push it to Prismic.",
           ]}
-          onCreateNew={() => setIsOpen(true)}
+          onCreateNew={openCreateCustomTypeModal}
           buttonText={"Create your first Custom Type"}
           documentationComponent={
             <>
@@ -191,17 +179,12 @@ const CustomTypes: React.FunctionComponent = () => {
           defineElementKey={(ct: CustomType<ObjectTabs>) => ct.id}
           renderElem={(ct: CustomType<ObjectTabs>) => (
             <Link passHref href={`/cts/${ct.id}`} key={ct.id}>
-              <Card ct={ct as CtPayload} />
+              <Card ct={ct} />
             </Link>
           )}
         />
       )}
-      <CreateCustomTypeModal
-        isOpen={isOpen}
-        onSubmit={_onCreate}
-        customTypes={customTypes}
-        close={() => setIsOpen(false)}
-      />
+      <CreateCustomTypeModal />
     </Container>
   );
 };
