@@ -119,13 +119,13 @@ export async function maybeExistingRepo(
   cookies: string,
   cwd: string,
   base = DEFAULT_BASE
-): Promise<{ name: string; existing: boolean }> {
+): Promise<{ repository: string; existing: boolean }> {
   const token = parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token);
 
   if (repos.length === 0) {
     const name = await promptForRepoName(base);
-    return { existing: false, name };
+    return { existing: false, repository: name };
   }
 
   const choices = sortReposForPrompt(repos, base, cwd);
@@ -150,7 +150,7 @@ export async function maybeExistingRepo(
 
   if (res.repoName === CREATE_REPO) {
     const name = await promptForRepoName(base);
-    return { existing: false, name };
+    return { existing: false, repository: name };
   }
-  return { existing: true, name: res.repoName };
+  return { existing: true, repository: res.repoName };
 }
