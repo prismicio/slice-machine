@@ -1,103 +1,189 @@
 import { describe, expect, test, jest, afterEach } from "@jest/globals";
-import { Frameworks } from "../../../src/models/Framework";
+import { Frameworks, SupportedFrameworks } from "../../../src/models/Framework";
+import { JsonPackage } from "../../../src/filesystem/pkg";
 import * as FrameworkUtils from "../../../src/utils/framework";
 import * as fs from "fs";
 import { mocked } from "ts-jest/utils";
+import { Manifest } from "../../../src/models/Manifest";
 
 jest.mock("fs");
+
+describe("framework.fancyName", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test("it should return a fancy name", () => {
+    expect(FrameworkUtils.fancyName(Frameworks.gatsby)).toEqual("Gatsby");
+  });
+
+  test("it should return a Next.js for next (special case)", () => {
+    expect(FrameworkUtils.fancyName(Frameworks.next)).toEqual("Next.js");
+  });
+});
+
+describe("framework.isFrameworkSupported", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const supportedFramework = SupportedFrameworks[0];
+  const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
+
+  test("it should return true to supported frameworks", () => {
+    expect(FrameworkUtils.isFrameworkSupported(supportedFramework)).toEqual(
+      true
+    );
+  });
+
+  test("it should return false to unsupported frameworks", () => {
+    expect(FrameworkUtils.isFrameworkSupported(unsupportedFramework)).toEqual(
+      false
+    );
+  });
+});
+
+describe("framework.detectFramework", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test("it should detect a supported framework", () => {
+    const pkg: JsonPackage = {
+      name: "fake",
+      version: "fakeBeta",
+      dependencies: {
+        [Frameworks.next]: "beta",
+      },
+    };
+
+    const result: Frameworks = FrameworkUtils.detectFramework(pkg);
+    expect(result).toEqual(Frameworks.next);
+  });
+
+  test("it should not detect an unsupported framework and fallback to vanillajs", () => {
+    const pkg: JsonPackage = {
+      name: "fake",
+      version: "fakeBeta",
+      dependencies: {
+        [Frameworks.next]: "beta",
+      },
+    };
+
+    // simulate supporting 0 frameworks.
+    const result: Frameworks = FrameworkUtils.detectFramework(pkg, []);
+    expect(result).toEqual(Frameworks.vanillajs);
+  });
+});
 
 describe("framework.defineFrameworks", () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test("it defaults to vanillajs when no framework is found in the package.json", () => {
-    const mockedFs = mocked(fs, true);
-    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
-    mockedFs.readFileSync.mockReturnValue(JSON.stringify({ dependencies: {} }));
+  test("it should take the framework from the pkg json if there isn't in the manifest", () => {
+    const fakeManifest: Manifest = {
+      apiEndpoint: "fake api endpoint",
+    };
 
-    const result = FrameworkUtils.defineFramework({ cwd: __dirname });
-
-    expect(mockedFs.lstatSync).toHaveBeenCalled();
-    expect(result).toEqual(Frameworks.vanillajs);
-  });
-
-  // poor mans property based testing
-  const valuesToCheck: string[] = [...Object.values(Frameworks), "", "foo"];
-
-  test("gatsby", () => {
     const mockedFs = mocked(fs, true);
     mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
     mockedFs.readFileSync.mockReturnValue(
       JSON.stringify({
         dependencies: {
-          [Frameworks.gatsby]: "beta",
-          [Frameworks.react]: "beta",
+          [Frameworks.next]: "beta",
         },
       })
     );
 
-    // supported frameworks is all frameworks as gatsby is not yet supported.
-    const result = FrameworkUtils.defineFramework({
-      cwd: __dirname,
-      supportedFrameworks: Object.values(Frameworks),
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
     });
-    expect(result).toEqual(Frameworks.gatsby);
+    expect(result).toEqual(Frameworks.next);
   });
 
-  valuesToCheck.forEach((value) => {
-    test("it will return a support framework when a support framework is found in the package.json", () => {
-      const mockedFs = mocked(fs, true);
-      mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+  test("it should take the framework from the manifest", () => {
+    const fakeManifest: Manifest = {
+      apiEndpoint: "fake api endpoint",
+      framework: Frameworks.next,
+    };
 
-      mockedFs.readFileSync.mockReturnValue(
-        JSON.stringify({
-          dependencies: {
-            [value]: "beta",
-          },
-        })
-      );
-
-      // if framework is not supported, vanillajs should always be sent back.
-      const wanted = FrameworkUtils.isFrameworkSupported(value as Frameworks)
-        ? value
-        : Frameworks.vanillajs;
-
-      const result = FrameworkUtils.defineFramework({ cwd: __dirname });
-      expect(mockedFs.lstatSync).toHaveBeenCalled();
-      expect(result).toEqual(wanted);
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
     });
+    expect(result).toEqual(Frameworks.next);
   });
 
-  test("it will throw an error when no package.json is found", () => {
-    const wanted =
-      "[api/env]: Unrecoverable error. Could not find package.json. Exiting..";
+  test("it should take the framework from the pkg json if the one in manifest isn't supported", () => {
+    const fakeManifest: Manifest = {
+      apiEndpoint: "fake api endpoint",
+      framework: FrameworkUtils.UnsupportedFrameWorks[0],
+    };
+
     const mockedFs = mocked(fs, true);
-    mockedFs.lstatSync.mockReturnValue(undefined);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
 
-    const spy = jest
-      .spyOn(console, "error")
-      .mockImplementationOnce(() => undefined);
-    expect(() => FrameworkUtils.defineFramework({ cwd: __dirname })).toThrow(
-      wanted
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [Frameworks.next]: "beta",
+        },
+      })
     );
-    expect(spy).toHaveBeenCalledWith(wanted);
-  });
-});
 
-describe("framework.fancyName", () => {
-  test("next should be Next.js", () => {
-    const wanted = "Next.js";
-    const result = FrameworkUtils.fancyName(Frameworks.next);
-    expect(result).toBe(wanted);
-  });
-
-  test("else the first letter should be capitalised", () => {
-    const values = Object.values(Frameworks);
-    values.forEach((value) => {
-      const result = FrameworkUtils.fancyName(value).charAt(0);
-      expect(result).toBe(result.toUpperCase());
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
     });
+    expect(result).toEqual(Frameworks.next);
+  });
+
+  test("it should default to vanillajs if no manifest and the pkg json framework is unsupported", () => {
+    const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [unsupportedFramework]: "beta",
+        },
+      })
+    );
+
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+    });
+    expect(result).toEqual(Frameworks.vanillajs);
+  });
+
+  test("it should default to vanillajs if package and manifest aren't good", () => {
+    const unsupportedFramework = FrameworkUtils.UnsupportedFrameWorks[0];
+
+    const fakeManifest: Manifest = {
+      apiEndpoint: "fake api endpoint",
+      framework: unsupportedFramework,
+    };
+
+    const mockedFs = mocked(fs, true);
+    mockedFs.lstatSync.mockReturnValue({ dev: 1 } as fs.Stats);
+
+    mockedFs.readFileSync.mockReturnValue(
+      JSON.stringify({
+        dependencies: {
+          [unsupportedFramework]: "beta",
+        },
+      })
+    );
+
+    const result: Frameworks = FrameworkUtils.defineFramework({
+      cwd: "not important",
+      manifest: fakeManifest,
+    });
+    expect(result).toEqual(Frameworks.vanillajs);
   });
 });
