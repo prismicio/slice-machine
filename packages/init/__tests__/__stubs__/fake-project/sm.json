@@ -1,4 +1,4 @@
 {
-  "apiEndpoint": "https://example.com",
+  "apiEndpoint": "https://foo-bar.prismic.io/api/v2",
   "libraries": ["~/slices"]
 }

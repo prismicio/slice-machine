@@ -59,37 +59,40 @@ export async function generateScreenshot(
     (v: Models.VariationAsObject) => v.id
   );
 
-  const promises: Promise<ScreenshotUI | Error>[] = variationIds.map(
+  const promises: Promise<ScreenshotUI>[] = variationIds.map(
     (id: Models.VariationAsObject["id"]) =>
       generateForVariation(env, libraryName, slice, id)
   );
-  const results: (ScreenshotUI | Error)[] = await Promise.all(promises);
+
+  const results = await Promise.allSettled(promises);
 
   return results.reduce(
     (
       acc: ScreenshotResults,
-      screenshotOrError: ScreenshotUI | Error,
+      result: PromiseSettledResult<ScreenshotUI>,
       index: number
     ) => {
-      if (screenshotOrError instanceof Error) {
-        return {
-          screenshots: acc.screenshots,
-          failure: [
-            ...acc.failure,
-            { error: screenshotOrError, variationId: variationIds[index] },
-          ],
-        };
-      }
+      const key = variationIds[index];
 
-      return {
-        screenshots: {
-          ...acc.screenshots,
-          [variationIds[index]]: screenshotOrError,
-        },
-        failure: acc.failure,
-      };
+      const screenshots =
+        result.status === "fulfilled"
+          ? {
+              ...acc.screenshots,
+              [key]: result.value,
+            }
+          : acc.screenshots;
+
+      const failure =
+        result.status === "rejected"
+          ? [
+              ...acc.failure,
+              { error: result.reason as Error, variationId: key },
+            ]
+          : acc.failure;
+
+      return { screenshots, failure };
     },
-    { screenshots: {}, failure: [] }
+    { screenshots: {}, failure: [] } as ScreenshotResults
   );
 }
 
@@ -98,7 +101,7 @@ async function generateForVariation(
   libraryName: string,
   slice: Models.SliceAsObject,
   variationId: string
-): Promise<ScreenshotUI | Error> {
+): Promise<ScreenshotUI> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     env.manifest.localSliceSimulatorURL
@@ -112,11 +115,10 @@ async function generateForVariation(
     .variation(variationId)
     .preview();
 
-  const maybeError = await Puppeteer.handleScreenshot({
+  await Puppeteer.handleScreenshot({
     screenshotUrl,
     pathToFile,
   });
-  if (maybeError instanceof Error) return maybeError;
   return createScreenshotUI(env.baseUrl, pathToFile);
 }
 

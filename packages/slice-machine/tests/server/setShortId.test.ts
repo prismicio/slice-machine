@@ -1,21 +1,11 @@
-import MockedUserProfile from "../__mockData__/userProfile";
-import MockedBackendEnv from "../__mockData__/envBackend";
+import MockedUserProfile from "../__mocks__/userProfile";
+import MockedBackendEnv from "../__mocks__/envBackend";
 import { setShortId } from "../../server/src/api/services/setShortId";
 import { vol } from "memfs";
 import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/src/models";
-
-const mockedUpdateProfile = jest.fn();
-jest.mock("@lib/models/common/http/DefaultClient", () => {
-  const actualClient = jest.requireActual(
-    "@lib/models/common/http/DefaultClient"
-  );
-
-  return {
-    ...actualClient,
-    profile: () => mockedUpdateProfile(),
-  };
-});
+import nock from "nock";
+import path from "path";
 
 jest.mock(`fs`, () => {
   const { vol } = jest.requireActual("memfs");
@@ -28,20 +18,29 @@ describe("setShortId", () => {
   });
 
   test("it should set the short ID", async () => {
-    const sharedConfig: PrismicSharedConfig = { base: "fakeBase", cookies: "" };
+    const fakeCookie = "biscuits";
+    const sharedConfig: PrismicSharedConfig = {
+      base: "fakeBase",
+      cookies: `prismic-auth=${fakeCookie}`,
+    };
     vol.fromJSON(
       { ".prismic": JSON.stringify(sharedConfig, null, "\t") },
       os.homedir()
     );
-    mockedUpdateProfile.mockResolvedValue(MockedUserProfile);
 
-    const res = await setShortId(MockedBackendEnv, "fakeToken");
-    expect(res instanceof Error).toBe(false);
+    nock("https://user.internal-prismic.io/", {
+      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
+    })
+      .get("/profile")
+      .reply(200, JSON.stringify(MockedUserProfile));
+
+    const res = await setShortId(MockedBackendEnv, fakeCookie);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
-      .readFileSync(`${os.homedir()}/.prismic`)
+      .readFileSync(path.join(os.homedir(), ".prismic"))
       .toString();
+
     const expectedPrismicSharedConfig: PrismicSharedConfig = {
       ...sharedConfig,
       shortId: MockedUserProfile.shortId,
@@ -52,11 +51,46 @@ describe("setShortId", () => {
   });
 
   test("it should return an error", async () => {
-    const errorMessage = "fakeErrorMessage";
-    mockedUpdateProfile.mockResolvedValue(new Error(errorMessage));
+    const fakeCookie = "biscuits";
+    const sharedConfig: PrismicSharedConfig = {
+      base: "fakeBase",
+      cookies: `prismic-auth=${fakeCookie}`,
+    };
+    vol.fromJSON(
+      { ".prismic": JSON.stringify(sharedConfig, null, "\t") },
+      os.homedir()
+    );
 
-    const res = await setShortId(MockedBackendEnv, "fakeToken");
-    expect(res instanceof Error).toBe(true);
-    expect((res as Error).message).toBe(errorMessage);
+    nock("https://user.internal-prismic.io/", {
+      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
+    })
+      .get("/profile")
+      .reply(200, {});
+
+    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
+      "Unable to parse profile: {}"
+    );
+  });
+
+  test("on network issues should throw an error", async () => {
+    const fakeCookie = "biscuits";
+    const sharedConfig: PrismicSharedConfig = {
+      base: "fakeBase",
+      cookies: `prismic-auth=${fakeCookie}`,
+    };
+    vol.fromJSON(
+      { ".prismic": JSON.stringify(sharedConfig, null, "\t") },
+      os.homedir()
+    );
+
+    nock("https://user.internal-prismic.io/", {
+      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
+    })
+      .get("/profile")
+      .reply(403);
+
+    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
+      "Request failed with status code 403"
+    );
   });
 });

@@ -305,4 +305,4 @@ router.use("*", async function (req: express.Request, res: express.Response) {
   });
 });
 
-module.exports = router;
+export default router;

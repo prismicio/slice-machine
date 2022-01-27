@@ -5,6 +5,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
 
 import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
+import axios from "axios";
 
 interface ApiSettings {
   STAGE: string;
@@ -124,28 +125,17 @@ export default class DefaultClient {
     );
   }
 
-  static async profile(
-    base: string,
-    auth: string
-  ): Promise<Error | UserProfile> {
-    try {
-      const result = await fetch(`${createApiUrl(base, UserService)}profile`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-        },
-      });
+  static async profile(base: string, auth: string): Promise<UserProfile> {
+    const result = await axios.get(
+      `${createApiUrl(base, UserService)}profile`,
+      { headers: { Authorization: `Bearer ${auth}` } }
+    );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsResult = await result.json();
-
-      return getOrElseW(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        () => new Error(`Unable to parse profile: ${jsResult}`)
-      )(UserProfile.decode(jsResult));
-    } catch (e) {
-      return e as Error;
-    }
+    return getOrElseW(() => {
+      throw new Error(
+        `Unable to parse profile: ${JSON.stringify(result.data)}`
+      );
+    })(UserProfile.decode(result.data));
   }
 
   constructor(

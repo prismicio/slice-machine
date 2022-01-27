@@ -25,8 +25,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Tracker from "@src/tracker";
-
-Modal.setAppElement("#__next");
+import preferWroomBase from "../../lib/utils/preferWroomBase";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";
@@ -34,6 +33,8 @@ interface ValidAuthStatus extends CheckAuthStatusResponse {
 }
 
 const LoginModal: React.FunctionComponent = () => {
+  Modal.setAppElement("#__next");
+
   const { env, isOpen, isLoginLoading } = useSelector(
     (store: SliceMachineStoreType) => ({
       isOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
@@ -46,7 +47,7 @@ const LoginModal: React.FunctionComponent = () => {
     useSliceMachineActions();
 
   const { addToast } = useToasts();
-  const prismicBase = env.prismicAPIUrl;
+  const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
     buildEndpoints(prismicBase).Dashboard.cliLogin
   }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;
@@ -69,8 +70,9 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60
       );
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      Tracker.get().identifyUser(userId);
+
+      void Tracker.get().identifyUser(userId);
+
       addToast("Logged in", { appearance: "success" });
       stopLoadingLogin();
       closeLoginModal();
