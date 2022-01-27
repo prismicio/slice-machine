@@ -12,7 +12,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
 import { Utils } from "@slicemachine/core";
-import * as communication from "../src/utils/communication";
+import * as communication from "../../src/utils/communication";
 
 jest.mock("fs");
 
