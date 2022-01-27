@@ -3,14 +3,11 @@
  */
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, fireEvent } from "../test-utils";
+import { render, fireEvent } from "@testing-library/react";
 import LoginModal from "@components/LoginModal";
-import { ModalKeysEnum, ModalStoreType } from "@src/modules/modal/types";
-import { LoadingKeysEnum, LoadingStoreType } from "@src/modules/loading/types";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
-import { EnvironmentStoreType } from "@src/modules/environment/types";
+import { useSelector, useDispatch } from "react-redux";
 import ToastProvider from "../../src/ToastProvider";
-// import { AnalyticsBrowser } from "@segment/analytics-next";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 
@@ -24,6 +21,15 @@ jest.mock("@segment/analytics-next", () => {
     standalone: Promise.resolve(NativeTrackerMocks),
   };
 });
+
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+  useSelector: jest.fn(),
+  useDispatch: () => mockDispatch,
+}));
+
+const useSelectorMock = useSelector as jest.Mock;
+const useDispatchMock = useDispatch() as jest.Mock;
 
 jest.mock("react-toast-notifications", () => {
   return {
@@ -49,11 +55,6 @@ const App = () => (
   </ToastProvider>
 );
 
-// Mock segement stuff
-// intercepts /api/auth/start
-// Intercept api polling
-// handle window.open
-
 const server = setupServer(
   rest.post("/api/auth/start", (_, res, ctx) => {
     return res(ctx.json({}));
@@ -71,6 +72,10 @@ const server = setupServer(
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+beforeEach(() => {
+  useSelectorMock.mockClear();
+  useDispatchMock.mockClear();
+});
 
 describe("LoginModal", () => {
   window.open = jest.fn();
@@ -80,27 +85,20 @@ describe("LoginModal", () => {
   document.body.appendChild(div);
 
   test("when given a prismic url in env it should open to primsic.io/dashboard", () => {
-    const result = render(<App />, {
-      preloadedState: {
-        environment: {
-          env: {
-            prismicAPIUrl: "https://prismic.io",
-            sliceMachineAPIUrl: "http://localhost:9999/",
-            manifest: {
-              apiEndpoint: "https://foo.prismic.io/api/v2",
-            },
-          } as FrontEndEnvironment,
-        } as EnvironmentStoreType,
-        modal: {
-          [ModalKeysEnum.LOGIN]: true,
-        } as ModalStoreType,
-        loading: {
-          [LoadingKeysEnum.LOGIN]: false,
-        } as LoadingStoreType,
-      },
-    });
+    useSelectorMock.mockImplementation(() => ({
+      env: {
+        prismicAPIUrl: "https://prismic.io",
+        sliceMachineAPIUrl: "http://localhost:9999/",
+        manifest: {
+          apiEndpoint: "https://foo.prismic.io/api/v2",
+        },
+      } as FrontEndEnvironment,
+      isOpen: true,
+      isLoginLoading: true,
+    }));
 
-    fireEvent.click(result.getByText("Signin to Prismic"));
+    const result = render(<App />);
+
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
       "https://prismic.io/dashboard/cli/login?source=slice-machine&port=9999&path=/api/auth"
@@ -108,27 +106,20 @@ describe("LoginModal", () => {
   });
 
   test("when given wroom.io url it should open to wroom.io/dashboard", () => {
-    const result = render(<App />, {
-      preloadedState: {
-        environment: {
-          env: {
-            prismicAPIUrl: "https://prismic.io",
-            sliceMachineAPIUrl: "http://localhost:9999/",
-            manifest: {
-              apiEndpoint: "https://foo.wroom.io/api/v2",
-            },
-          } as FrontEndEnvironment,
-        } as EnvironmentStoreType,
-        modal: {
-          [ModalKeysEnum.LOGIN]: true,
-        } as ModalStoreType,
-        loading: {
-          [LoadingKeysEnum.LOGIN]: false,
-        } as LoadingStoreType,
-      },
-    });
+    useSelectorMock.mockImplementation(() => ({
+      env: {
+        prismicAPIUrl: "https://prismic.io",
+        sliceMachineAPIUrl: "http://localhost:9999/",
+        manifest: {
+          apiEndpoint: "https://foo.wroom.io/api/v2",
+        },
+      } as FrontEndEnvironment,
+      isOpen: true,
+      isLoginLoading: true,
+    }));
 
-    fireEvent.click(result.getByText("Signin to Prismic"));
+    const result = render(<App />);
+
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
       "href",
       "https://wroom.io/dashboard/cli/login?source=slice-machine&port=9999&path=/api/auth"
