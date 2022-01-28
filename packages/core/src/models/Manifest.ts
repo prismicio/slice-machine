@@ -9,8 +9,8 @@ class ApiEndPointType extends t.Type<string> {
       (input, context) => {
         if (typeof input !== "string") return t.failure(input, context);
         const regx = new RegExp(
-          "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9].(prismic.io|wroom.io|wroom.test)/api/v2/?$",
-          "i"
+          "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test)/api/v2/?$",
+          "gi"
         );
         const result = regx.test(input);
         return result
