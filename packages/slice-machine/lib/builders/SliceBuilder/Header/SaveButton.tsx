@@ -1,9 +1,14 @@
-import { Flex, Button, Spinner } from "theme-ui";
+import React from "react";
+import { Spinner, Button } from "theme-ui";
 
-const SaveButton = ({ __status, isTouched, onSave, onPush, isLoading }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const SaveButton: React.FC<{
+  __status: string;
+  isTouched: boolean;
+  onSave: () => void;
+  onPush: () => void;
+  isLoading: boolean;
+}> = ({ __status, isTouched, onSave, onPush, isLoading }) => {
   const onClick = isTouched ? onSave : onPush;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   const unsynced = ["MODIFIED", "NEW_SLICE"].indexOf(__status) !== -1;
 
   const text = (() => {
@@ -17,9 +22,9 @@ const SaveButton = ({ __status, isTouched, onSave, onPush, isLoading }) => {
   })();
 
   return (
-    <Flex
-      as={Button}
+    <Button
       sx={{
+        display: "flex",
         cursor: "pointer",
         p: 2,
         px: 3,
@@ -29,11 +34,10 @@ const SaveButton = ({ __status, isTouched, onSave, onPush, isLoading }) => {
       }}
       variant={isTouched || unsynced ? "buttons.primary" : "buttons.disabled"}
       disabled={!isTouched && !unsynced}
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onClick={onClick}
     >
       {isLoading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null} {text}
-    </Flex>
+    </Button>
   );
 };
 
