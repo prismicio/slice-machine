@@ -86,4 +86,21 @@ describe("Manifest", () => {
     );
     expect(decoded).toBeNull();
   });
+
+  test("apiEnpoint: https://foo-bar.cdn.prismic.io/api/v2", () => {
+    const input = { apiEndpoint: "https://foo-bar.cdn.prismic.io/api/v2" };
+    const result = Manifest.decode(input);
+    expect(isRight(result)).toBeTruthy();
+    const decoded = pipe(
+      result,
+      fold(
+        (e) => {
+          console.log(e);
+          return null;
+        },
+        (d: Manifest) => d
+      )
+    );
+    expect(decoded?.apiEndpoint).toEqual(input.apiEndpoint);
+  });
 });
