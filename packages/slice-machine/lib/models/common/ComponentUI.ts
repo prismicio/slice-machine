@@ -1,4 +1,4 @@
-import * as Models from "@slicemachine/core/build/src/models/index";
+import * as Models from "@slicemachine/core/build/src/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
 

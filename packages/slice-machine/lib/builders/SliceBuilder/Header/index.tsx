@@ -8,14 +8,12 @@ import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 import SaveButton from "./SaveButton";
-// import type SliceState from "@lib/models/ui/SliceState";
-import type SliceStore from "@src/models/slice/store";
-// import type {Models} from '@slicemachine/core'
+import type { ContextProps } from "@src/models/slice/context";
 
 const Header: React.FC<{
-  Model: unknown;
-  store: SliceStore;
-  variation: unknown;
+  Model: ContextProps["Model"];
+  store: ContextProps["store"];
+  variation: ContextProps["variation"];
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
@@ -63,46 +61,28 @@ const Header: React.FC<{
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
                   <Text ml={2}>
-                    /{" "}
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                      Model.infos.sliceName
-                    }{" "}
-                    /{" "}
-                    {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                      variation.name
-                    }
+                    {`/ ${Model.infos.sliceName} / ${variation.name}`}
                   </Text>
                 </Box>
               </Flex>
               <Flex mt={3} sx={{ alignItems: "center" }}>
                 <Flex sx={{ alignItems: "center" }}>
                   <VariationPopover
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     defaultValue={variation}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                     variations={Model.variations}
                     onNewVariation={() => setShowVariationModal(true)}
-                    onChange={(v) => {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-floating-promises
+                    onChange={(v) =>
                       router.push(
                         ...Links.variation({
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                           lib: Model.href,
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                           sliceName: Model.infos.sliceName,
                           variationId: v.id,
                         }).all
-                      );
-                    }}
+                      )
+                    }
                   />
                   <Box ml={2}>
-                    <Text // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                      variant="xs"
-                    >
-                      Variation id : {variation.id}
-                    </Text>
+                    <Text variant="xs">Variation id : {variation.id}</Text>
                   </Box>
                 </Flex>
               </Flex>
@@ -110,44 +90,32 @@ const Header: React.FC<{
           </Box>
 
           <SaveButton
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             onSave={onSave}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             onPush={onPush}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             __status={Model.__status}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             isTouched={Model.isTouched}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             isLoading={isLoading}
           />
           <VariationModal
             isOpen={showVariationModal}
             onClose={() => setShowVariationModal(false)}
             onSubmit={(id, name, copiedVariation) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
               store.copyVariation(id, name, copiedVariation);
-              // eslint-disable-next-line @typescript-eslint/no-floating-promises
-              router.push(
+              return router.push(
                 ...Links.variation({
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   lib: Model.href,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   sliceName: Model.infos.sliceName,
                   variationId: id,
                 }).all
               );
             }}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             initialVariation={variation}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             variations={Model.variations}
           />
         </Flex>
       </Box>
       <MetaData
         isOpen={showMeta}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         Model={Model}
         close={() => setShowMeta(false)}
       />
