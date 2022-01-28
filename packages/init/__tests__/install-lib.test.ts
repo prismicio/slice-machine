@@ -57,7 +57,7 @@ describe("install-lib", () => {
 
     stderr.start();
     stdout.start();
-    const libs = await installLib(undefined, fakeCWD, gitpath);
+    const libs = await installLib(fakeCWD, gitpath);
 
     stderr.stop();
     stdout.stop();
@@ -101,7 +101,7 @@ describe("install-lib", () => {
 
     stderr.start();
     stdout.start();
-    const libs = await installLib(undefined, fakeCWD, gitpath, branch);
+    const libs = await installLib(fakeCWD, gitpath, branch);
     stderr.stop();
     stderr.stop();
 
@@ -137,7 +137,7 @@ describe("install-lib", () => {
 
     stderr.start();
     stdout.start();
-    await installLib(undefined, fakeCWD, gitpath, branch);
+    await installLib(fakeCWD, gitpath, branch);
     stderr.stop();
     stderr.stop();
 

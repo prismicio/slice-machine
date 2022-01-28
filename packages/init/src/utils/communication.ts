@@ -20,10 +20,13 @@ export async function getUserProfile(
   cookies: string,
   base = Utils.CONSTS.DEFAULT_BASE
 ): Promise<UserProfile> {
-  // note the auth server also provides a userId
+  const userServiceBase =
+    Utils.CONSTS.DEFAULT_BASE === base
+      ? Utils.CONSTS.USER_SERVICE_BASE
+      : "https://user.wroom.io/";
 
-  const url = new URL(base);
-  url.hostname = `user.${url.hostname}`;
+  // note the auth server also provides a userId
+  const url = new URL(userServiceBase);
   url.pathname = "profile";
 
   const endpoint = url.toString();
@@ -32,7 +35,7 @@ export async function getUserProfile(
   return axios
     .get<UserProfile>(endpoint, {
       headers: {
-        Authorization: `Bearer Token ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) =>

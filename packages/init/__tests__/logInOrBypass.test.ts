@@ -57,8 +57,8 @@ describe("loginOrBypass", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(200, {
         userId,
@@ -113,8 +113,8 @@ describe("loginOrBypass", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(200, {
         userId,

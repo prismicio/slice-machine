@@ -62,7 +62,7 @@ describe("maybe-existing-repo", () => {
     const result = await maybeExistingRepo(cookies, base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
-    expect(result.name).toEqual(repoName);
+    expect(result.repository).toEqual(repoName);
     return expect(result.existing).toBeFalsy();
   });
 
@@ -91,7 +91,7 @@ describe("maybe-existing-repo", () => {
 
     const result = await maybeExistingRepo(cookies, base);
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
-    expect(result.name).toEqual(repoName);
+    expect(result.repository).toEqual(repoName);
     expect(result.existing).toBeFalsy();
   });
 });
