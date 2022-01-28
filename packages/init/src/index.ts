@@ -42,6 +42,11 @@ async function init() {
   const user = await loginOrBypass(base);
   if (!user) throw new Error("The user should be logged in!");
 
+  // If we get the info from the profile we want to identify all the previous events sent or continue in anonymous mode
+  if (user.profile) {
+    Tracker.get().identifyUser(user.profile.shortId);
+  }
+
   // retrieve tokens for api calls
   const config = FileSystem.PrismicSharedConfigManager.get();
 
@@ -57,11 +62,6 @@ async function init() {
 
   if (!existing) {
     await createRepository(repository, frameworkResult.value, config);
-  }
-
-  // If we get the info from the profile we want to identify all the previous events sent or continue in anonymous mode
-  if (user.profile) {
-    Tracker.get().identifyUser(user.profile.userId);
   }
 
   // Install the required dependencies in the project.

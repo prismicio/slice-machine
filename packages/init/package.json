@@ -9,13 +9,13 @@
   "scripts": {
     "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix",
-    "tsc": "tsc --project tsconfig.json --noEmit",
     "build": "npm run tsc && siroc build",
-    "watch": "tsc --project tsconfig.json --noEmit --watch",
     "lint": "eslint --ext .ts .",
     "lint:precommit": "eslint",
     "prepublishOnly": "npm run test && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "tsc --project tsconfig.json --noEmit",
+    "watch": "tsc --project tsconfig.json --noEmit --watch"
   },
   "dependencies": {
     "@slicemachine/core": "1.1.1-alpha.2",
