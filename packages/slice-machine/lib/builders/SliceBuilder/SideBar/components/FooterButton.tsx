@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Spinner } from "theme-ui";
 
+// Dead code
 const FooterButton: React.FC<{
   __status: string;
   isTouched: boolean;

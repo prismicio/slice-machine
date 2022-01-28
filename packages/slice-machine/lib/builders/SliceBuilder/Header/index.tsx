@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
 import MetaData from "./MetaData";
 import { FiLayers } from "react-icons/fi";
@@ -8,10 +8,19 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-
 import SaveButton from "./SaveButton";
+// import type SliceState from "@lib/models/ui/SliceState";
+import type SliceStore from "@src/models/slice/store";
+// import type {Models} from '@slicemachine/core'
 
-const Header = ({ Model, store, variation, onSave, onPush, isLoading }) => {
+const Header: React.FC<{
+  Model: unknown;
+  store: SliceStore;
+  variation: unknown;
+  onSave: () => void;
+  onPush: () => void;
+  isLoading: boolean;
+}> = ({ Model, store, variation, onSave, onPush, isLoading }) => {
   const router = useRouter();
   const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);

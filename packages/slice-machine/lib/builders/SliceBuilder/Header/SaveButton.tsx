@@ -3,7 +3,7 @@ import { Spinner, Button } from "theme-ui";
 
 const SaveButton: React.FC<{
   __status: string;
-  isTouched: boolean;
+  isTouched?: boolean;
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
