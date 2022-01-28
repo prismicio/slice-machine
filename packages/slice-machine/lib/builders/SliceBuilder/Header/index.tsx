@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useState } from "react";
 import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
 import MetaData from "./MetaData";
