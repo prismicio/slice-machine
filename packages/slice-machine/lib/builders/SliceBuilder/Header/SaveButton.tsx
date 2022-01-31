@@ -7,7 +7,8 @@ const SaveButton: React.FC<{
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
-}> = ({ __status, isTouched, onSave, onPush, isLoading }) => {
+  imageLoading: boolean;
+}> = ({ __status, isTouched, onSave, onPush, isLoading, imageLoading }) => {
   const onClick = isTouched ? onSave : onPush;
   const unsynced = ["MODIFIED", "NEW_SLICE"].indexOf(__status) !== -1;
 
@@ -32,11 +33,18 @@ const SaveButton: React.FC<{
         justifyContent: "center",
         borderColor: "transparent",
       }}
-      variant={isTouched || unsynced ? "buttons.primary" : "buttons.disabled"}
-      disabled={!isTouched && !unsynced}
+      variant={
+        !imageLoading || isTouched || unsynced
+          ? "buttons.primary"
+          : "buttons.disabled"
+      }
+      disabled={imageLoading || (!isTouched && !unsynced)}
       onClick={onClick}
     >
-      {isLoading ? <Spinner color="#F7F7F7" size={24} mr={2} /> : null} {text}
+      {isLoading && !imageLoading ? (
+        <Spinner color="#F7F7F7" size={24} mr={2} />
+      ) : null}{" "}
+      {text}
     </Button>
   );
 };

@@ -17,7 +17,16 @@ const Header: React.FC<{
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
-}> = ({ Model, store, variation, onSave, onPush, isLoading }) => {
+  imageLoading?: boolean;
+}> = ({
+  Model,
+  store,
+  variation,
+  onSave,
+  onPush,
+  isLoading,
+  imageLoading = false,
+}) => {
   const router = useRouter();
   const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);
@@ -95,6 +104,7 @@ const Header: React.FC<{
             __status={Model.__status}
             isTouched={Model.isTouched}
             isLoading={isLoading}
+            imageLoading={imageLoading}
           />
           <VariationModal
             isOpen={showVariationModal}

@@ -110,6 +110,7 @@ const SliceBuilder: React.FunctionComponent = () => {
         // @ts-expect-error
         onSave={() => store.save(Model, setData)}
         isLoading={data.loading}
+        imageLoading={data.imageLoading}
       />
       <FlexEditor
         sx={{ py: 4 }}
