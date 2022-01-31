@@ -30,6 +30,7 @@ const Header: React.FC<{
   const router = useRouter();
   const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);
+  const unsynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
 
   return (
     <Flex
@@ -99,13 +100,20 @@ const Header: React.FC<{
           </Box>
 
           <SaveButton
-            onSave={onSave}
-            onPush={onPush}
-            __status={Model.__status}
-            isTouched={Model.isTouched}
-            isLoading={isLoading}
-            imageLoading={imageLoading}
-          />
+            onClick={Model.isTouched ? onSave : onPush}
+            loading={isLoading || imageLoading}
+            disabled={
+              isLoading === true ||
+              imageLoading === true ||
+              (Model.isTouched === false && unsynced === false)
+            }
+          >
+            {Model.isTouched
+              ? "Save model to filesystem"
+              : unsynced
+              ? "Push Slice to Prismic"
+              : "Your Slice is up to date!"}
+          </SaveButton>
           <VariationModal
             isOpen={showVariationModal}
             onClose={() => setShowVariationModal(false)}
