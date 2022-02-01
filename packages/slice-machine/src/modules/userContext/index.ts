@@ -41,14 +41,10 @@ export const userHasDoneTheOnboarding = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.isOnboarded;
 
-export const getDismissedUpdateVersion = (
-  state: SliceMachineStoreType
-): string | undefined => state.userContext.dismissedUpdate;
-
 export const dismissedLatestUpdate = (
   state: SliceMachineStoreType
 ): boolean => {
-  const dismissed = getDismissedUpdateVersion(state);
+  const dismissed = state.userContext.dismissedUpdate;
   if (!dismissed) return false;
   const current = getUpdateVersionInfo(state);
   return gte(dismissed, current.latestVersion);
