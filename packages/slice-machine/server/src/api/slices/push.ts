@@ -39,7 +39,6 @@ export async function handler(
   slices: ReadonlyArray<Models.SliceAsObject>,
   { sliceName, from }: { sliceName: string; from: string }
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
 
   try {
