@@ -16,22 +16,30 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getUpdateVersionInfo } from "@src/modules/environment";
+import { dismissedLatestUpdate } from "@src/modules/userContext";
 
 const UpdateVersionModal: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { isOpen, updateVersionInfo } = useSelector(
+  const { isOpen, updateVersionInfo, dismissedUpdate } = useSelector(
     (store: SliceMachineStoreType) => ({
       updateVersionInfo: getUpdateVersionInfo(store),
       isOpen: isModalOpen(store, ModalKeysEnum.UPDATE_VERSION),
+      dismissedUpdate: dismissedLatestUpdate(store),
     })
   );
 
-  const { closeUpdateVersionModal, openUpdateVersionModal } =
+  const { closeUpdateVersionModal, openUpdateVersionModal, dismissUpdate } =
     useSliceMachineActions();
 
+  const handleClose = () => {
+    dismissUpdate(updateVersionInfo.latestVersion);
+    closeUpdateVersionModal();
+  };
+
   React.useEffect(() => {
-    if (updateVersionInfo.updateAvailable && !isOpen) openUpdateVersionModal();
+    if (updateVersionInfo.updateAvailable && !isOpen && !dismissedUpdate)
+      openUpdateVersionModal();
   }, [updateVersionInfo.updateAvailable]);
 
   const copy = () => {
@@ -82,7 +90,7 @@ const UpdateVersionModal: React.FC = () => {
             tabIndex={0}
             sx={{ p: 0, alignSelf: "start" }}
             type="button"
-            onClick={closeUpdateVersionModal}
+            onClick={handleClose}
             data-testid="update-modal-close"
           />
         </Flex>

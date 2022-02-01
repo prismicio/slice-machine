@@ -10,6 +10,7 @@ import {
   finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
+  dismissedUpdateCreator,
 } from "@src/modules/userContext";
 import { getStateCreator } from "@src/modules/environment";
 import {
@@ -74,6 +75,8 @@ const useSliceMachineActions = () => {
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
+  const dismissUpdate = (version: string) =>
+    dispatch(dismissedUpdateCreator(version));
 
   // Custom types Store
   const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
@@ -115,6 +118,7 @@ const useSliceMachineActions = () => {
     saveCustomTypes,
     sendAReview,
     skipReview,
+    dismissUpdate,
     closeUpdateVersionModal,
     openUpdateVersionModal,
     closeCreateCustomTypeModal,
