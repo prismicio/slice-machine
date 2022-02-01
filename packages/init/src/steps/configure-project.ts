@@ -43,7 +43,7 @@ export function configureProject(
 
     spinner.succeed("Project configured! Ready to start");
   } catch {
-    spinner.fail("Failed to configure your Prismic Local Builder");
+    spinner.fail("Failed to configure Slice Machine");
     process.exit(-1);
   }
 }

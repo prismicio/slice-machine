@@ -9,6 +9,6 @@ export function displayFinalMessage(cwd: string): void {
   console.log(
     `${Utils.white("■")} Run ${Utils.purple(
       command
-    )} to now launch your Local Builder`
+    )} to now launch Slice Machine`
   );
 }

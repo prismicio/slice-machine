@@ -118,7 +118,7 @@ describe("detect-framework", () => {
     );
     expect(logSpy).toHaveBeenCalledWith(
       `Please run ${Utils.bold(
-        "npx slicemachine init"
+        "npx @slicemachine/init"
       )} in a Nuxt or Next.js project`
     );
   });

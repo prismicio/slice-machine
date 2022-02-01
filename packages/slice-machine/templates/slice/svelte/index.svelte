@@ -26,7 +26,7 @@
   {#if slice.primary.description}
   {@html PrismicDom.RichText.asHtml(slice.primary.description)}     
   {:else}
-  <p>start by editing this slice from inside the SliceMachine builder!</p>
+  <p>start by editing this slice from inside Slice Machine!</p>
   {/if}
 
 </section>

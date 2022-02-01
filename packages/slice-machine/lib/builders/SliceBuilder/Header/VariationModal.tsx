@@ -174,8 +174,8 @@ const VariationModal: React.FunctionComponent<{
                   }
                 />
                 <Text>
-                  It will appear here in your slice builder, and in the page
-                  editor in Prismic
+                  It will appear here in Slice Machine, and in the page editor
+                  in Prismic
                 </Text>
               </Box>
               <Box sx={{ pb: 4 }}>

@@ -35,7 +35,7 @@ export async function promptForFramework(): Promise<FrameworkResult> {
 
 export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   const failMessage = `Please run ${Utils.bold(
-    "npx slicemachine init"
+    "npx @slicemachine/init"
   )} in a Nuxt or Next.js project`;
 
   const spinner = Utils.spinner(
