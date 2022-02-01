@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import { RolesValidator } from "../utils/roles";
+import { RolesValidator } from "./Roles";
 
 export const Repository = t.exact(
   t.type({

@@ -10,23 +10,23 @@ export enum Roles {
   READONLY = "Readonly",
 }
 
-const RolesV = t.union([
-  t.literal(Roles.WRITER),
-  t.literal(Roles.OWNER),
-  t.literal(Roles.PUBLISHER),
-  t.literal(Roles.ADMIN),
-  t.literal(Roles.SUPERUSER),
-  t.literal(Roles.MANAGER),
-  t.literal(Roles.READONLY),
-]);
+const RolesV = t.keyof({
+  [Roles.WRITER]: null,
+  [Roles.OWNER]: null,
+  [Roles.PUBLISHER]: null,
+  [Roles.ADMIN]: null,
+  [Roles.SUPERUSER]: null,
+  [Roles.MANAGER]: null,
+  [Roles.READONLY]: null,
+});
 
 export const RolePerLocaleProfile = t.record(t.string, RolesV);
+export type RolePerLocaleProfile = t.TypeOf<typeof RolePerLocaleProfile>;
 
 export const RolesValidator = t.union([RolesV, RolePerLocaleProfile]);
+export type RolesValidator = t.TypeOf<typeof RolesValidator>;
 
-export function canUpdateCustomTypes(
-  role: Roles | Record<string, Roles>
-): boolean {
+export function canUpdateCustomTypes(role: RolesValidator): boolean {
   if (role === Roles.OWNER) return true;
   if (role === Roles.ADMIN) return true;
   if (role === Roles.SUPERUSER) return true;

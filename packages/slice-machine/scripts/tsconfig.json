@@ -20,9 +20,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@lib/*": ["../lib/*"]
+      "@lib/*": ["../lib/*"],
+      "@server/*": ["../server/*"]
     }
   },
   "exclude": ["../build"],
-  "include": ["./**/*.ts", "./**/*.js", "../lib/**/*.ts", "../lib/**/*.js"]
+  "include": ["./**/*.ts", "./**/*.js"]
 }

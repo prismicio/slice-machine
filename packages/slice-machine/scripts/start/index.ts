@@ -3,13 +3,13 @@ import { Utils, Models } from "@slicemachine/core";
 
 import handleManifest, { ManifestInfo } from "../../lib/env/manifest";
 import compareVersions from "../../lib/env/semver";
-import { validateUserAuth } from "../../server/src/api/services/validateUserAuth";
 
 import { findArgument } from "../common/findArgument";
 import infoBox from "./infoxBox";
 import { handleMigration } from "./handleMigration";
 import { validateManifest } from "./validateManifest";
 import { startSMServer } from "./startSMServer";
+import { validateSession } from "./validateSession";
 
 async function run(): Promise<void> {
   const cwd: string = process.cwd(); // project running the script
@@ -31,19 +31,17 @@ async function run(): Promise<void> {
   const SmDirectory = path.resolve(__dirname, "..");
   const npmCompareData = await compareVersions({ cwd: SmDirectory });
 
-  const framework = Utils.Framework.defineFramework(
-    manifest.content,
+  const framework = Utils.Framework.defineFramework({
     cwd,
-    Models.SupportedFrameworks
-  );
-  const validateRes = await validateUserAuth();
-
-  return startSMServer(cwd, port, (url: string) => {
-    const email: string | undefined = validateRes.body
-      ? (validateRes.body as { email: string }).email
-      : undefined;
-    infoBox(npmCompareData, url, framework, email);
+    supportedFrameworks: Models.SupportedFrameworks,
+    manifest: manifest.content || undefined,
   });
+
+  const UserInfo = await validateSession(cwd);
+
+  return startSMServer(cwd, port, (url: string) =>
+    infoBox(npmCompareData, url, framework, UserInfo?.email)
+  );
 }
 
 run().catch((err) => {
