@@ -90,7 +90,7 @@ const Zone = ({
                     top: "2px",
                   }}
                 />{" "}
-                {showHints ? "Hide" : "Show"} Code Widgets
+                {showHints ? "Hide" : "Show"} code snippets
               </Button>
               <Button
                 ml={2}
