@@ -13,7 +13,7 @@ const {{componentName}} = ({ slice }) => (
     {
       slice.primary.description ?
       <RichText render={slice.primary.description}/>
-      : <p>start by editing this slice from inside Prismic builder!</p>
+      : <p>start by editing this slice from inside Slice Machine!</p>
     }
     <style jsx>{`
         section {

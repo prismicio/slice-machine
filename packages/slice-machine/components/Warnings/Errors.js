@@ -100,7 +100,7 @@ export const NewVersionAvailable = ({
     )}
   >
     <Text as="p">
-      A new version of the slice builder is available (<b>{latestVersion}</b>).
+      A new version of the Slice Machine is available (<b>{latestVersion}</b>).
       <br />
     </Text>
     Please run: <Text variant="pre">{updateCommand}</Text>

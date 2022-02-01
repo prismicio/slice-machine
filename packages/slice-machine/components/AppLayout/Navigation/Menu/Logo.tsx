@@ -12,7 +12,7 @@ const Logo: React.FC = () => {
           <Flex sx={{ alignItems: "center" }}>
             <Prismic fill={theme.colors?.text as string} />
             <Heading as="h5" sx={{ ml: 2 }}>
-              Prismic Builder
+              Slice Machine
             </Heading>
           </Flex>
         </ThemeLink>
