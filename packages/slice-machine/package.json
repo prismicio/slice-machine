@@ -36,7 +36,7 @@
     "audit-fix": "npm audit fix"
   },
   "bin": {
-    "start-slicemachine": "bins/start.js"
+    "start-slicemachine": "bin/start.js"
   },
   "dependencies": {
     "@babel/register": "^7.11.5",
