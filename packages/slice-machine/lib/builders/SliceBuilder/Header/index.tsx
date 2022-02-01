@@ -101,7 +101,7 @@ const Header: React.FC<{
 
           <SaveButton
             onClick={Model.isTouched ? onSave : onPush}
-            loading={isLoading || imageLoading}
+            loading={isLoading && !imageLoading}
             disabled={
               isLoading === true ||
               imageLoading === true ||
