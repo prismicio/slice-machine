@@ -1,14 +1,11 @@
-import fs from "fs";
-import path from "path";
-import migrate from "../../changelog/migrate";
+import { FileSystem } from "@slicemachine/core";
+import { migrate } from "../../changelog/migrate";
 
 export async function handleMigration(cwd: string): Promise<void> {
-  const pathToPkg: string = path.join(cwd, "package.json");
-  const pathToSmFile: string = path.join(cwd, "sm.json");
-  if (!fs.existsSync(pathToSmFile)) return;
+  if (!FileSystem.retrieveManifest(cwd).exists) return;
 
   try {
-    await migrate(false, { cwd, pathToPkg, pathToSmFile });
+    await migrate({ cwd, ignorePrompt: false });
   } catch (e: unknown) {
     console.error(
       "An error occurred while migrating file system. Continuing..."
