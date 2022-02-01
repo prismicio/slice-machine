@@ -63,7 +63,7 @@ describe("createRepository", () => {
     stderr.stop();
     stdout.stop();
     expect(stderr.output).toContain("Error creating repository");
-    expect(stdout.output).toContain("Run npx slicemachine init again!");
+    expect(stdout.output).toContain("Run npx @slicemachine/init again!");
     expect(fakeExit).toHaveBeenCalled();
   });
 });
