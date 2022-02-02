@@ -24,6 +24,5 @@
       "@models/*": ["../lib/models/*"]
     }
   },
-  "exclude": ["../build"],
   "include": ["./**/*.ts", "./**/*.js"]
 }

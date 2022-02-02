@@ -1,8 +1,12 @@
 import path from "path";
 import { Utils, Models } from "@slicemachine/core";
 
-import handleManifest, { ManifestInfo } from "../../lib/env/manifest";
-import compareVersions from "../../lib/env/semver";
+// Don't remove those lines, they resolve aliases
+import { resolveAliases } from "../../server/src/resolveAliases";
+resolveAliases(path.join(__dirname, "../../../"));
+
+import handleManifest, { ManifestInfo } from "@lib/env/manifest";
+import compareVersions from "@lib/env/semver";
 
 import { findArgument } from "../common/findArgument";
 import infoBox from "./infoxBox";
@@ -28,8 +32,8 @@ async function run(): Promise<void> {
   const { isManifestValid } = validateManifest(manifest);
   if (!isManifestValid) process.exit(0);
 
-  const SmDirectory = path.resolve(__dirname, "..");
-  const npmCompareData = await compareVersions({ cwd: SmDirectory });
+  const SmNodeModuleDirectory = path.resolve(__dirname, "../../..");
+  const npmCompareData = await compareVersions({ cwd: SmNodeModuleDirectory });
 
   const framework = Utils.Framework.defineFramework({
     cwd,
