@@ -5,6 +5,7 @@ import {
   sendAReviewCreator,
   skipReviewCreator,
   finishOnboardingCreator,
+  dismissedUpdateCreator,
 } from "@src/modules/userContext";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 
@@ -22,6 +23,7 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        dismissedUpdate: "",
       };
 
       const action = sendAReviewCreator();
@@ -29,6 +31,7 @@ describe("[UserContext module]", () => {
       const expectedState = {
         hasSendAReview: true,
         isOnboarded: false,
+        dismissedUpdate: "",
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
@@ -38,6 +41,7 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        dismissedUpdate: "",
       };
 
       const action = skipReviewCreator();
@@ -45,6 +49,7 @@ describe("[UserContext module]", () => {
       const expectedState = {
         hasSendAReview: true,
         isOnboarded: false,
+        dismissedUpdate: "",
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);
@@ -54,6 +59,7 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        dismissedUpdate: "",
       };
 
       const action = finishOnboardingCreator();
@@ -61,6 +67,26 @@ describe("[UserContext module]", () => {
       const expectedState = {
         hasSendAReview: false,
         isOnboarded: true,
+        dismissedUpdate: "",
+      };
+
+      expect(userContextReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should update dismissedUpdate to the value of the update dismissed", () => {
+      const initialState: UserContextStoreType = {
+        hasSendAReview: false,
+        isOnboarded: false,
+        dismissedUpdate: "",
+      };
+
+      const version = "0.1.2";
+
+      const action = dismissedUpdateCreator(version);
+
+      const expectedState = {
+        ...initialState,
+        dismissedUpdate: version,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);

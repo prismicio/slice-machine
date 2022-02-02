@@ -29,8 +29,8 @@ const DefaultComparison: Comparison = {
 };
 
 const MessageByManager = {
-  YARN: (name: string) => `yarn upgrade -D ${name}`,
-  NPM: (name: string) => `npm i --save-dev ${name}`,
+  YARN: (name: string, version: string) => `yarn add -D ${name}@${version}`,
+  NPM: (name: string, version: string) => `npm i --save-dev ${name}@${version}`,
 };
 
 async function fetchJsonPackage(packageName: string): Promise<Manifest> {
@@ -62,8 +62,8 @@ export const createComparator =
       );
       const isYarnPackageManager = Files.exists(YarnLock(cwd));
       const updateCommand = isYarnPackageManager
-        ? MessageByManager.YARN(manifest.name)
-        : MessageByManager.NPM(manifest.name);
+        ? MessageByManager.YARN(manifest.name, onlinePackage.version)
+        : MessageByManager.NPM(manifest.name, onlinePackage.version);
 
       return {
         currentVersion: manifest.version,

@@ -2,12 +2,15 @@ import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { UserContextStoreType } from "@src/modules/userContext/types";
+import { getUpdateVersionInfo } from "../environment";
+import { gte } from "semver";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
 const initialState: UserContextStoreType = {
   hasSendAReview: false,
   isOnboarded: false,
+  dismissedUpdate: "",
 };
 
 // Actions Creators
@@ -19,10 +22,15 @@ export const finishOnboardingCreator = createAction(
   "USER_CONTEXT/FINISH_ONBOARDING"
 )();
 
+export const dismissedUpdateCreator = createAction(
+  "USER_CONTEXT/DISMISS_UPDATE"
+)<UserContextStoreType["dismissedUpdate"]>();
+
 type userContextActions = ActionType<
   | typeof finishOnboardingCreator
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
+  | typeof dismissedUpdateCreator
 >;
 
 // Selectors
@@ -32,6 +40,15 @@ export const userHasSendAReview = (state: SliceMachineStoreType): boolean =>
 export const userHasDoneTheOnboarding = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.isOnboarded;
+
+export const dismissedLatestUpdate = (
+  state: SliceMachineStoreType
+): boolean => {
+  const dismissed = state.userContext.dismissedUpdate;
+  if (!dismissed) return false;
+  const current = getUpdateVersionInfo(state);
+  return gte(dismissed, current.latestVersion);
+};
 
 // Reducer
 export const userContextReducer: Reducer<
@@ -50,6 +67,12 @@ export const userContextReducer: Reducer<
         ...state,
         isOnboarded: true,
       };
+    case getType(dismissedUpdateCreator): {
+      return {
+        ...state,
+        dismissedUpdate: action.payload,
+      };
+    }
     default:
       return state;
   }
