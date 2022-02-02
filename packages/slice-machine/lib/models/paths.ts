@@ -3,54 +3,44 @@ import path from "path";
 export const paths = (cwd: string, prefix: string) => ({
   value: (): string => path.join(cwd, prefix),
   customType: (id: string) => ({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     value: (): string => path.join(paths(cwd, prefix).value()),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     model: (): string =>
       path.join(paths(cwd, prefix).value(), id, "index.json"),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
     mock: (): string => path.join(paths(cwd, prefix).value(), id, "mocks.json"),
   }),
   library: (libraryName: string) => ({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
     value: (): string => path.join(paths(cwd, prefix).value(), libraryName),
     slice: (sliceName: string) => ({
       value: (): string =>
         path.join(paths(cwd, prefix).library(libraryName).value(), sliceName),
       preview: (filename = "preview.png"): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
       stories: (filename = "index.stories.js"): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
       mocks: (): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "mocks.json"
         ),
       model: (): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "model.json"
         ),
       variation: (variationId: string) => ({
         value: (): string =>
           path.join(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
             variationId
           ),
         preview: (filename = "preview.png"): string =>
           path.join(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             paths(cwd, prefix)
               .library(libraryName)
               .slice(sliceName)

@@ -1,12 +1,12 @@
 import { getBackendState } from "../state";
-import { handler as pushSlice } from "../slices/push";
+import { pushSlice } from "../slices/push";
 import { handler as saveSlice } from "../slices/save";
 
 import { onError } from "../common/error";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
+import FakeClient from "@lib/models/common/http/FakeClient";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
@@ -28,11 +28,9 @@ const createOrUpdate = (
   return client.insertCustomType(model);
 };
 
-export default async function handler(req: RequestWithEnv): Promise<{
-  err: Response | FakeResponse | Error | null;
-  reason: string | null;
-  status: number;
-}> {
+export default async function handler(
+  req: RequestWithEnv
+): Promise<ReturnType<typeof onError> | Record<string, never>> {
   const { id } = req.query;
 
   const state = await getBackendState(req.errors, req.env);
@@ -155,9 +153,5 @@ export default async function handler(req: RequestWithEnv): Promise<{
 
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`[custom-types/push] Custom Type ${id} was pushed!`);
-  return {
-    err: null,
-    reason: null,
-    status: 200,
-  };
+  return {};
 }

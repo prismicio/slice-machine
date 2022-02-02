@@ -1,6 +1,4 @@
 import type Models from "@slicemachine/core/build/src/models";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { snakelize } from "@lib/utils/str";
 import path from "path";
 import uniqid from "uniqid";
@@ -8,15 +6,13 @@ import uniqid from "uniqid";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import { s3DefaultPrefix } from "@lib/consts";
+import { onError } from "../common/error";
 
-export async function purge(
+export const purge = async (
   env: BackendEnvironment,
   slices: ReadonlyArray<Models.SliceAsObject>,
-  sliceName: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  onError: (error?: any, msg?: string) => any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<{ err?: any }> {
+  sliceName: string
+): Promise<{ err?: ReturnType<typeof onError> }> => {
   if (slices.find((e) => e.id === snakelize(sliceName))) {
     console.log("\n[slice/push]: purging images folder");
     const deleteRes = await env.client.images.deleteFolder({
@@ -24,24 +20,21 @@ export async function purge(
     });
     if (deleteRes.status > 209) {
       const msg =
-        "[slice/push] An error occured while purging slice folder - please contact support";
+        "[slice/push] An error occurred while purging slice folder - please contact support";
       console.error(msg);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { err: onError(deleteRes, msg) };
+      return { err: onError(null, msg) };
     }
   }
 
   return {};
-}
+};
 
-export async function upload(
+export const upload = async (
   env: BackendEnvironment,
   sliceName: string,
   variationId: string,
-  filePath: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  onError: (error?: any, msg?: string) => any
-) {
+  filePath: string
+): Promise<{ s3ImageUrl?: string; err?: ReturnType<typeof onError> }> => {
   console.log("[slice/push]: uploading variation preview");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/await-thenable
   const aclResponse: any = await (await env.client.images.createAcl()).json();
@@ -57,7 +50,7 @@ export async function upload(
     console.error(msg);
     console.error(`Full error: ${JSON.stringify(aclResponse)}`);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
-    return onError(aclResponse, msg);
+    return { err: onError(aclResponse, msg) };
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
@@ -85,13 +78,13 @@ export async function upload(
 
   if (postStatus !== 204) {
     const msg =
-      "[slice/push] An error occured while uploading files - please contact support";
+      "[slice/push] An error occurred while uploading files - please contact support";
     console.error(msg);
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     console.error(`Error code: "${postStatus}"`);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     return { err: onError(null, msg) };
   }
 
   return { s3ImageUrl };
-}
+};

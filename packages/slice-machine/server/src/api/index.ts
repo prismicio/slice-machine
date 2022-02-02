@@ -28,6 +28,7 @@ import {
 } from "@models/common/Screenshots";
 import { SliceCreateBody, SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
+import { onError } from "./common/error";
 
 router.use(
   "/__preview",
@@ -174,13 +175,13 @@ router.get(
     >,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await pushSlice(req.query);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
+
+    if (isPayloadHasError<Record<string, never>>(payload)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       return res.status(payload.status).json(payload);
     }
+
     return res.status(200).json(payload);
   }
 );
@@ -209,11 +210,11 @@ router.get(
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await pushCustomType(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+
+    if (isPayloadHasError<Record<string, never>>(payload)) {
       return res.status(payload.status).json(payload);
     }
+
     return res.status(200).json(payload);
   })
 );
@@ -226,9 +227,6 @@ router.get(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await validateAuth();
-    if (payload.err) {
-      return res.status(400).json(payload);
-    }
     return res.status(200).json(payload);
   }
 );
@@ -304,5 +302,15 @@ router.use("*", async function (req: express.Request, res: express.Response) {
     reason: `Could not find route "${req.baseUrl}"`,
   });
 });
+
+function isPayloadHasError<Request extends Record<string, unknown>>(
+  payload: ReturnType<typeof onError> | Request
+): payload is ReturnType<typeof onError> {
+  return (
+    typeof payload === "object" &&
+    payload !== null &&
+    payload.hasOwnProperty("err")
+  );
+}
 
 export default router;

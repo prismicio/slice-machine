@@ -36,7 +36,7 @@ const handleMatch = (matches: string[], env: BackendEnvironment) => {
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
 ): Promise<{ remoteCustomTypes: CustomTypeJsonModel[]; isFake?: boolean }> => {
-  if (env.client.isFake()) {
+  if (!env.isUserLoggedIn) {
     return { remoteCustomTypes: [], isFake: true };
   }
   try {
