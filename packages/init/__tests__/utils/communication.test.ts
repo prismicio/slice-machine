@@ -11,7 +11,7 @@ import nock from "nock";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
-import { Utils } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
 import * as communication from "../../src/utils/communication";
 
 jest.mock("fs");
@@ -72,8 +72,8 @@ describe("communication.validateSessionAndGetProfile", () => {
   const shortId = "12";
   const type = "USER";
   const repositories = {
-    "foo-repo": { dbid: "abcd", role: Utils.roles.Roles.OWNER },
-    qwerty: { dbid: "efgh", role: Utils.roles.Roles.WRITER },
+    "foo-repo": { dbid: "abcd", role: Models.Roles.OWNER },
+    qwerty: { dbid: "efgh", role: Models.Roles.WRITER },
   };
 
   test("if base does not match the base in the config it should return null", async () => {

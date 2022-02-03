@@ -6,7 +6,7 @@ import { MdSettingsEthernet } from "react-icons/md";
 import { Widget } from "../Widget";
 import { FieldType } from "../../CustomType/fields";
 import { ContentRelationshipField } from "./type";
-import { linkConfigSchema } from "@models/common/widgets/Link";
+import { linkConfigSchema } from "../Link";
 
 /**
  * {

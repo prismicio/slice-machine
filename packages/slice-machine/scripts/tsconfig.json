@@ -1,5 +1,5 @@
 {
-  // TS Config used to build the backend of the application.
+  // TS Config used to build the common code to both frontend and backend of the application.
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",
@@ -10,7 +10,6 @@
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "baseUrl": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["../node_modules/@types", "../../sm-commons/index.d.ts"],
@@ -19,9 +18,10 @@
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
       "@lib/*": ["../lib/*"],
-      "@models/*": ["../lib/models/*"]
+      "@server/*": ["../server/*"]
     }
   },
   "include": ["./**/*.ts", "./**/*.js"]
