@@ -6,6 +6,8 @@ import fetch from "node-fetch";
 import semver from "semver";
 import Files from "../utils/files";
 import { YarnLock } from "../models/paths";
+import { getAvailableVersionInfo } from "./npmApi";
+import type { UpdateVersionInfo } from "@lib/models/common/Environment";
 
 interface Manifest {
   name: string;
@@ -18,6 +20,7 @@ interface Comparison {
   updateAvailable: boolean;
   updateCommand: string;
   packageManager: "npm" | "yarn";
+  availableVersions: UpdateVersionInfo["availableVersions"];
 }
 
 const DefaultComparison: Comparison = {
@@ -26,6 +29,11 @@ const DefaultComparison: Comparison = {
   updateAvailable: false,
   updateCommand: "",
   packageManager: "npm",
+  availableVersions: {
+    patch: "",
+    minor: "",
+    major: "",
+  },
 };
 
 const MessageByManager = {
@@ -65,12 +73,18 @@ export const createComparator =
         ? MessageByManager.YARN(manifest.name, onlinePackage.version)
         : MessageByManager.NPM(manifest.name, onlinePackage.version);
 
+      const versions = await getAvailableVersionInfo(
+        manifest.name,
+        manifest.version
+      );
+
       return {
         currentVersion: manifest.version,
         onlinePackage,
         updateAvailable,
         updateCommand,
         packageManager: isYarnPackageManager ? "yarn" : "npm",
+        availableVersions: versions,
       };
     } catch (e) {
       return DefaultComparison;

@@ -9,6 +9,11 @@ export interface UpdateVersionInfo {
   packageManager: "npm" | "yarn";
   updateCommand: string;
   updateAvailable: boolean;
+  availableVersions: {
+    patch: string;
+    minor: string;
+    major: string;
+  };
 }
 
 export interface BackendEnvironment {

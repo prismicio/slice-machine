@@ -108,6 +108,7 @@ export default async function getEnv(
         packageManager: npmCompare.packageManager,
         updateCommand: npmCompare.updateCommand,
         updateAvailable: npmCompare.updateAvailable,
+        availableVersions: npmCompare.availableVersions,
       },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
