@@ -2,7 +2,7 @@ import path from "path";
 import { Utils, Models } from "@slicemachine/core";
 
 // Don't remove those lines, they resolve aliases
-import { resolveAliases } from "../../server/src/resolveAliases";
+import { resolveAliases } from "../../lib/env/resolveAliases";
 resolveAliases(path.join(__dirname, "../../../"));
 
 import handleManifest, { ManifestInfo } from "@lib/env/manifest";

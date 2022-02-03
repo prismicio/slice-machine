@@ -12,7 +12,7 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 import fetch from "node-fetch";
-import { resolveAliases } from "./resolveAliases";
+import { resolveAliases } from "../../lib/env/resolveAliases";
 
 declare let global: {
   fetch: typeof fetch;
