@@ -46,15 +46,16 @@ export default async function handler(
     };
   }
 
-  if (state.clientError || state.isFake) {
+  if (state.clientError || !state.env.isUserLoggedIn) {
     const isAnAuthenticationError =
-      state.isFake || (state.clientError && state.clientError.status === 403);
+      !state.env.isUserLoggedIn ||
+      (state.clientError && state.clientError.status === 403);
     const errorExplanation = isAnAuthenticationError
       ? "Please log in to Prismic!"
       : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `You don\'t have access to the repo \"${state.env.repo}\"`;
 
-    const errorCode = state.isFake
+    const errorCode = !state.env.isUserLoggedIn
       ? 403
       : state.clientError
       ? state.clientError.status
