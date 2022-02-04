@@ -16,6 +16,7 @@ import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import { Models, Utils } from "@slicemachine/core";
+import preferWroomBase from "@lib/utils/preferWroomBase";
 
 declare let appRoot: string;
 
@@ -90,7 +91,7 @@ export default async function getEnv(
 
   const client = initClient(
     cwd,
-    prismicData.value.base,
+    preferWroomBase(manifestInfo.content.apiEndpoint),
     repo,
     prismicData.value.auth
   );

@@ -3,6 +3,8 @@ import { Volume } from "memfs";
 
 import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
+import os from "os";
+import path from "path";
 
 const TMP = "/tmp";
 
@@ -209,5 +211,29 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.framework).toEqual("vanillajs");
+  });
+
+  test("it should prefer to use the endpoint from sm.json", async () => {
+    fs.reset();
+    fs.use(
+      Volume.fromJSON(
+        {
+          "sm.json": '{"apiEndpoint": "https://api-1.wroom.io/api/v2"}',
+          "package.json": "{}",
+        },
+        TMP
+      )
+    );
+    fs.use(
+      Volume.fromJSON(
+        {
+          ".prismic": '{"base": "https://prismic.io"}',
+        },
+        path.join(os.homedir(), ".prismic")
+      )
+    );
+
+    const { env } = await getEnv(TMP);
+    expect(env.client.base).toEqual("https://wroom.io");
   });
 });
