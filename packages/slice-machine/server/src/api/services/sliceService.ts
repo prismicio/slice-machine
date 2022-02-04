@@ -35,14 +35,12 @@ export async function uploadScreenshots(
   const imageUrlsByVariation: { [variationId: string]: string | null } = {};
 
   for (let i = 0; i < variationIds.length; i += 1) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const variationId = variationIds[i];
 
     const screenshot = resolvePathsToScreenshot({
       paths: [env.cwd, path.join(env.cwd, ".slicemachine/assets")],
       from,
       sliceName,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       variationId,
     });
 
@@ -55,14 +53,11 @@ export async function uploadScreenshots(
 
       if (err) throw new Error(err.reason);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       imageUrlsByVariation[variationId] = !!s3ImageUrl ? s3ImageUrl : null;
     } else {
       console.error(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/restrict-template-expressions
         `--- Unable to find a screenshot for slice ${sliceName} | variation ${variationId}`
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       imageUrlsByVariation[variationId] = null;
     }
   }
