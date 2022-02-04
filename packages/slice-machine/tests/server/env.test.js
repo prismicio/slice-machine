@@ -4,7 +4,6 @@ import { Volume } from "memfs";
 import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
 import os from "os";
-import path from "path";
 
 const TMP = "/tmp";
 
@@ -227,13 +226,44 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          ".prismic": '{"base": "https://prismic.io"}',
+          ".prismic": JSON.stringify({
+            base: "https://prismic.io",
+            cookies: "prismic-auth=biscuits",
+          }),
         },
-        path.join(os.homedir(), ".prismic")
+        os.homedir()
+      )
+    );
+    const { env } = await getEnv(TMP);
+    expect(env.client.isFake()).toBeTruthy();
+  });
+
+  test("it should use the cookie if base and apiEnpoint use the same host", async () => {
+    fs.reset();
+    fs.use(
+      Volume.fromJSON(
+        {
+          "sm.json": '{"apiEndpoint": "https://api-1.wroom.io/api/v2"}',
+          "package.json": "{}",
+        },
+        TMP
+      )
+    );
+    fs.use(
+      Volume.fromJSON(
+        {
+          ".prismic": JSON.stringify({
+            base: "https://wroom.io",
+            cookies: "prismic-auth=biscuits",
+          }),
+        },
+        os.homedir()
       )
     );
 
     const { env } = await getEnv(TMP);
+    expect(env.client.isFake()).toBeFalsy();
     expect(env.client.base).toEqual("https://wroom.io");
+    expect(env.client.auth).toEqual("biscuits");
   });
 });
