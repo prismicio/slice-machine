@@ -84,7 +84,11 @@ export default class PluginContainer {
     }, {});
   }
 
-  createSnippet(widget: FieldType, field: string, useKey = false) {
+  createSnippet(
+    widget: FieldType,
+    field: string,
+    useKey = false
+  ): Record<string, string> {
     const widgets = this._findPluginsWithProp("snippets");
     return Object.entries(widgets).reduce((acc, [name, plugin]) => {
       if (!plugin.snippets) return acc;

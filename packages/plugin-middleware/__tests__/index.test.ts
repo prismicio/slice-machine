@@ -1,3 +1,4 @@
+import { FieldType } from "@slicemachine/core/build/src/models/CustomType/fields"; // <<< this is bad
 import path from "path";
 import PluginMiddleware from "../src";
 import * as Dummy from "../src/dummy-plugin";
@@ -71,6 +72,28 @@ describe("@slicemachine/plugin-middleware", () => {
       expect(result[Dummy.name].data).toContain(
         'export {default as baz} from "./baz"'
       );
+    });
+  });
+
+  describe("createSnippet", () => {
+    it("should call plugins snippet function", () => {
+      jest.spyOn(Dummy, "snippets");
+      const p = new PluginMiddleware([Dummy.name]);
+      const result = p.createSnippet(FieldType.Text, "slice[0].text");
+      expect(Dummy.snippets).toBeCalledWith(
+        FieldType.Text,
+        "slice[0].text",
+        false
+      );
+      expect(result[Dummy.name]).toEqual("<div>slice[0].text</div>");
+    });
+
+    it("snippets is optional? (maybe cahnge this)", () => {
+      jest.mock("foo", () => ({}), { virtual: true });
+      const p = new PluginMiddleware(["foo"]);
+      const result = p.createSnippet(FieldType.Text, "slice[0].text", true);
+      expect(p.plugins["foo"]).toBeDefined();
+      expect(result["foo"]).toBeUndefined();
     });
   });
 });
