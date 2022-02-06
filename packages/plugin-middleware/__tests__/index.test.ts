@@ -1,11 +1,10 @@
-"use strict";
 import path from "path";
 import PluginMiddleware from "../src";
 import * as Dummy from "../src/dummy-plugin";
 
 describe("@slicemachine/plugin-middleware", () => {
   describe("register", () => {
-    it("it should register a node-module", () => {
+    it("should register a node-module", () => {
       jest.mock("foo", () => ({ bar: null }), { virtual: true });
       const p = new PluginMiddleware(["foo"]);
       expect(p.plugins.foo).toBeDefined();
