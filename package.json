@@ -38,6 +38,7 @@
     "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine run lint:precommit",
     "**/packages/core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/core run lint:precommit",
     "**/packages/init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/init run lint:precommit",
+    "**/packages/plugin-middleware/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-middleware run lint",
     "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }
