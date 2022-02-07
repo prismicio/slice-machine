@@ -26,30 +26,32 @@ export async function pushSlice(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 
-    const imageUrlsByVariation: Record<string, string | null> =
+    const screenshotUrlsByVariation: Record<string, string | null> =
       await uploadScreenshots(env, jsonModel, sliceName, from);
 
     console.log("[slice/push]: pushing slice model to Prismic");
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const variations = jsonModel.variations.map(
-      (v: Models.VariationAsObject) => ({
-        ...v,
-        imageUrl: imageUrlsByVariation[v.id],
-      })
+      (variation: Models.VariationAsObject) => {
+        const imageUrl = screenshotUrlsByVariation[variation.id];
+        if (!imageUrl) return variation;
+
+        return {
+          ...variation,
+          imageUrl,
+        };
+      }
     );
 
-    const modelWithImageUrl = {
+    const modelWithImageUrl: Models.SliceAsObject = {
       ...jsonModel,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       variations,
     };
 
     const res = await createOrUpdate(
       slices,
       sliceName,
-      // This type is wrong because there is the property imageUrl inside it.
-      modelWithImageUrl as Models.SliceAsObject,
+      modelWithImageUrl,
       env.client
     );
 
