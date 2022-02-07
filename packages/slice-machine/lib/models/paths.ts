@@ -1,61 +1,46 @@
 import path from "path";
 
-export const paths = (
-  cwd: string,
-  prefix: string
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Record<string, Function> => ({
-  value: () => path.join(cwd, prefix),
+export const paths = (cwd: string, prefix: string) => ({
+  value: (): string => path.join(cwd, prefix),
   customType: (id: string) => ({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    value: () => path.join(paths(cwd, prefix).value()),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    model: () => path.join(paths(cwd, prefix).value(), id, "index.json"),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
-    mock: () => path.join(paths(cwd, prefix).value(), id, "mocks.json"),
+    value: (): string => path.join(paths(cwd, prefix).value()),
+    model: (): string =>
+      path.join(paths(cwd, prefix).value(), id, "index.json"),
+    mock: (): string => path.join(paths(cwd, prefix).value(), id, "mocks.json"),
   }),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/ban-types
-  library: (libraryName: string): Record<string, Function> => ({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
-    value: () => path.join(paths(cwd, prefix).value(), libraryName),
+  library: (libraryName: string) => ({
+    value: (): string => path.join(paths(cwd, prefix).value(), libraryName),
     slice: (sliceName: string) => ({
-      value: () =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      value: (): string =>
         path.join(paths(cwd, prefix).library(libraryName).value(), sliceName),
-      preview: (filename = "preview.png") =>
+      preview: (filename = "preview.png"): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
-      stories: (filename = "index.stories.js") =>
+      stories: (filename = "index.stories.js"): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           filename
         ),
-      mocks: () =>
+      mocks: (): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "mocks.json"
         ),
-      model: () =>
+      model: (): string =>
         path.join(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "model.json"
         ),
       variation: (variationId: string) => ({
-        value: () =>
+        value: (): string =>
           path.join(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
             variationId
           ),
-        preview: (filename = "preview.png") =>
+        preview: (filename = "preview.png"): string =>
           path.join(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             paths(cwd, prefix)
               .library(libraryName)
               .slice(sliceName)
@@ -80,8 +65,7 @@ export const GeneratedCustomTypesPaths = (
 export const CustomTypesPaths = (cwd: string): Record<string, Function> =>
   paths(cwd, "customtypes");
 // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/ban-types
-export const CustomPaths = (cwd: string): Record<string, Function> =>
-  paths(cwd, "");
+export const CustomPaths = (cwd: string) => paths(cwd, "");
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const PackagePaths = (cwd: string): Record<string, Function> =>
   paths(cwd, "node_modules");

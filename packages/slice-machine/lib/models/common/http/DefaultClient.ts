@@ -149,10 +149,9 @@ export default class DefaultClient {
         return {};
       }
       try {
-        return Files.readJson(path.join(cwd, "sm.dev.json")) as Record<
-          string,
-          DevConfig
-        >;
+        return Files.readJson<Record<string, DevConfig>>(
+          path.join(cwd, "sm.dev.json")
+        );
       } catch (e) {
         return {};
       }
@@ -174,10 +173,6 @@ export default class DefaultClient {
       repo,
       auth
     );
-  }
-
-  isFake(): boolean {
-    return false;
   }
 
   async getSlice(): Promise<Response> {

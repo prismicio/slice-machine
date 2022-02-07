@@ -27,6 +27,7 @@ import {
 } from "@models/common/Screenshots";
 import { SliceCreateBody, SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
+import { isApiError } from "@models/server/ApiResult";
 
 router.use(
   "/__preview",
@@ -173,13 +174,13 @@ router.get(
     >,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await pushSlice(req.query);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
+
+    if (isApiError(payload)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       return res.status(payload.status).json(payload);
     }
+
     return res.status(200).json(payload);
   }
 );
@@ -208,11 +209,11 @@ router.get(
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await pushCustomType(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+
+    if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
+
     return res.status(200).json(payload);
   })
 );
