@@ -72,7 +72,8 @@ export default async function getEnv(
     throw new Error(manifestInfo.message);
   }
 
-  const prismicData = getPrismicData();
+  const base = preferWroomBase(manifestInfo.content.apiEndpoint);
+  const prismicData = getPrismicData(base);
 
   if (!prismicData.isOk()) {
     const message =
@@ -89,12 +90,7 @@ export default async function getEnv(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mockConfig = getMockConfig(cwd);
 
-  const base = preferWroomBase(manifestInfo.content.apiEndpoint);
-  const auth = prismicData.value.base.startsWith(base)
-    ? prismicData.value.auth
-    : undefined;
-
-  const client = initClient(cwd, base, repo, auth);
+  const client = initClient(cwd, base, repo, prismicData.value.auth);
 
   return {
     errors: maybeErrors,
