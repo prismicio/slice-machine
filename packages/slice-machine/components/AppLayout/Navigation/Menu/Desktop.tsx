@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
+import { Box, Divider, Heading, Paragraph, Button, Flex, Text } from "theme-ui";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
@@ -19,6 +19,7 @@ import {
   getWarnings,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
+import type { UpdateVersionInfo } from "@lib/models/common/Environment";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -30,7 +31,10 @@ const formatWarnings = (len: number) => ({
   Icon: FiZap,
 });
 
-const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+const UpdateInfo: React.FC<{
+  onClick: () => void;
+  versions: UpdateVersionInfo["availableVersions"];
+}> = ({ onClick, versions }) => {
   return (
     <Flex
       sx={{
@@ -40,6 +44,40 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
         flexDirection: "column",
       }}
     >
+      {(versions.major || versions.minor || versions.patch) && (
+        <Box sx={{ margin: "4px" }}>
+          {/* This is not semantic */}
+          {versions.minor && (
+            <Text
+              sx={{
+                fontSize: "8px",
+                color: "#5B3DF5",
+                background: "rgba(91, 61, 245, 0.15)",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                margin: "4px",
+              }}
+            >
+              Major
+            </Text>
+          )}
+          {/* This is not semantic */}
+          {versions.patch && (
+            <Text
+              sx={{
+                fontSize: "8px",
+                color: "#667587",
+                background: "#E6E6EA",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                margin: "4px",
+              }}
+            >
+              Minor
+            </Text>
+          )}
+        </Box>
+      )}
       <Heading
         as="h6"
         sx={{
@@ -67,10 +105,11 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           borderRadius: "4px",
           margin: "8px",
           fontSize: "11.67px",
+          alignSelf: "flex-start",
         }}
         onClick={onClick}
       >
-        Update
+        Learn more
       </Button>
     </Flex>
   );
@@ -99,7 +138,10 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo.updateAvailable && (
-            <UpdateInfo onClick={openUpdateVersionModal} />
+            <UpdateInfo
+              onClick={openUpdateVersionModal}
+              versions={updateVersionInfo.availableVersions}
+            />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
