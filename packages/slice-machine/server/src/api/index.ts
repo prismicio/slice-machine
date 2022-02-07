@@ -16,7 +16,6 @@ import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import pushCustomType from "./custom-types/push";
-import validateAuth from "./auth/validate";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
@@ -220,18 +219,6 @@ router.get(
 );
 
 router.get(
-  "/auth/validate",
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    _req: express.Request,
-    res: express.Response
-  ): Promise<Express.Response> {
-    const payload = await validateAuth();
-    return res.status(200).json(payload);
-  }
-);
-
-router.get(
   "/simulator/check",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
@@ -275,6 +262,7 @@ router.post(
   })
 );
 
+// Important route that allows the dashboard to send auth tokens.
 router.post(
   "/auth",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-misused-promises, @typescript-eslint/require-await

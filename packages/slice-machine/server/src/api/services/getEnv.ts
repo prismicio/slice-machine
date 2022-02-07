@@ -16,6 +16,7 @@ import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import { Models, Utils } from "@slicemachine/core";
+import preferWroomBase from "@lib/utils/preferWroomBase";
 
 declare let appRoot: string;
 
@@ -71,7 +72,8 @@ export default async function getEnv(
     throw new Error(manifestInfo.message);
   }
 
-  const prismicData = getPrismicData();
+  const base = preferWroomBase(manifestInfo.content.apiEndpoint);
+  const prismicData = getPrismicData(base);
 
   if (!prismicData.isOk()) {
     const message =
@@ -88,12 +90,7 @@ export default async function getEnv(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mockConfig = getMockConfig(cwd);
 
-  const client = initClient(
-    cwd,
-    prismicData.value.base,
-    repo,
-    prismicData.value.auth
-  );
+  const client = initClient(cwd, base, repo, prismicData.value.auth);
 
   return {
     errors: maybeErrors,

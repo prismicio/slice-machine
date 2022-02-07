@@ -4,9 +4,17 @@ import PrismicData from "@lib/models/common/PrismicData";
 import { Utils, FileSystem } from "@slicemachine/core";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
+export default function getPrismicData(
+  requiredBase: string
+): Result<PrismicData, ErrorWithStatus> {
   try {
     const prismicConfig = FileSystem.PrismicSharedConfigManager.get();
+
+    if (prismicConfig.base != requiredBase) {
+      return ok({
+        base: requiredBase,
+      });
+    }
 
     const prismicData: PrismicData = {
       base: prismicConfig.base,
@@ -17,13 +25,9 @@ export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
       return ok(prismicData);
     }
 
-    const authResult = Utils.Cookie.parsePrismicAuthToken(
-      prismicConfig.cookies
-    );
-
     return ok({
       ...prismicData,
-      auth: authResult,
+      auth: Utils.Cookie.parsePrismicAuthToken(prismicConfig.cookies),
     });
   } catch (e) {
     return err(new ErrorWithStatus("Could not parse file at ~/.prismic.", 500));
