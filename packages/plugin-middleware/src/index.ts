@@ -11,6 +11,7 @@ export type Plugin = {
   ) => { filename: string; data: string };
   index: (slices: string[]) => { filename: string; data: string };
   snippets?: (widget: FieldType, field: string, useKey?: boolean) => string;
+  framework?: string;
   // [key: string]: unknown;
 };
 
@@ -30,10 +31,16 @@ export default class PluginContainer {
     }
   }
 
-  private _findPluginsWithProp(prop: string): Record<string, Plugin> {
+  private _findPluginsWithProp(
+    framework: string,
+    prop: string
+  ): Record<string, Plugin> {
     return Object.entries(this.plugins)
       .filter(([, plugin]) => {
-        return Object.prototype.hasOwnProperty.call(plugin, prop);
+        return (
+          Object.prototype.hasOwnProperty.call(plugin, prop) &&
+          plugin.framework === framework
+        );
       })
       .reduce((acc, [name, plugin]) => ({ ...acc, [name]: plugin }), {});
   }
@@ -53,9 +60,10 @@ export default class PluginContainer {
   }
 
   createSlice(
+    framework: string,
     sliceName: string
   ): Record<string, { filename: string; data: string }> {
-    const slices = this._findPluginsWithProp("slice");
+    const slices = this._findPluginsWithProp(framework, "slice");
     return Object.entries(slices).reduce((acc, [name, plugin]) => {
       const result = plugin.slice(sliceName);
       return { ...acc, [name]: result };
@@ -63,11 +71,12 @@ export default class PluginContainer {
   }
 
   createStory(
+    framework: string,
     path: string,
     title: string,
     mock: SliceMock
   ): Record<string, { filename: string; data: string }> {
-    const stories = this._findPluginsWithProp("story");
+    const stories = this._findPluginsWithProp(framework, "story");
     return Object.entries(stories).reduce((acc, [name, plugin]) => {
       const result = plugin.story(path, title, mock);
       return { ...acc, [name]: result };
@@ -75,9 +84,10 @@ export default class PluginContainer {
   }
 
   createIndex(
+    framework: string,
     stories: string[]
   ): Record<string, { filename: string; data: string }> {
-    const indices = this._findPluginsWithProp("index");
+    const indices = this._findPluginsWithProp(framework, "index");
     return Object.entries(indices).reduce((acc, [name, plugin]) => {
       const result = plugin.index(stories);
       return { ...acc, [name]: result };
@@ -85,11 +95,12 @@ export default class PluginContainer {
   }
 
   createSnippet(
+    framework: string,
     widget: FieldType,
     field: string,
     useKey = false
   ): Record<string, string> {
-    const widgets = this._findPluginsWithProp("snippets");
+    const widgets = this._findPluginsWithProp(framework, "snippets");
     return Object.entries(widgets).reduce((acc, [name, plugin]) => {
       if (!plugin.snippets) return acc;
       const result = plugin.snippets(widget, field, useKey);

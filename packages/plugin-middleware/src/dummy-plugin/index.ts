@@ -4,6 +4,7 @@ import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields"
 // for testing the dummy, not needed else where
 export const name = module.filename;
 
+export const framework = "dummy";
 /* slice template */
 export const slice = (name: string): { filename: string; data: string } => ({
   filename: "index.js",

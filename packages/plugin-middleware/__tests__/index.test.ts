@@ -35,7 +35,7 @@ describe("@slicemachine/plugin-middleware", () => {
       jest.spyOn(Dummy, "slice");
       const sliceName = "foo";
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createSlice(sliceName);
+      const result = p.createSlice("dummy", sliceName);
       expect(Dummy.slice).toHaveBeenCalled();
       expect(result[Dummy.name].data).toContain(
         `const ${sliceName} = () => "foobar"`
@@ -49,7 +49,7 @@ describe("@slicemachine/plugin-middleware", () => {
     it("should call the story method on the plugins", () => {
       jest.spyOn(Dummy, "story");
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createStory("some/path", "MySlice", []);
+      const result = p.createStory("dummy", "some/path", "MySlice", []);
       expect(Dummy.story).toBeCalled();
       expect(result[Dummy.name].filename).toEqual("index.story.js");
       // expect(result[Dummy.name].data).toEqual("")
@@ -60,7 +60,7 @@ describe("@slicemachine/plugin-middleware", () => {
     it("should call the index method on the plugins", () => {
       jest.spyOn(Dummy, "index");
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createIndex(["foo", "bar", "baz"]);
+      const result = p.createIndex("dummy", ["foo", "bar", "baz"]);
       expect(Dummy.index).toBeCalled();
       expect(result[Dummy.name].filename).toEqual("index.js");
       expect(result[Dummy.name].data).toContain(
@@ -79,7 +79,7 @@ describe("@slicemachine/plugin-middleware", () => {
     it("should call plugins snippet function", () => {
       jest.spyOn(Dummy, "snippets");
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createSnippet(FieldType.Text, "slice[0].text");
+      const result = p.createSnippet("dummy", FieldType.Text, "slice[0].text");
       expect(Dummy.snippets).toBeCalledWith(
         FieldType.Text,
         "slice[0].text",
@@ -91,7 +91,12 @@ describe("@slicemachine/plugin-middleware", () => {
     it("snippets is optional? (maybe cahnge this)", () => {
       jest.mock("foo", () => ({}), { virtual: true });
       const p = new PluginMiddleware(["foo"]);
-      const result = p.createSnippet(FieldType.Text, "slice[0].text", true);
+      const result = p.createSnippet(
+        "dummy",
+        FieldType.Text,
+        "slice[0].text",
+        true
+      );
       expect(p.plugins["foo"]).toBeDefined();
       expect(result["foo"]).toBeUndefined();
     });
