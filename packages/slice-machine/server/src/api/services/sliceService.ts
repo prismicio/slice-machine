@@ -2,12 +2,12 @@ import path from "path";
 import type Models from "@slicemachine/core/build/src/models";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 
-import { onError } from "../common/error";
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import DefaultClient from "@models/common/http/DefaultClient";
 import FakeClient from "@models/common/http/FakeClient";
 import { snakelize } from "@lib/utils/str";
+import { ApiError } from "@lib/models/server/ApiResult";
 
 export const createOrUpdate = async (
   slices: ReadonlyArray<Models.SliceAsObject>,
@@ -45,10 +45,7 @@ export async function uploadScreenshots(
     });
 
     if (!!screenshot) {
-      const {
-        err,
-        s3ImageUrl,
-      }: { err?: ReturnType<typeof onError>; s3ImageUrl?: string } =
+      const { err, s3ImageUrl }: { err?: ApiError; s3ImageUrl?: string } =
         await upload(env, sliceName, variationId, screenshot.path);
 
       if (err) throw new Error(err.reason);

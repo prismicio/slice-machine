@@ -10,22 +10,19 @@ import { CustomPaths } from "@lib/models/paths";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { SliceBody } from "@models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
+import { ApiResult } from "@models/server/ApiResult";
 
 export async function pushSlice(
   env: BackendEnvironment,
   slices: ReadonlyArray<Models.SliceAsObject>,
   { sliceName, from }: { sliceName: string; from: string }
-) {
+): Promise<ApiResult> {
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
 
   try {
     const jsonModel: Models.SliceAsObject =
       Files.readJson<Models.SliceAsObject>(modelPath);
-    const { err }: { err?: ReturnType<typeof onError> } = await purge(
-      env,
-      slices,
-      sliceName
-    );
+    const { err } = await purge(env, slices, sliceName);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 
@@ -74,9 +71,7 @@ export async function pushSlice(
   }
 }
 
-const handler = async (
-  query: SliceBody
-): Promise<ReturnType<typeof onError> | Record<string, never>> => {
+const handler = async (query: SliceBody): Promise<ApiResult> => {
   const { sliceName, from } = query;
   const { env } = await getEnv();
 

@@ -28,7 +28,7 @@ import {
 } from "@models/common/Screenshots";
 import { SliceCreateBody, SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
-import { onError } from "./common/error";
+import { isApiError } from "@models/server/ApiResult";
 
 router.use(
   "/__preview",
@@ -177,7 +177,7 @@ router.get(
   ): Promise<Express.Response> {
     const payload = await pushSlice(req.query);
 
-    if (isPayloadHasError<Record<string, never>>(payload)) {
+    if (isApiError(payload)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       return res.status(payload.status).json(payload);
     }
@@ -211,7 +211,7 @@ router.get(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await pushCustomType(req);
 
-    if (isPayloadHasError<Record<string, never>>(payload)) {
+    if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
 
@@ -302,15 +302,5 @@ router.use("*", async function (req: express.Request, res: express.Response) {
     reason: `Could not find route "${req.baseUrl}"`,
   });
 });
-
-function isPayloadHasError<Request extends Record<string, unknown>>(
-  payload: ReturnType<typeof onError> | Request
-): payload is ReturnType<typeof onError> {
-  return (
-    typeof payload === "object" &&
-    payload !== null &&
-    payload.hasOwnProperty("err")
-  );
-}
 
 export default router;

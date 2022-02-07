@@ -4,6 +4,7 @@ import path from "path";
 import uniqid from "uniqid";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
+import { ApiError } from "@lib/models/server/ApiResult";
 
 import { s3DefaultPrefix } from "@lib/consts";
 import { onError } from "../common/error";
@@ -12,7 +13,7 @@ export const purge = async (
   env: BackendEnvironment,
   slices: ReadonlyArray<Models.SliceAsObject>,
   sliceName: string
-): Promise<{ err?: ReturnType<typeof onError> }> => {
+): Promise<{ err?: ApiError }> => {
   if (slices.find((e) => e.id === snakelize(sliceName))) {
     console.log("\n[slice/push]: purging images folder");
     const deleteRes = await env.client.images.deleteFolder({
@@ -34,7 +35,7 @@ export const upload = async (
   sliceName: string,
   variationId: string,
   filePath: string
-): Promise<{ s3ImageUrl?: string; err?: ReturnType<typeof onError> }> => {
+): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
   console.log("[slice/push]: uploading variation preview");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/await-thenable
   const aclResponse: any = await (await env.client.images.createAcl()).json();

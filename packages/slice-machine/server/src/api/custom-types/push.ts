@@ -7,6 +7,7 @@ import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
+import { ApiResult } from "@lib/models/server/ApiResult";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
@@ -28,9 +29,7 @@ const createOrUpdate = (
   return client.insertCustomType(model);
 };
 
-export default async function handler(
-  req: RequestWithEnv
-): Promise<ReturnType<typeof onError> | Record<string, never>> {
+export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   const { id } = req.query;
 
   const state = await getBackendState(req.errors, req.env);
