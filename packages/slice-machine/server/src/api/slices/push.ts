@@ -62,7 +62,7 @@ export async function handler(
       const variationId = variationIds[i];
 
       const screenshot = resolvePathsToScreenshot({
-        paths: [env.cwd, path.join(env.cwd, ".slicemchine/assets")],
+        paths: [env.cwd, path.join(env.cwd, ".slicemachine/assets")],
         from,
         sliceName,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
