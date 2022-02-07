@@ -103,7 +103,7 @@ const Header: React.FC<{
             onClick={Model.isTouched ? onSave : onPush}
             loading={isLoading && !imageLoading}
             disabled={
-              isLoading || !!imageLoading || (!Model.isTouched && !unSynced)
+              isLoading || imageLoading || (!Model.isTouched && !unSynced)
             }
           >
             {Model.isTouched

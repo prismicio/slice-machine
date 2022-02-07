@@ -7,7 +7,7 @@ import {
 import { upload } from "../../../server/src/api/services/uploadScreenshotClient";
 
 import DefaultClient from "../../../lib/models/common/http/DefaultClient";
-import { allFieldSliceModel } from "../../__mocks__/sliceModel";
+import allFieldSliceModel from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 

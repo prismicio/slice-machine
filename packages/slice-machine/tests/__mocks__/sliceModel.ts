@@ -1,6 +1,6 @@
 import { SliceAsObject } from "@slicemachine/core/build/src/models";
 
-export const allFieldSliceModel: SliceAsObject = {
+const allFieldSliceModel: SliceAsObject = {
   id: "all_fields",
   type: "SharedSlice",
   name: "AllFields",
@@ -228,3 +228,5 @@ export const allFieldSliceModel: SliceAsObject = {
     },
   ],
 };
+
+export default allFieldSliceModel;
