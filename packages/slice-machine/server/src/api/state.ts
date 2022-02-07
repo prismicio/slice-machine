@@ -54,9 +54,7 @@ export const getBackendState = async (
   env: BackendEnvironment
 ) => {
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
-  const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
-    env
-  );
+  const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
   const base = preferWroomBase(env.manifest.apiEndpoint);
   if (base !== env.prismicData.base) {
@@ -64,7 +62,7 @@ export const getBackendState = async (
   }
 
   // Refresh auth
-  if (!isFake && env.prismicData.auth) {
+  if (env.isUserLoggedIn && env.prismicData.auth) {
     try {
       const newTokenResponse: Response = await DefaultClient.refreshToken(
         base,
@@ -96,7 +94,6 @@ export const getBackendState = async (
     remoteCustomTypes,
     remoteSlices,
     clientError,
-    isFake,
     configErrors,
     env,
     warnings,

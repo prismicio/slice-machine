@@ -94,8 +94,4 @@ export default class FakeClient {
       return { status: 200 };
     },
   };
-
-  isFake() {
-    return true;
-  }
 }

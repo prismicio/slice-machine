@@ -2,7 +2,8 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import FakeClient from "@lib/models/common/http/FakeClient";
 import { Frameworks } from "@slicemachine/core/build/src/models";
 
-const mockBackendEnvironment: BackendEnvironment = {
+const backendEnvironment: BackendEnvironment = {
+  isUserLoggedIn: false,
   cwd: "fakeCwd",
   prismicData: {
     base: "https://fakebase.io",
@@ -23,4 +24,4 @@ const mockBackendEnvironment: BackendEnvironment = {
   client: new FakeClient(),
 };
 
-export default mockBackendEnvironment;
+export default backendEnvironment;

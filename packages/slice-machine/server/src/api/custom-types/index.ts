@@ -35,10 +35,9 @@ const handleMatch = (matches: string[], env: BackendEnvironment) => {
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
-): Promise<{ remoteCustomTypes: CustomTypeJsonModel[]; isFake?: boolean }> => {
-  if (env.client.isFake()) {
-    return { remoteCustomTypes: [], isFake: true };
-  }
+): Promise<{ remoteCustomTypes: CustomTypeJsonModel[] }> => {
+  if (!env.isUserLoggedIn) return { remoteCustomTypes: [] };
+
   try {
     const res = await env.client.getCustomTypes();
     const { remoteCustomTypes } = await (async (): Promise<{
@@ -71,7 +70,6 @@ const saveCustomTypes = (
 };
 
 export default async function handler(env: BackendEnvironment): Promise<{
-  isFake: boolean;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 }> {
@@ -81,7 +79,7 @@ export default async function handler(env: BackendEnvironment): Promise<{
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const folderExists = Files.exists(pathToCustomTypes);
 
-  const { remoteCustomTypes, isFake } = await fetchRemoteCustomTypes(env);
+  const { remoteCustomTypes } = await fetchRemoteCustomTypes(env);
 
   if (!folderExists) {
     saveCustomTypes(remoteCustomTypes, cwd);
@@ -89,7 +87,6 @@ export default async function handler(env: BackendEnvironment): Promise<{
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`);
   return {
-    isFake: !!isFake,
     customTypes: handleMatch(matches, env),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     remoteCustomTypes: remoteCustomTypes.map((ct: any) =>
