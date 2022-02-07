@@ -212,7 +212,7 @@ describe("getEnv", () => {
     expect(env.framework).toEqual("vanillajs");
   });
 
-  test("it should prefer to use the endpoint from sm.json", async () => {
+  test("it should not consider the user logged in if the base from .prismic is different than the one in SM.json", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -235,10 +235,10 @@ describe("getEnv", () => {
       )
     );
     const { env } = await getEnv(TMP);
-    expect(env.client.isFake()).toBeTruthy();
+    expect(env.isUserLoggedIn).toBeFalsy();
   });
 
-  test("it should use the cookie if base and apiEnpoint use the same host", async () => {
+  test("it should consider the user logged in if the base from .prismic is equal to the one in SM.json", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -262,7 +262,7 @@ describe("getEnv", () => {
     );
 
     const { env } = await getEnv(TMP);
-    expect(env.client.isFake()).toBeFalsy();
+    expect(env.isUserLoggedIn).toBeTruthy();
     expect(env.client.base).toEqual("https://wroom.io");
     expect(env.client.auth).toEqual("biscuits");
   });
