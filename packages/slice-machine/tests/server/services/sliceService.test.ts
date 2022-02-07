@@ -34,7 +34,7 @@ jest.mock("../../../server/src/api/services/uploadScreenshotClient", () => {
   };
 });
 
-describe("createOrUpdate", () => {
+describe("Slice Service", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
