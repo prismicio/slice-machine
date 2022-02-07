@@ -62,7 +62,7 @@ export const getBackendState = async (
   }
 
   // Refresh auth
-  if (!env.isUserLoggedIn && env.prismicData.auth) {
+  if (env.isUserLoggedIn && env.prismicData.auth) {
     try {
       const newTokenResponse: Response = await DefaultClient.refreshToken(
         base,
