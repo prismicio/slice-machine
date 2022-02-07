@@ -8,9 +8,9 @@ import { onError } from "../common/error";
 import { purge } from "../services/uploadScreenshotClient";
 import { CustomPaths } from "@lib/models/paths";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { SliceBody } from "@models/common/Slice";
+import type { SliceBody } from "@models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
-import { ApiResult } from "@models/server/ApiResult";
+import { ApiResult } from "@lib/models/server/ApiResult";
 
 export async function pushSlice(
   env: BackendEnvironment,
