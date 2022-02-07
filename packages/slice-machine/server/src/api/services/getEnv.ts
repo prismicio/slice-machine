@@ -117,6 +117,7 @@ export default async function getEnv(
         supportedFrameworks: Models.SupportedFrameworks,
         manifest: manifestInfo.content,
       }),
+      isUserLoggedIn: !!prismicData.value.auth && !!repo,
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },

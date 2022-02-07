@@ -8,11 +8,11 @@ import os from "os";
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import moduleAlias from "module-alias";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 import fetch from "node-fetch";
+import { resolveAliases } from "../../lib/env/resolveAliases";
 
 declare let global: {
   fetch: typeof fetch;
@@ -22,21 +22,7 @@ declare let global: {
 global.fetch = fetch;
 global.appRoot = path.join(__dirname, "../../../");
 
-type PKG = {
-  _moduleAliases: string[];
-  [key: string]: unknown;
-};
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pkg = require(global.appRoot + "package.json") as PKG;
-const LIB_PATH = path.join(global.appRoot, "build", "lib");
-
-Object.entries(pkg._moduleAliases).forEach(([key]) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore As the 2.1 typing is not available yet and solve this problem
-  moduleAlias.addAlias(key, (fromPath: string) => {
-    return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
-  });
-});
+resolveAliases(global.appRoot);
 
 import api from "./api";
 

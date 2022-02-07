@@ -17,8 +17,8 @@ export interface Paths {
     value: () => string;
     slice: (sliceName: string) => {
       value: () => string;
-      preview: (filename: string) => string;
-      stories: (filename: string) => string;
+      preview: (filename?: string) => string;
+      stories: (filename?: string) => string;
       mocks: () => string;
       model: () => string;
       variation: (variationId: string) => {

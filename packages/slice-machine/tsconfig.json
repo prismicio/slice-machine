@@ -1,4 +1,5 @@
 {
+  // TS Config used by Next to build the frontend of the application.
   "compilerOptions": {
     "target": "ES2019",
     "module": "esnext",

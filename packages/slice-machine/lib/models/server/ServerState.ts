@@ -1,9 +1,9 @@
 import Warning from "@lib/models/common/Warning";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "./ServerError";
-import { FrontEndEnvironment } from "@models/common/Environment";
-import { LibraryUI } from "@models/common/LibraryUI";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { FrontEndEnvironment } from "@lib/models/common/Environment";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import { Models } from "@slicemachine/core";
 
 export interface ConfigErrors {

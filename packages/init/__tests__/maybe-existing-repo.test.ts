@@ -14,9 +14,7 @@ import {
 } from "../src/steps/maybe-existing-repo";
 
 import nock from "nock";
-import { Utils } from "@slicemachine/core";
-
-const { Roles } = Utils.roles;
+import { Models } from "@slicemachine/core";
 
 import * as fs from "fs";
 import { Repositories } from "@slicemachine/core/build/src/models/Repositories";
@@ -74,7 +72,7 @@ describe("maybe-existing-repo", () => {
 
     nock(userServiceURL)
       .get("/repositories")
-      .reply(200, [{ domain: "foo", name: "foo", role: Roles.OWNER }]);
+      .reply(200, [{ domain: "foo", name: "foo", role: Models.Roles.OWNER }]);
 
     jest
       .spyOn(inquirer, "prompt")
@@ -118,7 +116,7 @@ describe("makeReposPretty", () => {
     const result = makeReposPretty(base)({
       name: "foo-bar",
       domain: "foo-bar",
-      role: Roles.WRITER,
+      role: Models.Roles.WRITER,
     });
 
     expect(result.name).toContain("foo-bar.prismic.io");
@@ -131,7 +129,7 @@ describe("makeReposPretty", () => {
     const result = makeReposPretty(base)({
       name: "foo-bar",
       domain: "foo-bar",
-      role: Roles.OWNER,
+      role: Models.Roles.OWNER,
     });
 
     expect(result.name).toContain("foo-bar.prismic.io");
@@ -231,8 +229,8 @@ describe("maybeStickTheRepoToTheTopOfTheList", () => {
 describe("sortReposForPrompt", () => {
   test("sort without pre-configured repo-name", () => {
     const repos: Repositories = [
-      { name: "foo-bar", domain: "foo-bar", role: Roles.WRITER },
-      { name: "qwerty", domain: "qwerty", role: Roles.ADMIN },
+      { name: "foo-bar", domain: "foo-bar", role: Models.Roles.WRITER },
+      { name: "qwerty", domain: "qwerty", role: Models.Roles.ADMIN },
     ];
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
@@ -250,8 +248,8 @@ describe("sortReposForPrompt", () => {
 
   test("sort with pre-configure repo-name", () => {
     const repos: Repositories = [
-      { name: "foo-bar", domain: "foo-bar", role: Roles.WRITER },
-      { name: "qwerty", domain: "qwerty", role: Roles.ADMIN },
+      { name: "foo-bar", domain: "foo-bar", role: Models.Roles.WRITER },
+      { name: "qwerty", domain: "qwerty", role: Models.Roles.ADMIN },
     ];
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));

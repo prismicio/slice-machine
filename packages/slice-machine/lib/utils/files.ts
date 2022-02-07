@@ -47,9 +47,9 @@ const Files = {
     }
   },
 
-  readJson(pathToFile: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(this.readString(pathToFile));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readJson<Return = any>(pathToFile: string): Return {
+    return JSON.parse(this.readString(pathToFile)) as Return;
   },
   safeReadJson(pathToFile: string) {
     try {

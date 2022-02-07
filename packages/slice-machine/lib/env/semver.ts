@@ -14,7 +14,7 @@ interface Manifest {
   version: string;
 }
 
-interface Comparison {
+export interface Comparison {
   currentVersion: string;
   onlinePackage: Manifest | null;
   updateAvailable: boolean;

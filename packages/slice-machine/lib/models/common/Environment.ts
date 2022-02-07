@@ -26,6 +26,8 @@ export interface BackendEnvironment {
   mockConfig: any;
   framework: Models.Frameworks;
   baseUrl: string;
+  // Here to replace the fake client
+  isUserLoggedIn: boolean;
   client: DefaultClient | FakeClient;
 }
 

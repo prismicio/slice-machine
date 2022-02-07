@@ -2,24 +2,12 @@ import axios from "axios";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
-import { Utils, Communication, FileSystem } from "@slicemachine/core";
-
-const UserProfile = t.exact(
-  t.type({
-    userId: t.string,
-    shortId: t.string,
-    email: t.string,
-    firstName: t.string,
-    lastName: t.string,
-  })
-);
-
-export type UserProfile = t.TypeOf<typeof UserProfile>;
+import { Utils, Models, Communication, FileSystem } from "@slicemachine/core";
 
 export async function getUserProfile(
   cookies: string,
   base = Utils.CONSTS.DEFAULT_BASE
-): Promise<UserProfile> {
+): Promise<Models.UserProfile> {
   const userServiceBase =
     Utils.CONSTS.DEFAULT_BASE === base
       ? Utils.CONSTS.USER_SERVICE_BASE
@@ -33,19 +21,19 @@ export async function getUserProfile(
   const token = Utils.Cookie.parsePrismicAuthToken(cookies);
 
   return axios
-    .get<UserProfile>(endpoint, {
+    .get<Models.UserProfile>(endpoint, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
     .then((res) =>
       pipe(
-        UserProfile.decode(res.data),
-        fold<t.Errors, UserProfile, UserProfile>(
+        Models.UserProfile.decode(res.data),
+        fold<t.Errors, Models.UserProfile, Models.UserProfile>(
           () => {
             throw new Error("Can't parse user profile");
           },
-          (data: UserProfile) => data
+          (data: Models.UserProfile) => data
         )
       )
     );
@@ -54,8 +42,8 @@ export async function getUserProfile(
 export async function validateSessionAndGetProfile(
   base = Utils.CONSTS.DEFAULT_BASE
 ): Promise<{
-  info: Communication.UserInfo;
-  profile: UserProfile | null;
+  info: Models.UserInfo;
+  profile: Models.UserProfile | null;
 } | null> {
   const config = FileSystem.PrismicSharedConfigManager.get();
 

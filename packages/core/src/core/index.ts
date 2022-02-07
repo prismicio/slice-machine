@@ -1,6 +1,6 @@
 import { startServerAndOpenBrowser } from "./auth";
 import { Poll, Endpoints } from "../utils";
-import type { Manifest, Frameworks } from "../models";
+import type { Manifest, Frameworks, UserInfo } from "../models";
 import * as Communication from "./communication";
 import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
 import { Repositories } from "../models/Repositories";
@@ -75,12 +75,9 @@ async function startAuth({
   const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
   try {
     // We wait 3 minutes before timeout
-    await Poll.startPolling<
-      Communication.UserInfo | null,
-      Communication.UserInfo
-    >(
+    await Poll.startPolling<UserInfo | null, UserInfo>(
       () => Auth.validateSession(base),
-      (user): user is Communication.UserInfo => !!user,
+      (user): user is UserInfo => !!user,
       3000,
       60
     );
@@ -108,9 +105,7 @@ export const Auth = {
     });
   },
   logout: (): void => PrismicSharedConfigManager.remove(),
-  validateSession: async (
-    requiredBase: string
-  ): Promise<Communication.UserInfo | null> => {
+  validateSession: async (requiredBase: string): Promise<UserInfo | null> => {
     const config = PrismicSharedConfigManager.get();
 
     if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
