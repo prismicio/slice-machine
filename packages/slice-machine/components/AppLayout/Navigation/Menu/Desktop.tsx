@@ -47,7 +47,7 @@ const UpdateInfo: React.FC<{
       {(versions.major || versions.minor || versions.patch) && (
         <Box sx={{ margin: "4px" }}>
           {/* This is not semantic */}
-          {versions.minor && (
+          {(versions.major || versions.minor) && (
             <Text
               sx={{
                 fontSize: "8px",
