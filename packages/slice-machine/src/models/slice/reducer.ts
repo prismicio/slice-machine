@@ -36,6 +36,7 @@ export function reducer(
       case SliceActions.Push:
         return {
           ...prevState,
+          __status: LibStatus.Synced,
           initialScreenshotUrls: prevState.screenshotUrls,
           remoteVariations: prevState.variations,
         };
@@ -202,16 +203,32 @@ export function reducer(
   return {
     ...result,
     isTouched: (() => {
+      // Should be the slice be saved ?
       return (
         !equal(result.initialVariations, result.variations) ||
         !equal(result.initialMockConfig, result.mockConfig)
       );
     })(),
     __status: (() => {
-      return !equal(result.screenshotUrls, result.initialScreenshotUrls) ||
-        !compareVariations(result.remoteVariations, result.initialVariations)
+      // If the model is not pushed the only status possible is new slice
+      if (result.__status === LibStatus.NewSlice) {
+        return result.__status;
+      }
+
+      const isScreenshotModified = !equal(
+        result.screenshotUrls,
+        result.initialScreenshotUrls
+      );
+
+      // Should be the slice be pushed ?
+      const isModelModified = !compareVariations(
+        result.remoteVariations,
+        result.initialVariations
+      );
+
+      return isModelModified || isScreenshotModified
         ? LibStatus.Modified
-        : LibStatus.Synced;
+        : result.__status;
     })(),
   };
 }
