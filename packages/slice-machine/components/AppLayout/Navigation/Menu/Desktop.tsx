@@ -85,7 +85,7 @@ const UpdateInfo: React.FC<{
           margin: "4px 8px",
         }}
       >
-        Update Available
+        Updates Available
       </Heading>
       <Paragraph
         sx={{
@@ -94,7 +94,7 @@ const UpdateInfo: React.FC<{
           margin: "4px 8px",
         }}
       >
-        A new version of Slice Machine is available
+        Some updates of SliceMachine are available.
       </Paragraph>
       <Button
         data-testid="update-modal-open"
