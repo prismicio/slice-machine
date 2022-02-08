@@ -203,11 +203,7 @@ export function reducer(
   return {
     ...result,
     isTouched: (() => {
-      // If the model is not pushed the model cannot be touched
-      if (result.__status === LibStatus.NewSlice) {
-        return false;
-      }
-
+      // Should be the slice be saved ?
       return (
         !equal(result.initialVariations, result.variations) ||
         !equal(result.initialMockConfig, result.mockConfig)
@@ -223,12 +219,14 @@ export function reducer(
         result.screenshotUrls,
         result.initialScreenshotUrls
       );
+
+      // Should be the slice be pushed ?
       const isModelModified = !compareVariations(
         result.remoteVariations,
         result.initialVariations
       );
 
-      return isScreenshotModified || isModelModified
+      return isModelModified || isScreenshotModified
         ? LibStatus.Modified
         : result.__status;
     })(),
