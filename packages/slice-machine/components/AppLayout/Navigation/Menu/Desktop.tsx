@@ -53,12 +53,12 @@ const UpdateInfo: React.FC<{
                 fontSize: "8px",
                 color: "#5B3DF5",
                 background: "rgba(91, 61, 245, 0.15)",
-                padding: "4px 8px",
+                padding: "2px 4px",
                 borderRadius: "4px",
-                margin: "4px",
+                margin: "2px",
               }}
             >
-              Major
+              MAJOR
             </Text>
           )}
           {/* This is not semantic */}
@@ -68,12 +68,12 @@ const UpdateInfo: React.FC<{
                 fontSize: "8px",
                 color: "#667587",
                 background: "#E6E6EA",
-                padding: "4px 8px",
+                padding: "2px 4px",
                 borderRadius: "4px",
-                margin: "4px",
+                margin: "2px",
               }}
             >
-              Minor
+              MINOR
             </Text>
           )}
         </Box>
@@ -82,7 +82,7 @@ const UpdateInfo: React.FC<{
         as="h6"
         sx={{
           fontSize: "14px",
-          margin: "8px",
+          margin: "4px 8px",
         }}
       >
         Update Available
@@ -91,7 +91,7 @@ const UpdateInfo: React.FC<{
         sx={{
           fontSize: "14px",
           color: "#4E4E55",
-          margin: "8px",
+          margin: "4px 8px",
         }}
       >
         A new version of Slice Machine is available
@@ -103,7 +103,7 @@ const UpdateInfo: React.FC<{
           border: "1px solid rgba(62, 62, 72, 0.15)",
           boxSizing: "border-box",
           borderRadius: "4px",
-          margin: "8px",
+          margin: "4px 8px",
           fontSize: "11.67px",
           alignSelf: "flex-start",
         }}
