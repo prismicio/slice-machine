@@ -11,7 +11,6 @@ import NotLoggedIn from "./Navigation/NotLoggedIn";
 
 import { warningStates } from "@lib/consts";
 
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
@@ -126,7 +125,6 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
       updateVersionInfo: getUpdateVersionInfo(store),
     })
   );
-  const { openUpdateVersionModal } = useSliceMachineActions();
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
@@ -140,7 +138,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo.updateAvailable && (
             <UpdateInfo
-              onClick={openUpdateVersionModal}
+              onClick={() => void 0}
               versions={updateVersionInfo.availableVersions}
             />
           )}

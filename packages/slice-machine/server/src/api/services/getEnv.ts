@@ -104,9 +104,6 @@ export default async function getEnv(
       prismicData: prismicData.value,
       updateVersionInfo: {
         currentVersion: npmCompare.currentVersion,
-        latestVersion: npmCompare.onlinePackage?.version || "",
-        packageManager: npmCompare.packageManager,
-        updateCommand: npmCompare.updateCommand,
         updateAvailable: npmCompare.updateAvailable,
         availableVersions: npmCompare.availableVersions,
       },
