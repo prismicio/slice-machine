@@ -45,7 +45,7 @@ const UpdateInfo: React.FC<{
       }}
     >
       {(versions.major || versions.minor || versions.patch) && (
-        <Box sx={{ margin: "4px" }}>
+        <Box sx={{ margin: "0px 4px 4px 4px" }}>
           {/* This is not semantic */}
           {(versions.major || versions.minor) && (
             <Text
@@ -91,10 +91,10 @@ const UpdateInfo: React.FC<{
         sx={{
           fontSize: "14px",
           color: "#4E4E55",
-          margin: "4px 8px",
+          margin: "4px 8px 8px",
         }}
       >
-        Some updates of SliceMachine are available.
+        Some updates of Slice Machine are available.
       </Paragraph>
       <Button
         data-testid="update-modal-open"
@@ -103,9 +103,10 @@ const UpdateInfo: React.FC<{
           border: "1px solid rgba(62, 62, 72, 0.15)",
           boxSizing: "border-box",
           borderRadius: "4px",
-          margin: "4px 8px",
+          margin: "8px",
           fontSize: "11.67px",
           alignSelf: "flex-start",
+          padding: "4px 8px",
         }}
         onClick={onClick}
       >
