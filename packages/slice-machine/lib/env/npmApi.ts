@@ -12,7 +12,7 @@ export async function fetchVersions(name: string): Promise<string[]> {
     .catch(() => []);
 }
 
-const highest = (
+const highestSemverVersionFor = (
   kind: "patch" | "minor" | "major",
   current: string,
   versions: string[]
@@ -20,32 +20,34 @@ const highest = (
   const minorVersion = current.replace(/^(\d+\.\d+).*/, "$1");
   const majorVersion = current.replace(/^(\d+).*/, "$1");
 
-  const top = versions.reduce((acc, version) => {
+  const result = versions.reduce((acc, version) => {
     if (/^\d+\.\d+\.\d+$/.test(version) === false) return acc;
     if (semver.gt(acc, version)) return acc;
     if (kind === "patch" && version.startsWith(minorVersion)) return version;
     if (
       kind === "minor" &&
       version.startsWith(majorVersion) &&
-      version.startsWith(minorVersion) === false
-    )
+      !version.startsWith(minorVersion)
+    ) {
       return version;
-    if (kind === "major" && version.startsWith(majorVersion) === false)
+    }
+    if (kind === "major" && !version.startsWith(majorVersion)) {
       return version;
+    }
     return acc;
   }, current);
 
-  return top === current ? "" : top;
+  return result === current ? "" : result;
 };
 
-export function whatSortOfVersions(
+export function semverVersions(
   current: string,
   versions: string[]
 ): UpdateVersionInfo["availableVersions"] {
   return {
-    patch: highest("patch", current, versions),
-    minor: highest("minor", current, versions),
-    major: highest("major", current, versions),
+    patch: highestSemverVersionFor("patch", current, versions),
+    minor: highestSemverVersionFor("minor", current, versions),
+    major: highestSemverVersionFor("major", current, versions),
   };
 }
 
@@ -54,5 +56,5 @@ export async function getAvailableVersionInfo(
   current: string
 ): Promise<UpdateVersionInfo["availableVersions"]> {
   const versions = await fetchVersions(name);
-  return whatSortOfVersions(current, versions);
+  return semverVersions(current, versions);
 }
