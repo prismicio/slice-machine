@@ -40,6 +40,7 @@ const UpdateInfo: React.FC<{
       sx={{
         maxWidth: "230px",
         border: "1px solid #E6E6EA",
+        borderRadius: "4px",
         padding: "8px",
         flexDirection: "column",
       }}
