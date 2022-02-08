@@ -37,7 +37,7 @@ const UpdateInfo: React.FC<{
   return (
     <Flex
       sx={{
-        maxWidth: "230px",
+        maxWidth: "240px",
         border: "1px solid #E6E6EA",
         borderRadius: "4px",
         padding: "8px",
@@ -131,7 +131,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   );
 
   return (
-    <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
+    <Box as="aside" bg="sidebar" sx={{ minWidth: "270px" }}>
       <Box py={4} px={3}>
         <Logo />
         <ItemsList mt={4} links={links} />
