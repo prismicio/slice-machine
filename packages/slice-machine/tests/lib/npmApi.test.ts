@@ -1,6 +1,6 @@
 import {
   fetchVersions,
-  whatSortOfVersions,
+  semverVersions,
   getAvailableVersionInfo,
 } from "../../lib/env/npmApi";
 import nock from "nock";
@@ -38,47 +38,38 @@ describe("fetchVersions", () => {
 
 describe("whatSortOfVersions", () => {
   test("when given an empty array of versions it should return empty strings for patch, minor and major", () => {
-    const want = { patch: "", minor: "", major: "" };
-    const got = whatSortOfVersions("0.0.0", []);
+    const want = { patch: null, minor: null, major: null };
+    const got = semverVersions("0.0.0", []);
     expect(got).toEqual(want);
   });
 
   test("when versions that contains a patch it should return the patch version", () => {
-    const want = { patch: "0.0.1", minor: "", major: "" };
-    const got = whatSortOfVersions("0.0.0", ["0.0.0", "0.0.1"]);
+    const want = { patch: "0.0.1", minor: null, major: null };
+    const got = semverVersions("0.0.0", ["0.0.0", "0.0.1"]);
     expect(got).toEqual(want);
   });
 
   test("when versions contains two patches it should return the highest patch version", () => {
-    const want = { patch: "0.0.2", minor: "", major: "" };
-    const got = whatSortOfVersions("0.0.0", ["0.0.0", "0.0.1", "0.0.2"]);
+    const want = { patch: "0.0.2", minor: null, major: null };
+    const got = semverVersions("0.0.0", ["0.0.0", "0.0.1", "0.0.2"]);
     expect(got).toEqual(want);
   });
 
   test("when versions contains a minor version it should return the highest minor version", () => {
-    const want = { patch: "", minor: "0.1.0", major: "" };
-    const got = whatSortOfVersions("0.0.0", [
-      "0.0.0",
-      "0.1.0",
-      "0.2.0-alpha.1",
-    ]);
+    const want = { patch: null, minor: "0.1.0", major: null };
+    const got = semverVersions("0.0.0", ["0.0.0", "0.1.0", "0.2.0-alpha.1"]);
     expect(got).toEqual(want);
   });
 
   test("when versions contains a minor version it should return the highest minor version", () => {
-    const want = { patch: "", minor: "0.2.1", major: "" };
-    const got = whatSortOfVersions("0.0.0", [
-      "0.0.0",
-      "0.1.0",
-      "0.2.1",
-      "0.2.0",
-    ]);
+    const want = { patch: null, minor: "0.2.1", major: null };
+    const got = semverVersions("0.0.0", ["0.0.0", "0.1.0", "0.2.1", "0.2.0"]);
     expect(got).toEqual(want);
   });
 
   test("when versions contain major versions it should return the highest major version", () => {
-    const want = { patch: "", minor: "", major: "2.2.2" };
-    const got = whatSortOfVersions("1.0.0", [
+    const want = { patch: null, minor: null, major: "2.2.2" };
+    const got = semverVersions("1.0.0", [
       "0.5.9",
       "1.0.0",
       "1.2.2-alpha.0",
@@ -104,7 +95,7 @@ describe("whatSortOfVersions", () => {
       "2.1.0",
     ];
 
-    const got = whatSortOfVersions("1.0.1", versions);
+    const got = semverVersions("1.0.1", versions);
 
     expect(got).toEqual(want);
   });
