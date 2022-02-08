@@ -16,7 +16,7 @@ const highestSemverVersionFor = (
   kind: "patch" | "minor" | "major",
   current: string,
   versions: string[]
-): string => {
+): string | null => {
   const minorVersion = current.replace(/^(\d+\.\d+).*/, "$1");
   const majorVersion = current.replace(/^(\d+).*/, "$1");
 
@@ -37,7 +37,7 @@ const highestSemverVersionFor = (
     return acc;
   }, current);
 
-  return result === current ? "" : result;
+  return result === current ? null : result;
 };
 
 export function semverVersions(

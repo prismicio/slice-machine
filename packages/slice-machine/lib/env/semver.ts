@@ -30,9 +30,9 @@ const DefaultComparison: Comparison = {
   updateCommand: "",
   packageManager: "npm",
   availableVersions: {
-    patch: "",
-    minor: "",
-    major: "",
+    patch: null,
+    minor: null,
+    major: null,
   },
 };
 
@@ -63,20 +63,21 @@ export const createComparator =
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const manifest: Manifest = Files.readJson(pathToPkg);
-      const onlinePackage = await fetchJsonPackage(manifest.name);
-      const updateAvailable = semver.lt(
-        manifest.version,
-        onlinePackage.version
-      );
-      const isYarnPackageManager = Files.exists(YarnLock(cwd));
-      const updateCommand = isYarnPackageManager
-        ? MessageByManager.YARN(manifest.name, onlinePackage.version)
-        : MessageByManager.NPM(manifest.name, onlinePackage.version);
 
       const versions = await getAvailableVersionInfo(
         manifest.name,
         manifest.version
       );
+      const onlinePackage = await fetchJsonPackage(manifest.name);
+      const updateAvailable = !!(
+        versions.patch ||
+        versions.minor ||
+        versions.major
+      );
+      const isYarnPackageManager = Files.exists(YarnLock(cwd));
+      const updateCommand = isYarnPackageManager
+        ? MessageByManager.YARN(manifest.name, onlinePackage.version)
+        : MessageByManager.NPM(manifest.name, onlinePackage.version);
 
       return {
         currentVersion: manifest.version,

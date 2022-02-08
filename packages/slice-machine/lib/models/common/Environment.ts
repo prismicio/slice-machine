@@ -10,9 +10,9 @@ export interface UpdateVersionInfo {
   updateCommand: string;
   updateAvailable: boolean;
   availableVersions: {
-    patch: string;
-    minor: string;
-    major: string;
+    patch: string | null;
+    minor: string | null;
+    major: string | null;
   };
 }
 
