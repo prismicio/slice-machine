@@ -2,6 +2,8 @@ import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { UserContextStoreType } from "@src/modules/userContext/types";
+import { getUpdateVersionInfo } from "../environment";
+import { gte } from "semver";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
@@ -38,6 +40,15 @@ export const userHasSendAReview = (state: SliceMachineStoreType): boolean =>
 export const userHasDoneTheOnboarding = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.isOnboarded;
+
+export const dismissedLatestUpdate = (
+  state: SliceMachineStoreType
+): boolean => {
+  const dismissed = state.userContext.dismissedUpdate;
+  if (!dismissed) return false;
+  const current = getUpdateVersionInfo(state);
+  return gte(dismissed, current.latestVersion);
+};
 
 // Reducer
 export const userContextReducer: Reducer<

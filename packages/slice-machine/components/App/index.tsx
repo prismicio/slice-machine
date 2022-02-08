@@ -11,6 +11,7 @@ import ReviewModal from "@components/ReviewModal";
 import ServerState from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
+import UpdateVersionModal from "../UpdateVersionModal";
 import { MissingLibraries } from "@components/MissingLibraries";
 
 type AppProps = {
@@ -40,6 +41,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
             )}
           </SliceHandler>
         </AppLayout>
+        <UpdateVersionModal />
         <LoginModal />
         <ReviewModal />
       </LibrariesProvider>

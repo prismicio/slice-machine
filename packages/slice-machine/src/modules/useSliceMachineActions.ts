@@ -56,6 +56,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+  const closeUpdateVersionModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
+  const openUpdateVersionModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
 
   // Loading store
   const startLoadingReview = () =>
@@ -115,6 +119,8 @@ const useSliceMachineActions = () => {
     sendAReview,
     skipReview,
     dismissUpdate,
+    closeUpdateVersionModal,
+    openUpdateVersionModal,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
   };

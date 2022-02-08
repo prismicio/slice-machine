@@ -90,8 +90,6 @@ describe("Slice Service", () => {
       expect(uploadMock).toHaveBeenCalledTimes(2);
     });
     test("should return null for every variation", async () => {
-      jest.spyOn(console, "error").mockImplementation(() => void 0);
-
       const resolvePathsToScreenshotMock =
         resolvePathsToScreenshot as jest.Mock;
       const uploadMock = upload as jest.Mock;

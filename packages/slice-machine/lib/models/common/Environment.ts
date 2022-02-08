@@ -5,12 +5,10 @@ import FakeClient from "./http/FakeClient";
 
 export interface UpdateVersionInfo {
   currentVersion: string;
+  latestVersion: string;
+  packageManager: "npm" | "yarn";
+  updateCommand: string;
   updateAvailable: boolean;
-  availableVersions: {
-    patch: string | null;
-    minor: string | null;
-    major: string | null;
-  };
 }
 
 export interface BackendEnvironment {
