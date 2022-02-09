@@ -42,6 +42,7 @@ describe("[Custom types module]", () => {
         warnings: dummyServerState.warnings,
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
+        libraries: dummyServerState.libraries,
       });
 
       expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({

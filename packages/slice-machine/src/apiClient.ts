@@ -30,6 +30,20 @@ export const saveCustomType = (
   return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
+/** Slice Routes **/
+
+export const saveSlice = (
+  sliceName: string,
+  from: string
+): Promise<{ variationId: string }> => {
+  return axios
+    .get(
+      `/api/slices/create?sliceName=${sliceName}&from=${from}`,
+      defaultAxiosConfig
+    )
+    .then((r: AxiosResponse<{ variationId: string }>) => r.data);
+};
+
 /** Auth Routes **/
 
 export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
@@ -37,8 +51,8 @@ export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
 
 export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
   axios
-    .post<CheckAuthStatusResponse>("/api/auth/status", {}, defaultAxiosConfig)
-    .then((r) => r.data);
+    .post("/api/auth/status", {}, defaultAxiosConfig)
+    .then((r: AxiosResponse<CheckAuthStatusResponse>) => r.data);
 
 /** Simulator Routes **/
 

@@ -11,6 +11,7 @@ import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { LibraryUI } from "@models/common/LibraryUI";
 
 // Action Creators
 export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
@@ -19,6 +20,7 @@ export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
   configErrors: ConfigErrors;
   localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  libraries: ReadonlyArray<LibraryUI>;
 }>();
 
 type EnvironmentActions = ActionType<typeof getStateCreator>;

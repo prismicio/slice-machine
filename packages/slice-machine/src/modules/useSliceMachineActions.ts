@@ -26,11 +26,12 @@ import {
   saveCustomTypesCreator,
 } from "@src/modules/customTypes";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
+import { createSliceCreator } from "@src/modules/slices";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Simulator store
+  // Simulator module
   const checkSimulatorSetup = (
     withFirstVisitCheck: boolean,
     callback?: () => void
@@ -47,11 +48,15 @@ const useSliceMachineActions = () => {
   const toggleSetupDrawerStep = (stepNumber: number) =>
     dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
-  // Modal store
+  // Modal module
   const closeLoginModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeCreateSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  const openCreateSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const closeCreateCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
@@ -61,7 +66,7 @@ const useSliceMachineActions = () => {
   const openUpdateVersionModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
 
-  // Loading store
+  // Loading module
   const startLoadingReview = () =>
     dispatch(startLoadingActionCreator({ loadingKey: LoadingKeysEnum.REVIEW }));
   const stopLoadingReview = () =>
@@ -71,18 +76,22 @@ const useSliceMachineActions = () => {
   const stopLoadingLogin = () =>
     dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
 
-  // UserContext Store
+  // UserContext module
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const dismissUpdate = (version: string) =>
     dispatch(dismissedUpdateCreator(version));
 
-  // Custom types Store
+  // Custom types module
   const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
   const saveCustomTypes = (modelPayload: CustomTypeState) =>
     dispatch(saveCustomTypesCreator({ modelPayload }));
+
+  // Slice module
+  const createSlice = (sliceName: string, from: string) =>
+    dispatch(createSliceCreator.request({ sliceName, from }));
 
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {
@@ -95,6 +104,7 @@ const useSliceMachineActions = () => {
         configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
+        libraries: serverState.libraries,
       })
     );
   };
@@ -116,6 +126,7 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomTypes,
     saveCustomTypes,
+    createSlice,
     sendAReview,
     skipReview,
     dismissUpdate,
@@ -123,6 +134,8 @@ const useSliceMachineActions = () => {
     openUpdateVersionModal,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
+    openCreateSliceModal,
+    closeCreateSliceModal,
   };
 };
 
