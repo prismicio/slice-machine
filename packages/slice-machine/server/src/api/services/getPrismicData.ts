@@ -11,6 +11,9 @@ export default function getPrismicData(
     const prismicConfig = FileSystem.PrismicSharedConfigManager.get();
 
     if (prismicConfig.base != requiredBase) {
+      FileSystem.PrismicSharedConfigManager.setProperties({
+        base: requiredBase,
+      });
       return ok({
         base: requiredBase,
       });
