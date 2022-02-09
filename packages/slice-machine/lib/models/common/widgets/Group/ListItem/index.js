@@ -22,6 +22,7 @@ import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
+import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 
 const CustomListItem = ({
   tabId,
@@ -65,8 +66,14 @@ const CustomListItem = ({
   const onSaveNewField = ({ id, widgetTypeName }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const friendlyName = createFriendlyFieldNameWithId(id);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+    const newWidget = widget.create(friendlyName);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).group(groupItem.key).addWidget(id, widget.create(id));
+    store.tab(tabId).group(groupItem.key).addWidget(id, newWidget);
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {

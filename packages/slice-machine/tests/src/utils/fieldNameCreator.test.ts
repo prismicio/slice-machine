@@ -34,6 +34,10 @@ const dataProvider = [
     expectedResult: "My FIELd",
   },
   {
+    fieldId: "myComplexFIELd",
+    expectedResult: "My Complex FIELd",
+  },
+  {
     fieldId: "MYField",
     expectedResult: "MYField",
   },
