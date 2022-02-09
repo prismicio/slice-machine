@@ -25,7 +25,8 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc -b"
   },
   "bugs": {
     "url": "https://github.com/prismicio/slice-machine/issues"
