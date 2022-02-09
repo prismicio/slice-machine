@@ -4,4 +4,4 @@ so usage is
 export simulator from 'slice-mahcine-next/simulator'
 */
 
-export default {}; // what is the spec for the simulator?
+export default "foo"; // what is the spec for the simulator?

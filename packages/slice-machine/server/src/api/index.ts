@@ -152,6 +152,7 @@ router.use(
     res: express.Response
   ): Promise<Express.Response> {
     let payload;
+    // why both?
     if (req.method === "POST") {
       payload = await createSlice(req.body);
     } else {

@@ -85,11 +85,11 @@ export default class PluginContainer {
 
   createIndex(
     framework: string,
-    stories: string[]
+    slices: string[]
   ): Record<string, { filename: string; data: string }> {
     const indices = this._findPluginsWithProp(framework, "index");
     return Object.entries(indices).reduce((acc, [name, plugin]) => {
-      const result = plugin.index(stories);
+      const result = plugin.index(slices);
       return { ...acc, [name]: result };
     }, {});
   }

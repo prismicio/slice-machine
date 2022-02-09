@@ -1,2 +1,2 @@
 /* May aswell add the slice-zones to the framework plugins */
-export default {};
+export default "foo";
