@@ -1,0 +1,9 @@
+{
+	"apiEndpoint": "https://sm-plugin-next-090222.prismic.io/api/v2",
+	"libraries": [
+		"@/slices"
+	],
+	"plugins": [
+		"@slicemachine/plugin-next"
+	]
+}
