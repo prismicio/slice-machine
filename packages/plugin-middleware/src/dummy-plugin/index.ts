@@ -1,4 +1,4 @@
-import type { SliceMock } from "@slicemachine/core/src/models";
+import type { Plugin } from "../index";
 import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
 
 // for testing the dummy, not needed else where
@@ -15,13 +15,13 @@ export default ${name}
 });
 
 /* story template */
-export const story = (
+export const story: Plugin["story"] = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  path: string,
+  path,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  title: string,
+  title,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mock: SliceMock
+  variations
 ): { filename: string; data: string } => ({
   filename: "index.story.js",
   data: "some story",

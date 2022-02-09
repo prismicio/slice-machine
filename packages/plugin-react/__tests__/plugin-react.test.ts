@@ -1,9 +1,9 @@
 import * as plugin from "../src";
 import type { Variations } from "@slicemachine/plugin-middleware";
 
-describe("@slicemachine/plugin-next", () => {
+describe("@slicemachine/plugin-react", () => {
   test("#framework", () => {
-    expect(plugin.framework).toEqual("next");
+    expect(plugin.framework).toEqual("react");
   });
   test("#slice", () => {
     const result = plugin.slice("Foo");

@@ -1,5 +1,5 @@
 {
-  "name": "@slicemachine/plugin-next",
+  "name": "@slicemachine/plugin-react",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "MarcMcIntosh <marcmcintosh1987@gmail.com>",
@@ -27,9 +27,6 @@
   },
   "bugs": {
     "url": "https://github.com/prismicio/slice-machine/issues"
-  },
-  "dependencies": {
-    "@slicemachine/plugin-react": "^1.0.0"
   },
   "devDependencies": {
     "@slicemachine/plugin-middleware": "^1.0.0",

@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@slicemachine/plugin-next #slice 1`] = `
+Object {
+  "data": "import React from 'react'
+import { RichText } from 'prismic-reactjs'
+  
+const Foo = ({ slice }) => (
+  <section>
+    <span className=\\"title\\">
+      { slice.primary.title ? (
+        <RichText render={slice.primary.title}/
+      ) : (
+        <h2>Template slice, update me!</h2>
+      )}
+    </span>
+      { slice.primary.description ? (
+        <RichText render={slice.primary.description}/>
+      ) : (
+         <p>start by editing this slice from inside Slice Machine!</p>
+      )}
+      <style jsx>{\`
+          section {
+            max-width: 600px;
+            margin: 4em auto;
+            text-align: center;
+          }
+          .title {
+            color: #8592e0;
+          }
+      \`}</style>
+    </section>
+  )
+  
+  export default Foo
+",
+  "filename": "index.js",
+}
+`;
+
+exports[`@slicemachine/plugin-next story 1`] = `
+Object {
+  "data": "import MyComponent from '../slices/foo';
+export default { title: 'FooBar' }
+
+export const _DefaultSlice = () => <MyComponent slice={{\\"id\\":\\"default-slice\\",\\"name\\":\\"Default slice\\",\\"docURL\\":\\"...\\",\\"version\\":\\"sktwi1xtmkfgx8626\\",\\"description\\":\\"FooSlice\\",\\"primary\\":{\\"title\\":{\\"type\\":\\"StructuredText\\",\\"config\\":{\\"single\\":\\"heading1\\",\\"label\\":\\"Title\\",\\"placeholder\\":\\"This is where it all begins...\\"}},\\"description\\":{\\"type\\":\\"StructuredText\\",\\"config\\":{\\"single\\":\\"paragraph\\",\\"label\\":\\"Description\\",\\"placeholder\\":\\"A nice description of your feature\\"}},\\"\\":{\\"config\\":{\\"label\\":\\"\\",\\"constraint\\":{},\\"thumbnails\\":[]},\\"type\\":\\"Image\\"}},\\"items\\":{}}} />
+_DefaultSlice.storyName = 'Default slice'
+
+",
+  "filename": "index.stories.js",
+}
+`;

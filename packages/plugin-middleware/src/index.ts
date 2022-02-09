@@ -1,13 +1,15 @@
 import path from "path";
-import type { SliceMock } from "@slicemachine/core/src/models";
+import type { SliceAsObject } from "@slicemachine/core/src/models";
 import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
+
+export type Variations = SliceAsObject["variations"];
 
 export type Plugin = {
   slice: (name: string) => { filename: string; data: string };
   story: (
     path: string,
     title: string,
-    mock: SliceMock
+    variations: SliceAsObject["variations"]
   ) => { filename: string; data: string };
   index: (slices: string[]) => { filename: string; data: string };
   snippets?: (widget: FieldType, field: string, useKey?: boolean) => string;
@@ -74,11 +76,11 @@ export default class PluginContainer {
     framework: string,
     path: string,
     title: string,
-    mock: SliceMock
+    variations: SliceAsObject["variations"]
   ): Record<string, { filename: string; data: string }> {
     const stories = this._findPluginsWithProp(framework, "story");
     return Object.entries(stories).reduce((acc, [name, plugin]) => {
-      const result = plugin.story(path, title, mock);
+      const result = plugin.story(path, title, variations);
       return { ...acc, [name]: result };
     }, {});
   }
