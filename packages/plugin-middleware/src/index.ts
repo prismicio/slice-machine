@@ -107,4 +107,9 @@ export default class PluginContainer {
       return { ...acc, [name]: result };
     }, {});
   }
+
+  // clean up actions
+
+  // deleteSlice(name: string): string { return name }
+  // deleteStory(name: string): string { return name }
 }
