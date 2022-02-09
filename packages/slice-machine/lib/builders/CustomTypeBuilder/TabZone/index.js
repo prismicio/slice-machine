@@ -14,6 +14,7 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import SliceZone from "../SliceZone";
 
 import ModalFormCard from "components/ModalFormCard";
+import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 
 const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -30,12 +31,6 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
     return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onDeleteTab = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).delete();
-  };
-
   const onSaveNewField = ({ id, widgetTypeName }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
@@ -43,8 +38,12 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const friendlyName = createFriendlyFieldNameWithId(id);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).addWidget(id, widget.create(id));
+    store.tab(tabId).addWidget(id, widget.create(friendlyName));
   };
 
   const onDragEnd = (result) => {
