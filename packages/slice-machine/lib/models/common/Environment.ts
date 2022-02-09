@@ -37,5 +37,4 @@ export interface FrontEndEnvironment {
   mockConfig: any;
   framework: Models.Frameworks;
   sliceMachineAPIUrl: string;
-  prismicAPIUrl: string;
 }

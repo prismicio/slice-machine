@@ -4,7 +4,6 @@ import os from "os";
 import fs from "fs";
 
 jest.mock(`fs`, () => {
-  //@ts-ignore
   const { vol } = jest.requireActual("memfs");
   return vol;
 });
@@ -13,7 +12,7 @@ describe("getPrismicData", () => {
     vol.reset();
   });
 
-  test("it should set return the data from ~/.prismic", async () => {
+  test("it should return the data from ~/.prismic", () => {
     const base = "https://example.com";
     const cookies = "prismic-auth=biscuits";
     vol.fromJSON(
@@ -23,32 +22,12 @@ describe("getPrismicData", () => {
       os.homedir()
     );
 
-    const result = await getPrismicData(base);
+    const result = getPrismicData();
     expect(result.isOk()).toBeTruthy();
-    expect(result.isOk() && result.value.base).toEqual(base);
     expect(result.isOk() && result.value.auth).toEqual("biscuits");
   });
 
-  test("if the argument is diffrent from the base in ~/.prismic it will set it", async () => {
-    const base = "https://wroom.io";
-    const cookies = "prismic-auth=biscuits";
-    vol.fromJSON(
-      {
-        ".prismic": JSON.stringify({ base: "https://prismic.io", cookies }),
-      },
-      os.homedir()
-    );
-
-    jest.spyOn(fs, "writeFileSync");
-
-    const result = await getPrismicData(base);
-    expect(fs.writeFileSync).toHaveBeenCalled();
-    expect(result.isOk()).toBeTruthy();
-    expect(result.isOk() && result.value.base).toEqual(base);
-    expect(result.isOk() && result.value.auth).toBeUndefined();
-  });
-
-  test("no cookie", async () => {
+  test("should return cookies as undefinde when there is no cookie", () => {
     const base = "https://prismic.io";
     vol.fromJSON(
       {
@@ -56,9 +35,8 @@ describe("getPrismicData", () => {
       },
       os.homedir()
     );
-    const result = await getPrismicData(base);
+    const result = getPrismicData();
     expect(result.isOk()).toBeTruthy();
-    expect(result.isOk() && result.value.base).toEqual(base);
     expect(result.isOk() && result.value.auth).toBeUndefined();
   });
 
@@ -78,7 +56,7 @@ describe("getPrismicData", () => {
       throw new Error("whoops");
     });
 
-    const result = await getPrismicData(base);
+    const result = await getPrismicData();
     expect(result.isOk()).toBeTruthy();
     expect(result.isOk() && result.value.shortId).toBeUndefined();
   });

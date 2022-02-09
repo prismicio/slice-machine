@@ -4,23 +4,11 @@ import PrismicData from "@lib/models/common/PrismicData";
 import { Utils, FileSystem } from "@slicemachine/core";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
-export default function getPrismicData(
-  requiredBase: string
-): Result<PrismicData, ErrorWithStatus> {
+export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {
     const prismicConfig = FileSystem.PrismicSharedConfigManager.get();
 
-    if (prismicConfig.base != requiredBase) {
-      FileSystem.PrismicSharedConfigManager.setProperties({
-        base: requiredBase,
-      });
-      return ok({
-        base: requiredBase,
-      });
-    }
-
     const prismicData: PrismicData = {
-      base: prismicConfig.base,
       shortId: prismicConfig.shortId,
     };
 
