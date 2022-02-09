@@ -39,6 +39,8 @@
     "**/packages/core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/core run lint:precommit",
     "**/packages/init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/init run lint:precommit",
     "**/packages/plugin-middleware/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-middleware run lint",
+    "**/packages/plugin-react/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-react run lint",
+    "**/packages/plugin-next/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-middleware run lint",
     "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }
