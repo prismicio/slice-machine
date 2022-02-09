@@ -1,9 +1,5 @@
 import path from "path";
 import fetch from "node-fetch";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import semver from "semver";
 import Files from "../utils/files";
 import { YarnLock } from "../models/paths";
 import { getAvailableVersionInfo } from "./npmApi";
