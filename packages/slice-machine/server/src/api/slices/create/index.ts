@@ -14,6 +14,7 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
+import { DEFAULT_VARIATION_ID } from "@lib/consts";
 
 import save from "../save";
 
@@ -43,7 +44,7 @@ const copyTemplate = async (
     await copy(templatePath, path.join(env.cwd, from, sliceName), {
       componentName: sliceName,
       componentId: snakelize(sliceName),
-      variationId: "default-slice",
+      variationId: DEFAULT_VARIATION_ID,
     });
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -120,7 +121,7 @@ export default async function handler({
     });
     return {
       ...res,
-      variationId: "default-slice",
+      variationId: DEFAULT_VARIATION_ID,
     };
   }
 

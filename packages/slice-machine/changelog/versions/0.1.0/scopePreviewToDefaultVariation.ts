@@ -22,11 +22,7 @@ export function scopePreviewToDefaultVariation(
   const dirname = path.dirname(generatedSlicePreview.path);
   const fileName = path.basename(generatedSlicePreview.path);
 
-  const generatedVariationPreviewPath = path.join(
-    dirname,
-    "default-slice",
-    fileName
-  );
+  const generatedVariationPreviewPath = path.join(dirname, "default", fileName);
 
   Utils.Files.mkdir(path.dirname(generatedVariationPreviewPath), {
     recursive: true,
