@@ -4,11 +4,7 @@ export const warningStates = {
   CLIENT_ERROR: "CLIENT_ERROR",
 };
 
-export const warningTwoLiners = {
-  NOT_CONNECTED: ["You're not connected", "Run `prismic login` to connect"],
-};
-
-export const defaultSliceId = "default-slice";
+export const DEFAULT_VARIATION_ID = "default";
 export const changelogPath = "changelog/versions";
 export const s3DefaultPrefix = "shared-slices";
 

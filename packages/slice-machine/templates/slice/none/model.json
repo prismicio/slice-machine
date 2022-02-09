@@ -5,7 +5,7 @@
   "description": "{{componentName}}",
   "variations": [{
     "id": "{{variationId}}",
-    "name": "Default slice",
+    "name": "Default",
     "docURL": "...",
     "version": "sktwi1xtmkfgx8626",
     "description": "{{componentName}}",
