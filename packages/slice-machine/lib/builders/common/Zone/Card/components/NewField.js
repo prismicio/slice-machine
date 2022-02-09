@@ -1,10 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Formik, Form, Field } from "formik";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Box, Input, Flex, Text, Button, Label, useThemeUI } from "theme-ui";
+import { Box, Input, Flex, Text, Button, useThemeUI } from "theme-ui";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DefaultFields, validateId } from "@lib/forms/defaults";
+import { validateId } from "@lib/forms/defaults";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
