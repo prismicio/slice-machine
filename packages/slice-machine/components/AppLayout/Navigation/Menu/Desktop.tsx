@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Divider, Heading, Paragraph, Button, Flex, Text } from "theme-ui";
+import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
@@ -20,6 +20,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getVersionsTheUserKnowsAbout } from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useRouter } from "next/router";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -120,6 +121,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
     (e) => e.key === warningStates.NOT_CONNECTED
   );
 
+  const router = useRouter();
+
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "270px" }}>
       <Box py={4} px={3}>
@@ -128,7 +131,10 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo.updateAvailable && (
             <UpdateInfo
-              onClick={() => viewedUpdates(updateVersionInfo.availableVersions)}
+              onClick={() => {
+                viewedUpdates(updateVersionInfo.availableVersions);
+                return router.push("/changelog");
+              }}
               hasSeenUpdate={userSeenUpdates}
             />
           )}
