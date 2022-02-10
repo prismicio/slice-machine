@@ -19,7 +19,7 @@ import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
 
-import PluginMiddleWare from "@slicemachine/plugin-middleware";
+// import PluginMiddleWare from "@slicemachine/plugin-middleware";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
@@ -80,9 +80,10 @@ const fromTemplate = async (
 export default async function handler({
   sliceName,
   from,
-  values,
+  values, // undefined ?
 }: SliceCreateBody) {
   const { env } = await getEnv();
+  console.log({ sliceName, from, values });
 
   // from is lib name
   // values is the model?
@@ -90,17 +91,17 @@ export default async function handler({
   // create the model
   // create the mocks
   // create the story
-  const plugins = new PluginMiddleWare(env.manifest.plugins);
-  // add sane default for model
-  const slice = plugins.createSlice(env.manifest.framework || "", sliceName);
-  const story = plugins.createStory(
-    env.manifest.framework || "",
-    sliceName,
-    sliceName,
-    values?.model
-  ); // add models
-  // get current and new slice
-  const index = plugins.createIndex(env.manifest.framework || "", []); // add all slices here
+  // const plugins = new PluginMiddleWare(env.manifest.plugins);
+  // // add sane default for model
+  // const slice = plugins.createSlice(env.manifest.framework || "", sliceName);
+  // const story = plugins.createStory(
+  //   env.manifest.framework || "",
+  //   sliceName,
+  //   sliceName,
+  //   values?.model
+  // ); // add models
+  // // get current and new slice
+  // const index = plugins.createIndex(env.manifest.framework || "", []); // add all slices here
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();
