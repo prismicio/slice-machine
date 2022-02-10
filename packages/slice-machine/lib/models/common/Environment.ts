@@ -2,15 +2,12 @@ import PrismicData from "./PrismicData";
 import type { Models } from "@slicemachine/core";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
+import { SliceMachineVersion } from "@lib/env/semver";
 
 export interface UpdateVersionInfo {
   currentVersion: string;
   updateAvailable: boolean;
-  availableVersions: {
-    patch: string | null;
-    minor: string | null;
-    major: string | null;
-  };
+  availableVersions: SliceMachineVersion[];
 }
 
 export interface BackendEnvironment {

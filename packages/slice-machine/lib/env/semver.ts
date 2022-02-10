@@ -2,12 +2,16 @@ import path from "path";
 import fetch from "node-fetch";
 import Files from "../utils/files";
 import { YarnLock } from "../models/paths";
-import { getAvailableVersionInfo } from "./npmApi";
-import type { UpdateVersionInfo } from "@lib/models/common/Environment";
+import { getAvailableVersionInfo, isUpdateAvailable } from "./npmApi";
 
 interface Manifest {
   name: string;
   version: string;
+}
+
+export interface SliceMachineVersion {
+  version: string;
+  releaseNote: string | null;
 }
 
 export interface Comparison {
@@ -16,7 +20,7 @@ export interface Comparison {
   updateAvailable: boolean;
   updateCommand: string;
   packageManager: "npm" | "yarn";
-  availableVersions: UpdateVersionInfo["availableVersions"];
+  availableVersions: SliceMachineVersion[];
 }
 
 const DefaultComparison: Comparison = {
@@ -25,16 +29,7 @@ const DefaultComparison: Comparison = {
   updateAvailable: false,
   updateCommand: "",
   packageManager: "npm",
-  availableVersions: {
-    patch: null,
-    minor: null,
-    major: null,
-  },
-};
-
-const MessageByManager = {
-  YARN: (name: string, version: string) => `yarn add -D ${name}@${version}`,
-  NPM: (name: string, version: string) => `npm i --save-dev ${name}@${version}`,
+  availableVersions: [],
 };
 
 async function fetchJsonPackage(packageName: string): Promise<Manifest> {
@@ -60,20 +55,12 @@ export const createComparator =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const manifest: Manifest = Files.readJson(pathToPkg);
 
-      const versions = await getAvailableVersionInfo(
-        manifest.name,
-        manifest.version
-      );
+      const versions = await getAvailableVersionInfo(manifest.name);
+
       const onlinePackage = await fetchJsonPackage(manifest.name);
-      const updateAvailable = !!(
-        versions.patch ||
-        versions.minor ||
-        versions.major
-      );
+      const updateAvailable = isUpdateAvailable(manifest.version, versions);
       const isYarnPackageManager = Files.exists(YarnLock(cwd));
-      const updateCommand = isYarnPackageManager
-        ? MessageByManager.YARN(manifest.name, onlinePackage.version)
-        : MessageByManager.NPM(manifest.name, onlinePackage.version);
+      const updateCommand = "toto";
 
       return {
         currentVersion: manifest.version,
