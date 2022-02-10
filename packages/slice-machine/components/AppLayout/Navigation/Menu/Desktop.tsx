@@ -56,6 +56,7 @@ const UpdateInfo: React.FC<{
         Updates Available{" "}
         {hasSeenUpdate || (
           <span
+            data-testid="the-red-dot"
             style={{
               borderRadius: "50%",
               width: "8px",
