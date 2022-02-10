@@ -57,9 +57,6 @@ export const getBackendState = async (
   const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
   const base = preferWroomBase(env.manifest.apiEndpoint);
-  if (base !== env.prismicData.base) {
-    FileSystem.PrismicSharedConfigManager.setProperties({ base });
-  }
 
   // Refresh auth
   if (env.isUserLoggedIn && env.prismicData.auth) {
@@ -111,7 +108,6 @@ export default async function handler(
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
     shortId: prismicData.shortId,
-    prismicAPIUrl: prismicData.base,
   };
 
   return {

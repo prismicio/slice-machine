@@ -73,7 +73,7 @@ export default async function getEnv(
   }
 
   const base = preferWroomBase(manifestInfo.content.apiEndpoint);
-  const prismicData = getPrismicData(base);
+  const prismicData = getPrismicData();
 
   if (!prismicData.isOk()) {
     const message =
