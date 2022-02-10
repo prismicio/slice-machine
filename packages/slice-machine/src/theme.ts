@@ -45,7 +45,7 @@ const AppTheme = (): Theme =>
       codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
       highlight: "hsl(10, 40%, 90%)",
-      purple: "hsl(250, 60%, 30%)",
+      purple: "#5B3DF5",
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",

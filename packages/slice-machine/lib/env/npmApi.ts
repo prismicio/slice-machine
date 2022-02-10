@@ -1,6 +1,6 @@
 import npmFetch from "npm-registry-fetch";
 import semver from "semver";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { SliceMachineVersion } from "@lib/env/semver";
 
 interface ReleaseNote {
@@ -68,28 +68,31 @@ export async function getAvailableVersionInfo(
     (version) => /^\d+\.\d+\.\d+$/.test(version) && semver.lte("0.1.0", version)
   );
   const stableVersionsOrdered = stableVersions.sort().reverse();
-  let releaseNoteMap: Record<string, ReleaseNote> = {};
 
-  try {
-    const releaseNotes = await axios
-      .get("https://api.github.com/repos/prismicio/slice-machine/releases")
-      .then((r: AxiosResponse<ReleaseNote[]>) => r.data);
-    releaseNoteMap = releaseNotes.reduce(
-      (map: Record<string, ReleaseNote>, releaseNote) => {
-        map[releaseNote.name] = releaseNote;
-        return map;
-      },
-      {}
-    );
-  } catch (e) {
-    console.log(e);
-  }
+  const releaseNotesMap: Record<string, ReleaseNote> = await axios
+    .get<ReleaseNote[]>(
+      "https://api.github.com/repos/prismicio/slice-machine/releases"
+    )
+    .then((response) => {
+      const releaseNotes = response.data;
+      return releaseNotes.reduce(
+        (map: Record<string, ReleaseNote>, releaseNote) => {
+          map[releaseNote.name] = releaseNote;
+          return map;
+        },
+        {}
+      );
+    })
+    .catch(() => {
+      console.log("Couldn't retrieve Github release notes");
+      return {};
+    });
 
   return stableVersionsOrdered.map((stableVersion: string) => {
     return {
       version: stableVersion,
-      releaseNote: releaseNoteMap[stableVersion]
-        ? releaseNoteMap[stableVersion].body
+      releaseNote: releaseNotesMap[stableVersion]
+        ? releaseNotesMap[stableVersion].body
         : null,
     };
   });
