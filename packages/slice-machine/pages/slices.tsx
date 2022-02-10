@@ -198,6 +198,7 @@ const SlicesIndex: React.FunctionComponent = () => {
       </Container>
       {localLibraries && localLibraries.length > 0 && (
         <CreateSliceModal
+          isCreatingSlice={isCreatingSlice}
           isOpen={isCreateSliceModalOpen}
           close={closeCreateSliceModal}
           libraries={localLibraries}

@@ -25,7 +25,7 @@ import {
   ScreenshotRequest,
   ScreenshotResponse,
 } from "@models/common/Screenshots";
-import { SliceCreateBody, SliceBody } from "@models/common/Slice";
+import { SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
 import { isApiError } from "@models/server/ApiResult";
 
@@ -139,25 +139,14 @@ router.post(
   }
 );
 
-router.use(
+router.post(
   "/slices/create",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request<
-      undefined,
-      undefined,
-      SliceCreateBody,
-      SliceCreateBody
-    >,
+    req: express.Request<undefined, undefined, SliceBody, SliceBody>,
     res: express.Response
   ): Promise<Express.Response> {
-    let payload;
-    if (req.method === "POST") {
-      payload = await createSlice(req.body);
-    } else {
-      payload = await createSlice(req.query);
-    }
-
+    const payload = await createSlice(req.body);
     return res.status(200).json(payload);
   }
 );

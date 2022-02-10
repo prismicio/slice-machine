@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import "@testing-library/jest-dom";
 
 import {
@@ -7,8 +11,7 @@ import {
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
-import { saveSlice } from "@src/apiClient";
-import { push } from "connected-next-router";
+import { createSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
@@ -33,17 +36,21 @@ describe("[Slices module]", () => {
   describe("[createSliceSaga]", () => {
     it("should call the api and dispatch the good actions", () => {
       const variationId = "variationId";
-      const actionPayload = { sliceName: "MySlice", from: "MyLib/Components" };
+      const actionPayload = {
+        sliceName: "MySlice",
+        libName: "MyLib/Components",
+      };
       const saga = testSaga(
         createSliceSaga,
         createSliceCreator.request(actionPayload)
       );
 
-      saga.next().call(saveSlice, actionPayload.sliceName, actionPayload.from);
+      saga
+        .next()
+        .call(createSlice, actionPayload.sliceName, actionPayload.libName);
       saga
         .next({ variationId })
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-      saga.next().put(push("/MyLib--Components/MySlice/variationId"));
       saga.next().isDone();
     });
   });

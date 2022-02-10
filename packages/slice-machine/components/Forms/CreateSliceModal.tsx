@@ -11,6 +11,7 @@ const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
   isOpen: boolean;
+  isCreatingSlice: boolean;
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
   libraries: ReadonlyArray<{ name: string }>;
@@ -20,6 +21,7 @@ type FormValues = { sliceName: string; from: string };
 
 const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   isOpen,
+  isCreatingSlice,
   onSubmit,
   close,
   libraries,
@@ -28,8 +30,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
     dataCy={"create-slice-modal"}
     isOpen={isOpen}
     widthInPx="530px"
+    isLoading={isCreatingSlice}
     formId={formId}
-    close={() => close()}
+    close={close}
+    buttonLabel="Create"
     onSubmit={(values: FormValues) => onSubmit(values)}
     initialValues={{
       sliceName: "",

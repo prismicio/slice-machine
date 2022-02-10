@@ -35,6 +35,7 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
       isOpen={isCreateCustomTypeModalOpen}
       widthInPx="530px"
       formId="create-custom-type"
+      buttonLabel={"Create"}
       close={closeCreateCustomTypeModal}
       onSubmit={(values) => {
         createCustomType(

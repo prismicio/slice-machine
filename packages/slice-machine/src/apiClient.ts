@@ -7,6 +7,7 @@ import {
   SaveCustomTypeBody,
 } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import { SliceBody } from "@models/common/Slice";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -32,16 +33,18 @@ export const saveCustomType = (
 
 /** Slice Routes **/
 
-export const saveSlice = (
+export const createSlice = (
   sliceName: string,
-  from: string
+  libName: string
 ): Promise<{ variationId: string }> => {
+  const requestBody: SliceBody = {
+    sliceName,
+    from: libName,
+  };
+
   return axios
-    .get(
-      `/api/slices/create?sliceName=${sliceName}&from=${from}`,
-      defaultAxiosConfig
-    )
-    .then((r: AxiosResponse<{ variationId: string }>) => r.data);
+    .post(`/api/slices/create`, requestBody, defaultAxiosConfig)
+    .then((response: AxiosResponse<{ variationId: string }>) => response.data);
 };
 
 /** Auth Routes **/

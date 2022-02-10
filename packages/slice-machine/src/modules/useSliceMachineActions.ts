@@ -90,8 +90,8 @@ const useSliceMachineActions = () => {
     dispatch(saveCustomTypeCreator({ modelPayload }));
 
   // Slice module
-  const createSlice = (sliceName: string, from: string) =>
-    dispatch(createSliceCreator.request({ sliceName, from }));
+  const createSlice = (sliceName: string, libName: string) =>
+    dispatch(createSliceCreator.request({ sliceName, libName }));
 
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {

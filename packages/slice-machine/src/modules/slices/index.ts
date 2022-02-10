@@ -8,10 +8,9 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { saveSlice } from "@src/apiClient";
+import { createSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { push } from "connected-next-router";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
 import { getStateCreator } from "@src/modules/environment";
@@ -23,7 +22,7 @@ export const createSliceCreator = createAsyncAction(
   "SLICES/CREATE.FAILURE"
 )<{
   sliceName: string;
-  from: string;
+  libName: string;
 }>();
 
 type SlicesActions = ActionType<typeof getStateCreator>;
@@ -51,18 +50,14 @@ export function* createSliceSaga({
   payload,
 }: ReturnType<typeof createSliceCreator.request>) {
   const { variationId } = (yield call(
-    saveSlice,
+    createSlice,
     payload.sliceName,
-    payload.from
-  )) as SagaReturnType<typeof saveSlice>;
+    payload.libName
+  )) as SagaReturnType<typeof createSlice>;
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  yield put(
-    push(
-      `/${payload.from.replace(/\//g, "--")}/${
-        payload.sliceName
-      }/${variationId}`
-    )
-  );
+  window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
+    payload.sliceName
+  }/${variationId}`;
 }
 
 // Saga watchers
