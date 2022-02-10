@@ -1,3 +1,5 @@
+import {randomString, capitalizeFirstChar} from '../../support/utils'
+
 describe("Custom Types specs", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
@@ -14,11 +16,14 @@ describe("Custom Types specs", () => {
       .get('[data-cy=create-ct-modal]')
       .should('be.visible');
 
-    cy.get('input[data-cy=ct-name-input]').type('My custom type')
-    cy.get('input[data-cy=ct-id-input]').type('my-custom-type')
+    const name = [randomString(), randomString()].map(capitalizeFirstChar).join(" ")
+    const id = name.toLowerCase().replace(" ", '-')
+
+    cy.get('input[data-cy=ct-name-input]').type(name)
+    cy.get('input[data-cy=ct-id-input]').type(id)
     cy.get('[data-cy=create-ct-modal]').submit()
-    cy.location('pathname', {timeout: 5000}).should('eq', '/cts/my-custom-type')
-    cy.visit('/cts/my-custom-type')
-    cy.location('pathname', {timeout: 5000}).should('eq', '/cts/my-custom-type')
+    cy.location('pathname', {timeout: 5000}).should("eq", `/cts/${id}`)
+    cy.visit(`/cts/${id}`)
+    cy.location('pathname', {timeout: 5000}).should("eq", `/cts/${id}`)
   })
 })

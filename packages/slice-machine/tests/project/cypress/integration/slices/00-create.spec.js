@@ -1,3 +1,5 @@
+import {randomPascalCase} from '../../support/utils'
+
 describe("Create Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
@@ -12,10 +14,12 @@ describe("Create Slices", () => {
     cy
       .get('[data-cy=create-slice-modal]')
       .should('be.visible');
-    cy.get('input[data-cy=slice-name-input]').type('MySlice')
+
+    const name = randomPascalCase()
+    cy.get('input[data-cy=slice-name-input]').type(name)
     cy.get('[data-cy=create-slice-modal]').submit()
-    cy.location('pathname', {timeout: 5000}).should('eq', '/slices/MySlice/default-slice')
-    cy.visit('/slices/MySlice/default-slice')
-    cy.location('pathname', {timeout: 5000}).should('eq', '/slices/MySlice/default-slice')
+    cy.location('pathname', {timeout: 5000}).should('eq', `/slices/${name}/default-slice`)
+    cy.visit(`/slices/${name}/default-slice`)
+    cy.location('pathname', {timeout: 5000}).should('eq', `/slices/${name}/default-slice`)
   })
 })

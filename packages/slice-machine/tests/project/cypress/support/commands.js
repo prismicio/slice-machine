@@ -8,3 +8,17 @@ Cypress.Commands.add('setupSliceMachineUserContext', (hasSendAReview = true, isO
 Cypress.Commands.add('cleanSliceMachineUserContext', (hasSendAReview = true, isOnboarded = true) => {
   return cy.removeLocalStorage("persist:root")
 })
+
+Cypress.Commands.add('typeRandomPascalCase', { prevSubject: 'element' }, (
+  subject /* :JQuery<HTMLElement> */,
+  options,
+) => {
+  return cy.wrap(subject).type(cy.randomPascalCase(), options)
+})
+
+Cypress.Commands.add('typeRandomKebabCase', { prevSubject: 'element' }, (
+  subject /* :JQuery<HTMLElement> */,
+  options,
+) => {
+  return cy.wrap(subject).type(cy.randomKebabCase(), options)
+})
