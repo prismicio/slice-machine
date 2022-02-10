@@ -18,7 +18,8 @@ import {
   getWarnings,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import type { UpdateVersionInfo } from "@lib/models/common/Environment";
+import { getVersionsTheUserKnowsAbout } from "@src/modules/userContext";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -32,8 +33,8 @@ const formatWarnings = (len: number) => ({
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
-  versions: UpdateVersionInfo["availableVersions"];
-}> = ({ onClick }) => {
+  hasSeenUpdate: boolean;
+}> = ({ onClick, hasSeenUpdate }) => {
   return (
     <Flex
       sx={{
@@ -52,16 +53,18 @@ const UpdateInfo: React.FC<{
         }}
       >
         Updates Available{" "}
-        <span
-          style={{
-            borderRadius: "50%",
-            width: "8px",
-            height: "8px",
-            backgroundColor: "#FF4A4A",
-            display: "inline-block",
-            margin: "4px",
-          }}
-        />
+        {hasSeenUpdate || (
+          <span
+            style={{
+              borderRadius: "50%",
+              width: "8px",
+              height: "8px",
+              backgroundColor: "#FF4A4A",
+              display: "inline-block",
+              margin: "4px",
+            }}
+          />
+        )}
       </Heading>
       <Paragraph
         sx={{
@@ -95,13 +98,23 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, updateVersionInfo } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { warnings, configErrors, updateVersionInfo, versionsSeen } =
+    useSelector((store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
       updateVersionInfo: getUpdateVersionInfo(store),
-    })
-  );
+      versionsSeen: getVersionsTheUserKnowsAbout(store),
+    }));
+
+  const { viewedUpdates } = useSliceMachineActions();
+
+  const userSeenUpdates =
+    versionsSeen &&
+    versionsSeen.patch === updateVersionInfo.availableVersions.patch &&
+    versionsSeen.minor === updateVersionInfo.availableVersions.minor &&
+    versionsSeen.major === updateVersionInfo.availableVersions.major
+      ? true
+      : false;
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
@@ -115,8 +128,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo.updateAvailable && (
             <UpdateInfo
-              onClick={() => void 0}
-              versions={updateVersionInfo.availableVersions}
+              onClick={() => viewedUpdates(updateVersionInfo.availableVersions)}
+              hasSeenUpdate={userSeenUpdates}
             />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
