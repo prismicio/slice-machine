@@ -13,7 +13,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const CreateCustomTypeModal: React.FunctionComponent = () => {
-  const { createCustomTypes, closeCreateCustomTypeModal } =
+  const { createCustomType, closeCreateCustomTypeModal } =
     useSliceMachineActions();
 
   const { customTypes, isCreateCustomTypeModalOpen, isCreatingCustomType } =
@@ -37,7 +37,7 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
       formId="create-custom-type"
       close={closeCreateCustomTypeModal}
       onSubmit={(values) => {
-        createCustomTypes(
+        createCustomType(
           values.id,
           values.label || values.id,
           values.repeatable

@@ -22,8 +22,8 @@ import {
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
 import {
-  createCustomTypesCreator,
-  saveCustomTypesCreator,
+  createCustomTypeCreator,
+  saveCustomTypeCreator,
 } from "@src/modules/customTypes";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { createSliceCreator } from "@src/modules/slices";
@@ -84,10 +84,10 @@ const useSliceMachineActions = () => {
     dispatch(dismissedUpdateCreator(version));
 
   // Custom types module
-  const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
-  const saveCustomTypes = (modelPayload: CustomTypeState) =>
-    dispatch(saveCustomTypesCreator({ modelPayload }));
+  const createCustomType = (id: string, label: string, repeatable: boolean) =>
+    dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const saveCustomType = (modelPayload: CustomTypeState) =>
+    dispatch(saveCustomTypeCreator({ modelPayload }));
 
   // Slice module
   const createSlice = (sliceName: string, from: string) =>
@@ -124,8 +124,8 @@ const useSliceMachineActions = () => {
     stopLoadingLogin,
     stopLoadingReview,
     startLoadingReview,
-    createCustomTypes,
-    saveCustomTypes,
+    createCustomType,
+    saveCustomType,
     createSlice,
     sendAReview,
     skipReview,
