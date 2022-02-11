@@ -2,7 +2,7 @@ import path from "path";
 import fetch from "node-fetch";
 import Files from "../utils/files";
 import { YarnLock } from "../models/paths";
-import { getAvailableVersionInfo, isUpdateAvailable } from "./npmApi";
+import { findPackageVersions, isUpdateAvailable } from "./versions";
 
 interface Manifest {
   name: string;
@@ -55,7 +55,7 @@ export const createComparator =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const manifest: Manifest = Files.readJson(pathToPkg);
 
-      const versions = await getAvailableVersionInfo(manifest.name);
+      const versions = await findPackageVersions(manifest.name);
 
       const onlinePackage = await fetchJsonPackage(manifest.name);
       const updateAvailable = isUpdateAvailable(manifest.version, versions);

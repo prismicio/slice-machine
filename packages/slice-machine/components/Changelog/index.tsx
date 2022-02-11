@@ -6,6 +6,13 @@ import { getUpdateVersionInfo } from "@src/modules/environment";
 import { useState } from "react";
 import { SliceMachineVersion } from "@lib/env/semver";
 
+function findLatestNonBreaking(
+  currentVersion: string,
+  versions: SliceMachineVersion[]
+) {
+  return versions[1].version;
+}
+
 export default function Changelog() {
   const { updateVersion } = useSelector((store: SliceMachineStoreType) => ({
     updateVersion: getUpdateVersionInfo(store),
@@ -16,6 +23,26 @@ export default function Changelog() {
     useState<SliceMachineVersion | null>(
       updateVersion.availableVersions[0] || null
     );
+
+  const latestVersion: string | undefined =
+    updateVersion.availableVersions[0].version;
+  const latestNonBreakingVersion: string | undefined = findLatestNonBreaking(
+    updateVersion.currentVersion,
+    updateVersion.availableVersions
+  );
+
+  function findVersionTag(versionNumber: string): VersionTags | null {
+    switch (versionNumber) {
+      case latestVersion:
+        return VersionTags.Latest;
+      case latestNonBreakingVersion:
+        return VersionTags.LatestNonBreaking;
+      case updateVersion.currentVersion:
+        return VersionTags.Current;
+      default:
+        return null;
+    }
+  }
 
   return (
     <Flex
@@ -73,24 +100,35 @@ export default function Changelog() {
                 setSelectedVersion(availableVersion);
               }}
               versionNumber={availableVersion.version}
+              tag={findVersionTag(availableVersion.version)}
             />
           ))}
         </Flex>
       </Flex>
+
+      <Flex>{selectedVersion?.version}</Flex>
     </Flex>
   );
+}
+
+enum VersionTags {
+  Latest = "LATEST",
+  LatestNonBreaking = "LATEST-NON-BREAKING",
+  Current = "CURRENT",
 }
 
 interface VersionBadgeProps {
   isSelected: boolean;
   onClick: () => void;
   versionNumber: string;
+  tag: VersionTags | null;
 }
 
 export const VersionBadge: React.FC<VersionBadgeProps> = ({
   isSelected,
   onClick,
   versionNumber,
+  tag,
 }) => {
   return (
     <Flex
@@ -99,6 +137,8 @@ export const VersionBadge: React.FC<VersionBadgeProps> = ({
         borderRadius: "4px",
         cursor: "pointer",
         transition: "200ms all",
+        justifyContent: "space-between",
+        alignItems: "center",
         ...(!isSelected
           ? {
               "&:hover": {
@@ -113,6 +153,35 @@ export const VersionBadge: React.FC<VersionBadgeProps> = ({
       onClick={onClick}
     >
       <Text>{versionNumber}</Text>
+      {tag && <VersionTag type={tag} />}
     </Flex>
   );
 };
+
+interface VersionTagProps {
+  type: VersionTags;
+}
+
+export const VersionTag: React.FC<VersionTagProps> = ({ type }) => (
+  <Text
+    sx={{
+      padding: "0px 4px",
+      borderRadius: "2px",
+      fontSize: "8px",
+      fontWeight: 600,
+      lineHeight: "16px",
+      textTransform: "uppercase",
+      ...((type === VersionTags.Latest ||
+        type === VersionTags.LatestNonBreaking) && {
+        bg: "grey02",
+        color: "code.gray",
+      }),
+      ...(type === VersionTags.Current && {
+        bg: "lightGreen",
+        color: "code.green",
+      }),
+    }}
+  >
+    {type}
+  </Text>
+);
