@@ -1,5 +1,3 @@
-import {randomPascalCase} from '../../support/utils'
-
 describe("Create Slices", () => {
   const name = "TestSlice"
   const lib = "slices"

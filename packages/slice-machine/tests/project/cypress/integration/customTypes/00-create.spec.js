@@ -1,5 +1,3 @@
-import {randomString, capitalizeFirstChar} from '../../support/utils'
-
 describe("Custom Types specs", () => {
 
   const name = "My Test"
