@@ -108,15 +108,6 @@ export default async function handler(
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
     shortId: prismicData.shortId,
-    updateVersionInfo: {
-      ...frontEnv.updateVersionInfo,
-      updateAvailable: true,
-      availableVersions: {
-        patch: "0.0.1",
-        minor: "0.1.0",
-        major: "1.0.0",
-      },
-    },
   };
 
   return {
