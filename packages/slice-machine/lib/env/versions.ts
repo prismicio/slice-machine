@@ -1,13 +1,8 @@
 import npmFetch from "npm-registry-fetch";
-import semver, { patch } from "semver";
+import semver from "semver";
 import axios from "axios";
 import { SliceMachineVersion } from "@lib/env/semver";
-
-interface ReleaseNote {
-  name: string;
-  body: string;
-  draft: boolean;
-}
+import { ReleaseNote } from "@models/common/versions";
 
 export async function findPackageVersions(
   packageName: string
@@ -90,7 +85,7 @@ const findHighestUpdateByKind = (
   const majorVersion = current.replace(/^(\d+).*/, "$1");
 
   const result = versions.reduce((acc, { version }) => {
-    if (/^\d+\.\d+\.\d+$/.test(version) === false) return acc;
+    if (!/^\d+\.\d+\.\d+$/.test(version)) return acc;
     if (semver.gt(acc, version)) return acc;
     if (kind === "patch" && version.startsWith(minorVersion)) return version;
     if (
