@@ -114,9 +114,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
     versionsSeen &&
     versionsSeen.patch === updateVersionInfo.availableVersions.patch &&
     versionsSeen.minor === updateVersionInfo.availableVersions.minor &&
-    versionsSeen.major === updateVersionInfo.availableVersions.major
-      ? true
-      : false;
+    versionsSeen.major === updateVersionInfo.availableVersions.major;
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
