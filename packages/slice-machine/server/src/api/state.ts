@@ -21,13 +21,12 @@ function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
 ): ReadonlyArray<Warning> {
-  const newVersion =
-    env.updateVersionInfo && env.updateVersionInfo.updateAvailable
-      ? {
-          key: warningStates.NEW_VERSION_AVAILABLE,
-          value: env.updateVersionInfo,
-        }
-      : undefined;
+  const newVersion = env.changelog.updateAvailable
+    ? {
+        key: warningStates.NEW_VERSION_AVAILABLE,
+        value: env.changelog,
+      }
+    : undefined;
 
   const connected = !env.prismicData?.auth
     ? {

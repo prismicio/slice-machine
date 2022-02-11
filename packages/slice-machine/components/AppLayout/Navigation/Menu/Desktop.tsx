@@ -14,11 +14,10 @@ import { warningStates } from "@lib/consts";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
-  getUpdateVersionInfo,
+  getChangelog,
   getWarnings,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import type { UpdateVersionInfo } from "@lib/models/common/Environment";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -32,7 +31,7 @@ const formatWarnings = (len: number) => ({
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
-  versions: UpdateVersionInfo["availableVersions"];
+  versions: { major?: string; minor?: string; patch?: string };
 }> = ({ onClick, versions }) => {
   return (
     <Flex
@@ -119,11 +118,11 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, updateVersionInfo } = useSelector(
+  const { warnings, configErrors, changelog } = useSelector(
     (store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
-      updateVersionInfo: getUpdateVersionInfo(store),
+      changelog: getChangelog(store),
     })
   );
 
@@ -137,11 +136,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Logo />
         <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {updateVersionInfo.updateAvailable && (
-            <UpdateInfo
-              onClick={() => void 0}
-              versions={updateVersionInfo.availableVersions}
-            />
+          {changelog.updateAvailable && (
+            <UpdateInfo onClick={() => void 0} versions={{}} />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
@@ -150,10 +146,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               warnings.length + Object.keys(configErrors).length
             )}
           />
-          <VersionBadge
-            label="Version"
-            version={updateVersionInfo.currentVersion}
-          />
+          <VersionBadge label="Version" version={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

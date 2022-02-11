@@ -2,20 +2,14 @@ import PrismicData from "./PrismicData";
 import type { Models } from "@slicemachine/core";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
-import { SliceMachineVersion } from "@lib/env/semver";
-
-export interface UpdateVersionInfo {
-  currentVersion: string;
-  updateAvailable: boolean;
-  availableVersions: SliceMachineVersion[];
-}
+import { PackageChangelog } from "./versions";
 
 export interface BackendEnvironment {
   cwd: string;
   prismicData: PrismicData;
   manifest: Models.Manifest;
   repo?: string;
-  updateVersionInfo: UpdateVersionInfo;
+  changelog: PackageChangelog;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   framework: Models.Frameworks;
@@ -29,7 +23,7 @@ export interface FrontEndEnvironment {
   shortId?: string;
   manifest: Models.Manifest;
   repo?: string;
-  updateVersionInfo: UpdateVersionInfo;
+  changelog: PackageChangelog;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   framework: Models.Frameworks;
