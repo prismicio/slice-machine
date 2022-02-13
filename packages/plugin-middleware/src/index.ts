@@ -6,24 +6,33 @@ import fs from "fs";
 
 export type Variations = SliceAsObject["variations"];
 
+export type FilenameAndData<T = string | SliceAsObject> = {
+  filename: string;
+  data: T;
+};
+
 export type Plugin = {
-  slice?: (name: string) => { filename: string; data: string };
+  framework?: string;
+  slice?: (name: string) => FilenameAndData<string>[] | FilenameAndData<string>;
   story?: (
     path: string,
-    title: string,
-    variations: SliceAsObject["variations"]
-  ) => { filename: string; data: string };
-  index?: (slices: string[]) => { filename: string; data: string };
+    sliceName: string,
+    variations: Variations
+  ) => FilenameAndData<string>[] | FilenameAndData<string>;
+  index?: (
+    slices: string[]
+  ) => FilenameAndData<string>[] | FilenameAndData<string>;
   snippets?: (widget: FieldType, field: string, useKey?: boolean) => string;
-  framework?: string;
-  model?: (sliceName: string) => { filename: string; data: SliceAsObject };
+  model?: (sliceName: string) => FilenameAndData<SliceAsObject>;
   // [key: string]: unknown;
 };
 
 export default class PluginContainer {
   plugins: Record<string, Plugin>;
-  constructor(paths?: string[]) {
+  cwd: string;
+  constructor(pluginsToLoad: string[] = [], cwd: string = process.cwd()) {
     this.plugins = {};
+    this.cwd = cwd;
 
     this.register = this.register.bind(this);
     this.createSlice = this.createSlice.bind(this);
@@ -31,25 +40,19 @@ export default class PluginContainer {
     this.createIndex = this.createIndex.bind(this);
     this.createSnippet = this.createSnippet.bind(this);
 
-    if (paths && paths.length) {
-      paths.forEach(this.register);
+    if (pluginsToLoad && pluginsToLoad.length) {
+      pluginsToLoad.forEach((plugin) => this.register(plugin, cwd));
     }
   }
 
   private _findPluginsWithProp(
-    framework: string | undefined,
-    prop: string
-  ): Record<string, Plugin> {
-    if (framework === undefined) return this.plugins;
-
-    return Object.entries(this.plugins)
-      .filter(([, plugin]) => {
-        return (
-          Object.prototype.hasOwnProperty.call(plugin, prop) &&
-          plugin.framework === framework
-        );
-      })
-      .reduce((acc, [name, plugin]) => ({ ...acc, [name]: plugin }), {});
+    prop: string,
+    framework?: string
+  ): Array<Plugin> {
+    return Object.values(this.plugins).filter((plugin) => {
+      const hasProp = Object.prototype.hasOwnProperty.call(plugin, prop);
+      return framework ? hasProp && plugin.framework === framework : hasProp;
+    });
   }
 
   private _defaultModel(name: string): {
@@ -94,66 +97,71 @@ export default class PluginContainer {
     return { filename, data: dataObj };
   }
 
-  register(name: string) {
-    const root = process.env.PWD || process.cwd();
-    const modulesDir = path.join(root, "node_modules");
-    const modulesPath = name.startsWith(".")
-      ? path.resolve(root, path.join.apply(null, name.split(path.posix.sep)))
+  register(name: string, cwd: string) {
+    // intresting
+    // https://github.com/eslint/eslintrc/blob/8761efbb1b263f63bcc34a3765ce092c7494b251/lib/shared/relative-module-resolver.js#L21
+    // THIS LOOKS intresting. it returns a custom require function https://nodejs.org/api/module.html#modulecreaterequirefilename
+    // const root = process.env.PWD || process.cwd(); // TODO: this could be a parameter in the constructor, we need to know from where slice-machine is being run
+    const modulesDir = path.join(cwd, "node_modules");
+    const modulesPath = path.isAbsolute(name)
+      ? name
+      : name.startsWith(".")
+      ? path.resolve(cwd, path.join.apply(null, name.split(path.posix.sep)))
       : path.join(modulesDir, name);
 
     const fileStat = fs.lstatSync(modulesPath);
     const isLink = fileStat.isSymbolicLink();
-    const link = fs.readlinkSync(modulesPath);
-    const pathToModule = path.resolve(path.join(modulesDir, "foo"), link);
-    const realPath = isLink ? pathToModule : modulesPath;
+    const realPath = isLink
+      ? path.resolve(path.join(modulesDir, "foo"), fs.readlinkSync(modulesPath))
+      : modulesPath;
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const plugin = require(realPath);
 
-    this.plugins[realPath] = plugin;
+    this.plugins[name] = plugin;
   }
 
   // TODO: remove the framework argument, and return an object or array of files and data
-  createSlice(
-    framework: string | undefined,
-    sliceName: string
-  ): Record<string, { filename: string; data: string }> {
-    const slices = this._findPluginsWithProp(framework, "slice");
+  createSlice(sliceName: string): FilenameAndData<string>[] {
+    const slices = this._findPluginsWithProp("slice");
 
-    return Object.entries(slices).reduce((acc, [name, plugin]) => {
+    return slices.reduce((acc: FilenameAndData<string>[], plugin) => {
       if (!plugin.slice) return acc;
-
       const result = plugin.slice(sliceName);
-      return { ...acc, [name]: result };
-    }, {});
+      if (Array.isArray(result)) return [...acc, ...result];
+      return [...acc, result];
+    }, []);
   }
 
   createStory(
-    framework: string | undefined,
     pathToComponent: string,
     sliceName: string,
     variations: SliceAsObject["variations"]
-  ): Record<string, { filename: string; data: string }> {
-    const stories = this._findPluginsWithProp(framework, "story");
+  ): FilenameAndData<string>[] {
+    const stories = this._findPluginsWithProp("story");
 
-    return Object.entries(stories).reduce((acc, [name, plugin]) => {
+    return stories.reduce((acc: FilenameAndData<string>[], plugin) => {
       if (!plugin.story) return acc;
 
-      const result = plugin.story(pathToComponent, name, variations);
-      return { ...acc, [name]: result };
-    }, {});
+      const result = plugin.story(pathToComponent, sliceName, variations);
+
+      if (Array.isArray(result)) return [...acc, ...result];
+      return [...acc, result];
+    }, []);
   }
 
   createIndex(
     framework: string | undefined,
     slices: string[]
-  ): Record<string, { filename: string; data: string }> {
-    const indices = this._findPluginsWithProp(framework, "index");
-    return Object.entries(indices).reduce((acc, [name, plugin]) => {
+  ): FilenameAndData<string>[] {
+    const indices = this._findPluginsWithProp("index");
+    return indices.reduce((acc: FilenameAndData<string>[], plugin) => {
       if (!plugin.index) return acc;
 
       const result = plugin.index(slices);
-      return { ...acc, [name]: result };
-    }, {});
+
+      if (Array.isArray(result)) return [...acc, ...result];
+      return [...acc, result];
+    }, []);
   }
 
   createSnippet(
@@ -161,20 +169,16 @@ export default class PluginContainer {
     widget: FieldType,
     field: string,
     useKey = false
-  ): Record<string, string> {
-    const widgets = this._findPluginsWithProp(framework, "snippets");
-    return Object.entries(widgets).reduce((acc, [name, plugin]) => {
+  ): string {
+    const widgets = this._findPluginsWithProp("snippets", framework);
+    return widgets.reduce((acc, plugin) => {
       if (!plugin.snippets) return acc;
-      const result = plugin.snippets(widget, field, useKey);
-      return { ...acc, [name]: result };
-    }, {});
+      return plugin.snippets(widget, field, useKey);
+    }, "");
   }
 
-  createModel(
-    framework: string | undefined,
-    sliceName: string
-  ): { filename: string; data: SliceAsObject } {
-    const models = this._findPluginsWithProp(framework, "model");
+  createModel(sliceName: string): { filename: string; data: SliceAsObject } {
+    const models = this._findPluginsWithProp("model");
 
     return Object.values(models).reduce((acc, plugin) => {
       if (!plugin.model) return acc;

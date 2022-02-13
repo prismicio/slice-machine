@@ -80,7 +80,7 @@ const fromTemplate = async (
 
 export default async function createSlice({ sliceName, from }: SliceBody) {
   const { env } = await getEnv();
-  const plugins = new PluginMiddleWare(env.manifest.plugins);
+  const plugins = new PluginMiddleWare(env.manifest.plugins, env.cwd);
 
   const sliceDir = path.join(env.cwd, from, sliceName);
 

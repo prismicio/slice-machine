@@ -19,7 +19,7 @@ export const story: Plugin["story"] = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   path,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  title,
+  sliceName,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   variations
 ): { filename: string; data: string } => ({

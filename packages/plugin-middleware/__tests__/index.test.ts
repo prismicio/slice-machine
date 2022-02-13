@@ -2,76 +2,105 @@ import { FieldType } from "@slicemachine/core/build/src/models/CustomType/fields
 import path from "path";
 import PluginMiddleware from "../src";
 import * as Dummy from "../src/dummy-plugin";
+import fs from "fs";
 
 describe("@slicemachine/plugin-middleware", () => {
   describe("register", () => {
     it("should register a node-module", () => {
-      jest.mock("foo", () => ({ bar: null }), { virtual: true });
-      const p = new PluginMiddleware(["foo"]);
-      expect(p.plugins.foo).toBeDefined();
-      expect("bar" in p.plugins.foo).toBeTruthy();
+      const name = "foo";
+      const modulePath = path.join(process.cwd(), "node_modules", name);
+
+      jest.doMock(modulePath, () => ({ bar: null }), { virtual: true });
+
+      jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+        () =>
+          ({
+            isSymbolicLink: () => false,
+          } as fs.Stats)
+      );
+      const p = new PluginMiddleware([name], process.cwd());
+
+      expect(p.plugins[name]).toBeDefined();
+      expect("bar" in p.plugins[name]).toBeTruthy();
       // expect(p.plugins.foo.bar).toBeNull();
     });
 
     it("should register a local module", () => {
-      jest.mock(
-        path.join(process.cwd(), "fake-plugin"),
-        () => ({ bar: null }),
-        { virtual: true }
-      );
-
       const name = "fake-plugin";
-      const p = new PluginMiddleware([`./${name}`]);
 
-      const localPath = path.join(process.cwd(), name);
+      const moduleName = path.join(process.cwd(), name);
+      jest.doMock(moduleName, () => ({ bar: null }), { virtual: true });
+
+      const localPath = `./${name}`;
+
+      jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+        () =>
+          ({
+            isSymbolicLink: () => false,
+          } as fs.Stats)
+      );
+      const p = new PluginMiddleware([localPath]);
+
       expect(p.plugins[localPath]).toBeDefined();
       expect("bar" in p.plugins[localPath]).toBeTruthy();
-      // expect(p.plugins[localPath].bar).toBeNull();
     });
+
+    // it.skip("linked plugin from node_modules to somewhere else", () => {
+    //   expect(false).toBeTruthy()
+    // })
   });
 
   describe("createSlice", () => {
     it("should call the slice method on plugins", () => {
       jest.spyOn(Dummy, "slice");
+      jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+        () =>
+          ({
+            isSymbolicLink: () => false,
+          } as fs.Stats)
+      );
+
       const sliceName = "foo";
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createSlice("dummy", sliceName);
+      const result = p.createSlice(sliceName);
       expect(Dummy.slice).toHaveBeenCalled();
-      expect(result[Dummy.name].data).toContain(
-        `const ${sliceName} = () => "foobar"`
-      );
-      expect(result[Dummy.name].data).toContain(`export default ${sliceName}`);
-      expect(result[Dummy.name].filename).toEqual("index.js");
+      expect(result[0].data).toContain(`const ${sliceName} = () => "foobar"`);
+      expect(result[0].data).toContain(`export default ${sliceName}`);
+      expect(result[0].filename).toEqual("index.js");
     });
   });
 
   describe("createStory", () => {
     it("should call the story method on the plugins", () => {
-      jest.spyOn(Dummy, "story");
-      const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createStory("dummy", "some/path", "MySlice", []);
-      expect(Dummy.story).toBeCalled();
-      expect(result[Dummy.name].filename).toEqual("index.story.js");
-      // expect(result[Dummy.name].data).toEqual("")
+      jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+        () =>
+          ({
+            isSymbolicLink: () => false,
+          } as fs.Stats)
+      );
+
+      const p = new PluginMiddleware([`./src/dummy-plugin`], process.cwd());
+      const result = p.createStory("some/path", "MySlice", []);
+
+      expect(result[0].filename).toEqual("index.story.js");
+      expect(result[0].data).toEqual("some story");
     });
   });
 
-  describe("craeteIndex", () => {
+  describe("createIndex", () => {
     it("should call the index method on the plugins", () => {
       jest.spyOn(Dummy, "index");
       const p = new PluginMiddleware([Dummy.name]);
       const result = p.createIndex("dummy", ["foo", "bar", "baz"]);
       expect(Dummy.index).toBeCalled();
-      expect(result[Dummy.name].filename).toEqual("index.js");
-      expect(result[Dummy.name].data).toContain(
+      expect(result[0].filename).toEqual("index.js");
+      expect(result[0].data).toContain(
         'export {default as foo} from "./foo"\n'
       );
-      expect(result[Dummy.name].data).toContain(
+      expect(result[0].data).toContain(
         'export {default as bar} from "./bar"\n'
       );
-      expect(result[Dummy.name].data).toContain(
-        'export {default as baz} from "./baz"'
-      );
+      expect(result[0].data).toContain('export {default as baz} from "./baz"');
     });
   });
 
@@ -79,18 +108,29 @@ describe("@slicemachine/plugin-middleware", () => {
     it("should call plugins snippet function", () => {
       jest.spyOn(Dummy, "snippets");
       const p = new PluginMiddleware([Dummy.name]);
+
       const result = p.createSnippet("dummy", FieldType.Text, "slice[0].text");
+      console.log(result);
       expect(Dummy.snippets).toBeCalledWith(
         FieldType.Text,
         "slice[0].text",
         false
       );
-      expect(result[Dummy.name]).toEqual("<div>slice[0].text</div>");
+      expect(result).toEqual("<div>slice[0].text</div>");
     });
 
     it("snippets is optional? (maybe cahnge this)", () => {
-      jest.mock("foo", () => ({}), { virtual: true });
-      const p = new PluginMiddleware(["foo"]);
+      const name = "foo";
+      jest.doMock("foo", () => ({}), { virtual: true });
+
+      jest.spyOn(fs, "lstatSync").mockImplementationOnce(
+        () =>
+          ({
+            isSymbolicLink: () => false,
+          } as fs.Stats)
+      );
+
+      const p = new PluginMiddleware([name], process.cwd());
       const result = p.createSnippet(
         "dummy",
         FieldType.Text,
@@ -98,7 +138,9 @@ describe("@slicemachine/plugin-middleware", () => {
         true
       );
       expect(p.plugins["foo"]).toBeDefined();
-      expect(result["foo"]).toBeUndefined();
+      expect(result).toEqual("");
     });
   });
+
+  // describe.skip("createModel", () => {})
 });
