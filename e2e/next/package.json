@@ -19,6 +19,6 @@
   },
   "devDependencies": {
     "slice-machine-ui": "file:../../packages/slice-machine",
-    "@slicemachine/plugin-next": "file:../../package/plugin-next"
+    "@slicemachine/plugin-next": "file:../../packages/plugin-next"
   }
 }

@@ -11,7 +11,7 @@ const ${name} = ({ slice }) => (
   <section>
     <span className="title">
       { slice.primary.title ? (
-        <RichText render={slice.primary.title}/
+        <RichText render={slice.primary.title} />
       ) : (
         <h2>Template slice, update me!</h2>
       )}

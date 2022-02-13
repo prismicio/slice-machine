@@ -1,4 +1,4 @@
-import { SliceCreateBody } from "@models/common/Slice";
+import { SliceCreateBody, SliceBody } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -19,7 +19,8 @@ import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
 
-// import PluginMiddleWare from "@slicemachine/plugin-middleware";
+import PluginMiddleWare from "@slicemachine/plugin-middleware";
+import fs from "fs";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
@@ -77,31 +78,92 @@ const fromTemplate = async (
   return copyTemplate(env, templatePath, from, sliceName);
 };
 
-export default async function handler({
+export default async function createSlice({ sliceName, from }: SliceBody) {
+  const { env } = await getEnv();
+  const plugins = new PluginMiddleWare(env.manifest.plugins);
+
+  const sliceDir = path.join(env.cwd, from, sliceName);
+
+  // slice and model
+  const slices = plugins.createSlice(
+    env.manifest.framework as unknown as string,
+    sliceName
+  );
+  const model = plugins.createModel(
+    env.manifest.framework as unknown as string,
+    sliceName
+  );
+
+  const slicesAndModelToWrite = Object.values(slices)
+    .concat({ filename: model.filename, data: JSON.stringify(model.data) })
+    .map(({ filename, data }) => {
+      return {
+        filename: path.join(sliceDir, filename),
+        data,
+      };
+    });
+
+  // story
+  const assetsDir = path.join(
+    env.cwd,
+    ".slicemachine",
+    "assets",
+    from,
+    sliceName
+  );
+  const pathToSliceFromStory = path.relative(
+    path.join(assetsDir, "foo"),
+    sliceDir
+  );
+
+  const stories = plugins.createStory(
+    env.manifest.framework as unknown as string,
+    pathToSliceFromStory,
+    sliceName,
+    model.data.variations
+  );
+
+  const storiesToWrite = Object.values(stories).map(({ filename, data }) => {
+    return {
+      filename: path.join(assetsDir, filename),
+      data,
+    };
+  });
+
+  // TODO: Log things
+  // TODO check files don't exist before writing ?
+
+  const filesToWrite = [...slicesAndModelToWrite, ...storiesToWrite];
+
+  filesToWrite.forEach(({ filename, data }) => {
+    const dir = path.posix.dirname(filename);
+    if (fs.existsSync(dir) === false) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(filename, data, "utf-8");
+  });
+
+  // mocks and screenshorts ... difficult to unravel
+
+  const body = { sliceName, from, model: model.data, mockConfig: {} };
+
+  const res = await save({ body });
+
+  return {
+    ...res,
+    variationId: "default-slice",
+  };
+}
+
+export async function handler({
   sliceName,
-  from,
+  from, // libraryName
   values, // undefined ?
 }: SliceCreateBody) {
   const { env } = await getEnv();
-  console.log({ sliceName, from, values });
+  console.log({ sliceName, from });
 
-  // from is lib name
-  // values is the model?
-  // create the slice
-  // create the model
-  // create the mocks
-  // create the story
-  // const plugins = new PluginMiddleWare(env.manifest.plugins);
-  // // add sane default for model
-  // const slice = plugins.createSlice(env.manifest.framework || "", sliceName);
-  // const story = plugins.createStory(
-  //   env.manifest.framework || "",
-  //   sliceName,
-  //   sliceName,
-  //   values?.model
-  // ); // add models
-  // // get current and new slice
-  // const index = plugins.createIndex(env.manifest.framework || "", []); // add all slices here
+  // TODO: wrap this in a test and find out the side effects on the file system
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();

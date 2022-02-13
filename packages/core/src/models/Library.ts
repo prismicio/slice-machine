@@ -51,15 +51,15 @@ export interface Component {
 export interface Screenshot {
   path: string;
 }
-
+const lreader = t.exact(
+  t.partial({
+    name: t.string,
+    version: t.string,
+  })
+);
 export const LibraryMeta = {
-  reader: t.exact(
-    t.partial({
-      name: t.string,
-      version: t.string,
-    })
-  ),
-  build(libPath: string): t.TypeOf<typeof this.reader> | undefined {
+  reader: lreader,
+  build(libPath: string): t.TypeOf<typeof lreader> | undefined {
     const meta = Files.safeReadEntity(
       path.join(libPath, "meta.json"),
       (payload) => {
