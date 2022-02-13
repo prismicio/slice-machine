@@ -84,24 +84,21 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
 
   const sliceDir = path.join(env.cwd, from, sliceName);
 
-  // slice and model
-  const slices = plugins.createSlice(
-    env.manifest.framework as unknown as string,
-    sliceName
-  );
-  const model = plugins.createModel(
-    env.manifest.framework as unknown as string,
-    sliceName
-  );
+  // slices
+  const slices = plugins.createSlice(sliceName);
 
-  const slicesAndModelToWrite = Object.values(slices)
-    .concat({ filename: model.filename, data: JSON.stringify(model.data) })
-    .map(({ filename, data }) => {
-      return {
-        filename: path.join(sliceDir, filename),
-        data,
-      };
-    });
+  // model
+  const model = plugins.createModel(sliceName);
+
+  const slicesAndModelToWrite = slices
+    .concat({
+      filename: model.filename,
+      data: JSON.stringify(model.data),
+    })
+    .map(({ filename, data }) => ({
+      filename: path.join(sliceDir, filename),
+      data,
+    }));
 
   // story
   const assetsDir = path.join(
@@ -117,18 +114,15 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
   );
 
   const stories = plugins.createStory(
-    env.manifest.framework as unknown as string,
     pathToSliceFromStory,
     sliceName,
     model.data.variations
   );
 
-  const storiesToWrite = Object.values(stories).map(({ filename, data }) => {
-    return {
-      filename: path.join(assetsDir, filename),
-      data,
-    };
-  });
+  const storiesToWrite = stories.map(({ filename, data }) => ({
+    filename: path.join(assetsDir, filename),
+    data,
+  }));
 
   // TODO: Log things
   // TODO check files don't exist before writing ?
