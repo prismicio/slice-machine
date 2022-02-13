@@ -112,6 +112,7 @@ export default class PluginContainer {
     this.plugins[realPath] = plugin;
   }
 
+  // TODO: remove the framework argument, and return an object or array of files and data
   createSlice(
     framework: string | undefined,
     sliceName: string
