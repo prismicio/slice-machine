@@ -32,7 +32,7 @@ export default function Changelog() {
         selectVersion={(version) => setSelectedVersion(version)}
       />
       {selectedVersion && (
-        <VersionDetail
+        <VersionDetails
           changelog={changelog}
           selectedVersion={selectedVersion}
           packageManager={packageManager}

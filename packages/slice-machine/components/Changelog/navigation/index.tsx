@@ -83,8 +83,9 @@ export const Navigation: React.FC<NavigationProps> = ({
           overflow: "auto",
         }}
       >
-        {changelog.versions.map((version) => (
+        {changelog.versions.map((version, index) => (
           <VersionBadge
+            key={`versionBadge-${version.versionNumber}-${index}`}
             isSelected={
               selectedVersion?.versionNumber === version.versionNumber
             }
