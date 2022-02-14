@@ -49,7 +49,6 @@ describe("update notification", () => {
 
       expect(userContext.viewedUpdates).to.deep.equal({patch: "0.0.1", minor: "0.1.0", major: "1.0.0"})
     })
-
   })
 
 
@@ -68,7 +67,6 @@ describe("update notification", () => {
     cy.contains("Learn more").should('exist')
     cy.get('[data-testid=the-red-dot]').should('not.exist')
   
-
   })
 
   it("user has seen the updates but an even newer on is available", () => {
@@ -86,7 +84,5 @@ describe("update notification", () => {
     cy.contains("Learn more").should('exist')
     cy.get('[data-testid=the-red-dot]').should('exist')
   
-
   })
-
 })

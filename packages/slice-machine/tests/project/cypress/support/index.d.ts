@@ -9,8 +9,8 @@ declare namespace Cypress {
     * Custom command to type a random PascalCased string into input elements
     * @example cy.get('input').typeRandomPascalCase()
     */
-    typeRandomPascalCase(options?: Partial<TypeOptions>): Chainable<Element>
+    cleanSliceMachineUserContext(hasSendAReview?: boolean, isOnboarded?: boolean): Chainable<undefined>
+    setupSliceMachineUserContext(hasSendAReview?: boolean, isOnboarded?: boolean, viewedUpdates?: Record<string, unknown>): Chainable<undefined>
 
-    typeRandomKebabCase(options?: Partial<TypeOptions>): Chainable<Element>
   }
 }
