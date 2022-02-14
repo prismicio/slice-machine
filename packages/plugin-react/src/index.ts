@@ -3,6 +3,7 @@ import type {
   FilenameAndData,
   Variations,
 } from "@slicemachine/plugin-middleware";
+import { FieldType } from "@slicemachine/plugin-middleware";
 
 export const framework: Plugin["framework"] = "react";
 
@@ -83,3 +84,107 @@ ${slices
   .join("\n")}
 `,
 });
+
+export const snippets = ({
+  type,
+  fieldText,
+  useKey = false,
+  isRepeatable = false,
+}: {
+  type: FieldType;
+  fieldText: string;
+  useKey?: boolean;
+  isRepeatable?: boolean;
+}): string => {
+  if (isRepeatable) {
+    const code = snippets({ type, fieldText, useKey: true });
+    return `{ slice?.items?.map((item, i) => ${code}) }`;
+  }
+  switch (type) {
+    case FieldType.Boolean:
+      return `<span ${
+        useKey ? `key="bool-\${i}"` : ""
+      }> { ${fieldText} ? 'true' : 'false' }</span>`;
+
+    case FieldType.Color:
+      return `<span  ${
+        useKey ? `key="color-\${i}"` : ""
+      } style={{ color: ${fieldText} }}>Some Text</span>`;
+
+    case FieldType.ContentRelationship:
+      return `/* import { Link } from 'prismic-reactjs' */
+<a ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      } href={Link.url(${fieldText})}>My Link</a>`;
+
+    case FieldType.Date:
+      return `/* import { Date as ParseDate } from 'prismic-reactjs' */
+<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ParseDate(${fieldText}) }</span>`;
+
+    case FieldType.Embed:
+      return `// you might want to use a lib here (eg. react-oembed-container)
+<div ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }} dangerouslySetInnerHTML={{ __html: ${fieldText} }} />`;
+
+    case FieldType.GeoPoint:
+      return `<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ${fieldText} }</span>`;
+
+    case FieldType.Group:
+      return "";
+
+    case FieldType.Image:
+      return `<img src={${fieldText}.url} alt={${fieldText}.alt} ${
+        useKey ? `key="img-\${i}"` : ""
+      }/>`;
+
+    case FieldType.IntegrationFields:
+      return "";
+
+    case FieldType.Link:
+      return `/* import { Link } from 'prismic-reactjs' */
+<a ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      } href={Link.url(${fieldText})}>My Link</a>`;
+
+    case FieldType.LinkToMedia:
+      return `/* import { Link } from 'prismic-reactjs' */
+    <a ${
+      useKey ? `key="${fieldText}-\${i}"` : ""
+    } href={Link.url(${fieldText})}>My Link</a>`;
+
+    case FieldType.Number:
+      return `<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ${fieldText} }</span>`;
+
+    case FieldType.Select:
+      return `<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ${fieldText} }</span>`;
+
+    case FieldType.StructuredText:
+      return `<RichText render={${fieldText}} ${
+        useKey ? `key="rich-text-\${i}"` : ""
+      } />`;
+
+    case FieldType.Text:
+      return `<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ${fieldText} }</span>`;
+
+    case FieldType.Timestamp:
+      return `<span ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      }>{ ${fieldText} }>/span>`;
+
+    case FieldType.UID:
+      return `<span>{ ${fieldText} }</span>`;
+    default:
+      return "";
+  }
+};

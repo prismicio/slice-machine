@@ -4,6 +4,8 @@ import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields"
 import snakeCase from "lodash.snakecase";
 import fs from "fs";
 
+export { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
+
 export type Variations = SliceAsObject["variations"];
 
 export type FilenameAndData<T = string | SliceAsObject> = {

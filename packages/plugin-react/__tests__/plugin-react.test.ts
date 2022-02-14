@@ -1,5 +1,7 @@
+import { expect, test } from "@jest/globals";
 import * as plugin from "../src";
 import type { Variations } from "@slicemachine/plugin-middleware";
+import { FieldType } from "@slicemachine/plugin-middleware";
 
 describe("@slicemachine/plugin-react", () => {
   test("#framework", () => {
@@ -12,7 +14,7 @@ describe("@slicemachine/plugin-react", () => {
     expect(result).toMatchSnapshot();
   });
 
-  test("story", () => {
+  test("#story", () => {
     const variations = [
       {
         id: "default-slice",
@@ -64,5 +66,52 @@ describe("@slicemachine/plugin-react", () => {
     );
 
     expect(result).toMatchSnapshot();
+  });
+
+  describe("#snippets", () => {
+    const SupportedFields = Object.values(FieldType).filter(
+      (type) => type !== FieldType.Group && type !== FieldType.IntegrationFields
+    );
+
+    const suported = SupportedFields.map((field, i) => [
+      field,
+      `slices[${i}].data`,
+    ]);
+
+    test.each(suported)(
+      "supported type %s should be truthy",
+      (type, fieldText) => {
+        expect(plugin.snippets({ type, fieldText })).toBeTruthy();
+      }
+    );
+
+    const UnsupprtedFields = Object.values(FieldType).filter(
+      (type) => SupportedFields.includes(type) === false
+    );
+
+    const unsupported = UnsupprtedFields.map((field, i) => [
+      field,
+      `slice[${i}].data`,
+    ]);
+
+    test.each(unsupported)(
+      "unsuported types %s should be falsy",
+      (type, fieldText) => {
+        expect(plugin.snippets({ type, fieldText })).toBeFalsy();
+      }
+    );
+
+    test("repeatable slices", () => {
+      const result = plugin.snippets({
+        type: FieldType.Text,
+        fieldText: "slices",
+        useKey: false,
+        isRepeatable: true,
+      });
+
+      expect(result).toEqual(
+        '{ slice?.items?.map((item, i) => <span key="slices-${i}">{ slices }</span>) }'
+      );
+    });
   });
 });

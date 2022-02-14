@@ -38,7 +38,7 @@ const Foo = ({ slice }) => (
 }
 `;
 
-exports[`@slicemachine/plugin-react story 1`] = `
+exports[`@slicemachine/plugin-react #story 1`] = `
 Object {
   "data": "import MyComponent from '../slices/foo';
 export default { title: 'FooBar' }
