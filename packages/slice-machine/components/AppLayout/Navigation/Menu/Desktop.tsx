@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Divider, Heading, Paragraph, Button, Flex, Text } from "theme-ui";
+import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
 import { FiZap } from "react-icons/fi";
 import VersionBadge from "../Badge";
 import ItemsList from "./Navigation/List";
@@ -18,7 +18,9 @@ import {
   getWarnings,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import type { UpdateVersionInfo } from "@lib/models/common/Environment";
+import { getVersionsTheUserKnowsAbout } from "@src/modules/userContext";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useRouter } from "next/router";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -32,8 +34,8 @@ const formatWarnings = (len: number) => ({
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
-  versions: UpdateVersionInfo["availableVersions"];
-}> = ({ onClick, versions }) => {
+  hasSeenUpdate: boolean;
+}> = ({ onClick, hasSeenUpdate }) => {
   return (
     <Flex
       sx={{
@@ -44,40 +46,6 @@ const UpdateInfo: React.FC<{
         flexDirection: "column",
       }}
     >
-      {(versions.major || versions.minor || versions.patch) && (
-        <Box sx={{ margin: "0px 4px 4px 4px" }}>
-          {/* This is not semantic */}
-          {(versions.major || versions.minor) && (
-            <Text
-              sx={{
-                fontSize: "8px",
-                color: "#5B3DF5",
-                background: "rgba(91, 61, 245, 0.15)",
-                padding: "2px 4px",
-                borderRadius: "4px",
-                margin: "2px",
-              }}
-            >
-              MAJOR
-            </Text>
-          )}
-          {/* This is not semantic */}
-          {versions.patch && (
-            <Text
-              sx={{
-                fontSize: "8px",
-                color: "#667587",
-                background: "#E6E6EA",
-                padding: "2px 4px",
-                borderRadius: "4px",
-                margin: "2px",
-              }}
-            >
-              MINOR
-            </Text>
-          )}
-        </Box>
-      )}
       <Heading
         as="h6"
         sx={{
@@ -85,7 +53,20 @@ const UpdateInfo: React.FC<{
           margin: "4px 8px",
         }}
       >
-        Updates Available
+        Updates Available{" "}
+        {hasSeenUpdate || (
+          <span
+            data-testid="the-red-dot"
+            style={{
+              borderRadius: "50%",
+              width: "8px",
+              height: "8px",
+              backgroundColor: "#FF4A4A",
+              display: "inline-block",
+              margin: "4px",
+            }}
+          />
+        )}
       </Heading>
       <Paragraph
         sx={{
@@ -119,17 +100,27 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, updateVersionInfo } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { warnings, configErrors, updateVersionInfo, versionsSeen } =
+    useSelector((store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
       updateVersionInfo: getUpdateVersionInfo(store),
-    })
-  );
+      versionsSeen: getVersionsTheUserKnowsAbout(store),
+    }));
+
+  const { viewedUpdates } = useSliceMachineActions();
+
+  const userSeenUpdates =
+    versionsSeen &&
+    versionsSeen.patch === updateVersionInfo.availableVersions.patch &&
+    versionsSeen.minor === updateVersionInfo.availableVersions.minor &&
+    versionsSeen.major === updateVersionInfo.availableVersions.major;
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
   );
+
+  const router = useRouter();
 
   return (
     <Box as="aside" bg="sidebar" sx={{ minWidth: "270px" }}>
@@ -139,8 +130,11 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Box sx={{ position: "absolute", bottom: "3" }}>
           {updateVersionInfo.updateAvailable && (
             <UpdateInfo
-              onClick={() => void 0}
-              versions={updateVersionInfo.availableVersions}
+              onClick={() => {
+                viewedUpdates(updateVersionInfo.availableVersions);
+                return router.push("/changelog");
+              }}
+              hasSeenUpdate={userSeenUpdates}
             />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
