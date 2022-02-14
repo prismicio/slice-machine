@@ -5,7 +5,7 @@ import {
   sendAReviewCreator,
   skipReviewCreator,
   finishOnboardingCreator,
-  viewedUpdatesCreator,
+  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 
@@ -98,7 +98,7 @@ describe("[UserContext module]", () => {
 
       const versions = { patch: "0.0.1", minor: "0.1.0", major: "1.0.0" };
 
-      const action = viewedUpdatesCreator(versions);
+      const action = updatesViewedCreator(versions);
 
       const expectedState = {
         ...initialState,
