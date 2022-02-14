@@ -1,18 +1,15 @@
 describe("update notification", () => {
 
-  function addVersionsToResponseBody(body, patch = null, minor = null, major = null) {
+  function addVersionsToResponseBody(body, latestNonBreakingVersion, versions) {
     return {
       ...body,
       env: {
         ...body.env,
-        updateVersionInfo: {
-          ...body.env.updateVersionInfo,
+        changelog: {
+          ...body.env.changelog,
           updateAvailable: true,
-          availableVersions: {
-            patch,
-            minor,
-            major,
-          },
+          latestNonBreakingVersion,
+          versions
         }
       }
     }
@@ -24,7 +21,15 @@ describe("update notification", () => {
 
     cy.intercept("/api/state", req => {
       req.continue(res => {
-        res.body = addVersionsToResponseBody(res.body, "0.0.1", '0.1.0', '1.0.0')
+        res.body = addVersionsToResponseBody(
+          res.body,
+          "1.2.3",
+          [{
+            versionNumber: '1000.0.0',
+            status: 'MAJOR',
+            releaseNote: null
+          }]
+        )
       })
     })
 
@@ -32,7 +37,6 @@ describe("update notification", () => {
 
     cy.get('[data-testid=the-red-dot]').should('exist')
   
-
     cy.contains("Learn more").click()
 
     cy.location("pathname", {timeout: 1000}).should('eq', '/changelog')
@@ -40,6 +44,7 @@ describe("update notification", () => {
     cy.visit('/')
 
     cy.contains("Learn more").should('exist')
+
     cy.get('[data-testid=the-red-dot]').should('not.exist')
 
     cy.getLocalStorage("persist:root").then((str) => {
@@ -47,7 +52,7 @@ describe("update notification", () => {
       const obj = JSON.parse(str)
       const userContext = JSON.parse(obj.userContext)
 
-      expect(userContext.viewedUpdates).to.deep.equal({patch: "0.0.1", minor: "0.1.0", major: "1.0.0"})
+      expect(userContext.updatesViewed).to.deep.equal({latest: '1000.0.0', latestNonBreaking: '1.2.3'})
     })
   })
 
@@ -55,11 +60,19 @@ describe("update notification", () => {
   it("updates available and user has seen the notification", () => {
 
     cy.clearLocalStorageSnapshot()
-    cy.setupSliceMachineUserContext(true, true, {patch: "0.0.1", minor: "0.1.0", major: "1.0.0"})
+    cy.setupSliceMachineUserContext(true, true, {latest: '1000.0.0', latestNonBreaking: '1.2.3'})
 
     cy.intercept("/api/state", req => {
       req.continue(res => {
-        res.body = addVersionsToResponseBody(res.body, "0.0.1", '0.1.0', '1.0.0')
+        res.body = addVersionsToResponseBody(
+          res.body,
+          "1.2.3",
+          [{
+            versionNumber: '1000.0.0',
+            status: 'MAJOR',
+            releaseNote: null
+          }]
+        )
       })
     })
 
@@ -72,17 +85,24 @@ describe("update notification", () => {
   it("user has seen the updates but an even newer on is available", () => {
 
     cy.clearLocalStorageSnapshot()
-    cy.setupSliceMachineUserContext(true, true, {patch: "0.0.1", minor: "0.2.0", major: "1.0.0"})
+    cy.setupSliceMachineUserContext(true, true, {latest: '999.0.0', latestNonBreaking: '1.2.3'})
 
     cy.intercept("/api/state", req => {
       req.continue(res => {
-        res.body = addVersionsToResponseBody(res.body, "0.0.1", '0.1.0', '1.0.0')
+        res.body = addVersionsToResponseBody(
+          res.body,
+          "1.2.3",
+          [{
+            versionNumber: '1000.0.0',
+            status: 'MAJOR',
+            releaseNote: null
+          }]
+        )
       })
     })
 
     cy.visit("/")
     cy.contains("Learn more").should('exist')
     cy.get('[data-testid=the-red-dot]').should('exist')
-  
   })
 })

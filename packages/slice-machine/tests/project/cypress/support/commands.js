@@ -1,12 +1,16 @@
 import "cypress-localstorage-commands"
 import 'cypress-wait-until';
 
-Cypress.Commands.add('setupSliceMachineUserContext', (hasSendAReview = true, isOnboarded = true, viewedUpdates = {}) => {
+Cypress.Commands.add('setupSliceMachineUserContext', (hasSendAReview = true, isOnboarded = true, updatesViewed = {}) => {
   return cy.setLocalStorage("persist:root", JSON.stringify({
     userContext: JSON.stringify({
       hasSendAReview,
       isOnboarded,
-      viewedUpdates: {patch: null, minor: null, major: null, ...viewedUpdates}
+      updatesViewed: {
+        latest: null,
+        latestNonBreaking: null,
+        ...updatesViewed
+      }
     })
   }))
 })
