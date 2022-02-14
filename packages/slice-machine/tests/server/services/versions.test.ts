@@ -4,10 +4,18 @@ import {
   isUpdateAvailable,
 } from "../../../server/src/api/services/versions";
 import nock from "nock";
+import { VersionKind } from "@models/common/versions";
 
 describe("findPackageVersions", () => {
   test("it should return the version above 0.1.0 without non stable version", async () => {
-    const versions = ["0.0.42", "1.0.1", "2.2.1", "3.0.0-alpha.0"];
+    const versions = [
+      "0.0.42",
+      "1.0.1",
+      "1.2.1",
+      "1.2.2",
+      "2.2.1",
+      "3.0.0-alpha.0",
+    ];
 
     // fetching npm versions
     nock("https://registry.npmjs.org")
@@ -36,16 +44,35 @@ describe("findPackageVersions", () => {
       {
         versionNumber: "2.2.1",
         releaseNote: "releaseNote 2.2.1",
+        kind: VersionKind.MAJOR,
+      },
+      {
+        versionNumber: "1.2.2",
+        releaseNote: null,
+        kind: VersionKind.PATCH,
+      },
+      {
+        versionNumber: "1.2.1",
+        releaseNote: null,
+        kind: VersionKind.MINOR,
       },
       {
         versionNumber: "1.0.1",
         releaseNote: null,
+        kind: null,
       },
     ]);
   });
 
   test("it should not throw if we can't retrieve Github release notes", async () => {
-    const versions = ["0.0.42", "1.0.1", "2.2.1", "3.0.0-alpha.0"];
+    const versions = [
+      "0.0.42",
+      "1.0.1",
+      "1.2.1",
+      "1.2.2",
+      "2.2.1",
+      "3.0.0-alpha.0",
+    ];
 
     jest.spyOn(console, "log").mockImplementation(() => null);
 
@@ -68,12 +95,24 @@ describe("findPackageVersions", () => {
     const result = await findPackageVersions("slice-machine-ui");
     expect(result).toEqual([
       {
-        version: "2.2.1",
+        versionNumber: "2.2.1",
         releaseNote: null,
+        kind: VersionKind.MAJOR,
       },
       {
-        version: "1.0.1",
+        versionNumber: "1.2.2",
         releaseNote: null,
+        kind: VersionKind.PATCH,
+      },
+      {
+        versionNumber: "1.2.1",
+        releaseNote: null,
+        kind: VersionKind.MINOR,
+      },
+      {
+        versionNumber: "1.0.1",
+        releaseNote: null,
+        kind: null,
       },
     ]);
   });

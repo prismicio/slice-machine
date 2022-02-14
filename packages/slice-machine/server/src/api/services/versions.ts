@@ -2,9 +2,10 @@ import npmFetch from "npm-registry-fetch";
 import semver from "semver";
 import axios from "axios";
 import {
-  ReleaseNote,
   PackageChangelog,
   PackageVersion,
+  ReleaseNote,
+  VersionKind,
 } from "@models/common/versions";
 import { FileSystem } from "@slicemachine/core";
 
@@ -90,14 +91,23 @@ export async function findPackageVersions(
       return {};
     });
 
-  return stableVersionsOrdered.map((stableVersion: string) => {
-    return {
-      versionNumber: stableVersion,
-      releaseNote: releaseNotesMap[stableVersion]
-        ? releaseNotesMap[stableVersion].body
-        : null,
-    };
-  });
+  return stableVersionsOrdered.map(
+    (stableVersion: string, index: number, versions: string[]) => {
+      let kind: VersionKind | null = null;
+
+      if (index !== versions.length - 1) {
+        kind = findVersionKind(versions[index + 1], stableVersion);
+      }
+
+      return {
+        versionNumber: stableVersion,
+        releaseNote: releaseNotesMap[stableVersion]
+          ? releaseNotesMap[stableVersion].body
+          : null,
+        kind,
+      };
+    }
+  );
 }
 
 async function fetchVersionsFromNpm(packageName: string): Promise<string[]> {
@@ -115,8 +125,8 @@ const findHighestUpdateByKind = (
   current: string,
   versions: PackageVersion[]
 ): string | null => {
-  const minorVersion = current.replace(/^(\d+\.\d+).*/, "$1");
-  const majorVersion = current.replace(/^(\d+).*/, "$1");
+  const minorVersion = extractMinorVersionFromVersion(current);
+  const majorVersion = extractMajorVersionFromVersion(current);
 
   const result = versions.reduce((acc, { versionNumber }) => {
     if (!/^\d+\.\d+\.\d+$/.test(versionNumber)) return acc;
@@ -137,4 +147,62 @@ const findHighestUpdateByKind = (
   }, current);
 
   return result === current ? null : result;
+};
+
+const extractMinorVersionFromVersion = (version: string) =>
+  version.replace(/^(\d+\.\d+).*/, "$1");
+const extractMajorVersionFromVersion = (version: string) =>
+  version.replace(/^(\d+).*/, "$1");
+
+const findVersionKind = (
+  versionA: string,
+  versionB: string
+): VersionKind | null => {
+  if (semver.gt(versionA, versionB)) return null;
+
+  if (isAPatchVersion(versionA, versionB)) {
+    return VersionKind.PATCH;
+  }
+
+  if (isAMinorVersion(versionA, versionB)) {
+    return VersionKind.MINOR;
+  }
+
+  if (isAMajorVersion(versionA, versionB)) {
+    return VersionKind.MAJOR;
+  }
+
+  return null;
+};
+
+const isAPatchVersion = (
+  versionA: string,
+  versionB: string
+): boolean | null => {
+  if (semver.gt(versionA, versionB)) return null;
+  const minorVersion = extractMinorVersionFromVersion(versionA);
+
+  return versionB.startsWith(minorVersion);
+};
+
+const isAMinorVersion = (
+  versionA: string,
+  versionB: string
+): boolean | null => {
+  if (semver.gt(versionA, versionB)) return null;
+  const majorVersion = extractMajorVersionFromVersion(versionA);
+
+  return (
+    versionB.startsWith(majorVersion) && !isAPatchVersion(versionA, versionB)
+  );
+};
+
+const isAMajorVersion = (
+  versionA: string,
+  versionB: string
+): boolean | null => {
+  if (semver.gt(versionA, versionB)) return null;
+  const majorVersion = extractMajorVersionFromVersion(versionA);
+
+  return !versionB.startsWith(majorVersion);
 };

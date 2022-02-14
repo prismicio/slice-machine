@@ -37,7 +37,7 @@ const AppTheme = (): Theme => ({
     grey01: "#F3F5F7",
     grey02: "#E6E6EA",
     grey04: "#9AA4AF",
-    textGray: "#667587",
+    grey05: "#667587",
     borders: "#C9D0D8",
     deep: "#0E2150",
     deep1: "#A0ADE7",

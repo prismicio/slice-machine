@@ -1,9 +1,15 @@
 import React from "react";
-import { Flex, Text, Button } from "theme-ui";
-import { PackageVersion, PackageChangelog } from "@models/common/versions";
+import { Button, Flex, Text } from "theme-ui";
+import { transparentize } from "@theme-ui/color";
+import {
+  PackageChangelog,
+  PackageVersion,
+  VersionKind,
+} from "@models/common/versions";
 import { PackageManager } from "@models/common/PackageManager";
 import CodeBlock from "@components/CodeBlock";
 import { marked } from "marked";
+import { ThemeUIStyleObject } from "@theme-ui/css";
 
 interface VersionDetailsProps {
   changelog: PackageChangelog;
@@ -43,6 +49,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           borderBottom: "1px solid",
           borderColor: "grey01",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Text
@@ -54,8 +61,10 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         >
           {`Version ${selectedVersion.versionNumber}`}
         </Text>
+        {!!selectedVersion.kind && (
+          <VersionKindLabel versionKind={selectedVersion.kind} />
+        )}
       </Flex>
-
       <Flex
         sx={{
           flexDirection: "column",
@@ -128,4 +137,28 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
       </Flex>
     </Flex>
   );
+};
+
+interface VersionKindLabelProps {
+  versionKind: VersionKind;
+}
+
+const VersionKindLabel: React.FC<VersionKindLabelProps> = ({ versionKind }) => {
+  const versionLabelStyle: ThemeUIStyleObject = {
+    fontSize: "14px",
+    padding: "2px 4px",
+    borderRadius: "4px",
+    textTransform: "uppercase",
+    ...(versionKind === VersionKind.MAJOR
+      ? {
+          color: "purple",
+          bg: transparentize("purple", 0.85),
+        }
+      : {
+          color: "grey05",
+          bg: "grey02",
+        }),
+  };
+
+  return <Text sx={versionLabelStyle}>{versionKind}</Text>;
 };
