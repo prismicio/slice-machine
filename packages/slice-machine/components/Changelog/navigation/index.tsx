@@ -39,8 +39,10 @@ export const Navigation: React.FC<NavigationProps> = ({
     <Flex
       sx={{
         width: "244px",
+        minWidth: "244px",
         height: "100%",
-        borderRight: "1px solid #F3F5F7",
+        borderRight: "1px solid",
+        borderColor: "grey01",
         flexDirection: "column",
         padding: "32px 48px 0px 16px",
       }}
@@ -48,7 +50,8 @@ export const Navigation: React.FC<NavigationProps> = ({
       <Flex
         sx={{
           flexDirection: "column",
-          borderBottom: "1px solid #F3F5F7",
+          borderBottom: "1px solid",
+          borderColor: "grey01",
           paddingBottom: "28px",
         }}
       >

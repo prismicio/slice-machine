@@ -1,15 +1,19 @@
 import { Flex } from "theme-ui";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getChangelog } from "@src/modules/environment";
+import { getChangelog, getPackageManager } from "@src/modules/environment";
 import { useState } from "react";
 import { PackageVersion } from "@models/common/versions";
 import { Navigation } from "./navigation";
+import { VersionDetails } from "./versionDetails";
 
 export default function Changelog() {
-  const { changelog } = useSelector((store: SliceMachineStoreType) => ({
-    changelog: getChangelog(store),
-  }));
+  const { changelog, packageManager } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      changelog: getChangelog(store),
+      packageManager: getPackageManager(store),
+    })
+  );
 
   // Null is when no version are found (edge case)
   const [selectedVersion, setSelectedVersion] = useState<PackageVersion | null>(
@@ -28,7 +32,13 @@ export default function Changelog() {
         selectVersion={(version) => setSelectedVersion(version)}
       />
 
-      <Flex>{selectedVersion?.versionNumber}</Flex>
+      {selectedVersion ? (
+        <VersionDetails
+          changelog={changelog}
+          selectedVersion={selectedVersion}
+          packageManager={packageManager}
+        />
+      ) : null}
     </Flex>
   );
 }

@@ -3,6 +3,7 @@ import type { Models } from "@slicemachine/core";
 import DefaultClient from "./http/DefaultClient";
 import FakeClient from "./http/FakeClient";
 import { PackageChangelog } from "./versions";
+import { PackageManager } from "./PackageManager";
 
 export interface BackendEnvironment {
   cwd: string;
@@ -24,6 +25,7 @@ export interface FrontEndEnvironment {
   manifest: Models.Manifest;
   repo?: string;
   changelog: PackageChangelog;
+  packageManager: PackageManager;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   framework: Models.Frameworks;

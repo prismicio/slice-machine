@@ -9,6 +9,7 @@ import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { PackageChangelog } from "@lib/models/common/versions";
+import { PackageManager } from "@lib/models/common/PackageManager";
 
 // Action Creators
 export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
@@ -52,6 +53,12 @@ export const getChangelog = (
   store: SliceMachineStoreType
 ): PackageChangelog => {
   return store.environment.env.changelog;
+};
+
+export const getPackageManager = (
+  store: SliceMachineStoreType
+): PackageManager => {
+  return store.environment.env.packageManager;
 };
 
 export const getCurrentVersion = (store: SliceMachineStoreType): string => {
