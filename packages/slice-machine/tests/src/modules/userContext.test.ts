@@ -23,10 +23,9 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
-        viewedUpdates: {
-          patch: null,
-          minor: null,
-          major: null,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
         },
       };
 
@@ -45,10 +44,9 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
-        viewedUpdates: {
-          patch: null,
-          minor: null,
-          major: null,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
         },
       };
 
@@ -67,10 +65,9 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
-        viewedUpdates: {
-          patch: null,
-          minor: null,
-          major: null,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
         },
       };
 
@@ -89,20 +86,19 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
-        viewedUpdates: {
-          patch: null,
-          minor: null,
-          major: null,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
         },
       };
 
-      const versions = { patch: "0.0.1", minor: "0.1.0", major: "1.0.0" };
+      const versions = { latestNonBreaking: "0.1.0", latest: "1.0.0" };
 
       const action = updatesViewedCreator(versions);
 
       const expectedState = {
         ...initialState,
-        viewedUpdates: versions,
+        updatesViewed: versions,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);

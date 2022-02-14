@@ -154,20 +154,20 @@ const extractMajorVersionFromVersion = (version: string) =>
   version.replace(/^(\d+).*/, "$1");
 
 const findVersionKind = (
-  versionA: string,
-  versionB: string
+  targetVersion: string,
+  previousVersion: string
 ): VersionKind | null => {
-  if (semver.lte(versionA, versionB)) return null;
+  if (semver.lte(targetVersion, previousVersion)) return null;
 
-  if (isAPatchVersion(versionA, versionB)) {
+  if (isAPatchVersion(targetVersion, previousVersion)) {
     return VersionKind.PATCH;
   }
 
-  if (isAMinorVersion(versionA, versionB)) {
+  if (isAMinorVersion(targetVersion, previousVersion)) {
     return VersionKind.MINOR;
   }
 
-  if (isAMajorVersion(versionA, versionB)) {
+  if (isAMajorVersion(targetVersion, previousVersion)) {
     return VersionKind.MAJOR;
   }
 
@@ -175,33 +175,34 @@ const findVersionKind = (
 };
 
 const isAPatchVersion = (
-  versionA: string,
-  versionB: string
+  targetVersion: string,
+  previousVersion: string
 ): boolean | null => {
-  if (semver.lte(versionA, versionB)) return null;
-  const minorVersion = extractMinorVersionFromVersion(versionB);
+  if (semver.lte(targetVersion, previousVersion)) return null;
+  const minorVersion = extractMinorVersionFromVersion(previousVersion);
 
-  return versionA.startsWith(minorVersion);
+  return targetVersion.startsWith(minorVersion);
 };
 
 const isAMinorVersion = (
-  versionA: string,
-  versionB: string
+  targetVersion: string,
+  previousVersion: string
 ): boolean | null => {
-  if (semver.lte(versionA, versionB)) return null;
-  const majorVersion = extractMajorVersionFromVersion(versionB);
+  if (semver.lte(targetVersion, previousVersion)) return null;
+  const majorVersion = extractMajorVersionFromVersion(previousVersion);
 
   return (
-    versionA.startsWith(majorVersion) && !isAPatchVersion(versionA, versionB)
+    targetVersion.startsWith(majorVersion) &&
+    !isAPatchVersion(targetVersion, previousVersion)
   );
 };
 
 const isAMajorVersion = (
-  versionA: string,
-  versionB: string
+  targetVersion: string,
+  previousVersion: string
 ): boolean | null => {
-  if (semver.lte(versionA, versionB)) return null;
-  const majorVersion = extractMajorVersionFromVersion(versionB);
+  if (semver.lte(targetVersion, previousVersion)) return null;
+  const majorVersion = extractMajorVersionFromVersion(previousVersion);
 
-  return !versionA.startsWith(majorVersion);
+  return !targetVersion.startsWith(majorVersion);
 };
