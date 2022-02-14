@@ -31,7 +31,6 @@ export default function Changelog() {
         selectedVersion={selectedVersion}
         selectVersion={(version) => setSelectedVersion(version)}
       />
-
       {selectedVersion ? (
         <VersionDetails
           changelog={changelog}

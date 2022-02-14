@@ -26,6 +26,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         borderRight: "1px solid",
         borderColor: "grey01",
         flexDirection: "column",
+        overflow: "auto",
       }}
     >
       <Flex
