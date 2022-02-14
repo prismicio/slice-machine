@@ -153,9 +153,9 @@ export const snippets = ({
 
     case FieldType.LinkToMedia:
       return `/* import { Link } from 'prismic-reactjs' */
-    <a ${
-      useKey ? `key="${fieldText}-\${i}"` : ""
-    } href={Link.url(${fieldText})}>My Link</a>`;
+<a ${
+        useKey ? `key="${fieldText}-\${i}"` : ""
+      } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.Number:
       return `<span ${
