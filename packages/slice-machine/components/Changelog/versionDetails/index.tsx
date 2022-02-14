@@ -64,9 +64,9 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           packageManager={packageManager}
         />
 
-        {selectedVersion.releaseNote ? (
+        {selectedVersion.releaseNote && (
           <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
-        ) : null}
+        )}
       </Flex>
     </Flex>
   );

@@ -93,11 +93,10 @@ export async function findPackageVersions(
 
   return stableVersionsOrdered.map(
     (stableVersion: string, index: number, versions: string[]) => {
-      let kind: VersionKind | null = null;
-
-      if (index !== versions.length - 1) {
-        kind = findVersionKind(versions[index + 1], stableVersion);
-      }
+      const kind: VersionKind | null =
+        index !== versions.length - 1
+          ? findVersionKind(stableVersion, versions[index + 1])
+          : null;
 
       return {
         versionNumber: stableVersion,
@@ -158,7 +157,7 @@ const findVersionKind = (
   versionA: string,
   versionB: string
 ): VersionKind | null => {
-  if (semver.gt(versionA, versionB)) return null;
+  if (semver.lte(versionA, versionB)) return null;
 
   if (isAPatchVersion(versionA, versionB)) {
     return VersionKind.PATCH;
@@ -179,21 +178,21 @@ const isAPatchVersion = (
   versionA: string,
   versionB: string
 ): boolean | null => {
-  if (semver.gt(versionA, versionB)) return null;
-  const minorVersion = extractMinorVersionFromVersion(versionA);
+  if (semver.lte(versionA, versionB)) return null;
+  const minorVersion = extractMinorVersionFromVersion(versionB);
 
-  return versionB.startsWith(minorVersion);
+  return versionA.startsWith(minorVersion);
 };
 
 const isAMinorVersion = (
   versionA: string,
   versionB: string
 ): boolean | null => {
-  if (semver.gt(versionA, versionB)) return null;
-  const majorVersion = extractMajorVersionFromVersion(versionA);
+  if (semver.lte(versionA, versionB)) return null;
+  const majorVersion = extractMajorVersionFromVersion(versionB);
 
   return (
-    versionB.startsWith(majorVersion) && !isAPatchVersion(versionA, versionB)
+    versionA.startsWith(majorVersion) && !isAPatchVersion(versionA, versionB)
   );
 };
 
@@ -201,8 +200,8 @@ const isAMajorVersion = (
   versionA: string,
   versionB: string
 ): boolean | null => {
-  if (semver.gt(versionA, versionB)) return null;
-  const majorVersion = extractMajorVersionFromVersion(versionA);
+  if (semver.lte(versionA, versionB)) return null;
+  const majorVersion = extractMajorVersionFromVersion(versionB);
 
-  return !versionB.startsWith(majorVersion);
+  return !versionA.startsWith(majorVersion);
 };

@@ -31,13 +31,13 @@ export default function Changelog() {
         selectedVersion={selectedVersion}
         selectVersion={(version) => setSelectedVersion(version)}
       />
-      {selectedVersion ? (
-        <VersionDetails
+      {selectedVersion && (
+        <VersionDetail
           changelog={changelog}
           selectedVersion={selectedVersion}
           packageManager={packageManager}
         />
-      ) : null}
+      )}
     </Flex>
   );
 }
