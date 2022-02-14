@@ -80,6 +80,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           mt: "24px",
           flexDirection: "column",
           gap: "4px",
+          overflow: "auto",
         }}
       >
         {changelog.versions.map((version) => (

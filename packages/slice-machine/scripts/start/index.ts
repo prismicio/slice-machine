@@ -44,7 +44,7 @@ async function run(): Promise<void> {
   const UserInfo = await validateSession(cwd);
 
   return startSMServer(cwd, port, (url: string) =>
-    infoBox(packageChangelog, url, framework, UserInfo?.email)
+    infoBox(packageChangelog.currentVersion, url, framework, UserInfo?.email)
   );
 }
 
