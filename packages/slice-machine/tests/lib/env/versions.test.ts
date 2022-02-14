@@ -2,7 +2,7 @@ import {
   findPackageVersions,
   findLatestNonBreakingUpdate,
   isUpdateAvailable,
-} from "../../../server/src/api/services/versions";
+} from "../../../lib/env/versions";
 import nock from "nock";
 import { VersionKind } from "@models/common/versions";
 

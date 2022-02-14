@@ -6,7 +6,7 @@ import { resolveAliases } from "../../lib/env/resolveAliases";
 resolveAliases(path.join(__dirname, "../../../"));
 
 import handleManifest, { ManifestInfo } from "@lib/env/manifest";
-import compareVersions from "@lib/env/semver";
+import { getPackageChangelog } from "@lib/env/versions";
 
 import { findArgument } from "../common/findArgument";
 import infoBox from "./infoxBox";
@@ -32,8 +32,8 @@ async function run(): Promise<void> {
   const { isManifestValid } = validateManifest(manifest);
   if (!isManifestValid) process.exit(0);
 
-  const SmNodeModuleDirectory = path.resolve(__dirname, "../../..");
-  const npmCompareData = await compareVersions({ cwd: SmNodeModuleDirectory });
+  const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
+  const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);
 
   const framework = Utils.Framework.defineFramework({
     cwd,
@@ -44,7 +44,7 @@ async function run(): Promise<void> {
   const UserInfo = await validateSession(cwd);
 
   return startSMServer(cwd, port, (url: string) =>
-    infoBox(npmCompareData, url, framework, UserInfo?.email)
+    infoBox(packageChangelog, url, framework, UserInfo?.email)
   );
 }
 

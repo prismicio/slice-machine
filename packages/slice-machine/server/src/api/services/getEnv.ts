@@ -15,7 +15,7 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import { Models, Utils } from "@slicemachine/core";
 import preferWroomBase from "@lib/utils/preferWroomBase";
-import { getPackageChangelog } from "./versions";
+import { getPackageChangelog } from "@lib/env/versions";
 
 // variable declared globally on the index.ts, is the cwd to SM dependency
 declare let appRoot: string;

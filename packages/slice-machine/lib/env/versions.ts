@@ -6,7 +6,7 @@ import {
   PackageVersion,
   ReleaseNote,
   VersionKind,
-} from "@models/common/versions";
+} from "@lib/models/common/versions";
 import { FileSystem } from "@slicemachine/core";
 
 export async function getPackageChangelog(
