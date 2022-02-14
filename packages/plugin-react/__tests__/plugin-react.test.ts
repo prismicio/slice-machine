@@ -68,6 +68,15 @@ describe("@slicemachine/plugin-react", () => {
     expect(result).toMatchSnapshot();
   });
 
+  describe("#index", () => {
+    test("it creates an index.js file", () => {
+      const result = plugin.index(["Foo", "Bar", "Baz"]);
+      expect(result.filename).toEqual("index.js");
+      expect(result.data).toContain("export { default as Foo } from './Foo'");
+      expect(result.data).toMatchSnapshot();
+    });
+  });
+
   describe("#snippets", () => {
     const SupportedFields = Object.values(FieldType).filter(
       (type) => type !== FieldType.Group && type !== FieldType.IntegrationFields
@@ -81,7 +90,23 @@ describe("@slicemachine/plugin-react", () => {
     test.each(suported)(
       "supported type %s should be truthy",
       (type, fieldText) => {
-        expect(plugin.snippets({ type, fieldText })).toBeTruthy();
+        const result = plugin.snippets({ type, fieldText });
+        expect(result).toBeTruthy();
+        expect(result).toMatchSnapshot();
+      }
+    );
+
+    test.each(suported.map((d) => [...d, true, false]))(
+      "snippet %s with useKey",
+      (type, fieldText, useKey, isRepeatable) => {
+        const result = plugin.snippets({
+          type,
+          fieldText,
+          useKey,
+          isRepeatable,
+        });
+        expect(result).toBeTruthy();
+        expect(result).toMatchSnapshot();
       }
     );
 
