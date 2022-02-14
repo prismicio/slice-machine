@@ -1,4 +1,3 @@
-
 describe("onboarding finish", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
