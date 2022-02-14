@@ -1,32 +1,20 @@
 import dedent from "dedent";
 import boxen from "boxen";
-import { PackageChangelog } from "@lib/models/common/versions";
 
 export default function infoBox(
-  packageChangelog: PackageChangelog,
+  currentVersion: string,
   port: string,
   framework: string,
   userEmail?: string
 ) {
-  const hasUpdate = packageChangelog.updateAvailable;
-  if (!packageChangelog.currentVersion) {
+  if (!currentVersion) {
     console.error("Could not get your current package versions.");
     return;
   }
 
   console.log(
     boxen(
-      dedent(`🍕 SliceMachine ${
-        packageChangelog.currentVersion.split("-")[0]
-      } started.
-        ${
-          hasUpdate && packageChangelog.latestNonBreakingVersion
-            ? `
-          A new version (${packageChangelog.latestNonBreakingVersion}) is available!
-          Upgrade now: yarn add slice-machine-ui@latest
-        `
-            : ""
-        }
+      dedent(`🍕 SliceMachine ${currentVersion.split("-")[0]} started.
         Framework:         ${framework}
         Logged in as:      ${userEmail || "Not logged in"}
         Running on:        ${port}
@@ -35,7 +23,7 @@ export default function infoBox(
       `),
       {
         padding: 1,
-        borderColor: hasUpdate ? "red" : "green",
+        borderColor: "green",
       }
     )
   );
