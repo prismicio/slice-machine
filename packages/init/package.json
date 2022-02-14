@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.1.1-alpha.17",
+  "version": "1.1.1-alpha.18",
   "description": "The easiest way to add Slice Machine to your project",
   "license": "MIT",
   "bin": {
@@ -18,7 +18,7 @@
     "watch": "tsc --project tsconfig.json --noEmit --watch"
   },
   "dependencies": {
-    "@slicemachine/core": "1.1.1-alpha.17",
+    "@slicemachine/core": "1.1.1-alpha.18",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",
     "axios": "^0.24.0",
