@@ -1,10 +1,15 @@
 import React from "react";
 import { Flex, Text } from "theme-ui";
-import { PackageChangelog, PackageVersion } from "@models/common/versions";
+import {
+  PackageChangelog,
+  PackageVersion,
+  VersionKind,
+} from "@models/common/versions";
 import { PackageManager } from "@models/common/PackageManager";
 import { VersionKindLabel } from "./VersionKindLabel";
 import { ReleaseNoteDetails } from "./ReleaseNoteDetails";
 import { UpdateCommandBox } from "./UpdateCommandBox";
+import { AiFillWarning } from "react-icons/ai";
 
 interface VersionDetailsProps {
   changelog: PackageChangelog;
@@ -26,7 +31,6 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         borderRight: "1px solid",
         borderColor: "grey01",
         flexDirection: "column",
-        overflow: "auto",
       }}
     >
       <Flex
@@ -51,13 +55,32 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           <VersionKindLabel versionKind={selectedVersion.kind} />
         )}
       </Flex>
+
       <Flex
         sx={{
           flexDirection: "column",
-          padding: "24px 32px",
+          margin: "24px 32px",
           gap: "24px",
         }}
       >
+        {selectedVersion?.kind === VersionKind.MAJOR && (
+          <Flex
+            sx={{
+              padding: "16px",
+              bg: "lightOrange",
+              color: "darkOrange",
+              fontSize: "13px",
+              lineHeight: "24px",
+              borderRadius: "4px",
+              gap: "16px",
+            }}
+          >
+            <AiFillWarning size="24px" />
+            This update includes breaking changes. To update correctly, follow
+            the steps below.
+          </Flex>
+        )}
+
         <UpdateCommandBox
           changelog={changelog}
           selectedVersion={selectedVersion}
