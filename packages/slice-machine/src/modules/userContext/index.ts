@@ -8,10 +8,9 @@ import type { UserContextStoreType } from "@src/modules/userContext/types";
 const initialState: UserContextStoreType = {
   hasSendAReview: false,
   isOnboarded: false,
-  viewedUpdates: {
-    patch: null,
-    minor: null,
-    major: null,
+  updatesViewed: {
+    latest: null,
+    latestNonBreaking: null,
   },
 };
 
@@ -24,15 +23,15 @@ export const finishOnboardingCreator = createAction(
   "USER_CONTEXT/FINISH_ONBOARDING"
 )();
 
-export const viewedUpdatesCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
-  UserContextStoreType["viewedUpdates"]
+export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
+  UserContextStoreType["updatesViewed"]
 >();
 
 type userContextActions = ActionType<
   | typeof finishOnboardingCreator
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
-  | typeof viewedUpdatesCreator
+  | typeof updatesViewedCreator
 >;
 
 // Selectors
@@ -43,9 +42,9 @@ export const userHasDoneTheOnboarding = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.isOnboarded;
 
-export const getVersionsTheUserKnowsAbout = (
+export const getUpdatesViewed = (
   state: SliceMachineStoreType
-): UserContextStoreType["viewedUpdates"] => state.userContext.viewedUpdates;
+): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
 // Reducer
 export const userContextReducer: Reducer<
@@ -64,10 +63,10 @@ export const userContextReducer: Reducer<
         ...state,
         isOnboarded: true,
       };
-    case getType(viewedUpdatesCreator): {
+    case getType(updatesViewedCreator): {
       return {
         ...state,
-        viewedUpdates: action.payload,
+        updatesViewed: action.payload,
       };
     }
     default:

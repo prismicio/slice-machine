@@ -59,7 +59,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
       <Text
         variant={"xs"}
         sx={(theme) => ({
-          color: theme?.colors?.textGray,
+          color: theme?.colors?.grey05,
         })}
       >
         {documentationComponent}

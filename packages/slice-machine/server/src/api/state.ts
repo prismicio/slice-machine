@@ -11,7 +11,7 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem } from "@slicemachine/core";
+import { FileSystem, Utils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
@@ -21,13 +21,12 @@ function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
 ): ReadonlyArray<Warning> {
-  const newVersion =
-    env.updateVersionInfo && env.updateVersionInfo.updateAvailable
-      ? {
-          key: warningStates.NEW_VERSION_AVAILABLE,
-          value: env.updateVersionInfo,
-        }
-      : undefined;
+  const newVersion = env.changelog.updateAvailable
+    ? {
+        key: warningStates.NEW_VERSION_AVAILABLE,
+        value: env.changelog,
+      }
+    : undefined;
 
   const connected = !env.prismicData?.auth
     ? {
@@ -107,6 +106,9 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
+    packageManager: Utils.Files.exists(FileSystem.YarnLockPath(cwd))
+      ? "yarn"
+      : "npm",
     shortId: prismicData.shortId,
   };
 

@@ -17,7 +17,7 @@ const Section: React.FC<{
     >
       <Flex sx={{ alignItems: "center", mb: 3 }}>
         <Flex sx={{ mr: 2 }}>
-          <FaRegQuestionCircle size={20} color="textGray" />
+          <FaRegQuestionCircle size={20} color="grey05" />
         </Flex>
         <Text sx={{ fontSize: 2, fontWeight: 500 }}>{heading}</Text>
       </Flex>

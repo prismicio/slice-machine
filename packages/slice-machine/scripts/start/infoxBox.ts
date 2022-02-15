@@ -1,34 +1,20 @@
 import dedent from "dedent";
 import boxen from "boxen";
-import { Comparison } from "../../lib/env/semver";
 
 export default function infoBox(
-  npmCompare: Comparison,
+  currentVersion: string,
   port: string,
   framework: string,
   userEmail?: string
 ) {
-  const hasUpdate = npmCompare.updateAvailable;
-  if (!npmCompare.currentVersion) {
-    console.error(
-      "Could not fetch package versions. Are you connected to internet?"
-    );
+  if (!currentVersion) {
+    console.error("Could not get your current package versions.");
     return;
   }
 
   console.log(
     boxen(
-      dedent(`🍕 SliceMachine ${
-        npmCompare.currentVersion.split("-")[0]
-      } started.
-        ${
-          hasUpdate && npmCompare.onlinePackage
-            ? `
-          A new version (${npmCompare.onlinePackage.version}) is available!
-          Upgrade now: yarn add slice-machine-ui@latest
-        `
-            : ""
-        }
+      dedent(`🍕 SliceMachine ${currentVersion.split("-")[0]} started.
         Framework:         ${framework}
         Logged in as:      ${userEmail || "Not logged in"}
         Running on:        ${port}
@@ -37,7 +23,7 @@ export default function infoBox(
       `),
       {
         padding: 1,
-        borderColor: hasUpdate ? "red" : "green",
+        borderColor: "green",
       }
     )
   );

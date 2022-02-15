@@ -14,11 +14,11 @@ import { warningStates } from "@lib/consts";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
-  getUpdateVersionInfo,
+  getChangelog,
   getWarnings,
 } from "@src/modules/environment";
+import { getUpdatesViewed } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getVersionsTheUserKnowsAbout } from "@src/modules/userContext";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 
@@ -100,21 +100,24 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, updateVersionInfo, versionsSeen } =
-    useSelector((store: SliceMachineStoreType) => ({
+  const { warnings, configErrors, changelog, updatesViewed } = useSelector(
+    (store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
-      updateVersionInfo: getUpdateVersionInfo(store),
-      versionsSeen: getVersionsTheUserKnowsAbout(store),
-    }));
+      changelog: getChangelog(store),
+      updatesViewed: getUpdatesViewed(store),
+    })
+  );
 
-  const { viewedUpdates } = useSliceMachineActions();
+  const { setUpdatesViewed } = useSliceMachineActions();
 
-  const userSeenUpdates =
-    versionsSeen &&
-    versionsSeen.patch === updateVersionInfo.availableVersions.patch &&
-    versionsSeen.minor === updateVersionInfo.availableVersions.minor &&
-    versionsSeen.major === updateVersionInfo.availableVersions.major;
+  const latestVersion =
+    changelog.versions.length > 0 ? changelog.versions[0] : null;
+
+  const hasSeenLatestUpdates =
+    updatesViewed &&
+    updatesViewed.latest === latestVersion?.versionNumber &&
+    updatesViewed.latestNonBreaking === changelog.latestNonBreakingVersion;
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
@@ -128,15 +131,18 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
         <Logo />
         <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {updateVersionInfo.updateAvailable && (
+          {changelog.updateAvailable ? (
             <UpdateInfo
               onClick={() => {
-                viewedUpdates(updateVersionInfo.availableVersions);
+                setUpdatesViewed({
+                  latest: latestVersion && latestVersion.versionNumber,
+                  latestNonBreaking: changelog.latestNonBreakingVersion,
+                });
                 return router.push("/changelog");
               }}
-              hasSeenUpdate={userSeenUpdates}
+              hasSeenUpdate={hasSeenLatestUpdates}
             />
-          )}
+          ) : null}
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item
@@ -144,10 +150,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               warnings.length + Object.keys(configErrors).length
             )}
           />
-          <VersionBadge
-            label="Version"
-            version={updateVersionInfo.currentVersion}
-          />
+          <VersionBadge label="Version" version={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

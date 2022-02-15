@@ -2,21 +2,8 @@ import { darken, lighten } from "@theme-ui/color";
 
 import { Theme } from "theme-ui";
 
-interface MyTheme extends Theme {
-  codeColor: {
-    [x: string]: string;
-  };
-}
-
 const AppTheme = (): Theme =>
   ({
-    codeColor: {
-      border: "#DFE1E5",
-      blue: "#3B41BD",
-      gray: "#667587",
-      orange: "#EA6D46",
-      green: "#3AB97A",
-    },
     initialColorModeName: "light",
     colors: {
       text: "#25252D",
@@ -25,7 +12,6 @@ const AppTheme = (): Theme =>
       hoverBackground: "#f2f2f2",
       background: "#FFF",
       backgroundClear: "#FFF",
-      zoneHeader: "#E6E6EA",
       primary: "#6E52FF",
       purpleLight: "#F6F1FC",
       badge: {
@@ -45,13 +31,14 @@ const AppTheme = (): Theme =>
       codeBlockBorder: "#545454",
       secondary: "#F9FAFB",
       highlight: "hsl(10, 40%, 90%)",
-      purple: "hsl(250, 60%, 30%)",
+      purple: "#5B3DF5",
       muted: "#F9F9FB",
       icons: "#8091A5",
       gray: "#F8F9FA",
       grey01: "#F3F5F7",
+      grey02: "#E6E6EA",
       grey04: "#9AA4AF",
-      textGray: "#667587",
+      grey05: "#667587",
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",
@@ -77,7 +64,7 @@ const AppTheme = (): Theme =>
           text: "#fff",
           textClear: "#6E707B",
           hoverBackground: "#202020",
-          zoneHeader: "#E6E6EA",
+          grey02: "#E6E6EA",
           background: "#202022",
           backgroundClear: "#28282C",
           primary: "#4E54D7",
@@ -324,7 +311,7 @@ const AppTheme = (): Theme =>
         color: "error",
         fontSize: "16px",
         fontWeight: "body",
-        bg: "zoneHeader",
+        bg: "grey02",
         boxShadow:
           "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
         userSelect: "none",
@@ -682,6 +669,6 @@ const AppTheme = (): Theme =>
         bg: "muted",
       },
     },
-  } as MyTheme);
+  } as Theme);
 
 export default AppTheme;

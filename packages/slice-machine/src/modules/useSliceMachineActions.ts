@@ -10,7 +10,7 @@ import {
   finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
-  viewedUpdatesCreator,
+  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { getStateCreator } from "@src/modules/environment";
 import {
@@ -72,8 +72,8 @@ const useSliceMachineActions = () => {
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
-  const viewedUpdates = (versions: UserContextStoreType["viewedUpdates"]) =>
-    dispatch(viewedUpdatesCreator(versions));
+  const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
+    dispatch(updatesViewedCreator(versions));
 
   // Custom types Store
   const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
@@ -115,7 +115,7 @@ const useSliceMachineActions = () => {
     saveCustomTypes,
     sendAReview,
     skipReview,
-    viewedUpdates,
+    setUpdatesViewed,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
   };

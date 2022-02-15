@@ -1,9 +1,8 @@
 export type UserContextStoreType = {
   hasSendAReview: boolean;
   isOnboarded: boolean;
-  viewedUpdates: {
-    patch: string | null;
-    minor: string | null;
-    major: string | null;
+  updatesViewed: {
+    latest: string | null;
+    latestNonBreaking: string | null;
   };
 };
