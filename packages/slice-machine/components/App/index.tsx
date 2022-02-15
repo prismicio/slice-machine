@@ -12,6 +12,8 @@ import ServerState from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
 import { MissingLibraries } from "@components/MissingLibraries";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type AppProps = {
   serverState: ServerState;
@@ -42,6 +44,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
         </AppLayout>
         <LoginModal />
         <ReviewModal />
+        <ToastContainer autoClose={2000} />
       </LibrariesProvider>
     </ToastProvider>
   );

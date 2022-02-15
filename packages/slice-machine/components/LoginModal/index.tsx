@@ -11,7 +11,6 @@ import {
   Text,
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
-import { useToasts } from "react-toast-notifications";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
 import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
 import { startPolling } from "@slicemachine/core/build/src/utils/poll";
@@ -26,6 +25,7 @@ import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import Tracker from "@src/tracker";
 import preferWroomBase from "../../lib/utils/preferWroomBase";
+import { ToasterType } from "@src/modules/toaster";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";
@@ -43,10 +43,9 @@ const LoginModal: React.FunctionComponent = () => {
     })
   );
 
-  const { closeLoginModal, startLoadingLogin, stopLoadingLogin } =
+  const { closeLoginModal, startLoadingLogin, stopLoadingLogin, openToaster } =
     useSliceMachineActions();
 
-  const { addToast } = useToasts();
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
     buildEndpoints(prismicBase).Dashboard.cliLogin
@@ -73,12 +72,12 @@ const LoginModal: React.FunctionComponent = () => {
 
       void Tracker.get().identifyUser(userId);
 
-      addToast("Logged in", { appearance: "success" });
+      openToaster(ToasterType.SUCCESS, "Logged in");
       stopLoadingLogin();
       closeLoginModal();
     } catch (e) {
       stopLoadingLogin();
-      addToast("Logging fail", { appearance: "error" });
+      openToaster(ToasterType.ERROR, "Logging fail");
     }
   };
 

@@ -1,5 +1,4 @@
 import { Fragment, useState } from "react";
-import { useToasts } from "react-toast-notifications";
 import { Box, Button, Spinner, Text } from "theme-ui";
 
 import {
@@ -22,8 +21,7 @@ const CustomTypeHeader = ({
   store: CustomTypeStore;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { openLoginModal } = useSliceMachineActions();
-  const { addToast } = useToasts();
+  const { openLoginModal, openToaster } = useSliceMachineActions();
 
   const buttonProps = (() => {
     if (Model.isTouched) {
@@ -50,7 +48,7 @@ const CustomTypeHeader = ({
                 return;
               }
               setIsLoading(false);
-              handleRemoteResponse(addToast)(data);
+              handleRemoteResponse(openToaster)(data);
               if (data.error && data.status === 403) {
                 openLoginModal();
               }

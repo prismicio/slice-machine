@@ -1,3 +1,5 @@
+import { ToasterType } from "@src/modules/toaster";
+
 export interface ToastPayload {
   loading: boolean;
   done: boolean;
@@ -7,27 +9,21 @@ export interface ToastPayload {
   error: Error | null;
 }
 
-enum Apperance {
-  Success = "success",
-  Error = "error",
-  Warning = "warning",
-  Info = "info",
-}
-
 export const handleRemoteResponse =
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  (addToast: Function) => (payload: ToastPayload) => {
+  (addToast: (type: ToasterType, message: string) => void) =>
+  (payload: ToastPayload) => {
     if (payload.done) {
-      addToast(payload.message, {
-        appearance: (() => {
+      addToast(
+        (() => {
           if (payload.error) {
-            return Apperance.Error;
+            return ToasterType.ERROR;
           }
           if (payload.warning) {
-            return Apperance.Warning;
+            return ToasterType.WARNING;
           }
-          return Apperance.Success;
+          return ToasterType.SUCCESS;
         })(),
-      });
+        payload.message
+      );
     }
   };
