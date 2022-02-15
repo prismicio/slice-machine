@@ -1,6 +1,6 @@
 {
   "name": "vue-slicezone",
-  "version": "0.1.1-alpha.18",
+  "version": "0.1.1-alpha.19",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
   "scripts": {
