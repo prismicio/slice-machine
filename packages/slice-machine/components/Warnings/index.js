@@ -1,73 +1,77 @@
-import { Box, Flex, Heading, useThemeUI, Text } from "theme-ui";
-import { NewVersionAvailable, ClientError, NotConnected } from "./Errors";
-import ConfigErrors from "../ConfigErrors";
+import { Text, Flex, Heading } from "theme-ui";
 
-import { warningStates } from "lib/consts";
-import { FiZap } from "react-icons/fi";
+import Card from "../Card";
 
-const Renderers = {
-  [warningStates.NOT_CONNECTED]: NotConnected,
-  [warningStates.CLIENT_ERROR]: ClientError,
-  [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable,
-};
-
-const Warnings = ({ list, configErrors, priority }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { theme } = useThemeUI();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
-  const orderedList = priority
-    ? // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      [priority, ...list.filter((e) => e !== priority)]
-    : list;
-  return (
-    <Box bg="background" sx={{ minHeight: "100vh", maxWidth: 480 }}>
+export const ClientError = ({ errorType }) => (
+  <Card
+    bg="background"
+    bodySx={{ p: 3 }}
+    Header={({ radius }) => (
       <Flex
         sx={{
-          height: "57px",
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          borderBottom: ({ colors }) => `1px solid ${colors.deep}`,
           p: 3,
-          bg: "deep",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderTopLeftRadius: radius,
+          borderTopRightRadius: radius,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
         }}
       >
-        <Heading
-          as="h3"
-          sx={{ display: "flex", alignItems: "center", color: "#FFF" }}
-        >
-          <FiZap /> <Text ml={2}>Warnings</Text>
-        </Heading>
+        <Heading as="h3">Unable to fetch remote slices</Heading>
       </Flex>
-      <Box p={3} sx={{ overflow: "auto" }}>
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          orderedList.map((warning) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-            const Component = Renderers[warning.key];
-            if (!Component) {
-              return null;
-            }
-            return (
-              <Component
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                key={warning.key}
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                errorType={warning.title}
-                {...warning}
-              />
-            );
-          })
-        }
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          Object.entries(configErrors || {}).length ? (
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-            <ConfigErrors errors={configErrors} />
-          ) : null
-        }
-      </Box>
-    </Box>
-  );
-};
+    )}
+  >
+    <Text as="p" mt={1}>
+      This error probably means that you are not connected to Prismic or that
+      your `prismic-auth` token is outdated.
+    </Text>
+    <Text as="p">
+      To generate a new token, type `prismic login` in your CLI. This message
+      you should disappear instantly.
+    </Text>
+    <Text as="p" mt={4}>
+      If the problem persists, check that your `sm.json` file points to the
+      right API endpoint.
+      <br />
+      Full error: {errorType}
+    </Text>
+  </Card>
+);
 
-export default Warnings;
+export const NotConnected = () => (
+  <Card
+    bg="background"
+    bodySx={{ p: 3 }}
+    Header={({ radius }) => (
+      <Flex
+        sx={{
+          p: 3,
+          bg: "headSection",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderTopLeftRadius: radius,
+          borderTopRightRadius: radius,
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+        }}
+      >
+        <Heading as="h3">You're not logged in</Heading>
+      </Flex>
+    )}
+  >
+    <Text as="p">
+      In order to push your slices to your Shared Slices bucket, you will need
+      to be connected to Prismic. If you haven't already created a project,
+      please <b>run the setup command</b> first:
+      <Text variant="pre">prismic sm --setup</Text>
+      <Text mt={1}>
+        👆 This needs to be done inside a valid Next/Nuxt project.
+      </Text>
+      <Text mt={3}>
+        <b>Otherwise, simply run:</b>
+      </Text>
+      <Text mt={1}>prismic login</Text>
+    </Text>
+  </Card>
+);

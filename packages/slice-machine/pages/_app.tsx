@@ -120,7 +120,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Tracker.get().groupLibraries(
         serverState.libraries || [],
-        serverState.env.updateVersionInfo.currentVersion
+        serverState.env.changelog.currentVersion
       );
 
       serverState.env.shortId &&

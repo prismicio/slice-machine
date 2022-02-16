@@ -11,7 +11,7 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem } from "@slicemachine/core";
+import { FileSystem, Utils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
@@ -21,14 +21,6 @@ function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
 ): ReadonlyArray<Warning> {
-  const newVersion =
-    env.updateVersionInfo && env.updateVersionInfo.updateAvailable
-      ? {
-          key: warningStates.NEW_VERSION_AVAILABLE,
-          value: env.updateVersionInfo,
-        }
-      : undefined;
-
   const connected = !env.prismicData?.auth
     ? {
         key: warningStates.NOT_CONNECTED,
@@ -44,9 +36,7 @@ function createWarnings(
       }
     : undefined;
 
-  return [newVersion, connected, client].filter(
-    Boolean
-  ) as ReadonlyArray<Warning>;
+  return [connected, client].filter(Boolean) as ReadonlyArray<Warning>;
 }
 
 export const getBackendState = async (
@@ -57,9 +47,6 @@ export const getBackendState = async (
   const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
   const base = preferWroomBase(env.manifest.apiEndpoint);
-  if (base !== env.prismicData.base) {
-    FileSystem.PrismicSharedConfigManager.setProperties({ base });
-  }
 
   // Refresh auth
   if (env.isUserLoggedIn && env.prismicData.auth) {
@@ -110,8 +97,10 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
+    packageManager: Utils.Files.exists(FileSystem.YarnLockPath(cwd))
+      ? "yarn"
+      : "npm",
     shortId: prismicData.shortId,
-    prismicAPIUrl: prismicData.base,
   };
 
   return {

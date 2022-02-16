@@ -1,16 +1,17 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
-import { UserContextStoreType } from "@src/modules/userContext/types";
-import { getUpdateVersionInfo } from "../environment";
-import { gte } from "semver";
+import type { UserContextStoreType } from "@src/modules/userContext/types";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
 const initialState: UserContextStoreType = {
   hasSendAReview: false,
   isOnboarded: false,
-  dismissedUpdate: "",
+  updatesViewed: {
+    latest: null,
+    latestNonBreaking: null,
+  },
 };
 
 // Actions Creators
@@ -22,15 +23,15 @@ export const finishOnboardingCreator = createAction(
   "USER_CONTEXT/FINISH_ONBOARDING"
 )();
 
-export const dismissedUpdateCreator = createAction(
-  "USER_CONTEXT/DISMISS_UPDATE"
-)<UserContextStoreType["dismissedUpdate"]>();
+export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
+  UserContextStoreType["updatesViewed"]
+>();
 
 type userContextActions = ActionType<
   | typeof finishOnboardingCreator
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
-  | typeof dismissedUpdateCreator
+  | typeof updatesViewedCreator
 >;
 
 // Selectors
@@ -41,14 +42,9 @@ export const userHasDoneTheOnboarding = (
   state: SliceMachineStoreType
 ): boolean => state.userContext.isOnboarded;
 
-export const dismissedLatestUpdate = (
+export const getUpdatesViewed = (
   state: SliceMachineStoreType
-): boolean => {
-  const dismissed = state.userContext.dismissedUpdate;
-  if (!dismissed) return false;
-  const current = getUpdateVersionInfo(state);
-  return gte(dismissed, current.latestVersion);
-};
+): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
 // Reducer
 export const userContextReducer: Reducer<
@@ -67,10 +63,10 @@ export const userContextReducer: Reducer<
         ...state,
         isOnboarded: true,
       };
-    case getType(dismissedUpdateCreator): {
+    case getType(updatesViewedCreator): {
       return {
         ...state,
-        dismissedUpdate: action.payload,
+        updatesViewed: action.payload,
       };
     }
     default:

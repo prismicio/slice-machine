@@ -87,7 +87,6 @@ describe("LoginModal", () => {
   test("when given a prismic url in env it should open to primsic.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
-        prismicAPIUrl: "https://prismic.io",
         sliceMachineAPIUrl: "http://localhost:9999/",
         manifest: {
           apiEndpoint: "https://foo.prismic.io/api/v2",
@@ -108,7 +107,6 @@ describe("LoginModal", () => {
   test("when given wroom.io url it should open to wroom.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
-        prismicAPIUrl: "https://prismic.io",
         sliceMachineAPIUrl: "http://localhost:9999/",
         manifest: {
           apiEndpoint: "https://foo.wroom.io/api/v2",

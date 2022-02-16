@@ -1,4 +1,3 @@
-import path from "path";
 import {
   fromUrl,
   parseDomain,
@@ -9,7 +8,6 @@ import {
 import getPrismicData from "./getPrismicData";
 
 import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
-import { createComparator } from "@lib/env/semver";
 import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 
 import initClient from "@lib/models/common/http";
@@ -17,10 +15,10 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
 import { Models, Utils } from "@slicemachine/core";
 import preferWroomBase from "@lib/utils/preferWroomBase";
+import { getPackageChangelog } from "@lib/env/versions";
 
+// variable declared globally on the index.ts, is the cwd to SM dependency
 declare let appRoot: string;
-
-const compareNpmVersions = createComparator(path.join(appRoot, "package.json"));
 
 function validate(config: Models.Manifest): ConfigErrors {
   const errors: ConfigErrors = {};
@@ -73,7 +71,7 @@ export default async function getEnv(
   }
 
   const base = preferWroomBase(manifestInfo.content.apiEndpoint);
-  const prismicData = getPrismicData(base);
+  const prismicData = getPrismicData();
 
   if (!prismicData.isOk()) {
     const message =
@@ -82,7 +80,7 @@ export default async function getEnv(
     throw new Error(message);
   }
 
-  const npmCompare = await compareNpmVersions({ cwd });
+  const smChangelog = await getPackageChangelog(appRoot);
 
   const maybeErrors = validate(manifestInfo.content);
   const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));
@@ -99,13 +97,7 @@ export default async function getEnv(
       repo,
       manifest: manifestInfo.content,
       prismicData: prismicData.value,
-      updateVersionInfo: {
-        currentVersion: npmCompare.currentVersion,
-        latestVersion: npmCompare.onlinePackage?.version || "",
-        packageManager: npmCompare.packageManager,
-        updateCommand: npmCompare.updateCommand,
-        updateAvailable: npmCompare.updateAvailable,
-      },
+      changelog: smChangelog,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
       framework: Utils.Framework.defineFramework({

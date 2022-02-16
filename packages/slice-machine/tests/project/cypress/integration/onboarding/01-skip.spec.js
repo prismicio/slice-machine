@@ -12,8 +12,7 @@ describe("onboarding skip", () => {
     cy.get('[data-cy=skip-onboarding]').click()
 
     cy.location('pathname', {timeout: 1000}).should('eq', '/')
-
   
-    cy.getLocalStorage("persist:root").should('eq', '{"userContext":"{\\"hasSendAReview\\":false,\\"isOnboarded\\":true,\\"dismissedUpdate\\":\\"\\"}","_persist":"{\\"version\\":-1,\\"rehydrated\\":true}"}')
+    cy.getLocalStorage("persist:root").should('include', '\\"isOnboarded\\":true,')
   })
 })

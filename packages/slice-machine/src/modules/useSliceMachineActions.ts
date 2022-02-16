@@ -10,7 +10,7 @@ import {
   finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
-  dismissedUpdateCreator,
+  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { getStateCreator } from "@src/modules/environment";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@src/modules/customTypes";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { createSliceCreator } from "@src/modules/slices";
+import { UserContextStoreType } from "./userContext/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -61,10 +62,6 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const closeUpdateVersionModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
-  const openUpdateVersionModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -80,8 +77,8 @@ const useSliceMachineActions = () => {
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
-  const dismissUpdate = (version: string) =>
-    dispatch(dismissedUpdateCreator(version));
+  const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
+    dispatch(updatesViewedCreator(versions));
 
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
@@ -129,9 +126,7 @@ const useSliceMachineActions = () => {
     createSlice,
     sendAReview,
     skipReview,
-    dismissUpdate,
-    closeUpdateVersionModal,
-    openUpdateVersionModal,
+    setUpdatesViewed,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
     openCreateSliceModal,

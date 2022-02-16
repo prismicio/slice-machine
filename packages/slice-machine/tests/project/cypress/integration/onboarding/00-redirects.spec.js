@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 
 describe('onboarding redirects and local storage', () => {
   beforeEach(() => {

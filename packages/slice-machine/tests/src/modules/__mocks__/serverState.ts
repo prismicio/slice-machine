@@ -33,7 +33,6 @@ export const dummyServerState: Pick<
     framework: Frameworks.next,
     sliceMachineAPIUrl: "http://localhost:9999",
     shortId: "shortId",
-    prismicAPIUrl: "https://prismic.io",
   },
   warnings: [],
   configErrors: {},

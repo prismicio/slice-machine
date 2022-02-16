@@ -106,7 +106,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           sx={{
             textAlign: "center",
             mt: 3,
-            color: "textGray",
+            color: "grey05",
             "::first-letter": {
               "text-transform": "uppercase",
             },
