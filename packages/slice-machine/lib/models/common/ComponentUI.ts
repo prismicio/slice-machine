@@ -70,6 +70,8 @@ export const ComponentUI = {
     const plugins = new PlugginMiddleware(env.manifest.plugins, env.cwd);
     const syntax = plugins.getSyntaxForFramework(env.manifest.framework);
 
+    // TODO check that this uses the TYPE_NAME and CUSTOM_NAME properties from the widgets
+
     const snippets = component.model.variations.reduce((acc, variation) => {
       const value = Object.entries(variation.primary || {}).reduce(
         (acc, [key, value]) => {
