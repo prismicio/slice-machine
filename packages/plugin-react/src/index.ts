@@ -102,36 +102,36 @@ export const snippets = ({
   }
   switch (type) {
     case FieldType.Boolean:
-      return `<span ${
-        useKey ? `key="bool-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="bool-\${i}" ` : ""
       }>{ ${fieldText} ? 'true' : 'false' }</span>`;
 
     case FieldType.Color:
-      return `<span ${
-        useKey ? `key="color-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="color-\${i}"` : ""
       } style={{ color: ${fieldText} }}>Some Text</span>`;
 
     case FieldType.ContentRelationship:
       return `/* import { Link } from 'prismic-reactjs' */
-<a ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+<a${
+        useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.Date:
       return `/* import { Date as ParseDate } from 'prismic-reactjs' */
-<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+<span${
+        useKey ? ` key="${fieldText}-\${i}"` : ""
       }>{ ParseDate(${fieldText}) }</span>`;
 
     case FieldType.Embed:
       return `// you might want to use a lib here (eg. react-oembed-container)
-<div ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+<div${
+        useKey ? ` key="${fieldText}-\${i}"` : ""
       }} dangerouslySetInnerHTML={{ __html: ${fieldText} }} />`;
 
     case FieldType.GeoPoint:
-      return `<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="${fieldText}-\${i}" ` : ""
       }>{ ${fieldText} }</span>`;
 
     case FieldType.Group:
@@ -139,7 +139,7 @@ export const snippets = ({
 
     case FieldType.Image:
       return `<img src={${fieldText}.url} alt={${fieldText}.alt} ${
-        useKey ? `key="img-\${i}"` : ""
+        useKey ? `key="img-\${i}" ` : ""
       }/>`;
 
     case FieldType.IntegrationFields:
@@ -147,24 +147,24 @@ export const snippets = ({
 
     case FieldType.Link:
       return `/* import { Link } from 'prismic-reactjs' */
-<a ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+<a${
+        useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.LinkToMedia:
       return `/* import { Link } from 'prismic-reactjs' */
-<a ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+<a${
+        useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.Number:
-      return `<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="${fieldText}-\${i}" ` : ""
       }>{ ${fieldText} }</span>`;
 
     case FieldType.Select:
-      return `<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="${fieldText}-\${i}" ` : ""
       }>{ ${fieldText} }</span>`;
 
     case FieldType.StructuredText:
@@ -173,13 +173,13 @@ export const snippets = ({
       } />`;
 
     case FieldType.Text:
-      return `<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="${fieldText}-\${i}" ` : ""
       }>{ ${fieldText} }</span>`;
 
     case FieldType.Timestamp:
-      return `<span ${
-        useKey ? `key="${fieldText}-\${i}"` : ""
+      return `<span${
+        useKey ? ` key="${fieldText}-\${i}" ` : ""
       }>{ ${fieldText} }>/span>`;
 
     case FieldType.UID:
