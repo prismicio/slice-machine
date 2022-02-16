@@ -55,7 +55,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
       <Flex
         sx={{
           flexDirection: "column",
-          margin: "24px 32px",
+          padding: "24px 32px",
           gap: "24px",
         }}
       >

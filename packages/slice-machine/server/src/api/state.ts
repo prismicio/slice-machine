@@ -21,13 +21,6 @@ function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
 ): ReadonlyArray<Warning> {
-  const newVersion = env.changelog.updateAvailable
-    ? {
-        key: warningStates.NEW_VERSION_AVAILABLE,
-        value: env.changelog,
-      }
-    : undefined;
-
   const connected = !env.prismicData?.auth
     ? {
         key: warningStates.NOT_CONNECTED,
@@ -43,9 +36,7 @@ function createWarnings(
       }
     : undefined;
 
-  return [newVersion, connected, client].filter(
-    Boolean
-  ) as ReadonlyArray<Warning>;
+  return [connected, client].filter(Boolean) as ReadonlyArray<Warning>;
 }
 
 export const getBackendState = async (
