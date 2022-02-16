@@ -40,6 +40,7 @@ export type FilenameAndData<T = string | SliceAsObject> = {
 
 export type Plugin = {
   framework?: string;
+  syntax?: string;
   slice?: (name: string) => FilenameAndData<string>[] | FilenameAndData<string>;
   story?: (
     path: string,
@@ -158,6 +159,15 @@ export default class PluginContainer {
     const plugin = require(realPath);
 
     this.plugins[name] = plugin;
+  }
+
+  getSyntaxForFramework(framework?: string): string | null {
+    return this._findPluginsWithProp("syntax", framework).reduce(
+      (acc: string | null, plugin) => {
+        return plugin.syntax || acc;
+      },
+      null
+    );
   }
 
   // TODO: remove the framework argument, and return an object or array of files and data

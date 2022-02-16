@@ -85,6 +85,8 @@ ${slices
 `,
 });
 
+export const syntax = "jsx";
+
 export const snippets = ({
   type,
   fieldText,
@@ -127,7 +129,7 @@ export const snippets = ({
       return `// you might want to use a lib here (eg. react-oembed-container)
 <div${
         useKey ? ` key="${fieldText}-\${i}"` : ""
-      }} dangerouslySetInnerHTML={{ __html: ${fieldText} }} />`;
+      } dangerouslySetInnerHTML={{ __html: ${fieldText} }} />`;
 
     case FieldType.GeoPoint:
       return `<span${

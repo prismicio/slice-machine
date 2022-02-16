@@ -4,7 +4,7 @@ import { Box, Text } from "theme-ui";
 
 import ListItem from "components/ListItem";
 
-import Hint from "./components/Hints";
+// import Hint from "./components/Hints";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 
@@ -13,6 +13,8 @@ import * as Widgets from "@lib/models/common/widgets/withGroup";
 import Li from "components/Li";
 import { useSelector } from "react-redux";
 import { getFramework } from "@src/modules/environment";
+
+import CodeBlock from "./components/Hints/CodeBlock";
 
 const FieldZone = ({
   fields,
@@ -27,8 +29,8 @@ const FieldZone = ({
   onDeleteItem,
   showHints,
   NewFieldC,
-  renderHintBase,
-  isRepeatable,
+  //  renderHintBase,
+  //  isRepeatable,
 }) => {
   const { framework } = useSelector((store) => ({
     framework: getFramework(store),
@@ -60,6 +62,11 @@ const FieldZone = ({
                 } = item;
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
                 const widget = findWidgetByConfigOrType(Widgets, config, type);
+
+                const variation = "default-slice"; // TODO: get the current variation
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                const snippet = Model.snippets[variation][item.key];
+
                 if (!widget) {
                   return (
                     <Li>
@@ -103,22 +110,33 @@ const FieldZone = ({
                   return <CustomListItem {...props} framework={framework} />;
                 }
 
-                const HintElement = (
-                  <Hint
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-                    item={item}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    show={showHints}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    isRepeatable={isRepeatable}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    renderHintBase={renderHintBase}
-                    framework={framework}
-                    Widgets={Widgets}
-                    typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
-                  />
+                const Snippet = (
+                  <div style={{ display: showHints ? "initial" : "none" }}>
+                    <CodeBlock
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                      code={snippet}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                      lang={Model.syntax}
+                    />
+                  </div>
                 );
-                return <ListItem {...props} HintElement={HintElement} />;
+
+                // const HintElement = (
+                //   <Hint
+                //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+                //     item={item}
+                //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                //     show={showHints}
+                //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                //     isRepeatable={isRepeatable}
+                //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                //     renderHintBase={renderHintBase}
+                //     framework={framework}
+                //     Widgets={Widgets}
+                //     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                //   />
+                // );
+                return <ListItem {...props} HintElement={Snippet} />;
               })
             }
             {provided.placeholder}
