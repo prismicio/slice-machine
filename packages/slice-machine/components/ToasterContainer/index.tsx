@@ -3,11 +3,18 @@ import React from "react";
 import {
   ToastContainer as ReactToastifyContainer,
   toast,
+  TypeOptions,
+  Slide,
 } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { MdDangerous, MdDone, MdError, MdWarning } from "react-icons/md";
 
-const getIconAccordingToasterType = ({ type }: toast.TYPE): JSX.Element => {
+const getIconAccordingToasterType = ({
+  type,
+}: {
+  type: TypeOptions;
+}): JSX.Element => {
   switch (type) {
     case toast.TYPE.INFO:
       return <MdError />;
@@ -23,8 +30,9 @@ const getIconAccordingToasterType = ({ type }: toast.TYPE): JSX.Element => {
 const ToastContainer: React.FunctionComponent = () => {
   return (
     <ReactToastifyContainer
-      autoClose={20000}
+      autoClose={2500}
       hideProgressBar
+      transition={Slide}
       closeButton={false}
       position={toast.POSITION.TOP_CENTER}
       icon={getIconAccordingToasterType}
