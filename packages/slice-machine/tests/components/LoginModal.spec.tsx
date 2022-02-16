@@ -31,24 +31,6 @@ jest.mock("react-redux", () => ({
 const useSelectorMock = useSelector as jest.Mock;
 const useDispatchMock = useDispatch() as jest.Mock;
 
-jest.mock("react-toast-notifications", () => {
-  return {
-    ToastProvider: ({
-      autoDismiss,
-      autoDismissTimeout,
-      components,
-      ...rest
-    }: {
-      autoDismiss: boolean;
-      autoDismissTimeout: number;
-      components: any;
-    }) => {
-      return <div {...rest} />;
-    },
-    useToasts: () => ({ addToast: jest.fn() }),
-  };
-});
-
 const App = () => (
   <ToastProvider>
     <LoginModal />

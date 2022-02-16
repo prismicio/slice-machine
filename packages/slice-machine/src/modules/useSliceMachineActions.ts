@@ -91,9 +91,9 @@ const useSliceMachineActions = () => {
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
 
-  // Toaster module
-  const openToaster = (type: ToasterType, message: string) =>
-    dispatch(openToasterCreator({ type, message }));
+  // Toaster store
+  const openToaster = (message: string, type: ToasterType) =>
+    dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {

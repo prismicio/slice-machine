@@ -5,7 +5,7 @@ import {
   CustomTypeState,
   CustomTypeStatus,
 } from "@lib/models/ui/CustomTypeState";
-import { handleRemoteResponse, ToastPayload } from "@src/ToastProvider/utils";
+import { handleRemoteResponse, ToastPayload } from "@src/modules/toaster/utils";
 import CustomTypeStore from "@src/models/customType/store";
 
 import { FiLayout } from "react-icons/fi";

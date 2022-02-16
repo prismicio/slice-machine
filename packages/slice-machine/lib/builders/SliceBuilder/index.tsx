@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useMemo } from "react";
 import { useIsMounted } from "react-tidy";
 
-import { handleRemoteResponse } from "src/ToastProvider/utils";
+import { handleRemoteResponse } from "@src/modules/toaster/utils";
 import { SliceContext } from "src/models/slice/context";
 
 import { Box } from "theme-ui";

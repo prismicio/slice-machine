@@ -72,12 +72,12 @@ const LoginModal: React.FunctionComponent = () => {
 
       void Tracker.get().identifyUser(userId);
 
-      openToaster(ToasterType.SUCCESS, "Logged in");
+      openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();
       closeLoginModal();
     } catch (e) {
       stopLoadingLogin();
-      openToaster(ToasterType.ERROR, "Logging fail");
+      openToaster("Logging fail", ToasterType.ERROR);
     }
   };
 

@@ -1,4 +1,4 @@
-import { ToasterType } from "@src/modules/toaster";
+import { ToasterType } from "../toaster";
 
 export interface ToastPayload {
   loading: boolean;
@@ -10,10 +10,11 @@ export interface ToastPayload {
 }
 
 export const handleRemoteResponse =
-  (addToast: (type: ToasterType, message: string) => void) =>
+  (addToast: (message: string, type: ToasterType) => void) =>
   (payload: ToastPayload) => {
     if (payload.done) {
       addToast(
+        payload.message,
         (() => {
           if (payload.error) {
             return ToasterType.ERROR;
@@ -22,8 +23,7 @@ export const handleRemoteResponse =
             return ToasterType.WARNING;
           }
           return ToasterType.SUCCESS;
-        })(),
-        payload.message
+        })()
       );
     }
   };

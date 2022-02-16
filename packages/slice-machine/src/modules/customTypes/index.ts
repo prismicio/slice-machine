@@ -18,6 +18,7 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 // Action Creators
 export const saveCustomTypeCreator = createAction("CUSTOM_TYPES/SAVE.REQUEST")<{
@@ -91,15 +92,32 @@ export const customTypesReducer: Reducer<
 export function* createCustomTypeSaga({
   payload,
 }: ReturnType<typeof createCustomTypeCreator.request>) {
-  const newCustomType = createCustomType(
-    payload.id,
-    payload.label,
-    payload.repeatable
-  );
-  yield call(saveCustomType, newCustomType, {});
-  yield put(createCustomTypeCreator.success({ newCustomType }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  yield put(push(`/cts/${payload.id}`));
+  try {
+    const newCustomType = createCustomType(
+      payload.id,
+      payload.label,
+      payload.repeatable
+    );
+    yield call(saveCustomType, newCustomType, {});
+    yield put(createCustomTypeCreator.success({ newCustomType }));
+    yield put(
+      modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE })
+    );
+    yield put(push(`/cts/${payload.id}`));
+    yield put(
+      openToasterCreator({
+        message: "Custom type saved",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Custom type not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
 }
 
 // Saga watchers

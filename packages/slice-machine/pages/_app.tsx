@@ -15,9 +15,11 @@ import Tracker from "@src/tracker";
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
+import "src/css/toaster.css";
 
 import "highlight.js/styles/atom-one-dark.css";
 

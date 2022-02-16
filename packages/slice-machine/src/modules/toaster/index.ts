@@ -19,24 +19,16 @@ export const openToasterCreator = createAction("TOASTER/OPEN")<{
 function* openToasterSaga(action: ReturnType<typeof openToasterCreator>) {
   switch (action.payload.type) {
     case ToasterType.SUCCESS:
-      toast.success(action.payload.message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.success(action.payload.message);
       break;
     case ToasterType.ERROR:
-      toast.error(action.payload.message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.error(action.payload.message);
       break;
     case ToasterType.INFO:
-      toast.info(action.payload.message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.info(action.payload.message);
       break;
     case ToasterType.WARNING:
-      toast.warning(action.payload.message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warning(action.payload.message);
       break;
   }
 }
