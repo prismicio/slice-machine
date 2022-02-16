@@ -1,6 +1,7 @@
 import * as Models from "@slicemachine/core/build/src/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
+import PlugginMiddleware from "@slicemachine/plugin-middleware";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -56,6 +57,7 @@ export interface ScreenshotUI extends Models.Screenshot {
 export interface ComponentUI extends Models.Component {
   __status: LibStatus;
   screenshotUrls?: Record<Models.VariationAsObject["id"], ScreenshotUI>;
+  snippets: Record<string, Record<string, string>>;
 }
 
 export const ComponentUI = {
@@ -64,6 +66,27 @@ export const ComponentUI = {
     remoteSlices: ReadonlyArray<Models.SliceAsObject>,
     env: BackendEnvironment
   ): ComponentUI {
+    const plugins = new PlugginMiddleware(env.manifest.plugins, env.cwd);
+
+    const snippets = component.model.variations.reduce((acc, variation) => {
+      const value = Object.entries(variation.primary || {}).reduce(
+        (acc, [key, value]) => {
+          const field = `slice.primary${
+            key.includes("-") ? `['${key}']` : `.${key}`
+          }`;
+          const snippet = plugins.createSnippet(
+            env.framework,
+            value.type,
+            field
+          );
+          return { ...acc, [key]: snippet };
+        },
+        {} as Record<string, string>
+      );
+
+      return { ...acc, [variation.id]: value };
+    }, {} as Record<string, Record<string, string>>);
+
     return {
       ...component,
       screenshotUrls: buildScreenshotUrls(
@@ -71,6 +94,7 @@ export const ComponentUI = {
         env.baseUrl
       ),
       __status: computeStatus(component, remoteSlices),
+      snippets,
     };
   },
 };

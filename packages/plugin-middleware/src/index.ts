@@ -1,10 +1,35 @@
 import path from "path";
-import { SliceAsObject } from "@slicemachine/core/src/models";
-import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
+import { SliceAsObject } from "@slicemachine/core/build/src/models/index";
 import snakeCase from "lodash.snakecase";
 import fs from "fs";
 
-export { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
+// export const FieldType = CustomType.Fields.FieldType
+// export type FieldType = CustomType.Fields.FieldType
+// console.log(FieldType)
+
+// CUSTOM_NAME and TYPE_NAME
+
+export enum FieldType {
+  Boolean = "Boolean",
+  Color = "Color",
+  ContentRelationship = "ContentRelationship",
+  Date = "Date",
+  Embed = "Embed",
+  GeoPoint = "GeoPoint",
+  Group = "Group",
+  Image = "Image",
+  //  IntegrationFields = "IntegrationFields",
+  Link = "Link",
+  LinkToMedia = "LinkToMedia",
+  Number = "Number",
+  Select = "Select",
+  //  SharedSlice: null
+  //  SliceZone: null
+  StructuredText = "StructuredText",
+  Text = "Text",
+  Timestamp = "Timestamp",
+  UID = "UID",
+}
 
 export type Variations = SliceAsObject["variations"];
 
@@ -24,7 +49,20 @@ export type Plugin = {
   index?: (
     slices: string[]
   ) => FilenameAndData<string>[] | FilenameAndData<string>;
-  snippets?: (widget: FieldType, field: string, useKey?: boolean) => string;
+  snippets?: ({
+    type,
+    fieldText,
+    useKey,
+    isRepeatable,
+  }: {
+    type: FieldType | string;
+    fieldText: string;
+    useKey?: boolean | undefined;
+    isRepeatable?: boolean | undefined;
+  }) => string;
+  // snippets: ({ type: FieldType; fieldText: string; useKey?: boolean; isRepeatable?: boolean }) => string
+
+  // snippets?: (widget: FieldType | string, field: string, useKey?: boolean) => string;
   model?: (sliceName: string) => FilenameAndData<SliceAsObject>;
   // [key: string]: unknown;
 };
@@ -151,10 +189,7 @@ export default class PluginContainer {
     }, []);
   }
 
-  createIndex(
-    framework: string | undefined,
-    slices: string[]
-  ): FilenameAndData<string>[] {
+  createIndex(slices: string[]): FilenameAndData<string>[] {
     const indices = this._findPluginsWithProp("index");
     return indices.reduce((acc: FilenameAndData<string>[], plugin) => {
       if (!plugin.index) return acc;
@@ -168,14 +203,14 @@ export default class PluginContainer {
 
   createSnippet(
     framework: string,
-    widget: FieldType,
-    field: string,
+    type: FieldType | string,
+    fieldText: string,
     useKey = false
   ): string {
     const widgets = this._findPluginsWithProp("snippets", framework);
     return widgets.reduce((acc, plugin) => {
       if (!plugin.snippets) return acc;
-      return plugin.snippets(widget, field, useKey);
+      return plugin.snippets({ type, fieldText, useKey });
     }, "");
   }
 

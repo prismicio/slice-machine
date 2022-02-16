@@ -104,10 +104,10 @@ export const snippets = ({
     case FieldType.Boolean:
       return `<span ${
         useKey ? `key="bool-\${i}"` : ""
-      }> { ${fieldText} ? 'true' : 'false' }</span>`;
+      }>{ ${fieldText} ? 'true' : 'false' }</span>`;
 
     case FieldType.Color:
-      return `<span  ${
+      return `<span ${
         useKey ? `key="color-\${i}"` : ""
       } style={{ color: ${fieldText} }}>Some Text</span>`;
 

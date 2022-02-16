@@ -26,7 +26,8 @@
     "start-server-and-test": "^1.14.0",
     "style-loader": "^2.0.0",
     "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "@slicemachine/plugin-next": "file:../../../plugin-next"
   },
   "dependencies": {
     "@prismicio/vue": "^2.0.7",

@@ -9,5 +9,6 @@
   "framework": "next",
   "tracking": false,
   "localSliceSimulatorURL": "http://localhost:3001/slice-simulator",
-  "_latest": "0.1.0"
+  "_latest": "0.1.0",
+  "plugins": ["@slicemachine/plugin-next"]
 }
