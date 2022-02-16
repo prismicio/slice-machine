@@ -7,7 +7,6 @@ import { render } from "@testing-library/react";
 import LoginModal from "@components/LoginModal";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { useSelector, useDispatch } from "react-redux";
-import ToastProvider from "../../src/ToastProvider";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 
@@ -31,11 +30,7 @@ jest.mock("react-redux", () => ({
 const useSelectorMock = useSelector as jest.Mock;
 const useDispatchMock = useDispatch() as jest.Mock;
 
-const App = () => (
-  <ToastProvider>
-    <LoginModal />
-  </ToastProvider>
-);
+const App = () => <LoginModal />;
 
 const server = setupServer(
   rest.post("/api/auth/start", (_, res, ctx) => {

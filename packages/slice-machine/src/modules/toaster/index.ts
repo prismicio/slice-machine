@@ -16,7 +16,9 @@ export const openToasterCreator = createAction("TOASTER/OPEN")<{
 }>();
 
 // Sagas
-function* openToasterSaga(action: ReturnType<typeof openToasterCreator>) {
+export function* openToasterSaga(
+  action: ReturnType<typeof openToasterCreator>
+) {
   switch (action.payload.type) {
     case ToasterType.SUCCESS:
       toast.success(action.payload.message);
