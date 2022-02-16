@@ -14,7 +14,7 @@ const getIconAccordingToasterType = ({
   type,
 }: {
   type: TypeOptions;
-}): JSX.Element => {
+}): JSX.Element | undefined => {
   switch (type) {
     case toast.TYPE.INFO:
       return <MdError />;
