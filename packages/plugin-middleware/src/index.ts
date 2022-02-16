@@ -18,7 +18,7 @@ export enum FieldType {
   GeoPoint = "GeoPoint",
   Group = "Group",
   Image = "Image",
-  //  IntegrationFields = "IntegrationFields",
+  IntegrationFields = "IntegrationFields",
   Link = "Link",
   LinkToMedia = "LinkToMedia",
   Number = "Number",
