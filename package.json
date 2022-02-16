@@ -41,6 +41,8 @@
     "**/packages/plugin-middleware/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-middleware run lint",
     "**/packages/plugin-react/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-react run lint",
     "**/packages/plugin-next/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-middleware run lint",
+    "**/packages/plugin-vue/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-vue run lint",
+    "**/packages/plugin-nuxt/**/*.@(js|jsx|ts|tsx)": "npm --prefix ./packages/plugin-nuxt run lint",
     "**/packages/**/**/*": "prettier --write --ignore-unknown"
   }
 }
