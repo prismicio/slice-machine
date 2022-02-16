@@ -59,7 +59,7 @@ const fetchRemoteCustomTypes = async (
   }
 };
 
-const saveCustomTypes = (
+const saveCustomType = (
   cts: ReadonlyArray<CustomTypeJsonModel>,
   cwd: string
 ) => {
@@ -82,7 +82,7 @@ export default async function handler(env: BackendEnvironment): Promise<{
   const { remoteCustomTypes } = await fetchRemoteCustomTypes(env);
 
   if (!folderExists) {
-    saveCustomTypes(remoteCustomTypes, cwd);
+    saveCustomType(remoteCustomTypes, cwd);
   }
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`);

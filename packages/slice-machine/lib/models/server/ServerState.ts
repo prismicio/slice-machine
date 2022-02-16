@@ -12,7 +12,7 @@ export interface ConfigErrors {
 
 export default interface ServerState {
   env: FrontEndEnvironment;
-  libraries: ReadonlyArray<LibraryUI> | null;
+  libraries: ReadonlyArray<LibraryUI>;
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;

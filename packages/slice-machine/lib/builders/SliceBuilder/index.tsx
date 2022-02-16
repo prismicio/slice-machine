@@ -39,6 +39,7 @@ const initialState: SliceBuilderState = {
 
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
+
   const { openLoginModal, checkSimulatorSetup } = useSliceMachineActions();
   const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({

@@ -1,4 +1,4 @@
-import { SliceCreateBody } from "@models/common/Slice";
+import { SliceBody } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -22,17 +22,6 @@ import { paths, SliceTemplateConfig } from "@lib/models/paths";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
-
-const IndexFiles = {
-  none: null,
-  react: "index.js",
-  next: "index.js",
-  nuxt: "index.vue",
-  vue: "index.vue",
-  vanillajs: "index.js",
-  svelte: "index.svelte",
-  gatsby: null, // unused for now
-};
 
 const copyTemplate = async (
   env: BackendEnvironment,
@@ -76,39 +65,23 @@ const fromTemplate = async (
   return copyTemplate(env, templatePath, from, sliceName);
 };
 
-export default async function handler({
-  sliceName,
-  from,
-  values,
-}: SliceCreateBody) {
+export default async function handler({ sliceName, from }: SliceBody) {
   const { env } = await getEnv();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();
 
-  if (!values) {
-    const templatePath = SliceTemplateConfig(
-      env.cwd /*, pass custom template path here (relative to cwd) */
-    );
-    if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
-      await copyTemplate(env, templatePath, from, sliceName);
-    } else {
-      const maybeError = await fromTemplate(env, from, sliceName);
-      if (maybeError) {
-        return maybeError;
-      }
-    }
-  } else {
-    const fileName = IndexFiles[env.framework] || "index.js";
-    const pathToIndexFile = path.join(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      paths(env.cwd, "").library(from).slice(sliceName).value(),
-      fileName
-    );
+  const templatePath = SliceTemplateConfig(
+    env.cwd /*, pass custom template path here (relative to cwd) */
+  );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Files.write(pathToModel, JSON.stringify(values.model, null, 2));
-    Files.write(pathToIndexFile, values.componentCode);
+  if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
+    await copyTemplate(env, templatePath, from, sliceName);
+  } else {
+    const maybeError = await fromTemplate(env, from, sliceName);
+    if (maybeError) {
+      return maybeError;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

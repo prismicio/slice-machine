@@ -7,6 +7,7 @@ import {
   SaveCustomTypeBody,
 } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import { SliceBody } from "@models/common/Slice";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -30,6 +31,22 @@ export const saveCustomType = (
   return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
+/** Slice Routes **/
+
+export const createSlice = (
+  sliceName: string,
+  libName: string
+): Promise<{ variationId: string }> => {
+  const requestBody: SliceBody = {
+    sliceName,
+    from: libName,
+  };
+
+  return axios
+    .post(`/api/slices/create`, requestBody, defaultAxiosConfig)
+    .then((response: AxiosResponse<{ variationId: string }>) => response.data);
+};
+
 /** Auth Routes **/
 
 export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
@@ -37,8 +54,8 @@ export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
 
 export const checkAuthStatus = (): Promise<CheckAuthStatusResponse> =>
   axios
-    .post<CheckAuthStatusResponse>("/api/auth/status", {}, defaultAxiosConfig)
-    .then((r) => r.data);
+    .post("/api/auth/status", {}, defaultAxiosConfig)
+    .then((r: AxiosResponse<CheckAuthStatusResponse>) => r.data);
 
 /** Simulator Routes **/
 

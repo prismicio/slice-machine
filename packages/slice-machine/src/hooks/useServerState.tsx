@@ -14,6 +14,7 @@ const useServerState = (serverState: ServerState) => {
     serverState.configErrors,
     serverState.customTypes,
     serverState.remoteCustomTypes,
+    serverState.libraries,
   ]);
 
   return;

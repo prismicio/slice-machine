@@ -101,6 +101,9 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
           localCustomTypes: serverState.customTypes,
           remoteCustomTypes: serverState.remoteCustomTypes,
         },
+        slices: {
+          libraries: serverState.libraries,
+        },
       });
       setStoreInitiated(true);
       setSMStore({ store, persistor });
