@@ -1,10 +1,6 @@
 import React from "react";
 import { Flex, Text } from "theme-ui";
-import {
-  PackageChangelog,
-  PackageVersion,
-  VersionKind,
-} from "@models/common/versions";
+import { PackageChangelog, PackageVersion } from "@models/common/versions";
 import { PackageManager } from "@models/common/PackageManager";
 import { VersionKindLabel } from "./VersionKindLabel";
 import { ReleaseNoteDetails } from "./ReleaseNoteDetails";
@@ -63,7 +59,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           gap: "24px",
         }}
       >
-        {selectedVersion?.kind === VersionKind.MAJOR && (
+        {selectedVersion.releaseNote?.includes("# Breaking Change") && (
           <Flex
             sx={{
               padding: "16px",
@@ -74,6 +70,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
               borderRadius: "4px",
               gap: "16px",
             }}
+            data-testid="breaking-changes-warning"
           >
             <AiFillWarning size="24px" />
             This update includes breaking changes. To update correctly, follow
