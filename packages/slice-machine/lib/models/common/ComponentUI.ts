@@ -1,7 +1,7 @@
 import * as Models from "@slicemachine/core/build/src/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
-import PlugginMiddleware from "@slicemachine/plugin-middleware";
+import PlugginMiddleware, { FieldType } from "@slicemachine/plugin-middleware";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -61,6 +61,28 @@ export interface ComponentUI extends Models.Component {
   syntax: string | null;
 }
 
+function hasOwnProperty<X, Y extends PropertyKey>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+function snippetType(type: string, config: unknown): string {
+  if (
+    type === FieldType.Link &&
+    config &&
+    typeof config === "object" &&
+    hasOwnProperty(config, "select")
+  ) {
+    if (config.select === "web") return FieldType.Link;
+    if (config.select === "document") return FieldType.ContentRelationship;
+    if (config.select === "media") return FieldType.LinkToMedia;
+  }
+
+  return type;
+}
+
 export const ComponentUI = {
   build(
     component: Models.Component,
@@ -68,9 +90,8 @@ export const ComponentUI = {
     env: BackendEnvironment
   ): ComponentUI {
     const plugins = new PlugginMiddleware(env.manifest.plugins, env.cwd);
-    const syntax = plugins.getSyntaxForFramework(env.manifest.framework);
 
-    // TODO check that this uses the TYPE_NAME and CUSTOM_NAME properties from the widgets
+    const syntax = plugins.getSyntaxForFramework(env.manifest.framework);
 
     const snippets = component.model.variations.reduce((acc, variation) => {
       const value = Object.entries(variation.primary || {}).reduce(
@@ -78,11 +99,9 @@ export const ComponentUI = {
           const field = `slice.primary${
             key.includes("-") ? `['${key}']` : `.${key}`
           }`;
-          const snippet = plugins.createSnippet(
-            env.framework,
-            value.type,
-            field
-          );
+          const type = snippetType(value.type, value.config);
+
+          const snippet = plugins.createSnippet(env.framework, type, field);
           return { ...acc, [key]: snippet };
         },
         {} as Record<string, string>
