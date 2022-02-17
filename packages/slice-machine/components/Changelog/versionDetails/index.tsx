@@ -18,33 +18,6 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
   selectedVersion,
   packageManager,
 }) => {
-  if (!selectedVersion || !selectedVersion.releaseNote)
-    return (
-      <Flex
-        sx={{
-          width: "650px",
-          minWidth: "650px",
-          height: "100%",
-          borderRight: "1px solid",
-          borderColor: "grey01",
-          flexDirection: "column",
-          padding: "24px 32px",
-          gap: "24px",
-        }}
-      >
-        <div>
-          Could not fetch release notes.{" "}
-          <a
-            href="https://github.com/prismicio/slice-machine/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Find out more on GitHub
-          </a>
-        </div>
-      </Flex>
-    );
-
   return (
     <Flex
       sx={{
