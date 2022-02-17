@@ -32,7 +32,7 @@ export default function Changelog() {
         selectVersion={(version) => setSelectedVersion(version)}
       />
 
-      {changelog.versions.length === 0 ? (
+      {changelog.versions.length === 0 || !selectedVersion ? (
         <Flex
           sx={{
             width: "650px",
