@@ -84,8 +84,19 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           packageManager={packageManager}
         />
 
-        {selectedVersion.releaseNote && (
+        {selectedVersion.releaseNote ? (
           <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
+        ) : (
+          <div>
+            Could not fetch release notes.{" "}
+            <a
+              href="https://github.com/prismicio/slice-machine/releases"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Find out more on GitHub
+            </a>
+          </div>
         )}
       </Flex>
     </Flex>
