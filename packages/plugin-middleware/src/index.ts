@@ -215,12 +215,13 @@ export default class PluginContainer {
     framework: string,
     type: FieldType | string,
     fieldText: string,
-    useKey = false
+    useKey = false,
+    isRepeatable = false
   ): string {
     const widgets = this._findPluginsWithProp("snippets", framework);
     return widgets.reduce((acc, plugin) => {
       if (!plugin.snippets) return acc;
-      return plugin.snippets({ type, fieldText, useKey });
+      return plugin.snippets({ type, fieldText, useKey, isRepeatable });
     }, "");
   }
 

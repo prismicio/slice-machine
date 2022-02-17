@@ -91,7 +91,7 @@ describe("@slicemachine/plugin-middleware", () => {
     it("should call the index method on the plugins", () => {
       jest.spyOn(Dummy, "index");
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createIndex("dummy", ["foo", "bar", "baz"]);
+      const result = p.createIndex(["foo", "bar", "baz"]);
       expect(Dummy.index).toBeCalled();
       expect(result[0].filename).toEqual("index.js");
       expect(result[0].data).toContain(
@@ -109,13 +109,18 @@ describe("@slicemachine/plugin-middleware", () => {
       jest.spyOn(Dummy, "snippets");
       const p = new PluginMiddleware([Dummy.name]);
 
-      const result = p.createSnippet("dummy", FieldType.Text, "slice[0].text");
-      console.log(result);
-      expect(Dummy.snippets).toBeCalledWith(
+      const result = p.createSnippet(
+        Dummy.framework,
         FieldType.Text,
-        "slice[0].text",
-        false
+        "slice[0].text"
       );
+      console.log(result);
+      expect(Dummy.snippets).toBeCalledWith({
+        fieldText: "slice[0].text",
+        type: "Text",
+        useKey: false,
+        isRepeatable: false,
+      });
       expect(result).toEqual("<div>slice[0].text</div>");
     });
 

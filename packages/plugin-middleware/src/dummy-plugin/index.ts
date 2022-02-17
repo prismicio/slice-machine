@@ -1,5 +1,4 @@
-import type { Plugin } from "../index";
-import type { FieldType } from "@slicemachine/core/src/models/CustomType/fields";
+import type { Plugin, FieldType } from "../index";
 
 // for testing the dummy, not needed else where
 export const name = module.filename;
@@ -39,15 +38,18 @@ export const index = (slices: string[]): { filename: string; data: string } => {
   };
 };
 
-export const snippets = (
+export const snippets = ({
+  fieldText,
+}: {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  widget: FieldType,
-  field: string,
+  type: FieldType;
+  fieldText: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  useKey?: boolean
-): string => {
+  useKey?: boolean;
+  isReapable?: boolean;
+}): string => {
   // some map for the widget
-  return `<div>${field}</div>`;
+  return `<div>${fieldText}</div>`;
 };
 
 // TODO: discuss
