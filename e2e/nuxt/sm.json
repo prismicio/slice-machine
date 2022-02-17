@@ -1,0 +1,9 @@
+{
+	"apiEndpoint": "https://sm-e2e-nuxt.prismic.io/api/v2",
+	"libraries": [
+		"@/slices"
+	],
+    "plugins": [
+        "@slicemachine/plugin-nuxt"
+    ]
+}
