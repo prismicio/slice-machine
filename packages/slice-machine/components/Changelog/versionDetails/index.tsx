@@ -78,7 +78,15 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           </Flex>
         )}
 
-        {!selectedVersion.releaseNote && (
+        <UpdateCommandBox
+          changelog={changelog}
+          selectedVersion={selectedVersion}
+          packageManager={packageManager}
+        />
+
+        {selectedVersion.releaseNote ? (
+          <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
+        ) : (
           <div>
             Could not fetch release notes.{" "}
             <a
@@ -89,16 +97,6 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
               Find out more on GitHub
             </a>
           </div>
-        )}
-
-        <UpdateCommandBox
-          changelog={changelog}
-          selectedVersion={selectedVersion}
-          packageManager={packageManager}
-        />
-
-        {selectedVersion.releaseNote && (
-          <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
         )}
       </Flex>
     </Flex>
