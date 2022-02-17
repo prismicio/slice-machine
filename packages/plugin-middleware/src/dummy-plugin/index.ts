@@ -4,6 +4,8 @@ import type { Plugin, FieldType } from "../index";
 export const name = module.filename;
 
 export const framework = "dummy";
+
+export const syntax = "html";
 /* slice template */
 export const slice = (name: string): { filename: string; data: string } => ({
   filename: "index.js",

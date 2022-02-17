@@ -114,7 +114,6 @@ describe("@slicemachine/plugin-middleware", () => {
         FieldType.Text,
         "slice[0].text"
       );
-      console.log(result);
       expect(Dummy.snippets).toBeCalledWith({
         fieldText: "slice[0].text",
         type: "Text",
@@ -147,5 +146,19 @@ describe("@slicemachine/plugin-middleware", () => {
     });
   });
 
-  // describe.skip("createModel", () => {})
+  describe("#createModel", () => {
+    it("should create a default model", () => {
+      const plugin = new PluginMiddleware([Dummy.name], process.cwd());
+      const result = plugin.createModel("FooBar");
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe("#getSyntaxForFramework", () => {
+    it("should return the syntaxt for the plugin", () => {
+      const plugin = new PluginMiddleware([Dummy.name], process.cwd());
+      const result = plugin.getSyntaxForFramework(Dummy.framework);
+      expect(result).toEqual(Dummy.syntax);
+    });
+  });
 });

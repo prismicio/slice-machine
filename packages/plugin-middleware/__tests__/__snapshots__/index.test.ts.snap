@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@slicemachine/plugin-middleware #createModel should create a default model 1`] = `
+Object {
+  "data": Object {
+    "description": "MySlice",
+    "id": "foo_bar",
+    "name": "MySlice",
+    "type": "SharedSlice",
+    "variations": Array [
+      Object {
+        "description": "MySlice",
+        "docURL": "...",
+        "id": "default-slice",
+        "name": "Default slice",
+        "primary": Object {
+          "description": Object {
+            "config": Object {
+              "label": "Description",
+              "placeholder": "A nice description of your product",
+              "single": "paragraph",
+            },
+            "type": "StructuredText",
+          },
+          "title": Object {
+            "config": Object {
+              "label": "Title",
+              "placeholder": "This is where it all begins...",
+              "single": "heading1",
+            },
+            "type": "StructuredText",
+          },
+        },
+        "version": "sktwi1xtmkfgx8626",
+      },
+    ],
+  },
+  "filename": "model.json",
+}
+`;
