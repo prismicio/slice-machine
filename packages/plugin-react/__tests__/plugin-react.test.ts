@@ -135,7 +135,7 @@ describe("@slicemachine/plugin-react", () => {
       });
 
       expect(result).toEqual(
-        '{ slice?.items?.map((item, i) => <span key="slices-${i}">{ slices }</span>) }'
+        '{ slice?.items?.map((item, i) => <span key="slices-${i}" >{ slices }</span>) }'
       );
     });
   });
