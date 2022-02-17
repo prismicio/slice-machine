@@ -9,9 +9,22 @@ import { AiFillWarning } from "react-icons/ai";
 
 interface VersionDetailsProps {
   changelog: PackageChangelog;
-  selectedVersion: PackageVersion | null;
+  selectedVersion: PackageVersion;
   packageManager: PackageManager;
 }
+
+export const ReleaseWarning = () => (
+  <div>
+    Could not fetch release notes.{" "}
+    <a
+      href="https://github.com/prismicio/slice-machine/releases"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Find out more on GitHub
+    </a>
+  </div>
+);
 
 export const VersionDetails: React.FC<VersionDetailsProps> = ({
   changelog,
@@ -83,8 +96,11 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
           selectedVersion={selectedVersion}
           packageManager={packageManager}
         />
-
-        <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
+        {selectedVersion?.releaseNote ? (
+          <ReleaseNoteDetails releaseNote={selectedVersion.releaseNote} />
+        ) : (
+          <ReleaseWarning />
+        )}
       </Flex>
     </Flex>
   );

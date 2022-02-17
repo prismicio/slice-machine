@@ -5,7 +5,7 @@ import { getChangelog, getPackageManager } from "@src/modules/environment";
 import { useState } from "react";
 import { PackageVersion } from "@models/common/versions";
 import { Navigation } from "./navigation";
-import { VersionDetails } from "./versionDetails";
+import { VersionDetails, ReleaseWarning } from "./versionDetails";
 
 export default function Changelog() {
   const { changelog, packageManager } = useSelector(
@@ -32,7 +32,7 @@ export default function Changelog() {
         selectVersion={(version) => setSelectedVersion(version)}
       />
 
-      {changelog.versions.length === 0 || !selectedVersion.releaseNote ? (
+      {changelog.versions.length === 0 ? (
         <Flex
           sx={{
             width: "650px",
@@ -45,16 +45,7 @@ export default function Changelog() {
             gap: "24px",
           }}
         >
-          <div>
-            Could not fetch release notes.{" "}
-            <a
-              href="https://github.com/prismicio/slice-machine/releases"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Find out more on GitHub
-            </a>
-          </div>
+          <ReleaseWarning />
         </Flex>
       ) : (
         <VersionDetails
