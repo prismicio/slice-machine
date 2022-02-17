@@ -9,7 +9,7 @@ import { AiFillWarning } from "react-icons/ai";
 
 interface VersionDetailsProps {
   changelog: PackageChangelog;
-  selectedVersion: PackageVersion;
+  selectedVersion: PackageVersion | null;
   packageManager: PackageManager;
 }
 
