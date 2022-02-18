@@ -77,7 +77,7 @@ describe("install required dependency", () => {
     expect(failFn).not.toHaveBeenCalled();
   });
 
-  test("when using react it should install @prismicio/client and prismic-reactjs", async () => {
+  test("when using react it should install @prismicio/client and @prismicio/react", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -91,7 +91,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client"
+      "npm install --save @prismicio/react @prismicio/client"
     );
   });
 
@@ -109,7 +109,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client@v5.1.1 next-slicezone @prismicio/slice-simulator-react"
+      "npm install --save @prismicio/react @prismicio/client @prismicio/slice-simulator-react"
     );
   });
 
