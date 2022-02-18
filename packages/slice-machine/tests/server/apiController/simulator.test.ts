@@ -81,8 +81,7 @@ describe("simulator controller", () => {
       content: {
         dependencies: {
           "@prismicio/slice-simulator-react": "^2.6.12",
-          "prismic-reactjs": "^0.3.0",
-          "next-slicezone": "^0.0.28",
+          "@prismicio/react": "^0.3.0",
         },
         devDependencies: {},
       },
