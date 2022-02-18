@@ -19,6 +19,8 @@ import { DEFAULT_VARIATION_ID } from "@lib/consts";
 import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
+import { ApiResult } from "@lib/models/server/ApiResult";
+import { RESERVED_SLICE_NAME } from "@lib/consts";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
@@ -65,7 +67,15 @@ const fromTemplate = async (
   return copyTemplate(env, templatePath, from, sliceName);
 };
 
-export default async function handler({ sliceName, from }: SliceBody) {
+export default async function handler({
+  sliceName,
+  from,
+}: SliceBody): Promise<ApiResult> {
+  if (RESERVED_SLICE_NAME.includes(sliceName)) {
+    const msg = `The slice name '${sliceName}' is reserved for slice machine use`;
+    return { err: new Error(msg), status: 400, reason: msg };
+  }
+
   const { env } = await getEnv();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
