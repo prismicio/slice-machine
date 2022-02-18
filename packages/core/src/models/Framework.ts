@@ -4,9 +4,11 @@ export enum Frameworks {
   none = "none",
   nuxt = "nuxt",
   next = "next",
+  nextLegacy = "next-legacy",
   gatsby = "gatsby",
   vue = "vue",
   react = "react",
+  reactLegacy = "react-legacy",
   svelte = "svelte",
   vanillajs = "vanillajs",
 }

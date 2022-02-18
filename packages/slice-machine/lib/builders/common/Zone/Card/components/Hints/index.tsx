@@ -14,6 +14,8 @@ const FrameworkRenderers = {
   [Frameworks.vanillajs]: Renderers.vanillajs,
   [Frameworks.none]: null,
   [Frameworks.gatsby]: null,
+  [Frameworks.reactLegacy]: Renderers.legacyReact,
+  [Frameworks.nextLegacy]: Renderers.legacyNext,
 };
 
 interface HintProps {
