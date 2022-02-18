@@ -1,11 +1,7 @@
 import { Box, Flex, Text } from "@theme-ui/components";
 import Container from "components/Container";
 import ConfigErrors from "components/ConfigErrors";
-import {
-  NewVersionAvailable,
-  ClientError,
-  NotConnected,
-} from "components/Warnings/Errors";
+import { ClientError, NotConnected } from "components/Warnings";
 import { warningStates } from "lib/consts";
 
 import { FiZap } from "react-icons/fi";
@@ -27,7 +23,6 @@ const WarningsPage: React.FunctionComponent = () => {
   const Renderers: Record<string, React.FunctionComponent<any>> = {
     [warningStates.NOT_CONNECTED]: NotConnected,
     [warningStates.CLIENT_ERROR]: ClientError,
-    [warningStates.NEW_VERSION_AVAILABLE]: NewVersionAvailable,
   };
 
   return (

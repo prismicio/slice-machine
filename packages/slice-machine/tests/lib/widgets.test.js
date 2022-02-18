@@ -43,7 +43,7 @@ test.each(WidgetsTable)(
       widget.schema.validateSync(defaultWidget, { stripUnknown: false });
     }).not.toThrow();
 
-    const tests = require(`../__mockData__/widgets/${name}`);
+    const tests = require(`../__mocks__/widgets/${name}`);
     Object.entries(tests).forEach(([testName, t]) => {
       validate(widget, t); //, name === 'GeoPoint' && testName)
     });

@@ -9,7 +9,6 @@ export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
     const prismicConfig = FileSystem.PrismicSharedConfigManager.get();
 
     const prismicData: PrismicData = {
-      base: prismicConfig.base,
       shortId: prismicConfig.shortId,
     };
 
@@ -17,13 +16,9 @@ export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
       return ok(prismicData);
     }
 
-    const authResult = Utils.Cookie.parsePrismicAuthToken(
-      prismicConfig.cookies
-    );
-
     return ok({
       ...prismicData,
-      auth: authResult,
+      auth: Utils.Cookie.parsePrismicAuthToken(prismicConfig.cookies),
     });
   } catch (e) {
     return err(new ErrorWithStatus("Could not parse file at ~/.prismic.", 500));

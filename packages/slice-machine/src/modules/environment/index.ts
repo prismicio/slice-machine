@@ -2,21 +2,25 @@ import { Reducer } from "redux";
 import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
-import {
-  FrontEndEnvironment,
-  UpdateVersionInfo,
-} from "@models/common/Environment";
+import { FrontEndEnvironment } from "@models/common/Environment";
 import Warning from "@models/common/Warning";
 import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
+import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { PackageChangelog } from "@lib/models/common/versions";
+import { PackageManager } from "@lib/models/common/PackageManager";
 
 // Action Creators
-export const getEnvironmentCreator = createAction(
-  "ENVIRONMENT/GET.RESPONSE"
-)<EnvironmentStoreType>();
+export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
+  env: FrontEndEnvironment;
+  warnings: ReadonlyArray<Warning>;
+  configErrors: ConfigErrors;
+  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+}>();
 
-type EnvironmentActions = ActionType<typeof getEnvironmentCreator>;
+type EnvironmentActions = ActionType<typeof getStateCreator>;
 
 // Selectors
 export const getEnvironment = (
@@ -45,14 +49,20 @@ export const getWarnings = (
 export const getConfigErrors = (store: SliceMachineStoreType): ConfigErrors =>
   store.environment.configErrors;
 
-export const getUpdateVersionInfo = (
+export const getChangelog = (
   store: SliceMachineStoreType
-): UpdateVersionInfo => {
-  return store.environment.env.updateVersionInfo;
+): PackageChangelog => {
+  return store.environment.env.changelog;
+};
+
+export const getPackageManager = (
+  store: SliceMachineStoreType
+): PackageManager => {
+  return store.environment.env.packageManager;
 };
 
 export const getCurrentVersion = (store: SliceMachineStoreType): string => {
-  const { currentVersion } = getUpdateVersionInfo(store);
+  const { currentVersion } = getChangelog(store);
   return currentVersion;
 };
 
@@ -105,10 +115,12 @@ export const environmentReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getEnvironmentCreator):
+    case getType(getStateCreator):
       return {
         ...state,
-        ...action.payload,
+        env: action.payload.env,
+        warnings: action.payload.warnings,
+        configErrors: action.payload.configErrors,
       };
     default:
       return state;

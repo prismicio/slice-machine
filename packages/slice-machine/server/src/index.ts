@@ -8,35 +8,23 @@ import os from "os";
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import moduleAlias from "module-alias";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
+import fetch from "node-fetch";
+import { resolveAliases } from "../../lib/env/resolveAliases";
 
 declare let global: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetch: any;
+  fetch: typeof fetch;
   appRoot: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-global.fetch = require("node-fetch");
+global.fetch = fetch;
 global.appRoot = path.join(__dirname, "../../../");
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const pkg = require(global.appRoot + "package.json");
-const LIB_PATH = path.join(global.appRoot, "build", "lib");
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-Object.entries(pkg._moduleAliases).forEach(([key]) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore As the 2.1 typing is not available yet and solve this problem
-  moduleAlias.addAlias(key, (fromPath: string) => {
-    return path.join(path.relative(path.dirname(fromPath), LIB_PATH));
-  });
-});
+resolveAliases(global.appRoot);
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const api = require("./api");
+import api from "./api";
 
 const app = express();
 app.use(cors());
@@ -51,7 +39,6 @@ const formDataOptions = {
 
 app.use(formData.parse(formDataOptions));
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 app.use("/api", api);
 
 // For local env (SM), all the requests are forwarded to the next dev server
@@ -95,6 +82,21 @@ app.use("/onboarding", (_, res) => {
 });
 
 const PORT = process.env.PORT || "9999";
+
+app.use(
+  (
+    err: Error,
+    _req: express.Request,
+    res: express.Response,
+    // This is need becuase express middleware uses arguments.length
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _next: express.NextFunction
+  ) => {
+    console.error(err);
+    res.status(500).send(err.message || "Something broke!");
+  }
+);
+
 app.listen(PORT, () => {
   const p = `http://localhost:${PORT}`;
   console.log(`Server running : ${p}`);

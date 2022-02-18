@@ -9,6 +9,8 @@ import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
+import { customTypesReducer } from "@src/modules/customTypes";
+import { routerReducer } from "connected-next-router";
 
 /**
  * Creates the main reducer
@@ -20,6 +22,8 @@ const createReducer = (): Reducer =>
     userContext: userContextReducer,
     environment: environmentReducer,
     simulator: simulatorReducer,
+    customTypes: customTypesReducer,
+    router: routerReducer,
   });
 
 export default createReducer;

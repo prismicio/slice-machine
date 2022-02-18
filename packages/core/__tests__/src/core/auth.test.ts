@@ -4,13 +4,12 @@ import { Auth } from "../../../src/core";
 import * as Utils from "../../../src/utils";
 import * as communication from "../../../src/core/communication";
 import { PrismicSharedConfigManager } from "../../../src/filesystem/PrismicSharedConfig";
+import { Roles } from "../../../src/models";
 
 jest.mock("../../../src/filesystem");
 jest.mock("../../../src/filesystem/PrismicSharedConfig");
 jest.mock("../../../src/core/communication");
 jest.mock("../../../src/utils/poll");
-
-const { Roles } = Utils.roles;
 
 describe("communication", () => {
   afterEach(() => {

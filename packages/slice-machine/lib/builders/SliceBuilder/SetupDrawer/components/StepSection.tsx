@@ -135,9 +135,9 @@ const StepNumber: React.FunctionComponent<StepNumberProps> = ({
       alignItems: "center",
       borderRadius: "50%",
       borderStyle: "solid",
-      borderColor: (t) => t.colors?.textGray,
+      borderColor: (t) => t.colors?.grey05,
       borderWidth: 1,
-      color: (t) => t.colors?.textGray,
+      color: (t) => t.colors?.grey05,
       ...sx,
     }}
   >

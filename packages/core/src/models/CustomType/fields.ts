@@ -1,4 +1,4 @@
-import * as t from 'io-ts';
+import * as t from "io-ts";
 import { sliceZoneType } from "./sliceZone";
 
 export enum FieldType {
@@ -18,6 +18,7 @@ export enum FieldType {
   Embed = "Embed",
   Number = "Number",
   UID = "UID",
+  IntegrationFields = "IntegrationFields",
 }
 
 export const FieldTypeCodec = t.keyof({
@@ -37,7 +38,8 @@ export const FieldTypeCodec = t.keyof({
   Embed: null,
   Number: null,
   UID: null,
-})
+  IntegrationFields: null,
+});
 
 export interface SimpleField {
   label: string;
@@ -50,11 +52,11 @@ export const SimpleField = {
 export const Field = t.intersection([
   t.type({
     type: t.union([t.keyof({ [sliceZoneType]: null }), FieldTypeCodec]),
-    config: t.unknown
+    config: t.unknown,
   }),
   t.partial({
-    fieldset: t.string
-  })
-])
+    fieldset: t.string,
+  }),
+]);
 
-export type Field = t.TypeOf<typeof Field>
+export type Field = t.TypeOf<typeof Field>;

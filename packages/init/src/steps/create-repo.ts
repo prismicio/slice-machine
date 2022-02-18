@@ -29,7 +29,7 @@ export function createRepository(
         Utils.writeError(error.message);
       }
       Utils.writeError(`We failed to create you new prismic repository`);
-      console.log(`Run ${Utils.bold("npx slicemachine init")} again!`);
+      console.log(`Run ${Utils.bold("npx @slicemachine/init")} again!`);
       process.exit(-1);
     });
 }

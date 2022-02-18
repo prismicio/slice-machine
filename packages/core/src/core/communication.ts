@@ -1,10 +1,14 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { Cookie, CONSTS, roles } from "../utils";
-import { Frameworks } from "../models/Framework";
 import * as t from "io-ts";
-import { pipe } from "fp-ts/function";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { fold, getOrElseW } from "fp-ts/Either";
-import { Repositories } from "../models/Repositories";
+
+import {
+  RepositoriesRoles,
+  Repositories,
+  Frameworks,
+  UserInfo,
+} from "../models";
+import { Cookie, CONSTS } from "../utils";
 
 const { DEFAULT_BASE, USER_SERVICE_BASE } = CONSTS;
 
@@ -37,38 +41,17 @@ export async function refreshSession(
   return axios.get<string>(url).then((res) => res.data);
 }
 
-export type RepoData = Record<
-  string,
-  { role: roles.Roles | Record<string, roles.Roles>; dbid: string }
->;
-const RepoDataValidator = t.record(
-  t.string,
-  t.type({
-    role: roles.RolesValidator,
-    dbid: t.string,
-  })
-);
-export type UserInfo = {
-  userId: string;
-  email: string;
-  type: string;
-  repositories: RepoData;
-};
-
-export function maybeParseRepoData(repos?: string | RepoData): RepoData {
+export function maybeParseRepoData(
+  repos?: string | RepositoriesRoles
+): RepositoriesRoles {
   if (!repos) throw new Error("Did not receive repository data");
   if (typeof repos === "string") {
-    return pipe(
-      RepoDataValidator.decode(JSON.parse(repos)),
-      fold<t.Errors, RepoData, RepoData>(
-        () => {
-          throw new Error("Can't parse repo data");
-        },
-        (f: RepoData) => {
-          return f;
-        }
-      )
-    );
+    return fold<t.Errors, RepositoriesRoles, RepositoriesRoles>(
+      () => {
+        throw new Error("Can't parse repo data");
+      },
+      (f: RepositoriesRoles) => f
+    )(RepositoriesRoles.decode(JSON.parse(repos)));
   }
   return repos;
 }

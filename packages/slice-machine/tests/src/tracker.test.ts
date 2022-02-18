@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+
 import { expect, test } from "@jest/globals";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 

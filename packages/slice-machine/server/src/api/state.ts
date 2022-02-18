@@ -11,24 +11,16 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem } from "@slicemachine/core";
+import { FileSystem, Utils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
+import preferWroomBase from "../../../lib/utils/preferWroomBase";
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function createWarnings(
+function createWarnings(
   env: BackendEnvironment,
   clientError?: ErrorWithStatus
-): Promise<ReadonlyArray<Warning>> {
-  const newVersion =
-    env.updateVersionInfo && env.updateVersionInfo.updateAvailable
-      ? {
-          key: warningStates.NEW_VERSION_AVAILABLE,
-          value: env.updateVersionInfo,
-        }
-      : undefined;
-
+): ReadonlyArray<Warning> {
   const connected = !env.prismicData?.auth
     ? {
         key: warningStates.NOT_CONNECTED,
@@ -44,9 +36,7 @@ export async function createWarnings(
       }
     : undefined;
 
-  return [newVersion, connected, client].filter(
-    Boolean
-  ) as ReadonlyArray<Warning>;
+  return [connected, client].filter(Boolean) as ReadonlyArray<Warning>;
 }
 
 export const getBackendState = async (
@@ -54,15 +44,15 @@ export const getBackendState = async (
   env: BackendEnvironment
 ) => {
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
-  const { customTypes, remoteCustomTypes, isFake } = await fetchCustomTypes(
-    env
-  );
+  const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
+
+  const base = preferWroomBase(env.manifest.apiEndpoint);
 
   // Refresh auth
-  if (!isFake && env.prismicData.auth) {
+  if (env.isUserLoggedIn && env.prismicData.auth) {
     try {
       const newTokenResponse: Response = await DefaultClient.refreshToken(
-        env.prismicData.base,
+        base,
         env.prismicData.auth
       );
 
@@ -81,7 +71,7 @@ export const getBackendState = async (
     }
   }
 
-  const warnings = await createWarnings(env, clientError);
+  const warnings = createWarnings(env, clientError);
 
   if (libraries) await generate(env, libraries);
 
@@ -91,7 +81,6 @@ export const getBackendState = async (
     remoteCustomTypes,
     remoteSlices,
     clientError,
-    isFake,
     configErrors,
     env,
     warnings,
@@ -108,8 +97,10 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
+    packageManager: Utils.Files.exists(FileSystem.YarnLockPath(cwd))
+      ? "yarn"
+      : "npm",
     shortId: prismicData.shortId,
-    prismicAPIUrl: prismicData.base,
   };
 
   return {

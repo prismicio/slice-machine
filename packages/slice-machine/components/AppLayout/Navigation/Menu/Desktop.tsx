@@ -11,14 +11,16 @@ import NotLoggedIn from "./Navigation/NotLoggedIn";
 
 import { warningStates } from "@lib/consts";
 
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import {
   getConfigErrors,
-  getUpdateVersionInfo,
+  getChangelog,
   getWarnings,
 } from "@src/modules/environment";
+import { getUpdatesViewed } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useRouter } from "next/router";
 
 const formatWarnings = (len: number) => ({
   title: `Warnings${len ? ` (${len})` : ""}`,
@@ -30,12 +32,16 @@ const formatWarnings = (len: number) => ({
   Icon: FiZap,
 });
 
-const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+const UpdateInfo: React.FC<{
+  onClick: () => void;
+  hasSeenUpdate: boolean;
+}> = ({ onClick, hasSeenUpdate }) => {
   return (
     <Flex
       sx={{
-        maxWidth: "230px",
+        maxWidth: "240px",
         border: "1px solid #E6E6EA",
+        borderRadius: "4px",
         padding: "8px",
         flexDirection: "column",
       }}
@@ -44,19 +50,32 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
         as="h6"
         sx={{
           fontSize: "14px",
-          margin: "8px",
+          margin: "4px 8px",
         }}
       >
-        Update Available
+        Updates Available{" "}
+        {hasSeenUpdate || (
+          <span
+            data-testid="the-red-dot"
+            style={{
+              borderRadius: "50%",
+              width: "8px",
+              height: "8px",
+              backgroundColor: "#FF4A4A",
+              display: "inline-block",
+              margin: "4px",
+            }}
+          />
+        )}
       </Heading>
       <Paragraph
         sx={{
           fontSize: "14px",
           color: "#4E4E55",
-          margin: "8px",
+          margin: "4px 8px 8px",
         }}
       >
-        A new version of Slice Machine is available
+        Some updates of Slice Machine are available.
       </Paragraph>
       <Button
         data-testid="update-modal-open"
@@ -67,10 +86,12 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           borderRadius: "4px",
           margin: "8px",
           fontSize: "11.67px",
+          alignSelf: "flex-start",
+          padding: "4px 8px",
         }}
         onClick={onClick}
       >
-        Update
+        Learn more
       </Button>
     </Flex>
   );
@@ -79,28 +100,49 @@ const UpdateInfo: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, updateVersionInfo } = useSelector(
+  const { warnings, configErrors, changelog, updatesViewed } = useSelector(
     (store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       configErrors: getConfigErrors(store),
-      updateVersionInfo: getUpdateVersionInfo(store),
+      changelog: getChangelog(store),
+      updatesViewed: getUpdatesViewed(store),
     })
   );
-  const { openUpdateVersionModal } = useSliceMachineActions();
+
+  const { setUpdatesViewed } = useSliceMachineActions();
+
+  const latestVersion =
+    changelog.versions.length > 0 ? changelog.versions[0] : null;
+
+  const hasSeenLatestUpdates =
+    updatesViewed &&
+    updatesViewed.latest === latestVersion?.versionNumber &&
+    updatesViewed.latestNonBreaking === changelog.latestNonBreakingVersion;
 
   const isNotLoggedIn = !!warnings.find(
     (e) => e.key === warningStates.NOT_CONNECTED
   );
 
+  const router = useRouter();
+
   return (
-    <Box as="aside" bg="sidebar" sx={{ minWidth: "260px" }}>
+    <Box as="aside" bg="sidebar" sx={{ minWidth: "270px" }}>
       <Box py={4} px={3}>
         <Logo />
         <ItemsList mt={4} links={links} />
         <Box sx={{ position: "absolute", bottom: "3" }}>
-          {updateVersionInfo.updateAvailable && (
-            <UpdateInfo onClick={openUpdateVersionModal} />
-          )}
+          {changelog.updateAvailable ? (
+            <UpdateInfo
+              onClick={() => {
+                setUpdatesViewed({
+                  latest: latestVersion && latestVersion.versionNumber,
+                  latestNonBreaking: changelog.latestNonBreakingVersion,
+                });
+                return router.push("/changelog");
+              }}
+              hasSeenUpdate={hasSeenLatestUpdates}
+            />
+          ) : null}
           {isNotLoggedIn && <NotLoggedIn />}
           <Divider variant="sidebar" />
           <Item
@@ -108,10 +150,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               warnings.length + Object.keys(configErrors).length
             )}
           />
-          <VersionBadge
-            label="Version"
-            version={updateVersionInfo.currentVersion}
-          />
+          <VersionBadge label="Version" version={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

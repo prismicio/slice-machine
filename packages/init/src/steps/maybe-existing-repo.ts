@@ -1,8 +1,6 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Communication, Utils, FileSystem } from "@slicemachine/core";
-import { Repositories } from "@slicemachine/core/src/models/Repositories";
-import { Repository } from "@slicemachine/core/src/models/Repository";
+import { Communication, Utils, FileSystem, Models } from "@slicemachine/core";
 import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
@@ -50,10 +48,10 @@ export type PromptOrSeparator = RepoPrompt | Separator;
 export type RepoPrompts = Array<PromptOrSeparator>;
 
 export function makeReposPretty(base: string) {
-  return function ({ name, domain, role }: Repository): RepoPrompt {
+  return function ({ name, domain, role }: Models.Repository): RepoPrompt {
     const address = new URL(base);
     address.hostname = `${domain}.${address.hostname}`;
-    if (Utils.roles.canUpdateCustomTypes(role) === false) {
+    if (Models.canUpdateCustomTypes(role) === false) {
       return {
         name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
           name
@@ -93,7 +91,7 @@ export function maybeStickTheRepoToTheTopOfTheList(repoName?: string | null) {
 }
 
 export function sortReposForPrompt(
-  repos: Repositories,
+  repos: Models.Repositories,
   base: string,
   cwd: string
 ): RepoPrompts {
@@ -119,13 +117,13 @@ export async function maybeExistingRepo(
   cookies: string,
   cwd: string,
   base = DEFAULT_BASE
-): Promise<{ name: string; existing: boolean }> {
+): Promise<{ repository: string; existing: boolean }> {
   const token = parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token);
 
   if (repos.length === 0) {
     const name = await promptForRepoName(base);
-    return { existing: false, name };
+    return { existing: false, repository: name };
   }
 
   const choices = sortReposForPrompt(repos, base, cwd);
@@ -150,7 +148,7 @@ export async function maybeExistingRepo(
 
   if (res.repoName === CREATE_REPO) {
     const name = await promptForRepoName(base);
-    return { existing: false, name };
+    return { existing: false, repository: name };
   }
-  return { existing: true, name: res.repoName };
+  return { existing: true, repository: res.repoName };
 }

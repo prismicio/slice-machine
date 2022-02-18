@@ -1,14 +1,14 @@
 import { describe, expect, test } from "@jest/globals";
-import { roles } from "../../../src/utils";
+import { Roles, canUpdateCustomTypes } from "../../../src/models";
 
 describe("canUpdateCutsomTypes", () => {
   test("should return true only if role is owner or admin", () => {
-    Object.values(roles.Roles).forEach((role) => {
-      const result = roles.canUpdateCustomTypes(role);
+    Object.values(Roles).forEach((role) => {
+      const result = canUpdateCustomTypes(role);
       const wanted =
-        role === roles.Roles.ADMIN ||
-        role === roles.Roles.OWNER ||
-        role === roles.Roles.SUPERUSER;
+        role === Roles.ADMIN ||
+        role === Roles.OWNER ||
+        role === Roles.SUPERUSER;
       return expect(result).toBe(wanted);
     });
   });

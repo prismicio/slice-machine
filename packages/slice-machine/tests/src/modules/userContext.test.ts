@@ -1,8 +1,11 @@
+import "@testing-library/jest-dom";
+
 import {
   userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
   finishOnboardingCreator,
+  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { UserContextStoreType } from "@src/modules/userContext/types";
 
@@ -20,11 +23,16 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
+        },
       };
 
       const action = sendAReviewCreator();
 
       const expectedState = {
+        ...initialState,
         hasSendAReview: true,
         isOnboarded: false,
       };
@@ -36,11 +44,16 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
+        },
       };
 
       const action = skipReviewCreator();
 
       const expectedState = {
+        ...initialState,
         hasSendAReview: true,
         isOnboarded: false,
       };
@@ -52,13 +65,40 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         hasSendAReview: false,
         isOnboarded: false,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
+        },
       };
 
       const action = finishOnboardingCreator();
 
       const expectedState = {
+        ...initialState,
         hasSendAReview: false,
         isOnboarded: true,
+      };
+
+      expect(userContextReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should update dismissedUpdate to the value of the update dismissed", () => {
+      const initialState: UserContextStoreType = {
+        hasSendAReview: false,
+        isOnboarded: false,
+        updatesViewed: {
+          latest: null,
+          latestNonBreaking: null,
+        },
+      };
+
+      const versions = { latestNonBreaking: "0.1.0", latest: "1.0.0" };
+
+      const action = updatesViewedCreator(versions);
+
+      const expectedState = {
+        ...initialState,
+        updatesViewed: versions,
       };
 
       expect(userContextReducer(initialState, action)).toEqual(expectedState);

@@ -1,5 +1,5 @@
 import { test, expect, jest, describe } from "@jest/globals";
-import { mocked } from "ts-jest/utils";
+import { mocked } from "jest-mock";
 
 import * as core from "@slicemachine/core";
 import { createRepository } from "../src/steps/create-repo";

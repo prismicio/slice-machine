@@ -1,4 +1,4 @@
-import * as Models from "@slicemachine/core/build/src/models/index";
+import * as Models from "@slicemachine/core/build/src/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
 
@@ -82,7 +82,7 @@ function computeStatus(
   const slice = remoteSlices.find((s) => component.model.id === s.id);
   if (!slice) return LibStatus.NewSlice;
 
-  const sameVersion = !compareVariations(
+  const sameVersion = compareVariations(
     component.model.variations,
     slice.variations
   );

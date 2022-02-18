@@ -1,7 +1,6 @@
 import React from "react";
 
 import LibrariesProvider from "@src/models/libraries/context";
-import CustomTypesProvider from "@src/models/customTypes/context";
 import { SliceHandler } from "@src/models/slice/context";
 
 import AppLayout from "../AppLayout";
@@ -12,7 +11,6 @@ import ReviewModal from "@components/ReviewModal";
 import ServerState from "@models/server/ServerState";
 import useOnboardingRedirection from "@src/hooks/useOnboardingRedirection";
 import useServerState from "@src/hooks/useServerState";
-import UpdateVersionModal from "../UpdateVersionModal";
 import { MissingLibraries } from "@components/MissingLibraries";
 
 type AppProps = {
@@ -33,23 +31,17 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
         libraries={serverState.libraries}
         env={serverState.env}
       >
-        <CustomTypesProvider
-          customTypes={serverState.customTypes}
-          remoteCustomTypes={serverState.remoteCustomTypes}
-        >
-          <AppLayout>
-            <SliceHandler {...serverState}>
-              {serverState.libraries?.length ? (
-                <>{children}</>
-              ) : (
-                <MissingLibraries />
-              )}
-            </SliceHandler>
-          </AppLayout>
-          <UpdateVersionModal />
-          <LoginModal />
-          <ReviewModal />
-        </CustomTypesProvider>
+        <AppLayout>
+          <SliceHandler {...serverState}>
+            {serverState.libraries?.length ? (
+              <>{children}</>
+            ) : (
+              <MissingLibraries />
+            )}
+          </SliceHandler>
+        </AppLayout>
+        <LoginModal />
+        <ReviewModal />
       </LibrariesProvider>
     </ToastProvider>
   );

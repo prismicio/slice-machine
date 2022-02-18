@@ -43,7 +43,7 @@ export async function installRequiredDependencies(
     : "npm install --save-dev";
   const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
 
-  const spinner = Utils.spinner("Downloading Prismic Visual Builder");
+  const spinner = Utils.spinner("Downloading Slice Machine");
   spinner.start();
 
   const { stderr } = await execCommand(
@@ -60,7 +60,7 @@ export async function installRequiredDependencies(
   const isPackageInstalled = Utils.Files.exists(pathToPkg);
 
   if (isPackageInstalled || !stderr.length) {
-    spinner.succeed("The Prismic Visual Builder was installed successfully");
+    spinner.succeed("Slice Machine was installed successfully");
     return;
   }
 

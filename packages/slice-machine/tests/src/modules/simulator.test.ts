@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+
 import {
   initialState,
   simulatorReducer,
@@ -6,8 +8,14 @@ import {
   toggleSetupDrawerStepCreator,
   connectToSimulatorIframeCreator,
   checkSimulatorSetupCreator,
+  failCheckSetupSaga,
 } from "@src/modules/simulator";
 import { SimulatorStoreType, SetupStatus } from "@src/modules/simulator/types";
+import { testSaga } from "redux-saga-test-plan";
+import {
+  getFramework,
+  selectIsSimulatorAvailableForFramework,
+} from "@src/modules/environment";
 
 const dummySimulatorState: SimulatorStoreType = initialState;
 
@@ -145,6 +153,32 @@ describe("[Simulator module]", () => {
       expect(simulatorReducer(initialState, action)).toEqual(expectedState);
       // We check that if we call again the toggle action we go back to the initial state
       expect(simulatorReducer(expectedState, action)).toEqual(initialState);
+    });
+  });
+
+  describe("[failCheckSetupSaga]", () => {
+    it("should early return if the framework don't support the simulator feature", () => {
+      const saga = testSaga(failCheckSetupSaga);
+
+      saga.next().select(getFramework);
+      saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next(false).isDone();
+    });
+    it("should open the fourth step on next", () => {
+      const saga = testSaga(failCheckSetupSaga);
+
+      saga.next().select(getFramework);
+      saga.next("next").select(selectIsSimulatorAvailableForFramework);
+      saga.next(true).put(openSetupDrawerCreator({ stepToOpen: 4 }));
+      saga.next().isDone();
+    });
+    it("should open the fifth step on nuxt", () => {
+      const saga = testSaga(failCheckSetupSaga);
+
+      saga.next().select(getFramework);
+      saga.next("nuxt").select(selectIsSimulatorAvailableForFramework);
+      saga.next(true).put(openSetupDrawerCreator({ stepToOpen: 5 }));
+      saga.next().isDone();
     });
   });
 });

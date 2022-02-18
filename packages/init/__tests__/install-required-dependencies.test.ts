@@ -39,7 +39,7 @@ describe("install required dependency", () => {
   const fakeCWD = "..";
   const fileExistsMock = Core.Utils.Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
 
-  test("it should use yarn to install the builder", async () => {
+  test("it should use yarn to install Slice Machine", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -58,7 +58,7 @@ describe("install required dependency", () => {
     expect(failFn).not.toHaveBeenCalled();
   });
 
-  test("it should use npm to install the builder", async () => {
+  test("it should use npm to install Slice Machine", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));

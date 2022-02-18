@@ -1,12 +1,13 @@
 import { getBackendState } from "../state";
-import { handler as pushSlice } from "../slices/push";
+import { pushSlice } from "../slices/push";
 import { handler as saveSlice } from "../slices/save";
 
 import { onError } from "../common/error";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
+import FakeClient from "@lib/models/common/http/FakeClient";
+import { ApiResult } from "@lib/models/server/ApiResult";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
@@ -28,11 +29,7 @@ const createOrUpdate = (
   return client.insertCustomType(model);
 };
 
-export default async function handler(req: RequestWithEnv): Promise<{
-  err: Response | FakeResponse | Error | null;
-  reason: string | null;
-  status: number;
-}> {
+export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   const { id } = req.query;
 
   const state = await getBackendState(req.errors, req.env);
@@ -48,15 +45,16 @@ export default async function handler(req: RequestWithEnv): Promise<{
     };
   }
 
-  if (state.clientError || state.isFake) {
+  if (state.clientError || !state.env.isUserLoggedIn) {
     const isAnAuthenticationError =
-      state.isFake || (state.clientError && state.clientError.status === 403);
+      !state.env.isUserLoggedIn ||
+      (state.clientError && state.clientError.status === 403);
     const errorExplanation = isAnAuthenticationError
       ? "Please log in to Prismic!"
       : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `You don\'t have access to the repo \"${state.env.repo}\"`;
 
-    const errorCode = state.isFake
+    const errorCode = !state.env.isUserLoggedIn
       ? 403
       : state.clientError
       ? state.clientError.status
@@ -155,9 +153,5 @@ export default async function handler(req: RequestWithEnv): Promise<{
 
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   console.log(`[custom-types/push] Custom Type ${id} was pushed!`);
-  return {
-    err: null,
-    reason: null,
-    status: 200,
-  };
+  return {};
 }

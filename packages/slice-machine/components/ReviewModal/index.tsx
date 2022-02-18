@@ -17,7 +17,6 @@ import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { useContext } from "react";
-import { CustomTypesContext } from "@src/models/customTypes/context";
 import { LibrariesContext } from "@src/models/libraries/context";
 import {
   userHasDoneTheOnboarding,
@@ -27,13 +26,9 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracker";
+import { selectLocalCustomTypes } from "@src/modules/customTypes";
 
 Modal.setAppElement("#__next");
-
-type ReviewModalProps = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  cardProps?: {};
-};
 
 const ratingSelectable = [1, 2, 3, 4, 5, 6, 7];
 
@@ -64,8 +59,7 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
   );
 };
 
-const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
-  const { customTypes } = useContext(CustomTypesContext);
+const ReviewModal: React.FunctionComponent = () => {
   const libraries = useContext(LibrariesContext);
 
   const {
@@ -74,12 +68,14 @@ const ReviewModal: React.FunctionComponent<ReviewModalProps> = () => {
     isLoginModalOpen,
     hasSendAReview,
     hasDoneTheOnboarding,
+    customTypes,
   } = useSelector((store: SliceMachineStoreType) => ({
     env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
+    customTypes: selectLocalCustomTypes(store),
   }));
 
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =

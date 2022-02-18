@@ -25,7 +25,7 @@ export default async function handler(
           clientError: new ErrorWithStatus(res.statusText, res.status),
         };
       }
-      if (env.client.isFake()) {
+      if (!env.isUserLoggedIn) {
         return { remoteSlices: [] };
       }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

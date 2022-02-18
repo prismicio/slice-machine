@@ -1,6 +1,6 @@
 import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
-import { mocked } from "ts-jest/utils";
+import { mocked } from "jest-mock";
 import { detectFramework } from "../src/steps";
 import { Utils, Models } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
@@ -118,7 +118,7 @@ describe("detect-framework", () => {
     );
     expect(logSpy).toHaveBeenCalledWith(
       `Please run ${Utils.bold(
-        "npx slicemachine init"
+        "npx @slicemachine/init"
       )} in a Nuxt or Next.js project`
     );
   });

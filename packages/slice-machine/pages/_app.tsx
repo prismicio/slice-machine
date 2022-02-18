@@ -28,6 +28,7 @@ import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
 import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
+import { ConnectedRouter } from "connected-next-router";
 
 /*
  * TEMPORARY
@@ -96,6 +97,10 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     if (!storeInitiated) {
       const { store, persistor } = configureStore({
         environment: { env: serverState.env, warnings: [], configErrors: {} },
+        customTypes: {
+          localCustomTypes: serverState.customTypes,
+          remoteCustomTypes: serverState.remoteCustomTypes,
+        },
       });
       setStoreInitiated(true);
       setSMStore({ store, persistor });
@@ -112,7 +117,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Tracker.get().groupLibraries(
         serverState.libraries || [],
-        serverState.env.updateVersionInfo.currentVersion
+        serverState.env.changelog.currentVersion
       );
 
       serverState.env.shortId &&
@@ -149,11 +154,13 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
               <LoadingPage />
             ) : (
               <Provider store={smStore.store}>
-                <PersistGate loading={null} persistor={smStore.persistor}>
-                  <SliceMachineApp serverState={serverState}>
-                    <Component {...pageProps} />
-                  </SliceMachineApp>
-                </PersistGate>
+                <ConnectedRouter>
+                  <PersistGate loading={null} persistor={smStore.persistor}>
+                    <SliceMachineApp serverState={serverState}>
+                      <Component {...pageProps} />
+                    </SliceMachineApp>
+                  </PersistGate>
+                </ConnectedRouter>
               </Provider>
             )}
           </RemoveDarkMode>

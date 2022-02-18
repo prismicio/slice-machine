@@ -13,9 +13,9 @@ export default {
   handleScreenshot: async ({
     screenshotUrl,
     pathToFile,
-  }: PuppeteerHandleProps): Promise<void | Error> => {
+  }: PuppeteerHandleProps): Promise<void> => {
     const { warning } = await testUrl(screenshotUrl);
-    if (warning) return Error(warning);
+    if (warning) throw new Error(warning);
 
     if (!puppeteerBrowserPromise)
       puppeteerBrowserPromise = puppeteer.launch({
@@ -27,12 +27,11 @@ export default {
       puppeteerBrowser,
       screenshotUrl,
       pathToFile
-    ).catch(
-      () =>
-        new Error(
-          `Unable to generate screenshot for this page: ${screenshotUrl}`
-        )
-    );
+    ).catch(() => {
+      throw new Error(
+        `Unable to generate screenshot for this page: ${screenshotUrl}`
+      );
+    });
   },
 };
 
@@ -40,7 +39,7 @@ const generateScreenshot = async (
   browser: puppeteer.Browser,
   screenshotUrl: string,
   pathToFile: string
-): Promise<void | Error> => {
+): Promise<void> => {
   // Create an incognito context to isolate screenshots.
   const context = await browser.createIncognitoBrowserContext();
   // Create a new page in the context.
@@ -62,9 +61,9 @@ const generateScreenshot = async (
 
     await context.close();
     return;
-  } catch (err) {
+  } catch (error) {
     await context.close();
-    return err as Error;
+    throw error;
   }
 };
 

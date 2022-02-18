@@ -6,7 +6,7 @@ import {
   afterAll,
   afterEach,
 } from "@jest/globals";
-import { Utils, Auth } from "@slicemachine/core";
+import { Auth, Models } from "@slicemachine/core";
 import { loginOrBypass } from "../src/steps/loginOrBypass";
 import nock from "nock";
 import * as fs from "fs";
@@ -36,8 +36,8 @@ describe("loginOrBypass", () => {
   const shortId = "12";
   const type = "USER";
   const repositories = {
-    "foo-repo": { dbid: "abcd", role: Utils.roles.Roles.OWNER },
-    qwerty: { dbid: "efgh", role: Utils.roles.Roles.WRITER },
+    "foo-repo": { dbid: "abcd", role: Models.Roles.OWNER },
+    qwerty: { dbid: "efgh", role: Models.Roles.WRITER },
   };
 
   test("is should validate the session and get the users profile", async () => {
@@ -57,8 +57,8 @@ describe("loginOrBypass", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(200, {
         userId,
@@ -113,8 +113,8 @@ describe("loginOrBypass", () => {
         repositories,
       });
 
-    nock("https://user.prismic.io")
-      .matchHeader("Authorization", `Bearer Token ${fakeToken}`)
+    nock("https://user.internal-prismic.io")
+      .matchHeader("Authorization", `Bearer ${fakeToken}`)
       .get("/profile")
       .reply(200, {
         userId,
