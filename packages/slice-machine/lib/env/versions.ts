@@ -85,9 +85,6 @@ export async function findPackageVersions(
       );
     })
     .catch(() => {
-      console.log(
-        `Couldn't retrieve Github release notes for package ${packageName}`
-      );
       return {};
     });
 

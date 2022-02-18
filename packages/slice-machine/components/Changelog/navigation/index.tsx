@@ -20,7 +20,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   selectedVersion,
   selectVersion,
 }) => {
-  const latestVersion: string | undefined = changelog.versions[0].versionNumber;
+  const latestVersion: string | undefined =
+    changelog.versions[0]?.versionNumber;
 
   function findVersionTag(versionNumber: string): VersionTags | null {
     switch (versionNumber) {
