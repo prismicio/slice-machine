@@ -12,7 +12,7 @@ const createCodeFromTag = (tag: string) => (fieldText: string) =>
   `<${tag} :field="${fieldText}" />`;
 
 const createPrismicLink = (fieldText: string) =>
-  `<PrismicLink :field="${fieldText}">My Link</PrismicLink>`;
+  `<prismic-link :field="${fieldText}">My Link</prismic-link>`;
 
 const createDefaultField =
   (tag = "span") =>
@@ -26,8 +26,8 @@ const codeByWidgetType = (
   [Widgets.LinkToMedia?.CUSTOM_NAME]: createPrismicLink,
   [Widgets.UID?.TYPE_NAME]: (fieldText: string) =>
     `<span>{{ ${fieldText} }}</span>`,
-  [Widgets.StructuredText?.TYPE_NAME]: createCodeFromTag("PrismicRichText"),
-  [Widgets.Image?.TYPE_NAME]: createCodeFromTag("PrismicImage"),
+  [Widgets.StructuredText?.TYPE_NAME]: createCodeFromTag("prismic-rich-text"),
+  [Widgets.Image?.TYPE_NAME]: createCodeFromTag("prismic-image"),
   [Widgets.Link?.TYPE_NAME]: createPrismicLink,
   [Widgets.Select?.TYPE_NAME]: createDefaultField(),
   [Widgets.Boolean?.TYPE_NAME]: (fieldText: string) =>
@@ -35,7 +35,7 @@ const codeByWidgetType = (
   [Widgets.Date?.TYPE_NAME]: (fieldText: string) =>
     `<span>{{ ${fieldText} }}</span>`,
   [Widgets.Timestamp?.TYPE_NAME]: createDefaultField(),
-  [Widgets.Embed?.TYPE_NAME]: createCodeFromTag("PrismicEmbed"),
+  [Widgets.Embed?.TYPE_NAME]: createCodeFromTag("prismic-embed"),
   [Widgets.Number?.TYPE_NAME]: createDefaultField(),
   [Widgets.GeoPoint?.TYPE_NAME]: createDefaultField(),
   [Widgets.Color?.TYPE_NAME]: (fieldText: string) =>
@@ -43,7 +43,7 @@ const codeByWidgetType = (
   [Widgets.Text?.TYPE_NAME]: createDefaultField(),
 });
 
-const toVue: React.FC<{
+const toPreviousVue: React.FC<{
   Widgets: WidgetsType;
   item: Item;
   typeName: string;
@@ -58,4 +58,4 @@ const toVue: React.FC<{
   return <CodeBlock lang="html" code={withRepeat} />;
 };
 
-export default toVue;
+export default toPreviousVue;
