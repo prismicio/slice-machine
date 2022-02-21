@@ -3,7 +3,7 @@ import * as t from "io-ts";
 export enum Frameworks {
   none = "none",
   nuxt = "nuxt",
-  previousNuxt = "previous-nuxt",
+  previousNuxt = "previousNuxt",
   next = "next",
   gatsby = "gatsby",
   vue = "vue",
