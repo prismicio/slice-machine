@@ -4,6 +4,33 @@ import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
+function requiredDepsForFramework(framework: Frameworks): Array<string> {
+  const legacyNext = [
+    Utils.CONSTS.LEGACY_REACT_PACKAGE_NAME,
+    Utils.CONSTS.NEXT_SLICEZONE,
+    Utils.CONSTS.SLICE_SIMULATOR_REACT,
+  ];
+
+  const next = [
+    Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME,
+    Utils.CONSTS.SLICE_SIMULATOR_REACT,
+    Utils.CONSTS.PRISMIC_HELPERS,
+  ];
+
+  const vue = [
+    Utils.CONSTS.SLICE_SIMULATOR_VUE,
+    Utils.CONSTS.NUXT_SM,
+    Utils.CONSTS.VUE_SLICEZONE,
+    Utils.CONSTS.NUXT_PRISMIC,
+  ];
+
+  if (framework === Frameworks.next) return next;
+  if (framework === Frameworks["next-legacy"]) return legacyNext;
+  if (framework === Frameworks.vue) return vue;
+
+  return [];
+}
+
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function handler(
   req: RequestWithEnv
@@ -39,18 +66,7 @@ export default async function handler(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deps: Record<string, string> = { ...dependencies, ...devDependencies };
   // TODO: fix this for legacy frameworks, and svelte?
-  const requiredDeps =
-    req.env.framework === Frameworks.next
-      ? [
-          Utils.CONSTS.SLICE_SIMULATOR_REACT,
-          Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME,
-        ]
-      : [
-          Utils.CONSTS.SLICE_SIMULATOR_VUE,
-          Utils.CONSTS.NUXT_SM,
-          Utils.CONSTS.VUE_SLICEZONE,
-          Utils.CONSTS.NUXT_PRISMIC,
-        ];
+  const requiredDeps = requiredDepsForFramework(req.env.framework);
 
   Object.keys(deps).forEach((dep: string) => {
     const depIndex = requiredDeps.indexOf(dep);
