@@ -4,11 +4,11 @@ export enum Frameworks {
   none = "none",
   nuxt = "nuxt",
   next = "next",
-  nextLegacy = "next-legacy",
+  "next-legacy" = "next-legacy",
   gatsby = "gatsby",
   vue = "vue",
   react = "react",
-  reactLegacy = "react-legacy",
+  "react-legacy" = "react-legacy",
   svelte = "svelte",
   vanillajs = "vanillajs",
 }
@@ -22,8 +22,8 @@ export const FrameworksC = t.keyof({
   [Frameworks.react]: null,
   [Frameworks.svelte]: null,
   [Frameworks.vanillajs]: null,
-  [Frameworks.reactLegacy]: null,
-  [Frameworks.nextLegacy]: null,
+  [Frameworks["next-legacy"]]: null,
+  [Frameworks["react-legacy"]]: null,
 });
 
 export const SupportedFrameworks: Frameworks[] = [
@@ -33,6 +33,6 @@ export const SupportedFrameworks: Frameworks[] = [
   Frameworks.vue,
   Frameworks.react,
   Frameworks.svelte,
-  Frameworks.reactLegacy,
-  Frameworks.nextLegacy,
+  Frameworks["react-legacy"],
+  Frameworks["next-legacy"],
 ];
