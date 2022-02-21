@@ -25,7 +25,7 @@ function requiredDepsForFramework(framework: Frameworks): Array<string> {
   ];
 
   if (framework === Frameworks.next) return next;
-  if (framework === Frameworks["next-legacy"]) return legacyNext;
+  if (framework === Frameworks.previousNext) return legacyNext;
   if (framework === Frameworks.vue) return vue;
 
   return [];
