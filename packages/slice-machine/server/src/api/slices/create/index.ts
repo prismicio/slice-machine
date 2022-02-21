@@ -135,7 +135,7 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
 
   return {
     ...res,
-    variationId: "default-slice",
+    variationId: DEFAULT_VARIATION_ID,
   };
 }
 
