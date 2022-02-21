@@ -3,6 +3,7 @@ import * as t from "io-ts";
 export enum Frameworks {
   none = "none",
   nuxt = "nuxt",
+  previousNuxt = "previous-nuxt",
   next = "next",
   gatsby = "gatsby",
   vue = "vue",
@@ -14,6 +15,7 @@ export enum Frameworks {
 export const FrameworksC = t.keyof({
   [Frameworks.none]: null,
   [Frameworks.nuxt]: null,
+  [Frameworks.previousNuxt]: null,
   [Frameworks.next]: null,
   [Frameworks.gatsby]: null,
   [Frameworks.vue]: null,
