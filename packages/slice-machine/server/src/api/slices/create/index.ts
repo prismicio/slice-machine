@@ -1,4 +1,4 @@
-import { SliceBody } from "@models/common/Slice";
+import { SliceBody, SliceCreateResponse } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -70,7 +70,7 @@ const fromTemplate = async (
 export default async function handler({
   sliceName,
   from,
-}: SliceBody): Promise<ApiResult> {
+}: SliceBody): Promise<ApiResult<SliceCreateResponse>> {
   if (RESERVED_SLICE_NAME.includes(sliceName)) {
     const msg = `The slice name '${sliceName}' is reserved for slice machine use`;
     return { err: new Error(msg), status: 400, reason: msg };
@@ -102,10 +102,7 @@ export default async function handler({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       body: { sliceName, from, model, mockConfig: {} },
     });
-    return {
-      ...res,
-      variationId: DEFAULT_VARIATION_ID,
-    };
+    return { ...res, variationId: DEFAULT_VARIATION_ID };
   }
 
   const msg = `[create] Could not find file model.json. Exiting...`;
