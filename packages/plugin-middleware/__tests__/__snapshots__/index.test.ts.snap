@@ -11,8 +11,8 @@ Object {
       Object {
         "description": "MySlice",
         "docURL": "...",
-        "id": "default-slice",
-        "name": "Default slice",
+        "id": "default",
+        "name": "Default",
         "primary": Object {
           "description": Object {
             "config": Object {

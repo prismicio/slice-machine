@@ -108,8 +108,8 @@ export default class PluginContainer {
       description: "MySlice",
       variations: [
         {
-          id: "default-slice",
-          name: "Default slice",
+          id: "default",
+          name: "Default",
           docURL: "...",
           version: "sktwi1xtmkfgx8626",
           description: "MySlice",
