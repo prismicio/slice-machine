@@ -21,7 +21,7 @@
 
 /** Used to position the icon **/
 .Toastify__toast-icon {
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 /** handle the notification color and the text color based on the theme **/

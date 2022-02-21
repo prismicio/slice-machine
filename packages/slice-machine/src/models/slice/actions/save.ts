@@ -1,9 +1,9 @@
-import { Variation } from "../../../../lib/models/common/Variation";
-import { fetchApi } from "../../../../lib/builders/common/fetch";
-import SliceState from "../../../../lib/models/ui/SliceState";
-import { ActionType } from "./ActionType";
-import { ToastPayload } from "../../../../src/ToastProvider/utils";
+import { Variation } from "@lib/models/common/Variation";
+import { fetchApi } from "@lib/builders/common/fetch";
+import SliceState from "@lib/models/ui/SliceState";
+import { ToastPayload } from "@src/modules/toaster/utils";
 import { SliceSaveResponse } from "@lib/models/common/Slice";
+import { ActionType } from "./ActionType";
 
 export default function save(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

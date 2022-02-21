@@ -7,7 +7,6 @@ import {
   Slide,
 } from "react-toastify";
 
-import "react-toastify/dist/ReactToastify.css";
 import { MdDangerous, MdDone, MdError, MdWarning } from "react-icons/md";
 
 const getIconAccordingToasterType = ({

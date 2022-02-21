@@ -41,7 +41,7 @@ const SliceMachineApp: React.FunctionComponent<AppProps> = ({
       </AppLayout>
       <LoginModal />
       <ReviewModal />
-      <ToastContainer autoClose={2000} />
+      <ToastContainer />
     </LibrariesProvider>
   );
 };

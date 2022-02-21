@@ -119,7 +119,7 @@ describe("[Custom types module]", () => {
       );
       const saga = testSaga(
         createCustomTypeSaga,
-        createCustomTypesCreator.request(actionPayload)
+        createCustomTypeCreator.request(actionPayload)
       );
 
       saga.next().call(saveCustomType, customTypeCreated, {});
