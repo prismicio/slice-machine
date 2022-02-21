@@ -1,6 +1,6 @@
 import {
   createCustomTypeSaga,
-  createCustomTypesCreator,
+  createCustomTypeCreator,
   customTypesReducer,
 } from "@src/modules/customTypes";
 import { testSaga } from "redux-saga-test-plan";
@@ -42,6 +42,7 @@ describe("[Custom types module]", () => {
         warnings: dummyServerState.warnings,
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
+        libraries: dummyServerState.libraries,
       });
 
       expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
@@ -63,7 +64,7 @@ describe("[Custom types module]", () => {
         },
       };
 
-      const action = createCustomTypesCreator.success({
+      const action = createCustomTypeCreator.success({
         newCustomType: createdCustomType,
       });
 
@@ -87,14 +88,14 @@ describe("[Custom types module]", () => {
       );
       const saga = testSaga(
         createCustomTypeSaga,
-        createCustomTypesCreator.request(actionPayload)
+        createCustomTypeCreator.request(actionPayload)
       );
 
       saga.next().call(saveCustomType, customTypeCreated, {});
       saga
         .next()
         .put(
-          createCustomTypesCreator.success({ newCustomType: customTypeCreated })
+          createCustomTypeCreator.success({ newCustomType: customTypeCreated })
         );
       saga
         .next()

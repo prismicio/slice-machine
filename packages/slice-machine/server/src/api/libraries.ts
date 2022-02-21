@@ -9,7 +9,7 @@ import { LibraryUI } from "@lib/models/common/LibraryUI";
 interface LibrariesResult {
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
   clientError: ErrorWithStatus | undefined;
-  libraries: ReadonlyArray<LibraryUI> | null;
+  libraries: ReadonlyArray<LibraryUI>;
 }
 
 export default async function handler(
@@ -25,7 +25,7 @@ export default async function handler(
           clientError: new ErrorWithStatus(res.statusText, res.status),
         };
       }
-      if (env.client.isFake()) {
+      if (!env.isUserLoggedIn) {
         return { remoteSlices: [] };
       }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -36,7 +36,7 @@ export default async function handler(
 
     if (!env.manifest.libraries)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { remoteSlices, libraries: null, clientError };
+      return { remoteSlices, libraries: [], clientError };
 
     const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
 

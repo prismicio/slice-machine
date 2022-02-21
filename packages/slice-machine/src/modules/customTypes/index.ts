@@ -20,13 +20,11 @@ import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
 
 // Action Creators
-export const saveCustomTypesCreator = createAction(
-  "CUSTOM_TYPES/SAVE.REQUEST"
-)<{
+export const saveCustomTypeCreator = createAction("CUSTOM_TYPES/SAVE.REQUEST")<{
   modelPayload: CustomTypeState;
 }>();
 
-export const createCustomTypesCreator = createAsyncAction(
+export const createCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/CREATE.REQUEST",
   "CUSTOM_TYPES/CREATE.RESPONSE",
   "CUSTOM_TYPES/CREATE.FAILURE"
@@ -43,8 +41,8 @@ export const createCustomTypesCreator = createAsyncAction(
 
 type CustomTypesActions =
   | ActionType<typeof getStateCreator>
-  | ActionType<typeof saveCustomTypesCreator>
-  | ActionType<typeof createCustomTypesCreator>;
+  | ActionType<typeof saveCustomTypeCreator>
+  | ActionType<typeof createCustomTypeCreator>;
 
 // Selectors
 export const selectLocalCustomTypes = (store: SliceMachineStoreType) =>
@@ -67,7 +65,7 @@ export const customTypesReducer: Reducer<
         remoteCustomTypes: action.payload.remoteCustomTypes,
         localCustomTypes: action.payload.localCustomTypes,
       };
-    case getType(saveCustomTypesCreator):
+    case getType(saveCustomTypeCreator):
       return {
         ...state,
         localCustomTypes: state.localCustomTypes.map((ct) => {
@@ -77,7 +75,7 @@ export const customTypesReducer: Reducer<
           return ct;
         }),
       };
-    case getType(createCustomTypesCreator.success):
+    case getType(createCustomTypeCreator.success):
       return {
         ...state,
         localCustomTypes: [
@@ -92,14 +90,14 @@ export const customTypesReducer: Reducer<
 
 export function* createCustomTypeSaga({
   payload,
-}: ReturnType<typeof createCustomTypesCreator.request>) {
+}: ReturnType<typeof createCustomTypeCreator.request>) {
   const newCustomType = createCustomType(
     payload.id,
     payload.label,
     payload.repeatable
   );
   yield call(saveCustomType, newCustomType, {});
-  yield put(createCustomTypesCreator.success({ newCustomType }));
+  yield put(createCustomTypeCreator.success({ newCustomType }));
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   yield put(push(`/cts/${payload.id}`));
 }
@@ -107,7 +105,7 @@ export function* createCustomTypeSaga({
 // Saga watchers
 function* watchCreateCustomType() {
   yield takeLatest(
-    getType(createCustomTypesCreator.request),
+    getType(createCustomTypeCreator.request),
     withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE)
   );
 }

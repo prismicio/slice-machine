@@ -10,7 +10,7 @@ import {
   finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
-  dismissedUpdateCreator,
+  updatesViewedCreator,
 } from "@src/modules/userContext";
 import { getStateCreator } from "@src/modules/environment";
 import {
@@ -22,15 +22,17 @@ import {
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
 import {
-  createCustomTypesCreator,
-  saveCustomTypesCreator,
+  createCustomTypeCreator,
+  saveCustomTypeCreator,
 } from "@src/modules/customTypes";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
+import { createSliceCreator } from "@src/modules/slices";
+import { UserContextStoreType } from "./userContext/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Simulator store
+  // Simulator module
   const checkSimulatorSetup = (
     withFirstVisitCheck: boolean,
     callback?: () => void
@@ -47,21 +49,21 @@ const useSliceMachineActions = () => {
   const toggleSetupDrawerStep = (stepNumber: number) =>
     dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
-  // Modal store
+  // Modal module
   const closeLoginModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeCreateSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  const openCreateSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const closeCreateCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  const closeUpdateVersionModal = () =>
-    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
-  const openUpdateVersionModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.UPDATE_VERSION }));
 
-  // Loading store
+  // Loading module
   const startLoadingReview = () =>
     dispatch(startLoadingActionCreator({ loadingKey: LoadingKeysEnum.REVIEW }));
   const stopLoadingReview = () =>
@@ -71,18 +73,22 @@ const useSliceMachineActions = () => {
   const stopLoadingLogin = () =>
     dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
 
-  // UserContext Store
+  // UserContext module
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
-  const dismissUpdate = (version: string) =>
-    dispatch(dismissedUpdateCreator(version));
+  const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
+    dispatch(updatesViewedCreator(versions));
 
-  // Custom types Store
-  const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
-  const saveCustomTypes = (modelPayload: CustomTypeState) =>
-    dispatch(saveCustomTypesCreator({ modelPayload }));
+  // Custom types module
+  const createCustomType = (id: string, label: string, repeatable: boolean) =>
+    dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const saveCustomType = (modelPayload: CustomTypeState) =>
+    dispatch(saveCustomTypeCreator({ modelPayload }));
+
+  // Slice module
+  const createSlice = (sliceName: string, libName: string) =>
+    dispatch(createSliceCreator.request({ sliceName, libName }));
 
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {
@@ -95,6 +101,7 @@ const useSliceMachineActions = () => {
         configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
+        libraries: serverState.libraries,
       })
     );
   };
@@ -114,15 +121,16 @@ const useSliceMachineActions = () => {
     stopLoadingLogin,
     stopLoadingReview,
     startLoadingReview,
-    createCustomTypes,
-    saveCustomTypes,
+    createCustomType,
+    saveCustomType,
+    createSlice,
     sendAReview,
     skipReview,
-    dismissUpdate,
-    closeUpdateVersionModal,
-    openUpdateVersionModal,
+    setUpdatesViewed,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
+    openCreateSliceModal,
+    closeCreateSliceModal,
   };
 };
 

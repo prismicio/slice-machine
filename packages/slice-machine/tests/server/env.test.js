@@ -3,6 +3,7 @@ import { Volume } from "memfs";
 
 import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
+import os from "os";
 
 const TMP = "/tmp";
 
@@ -209,5 +210,34 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.framework).toEqual("vanillajs");
+  });
+
+  test("it should take the auth from .prismic and base from sm.json", async () => {
+    fs.reset();
+    fs.use(
+      Volume.fromJSON(
+        {
+          "sm.json": '{"apiEndpoint": "https://api-1.wroom.io/api/v2"}',
+          "package.json": "{}",
+        },
+        TMP
+      )
+    );
+    fs.use(
+      Volume.fromJSON(
+        {
+          ".prismic": JSON.stringify({
+            base: "https://prismic.io",
+            cookies: "prismic-auth=biscuits",
+          }),
+        },
+        os.homedir()
+      )
+    );
+
+    const { env } = await getEnv(TMP);
+    expect(env.isUserLoggedIn).toBeTruthy();
+    expect(env.client.base).toEqual("https://wroom.io");
+    expect(env.client.auth).toEqual("biscuits");
   });
 });

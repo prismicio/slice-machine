@@ -4,7 +4,12 @@ import { FieldType } from "@models/common/CustomType/fields";
 
 export const dummyServerState: Pick<
   ServerState,
-  "env" | "customTypes" | "warnings" | "remoteCustomTypes" | "configErrors"
+  | "env"
+  | "customTypes"
+  | "warnings"
+  | "remoteCustomTypes"
+  | "configErrors"
+  | "libraries"
 > = {
   env: {
     repo: "sm-env-example",
@@ -28,7 +33,6 @@ export const dummyServerState: Pick<
     framework: Frameworks.next,
     sliceMachineAPIUrl: "http://localhost:9999",
     shortId: "shortId",
-    prismicAPIUrl: "https://prismic.io",
   },
   warnings: [],
   configErrors: {},
@@ -58,4 +62,5 @@ export const dummyServerState: Pick<
     },
   ],
   remoteCustomTypes: [],
+  libraries: [],
 };

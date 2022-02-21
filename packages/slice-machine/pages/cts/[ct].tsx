@@ -42,7 +42,7 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
 
 const CustomTypeBuilderWithRouter = () => {
   const router = useRouter();
-  const { saveCustomTypes } = useSliceMachineActions();
+  const { saveCustomType } = useSliceMachineActions();
   const { customTypes, remoteCustomTypes } = useSelector(
     (store: SliceMachineStoreType) => ({
       customTypes: selectLocalCustomTypes(store),
@@ -64,7 +64,7 @@ const CustomTypeBuilderWithRouter = () => {
     <CustomTypeBuilderWithProvider
       customType={customType}
       remoteCustomType={remoteCustomType}
-      onLeave={saveCustomTypes}
+      onLeave={saveCustomType}
     />
   );
 };

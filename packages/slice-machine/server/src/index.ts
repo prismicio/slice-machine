@@ -21,6 +21,7 @@ declare let global: {
 
 global.fetch = fetch;
 global.appRoot = path.join(__dirname, "../../../");
+
 resolveAliases(global.appRoot);
 
 import api from "./api";

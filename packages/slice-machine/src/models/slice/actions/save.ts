@@ -33,7 +33,7 @@ export default function save(
         }),
       },
       setData,
-      successMessage: "Model & mocks have been generated successfully!",
+      successMessage: "Models & mocks have been generated successfully!",
       onSuccess({ screenshots }: SliceSaveResponse) {
         const savedState = {
           ...slice,

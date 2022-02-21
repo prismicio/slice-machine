@@ -1,4 +1,4 @@
-import { SliceCreateBody, SliceBody } from "@models/common/Slice";
+import { SliceSaveBody, SliceBody } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -14,6 +14,7 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
+import { DEFAULT_VARIATION_ID } from "@lib/consts";
 
 import save from "../save";
 
@@ -25,17 +26,6 @@ import fs from "fs";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
 
-const IndexFiles = {
-  none: null,
-  react: "index.js",
-  next: "index.js",
-  nuxt: "index.vue",
-  vue: "index.vue",
-  vanillajs: "index.js",
-  svelte: "index.svelte",
-  gatsby: null, // unused for now
-};
-
 const copyTemplate = async (
   env: BackendEnvironment,
   templatePath: string,
@@ -46,7 +36,7 @@ const copyTemplate = async (
     await copy(templatePath, path.join(env.cwd, from, sliceName), {
       componentName: sliceName,
       componentId: snakelize(sliceName),
-      variationId: "default-slice",
+      variationId: DEFAULT_VARIATION_ID,
     });
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -152,8 +142,7 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
 export async function handler({
   sliceName,
   from, // libraryName
-  values, // undefined ?
-}: SliceCreateBody) {
+}: SliceSaveBody) {
   const { env } = await getEnv();
   console.log({ sliceName, from });
 
@@ -162,31 +151,17 @@ export async function handler({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();
 
-  // Do we have values ?
+  const templatePath = SliceTemplateConfig(
+    env.cwd /*, pass custom template path here (relative to cwd) */
+  );
 
-  if (!values) {
-    const templatePath = SliceTemplateConfig(
-      env.cwd /*, pass custom template path here (relative to cwd) */
-    );
-    if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
-      await copyTemplate(env, templatePath, from, sliceName);
-    } else {
-      const maybeError = await fromTemplate(env, from, sliceName);
-      if (maybeError) {
-        return maybeError;
-      }
-    }
+  if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
+    await copyTemplate(env, templatePath, from, sliceName);
   } else {
-    const fileName = IndexFiles[env.framework] || "index.js";
-    const pathToIndexFile = path.join(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      paths(env.cwd, "").library(from).slice(sliceName).value(),
-      fileName
-    );
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Files.write(pathToModel, JSON.stringify(values.model, null, 2));
-    Files.write(pathToIndexFile, values.componentCode);
+    const maybeError = await fromTemplate(env, from, sliceName);
+    if (maybeError) {
+      return maybeError;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -199,7 +174,7 @@ export async function handler({
     });
     return {
       ...res,
-      variationId: "default-slice",
+      variationId: DEFAULT_VARIATION_ID,
     };
   }
 

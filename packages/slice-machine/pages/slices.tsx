@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { FiLayers } from "react-icons/fi";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
@@ -9,8 +9,6 @@ import { GoPlus } from "react-icons/go";
 
 import CreateSliceModal from "components/Forms/CreateSliceModal";
 
-import { fetchApi } from "lib/builders/common/fetch";
-
 import Header from "components/Header";
 import Grid from "components/Grid";
 
@@ -18,6 +16,13 @@ import LibraryState from "lib/models/ui/LibraryState";
 import SliceState from "lib/models/ui/SliceState";
 import { SharedSlice } from "lib/models/ui/Slice";
 import EmptyState from "components/EmptyState";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isModalOpen } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const CreateSliceButton = ({
   onClick,
@@ -44,8 +49,15 @@ const CreateSliceButton = ({
 
 const SlicesIndex: React.FunctionComponent = () => {
   const libraries = useContext(LibrariesContext);
-  const [isCreatingSlice, setIsCreatingSlice] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
+    useSliceMachineActions();
+
+  const { isCreateSliceModalOpen, isCreatingSlice } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
+      isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    })
+  );
 
   const _onCreate = ({
     sliceName,
@@ -54,28 +66,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     sliceName: string;
     from: string;
   }) => {
-    void fetchApi({
-      url: `/api/slices/create?sliceName=${sliceName}&from=${from}`,
-      setData() {
-        setIsCreatingSlice(true);
-      },
-      successMessage: "Model was correctly saved to Prismic!",
-      onSuccess({
-        reason,
-        variationId,
-      }: {
-        reason: string | undefined;
-        variationId: string;
-      }) {
-        if (reason) {
-          return console.error(reason);
-        }
-        window.location.href = `/${from.replace(
-          /\//g,
-          "--"
-        )}/${sliceName}/${variationId}`;
-      },
-    });
+    createSlice(sliceName, from);
   };
 
   const localLibraries: LibraryState[] | undefined = libraries?.filter(
@@ -110,7 +101,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             ActionButton={
               localLibraries?.length != 0 && sliceCount != 0 ? (
                 <CreateSliceButton
-                  onClick={() => setIsOpen(true)}
+                  onClick={openCreateSliceModal}
                   loading={isCreatingSlice}
                 />
               ) : undefined
@@ -137,7 +128,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     "Click the + button on the top right to create the first slice of your project.",
                     "It will be stored locally. You will then be able to push it to Prismic.",
                   ]}
-                  onCreateNew={() => setIsOpen(true)}
+                  onCreateNew={openCreateSliceModal}
                   buttonText={"Create my first Slice"}
                   documentationComponent={
                     <>
@@ -207,8 +198,9 @@ const SlicesIndex: React.FunctionComponent = () => {
       </Container>
       {localLibraries && localLibraries.length > 0 && (
         <CreateSliceModal
-          isOpen={isOpen}
-          close={() => setIsOpen(false)}
+          isCreatingSlice={isCreatingSlice}
+          isOpen={isCreateSliceModalOpen}
+          close={closeCreateSliceModal}
           libraries={localLibraries}
           onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
         />

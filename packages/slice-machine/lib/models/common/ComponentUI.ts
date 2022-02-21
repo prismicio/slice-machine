@@ -130,7 +130,7 @@ function computeStatus(
   const slice = remoteSlices.find((s) => component.model.id === s.id);
   if (!slice) return LibStatus.NewSlice;
 
-  const sameVersion = !compareVariations(
+  const sameVersion = compareVariations(
     component.model.variations,
     slice.variations
   );
