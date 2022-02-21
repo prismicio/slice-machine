@@ -38,7 +38,7 @@ export default async function handler(
   const { dependencies, devDependencies } = packageJson.content;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deps: Record<string, string> = { ...dependencies, ...devDependencies };
-
+  // TODO: fix this for legacy frameworks, and svelte?
   const requiredDeps =
     req.env.framework === Frameworks.next
       ? [
