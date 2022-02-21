@@ -22,6 +22,8 @@ export const FrameworksC = t.keyof({
   [Frameworks.react]: null,
   [Frameworks.svelte]: null,
   [Frameworks.vanillajs]: null,
+  [Frameworks.reactLegacy]: null,
+  [Frameworks.nextLegacy]: null,
 });
 
 export const SupportedFrameworks: Frameworks[] = [
@@ -31,4 +33,6 @@ export const SupportedFrameworks: Frameworks[] = [
   Frameworks.vue,
   Frameworks.react,
   Frameworks.svelte,
+  Frameworks.reactLegacy,
+  Frameworks.nextLegacy,
 ];
