@@ -66,6 +66,34 @@ describe("simulator controller", () => {
     expect(previewCheckResponse.dependencies).toBe("ko");
   });
 
+  test("it should return ok when all the legacy next required deps are installed", async () => {
+    const requestWithPreviewUrl = {
+      env: {
+        framework: Frameworks.previousNext,
+        manifest: {
+          localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
+        },
+      },
+    };
+
+    retrieveJsonPackage.mockReturnValue({
+      exists: true,
+      content: {
+        dependencies: {
+          "@prismicio/slice-simulator-react": "^2.6.12",
+          "prismic-reactjs": "^0.3.0",
+          "next-slicezone": "^0.1.0",
+        },
+        devDependencies: {},
+      },
+    });
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
+      requestWithPreviewUrl
+    );
+    expect(previewCheckResponse.manifest).toBe("ok");
+    expect(previewCheckResponse.dependencies).toBe("ok");
+  });
+
   test("it should return ok when all the next required deps are installed", async () => {
     const requestWithPreviewUrl = {
       env: {
@@ -82,6 +110,7 @@ describe("simulator controller", () => {
         dependencies: {
           "@prismicio/slice-simulator-react": "^2.6.12",
           "@prismicio/react": "^0.3.0",
+          "@prismicio/helpers": "^0",
         },
         devDependencies: {},
       },
