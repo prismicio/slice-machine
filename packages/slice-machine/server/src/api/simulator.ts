@@ -43,7 +43,6 @@ export default async function handler(
     req.env.framework === Frameworks.next
       ? [
           Utils.CONSTS.SLICE_SIMULATOR_REACT,
-          Utils.CONSTS.NEXT_SLICEZONE,
           Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME,
         ]
       : [

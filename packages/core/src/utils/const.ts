@@ -3,9 +3,10 @@ export const SCRIPT_VALUE = "start-slicemachine";
 export const INIT_COMMAND = "npx sm init";
 export const SM_PACKAGE_NAME = "slice-machine-ui";
 
-export const PRISMIC_REACT_PACKAGE_NAME = "prismic-reactjs";
+export const PRISMIC_REACT_PACKAGE_NAME = "@prismicio/react";
 export const PRISMIC_DOM_PACKAGE_NAME = "prismic-dom";
 export const PRISMIC_CLIENT = "@prismicio/client";
+export const PRISMIC_HELPERS = "@prismicio/helpers";
 export const NEXT_SLICEZONE = "next-slicezone";
 export const NUXT_PRISMIC = "@nuxtjs/prismic";
 export const NUXT_SM = "nuxt-sm";
