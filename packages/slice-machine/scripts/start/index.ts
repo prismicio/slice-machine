@@ -37,7 +37,6 @@ async function run(): Promise<void> {
 
   const framework = Utils.Framework.defineFramework({
     cwd,
-    supportedFrameworks: Models.SupportedFrameworks,
     manifest: manifest.content || undefined,
   });
 

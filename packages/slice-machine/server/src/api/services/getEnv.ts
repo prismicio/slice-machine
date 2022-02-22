@@ -102,7 +102,6 @@ export default async function getEnv(
       mockConfig,
       framework: Utils.Framework.defineFramework({
         cwd,
-        supportedFrameworks: Models.SupportedFrameworks,
         manifest: manifestInfo.content,
       }),
       isUserLoggedIn: !!prismicData.value.auth && !!repo,
