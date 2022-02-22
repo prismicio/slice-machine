@@ -78,7 +78,7 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
   const model = plugins.createModel(sliceName);
 
   // slices
-  const slices = plugins.createSlice(model);
+  const slices = plugins.createSlice(model.data);
 
   const slicesAndModelToWrite = slices
     .concat({
