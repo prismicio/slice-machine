@@ -122,6 +122,35 @@ describe("simulator controller", () => {
     expect(previewCheckResponse.dependencies).toBe("ok");
   });
 
+  test("it should return ok when all the previous nuxt required deps are installed", async () => {
+    const requestWithPreviewUrl = {
+      env: {
+        framework: Frameworks.previousNuxt,
+        manifest: {
+          localSliceSimulatorURL: "http://localhost:3001/slice-simulator",
+        },
+      },
+    };
+
+    retrieveJsonPackage.mockReturnValue({
+      exists: true,
+      content: {
+        dependencies: {
+          "@prismicio/slice-simulator-vue": "^2.6.12",
+          "nuxt-sm": "^0.3.0",
+          "vue-slicezone": "^0.0.28",
+          "@nuxtjs/prismic": "^0.0.28",
+        },
+        devDependencies: {},
+      },
+    });
+    const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
+      requestWithPreviewUrl
+    );
+    expect(previewCheckResponse.manifest).toBe("ok");
+    expect(previewCheckResponse.dependencies).toBe("ok");
+  });
+
   test("it should return ok when all the nuxt required deps are installed", async () => {
     const requestWithPreviewUrl = {
       env: {
@@ -137,8 +166,6 @@ describe("simulator controller", () => {
       content: {
         dependencies: {
           "@prismicio/slice-simulator-vue": "^2.6.12",
-          "nuxt-sm": "^0.3.0",
-          "vue-slicezone": "^0.0.28",
           "@nuxtjs/prismic": "^0.0.28",
         },
         devDependencies: {},

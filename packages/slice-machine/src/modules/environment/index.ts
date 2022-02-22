@@ -80,8 +80,10 @@ export const getLinkToTroubleshootingDocs = (
   const framework = getFramework(state);
   switch (framework) {
     case Frameworks.next:
+    case Frameworks.previousNext:
       return "https://prismic.io/docs/technologies/setup-slice-simulator-nextjs";
     case Frameworks.nuxt:
+    case Frameworks.previousNuxt:
       return "https://prismic.io/docs/technologies/setup-slice-simulator-nuxtjs";
     default:
       return "https://prismic.io/docs";
@@ -94,8 +96,10 @@ export const getLinkToStorybookDocs = (
   const framework = getFramework(state);
   switch (framework) {
     case Frameworks.next:
+    case Frameworks.previousNext:
       return "https://prismic.io/docs/technologies/storybook-nextjs";
     case Frameworks.nuxt:
+    case Frameworks.previousNuxt:
       return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
     case Frameworks.react:
       return "https://storybook.js.org/docs/react/get-started/install";

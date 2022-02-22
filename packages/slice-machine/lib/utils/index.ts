@@ -103,7 +103,10 @@ export const sanitizeSbId = (str: string) => {
 };
 
 export const simulatorIsSupported = (framework: Frameworks) => {
-  return [Frameworks.next, Frameworks.nuxt, Frameworks.previousNext].includes(
-    framework
-  );
+  return [
+    Frameworks.next,
+    Frameworks.nuxt,
+    Frameworks.previousNext,
+    Frameworks.previousNuxt,
+  ].includes(framework);
 };
