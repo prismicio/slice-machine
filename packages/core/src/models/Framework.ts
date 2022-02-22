@@ -10,7 +10,6 @@ export enum Frameworks {
   svelte = "svelte",
   vanillajs = "vanillajs",
   previousNext = "previousNext",
-  previousReact = "previousReact",
 }
 
 export const FrameworksC = t.keyof({
@@ -23,7 +22,6 @@ export const FrameworksC = t.keyof({
   [Frameworks.svelte]: null,
   [Frameworks.vanillajs]: null,
   [Frameworks.previousNext]: null,
-  [Frameworks.previousReact]: null,
 });
 
 export const SupportedFrameworks: Frameworks[] = [
@@ -33,6 +31,5 @@ export const SupportedFrameworks: Frameworks[] = [
   Frameworks.vue,
   Frameworks.react,
   Frameworks.svelte,
-  Frameworks.previousReact,
   Frameworks.previousNext,
 ];
