@@ -27,6 +27,7 @@ export const FrameworksC = t.keyof({
 export const SupportedFrameworks: Frameworks[] = [
   Frameworks.none,
   Frameworks.nuxt,
+  Frameworks.previousNuxt,
   Frameworks.next,
   Frameworks.vue,
   Frameworks.react,
