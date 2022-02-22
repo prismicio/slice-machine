@@ -6,7 +6,7 @@ import toPreviousReact from "./previous-react";
 export const svelte = toSvelte;
 
 export const vue = toVue;
-export const react = toPreviousReact;
+export const react = toReact;
 
 export const next = toReact;
 export const previousNext = toPreviousReact;
