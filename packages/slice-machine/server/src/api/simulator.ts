@@ -5,8 +5,8 @@ import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 function requiredDepsForFramework(framework: Frameworks): Array<string> {
-  const legacyNext = [
-    Utils.CONSTS.LEGACY_REACT_PACKAGE_NAME,
+  const previousNext = [
+    Utils.CONSTS.PREVIOUS_REACT_PACKAGE_NAME,
     Utils.CONSTS.NEXT_SLICEZONE,
     Utils.CONSTS.SLICE_SIMULATOR_REACT,
   ];
@@ -25,7 +25,7 @@ function requiredDepsForFramework(framework: Frameworks): Array<string> {
   ];
 
   if (framework === Frameworks.next) return next;
-  if (framework === Frameworks.previousNext) return legacyNext;
+  if (framework === Frameworks.previousNext) return previousNext;
   if (framework === Frameworks.vue) return vue;
 
   return [];
@@ -65,7 +65,7 @@ export default async function handler(
   const { dependencies, devDependencies } = packageJson.content;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deps: Record<string, string> = { ...dependencies, ...devDependencies };
-  // TODO: fix this for legacy frameworks, and svelte?
+
   const requiredDeps = requiredDepsForFramework(req.env.framework);
 
   Object.keys(deps).forEach((dep: string) => {
