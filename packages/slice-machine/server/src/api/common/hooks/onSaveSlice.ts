@@ -19,15 +19,15 @@ const createIndexFile = (lib: Models.Library<Models.Component>) => {
       },
       component
     ) => {
-      const i =
+      const imports =
         acc.imports +
         `import ${component.infos.sliceName} from '${component.infos.sliceName}';\n`;
-      const e = acc.exportList + `\t${component.infos.sliceName},\n`;
-      const c =
+      const exportList = acc.exportList + `\t${component.infos.sliceName},\n`;
+      const componentsProperties =
         acc.componentsProperties +
         `\t${component.infos.meta.id}: ${component.infos.sliceName},\n`;
 
-      return { imports: i, exportList: e, componentsProperties: c };
+      return { imports, exportList, componentsProperties };
     },
     { imports: "", exportList: "", componentsProperties: "" }
   );
