@@ -21,7 +21,7 @@ const createIndexFile = (lib: Models.Library<Models.Component>) => {
     ) => {
       const imports =
         acc.imports +
-        `import ${component.infos.sliceName} from '${component.infos.sliceName}';\n`;
+        `import ${component.infos.sliceName} from './${component.infos.sliceName}';\n`;
       const exportList = acc.exportList + `\t${component.infos.sliceName},\n`;
       const componentsProperties =
         acc.componentsProperties +
