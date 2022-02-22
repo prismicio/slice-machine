@@ -8,6 +8,7 @@ import {
 } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
+import ServerState from "@models/server/ServerState";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -15,6 +16,12 @@ const defaultAxiosConfig = {
     Accept: "application/json",
     "Content-Type": "application/json",
   },
+};
+
+/** State Routes **/
+
+export const getState = (): Promise<AxiosResponse<ServerState>> => {
+  return axios.get("/api/state", defaultAxiosConfig);
 };
 
 /** Custom Type Routes **/

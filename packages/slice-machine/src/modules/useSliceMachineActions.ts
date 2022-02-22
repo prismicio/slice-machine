@@ -12,7 +12,7 @@ import {
   skipReviewCreator,
   updatesViewedCreator,
 } from "@src/modules/userContext";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
@@ -96,17 +96,16 @@ const useSliceMachineActions = () => {
     dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
-  const getState = (serverState: ServerState | undefined) => {
-    if (!serverState) return;
-
+  const refreshState = (serverState: ServerState) => {
     dispatch(
-      getStateCreator({
+      refreshStateCreator({
         env: serverState.env,
         warnings: serverState.warnings,
         configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
+        remoteSlices: serverState.remoteSlices,
       })
     );
   };
@@ -118,7 +117,7 @@ const useSliceMachineActions = () => {
     toggleSetupDrawerStep,
     closeSetupDrawer,
     openSetupDrawer,
-    getState,
+    refreshState,
     finishOnboarding,
     openLoginModal,
     closeLoginModal,

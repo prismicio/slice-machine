@@ -13,7 +13,10 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
 import { SlicesStoreType } from "./types";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { LibraryUI } from "@models/common/LibraryUI";
+import type { Models } from "@slicemachine/core";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -25,7 +28,15 @@ export const createSliceCreator = createAsyncAction(
   libName: string;
 }>();
 
-type SlicesActions = ActionType<typeof getStateCreator>;
+type SlicesActions = ActionType<typeof refreshStateCreator>;
+
+// Selectors
+export const getLibraries = (store: SliceMachineStoreType): LibraryUI[] =>
+  store.slices.libraries;
+
+export const getRemoteSlices = (
+  store: SliceMachineStoreType
+): Models.SliceAsObject[] => store.slices.remoteSlices;
 
 // Reducer
 export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
@@ -35,10 +46,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getStateCreator):
+    case getType(refreshStateCreator):
       return {
         ...state,
         libraries: action.payload.libraries,
+        remoteSlices: action.payload.remoteSlices,
       };
     default:
       return state;

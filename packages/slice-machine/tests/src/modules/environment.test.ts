@@ -1,6 +1,9 @@
 import "@testing-library/jest-dom";
 
-import { environmentReducer, getStateCreator } from "@src/modules/environment";
+import {
+  environmentReducer,
+  refreshStateCreator,
+} from "@src/modules/environment";
 import { EnvironmentStoreType } from "@src/modules/environment/types";
 import { dummyServerState } from "./__mocks__/serverState";
 
@@ -25,7 +28,7 @@ describe("[Environment module]", () => {
     });
 
     it("should update the environment state given STATE/GET.RESPONSE action", () => {
-      const action = getStateCreator({
+      const action = refreshStateCreator({
         env: {
           ...dummyServerState.env,
           repo: "newUrl",

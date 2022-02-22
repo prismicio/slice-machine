@@ -5,7 +5,7 @@ import {
 } from "@src/modules/customTypes";
 import { testSaga } from "redux-saga-test-plan";
 import { CustomTypesStoreType } from "@src/modules/customTypes/types";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
@@ -37,7 +37,7 @@ describe("[Custom types module]", () => {
     });
 
     it("should update the custom types state given STATE/GET.RESPONSE action", () => {
-      const action = getStateCreator({
+      const action = refreshStateCreator({
         env: dummyServerState.env,
         configErrors: dummyServerState.configErrors,
         warnings: dummyServerState.warnings,

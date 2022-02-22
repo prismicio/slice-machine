@@ -64,11 +64,7 @@ router.get(
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await state(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.clientError) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      return res.status(payload.clientError.status).json(payload);
-    }
+
     return res.status(200).json(payload);
   })
 );
