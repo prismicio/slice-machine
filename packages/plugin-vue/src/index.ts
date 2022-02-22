@@ -2,6 +2,7 @@ import type {
   Plugin,
   FilenameAndData,
   Variations,
+  Slice,
 } from "@slicemachine/plugin-middleware";
 import { FieldType } from "@slicemachine/plugin-middleware";
 
@@ -9,12 +10,32 @@ export const framework: Plugin["framework"] = "vue";
 
 export const syntax = "html";
 
-export const slice = (name: string): FilenameAndData<string> => ({
-  filename: "index.vue",
-  data: `<template>
+export const slice = (model: Slice): FilenameAndData<string>[] => {
+  if (model.variations.length === 0) return [];
+  if (!model.variations[0].primary) return [];
+
+  const name = model.name;
+
+  const items = Object.entries(model.variations[0].primary).map(
+    ([key, value]) => {
+      const accessor = key.includes("-")
+        ? `slice.primary["${key}"]`
+        : `slice.primary.${key}`;
+      const isRepeatable = ["Group"].includes(value.type);
+      return snippets({
+        type: value.type as FieldType,
+        fieldText: accessor,
+        isRepeatable,
+      });
+    }
+  );
+
+  return [
+    {
+      filename: "index.vue",
+      data: `<template>
   <section class="section">
-    <prismic-rich-text :field="slice.primary.title" class="title" />
-    <prismic-rich-text :field="slice.primary.description" />
+    ${items.join("\n    ")}
   </section>
 </template>
 
@@ -44,12 +65,11 @@ export default {
 a {
   color: #111;
 }
-.title {
-  margin-bottom: 2em;
-}
 </style>
 `,
-});
+    },
+  ];
+};
 
 export const story = (
   pathToComponent: string,

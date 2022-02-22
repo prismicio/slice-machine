@@ -1,4 +1,4 @@
-import type { Plugin, FieldType } from "../index";
+import type { Plugin, FieldType, Slice } from "../index";
 
 // for testing the dummy, not needed else where
 export const name = module.filename;
@@ -7,13 +7,16 @@ export const framework = "dummy";
 
 export const syntax = "html";
 /* slice template */
-export const slice = (name: string): { filename: string; data: string } => ({
-  filename: "index.js",
-  data: `
-const ${name} = () => "foobar"
-export default ${name}
-`,
-});
+export const slice = (model: Slice): { filename: string; data: string } => {
+  const name = model.name;
+  return {
+    filename: "index.js",
+    data: `
+  const ${name} = () => "foobar"
+  export default ${name}
+  `,
+  };
+};
 
 /* story template */
 export const story: Plugin["story"] = (

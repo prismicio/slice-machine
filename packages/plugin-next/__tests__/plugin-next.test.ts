@@ -1,7 +1,41 @@
 import { expect, test } from "@jest/globals";
 import * as plugin from "../src";
 import type { Variations } from "@slicemachine/plugin-middleware";
-import { FieldType } from "@slicemachine/plugin-middleware";
+import { FieldType, Slice } from "@slicemachine/plugin-middleware";
+
+const model: Slice = {
+  id: "my-slice",
+  type: "SharedSlice",
+  name: "MySlice",
+  description: "MySlice",
+  variations: [
+    {
+      id: "default",
+      name: "Default",
+      docURL: "...",
+      version: "sktwi1xtmkfgx8626",
+      description: "MySlice",
+      primary: {
+        title: {
+          type: "StructuredText",
+          config: {
+            single: "heading1",
+            label: "Title",
+            placeholder: "This is where it all begins...",
+          },
+        },
+        description: {
+          type: "StructuredText",
+          config: {
+            single: "paragraph",
+            label: "Description",
+            placeholder: "A nice description of your product",
+          },
+        },
+      },
+    },
+  ],
+};
 
 describe("@slicemachine/plugin-react", () => {
   test("#framework", () => {
@@ -12,10 +46,10 @@ describe("@slicemachine/plugin-react", () => {
     expect(plugin.syntax).toEqual("jsx");
   });
   test("#slice", () => {
-    const result = plugin.slice("Foo");
-    expect(result.data).toContain("const Foo = ({ slice }) => (");
-    expect(result.data).toContain("export default Foo");
-    expect(result).toMatchSnapshot();
+    const result = plugin.slice(model);
+    expect(result[0].data).toContain(`const _${model.name} = ({ slice }) => (`);
+    expect(result[0].data).toContain(`export default _${model.name}`);
+    expect(result[0]).toMatchSnapshot();
   });
 
   test("#story", () => {

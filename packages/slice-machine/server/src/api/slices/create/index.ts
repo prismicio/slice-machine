@@ -74,11 +74,11 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
 
   const sliceDir = path.join(env.cwd, from, sliceName);
 
-  // slices
-  const slices = plugins.createSlice(sliceName);
-
   // model
   const model = plugins.createModel(sliceName);
+
+  // slices
+  const slices = plugins.createSlice(model);
 
   const slicesAndModelToWrite = slices
     .concat({

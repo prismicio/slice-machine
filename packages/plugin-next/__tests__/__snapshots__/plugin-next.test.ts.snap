@@ -12,38 +12,18 @@ export { default as Baz } from './Baz'
 exports[`@slicemachine/plugin-react #slice 1`] = `
 Object {
   "data": "import React from 'react'
-import { RichText } from 'prismic-reactjs'
-  
-const Foo = ({ slice }) => (
+import {Link, Date as ParseDate, RichText} from 'prismic-reactjs';
+    
+const _MySlice = ({ slice }) => (
   <section>
-    <span className=\\"title\\">
-      { slice.primary.title ? (
-        <RichText render={slice.primary.title} />
-      ) : (
-        <h2>Template slice, update me!</h2>
-      )}
-    </span>
-      { slice.primary.description ? (
-        <RichText render={slice.primary.description}/>
-      ) : (
-         <p>start by editing this slice from inside Slice Machine!</p>
-      )}
-      <style jsx>{\`
-          section {
-            max-width: 600px;
-            margin: 4em auto;
-            text-align: center;
-          }
-          .title {
-            color: #8592e0;
-          }
-      \`}</style>
-    </section>
-  )
-  
-  export default Foo
+    <RichText render={slice.primary.title}  />
+    <RichText render={slice.primary.description}  />
+  </section>
+)
+
+export default _MySlice
 ",
-  "filename": "index.js",
+  "filename": "index.jsx",
 }
 `;
 
@@ -51,15 +31,9 @@ exports[`@slicemachine/plugin-react #snippets snippet Boolean with useKey 1`] = 
 
 exports[`@slicemachine/plugin-react #snippets snippet Color with useKey 1`] = `"<span key=\\"color-\${i}\\" style={{ color: slices[1].data }}>Some Text</span>"`;
 
-exports[`@slicemachine/plugin-react #snippets snippet ContentRelationship with useKey 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a key=\\"slices[2].data-\${i}\\" href={Link.url(slices[2].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets snippet ContentRelationship with useKey 1`] = `"<a key=\\"slices[2].data-\${i}\\" href={Link.url(slices[2].data)}>My Link</a>"`;
 
-exports[`@slicemachine/plugin-react #snippets snippet Date with useKey 1`] = `
-"/* import { Date as ParseDate } from 'prismic-reactjs' */
-<span key=\\"slices[3].data-\${i}\\">{ ParseDate(slices[3].data) }</span>"
-`;
+exports[`@slicemachine/plugin-react #snippets snippet Date with useKey 1`] = `"<span key=\\"slices[3].data-\${i}\\">{ ParseDate(slices[3].data) }</span>"`;
 
 exports[`@slicemachine/plugin-react #snippets snippet Embed with useKey 1`] = `
 "// you might want to use a lib here (eg. react-oembed-container)
@@ -70,15 +44,9 @@ exports[`@slicemachine/plugin-react #snippets snippet GeoPoint with useKey 1`] =
 
 exports[`@slicemachine/plugin-react #snippets snippet Image with useKey 1`] = `"<img src={slices[6].data.url} alt={slices[6].data.alt} key=\\"img-\${i}\\" />"`;
 
-exports[`@slicemachine/plugin-react #snippets snippet Link with useKey 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a key=\\"slices[7].data-\${i}\\" href={Link.url(slices[7].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets snippet Link with useKey 1`] = `"<a key=\\"slices[7].data-\${i}\\" href={Link.url(slices[7].data)}>My Link</a>"`;
 
-exports[`@slicemachine/plugin-react #snippets snippet LinkToMedia with useKey 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a key=\\"slices[8].data-\${i}\\" href={Link.url(slices[8].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets snippet LinkToMedia with useKey 1`] = `"<a key=\\"slices[8].data-\${i}\\" href={Link.url(slices[8].data)}>My Link</a>"`;
 
 exports[`@slicemachine/plugin-react #snippets snippet Number with useKey 1`] = `"<span key=\\"slices[9].data-\${i}\\" >{ slices[9].data }</span>"`;
 
@@ -96,15 +64,9 @@ exports[`@slicemachine/plugin-react #snippets supported type Boolean should be t
 
 exports[`@slicemachine/plugin-react #snippets supported type Color should be truthy 1`] = `"<span style={{ color: slices[1].data }}>Some Text</span>"`;
 
-exports[`@slicemachine/plugin-react #snippets supported type ContentRelationship should be truthy 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a href={Link.url(slices[2].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets supported type ContentRelationship should be truthy 1`] = `"<a href={Link.url(slices[2].data)}>My Link</a>"`;
 
-exports[`@slicemachine/plugin-react #snippets supported type Date should be truthy 1`] = `
-"/* import { Date as ParseDate } from 'prismic-reactjs' */
-<span>{ ParseDate(slices[3].data) }</span>"
-`;
+exports[`@slicemachine/plugin-react #snippets supported type Date should be truthy 1`] = `"<span>{ ParseDate(slices[3].data) }</span>"`;
 
 exports[`@slicemachine/plugin-react #snippets supported type Embed should be truthy 1`] = `
 "// you might want to use a lib here (eg. react-oembed-container)
@@ -115,15 +77,9 @@ exports[`@slicemachine/plugin-react #snippets supported type GeoPoint should be 
 
 exports[`@slicemachine/plugin-react #snippets supported type Image should be truthy 1`] = `"<img src={slices[6].data.url} alt={slices[6].data.alt} />"`;
 
-exports[`@slicemachine/plugin-react #snippets supported type Link should be truthy 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a href={Link.url(slices[7].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets supported type Link should be truthy 1`] = `"<a href={Link.url(slices[7].data)}>My Link</a>"`;
 
-exports[`@slicemachine/plugin-react #snippets supported type LinkToMedia should be truthy 1`] = `
-"/* import { Link } from 'prismic-reactjs' */
-<a href={Link.url(slices[8].data)}>My Link</a>"
-`;
+exports[`@slicemachine/plugin-react #snippets supported type LinkToMedia should be truthy 1`] = `"<a href={Link.url(slices[8].data)}>My Link</a>"`;
 
 exports[`@slicemachine/plugin-react #snippets supported type Number should be truthy 1`] = `"<span>{ slices[9].data }</span>"`;
 

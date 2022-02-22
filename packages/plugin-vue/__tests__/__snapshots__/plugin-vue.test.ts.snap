@@ -10,17 +10,18 @@ export { default as Baz } from './Baz'
 `;
 
 exports[`@slicemachine/plugin-vue #slice 1`] = `
-Object {
-  "data": "<template>
+Array [
+  Object {
+    "data": "<template>
   <section class=\\"section\\">
-    <prismic-rich-text :field=\\"slice.primary.title\\" class=\\"title\\" />
+    <prismic-rich-text :field=\\"slice.primary.title\\" />
     <prismic-rich-text :field=\\"slice.primary.description\\" />
   </section>
 </template>
 
 <script>
 export default {
-  name: \\"Foo\\",
+  name: \\"MySlice\\",
   props: {
     slice: {
       type: Object,
@@ -44,13 +45,11 @@ export default {
 a {
   color: #111;
 }
-.title {
-  margin-bottom: 2em;
-}
 </style>
 ",
-  "filename": "index.vue",
-}
+    "filename": "index.vue",
+  },
+]
 `;
 
 exports[`@slicemachine/plugin-vue #snippets snippet Boolean with useKey 1`] = `"<span>{{ slices[0].data ? 'true' : 'false' }}</span>"`;

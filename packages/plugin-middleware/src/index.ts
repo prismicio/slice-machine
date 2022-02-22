@@ -9,6 +9,8 @@ import fs from "fs";
 
 // CUSTOM_NAME and TYPE_NAME
 
+export type Slice = SliceAsObject;
+
 export enum FieldType {
   Boolean = "Boolean",
   Color = "Color",
@@ -29,6 +31,7 @@ export enum FieldType {
   Text = "Text",
   Timestamp = "Timestamp",
   UID = "UID",
+  // Slices = "Slices",
 }
 
 export type Variations = SliceAsObject["variations"];
@@ -41,7 +44,7 @@ export type FilenameAndData<T = string | SliceAsObject> = {
 export type Plugin = {
   framework?: string;
   syntax?: string;
-  slice?: (name: string) => FilenameAndData<string>[] | FilenameAndData<string>;
+  slice?: (model: Slice) => FilenameAndData<string>[] | FilenameAndData<string>;
   story?: (
     path: string,
     sliceName: string,
@@ -98,7 +101,7 @@ export default class PluginContainer {
 
   private _defaultModel(name: string): {
     filename: string;
-    data: SliceAsObject;
+    data: Slice;
   } {
     const filename = "model.json";
     const dataObj = {
@@ -133,7 +136,7 @@ export default class PluginContainer {
           },
         },
       ],
-    } as SliceAsObject;
+    } as Slice;
 
     return { filename, data: dataObj };
   }
@@ -171,12 +174,12 @@ export default class PluginContainer {
   }
 
   // TODO: remove the framework argument, and return an object or array of files and data
-  createSlice(sliceName: string): FilenameAndData<string>[] {
+  createSlice(model: Slice): FilenameAndData<string>[] {
     const slices = this._findPluginsWithProp("slice");
 
     return slices.reduce((acc: FilenameAndData<string>[], plugin) => {
       if (!plugin.slice) return acc;
-      const result = plugin.slice(sliceName);
+      const result = plugin.slice(model);
       if (Array.isArray(result)) return [...acc, ...result];
       return [...acc, result];
     }, []);

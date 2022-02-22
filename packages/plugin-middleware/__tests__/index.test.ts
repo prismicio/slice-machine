@@ -1,8 +1,42 @@
-import { FieldType } from "@slicemachine/core/build/src/models/CustomType/fields"; // <<< this is bad
+import { FieldType, Slice } from "../src";
 import path from "path";
 import PluginMiddleware from "../src";
 import * as Dummy from "../src/dummy-plugin";
 import fs from "fs";
+
+const StubModel: Slice = {
+  id: "my-slice",
+  type: "SharedSlice",
+  name: "MySlice",
+  description: "MySlice",
+  variations: [
+    {
+      id: "default",
+      name: "Default",
+      docURL: "...",
+      version: "sktwi1xtmkfgx8626",
+      description: "MySlice",
+      primary: {
+        title: {
+          type: "StructuredText",
+          config: {
+            single: "heading1",
+            label: "Title",
+            placeholder: "This is where it all begins...",
+          },
+        },
+        description: {
+          type: "StructuredText",
+          config: {
+            single: "paragraph",
+            label: "Description",
+            placeholder: "A nice description of your product",
+          },
+        },
+      },
+    },
+  ],
+};
 
 describe("@slicemachine/plugin-middleware", () => {
   describe("register", () => {
@@ -60,9 +94,9 @@ describe("@slicemachine/plugin-middleware", () => {
           } as fs.Stats)
       );
 
-      const sliceName = "foo";
+      const sliceName = StubModel.name;
       const p = new PluginMiddleware([Dummy.name]);
-      const result = p.createSlice(sliceName);
+      const result = p.createSlice(StubModel as Slice);
       expect(Dummy.slice).toHaveBeenCalled();
       expect(result[0].data).toContain(`const ${sliceName} = () => "foobar"`);
       expect(result[0].data).toContain(`export default ${sliceName}`);

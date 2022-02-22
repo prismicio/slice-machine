@@ -2,46 +2,84 @@ import type {
   Plugin,
   FilenameAndData,
   Variations,
-} from "@slicemachine/plugin-middleware";
-import { FieldType } from "@slicemachine/plugin-middleware";
+  Slice,
+} from "@slicemachine/plugin-middleware/src";
+import { FieldType } from "@slicemachine/plugin-middleware/src";
 
 export const framework: Plugin["framework"] = "react";
 
-export const slice = (name: string): FilenameAndData<string> => ({
-  filename: "index.js",
-  data: `import React from 'react'
-import { RichText } from 'prismic-reactjs'
-  
+// export const slice = (name: string): FilenameAndData<string> => ({
+//   filename: "index.js",
+//   data: `import React from 'react'
+// import { RichText } from 'prismic-reactjs'
+
+// const ${name} = ({ slice }) => (
+//   <section>
+//     <span className="title">
+//       { slice.primary.title ? (
+//         <RichText render={slice.primary.title} />
+//       ) : (
+//         <h2>Template slice, update me!</h2>
+//       )}
+//     </span>
+//       { slice.primary.description ? (
+//         <RichText render={slice.primary.description}/>
+//       ) : (
+//          <p>start by editing this slice from inside Slice Machine!</p>
+//       )}
+//       <style jsx>{\`
+//           section {
+//             max-width: 600px;
+//             margin: 4em auto;
+//             text-align: center;
+//           }
+//           .title {
+//             color: #8592e0;
+//           }
+//       \`}</style>
+//     </section>
+//   )
+
+//   export default ${name}
+// `,
+// });
+
+export const slice = (slice: Slice): FilenameAndData<string>[] => {
+  if (slice.variations.length === 0) return [];
+  if (!slice.variations[0].primary) return [];
+  const primary = slice.variations[0].primary;
+
+  const name = safeComponentName(slice.name);
+
+  const items = Object.entries(primary).map(([key, value]) => {
+    const accessor = key.includes("-")
+      ? `slice.primary["${key}"]`
+      : `slice.primary.${key}`;
+    const isRepeatable = ["Group"].includes(value.type);
+    return snippets({
+      type: value.type as FieldType,
+      fieldText: accessor,
+      isRepeatable,
+    });
+  });
+
+  return [
+    {
+      filename: "index.jsx",
+      data: `import React from 'react'
+import {Link, Date as ParseDate, RichText} from 'prismic-reactjs';
+    
 const ${name} = ({ slice }) => (
   <section>
-    <span className="title">
-      { slice.primary.title ? (
-        <RichText render={slice.primary.title} />
-      ) : (
-        <h2>Template slice, update me!</h2>
-      )}
-    </span>
-      { slice.primary.description ? (
-        <RichText render={slice.primary.description}/>
-      ) : (
-         <p>start by editing this slice from inside Slice Machine!</p>
-      )}
-      <style jsx>{\`
-          section {
-            max-width: 600px;
-            margin: 4em auto;
-            text-align: center;
-          }
-          .title {
-            color: #8592e0;
-          }
-      \`}</style>
-    </section>
-  )
-  
-  export default ${name}
+    ${items.join("\n    ")}
+  </section>
+)
+
+export default ${name}
 `,
-});
+    },
+  ];
+};
 
 function safeComponentName(name: string): string {
   return `_${name.replace(/(^\w|-+\w)/g, (text) =>
@@ -114,14 +152,12 @@ export const snippets = ({
       } style={{ color: ${fieldText} }}>Some Text</span>`;
 
     case FieldType.ContentRelationship:
-      return `/* import { Link } from 'prismic-reactjs' */
-<a${
+      return `<a${
         useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.Date:
-      return `/* import { Date as ParseDate } from 'prismic-reactjs' */
-<span${
+      return `<span${
         useKey ? ` key="${fieldText}-\${i}"` : ""
       }>{ ParseDate(${fieldText}) }</span>`;
 
@@ -148,14 +184,12 @@ export const snippets = ({
       return "";
 
     case FieldType.Link:
-      return `/* import { Link } from 'prismic-reactjs' */
-<a${
+      return `<a${
         useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
     case FieldType.LinkToMedia:
-      return `/* import { Link } from 'prismic-reactjs' */
-<a${
+      return `<a${
         useKey ? ` key="${fieldText}-\${i}"` : ""
       } href={Link.url(${fieldText})}>My Link</a>`;
 
@@ -187,6 +221,6 @@ export const snippets = ({
     case FieldType.UID:
       return `<span>{ ${fieldText} }</span>`;
     default:
-      return "";
+      return `<span>{ ${fieldText} }</span>`;
   }
 };

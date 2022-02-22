@@ -1,7 +1,41 @@
 import { expect, test } from "@jest/globals";
 import * as plugin from "../src";
-import type { Variations } from "@slicemachine/plugin-middleware";
+import type { Variations, Slice } from "@slicemachine/plugin-middleware";
 import { FieldType } from "@slicemachine/plugin-middleware";
+
+const model: Slice = {
+  id: "my-slice",
+  type: "SharedSlice",
+  name: "MySlice",
+  description: "MySlice",
+  variations: [
+    {
+      id: "default",
+      name: "Default",
+      docURL: "...",
+      version: "sktwi1xtmkfgx8626",
+      description: "MySlice",
+      primary: {
+        title: {
+          type: "StructuredText",
+          config: {
+            single: "heading1",
+            label: "Title",
+            placeholder: "This is where it all begins...",
+          },
+        },
+        description: {
+          type: "StructuredText",
+          config: {
+            single: "paragraph",
+            label: "Description",
+            placeholder: "A nice description of your product",
+          },
+        },
+      },
+    },
+  ],
+};
 
 describe("@slicemachine/plugin-nuxt", () => {
   test("#framework", () => {
@@ -13,9 +47,9 @@ describe("@slicemachine/plugin-nuxt", () => {
   });
 
   test("#slice", () => {
-    const result = plugin.slice("Foo");
-    expect(result.data).toContain('name: "Foo"');
-    expect(result).toMatchSnapshot();
+    const result = plugin.slice(model);
+    expect(result[0].data).toContain(`name: "${model.name}"`);
+    expect(result[0]).toMatchSnapshot();
   });
 
   test("#story", () => {
