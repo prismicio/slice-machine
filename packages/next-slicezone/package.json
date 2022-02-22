@@ -1,6 +1,6 @@
 {
   "name": "next-slicezone",
-  "version": "0.2.2-alpha.8",
+  "version": "0.2.2-alpha.9",
   "description": "A component that maps other components to Prismic slices",
   "source": "src/index.js",
   "main": "dist/index.js",
