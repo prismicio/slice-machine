@@ -3,7 +3,7 @@ import { fetchApi } from "@lib/builders/common/fetch";
 import { CustomType } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import ActionType from "./";
-import { ToastPayload } from "@src/ToastProvider/utils";
+import { ToastPayload } from "@src/modules/toaster/utils";
 
 export default function save(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

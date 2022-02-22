@@ -28,6 +28,7 @@ import {
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -90,6 +91,10 @@ const useSliceMachineActions = () => {
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
 
+  // Toaster store
+  const openToaster = (message: string, type: ToasterType) =>
+    dispatch(openToasterCreator({ message, type }));
+
   // State Action (used by multiple stores)
   const getState = (serverState: ServerState | undefined) => {
     if (!serverState) return;
@@ -131,6 +136,7 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openCreateSliceModal,
     closeCreateSliceModal,
+    openToaster,
   };
 };
 
