@@ -4,7 +4,7 @@ import { Frameworks } from "@slicemachine/core/build/src/models";
 
 const backendEnvironment: BackendEnvironment = {
   isUserLoggedIn: false,
-  cwd: ".",
+  cwd: "/test",
   prismicData: {
     base: "https://fakebase.io",
   },

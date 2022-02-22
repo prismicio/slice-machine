@@ -7,10 +7,10 @@ export type ApiError = {
 };
 
 export type ApiResult<
-  Expected extends Record<string, unknown> = Record<string, never>
+  Expected extends Record<keyof Expected, unknown> = Record<string, never>
 > = Expected | ApiError;
 
-export function isApiError<Expected extends Record<string, unknown>>(
+export function isApiError<Expected extends Record<keyof Expected, unknown>>(
   payload: ApiResult<Expected>
 ): payload is ApiError {
   return (

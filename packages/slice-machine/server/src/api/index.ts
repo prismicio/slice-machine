@@ -133,7 +133,6 @@ router.post(
     req: express.Request,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await saveSlice(req);
     return res.status(200).json(payload);
   }
@@ -147,6 +146,11 @@ router.post(
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await createSlice(req.body);
+
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
     return res.status(200).json(payload);
   }
 );
@@ -166,7 +170,6 @@ router.get(
     const payload = await pushSlice(req.query);
 
     if (isApiError(payload)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       return res.status(payload.status).json(payload);
     }
 
