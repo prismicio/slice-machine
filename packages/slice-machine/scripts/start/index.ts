@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, Models } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 
 // Don't remove those lines, they resolve aliases
 import { resolveAliases } from "../../lib/env/resolveAliases";
