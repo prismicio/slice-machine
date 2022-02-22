@@ -94,11 +94,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         }
         sx={{ cursor: "pointer", width: "100%", mt: 3 }}
       >
-        {isCheckingSimulatorSetup ? (
-          <Spinner size={12} />
-        ) : (
-          "Open Slice Simulator"
-        )}
+        {isCheckingSimulatorSetup ? <Spinner size={12} /> : "Preview Slice"}
       </Button>
       {!isSimulatorAvailableForFramework && (
         <Text
