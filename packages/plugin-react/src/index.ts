@@ -3,8 +3,8 @@ import type {
   FilenameAndData,
   Variations,
   Slice,
-} from "@slicemachine/plugin-middleware/src";
-import { FieldType } from "@slicemachine/plugin-middleware/src";
+} from "@slicemachine/plugin-middleware";
+import { FieldType } from "@slicemachine/plugin-middleware";
 
 export const framework: Plugin["framework"] = "react";
 
