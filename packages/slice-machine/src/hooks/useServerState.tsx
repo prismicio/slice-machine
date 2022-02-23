@@ -5,8 +5,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import useSwr from "swr";
 import axios, { AxiosResponse } from "axios";
 
-const fetcher = (url: string): unknown =>
-  axios.get(url).then((res: AxiosResponse<unknown>) => res.data);
+const fetcher = (url: string): Promise<ServerState> =>
+  axios.get(url).then((res: AxiosResponse<ServerState>) => res.data);
 
 const useServerState = () => {
   const { refreshState } = useSliceMachineActions();

@@ -31,12 +31,13 @@ export const createSliceCreator = createAsyncAction(
 type SlicesActions = ActionType<typeof refreshStateCreator>;
 
 // Selectors
-export const getLibraries = (store: SliceMachineStoreType): LibraryUI[] =>
-  store.slices.libraries;
+export const getLibraries = (
+  store: SliceMachineStoreType
+): ReadonlyArray<LibraryUI> => store.slices.libraries;
 
 export const getRemoteSlices = (
   store: SliceMachineStoreType
-): Models.SliceAsObject[] => store.slices.remoteSlices;
+): ReadonlyArray<Models.SliceAsObject> => store.slices.remoteSlices;
 
 // Reducer
 export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
