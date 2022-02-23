@@ -1,6 +1,10 @@
 import { FileSystem, Utils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
+import {
+  FileContent,
+  JsonPackage,
+} from "@slicemachine/core/build/src/filesystem";
 
 type Base = Utils.Endpoints.Base;
 
@@ -19,6 +23,10 @@ export function configureProject(
 
   try {
     const manifest = FileSystem.retrieveManifest(cwd);
+    const packageJson = FileSystem.retrieveJsonPackage(cwd);
+
+    const sliceMachineVersionInstalled =
+      getTheSliceMachineVersionInstalled(packageJson);
 
     const manifestUpdated: Models.Manifest = {
       ...(manifest.exists && manifest.content ? manifest.content : {}),
@@ -26,6 +34,7 @@ export function configureProject(
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
+      _latest: sliceMachineVersionInstalled,
     };
 
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
@@ -47,3 +56,41 @@ export function configureProject(
     process.exit(-1);
   }
 }
+
+const getTheSliceMachineVersionInstalled = (
+  packageJson: FileContent<JsonPackage>
+) => {
+  const sliceMachinePackageInstalled = Object.entries(
+    packageJson.content?.devDependencies || {}
+  ).find((devDependency) => {
+    if (devDependency[0] === Utils.CONSTS.SM_PACKAGE_NAME) {
+      return devDependency;
+    }
+  });
+
+  const defaultSliceMachineVersion = "0.1.0";
+
+  if (!sliceMachinePackageInstalled) {
+    return defaultSliceMachineVersion;
+  }
+
+  const extractedVersion = extractVersionNumberFromSemver(
+    sliceMachinePackageInstalled[1]
+  );
+
+  if (!extractedVersion) {
+    return defaultSliceMachineVersion;
+  }
+
+  return extractedVersion;
+};
+
+const extractVersionNumberFromSemver = (semver: string) => {
+  const versionFound = semver.match(/\d+\.\d+\.\d+/);
+
+  if (versionFound && versionFound.length > 0) {
+    return versionFound[0];
+  }
+
+  return null;
+};
