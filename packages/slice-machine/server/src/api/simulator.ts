@@ -17,7 +17,9 @@ function requiredDepsForFramework(framework: Frameworks): Array<string> {
     Utils.CONSTS.PRISMIC_HELPERS,
   ];
 
-  const vue = [
+  const nuxt = [Utils.CONSTS.SLICE_SIMULATOR_VUE, Utils.CONSTS.NUXT_PRISMIC];
+
+  const previousNuxt = [
     Utils.CONSTS.SLICE_SIMULATOR_VUE,
     Utils.CONSTS.NUXT_SM,
     Utils.CONSTS.VUE_SLICEZONE,
@@ -26,7 +28,8 @@ function requiredDepsForFramework(framework: Frameworks): Array<string> {
 
   if (framework === Frameworks.next) return next;
   if (framework === Frameworks.previousNext) return previousNext;
-  if (framework === Frameworks.vue) return vue;
+  if (framework === Frameworks.nuxt) return nuxt;
+  if (framework === Frameworks.previousNuxt) return previousNuxt;
 
   return [];
 }

@@ -17,36 +17,36 @@ import { SetupStatus } from "@src/modules/simulator/types";
 const NuxtConfigInstructions = `// Modules: https://go.nuxtjs.dev/config-modules
 modules: [["@nuxtjs/prismic", {
   endpoint: smConfig.apiEndpoint|| ""
-}]],
+}], ["nuxt-sm"]],
 
 // Build Configuration: https://go.nuxtjs.dev/config-build
 build: {
-  transpile: ["@prismicio/vue"]
+  transpile: ["vue-slicezone", "nuxt-sm"]
 }
 `;
 
 const SliceSimulatorPageCreationInstruction = `<template>
-  <SliceSimulator v-slot="{ slices }" :state="state">
-    <SliceZone :slices="slices" :components="components" />
+  <SliceSimulator :state="state" #default="props">
+    <SliceZone v-bind="props" />
   </SliceSimulator>
 </template>
 
 <script>
 import { SliceSimulator } from "@prismicio/slice-simulator-vue";
-import { components } from "~/slices"
+import SliceZone from "vue-slicezone";
 
 import state from "~/.slicemachine/libraries-state.json";
 
 export default {
   components: {
     SliceSimulator,
+    SliceZone
   },
   data() {
-    return { state, components };
+    return { state };
   }
 }
 </script>
-
 `;
 
 const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = (
@@ -87,7 +87,7 @@ const UpdateNuxtConfig: React.FunctionComponent<DefaultStepCompProps> = (
 };
 export const steps = [
   InstallSliceSimulator({
-    code: `npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue`,
+    code: `npm install --save nuxt-sm vue-slicezone @nuxtjs/prismic @prismicio/slice-simulator-vue`,
   }),
   UpdateNuxtConfig,
   CreatePage({
