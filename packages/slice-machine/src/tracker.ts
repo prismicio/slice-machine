@@ -24,16 +24,10 @@ export enum ContinueOnboardingType {
 export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
-  #repoName: string | null = null;
 
-  initialize(
-    segmentKey: string,
-    repoName: string | null = null,
-    isTrackingActive = true
-  ): void {
+  initialize(segmentKey: string, isTrackingActive = true): void {
     try {
       this.#isTrackingActive = isTrackingActive;
-      this.#repoName = repoName;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
       this.#client = AnalyticsBrowser.standalone(segmentKey);
@@ -55,12 +49,23 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.track(eventType, attributes);
+        void client.track(eventType, attributes);
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
       );
+  }
+
+  async #page(attributes: Record<string, unknown> = {}): Promise<void> {
+    if (!this.#isTrackingPossible(this.#client)) {
+      return;
+    }
+
+    return this.#client
+      .then((client): void => {
+        void client.page(attributes);
+      })
+      .catch(() => console.warn(`Couldn't report page event: Tracking error`));
   }
 
   async #identify(userId: string): Promise<void> {
@@ -70,8 +75,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.identify(userId);
+        void client.identify(userId);
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
@@ -81,16 +85,9 @@ export class SMTracker {
       return;
     }
 
-    const repoName = this.#repoName;
-
-    if (!repoName) {
-      return;
-    }
-
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.group(repoName, attributes);
+        void client.group(attributes);
       })
       .catch(() => console.warn(`Couldn't report group: Tracking error`));
   }
@@ -103,17 +100,30 @@ export class SMTracker {
 
   /** Public methods **/
 
+  async page(framework: Frameworks, version: string): Promise<void> {
+    await this.#page({
+      framework,
+      slicemachineVersion: version,
+    });
+  }
+
   async identifyUser(userId: string): Promise<void> {
     await this.#identify(userId);
   }
 
   async groupLibraries(
     libs: readonly LibraryUI[],
+    repoName: string | undefined,
     version: string
   ): Promise<void> {
+    if (!repoName) {
+      return;
+    }
+
     const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
     await this.#group({
+      repoName: repoName,
       manualLibsCount: libs.filter((l) => l.meta.isManual).length,
       downloadedLibsCount: downloadedLibs.length,
       npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,

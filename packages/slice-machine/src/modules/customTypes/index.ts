@@ -9,7 +9,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
@@ -41,7 +41,7 @@ export const createCustomTypeCreator = createAsyncAction(
 >();
 
 type CustomTypesActions =
-  | ActionType<typeof getStateCreator>
+  | ActionType<typeof refreshStateCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof createCustomTypeCreator>;
 
@@ -60,7 +60,7 @@ export const customTypesReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getStateCreator):
+    case getType(refreshStateCreator):
       return {
         ...state,
         remoteCustomTypes: action.payload.remoteCustomTypes,
