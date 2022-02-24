@@ -10,7 +10,7 @@ import prompts from "prompts";
 // Migration to move the old screenshots to the .slicemachine folder
 const migration: Migration = {
   version: "0.0.41",
-  main: async function main({ cwd }): Promise<void> {
+  main: async function main(cwd): Promise<void> {
     console.info(
       "\nSliceMachine now supports both default and custom previews (screenshots)!"
     );

@@ -6,17 +6,12 @@ import { run } from "./run";
 
 export interface Migration {
   version: string;
-  main: (params: MigrationParams) => Promise<void>;
+  main: (cwd: string) => Promise<void>;
 }
 
-export interface MigrationParams {
-  cwd: string;
-}
-
-// on postinstall of slicemachine UI, set the _latest to the current version if it doesn't exist yet.
-export async function migrate(params: MigrationParams) {
-  const projectCWD = params.cwd;
-  const smConfig = FileSystem.retrieveManifest(projectCWD);
+// on postinstall of sliceMachine UI, set the _latest to the current version if it doesn't exist yet.
+export async function migrate(cwd: string) {
+  const smConfig = FileSystem.retrieveManifest(cwd);
 
   const latestMigrationVersion: string | undefined = smConfig.content?._latest;
 
@@ -29,5 +24,5 @@ export async function migrate(params: MigrationParams) {
   });
 
   if (!migrationsToRun.length) return;
-  return run(migrationsToRun, params);
+  return run(migrationsToRun, cwd);
 }

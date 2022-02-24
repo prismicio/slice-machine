@@ -1,9 +1,9 @@
 import { FileSystem } from "@slicemachine/core";
-import { Migration, MigrationParams } from "./migrate";
+import { Migration } from "./migrate";
 
 export async function run(
   migrations: readonly Migration[],
-  params: MigrationParams
+  cwd: string
 ): Promise<void> {
   if (migrations.length === 0) {
     console.info(
@@ -16,16 +16,16 @@ export async function run(
 
   // run migration
   return head
-    .main(params)
+    .main(cwd)
     .then(() => {
       console.info(
         `Migration ${head.version} done. Read the full changelog for more info!`
       );
       // update last migration version
-      FileSystem.patchManifest(params.cwd, { _latest: head.version });
+      FileSystem.patchManifest(cwd, { _latest: head.version });
 
       // call next migrations
-      return run(tail, params);
+      return run(tail, cwd);
     })
     .catch((e: unknown) => {
       console.error(e);
