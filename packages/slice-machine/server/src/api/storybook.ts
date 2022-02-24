@@ -17,10 +17,12 @@ const Paths = {
   getTemplate(appRoot: string, framework: Models.Frameworks) {
     switch (framework) {
       case Models.Frameworks.nuxt:
+      case Models.Frameworks.previousNuxt:
         return Paths.nuxtTemplate(appRoot);
       case Models.Frameworks.vue:
         return Paths.nuxtTemplate(appRoot);
       case Models.Frameworks.next:
+      case Models.Frameworks.previousNext:
         return Paths.nextTemplate(appRoot);
       case Models.Frameworks.react:
         return Paths.nextTemplate(appRoot);
