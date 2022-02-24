@@ -12,6 +12,7 @@ enum EventType {
   OnboardingSkip = "SliceMachine Onboarding Skip",
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
+  PageView = "SliceMachine",
 }
 
 export enum ContinueOnboardingType {
@@ -63,7 +64,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        void client.page(attributes);
+        void client.page(EventType.PageView, attributes);
       })
       .catch(() => console.warn(`Couldn't report page event: Tracking error`));
   }
