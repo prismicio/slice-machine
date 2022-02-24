@@ -4,26 +4,24 @@ import glob from "glob";
 import slash from "slash";
 import { FileSystem, Utils } from "@slicemachine/core";
 
-import { shouldIRun } from "../../common";
 import { Migration } from "../../migrate";
+import prompts from "prompts";
 
 // Migration to move the old screenshots to the .slicemachine folder
 const migration: Migration = {
   version: "0.0.41",
-  main: async function main({ cwd, ignorePrompt }): Promise<void> {
-    if (!ignorePrompt) {
-      console.info(
-        "\nSliceMachine nows supports both default and custom previews (screenshots)!"
-      );
-      console.info(
-        "Default screenshots are now stored in a special .slicemachine folder."
-      );
+  main: async function main({ cwd }): Promise<void> {
+    console.info(
+      "\nSliceMachine now supports both default and custom previews (screenshots)!"
+    );
+    console.info(
+      "Default screenshots are now stored in a special .slicemachine folder."
+    );
 
-      const doTheMigration = await shouldIRun(
-        "Would you like me to move current previews to .slicemachine folder?"
-      );
-      if (!doTheMigration.yes) return;
-    }
+    const doTheMigration = await shouldIRun(
+      "Would you like me to move current previews to .slicemachine folder?"
+    );
+    if (!doTheMigration.yes) return;
 
     const manifest = FileSystem.retrieveManifest(cwd);
     if (!manifest.exists || !manifest.content) return;
@@ -75,5 +73,18 @@ const migration: Migration = {
     }
   },
 };
+
+function shouldIRun(message: string): Promise<{ yes: boolean }> {
+  return prompts({
+    type: "select",
+    name: "yes",
+    message,
+    choices: [
+      { title: "Yes", value: true },
+      { title: "No (skip)", value: false },
+    ],
+    initial: 0,
+  });
+}
 
 export default migration;

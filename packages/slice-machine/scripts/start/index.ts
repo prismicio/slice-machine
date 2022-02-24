@@ -8,7 +8,7 @@ resolveAliases(path.join(__dirname, "../../../"));
 import handleManifest, { ManifestInfo } from "@lib/env/manifest";
 import { getPackageChangelog } from "@lib/env/versions";
 
-import { findArgument } from "../common/findArgument";
+import { findArgument } from "./findArgument";
 import infoBox from "./infoxBox";
 import { handleMigration } from "./handleMigration";
 import { validateManifest } from "./validateManifest";

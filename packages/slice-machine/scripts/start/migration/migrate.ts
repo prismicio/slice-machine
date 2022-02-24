@@ -11,10 +11,9 @@ export interface Migration {
 
 export interface MigrationParams {
   cwd: string;
-  ignorePrompt: boolean;
 }
 
-// on postinstall of slicemachine UI, set the _latest the current version if doesn't exist yet.
+// on postinstall of slicemachine UI, set the _latest to the current version if it doesn't exist yet.
 export async function migrate(params: MigrationParams) {
   const projectCWD = params.cwd;
   const smConfig = FileSystem.retrieveManifest(projectCWD);
