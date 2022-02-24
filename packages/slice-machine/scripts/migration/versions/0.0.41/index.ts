@@ -10,7 +10,7 @@ import prompts from "prompts";
 // Migration to move the old screenshots to the .slicemachine folder
 const migration: Migration = {
   version: "0.0.41",
-  main: async function main(cwd): Promise<void> {
+  main: async function main({ cwd, ignorePromptForTest }): Promise<void> {
     console.info(
       "\nSliceMachine now supports both default and custom previews (screenshots)!"
     );
@@ -18,10 +18,12 @@ const migration: Migration = {
       "Default screenshots are now stored in a special .slicemachine folder."
     );
 
-    const doTheMigration = await shouldIRun(
-      "Would you like me to move current previews to .slicemachine folder?"
-    );
-    if (!doTheMigration.yes) return;
+    if (!ignorePromptForTest) {
+      const doTheMigration = await shouldIRun(
+        "Would you like me to move current previews to .slicemachine folder?"
+      );
+      if (!doTheMigration.yes) return;
+    }
 
     const manifest = FileSystem.retrieveManifest(cwd);
     if (!manifest.exists || !manifest.content) return;

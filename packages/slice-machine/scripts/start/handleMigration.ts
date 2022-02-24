@@ -1,11 +1,11 @@
 import { FileSystem } from "@slicemachine/core";
-import { migrate } from "./migration/migrate";
+import { migrate } from "../migration/migrate";
 
 export async function handleMigration(cwd: string): Promise<void> {
   if (!FileSystem.retrieveManifest(cwd).exists) return;
 
   try {
-    await migrate(cwd);
+    await migrate({ cwd, ignorePromptForTest: false });
   } catch (e: unknown) {
     console.error(
       "An error occurred while migrating file system. Continuing..."

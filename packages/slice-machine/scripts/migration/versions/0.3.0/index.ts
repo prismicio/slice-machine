@@ -6,7 +6,7 @@ import { Migration } from "../../migrate";
 const migration: Migration = {
   version: "0.3.0",
   // eslint-disable-next-line @typescript-eslint/require-await
-  main: async function main(cwd): Promise<void> {
+  main: async function main({ cwd }): Promise<void> {
     try {
       const manifest = FileSystem.retrieveManifest(cwd);
       if (!manifest.exists || !manifest.content) return;

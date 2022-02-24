@@ -6,12 +6,18 @@ import { run } from "./run";
 
 export interface Migration {
   version: string;
-  main: (cwd: string) => Promise<void>;
+  main: (params: MigrationParams) => Promise<void>;
+}
+
+export interface MigrationParams {
+  cwd: string;
+  ignorePromptForTest: boolean;
 }
 
 // on postinstall of sliceMachine UI, set the _latest to the current version if it doesn't exist yet.
-export async function migrate(cwd: string) {
-  const smConfig = FileSystem.retrieveManifest(cwd);
+export async function migrate(params: MigrationParams) {
+  const projectCWD = params.cwd;
+  const smConfig = FileSystem.retrieveManifest(projectCWD);
 
   const latestMigrationVersion: string | undefined = smConfig.content?._latest;
 
@@ -24,5 +30,5 @@ export async function migrate(cwd: string) {
   });
 
   if (!migrationsToRun.length) return;
-  return run(migrationsToRun, cwd);
+  return run(migrationsToRun, params);
 }

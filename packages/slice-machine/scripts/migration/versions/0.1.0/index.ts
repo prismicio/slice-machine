@@ -17,7 +17,7 @@ function migrateSlice(cwd: string, libraryName: string, sliceName: string) {
 
 const migration: Migration = {
   version: "0.1.0",
-  main: async function main(cwd) {
+  main: async function main({ cwd }) {
     // remove old mocks
     const pathToOldMocks = path.join(cwd, ".slicemachine", "mocks.json");
     if (Utils.Files.exists(pathToOldMocks)) Utils.Files.remove(pathToOldMocks);
