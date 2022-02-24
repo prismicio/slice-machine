@@ -21,7 +21,7 @@ const defaultAxiosConfig = {
 /** State Routes **/
 
 export const getState = (): Promise<AxiosResponse<ServerState>> => {
-  return axios.get("/api/state", defaultAxiosConfig);
+  return axios.get<ServerState>("/api/state", defaultAxiosConfig);
 };
 
 /** Custom Type Routes **/

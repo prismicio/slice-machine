@@ -49,8 +49,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.track(eventType, attributes);
+        void client.track(eventType, attributes);
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
@@ -64,8 +63,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.page(attributes);
+        void client.page(attributes);
       })
       .catch(() => console.warn(`Couldn't report page event: Tracking error`));
   }
@@ -77,8 +75,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.identify(userId);
+        void client.identify(userId);
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
@@ -90,8 +87,7 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        client.group(attributes);
+        void client.group(attributes);
       })
       .catch(() => console.warn(`Couldn't report group: Tracking error`));
   }
