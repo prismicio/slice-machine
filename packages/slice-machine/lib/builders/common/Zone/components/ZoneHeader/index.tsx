@@ -1,8 +1,16 @@
 import { Flex } from "theme-ui";
 
-const ZoneHeader = ({ Heading, Actions }) => (
+interface ZoneHeaderProps {
+  Heading: JSX.Element;
+  Actions: JSX.Element;
+}
+
+const ZoneHeader: React.FunctionComponent<ZoneHeaderProps> = ({
+  Heading,
+  Actions,
+}) => (
   <Flex
-    bg="zoneHeader"
+    bg="grey02"
     sx={{
       pl: 3,
       pr: 2,
