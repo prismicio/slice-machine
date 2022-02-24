@@ -174,7 +174,7 @@ describe("SMTracker", () => {
     smTracker.initialize(dumpSegmentKey);
     await smTracker.page(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
-    expect(NativeTrackerMocks.page).toHaveBeenCalledWith({
+    expect(NativeTrackerMocks.page).toHaveBeenCalledWith("SliceMachine", {
       framework: Frameworks.next,
       slicemachineVersion: "0.2.0",
     });
