@@ -116,6 +116,7 @@ describe("configure-project", () => {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
       libraries: ["@/slices"],
+      _latest: "0.1.0",
     });
 
     expect(successFn).toHaveBeenCalled();
@@ -141,6 +142,7 @@ describe("configure-project", () => {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
       libraries: ["@/slices", "@/material/slices"],
+      _latest: "0.1.0",
     });
 
     expect(successFn).toHaveBeenCalled();
