@@ -100,7 +100,6 @@ const InputSrc = ({ value, onUpdate, onReset }) => {
 const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const contentValue =
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

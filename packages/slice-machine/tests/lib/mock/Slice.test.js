@@ -13,7 +13,7 @@ jest.mock("lorem-ipsum", () => {
 });
 
 describe("MockSlice", () => {
-  test("when creating a slice it should return the default mock", async () => {
+  test("when creating a slice it should return the default mock", () => {
     jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
 
     const wanted = [
@@ -65,12 +65,12 @@ describe("MockSlice", () => {
 
     const mockConfig = {};
 
-    const result = await MockSlice(model.name, model, mockConfig);
+    const result = MockSlice(model.name, model, mockConfig);
 
     expect(result).toEqual(wanted);
   });
 
-  test("when updating a mock with config", async () => {
+  test("when updating a mock with config", () => {
     jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
 
     const wanted = [
@@ -142,7 +142,7 @@ describe("MockSlice", () => {
       },
     };
 
-    const result = await MockSlice(model.name, model, mockConfig);
+    const result = MockSlice(model.name, model, mockConfig);
 
     expect(result).toEqual(wanted);
   });
