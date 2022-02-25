@@ -44,7 +44,7 @@ export async function handler(
     console.log("[slice/save]: Generating mocks");
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mocks = await mock(
+    const mocks = mock(
       sliceName,
       model,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

@@ -15,7 +15,7 @@ export const SliceMockConfig = {
     globalMockConfig: GlobalMockConfig,
     libName: string,
     sliceName: string
-  ) {
+  ): Record<string, Record<string, Record<string, unknown>>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return globalMockConfig?.[libName]?.[sliceName] || {};
   },
@@ -23,6 +23,15 @@ export const SliceMockConfig = {
     sliceMockConfig: SliceMockConfig,
     variationId: string
   ) {
+    if (Array.isArray(sliceMockConfig)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const result = sliceMockConfig.find(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (config) => config.variation === variationId
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return result || {};
+    }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return sliceMockConfig[variationId] || {};
   },
