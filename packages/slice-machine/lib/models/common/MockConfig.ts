@@ -15,7 +15,7 @@ export const SliceMockConfig = {
     globalMockConfig: GlobalMockConfig,
     libName: string,
     sliceName: string
-  ) {
+  ): Record<string, Record<string, Record<string, unknown>>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return globalMockConfig?.[libName]?.[sliceName] || {};
   },
