@@ -56,14 +56,15 @@ export const paths = (cwd: string, prefix: string) => ({
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const GeneratedPaths = (cwd: string): Record<string, Function> =>
   paths(cwd, path.join(".slicemachine", "assets"));
+
 export const GeneratedCustomTypesPaths = (
   cwd: string
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Record<string, Function> =>
+): ReturnType<typeof paths> =>
   paths(cwd, path.join(".slicemachine", "assets", "customtypes"));
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const CustomTypesPaths = (cwd: string): Record<string, Function> =>
+
+export const CustomTypesPaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, "customtypes");
+
 // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/ban-types
 export const CustomPaths = (cwd: string) => paths(cwd, "");
 // eslint-disable-next-line @typescript-eslint/ban-types
