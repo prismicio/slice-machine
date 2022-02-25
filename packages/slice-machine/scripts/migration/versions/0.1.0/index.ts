@@ -45,7 +45,7 @@ const migration: Migration = {
       });
     }
 
-    console.info("\nSliceMachine nows supports variations!");
+    console.info("\nSliceMachine now supports variations!");
     console.info(
       "Generated mocks and Stories are now stored in the .slicemachine folder."
     );

@@ -1,4 +1,4 @@
-import { findArgument } from "../../../scripts/common/findArgument";
+import { findArgument } from "../../../scripts/start/findArgument";
 
 describe("Common.findArgument", () => {
   it("Should find my argument and it's value", () => {

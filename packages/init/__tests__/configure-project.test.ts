@@ -92,7 +92,11 @@ describe("configure-project", () => {
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).toBeCalled();
+    expect(createManifestMock).toHaveBeenCalledWith("./", {
+      _latest: "0.0.41",
+      apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
+      libraries: ["@/slices"],
+    });
     expect(patchManifestMock).not.toBeCalled();
 
     expect(successFn).toHaveBeenCalled();

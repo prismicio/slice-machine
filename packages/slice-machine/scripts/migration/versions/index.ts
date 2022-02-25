@@ -1,7 +1,8 @@
 import type { Migration } from "../migrate";
 import migration0041 from "./0.0.41";
 import migration010 from "./0.1.0";
+import migration030 from "./0.3.0";
 
 // list of the migrations to execute.
-const Migrations: Migration[] = [migration0041, migration010];
+const Migrations: Migration[] = [migration0041, migration010, migration030];
 export default Migrations;

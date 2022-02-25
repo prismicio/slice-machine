@@ -1,7 +1,7 @@
 import path from "path";
 import { Utils, FileSystem } from "@slicemachine/core";
 
-import storybook from "../../../server/src/api/storybook";
+import storybook from "../../../../server/src/api/storybook";
 
 export function moveStories(
   cwd: string,

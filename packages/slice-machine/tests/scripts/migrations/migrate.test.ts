@@ -1,6 +1,6 @@
 import { vol } from "memfs";
-import { migrate } from "../../changelog/migrate";
-import { run } from "../../changelog/run";
+import { migrate } from "../../../scripts/migration/migrate";
+import { run } from "../../../scripts/migration/run";
 
 const CwdTmp = "./tmp";
 
@@ -9,7 +9,7 @@ jest.mock(`fs`, () => {
   return vol;
 });
 
-jest.mock("../../changelog/run", () => ({
+jest.mock("../../../scripts/migration/run", () => ({
   run: jest.fn(),
 }));
 
@@ -31,7 +31,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePrompt: true });
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true });
 
     expect(runMock).toHaveBeenCalled();
     const migrationToExecute = runMock.mock.calls[0][0];
@@ -52,7 +52,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePrompt: true });
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true });
 
     expect(runMock).toHaveBeenCalled();
 
@@ -75,7 +75,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePrompt: true });
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true });
 
     // should not execute any migrations
     expect(runMock).not.toHaveBeenCalled();
