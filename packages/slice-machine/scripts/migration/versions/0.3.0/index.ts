@@ -12,19 +12,22 @@ const migration: Migration = {
       if (!manifest.exists || !manifest.content) return;
 
       const framework = Utils.Framework.defineFramework({ cwd });
-      let previousFramework = null;
 
-      if (framework === Models.Frameworks.next) {
-        previousFramework = Models.Frameworks.previousNext;
+      if (
+        framework !== Models.Frameworks.next &&
+        framework !== Models.Frameworks.nuxt
+      ) {
+        return;
       }
 
-      if (framework === Models.Frameworks.nuxt) {
-        previousFramework = Models.Frameworks.previousNuxt;
-      }
+      const frameworkToSet =
+        framework === Models.Frameworks.next
+          ? Models.Frameworks.previousNext
+          : Models.Frameworks.previousNuxt;
 
       const patchedManifest = {
         ...manifest.content,
-        ...(previousFramework ? { framework: previousFramework } : {}),
+        framework: frameworkToSet,
       };
 
       FileSystem.patchManifest(cwd, patchedManifest);

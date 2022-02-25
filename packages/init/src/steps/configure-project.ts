@@ -8,6 +8,8 @@ import {
 
 type Base = Utils.Endpoints.Base;
 
+const defaultSliceMachineVersion = "0.0.41";
+
 export function configureProject(
   cwd: string,
   base: Base,
@@ -28,13 +30,16 @@ export function configureProject(
     const sliceMachineVersionInstalled =
       getTheSliceMachineVersionInstalled(packageJson);
 
+    const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
     const manifestUpdated: Models.Manifest = {
-      ...(manifest.exists && manifest.content ? manifest.content : {}),
+      ...(manifestAlreadyExistWithContent
+        ? {}
+        : { _latest: sliceMachineVersionInstalled }),
+      ...(manifestAlreadyExistWithContent ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
-      _latest: sliceMachineVersionInstalled,
     };
 
     if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
@@ -67,8 +72,6 @@ const getTheSliceMachineVersionInstalled = (
       return devDependency;
     }
   });
-
-  const defaultSliceMachineVersion = "0.1.0";
 
   if (!sliceMachinePackageInstalled) {
     return defaultSliceMachineVersion;
