@@ -33,9 +33,8 @@ export function configureProject(
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
     const manifestUpdated: Models.Manifest = {
       ...(manifestAlreadyExistWithContent
-        ? {}
+        ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
-      ...(manifestAlreadyExistWithContent ? manifest.content : {}),
       apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
