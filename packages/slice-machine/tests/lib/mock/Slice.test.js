@@ -2,7 +2,6 @@ import MockSlice from "../../../lib/mock/Slice";
 import faker from "faker";
 
 jest.mock("lorem-ipsum", () => {
-  console.log("\n### Mock Called ###m");
   return {
     __edModule: true,
     LoremIpsum: jest.fn().mockImplementation(() => {
