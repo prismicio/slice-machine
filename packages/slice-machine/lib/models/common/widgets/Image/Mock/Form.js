@@ -103,7 +103,7 @@ const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const contentValue =
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    values[MockConfigKey]?.content || values[MockConfigKey]?.url || null;
+    values[MockConfigKey]?.content || null;
 
   const onUpdate = (value) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
