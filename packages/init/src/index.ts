@@ -4,8 +4,7 @@ import Tracker from "./utils/tracker";
 import {
   installRequiredDependencies,
   validatePkg,
-  maybeExistingRepo,
-  createRepository,
+  chooseOrCreateARepository,
   loginOrBypass,
   configureProject,
   displayFinalMessage,
@@ -54,15 +53,12 @@ async function init() {
   const frameworkResult = await detectFramework(cwd);
 
   // select the repository used with the project.
-  const { existing, repository } = await maybeExistingRepo(
-    config.cookies,
+  const repositoryDomainName = await chooseOrCreateARepository(
     cwd,
+    frameworkResult.value,
+    config.cookies,
     config.base
   );
-
-  if (!existing) {
-    await createRepository(repository, frameworkResult.value, config);
-  }
 
   // Install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
@@ -73,13 +69,13 @@ async function init() {
   configureProject(
     cwd,
     base,
-    repository,
+    repositoryDomainName,
     frameworkResult,
     sliceLibPath,
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitDone(frameworkResult.value, repository);
+  Tracker.get().trackInitDone(frameworkResult.value, repositoryDomainName);
 
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd);

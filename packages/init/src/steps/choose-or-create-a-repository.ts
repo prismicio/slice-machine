@@ -2,6 +2,7 @@ import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
 import { Communication, Utils, FileSystem, Models } from "@slicemachine/core";
 import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
+import { createRepository } from "../utils/create-repo";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
@@ -13,7 +14,7 @@ export function prettyRepoName(address: URL, value?: string): string {
   )}`;
 }
 
-export async function promptForRepoName(base: string): Promise<string> {
+export async function promptForRepoDomain(base: string): Promise<string> {
   const address = new URL(base);
 
   Utils.writeInfo(
@@ -23,7 +24,7 @@ export async function promptForRepoName(base: string): Promise<string> {
   return inquirer
     .prompt<Record<string, string>>([
       {
-        name: "repoName",
+        name: "repoDomain",
         message: "Name your Prismic repository",
         type: "input",
         required: true,
@@ -38,7 +39,7 @@ export async function promptForRepoName(base: string): Promise<string> {
         },
       },
     ])
-    .then((res) => res.repoName);
+    .then((res) => res.repoDomain);
 }
 
 export type RepoPrompt = { name: string; value: string; disabled?: string };
@@ -65,7 +66,7 @@ export function makeReposPretty(base: string) {
       name: `${Utils.purple("Use")} ${Utils.bold(name)} ${Utils.purple(
         `"${address.hostname}"`
       )}`,
-      value: name,
+      value: domain,
     };
   };
 }
@@ -113,17 +114,18 @@ export function sortReposForPrompt(
     .sort(orderPrompts(maybeConfiguredRepoName));
 }
 
-export async function maybeExistingRepo(
-  cookies: string,
+export async function chooseOrCreateARepository(
   cwd: string,
+  framework: Models.Frameworks,
+  cookies: string,
   base = DEFAULT_BASE
-): Promise<{ repository: string; existing: boolean }> {
+): Promise<string> {
   const token = parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token);
 
   if (repos.length === 0) {
-    const name = await promptForRepoName(base);
-    return { existing: false, repository: name };
+    const domainName = await promptForRepoDomain(base);
+    return await createRepository(domainName, framework, cookies, base);
   }
 
   const choices = sortReposForPrompt(repos, base, cwd);
@@ -133,10 +135,10 @@ export async function maybeExistingRepo(
     return repo.disabled;
   }).length;
 
-  const res = await inquirer.prompt<Record<string, string>>([
+  const res = await inquirer.prompt<{ chosenRepo: string }>([
     {
       type: "list",
-      name: "repoName",
+      name: "chosenRepo",
       default: 0,
       required: true,
       message: "Connect a Prismic Repository or create a new one",
@@ -146,9 +148,10 @@ export async function maybeExistingRepo(
     },
   ]);
 
-  if (res.repoName === CREATE_REPO) {
-    const name = await promptForRepoName(base);
-    return { existing: false, repository: name };
+  if (res.chosenRepo === CREATE_REPO) {
+    const domainName = await promptForRepoDomain(base);
+    return await createRepository(domainName, framework, cookies, base);
   }
-  return { existing: true, repository: res.repoName };
+
+  return res.chosenRepo;
 }

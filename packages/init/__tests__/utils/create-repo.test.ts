@@ -1,7 +1,7 @@
 import { describe, expect, test, jest } from "@jest/globals";
 
 import nock from "nock";
-import { createRepository } from "../src/steps/create-repo";
+import { createRepository } from "../../src/utils/create-repo";
 import { stderr, stdout } from "stdout-stderr";
 import { Models } from "@slicemachine/core";
 
@@ -17,8 +17,14 @@ describe("createRepository", () => {
       .reply(200, { domain });
 
     stderr.start();
-    await createRepository(domain, framework, { cookies, base });
+    const createdRepoDomain = await createRepository(
+      domain,
+      framework,
+      cookies,
+      base
+    );
     stderr.stop();
+    expect(createdRepoDomain).toBe(domain);
     expect(stderr.output).toContain(domain);
     expect(stderr.output).toContain("Creating Prismic Repository");
     expect(stderr.output).toContain("We created your new repository");
@@ -35,8 +41,14 @@ describe("createRepository", () => {
       .reply(200, {});
 
     stderr.start();
-    await createRepository(domain, framework, { cookies, base });
+    const createdRepoDomain = await createRepository(
+      domain,
+      framework,
+      cookies,
+      base
+    );
     stderr.stop();
+    expect(createdRepoDomain).toBe(domain);
     expect(stderr.output).toContain(domain);
     expect(stderr.output).toContain("Creating Prismic Repository");
     expect(stderr.output).toContain("We created your new repository");
@@ -59,7 +71,7 @@ describe("createRepository", () => {
 
     stderr.start();
     stdout.start();
-    await createRepository(domain, framework, { cookies, base });
+    await createRepository(domain, framework, cookies, base);
     stderr.stop();
     stdout.stop();
     expect(stderr.output).toContain("Error creating repository");

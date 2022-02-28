@@ -4,24 +4,21 @@ import type { Models } from "@slicemachine/core";
 export function createRepository(
   domain: string,
   framework: Models.Frameworks,
-  config: Models.PrismicSharedConfig
-): Promise<void> {
+  cookies: string,
+  base: string
+): Promise<string> {
   const spinner = Utils.spinner("Creating Prismic Repository");
   spinner.start();
 
-  return Communication.createRepository(
-    domain,
-    config.cookies,
-    framework,
-    config.base
-  )
+  return Communication.createRepository(domain, cookies, framework, base)
     .then((res) => {
-      const addressUrl = new URL(config.base);
-      addressUrl.hostname = `${res.data.domain || domain}.${
-        addressUrl.hostname
-      }`;
+      const addressUrl = new URL(base);
+      const repoDomainName = res.data.domain || domain;
+      addressUrl.hostname = `${repoDomainName}.${addressUrl.hostname}`;
       const address = addressUrl.toString();
       spinner.succeed(`We created your new repository ${address}`);
+
+      return repoDomainName;
     })
     .catch((error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);
