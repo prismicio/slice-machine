@@ -127,7 +127,6 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
           sliceName: slice.infos.sliceName,
           from: slice.from,
           model: slice.model,
-          mockConfig: slice.infos.mock,
         });
         console.log("[custom-types/push] Pushing slice", sliceKey);
         await pushSlice(state.env, state.remoteSlices, {
