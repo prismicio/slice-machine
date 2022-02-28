@@ -36,7 +36,7 @@ jobs:
           REPO_URL: ${{ secrets.REPO_URL }}
         run: lerna run test
       - name: Linting
-        run: lerna run lint --parallel
+        run: lerna run lint
       - name: Audit
         run: lerna run audit
       - name: Build slice machine init
