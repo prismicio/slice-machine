@@ -64,7 +64,6 @@ const saveCustomType = (
   cwd: string
 ) => {
   for (const ct of cts) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     Files.write(CustomTypesPaths(cwd).customType(ct.id).model(), ct);
   }
 };
@@ -74,7 +73,7 @@ export default async function handler(env: BackendEnvironment): Promise<{
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 }> {
   const { cwd } = env;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
   const pathToCustomTypes = CustomTypesPaths(cwd).value();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const folderExists = Files.exists(pathToCustomTypes);

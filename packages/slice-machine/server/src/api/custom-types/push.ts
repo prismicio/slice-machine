@@ -68,7 +68,9 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const modelPath = CustomTypesPaths(state.env.cwd).customType(id).model();
+  const modelPath = CustomTypesPaths(state.env.cwd)
+    .customType(id as string)
+    .model();
 
   let model;
   try {
