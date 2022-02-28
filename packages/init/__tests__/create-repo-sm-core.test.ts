@@ -2,7 +2,7 @@ import { test, expect, jest, describe } from "@jest/globals";
 import { mocked } from "jest-mock";
 
 import * as core from "@slicemachine/core";
-import { createRepository } from "../src/steps/create-repo";
+import { createRepository } from "../src/utils/create-repo";
 import { stdout, stderr } from "stdout-stderr";
 
 jest.mock("@slicemachine/core", () => ({
@@ -37,10 +37,12 @@ describe("mocking the core example: not advised", () => {
       .mockImplementationOnce(() => undefined as never);
     stderr.start();
     stdout.start();
-    await createRepository("foo-bar", core.Models.Frameworks.next, {
-      base: "https://prismic.io",
-      cookies: "prismic-auth=abcd",
-    });
+    await createRepository(
+      "foo-bar",
+      core.Models.Frameworks.next,
+      "https://prismic.io",
+      "prismic-auth=abcd"
+    );
     stderr.stop();
     stdout.stop();
     expect(mockCore.Communication.createRepository).toHaveBeenCalled();

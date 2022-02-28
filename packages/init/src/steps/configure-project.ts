@@ -13,7 +13,7 @@ const defaultSliceMachineVersion = "0.0.41";
 export function configureProject(
   cwd: string,
   base: Base,
-  repository: string,
+  repositoryDomainName: string,
   framework: FrameworkResult,
   sliceLibPath: string[] = [],
   tracking = true
@@ -35,7 +35,10 @@ export function configureProject(
       ...(manifestAlreadyExistWithContent
         ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
-      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
+      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(
+        base,
+        repositoryDomainName
+      ),
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
