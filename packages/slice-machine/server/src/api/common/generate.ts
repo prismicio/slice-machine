@@ -19,7 +19,6 @@ export function generate(
       []
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     components.forEach((c) => {
       if (
         !Files.exists(
