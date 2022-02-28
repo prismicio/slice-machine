@@ -1,6 +1,5 @@
 import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
-import { handler as saveSlice } from "../slices/save";
 
 import { onError } from "../common/error";
 import Files from "@lib/utils/files";
@@ -122,12 +121,6 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     const slice = localSlices[sliceKey];
     if (slice) {
       try {
-        console.log("[custom-types/push] Saving slice", sliceKey);
-        await saveSlice(state.env, {
-          sliceName: slice.infos.sliceName,
-          from: slice.from,
-          model: slice.model,
-        });
         console.log("[custom-types/push] Pushing slice", sliceKey);
         await pushSlice(state.env, state.remoteSlices, {
           sliceName: slice.infos.sliceName,
