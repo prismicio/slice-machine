@@ -1,6 +1,5 @@
 import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
-import { handler as saveSlice } from "../slices/save";
 
 import { onError } from "../common/error";
 import Files from "@lib/utils/files";
