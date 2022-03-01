@@ -32,7 +32,8 @@ export async function promptForRepoDomain(
         type: "input",
         required: true,
         default: defaultValue,
-        transformer: (value) => prettyRepoName(address, String(value)),
+        transformer: (value) =>
+          prettyRepoName(address, String(value || defaultValue)),
         async validate(name: string) {
           const result = await Communication.validateRepositoryName(
             name,
@@ -158,7 +159,7 @@ export async function chooseOrCreateARepository(
   ]);
 
   if (res.chosenRepo === CREATE_REPO) {
-    const domainName = await promptForRepoDomain(base);
+    const domainName = await promptForRepoDomain(base, project);
     return await createRepository(domainName, framework, cookies, base);
   }
 
