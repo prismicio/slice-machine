@@ -134,11 +134,7 @@ export async function chooseOrCreateARepository(
 
   if (repos.length === 0) {
     const domainName = await promptForRepoDomain(base, project);
-    console.log({ domainName });
-    const req = createRepository(domainName, framework, cookies, base);
-    const res = await req;
-    console.log(res);
-    return res || "";
+    return await createRepository(domainName, framework, cookies, base);
   }
 
   const choices = sortReposForPrompt(repos, base, cwd);
