@@ -61,22 +61,22 @@ export const deleteTabCreator = createAction("CUSTOM_TYPE/DELETE_TAB")<{
 
 // Field actions
 export const addFieldCreator = createAction("CUSTOM_TYPE/ADD_FIELD")<{
-  variationId: string;
+  tabId: string;
   fieldId: string;
   field: Field;
 }>();
 export const deleteFieldCreator = createAction("CUSTOM_TYPE/DELETE_FIELD")<{
-  variationId: string;
+  tabId: string;
   fieldId: string;
 }>();
 export const replaceFieldCreator = createAction("CUSTOM_TYPE/REPLACE_FIELD")<{
-  variationId: string;
+  tabId: string;
   previousFieldId: string;
   newFieldId: string;
   value: Field;
 }>();
 export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
-  variationId: string;
+  tabId: string;
   start: number;
   end: number;
 }>();
@@ -85,30 +85,30 @@ export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
 export const createSliceZoneCreator = createAction(
   "CUSTOM_TYPE/CREATE_SLICE_ZONE"
 )<{
-  variationId: string;
+  tabId: string;
 }>();
 export const deleteSliceZoneCreator = createAction(
   "CUSTOM_TYPE/DELETE_SLICE_ZONE"
 )<{
-  variationId: string;
+  tabId: string;
 }>();
 export const addSharedSliceCreator = createAction(
   "CUSTOM_TYPE/ADD_SHARED_SLICE"
 )<{
-  variationId: string;
+  tabId: string;
   sliceId: string;
 }>();
 export const replaceSharedSliceCreator = createAction(
   "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
 )<{
-  variationId: string;
+  tabId: string;
   sliceKeys: [string];
   preserve: [string];
 }>();
 export const deleteSharedSliceCreator = createAction(
   "CUSTOM_TYPE/DELETE_SHARED_SLICE"
 )<{
-  variationId: string;
+  tabId: string;
   sliceId: string;
 }>();
 
@@ -116,7 +116,7 @@ export const deleteSharedSliceCreator = createAction(
 export const addFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/ADD_FIELD"
 )<{
-  variationId: string;
+  tabId: string;
   groupId: string;
   fieldId: string;
   field: Field;
@@ -124,7 +124,7 @@ export const addFieldIntoGroupCreator = createAction(
 export const replaceFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/REPLACE_FIELD"
 )<{
-  variationId: string;
+  tabId: string;
   groupId: string;
   previousFieldId: string;
   newFieldId: string;
@@ -133,7 +133,7 @@ export const replaceFieldIntoGroupCreator = createAction(
 export const reorderFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/REORDER_FIELD"
 )<{
-  variationId: string;
+  tabId: string;
   groupId: string;
   start: number;
   end: number;
@@ -141,7 +141,7 @@ export const reorderFieldIntoGroupCreator = createAction(
 export const deleteFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/DELETE_FIELD"
 )<{
-  variationId: string;
+  tabId: string;
   groupId: string;
   fieldId: string;
 }>();

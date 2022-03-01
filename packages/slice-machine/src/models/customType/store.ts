@@ -1,6 +1,6 @@
 import Store from "@lib/models/ui/Store";
 
-import Actions, {
+import {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
   updateWidgetGroupMockConfig,
@@ -8,8 +8,21 @@ import Actions, {
 } from "./actions";
 
 import {
+  addFieldCreator,
+  addFieldIntoGroupCreator,
+  addSharedSliceCreator,
+  createSliceZoneCreator,
   createTabCreator,
+  deleteFieldCreator,
+  deleteFieldIntoGroupCreator,
+  deleteSharedSliceCreator,
+  deleteSliceZoneCreator,
   deleteTabCreator,
+  reorderFieldCreator,
+  reorderFieldIntoGroupCreator,
+  replaceFieldCreator,
+  replaceFieldIntoGroupCreator,
+  replaceSharedSliceCreator,
   resetCustomTypeCreator,
   updateTabCreator,
 } from "./newActions";
@@ -54,85 +67,73 @@ export default class CustomTypeStore implements Store {
       delete: (): void => {
         this.dispatch(deleteTabCreator({ tabId }));
       },
-      addWidget: (id: string, field: Field): void => {
-        this.dispatch({
-          type: Actions.AddWidget,
-          payload: { tabId, id, field },
-        });
+      addWidget: (fieldId: string, field: Field): void => {
+        this.dispatch(addFieldCreator({ tabId, fieldId, field }));
       },
-      removeWidget: (id: string): void => {
-        this.dispatch({ type: Actions.RemoveWidget, payload: { tabId, id } });
+      removeWidget: (fieldId: string): void => {
+        this.dispatch(deleteFieldCreator({ tabId, fieldId }));
       },
       replaceWidget: (
-        previousKey: string,
-        newKey: string,
+        previousFieldId: string,
+        newFieldId: string,
         value: Field
       ): void => {
-        this.dispatch({
-          type: Actions.ReplaceWidget,
-          payload: { tabId, previousKey, newKey, value },
-        });
+        this.dispatch(
+          replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
+        );
       },
       reorderWidget: (start: number, end: number): void => {
-        this.dispatch({
-          type: Actions.ReorderWidget,
-          payload: { tabId, start, end },
-        });
+        this.dispatch(reorderFieldCreator({ tabId, start, end }));
       },
       createSliceZone: (): void => {
-        this.dispatch({ type: Actions.CreateSliceZone, payload: { tabId } });
+        this.dispatch(createSliceZoneCreator({ tabId }));
       },
       deleteSliceZone: (): void => {
-        this.dispatch({ type: Actions.DeleteSliceZone, payload: { tabId } });
+        this.dispatch(deleteSliceZoneCreator({ tabId }));
       },
-      addSharedSlice: (sliceKey: string): void => {
-        this.dispatch({
-          type: Actions.AddSharedSlice,
-          payload: { tabId, sliceKey },
-        });
+      addSharedSlice: (sliceId: string): void => {
+        this.dispatch(addSharedSliceCreator({ tabId, sliceId }));
       },
       replaceSharedSlices: (sliceKeys: [string], preserve: [string]): void => {
-        this.dispatch({
-          type: Actions.ReplaceSharedSlices,
-          payload: { tabId, sliceKeys, preserve },
-        });
+        this.dispatch(
+          replaceSharedSliceCreator({ tabId, sliceKeys, preserve })
+        );
       },
-      removeSharedSlice: (sliceKey: string): void => {
-        this.dispatch({
-          type: Actions.RemoveSharedSlice,
-          payload: { tabId, sliceKey },
-        });
+      removeSharedSlice: (sliceId: string): void => {
+        this.dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
       },
       // eslint-disable-next-line @typescript-eslint/ban-types
       group: (groupId: string): Record<string, Function> => {
         return {
-          addWidget: (id: string, field: Field): void => {
-            this.dispatch({
-              type: Actions.GroupAddWidget,
-              payload: { tabId, groupId, id, field },
-            });
+          addWidget: (fieldId: string, field: Field): void => {
+            this.dispatch(
+              addFieldIntoGroupCreator({ tabId, groupId, fieldId, field })
+            );
           },
           replaceWidget: (
-            previousKey: string,
-            newKey: string,
+            previousFieldId: string,
+            newFieldId: string,
             value: Field
           ): void => {
-            this.dispatch({
-              type: Actions.GroupReplaceWidget,
-              payload: { tabId, groupId, previousKey, newKey, value },
-            });
+            this.dispatch(
+              replaceFieldIntoGroupCreator({
+                tabId,
+                groupId,
+                previousFieldId,
+                newFieldId,
+                value,
+              })
+            );
           },
           reorderWidget: (start: number, end: number): void => {
-            this.dispatch({
-              type: Actions.GroupReorderWidget,
-              payload: { tabId, groupId, start, end },
-            });
+            this.dispatch(
+              reorderFieldIntoGroupCreator({ tabId, groupId, start, end })
+            );
           },
-          deleteWidget: (key: string): void => {
-            this.dispatch({
-              type: Actions.GroupDeleteWidget,
-              payload: { tabId, groupId, key },
-            });
+          deleteWidget: (fieldId: string): void => {
+            this.dispatch(
+              deleteFieldIntoGroupCreator({ tabId, groupId, fieldId })
+            );
           },
         };
       },
