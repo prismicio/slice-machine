@@ -124,6 +124,65 @@ describe("choose-or-create-repo", () => {
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
     expect(result).toEqual(repoDomain);
   });
+
+  test("when given project and project exists, the project is pre-selected and the user is not asked to select a project", async () => {
+    const domain = "foo-bar";
+    const base = "https://prismic.io";
+    const userServiceURL = "https://user.internal-prismic.io";
+    const cookies = "prismic-auth=biscuits;";
+
+    nock(userServiceURL)
+      .get("/repositories")
+      .reply(200, [
+        { domain: domain, name: "Foo Bar", role: Models.Roles.OWNER },
+      ]);
+
+    const promptSpy = jest.spyOn(inquirer, "prompt");
+
+    const result = await chooseOrCreateARepository(
+      fakeCwd,
+      framework,
+      cookies,
+      base,
+      domain
+    );
+
+    expect(promptSpy).not.toHaveBeenCalled();
+    expect(result).toEqual(domain);
+  });
+
+  test("when the given a project and the project does not exist in the users repo's it should prompt them for a repo", async () => {
+    const domain = "foo-bar";
+    const base = "https://prismic.io";
+    const userServiceURL = "https://user.internal-prismic.io";
+    const cookies = "prismic-auth=biscuits;";
+
+    nock(userServiceURL).get("/repositories").reply(200, []);
+
+    createRepositoryMock.mockImplementation(() => Promise.resolve(domain));
+
+    const promptSpy = jest
+      .spyOn(inquirer, "prompt")
+      .mockReturnValue(
+        Promise.resolve({ repoDomain: domain }) as ReturnType<
+          typeof inquirer.prompt
+        >
+      );
+
+    const result = await chooseOrCreateARepository(
+      fakeCwd,
+      framework,
+      cookies,
+      base,
+      domain
+    );
+
+    expect(promptSpy).toHaveBeenCalledTimes(1);
+    expect(promptSpy).toHaveBeenLastCalledWith(
+      expect.arrayContaining([expect.objectContaining({ default: domain })])
+    );
+    expect(result).toEqual(domain);
+  });
 });
 
 describe("prettyRepoName", () => {
