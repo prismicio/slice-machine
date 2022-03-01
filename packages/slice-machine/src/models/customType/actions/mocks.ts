@@ -1,5 +1,8 @@
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import Actions from "./";
+import {
+  deleteFieldMockConfigCreator,
+  updateFieldMockConfigCreator,
+} from "@src/models/customType/newActions";
 
 export function updateWidgetGroupMockConfig(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +24,7 @@ export function updateWidgetGroupMockConfig(
       value
     );
     // you can use same dispatch her
-    dispatch({ type: Actions.UpdateWidgetMockConfig, payload: updatedConfig });
+    dispatch(updateFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }
 export function updateWidgetMockConfig(
@@ -42,7 +45,7 @@ export function updateWidgetMockConfig(
       fieldId,
       value
     );
-    dispatch({ type: Actions.UpdateWidgetMockConfig, payload: updatedConfig });
+    dispatch(updateFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }
 
@@ -63,7 +66,7 @@ export function deleteWidgetGroupMockConfig(
       fieldId
     );
 
-    dispatch({ type: Actions.DeleteWidgetMockConfig, payload: updatedConfig });
+    dispatch(deleteFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }
 
@@ -82,6 +85,6 @@ export function deleteWidgetMockConfig(
       fieldId
     );
 
-    dispatch({ type: Actions.DeleteWidgetMockConfig, payload: updatedConfig });
+    dispatch(deleteFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }

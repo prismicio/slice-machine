@@ -2,8 +2,8 @@ import { fetchApi } from "@lib/builders/common/fetch";
 
 import { CustomType } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
-import ActionType from "./";
 import { ToastPayload } from "@src/modules/toaster/utils";
+import { saveCustomTypeCreator } from "@src/models/customType/newActions";
 
 export default function save(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +27,7 @@ export default function save(
       setData,
       successMessage: "Model & mocks have been generated successfully!",
       onSuccess() {
-        dispatch({ type: ActionType.Save, payload: { state: customType } });
+        dispatch(saveCustomTypeCreator({ state: customType }));
       },
     });
   };

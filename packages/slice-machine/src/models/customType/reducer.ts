@@ -5,7 +5,6 @@ import {
 } from "@lib/models/ui/CustomTypeState";
 import { Tab } from "@lib/models/common/CustomType/tab";
 
-import Actions from "./actions";
 import { Group } from "@lib/models/common/CustomType/group";
 import {
   SliceZone,
@@ -17,7 +16,6 @@ import { CustomType } from "@lib/models/common/CustomType";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { Field } from "@lib/models/common/CustomType/fields";
 import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
 import { getType } from "typesafe-actions";
 import {
@@ -26,23 +24,28 @@ import {
   addSharedSliceCreator,
   createSliceZoneCreator,
   createTabCreator,
+  CustomTypeActions,
   deleteFieldCreator,
   deleteFieldIntoGroupCreator,
   deleteSharedSliceCreator,
   deleteSliceZoneCreator,
   deleteTabCreator,
+  deleteFieldMockConfigCreator,
+  pushCustomTypeCreator,
   reorderFieldCreator,
   reorderFieldIntoGroupCreator,
   replaceFieldCreator,
   replaceFieldIntoGroupCreator,
   replaceSharedSliceCreator,
   resetCustomTypeCreator,
+  saveCustomTypeCreator,
   updateTabCreator,
+  updateFieldMockConfigCreator,
 } from "./newActions";
 
 export default function reducer(
   prevState: CustomTypeState,
-  action: { type: string; payload?: unknown }
+  action: CustomTypeActions
 ): CustomTypeState {
   const result = ((): CustomTypeState => {
     switch (action.type) {
@@ -55,7 +58,7 @@ export default function reducer(
         };
       }
       case getType(createTabCreator): {
-        const { tabId } = action.payload as { tabId: string };
+        const { tabId } = action.payload;
         if (prevState.current.tabs.find((e) => e.key === tabId)) {
           return prevState;
         }
@@ -68,10 +71,7 @@ export default function reducer(
         };
       }
       case getType(updateTabCreator): {
-        const { tabId, newTabId } = action.payload as {
-          tabId: string;
-          newTabId: string;
-        };
+        const { tabId, newTabId } = action.payload;
         if (newTabId === tabId) {
           return prevState;
         }
@@ -92,11 +92,11 @@ export default function reducer(
         };
       }
       case getType(deleteTabCreator): {
-        const { tabId } = action.payload as { tabId: string };
+        const { tabId } = action.payload;
         return CustomTypeState.deleteTab(prevState, tabId);
       }
-      case Actions.Save: {
-        const { state } = action.payload as { state: CustomTypeState };
+      case getType(saveCustomTypeCreator): {
+        const { state } = action.payload;
         return {
           ...state,
           initialCustomType: state.current,
@@ -104,18 +104,14 @@ export default function reducer(
           initialMockConfig: state.mockConfig,
         };
       }
-      case Actions.Push:
+      case getType(pushCustomTypeCreator):
         return {
           ...prevState,
           initialCustomType: prevState.current,
           remoteCustomType: prevState.current,
         };
       case getType(addFieldCreator): {
-        const { tabId, field, fieldId } = action.payload as {
-          tabId: string;
-          fieldId: string;
-          field: Field;
-        };
+        const { tabId, field, fieldId } = action.payload;
         try {
           if (field.type !== sliceZoneType) {
             const CurrentWidget: AnyWidget = Widgets[field.type];
@@ -136,23 +132,14 @@ export default function reducer(
         }
       }
       case getType(deleteFieldCreator): {
-        const { tabId, fieldId } = action.payload as {
-          tabId: string;
-          fieldId: string;
-        };
+        const { tabId, fieldId } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
         )((tab) => Tab.removeWidget(tab, fieldId));
       }
       case getType(replaceFieldCreator): {
-        const { tabId, previousFieldId, newFieldId, value } =
-          action.payload as {
-            tabId: string;
-            previousFieldId: string;
-            newFieldId: string;
-            value: Field;
-          };
+        const { tabId, previousFieldId, newFieldId, value } = action.payload;
         try {
           if (value.type !== sliceZoneType) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
@@ -171,18 +158,14 @@ export default function reducer(
         }
       }
       case getType(reorderFieldCreator): {
-        const { tabId, start, end } = action.payload as {
-          tabId: string;
-          start: number;
-          end: number;
-        };
+        const { tabId, start, end } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
         )((tab) => Tab.reorderWidget(tab, start, end));
       }
       case getType(createSliceZoneCreator): {
-        const { tabId } = action.payload as { tabId: string };
+        const { tabId } = action.payload;
 
         const tabIndex = prevState.current.tabs.findIndex(
           (t) => t.key === tabId
@@ -207,17 +190,14 @@ export default function reducer(
         });
       }
       case getType(deleteSliceZoneCreator): {
-        const { tabId } = action.payload as { tabId: string };
+        const { tabId } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
         )((tab) => Tab.deleteSliceZone(tab));
       }
       case getType(addSharedSliceCreator): {
-        const { tabId, sliceId } = action.payload as {
-          tabId: string;
-          sliceId: string;
-        };
+        const { tabId, sliceId } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -229,11 +209,7 @@ export default function reducer(
         );
       }
       case getType(replaceSharedSliceCreator): {
-        const { tabId, sliceKeys, preserve } = action.payload as {
-          tabId: string;
-          sliceKeys: [string];
-          preserve: [string];
-        };
+        const { tabId, sliceKeys, preserve } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -245,10 +221,7 @@ export default function reducer(
         );
       }
       case getType(deleteSharedSliceCreator): {
-        const { tabId, sliceId } = action.payload as {
-          tabId: string;
-          sliceId: string;
-        };
+        const { tabId, sliceId } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -259,26 +232,20 @@ export default function reducer(
           )
         );
       }
-      case Actions.UpdateWidgetMockConfig:
+      case getType(updateFieldMockConfigCreator):
         return {
           ...prevState,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-          mockConfig: action.payload as any,
+          mockConfig: action.payload.mockConfig,
         };
-
-      case Actions.DeleteWidgetMockConfig:
+      case getType(deleteFieldMockConfigCreator):
         return {
           ...prevState,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-          mockConfig: action.payload as any,
+          mockConfig: action.payload.mockConfig,
         };
       case getType(addFieldIntoGroupCreator): {
-        const { tabId, groupId, fieldId, field } = action.payload as {
-          tabId: string;
-          groupId: string;
-          fieldId: string;
-          field: Field;
-        };
+        const { tabId, groupId, fieldId, field } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -293,13 +260,7 @@ export default function reducer(
       }
       case getType(replaceFieldIntoGroupCreator): {
         const { tabId, groupId, previousFieldId, newFieldId, value } =
-          action.payload as {
-            tabId: string;
-            groupId: string;
-            previousFieldId: string;
-            newFieldId: string;
-            value: Field;
-          };
+          action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -313,11 +274,7 @@ export default function reducer(
         );
       }
       case getType(deleteFieldIntoGroupCreator): {
-        const { tabId, groupId, fieldId } = action.payload as {
-          tabId: string;
-          groupId: string;
-          fieldId: string;
-        };
+        const { tabId, groupId, fieldId } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId
@@ -329,12 +286,7 @@ export default function reducer(
         );
       }
       case getType(reorderFieldIntoGroupCreator): {
-        const { tabId, groupId, start, end } = action.payload as {
-          tabId: string;
-          groupId: string;
-          start: number;
-          end: number;
-        };
+        const { tabId, groupId, start, end } = action.payload;
         return CustomTypeState.updateTab(
           prevState,
           tabId

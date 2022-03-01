@@ -1,7 +1,8 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
-import ActionType from "./";
+
 import { ToastPayload } from "@src/modules/toaster/utils";
+import { pushCustomTypeCreator } from "@src/models/customType/newActions";
 
 export default function push(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,7 +14,7 @@ export default function push(
       setData,
       successMessage: "Model was correctly saved to Prismic!",
       onSuccess() {
-        dispatch({ type: ActionType.Push });
+        dispatch(pushCustomTypeCreator());
       },
     });
   };

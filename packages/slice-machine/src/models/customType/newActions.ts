@@ -1,13 +1,14 @@
 import { ActionType, createAction } from "typesafe-actions";
 
 import { Field } from "@models/common/CustomType/fields";
+import { CustomTypeState } from "@models/ui/CustomTypeState";
 
 export type CustomTypeActions =
   | ActionType<typeof resetCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof pushCustomTypeCreator>
-  | ActionType<typeof updateWidgetMockConfigCreator>
-  | ActionType<typeof deleteWidgetMockConfigCreator>
+  | ActionType<typeof updateFieldMockConfigCreator>
+  | ActionType<typeof deleteFieldMockConfigCreator>
   | ActionType<typeof updateWidgetGroupMockConfigCreator>
   | ActionType<typeof deleteWidgetGroupMockConfigCreator>
   | ActionType<typeof createTabCreator>
@@ -30,16 +31,17 @@ export type CustomTypeActions =
 export const resetCustomTypeCreator = createAction("CUSTOM_TYPE/RESET")();
 
 // Async actions
-export const saveCustomTypeCreator = createAction("CUSTOM_TYPE/SAVE")();
-export const pushCustomTypeCreator = createAction("CUSTOM_TYPE/SAVE")();
+export const saveCustomTypeCreator =
+  createAction("CUSTOM_TYPE/SAVE")<{ state: CustomTypeState }>();
+export const pushCustomTypeCreator = createAction("CUSTOM_TYPE/PUSH")();
 
 // Mock config actions
-export const updateWidgetMockConfigCreator = createAction(
-  "CUSTOM_TYPE/UPDATE_WIDGET_MOCK_CONFIG"
-)();
-export const deleteWidgetMockConfigCreator = createAction(
-  "CUSTOM_TYPE/DELETE_WIDGET_MOCK_CONFIG"
-)();
+export const updateFieldMockConfigCreator = createAction(
+  "CUSTOM_TYPE/UPDATE_FIELD_MOCK_CONFIG"
+)<{ mockConfig: any }>();
+export const deleteFieldMockConfigCreator = createAction(
+  "CUSTOM_TYPE/DELETE_FIELD_MOCK_CONFIG"
+)<{ mockConfig: any }>();
 export const updateWidgetGroupMockConfigCreator = createAction(
   "CUSTOM_TYPE/UPDATE_WIDGET_GROUP__MOCK_CONFIG"
 )();
