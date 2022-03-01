@@ -1,10 +1,18 @@
 import Store from "@lib/models/ui/Store";
+
 import Actions, {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
   updateWidgetGroupMockConfig,
   deleteWidgetGroupMockConfig,
 } from "./actions";
+
+import {
+  createTabCreator,
+  deleteTabCreator,
+  resetCustomTypeCreator,
+  updateTabCreator,
+} from "./newActions";
 
 import saveCustomType from "./actions/save";
 import pushCustomType from "./actions/push";
@@ -23,12 +31,14 @@ export default class CustomTypeStore implements Store {
     }) => void
   ) {}
 
-  createTab(id: string): void {
-    this.dispatch({ type: Actions.CreateTab, payload: { id } });
+  createTab(tabId: string): void {
+    this.dispatch(createTabCreator({ tabId }));
   }
+
   reset(): void {
-    this.dispatch({ type: Actions.Reset });
+    this.dispatch(resetCustomTypeCreator());
   }
+
   save = saveCustomType(this.dispatch);
   push = pushCustomType(this.dispatch);
   updateWidgetMockConfig = updateWidgetMockConfig(this.dispatch);
@@ -39,13 +49,10 @@ export default class CustomTypeStore implements Store {
   tab(tabId: string): Record<string, Function> {
     return {
       update: (newKey: string): void => {
-        this.dispatch({
-          type: Actions.UpdateTab,
-          payload: { prevKey: tabId, newKey },
-        });
+        this.dispatch(updateTabCreator({ tabId, newTabId: newKey }));
       },
       delete: (): void => {
-        this.dispatch({ type: Actions.DeleteTab, payload: { tabId } });
+        this.dispatch(deleteTabCreator({ tabId }));
       },
       addWidget: (id: string, field: Field): void => {
         this.dispatch({

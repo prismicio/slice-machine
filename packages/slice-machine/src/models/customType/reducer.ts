@@ -19,6 +19,13 @@ import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { Field } from "@lib/models/common/CustomType/fields";
 import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
+import { getType } from "typesafe-actions";
+import {
+  createTabCreator,
+  deleteTabCreator,
+  resetCustomTypeCreator,
+  updateTabCreator,
+} from "./newActions";
 
 export default function reducer(
   prevState: CustomTypeState,
@@ -26,7 +33,7 @@ export default function reducer(
 ): CustomTypeState {
   const result = ((): CustomTypeState => {
     switch (action.type) {
-      case Actions.Reset: {
+      case getType(resetCustomTypeCreator): {
         return {
           ...prevState,
           current: prevState.initialCustomType,
@@ -34,25 +41,25 @@ export default function reducer(
           mockConfig: prevState.initialMockConfig,
         };
       }
-      case Actions.CreateTab: {
-        const { id } = action.payload as { id: string };
-        if (prevState.current.tabs.find((e) => e.key === id)) {
+      case getType(createTabCreator): {
+        const { tabId } = action.payload as { tabId: string };
+        if (prevState.current.tabs.find((e) => e.key === tabId)) {
           return prevState;
         }
         return {
           ...prevState,
           current: {
             ...prevState.current,
-            tabs: [...prevState.current.tabs, Tab.init(id)],
+            tabs: [...prevState.current.tabs, Tab.init(tabId)],
           },
         };
       }
-      case Actions.UpdateTab: {
-        const { prevKey, newKey } = action.payload as {
-          prevKey: string;
-          newKey: string;
+      case getType(updateTabCreator): {
+        const { tabId, newTabId } = action.payload as {
+          tabId: string;
+          newTabId: string;
         };
-        if (newKey === prevKey) {
+        if (newTabId === tabId) {
           return prevState;
         }
         return {
@@ -60,10 +67,10 @@ export default function reducer(
           current: {
             ...prevState.current,
             tabs: prevState.current.tabs.map((t) => {
-              if (t.key === prevKey) {
+              if (t.key === tabId) {
                 return {
                   ...t,
-                  key: newKey,
+                  key: newTabId,
                 };
               }
               return t;
@@ -155,7 +162,7 @@ export default function reducer(
           tabId
         )((tab) => Tab.reorderWidget(tab, start, end));
       }
-      case Actions.DeleteTab: {
+      case getType(deleteTabCreator): {
         const { tabId } = action.payload as { tabId: string };
         return CustomTypeState.deleteTab(prevState, tabId);
       }
