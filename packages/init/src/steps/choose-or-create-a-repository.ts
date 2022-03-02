@@ -129,8 +129,7 @@ export async function chooseOrCreateARepository(
   const token = parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token);
 
-  const hasRepo =
-    repoName && repos.length && repos.map((d) => d.domain).includes(repoName);
+  const hasRepo = repoName && repos.find((d) => d.domain === repoName);
   if (hasRepo) return repoName;
 
   if (repos.length === 0) {
