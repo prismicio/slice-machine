@@ -228,7 +228,7 @@ test("it creates sliceZone", () => {
   const { result, initialTab } = init();
   const { key } = initialTab;
   act(() => {
-    result.current[1].tab(key).createSliceZone();
+    result.current[1].createSliceZone(key);
   });
 
   expect(result.current[0].current.tabs[0].sliceZone).not.toEqual(null);
@@ -243,37 +243,6 @@ test("it adds and removes slices to/from sliceZone", () => {
     result.current[1].createSliceZone(key);
   });
 
-  act(() => {
-    result.current[1].tab(key).addSharedSlice("MySlice");
-  });
-
-  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1);
-  expect(
-    result.current[0].current.tabs[0].sliceZone.value[0].value.type
-  ).toEqual("SharedSlice");
-
-  // Slice exists already
-  act(() => {
-    result.current[1].tab(key).addSharedSlice("MySlice");
-  });
-  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1);
-
-  act(() => {
-    result.current[1].tab(key).addSharedSlice("MySlice2");
-  });
-  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(2);
-
-  // Slice does not exist
-  act(() => {
-    result.current[1].deleteSharedSlice(key, "MyUndefSlice");
-  });
-  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(2);
-
-  act(() => {
-    result.current[1].deleteSharedSlice(key, "MySlice");
-  });
-  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1);
-
   const keys = ["Slice1", "Slice2", "Slice3", "Slice4"];
   act(() => {
     result.current[1].replaceSharedSlice(key, keys);
@@ -281,4 +250,15 @@ test("it adds and removes slices to/from sliceZone", () => {
   expect(
     result.current[0].current.tabs[0].sliceZone.value.map((e) => e.key)
   ).toEqual(keys);
+
+  // Slice does not exist
+  act(() => {
+    result.current[1].deleteSharedSlice(key, "MyUndefSlice");
+  });
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(4);
+
+  act(() => {
+    result.current[1].deleteSharedSlice(key, "Slice1");
+  });
+  expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(3);
 });

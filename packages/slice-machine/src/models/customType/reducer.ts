@@ -21,7 +21,6 @@ import { getType } from "typesafe-actions";
 import {
   addFieldCreator,
   addFieldIntoGroupCreator,
-  addSharedSliceCreator,
   createSliceZoneCreator,
   createTabCreator,
   CustomTypeActions,
@@ -187,18 +186,6 @@ export default function reducer(
             `slices${i !== 0 ? i.toString() : ""}`
           );
         });
-      }
-      case getType(addSharedSliceCreator): {
-        const { tabId, sliceId } = action.payload;
-        return CustomTypeState.updateTab(
-          prevState,
-          tabId
-        )((tab) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
-            SliceZone.addSharedSlice(sliceZone, sliceId)
-          )
-        );
       }
       case getType(replaceSharedSliceCreator): {
         const { tabId, sliceKeys, preserve } = action.payload;
