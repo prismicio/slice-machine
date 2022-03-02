@@ -15,7 +15,7 @@ describe("findArgument", () => {
     const argument = findArgument(["--base", "wroom.io"], "toto");
     expect(argument).toBeUndefined();
   });
-  test("project argument", () => {
+  test("repository argument", () => {
     const arg = findArgument(["--repository", "foo-bar"], "repository");
     expect(arg).toEqual("foo-bar");
   });
