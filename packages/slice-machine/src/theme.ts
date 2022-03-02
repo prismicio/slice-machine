@@ -536,7 +536,19 @@ const AppTheme = (): Theme =>
         transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
         "&:hover": {
           color: "text",
-          bg: "#E6E6EA",
+          bg: "grey02",
+        },
+      },
+      sidebarEmphasis: {
+        fontSize: 1,
+        color: "purple",
+        textDecoration: "none",
+        cursor: "pointer",
+        borderRadius: "6px",
+        p: 2,
+        transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+        "&:hover": {
+          bg: "grey02",
         },
       },
     },
