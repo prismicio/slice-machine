@@ -1,5 +1,3 @@
-import Store from "@lib/models/ui/Store";
-
 import {
   updateWidgetMockConfig,
   deleteWidgetMockConfig,
@@ -12,6 +10,7 @@ import {
   addFieldIntoGroupCreator,
   createSliceZoneCreator,
   createTabCreator,
+  CustomTypeActions,
   deleteFieldCreator,
   deleteFieldIntoGroupCreator,
   deleteSharedSliceCreator,
@@ -29,18 +28,10 @@ import saveCustomType from "./actions/save";
 import pushCustomType from "./actions/push";
 
 import { Field } from "@lib/models/common/CustomType/fields";
+import { Dispatch } from "react";
 
-export default class CustomTypeStore implements Store {
-  constructor(
-    readonly dispatch: ({
-      type,
-      payload,
-    }: {
-      type: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      payload?: any;
-    }) => void
-  ) {}
+export default class CustomTypeStore {
+  constructor(readonly dispatch: Dispatch<CustomTypeActions>) {}
 
   reset = () => this.dispatch(resetCustomTypeCreator());
 

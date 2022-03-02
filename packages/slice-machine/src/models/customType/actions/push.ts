@@ -2,12 +2,13 @@ import { fetchApi } from "@lib/builders/common/fetch";
 import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 
 import { ToastPayload } from "@src/modules/toaster/utils";
-import { pushCustomTypeCreator } from "@src/models/customType/newActions";
+import {
+  CustomTypeActions,
+  pushCustomTypeCreator,
+} from "@src/models/customType/newActions";
+import { Dispatch } from "react";
 
-export default function push(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export default function push(dispatch: Dispatch<CustomTypeActions>) {
   return async (ct: CustomTypeState, setData: (data: ToastPayload) => void) => {
     await fetchApi({
       url: `/api/custom-types/push?id=${ct.current.id}`,

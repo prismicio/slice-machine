@@ -1,12 +1,13 @@
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import {
+  CustomTypeActions,
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
 } from "@src/models/customType/newActions";
+import { Dispatch } from "react";
 
 export function updateWidgetGroupMockConfig(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
+  dispatch: Dispatch<CustomTypeActions>
 ) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
@@ -27,10 +28,7 @@ export function updateWidgetGroupMockConfig(
     dispatch(updateFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }
-export function updateWidgetMockConfig(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export function updateWidgetMockConfig(dispatch: Dispatch<CustomTypeActions>) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
     previousFieldId: string,
@@ -50,8 +48,7 @@ export function updateWidgetMockConfig(
 }
 
 export function deleteWidgetGroupMockConfig(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
+  dispatch: Dispatch<CustomTypeActions>
 ) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
@@ -70,10 +67,7 @@ export function deleteWidgetGroupMockConfig(
   };
 }
 
-export function deleteWidgetMockConfig(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export function deleteWidgetMockConfig(dispatch: Dispatch<CustomTypeActions>) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
     fieldId: string

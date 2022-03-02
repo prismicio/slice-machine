@@ -3,12 +3,13 @@ import { fetchApi } from "@lib/builders/common/fetch";
 import { CustomType } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { ToastPayload } from "@src/modules/toaster/utils";
-import { saveCustomTypeCreator } from "@src/models/customType/newActions";
+import {
+  CustomTypeActions,
+  saveCustomTypeCreator,
+} from "@src/models/customType/newActions";
+import { Dispatch } from "react";
 
-export default function save(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: ({ type, payload }: { type: string; payload?: any }) => void
-) {
+export default function save(dispatch: Dispatch<CustomTypeActions>) {
   return async (
     customType: CustomTypeState,
     setData: (data: ToastPayload) => void = () => null
