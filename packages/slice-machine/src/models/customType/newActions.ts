@@ -17,7 +17,6 @@ export type CustomTypeActions =
   | ActionType<typeof replaceFieldCreator>
   | ActionType<typeof reorderFieldCreator>
   | ActionType<typeof createSliceZoneCreator>
-  | ActionType<typeof deleteSliceZoneCreator>
   | ActionType<typeof addSharedSliceCreator>
   | ActionType<typeof addFieldIntoGroupCreator>
   | ActionType<typeof replaceSharedSliceCreator>
@@ -81,11 +80,6 @@ export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
 // Slice zone actions
 export const createSliceZoneCreator = createAction(
   "CUSTOM_TYPE/CREATE_SLICE_ZONE"
-)<{
-  tabId: string;
-}>();
-export const deleteSliceZoneCreator = createAction(
-  "CUSTOM_TYPE/DELETE_SLICE_ZONE"
 )<{
   tabId: string;
 }>();

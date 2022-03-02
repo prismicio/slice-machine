@@ -28,7 +28,6 @@ import {
   deleteFieldCreator,
   deleteFieldIntoGroupCreator,
   deleteSharedSliceCreator,
-  deleteSliceZoneCreator,
   deleteTabCreator,
   deleteFieldMockConfigCreator,
   pushCustomTypeCreator,
@@ -188,13 +187,6 @@ export default function reducer(
             `slices${i !== 0 ? i.toString() : ""}`
           );
         });
-      }
-      case getType(deleteSliceZoneCreator): {
-        const { tabId } = action.payload;
-        return CustomTypeState.updateTab(
-          prevState,
-          tabId
-        )((tab) => Tab.deleteSliceZone(tab));
       }
       case getType(addSharedSliceCreator): {
         const { tabId, sliceId } = action.payload;

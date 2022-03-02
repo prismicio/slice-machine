@@ -224,26 +224,9 @@ test("it reorders widgets", () => {
   expect(result.current[0].current.tabs[0].value[2].key).toEqual(widgetC.key);
 });
 
-test("it removes sliceZone", () => {
-  const { result, initialTab } = init();
-
-  const { key } = initialTab;
-
-  expect(result.current[0].current.tabs[0].sliceZone).not.toEqual(null);
-
-  act(() => {
-    result.current[1].tab(key).deleteSliceZone();
-  });
-
-  expect(result.current[0].current.tabs[0].sliceZone).toEqual(null);
-});
-
 test("it creates sliceZone", () => {
   const { result, initialTab } = init();
   const { key } = initialTab;
-  act(() => {
-    result.current[1].tab(key).deleteSliceZone();
-  });
   act(() => {
     result.current[1].tab(key).createSliceZone();
   });
@@ -256,9 +239,6 @@ test("it creates sliceZone", () => {
 test("it adds and removes slices to/from sliceZone", () => {
   const { result, initialTab } = init();
   const { key } = initialTab;
-  act(() => {
-    result.current[1].tab(key).deleteSliceZone();
-  });
   act(() => {
     result.current[1].createSliceZone(key);
   });

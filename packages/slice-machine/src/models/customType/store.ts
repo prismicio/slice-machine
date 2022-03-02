@@ -16,7 +16,6 @@ import {
   deleteFieldCreator,
   deleteFieldIntoGroupCreator,
   deleteSharedSliceCreator,
-  deleteSliceZoneCreator,
   deleteTabCreator,
   reorderFieldCreator,
   reorderFieldIntoGroupCreator,
@@ -154,9 +153,6 @@ export default class CustomTypeStore implements Store {
       },
       createSliceZone: (): void => {
         this.dispatch(createSliceZoneCreator({ tabId }));
-      },
-      deleteSliceZone: (): void => {
-        this.dispatch(deleteSliceZoneCreator({ tabId }));
       },
       addSharedSlice: (sliceId: string): void => {
         this.dispatch(addSharedSliceCreator({ tabId, sliceId }));
