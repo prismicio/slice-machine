@@ -12,6 +12,7 @@ export interface LinkProps {
   match: (pathname: string) => boolean;
   Icon: IconType;
   delimiter?: boolean;
+  target?: "_blank";
 }
 
 const links: LinkProps[] = [

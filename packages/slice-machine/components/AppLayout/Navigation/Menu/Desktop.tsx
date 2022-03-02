@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
-import { FiZap } from "react-icons/fi";
-import VersionBadge from "../Badge";
+import { MdPlayCircleFilled } from "react-icons/md";
 import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
 import { LinkProps } from "..";
-import Item from "./Navigation/Item";
 
 import NotLoggedIn from "./Navigation/NotLoggedIn";
 
@@ -13,7 +11,6 @@ import { warningStates } from "@lib/consts";
 
 import { useSelector } from "react-redux";
 import {
-  getConfigErrors,
   getChangelog,
   getWarnings,
 } from "@src/modules/environment";
@@ -21,16 +18,8 @@ import { getUpdatesViewed } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
-
-const formatWarnings = (len: number) => ({
-  title: `Warnings${len ? ` (${len})` : ""}`,
-  delimiter: true,
-  href: "/warnings",
-  match(pathname: string) {
-    return pathname.indexOf("/warnings") === 0;
-  },
-  Icon: FiZap,
-});
+import WarningItem from "@components/AppLayout/Navigation/Menu/Navigation/WarningItem";
+import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
@@ -100,10 +89,9 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, configErrors, changelog, updatesViewed } = useSelector(
+  const { warnings, changelog, updatesViewed } = useSelector(
     (store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
-      configErrors: getConfigErrors(store),
       changelog: getChangelog(store),
       updatesViewed: getUpdatesViewed(store),
     })
@@ -126,12 +114,19 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   const router = useRouter();
 
   return (
-    <Box as="aside" bg="sidebar" sx={{ minWidth: "270px" }}>
-      <Box py={4} px={3}>
+    <Box as="aside" bg="sidebar" sx={{ minWidth: "270px", display: "flex" }}>
+      <Box
+        sx={{
+          p: "40px 20px 20px",
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+        }}
+      >
         <Logo />
-        <ItemsList mt={4} links={links} />
-        <Box sx={{ position: "absolute", bottom: "3" }}>
-          {changelog.updateAvailable ? (
+        <ItemsList mt={4} links={links} sx={{ flex: "1" }} />
+        <Box>
+          {changelog.updateAvailable && (
             <UpdateInfo
               onClick={() => {
                 setUpdatesViewed({
@@ -142,15 +137,20 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               }}
               hasSeenUpdate={hasSeenLatestUpdates}
             />
-          ) : null}
+          )}
           {isNotLoggedIn && <NotLoggedIn />}
-          <Divider variant="sidebar" />
           <Item
-            link={formatWarnings(
-              warnings.length + Object.keys(configErrors).length
-            )}
+            link={{
+              title: "Video tutorials",
+              Icon: MdPlayCircleFilled,
+              href: "https://youtube.com",
+              target: "_blank",
+              match: () => false,
+            }}
+            theme={"emphasis"}
           />
-          <VersionBadge label="Version" version={changelog.currentVersion} />
+          <Divider variant="sidebar" />
+          <WarningItem currentVersion={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

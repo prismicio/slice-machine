@@ -6,15 +6,18 @@ import { LinkProps } from "components/AppLayout/Navigation";
 
 interface itemProps {
   link: LinkProps;
+  theme?: "emphasis";
 }
 
-const Item: React.FC<itemProps> = ({ link }) => {
+const Item: React.FC<itemProps> = ({ link, theme }) => {
   const router = useRouter();
   return (
     <Box as="li" key={link.title}>
       <Link href={link.href} passHref>
         <ThemeLink
-          variant="links.sidebar"
+          variant={
+            theme === "emphasis" ? "links.sidebarEmphasis" : "links.sidebar"
+          }
           sx={{
             display: "flex",
             alignItems: "center",
@@ -26,8 +29,9 @@ const Item: React.FC<itemProps> = ({ link }) => {
                 }
               : {}),
           }}
+          target={link.target}
         >
-          <link.Icon size={22} />
+          <link.Icon size={24} />
           <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
             {link.title}
           </Box>
