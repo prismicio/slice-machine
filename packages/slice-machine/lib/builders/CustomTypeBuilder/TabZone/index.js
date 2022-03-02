@@ -19,11 +19,11 @@ import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const onDeleteItem = (key) => {
+  const onDeleteItem = (fieldId) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     store.deleteWidgetMockConfig(Model.mockConfig, key);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).removeWidget(key);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.deleteField(tabId, fieldId);
   };
 
   const getFieldMockConfig = ({ apiId }) => {
@@ -42,8 +42,8 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const friendlyName = createFriendlyFieldNameWithId(id);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).addWidget(id, widget.create(friendlyName));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    store.addField(tabId, id, widget.create(friendlyName));
   };
 
   const onDragEnd = (result) => {
@@ -51,11 +51,8 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
     if (ensureDnDDestination(result)) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store
-      .tab(tabId)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-      .reorderWidget(result.source.index, result.destination.index);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.reorderField(tabId, result.source.index, result.destination.index);
   };
 
   const onSave = ({ apiId: previousKey, newKey, value, mockValue }) => {
@@ -77,28 +74,23 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
       store.deleteWidgetMockConfig(Model.mockConfig, newKey);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).replaceWidget(previousKey, newKey, value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.replaceField(tabId, previousKey, newKey, value);
   };
 
   const onCreateSliceZone = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).createSliceZone();
-  };
-
-  const onDeleteSliceZone = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).deleteSliceZone();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.createSliceZone(tabId);
   };
 
   const onSelectSharedSlices = (keys, preserve = []) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).replaceSharedSlices(keys, preserve);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.replaceSharedSlice(tabId, keys, preserve);
   };
 
-  const onRemoveSharedSlice = (key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    store.tab(tabId).removeSharedSlice(key);
+  const onRemoveSharedSlice = (sliceId) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    store.deleteSharedSlice(tabId, sliceId);
   };
 
   return (
@@ -135,7 +127,6 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         sliceZone={sliceZone}
-        onDelete={onDeleteSliceZone}
         onRemoveSharedSlice={onRemoveSharedSlice}
         onCreateSliceZone={onCreateSliceZone}
         onSelectSharedSlices={onSelectSharedSlices}

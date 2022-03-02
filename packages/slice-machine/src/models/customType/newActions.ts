@@ -9,8 +9,6 @@ export type CustomTypeActions =
   | ActionType<typeof pushCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
   | ActionType<typeof deleteFieldMockConfigCreator>
-  | ActionType<typeof updateWidgetGroupMockConfigCreator>
-  | ActionType<typeof deleteWidgetGroupMockConfigCreator>
   | ActionType<typeof createTabCreator>
   | ActionType<typeof updateTabCreator>
   | ActionType<typeof deleteTabCreator>
@@ -38,16 +36,13 @@ export const pushCustomTypeCreator = createAction("CUSTOM_TYPE/PUSH")();
 // Mock config actions
 export const updateFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/UPDATE_FIELD_MOCK_CONFIG"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 )<{ mockConfig: any }>();
+
 export const deleteFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/DELETE_FIELD_MOCK_CONFIG"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 )<{ mockConfig: any }>();
-export const updateWidgetGroupMockConfigCreator = createAction(
-  "CUSTOM_TYPE/UPDATE_WIDGET_GROUP__MOCK_CONFIG"
-)();
-export const deleteWidgetGroupMockConfigCreator = createAction(
-  "CUSTOM_TYPE/DELETE_WIDGET_GROUP_MOCK_CONFIG"
-)();
 
 // Variation actions
 export const createTabCreator = createAction("CUSTOM_TYPE/CREATE_TAB")<{

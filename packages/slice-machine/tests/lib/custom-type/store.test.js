@@ -51,7 +51,7 @@ test("it renames a tab", () => {
   const Tab = result.current[0].current.tabs[0];
   const newTabKey = "Tab1";
   act(() => {
-    store.tab(Tab.key).update(newTabKey);
+    store.updateTab(Tab.key, newTabKey);
   });
   const NewTab = result.current[0].current.tabs[0];
 
@@ -59,7 +59,7 @@ test("it renames a tab", () => {
 
   const unattr = `some___${newTabKey}`;
   act(() => {
-    store.tab(`undef___${Tab.key}`).update(unattr);
+    store.updateTab(`undef___${Tab.key}`, unattr);
   });
 
   expect(!!result.current[0].current.tabs.find((e) => e.key === unattr)).toBe(
@@ -94,9 +94,7 @@ test("it adds widget", () => {
   const { key, value } = initialTab;
   const widgetId = "myWidget";
   act(() => {
-    result.current[1]
-      .tab(key)
-      .addWidget(widgetId, widgets.Boolean.create(widgetId));
+    result.current[1].addField(key, widgetId, widgets.Boolean.create(widgetId));
   });
 
   const newValue = result.current[0].current.tabs[0].value;
@@ -110,9 +108,7 @@ test("it adds widget", () => {
   const { key, value } = initialTab;
   const widgetId = "myWidget";
   act(() => {
-    result.current[1]
-      .tab(key)
-      .addWidget(widgetId, widgets.Boolean.create(widgetId));
+    result.current[1].addField(key, widgetId, widgets.Boolean.create(widgetId));
   });
 
   const newValue = result.current[0].current.tabs[0].value;
@@ -127,7 +123,7 @@ test("it removes widget", () => {
   const widget = initialTab.value[0];
 
   act(() => {
-    result.current[1].tab(key).removeWidget(widget.key);
+    result.current[1].deleteField(key, widget.key);
   });
 
   expect(result.current[0].current.tabs[0].value.length).toEqual(
@@ -144,9 +140,7 @@ test("it replaces widget", () => {
   const initialStoreTab = result.current[0].current.tabs[0];
 
   act(() => {
-    result.current[1]
-      .tab(key)
-      .replaceWidget(widget.key, "newKey", widget.value);
+    result.current[1].replaceField(key, widget.key, "newKey", widget.value);
   });
 
   expect(
@@ -160,32 +154,30 @@ test("it replaces widget", () => {
   ).toEqual(true);
 
   act(() => {
-    result.current[1]
-      .tab(key)
-      .replaceWidget(
-        result.current[0].current.tabs[0].value[0].key,
-        initialTab.value[0].key,
-        initialTab.value[0].value
-      );
+    result.current[1].replaceField(
+      key,
+      result.current[0].current.tabs[0].value[0].key,
+      initialTab.value[0].key,
+      initialTab.value[0].value
+    );
   });
 
   expect(equal(initialStoreTab.value, initialTab.value)).toEqual(true);
 
   const newPlaceholder = `differ-from-${widget.value.config.placeholder}`;
   act(() => {
-    result.current[1]
-      .tab(key)
-      .replaceWidget(
-        result.current[0].current.tabs[0].value[0].key,
-        result.current[0].current.tabs[0].value[0].key,
-        {
-          ...widget.value,
-          config: {
-            ...widget.value.config,
-            placeholder: newPlaceholder,
-          },
-        }
-      );
+    result.current[1].replaceField(
+      key,
+      result.current[0].current.tabs[0].value[0].key,
+      result.current[0].current.tabs[0].value[0].key,
+      {
+        ...widget.value,
+        config: {
+          ...widget.value.config,
+          placeholder: newPlaceholder,
+        },
+      }
+    );
   });
 
   expect(
@@ -202,21 +194,21 @@ test("it reorders widgets", () => {
   const widgetC = initialTab.value[2];
 
   act(() => {
-    result.current[1].tab(key).reorderWidget(0, 1);
+    result.current[1].reorderField(key, 0, 1);
   });
 
   expect(result.current[0].current.tabs[0].value[0].key).toEqual(widgetB.key);
   expect(result.current[0].current.tabs[0].value[1].key).toEqual(widgetA.key);
 
   act(() => {
-    result.current[1].tab(key).reorderWidget(0, 1);
+    result.current[1].reorderField(key, 0, 1);
   });
 
   expect(result.current[0].current.tabs[0].value[0].key).toEqual(widgetA.key);
   expect(result.current[0].current.tabs[0].value[1].key).toEqual(widgetB.key);
 
   act(() => {
-    result.current[1].tab(key).reorderWidget(0, 2);
+    result.current[1].reorderField(key, 0, 2);
   });
 
   expect(result.current[0].current.tabs[0].value[0].key).toEqual(widgetB.key);
@@ -224,7 +216,7 @@ test("it reorders widgets", () => {
   expect(result.current[0].current.tabs[0].value[2].key).toEqual(widgetA.key);
 
   act(() => {
-    result.current[1].tab(key).reorderWidget(2, 0);
+    result.current[1].reorderField(key, 2, 0);
   });
 
   expect(result.current[0].current.tabs[0].value[0].key).toEqual(widgetA.key);
@@ -268,7 +260,7 @@ test("it adds and removes slices to/from sliceZone", () => {
     result.current[1].tab(key).deleteSliceZone();
   });
   act(() => {
-    result.current[1].tab(key).createSliceZone();
+    result.current[1].createSliceZone(key);
   });
 
   act(() => {
@@ -293,18 +285,18 @@ test("it adds and removes slices to/from sliceZone", () => {
 
   // Slice does not exist
   act(() => {
-    result.current[1].tab(key).removeSharedSlice("MyUndefSlice");
+    result.current[1].deleteSharedSlice(key, "MyUndefSlice");
   });
   expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(2);
 
   act(() => {
-    result.current[1].tab(key).removeSharedSlice("MySlice");
+    result.current[1].deleteSharedSlice(key, "MySlice");
   });
   expect(result.current[0].current.tabs[0].sliceZone.value.length).toEqual(1);
 
   const keys = ["Slice1", "Slice2", "Slice3", "Slice4"];
   act(() => {
-    result.current[1].tab(key).replaceSharedSlices(keys);
+    result.current[1].replaceSharedSlice(key, keys);
   });
   expect(
     result.current[0].current.tabs[0].sliceZone.value.map((e) => e.key)

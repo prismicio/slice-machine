@@ -165,10 +165,10 @@ const CtTabs = ({
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              return store.tab(state.key).update(id);
+              return store.updateTab(state.key, id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
-              store.tab(state.key).delete();
+              store.deleteTab(state.key);
               setTabIndex(0);
             }
           }}
