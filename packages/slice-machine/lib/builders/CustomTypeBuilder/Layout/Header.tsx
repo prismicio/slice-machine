@@ -6,18 +6,18 @@ import {
   CustomTypeStatus,
 } from "@lib/models/ui/CustomTypeState";
 import { handleRemoteResponse, ToastPayload } from "@src/modules/toaster/utils";
-import CustomTypeStore from "@src/models/customType/store";
 
 import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { MdSpaceDashboard } from "react-icons/md";
 
 const CustomTypeHeader = ({
   Model,
-  store,
+  customTypeActions,
 }: {
   Model: CustomTypeState;
-  store: CustomTypeStore;
+  customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal, openToaster } = useSliceMachineActions();
@@ -27,7 +27,7 @@ const CustomTypeHeader = ({
       return {
         onClick: () => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          store.save(Model);
+          customTypeActions.save(Model);
         },
         children: <span>Save to File System</span>,
       };
@@ -42,7 +42,7 @@ const CustomTypeHeader = ({
           if (!isLoading) {
             setIsLoading(true);
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            store.push(Model, (data: ToastPayload): void => {
+            customTypeActions.push(Model, (data: ToastPayload): void => {
               if (!data.done) {
                 return;
               }

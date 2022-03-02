@@ -6,7 +6,7 @@ import { renderHook, act } from "@testing-library/react-hooks";
 
 import equal from "fast-deep-equal";
 
-import { useModelReducer } from "@src/models/customType/modelReducer";
+import { useCustomTypeReducer } from "@src/models/customType/modelReducer";
 import { CustomType } from "@lib/models/common/CustomType";
 
 import * as widgets from "@lib/models/common/widgets/withGroup";
@@ -21,7 +21,7 @@ const init = (initialData) => {
     remoteCustomType: model,
     initialMockConfig: {},
   };
-  const { result } = renderHook(() => useModelReducer(data));
+  const { result } = renderHook(() => useCustomTypeReducer(data));
   const initialTab = result.current[0].current.tabs[0];
   return { result, initialTab };
 };

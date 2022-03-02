@@ -4,9 +4,11 @@ import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { CustomTypeState, CustomTypeStatus } from "@models/ui/CustomTypeState";
 
 import reducer from "./reducer";
-import CustomTypeStore from "./store";
+import useCustomTypeActions, {
+  UseCustomTypeActionsReturnType,
+} from "@src/models/customType/useCustomTypeActions";
 
-export function useModelReducer({
+export function useCustomTypeReducer({
   customType,
   remoteCustomType: remoteCustomTypeObject,
   initialMockConfig = {},
@@ -15,7 +17,7 @@ export function useModelReducer({
   remoteCustomType: CustomType<ObjectTabs> | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMockConfig: any;
-}): [CustomTypeState, CustomTypeStore] {
+}): [CustomTypeState, UseCustomTypeActionsReturnType] {
   const current = CustomType.toArray(customType);
 
   const remoteCustomType = remoteCustomTypeObject
@@ -45,7 +47,7 @@ export function useModelReducer({
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  const store = new CustomTypeStore(dispatch);
+  const customTypeActions = useCustomTypeActions(dispatch);
 
-  return [state, store];
+  return [state, customTypeActions];
 }

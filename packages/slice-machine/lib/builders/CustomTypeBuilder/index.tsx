@@ -4,16 +4,16 @@ import { Box } from "theme-ui";
 import TabZone from "./TabZone";
 import { Header, Tabs } from "./Layout";
 
-import { CustomTypeState } from "../../models/ui/CustomTypeState";
-import CustomTypeStore from "../../../src/models/customType/store";
-import Container from "../../../components/Container";
+import { CustomTypeState } from "@models/ui/CustomTypeState";
+import Container from "@components/Container";
+import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 
 const CustomTypeBuilder = ({
   Model,
-  store,
+  customTypeActions,
 }: {
   Model: CustomTypeState;
-  store: CustomTypeStore;
+  customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
   const modelRef = useRef(Model);
 
@@ -22,17 +22,17 @@ const CustomTypeBuilder = ({
   }, [Model]);
 
   useEffect(() => {
-    return () => store.reset();
+    return () => customTypeActions.reset();
   }, []);
 
   return (
     <Box sx={{ flex: 1 }}>
       <Container sx={{ pb: 0 }}>
-        <Header Model={Model} store={store} />
+        <Header Model={Model} customTypeActions={customTypeActions} />
       </Container>
       <Tabs
         Model={Model}
-        store={store}
+        customTypeActions={customTypeActions}
         renderTab={({
           value,
           sliceZone,
@@ -49,7 +49,7 @@ const CustomTypeBuilder = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={value}
               Model={Model}
-              store={store}
+              customTypeActions={customTypeActions}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               sliceZone={sliceZone}
               showHints={true}

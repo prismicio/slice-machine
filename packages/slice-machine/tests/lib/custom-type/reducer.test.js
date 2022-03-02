@@ -4,7 +4,7 @@
 
 import { renderHook } from "@testing-library/react-hooks";
 
-import { useModelReducer } from "@src/models/customType/modelReducer";
+import { useCustomTypeReducer } from "@src/models/customType/modelReducer";
 import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
 import { CustomType } from "@lib/models/common/CustomType";
 
@@ -14,7 +14,7 @@ const model = CustomType.fromJsonModel(jsonModel.id, jsonModel);
 
 test("it renders model reducer", () => {
   const { result } = renderHook(() =>
-    useModelReducer({
+    useCustomTypeReducer({
       customType: model,
       remoteCustomType: null,
       initialMockConfig: {},
@@ -31,7 +31,7 @@ test("it renders model reducer", () => {
 
 test("it sets correct status 1/4", () => {
   const { result } = renderHook(() =>
-    useModelReducer({
+    useCustomTypeReducer({
       customType: model,
       remoteCustomType: null,
       initialMockConfig: {},
@@ -44,7 +44,7 @@ test("it sets correct status 1/4", () => {
 
 test("it sets correct status 2/4", () => {
   const { result } = renderHook(() =>
-    useModelReducer({
+    useCustomTypeReducer({
       customType: model,
       remoteCustomType: model,
       initialMockConfig: {},
@@ -57,7 +57,7 @@ test("it sets correct status 2/4", () => {
 
 test("it sets correct status 3/4", () => {
   const { result } = renderHook(() =>
-    useModelReducer({
+    useCustomTypeReducer({
       customType: model,
       remoteCustomType: { ...model, label: `differ-from-${model.label}` },
       initialMockConfig: {},
@@ -70,7 +70,7 @@ test("it sets correct status 3/4", () => {
 
 test("it sets correct status 4/4", () => {
   const { result } = renderHook(() =>
-    useModelReducer({
+    useCustomTypeReducer({
       customType: model,
       remoteCustomType: { ...model, tabs: {} },
       initialMockConfig: {},

@@ -18,8 +18,8 @@ import CreateModal from "../TabModal/create";
 import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
-import CustomTypeStore from "src/models/customType/store";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
+import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 
 enum ModalType {
   CREATE = "create",
@@ -58,13 +58,13 @@ const Icon = ({
 const CtTabs = ({
   sx,
   Model,
-  store,
+  customTypeActions,
   renderTab,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sx?: any;
   Model: CustomTypeState;
-  store: CustomTypeStore;
+  customTypeActions: UseCustomTypeActionsReturnType;
   // eslint-disable-next-line @typescript-eslint/ban-types
   renderTab: Function;
 }) => {
@@ -142,7 +142,7 @@ const CtTabs = ({
           tabIds={Model.current.tabs.map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
-            store.createTab(id);
+            customTypeActions.createTab(id);
             // current.tabs is not updated yet
             setTabIndex(Model.current.tabs.length);
           }}
@@ -165,10 +165,10 @@ const CtTabs = ({
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              return store.updateTab(state.key, id);
+              return customTypeActions.updateTab(state.key, id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
-              store.deleteTab(state.key);
+              customTypeActions.deleteTab(state.key);
               setTabIndex(0);
             }
           }}

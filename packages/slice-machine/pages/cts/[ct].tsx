@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import { useModelReducer } from "src/models/customType/modelReducer";
+import { useCustomTypeReducer } from "src/models/customType/modelReducer";
 import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
@@ -28,13 +28,18 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
       env.mockConfig,
       customType.id
     );
-    const [Model, store] = useModelReducer({
+    const [Model, customTypeActions] = useCustomTypeReducer({
       customType,
       remoteCustomType,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       initialMockConfig,
     });
-    return <CustomTypeBuilder Model={Model} store={store} />;
+    return (
+      <CustomTypeBuilder
+        Model={Model}
+        customTypeActions={customTypeActions}
+      />
+    );
   };
 
 const CustomTypeBuilderWithRouter = () => {

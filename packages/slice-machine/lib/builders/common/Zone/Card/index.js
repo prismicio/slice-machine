@@ -30,8 +30,8 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable,
 }) => {
-  const { framework } = useSelector((store) => ({
-    framework: getFramework(store),
+  const { framework } = useSelector((state) => ({
+    framework: getFramework(state),
   }));
 
   return (
