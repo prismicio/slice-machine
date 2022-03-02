@@ -20,6 +20,7 @@ async function init() {
   const branch: string | undefined = findArgument(process.argv, "branch");
   const isTrackingAvailable =
     findArgument(process.argv, "tracking") !== "false";
+  const repoName = findArgument(process.argv, "repository");
 
   Tracker.get().initialize(
     process.env.NEXT_PUBLIC_SEGMENT_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
@@ -57,7 +58,8 @@ async function init() {
     cwd,
     frameworkResult.value,
     config.cookies,
-    config.base
+    config.base,
+    repoName
   );
 
   // Install the required dependencies in the project.
