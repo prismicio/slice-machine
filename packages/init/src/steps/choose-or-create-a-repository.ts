@@ -124,17 +124,17 @@ export async function chooseOrCreateARepository(
   framework: Models.Frameworks,
   cookies: string,
   base = DEFAULT_BASE,
-  project?: string
+  repoName?: string
 ): Promise<string> {
   const token = parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token);
 
   const hasRepo =
-    project && repos.length && repos.map((d) => d.domain).includes(project);
-  if (hasRepo) return project;
+    repoName && repos.length && repos.map((d) => d.domain).includes(repoName);
+  if (hasRepo) return repoName;
 
   if (repos.length === 0) {
-    const domainName = await promptForRepoDomain(base, project);
+    const domainName = await promptForRepoDomain(base, repoName);
     return await createRepository(domainName, framework, cookies, base);
   }
 
@@ -159,7 +159,7 @@ export async function chooseOrCreateARepository(
   ]);
 
   if (res.chosenRepo === CREATE_REPO) {
-    const domainName = await promptForRepoDomain(base, project);
+    const domainName = await promptForRepoDomain(base, repoName);
     return await createRepository(domainName, framework, cookies, base);
   }
 

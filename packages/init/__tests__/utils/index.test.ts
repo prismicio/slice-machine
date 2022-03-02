@@ -16,7 +16,7 @@ describe("findArgument", () => {
     expect(argument).toBeUndefined();
   });
   test("project argument", () => {
-    const arg = findArgument(["--project", "foo-bar"], "project");
+    const arg = findArgument(["--repository", "foo-bar"], "repository");
     expect(arg).toEqual("foo-bar");
   });
 });
