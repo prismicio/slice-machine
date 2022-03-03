@@ -10,16 +10,14 @@ import NotLoggedIn from "./Navigation/NotLoggedIn";
 import { warningStates } from "@lib/consts";
 
 import { useSelector } from "react-redux";
-import {
-  getChangelog,
-  getWarnings,
-} from "@src/modules/environment";
+import { getChangelog, getWarnings } from "@src/modules/environment";
 import { getUpdatesViewed } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
-import WarningItem from "@components/AppLayout/Navigation/Menu/Navigation/WarningItem";
-import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
+import WarningItem from "./Navigation/WarningItem";
+import Item from "./Navigation/Item";
+import ReactTooltip from "react-tooltip";
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
@@ -86,6 +84,47 @@ const UpdateInfo: React.FC<{
   );
 };
 
+const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
+  const ref = React.createRef<HTMLParagraphElement>();
+  const id = "nav-tool-tip";
+  React.useEffect(() => {
+    showToolTip && ref.current && ReactTooltip.show(ref.current);
+  }, [ref.current]);
+
+  return (
+    <>
+      <Item
+        ref={ref}
+        data-for={id}
+        data-tip=""
+        link={{
+          title: "Video tutorials",
+          Icon: MdPlayCircleFilled,
+          href: "https://youtube.com",
+          target: "_blank",
+          match: () => false,
+        }}
+        theme={"emphasis"}
+      />
+      <ReactTooltip
+        id={id}
+        effect="solid"
+        getContent={() => {
+          return (
+            <div>
+              <Paragraph>Need Help?</Paragraph>
+              <Paragraph>
+                Follow our Quick Start guide to learn the basics of Slice
+                Machine
+              </Paragraph>
+            </div>
+          );
+        }}
+      />
+    </>
+  );
+};
+
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
@@ -139,16 +178,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
             />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
-          <Item
-            link={{
-              title: "Video tutorials",
-              Icon: MdPlayCircleFilled,
-              href: "https://youtube.com",
-              target: "_blank",
-              match: () => false,
-            }}
-            theme={"emphasis"}
-          />
+
+          <VideoInfo showToolTip={true} />
           <Divider variant="sidebar" />
           <WarningItem currentVersion={changelog.currentVersion} />
         </Box>
