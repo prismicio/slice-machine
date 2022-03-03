@@ -1,24 +1,36 @@
-import PageFetch from "./PageFetch";
-import SliceZone from "./SliceZone";
+import PageFetch from "./features/PageFetch";
+import SliceZone from "./features/SliceZone";
 
 export default {
   name: "SliceZone",
-  render(h) {
-    const { slices, type, uid, resolver: maybeResolver } = this.$attrs;
+  props:
+    // Merge PageFetch and SliceZone props and make them not required at this stage
+    Object.entries({ ...PageFetch.props, ...SliceZone.props }).reduce(
+      (acc, [key, value]) => {
+        const newValue = { ...value };
+        delete newValue.validator;
+        newValue.required = false;
 
-    const resolver = maybeResolver || this.$sliceMachine.resolver;
-    if (!slices && type && uid) {
-      return h(PageFetch, {
-        props: {
-          ...this.$attrs,
-          resolver,
-          scopedSlots: this.$scopedSlots,
-        },
-      });
-    }
-    return h(SliceZone, {
+        return {
+          ...acc,
+          [key]: newValue,
+        };
+      },
+      {}
+    ),
+  render(h) {
+    const { type, uid, slices, queryType, resolver: maybeResolver } = this;
+
+    const component =
+      !slices && type && (uid || queryType === "single")
+        ? PageFetch
+        : SliceZone;
+    return h(component, {
       scopedSlots: this.$scopedSlots,
-      props: { ...this.$attrs, resolver },
+      props: {
+        ...this.$props,
+        resolver: maybeResolver || this.$sliceMachine.resolver,
+      },
     });
   },
 };
