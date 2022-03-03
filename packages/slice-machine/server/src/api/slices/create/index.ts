@@ -1,4 +1,4 @@
-import { SliceSaveBody, SliceBody } from "@models/common/Slice";
+import { SliceBody, SliceCreateResponse } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -19,6 +19,8 @@ import { DEFAULT_VARIATION_ID } from "@lib/consts";
 import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
+import { ApiResult } from "@lib/models/server/ApiResult";
+import { RESERVED_SLICE_NAME } from "@lib/consts";
 
 import PluginMiddleWare from "@slicemachine/plugin-middleware";
 import fs from "fs";
@@ -141,8 +143,13 @@ export default async function createSlice({ sliceName, from }: SliceBody) {
 
 export async function handler({
   sliceName,
-  from, // libraryName
-}: SliceSaveBody) {
+  from,
+}: SliceBody): Promise<ApiResult<SliceCreateResponse>> {
+  if (RESERVED_SLICE_NAME.includes(sliceName)) {
+    const msg = `The slice name '${sliceName}' is reserved for slice machine use`;
+    return { err: new Error(msg), status: 400, reason: msg };
+  }
+
   const { env } = await getEnv();
   console.log({ sliceName, from });
 
@@ -172,10 +179,7 @@ export async function handler({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       body: { sliceName, from, model, mockConfig: {} },
     });
-    return {
-      ...res,
-      variationId: DEFAULT_VARIATION_ID,
-    };
+    return { ...res, variationId: DEFAULT_VARIATION_ID };
   }
 
   const msg = `[create] Could not find file model.json. Exiting...`;

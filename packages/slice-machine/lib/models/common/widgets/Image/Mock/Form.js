@@ -100,9 +100,10 @@ const InputSrc = ({ value, onUpdate, onReset }) => {
 const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { values, setFieldValue } = useFormikContext();
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const contentValue = values[MockConfigKey]?.content || null;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const contentValue =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    values[MockConfigKey]?.content || null;
 
   const onUpdate = (value) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

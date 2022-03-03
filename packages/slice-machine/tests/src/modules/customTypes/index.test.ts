@@ -5,7 +5,7 @@ import {
 } from "@src/modules/customTypes";
 import { testSaga } from "redux-saga-test-plan";
 import { CustomTypesStoreType } from "@src/modules/customTypes/types";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
@@ -15,6 +15,7 @@ import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const dummyCustomTypesState: CustomTypesStoreType = {
   localCustomTypes: [],
@@ -36,7 +37,7 @@ describe("[Custom types module]", () => {
     });
 
     it("should update the custom types state given STATE/GET.RESPONSE action", () => {
-      const action = getStateCreator({
+      const action = refreshStateCreator({
         env: dummyServerState.env,
         configErrors: dummyServerState.configErrors,
         warnings: dummyServerState.warnings,
@@ -79,7 +80,7 @@ describe("[Custom types module]", () => {
   });
 
   describe("[createCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions", () => {
+    it("should call the api and dispatch the good actions on success", () => {
       const actionPayload = { id: "id", label: "label", repeatable: true };
       const customTypeCreated = createCustomType(
         actionPayload.id,
@@ -101,6 +102,33 @@ describe("[Custom types module]", () => {
         .next()
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
       saga.next().put(push("/cts/id"));
+      saga.next().put(
+        openToasterCreator({
+          message: "Custom type saved",
+          type: ToasterType.SUCCESS,
+        })
+      );
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on failure", () => {
+      const actionPayload = { id: "id", label: "label", repeatable: true };
+      const customTypeCreated = createCustomType(
+        actionPayload.id,
+        actionPayload.label,
+        actionPayload.repeatable
+      );
+      const saga = testSaga(
+        createCustomTypeSaga,
+        createCustomTypeCreator.request(actionPayload)
+      );
+
+      saga.next().call(saveCustomType, customTypeCreated, {});
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          message: "Internal Error: Custom type not saved",
+          type: ToasterType.ERROR,
+        })
+      );
       saga.next().isDone();
     });
   });

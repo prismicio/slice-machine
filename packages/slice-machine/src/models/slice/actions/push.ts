@@ -1,7 +1,7 @@
-import { fetchApi } from "../../../../lib/builders/common/fetch";
-import SliceState from "../../../../lib/models/ui/SliceState";
+import { fetchApi } from "@lib/builders/common/fetch";
+import SliceState from "@lib/models/ui/SliceState";
+import { ToastPayload } from "@src/modules/toaster/utils";
 import { ActionType } from "./ActionType";
-import { ToastPayload } from "../../../../src/ToastProvider/utils";
 
 export default function push(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

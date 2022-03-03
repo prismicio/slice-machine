@@ -6,7 +6,7 @@
   "apiEndpoint": "https://sm-env-example.prismic.io/api/v2",
   "_storybook": "http://localhost:6006",
   "chromaticAppId": "5f5b34f06f304800225c4e17",
-  "framework": "next",
+  "framework": "previousNuxt",
   "tracking": false,
   "localSliceSimulatorURL": "http://localhost:3001/slice-simulator",
   "_latest": "0.1.0",

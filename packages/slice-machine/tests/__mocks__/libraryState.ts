@@ -4,13 +4,13 @@ export const MockLibraryInfo: (
   lib: string
 ) => Models.Library<Models.Component> = (lib: string) => ({
   name: lib,
-  path: "./" + lib,
+  path: "/" + lib,
   isLocal: true,
   components: [
     {
       from: lib,
       href: "http://myscreenshotuploaded",
-      pathToSlice: "./" + lib + "/slice1",
+      pathToSlice: "/slice1",
       infos: {
         sliceName: "slice1",
         fileName: "slice1/models.json",

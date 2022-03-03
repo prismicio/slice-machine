@@ -36,4 +36,8 @@ export interface SliceSaveResponse {
   warning: string | null;
 }
 
+export interface SliceCreateResponse extends SliceSaveResponse {
+  variationId: string;
+}
+
 export default Slice;

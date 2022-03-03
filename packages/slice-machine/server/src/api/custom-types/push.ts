@@ -1,6 +1,5 @@
 import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
-import { handler as saveSlice } from "../slices/save";
 
 import { onError } from "../common/error";
 import Files from "@lib/utils/files";
@@ -69,7 +68,9 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const modelPath = CustomTypesPaths(state.env.cwd).customType(id).model();
+  const modelPath = CustomTypesPaths(state.env.cwd)
+    .customType(id as string)
+    .model();
 
   let model;
   try {
@@ -122,13 +123,6 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     const slice = localSlices[sliceKey];
     if (slice) {
       try {
-        console.log("[custom-types/push] Saving slice", sliceKey);
-        await saveSlice(state.env, {
-          sliceName: slice.infos.sliceName,
-          from: slice.from,
-          model: slice.model,
-          mockConfig: slice.infos.mock,
-        });
         console.log("[custom-types/push] Pushing slice", sliceKey);
         await pushSlice(state.env, state.remoteSlices, {
           sliceName: slice.infos.sliceName,

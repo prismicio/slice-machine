@@ -12,7 +12,7 @@ import {
   skipReviewCreator,
   updatesViewedCreator,
 } from "@src/modules/userContext";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
@@ -28,6 +28,7 @@ import {
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -90,18 +91,21 @@ const useSliceMachineActions = () => {
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
 
-  // State Action (used by multiple stores)
-  const getState = (serverState: ServerState | undefined) => {
-    if (!serverState) return;
+  // Toaster store
+  const openToaster = (message: string, type: ToasterType) =>
+    dispatch(openToasterCreator({ message, type }));
 
+  // State Action (used by multiple stores)
+  const refreshState = (serverState: ServerState) => {
     dispatch(
-      getStateCreator({
+      refreshStateCreator({
         env: serverState.env,
         warnings: serverState.warnings,
         configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
+        remoteSlices: serverState.remoteSlices,
       })
     );
   };
@@ -113,7 +117,7 @@ const useSliceMachineActions = () => {
     toggleSetupDrawerStep,
     closeSetupDrawer,
     openSetupDrawer,
-    getState,
+    refreshState,
     finishOnboarding,
     openLoginModal,
     closeLoginModal,
@@ -131,6 +135,7 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openCreateSliceModal,
     closeCreateSliceModal,
+    openToaster,
   };
 };
 

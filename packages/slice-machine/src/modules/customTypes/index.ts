@@ -9,7 +9,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
@@ -18,6 +18,7 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 // Action Creators
 export const saveCustomTypeCreator = createAction("CUSTOM_TYPES/SAVE.REQUEST")<{
@@ -40,7 +41,7 @@ export const createCustomTypeCreator = createAsyncAction(
 >();
 
 type CustomTypesActions =
-  | ActionType<typeof getStateCreator>
+  | ActionType<typeof refreshStateCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof createCustomTypeCreator>;
 
@@ -59,7 +60,7 @@ export const customTypesReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getStateCreator):
+    case getType(refreshStateCreator):
       return {
         ...state,
         remoteCustomTypes: action.payload.remoteCustomTypes,
@@ -91,15 +92,32 @@ export const customTypesReducer: Reducer<
 export function* createCustomTypeSaga({
   payload,
 }: ReturnType<typeof createCustomTypeCreator.request>) {
-  const newCustomType = createCustomType(
-    payload.id,
-    payload.label,
-    payload.repeatable
-  );
-  yield call(saveCustomType, newCustomType, {});
-  yield put(createCustomTypeCreator.success({ newCustomType }));
-  yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
-  yield put(push(`/cts/${payload.id}`));
+  try {
+    const newCustomType = createCustomType(
+      payload.id,
+      payload.label,
+      payload.repeatable
+    );
+    yield call(saveCustomType, newCustomType, {});
+    yield put(createCustomTypeCreator.success({ newCustomType }));
+    yield put(
+      modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE })
+    );
+    yield put(push(`/cts/${payload.id}`));
+    yield put(
+      openToasterCreator({
+        message: "Custom type saved",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Custom type not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
 }
 
 // Saga watchers

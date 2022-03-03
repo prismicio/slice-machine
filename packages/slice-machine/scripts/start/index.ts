@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, Models } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 
 // Don't remove those lines, they resolve aliases
 import { resolveAliases } from "../../lib/env/resolveAliases";
@@ -8,7 +8,7 @@ resolveAliases(path.join(__dirname, "../../../"));
 import handleManifest, { ManifestInfo } from "@lib/env/manifest";
 import { getPackageChangelog } from "@lib/env/versions";
 
-import { findArgument } from "../common/findArgument";
+import { findArgument } from "./findArgument";
 import infoBox from "./infoxBox";
 import { handleMigration } from "./handleMigration";
 import { validateManifest } from "./validateManifest";
@@ -37,7 +37,6 @@ async function run(): Promise<void> {
 
   const framework = Utils.Framework.defineFramework({
     cwd,
-    supportedFrameworks: Models.SupportedFrameworks,
     manifest: manifest.content || undefined,
   });
 

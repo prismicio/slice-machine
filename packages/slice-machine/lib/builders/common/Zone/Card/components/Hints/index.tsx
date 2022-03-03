@@ -7,7 +7,7 @@ import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 const FrameworkRenderers = {
   [Frameworks.nuxt]: Renderers.nuxt,
-  [Frameworks.previousNuxt]: null,
+  [Frameworks.previousNuxt]: Renderers.previousNuxt,
   [Frameworks.next]: Renderers.next,
   [Frameworks.vue]: Renderers.vue,
   [Frameworks.react]: Renderers.react,
@@ -15,6 +15,7 @@ const FrameworkRenderers = {
   [Frameworks.vanillajs]: Renderers.vanillajs,
   [Frameworks.none]: null,
   [Frameworks.gatsby]: null,
+  [Frameworks.previousNext]: Renderers.previousNext,
 };
 
 interface HintProps {

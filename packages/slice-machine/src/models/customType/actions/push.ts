@@ -1,7 +1,7 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 import ActionType from "./";
-import { ToastPayload } from "@src/ToastProvider/utils";
+import { ToastPayload } from "@src/modules/toaster/utils";
 
 export default function push(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

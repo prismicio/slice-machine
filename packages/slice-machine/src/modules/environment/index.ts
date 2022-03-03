@@ -11,18 +11,20 @@ import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
+import type { Models } from "@slicemachine/core";
 
 // Action Creators
-export const getStateCreator = createAction("STATE/GET.RESPONSE")<{
+export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   env: FrontEndEnvironment;
   warnings: ReadonlyArray<Warning>;
   configErrors: ConfigErrors;
   localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   libraries: ReadonlyArray<LibraryUI>;
+  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
 }>();
 
-type EnvironmentActions = ActionType<typeof getStateCreator>;
+type EnvironmentActions = ActionType<typeof refreshStateCreator>;
 
 // Selectors
 export const getEnvironment = (
@@ -37,6 +39,12 @@ export const selectSimulatorUrl = (
 
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
   store.environment.env.framework;
+
+export const getShortId = (store: SliceMachineStoreType): string | undefined =>
+  store.environment.env.shortId;
+
+export const getRepoName = (store: SliceMachineStoreType): string | undefined =>
+  store.environment.env.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
@@ -68,6 +76,12 @@ export const getCurrentVersion = (store: SliceMachineStoreType): string => {
   return currentVersion;
 };
 
+export const getIsTrackingAvailable = (
+  store: SliceMachineStoreType
+): boolean => {
+  return !!store.environment.env.manifest.tracking;
+};
+
 export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {
@@ -80,8 +94,10 @@ export const getLinkToTroubleshootingDocs = (
   const framework = getFramework(state);
   switch (framework) {
     case Frameworks.next:
+    case Frameworks.previousNext:
       return "https://prismic.io/docs/technologies/setup-slice-simulator-nextjs";
     case Frameworks.nuxt:
+    case Frameworks.previousNuxt:
       return "https://prismic.io/docs/technologies/setup-slice-simulator-nuxtjs";
     default:
       return "https://prismic.io/docs";
@@ -94,8 +110,10 @@ export const getLinkToStorybookDocs = (
   const framework = getFramework(state);
   switch (framework) {
     case Frameworks.next:
+    case Frameworks.previousNext:
       return "https://prismic.io/docs/technologies/storybook-nextjs";
     case Frameworks.nuxt:
+    case Frameworks.previousNuxt:
       return "https://prismic.io/docs/technologies/use-storybook-nuxtjs";
     case Frameworks.react:
       return "https://storybook.js.org/docs/react/get-started/install";
@@ -117,7 +135,7 @@ export const environmentReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(getStateCreator):
+    case getType(refreshStateCreator):
       return {
         ...state,
         env: action.payload.env,

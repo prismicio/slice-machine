@@ -6,20 +6,20 @@ const {
   PRISMIC_CLIENT,
   PRISMIC_DOM_PACKAGE_NAME,
   PRISMIC_REACT_PACKAGE_NAME,
-  NEXT_SLICEZONE,
   SM_PACKAGE_NAME,
   NUXT_PRISMIC,
   PRISMIC_VUE,
   SLICE_SIMULATOR_REACT,
   SLICE_SIMULATOR_VUE,
+  PRISMIC_HELPERS,
 } = Utils.CONSTS;
 
 function depsForFramework(framework: Models.Frameworks): string {
   switch (framework) {
     case Models.Frameworks.react:
-      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${PRISMIC_HELPERS}`;
     case Models.Frameworks.next:
-      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT}@v5.1.1 ${NEXT_SLICEZONE} ${SLICE_SIMULATOR_REACT}`;
+      return `${PRISMIC_REACT_PACKAGE_NAME} ${PRISMIC_CLIENT} ${SLICE_SIMULATOR_REACT} ${PRISMIC_HELPERS}`;
     case Models.Frameworks.svelte:
       return `${PRISMIC_DOM_PACKAGE_NAME} ${PRISMIC_CLIENT}`;
     case Models.Frameworks.nuxt:
