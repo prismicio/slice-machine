@@ -10,7 +10,7 @@ import {
 } from "../models";
 import { Cookie, CONSTS } from "../utils";
 
-const { DEFAULT_BASE, USER_SERVICE_BASE } = CONSTS;
+const { DEFAULT_BASE, USER_SERVICE_BASE, USER_SERVICE_STAGING_BASE } = CONSTS;
 
 /**
  *
@@ -78,9 +78,15 @@ export async function validateSession(
     });
 }
 
-export async function listRepositories(token: string): Promise<Repositories> {
+export async function listRepositories(
+  token: string,
+  base = DEFAULT_BASE
+): Promise<Repositories> {
+  const userServiceBase =
+    DEFAULT_BASE === base ? USER_SERVICE_BASE : USER_SERVICE_STAGING_BASE;
+
   return axios
-    .get<Repositories>(`${USER_SERVICE_BASE}/repositories`, {
+    .get<Repositories>(`${userServiceBase}/repositories`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => {
