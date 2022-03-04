@@ -95,7 +95,10 @@ const UpdateInfo: React.FC<{
   );
 };
 
-const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
+const VideoInfo: React.FC<{ showToolTip: boolean; onClose: () => void }> = ({
+  showToolTip,
+  onClose,
+}) => {
   const ref = React.createRef<HTMLParagraphElement>();
   const id = "nav-tool-tip";
 
@@ -103,6 +106,7 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
 
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
   React.useEffect(() => {
@@ -118,6 +122,7 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
         ref={ref}
         data-for={id}
         data-tip=""
+        data-testid="video-toolbar"
         link={{
           title: "Video tutorials",
           Icon: MdPlayCircleFilled,
@@ -126,12 +131,14 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
           match: () => false,
         }}
         theme={"emphasis"}
+        onClick={handleClose}
       />
       <ReactTooltip
         id={id}
         effect="solid"
         backgroundColor="#5B3DF5"
         clickable={true}
+        afterHide={handleClose}
         getContent={() =>
           isOpen ? (
             <Flex
@@ -174,7 +181,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
       viewedVideosToolTip: userHasViewedVideosToolTip(store),
     }));
 
-  const { setUpdatesViewed } = useSliceMachineActions();
+  const { setUpdatesViewed, setVideosViewedToolTip } = useSliceMachineActions();
 
   const latestVersion =
     changelog.versions.length > 0 ? changelog.versions[0] : null;
@@ -217,7 +224,10 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
           )}
           {isNotLoggedIn && <NotLoggedIn />}
 
-          <VideoInfo showToolTip={!viewedVideosToolTip} />
+          <VideoInfo
+            showToolTip={!viewedVideosToolTip}
+            onClose={setVideosViewedToolTip}
+          />
           <Divider variant="sidebar" />
           <WarningItem currentVersion={changelog.currentVersion} />
         </Box>
