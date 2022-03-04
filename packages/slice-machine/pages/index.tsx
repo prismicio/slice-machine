@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React, { Fragment } from "react";
-import { GoPlus } from "react-icons/go";
 import {
   Box,
   Button,
@@ -8,6 +7,7 @@ import {
   Flex,
   Heading,
   Link as ThemeLink,
+  Spinner,
   Text,
 } from "theme-ui";
 import { FiLayout } from "react-icons/fi";
@@ -22,6 +22,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { selectLocalCustomTypes } from "@src/modules/customTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 // To isolate later
 const CTName: React.FunctionComponent<{ ctName: string }> = ({ ctName }) => {
@@ -118,9 +120,15 @@ const Card: React.FunctionComponent<{ ct: CustomType<ObjectTabs> }> = ({
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { customTypes } = useSelector((store: SliceMachineStoreType) => ({
-    customTypes: selectLocalCustomTypes(store),
-  }));
+  const { customTypes, isCreatingCustomType } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      customTypes: selectLocalCustomTypes(store),
+      isCreatingCustomType: isLoading(
+        store,
+        LoadingKeysEnum.CREATE_CUSTOM_TYPE
+      ),
+    })
+  );
 
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -131,15 +139,14 @@ const CustomTypes: React.FunctionComponent = () => {
               data-cy="create-ct"
               onClick={openCreateCustomTypeModal}
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "50%",
-                height: "48px",
-                width: "48px",
+                minWidth: "171px",
               }}
             >
-              <GoPlus size={"2em"} />
+              {isCreatingCustomType ? (
+                <Spinner color="#FFF" size={14} />
+              ) : (
+                "Create a Custom Type"
+              )}
             </Button>
           ) : undefined
         }
