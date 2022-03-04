@@ -11,7 +11,10 @@ import { warningStates } from "@lib/consts";
 
 import { useSelector } from "react-redux";
 import { getChangelog, getWarnings } from "@src/modules/environment";
-import { getUpdatesViewed } from "@src/modules/userContext";
+import {
+  getUpdatesViewed,
+  userHasViewedVideosToolTip,
+} from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
@@ -88,7 +91,13 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
   const ref = React.createRef<HTMLParagraphElement>();
   const id = "nav-tool-tip";
   React.useEffect(() => {
-    showToolTip && ref.current && ReactTooltip.show(ref.current);
+    if (showToolTip && ref.current) {
+      ReactTooltip.show(ref.current);
+
+      setTimeout(() => {
+        ref.current && ReactTooltip.hide(ref.current);
+      }, 5000);
+    }
   }, [ref.current]);
 
   return (
@@ -128,13 +137,13 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, changelog, updatesViewed } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { warnings, changelog, updatesViewed, viewedVideosToolTip } =
+    useSelector((store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       changelog: getChangelog(store),
       updatesViewed: getUpdatesViewed(store),
-    })
-  );
+      viewedVideosToolTip: userHasViewedVideosToolTip(store),
+    }));
 
   const { setUpdatesViewed } = useSliceMachineActions();
 
@@ -179,7 +188,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
           )}
           {isNotLoggedIn && <NotLoggedIn />}
 
-          <VideoInfo showToolTip={true} />
+          <VideoInfo showToolTip={!viewedVideosToolTip} />
           <Divider variant="sidebar" />
           <WarningItem currentVersion={changelog.currentVersion} />
         </Box>

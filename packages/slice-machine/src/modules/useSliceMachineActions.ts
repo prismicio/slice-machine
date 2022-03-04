@@ -11,6 +11,7 @@ import {
   sendAReviewCreator,
   skipReviewCreator,
   updatesViewedCreator,
+  viewedVideosToolTipCreator,
 } from "@src/modules/userContext";
 import { refreshStateCreator } from "@src/modules/environment";
 import {
@@ -80,6 +81,7 @@ const useSliceMachineActions = () => {
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
+  const setVideosViewedToolTip = () => dispatch(viewedVideosToolTipCreator());
 
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
@@ -131,6 +133,7 @@ const useSliceMachineActions = () => {
     sendAReview,
     skipReview,
     setUpdatesViewed,
+    setVideosViewedToolTip,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
     openCreateSliceModal,
