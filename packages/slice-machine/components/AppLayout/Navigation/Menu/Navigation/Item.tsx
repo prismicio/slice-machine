@@ -9,11 +9,13 @@ export interface ItemProps {
   theme?: "emphasis";
   "data-for"?: string;
   "data-tip"?: string;
+  "data-testid"?: string;
+  onClick?: () => void;
 }
 
 //const Item: React.FC<ItemProps> = ({ link, theme, ...rest }) => {
 const Item = React.forwardRef<HTMLDivElement, ItemProps>(
-  ({ link, theme, ...rest }, ref) => {
+  ({ link, theme, onClick, ...rest }, ref) => {
     const router = useRouter();
     return (
       <Box {...rest} ref={ref} as="li" key={link.title}>
@@ -34,6 +36,7 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
                 : {}),
             }}
             target={link.target}
+            onClick={onClick}
           >
             <link.Icon size={24} />
             <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
