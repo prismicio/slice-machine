@@ -5,8 +5,6 @@ import Container from "components/Container";
 
 import { LibrariesContext } from "src/models/libraries/context";
 
-import { GoPlus } from "react-icons/go";
-
 import CreateSliceModal from "components/Forms/CreateSliceModal";
 
 import Header from "components/Header";
@@ -32,18 +30,13 @@ const CreateSliceButton = ({
   loading: boolean;
 }) => (
   <Button
-    onClick={() => onClick()}
+    onClick={onClick}
     data-cy="create-slice"
     sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: "50%",
-      height: "48px",
-      width: "48px",
+      minWidth: "120px",
     }}
   >
-    {loading ? <Spinner color="#FFF" /> : <GoPlus size="2em" />}
+    {loading ? <Spinner color="#FFF" size={14} /> : "Create a Slice"}
   </Button>
 );
 
