@@ -99,16 +99,18 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
   const ref = React.createRef<HTMLParagraphElement>();
   const id = "nav-tool-tip";
 
-  const handleClose = () => {
-    ref.current && ReactTooltip.hide(ref.current);
-  };
-  React.useEffect(() => {
-    if (showToolTip && ref.current) {
-      ReactTooltip.show(ref.current);
+  const [isOpen, setOpen] = React.useState(showToolTip);
 
-      setTimeout(handleClose, 3000);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  React.useEffect(() => {
+    ReactTooltip.rebuild();
+    if (isOpen && ref.current) {
+      ReactTooltip.show(ref.current);
     }
-  }, [ref.current]);
+  }, []);
 
   return (
     <>
@@ -129,8 +131,9 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
         id={id}
         effect="solid"
         backgroundColor="#5B3DF5"
-        getContent={() => {
-          return (
+        clickable={true}
+        getContent={() =>
+          isOpen ? (
             <Flex
               data-testid="video-tooltip"
               sx={{
@@ -144,10 +147,8 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
               <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
                 Need Help?
               </Paragraph>
-              <Close sx={{}} onClick={handleClose} />
               <Close
                 data-testid="video-tooltip-close-button"
-                sx={{}}
                 onClick={handleClose}
               />
               <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
@@ -155,8 +156,8 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
                 Machine
               </Paragraph>
             </Flex>
-          );
-        }}
+          ) : undefined
+        }
       />
     </>
   );
