@@ -33,17 +33,7 @@ const CustomTypeBuilder = ({
       <Tabs
         Model={Model}
         customTypeActions={customTypeActions}
-        renderTab={({
-          value,
-          sliceZone,
-          key,
-        }: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          value: any;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          sliceZone: any;
-          key: string;
-        }) => (
+        renderTab={({ value, sliceZone, key }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -52,7 +42,6 @@ const CustomTypeBuilder = ({
               customTypeActions={customTypeActions}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               sliceZone={sliceZone}
-              showHints={true}
               tabId={key}
             />
           </Box>

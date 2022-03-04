@@ -86,8 +86,8 @@ export const replaceSharedSliceCreator = createAction(
   "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
 )<{
   tabId: string;
-  sliceKeys: [string];
-  preserve: [string];
+  sliceKeys: string[];
+  preserve: string[];
 }>();
 export const deleteSharedSliceCreator = createAction(
   "CUSTOM_TYPE/DELETE_SHARED_SLICE"

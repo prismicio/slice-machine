@@ -116,8 +116,8 @@ const useCustomTypeActions = (dispatch: Dispatch<CustomTypeActions>) => {
     dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
   const replaceSharedSlice = (
     tabId: string,
-    sliceKeys: [string],
-    preserve: [string]
+    sliceKeys: string[],
+    preserve: string[]
   ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
 
   return {

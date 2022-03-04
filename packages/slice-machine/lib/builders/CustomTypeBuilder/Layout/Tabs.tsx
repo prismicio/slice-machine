@@ -20,6 +20,7 @@ import UpdateModal, {
 } from "../TabModal/update";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
+import { TabAsArray } from "@models/common/CustomType/tab";
 
 enum ModalType {
   CREATE = "create",
@@ -65,8 +66,7 @@ const CtTabs = ({
   sx?: any;
   Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  renderTab: Function;
+  renderTab: (tab: TabAsArray) => JSX.Element;
 }) => {
   const { theme } = useThemeUI();
 
