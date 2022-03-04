@@ -127,7 +127,7 @@ export async function chooseOrCreateARepository(
   domain?: string
 ): Promise<string> {
   const token = parsePrismicAuthToken(cookies);
-  const repos = await Communication.listRepositories(token);
+  const repos = await Communication.listRepositories(token, base);
 
   const hasRepo = domain && repos.find((d) => d.domain === domain);
   if (hasRepo) return domain;

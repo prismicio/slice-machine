@@ -20,5 +20,6 @@ export const MANIFEST_FILE_NAME = "sm.json";
 export const DEFAULT_SERVER_PORT = 5555;
 export const DEFAULT_BASE = "https://prismic.io";
 export const USER_SERVICE_BASE = "https://user.internal-prismic.io";
+export const USER_SERVICE_STAGING_BASE = "https://user.wroom.io";
 
 export const ACCEPTED_IMAGE_TYPES = ["png", "jpg", "jpeg"];

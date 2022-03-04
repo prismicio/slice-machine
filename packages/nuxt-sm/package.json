@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint --ext .js .",
-    "audit": "better-npm-audit audit -l high -p -x 1006754",
+    "audit": "better-npm-audit audit -l high -p -x 1007554",
     "audit-fix": "npm audit fix"
   },
   "repository": {
