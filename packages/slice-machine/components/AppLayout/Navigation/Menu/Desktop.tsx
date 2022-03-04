@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
+import {
+  Box,
+  Divider,
+  Heading,
+  Paragraph,
+  Button,
+  Flex,
+  Close,
+} from "theme-ui";
 import { MdPlayCircleFilled } from "react-icons/md";
 import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
@@ -90,13 +98,15 @@ const UpdateInfo: React.FC<{
 const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
   const ref = React.createRef<HTMLParagraphElement>();
   const id = "nav-tool-tip";
+
+  const handleClose = () => {
+    ref.current && ReactTooltip.hide(ref.current);
+  };
   React.useEffect(() => {
     if (showToolTip && ref.current) {
       ReactTooltip.show(ref.current);
 
-      setTimeout(() => {
-        ref.current && ReactTooltip.hide(ref.current);
-      }, 5000);
+      setTimeout(handleClose, 3000);
     }
   }, [ref.current]);
 
@@ -118,15 +128,27 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
       <ReactTooltip
         id={id}
         effect="solid"
+        backgroundColor="#5B3DF5"
         getContent={() => {
           return (
-            <div>
-              <Paragraph>Need Help?</Paragraph>
-              <Paragraph>
+            <Flex
+              sx={{
+                maxWidth: "300px",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+              }}
+            >
+              <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
+                Need Help?
+              </Paragraph>
+              <Close sx={{}} onClick={handleClose} />
+              <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
                 Follow our Quick Start guide to learn the basics of Slice
                 Machine
               </Paragraph>
-            </div>
+            </Flex>
           );
         }}
       />
