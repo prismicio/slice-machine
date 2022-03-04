@@ -132,6 +132,7 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
         getContent={() => {
           return (
             <Flex
+              data-testid="video-tooltip"
               sx={{
                 maxWidth: "300px",
                 flexDirection: "row",
@@ -144,6 +145,11 @@ const VideoInfo: React.FC<{ showToolTip: boolean }> = ({ showToolTip }) => {
                 Need Help?
               </Paragraph>
               <Close sx={{}} onClick={handleClose} />
+              <Close
+                data-testid="video-tooltip-close-button"
+                sx={{}}
+                onClick={handleClose}
+              />
               <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
                 Follow our Quick Start guide to learn the basics of Slice
                 Machine
