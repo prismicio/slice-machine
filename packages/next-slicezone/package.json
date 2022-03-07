@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "prepublishOnly": "yarn build && yarn test",
     "lint": "eslint --ext .js,.jsx .",
-    "audit": "better-npm-audit audit -l high -p -x 1031066",
+    "audit": "better-npm-audit audit -l high -p -x 1033678",
     "audit-fix": "npm audit fix",
     "test": "jest"
   },

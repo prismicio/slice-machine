@@ -32,7 +32,7 @@
     "slicemachine": "start-slicemachine --port 9999",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -l high -p -x 1030641,1031066",
+    "audit": "better-npm-audit audit -l high -p -x 1033253,1033678",
     "audit-fix": "npm audit fix"
   },
   "bin": {
