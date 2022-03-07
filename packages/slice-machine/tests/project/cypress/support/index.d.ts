@@ -10,7 +10,7 @@ declare namespace Cypress {
     * @example cy.get('input').typeRandomPascalCase()
     */
     cleanSliceMachineUserContext(hasSendAReview?: boolean, isOnboarded?: boolean): Chainable<undefined>
-    setupSliceMachineUserContext(hasSendAReview?: boolean, isOnboarded?: boolean, viewedUpdates?: Record<string, unknown>): Chainable<undefined>
-
+    setupSliceMachineUserContext(hasSendAReview?: boolean, isOnboarded?: boolean, viewedUpdates?: Record<string, unknown>, hasSeenTutorialsTooTip?: boolean): Chainable<undefined>
+    getSliceMachineUSerContext(): Chainable<undefined | Record<string, unknown>>
   }
 }
