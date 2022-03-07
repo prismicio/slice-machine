@@ -23,7 +23,8 @@ const VideoItem: React.FC<VideoItemProps> = ({
 
   React.useEffect(() => {
     if (!hasSeenTutorialsTooTip && ref.current) {
-      ReactTooltip.show(ref.current);
+      const currentRef = ref.current;
+      setTimeout(() => ReactTooltip.show(currentRef), 5000);
     }
   }, []);
 
@@ -59,7 +60,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
             <Flex
               data-testid="video-tooltip"
               sx={{
-                maxWidth: "300px",
+                maxWidth: "268px",
                 flexDirection: "column",
               }}
             >
