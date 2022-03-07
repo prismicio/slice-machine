@@ -6,12 +6,12 @@ import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
 
 type VideoItemProps = {
-  viewedVideosToolTip: boolean;
+  hasSeenTutorialsTooTip: boolean;
   onClose: () => void;
 };
 
 const VideoItem: React.FC<VideoItemProps> = ({
-  viewedVideosToolTip,
+  hasSeenTutorialsTooTip,
   onClose,
 }) => {
   const ref = React.createRef<HTMLParagraphElement>();
@@ -22,7 +22,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
   };
 
   React.useEffect(() => {
-    if (!viewedVideosToolTip && ref.current) {
+    if (!hasSeenTutorialsTooTip && ref.current) {
       ReactTooltip.show(ref.current);
     }
   }, []);
@@ -44,7 +44,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
         theme={"emphasis"}
         onClick={handleClose}
       />
-      {!viewedVideosToolTip && (
+      {!hasSeenTutorialsTooTip && (
         <ReactTooltip
           id={id}
           effect="solid"

@@ -12,7 +12,7 @@ const initialState: UserContextStoreType = {
     latest: null,
     latestNonBreaking: null,
   },
-  viewedVideosToolTip: false,
+  hasSeenTutorialsTooTip: false,
 };
 
 // Actions Creators
@@ -28,8 +28,8 @@ export const updatesViewedCreator = createAction("USER_CONTEXT/VIEWED_UPDATES")<
   UserContextStoreType["updatesViewed"]
 >();
 
-export const viewedVideosToolTipCreator = createAction(
-  "USER_CONTEXT/VIEWED_VIDEOS_TOOL_TIP"
+export const hasSeenTutorialsTooTipCreator = createAction(
+  "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP"
 )();
 
 type userContextActions = ActionType<
@@ -37,7 +37,7 @@ type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
   | typeof updatesViewedCreator
-  | typeof viewedVideosToolTipCreator
+  | typeof hasSeenTutorialsTooTipCreator
 >;
 
 // Selectors
@@ -52,9 +52,9 @@ export const getUpdatesViewed = (
   state: SliceMachineStoreType
 ): UserContextStoreType["updatesViewed"] => state.userContext.updatesViewed;
 
-export const userHasViewedVideosToolTip = (
+export const userHashasSeenTutorialsTooTip = (
   state: SliceMachineStoreType
-): boolean => state.userContext.viewedVideosToolTip || false;
+): boolean => state.userContext.hasSeenTutorialsTooTip || false;
 
 // Reducer
 export const userContextReducer: Reducer<
@@ -79,10 +79,10 @@ export const userContextReducer: Reducer<
         updatesViewed: action.payload,
       };
     }
-    case getType(viewedVideosToolTipCreator): {
+    case getType(hasSeenTutorialsTooTipCreator): {
       return {
         ...state,
-        viewedVideosToolTip: true,
+        hasSeenTutorialsTooTip: true,
       };
     }
     default:

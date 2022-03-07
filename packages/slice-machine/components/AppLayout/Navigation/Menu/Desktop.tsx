@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import { getChangelog, getWarnings } from "@src/modules/environment";
 import {
   getUpdatesViewed,
-  userHasViewedVideosToolTip,
+  userHashasSeenTutorialsTooTip,
 } from "@src/modules/userContext";
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -88,15 +88,16 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, changelog, updatesViewed, viewedVideosToolTip } =
+  const { warnings, changelog, updatesViewed, hasSeenTutorialsTooTip } =
     useSelector((store: SliceMachineStoreType) => ({
       warnings: getWarnings(store),
       changelog: getChangelog(store),
       updatesViewed: getUpdatesViewed(store),
-      viewedVideosToolTip: userHasViewedVideosToolTip(store),
+      hasSeenTutorialsTooTip: userHashasSeenTutorialsTooTip(store),
     }));
 
-  const { setUpdatesViewed, setVideosViewedToolTip } = useSliceMachineActions();
+  const { setUpdatesViewed, setSeenTutorialsToolTip } =
+    useSliceMachineActions();
 
   const latestVersion =
     changelog.versions.length > 0 ? changelog.versions[0] : null;
@@ -139,8 +140,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
           )}
           {isNotLoggedIn && <NotLoggedIn />}
           <VideoItem
-            viewedVideosToolTip={viewedVideosToolTip}
-            onClose={setVideosViewedToolTip}
+            hasSeenTutorialsTooTip={hasSeenTutorialsTooTip}
+            onClose={setSeenTutorialsToolTip}
           />
           <Divider variant="sidebar" />
           <WarningItem currentVersion={changelog.currentVersion} />
