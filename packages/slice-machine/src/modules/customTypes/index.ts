@@ -1,6 +1,11 @@
 import { Reducer } from "redux";
-import { CustomTypesStoreType } from "./types";
-import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import { CustomTypesStoreType, FrontEndCustomType } from "./types";
+import {
+  ActionType,
+  createAction,
+  createAsyncAction,
+  getType,
+} from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -13,6 +18,10 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import {
+  normalizeFrontendCustomType,
+  normalizeFrontendCustomTypes,
+} from "@src/normalizers/customType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -35,11 +44,21 @@ type CustomTypesActions =
   | ActionType<typeof createCustomTypeCreator>;
 
 // Selectors
-export const selectLocalCustomTypes = (store: SliceMachineStoreType) =>
-  store.customTypes.localCustomTypes;
+export const selectAllCustomTypes = (
+  store: SliceMachineStoreType
+): FrontEndCustomType[] => Object.values(store.customTypes.map);
 
-export const selectRemoteCustomTypes = (store: SliceMachineStoreType) =>
-  store.customTypes.remoteCustomTypes;
+export const selectAllCustomTypeIds = (
+  store: SliceMachineStoreType
+): string[] => Object.keys(store.customTypes.map);
+
+export const selectCustomTypeById = (
+  store: SliceMachineStoreType,
+  id: string
+): FrontEndCustomType | null => store.customTypes.map[id];
+
+export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
+  Object.values(store.customTypes.map).length;
 
 // Reducer
 export const customTypesReducer: Reducer<
@@ -50,18 +69,26 @@ export const customTypesReducer: Reducer<
 
   switch (action.type) {
     case getType(refreshStateCreator):
+      const map = normalizeFrontendCustomTypes(
+        action.payload.localCustomTypes,
+        action.payload.remoteCustomTypes
+      );
+
       return {
         ...state,
-        remoteCustomTypes: action.payload.remoteCustomTypes,
-        localCustomTypes: action.payload.localCustomTypes,
+        map,
       };
     case getType(createCustomTypeCreator.success):
+      const normalizedNewCustomType = normalizeFrontendCustomType(
+        action.payload.newCustomType
+      );
+
       return {
         ...state,
-        localCustomTypes: [
-          action.payload.newCustomType,
-          ...state.localCustomTypes,
-        ],
+        map: {
+          ...state.map,
+          ...normalizedNewCustomType,
+        },
       };
     default:
       return state;

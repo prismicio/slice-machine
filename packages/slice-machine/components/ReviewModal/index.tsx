@@ -26,7 +26,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracker";
-import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import { selectCustomTypeCount } from "@src/modules/customTypes";
 
 Modal.setAppElement("#__next");
 
@@ -68,14 +68,14 @@ const ReviewModal: React.FunctionComponent = () => {
     isLoginModalOpen,
     hasSendAReview,
     hasDoneTheOnboarding,
-    customTypes,
+    customTypeCount,
   } = useSelector((store: SliceMachineStoreType) => ({
     env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
     isLoginModalOpen: isModalOpen(store, ModalKeysEnum.LOGIN),
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
-    customTypes: selectLocalCustomTypes(store),
+    customTypeCount: selectCustomTypeCount(store),
   }));
 
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =
@@ -91,8 +91,6 @@ const ReviewModal: React.FunctionComponent = () => {
           return count + lib.components.length;
         }, 0)
       : 0;
-
-  const customTypeCount = customTypes.length;
 
   const userHasCreateEnoughContent = sliceCount >= 1 && customTypeCount >= 1;
 

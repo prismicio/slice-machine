@@ -6,7 +6,7 @@ import { SelectRepeatable } from "./components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import { selectAllCustomTypeIds } from "@src/modules/customTypes";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
@@ -16,9 +16,9 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
     useSliceMachineActions();
 
-  const { customTypes, isCreateCustomTypeModalOpen, isCreatingCustomType } =
+  const { customTypeIds, isCreateCustomTypeModalOpen, isCreatingCustomType } =
     useSelector((store: SliceMachineStoreType) => ({
-      customTypes: selectLocalCustomTypes(store),
+      customTypeIds: selectAllCustomTypeIds(store),
       isCreateCustomTypeModalOpen: isModalOpen(
         store,
         ModalKeysEnum.CREATE_CUSTOM_TYPE
@@ -60,7 +60,12 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
         if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
           return { id: "Invalid id: No special characters allowed" };
         }
-        if (id && customTypes.map((e) => e?.id.toLowerCase()).includes(id)) {
+        if (
+          id &&
+          customTypeIds
+            .map((customTypeId) => customTypeId.toLowerCase())
+            .includes(id)
+        ) {
           return { id: `ID "${id}" exists already` };
         }
       }}

@@ -9,7 +9,7 @@ import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
-import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import { selectAllCustomTypes } from "@src/modules/customTypes";
 
 const FormFields = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -27,16 +27,19 @@ const WidgetForm = ({
   fields,
   setFieldValue,
 }) => {
-  const customTypes = useSelector(selectLocalCustomTypes);
+  const customTypes = useSelector(selectAllCustomTypes);
 
   const options = customTypes.map((ct) => ({
-    value: ct?.id,
-    label: ct?.label,
+    value: ct.local.id,
+    label: ct.local.label,
   }));
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const selectValues = formValues.config.customtypes.map((id) => {
-    const ct = customTypes.find((e) => e && e.id === id);
-    return { value: ct?.id, label: ct?.label };
+    const ct = customTypes.find(
+      (frontendCustomType) => frontendCustomType.local.id === id
+    );
+    return { value: ct?.local.id, label: ct?.local.label };
   });
 
   return (

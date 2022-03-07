@@ -7,16 +7,20 @@ import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
 import Header from "components/Header";
 import EmptyState from "components/EmptyState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { selectLocalCustomTypes } from "@src/modules/customTypes";
+import {
+  selectCustomTypeCount,
+  selectAllCustomTypes,
+} from "@src/modules/customTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { FrontEndCustomType } from "@src/modules/customTypes/types";
 
 const CustomTypeTable: React.FC<{
-  customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  customTypes: ReadonlyArray<FrontEndCustomType>;
 }> = ({ customTypes }) => {
   const firstColumnWidth = "35%";
   const secondColumnWidth = "50%";
@@ -44,16 +48,16 @@ const CustomTypeTable: React.FC<{
       </thead>
       <tbody>
         {customTypes.map((customType) => (
-          <Link passHref href={`/cts/${customType.id}`} key={customType.id}>
+          <Link passHref href={`/cts/${customType.local.id}`} key={customType.id}>
             <tr key={customType.id}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
-                <Text sx={{ fontWeight: 500 }}>{customType.label}</Text>
+                <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
               </Box>
               <Box as={"td"} style={{ width: secondColumnWidth }}>
-                {customType.id}
+                {customType.local.id}
               </Box>
               <Box as={"td"} style={{ width: thirdColumnWidth }}>
-                {customType.repeatable ? "Repeatable Type" : "Single Type"}
+                {customType.local.repeatable ? "Repeatable Type" : "Single Type"}
               </Box>
             </tr>
           </Link>
@@ -65,9 +69,10 @@ const CustomTypeTable: React.FC<{
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { customTypes, isCreatingCustomType } = useSelector(
+  const { customTypes, isCreatingCustomType, customTypeCount } = useSelector(
     (store: SliceMachineStoreType) => ({
-      customTypes: selectLocalCustomTypes(store),
+      customTypes: selectAllCustomTypes(store),
+      customTypeCount: selectCustomTypeCount(store),
       isCreatingCustomType: isLoading(
         store,
         LoadingKeysEnum.CREATE_CUSTOM_TYPE
@@ -79,7 +84,7 @@ const CustomTypes: React.FunctionComponent = () => {
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header
         ActionButton={
-          customTypes.length ? (
+          customTypeCount > 0 ? (
             <Button
               data-cy="create-ct"
               onClick={openCreateCustomTypeModal}
@@ -102,7 +107,7 @@ const CustomTypes: React.FunctionComponent = () => {
         }
         breadrumbHref="/"
       />
-      {customTypes.length === 0 ? (
+      {customTypeCount === 0 ? (
         <Flex
           sx={{
             flex: 1,
