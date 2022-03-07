@@ -1,6 +1,6 @@
 describe("video tooltip", () => {
 
-  it("should display the tooltip when 'userContext.viewedVideosToolTip' is falsy and set to true when user clicks the lose button", () => {
+  it("should display the tooltip when 'userContext.hasSeenTutorialsTooTip' is falsy and set to true when user clicks the close button", () => {
     cy.clearLocalStorage()
     cy.setupSliceMachineUserContext(true, true, {}, false)
 
@@ -13,11 +13,11 @@ describe("video tooltip", () => {
     cy.get("[data-testid=video-tooltip]").should("not.exist")
 
     cy.getSliceMachineUserContext().should(data => {
-      expect(data.viewedVideosToolTip).equal(true, "userContext.viewedVideosToolTip should set in local storage")
+      expect(data.hasSeenTutorialsTooTip).equal(true, "userContext.hasSeenTutorialsTooTip should set in local storage")
     })
   })
 
-  it("should no display when viewedVideosToolTip is truthy", () => {
+  it("should no display when hasSeenTutorialsTooTip is truthy", () => {
     cy.clearLocalStorage()
     cy.setupSliceMachineUserContext(true, true, {}, true)
     cy.get("[data-testid=video-tooltip]").should("not.exist")
@@ -38,7 +38,7 @@ describe("video tooltip", () => {
     .click()
 
     cy.getSliceMachineUserContext().should(data => {
-      expect(data.viewedVideosToolTip).equal(true, "userContext.viewedVideosToolTip should set in local storage")
+      expect(data.hasSeenTutorialsTooTip).equal(true, "userContext.hasSeenTutorialsTooTip should set in local storage")
     })
   })
 
@@ -60,7 +60,7 @@ describe("video tooltip", () => {
     cy.get("[data-testid=video-tooltip]").should("not.exist")
 
     cy.getSliceMachineUserContext().should(data => {
-      expect(data.viewedVideosToolTip).equal(true, "userContext.viewedVideosToolTip should set in local storage")
+      expect(data.hasSeenTutorialsTooTip).equal(true, "userContext.hasSeenTutorialsTooTip should set in local storage")
     })
   })
 })

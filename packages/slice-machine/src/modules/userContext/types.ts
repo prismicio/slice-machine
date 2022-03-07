@@ -5,5 +5,5 @@ export type UserContextStoreType = {
     latest: string | null;
     latestNonBreaking: string | null;
   };
-  viewedVideosToolTip: boolean;
+  hasSeenTutorialsTooTip: boolean;
 };
