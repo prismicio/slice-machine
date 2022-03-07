@@ -3,6 +3,7 @@ import ReactTooltip from "react-tooltip";
 import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
+import style from "./VideoItem.module.css";
 
 type VideoItemProps = {
   viewedVideosToolTip: boolean;
@@ -21,16 +22,10 @@ const VideoItem: React.FC<VideoItemProps> = ({
   };
 
   React.useEffect(() => {
-    // Open the tooltip
     if (!viewedVideosToolTip && ref.current) {
       ReactTooltip.show(ref.current);
     }
-
-    // Open the tooltip
-    if (viewedVideosToolTip && ref.current) {
-      ReactTooltip.hide(ref.current);
-    }
-  }, [viewedVideosToolTip]);
+  }, []);
 
   return (
     <>
@@ -49,44 +44,52 @@ const VideoItem: React.FC<VideoItemProps> = ({
         theme={"emphasis"}
         onClick={handleClose}
       />
-      <ReactTooltip
-        id={id}
-        effect="solid"
-        backgroundColor="#5B3DF5"
-        clickable={true}
-        afterHide={handleClose}
-        offset={{
-          left: 80,
-        }}
-        getContent={() => (
-          <Flex
-            data-testid="video-tooltip"
-            sx={{
-              maxWidth: "300px",
-              flexDirection: "column",
-            }}
-          >
+      {!viewedVideosToolTip && (
+        <ReactTooltip
+          id={id}
+          effect="solid"
+          backgroundColor="#5B3DF5"
+          clickable={true}
+          className={style.videoTutorialsContainer}
+          afterHide={handleClose}
+          offset={{
+            left: 80,
+          }}
+          getContent={() => (
             <Flex
+              data-testid="video-tooltip"
               sx={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
+                maxWidth: "300px",
+                flexDirection: "column",
               }}
             >
-              <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
-                Need Help?
+              <Flex
+                sx={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 1,
+                }}
+              >
+                <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
+                  Need Help?
+                </Paragraph>
+                <Close
+                  data-testid="video-tooltip-close-button"
+                  onClick={handleClose}
+                  sx={{
+                    width: "26px",
+                  }}
+                />
+              </Flex>
+              <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
+                Follow our Quick Start guide to learn the basics of Slice
+                Machine
               </Paragraph>
-              <Close
-                data-testid="video-tooltip-close-button"
-                onClick={handleClose}
-              />
             </Flex>
-            <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
-              Follow our Quick Start guide to learn the basics of Slice Machine
-            </Paragraph>
-          </Flex>
-        )}
-      />
+          )}
+        />
+      )}
     </>
   );
 };
