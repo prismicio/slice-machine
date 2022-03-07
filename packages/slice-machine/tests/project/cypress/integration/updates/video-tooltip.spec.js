@@ -6,6 +6,9 @@ describe("video tooltip", () => {
 
     cy.visit("/")
 
+    // There is a 5s timeout for displaying the tooltip
+    cy.wait(5000)
+
     cy.get("[data-testid=video-tooltip]").should("exist")
 
     cy.get("[data-testid=video-tooltip-close-button]").click()
@@ -20,6 +23,10 @@ describe("video tooltip", () => {
   it("should no display when hasSeenTutorialsTooTip is truthy", () => {
     cy.clearLocalStorage()
     cy.setupSliceMachineUserContext(true, true, {}, true)
+
+    // There is a 5s timeout for displaying the tooltip
+    cy.wait(5000)
+
     cy.get("[data-testid=video-tooltip]").should("not.exist")
   })
 
@@ -28,6 +35,9 @@ describe("video tooltip", () => {
     cy.setupSliceMachineUserContext(true, true, {}, false)
     
     cy.visit("/")
+
+    // There is a 5s timeout for displaying the tooltip
+    cy.wait(5000)
 
     cy.get("[data-testid=video-tooltip]").should("exist")
 
