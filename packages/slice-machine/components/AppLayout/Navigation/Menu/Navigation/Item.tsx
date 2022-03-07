@@ -13,7 +13,6 @@ export interface ItemProps {
   onClick?: () => void;
 }
 
-//const Item: React.FC<ItemProps> = ({ link, theme, ...rest }) => {
 const Item = React.forwardRef<HTMLDivElement, ItemProps>(
   ({ link, theme, onClick, ...rest }, ref) => {
     const router = useRouter();
