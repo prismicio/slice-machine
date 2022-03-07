@@ -11,8 +11,7 @@ const useOnboardingRedirection = (): void => {
 
   useEffect((): void => {
     if (!isOnboarded && router.pathname !== "/onboarding") {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      router.replace("/onboarding");
+      void router.replace("/onboarding");
     }
   }, []);
 
