@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Divider,
-  Heading,
-  Paragraph,
-  Button,
-  Flex,
-  Close,
-} from "theme-ui";
-import { MdPlayCircleFilled } from "react-icons/md";
+import { Box, Divider, Heading, Paragraph, Button, Flex } from "theme-ui";
 import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
 import { LinkProps } from "..";
@@ -27,8 +18,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import WarningItem from "./Navigation/WarningItem";
-import Item from "./Navigation/Item";
-import ReactTooltip from "react-tooltip";
+import VideoItem from "@components/AppLayout/Navigation/Menu/Navigation/VideoItem";
 
 const UpdateInfo: React.FC<{
   onClick: () => void;
@@ -95,81 +85,6 @@ const UpdateInfo: React.FC<{
   );
 };
 
-const VideoInfo: React.FC<{ showToolTip: boolean; onClose: () => void }> = ({
-  showToolTip,
-  onClose,
-}) => {
-  const ref = React.createRef<HTMLParagraphElement>();
-  const id = "nav-tool-tip";
-
-  const [isOpen, setOpen] = React.useState(showToolTip);
-
-  const handleClose = () => {
-    setOpen(false);
-    onClose();
-  };
-
-  React.useEffect(() => {
-    ReactTooltip.rebuild();
-    if (isOpen && ref.current) {
-      ReactTooltip.show(ref.current);
-    }
-  }, []);
-
-  return (
-    <>
-      <Item
-        ref={ref}
-        data-for={id}
-        data-tip=""
-        data-testid="video-toolbar"
-        link={{
-          title: "Video tutorials",
-          Icon: MdPlayCircleFilled,
-          href: "https://youtube.com",
-          target: "_blank",
-          match: () => false,
-        }}
-        theme={"emphasis"}
-        onClick={handleClose}
-      />
-      <ReactTooltip
-        id={id}
-        effect="solid"
-        backgroundColor="#5B3DF5"
-        clickable={true}
-        afterHide={handleClose}
-        getContent={() =>
-          isOpen ? (
-            <Flex
-              data-testid="video-tooltip"
-              sx={{
-                maxWidth: "300px",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-              }}
-            >
-              <Paragraph sx={{ color: "#FFF", fontWeight: 700 }}>
-                Need Help?
-              </Paragraph>
-              <Close
-                data-testid="video-tooltip-close-button"
-                onClick={handleClose}
-              />
-              <Paragraph sx={{ color: "#FFF", fontWeight: 400 }}>
-                Follow our Quick Start guide to learn the basics of Slice
-                Machine
-              </Paragraph>
-            </Flex>
-          ) : undefined
-        }
-      />
-    </>
-  );
-};
-
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
@@ -223,9 +138,8 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
             />
           )}
           {isNotLoggedIn && <NotLoggedIn />}
-
-          <VideoInfo
-            showToolTip={!viewedVideosToolTip}
+          <VideoItem
+            viewedVideosToolTip={viewedVideosToolTip}
             onClose={setVideosViewedToolTip}
           />
           <Divider variant="sidebar" />
