@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 
 import {
@@ -8,10 +8,9 @@ import {
 import { handleRemoteResponse, ToastPayload } from "@src/modules/toaster/utils";
 import CustomTypeStore from "@src/models/customType/store";
 
-import { FiLayout } from "react-icons/fi";
-
 import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const CustomTypeHeader = ({
   Model,
@@ -77,7 +76,7 @@ const CustomTypeHeader = ({
     <Header
       MainBreadcrumb={
         <Fragment>
-          <FiLayout /> <Text ml={2}>Custom Types</Text>
+          <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
         </Fragment>
       }
       SecondaryBreadcrumb={
