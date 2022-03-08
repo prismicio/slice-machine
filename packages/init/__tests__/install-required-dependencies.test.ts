@@ -77,7 +77,7 @@ describe("install required dependency", () => {
     expect(failFn).not.toHaveBeenCalled();
   });
 
-  test("when using react it should install @prismicio/client and prismic-reactjs", async () => {
+  test("when using react it should install @prismicio/client and @prismicio/react and @prismicio/helpers", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -91,7 +91,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client"
+      "npm install --save @prismicio/react @prismicio/client @prismicio/helpers"
     );
   });
 
@@ -109,7 +109,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save prismic-reactjs @prismicio/client@v5.1.1 next-slicezone @prismicio/slice-simulator-react"
+      "npm install --save @prismicio/react @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
     );
   });
 
@@ -131,7 +131,7 @@ describe("install required dependency", () => {
     );
   });
 
-  test("when using nuxt is should install @nuxtjs/prismic vue-slicezone nuxt-sm", async () => {
+  test("when using nuxt is should install @nuxtjs/prismic", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -145,11 +145,11 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @nuxtjs/prismic nuxt-sm vue-slicezone @prismicio/slice-simulator-vue"
+      "npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue"
     );
   });
 
-  test("when using vue is should install @prismicio/vue @prismicio/client prismic-dom vue-slicezone", async () => {
+  test("when using vue is should install @prismicio/vue @prismicio/client prismic-dom", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
@@ -163,7 +163,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      "npm install --save @prismicio/vue @prismicio/client@v5.1.1 prismic-dom vue-slicezone"
+      "npm install --save @prismicio/vue @prismicio/client prismic-dom"
     );
   });
 });

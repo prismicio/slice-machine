@@ -12,7 +12,7 @@ import {
   skipReviewCreator,
   updatesViewedCreator,
 } from "@src/modules/userContext";
-import { getStateCreator } from "@src/modules/environment";
+import { refreshStateCreator } from "@src/modules/environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
@@ -22,16 +22,18 @@ import {
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
 import {
-  createCustomTypesCreator,
-  saveCustomTypesCreator,
+  createCustomTypeCreator,
+  saveCustomTypeCreator,
 } from "@src/modules/customTypes";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
+import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
 
-  // Simulator store
+  // Simulator module
   const checkSimulatorSetup = (
     withFirstVisitCheck: boolean,
     callback?: () => void
@@ -48,17 +50,21 @@ const useSliceMachineActions = () => {
   const toggleSetupDrawerStep = (stepNumber: number) =>
     dispatch(toggleSetupDrawerStepCreator({ stepNumber }));
 
-  // Modal store
+  // Modal module
   const closeLoginModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeCreateSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  const openCreateSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const closeCreateCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
 
-  // Loading store
+  // Loading module
   const startLoadingReview = () =>
     dispatch(startLoadingActionCreator({ loadingKey: LoadingKeysEnum.REVIEW }));
   const stopLoadingReview = () =>
@@ -68,30 +74,38 @@ const useSliceMachineActions = () => {
   const stopLoadingLogin = () =>
     dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
 
-  // UserContext Store
+  // UserContext module
   const skipReview = () => dispatch(skipReviewCreator());
   const sendAReview = () => dispatch(sendAReviewCreator());
   const finishOnboarding = () => dispatch(finishOnboardingCreator());
   const setUpdatesViewed = (versions: UserContextStoreType["updatesViewed"]) =>
     dispatch(updatesViewedCreator(versions));
 
-  // Custom types Store
-  const createCustomTypes = (id: string, label: string, repeatable: boolean) =>
-    dispatch(createCustomTypesCreator.request({ id, label, repeatable }));
-  const saveCustomTypes = (modelPayload: CustomTypeState) =>
-    dispatch(saveCustomTypesCreator({ modelPayload }));
+  // Custom types module
+  const createCustomType = (id: string, label: string, repeatable: boolean) =>
+    dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const saveCustomType = (modelPayload: CustomTypeState) =>
+    dispatch(saveCustomTypeCreator({ modelPayload }));
+
+  // Slice module
+  const createSlice = (sliceName: string, libName: string) =>
+    dispatch(createSliceCreator.request({ sliceName, libName }));
+
+  // Toaster store
+  const openToaster = (message: string, type: ToasterType) =>
+    dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
-  const getState = (serverState: ServerState | undefined) => {
-    if (!serverState) return;
-
+  const refreshState = (serverState: ServerState) => {
     dispatch(
-      getStateCreator({
+      refreshStateCreator({
         env: serverState.env,
         warnings: serverState.warnings,
         configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
+        libraries: serverState.libraries,
+        remoteSlices: serverState.remoteSlices,
       })
     );
   };
@@ -103,7 +117,7 @@ const useSliceMachineActions = () => {
     toggleSetupDrawerStep,
     closeSetupDrawer,
     openSetupDrawer,
-    getState,
+    refreshState,
     finishOnboarding,
     openLoginModal,
     closeLoginModal,
@@ -111,13 +125,17 @@ const useSliceMachineActions = () => {
     stopLoadingLogin,
     stopLoadingReview,
     startLoadingReview,
-    createCustomTypes,
-    saveCustomTypes,
+    createCustomType,
+    saveCustomType,
+    createSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
+    openCreateSliceModal,
+    closeCreateSliceModal,
+    openToaster,
   };
 };
 

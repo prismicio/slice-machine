@@ -25,6 +25,7 @@ type ModalCardProps<T> = {
   close: () => void;
   isOpen: boolean;
   formId: string;
+  buttonLabel?: string;
   validate?: (values: T) => FormikErrors<T> | void;
   widthInPx?: string;
   onSubmit: (values: T) => void;
@@ -49,6 +50,7 @@ function ModalCard<Values>({
   cardProps,
   omitFooter = false,
   isLoading = false,
+  buttonLabel = "Save",
   dataCy,
 }: ModalCardProps<Values>): JSX.Element {
   return (
@@ -126,7 +128,7 @@ function ModalCard<Values>({
                       disabled={!isValid && isSubmitting && isLoading}
                       isLoading={isLoading}
                     >
-                      Save
+                      {buttonLabel}
                     </Button>
                   </Flex>
                 ) : null

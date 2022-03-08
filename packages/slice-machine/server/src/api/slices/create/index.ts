@@ -1,4 +1,4 @@
-import { SliceCreateBody } from "@models/common/Slice";
+import { SliceBody, SliceCreateResponse } from "@models/common/Slice";
 
 declare let appRoot: string;
 
@@ -14,24 +14,16 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
+import { DEFAULT_VARIATION_ID } from "@lib/consts";
 
 import save from "../save";
 
 import { paths, SliceTemplateConfig } from "@lib/models/paths";
+import { ApiResult } from "@lib/models/server/ApiResult";
+import { RESERVED_SLICE_NAME } from "@lib/consts";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);
-
-const IndexFiles = {
-  none: null,
-  react: "index.js",
-  next: "index.js",
-  nuxt: "index.vue",
-  vue: "index.vue",
-  vanillajs: "index.js",
-  svelte: "index.svelte",
-  gatsby: null, // unused for now
-};
 
 const copyTemplate = async (
   env: BackendEnvironment,
@@ -43,7 +35,7 @@ const copyTemplate = async (
     await copy(templatePath, path.join(env.cwd, from, sliceName), {
       componentName: sliceName,
       componentId: snakelize(sliceName),
-      variationId: "default-slice",
+      variationId: DEFAULT_VARIATION_ID,
     });
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -78,36 +70,28 @@ const fromTemplate = async (
 export default async function handler({
   sliceName,
   from,
-  values,
-}: SliceCreateBody) {
+}: SliceBody): Promise<ApiResult<SliceCreateResponse>> {
+  if (RESERVED_SLICE_NAME.includes(sliceName)) {
+    const msg = `The slice name '${sliceName}' is reserved for slice machine use`;
+    return { err: new Error(msg), status: 400, reason: msg };
+  }
+
   const { env } = await getEnv();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const pathToModel = paths(env.cwd, "").library(from).slice(sliceName).model();
 
-  if (!values) {
-    const templatePath = SliceTemplateConfig(
-      env.cwd /*, pass custom template path here (relative to cwd) */
-    );
-    if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
-      await copyTemplate(env, templatePath, from, sliceName);
-    } else {
-      const maybeError = await fromTemplate(env, from, sliceName);
-      if (maybeError) {
-        return maybeError;
-      }
-    }
-  } else {
-    const fileName = IndexFiles[env.framework] || "index.js";
-    const pathToIndexFile = path.join(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      paths(env.cwd, "").library(from).slice(sliceName).value(),
-      fileName
-    );
+  const templatePath = SliceTemplateConfig(
+    env.cwd /*, pass custom template path here (relative to cwd) */
+  );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Files.write(pathToModel, JSON.stringify(values.model, null, 2));
-    Files.write(pathToIndexFile, values.componentCode);
+  if (Files.exists(templatePath) && Files.isDirectory(templatePath)) {
+    await copyTemplate(env, templatePath, from, sliceName);
+  } else {
+    const maybeError = await fromTemplate(env, from, sliceName);
+    if (maybeError) {
+      return maybeError;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -118,10 +102,7 @@ export default async function handler({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       body: { sliceName, from, model, mockConfig: {} },
     });
-    return {
-      ...res,
-      variationId: "default-slice",
-    };
+    return { ...res, variationId: DEFAULT_VARIATION_ID };
   }
 
   const msg = `[create] Could not find file model.json. Exiting...`;

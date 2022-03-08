@@ -53,28 +53,32 @@ export const paths = (cwd: string, prefix: string) => ({
   }),
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const GeneratedPaths = (cwd: string): Record<string, Function> =>
+export const GeneratedPaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, path.join(".slicemachine", "assets"));
+
 export const GeneratedCustomTypesPaths = (
   cwd: string
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Record<string, Function> =>
+): ReturnType<typeof paths> =>
   paths(cwd, path.join(".slicemachine", "assets", "customtypes"));
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const CustomTypesPaths = (cwd: string): Record<string, Function> =>
+
+export const CustomTypesPaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, "customtypes");
-// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/ban-types
-export const CustomPaths = (cwd: string) => paths(cwd, "");
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const PackagePaths = (cwd: string): Record<string, Function> =>
+
+export const CustomPaths = (cwd: string): ReturnType<typeof paths> =>
+  paths(cwd, "");
+
+export const PackagePaths = (cwd: string): ReturnType<typeof paths> =>
   paths(cwd, "node_modules");
+
 export const LibrariesStatePath = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "libraries-state.json");
+
 export const PrismicConfig = (cwd: string): string =>
   path.join(cwd, ".prismic");
+
 // This function is used in the changelog/migrate.js / don't remove it
 export const SMConfig = (cwd: string): string => path.join(cwd, "sm.json");
+
 export const SliceTemplateConfig = (
   cwd: string,
   customPathToTemplate?: string
@@ -82,7 +86,10 @@ export const SliceTemplateConfig = (
   customPathToTemplate
     ? path.join(cwd, customPathToTemplate)
     : path.join(PrismicConfig(cwd), "slice-template");
+
 export const Pkg = (cwd: string): string => path.join(cwd, "package.json");
+
 export const YarnLock = (cwd: string): string => path.join(cwd, "yarn.lock");
+
 export const MocksConfig = (cwd: string): string =>
   path.join(cwd, ".slicemachine", "mock-config.json");

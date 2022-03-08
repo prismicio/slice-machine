@@ -5,7 +5,7 @@ import Storybook from "../storybook";
 
 import getEnv from "../services/getEnv";
 import mock from "@lib/mock/Slice";
-import { insert as insertMockConfig } from "@lib/mock/misc/fs";
+import { getConfig, insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { generateScreenshot } from "../screenshots/generate";
@@ -22,11 +22,13 @@ export async function handler(
   await onBeforeSaveSlice({ from, sliceName, model }, env);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const updatedMockConfig = insertMockConfig(env.cwd, {
-    key: sliceName,
-    prefix: from,
-    value: mockConfig,
-  });
+  const updatedMockConfig = mockConfig
+    ? insertMockConfig(env.cwd, {
+        key: sliceName,
+        prefix: from,
+        value: mockConfig,
+      })
+    : getConfig(env.cwd);
 
   console.log("\n\n[slice/save]: Updating slice model");
 
@@ -44,7 +46,7 @@ export async function handler(
     console.log("[slice/save]: Generating mocks");
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mocks = await mock(
+    const mocks = mock(
       sliceName,
       model,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

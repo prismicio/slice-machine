@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.1.1",
+  "version": "0.1.2-alpha.20",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint --ext .js .",
-    "audit": "better-npm-audit audit -l high -p -x 1006754",
+    "audit": "better-npm-audit audit -l high -p -x 1038902",
     "audit-fix": "npm audit fix"
   },
   "repository": {

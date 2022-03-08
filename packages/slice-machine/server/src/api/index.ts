@@ -25,7 +25,7 @@ import {
   ScreenshotRequest,
   ScreenshotResponse,
 } from "@models/common/Screenshots";
-import { SliceCreateBody, SliceBody } from "@models/common/Slice";
+import { SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
 import { isApiError } from "@models/server/ApiResult";
 
@@ -64,11 +64,7 @@ router.get(
   ): Promise<Express.Response> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await state(req);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (payload.clientError) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      return res.status(payload.clientError.status).json(payload);
-    }
+
     return res.status(200).json(payload);
   })
 );
@@ -133,29 +129,22 @@ router.post(
     req: express.Request,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await saveSlice(req);
     return res.status(200).json(payload);
   }
 );
 
-router.use(
+router.post(
   "/slices/create",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
-    req: express.Request<
-      undefined,
-      undefined,
-      SliceCreateBody,
-      SliceCreateBody
-    >,
+    req: express.Request<undefined, undefined, SliceBody, SliceBody>,
     res: express.Response
   ): Promise<Express.Response> {
-    let payload;
-    if (req.method === "POST") {
-      payload = await createSlice(req.body);
-    } else {
-      payload = await createSlice(req.query);
+    const payload = await createSlice(req.body);
+
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
     }
 
     return res.status(200).json(payload);
@@ -177,7 +166,6 @@ router.get(
     const payload = await pushSlice(req.query);
 
     if (isApiError(payload)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       return res.status(payload.status).json(payload);
     }
 

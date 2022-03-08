@@ -15,16 +15,26 @@ const createDefaultField =
 
 const handleDateCode = (fieldText: string, useKey?: boolean): string =>
   `
-/* import { Date as ParseDate } from 'prismic-reactjs' */
-<span ${useKey ? appendKey(fieldText) : ""}>{ ParseDate(${fieldText}) }</span>
+/* import { asDate } from '@prismicio/helpers' */
+<span ${
+    useKey ? appendKey(fieldText) : ""
+  }>{ asDate(${fieldText}).toString() }</span>
 `;
 
 const handleLinkCode = (fieldText: string, useKey?: boolean): string =>
   `
-/* import { Link } from 'prismic-reactjs' */
-<a ${
+/* import { PrismicLink } from '@prismicio/react' */
+<PrismicLink ${
     useKey ? appendKey(fieldText) : ""
-  } href={Link.url(${fieldText})}>My Link</a>
+  } field={${fieldText}}>My Link</a>
+`;
+
+const handleDocumentLinkCode = (fieldText: string, useKey?: boolean): string =>
+  `
+/* import { PrismicLink } from '@prismicio/react' */
+<PrismicLink ${
+    useKey ? appendKey(fieldText) : ""
+  } document={${fieldText}}>My Link</a>
 `;
 
 const handleEmbedCode = (fieldText: string, useKey?: boolean): string =>
@@ -46,7 +56,7 @@ const codeByWidgetType = (
   [Widgets.ContentRelationship?.CUSTOM_NAME]: (
     fieldText: string,
     useKey?: boolean
-  ) => handleLinkCode(fieldText, useKey),
+  ) => handleDocumentLinkCode(fieldText, useKey),
 
   [Widgets.LinkToMedia?.CUSTOM_NAME]: (fieldText: string, useKey?: boolean) =>
     handleLinkCode(fieldText, useKey),
@@ -55,7 +65,10 @@ const codeByWidgetType = (
     `<span>{{ ${fieldText} }}</span>`,
 
   [Widgets.StructuredText?.TYPE_NAME]: (fieldText: string, useKey?: boolean) =>
-    `<RichText render={${fieldText}} ${useKey ? appendKey("rich-text") : ""}/>`,
+    `/* import { PrismicRichText } from '@prismicio/react' */
+<PrismicRichText field={${fieldText}} ${
+      useKey ? appendKey("rich-text") : ""
+    }/>`,
 
   [Widgets.Image?.TYPE_NAME]: (fieldText: string, useKey?: boolean) =>
     `<img src={${fieldText}.url} alt={${fieldText}.alt} ${
@@ -84,11 +97,15 @@ const codeByWidgetType = (
   [Widgets.GeoPoint?.TYPE_NAME]: createDefaultField(),
 
   [Widgets.Color?.TYPE_NAME]: (fieldText: string, useKey?: boolean) =>
-    `<span  ${
+    `<span ${
       useKey ? appendKey("color") : ""
     } style={{ color: ${fieldText} }}>Some Text</span>`,
 
-  [Widgets.Text?.TYPE_NAME]: createDefaultField(),
+  [Widgets.Text?.TYPE_NAME]: (
+    fieldText: string,
+    useKey?: boolean
+  ) => `/* import { PrismicText } from '@prismicio/react' */
+<PrismicText ${useKey ? appendKey("text") : ""} field={${fieldText}} />`,
 });
 
 const toReact: React.FC<{

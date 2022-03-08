@@ -16,5 +16,5 @@
     "plugin:jest/recommended",
     "eslint-config-prettier"
   ],
-  "ignorePatterns": ["build", "templates", "**/tests/**"]
+  "ignorePatterns": ["build", "templates", "**/tests/**", "helpers/**"]
 }

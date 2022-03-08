@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect, useMemo } from "react";
-import { useToasts } from "react-toast-notifications";
 import { useIsMounted } from "react-tidy";
 
-import { handleRemoteResponse } from "src/ToastProvider/utils";
+import { handleRemoteResponse } from "@src/modules/toaster/utils";
 import { SliceContext } from "src/models/slice/context";
 
 import { Box } from "theme-ui";
@@ -39,7 +38,8 @@ const initialState: SliceBuilderState = {
 
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
-  const { openLoginModal, checkSimulatorSetup } = useSliceMachineActions();
+
+  const { openLoginModal, checkSimulatorSetup, openToaster } = useSliceMachineActions();
   const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
@@ -48,8 +48,6 @@ const SliceBuilder: React.FunctionComponent = () => {
   );
 
   if (!store || !Model || !variation) return null;
-
-  const { addToast } = useToasts();
 
   const isMounted = useIsMounted();
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
@@ -73,7 +71,7 @@ const SliceBuilder: React.FunctionComponent = () => {
     if (data.done && isMounted) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      handleRemoteResponse(addToast)(data);
+      handleRemoteResponse(openToaster)(data);
     }
   }, [data]);
 

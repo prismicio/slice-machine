@@ -11,9 +11,9 @@ import { CustomType, SaveCustomTypeBody } from "@lib/models/common/CustomType";
 export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
   const { model, mockConfig } = req.body;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
   const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
   const mockPath = GeneratedCustomTypesPaths(env.cwd)
     .customType(model.id)
     .mock();

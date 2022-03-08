@@ -1,7 +1,6 @@
 export { installRequiredDependencies } from "./install-required-dependencies";
 export { validatePkg } from "./validate-pkg";
-export { maybeExistingRepo } from "./maybe-existing-repo";
-export { createRepository } from "./create-repo";
+export { chooseOrCreateARepository } from "./choose-or-create-a-repository";
 export { detectFramework } from "./detect-framework";
 export { loginOrBypass } from "./loginOrBypass";
 export { configureProject } from "./configure-project";

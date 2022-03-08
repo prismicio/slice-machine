@@ -1,13 +1,19 @@
 import { FileSystem, Utils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
+import {
+  FileContent,
+  JsonPackage,
+} from "@slicemachine/core/build/src/filesystem";
 
 type Base = Utils.Endpoints.Base;
+
+const defaultSliceMachineVersion = "0.0.41";
 
 export function configureProject(
   cwd: string,
   base: Base,
-  repository: string,
+  repositoryDomainName: string,
   framework: FrameworkResult,
   sliceLibPath: string[] = [],
   tracking = true
@@ -19,10 +25,20 @@ export function configureProject(
 
   try {
     const manifest = FileSystem.retrieveManifest(cwd);
+    const packageJson = FileSystem.retrieveJsonPackage(cwd);
 
+    const sliceMachineVersionInstalled =
+      getTheSliceMachineVersionInstalled(packageJson);
+
+    const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
     const manifestUpdated: Models.Manifest = {
-      ...(manifest.exists && manifest.content ? manifest.content : {}),
-      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(base, repository),
+      ...(manifestAlreadyExistWithContent
+        ? manifest.content
+        : { _latest: sliceMachineVersionInstalled }),
+      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(
+        base,
+        repositoryDomainName
+      ),
       libraries: ["@/slices", ...sliceLibPath],
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
@@ -47,3 +63,39 @@ export function configureProject(
     process.exit(-1);
   }
 }
+
+const getTheSliceMachineVersionInstalled = (
+  packageJson: FileContent<JsonPackage>
+) => {
+  const sliceMachinePackageInstalled = Object.entries(
+    packageJson.content?.devDependencies || {}
+  ).find((devDependency) => {
+    if (devDependency[0] === Utils.CONSTS.SM_PACKAGE_NAME) {
+      return devDependency;
+    }
+  });
+
+  if (!sliceMachinePackageInstalled) {
+    return defaultSliceMachineVersion;
+  }
+
+  const extractedVersion = extractVersionNumberFromSemver(
+    sliceMachinePackageInstalled[1]
+  );
+
+  if (!extractedVersion) {
+    return defaultSliceMachineVersion;
+  }
+
+  return extractedVersion;
+};
+
+const extractVersionNumberFromSemver = (semver: string) => {
+  const versionFound = semver.match(/\d+\.\d+\.\d+/);
+
+  if (versionFound && versionFound.length > 0) {
+    return versionFound[0];
+  }
+
+  return null;
+};

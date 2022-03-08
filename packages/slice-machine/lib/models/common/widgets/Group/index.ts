@@ -11,7 +11,7 @@ import { AsArray, GroupField } from "./type";
 const Meta = {
   icon: MdPlaylistAdd,
   title: "Group",
-  description: "A Group of Prismic widgets",
+  description: "A Group of Prismic fields",
 };
 
 const schema = yup.object().shape({

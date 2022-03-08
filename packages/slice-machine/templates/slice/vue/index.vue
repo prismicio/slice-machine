@@ -28,9 +28,6 @@ export default {
   padding: 4em;
   text-align: center;
 }
-a {
-  color: #111;
-}
 .title {
   margin-bottom: 2em;
 }

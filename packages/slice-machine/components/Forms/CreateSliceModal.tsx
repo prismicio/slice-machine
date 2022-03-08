@@ -6,11 +6,13 @@ import ModalFormCard from "@components/ModalFormCard";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
+import { RESERVED_SLICE_NAME } from "@lib/consts";
 
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
   isOpen: boolean;
+  isCreatingSlice: boolean;
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
   libraries: ReadonlyArray<{ name: string }>;
@@ -20,6 +22,7 @@ type FormValues = { sliceName: string; from: string };
 
 const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   isOpen,
+  isCreatingSlice,
   onSubmit,
   close,
   libraries,
@@ -28,8 +31,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
     dataCy={"create-slice-modal"}
     isOpen={isOpen}
     widthInPx="530px"
+    isLoading={isCreatingSlice}
     formId={formId}
-    close={() => close()}
+    close={close}
+    buttonLabel="Create"
     onSubmit={(values: FormValues) => onSubmit(values)}
     initialValues={{
       sliceName: "",
@@ -45,6 +50,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
       if (cased !== sliceName.trim()) {
         return { sliceName: "Value has to be PascalCased" };
+      }
+
+      if (RESERVED_SLICE_NAME.includes(sliceName)) {
+        return { sliceName: `${sliceName} is reserved for Slice Machine use` };
       }
     }}
     content={{

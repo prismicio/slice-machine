@@ -73,7 +73,7 @@ export const getBackendState = async (
 
   const warnings = createWarnings(env, clientError);
 
-  if (libraries) await generate(env, libraries);
+  generate(env, libraries);
 
   return {
     libraries,

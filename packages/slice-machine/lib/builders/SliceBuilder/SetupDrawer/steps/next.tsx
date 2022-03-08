@@ -10,17 +10,15 @@ import { SetupStatus } from "@src/modules/simulator/types";
 
 const CreatePageInstructions = {
   code: `import { SliceSimulator } from "@prismicio/slice-simulator-react";
-import SliceZone from "next-slicezone";
+import { SliceZone } from "@prismicio/react";
 
 import state from "../.slicemachine/libraries-state.json";
-
-import * as Slices from "../slices";
-const resolver = ({ sliceName }) => Slices[sliceName];
+import { components } from "../slices";
 
 const SliceSimulatorPage = () => (<SliceSimulator
-\t// The \`sliceZone\` prop should be a function receiving slices and rendering them using your \`SliceZone\` component.
-\tsliceZone={(props) => <SliceZone {...props} resolver={resolver} />}
-\tstate={state}
+  // The "sliceZone" prop should be a function receiving slices and rendering them using your "SliceZone" component.
+  sliceZone={(props) => <SliceZone {...props} components={components} />}
+  state={state}
 />);
 
 export default SliceSimulatorPage;`,
@@ -36,7 +34,7 @@ export default SliceSimulatorPage;`,
 
 const steps = [
   InstallSliceSimulator({
-    code: `npm install --save next-slicezone prismic-reactjs @prismicio/slice-simulator-react`,
+    code: `npm install --save @prismicio/react @prismicio/slice-simulator-react @prismicio/client@latest @prismicio/helpers`,
   }),
   CreatePage(CreatePageInstructions),
   UpdateSmJson({}),

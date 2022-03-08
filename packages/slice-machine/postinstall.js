@@ -17,12 +17,7 @@ function retrieveConfigFiles(cwd) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const smValue = readJsonFile(smPath);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const pkgPath = path.join(cwd, "package.json");
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
-  const pkgValue = readJsonFile(pkgPath);
   return {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-    pkg: { path: pkgPath, value: pkgValue },
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     smConfig: { path: smPath, value: smValue },
   };
@@ -56,29 +51,10 @@ function writeSMVersion(smModuleCWD, smConfig) {
   }
 }
 
-function installSMScript(pkg) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (!pkg.value.scripts) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    pkg.value.scripts = {};
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (!pkg.value.scripts.slicemachine) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    pkg.value.scripts.slicemachine = "start-slicemachine --port 9999";
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    fs.writeFileSync(pkg.path, JSON.stringify(pkg.value, null, 2));
-    console.log('Added script "slicemachine" to package.json');
-  }
-}
-
 (function main() {
   const projectCWD = process.cwd();
   const smModuleCWD = require.main.paths[0].split("node_modules")[0];
-  const { pkg, smConfig } = retrieveConfigFiles(projectCWD);
-
-  if (pkg.value) installSMScript(pkg);
-  else return console.error("[postinstall] Missing file package.json");
+  const { smConfig } = retrieveConfigFiles(projectCWD);
 
   if (smConfig.value) writeSMVersion(smModuleCWD, smConfig);
   else console.error("[postinstall] Missing file sm.json");

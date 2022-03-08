@@ -94,8 +94,8 @@ export class InitTracker {
     this._trackEvent(EventType.InitStart);
   }
 
-  trackInitDone(framework: Frameworks, repo: string): void {
-    this._trackEvent(EventType.InitDone, { framework, repo });
+  trackInitDone(framework: Frameworks, repoDomain: string): void {
+    this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
   }
 }
 

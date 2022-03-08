@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-if="error">
-      An error occured while fetching content:
+      An error occurred while fetching content:
       <span style="color: tomato">{{ error }}</span>
     </p>
   </div>

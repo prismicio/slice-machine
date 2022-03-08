@@ -26,10 +26,6 @@ export interface SliceBody {
   from: string;
 }
 
-export interface SliceCreateBody extends SliceBody {
-  values?: { componentCode: string; model: Models.SliceAsObject };
-}
-
 export interface SliceSaveBody extends SliceBody {
   model: Models.SliceAsObject;
   mockConfig?: SliceMockConfig;
@@ -38,6 +34,10 @@ export interface SliceSaveBody extends SliceBody {
 export interface SliceSaveResponse {
   screenshots: Screenshots;
   warning: string | null;
+}
+
+export interface SliceCreateResponse extends SliceSaveResponse {
+  variationId: string;
 }
 
 export default Slice;
