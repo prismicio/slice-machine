@@ -25,7 +25,11 @@ const CustomTypeTable: React.FC<{
   const firstColumnWidth = "35%";
   const secondColumnWidth = "50%";
   const thirdColumnWidth = "15%";
+import { MdSpaceDashboard } from "react-icons/md";
 
+const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
+  customTypes,
+}) => {
   return (
     <Box
       as={"table"}
