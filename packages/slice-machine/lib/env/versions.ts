@@ -13,16 +13,17 @@ export async function getPackageChangelog(
   dependencyCwd: string
 ): Promise<PackageChangelog> {
   const pkg = FileSystem.retrieveJsonPackage(dependencyCwd);
-  if (!pkg.exists || !pkg.content?.name)
+  const pkgContent = pkg.content as { name?: string; version: string };
+  if (!pkg.exists || !pkgContent?.name) {
     return {
       currentVersion: "",
       updateAvailable: false,
       latestNonBreakingVersion: null,
       versions: [],
     };
-
-  const currentVersion = pkg.content.version;
-  const versions = await findPackageVersions(pkg.content.name);
+  }
+  const currentVersion = pkgContent.version;
+  const versions = await findPackageVersions(pkgContent.name);
   const updateAvailable = isUpdateAvailable(currentVersion, versions);
   const latestNonBreakingVersion = findLatestNonBreakingUpdate(
     currentVersion,

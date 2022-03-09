@@ -35,7 +35,12 @@
             "placeholder": "",
             "options": [
               "1",
-              "2"
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
             ]
           },
           "type": "Select"
@@ -49,7 +54,7 @@
         },
         "embed-5": {
           "config": {
-            "label": "embed-5",
+            "label": "embed-55",
             "placeholder": ""
           },
           "type": "Embed"
@@ -71,7 +76,13 @@
           "config": {
             "label": "image-8",
             "constraint": {},
-            "thumbnails": []
+            "thumbnails": [
+              {
+                "name": "test",
+                "width": 344,
+                "height": 333
+              }
+            ]
           },
           "type": "Image"
         },
@@ -125,7 +136,7 @@
       "primary": {
         "rich-1": {
           "config": {
-            "label": "rich-1",
+            "label": "rich-1111",
             "placeholder": "",
             "allowTargetBlank": true,
             "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"

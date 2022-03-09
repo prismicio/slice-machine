@@ -47,7 +47,6 @@ export async function handler(
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const mocks = mock(
-      sliceName,
       model,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
