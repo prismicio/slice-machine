@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FiLayers } from "react-icons/fi";
+import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
 
@@ -101,42 +101,48 @@ const SlicesIndex: React.FunctionComponent = () => {
             }
             MainBreadcrumb={
               <>
-                <FiLayers /> <Text ml={2}>Slice libraries</Text>
+                <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
               </>
             }
             breadrumbHref="/slices"
           />
           {libraries && (
-            <Box
+            <Flex
               sx={{
                 flex: 1,
-                display: "flex",
                 flexDirection: "column",
               }}
             >
-              {sliceCount == 0 ? (
-                <EmptyState
-                  title={"Create your first Slice"}
-                  explanations={[
-                    "Click the + button on the top right to create the first slice of your project.",
-                    "It will be stored locally. You will then be able to push it to Prismic.",
-                  ]}
-                  onCreateNew={openCreateSliceModal}
-                  buttonText={"Create my first Slice"}
-                  documentationComponent={
-                    <>
-                      Go to our{" "}
-                      <Link
-                        target={"_blank"}
-                        href={"https://prismic.io/docs/core-concepts/slices"}
-                        sx={(theme) => ({ color: theme?.colors?.primary })}
-                      >
-                        documentation
-                      </Link>{" "}
-                      to learn more about Slices.
-                    </>
-                  }
-                />
+              {sliceCount === 0 ? (
+                <Flex
+                  sx={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <EmptyState
+                    title={"Slices"}
+                    onCreateNew={openCreateSliceModal}
+                    buttonText={"Create one"}
+                    documentationComponent={
+                      <>
+                        Slices are sections of your website. Prismic documents
+                        contain a dynamic "Slice Zone" that allows content
+                        creators to add, edit, and rearrange Slices to compose
+                        dynamic layouts for any page design.{" "}
+                        <Link
+                          target={"_blank"}
+                          href={"https://prismic.io/docs/core-concepts/slices"}
+                          sx={(theme) => ({ color: theme?.colors?.primary })}
+                        >
+                          Learn more
+                        </Link>
+                        .
+                      </>
+                    }
+                  />
+                </Flex>
               ) : (
                 libraries.map((lib: LibraryState) => {
                   const { name, isLocal, components } = lib;
@@ -185,7 +191,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   );
                 })
               )}
-            </Box>
+            </Flex>
           )}
         </Box>
       </Container>

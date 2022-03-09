@@ -3,9 +3,8 @@ import useWindowSize from "src/hooks/useWindowSize";
 
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
-import { FiLayers } from "react-icons/fi";
 import { IconType } from "react-icons/lib";
-import { MdSpaceDashboard } from "react-icons/md";
+import { MdHorizontalSplit, MdSpaceDashboard } from "react-icons/md";
 
 export interface LinkProps {
   title: string;
@@ -31,7 +30,7 @@ const links: LinkProps[] = [
     match(pathname: string) {
       return pathname.indexOf("/slices") === 0;
     },
-    Icon: FiLayers,
+    Icon: MdHorizontalSplit,
   },
 ];
 

@@ -103,28 +103,35 @@ const CustomTypes: React.FunctionComponent = () => {
         breadrumbHref="/"
       />
       {customTypes.length === 0 ? (
-        <EmptyState
-          title={"Create your first Custom Type"}
-          explanations={[
-            "Click the + button on the top right to create your first custom type.",
-            "It will be stored locally. You will then be able to push it to Prismic.",
-          ]}
-          onCreateNew={openCreateCustomTypeModal}
-          buttonText={"Create your first Custom Type"}
-          documentationComponent={
-            <>
-              Go to our{" "}
-              <ThemeLink
-                target={"_blank"}
-                href={"https://prismic.io/docs/core-concepts/custom-types "}
-                sx={(theme) => ({ color: theme?.colors?.primary })}
-              >
-                documentation
-              </ThemeLink>{" "}
-              to learn more about Custom Types.
-            </>
-          }
-        />
+        <Flex
+          sx={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <EmptyState
+            title={"Custom Types"}
+            onCreateNew={openCreateCustomTypeModal}
+            buttonText={"Create one"}
+            documentationComponent={
+              <>
+                Custom Types are models for your documents. They are the place
+                where you define and configure Fields and Slices for your
+                content. They will be stored locally, and you will be able to
+                push them to your repository.{" "}
+                <ThemeLink
+                  target={"_blank"}
+                  href={"https://prismic.io/docs/core-concepts/custom-types "}
+                  sx={(theme) => ({ color: theme?.colors?.primary })}
+                >
+                  Learn more
+                </ThemeLink>
+                .
+              </>
+            }
+          />
+        </Flex>
       ) : (
         <CustomTypeTable customTypes={customTypes} />
       )}
