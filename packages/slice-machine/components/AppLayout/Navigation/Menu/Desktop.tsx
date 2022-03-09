@@ -4,12 +4,8 @@ import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
 import { LinkProps } from "..";
 
-import NotLoggedIn from "./Navigation/NotLoggedIn";
-
-import { warningStates } from "@lib/consts";
-
 import { useSelector } from "react-redux";
-import { getChangelog, getWarnings } from "@src/modules/environment";
+import { getChangelog } from "@src/modules/environment";
 import {
   getUpdatesViewed,
   userHashasSeenTutorialsTooTip,
@@ -17,7 +13,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
-import WarningItem from "./Navigation/WarningItem";
+import ChangelogItem from "./Navigation/ChangelogItem";
 import VideoItem from "@components/AppLayout/Navigation/Menu/Navigation/VideoItem";
 
 const UpdateInfo: React.FC<{
@@ -88,13 +84,13 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, changelog, updatesViewed, hasSeenTutorialsTooTip } =
-    useSelector((store: SliceMachineStoreType) => ({
-      warnings: getWarnings(store),
+  const { changelog, updatesViewed, hasSeenTutorialsTooTip } = useSelector(
+    (store: SliceMachineStoreType) => ({
       changelog: getChangelog(store),
       updatesViewed: getUpdatesViewed(store),
       hasSeenTutorialsTooTip: userHashasSeenTutorialsTooTip(store),
-    }));
+    })
+  );
 
   const { setUpdatesViewed, setSeenTutorialsToolTip } =
     useSliceMachineActions();
@@ -106,10 +102,6 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
     updatesViewed &&
     updatesViewed.latest === latestVersion?.versionNumber &&
     updatesViewed.latestNonBreaking === changelog.latestNonBreakingVersion;
-
-  const isNotLoggedIn = !!warnings.find(
-    (e) => e.key === warningStates.NOT_CONNECTED
-  );
 
   const router = useRouter();
 
@@ -138,13 +130,12 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               hasSeenUpdate={hasSeenLatestUpdates}
             />
           )}
-          {isNotLoggedIn && <NotLoggedIn />}
           <VideoItem
             hasSeenTutorialsTooTip={hasSeenTutorialsTooTip}
             onClose={setSeenTutorialsToolTip}
           />
           <Divider variant="sidebar" />
-          <WarningItem currentVersion={changelog.currentVersion} />
+          <ChangelogItem currentVersion={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

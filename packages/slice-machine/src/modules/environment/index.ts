@@ -16,8 +16,6 @@ import type { Models } from "@slicemachine/core";
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   env: FrontEndEnvironment;
-  warnings: ReadonlyArray<Warning>;
-  configErrors: ConfigErrors;
   localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   libraries: ReadonlyArray<LibraryUI>;
@@ -51,13 +49,6 @@ export const selectIsSimulatorAvailableForFramework = (
 ): boolean => {
   return simulatorIsSupported(store.environment.env.framework);
 };
-
-export const getWarnings = (
-  store: SliceMachineStoreType
-): ReadonlyArray<Warning> => store.environment.warnings;
-
-export const getConfigErrors = (store: SliceMachineStoreType): ConfigErrors =>
-  store.environment.configErrors;
 
 export const getChangelog = (
   store: SliceMachineStoreType
@@ -142,8 +133,6 @@ export const environmentReducer: Reducer<
       return {
         ...state,
         env: action.payload.env,
-        warnings: action.payload.warnings,
-        configErrors: action.payload.configErrors,
       };
     default:
       return state;

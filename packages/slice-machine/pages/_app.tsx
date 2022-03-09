@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
     }
 
     const { store, persistor } = configureStore({
-      environment: { env: serverState.env, warnings: [], configErrors: {} },
+      environment: { env: serverState.env },
       customTypes: {
         localCustomTypes: serverState.customTypes,
         remoteCustomTypes: serverState.remoteCustomTypes,

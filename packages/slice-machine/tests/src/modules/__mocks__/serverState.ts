@@ -4,12 +4,7 @@ import { FieldType } from "@models/common/CustomType/fields";
 
 export const dummyServerState: Pick<
   ServerState,
-  | "env"
-  | "customTypes"
-  | "warnings"
-  | "remoteCustomTypes"
-  | "configErrors"
-  | "libraries"
+  "env" | "customTypes" | "remoteCustomTypes" | "libraries"
 > = {
   env: {
     repo: "sm-env-example",
@@ -34,8 +29,6 @@ export const dummyServerState: Pick<
     sliceMachineAPIUrl: "http://localhost:9999",
     shortId: "shortId",
   },
-  warnings: [],
-  configErrors: {},
   customTypes: [
     {
       id: "about",
