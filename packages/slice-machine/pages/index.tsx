@@ -18,6 +18,10 @@ import { CustomType, ObjectTabs } from "@models/common/CustomType";
 const CustomTypeTable: React.FC<{
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
 }> = ({ customTypes }) => {
+  const firstColumnWidth = "35%";
+  const secondColumnWidth = "50%";
+  const thirdColumnWidth = "15%";
+
   return (
     <Box
       as={"table"}
@@ -27,13 +31,13 @@ const CustomTypeTable: React.FC<{
     >
       <thead>
         <tr>
-          <Box as={"th"} sx={{ width: "35%" }}>
+          <Box as={"th"} sx={{ width: firstColumnWidth }}>
             Name
           </Box>
-          <Box as={"th"} sx={{ width: "50%" }}>
+          <Box as={"th"} sx={{ width: secondColumnWidth }}>
             API ID
           </Box>
-          <Box as={"th"} sx={{ width: "15%" }}>
+          <Box as={"th"} sx={{ width: thirdColumnWidth }}>
             Type
           </Box>
         </tr>
@@ -42,13 +46,13 @@ const CustomTypeTable: React.FC<{
         {customTypes.map((customType) => (
           <Link passHref href={`/cts/${customType.id}`} key={customType.id}>
             <tr key={customType.id}>
-              <Box as={"td"} style={{ width: "35%" }}>
+              <Box as={"td"} style={{ width: firstColumnWidth }}>
                 <Text sx={{ fontWeight: 500 }}>{customType.label}</Text>
               </Box>
-              <Box as={"td"} style={{ width: "50%" }}>
+              <Box as={"td"} style={{ width: secondColumnWidth }}>
                 {customType.id}
               </Box>
-              <Box as={"td"} style={{ width: "15%" }}>
+              <Box as={"td"} style={{ width: thirdColumnWidth }}>
                 {customType.repeatable ? "Repeatable Type" : "Single Type"}
               </Box>
             </tr>
