@@ -122,7 +122,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   }}
                 >
                   <EmptyState
-                    title={"Slices"}
+                    title={"What are Slices?"}
                     onCreateNew={openCreateSliceModal}
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}

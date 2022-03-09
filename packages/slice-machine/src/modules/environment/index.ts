@@ -3,8 +3,6 @@ import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
-import Warning from "@models/common/Warning";
-import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";

@@ -20,14 +20,14 @@ const EmptyState: React.FunctionComponent<Props> = ({
     sx={(theme) => ({
       maxWidth: "480px",
       flexDirection: "column",
-      border: `1px solid ${theme.colors?.grey01 as string}`,
+      border: `1px solid ${theme.colors?.grey02 as string}`,
     })}
   >
     <Flex
       sx={(theme) => ({
         flexDirection: "column",
         p: 4,
-        borderBottom: `1px solid ${theme.colors?.grey01 as string}`,
+        borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
       })}
     >
       <Heading
