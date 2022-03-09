@@ -113,6 +113,7 @@ const CustomTypes: React.FunctionComponent = () => {
           <EmptyState
             title={"Custom Types"}
             onCreateNew={openCreateCustomTypeModal}
+            isLoading={isCreatingCustomType}
             buttonText={"Create one"}
             documentationComponent={
               <>

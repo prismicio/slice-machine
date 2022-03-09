@@ -1,9 +1,11 @@
-import { Button, Text, Heading, Flex } from "theme-ui";
+import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
+import React from "react";
 
 interface Props {
   title: string;
   onCreateNew: () => void;
   buttonText: string;
+  isLoading: boolean;
   documentationComponent: React.ReactNode;
 }
 
@@ -11,6 +13,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
   title,
   onCreateNew,
   buttonText,
+  isLoading,
   documentationComponent,
 }) => (
   <Flex
@@ -53,7 +56,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
           mr: 4,
         }}
       >
-        {buttonText}
+        {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
       </Button>
       <Text
         sx={{
