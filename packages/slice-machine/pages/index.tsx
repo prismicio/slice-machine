@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { Fragment } from "react";
-import { Box, Button, Link as ThemeLink, Spinner, Text } from "theme-ui";
+import { Flex, Box, Button, Link as ThemeLink, Spinner, Text } from "theme-ui";
 
 import Container from "components/Container";
 import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";

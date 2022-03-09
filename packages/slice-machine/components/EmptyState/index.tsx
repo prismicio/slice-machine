@@ -27,7 +27,11 @@ const EmptyState: React.FunctionComponent<Props> = ({
         borderBottom: `1px solid ${theme.colors?.grey01 as string}`,
       })}
     >
-      <Heading as={"h3"} sx={{ mb: 2 }}>
+      <Heading
+        as={"h3"}
+        variant={"heading"}
+        sx={{ fontSize: "16px", lineHeight: "24px", mb: 2 }}
+      >
         {title}
       </Heading>
       <Text variant="xs" sx={{ lineHeight: "24px", fontSize: "13px" }}>
