@@ -27,39 +27,39 @@ type EnvironmentActions = ActionType<typeof refreshStateCreator>;
 // Selectors
 export const getEnvironment = (
   store: SliceMachineStoreType
-): FrontEndEnvironment => store.environment.env;
+): FrontEndEnvironment => store.environment;
 
 export const selectSimulatorUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env.manifest.localSliceSimulatorURL;
+  return store.environment.manifest.localSliceSimulatorURL;
 };
 
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
-  store.environment.env.framework;
+  store.environment.framework;
 
 export const getShortId = (store: SliceMachineStoreType): string | undefined =>
-  store.environment.env.shortId;
+  store.environment.shortId;
 
 export const getRepoName = (store: SliceMachineStoreType): string | undefined =>
-  store.environment.env.repo;
+  store.environment.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
-  return simulatorIsSupported(store.environment.env.framework);
+  return simulatorIsSupported(store.environment.framework);
 };
 
 export const getChangelog = (
   store: SliceMachineStoreType
 ): PackageChangelog => {
-  return store.environment.env.changelog;
+  return store.environment.changelog;
 };
 
 export const getPackageManager = (
   store: SliceMachineStoreType
 ): PackageManager => {
-  return store.environment.env.packageManager;
+  return store.environment.packageManager;
 };
 
 export const getCurrentVersion = (store: SliceMachineStoreType): string => {
@@ -71,15 +71,15 @@ export const getIsTrackingAvailable = (
   store: SliceMachineStoreType
 ): boolean => {
   return (
-    store.environment.env.manifest.tracking === undefined ||
-    store.environment.env.manifest.tracking
+    store.environment.manifest.tracking === undefined ||
+    store.environment.manifest.tracking
   );
 };
 
 export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {
-  return store.environment.env.manifest.storybook || null;
+  return store.environment.manifest.storybook || null;
 };
 
 export const getLinkToTroubleshootingDocs = (
@@ -132,7 +132,7 @@ export const environmentReducer: Reducer<
     case getType(refreshStateCreator):
       return {
         ...state,
-        env: action.payload.env,
+        ...action.payload.env,
       };
     default:
       return state;

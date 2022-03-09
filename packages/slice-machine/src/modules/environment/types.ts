@@ -1,5 +1,3 @@
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 
-export type EnvironmentStoreType = {
-  env: FrontEndEnvironment;
-};
+export type EnvironmentStoreType = FrontEndEnvironment;
