@@ -26,8 +26,12 @@ import { createCustomTypeCreator } from "@src/modules/customTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator } from "@src/modules/customType/actions";
+import { initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator, addFieldCreator,
+  deleteFieldCreator,
+  reorderFieldCreator,
+  replaceFieldCreator } from "@src/modules/customType/actions";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
+import { Field } from "@models/common/CustomType/fields";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -93,6 +97,21 @@ const useSliceMachineActions = () => {
   const deleteCustomTypeTab = (tabId: string) => dispatch(deleteTabCreator({ tabId }));
   const updateCustomTypeTab = (tabId: string, newTabId: string) =>
     dispatch(updateTabCreator({ tabId, newTabId }));
+  const addCustomTypeField = (tabId: string, fieldId: string, field: Field) =>
+    dispatch(addFieldCreator({ tabId, fieldId, field }));
+  const deleteCustomTypeField = (tabId: string, fieldId: string) =>
+    dispatch(deleteFieldCreator({ tabId, fieldId }));
+  const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
+    dispatch(reorderFieldCreator({ tabId, start, end }));
+  const replaceCustomTypeField = (
+    tabId: string,
+    previousFieldId: string,
+    newFieldId: string,
+    value: Field
+  ) =>
+    dispatch(
+      replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
+    );
 
   // Slice module
   const createSlice = (sliceName: string, libName: string) =>
@@ -135,6 +154,10 @@ const useSliceMachineActions = () => {
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,
+    addCustomTypeField,
+    deleteCustomTypeField,
+    reorderCustomTypeField,
+    replaceCustomTypeField,
     createSlice,
     sendAReview,
     skipReview,

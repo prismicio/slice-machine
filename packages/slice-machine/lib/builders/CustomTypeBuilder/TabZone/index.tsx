@@ -21,6 +21,7 @@ import { SliceZoneAsArray } from "@models/common/CustomType/sliceZone";
 import { Field } from "@lib/models/common/CustomType/fields";
 import { Widget } from "@models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 interface TabZoneProps {
   Model: CustomTypeState;
@@ -37,10 +38,12 @@ const TabZone: React.FC<TabZoneProps> = ({
   fields,
   sliceZone,
 }) => {
+  const { deleteCustomTypeField, addCustomTypeField, reorderCustomTypeField, replaceCustomTypeField } = useSliceMachineActions()
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     customTypeActions.deleteWidgetMockConfig(Model.mockConfig, fieldId);
     customTypeActions.deleteField(tabId, fieldId);
+    deleteCustomTypeField(tabId, fieldId);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,6 +66,7 @@ const TabZone: React.FC<TabZoneProps> = ({
     const widget: Widget<Field, AnyObjectSchema> = Widgets[widgetTypeName];
     const friendlyName = createFriendlyFieldNameWithId(id);
     customTypeActions.addField(tabId, id, widget.create(friendlyName));
+    addCustomTypeField(tabId, id, widget.create(friendlyName));
   };
 
   const onDragEnd = (result: {
@@ -78,6 +82,11 @@ const TabZone: React.FC<TabZoneProps> = ({
       result.source.index,
       result.destination.index
     );
+    reorderCustomTypeField(
+      tabId,
+      result.source.index,
+      result.destination.index
+    )
   };
 
   const onSave = ({
@@ -109,6 +118,7 @@ const TabZone: React.FC<TabZoneProps> = ({
       customTypeActions.deleteWidgetMockConfig(Model.mockConfig, newKey);
     }
     customTypeActions.replaceField(tabId, previousKey, newKey, value);
+    replaceCustomTypeField(tabId, previousKey, newKey, value);
   };
 
   const onCreateSliceZone = () => {
