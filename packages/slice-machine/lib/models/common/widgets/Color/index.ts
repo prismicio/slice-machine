@@ -1,6 +1,5 @@
 import { MdColorLens } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockContent, handleMockConfig } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -27,8 +26,6 @@ const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
 );
 
 export const ColorWidget: Widget<ColorField, typeof schema> = {
-  handleMockContent,
-  handleMockConfig,
   create: (label: string) => new ColorField({ label }),
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

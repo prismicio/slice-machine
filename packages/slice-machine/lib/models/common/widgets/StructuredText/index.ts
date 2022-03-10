@@ -3,7 +3,6 @@ import Form, { FormFields } from "./Form";
 
 import { MdTextFields } from "react-icons/md";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { createValidationSchema } from "../../../../forms";
@@ -42,8 +41,6 @@ const schema = yup.object().shape({
 export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
   {
     create: (label: string) => new StructuredTextField({ label }),
-    handleMockConfig,
-    handleMockContent,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     FormFields,
     Meta,

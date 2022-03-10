@@ -100,7 +100,7 @@ export const SliceMockConfig = {
 
 export interface CustomTypeMockConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any;
+  [x: string]: Partial<Record<string, unknown>> | undefined;
 }
 
 export const CustomTypeMockConfig = {

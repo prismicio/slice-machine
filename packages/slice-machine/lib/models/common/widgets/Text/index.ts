@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { MdTitle } from "react-icons/md";
 import { MockConfigForm } from "./Mock/Form";
-import { handleMockConfig, handleMockContent } from "./Mock";
 
 import { TextField } from "./type";
 
@@ -42,8 +41,6 @@ const Meta = {
 export const TextWidget: Widget<TextField, typeof schema> = {
   create: (label: string) => new TextField({ label }),
   MockConfigForm,
-  handleMockConfig,
-  handleMockContent,
   Meta,
   schema,
   TYPE_NAME: FieldType.Text,

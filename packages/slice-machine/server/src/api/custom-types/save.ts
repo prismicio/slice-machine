@@ -11,6 +11,7 @@ import { CustomType, SaveCustomTypeBody } from "@lib/models/common/CustomType";
 export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
   const { model, mockConfig } = req.body;
+  console.log({ MOCKCONFIG: JSON.stringify(mockConfig) });
 
   const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
 
@@ -25,14 +26,15 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     value: mockConfig,
   });
 
+  const jsonModel = CustomType.toJsonModel(model);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  Files.write(modelPath, CustomType.toJsonModel(model));
-  const mocked = await mock(
-    model,
+  Files.write(modelPath, jsonModel);
+  const mocked = mock(
+    jsonModel,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
     CustomTypeMockConfig.getCustomTypeMockConfig(updatedMockConfig, model.id)
   );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  Files.write(mockPath, mocked);
+  Files.write(mockPath, mocked as object);
   return {};
 }

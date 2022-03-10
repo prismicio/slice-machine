@@ -20,6 +20,7 @@ export function updateWidgetGroupMockConfig(
       fieldId,
       value
     );
+    console.log({ updatedConfig });
     // you can use same dispatch her
     dispatch({ type: Actions.UpdateWidgetMockConfig, payload: updatedConfig });
   };

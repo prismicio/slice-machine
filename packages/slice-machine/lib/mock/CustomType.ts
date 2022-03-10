@@ -1,95 +1,51 @@
-import faker from "faker";
-import * as Widgets from "./misc/widgets";
-
-import { CustomType, ObjectTabs } from "../models/common/CustomType";
-import { Tab } from "@lib/models/common/CustomType/tab";
-
-import { handleFields } from "./misc/handlers";
-
+import {
+  CustomType as PrismicCustomType,
+  flattenWidgets,
+} from "@prismicio/types-internal/lib/customtypes/CustomType";
+import {
+  DocumentMockConfig,
+  DocWidgetMockConfig,
+  generateDocumentMock,
+  renderDocumentMock,
+} from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
+import { CustomTypeJsonModel } from "../models/common/CustomType";
+import { PartialRecord, buildWidgetMockConfig } from "./LegacyMockConfig";
+import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
 
-interface Mock {
-  id: string;
-  uid: string | null;
-  type: string;
-  data: { [key: string]: unknown };
+function buildDocumentMockConfig(
+  model: PrismicCustomType,
+  legacyMockConfig: CustomTypeMockConfig
+): DocumentMockConfig {
+  const widgets = flattenWidgets(model);
+  const widgetsConfig = widgets.reduce<
+    Partial<Record<WidgetKey, DocWidgetMockConfig>>
+  >((acc, [key, w]) => {
+    const legacyFieldConfig: PartialRecord<unknown> | undefined =
+      legacyMockConfig[key];
+    if (!legacyFieldConfig) return acc;
+
+    const widgetConfig = buildWidgetMockConfig(w, legacyFieldConfig);
+    if (!widgetConfig) return acc;
+
+    return { ...acc, [key]: widgetConfig };
+  }, {});
+
+  return { value: widgetsConfig };
 }
 
-const fieldsHandler = handleFields(Widgets);
-
-const groupHandler = (
-  group: GroupField<AsArray>,
-  mockConfig: CustomTypeMockConfig
-) => {
-  const items = [];
-  const entries = group.config.fields.map((e) => [e.key, e.value]);
-  for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-    items.push(fieldsHandler(entries, mockConfig));
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return items;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const sliceZoneHandler = () => {};
-
-const createEmptyMock = (type: string) => ({
-  id: faker.datatype.uuid(),
-  uid: null,
-  type,
-  data: {},
-});
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function MockCustomType(
-  model: CustomType<ObjectTabs>,
-  mockConfig: CustomTypeMockConfig
+export default function MockCustomType(
+  model: CustomTypeJsonModel,
+  legacyMockConfig: CustomTypeMockConfig
 ) {
-  const customTypeMock: Mock = createEmptyMock(model.id);
-  const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
-    const maybeWidgetUid = Object.entries(curr[1]).find(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-member-access
-      ([_, e]) => e.type === "UID"
-    );
-    if (!acc && maybeWidgetUid) {
-      return curr;
-    }
-    return acc;
-  });
-
-  if (maybeUid) {
-    customTypeMock.uid = Widgets.UID.handleMockConfig();
-  }
-
-  for (const [, tab] of Object.entries(model.tabs)) {
-    const { fields, groups, sliceZone } = Tab.organiseFields(tab);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mockedFields = fieldsHandler(
-      fields.map((e) => [e.key, e.value]),
-      mockConfig
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    customTypeMock.data = {
-      ...customTypeMock.data,
-      ...mockedFields,
-    };
-    groups.forEach((group) => {
-      const { key, value } = group;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-      const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(
-        mockConfig,
-        key
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const groupFields = groupHandler(value, groupMockConfig);
-      customTypeMock.data[key] = groupFields;
-    });
-
-    if (sliceZone) {
-      sliceZoneHandler();
-    }
-  }
-  return customTypeMock;
+  const prismicModel = model as unknown as PrismicCustomType;
+  const documentMockConfig = buildDocumentMockConfig(
+    prismicModel,
+    legacyMockConfig
+  );
+  return generateDocumentMock(
+    prismicModel,
+    {},
+    documentMockConfig
+  )(renderDocumentMock);
 }

@@ -6,7 +6,6 @@ import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 
 import FormFields from "./FormFields";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -42,8 +41,6 @@ const schema = yup.object().shape({
 export const SelectWidget: Widget<SelectField, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   create: (label: string) => new SelectField({ label }),
   schema,

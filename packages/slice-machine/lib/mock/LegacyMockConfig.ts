@@ -21,8 +21,42 @@ import {
   ExternalLinkConfig,
   MediaLinkConfig,
   RichTextMockConfig,
+  GroupMockConfig,
+  UIDMockConfig,
 } from "@prismicio/mocks";
 import { EmbedContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
+import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
+
+export type PartialRecord<T> = {
+  [P in string]?: T;
+};
+
+export const DefaultConfig = {
+  GeoPoint: null,
+  Embed: null,
+  Date: null,
+  Color: null,
+  Boolean: null,
+  Group: null,
+  Image: null,
+  Link: null,
+  LinkToMedia: null,
+  Number: null,
+  Select: null,
+  RichText: {
+    config: {
+      patternType: "PARAGRAPH",
+      blocks: 1,
+    },
+  },
+  Text: {
+    content: null,
+  },
+  UID: null,
+  Timestamp: {
+    content: null,
+  },
+};
 
 export const NonEmptyText = new t.Type<
   string | undefined,
@@ -163,9 +197,27 @@ export const ColorLegacyMockConfig = t.exact(
 );
 export type ColorLegacyMockConfig = t.TypeOf<typeof ColorLegacyMockConfig>;
 
-export function buildFieldMockConfig(
+export const NestableLegacyMockConfig = t.union([
+  ColorLegacyMockConfig,
+  TimestampLegacyMockConfig,
+  NumberLegacyMockConfig,
+  TextLegacyMockConfig,
+  GeoPointLegacyMockConfig,
+  DateLegacyMockConfig,
+  EmbedLegacyMockConfig,
+  BooleanLegacyMockConfig,
+  SelectLegacyMockConfig,
+  LinkLegacyMockConfig,
+  RichTextLegacyMockConfig,
+  ImageLegacyMockConfig,
+]);
+export type NestableLegacyMockConfig = t.TypeOf<
+  typeof NestableLegacyMockConfig
+>;
+
+export function buildNestableMockConfig(
   type: WidgetTypes,
-  fieldMockConfig?: unknown
+  fieldMockConfig?: unknown | undefined
 ): NestableWidgetMockConfig | undefined {
   if (!fieldMockConfig) return;
 
@@ -348,23 +400,86 @@ export function buildFieldMockConfig(
   }
 }
 
+export function buildWidgetMockConfig(
+  widget: DynamicWidget,
+  legacyWidgetMockConfig?: PartialRecord<unknown> | undefined
+): NestableWidgetMockConfig | GroupMockConfig | undefined {
+  if (!legacyWidgetMockConfig) return;
+  switch (widget.type) {
+    // slices are specific and for now we ignore it
+    case WidgetTypes.LegacySlices:
+    case WidgetTypes.Slices:
+      return;
+
+    case WidgetTypes.Group:
+      return fold(
+        () => {
+          console.warn(`couldn't parse the Group mock config.`);
+          return undefined;
+        },
+        (config: GroupLegacyMockConfig): GroupMockConfig => {
+          return {
+            fields: buildFieldsMockConfig(
+              widget.config?.fields || {},
+              config || {}
+            ),
+          };
+        }
+      )(GroupLegacyMockConfig.decode(legacyWidgetMockConfig));
+
+    case WidgetTypes.UID:
+      return fold(
+        () => {
+          console.warn(`couldn't parse the UID mock config.`);
+          return undefined;
+        },
+        (config: UIDLegacyMockConfig): UIDMockConfig => {
+          return {
+            value: config.content,
+          };
+        }
+      )(UIDLegacyMockConfig.decode(legacyWidgetMockConfig));
+
+    default:
+      return buildNestableMockConfig(widget.type, legacyWidgetMockConfig);
+  }
+}
+
 export function buildFieldsMockConfig(
-  fieldsModels: Record<string, { type: string }>,
+  fieldsModels: PartialRecord<{ type: string }>,
   fieldsMockConfig?: Record<string, unknown>
 ): Record<string, NestableWidgetMockConfig> {
-  return Object.entries(fieldsModels || {}).reduce<
-    Record<string, NestableWidgetMockConfig>
-  >((acc, [fieldKey, { type }]) => {
-    const fieldLegacyMockConfig = buildFieldMockConfig(
-      type as WidgetTypes,
-      fieldsMockConfig?.[fieldKey]
-    );
-    const field = fieldLegacyMockConfig
-      ? { [fieldKey]: fieldLegacyMockConfig }
-      : {};
-    return {
-      ...acc,
-      ...field,
-    };
-  }, {});
+  const models = Object.entries(fieldsModels || {}).filter(Boolean) as Array<
+    [string, { type: string }]
+  >;
+
+  return models.reduce<Record<string, NestableWidgetMockConfig>>(
+    (acc, [fieldKey, { type }]) => {
+      const fieldLegacyMockConfig = buildNestableMockConfig(
+        type as WidgetTypes,
+        fieldsMockConfig?.[fieldKey]
+      );
+      const field = fieldLegacyMockConfig
+        ? { [fieldKey]: fieldLegacyMockConfig }
+        : {};
+      return {
+        ...acc,
+        ...field,
+      };
+    },
+    {}
+  );
 }
+
+export const UIDLegacyMockConfig = t.exact(
+  t.partial({
+    content: NonEmptyText,
+  })
+);
+export type UIDLegacyMockConfig = t.TypeOf<typeof UIDLegacyMockConfig>;
+
+export const GroupLegacyMockConfig = t.union([
+  t.record(t.string, NestableLegacyMockConfig),
+  t.void,
+]);
+export type GroupLegacyMockConfig = t.TypeOf<typeof GroupLegacyMockConfig>;

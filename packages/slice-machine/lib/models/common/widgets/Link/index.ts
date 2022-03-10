@@ -2,7 +2,6 @@ import * as yup from "yup";
 import Form, { FormFields } from "./Form";
 import { FiLink2 } from "react-icons/fi";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -43,7 +42,7 @@ import { LinkField } from "./type";
   } */
 
 /** should handle content relationship and media
-  * 
+  *
   *{
     id: "Xt9fSxEAACIAFHz7"
     type: "homepage"
@@ -92,8 +91,6 @@ const schema = yup.object().shape({
 });
 
 export const LinkWidget: Widget<LinkField, typeof schema> = {
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

@@ -1,7 +1,7 @@
 import { Box, Text, Select, Label } from "theme-ui";
 import { useFormikContext } from "formik";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -70,6 +70,6 @@ const Form = () => {
   );
 };
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Boolean;
 
 export const MockConfigForm = Form;

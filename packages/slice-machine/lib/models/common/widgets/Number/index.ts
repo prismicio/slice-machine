@@ -1,6 +1,5 @@
 import { AiOutlineFieldNumber } from "react-icons/ai";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -27,8 +26,6 @@ const Meta = {
 export const NumberWidget: Widget<NumberField, typeof schema> = {
   create: (label: string) => new NumberField({ label }),
   MockConfigForm,
-  handleMockConfig,
-  handleMockContent,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: FieldType.Number,

@@ -1,6 +1,5 @@
 import { MdDateRange } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -26,8 +25,6 @@ const Meta = {
 
 export const DateWidget: Widget<DateField, typeof schema> = {
   create: (label: string) => new DateField({ label }),
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,

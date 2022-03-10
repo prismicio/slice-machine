@@ -5,10 +5,6 @@ import { FieldType, Field } from "../CustomType/fields";
 
 export interface Widget<F extends Field, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  handleMockContent?: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  handleMockConfig?: Function;
   MockConfigForm?: {
     (): JSX.Element;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

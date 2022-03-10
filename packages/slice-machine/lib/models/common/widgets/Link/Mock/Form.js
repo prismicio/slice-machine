@@ -2,7 +2,7 @@ import { Box, Text, Label, Input } from "theme-ui";
 import { useFormikContext } from "formik";
 import InputDeleteIcon from "components/InputDeleteIcon";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import { MockConfigKey } from "../../../../../consts";
 
@@ -45,6 +45,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Link;
 
 export const MockConfigForm = Form;

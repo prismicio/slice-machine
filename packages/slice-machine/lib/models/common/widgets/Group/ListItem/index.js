@@ -50,10 +50,15 @@ const CustomListItem = ({
     setSelectMode(false);
   };
 
+  /* eslint-disable */
   const getFieldMockConfig = ({ apiId }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId);
+    return CustomTypeMockConfig.getGroupFieldMockConfig(
+      Model.mockConfig,
+      groupItem.key,
+      apiId
+    );
   };
+  /* eslint-enable */
 
   const onCancelNewField = () => {
     setNewFieldData(null);

@@ -10,11 +10,7 @@ import {
   generateSliceMock,
   renderSliceMock,
 } from "@prismicio/mocks";
-import { buildFieldsMockConfig } from "./LegacyMockConfig";
-
-type PartialRecord<T> = {
-  [P in string]?: T;
-};
+import { buildFieldsMockConfig, PartialRecord } from "./LegacyMockConfig";
 
 function buildVariationMockConfig(
   model: Models.VariationAsObject,
@@ -36,7 +32,7 @@ function buildVariationMockConfig(
   };
 }
 
-export function buildMockConfig(
+export function buildSliceMockConfig(
   model: Models.SliceAsObject,
   legacyMockConfig: PartialRecord<PartialRecord<PartialRecord<unknown>>>
 ): ReadonlyArray<SharedSliceMockConfig> {
@@ -64,7 +60,7 @@ export default function MockSlice(
   model: Models.SliceAsObject,
   legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
 ): unknown[] {
-  const sliceMockConfig = buildMockConfig(model, legacyMockConfig);
+  const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
   const sliceModel: SharedSlice = {
     ...model,
     variations: model.variations.map((v) => {

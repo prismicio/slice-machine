@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { MdPlace } from "react-icons/md";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { DefaultFields } from "../../../../forms/defaults";
@@ -47,8 +46,6 @@ const Meta = {
 
 export const GeoPointWidget: Widget<GeoPointField, typeof schema> = {
   create: (label: string) => new GeoPointField({ label }),
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   FormFields,
   TYPE_NAME: FieldType.GeoPoint,

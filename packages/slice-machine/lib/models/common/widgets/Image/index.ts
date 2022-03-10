@@ -6,14 +6,13 @@ import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
 import { ImageField } from "./type";
 import { FieldType } from "../../CustomType/fields";
 
-/** 
+/**
  * {
     "type": "Image",
     "config": {
@@ -54,8 +53,6 @@ export const ImageWidget: Widget<ImageField, typeof schema> = {
   Form,
   schema,
   create: (label: string) => new ImageField({ label }),
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   FormFields,
   TYPE_NAME: FieldType.Image,

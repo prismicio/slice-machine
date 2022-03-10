@@ -23,6 +23,38 @@
         },
         "type": "Boolean"
       },
+      "myGroup": {
+        "config": {
+          "label": "My Group",
+          "placeholder": "",
+          "fields": {
+            "myGroupBoolean": {
+              "config": {
+                "label": "My Group Boolean",
+                "placeholder_false": "false",
+                "placeholder_true": "true",
+                "default_value": false
+              },
+              "type": "Boolean"
+            },
+            "myGroupText": {
+              "config": {
+                "label": "My Group Text",
+                "placeholder": ""
+              },
+              "type": "Text"
+            }
+          }
+        },
+        "type": "Group"
+      },
+      "mytext": {
+        "config": {
+          "label": "Mytext",
+          "placeholder": ""
+        },
+        "type": "Text"
+      },
       "MainSliceZone": {
         "type": "Slices",
         "fieldset": "Slice Zone",

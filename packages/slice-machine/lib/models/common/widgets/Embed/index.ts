@@ -1,6 +1,5 @@
 import { FiCode } from "react-icons/fi";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -26,8 +25,6 @@ const Meta = {
 
 export const EmbedWidget: Widget<EmbedField, typeof schema> = {
   create: (label: string) => new EmbedField({ label }),
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
