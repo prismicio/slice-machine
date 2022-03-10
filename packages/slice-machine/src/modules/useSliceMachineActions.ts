@@ -22,11 +22,7 @@ import {
   connectToSimulatorIframeCreator,
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
-import {
-  createCustomTypeCreator,
-  saveCustomTypeCreator,
-} from "@src/modules/customTypes";
-import { CustomTypeState } from "@models/ui/CustomTypeState";
+import { createCustomTypeCreator } from "@src/modules/customTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -87,8 +83,6 @@ const useSliceMachineActions = () => {
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
-  const saveCustomType = (modelPayload: CustomTypeState) =>
-    dispatch(saveCustomTypeCreator({ modelPayload }));
 
   // Slice module
   const createSlice = (sliceName: string, libName: string) =>
@@ -129,7 +123,6 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
-    saveCustomType,
     createSlice,
     sendAReview,
     skipReview,

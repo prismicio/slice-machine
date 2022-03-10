@@ -29,6 +29,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
 
   return (
     <ModalFormCard
+      widthInPx={"500px"}
       isOpen={isOpen}
       formId={formId}
       close={close}
