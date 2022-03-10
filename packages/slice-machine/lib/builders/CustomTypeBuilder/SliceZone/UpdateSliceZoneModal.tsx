@@ -7,7 +7,7 @@ import { SharedSlice } from "@lib/models/ui/Slice";
 
 import Grid from "@components/Grid";
 
-const Form = ({
+const UpdateSliceZoneModal = ({
   isOpen,
   formId,
   close,
@@ -35,7 +35,7 @@ const Form = ({
         sliceKeys: slicesInSliceZone.map((slice) => slice.infos.meta.id),
       }}
       content={{
-        title: "Update SliceZone",
+        title: "Add a new Slice",
       }}
     >
       {({ values }) => (
@@ -105,4 +105,4 @@ const Form = ({
   );
 };
 
-export default Form;
+export default UpdateSliceZoneModal;
