@@ -21,7 +21,7 @@ const EmptyState: React.FC<{
         <Text variant={"small"} sx={{ mb: 2 }}>
           Add your Slices
         </Text>
-        <Text sx={{ mb: "24px" }}>Add slices to your custom type</Text>
+        <Text sx={{ mb: "24px" }}>Add Slices to your Custom Type</Text>
         <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
           Add a new Slice
         </Button>

@@ -7,7 +7,7 @@ const UpdateSliceZoneModalEmptyState = () => (
   <Flex sx={{ flexDirection: "column", alignItems: "center" }}>
     <MdHorizontalSplit size={40} />
     <Text variant={"small"} sx={{ mt: 2 }}>
-      No slices in your project
+      No Slices in your project
     </Text>
     <Text variant={"xs"} sx={{ maxWidth: "412px", textAlign: "center", mt: 3 }}>
       Slices are sections of your website. Prismic documents contain a dynamic

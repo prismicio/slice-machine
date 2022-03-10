@@ -151,7 +151,7 @@ const SliceZone = ({
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
-        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+        onSubmit={({ sliceKeys }) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }
