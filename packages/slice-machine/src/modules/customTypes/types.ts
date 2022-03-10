@@ -1,4 +1,4 @@
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import {CustomType, ObjectTabs} from "@models/common/CustomType";
 
 export type FrontEndCustomType = {
   local: CustomType<ObjectTabs>;

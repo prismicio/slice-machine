@@ -21,6 +21,7 @@ import UpdateModal, {
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { TabAsArray } from "@models/common/CustomType/tab";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 enum ModalType {
   CREATE = "create",
@@ -69,6 +70,7 @@ const CtTabs = ({
   renderTab: (tab: TabAsArray) => JSX.Element;
 }) => {
   const { theme } = useThemeUI();
+  const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } = useSliceMachineActions();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [state, setState] = useState<ModalState | undefined>();
@@ -143,6 +145,7 @@ const CtTabs = ({
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
             customTypeActions.createTab(id);
+            createCustomTypeTab(id);
             // current.tabs is not updated yet
             setTabIndex(Model.current.tabs.length);
           }}
@@ -164,11 +167,12 @@ const CtTabs = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              return customTypeActions.updateTab(state.key, id);
+              customTypeActions.updateTab(state.key, id);
+              updateCustomTypeTab(state.key, id)
             }
             if (actionType === UpdateModalActionType.DELETE) {
               customTypeActions.deleteTab(state.key);
+              deleteCustomTypeTab(state.key);
               setTabIndex(0);
             }
           }}

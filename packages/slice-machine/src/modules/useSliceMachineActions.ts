@@ -26,6 +26,8 @@ import { createCustomTypeCreator } from "@src/modules/customTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator } from "@src/modules/customType/actions";
+import { ArrayTabs, CustomType } from "@models/common/CustomType";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -84,6 +86,14 @@ const useSliceMachineActions = () => {
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
 
+  // Custom type module
+  const initCustomTypeStore = (model: CustomType<ArrayTabs>, mockConfig: any) =>
+    dispatch(initCustomTypeStoreCreator({model, mockConfig}))
+  const createCustomTypeTab = (tabId: string) => dispatch(createTabCreator({ tabId }));
+  const deleteCustomTypeTab = (tabId: string) => dispatch(deleteTabCreator({ tabId }));
+  const updateCustomTypeTab = (tabId: string, newTabId: string) =>
+    dispatch(updateTabCreator({ tabId, newTabId }));
+
   // Slice module
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
@@ -121,6 +131,10 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
+    initCustomTypeStore,
+    createCustomTypeTab,
+    updateCustomTypeTab,
+    deleteCustomTypeTab,
     createSlice,
     sendAReview,
     skipReview,

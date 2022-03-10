@@ -10,6 +10,7 @@ import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
 import { customTypesReducer } from "@src/modules/customTypes";
+import { customTypeReducer } from "@src/modules/customType";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
 
@@ -24,6 +25,7 @@ const createReducer = (): Reducer =>
     environment: environmentReducer,
     simulator: simulatorReducer,
     customTypes: customTypesReducer,
+    customType: customTypeReducer,
     slices: slicesReducer,
     router: routerReducer,
   });
