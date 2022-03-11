@@ -80,11 +80,7 @@
           "config": {
             "label": "",
             "select": "document",
-            "customtypes": [
-              "gggg",
-              "sdfsdf",
-              "test"
-            ]
+            "customtypes": ["gggg", "sdfsdf", "test"]
           },
           "type": "Link"
         }
@@ -102,11 +98,7 @@
           "config": {
             "label": "",
             "select": "document",
-            "customtypes": [
-              "gggg",
-              "sdfsdf",
-              "test"
-            ]
+            "customtypes": ["gggg", "sdfsdf", "test"]
           },
           "type": "Link"
         },
@@ -131,11 +123,7 @@
           "config": {
             "label": "",
             "select": "document",
-            "customtypes": [
-              "gggg",
-              "sdfsdf",
-              "test"
-            ]
+            "customtypes": ["gggg", "sdfsdf", "test"]
           },
           "type": "Link"
         },
