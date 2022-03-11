@@ -11,6 +11,9 @@ import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { MdSpaceDashboard } from "react-icons/md";
+import {useSelector} from "react-redux";
+import {SliceMachineStoreType} from "@src/redux/type";
+import {selectCurrentCustomType} from "@src/modules/customType";
 
 const CustomTypeHeader = ({
   Model,
@@ -19,8 +22,13 @@ const CustomTypeHeader = ({
   Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
+  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store)
+  }))
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal, openToaster } = useSliceMachineActions();
+
+  if (!currentCustomType) return null;
 
   const buttonProps = (() => {
     if (Model.isTouched) {
@@ -81,7 +89,7 @@ const CustomTypeHeader = ({
       }
       SecondaryBreadcrumb={
         <Box sx={{ fontWeight: "thin" }} as="span">
-          <Text ml={2}>/ {Model.current.label} </Text>
+          <Text ml={2}>/ {currentCustomType.label} </Text>
         </Box>
       }
       breadrumbHref="/"

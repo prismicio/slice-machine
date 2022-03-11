@@ -29,9 +29,25 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator, addFieldCreator,
   deleteFieldCreator,
   reorderFieldCreator,
-  replaceFieldCreator } from "@src/modules/customType/actions";
+  replaceFieldCreator,
+  deleteSharedSliceCreator,
+  replaceSharedSliceCreator,
+  createSliceZoneCreator
+} from "@src/modules/customType/actions";
+import {
+  deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
+  deleteWidgetMockConfig as deleteWidgetMockConfigHelper,
+  updateWidgetGroupMockConfig as updateWidgetGroupMockConfigHelper,
+  updateWidgetMockConfig as updateWidgetMockConfigHelper
+} from "@src/modules/customType/mockHelpers";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { Field } from "@models/common/CustomType/fields";
+import {
+  addFieldIntoGroupCreator,
+  deleteFieldIntoGroupCreator,
+  reorderFieldIntoGroupCreator, replaceFieldIntoGroupCreator
+} from "@src/models/customType/newActions";
+
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -112,6 +128,54 @@ const useSliceMachineActions = () => {
     dispatch(
       replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
     );
+  const createSliceZone = (tabId: string) =>
+    dispatch(createSliceZoneCreator({ tabId }));
+  const deleteCustomTypeSharedSlice = (tabId: string, sliceId: string) =>
+    dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
+  const replaceCustomTypeSharedSlice = (
+    tabId: string,
+    sliceKeys: string[],
+    preserve: string[]
+  ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
+  const updateWidgetMockConfig = updateWidgetMockConfigHelper(dispatch);
+  const deleteWidgetMockConfig = deleteWidgetMockConfigHelper(dispatch);
+  const updateWidgetGroupMockConfig =
+    updateWidgetGroupMockConfigHelper(dispatch);
+  const deleteWidgetGroupMockConfig =
+    deleteWidgetGroupMockConfigHelper(dispatch);
+  const addFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    fieldId: string,
+    field: Field
+  ) => dispatch(addFieldIntoGroupCreator({ tabId, groupId, fieldId, field }));
+  const deleteFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    fieldId: string
+  ) => dispatch(deleteFieldIntoGroupCreator({ tabId, groupId, fieldId }));
+  const reorderFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    start: number,
+    end: number
+  ) => dispatch(reorderFieldIntoGroupCreator({ tabId, groupId, start, end }));
+  const replaceFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    previousFieldId: string,
+    newFieldId: string,
+    value: Field
+  ) =>
+    dispatch(
+      replaceFieldIntoGroupCreator({
+        tabId,
+        groupId,
+        previousFieldId,
+        newFieldId,
+        value,
+      })
+    );
 
   // Slice module
   const createSlice = (sliceName: string, libName: string) =>
@@ -158,6 +222,17 @@ const useSliceMachineActions = () => {
     deleteCustomTypeField,
     reorderCustomTypeField,
     replaceCustomTypeField,
+    createSliceZone,
+    deleteCustomTypeSharedSlice,
+    replaceCustomTypeSharedSlice,
+    updateWidgetMockConfig,
+    deleteWidgetMockConfig,
+    updateWidgetGroupMockConfig,
+    deleteWidgetGroupMockConfig,
+    addFieldIntoGroup,
+    deleteFieldIntoGroup,
+    reorderFieldIntoGroup,
+    replaceFieldIntoGroup,
     createSlice,
     sendAReview,
     skipReview,

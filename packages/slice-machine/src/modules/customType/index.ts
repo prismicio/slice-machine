@@ -3,16 +3,33 @@ import { CustomTypeStoreType } from "./types";
 import {
   getType,
 } from "typesafe-actions";
-import { createTabCreator, updateTabCreator, CustomTypeActions, initCustomTypeStoreCreator, addFieldCreator, deleteTabCreator } from "./actions";
+import { createTabCreator, updateTabCreator, CustomTypeActions, initCustomTypeStoreCreator, addFieldCreator, deleteTabCreator, createSliceZoneCreator,
+  deleteFieldCreator, deleteSharedSliceCreator,
+  reorderFieldCreator,
+  replaceFieldCreator, replaceSharedSliceCreator, deleteFieldMockConfigCreator, updateFieldMockConfigCreator,
+  addFieldIntoGroupCreator,
+  deleteFieldIntoGroupCreator, reorderFieldIntoGroupCreator,
+  replaceFieldIntoGroupCreator
+} from "./actions";
 import { Tab } from "@models/common/CustomType/tab";
-import {sliceZoneType} from "@models/common/CustomType/sliceZone";
+import {SliceZone, SliceZoneAsArray, sliceZoneType} from "@models/common/CustomType/sliceZone";
 import {AnyWidget} from "@models/common/widgets/Widget";
 import * as Widgets from "@models/common/widgets/withGroup";
 import StateHelpers from "./stateHelpers";
-import {deleteFieldCreator, reorderFieldCreator, replaceFieldCreator} from "@src/models/customType/newActions";
-import {CustomTypeState} from "@models/ui/CustomTypeState";
+import {CustomType} from "@models/common/CustomType";
+import {AsArray, GroupField} from "@models/common/widgets/Group/type";
+import {Group} from "@models/common/CustomType/group";
+import {SliceMachineStoreType} from "@src/redux/type";
 
 // Selectors
+export const selectCurrentCustomType = (store: SliceMachineStoreType) => {
+  if (!store.customType) return null
+  return store.customType.model
+}
+export const selectCurrentMockConfig = (store: SliceMachineStoreType) => {
+  if (!store.customType) return null
+  return store.customType.mockConfig
+}
 
 // Reducer
 export const customTypeReducer: Reducer<
@@ -120,7 +137,137 @@ export const customTypeReducer: Reducer<
         tabId
       )((tab) => Tab.reorderWidget(tab, start, end));
     }
+    case getType(createSliceZoneCreator): {
+      if(!state) return;
+      const { tabId } = action.payload;
+      const tabIndex = state.model.tabs.findIndex(
+        (t) => t.key === tabId
+      );
+
+      if (tabIndex === -1) {
+        console.error(`No tabId ${tabId} found in tabs`);
+        return state;
+      }
+
+      const existingSliceZones = CustomType.getSliceZones(
+        state.model
+      ).filter((e) => e);
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) => {
+        const i = findAvailableKey(tabIndex, existingSliceZones);
+        return Tab.createSliceZone(
+          tab,
+          `slices${i !== 0 ? i.toString() : ""}`
+        );
+      });
+    }
+    case getType(replaceSharedSliceCreator): {
+      const { tabId, sliceKeys, preserve } = action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
+          SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)
+        )
+      );
+    }
+    case getType(deleteSharedSliceCreator): {
+      const { tabId, sliceId } = action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
+          SliceZone.removeSharedSlice(sliceZone, sliceId)
+        )
+      );
+    }
+    case getType(updateFieldMockConfigCreator):
+      return {
+        ...state,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        mockConfig: action.payload.mockConfig,
+      };
+    case getType(deleteFieldMockConfigCreator):
+      return {
+        ...state,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        mockConfig: action.payload.mockConfig,
+      };
+    case getType(addFieldIntoGroupCreator): {
+      const { tabId, groupId, fieldId, field } = action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        Tab.updateGroup(
+          tab,
+          groupId
+        )((group: GroupField<AsArray>) =>
+          Group.addWidget(group, { key: fieldId, value: field })
+        )
+      );
+    }
+    case getType(replaceFieldIntoGroupCreator): {
+      const { tabId, groupId, previousFieldId, newFieldId, value } =
+        action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        Tab.updateGroup(
+          tab,
+          groupId
+        )((group: GroupField<AsArray>) =>
+          Group.replaceWidget(group, previousFieldId, newFieldId, value)
+        )
+      );
+    }
+    case getType(deleteFieldIntoGroupCreator): {
+      const { tabId, groupId, fieldId } = action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        Tab.updateGroup(
+          tab,
+          groupId
+        )((group: GroupField<AsArray>) => Group.deleteWidget(group, fieldId))
+      );
+    }
+    case getType(reorderFieldIntoGroupCreator): {
+      const { tabId, groupId, start, end } = action.payload;
+      return StateHelpers.updateTab(
+        state,
+        tabId
+      )((tab) =>
+        Tab.updateGroup(
+          tab,
+          groupId
+        )((group: GroupField<AsArray>) =>
+          Group.reorderWidget(group, start, end)
+        )
+      );
+    }
     default:
       return state;
   }
+};
+
+const findAvailableKey = (
+  startI: number,
+  existingSliceZones: (SliceZoneAsArray | null)[]
+) => {
+  for (let i = startI; i < Infinity; i++) {
+    const key = `slices${i.toString()}`;
+    if (!existingSliceZones.find((e) => e?.key === key)) {
+      return i;
+    }
+  }
+  return -1;
 };

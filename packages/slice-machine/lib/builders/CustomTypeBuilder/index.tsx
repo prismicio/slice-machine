@@ -31,7 +31,6 @@ const CustomTypeBuilder = ({
         <Header Model={Model} customTypeActions={customTypeActions} />
       </Container>
       <Tabs
-        Model={Model}
         customTypeActions={customTypeActions}
         renderTab={({ value, sliceZone, key }) => (
           <Box sx={{ mt: 4 }}>

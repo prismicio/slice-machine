@@ -22,6 +22,9 @@ import { Field } from "@lib/models/common/CustomType/fields";
 import { Widget } from "@models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import {useSelector} from "react-redux";
+import {SliceMachineStoreType} from "@src/redux/type";
+import {selectCurrentCustomType, selectCurrentMockConfig} from "@src/modules/customType";
 
 interface TabZoneProps {
   Model: CustomTypeState;
@@ -38,10 +41,32 @@ const TabZone: React.FC<TabZoneProps> = ({
   fields,
   sliceZone,
 }) => {
-  const { deleteCustomTypeField, addCustomTypeField, reorderCustomTypeField, replaceCustomTypeField } = useSliceMachineActions()
+  const {
+    deleteCustomTypeField,
+    addCustomTypeField,
+    reorderCustomTypeField,
+    replaceCustomTypeField,
+    createSliceZone,
+    deleteCustomTypeSharedSlice,
+    replaceCustomTypeSharedSlice,
+    updateWidgetMockConfig,
+    deleteWidgetMockConfig
+  } = useSliceMachineActions()
+
+  const { currentCustomType, mockConfig } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+    mockConfig: selectCurrentMockConfig(store)
+  }))
+
+  if (!currentCustomType || mockConfig) {
+    return null;
+  }
+
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    customTypeActions.deleteWidgetMockConfig(Model.mockConfig, fieldId);
+    customTypeActions.deleteWidgetMockConfig(mockConfig, fieldId);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+    deleteWidgetMockConfig(mockConfig, fieldId)
     customTypeActions.deleteField(tabId, fieldId);
     deleteCustomTypeField(tabId, fieldId);
   };
@@ -49,7 +74,7 @@ const TabZone: React.FC<TabZoneProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getFieldMockConfig = ({ apiId }: { apiId: string }): any => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId);
+    return CustomTypeMockConfig.getFieldMockConfig(mockConfig, apiId);
   };
 
   const onSaveNewField = ({
@@ -108,14 +133,22 @@ const TabZone: React.FC<TabZoneProps> = ({
     if (mockValue) {
       customTypeActions.updateWidgetMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Model.mockConfig,
+        mockConfig,
         previousKey,
         newKey,
         mockValue
       );
+      updateWidgetMockConfig(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        mockConfig,
+        previousKey,
+        newKey,
+        mockValue)
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      customTypeActions.deleteWidgetMockConfig(Model.mockConfig, newKey);
+      customTypeActions.deleteWidgetMockConfig(mockConfig, newKey);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      deleteWidgetMockConfig(mockConfig, newKey)
     }
     customTypeActions.replaceField(tabId, previousKey, newKey, value);
     replaceCustomTypeField(tabId, previousKey, newKey, value);
@@ -123,14 +156,17 @@ const TabZone: React.FC<TabZoneProps> = ({
 
   const onCreateSliceZone = () => {
     customTypeActions.createSliceZone(tabId);
+    createSliceZone(tabId);
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
     customTypeActions.replaceSharedSlice(tabId, keys, preserve);
+    replaceCustomTypeSharedSlice(tabId, keys, preserve);
   };
 
   const onRemoveSharedSlice = (sliceId: string) => {
     customTypeActions.deleteSharedSlice(tabId, sliceId);
+    deleteCustomTypeSharedSlice(tabId, sliceId);
   };
 
   return (

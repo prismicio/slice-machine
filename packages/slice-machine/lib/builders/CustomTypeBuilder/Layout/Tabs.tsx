@@ -22,6 +22,9 @@ import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { TabAsArray } from "@models/common/CustomType/tab";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import {useSelector} from "react-redux";
+import {SliceMachineStoreType} from "@src/redux/type";
+import {selectCurrentCustomType} from "@src/modules/customType";
 
 enum ModalType {
   CREATE = "create",
@@ -59,21 +62,25 @@ const Icon = ({
 
 const CtTabs = ({
   sx,
-  Model,
   customTypeActions,
   renderTab,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sx?: any;
-  Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
   renderTab: (tab: TabAsArray) => JSX.Element;
 }) => {
+  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store)
+  }))
   const { theme } = useThemeUI();
   const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } = useSliceMachineActions();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [state, setState] = useState<ModalState | undefined>();
+
+  if (!currentCustomType)
+    return null;
 
   return (
     <Box sx={{ bg: "backgroundClear" }}>
@@ -87,7 +94,7 @@ const CtTabs = ({
           style={{ width: "100%" }}
         >
           <TabList>
-            {Model.current.tabs.map((tab, i) => (
+            {currentCustomType.tabs.map((tab, i) => (
               <Tab
                 key={tab.key}
                 style={{
@@ -109,7 +116,7 @@ const CtTabs = ({
                           title: "Edit Tab",
                           type: ModalType.UPDATE,
                           key: tab.key,
-                          allowDelete: Model.current.tabs.length > 1,
+                          allowDelete: currentCustomType.tabs.length > 1,
                         });
                       }}
                     />
@@ -131,7 +138,7 @@ const CtTabs = ({
               </Button>
             </Tab>
           </TabList>
-          {Model.current.tabs.map((tab) => (
+          {currentCustomType.tabs.map((tab) => (
             <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>
           ))}
           <TabPanel key={"new-tab"} />
@@ -141,13 +148,13 @@ const CtTabs = ({
         <CreateModal
           {...state}
           isOpen
-          tabIds={Model.current.tabs.map((e) => e.key.toLowerCase())}
+          tabIds={currentCustomType.tabs.map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
             customTypeActions.createTab(id);
             createCustomTypeTab(id);
             // current.tabs is not updated yet
-            setTabIndex(Model.current.tabs.length);
+            setTabIndex(currentCustomType.tabs.length);
           }}
         />
       ) : null}
@@ -155,7 +162,7 @@ const CtTabs = ({
         <UpdateModal
           {...state}
           isOpen
-          tabIds={Model.current.tabs
+          tabIds={currentCustomType.tabs
             .filter((e) => e.key !== state.key)
             .map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
