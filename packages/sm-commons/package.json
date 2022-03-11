@@ -1,13 +1,13 @@
 {
   "name": "sm-commons",
-  "version": "0.1.3-alpha.5",
+  "version": "0.1.3-alpha.8",
   "description": "A set of common utilities for slice machine libraries",
   "main": "scripts/bundle.js",
   "typings": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "lint": "eslint .",
-    "audit": "better-npm-audit audit -l high -p -x 1033678",
+    "audit": "better-npm-audit audit -l high -p -x 1054595",
     "audit-fix": "npm audit fix"
   },
   "repository": {

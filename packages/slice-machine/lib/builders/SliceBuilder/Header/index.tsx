@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
 import MetaData from "./MetaData";
-import { FiLayers } from "react-icons/fi";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,6 +8,7 @@ import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 import SaveButton from "./SaveButton";
 import type { ContextProps } from "@src/models/slice/context";
+import { MdHorizontalSplit } from "react-icons/md";
 
 const Header: React.FC<{
   Model: ContextProps["Model"];
@@ -65,7 +65,7 @@ const Header: React.FC<{
                 <Link href="/slices" passHref>
                   <ThemeLinK variant="invisible">
                     <Flex sx={{ alignItems: "center" }}>
-                      <FiLayers /> <Text ml={2}>Slices</Text>
+                      <MdHorizontalSplit /> <Text ml={2}>Slices</Text>
                     </Flex>
                   </ThemeLinK>
                 </Link>

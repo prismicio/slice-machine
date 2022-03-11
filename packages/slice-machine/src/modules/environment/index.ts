@@ -79,7 +79,10 @@ export const getCurrentVersion = (store: SliceMachineStoreType): string => {
 export const getIsTrackingAvailable = (
   store: SliceMachineStoreType
 ): boolean => {
-  return !!store.environment.env.manifest.tracking;
+  return (
+    store.environment.env.manifest.tracking === undefined ||
+    store.environment.env.manifest.tracking
+  );
 };
 
 export const getStorybookUrl = (

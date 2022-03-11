@@ -643,16 +643,37 @@ const AppTheme = (): Theme =>
       },
       table: {
         width: "100%",
-        my: 4,
-        borderCollapse: "separate",
+        borderCollapse: "collapse",
         borderSpacing: 0,
-        "th,td": {
+        "td, th": {
           textAlign: "left",
-          py: "4px",
-          pr: "4px",
-          pl: 0,
           borderColor: "muted",
           borderBottomStyle: "solid",
+        },
+        td: {
+          p: "24px",
+        },
+        "thead tr": {
+          bg: "grey02",
+          borderRadius: "4px",
+          th: {
+            p: "12px 24px",
+          },
+          "th:first-of-type": {
+            borderBottomLeftRadius: "4px",
+            borderTopLeftRadius: "4px",
+          },
+          "th:last-of-type": {
+            borderBottomRightRadius: "4px",
+            borderTopRightRadius: "4px",
+          },
+        },
+        "tbody tr": {
+          cursor: "pointer",
+          transition: "all 150ms cubic-bezier(0.215,0.60,0.355,1)",
+          "&:hover": {
+            bg: "grey01",
+          },
         },
       },
       th: {

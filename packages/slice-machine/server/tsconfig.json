@@ -13,7 +13,7 @@
     "baseUrl": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "typeRoots": ["../node_modules/@types", "../../sm-commons/index.d.ts"],
+    "typeRoots": ["../node_modules/@types"],
     "types": ["node"],
     "esModuleInterop": true,
     "inlineSourceMap": true,

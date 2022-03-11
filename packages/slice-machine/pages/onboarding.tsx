@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   Image,
   Paragraph,
   ParagraphProps,
+  useThemeUI,
 } from "theme-ui";
 import router from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
@@ -17,6 +18,7 @@ import { Video as CldVideo } from "cloudinary-react";
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import Tracker, { ContinueOnboardingType } from "@src/tracker";
+import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -60,16 +62,26 @@ const SubHeader = (props: ParagraphProps) => (
   />
 );
 
-const WelcomeSlide = ({ onClick }: { onClick: () => void }) => (
-  <>
-    <Image sx={{ display: "block", ...imageSx }} src="/SM-LOGO.svg" />
-    <Header>Welcome to Slice Machine</Header>
-    <SubHeader>Prismic’s local component development tool</SubHeader>
-    <Button data-cy="get-started" onClick={onClick} title="start onboarding">
-      Get Started
-    </Button>
-  </>
-);
+const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
+  const { theme } = useThemeUI();
+
+  return (
+    <>
+      <Flex sx={{ ...imageSx }}>
+        <SliceMachineLogo
+          width={imageSx.width}
+          height={imageSx.height}
+          fill={theme.colors?.purple as string}
+        />
+      </Flex>
+      <Header>Welcome to Slice Machine</Header>
+      <SubHeader>Prismic’s local component development tool</SubHeader>
+      <Button data-cy="get-started" onClick={onClick} title="start onboarding">
+        Get Started
+      </Button>
+    </>
+  );
+};
 const BuildSlicesSlide = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />

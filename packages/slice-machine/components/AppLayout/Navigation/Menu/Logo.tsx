@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Box, Flex, Heading, Link as ThemeLink, useThemeUI } from "theme-ui";
-import Prismic from "../Icons/Prismic";
+import SliceMachineLogo from "../Icons/SliceMachineLogo";
 
 const Logo: React.FC = () => {
   const { theme } = useThemeUI();
@@ -10,7 +10,11 @@ const Logo: React.FC = () => {
       <Link href="/" passHref>
         <ThemeLink variant="links.invisible">
           <Flex sx={{ alignItems: "center" }}>
-            <Prismic fill={theme.colors?.text as string} />
+            <SliceMachineLogo
+              width="32px"
+              height="32px"
+              fill={theme.colors?.text as string}
+            />
             <Heading as="h5" sx={{ ml: 2 }}>
               Slice Machine
             </Heading>
