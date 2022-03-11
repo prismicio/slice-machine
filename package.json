@@ -35,9 +35,12 @@
     "validate-npm-package": "^1.0.5"
   },
   "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/slice-machine run lint:precommit",
-    "**/packages/core/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/core run lint:precommit",
-    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": "npm --prefix ./packages/init run lint:precommit",
-    "**/packages/**/**/*": "prettier --write --ignore-unknown"
+    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": ["prettier --write --ignore-unknown" ,"npm --prefix ./packages/slice-machine run lint:precommit"],
+    "**/packages/core/**/*.@(js|jsx|ts|tsx|)": ["prettier --write --ignore-unknown", "npm --prefix ./packages/core run lint:precommit"],
+    "**/packages/init/**/*.@(js|jsx|ts|tsx|)": ["prettier --write --ignore-unknown", "npm --prefix ./packages/init run lint:precommit"],
+    "**/packages/next-slicezone/**/*": "prettier --write --ignore-unknown",
+    "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
+    "**/packages/vue-slicezone/**/*": "prettier --write --ignore-unknown",
+    "**/packages/sm-commons/**/*": "prettier --write --ignore-unknown"
   }
 }
