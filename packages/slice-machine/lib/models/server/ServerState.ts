@@ -1,4 +1,3 @@
-import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "./ServerError";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
@@ -15,5 +14,4 @@ export default interface ServerState {
   customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteSlices: ReadonlyArray<Models.SliceAsObject>;
-  clientError: ErrorWithStatus | undefined;
 }

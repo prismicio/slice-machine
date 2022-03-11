@@ -80,7 +80,6 @@ export default async function handler(
     remoteCustomTypes: serverState.remoteCustomTypes,
     libraries: serverState.libraries,
     remoteSlices: serverState.remoteSlices,
-    clientError: serverState.clientError,
     env: frontEndEnv,
   };
 }
