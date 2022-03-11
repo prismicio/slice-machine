@@ -1,6 +1,0 @@
-# Ignore artifacts:
-build
-out
-coverage
-tests/project/
-templates/
