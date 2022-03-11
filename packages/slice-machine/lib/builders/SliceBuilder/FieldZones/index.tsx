@@ -119,7 +119,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     <>
       <Zone
         Model={Model}
-        title="Non-Repeatable zone"
+        title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
@@ -145,7 +145,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Zone
         isRepeatable
         Model={Model}
-        title="Repeatable zone"
+        title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

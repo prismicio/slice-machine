@@ -11,17 +11,14 @@ import {
   selectLocalCustomTypes,
   selectRemoteCustomTypes,
 } from "@src/modules/customTypes";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomType<ObjectTabs>;
   remoteCustomType?: CustomType<ObjectTabs>;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onLeave: Function;
 };
 
 const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =
-  ({ customType, remoteCustomType, onLeave }) => {
+  ({ customType, remoteCustomType }) => {
     const { env } = useSelector((store: SliceMachineStoreType) => ({
       env: getEnvironment(store),
     }));
@@ -37,12 +34,11 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       initialMockConfig,
     });
-    return <CustomTypeBuilder Model={Model} store={store} onLeave={onLeave} />;
+    return <CustomTypeBuilder Model={Model} store={store} />;
   };
 
 const CustomTypeBuilderWithRouter = () => {
   const router = useRouter();
-  const { saveCustomType } = useSliceMachineActions();
   const { customTypes, remoteCustomTypes } = useSelector(
     (store: SliceMachineStoreType) => ({
       customTypes: selectLocalCustomTypes(store),
@@ -64,7 +60,6 @@ const CustomTypeBuilderWithRouter = () => {
     <CustomTypeBuilderWithProvider
       customType={customType}
       remoteCustomType={remoteCustomType}
-      onLeave={saveCustomType}
     />
   );
 };

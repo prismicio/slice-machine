@@ -1,14 +1,8 @@
 import { Reducer } from "redux";
 import { CustomTypesStoreType } from "./types";
-import {
-  ActionType,
-  createAction,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
-import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
@@ -21,10 +15,6 @@ import { createCustomType } from "@src/modules/customTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 // Action Creators
-export const saveCustomTypeCreator = createAction("CUSTOM_TYPES/SAVE.REQUEST")<{
-  modelPayload: CustomTypeState;
-}>();
-
 export const createCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/CREATE.REQUEST",
   "CUSTOM_TYPES/CREATE.RESPONSE",
@@ -42,7 +32,6 @@ export const createCustomTypeCreator = createAsyncAction(
 
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof createCustomTypeCreator>;
 
 // Selectors
@@ -65,16 +54,6 @@ export const customTypesReducer: Reducer<
         ...state,
         remoteCustomTypes: action.payload.remoteCustomTypes,
         localCustomTypes: action.payload.localCustomTypes,
-      };
-    case getType(saveCustomTypeCreator):
-      return {
-        ...state,
-        localCustomTypes: state.localCustomTypes.map((ct) => {
-          if (ct.id === action.payload.modelPayload.current.id) {
-            return CustomType.toObject(action.payload.modelPayload.current);
-          }
-          return ct;
-        }),
       };
     case getType(createCustomTypeCreator.success):
       return {
