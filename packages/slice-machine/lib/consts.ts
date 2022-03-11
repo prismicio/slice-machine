@@ -1,8 +1,3 @@
-export const warningStates = {
-  NOT_CONNECTED: "NOT_CONNECTED",
-  CLIENT_ERROR: "CLIENT_ERROR",
-};
-
 // A list of slice names that are reserved for internal uses.
 export const RESERVED_SLICE_NAME = ["components"];
 

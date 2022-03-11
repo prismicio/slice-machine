@@ -1,12 +1,9 @@
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
-import { warningStates } from "@lib/consts";
 import {
   BackendEnvironment,
   FrontEndEnvironment,
 } from "@lib/models/common/Environment";
-import Warning from "@lib/models/common/Warning";
-import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
@@ -16,28 +13,6 @@ import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
 import preferWroomBase from "../../../lib/utils/preferWroomBase";
-
-function createWarnings(
-  env: BackendEnvironment,
-  clientError?: ErrorWithStatus
-): ReadonlyArray<Warning> {
-  const connected = !env.prismicData?.auth
-    ? {
-        key: warningStates.NOT_CONNECTED,
-      }
-    : undefined;
-
-  const client = clientError
-    ? {
-        key: warningStates.CLIENT_ERROR,
-        title: `${
-          warningStates.CLIENT_ERROR
-        }:${clientError.reason.toUpperCase()}`,
-      }
-    : undefined;
-
-  return [connected, client].filter(Boolean) as ReadonlyArray<Warning>;
-}
 
 export const getBackendState = async (
   configErrors: Record<string, ServerError>,
@@ -71,8 +46,6 @@ export const getBackendState = async (
     }
   }
 
-  const warnings = createWarnings(env, clientError);
-
   generate(env, libraries);
 
   return {
@@ -83,7 +56,6 @@ export const getBackendState = async (
     clientError,
     configErrors,
     env,
-    warnings,
   };
 };
 
@@ -104,7 +76,10 @@ export default async function handler(
   };
 
   return {
-    ...serverState,
+    customTypes: serverState.customTypes,
+    remoteCustomTypes: serverState.remoteCustomTypes,
+    libraries: serverState.libraries,
+    remoteSlices: serverState.remoteSlices,
     env: frontEndEnv,
   };
 }

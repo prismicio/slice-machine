@@ -103,8 +103,6 @@ const useSliceMachineActions = () => {
     dispatch(
       refreshStateCreator({
         env: serverState.env,
-        warnings: serverState.warnings,
-        configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,

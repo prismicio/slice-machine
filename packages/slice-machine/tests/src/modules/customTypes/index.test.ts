@@ -39,8 +39,6 @@ describe("[Custom types module]", () => {
     it("should update the custom types state given STATE/GET.RESPONSE action", () => {
       const action = refreshStateCreator({
         env: dummyServerState.env,
-        configErrors: dummyServerState.configErrors,
-        warnings: dummyServerState.warnings,
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
         libraries: dummyServerState.libraries,

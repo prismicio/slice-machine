@@ -3,10 +3,10 @@ import { Flex, Text, Link as ThemeLink } from "theme-ui";
 import { MdInfo, MdBolt } from "react-icons/md";
 import Link from "next/link";
 
-const WarningItem: React.FunctionComponent<{ currentVersion: string }> = ({
+const ChangelogItem: React.FunctionComponent<{ currentVersion: string }> = ({
   currentVersion,
 }) => (
-  <Link href={"/warnings"} passHref>
+  <Link href={"/changelog"} passHref>
     <ThemeLink
       variant="links.sidebar"
       sx={{
@@ -33,7 +33,7 @@ const WarningItem: React.FunctionComponent<{ currentVersion: string }> = ({
             ml: 2,
           }}
         >
-          Warnings
+          Changelog
         </Text>
       </Flex>
       <Flex
@@ -54,4 +54,4 @@ const WarningItem: React.FunctionComponent<{ currentVersion: string }> = ({
   </Link>
 );
 
-export default WarningItem;
+export default ChangelogItem;
