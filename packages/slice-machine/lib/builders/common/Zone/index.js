@@ -115,7 +115,7 @@ const Zone = ({
         !fields.length && !newFieldData && (
           <EmptyState
             onEnterSelectMode={() => enterSelectMode()}
-            zoneName={isRepeatable ? "repeatable" : "static"}
+            zoneName={isRepeatable ? "Repeatable" : "Static"}
           />
         )
       }

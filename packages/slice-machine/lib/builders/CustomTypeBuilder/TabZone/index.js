@@ -110,7 +110,7 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
         Model={Model}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         store={store}
-        title="Static zone"
+        title="Static Zone"
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}

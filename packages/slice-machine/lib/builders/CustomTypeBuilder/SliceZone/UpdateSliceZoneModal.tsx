@@ -38,7 +38,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: slicesInSliceZone.map((slice) => slice.infos.meta.id),
       }}
       content={{
-        title: "Update Slice zone",
+        title: "Update Slice Zone",
       }}
       omitFooter={!projectHasAvailableSlices}
     >

@@ -125,7 +125,7 @@ const SliceZone = ({
   return (
     <Box my={3}>
       <ZoneHeader
-        Heading={<Heading as="h6">Slice zone</Heading>}
+        Heading={<Heading as="h6">Slice Zone</Heading>}
         Actions={
           <Flex sx={{ alignItems: "center" }}>
             {sliceZone ? (
@@ -135,7 +135,7 @@ const SliceZone = ({
             ) : null}
             {!!slicesInSliceZone.length && (
               <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
-                Update Slice zone
+                Update Slice Zone
               </Button>
             )}
           </Flex>

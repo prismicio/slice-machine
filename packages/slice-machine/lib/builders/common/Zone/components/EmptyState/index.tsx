@@ -13,7 +13,7 @@ const ZoneEmptyState = ({
     <Heading as="h5">Add a new field here</Heading>
     <Box sx={{ my: 2 }}>
       <Text sx={{ color: "textClear" }}>
-        Add a field to your {zoneName} zone
+        Add a field to your {zoneName} Zone
       </Text>
     </Box>
     <Button
