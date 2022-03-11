@@ -11,7 +11,6 @@ import { CustomType, SaveCustomTypeBody } from "@lib/models/common/CustomType";
 export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
   const { model, mockConfig } = req.body;
-  console.log({ MOCKCONFIG: JSON.stringify(mockConfig) });
 
   const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
 
