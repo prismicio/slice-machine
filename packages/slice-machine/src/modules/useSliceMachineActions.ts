@@ -38,22 +38,24 @@ import {
   deleteSharedSliceCreator,
   replaceSharedSliceCreator,
   createSliceZoneCreator,
-  saveCustomTypeCreator, pushCustomTypeCreator
+  saveCustomTypeCreator,
+  pushCustomTypeCreator,
 } from "@src/modules/customType";
 import {
   deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
   deleteWidgetMockConfig as deleteWidgetMockConfigHelper,
   updateWidgetGroupMockConfig as updateWidgetGroupMockConfigHelper,
-  updateWidgetMockConfig as updateWidgetMockConfigHelper
+  updateWidgetMockConfig as updateWidgetMockConfigHelper,
 } from "@src/modules/customType/mockHelpers";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { Field } from "@models/common/CustomType/fields";
 import {
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
-  reorderFieldIntoGroupCreator, replaceFieldIntoGroupCreator
+  reorderFieldIntoGroupCreator,
+  replaceFieldIntoGroupCreator,
 } from "@src/models/customType/newActions";
-
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -113,14 +115,17 @@ const useSliceMachineActions = () => {
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
 
   // Custom type module
-  const initCustomTypeStore = (model: CustomType<ArrayTabs>, remoteModel: CustomType<ArrayTabs> | null, mockConfig: any) =>
-    dispatch(initCustomTypeStoreCreator({model, mockConfig, remoteModel}))
-  const saveCustomType = () =>
-    dispatch(saveCustomTypeCreator.request())
-  const pushCustomType = () =>
-    dispatch(pushCustomTypeCreator.request())
-  const createCustomTypeTab = (tabId: string) => dispatch(createTabCreator({ tabId }));
-  const deleteCustomTypeTab = (tabId: string) => dispatch(deleteTabCreator({ tabId }));
+  const initCustomTypeStore = (
+    model: CustomType<ArrayTabs>,
+    remoteModel: CustomType<ArrayTabs> | null,
+    mockConfig: CustomTypeMockConfig
+  ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+  const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+  const pushCustomType = () => dispatch(pushCustomTypeCreator.request());
+  const createCustomTypeTab = (tabId: string) =>
+    dispatch(createTabCreator({ tabId }));
+  const deleteCustomTypeTab = (tabId: string) =>
+    dispatch(deleteTabCreator({ tabId }));
   const updateCustomTypeTab = (tabId: string, newTabId: string) =>
     dispatch(updateTabCreator({ tabId, newTabId }));
   const addCustomTypeField = (tabId: string, fieldId: string, field: Field) =>

@@ -1,27 +1,42 @@
-import {call, fork, put, select, takeLatest} from "redux-saga/effects";
-import {openToasterCreator, ToasterType} from "@src/modules/toaster";
-import {getType} from "typesafe-actions";
-import {withLoader} from "@src/modules/loading";
-import {LoadingKeysEnum} from "@src/modules/loading/types";
-import {pushCustomTypeCreator, saveCustomTypeCreator} from "@src/modules/customType/actions";
-import {selectCurrentCustomType, selectCurrentMockConfig} from "@src/modules/customType/index";
-import {pushCustomType, saveCustomType} from "@src/apiClient";
-import axios from 'axios';
-import {ArrayTabs, CustomType} from "@models/common/CustomType";
-import {modalOpenCreator} from "@src/modules/modal";
-import {ModalKeysEnum} from "@src/modules/modal/types";
+import { call, fork, put, select, takeLatest } from "redux-saga/effects";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { getType } from "typesafe-actions";
+import { withLoader } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
+import {
+  pushCustomTypeCreator,
+  saveCustomTypeCreator,
+} from "@src/modules/customType/actions";
+import {
+  selectCurrentCustomType,
+  selectCurrentMockConfig,
+} from "@src/modules/customType/index";
+import { pushCustomType, saveCustomType } from "@src/apiClient";
+import axios from "axios";
+import { CustomType } from "@models/common/CustomType";
+import { modalOpenCreator } from "@src/modules/modal";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 export function* saveCustomTypeSaga() {
   try {
-    const currentCustomType: CustomType<ArrayTabs> | null = yield select(selectCurrentCustomType);
-    const currentMockConfig: any | null = yield select(selectCurrentMockConfig);
+    const currentCustomType = selectCurrentCustomType(
+      (yield select()) as SliceMachineStoreType
+    );
+    const currentMockConfig = selectCurrentMockConfig(
+      (yield select()) as SliceMachineStoreType
+    );
 
     if (!currentCustomType || !currentMockConfig) {
       return;
     }
 
-    yield call(saveCustomType, CustomType.toObject(currentCustomType), currentMockConfig);
-    yield put(saveCustomTypeCreator.success())
+    yield call(
+      saveCustomType,
+      CustomType.toObject(currentCustomType),
+      currentMockConfig
+    );
+    yield put(saveCustomTypeCreator.success());
     yield put(
       openToasterCreator({
         message: "Model & mocks have been generated successfully!",
@@ -41,14 +56,16 @@ export function* saveCustomTypeSaga() {
 
 export function* pushCustomTypeSaga() {
   try {
-    const currentCustomType: CustomType<ArrayTabs> | null = yield select(selectCurrentCustomType);
+    const currentCustomType = selectCurrentCustomType(
+      (yield select()) as SliceMachineStoreType
+    );
 
     if (!currentCustomType) {
       return;
     }
 
     yield call(pushCustomType, currentCustomType.id);
-    yield put(pushCustomTypeCreator.success())
+    yield put(pushCustomTypeCreator.success());
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",
@@ -66,6 +83,7 @@ export function* pushCustomTypeSaga() {
       if (e.response.status > 209) {
         yield put(
           openToasterCreator({
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             message: e.response.data.reason,
             type: ToasterType.ERROR,
           })

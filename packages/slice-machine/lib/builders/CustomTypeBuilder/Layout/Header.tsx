@@ -1,29 +1,36 @@
 import React from "react";
-import {Box, Button, Spinner, Text} from "theme-ui";
+import { Box, Button, Spinner, Text } from "theme-ui";
 
 import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
 
 import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {MdSpaceDashboard} from "react-icons/md";
-import {useSelector} from "react-redux";
-import {SliceMachineStoreType} from "@src/redux/type";
+import { MdSpaceDashboard } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectCurrentCustomType,
   selectCustomTypeStatus,
-  selectIsCurrentCustomTypeHasPendingModifications
+  selectIsCurrentCustomTypeHasPendingModifications,
 } from "@src/modules/customType";
-import {isLoading} from "@src/modules/loading";
-import {LoadingKeysEnum} from "@src/modules/loading/types";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const CustomTypeHeader = () => {
-  const { currentCustomType, hasPendingModifications, customTypeStatus, isPushingCustomType, isSavingCustomType } = useSelector((store: SliceMachineStoreType) => ({
+  const {
+    currentCustomType,
+    hasPendingModifications,
+    customTypeStatus,
+    isPushingCustomType,
+    isSavingCustomType,
+  } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
-    hasPendingModifications: selectIsCurrentCustomTypeHasPendingModifications(store),
+    hasPendingModifications:
+      selectIsCurrentCustomTypeHasPendingModifications(store),
     customTypeStatus: selectCustomTypeStatus(store),
     isPushingCustomType: isLoading(store, LoadingKeysEnum.PUSH_CUSTOM_TYPE),
     isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-  }))
+  }));
   const { saveCustomType, pushCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
@@ -50,7 +57,9 @@ const CustomTypeHeader = () => {
       };
     }
     if (
-      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(customTypeStatus)
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
+        customTypeStatus
+      )
     ) {
       return {
         onClick: () => {

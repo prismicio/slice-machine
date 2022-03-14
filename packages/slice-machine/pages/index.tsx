@@ -47,7 +47,11 @@ const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
       </thead>
       <tbody>
         {customTypes.map((customType) => (
-          <Link passHref href={`/cts/${customType.local.id}`} key={customType.local.id}>
+          <Link
+            passHref
+            href={`/cts/${customType.local.id}`}
+            key={customType.local.id}
+          >
             <tr key={customType.local.id}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
                 <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
@@ -56,7 +60,9 @@ const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
                 {customType.local.id}
               </Box>
               <Box as={"td"} style={{ width: thirdColumnWidth }}>
-                {customType.local.repeatable ? "Repeatable Type" : "Single Type"}
+                {customType.local.repeatable
+                  ? "Repeatable Type"
+                  : "Single Type"}
               </Box>
             </tr>
           </Link>

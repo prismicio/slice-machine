@@ -1,10 +1,6 @@
 import { Reducer } from "redux";
 import { CustomTypesStoreType, FrontEndCustomType } from "./types";
-import {
-  ActionType,
-  createAsyncAction,
-  getType,
-} from "typesafe-actions";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { refreshStateCreator } from "@src/modules/environment";

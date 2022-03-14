@@ -50,8 +50,8 @@ const CustomListItem = ({
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     replaceFieldIntoGroup,
-    reorderFieldIntoGroup
-  } = useSliceMachineActions()
+    reorderFieldIntoGroup,
+  } = useSliceMachineActions();
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -82,7 +82,7 @@ const CustomListItem = ({
     const newWidget = widget.create(friendlyName);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    addFieldIntoGroup(tabId, groupItem.key, id, newWidget)
+    addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
@@ -100,7 +100,7 @@ const CustomListItem = ({
         previousKey,
         newKey,
         mockValue
-      )
+      );
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       deleteWidgetGroupMockConfig(
@@ -109,17 +109,11 @@ const CustomListItem = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         groupItem.key,
         previousKey
-      )
+      );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    replaceFieldIntoGroup(
-      tabId,
-      groupItem.key,
-      previousKey,
-      newKey,
-      value
-    )
+    replaceFieldIntoGroup(tabId, groupItem.key, previousKey, newKey, value);
   };
 
   const onDragEnd = (result) => {
@@ -133,14 +127,14 @@ const CustomListItem = ({
       groupItem.key,
       result.source.index,
       result.destination.index
-    )
+    );
   };
 
   const onDeleteItem = (key) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    deleteWidgetGroupMockConfig(mockConfig, groupItem.key, key)
+    deleteWidgetGroupMockConfig(mockConfig, groupItem.key, key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    deleteFieldIntoGroup(tabId, groupItem.key, key)
+    deleteFieldIntoGroup(tabId, groupItem.key, key);
   };
 
   const enterEditMode = (field) => {

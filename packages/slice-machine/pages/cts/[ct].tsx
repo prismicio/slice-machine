@@ -8,7 +8,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
 import { selectCustomTypeById } from "@src/modules/customTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomType<ObjectTabs>;
@@ -34,12 +34,10 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
         CustomType.toArray(customType),
         remoteCustomType ? CustomType.toArray(remoteCustomType) : null,
         initialMockConfig
-      )
-    }, [])
+      );
+    }, []);
 
-    return (
-      <CustomTypeBuilder/>
-    );
+    return <CustomTypeBuilder />;
   };
 
 const CustomTypeBuilderWithRouter = () => {

@@ -1,11 +1,11 @@
 // Actions
-export * from './actions'
+export * from "./actions";
 
 // Selectors
-export * from './selectors'
+export * from "./selectors";
 
 // Reducer
-export { customTypeReducer } from './reducer'
+export { customTypeReducer } from "./reducer";
 
 // Saga Exports
-export { watchCustomTypeSagas } from './sagas'
+export { watchCustomTypeSagas } from "./sagas";

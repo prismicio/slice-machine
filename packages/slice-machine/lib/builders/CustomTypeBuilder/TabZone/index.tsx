@@ -20,9 +20,13 @@ import { Field } from "@lib/models/common/CustomType/fields";
 import { Widget } from "@models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {useSelector} from "react-redux";
-import {SliceMachineStoreType} from "@src/redux/type";
-import {selectCurrentCustomType, selectCurrentMockConfig, selectCurrentPoolOfFields} from "@src/modules/customType";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import {
+  selectCurrentCustomType,
+  selectCurrentMockConfig,
+  selectCurrentPoolOfFields,
+} from "@src/modules/customType";
 
 interface TabZoneProps {
   tabId: string;
@@ -30,11 +34,7 @@ interface TabZoneProps {
   fields: AsArray;
 }
 
-const TabZone: React.FC<TabZoneProps> = ({
-  tabId,
-  fields,
-  sliceZone,
-}) => {
+const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   const {
     deleteCustomTypeField,
     addCustomTypeField,
@@ -44,22 +44,24 @@ const TabZone: React.FC<TabZoneProps> = ({
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
     updateWidgetMockConfig,
-    deleteWidgetMockConfig
-  } = useSliceMachineActions()
+    deleteWidgetMockConfig,
+  } = useSliceMachineActions();
 
-  const { currentCustomType, mockConfig, poolOfFields } = useSelector((store: SliceMachineStoreType) => ({
-    currentCustomType: selectCurrentCustomType(store),
-    mockConfig: selectCurrentMockConfig(store),
-    poolOfFields: selectCurrentPoolOfFields(store)
-  }))
+  const { currentCustomType, mockConfig, poolOfFields } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      currentCustomType: selectCurrentCustomType(store),
+      mockConfig: selectCurrentMockConfig(store),
+      poolOfFields: selectCurrentPoolOfFields(store),
+    })
+  );
 
-  if (!currentCustomType || !mockConfig || ! poolOfFields) {
+  if (!currentCustomType || !mockConfig || !poolOfFields) {
     return null;
   }
 
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    deleteWidgetMockConfig(mockConfig, fieldId)
+    deleteWidgetMockConfig(mockConfig, fieldId);
     deleteCustomTypeField(tabId, fieldId);
   };
 
@@ -76,10 +78,12 @@ const TabZone: React.FC<TabZoneProps> = ({
     id: string;
     widgetTypeName: string;
   }) => {
+    // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // @ts-expect-error We have to create a widget map or a service instead of using export name
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<Field, AnyObjectSchema> = Widgets[widgetTypeName];
     const friendlyName = createFriendlyFieldNameWithId(id);
     addCustomTypeField(tabId, id, widget.create(friendlyName));
@@ -97,7 +101,7 @@ const TabZone: React.FC<TabZoneProps> = ({
       tabId,
       result.source.index,
       result.destination.index
-    )
+    );
   };
 
   const onSave = ({
@@ -113,19 +117,14 @@ const TabZone: React.FC<TabZoneProps> = ({
     mockValue: any;
   }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    // @ts-expect-error We have to create a widget map or a service instead of using export name
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
     if (mockValue) {
-      updateWidgetMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        mockConfig,
-        previousKey,
-        newKey,
-        mockValue)
+      updateWidgetMockConfig(mockConfig, previousKey, newKey, mockValue);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      deleteWidgetMockConfig(mockConfig, newKey)
+      deleteWidgetMockConfig(mockConfig, newKey);
     }
     replaceCustomTypeField(tabId, previousKey, newKey, value);
   };

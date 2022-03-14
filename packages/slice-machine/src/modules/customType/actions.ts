@@ -1,6 +1,7 @@
-import {ActionType, createAction, createAsyncAction} from "typesafe-actions";
-import {Field} from "@models/common/CustomType/fields";
-import {ArrayTabs, CustomType } from "@models/common/CustomType";
+import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
+import { Field } from "@models/common/CustomType/fields";
+import { ArrayTabs, CustomType } from "@models/common/CustomType";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 export type CustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
@@ -23,10 +24,12 @@ export type CustomTypeActions =
   | ActionType<typeof deleteFieldIntoGroupCreator>
   | ActionType<typeof deleteSharedSliceCreator>;
 
-export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT.REQUEST")<{
+export const initCustomTypeStoreCreator = createAction(
+  "CUSTOM_TYPE/INIT.REQUEST"
+)<{
   model: CustomType<ArrayTabs>;
   remoteModel: CustomType<ArrayTabs> | null;
-  mockConfig: any
+  mockConfig: CustomTypeMockConfig;
 }>();
 
 // Async actions
@@ -34,30 +37,22 @@ export const saveCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/SAVE.REQUEST",
   "CUSTOM_TYPE/SAVE.RESPONSE",
   "CUSTOM_TYPE/SAVE.FAILURE"
-)<
-  undefined,
-  undefined
->();
+)<undefined, undefined>();
 
 export const pushCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/PUSH.REQUEST",
   "CUSTOM_TYPE/PUSH.RESPONSE",
   "CUSTOM_TYPE/PUSH.FAILURE"
-)<
-  undefined,
-  undefined
->();
+)<undefined, undefined>();
 
 // Mock config actions
 export const updateFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/UPDATE_FIELD_MOCK_CONFIG"
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-)<{ mockConfig: any }>();
+)<{ mockConfig: CustomTypeMockConfig }>();
 
 export const deleteFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/DELETE_FIELD_MOCK_CONFIG"
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-)<{ mockConfig: any }>();
+)<{ mockConfig: CustomTypeMockConfig }>();
 
 // Tab actions
 export const createTabCreator = createAction("CUSTOM_TYPE/CREATE_TAB")<{

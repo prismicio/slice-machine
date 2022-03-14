@@ -275,11 +275,9 @@ function* checkSetupSaga(
 }
 
 export function* failCheckSetupSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const isPreviewAvailableForFramework: boolean = yield select(
-    selectIsSimulatorAvailableForFramework
+  const framework = getFramework((yield select()) as SliceMachineStoreType);
+  const isPreviewAvailableForFramework = selectIsSimulatorAvailableForFramework(
+    (yield select()) as SliceMachineStoreType
   );
 
   if (!isPreviewAvailableForFramework) {

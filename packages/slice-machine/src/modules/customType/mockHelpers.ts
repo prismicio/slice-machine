@@ -3,10 +3,11 @@ import {
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
 } from "./actions";
-import {Dispatch} from "redux";
+import { Dispatch } from "redux";
 
 export function updateWidgetGroupMockConfig(
-  dispatch: Dispatch
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dispatch: Dispatch<any>
 ) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
@@ -27,7 +28,9 @@ export function updateWidgetGroupMockConfig(
     dispatch(updateFieldMockConfigCreator({ mockConfig: updatedConfig }));
   };
 }
-export function updateWidgetMockConfig(dispatch: Dispatch) {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function updateWidgetMockConfig(dispatch: Dispatch<any>) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
     previousFieldId: string,
@@ -47,7 +50,8 @@ export function updateWidgetMockConfig(dispatch: Dispatch) {
 }
 
 export function deleteWidgetGroupMockConfig(
-  dispatch: Dispatch
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dispatch: Dispatch<any>
 ) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
@@ -66,7 +70,8 @@ export function deleteWidgetGroupMockConfig(
   };
 }
 
-export function deleteWidgetMockConfig(dispatch) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function deleteWidgetMockConfig(dispatch: Dispatch<any>) {
   return (
     customTypeMockConfig: CustomTypeMockConfig,
     fieldId: string

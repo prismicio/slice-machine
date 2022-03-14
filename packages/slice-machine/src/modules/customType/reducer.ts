@@ -1,26 +1,40 @@
 import { Reducer } from "redux";
 import { CustomTypeStoreType } from "./types";
+import { getType } from "typesafe-actions";
 import {
-  getType,
-} from "typesafe-actions";
-import { createTabCreator, updateTabCreator, CustomTypeActions, initCustomTypeStoreCreator, addFieldCreator, deleteTabCreator, createSliceZoneCreator,
-  deleteFieldCreator, deleteSharedSliceCreator,
+  createTabCreator,
+  updateTabCreator,
+  CustomTypeActions,
+  initCustomTypeStoreCreator,
+  addFieldCreator,
+  deleteTabCreator,
+  createSliceZoneCreator,
+  deleteFieldCreator,
+  deleteSharedSliceCreator,
   reorderFieldCreator,
-  replaceFieldCreator, replaceSharedSliceCreator, deleteFieldMockConfigCreator, updateFieldMockConfigCreator,
+  replaceFieldCreator,
+  replaceSharedSliceCreator,
+  deleteFieldMockConfigCreator,
+  updateFieldMockConfigCreator,
   addFieldIntoGroupCreator,
-  deleteFieldIntoGroupCreator, reorderFieldIntoGroupCreator,
+  deleteFieldIntoGroupCreator,
+  reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   saveCustomTypeCreator,
-  pushCustomTypeCreator
+  pushCustomTypeCreator,
 } from "./actions";
 import { Tab } from "@models/common/CustomType/tab";
-import {SliceZone, SliceZoneAsArray, sliceZoneType} from "@models/common/CustomType/sliceZone";
-import {AnyWidget} from "@models/common/widgets/Widget";
+import {
+  SliceZone,
+  SliceZoneAsArray,
+  sliceZoneType,
+} from "@models/common/CustomType/sliceZone";
+import { AnyWidget } from "@models/common/widgets/Widget";
 import * as Widgets from "@models/common/widgets/withGroup";
 import StateHelpers from "./stateHelpers";
-import {CustomType} from "@models/common/CustomType";
-import {AsArray, GroupField} from "@models/common/widgets/Group/type";
-import {Group} from "@models/common/CustomType/group";
+import { CustomType } from "@models/common/CustomType";
+import { AsArray, GroupField } from "@models/common/widgets/Group/type";
+import { Group } from "@models/common/CustomType/group";
 
 // Reducer
 export const customTypeReducer: Reducer<
@@ -53,7 +67,7 @@ export const customTypeReducer: Reducer<
         ...state,
         initialModel: state.model,
         remoteModel: state.model,
-      }
+      };
     case getType(createTabCreator):
       if (!state) return;
       const { tabId } = action.payload;
@@ -149,29 +163,24 @@ export const customTypeReducer: Reducer<
       )((tab) => Tab.reorderWidget(tab, start, end));
     }
     case getType(createSliceZoneCreator): {
-      if(!state) return;
+      if (!state) return;
       const { tabId } = action.payload;
-      const tabIndex = state.model.tabs.findIndex(
-        (t) => t.key === tabId
-      );
+      const tabIndex = state.model.tabs.findIndex((t) => t.key === tabId);
 
       if (tabIndex === -1) {
         console.error(`No tabId ${tabId} found in tabs`);
         return state;
       }
 
-      const existingSliceZones = CustomType.getSliceZones(
-        state.model
-      ).filter((e) => e);
+      const existingSliceZones = CustomType.getSliceZones(state.model).filter(
+        (e) => e
+      );
       return StateHelpers.updateTab(
         state,
         tabId
       )((tab) => {
         const i = findAvailableKey(tabIndex, existingSliceZones);
-        return Tab.createSliceZone(
-          tab,
-          `slices${i !== 0 ? i.toString() : ""}`
-        );
+        return Tab.createSliceZone(tab, `slices${i !== 0 ? i.toString() : ""}`);
       });
     }
     case getType(replaceSharedSliceCreator): {

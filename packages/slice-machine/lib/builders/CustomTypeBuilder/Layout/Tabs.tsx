@@ -1,7 +1,14 @@
 import { MouseEventHandler, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
-import {Box, Button, Flex, Theme, ThemeUIStyleObject, useThemeUI} from "theme-ui";
+import {
+  Box,
+  Button,
+  Flex,
+  Theme,
+  ThemeUIStyleObject,
+  useThemeUI,
+} from "theme-ui";
 import { Tabs, TabPanel } from "react-tabs";
 
 import { HiOutlineCog } from "react-icons/hi";
@@ -20,9 +27,9 @@ import UpdateModal, {
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { TabAsArray } from "@models/common/CustomType/tab";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import {useSelector} from "react-redux";
-import {SliceMachineStoreType} from "@src/redux/type";
-import {selectCurrentCustomType} from "@src/modules/customType";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCurrentCustomType } from "@src/modules/customType";
 
 enum ModalType {
   CREATE = "create",
@@ -64,21 +71,18 @@ interface CustomTypeTabsProps {
   renderTab: (tab: TabAsArray) => JSX.Element;
 }
 
-const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
-  sx,
-  renderTab,
-}) => {
+const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
-    currentCustomType: selectCurrentCustomType(store)
-  }))
+    currentCustomType: selectCurrentCustomType(store),
+  }));
   const { theme } = useThemeUI();
-  const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } = useSliceMachineActions();
+  const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } =
+    useSliceMachineActions();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [state, setState] = useState<ModalState | undefined>();
 
-  if (!currentCustomType)
-    return null;
+  if (!currentCustomType) return null;
 
   return (
     <Box sx={{ bg: "backgroundClear" }}>
@@ -171,7 +175,7 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
-              updateCustomTypeTab(state.key, id)
+              updateCustomTypeTab(state.key, id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
               deleteCustomTypeTab(state.key);
