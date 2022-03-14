@@ -2,6 +2,9 @@ import type Models from "@slicemachine/core/build/src/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
+import { renderSliceMock } from "@prismicio/mocks";
+import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices/SharedSlice";
+
 const { handleLibraryPath } = Libraries;
 const { LibrariesStatePath } = FileSystem;
 
@@ -70,10 +73,13 @@ export function formatComponent(
     model: slice.model,
     mocks: (
       slice.infos.mock || []
-    ).reduce<Models.LibrariesState.ComponentMocks>(
+    ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
-        [variationMock.variation]: variationMock,
+        [variationMock.variation]: renderSliceMock(
+          slice.model as SharedSlice,
+          variationMock
+        ) as Models.VariationMock,
       }),
       {}
     ),

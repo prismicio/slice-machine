@@ -6,7 +6,6 @@ import {
   DocumentMockConfig,
   DocWidgetMockConfig,
   generateDocumentMock,
-  renderDocumentMock,
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { CustomTypeJsonModel } from "../models/common/CustomType";
@@ -43,9 +42,5 @@ export default function MockCustomType(
     prismicModel,
     legacyMockConfig
   );
-  return generateDocumentMock(
-    prismicModel,
-    {},
-    documentMockConfig
-  )(renderDocumentMock);
+  return generateDocumentMock(prismicModel, {}, documentMockConfig)();
 }

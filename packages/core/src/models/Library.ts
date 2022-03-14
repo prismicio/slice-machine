@@ -2,9 +2,23 @@ import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 import path from "path";
 import Files from "../utils/files";
-import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
+import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices/SharedSliceContent";
 
+export const SharedSliceReader = new t.Type<SharedSliceContent>(
+  "SharedSliceContent",
+  (s): s is SharedSliceContent =>
+    "SharedSliceContent" === (s as { __TYPE__?: string }).__TYPE__,
+  (s, c) => {
+    if ("SharedSliceContent" === (s as { __TYPE__?: string }).__TYPE__)
+      return t.success(s as SharedSliceContent);
+    else return t.failure(s, c);
+  },
+  (s) => s
+);
+
+export const ComponentMocks = t.array(SharedSliceReader);
+export type ComponentMocks = t.TypeOf<typeof ComponentMocks>;
 export interface ComponentInfo {
   sliceName: string;
   fileName: string | null;
@@ -20,7 +34,7 @@ export interface ComponentInfo {
     [variationId: string]: Screenshot;
   };
   meta: ComponentMetadata;
-  mock?: ReadonlyArray<VariationMock>;
+  mock?: ComponentMocks;
 }
 
 export const ComponentInfo = {
