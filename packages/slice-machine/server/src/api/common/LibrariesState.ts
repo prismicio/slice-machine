@@ -1,9 +1,10 @@
+import { isLeft } from "fp-ts/lib/Either";
 import type Models from "@slicemachine/core/build/src/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
 import { renderSliceMock } from "@prismicio/mocks";
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices/SharedSlice";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices/SharedSlice";
 
 const { handleLibraryPath } = Libraries;
 const { LibrariesStatePath } = FileSystem;
@@ -65,24 +66,31 @@ function getImageDimensions(imagePath: string | undefined) {
 export function formatComponent(
   slice: Models.Component
 ): Models.LibrariesState.Component {
+  const parsedModel = SharedSlice.decode(slice.model);
   return {
     library: slice.from,
     id: slice.model.id,
     name: slice.infos.meta.name,
     description: slice.infos.meta.description,
     model: slice.model,
-    mocks: (
-      slice.infos.mock || []
-    ).reduce<Models.LibrariesState.ComponentMocksRecord>(
-      (acc, variationMock) => ({
-        ...acc,
-        [variationMock.variation]: renderSliceMock(
-          slice.model as SharedSlice,
-          variationMock
-        ) as Models.VariationMock,
-      }),
-      {}
-    ),
+    mocks: (() => {
+      if (isLeft(parsedModel)) {
+        console.warn(`Invalid slice model ${slice.model.id}`);
+        return {};
+      }
+      return (
+        slice.infos.mock || []
+      ).reduce<Models.LibrariesState.ComponentMocksRecord>(
+        (acc, variationMock) => ({
+          ...acc,
+          [variationMock.variation]: renderSliceMock(
+            parsedModel.right,
+            variationMock
+          ) as Models.VariationMock,
+        }),
+        {}
+      );
+    })(),
     meta: {
       fileName: slice.infos.fileName,
       isDirectory: slice.infos.isDirectory,
