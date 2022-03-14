@@ -12,8 +12,8 @@ import {
 } from "theme-ui";
 import SliceMachineModal from "@components/SliceMachineModal";
 import { checkAuthStatus, startAuth } from "@src/apiClient";
-import { buildEndpoints } from "@slicemachine/core/build/src/utils/endpoints";
-import { startPolling } from "@slicemachine/core/build/src/utils/poll";
+import { buildEndpoints } from "@slicemachine/core/build/utils/endpoints";
+import { startPolling } from "@slicemachine/core/build/utils/poll";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { useSelector } from "react-redux";
 import { isModalOpen } from "@src/modules/modal";

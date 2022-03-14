@@ -1,8 +1,8 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import {
   VariationAsArray,
   VariationAsObject,
-} from "@slicemachine/core/build/src/models";
+} from "@slicemachine/core/build/models";
 ("./CustomType/fields");
 
 import camelCase from "lodash/camelCase";

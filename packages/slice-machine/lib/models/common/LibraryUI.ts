@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 

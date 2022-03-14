@@ -1,6 +1,6 @@
 import path from "path";
-import type Models from "@slicemachine/core/build/src/models";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import type Models from "@slicemachine/core/build/models";
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";

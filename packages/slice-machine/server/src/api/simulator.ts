@@ -1,7 +1,7 @@
 import { FileSystem, Utils } from "@slicemachine/core";
 import { simulatorIsSupported } from "@lib/utils";
 import { RequestWithEnv } from "./http/common";
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { Frameworks } from "@slicemachine/core/build/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 function requiredDepsForFramework(framework: Frameworks): Array<string> {

@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { snakelize } from "@lib/utils/str";
 import path from "path";
 import uniqid from "uniqid";
