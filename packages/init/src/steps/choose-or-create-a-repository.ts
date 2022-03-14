@@ -1,7 +1,6 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
 import { Communication, Utils, FileSystem, Models } from "@slicemachine/core";
-import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
 import { createRepository } from "../utils/create-repo";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
@@ -126,7 +125,7 @@ export async function chooseOrCreateARepository(
   base = DEFAULT_BASE,
   domain?: string
 ): Promise<string> {
-  const token = parsePrismicAuthToken(cookies);
+  const token = Utils.Cookie.parsePrismicAuthToken(cookies);
   const repos = await Communication.listRepositories(token, base);
 
   const hasRepo = domain && repos.find((d) => d.domain === domain);

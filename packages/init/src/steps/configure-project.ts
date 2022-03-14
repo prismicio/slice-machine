@@ -1,10 +1,7 @@
 import { FileSystem, Utils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
-import {
-  FileContent,
-  JsonPackage,
-} from "@slicemachine/core/build/src/filesystem";
+import { FileContent, JsonPackage } from "@slicemachine/core/build/filesystem";
 
 type Base = Utils.Endpoints.Base;
 
