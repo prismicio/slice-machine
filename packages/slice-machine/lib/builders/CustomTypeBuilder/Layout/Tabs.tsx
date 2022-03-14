@@ -18,7 +18,6 @@ import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
-import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { TabAsArray } from "@models/common/CustomType/tab";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {useSelector} from "react-redux";
@@ -62,13 +61,11 @@ const Icon = ({
 
 interface CustomTypeTabsProps {
   sx?: ThemeUIStyleObject;
-  customTypeActions: UseCustomTypeActionsReturnType;
   renderTab: (tab: TabAsArray) => JSX.Element;
 }
 
 const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
   sx,
-  customTypeActions,
   renderTab,
 }) => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
@@ -152,7 +149,6 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
           tabIds={currentCustomType.tabs.map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
-            customTypeActions.createTab(id);
             createCustomTypeTab(id);
             // current.tabs is not updated yet
             setTabIndex(currentCustomType.tabs.length);
@@ -175,11 +171,9 @@ const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
-              customTypeActions.updateTab(state.key, id);
               updateCustomTypeTab(state.key, id)
             }
             if (actionType === UpdateModalActionType.DELETE) {
-              customTypeActions.deleteTab(state.key);
               deleteCustomTypeTab(state.key);
               setTabIndex(0);
             }

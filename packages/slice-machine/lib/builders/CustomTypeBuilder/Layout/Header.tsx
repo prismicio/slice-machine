@@ -1,16 +1,11 @@
-import React, { Fragment, useState } from "react";
-import { Box, Button, Spinner, Text } from "theme-ui";
+import React from "react";
+import {Box, Button, Spinner, Text} from "theme-ui";
 
-import {
-  CustomTypeState,
-  CustomTypeStatus,
-} from "@lib/models/ui/CustomTypeState";
-import { handleRemoteResponse, ToastPayload } from "@src/modules/toaster/utils";
+import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
 
 import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
-import { MdSpaceDashboard } from "react-icons/md";
+import {MdSpaceDashboard} from "react-icons/md";
 import {useSelector} from "react-redux";
 import {SliceMachineStoreType} from "@src/redux/type";
 import {
@@ -18,21 +13,18 @@ import {
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications
 } from "@src/modules/customType";
+import {isLoading} from "@src/modules/loading";
+import {LoadingKeysEnum} from "@src/modules/loading/types";
 
-const CustomTypeHeader = ({
-  Model,
-  customTypeActions,
-}: {
-  Model: CustomTypeState;
-  customTypeActions: UseCustomTypeActionsReturnType;
-}) => {
-  const { currentCustomType, hasPendingModifications, customTypeStatus } = useSelector((store: SliceMachineStoreType) => ({
+const CustomTypeHeader = () => {
+  const { currentCustomType, hasPendingModifications, customTypeStatus, isPushingCustomType, isSavingCustomType } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
     hasPendingModifications: selectIsCurrentCustomTypeHasPendingModifications(store),
-    customTypeStatus: selectCustomTypeStatus(store)
+    customTypeStatus: selectCustomTypeStatus(store),
+    isPushingCustomType: isLoading(store, LoadingKeysEnum.PUSH_CUSTOM_TYPE),
+    isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
   }))
-  const [isLoading, setIsLoading] = useState(false);
-  const { openLoginModal, openToaster, saveCustomType } = useSliceMachineActions();
+  const { saveCustomType, pushCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
 
@@ -42,7 +34,19 @@ const CustomTypeHeader = ({
         onClick: () => {
           saveCustomType();
         },
-        children: <span>Save to File System</span>,
+        children: (
+          <span>
+            {isSavingCustomType ? (
+              <Spinner
+                color="#F7F7F7"
+                size={20}
+                mr={2}
+                sx={{ position: "relative", top: "5px", left: "3px" }}
+              />
+            ) : null}
+            Save to File System
+          </span>
+        ),
       };
     }
     if (
@@ -50,24 +54,13 @@ const CustomTypeHeader = ({
     ) {
       return {
         onClick: () => {
-          if (!isLoading) {
-            setIsLoading(true);
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            customTypeActions.push(Model, (data: ToastPayload): void => {
-              if (!data.done) {
-                return;
-              }
-              setIsLoading(false);
-              handleRemoteResponse(openToaster)(data);
-              if (data.error && data.status === 403) {
-                openLoginModal();
-              }
-            });
+          if (!isPushingCustomType) {
+            pushCustomType();
           }
         },
         children: (
           <span>
-            {isLoading ? (
+            {isPushingCustomType ? (
               <Spinner
                 color="#F7F7F7"
                 size={20}
@@ -86,9 +79,9 @@ const CustomTypeHeader = ({
   return (
     <Header
       MainBreadcrumb={
-        <Fragment>
+        <>
           <MdSpaceDashboard /> <Text ml={2}>Custom Types</Text>
-        </Fragment>
+        </>
       }
       SecondaryBreadcrumb={
         <Box sx={{ fontWeight: "thin" }} as="span">

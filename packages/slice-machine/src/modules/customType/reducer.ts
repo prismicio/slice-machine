@@ -9,7 +9,9 @@ import { createTabCreator, updateTabCreator, CustomTypeActions, initCustomTypeSt
   replaceFieldCreator, replaceSharedSliceCreator, deleteFieldMockConfigCreator, updateFieldMockConfigCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator, reorderFieldIntoGroupCreator,
-  replaceFieldIntoGroupCreator
+  replaceFieldIntoGroupCreator,
+  saveCustomTypeCreator,
+  pushCustomTypeCreator
 } from "./actions";
 import { Tab } from "@models/common/CustomType/tab";
 import {SliceZone, SliceZoneAsArray, sliceZoneType} from "@models/common/CustomType/sliceZone";
@@ -38,6 +40,23 @@ export const customTypeReducer: Reducer<
         initialMockConfig: action.payload.mockConfig,
         poolOfFieldsToCheck: poolOfFieldsToCheck,
       };
+    case getType(saveCustomTypeCreator.success): {
+      if (!state) return;
+
+      return {
+        ...state,
+        initialModel: state.model,
+        initialMockConfig: state.mockConfig,
+      };
+    }
+    case getType(pushCustomTypeCreator.success):
+      if (!state) return;
+
+      return {
+        ...state,
+        initialModel: state.model,
+        remoteModel: state.model,
+      }
     case getType(createTabCreator):
       if (!state) return;
       const { tabId } = action.payload;

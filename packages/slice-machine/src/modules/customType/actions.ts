@@ -42,7 +42,14 @@ export const saveCustomTypeCreator = createAsyncAction(
   undefined
 >();
 
-export const pushCustomTypeCreator = createAction("CUSTOM_TYPE/PUSH")();
+export const pushCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPE/PUSH.REQUEST",
+  "CUSTOM_TYPE/PUSH.RESPONSE",
+  "CUSTOM_TYPE/PUSH.FAILURE"
+)<
+  undefined,
+  undefined
+>();
 
 // Mock config actions
 export const updateFieldMockConfigCreator = createAction(

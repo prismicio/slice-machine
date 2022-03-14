@@ -45,7 +45,6 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
 
     return (
       <CustomTypeBuilder
-        Model={Model}
         customTypeActions={customTypeActions}
       />
     );

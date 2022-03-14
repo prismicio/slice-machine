@@ -1,26 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Box } from "theme-ui";
 
 import TabZone from "./TabZone";
 import { Header, Tabs } from "./Layout";
 
-import { CustomTypeState } from "@models/ui/CustomTypeState";
 import Container from "@components/Container";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 
 const CustomTypeBuilder = ({
-  Model,
   customTypeActions,
 }: {
-  Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
-  const modelRef = useRef(Model);
-
-  useEffect(() => {
-    modelRef.current = Model;
-  }, [Model]);
-
   useEffect(() => {
     return () => customTypeActions.reset();
   }, []);
@@ -28,10 +19,9 @@ const CustomTypeBuilder = ({
   return (
     <Box sx={{ flex: 1 }}>
       <Container sx={{ pb: 0 }}>
-        <Header Model={Model} customTypeActions={customTypeActions} />
+        <Header />
       </Container>
       <Tabs
-        customTypeActions={customTypeActions}
         renderTab={({ value, sliceZone, key }) => (
           <Box sx={{ mt: 4 }}>
             <TabZone

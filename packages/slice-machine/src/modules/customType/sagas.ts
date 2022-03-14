@@ -3,10 +3,13 @@ import {openToasterCreator, ToasterType} from "@src/modules/toaster";
 import {getType} from "typesafe-actions";
 import {withLoader} from "@src/modules/loading";
 import {LoadingKeysEnum} from "@src/modules/loading/types";
-import { saveCustomTypeCreator } from "@src/modules/customType/actions";
+import {pushCustomTypeCreator, saveCustomTypeCreator} from "@src/modules/customType/actions";
 import {selectCurrentCustomType, selectCurrentMockConfig} from "@src/modules/customType/index";
-import { saveCustomType } from "@src/apiClient";
+import {pushCustomType, saveCustomType} from "@src/apiClient";
+import axios from 'axios';
 import {ArrayTabs, CustomType} from "@models/common/CustomType";
+import {modalOpenCreator} from "@src/modules/modal";
+import {ModalKeysEnum} from "@src/modules/modal/types";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -18,6 +21,7 @@ export function* saveCustomTypeSaga() {
     }
 
     yield call(saveCustomType, CustomType.toObject(currentCustomType), currentMockConfig);
+    yield put(saveCustomTypeCreator.success())
     yield put(
       openToasterCreator({
         message: "Model & mocks have been generated successfully!",
@@ -25,9 +29,55 @@ export function* saveCustomTypeSaga() {
       })
     );
   } catch (e) {
+    // Unknown errors
     yield put(
       openToasterCreator({
         message: "Internal Error: Custom type not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+}
+
+export function* pushCustomTypeSaga() {
+  try {
+    const currentCustomType: CustomType<ArrayTabs> | null = yield select(selectCurrentCustomType);
+
+    if (!currentCustomType) {
+      return;
+    }
+
+    yield call(pushCustomType, currentCustomType.id);
+    yield put(pushCustomTypeCreator.success())
+    yield put(
+      openToasterCreator({
+        message: "Model was correctly saved to Prismic!",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      // Auth error
+      if (e.response.status === 403) {
+        yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+        return;
+      }
+      // Other server errors
+      if (e.response.status > 209) {
+        yield put(
+          openToasterCreator({
+            message: e.response.data.reason,
+            type: ToasterType.ERROR,
+          })
+        );
+        return;
+      }
+    }
+
+    // Unknown errors
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Custom type not pushed",
         type: ToasterType.ERROR,
       })
     );
@@ -42,7 +92,15 @@ function* watchSaveCustomType() {
   );
 }
 
+function* watchPushCustomType() {
+  yield takeLatest(
+    getType(pushCustomTypeCreator.request),
+    withLoader(pushCustomTypeSaga, LoadingKeysEnum.PUSH_CUSTOM_TYPE)
+  );
+}
+
 // Saga Exports
 export function* watchCustomTypeSagas() {
   yield fork(watchSaveCustomType);
+  yield fork(watchPushCustomType);
 }

@@ -38,7 +38,7 @@ import {
   deleteSharedSliceCreator,
   replaceSharedSliceCreator,
   createSliceZoneCreator,
-  saveCustomTypeCreator
+  saveCustomTypeCreator, pushCustomTypeCreator
 } from "@src/modules/customType";
 import {
   deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
@@ -117,6 +117,8 @@ const useSliceMachineActions = () => {
     dispatch(initCustomTypeStoreCreator({model, mockConfig, remoteModel}))
   const saveCustomType = () =>
     dispatch(saveCustomTypeCreator.request())
+  const pushCustomType = () =>
+    dispatch(pushCustomTypeCreator.request())
   const createCustomTypeTab = (tabId: string) => dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) => dispatch(deleteTabCreator({ tabId }));
   const updateCustomTypeTab = (tabId: string, newTabId: string) =>
@@ -224,6 +226,7 @@ const useSliceMachineActions = () => {
     createCustomType,
     initCustomTypeStore,
     saveCustomType,
+    pushCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,
