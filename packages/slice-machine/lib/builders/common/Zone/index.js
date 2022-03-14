@@ -13,7 +13,7 @@ import ZoneHeader from "./components/ZoneHeader";
 import EmptyState from "./components/EmptyState";
 
 const Zone = ({
-  Model,
+  mockConfig,
   store,
   tabId,
   title /* text info to display in Card Header */,
@@ -130,7 +130,7 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         store={store}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        Model={Model}
+        mockConfig={mockConfig}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         dataTip={dataTip}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
@@ -162,8 +162,6 @@ const Zone = ({
         }
       />
       <EditModal
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        Model={Model}
         data={editModalData}
         close={closeEditModal}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -186,7 +184,7 @@ const Zone = ({
 
 Zone.propTypes = {
   isRepeatable: bool,
-  Model: object.isRequired, // todo
+  mockConfig: object.isRequired,
   title: string.isRequired,
   dataTip: string.isRequired,
   onSave: func.isRequired,

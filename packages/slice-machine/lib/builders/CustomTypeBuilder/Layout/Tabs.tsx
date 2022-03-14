@@ -1,8 +1,7 @@
 import { MouseEventHandler, useState } from "react";
-import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 import { AiOutlinePlus } from "react-icons/ai";
 
-import { Box, Button, Flex, Theme, useThemeUI } from "theme-ui";
+import {Box, Button, Flex, Theme, ThemeUIStyleObject, useThemeUI} from "theme-ui";
 import { Tabs, TabPanel } from "react-tabs";
 
 import { HiOutlineCog } from "react-icons/hi";
@@ -28,8 +27,9 @@ import {selectCurrentCustomType} from "@src/modules/customType";
 
 enum ModalType {
   CREATE = "create",
-  UPDATE = "udate",
+  UPDATE = "update",
 }
+
 interface EditState {
   title: string;
   type: ModalType.UPDATE;
@@ -60,15 +60,16 @@ const Icon = ({
   />
 );
 
-const CtTabs = ({
+interface CustomTypeTabsProps {
+  sx?: ThemeUIStyleObject;
+  customTypeActions: UseCustomTypeActionsReturnType;
+  renderTab: (tab: TabAsArray) => JSX.Element;
+}
+
+const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({
   sx,
   customTypeActions,
   renderTab,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sx?: any;
-  customTypeActions: UseCustomTypeActionsReturnType;
-  renderTab: (tab: TabAsArray) => JSX.Element;
 }) => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store)
@@ -189,4 +190,4 @@ const CtTabs = ({
   );
 };
 
-export default CtTabs;
+export default CustomTypeTabs;

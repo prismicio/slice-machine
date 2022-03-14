@@ -37,7 +37,6 @@ const CustomTypeBuilder = ({
             <TabZone
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={value}
-              Model={Model}
               customTypeActions={customTypeActions}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               sliceZone={sliceZone}

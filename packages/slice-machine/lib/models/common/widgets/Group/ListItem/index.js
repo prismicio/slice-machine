@@ -29,7 +29,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 const CustomListItem = ({
   tabId,
   store,
-  Model,
+  mockConfig,
   widget,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
@@ -62,7 +62,7 @@ const CustomListItem = ({
 
   const getFieldMockConfig = ({ apiId }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    return CustomTypeMockConfig.getFieldMockConfig(Model.mockConfig, apiId);
+    return CustomTypeMockConfig.getFieldMockConfig(mockConfig, apiId);
   };
 
   const onCancelNewField = () => {
@@ -97,7 +97,7 @@ const CustomListItem = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       store.updateWidgetGroupMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        Model.mockConfig,
+        mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         groupItem.key,
         previousKey,
@@ -106,7 +106,7 @@ const CustomListItem = ({
       );
       updateWidgetGroupMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        Model.mockConfig,
+        mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         groupItem.key,
         previousKey,
@@ -117,14 +117,14 @@ const CustomListItem = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       store.deleteWidgetGroupMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-        Model.mockConfig,
+        mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         groupItem.key,
         previousKey
       );
       deleteWidgetGroupMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-        Model.mockConfig,
+        mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         groupItem.key,
         previousKey
@@ -173,9 +173,9 @@ const CustomListItem = ({
 
   const onDeleteItem = (key) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    store.deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, key);
+    store.deleteWidgetGroupMockConfig(mockConfig, groupItem.key, key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    deleteWidgetGroupMockConfig(Model.mockConfig, groupItem.key, key)
+    deleteWidgetGroupMockConfig(mockConfig, groupItem.key, key)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     store.deleteFieldIntoGroup(tabId, groupItem.key, key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
@@ -307,8 +307,6 @@ const CustomListItem = ({
         widgetsArray={sliceBuilderArray}
       />
       <EditModal
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        Model={Model}
         data={editModalData}
         close={closeEditModal}
         onSave={onSaveField}

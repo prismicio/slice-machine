@@ -20,6 +20,7 @@ import {CustomType} from "@models/common/CustomType";
 import {AsArray, GroupField} from "@models/common/widgets/Group/type";
 import {Group} from "@models/common/CustomType/group";
 import {SliceMachineStoreType} from "@src/redux/type";
+import {CustomTypeState} from "@models/ui/CustomTypeState";
 
 // Selectors
 export const selectCurrentCustomType = (store: SliceMachineStoreType) => {
@@ -31,6 +32,11 @@ export const selectCurrentMockConfig = (store: SliceMachineStoreType) => {
   return store.customType.mockConfig
 }
 
+export const selectCurrentPoolOfFields = (store: SliceMachineStoreType) => {
+  if (!store.customType) return null
+  return store.customType.poolOfFieldsToCheck
+}
+
 // Reducer
 export const customTypeReducer: Reducer<
   CustomTypeStoreType,
@@ -38,10 +44,13 @@ export const customTypeReducer: Reducer<
 > = (state = null, action) => {
   switch (action.type) {
     case getType(initCustomTypeStoreCreator):
+      const poolOfFieldsToCheck = StateHelpers.getPool(action.payload.model.tabs)
+
       return {
         ...state,
         model: action.payload.model,
-        mockConfig: action.payload.mockConfig
+        mockConfig: action.payload.mockConfig,
+        poolOfFieldsToCheck: poolOfFieldsToCheck,
       };
     case getType(createTabCreator):
       if (!state) return;

@@ -16,20 +16,15 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { FrontEndCustomType } from "@src/modules/customTypes/types";
-
-const CustomTypeTable: React.FC<{
-  customTypes: ReadonlyArray<FrontEndCustomType>;
-}> = ({ customTypes }) => {
-  const firstColumnWidth = "35%";
-  const secondColumnWidth = "50%";
-  const thirdColumnWidth = "15%";
-import { MdSpaceDashboard } from "react-icons/md";
 
 const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
   customTypes,
 }) => {
+  const firstColumnWidth = "35%";
+  const secondColumnWidth = "50%";
+  const thirdColumnWidth = "15%";
+
   return (
     <Box
       as={"table"}
@@ -52,8 +47,8 @@ const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
       </thead>
       <tbody>
         {customTypes.map((customType) => (
-          <Link passHref href={`/cts/${customType.local.id}`} key={customType.id}>
-            <tr key={customType.id}>
+          <Link passHref href={`/cts/${customType.local.id}`} key={customType.local.id}>
+            <tr key={customType.local.id}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
                 <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
               </Box>

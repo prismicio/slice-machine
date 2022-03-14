@@ -15,7 +15,6 @@ import SliceZone from "../SliceZone";
 
 import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
-import { CustomTypeState } from "@models/ui/CustomTypeState";
 import { AsArray } from "@models/common/widgets/Group/type";
 import { SliceZoneAsArray } from "@models/common/CustomType/sliceZone";
 import { Field } from "@lib/models/common/CustomType/fields";
@@ -24,10 +23,9 @@ import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {useSelector} from "react-redux";
 import {SliceMachineStoreType} from "@src/redux/type";
-import {selectCurrentCustomType, selectCurrentMockConfig} from "@src/modules/customType";
+import {selectCurrentCustomType, selectCurrentMockConfig, selectCurrentPoolOfFields} from "@src/modules/customType";
 
 interface TabZoneProps {
-  Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
   tabId: string;
   sliceZone: SliceZoneAsArray | null;
@@ -35,7 +33,6 @@ interface TabZoneProps {
 }
 
 const TabZone: React.FC<TabZoneProps> = ({
-  Model,
   customTypeActions,
   tabId,
   fields,
@@ -53,12 +50,13 @@ const TabZone: React.FC<TabZoneProps> = ({
     deleteWidgetMockConfig
   } = useSliceMachineActions()
 
-  const { currentCustomType, mockConfig } = useSelector((store: SliceMachineStoreType) => ({
+  const { currentCustomType, mockConfig, poolOfFields } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
-    mockConfig: selectCurrentMockConfig(store)
+    mockConfig: selectCurrentMockConfig(store),
+    poolOfFields: selectCurrentPoolOfFields(store)
   }))
 
-  if (!currentCustomType || mockConfig) {
+  if (!currentCustomType || !mockConfig || ! poolOfFields) {
     return null;
   }
 
@@ -175,7 +173,7 @@ const TabZone: React.FC<TabZoneProps> = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        Model={Model}
+        mockConfig={mockConfig}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         store={customTypeActions}
         title="Static Zone"
@@ -183,7 +181,7 @@ const TabZone: React.FC<TabZoneProps> = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        poolOfFieldsToCheck={Model.poolOfFieldsToCheck}
+        poolOfFieldsToCheck={poolOfFields}
         showHints={true}
         EditModal={EditModal}
         widgetsArray={ctBuilderArray}
