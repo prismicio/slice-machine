@@ -1,10 +1,13 @@
-import {ArrayTabs, CustomType} from "@models/common/CustomType";
-import {PoolOfFields} from "@src/modules/customType/stateHelpers";
+import {ArrayTabs, CustomType, ObjectTabs} from "@models/common/CustomType";
+import {Field} from "@models/common/CustomType/fields";
+
+export type PoolOfFields = ReadonlyArray<{ key: string; value: Field }>;
 
 export type CustomTypeStoreType = {
-    model: CustomType<ArrayTabs>,
-    initialModel: CustomType<ArrayTabs>,
-    poolOfFieldsToCheck: PoolOfFields
-    mockConfig: any
-    initialMockConfig: any
+    model: CustomType<ArrayTabs>;
+    initialModel: CustomType<ArrayTabs>;
+    remoteModel: CustomType<ObjectTabs> | null;
+    poolOfFieldsToCheck: PoolOfFields;
+    mockConfig: any;
+    initialMockConfig: any;
 } | null;

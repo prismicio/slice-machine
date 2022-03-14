@@ -13,7 +13,11 @@ import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustom
 import { MdSpaceDashboard } from "react-icons/md";
 import {useSelector} from "react-redux";
 import {SliceMachineStoreType} from "@src/redux/type";
-import {selectCurrentCustomType, selectIsCurrentCustomTypeHasPendingModifications} from "@src/modules/customType";
+import {
+  selectCurrentCustomType,
+  selectCustomTypeStatus,
+  selectIsCurrentCustomTypeHasPendingModifications
+} from "@src/modules/customType";
 
 const CustomTypeHeader = ({
   Model,
@@ -22,9 +26,10 @@ const CustomTypeHeader = ({
   Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
-  const { currentCustomType, hasPendingModifications } = useSelector((store: SliceMachineStoreType) => ({
+  const { currentCustomType, hasPendingModifications, customTypeStatus } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
-    hasPendingModifications: selectIsCurrentCustomTypeHasPendingModifications(store)
+    hasPendingModifications: selectIsCurrentCustomTypeHasPendingModifications(store),
+    customTypeStatus: selectCustomTypeStatus(store)
   }))
   const [isLoading, setIsLoading] = useState(false);
   const { openLoginModal, openToaster, saveCustomType } = useSliceMachineActions();
@@ -41,9 +46,7 @@ const CustomTypeHeader = ({
       };
     }
     if (
-      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
-        Model.__status as CustomTypeStatus
-      )
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(customTypeStatus)
     ) {
       return {
         onClick: () => {

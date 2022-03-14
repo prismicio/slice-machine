@@ -27,14 +27,19 @@ import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
-  initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator, addFieldCreator,
+  initCustomTypeStoreCreator,
+  createTabCreator,
+  deleteTabCreator,
+  updateTabCreator,
+  addFieldCreator,
   deleteFieldCreator,
   reorderFieldCreator,
   replaceFieldCreator,
   deleteSharedSliceCreator,
   replaceSharedSliceCreator,
-  createSliceZoneCreator, saveCustomTypeCreator
-} from "@src/modules/customType/actions";
+  createSliceZoneCreator,
+  saveCustomTypeCreator
+} from "@src/modules/customType";
 import {
   deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
   deleteWidgetMockConfig as deleteWidgetMockConfigHelper,
@@ -108,8 +113,8 @@ const useSliceMachineActions = () => {
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
 
   // Custom type module
-  const initCustomTypeStore = (model: CustomType<ArrayTabs>, mockConfig: any) =>
-    dispatch(initCustomTypeStoreCreator({model, mockConfig}))
+  const initCustomTypeStore = (model: CustomType<ArrayTabs>, remoteModel: CustomType<ArrayTabs> | null, mockConfig: any) =>
+    dispatch(initCustomTypeStoreCreator({model, mockConfig, remoteModel}))
   const saveCustomType = () =>
     dispatch(saveCustomTypeCreator.request())
   const createCustomTypeTab = (tabId: string) => dispatch(createTabCreator({ tabId }));

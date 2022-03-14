@@ -26,6 +26,7 @@ export type CustomTypeActions =
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT.REQUEST")<{
   model: CustomType<ArrayTabs>;
+  remoteModel: CustomType<ArrayTabs> | null;
   mockConfig: any
 }>();
 

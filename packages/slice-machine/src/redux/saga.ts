@@ -2,7 +2,7 @@ import { fork } from "redux-saga/effects";
 
 import { watchSimulatorSagas } from "@src/modules/simulator";
 import { watchCustomTypesSagas } from "@src/modules/customTypes";
-import { watchCustomTypeSagas } from "@src/modules/customType/sagas";
+import { watchCustomTypeSagas } from "@src/modules/customType";
 import { watchSliceSagas } from "@src/modules/slices";
 import { watchToasterSagas } from "@src/modules/toaster";
 

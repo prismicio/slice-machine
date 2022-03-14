@@ -2,7 +2,6 @@ import { Reducer } from "redux";
 import { CustomTypesStoreType, FrontEndCustomType } from "./types";
 import {
   ActionType,
-  createAction,
   createAsyncAction,
   getType,
 } from "typesafe-actions";

@@ -38,6 +38,7 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
     useEffect(() => {
       initCustomTypeStore(
         CustomType.toArray(customType),
+        remoteCustomType ? CustomType.toArray(remoteCustomType) : null,
         initialMockConfig
       )
     }, [])
