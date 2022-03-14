@@ -26,13 +26,14 @@ import { createCustomTypeCreator } from "@src/modules/customTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator, addFieldCreator,
+import {
+  initCustomTypeStoreCreator, createTabCreator, deleteTabCreator, updateTabCreator, addFieldCreator,
   deleteFieldCreator,
   reorderFieldCreator,
   replaceFieldCreator,
   deleteSharedSliceCreator,
   replaceSharedSliceCreator,
-  createSliceZoneCreator
+  createSliceZoneCreator, saveCustomTypeCreator
 } from "@src/modules/customType/actions";
 import {
   deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
@@ -109,6 +110,8 @@ const useSliceMachineActions = () => {
   // Custom type module
   const initCustomTypeStore = (model: CustomType<ArrayTabs>, mockConfig: any) =>
     dispatch(initCustomTypeStoreCreator({model, mockConfig}))
+  const saveCustomType = () =>
+    dispatch(saveCustomTypeCreator.request())
   const createCustomTypeTab = (tabId: string) => dispatch(createTabCreator({ tabId }));
   const deleteCustomTypeTab = (tabId: string) => dispatch(deleteTabCreator({ tabId }));
   const updateCustomTypeTab = (tabId: string, newTabId: string) =>
@@ -215,6 +218,7 @@ const useSliceMachineActions = () => {
     startLoadingReview,
     createCustomType,
     initCustomTypeStore,
+    saveCustomType,
     createCustomTypeTab,
     updateCustomTypeTab,
     deleteCustomTypeTab,

@@ -135,6 +135,6 @@ function* watchCreateCustomType() {
 }
 
 // Saga Exports
-export function* watchCustomTypeSagas() {
+export function* watchCustomTypesSagas() {
   yield fork(watchCreateCustomType);
 }

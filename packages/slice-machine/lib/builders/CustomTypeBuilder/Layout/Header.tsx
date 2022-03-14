@@ -13,7 +13,7 @@ import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustom
 import { MdSpaceDashboard } from "react-icons/md";
 import {useSelector} from "react-redux";
 import {SliceMachineStoreType} from "@src/redux/type";
-import {selectCurrentCustomType} from "@src/modules/customType";
+import {selectCurrentCustomType, selectIsCurrentCustomTypeHasPendingModifications} from "@src/modules/customType";
 
 const CustomTypeHeader = ({
   Model,
@@ -22,20 +22,20 @@ const CustomTypeHeader = ({
   Model: CustomTypeState;
   customTypeActions: UseCustomTypeActionsReturnType;
 }) => {
-  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
-    currentCustomType: selectCurrentCustomType(store)
+  const { currentCustomType, hasPendingModifications } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+    hasPendingModifications: selectIsCurrentCustomTypeHasPendingModifications(store)
   }))
   const [isLoading, setIsLoading] = useState(false);
-  const { openLoginModal, openToaster } = useSliceMachineActions();
+  const { openLoginModal, openToaster, saveCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
 
   const buttonProps = (() => {
-    if (Model.isTouched) {
+    if (hasPendingModifications) {
       return {
         onClick: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          customTypeActions.save(Model);
+          saveCustomType();
         },
         children: <span>Save to File System</span>,
       };

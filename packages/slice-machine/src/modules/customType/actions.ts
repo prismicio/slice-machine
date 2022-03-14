@@ -1,7 +1,6 @@
-import {ActionType, createAction} from "typesafe-actions";
-import {CustomTypeState} from "@models/ui/CustomTypeState";
+import {ActionType, createAction, createAsyncAction} from "typesafe-actions";
 import {Field} from "@models/common/CustomType/fields";
-import {ArrayTabs, CustomType} from "@models/common/CustomType";
+import {ArrayTabs, CustomType } from "@models/common/CustomType";
 
 export type CustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
@@ -33,8 +32,15 @@ export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT.REQUEST
 export const resetCustomTypeCreator = createAction("CUSTOM_TYPE/RESET")();
 
 // Async actions
-export const saveCustomTypeCreator =
-  createAction("CUSTOM_TYPE/SAVE")<{ state: CustomTypeState }>();
+export const saveCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPE/SAVE.REQUEST",
+  "CUSTOM_TYPE/SAVE.RESPONSE",
+  "CUSTOM_TYPE/SAVE.FAILURE"
+)<
+  undefined,
+  undefined
+>();
+
 export const pushCustomTypeCreator = createAction("CUSTOM_TYPE/PUSH")();
 
 // Mock config actions
