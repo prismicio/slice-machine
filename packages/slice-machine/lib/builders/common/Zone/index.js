@@ -14,7 +14,6 @@ import EmptyState from "./components/EmptyState";
 
 const Zone = ({
   mockConfig,
-  store,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -127,8 +126,6 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         fields={fields}
         showHints={showHints}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        store={store}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         mockConfig={mockConfig}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

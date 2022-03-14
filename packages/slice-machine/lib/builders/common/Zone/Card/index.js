@@ -16,7 +16,6 @@ import { getFramework } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
-  store,
   mockConfig,
   title,
   tabId,
@@ -73,8 +72,6 @@ const FieldZone = ({
                   item,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   index,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  store,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   mockConfig,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment

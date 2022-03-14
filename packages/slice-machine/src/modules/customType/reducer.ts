@@ -29,8 +29,6 @@ export const customTypeReducer: Reducer<
 > = (state = null, action) => {
   switch (action.type) {
     case getType(initCustomTypeStoreCreator):
-      const poolOfFieldsToCheck = StateHelpers.getPool(action.payload.model.tabs)
-
       return {
         ...state,
         model: action.payload.model,
@@ -38,7 +36,6 @@ export const customTypeReducer: Reducer<
         remoteModel: action.payload.remoteModel,
         mockConfig: action.payload.mockConfig,
         initialMockConfig: action.payload.mockConfig,
-        poolOfFieldsToCheck: poolOfFieldsToCheck,
       };
     case getType(saveCustomTypeCreator.success): {
       if (!state) return;

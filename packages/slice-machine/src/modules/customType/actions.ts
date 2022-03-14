@@ -4,7 +4,6 @@ import {ArrayTabs, CustomType } from "@models/common/CustomType";
 
 export type CustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
-  | ActionType<typeof resetCustomTypeCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof pushCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
@@ -29,8 +28,6 @@ export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT.REQUEST
   remoteModel: CustomType<ArrayTabs> | null;
   mockConfig: any
 }>();
-
-export const resetCustomTypeCreator = createAction("CUSTOM_TYPE/RESET")();
 
 // Async actions
 export const saveCustomTypeCreator = createAsyncAction(

@@ -14,7 +14,6 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import SliceZone from "../SliceZone";
 
 import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
-import { UseCustomTypeActionsReturnType } from "@src/models/customType/useCustomTypeActions";
 import { AsArray } from "@models/common/widgets/Group/type";
 import { SliceZoneAsArray } from "@models/common/CustomType/sliceZone";
 import { Field } from "@lib/models/common/CustomType/fields";
@@ -26,14 +25,12 @@ import {SliceMachineStoreType} from "@src/redux/type";
 import {selectCurrentCustomType, selectCurrentMockConfig, selectCurrentPoolOfFields} from "@src/modules/customType";
 
 interface TabZoneProps {
-  customTypeActions: UseCustomTypeActionsReturnType;
   tabId: string;
   sliceZone: SliceZoneAsArray | null;
   fields: AsArray;
 }
 
 const TabZone: React.FC<TabZoneProps> = ({
-  customTypeActions,
   tabId,
   fields,
   sliceZone,
@@ -62,10 +59,7 @@ const TabZone: React.FC<TabZoneProps> = ({
 
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    customTypeActions.deleteWidgetMockConfig(mockConfig, fieldId);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     deleteWidgetMockConfig(mockConfig, fieldId)
-    customTypeActions.deleteField(tabId, fieldId);
     deleteCustomTypeField(tabId, fieldId);
   };
 
@@ -88,7 +82,6 @@ const TabZone: React.FC<TabZoneProps> = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget: Widget<Field, AnyObjectSchema> = Widgets[widgetTypeName];
     const friendlyName = createFriendlyFieldNameWithId(id);
-    customTypeActions.addField(tabId, id, widget.create(friendlyName));
     addCustomTypeField(tabId, id, widget.create(friendlyName));
   };
 
@@ -100,11 +93,6 @@ const TabZone: React.FC<TabZoneProps> = ({
       return;
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    customTypeActions.reorderField(
-      tabId,
-      result.source.index,
-      result.destination.index
-    );
     reorderCustomTypeField(
       tabId,
       result.source.index,
@@ -129,13 +117,6 @@ const TabZone: React.FC<TabZoneProps> = ({
       return;
     }
     if (mockValue) {
-      customTypeActions.updateWidgetMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        mockConfig,
-        previousKey,
-        newKey,
-        mockValue
-      );
       updateWidgetMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         mockConfig,
@@ -144,26 +125,20 @@ const TabZone: React.FC<TabZoneProps> = ({
         mockValue)
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      customTypeActions.deleteWidgetMockConfig(mockConfig, newKey);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       deleteWidgetMockConfig(mockConfig, newKey)
     }
-    customTypeActions.replaceField(tabId, previousKey, newKey, value);
     replaceCustomTypeField(tabId, previousKey, newKey, value);
   };
 
   const onCreateSliceZone = () => {
-    customTypeActions.createSliceZone(tabId);
     createSliceZone(tabId);
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
-    customTypeActions.replaceSharedSlice(tabId, keys, preserve);
     replaceCustomTypeSharedSlice(tabId, keys, preserve);
   };
 
   const onRemoveSharedSlice = (sliceId: string) => {
-    customTypeActions.deleteSharedSlice(tabId, sliceId);
     deleteCustomTypeSharedSlice(tabId, sliceId);
   };
 
@@ -174,8 +149,6 @@ const TabZone: React.FC<TabZoneProps> = ({
         tabId={tabId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         mockConfig={mockConfig}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-        store={customTypeActions}
         title="Static Zone"
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
