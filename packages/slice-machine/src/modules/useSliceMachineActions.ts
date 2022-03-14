@@ -40,6 +40,10 @@ import {
   createSliceZoneCreator,
   saveCustomTypeCreator,
   pushCustomTypeCreator,
+  addFieldIntoGroupCreator,
+  deleteFieldIntoGroupCreator,
+  reorderFieldIntoGroupCreator,
+  replaceFieldIntoGroupCreator,
 } from "@src/modules/customType";
 import {
   deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
@@ -49,12 +53,6 @@ import {
 } from "@src/modules/customType/mockHelpers";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { Field } from "@models/common/CustomType/fields";
-import {
-  addFieldIntoGroupCreator,
-  deleteFieldIntoGroupCreator,
-  reorderFieldIntoGroupCreator,
-  replaceFieldIntoGroupCreator,
-} from "@src/models/customType/newActions";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 const useSliceMachineActions = () => {
