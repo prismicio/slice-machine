@@ -1,4 +1,4 @@
-import { SliceAsObject } from "@slicemachine/core/build/src/models";
+import { SliceAsObject } from "@slicemachine/core/build/models";
 
 const allFieldSliceModel: SliceAsObject = {
   id: "all_fields",

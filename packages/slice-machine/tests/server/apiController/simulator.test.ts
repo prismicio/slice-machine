@@ -3,7 +3,7 @@ import * as Core from "@slicemachine/core";
 
 import simulatorHandler from "../../../server/src/api/simulator";
 import "@testing-library/jest-dom";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
 jest.mock("@slicemachine/core", () => {
