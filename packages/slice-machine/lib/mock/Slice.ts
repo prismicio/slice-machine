@@ -1,16 +1,15 @@
 import {
   SharedSlice,
-  SlicesTypes,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import {
   SharedSliceMockConfig,
   VariationMockConfig,
   generateSliceMock,
-  renderSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import { ComponentMocks } from "@slicemachine/core/build/models/Library";
 
 function buildVariationMockConfig(
   model: Variation,
@@ -61,20 +60,10 @@ export function buildSliceMockConfig(
 export default function MockSlice(
   smModel: SliceSM,
   legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
-): unknown[] {
-  const model = Slices.fromSM(smModel);
-  const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
-  const sliceModel: SharedSlice = {
-    ...model,
-    variations: model.variations.map((v) => {
-      return {
-        ...v,
-        imageUrl: "",
-      } as Variation;
-    }),
-    type: SlicesTypes.SharedSlice,
-  };
+): ComponentMocks {
+  const sliceModel = Slices.fromSM(smModel);
+  const sliceMockConfig = buildSliceMockConfig(sliceModel, legacyMockConfig);
   return sliceMockConfig.map((sc) =>
-    generateSliceMock(sliceModel, sc)(renderSliceMock)
-  );
+    generateSliceMock(sliceModel, sc)()
+  ) as ComponentMocks;
 }

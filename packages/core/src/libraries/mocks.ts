@@ -1,8 +1,7 @@
 import path from "path";
 import { isRight } from "fp-ts/Either";
-
 import { Files } from "../node-utils";
-import { SliceMock } from "../models";
+import { ComponentMocks } from "../models";
 
 export function createPathToMock({
   path: filePath,
@@ -24,13 +23,13 @@ export function resolvePathsToMock({
   paths: ReadonlyArray<string>;
   from: string;
   sliceName: string;
-}): { path: string; value: SliceMock | undefined } | undefined {
+}): { path: string; value: ComponentMocks | undefined } | undefined {
   const possiblePaths = paths.map((base) =>
     createPathToMock({ path: base, from, sliceName })
   );
-  return Files.readFirstOf<SliceMock | undefined>(possiblePaths)(
+  return Files.readFirstOf<ComponentMocks | undefined>(possiblePaths)(
     (v: string) => {
-      const res = SliceMock.decode(JSON.parse(v));
+      const res = ComponentMocks.decode(JSON.parse(v));
       if (isRight(res)) {
         return res.right;
       }

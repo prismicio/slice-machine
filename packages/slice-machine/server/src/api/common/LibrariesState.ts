@@ -4,6 +4,8 @@ import probe from "probe-image-size";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 import { handleLibraryPath } from "@slicemachine/core/build/libraries";
 import { LibrariesStatePath, Files } from "@slicemachine/core/build/node-utils";
+import { renderSliceMock } from "@prismicio/mocks";
+import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices/SharedSlice";
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,
@@ -72,7 +74,10 @@ export function formatComponent(
     ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
-        [variationMock.variation]: variationMock,
+        [variationMock.variation]: renderSliceMock(
+          slice.model as SharedSlice,
+          variationMock
+        ) as Models.VariationMock,
       }),
       {}
     ),
