@@ -172,6 +172,21 @@ describe("SMTracker", () => {
     );
   });
 
+  test("should send a open video tutorials event", async () => {
+    const smTracker = new SMTracker();
+    smTracker.initialize(dumpSegmentKey);
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
+    expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
+      "Open Video Tutorials",
+      {
+        framework: Frameworks.next,
+        slicemachineVersion: "0.2.0",
+        source: "SliceMachine",
+      }
+    );
+  });
+
   test("should send a page view event", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey);
@@ -232,6 +247,7 @@ describe("SMTracker", () => {
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen3
     );
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
     await smTracker.trackPageView(Frameworks.next, "0.2.0");
     await smTracker.trackOnboardingStart();
     await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");

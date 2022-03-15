@@ -13,6 +13,7 @@ enum EventType {
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   PageView = "SliceMachine Page View",
+  OpenVideoTutorials = "Open Video Tutorials",
 }
 
 export enum ContinueOnboardingType {
@@ -123,6 +124,17 @@ export class SMTracker {
       npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
       downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
       slicemachineVersion: version,
+    });
+  }
+
+  async trackClickOnVideoTutorials(
+    framework: Frameworks,
+    version: string
+  ): Promise<void> {
+    await this.#trackEvent(EventType.OpenVideoTutorials, {
+      framework,
+      slicemachineVersion: version,
+      source: "SliceMachine",
     });
   }
 
