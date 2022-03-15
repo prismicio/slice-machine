@@ -1,4 +1,4 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { FileSystem, Utils, CONSTS } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 import { FileContent, JsonPackage } from "@slicemachine/core/build/filesystem";
@@ -67,7 +67,7 @@ const getTheSliceMachineVersionInstalled = (
   const sliceMachinePackageInstalled = Object.entries(
     packageJson.content?.devDependencies || {}
   ).find((devDependency) => {
-    if (devDependency[0] === Utils.CONSTS.SM_PACKAGE_NAME) {
+    if (devDependency[0] === CONSTS.SM_PACKAGE_NAME) {
       return devDependency;
     }
   });

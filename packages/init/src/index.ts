@@ -1,4 +1,4 @@
-import { Utils, FileSystem } from "@slicemachine/core";
+import { Utils, FileSystem, CONSTS } from "@slicemachine/core";
 import Tracker from "./utils/tracker";
 
 import {
@@ -15,7 +15,7 @@ import { findArgument } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
-  const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const base = findArgument(process.argv, "base") || CONSTS.DEFAULT_BASE;
   const lib: string | undefined = findArgument(process.argv, "library");
   const branch: string | undefined = findArgument(process.argv, "branch");
   const isTrackingAvailable =

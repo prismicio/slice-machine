@@ -51,7 +51,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      `yarn add -D ${Core.Utils.CONSTS.SM_PACKAGE_NAME}`
+      `yarn add -D ${Core.CONSTS.SM_PACKAGE_NAME}`
     );
 
     expect(successFn).toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe("install required dependency", () => {
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      `npm install --save-dev ${Core.Utils.CONSTS.SM_PACKAGE_NAME}`
+      `npm install --save-dev ${Core.CONSTS.SM_PACKAGE_NAME}`
     );
 
     expect(successFn).toHaveBeenCalled();

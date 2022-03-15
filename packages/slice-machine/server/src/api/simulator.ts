@@ -1,29 +1,41 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { FileSystem, CONSTS } from "@slicemachine/core";
 import { simulatorIsSupported } from "@lib/utils";
 import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
 
+const {
+  PREVIOUS_REACT_PACKAGE_NAME,
+  NEXT_SLICEZONE,
+  SLICE_SIMULATOR_REACT,
+  PRISMIC_REACT_PACKAGE_NAME,
+  PRISMIC_HELPERS,
+  SLICE_SIMULATOR_VUE,
+  NUXT_PRISMIC,
+  NUXT_SM,
+  VUE_SLICEZONE,
+} = CONSTS;
+
 function requiredDepsForFramework(framework: Frameworks): Array<string> {
   const previousNext = [
-    Utils.CONSTS.PREVIOUS_REACT_PACKAGE_NAME,
-    Utils.CONSTS.NEXT_SLICEZONE,
-    Utils.CONSTS.SLICE_SIMULATOR_REACT,
+    PREVIOUS_REACT_PACKAGE_NAME,
+    NEXT_SLICEZONE,
+    SLICE_SIMULATOR_REACT,
   ];
 
   const next = [
-    Utils.CONSTS.PRISMIC_REACT_PACKAGE_NAME,
-    Utils.CONSTS.SLICE_SIMULATOR_REACT,
-    Utils.CONSTS.PRISMIC_HELPERS,
+    PRISMIC_REACT_PACKAGE_NAME,
+    SLICE_SIMULATOR_REACT,
+    PRISMIC_HELPERS,
   ];
 
-  const nuxt = [Utils.CONSTS.SLICE_SIMULATOR_VUE, Utils.CONSTS.NUXT_PRISMIC];
+  const nuxt = [SLICE_SIMULATOR_VUE, NUXT_PRISMIC];
 
   const previousNuxt = [
-    Utils.CONSTS.SLICE_SIMULATOR_VUE,
-    Utils.CONSTS.NUXT_SM,
-    Utils.CONSTS.VUE_SLICEZONE,
-    Utils.CONSTS.NUXT_PRISMIC,
+    SLICE_SIMULATOR_VUE,
+    NUXT_SM,
+    VUE_SLICEZONE,
+    NUXT_PRISMIC,
   ];
 
   if (framework === Frameworks.next) return next;

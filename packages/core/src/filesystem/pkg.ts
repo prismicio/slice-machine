@@ -1,6 +1,7 @@
 import { JsonPackagePath, FileContent } from "./paths";
-import { CONSTS, Files } from "../utils";
+import { Files } from "../utils";
 import type { PackageJson } from "types-package-json";
+import { SCRIPT_NAME, SCRIPT_VALUE } from "../consts";
 
 export type JsonPackage = PackageJson;
 
@@ -45,9 +46,9 @@ export function addJsonPackageSmScript(cwd: string): boolean {
 
   const { scripts = {} } = pkg.content;
 
-  if (scripts[CONSTS.SCRIPT_NAME]) return false;
+  if (scripts[SCRIPT_NAME]) return false;
 
   return patchJsonPackage(cwd, {
-    scripts: { ...scripts, [CONSTS.SCRIPT_NAME]: CONSTS.SCRIPT_VALUE },
+    scripts: { ...scripts, [SCRIPT_NAME]: SCRIPT_VALUE },
   });
 }

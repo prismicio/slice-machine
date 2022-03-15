@@ -8,9 +8,12 @@ import {
   Frameworks,
   UserInfo,
 } from "../models";
-import { Cookie, CONSTS } from "../utils";
-
-const { DEFAULT_BASE, USER_SERVICE_BASE, USER_SERVICE_STAGING_BASE } = CONSTS;
+import { Cookie } from "../utils";
+import {
+  DEFAULT_BASE,
+  USER_SERVICE_BASE,
+  USER_SERVICE_STAGING_BASE,
+} from "../consts";
 
 /**
  *

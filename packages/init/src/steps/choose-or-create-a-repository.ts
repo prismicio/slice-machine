@@ -1,10 +1,16 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Communication, Utils, FileSystem, Models } from "@slicemachine/core";
+import {
+  Communication,
+  Utils,
+  FileSystem,
+  Models,
+  CONSTS,
+} from "@slicemachine/core";
 import { createRepository } from "../utils/create-repo";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
-const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
+const DEFAULT_BASE = CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
   const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");

@@ -1,6 +1,6 @@
 import path from "path";
 import { execCommand } from "../utils";
-import { Utils, FileSystem, Models } from "@slicemachine/core";
+import { Utils, CONSTS, FileSystem, Models } from "@slicemachine/core";
 
 const {
   PRISMIC_CLIENT,
@@ -12,7 +12,7 @@ const {
   SLICE_SIMULATOR_REACT,
   SLICE_SIMULATOR_VUE,
   PRISMIC_HELPERS,
-} = Utils.CONSTS;
+} = CONSTS;
 
 function depsForFramework(framework: Models.Frameworks): string {
   switch (framework) {

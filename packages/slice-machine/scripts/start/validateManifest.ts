@@ -1,5 +1,5 @@
 import boxen from "boxen";
-import { Utils } from "@slicemachine/core";
+import { Utils, CONSTS } from "@slicemachine/core";
 import { ManifestState, ManifestInfo } from "../../lib/env/manifest";
 
 export function validateManifest(manifest: ManifestInfo): {
@@ -28,7 +28,7 @@ See below for more info 👇`,
     case ManifestState.NotFound: {
       console.log(
         `Run ${Utils.bold(
-          `"${Utils.CONSTS.INIT_COMMAND}"`
+          `"${CONSTS.INIT_COMMAND}"`
         )} command to configure your project`
       );
 

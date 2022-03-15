@@ -2,16 +2,22 @@ import axios from "axios";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
-import { Utils, Models, Communication, FileSystem } from "@slicemachine/core";
+import {
+  Utils,
+  Models,
+  Communication,
+  FileSystem,
+  CONSTS,
+} from "@slicemachine/core";
 
 export async function getUserProfile(
   cookies: string,
-  base = Utils.CONSTS.DEFAULT_BASE
+  base = CONSTS.DEFAULT_BASE
 ): Promise<Models.UserProfile> {
   const userServiceBase =
-    Utils.CONSTS.DEFAULT_BASE === base
-      ? Utils.CONSTS.USER_SERVICE_BASE
-      : Utils.CONSTS.USER_SERVICE_STAGING_BASE;
+    CONSTS.DEFAULT_BASE === base
+      ? CONSTS.USER_SERVICE_BASE
+      : CONSTS.USER_SERVICE_STAGING_BASE;
 
   // note the auth server also provides a userId
   const url = new URL(userServiceBase);
@@ -40,7 +46,7 @@ export async function getUserProfile(
 }
 
 export async function validateSessionAndGetProfile(
-  base = Utils.CONSTS.DEFAULT_BASE
+  base = CONSTS.DEFAULT_BASE
 ): Promise<{
   info: Models.UserInfo;
   profile: Models.UserProfile | null;
