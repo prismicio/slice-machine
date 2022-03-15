@@ -4,3 +4,4 @@ export * from "./core";
 export * as Models from "./models";
 export * as Libraries from "./libraries";
 export * as Mocks from "./libraries/mocks";
+export * from "./auth";

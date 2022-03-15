@@ -1,15 +1,15 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
-import * as authHelpers from "../../../src/core/auth";
-import { Auth } from "../../../src/core";
-import * as Utils from "../../../src/utils";
-import * as communication from "../../../src/core/communication";
-import { PrismicSharedConfigManager } from "../../../src/filesystem/PrismicSharedConfig";
-import { Roles } from "../../../src/models";
+import * as authHelpers from "../../src/auth/helpers";
+import { Auth } from "../../src/auth";
+import * as Utils from "../../src/utils";
+import * as communication from "../../src/core/communication";
+import { PrismicSharedConfigManager } from "../../src/filesystem/PrismicSharedConfig";
+import { Roles } from "../../src/models";
 
-jest.mock("../../../src/filesystem");
-jest.mock("../../../src/filesystem/PrismicSharedConfig");
-jest.mock("../../../src/core/communication");
-jest.mock("../../../src/utils/poll");
+jest.mock("../../src/filesystem");
+jest.mock("../../src/filesystem/PrismicSharedConfig");
+jest.mock("../../src/core/communication");
+jest.mock("../../src/utils/poll");
 
 describe("communication", () => {
   afterEach(() => {
