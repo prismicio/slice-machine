@@ -13,7 +13,7 @@ enum EventType {
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   PageView = "SliceMachine Page View",
-  OpenVideoTutorials = "Open Video Tutorials",
+  OpenVideoTutorials = "SliceMachine Open Video Tutorials",
 }
 
 export enum ContinueOnboardingType {
@@ -134,7 +134,6 @@ export class SMTracker {
     await this.#trackEvent(EventType.OpenVideoTutorials, {
       framework,
       slicemachineVersion: version,
-      source: "SliceMachine",
     });
   }
 

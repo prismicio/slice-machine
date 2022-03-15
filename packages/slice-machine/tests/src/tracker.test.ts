@@ -178,11 +178,10 @@ describe("SMTracker", () => {
     await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
-      "Open Video Tutorials",
+      "SliceMachine Open Video Tutorials",
       {
         framework: Frameworks.next,
         slicemachineVersion: "0.2.0",
-        source: "SliceMachine",
       }
     );
   });
