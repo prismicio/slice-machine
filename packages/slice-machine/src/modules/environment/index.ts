@@ -9,7 +9,7 @@ import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
-import type { Models } from "@slicemachine/core";
+import { SliceSM } from "@slicemachine/core/build/src/models";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
@@ -17,7 +17,7 @@ export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
   libraries: ReadonlyArray<LibraryUI>;
-  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  remoteSlices: ReadonlyArray<SliceSM>;
 }>();
 
 type EnvironmentActions = ActionType<typeof refreshStateCreator>;

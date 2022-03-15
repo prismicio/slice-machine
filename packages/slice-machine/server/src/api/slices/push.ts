@@ -1,8 +1,5 @@
-import type Models from "@slicemachine/core/build/src/models";
-
 import getEnv from "../services/getEnv";
 import { getSlices } from "./";
-import Files from "@lib/utils/files";
 
 import { onError } from "../common/error";
 import { purge } from "../services/uploadScreenshotClient";
@@ -11,40 +8,39 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import type { SliceBody } from "@models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
 import { ApiResult } from "@lib/models/server/ApiResult";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/src/models";
+import * as IO from "../io";
 
 export async function pushSlice(
   env: BackendEnvironment,
-  slices: ReadonlyArray<Models.SliceAsObject>,
+  slices: ReadonlyArray<SliceSM>,
   { sliceName, from }: { sliceName: string; from: string }
 ): Promise<ApiResult> {
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
 
   try {
-    const jsonModel: Models.SliceAsObject =
-      Files.readJson<Models.SliceAsObject>(modelPath);
+    const smModel: SliceSM = IO.Slice.readSlice(modelPath);
     const { err } = await purge(env, slices, sliceName);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 
     const screenshotUrlsByVariation: Record<string, string | null> =
-      await uploadScreenshots(env, jsonModel, sliceName, from);
+      await uploadScreenshots(env, smModel, sliceName, from);
 
     console.log("[slice/push]: pushing slice model to Prismic");
 
-    const variations = jsonModel.variations.map(
-      (variation: Models.VariationAsObject) => {
-        const imageUrl = screenshotUrlsByVariation[variation.id];
-        if (!imageUrl) return variation;
+    const variations = smModel.variations.map((variation: VariationSM) => {
+      const imageUrl = screenshotUrlsByVariation[variation.id];
+      if (!imageUrl) return variation;
 
-        return {
-          ...variation,
-          imageUrl,
-        };
-      }
-    );
+      return {
+        ...variation,
+        imageUrl,
+      };
+    });
 
-    const modelWithImageUrl: Models.SliceAsObject = {
-      ...jsonModel,
+    const modelWithImageUrl: SliceSM = {
+      ...smModel,
       variations,
     };
 

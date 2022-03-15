@@ -1,14 +1,15 @@
 import getEnv from "../services/getEnv";
 
-import type Models from "@slicemachine/core/build/src/models";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (
   client: DefaultClient | FakeClient
 ): Promise<{
   err: Response | FakeResponse | null;
-  slices: Models.SliceAsObject[];
+  slices: Array<SliceSM>;
 }> => {
   try {
     const res = await client.getSlice();
@@ -16,8 +17,8 @@ export const getSlices = async (
       return { err: res, slices: [] };
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const slices: Models.SliceAsObject[] = await res.json();
-    return { err: null, slices };
+    const slices: Array<SharedSlice> = await res.json();
+    return { err: null, slices: slices.map((s) => Slices.toSM(s)) };
   } catch (e) {
     return { slices: [], err: e as Response };
   }

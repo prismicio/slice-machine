@@ -1,14 +1,13 @@
-import * as Widgets from "./misc/widgets";
-
-import { snakelize } from "../utils/str";
-
-import { handleFields } from "./misc/handlers";
-
 import { Models } from "@slicemachine/core";
+import * as Widgets from "./misc/widgets";
+import { snakelize } from "../utils/str";
+import { handleFields } from "./misc/handlers";
+import { FieldsSM, SliceSM } from "@slicemachine/core/build/src/models";
+import { VariationSM } from "@slicemachine/core/build/src/models";
 
 const createEmptyMock = (
   sliceName: string,
-  variation: Models.VariationAsObject
+  variation: VariationSM
 ): Models.VariationMock => ({
   variation: variation.id,
   name: variation.name,
@@ -19,27 +18,24 @@ const createEmptyMock = (
 
 export default function MockSlice(
   sliceName: string,
-  model: Models.SliceAsObject,
+  model: SliceSM,
   mockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
-): Models.VariationMock[] {
+): Models.SliceMock {
   const variations = model.variations.map((variation) => {
     const mock = createEmptyMock(sliceName, variation);
     const handler: (
-      fields?: any[],
+      fields?: FieldsSM,
       mocks?: Record<string, unknown>
     ) => Models.VariationMock["primary"] = handleFields(Widgets);
 
     const maybeMockConfig = mockConfig?.[variation.id]?.primary || {};
 
-    mock.primary = handler(
-      Object.entries(variation.primary || {}),
-      maybeMockConfig
-    );
+    mock.primary = handler(variation.primary, maybeMockConfig);
 
     const items: Models.VariationMock["items"] = [];
 
-    const repeat = Object.entries(variation.items || {});
-    if (repeat.length === 0) {
+    const repeat = variation.items;
+    if (repeat && repeat.length === 0) {
       return {
         ...mock,
         items,

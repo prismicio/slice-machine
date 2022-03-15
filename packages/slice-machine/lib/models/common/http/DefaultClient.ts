@@ -1,11 +1,11 @@
 import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
-import type Models from "@slicemachine/core/build/src/models";
 import Files from "../../../utils/files";
 
 import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
 import axios from "axios";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 interface ApiSettings {
   STAGE: string;
@@ -46,7 +46,7 @@ function createApiUrl(base: string, { STAGE, PROD }: ApiSettings): string {
   return PROD;
 }
 
-type Body = Models.SliceAsObject | Record<string, unknown> | string;
+type Body = SharedSlice | Record<string, unknown> | string;
 
 function createFetcher(
   apiUrl: string,

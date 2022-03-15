@@ -1,13 +1,17 @@
-import { Libraries, Models } from "@slicemachine/core";
+import * as t from "io-ts";
+import { fold } from "fp-ts/lib/Either";
+import { Libraries } from "@slicemachine/core";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 interface LibrariesResult {
-  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  remoteSlices: ReadonlyArray<SliceSM>;
   clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<LibraryUI>;
 }
@@ -21,31 +25,51 @@ export default async function handler(
     const { remoteSlices, clientError } = await (async () => {
       if (res.status > 209) {
         return {
-          remoteSlices: [],
+          remoteSlices: [] as Array<SharedSlice>,
           clientError: new ErrorWithStatus(res.statusText, res.status),
         };
       }
       if (!env.isUserLoggedIn) {
-        return { remoteSlices: [] };
+        return { remoteSlices: [] as Array<SharedSlice> };
       }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const r = await (res.json ? res.json() : Promise.resolve([]));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { remoteSlices: r };
+
+      return fold(
+        () => ({
+          remoteSlices: [] as Array<SharedSlice>,
+          clientError: new ErrorWithStatus(
+            "Invalid slices detected while fetching.",
+            400
+          ),
+        }),
+        (slices: Array<SharedSlice>) => {
+          return { remoteSlices: slices };
+        }
+      )(t.array(SharedSlice).decode(r as unknown));
     })();
 
+    const smRemoteSlices = remoteSlices.map((r) => Slices.toSM(r));
+
     if (!env.manifest.libraries)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { remoteSlices, libraries: [], clientError };
+      return {
+        remoteSlices: smRemoteSlices,
+        libraries: [],
+        clientError: clientError,
+      };
 
     const libraries = Libraries.libraries(env.cwd, env.manifest.libraries);
 
     const withFlags = libraries.map((lib) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      LibraryUI.build(lib, remoteSlices, env)
+      LibraryUI.build(lib, smRemoteSlices, env)
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return { clientError, libraries: withFlags, remoteSlices };
+    return {
+      clientError: clientError,
+      libraries: withFlags,
+      remoteSlices: smRemoteSlices,
+    };
   } catch (e) {
     return {
       clientError: new ErrorWithStatus("Could not fetch slices", 400),

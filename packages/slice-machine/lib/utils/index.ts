@@ -1,4 +1,3 @@
-import type Models from "@slicemachine/core/build/src/models";
 import * as yup from "yup";
 import equal from "fast-deep-equal";
 
@@ -8,6 +7,7 @@ import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
+import { VariationSM } from "@slicemachine/core/build/src/models";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,8 +43,8 @@ export const ensureWidgetTypeExistence = (
 };
 
 export const compareVariations = (
-  lhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>,
-  rhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>
+  lhs: ReadonlyArray<VariationSM>,
+  rhs: ReadonlyArray<VariationSM>
 ) => {
   return equal(
     lhs.map((e) => ({ ...e, imageUrl: undefined })),

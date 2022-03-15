@@ -6,7 +6,7 @@ import { transformKeyAccessor } from "@utils/str";
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
 import type { Models } from "@slicemachine/core";
-import { WidgetsArea } from "@slicemachine/core/build/src/models/Variation";
+import { WidgetsArea } from "@slicemachine/core/build/src/models/Slice";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
@@ -27,7 +27,7 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
 
 type FieldZonesProps = {
   Model: SliceState;
-  variation: Models.VariationAsArray;
+  variation: Models.VariationSM;
   store: SliceStore;
 };
 
@@ -119,10 +119,11 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     <>
       <Zone
         Model={Model}
+        store={undefined}
+        tabId={undefined}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         fields={variation.primary}
         EditModal={EditModal}
         widgetsArray={sliceBuilderWidgetsArray}
@@ -145,11 +146,12 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Zone
         isRepeatable
         Model={Model}
+        store={undefined}
+        tabId={undefined}
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         fields={variation.items}
         EditModal={EditModal}
         getFieldMockConfig={_getFieldMockConfig(WidgetsArea.Items)}

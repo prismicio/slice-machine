@@ -21,10 +21,10 @@ const VariationModal: React.FunctionComponent<{
   onSubmit: (
     id: string,
     name: string,
-    copiedVariation: Models.VariationAsArray
+    copiedVariation: Models.VariationSM
   ) => void;
-  initialVariation: Models.VariationAsArray;
-  variations: ReadonlyArray<Models.VariationAsArray>;
+  initialVariation: Models.VariationSM;
+  variations: ReadonlyArray<Models.VariationSM>;
 }> = ({ isOpen, onClose, onSubmit, initialVariation, variations }) => {
   const [errors, setErrors] = useState<{ [fieldKey: string]: string }>({});
   const [generatedId, setGeneratedId] = useState<string>("");

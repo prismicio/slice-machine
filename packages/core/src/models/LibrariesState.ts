@@ -1,9 +1,9 @@
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import * as t from "io-ts";
-import { SliceAsObject } from "./Slice";
-import { VariationMock } from "./Variation";
+import { VariationMock } from "./Slice";
 
-export const ComponentMocks = t.record(t.string, VariationMock);
-export type ComponentMocks = t.TypeOf<typeof ComponentMocks>;
+export const ComponentMocksRecord = t.record(t.string, VariationMock);
+export type ComponentMocksRecord = t.TypeOf<typeof ComponentMocksRecord>;
 
 export const ComponentMeta = t.type({
   fileName: t.union([t.string, t.null]),
@@ -27,8 +27,8 @@ export const Component = t.intersection([
   t.type({
     id: t.string,
     library: t.string,
-    model: SliceAsObject,
-    mocks: ComponentMocks,
+    model: SharedSlice,
+    mocks: ComponentMocksRecord,
     meta: ComponentMeta,
   }),
   t.partial({

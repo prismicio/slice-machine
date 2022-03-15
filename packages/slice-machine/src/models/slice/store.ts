@@ -1,6 +1,5 @@
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import type Models from "@slicemachine/core/build/src/models";
-import { Field } from "../../../lib/models/common/CustomType/fields";
-
 import {
   ActionType as VariationActions,
   updateWidgetMockConfig,
@@ -12,6 +11,7 @@ import {
 import { ActionType as SliceActions, saveSlice, pushSlice } from "./actions";
 
 import Store from "@lib/models/ui/Store";
+import { VariationSM } from "@slicemachine/core/build/src/models";
 
 export default class SliceStore implements Store {
   constructor(
@@ -32,11 +32,7 @@ export default class SliceStore implements Store {
   push = pushSlice(this.dispatch);
   updateMetadata = (value: Models.ComponentMetadata): void =>
     this.dispatch({ type: SliceActions.UpdateMetadata, payload: value });
-  copyVariation = (
-    key: string,
-    name: string,
-    copied: Models.VariationAsArray
-  ): void =>
+  copyVariation = (key: string, name: string, copied: VariationSM): void =>
     this.dispatch({
       type: SliceActions.CopyVariation,
       payload: { key, name, copied },
@@ -52,7 +48,7 @@ export default class SliceStore implements Store {
       addWidget: (
         widgetsArea: Models.WidgetsArea,
         key: string,
-        value: Field
+        value: NestableWidget
       ): void => {
         this.dispatch({
           type: VariationActions.AddWidget,
@@ -63,7 +59,7 @@ export default class SliceStore implements Store {
         widgetsArea: Models.WidgetsArea,
         previousKey: string,
         newKey: string,
-        value: Field
+        value: NestableWidget
       ): void => {
         this.dispatch({
           type: VariationActions.ReplaceWidget,

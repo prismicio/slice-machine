@@ -39,6 +39,7 @@
   "dependencies": {
     "@babel/register": "^7.11.5",
     "@prismicio/slice-simulator-com": "^0.2.0",
+    "@prismicio/types-internal": "^0.2.7",
     "@reach/menu-button": "^0.16.2",
     "@slicemachine/core": "1.1.3-alpha.12",
     "@svgr/webpack": "^5.4.0",
