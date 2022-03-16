@@ -100,6 +100,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     reorderCustomTypeField(
       tabId,
       result.source.index,
+      // @ts-expect-error We have to change the typeGuard above to cast properly the "result" property
       result.destination.index
     );
   };
@@ -151,8 +152,10 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         title="Static Zone"
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
         fields={fields}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
         poolOfFieldsToCheck={poolOfFields}
         showHints={true}
         EditModal={EditModal}

@@ -1,9 +1,10 @@
 import { SliceMachineStoreType } from "@src/redux/type";
 import equal from "fast-deep-equal";
-import { CustomTypeState, CustomTypeStatus } from "@models/ui/CustomTypeState";
+import { CustomTypeStatus } from "@models/ui/CustomTypeState";
 import { PoolOfFields } from "@src/modules/customType/types";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import { TabAsArray } from "@models/common/CustomType/tab";
 
 // Selectors
 export const selectCurrentCustomType = (
@@ -24,7 +25,12 @@ export const selectCurrentPoolOfFields = (
   store: SliceMachineStoreType
 ): PoolOfFields => {
   if (!store.customType) return [];
-  return CustomTypeState.getPool(store.customType.model.tabs);
+  return store.customType.model.tabs.reduce<PoolOfFields>(
+    (acc: PoolOfFields, curr: TabAsArray) => {
+      return [...acc, ...curr.value];
+    },
+    []
+  );
 };
 
 export const selectIsCurrentCustomTypeHasPendingModifications = (

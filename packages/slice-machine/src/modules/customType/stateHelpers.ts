@@ -1,9 +1,5 @@
 import { TabAsArray } from "@models/common/CustomType/tab";
-import {
-  CustomTypeStoreType,
-  PoolOfFields,
-} from "@src/modules/customType/types";
-import { ArrayTabs } from "@models/common/CustomType";
+import { CustomTypeStoreType } from "@src/modules/customType/types";
 
 const updateTab =
   (state: CustomTypeStoreType, tabId: string) =>
@@ -40,14 +36,7 @@ const deleteTab = (
   };
 };
 
-const getPool = (tabs: ArrayTabs): PoolOfFields => {
-  return tabs.reduce<PoolOfFields>((acc: PoolOfFields, curr: TabAsArray) => {
-    return [...acc, ...curr.value];
-  }, []);
-};
-
 export default {
   deleteTab,
   updateTab,
-  getPool,
 };

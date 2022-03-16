@@ -52,7 +52,7 @@ export const customTypeReducer: Reducer<
         initialMockConfig: action.payload.mockConfig,
       };
     case getType(saveCustomTypeCreator.success): {
-      if (!state) return;
+      if (!state) return state;
 
       return {
         ...state,
@@ -61,7 +61,7 @@ export const customTypeReducer: Reducer<
       };
     }
     case getType(pushCustomTypeCreator.success):
-      if (!state) return;
+      if (!state) return state;
 
       return {
         ...state,
@@ -69,7 +69,7 @@ export const customTypeReducer: Reducer<
         remoteModel: state.model,
       };
     case getType(createTabCreator):
-      if (!state) return;
+      if (!state) return state;
       const { tabId } = action.payload;
       if (state.model.tabs.find((e) => e.key === tabId)) {
         return state;
@@ -82,7 +82,7 @@ export const customTypeReducer: Reducer<
         },
       };
     case getType(updateTabCreator): {
-      if (!state) return;
+      if (!state) return state;
       const { tabId, newTabId } = action.payload;
       if (newTabId === tabId) {
         return state;
@@ -104,7 +104,7 @@ export const customTypeReducer: Reducer<
       };
     }
     case getType(deleteTabCreator): {
-      if (!state) return;
+      if (!state) return state;
       const { tabId } = action.payload;
       return StateHelpers.deleteTab(state, tabId);
     }
@@ -163,7 +163,7 @@ export const customTypeReducer: Reducer<
       )((tab) => Tab.reorderWidget(tab, start, end));
     }
     case getType(createSliceZoneCreator): {
-      if (!state) return;
+      if (!state) return state;
       const { tabId } = action.payload;
       const tabIndex = state.model.tabs.findIndex((t) => t.key === tabId);
 
@@ -208,12 +208,16 @@ export const customTypeReducer: Reducer<
       );
     }
     case getType(updateFieldMockConfigCreator):
+      if (!state) return state;
+
       return {
         ...state,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         mockConfig: action.payload.mockConfig,
       };
     case getType(deleteFieldMockConfigCreator):
+      if (!state) return state;
+
       return {
         ...state,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
