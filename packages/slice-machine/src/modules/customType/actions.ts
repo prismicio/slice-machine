@@ -24,9 +24,7 @@ export type CustomTypeActions =
   | ActionType<typeof deleteFieldIntoGroupCreator>
   | ActionType<typeof deleteSharedSliceCreator>;
 
-export const initCustomTypeStoreCreator = createAction(
-  "CUSTOM_TYPE/INIT.REQUEST"
-)<{
+export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomType<ArrayTabs>;
   remoteModel: CustomType<ArrayTabs> | null;
   mockConfig: CustomTypeMockConfig;

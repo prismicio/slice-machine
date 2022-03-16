@@ -16,16 +16,15 @@ import axios from "axios";
 import { CustomType } from "@models/common/CustomType";
 import { modalOpenCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { SliceMachineStoreType } from "@src/redux/type";
 
 export function* saveCustomTypeSaga() {
   try {
-    const currentCustomType = selectCurrentCustomType(
-      (yield select()) as SliceMachineStoreType
-    );
-    const currentMockConfig = selectCurrentMockConfig(
-      (yield select()) as SliceMachineStoreType
-    );
+    const currentCustomType = (yield select(
+      selectCurrentCustomType
+    )) as ReturnType<typeof selectCurrentCustomType>;
+    const currentMockConfig = (yield select(
+      selectCurrentMockConfig
+    )) as ReturnType<typeof selectCurrentMockConfig>;
 
     if (!currentCustomType || !currentMockConfig) {
       return;
@@ -56,9 +55,9 @@ export function* saveCustomTypeSaga() {
 
 export function* pushCustomTypeSaga() {
   try {
-    const currentCustomType = selectCurrentCustomType(
-      (yield select()) as SliceMachineStoreType
-    );
+    const currentCustomType = (yield select(
+      selectCurrentCustomType
+    )) as ReturnType<typeof selectCurrentCustomType>;
 
     if (!currentCustomType) {
       return;

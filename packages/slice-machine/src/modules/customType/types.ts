@@ -8,7 +8,6 @@ export type CustomTypeStoreType = {
   model: CustomType<ArrayTabs>;
   initialModel: CustomType<ArrayTabs>;
   remoteModel: CustomType<ObjectTabs> | null;
-  poolOfFieldsToCheck: PoolOfFields;
   mockConfig: CustomTypeMockConfig;
   initialMockConfig: CustomTypeMockConfig;
 } | null;

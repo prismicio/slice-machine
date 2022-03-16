@@ -18,8 +18,7 @@ import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const dummyCustomTypesState: CustomTypesStoreType = {
-  localCustomTypes: [],
-  remoteCustomTypes: [],
+  map: {},
 };
 
 describe("[Custom types module]", () => {
@@ -46,7 +45,11 @@ describe("[Custom types module]", () => {
 
       expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
         ...dummyCustomTypesState,
-        localCustomTypes: dummyServerState.customTypes,
+        map: {
+          about: {
+            local: dummyServerState.customTypes[0],
+          },
+        },
       });
     });
     it("should update the custom types state given CUSTOM_TYPES/CREATE.SUCCESS action", () => {
@@ -69,10 +72,12 @@ describe("[Custom types module]", () => {
 
       expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
         ...dummyCustomTypesState,
-        localCustomTypes: [
-          createdCustomType,
-          ...dummyCustomTypesState.localCustomTypes,
-        ],
+        map: {
+          ...dummyCustomTypesState.map,
+          [createdCustomType.id]: {
+            local: createdCustomType,
+          },
+        },
       });
     });
   });

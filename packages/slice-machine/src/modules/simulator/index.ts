@@ -275,10 +275,12 @@ function* checkSetupSaga(
 }
 
 export function* failCheckSetupSaga() {
-  const framework = getFramework((yield select()) as SliceMachineStoreType);
-  const isPreviewAvailableForFramework = selectIsSimulatorAvailableForFramework(
-    (yield select()) as SliceMachineStoreType
-  );
+  const framework = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const isPreviewAvailableForFramework = (yield select(
+    selectIsSimulatorAvailableForFramework
+  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
 
   if (!isPreviewAvailableForFramework) {
     return;
@@ -294,13 +296,14 @@ export function* failCheckSetupSaga() {
 }
 
 function* trackOpenSetupDrawerSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const version: string = yield select(getCurrentVersion);
+  const framework: Frameworks = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const version: string = (yield select(getCurrentVersion)) as ReturnType<
+    typeof getCurrentVersion
+  >;
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  Tracker.get().trackSliceSimulatorSetup(framework, version);
+  void Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
 // Saga watchers
