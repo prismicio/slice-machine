@@ -24,7 +24,7 @@
     "url": "https://github.com/prismicio/sm-commons/issues"
   },
   "homepage": "https://github.com/prismicio/sm-commons#readme",
-  "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
+  "gitHead": "e34025f35abbd621d3bcdae3772114e3436f381e",
   "devDependencies": {
     "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
