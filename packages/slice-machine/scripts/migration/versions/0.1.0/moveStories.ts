@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, FileSystem, NodeUtils } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 import storybook from "../../../../server/src/api/storybook";
 
@@ -8,7 +8,7 @@ export function moveStories(
   libraryName: string,
   sliceName: string
 ) {
-  const customStoriesPath = FileSystem.CustomPaths(cwd)
+  const customStoriesPath = NodeUtils.CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .stories();

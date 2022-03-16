@@ -1,4 +1,4 @@
-import { JsonPackagePath, FileContent } from "./paths";
+import { JsonPackagePath, FileContent } from "../node-utils/paths";
 import { Files } from "../utils";
 import type { PackageJson } from "types-package-json";
 import { SCRIPT_NAME, SCRIPT_VALUE } from "../consts";

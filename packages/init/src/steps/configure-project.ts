@@ -1,7 +1,7 @@
 import { FileSystem, Utils, CONSTS, NodeUtils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
-import { FileContent, JsonPackage } from "@slicemachine/core/build/filesystem";
+import { JsonPackage } from "@slicemachine/core/build/filesystem";
 
 type Base = Utils.Endpoints.Base;
 
@@ -45,7 +45,7 @@ export function configureProject(
     else NodeUtils.patchManifest(cwd, manifestUpdated);
 
     // create the default slices folder if it doesn't exist.
-    const pathToSlicesFolder = FileSystem.CustomPaths(cwd)
+    const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)
       .library("slices")
       .value();
     if (!Utils.Files.exists(pathToSlicesFolder))
@@ -62,7 +62,7 @@ export function configureProject(
 }
 
 const getTheSliceMachineVersionInstalled = (
-  packageJson: FileContent<JsonPackage>
+  packageJson: NodeUtils.FileContent<JsonPackage>
 ) => {
   const sliceMachinePackageInstalled = Object.entries(
     packageJson.content?.devDependencies || {}

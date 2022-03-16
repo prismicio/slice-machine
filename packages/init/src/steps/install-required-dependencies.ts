@@ -1,6 +1,6 @@
 import path from "path";
 import { execCommand } from "../utils";
-import { Utils, CONSTS, FileSystem, Models } from "@slicemachine/core";
+import { Utils, CONSTS, Models, NodeUtils } from "@slicemachine/core";
 
 const {
   PRISMIC_CLIENT,
@@ -35,7 +35,7 @@ export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks
 ): Promise<void> {
-  const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
+  const yarnLock = Utils.Files.exists(NodeUtils.YarnLockPath(cwd));
   const installDevDependencyCommand = yarnLock
     ? "yarn add -D"
     : "npm install --save-dev";
@@ -52,7 +52,7 @@ export async function installRequiredDependencies(
   if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
 
   const pathToPkg = path.join(
-    FileSystem.PackagePaths(cwd).value(),
+    NodeUtils.PackagePaths(cwd).value(),
     SM_PACKAGE_NAME
   );
   const isPackageInstalled = Utils.Files.exists(pathToPkg);

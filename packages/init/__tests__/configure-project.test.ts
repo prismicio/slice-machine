@@ -14,16 +14,16 @@ type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
-
 jest.mock("@slicemachine/core", () => {
+  // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
   const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
 
   return {
     ...actualCore,
-    FileSystem: {
-      ...actualCore.FileSystem,
+    NodeUtils: {
+      ...actualCore.NodeUtils,
       retrieveManifest: jest.fn<
-        Core.FileSystem.FileContent<Core.Models.Manifest>,
+        Core.NodeUtils.FileContent<Core.Models.Manifest>,
         [{ cwd: string }]
       >(),
       createManifest: jest.fn<
@@ -34,6 +34,9 @@ jest.mock("@slicemachine/core", () => {
         boolean,
         [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
+    },
+    FileSystem: {
+      ...actualCore.FileSystem,
       addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     },
     Utils: {
@@ -72,9 +75,9 @@ describe("configure-project", () => {
     manuallyAdded: false,
   };
 
-  const retrieveManifestMock = Core.FileSystem.retrieveManifest as jest.Mock;
-  const createManifestMock = Core.FileSystem.createManifest as jest.Mock;
-  const patchManifestMock = Core.FileSystem.patchManifest as jest.Mock;
+  const retrieveManifestMock = Core.NodeUtils.retrieveManifest as jest.Mock;
+  const createManifestMock = Core.NodeUtils.createManifest as jest.Mock;
+  const patchManifestMock = Core.NodeUtils.patchManifest as jest.Mock;
   const addJsonPackageSmScriptMock = Core.FileSystem
     .addJsonPackageSmScript as jest.Mock;
 

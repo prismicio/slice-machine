@@ -1,7 +1,7 @@
-import { Utils, FileSystem } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
-  const customMocksPath = FileSystem.CustomPaths(cwd)
+  const customMocksPath = NodeUtils.CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .mocks();
@@ -11,7 +11,7 @@ export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
     Utils.Files.readString(customMocksPath);
   if (!customMocks) return;
 
-  const generatedMocksPath = FileSystem.GeneratedPaths(cwd)
+  const generatedMocksPath = NodeUtils.GeneratedPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .mocks();

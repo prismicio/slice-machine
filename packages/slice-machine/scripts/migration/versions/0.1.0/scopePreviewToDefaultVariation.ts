@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { Utils, FileSystem } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 // Move the screenshot to the default variation folder
 export function scopePreviewToDefaultVariation(
@@ -8,7 +8,7 @@ export function scopePreviewToDefaultVariation(
   libraryName: string,
   sliceName: string
 ) {
-  const slicePath = FileSystem.GeneratedPaths(cwd)
+  const slicePath = NodeUtils.GeneratedPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .value();
