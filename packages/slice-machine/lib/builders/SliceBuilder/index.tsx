@@ -92,7 +92,7 @@ const SliceBuilder: React.FunctionComponent = () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       store
         .variation(variation.id)
-        .generateScreenShot(Model.from, Model.infos.sliceName, setData)
+        .generateScreenShot(Model.from, Model.model.name, setData)
     );
   };
 
@@ -124,7 +124,7 @@ const SliceBuilder: React.FunctionComponent = () => {
                 .variation(variation.id)
                 .generateCustomScreenShot(
                   Model.from,
-                  Model.infos.sliceName,
+                  Model.model.name,
                   setData,
                   file
                 )

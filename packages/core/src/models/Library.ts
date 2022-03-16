@@ -6,7 +6,6 @@ import { VariationMock } from "./Variation";
 import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
-  sliceName: string;
   fileName: string | null;
   isDirectory: boolean;
   extension: string | null;

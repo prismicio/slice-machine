@@ -199,7 +199,6 @@ export function getComponentInfo(
   });
 
   return {
-    sliceName,
     fileName,
     isDirectory,
     extension,

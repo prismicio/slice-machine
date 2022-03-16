@@ -17,7 +17,7 @@ const UpdateSliceZoneModalList: React.FC<{
       <Grid
         gridTemplateMinPx="200px"
         elems={availableSlices}
-        defineElementKey={(slice: SliceState) => slice.infos.sliceName}
+        defineElementKey={(slice: SliceState) => slice.model.name}
         renderElem={(slice: SliceState) => {
           return SharedSlice.render({
             bordered: true,
@@ -48,7 +48,7 @@ const UpdateSliceZoneModalList: React.FC<{
                     }
                     arrayHelpers.push(slice.infos.meta.id);
                   }}
-                  key={`${slice.from}-${slice.infos.sliceName}`}
+                  key={`${slice.from}-${slice.model.name}`}
                 >
                   {children}
                 </div>

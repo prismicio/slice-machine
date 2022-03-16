@@ -33,7 +33,7 @@ const commonExpect = (
   expect(component.href).toEqual(href || libName);
   expect(component.pathToSlice).toEqual(`./${libName}`);
 
-  expect(component.infos.sliceName).toEqual("CallToAction");
+  expect(component.model.name).toEqual("CallToAction");
   expect(component.infos.isDirectory).toEqual(true);
 
   expect(component.migrated).toEqual(false);

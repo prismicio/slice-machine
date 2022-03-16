@@ -53,7 +53,7 @@ export default function Simulator() {
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
-        title={Model.infos.sliceName}
+        title={Model.model.name}
         Model={Model}
         variation={variation}
         handleScreenSizeChange={handleScreenSizeChange}

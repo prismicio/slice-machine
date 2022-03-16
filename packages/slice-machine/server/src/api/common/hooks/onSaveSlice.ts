@@ -21,11 +21,11 @@ const createIndexFile = (lib: Models.Library<Models.Component>) => {
     ) => {
       const imports =
         acc.imports +
-        `import ${component.infos.sliceName} from './${component.infos.sliceName}';\n`;
-      const exportList = acc.exportList + `\t${component.infos.sliceName},\n`;
+        `import ${component.model.name} from './${component.model.name}';\n`;
+      const exportList = acc.exportList + `\t${component.model.name},\n`;
       const componentsProperties =
         acc.componentsProperties +
-        `\t${component.infos.meta.id}: ${component.infos.sliceName},\n`;
+        `\t${component.infos.meta.id}: ${component.model.name},\n`;
 
       return { imports, exportList, componentsProperties };
     },
@@ -44,8 +44,8 @@ const createIndexFileForSvelte = (lib: Models.Library<Models.Component>) => {
   f += "export default Slices\n\n";
 
   for (const c of lib.components) {
-    f += `import ${c.infos.sliceName} from './${c.infos.sliceName}/index.svelte'\n`;
-    f += `Slices.${c.infos.sliceName} = ${c.infos.sliceName}\n`;
+    f += `import ${c.model.name} from './${c.model.name}/index.svelte'\n`;
+    f += `Slices.${c.model.name} = ${c.model.name}\n`;
   }
   return f;
 };

@@ -71,7 +71,7 @@ const Header: React.FC<{
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
                   <Text ml={2}>
-                    {`/ ${Model.infos.sliceName} / ${variation.name}`}
+                    {`/ ${Model.model.name} / ${variation.name}`}
                   </Text>
                 </Box>
               </Flex>
@@ -85,7 +85,7 @@ const Header: React.FC<{
                       router.push(
                         ...Links.variation({
                           lib: Model.href,
-                          sliceName: Model.infos.sliceName,
+                          sliceName: Model.model.name,
                           variationId: v.id,
                         }).all
                       )
@@ -120,7 +120,7 @@ const Header: React.FC<{
               return router.push(
                 ...Links.variation({
                   lib: Model.href,
-                  sliceName: Model.infos.sliceName,
+                  sliceName: Model.model.name,
                   variationId: id,
                 }).all
               );
