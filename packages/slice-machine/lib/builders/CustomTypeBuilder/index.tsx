@@ -11,12 +11,9 @@ import Container from "../../../components/Container";
 const CustomTypeBuilder = ({
   Model,
   store,
-  onLeave,
 }: {
   Model: CustomTypeState;
   store: CustomTypeStore;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onLeave: Function;
 }) => {
   const modelRef = useRef(Model);
 
@@ -25,10 +22,7 @@ const CustomTypeBuilder = ({
   }, [Model]);
 
   useEffect(() => {
-    return () => {
-      store.reset();
-      onLeave(modelRef.current);
-    };
+    return () => store.reset();
   }, []);
 
   return (

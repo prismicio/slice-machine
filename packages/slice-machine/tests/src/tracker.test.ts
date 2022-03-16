@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import "@testing-library/jest-dom";
 
 import { expect, test } from "@jest/globals";
@@ -15,7 +19,6 @@ let NativeTrackerMocks = {
   track: jest.fn().mockImplementation(() => Promise.resolve()),
   identify: jest.fn().mockImplementation(() => Promise.resolve()),
   group: jest.fn().mockImplementation(() => Promise.resolve()),
-  page: jest.fn().mockImplementation(() => Promise.resolve()),
 };
 
 AnalyticsBrowser.standalone.mockImplementation(() =>
@@ -169,15 +172,37 @@ describe("SMTracker", () => {
     );
   });
 
-  test("should send a page event", async () => {
+  test("should send a open video tutorials event", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey);
-    await smTracker.page(Frameworks.next, "0.2.0");
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
-    expect(NativeTrackerMocks.page).toHaveBeenCalledWith("SliceMachine", {
-      framework: Frameworks.next,
-      slicemachineVersion: "0.2.0",
-    });
+    expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
+      "SliceMachine Open Video Tutorials",
+      {
+        framework: Frameworks.next,
+        slicemachineVersion: "0.2.0",
+      }
+    );
+  });
+
+  test("should send a page view event", async () => {
+    const smTracker = new SMTracker();
+    smTracker.initialize(dumpSegmentKey);
+    await smTracker.trackPageView(Frameworks.next, "0.2.0");
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
+    expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
+      "SliceMachine Page View",
+      {
+        framework: Frameworks.next,
+        path: "/",
+        referrer: "",
+        search: "",
+        slicemachineVersion: "0.2.0",
+        title: "",
+        url: "http://localhost/",
+      }
+    );
   });
 
   test("should send a group libraries event", async () => {
@@ -221,7 +246,8 @@ describe("SMTracker", () => {
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen3
     );
-    await smTracker.page(Frameworks.next, "0.2.0");
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
+    await smTracker.trackPageView(Frameworks.next, "0.2.0");
     await smTracker.trackOnboardingStart();
     await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
     await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
@@ -230,6 +256,5 @@ describe("SMTracker", () => {
     expect(NativeTrackerMocks.track).toHaveBeenCalledTimes(0);
     expect(NativeTrackerMocks.identify).toHaveBeenCalledTimes(0);
     expect(NativeTrackerMocks.group).toHaveBeenCalledTimes(0);
-    expect(NativeTrackerMocks.page).toHaveBeenCalledTimes(0);
   });
 });

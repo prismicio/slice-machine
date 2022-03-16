@@ -12,7 +12,8 @@ enum EventType {
   OnboardingSkip = "SliceMachine Onboarding Skip",
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
-  PageView = "SliceMachine",
+  PageView = "SliceMachine Page View",
+  OpenVideoTutorials = "SliceMachine Open Video Tutorials",
 }
 
 export enum ContinueOnboardingType {
@@ -57,18 +58,6 @@ export class SMTracker {
       );
   }
 
-  async #page(attributes: Record<string, unknown> = {}): Promise<void> {
-    if (!this.#isTrackingPossible(this.#client)) {
-      return;
-    }
-
-    return this.#client
-      .then((client): void => {
-        void client.page(EventType.PageView, attributes);
-      })
-      .catch(() => console.warn(`Couldn't report page event: Tracking error`));
-  }
-
   async #identify(userId: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
@@ -101,8 +90,13 @@ export class SMTracker {
 
   /** Public methods **/
 
-  async page(framework: Frameworks, version: string): Promise<void> {
-    await this.#page({
+  async trackPageView(framework: Frameworks, version: string): Promise<void> {
+    await this.#trackEvent(EventType.PageView, {
+      url: window.location.href,
+      path: window.location.pathname,
+      search: window.location.search,
+      title: document.title,
+      referrer: document.referrer,
       framework,
       slicemachineVersion: version,
     });
@@ -129,6 +123,16 @@ export class SMTracker {
       downloadedLibsCount: downloadedLibs.length,
       npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
       downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+      slicemachineVersion: version,
+    });
+  }
+
+  async trackClickOnVideoTutorials(
+    framework: Frameworks,
+    version: string
+  ): Promise<void> {
+    await this.#trackEvent(EventType.OpenVideoTutorials, {
+      framework,
       slicemachineVersion: version,
     });
   }

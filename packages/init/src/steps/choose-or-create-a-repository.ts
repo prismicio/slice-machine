@@ -14,7 +14,10 @@ export function prettyRepoName(address: URL, value?: string): string {
   )}`;
 }
 
-export async function promptForRepoDomain(base: string): Promise<string> {
+export async function promptForRepoDomain(
+  base: string,
+  defaultValue?: string
+): Promise<string> {
   const address = new URL(base);
 
   Utils.writeInfo(
@@ -28,7 +31,9 @@ export async function promptForRepoDomain(base: string): Promise<string> {
         message: "Name your Prismic repository",
         type: "input",
         required: true,
-        transformer: (value) => prettyRepoName(address, String(value)),
+        default: defaultValue,
+        transformer: (value) =>
+          prettyRepoName(address, String(value || defaultValue)),
         async validate(name: string) {
           const result = await Communication.validateRepositoryName(
             name,
@@ -118,13 +123,17 @@ export async function chooseOrCreateARepository(
   cwd: string,
   framework: Models.Frameworks,
   cookies: string,
-  base = DEFAULT_BASE
+  base = DEFAULT_BASE,
+  domain?: string
 ): Promise<string> {
   const token = parsePrismicAuthToken(cookies);
-  const repos = await Communication.listRepositories(token);
+  const repos = await Communication.listRepositories(token, base);
+
+  const hasRepo = domain && repos.find((d) => d.domain === domain);
+  if (hasRepo) return domain;
 
   if (repos.length === 0) {
-    const domainName = await promptForRepoDomain(base);
+    const domainName = await promptForRepoDomain(base, domain);
     return await createRepository(domainName, framework, cookies, base);
   }
 
@@ -149,7 +158,7 @@ export async function chooseOrCreateARepository(
   ]);
 
   if (res.chosenRepo === CREATE_REPO) {
-    const domainName = await promptForRepoDomain(base);
+    const domainName = await promptForRepoDomain(base, domain);
     return await createRepository(domainName, framework, cookies, base);
   }
 

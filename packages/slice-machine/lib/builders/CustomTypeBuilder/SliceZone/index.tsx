@@ -12,9 +12,10 @@ import LibraryState from "@lib/models/ui/LibraryState";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 
-import Form from "./Form";
+import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 import SlicesList from "./List";
+import EmptyState from "./EmptyState";
 
 export interface SliceZoneSlice {
   type: SliceType;
@@ -114,10 +115,17 @@ const SliceZone = ({
     .filter((e) => e.type === SliceType.Slice)
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
+  const onAddNewSlice = () => {
+    if (!sliceZone) {
+      onCreateSliceZone();
+    }
+    setFormIsOpen(true);
+  };
+
   return (
     <Box my={3}>
       <ZoneHeader
-        Heading={<Heading as="h6">SliceZone</Heading>}
+        Heading={<Heading as="h6">Slice Zone</Heading>}
         Actions={
           <Flex sx={{ alignItems: "center" }}>
             {sliceZone ? (
@@ -125,40 +133,25 @@ const SliceZone = ({
                 data.{sliceZone.key}
               </Text>
             ) : null}
-            <Button
-              variant="buttons.darkSmall"
-              onClick={() => {
-                if (!sliceZone) {
-                  onCreateSliceZone();
-                }
-                setFormIsOpen(true);
-              }}
-            >
-              {sliceZone ? "Edit" : "Add"} slices
-            </Button>
+            {!!slicesInSliceZone.length && (
+              <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
+                Update Slice Zone
+              </Button>
+            )}
           </Flex>
         }
       />
-
-      <SlicesList slices={slicesInSliceZone} />
-
       {!slicesInSliceZone.length ? (
-        <Flex
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "200px",
-          }}
-        >
-          <p>No slices selected</p>
-        </Flex>
-      ) : null}
-      <Form
+        <EmptyState onAddNewSlice={onAddNewSlice} />
+      ) : (
+        <SlicesList slices={slicesInSliceZone} />
+      )}
+      <UpdateSliceZoneModal
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
-        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+        onSubmit={({ sliceKeys }) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }

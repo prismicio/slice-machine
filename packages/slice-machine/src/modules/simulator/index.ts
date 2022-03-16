@@ -230,7 +230,7 @@ function* checkSetupSaga(
       } = yield race({
         iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
         iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-        timeout: delay(2500),
+        timeout: delay(10000),
       });
 
       if (iframeCheckOk && action.payload.callback) {

@@ -11,7 +11,7 @@ export async function getUserProfile(
   const userServiceBase =
     Utils.CONSTS.DEFAULT_BASE === base
       ? Utils.CONSTS.USER_SERVICE_BASE
-      : "https://user.wroom.io/";
+      : Utils.CONSTS.USER_SERVICE_STAGING_BASE;
 
   // note the auth server also provides a userId
   const url = new URL(userServiceBase);

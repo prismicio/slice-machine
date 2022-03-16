@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 
@@ -102,7 +102,7 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
   };
 
   return (
-    <Fragment>
+    <>
       <Zone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
@@ -145,7 +145,7 @@ const TabZone = ({ Model, store, tabId, fields, sliceZone, showHints }) => {
         content={{ title: "Edit Tab" }}
         close={() => setModalIsOpen(false)}
       />
-    </Fragment>
+    </>
   );
 };
 

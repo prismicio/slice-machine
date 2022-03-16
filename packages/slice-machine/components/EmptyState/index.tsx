@@ -1,71 +1,75 @@
-import { Box, Button, Text, Heading } from "theme-ui";
+import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
+import React from "react";
 
 interface Props {
   title: string;
-  explanations: string[];
   onCreateNew: () => void;
   buttonText: string;
+  isLoading: boolean;
   documentationComponent: React.ReactNode;
 }
 
 const EmptyState: React.FunctionComponent<Props> = ({
   title,
-  explanations,
   onCreateNew,
   buttonText,
+  isLoading,
   documentationComponent,
 }) => (
-  <Box
-    sx={{
-      display: "flex",
+  <Flex
+    sx={(theme) => ({
+      maxWidth: "480px",
       flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      flex: 1,
-      textAlign: "center",
-    }}
+      border: `1px solid ${theme.colors?.grey02 as string}`,
+    })}
   >
-    <Heading as={"h3"} sx={{ mb: 2 }}>
-      {title}
-    </Heading>
-    {explanations.map((explanation, i) => (
-      <Text
-        key={`expl-${i + 1}`}
-        variant="xs"
-        sx={{ mb: 2, "&:last-of-type": { mb: 4 } }}
-      >
-        {explanation}
-      </Text>
-    ))}
-    <Button
-      onClick={onCreateNew}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        mb: 4,
-      }}
-    >
-      {buttonText}
-    </Button>
-    <Box
+    <Flex
       sx={(theme) => ({
-        backgroundColor: theme?.colors?.muted,
-        px: 3,
-        py: 2,
-        borderRadius: "8px",
+        flexDirection: "column",
+        p: 4,
+        borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
       })}
     >
-      <Text
-        variant={"xs"}
-        sx={(theme) => ({
-          color: theme?.colors?.grey05,
-        })}
+      <Heading
+        as={"h3"}
+        variant={"heading"}
+        sx={{ fontSize: "16px", lineHeight: "24px", mb: 2 }}
       >
+        {title}
+      </Heading>
+      <Text variant="xs" sx={{ lineHeight: "24px", fontSize: "13px" }}>
         {documentationComponent}
       </Text>
-    </Box>
-  </Box>
+    </Flex>
+    <Flex
+      sx={{
+        p: 4,
+        alignItems: "center",
+      }}
+    >
+      <Button
+        onClick={onCreateNew}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mr: 4,
+        }}
+      >
+        {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
+      </Button>
+      <Text
+        sx={{
+          fontSize: "12px",
+          color: "grey04",
+          maxWidth: "280px",
+        }}
+      >
+        It will be stored locally and you will be able to push it to your
+        repository
+      </Text>
+    </Flex>
+  </Flex>
 );
 
 export default EmptyState;

@@ -55,7 +55,7 @@ const generateScreenshot = async (
       waitUntil: "networkidle2",
     });
 
-    await page.waitForSelector("#root", { timeout: 2000 });
+    await page.waitForSelector("#root", { timeout: 10000 });
     const element = await page.$("#root");
     if (element) await element.screenshot({ path: pathToFile });
 
