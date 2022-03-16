@@ -49,7 +49,6 @@ export const MockLibraryInfo: (
             },
           ],
         },
-        nameConflict: null,
         screenshotPaths: {},
         meta: { id: "slice1" },
       },
@@ -86,7 +85,6 @@ export const MockLibraryInfo: (
           },
         ],
       },
-      migrated: true,
     },
   ],
 });

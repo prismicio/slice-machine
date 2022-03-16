@@ -79,7 +79,6 @@ export function formatComponent(
     ),
     meta: {
       fileName: slice.infos.fileName,
-      isDirectory: slice.infos.isDirectory,
       extension: slice.infos.extension,
     },
     screenshotPaths: !slice.infos.screenshotPaths

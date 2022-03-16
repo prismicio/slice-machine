@@ -7,13 +7,8 @@ import { SliceAsObject } from "./Slice";
 
 export interface ComponentInfo {
   fileName: string | null;
-  isDirectory: boolean;
   extension: string | null;
   model: SliceAsObject;
-  nameConflict: {
-    sliceName: string;
-    id: string;
-  } | null;
   screenshotPaths: {
     [variationId: string]: Screenshot;
   };

@@ -34,7 +34,6 @@ const commonExpect = (
   expect(component.pathToSlice).toEqual(`./${libName}`);
 
   expect(component.model.name).toEqual("CallToAction");
-  expect(component.infos.isDirectory).toEqual(true);
 
   return result;
 };
