@@ -18,7 +18,7 @@ import * as IO from "../io";
 
 export async function handler(
   env: BackendEnvironment,
-  { sliceName, from, smModel, mockConfig }: SliceSaveBody
+  { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
 ): Promise<SliceSaveResponse> {
   await onBeforeSaveSlice({ from, sliceName }, env);
 

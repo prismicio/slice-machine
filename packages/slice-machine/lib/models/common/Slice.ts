@@ -8,7 +8,7 @@ export interface SliceBody {
 }
 
 export interface SliceSaveBody extends SliceBody {
-  smModel: Models.SliceSM;
+  model: Models.SliceSM;
   mockConfig?: SliceMockConfig;
 }
 

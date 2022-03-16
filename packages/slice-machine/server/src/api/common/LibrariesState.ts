@@ -2,7 +2,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
-import { Slices } from "@slicemachine/core/build/src/models";
+import { Slices } from "@slicemachine/core/build/src/models/Slice";
 const { handleLibraryPath } = Libraries;
 const { LibrariesStatePath } = FileSystem;
 

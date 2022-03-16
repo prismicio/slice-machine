@@ -7,7 +7,7 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 interface LibrariesResult {

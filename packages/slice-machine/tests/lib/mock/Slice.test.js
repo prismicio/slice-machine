@@ -41,24 +41,30 @@ describe("MockSlice", () => {
           docURL: "...",
           version: "sktwi1xtmkfgx8626",
           description: "SomeSlice",
-          primary: {
-            title: {
-              type: "StructuredText",
-              config: {
-                single: "heading1",
-                label: "Title",
-                placeholder: "This is where it all begins...",
+          primary: [
+            {
+              key: "title",
+              value: {
+                type: "StructuredText",
+                config: {
+                  single: "heading1",
+                  label: "Title",
+                  placeholder: "This is where it all begins...",
+                },
               },
             },
-            description: {
-              type: "StructuredText",
-              config: {
-                single: "paragraph",
-                label: "Description",
-                placeholder: "A nice description of your product",
+            {
+              key: "description",
+              value: {
+                type: "StructuredText",
+                config: {
+                  single: "paragraph",
+                  label: "Description",
+                  placeholder: "A nice description of your product",
+                },
               },
             },
-          },
+          ],
         },
       ],
     };
@@ -66,6 +72,7 @@ describe("MockSlice", () => {
     const mockConfig = {};
 
     const result = MockSlice(model.name, model, mockConfig);
+    console.log({ result: JSON.stringify(result, null, 2) });
 
     expect(result).toEqual(wanted);
   });
@@ -104,29 +111,38 @@ describe("MockSlice", () => {
           docURL: "...",
           version: "sktwi1xtmkfgx8626",
           description: "SomeSlice",
-          primary: {
-            title: {
-              type: "StructuredText",
-              config: {
-                single: "heading1",
-                label: "Title",
-                placeholder: "This is where it all begins...",
+          primary: [
+            {
+              key: "title",
+              value: {
+                type: "StructuredText",
+                config: {
+                  single: "heading1",
+                  label: "Title",
+                  placeholder: "This is where it all begins...",
+                },
               },
             },
-            description: {
-              type: "StructuredText",
-              config: {
-                single: "paragraph",
-                label: "Description",
-                placeholder: "A nice description of your product",
+            {
+              key: "description",
+              value: {
+                type: "StructuredText",
+                config: {
+                  single: "paragraph",
+                  label: "Description",
+                  placeholder: "A nice description of your product",
+                },
               },
             },
-            image: {
-              config: { label: "image", constraint: {}, thumbnails: [] },
-              type: "Image",
+            {
+              key: "image",
+              value: {
+                config: { label: "image", constraint: {}, thumbnails: [] },
+                type: "Image",
+              },
             },
-          },
-          items: {},
+          ],
+          items: [],
         },
       ],
     };

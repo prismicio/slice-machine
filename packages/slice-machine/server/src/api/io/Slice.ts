@@ -1,6 +1,6 @@
 import Files from "@lib/utils/files";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models/Slice";
 
 //env: BackendEnvironment,
 // libraryName: string,

@@ -11,7 +11,7 @@ import {
   Slices,
   SliceSM,
   VariationSM,
-} from "@slicemachine/core/build/src/models";
+} from "@slicemachine/core/build/src/models/Slice";
 
 export const createOrUpdate = async (
   slices: ReadonlyArray<SliceSM>,

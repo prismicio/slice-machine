@@ -2,7 +2,7 @@ import getEnv from "../services/getEnv";
 
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
-import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (

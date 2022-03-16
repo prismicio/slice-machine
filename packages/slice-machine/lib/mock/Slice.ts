@@ -29,13 +29,12 @@ export default function MockSlice(
     ) => Models.VariationMock["primary"] = handleFields(Widgets);
 
     const maybeMockConfig = mockConfig?.[variation.id]?.primary || {};
-
     mock.primary = handler(variation.primary, maybeMockConfig);
 
     const items: Models.VariationMock["items"] = [];
 
     const repeat = variation.items;
-    if (repeat && repeat.length === 0) {
+    if (!repeat || (repeat && repeat.length === 0)) {
       return {
         ...mock,
         items,

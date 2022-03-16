@@ -101,7 +101,7 @@ export default async function handler({
     const smModel = IO.Slice.readSlice(pathToModel);
     const res = await save({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      body: { sliceName, from, smModel, mockConfig: {} },
+      body: { sliceName, from, model: smModel, mockConfig: {} },
     });
     return { ...res, variationId: DEFAULT_VARIATION_ID };
   }

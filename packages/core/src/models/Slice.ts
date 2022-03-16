@@ -7,22 +7,10 @@ import {
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
-}
-
-export function isSimpleSliceWidget(
-  value: NestableWidget
-): Omit<NestableWidget, "Range"> | undefined {
-  const isValid =
-    value.type !== WidgetTypes.Range &&
-    value.type !== WidgetTypes.Separator &&
-    value.type !== WidgetTypes.IntegrationField;
-  if (isValid) return value;
-  return;
 }
 
 export const FieldsSM = t.array(

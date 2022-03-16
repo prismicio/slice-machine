@@ -23,9 +23,9 @@ const groupHandler = (
   mockConfig: CustomTypeMockConfig
 ) => {
   const items = [];
-  const entries = group.config.fields.map((e) => [e.key, e.value]);
+  const entries = group.config.fields;
   for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-    items.push(fieldsHandler(entries, mockConfig));
+    items.push(fieldsHandler(entries as [], mockConfig));
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return items;
