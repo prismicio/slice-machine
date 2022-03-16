@@ -14,11 +14,9 @@ export interface ComponentInfo {
     sliceName: string;
     id: string;
   } | null;
-
   screenshotPaths: {
     [variationId: string]: Screenshot;
   };
-  meta: ComponentMetadata;
   mock?: ReadonlyArray<VariationMock>;
 }
 
@@ -31,12 +29,6 @@ export const ComponentInfo = {
       .some((variationId) => !screenshotPaths[variationId]);
   },
 };
-
-export interface ComponentMetadata {
-  id: string;
-  name?: string;
-  description?: string;
-}
 
 export interface Component {
   from: string;

@@ -65,8 +65,8 @@ export function formatComponent(
   return {
     library: slice.from,
     id: slice.model.id,
-    name: slice.infos.meta.name,
-    description: slice.infos.meta.description,
+    name: slice.model.name,
+    description: slice.model.description,
     model: slice.model,
     mocks: (
       slice.infos.mock || []

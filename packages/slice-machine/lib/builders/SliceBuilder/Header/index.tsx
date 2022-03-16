@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
-import MetaData from "./MetaData";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,7 +27,6 @@ const Header: React.FC<{
   imageLoading = false,
 }) => {
   const router = useRouter();
-  const [showMeta, setShowMeta] = useState(false);
   const [showVariationModal, setShowVariationModal] = useState(false);
   const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
 
@@ -130,11 +128,6 @@ const Header: React.FC<{
           />
         </Flex>
       </Box>
-      <MetaData
-        isOpen={showMeta}
-        Model={Model}
-        close={() => setShowMeta(false)}
-      />
     </Flex>
   );
 };

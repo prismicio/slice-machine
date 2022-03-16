@@ -1,10 +1,6 @@
 import path from "path";
 import * as t from "io-ts";
-import {
-  ComponentInfo,
-  ComponentMetadata,
-  Screenshot,
-} from "../models/Library";
+import { ComponentInfo, Screenshot } from "../models/Library";
 
 import { pascalize } from "../utils/str";
 
@@ -12,18 +8,10 @@ import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../utils/files";
 import { resolvePathsToMock } from "./mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice, SliceAsObject } from "../models/Slice";
+import { Slice } from "../models/Slice";
 import { VariationAsObject, AsObject } from "../models/Variation";
 
 import Errors from "../utils/errors";
-
-function getMeta(model: SliceAsObject): ComponentMetadata {
-  return {
-    id: model.id,
-    name: model.name,
-    description: model.description,
-  };
-}
 
 /** take a path to slice and return its name  */
 function getComponentName(slicePath: string): string | undefined {
@@ -203,7 +191,6 @@ export function getComponentInfo(
     isDirectory,
     extension,
     model,
-    meta: getMeta(model),
     mock: maybeMock?.value,
     nameConflict,
     screenshotPaths,

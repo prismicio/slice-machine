@@ -56,7 +56,7 @@ const mapAvailableAndSharedSlices = (
         };
       }
       const maybeSliceState = availableSlices.find(
-        (state) => state.infos.meta.id === key
+        (state) => state.model.id === key
       );
 
       if (maybeSliceState) {
