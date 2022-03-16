@@ -3,7 +3,7 @@ import path from "path";
 import slash from "slash";
 import { Migration } from "../../migrate";
 
-import { FileSystem, Utils } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 import { scopePreviewToDefaultVariation } from "./scopePreviewToDefaultVariation";
 import { moveMocks } from "./moveMocks";
@@ -22,7 +22,7 @@ const migration: Migration = {
     const pathToOldMocks = path.join(cwd, ".slicemachine", "mocks.json");
     if (Utils.Files.exists(pathToOldMocks)) Utils.Files.remove(pathToOldMocks);
 
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
 
     if (manifest.exists && manifest.content) {
       const { libraries } = manifest.content;

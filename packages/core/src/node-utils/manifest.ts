@@ -1,5 +1,5 @@
 import { Files } from "../utils";
-import { FileContent, SMConfigPath } from "./paths";
+import { FileContent, SMConfigPath } from "../filesystem/paths";
 import { Manifest } from "../models/Manifest";
 
 export function createManifest(cwd: string, manifest: Manifest): void {

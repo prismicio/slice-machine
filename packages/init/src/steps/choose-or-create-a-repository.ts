@@ -3,9 +3,9 @@ import Separator from "inquirer/lib/objects/separator";
 import {
   Communication,
   Utils,
-  FileSystem,
   Models,
   CONSTS,
+  NodeUtils,
 } from "@slicemachine/core";
 import { createRepository } from "../utils/create-repo";
 
@@ -113,7 +113,7 @@ export function sortReposForPrompt(
     value: CREATE_REPO,
   };
 
-  const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
+  const maybeConfiguredRepoName = NodeUtils.maybeRepoNameFromSMFile(cwd, base);
 
   return repos
     .reverse()

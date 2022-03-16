@@ -1,8 +1,8 @@
-import { FileSystem } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 import { migrate } from "../migration/migrate";
 
 export async function handleMigration(cwd: string): Promise<void> {
-  if (!FileSystem.retrieveManifest(cwd).exists) return;
+  if (!NodeUtils.retrieveManifest(cwd).exists) return;
 
   try {
     await migrate({ cwd, ignorePromptForTest: false });

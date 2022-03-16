@@ -1,4 +1,4 @@
-import { FileSystem } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 import { Migration, MigrationParams } from "./migrate";
 
 export async function run(
@@ -22,7 +22,7 @@ export async function run(
         `Migration ${head.version} done. Read the full changelog for more info!`
       );
       // update last migration version
-      FileSystem.patchManifest(params.cwd, { _latest: head.version });
+      NodeUtils.patchManifest(params.cwd, { _latest: head.version });
 
       // call next migrations
       return run(tail, params);

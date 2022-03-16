@@ -1,4 +1,4 @@
-import { FileSystem, Utils, CONSTS } from "@slicemachine/core";
+import { FileSystem, Utils, CONSTS, NodeUtils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 import { FileContent, JsonPackage } from "@slicemachine/core/build/filesystem";
@@ -21,7 +21,7 @@ export function configureProject(
   spinner.start();
 
   try {
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
     const packageJson = FileSystem.retrieveJsonPackage(cwd);
 
     const sliceMachineVersionInstalled =
@@ -41,8 +41,8 @@ export function configureProject(
       ...(!tracking ? { tracking } : {}),
     };
 
-    if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
-    else FileSystem.patchManifest(cwd, manifestUpdated);
+    if (!manifest.exists) NodeUtils.createManifest(cwd, manifestUpdated);
+    else NodeUtils.patchManifest(cwd, manifestUpdated);
 
     // create the default slices folder if it doesn't exist.
     const pathToSlicesFolder = FileSystem.CustomPaths(cwd)

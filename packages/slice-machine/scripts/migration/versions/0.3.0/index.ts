@@ -1,4 +1,4 @@
-import { FileSystem, Models, NodeUtils } from "@slicemachine/core";
+import { Models, NodeUtils } from "@slicemachine/core";
 
 import { Migration } from "../../migrate";
 
@@ -8,7 +8,7 @@ const migration: Migration = {
   // eslint-disable-next-line @typescript-eslint/require-await
   main: async function main({ cwd }): Promise<void> {
     try {
-      const manifest = FileSystem.retrieveManifest(cwd);
+      const manifest = NodeUtils.retrieveManifest(cwd);
       if (!manifest.exists || !manifest.content) return;
 
       const framework = NodeUtils.Framework.defineFramework({ cwd });
@@ -30,7 +30,7 @@ const migration: Migration = {
         framework: frameworkToSet,
       };
 
-      FileSystem.patchManifest(cwd, patchedManifest);
+      NodeUtils.patchManifest(cwd, patchedManifest);
     } catch (e) {
       console.log(e);
     }

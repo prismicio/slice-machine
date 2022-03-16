@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import glob from "glob";
 import slash from "slash";
-import { FileSystem, Utils } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 import { Migration } from "../../migrate";
 import prompts from "prompts";
@@ -25,7 +25,7 @@ const migration: Migration = {
       if (!doTheMigration.yes) return;
     }
 
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
     if (!manifest.exists || !manifest.content) return;
 
     try {
