@@ -37,8 +37,8 @@ export async function promptForRepoDomain(
         type: "input",
         required: true,
         default: defaultValue,
-        transformer: (value) =>
-          prettyRepoName(address, String(value || defaultValue)),
+        transformer: (value: string) =>
+          prettyRepoName(address, value || defaultValue),
         async validate(name: string) {
           const result = await Communication.validateRepositoryName(
             name,
