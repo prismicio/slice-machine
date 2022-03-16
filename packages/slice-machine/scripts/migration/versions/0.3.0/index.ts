@@ -1,4 +1,4 @@
-import { FileSystem, Utils, Models } from "@slicemachine/core";
+import { FileSystem, Models, NodeUtils } from "@slicemachine/core";
 
 import { Migration } from "../../migrate";
 
@@ -11,7 +11,7 @@ const migration: Migration = {
       const manifest = FileSystem.retrieveManifest(cwd);
       if (!manifest.exists || !manifest.content) return;
 
-      const framework = Utils.Framework.defineFramework({ cwd });
+      const framework = NodeUtils.Framework.defineFramework({ cwd });
 
       if (
         framework !== Models.Frameworks.next &&

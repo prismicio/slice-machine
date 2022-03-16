@@ -1,5 +1,4 @@
 export { default as Files } from "./files";
-export * as Framework from "./framework";
 export * as Cookie from "./cookie";
 export * from "./cliLogs";
 export * as Endpoints from "./endpoints";

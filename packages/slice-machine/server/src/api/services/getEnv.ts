@@ -13,7 +13,7 @@ import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 import initClient from "@lib/models/common/http";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ConfigErrors } from "@lib/models/server/ServerState";
-import { Models, Utils } from "@slicemachine/core";
+import { Models, NodeUtils } from "@slicemachine/core";
 import preferWroomBase from "@lib/utils/preferWroomBase";
 import { getPackageChangelog } from "@lib/env/versions";
 
@@ -25,7 +25,9 @@ function validate(config: Models.Manifest): ConfigErrors {
 
   if (
     config.framework &&
-    !Utils.Framework.isFrameworkSupported(Models.Frameworks[config.framework])
+    !NodeUtils.Framework.isFrameworkSupported(
+      Models.Frameworks[config.framework]
+    )
   ) {
     const options = Object.values(Models.SupportedFrameworks);
 
@@ -100,7 +102,7 @@ export default async function getEnv(
       changelog: smChangelog,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mockConfig,
-      framework: Utils.Framework.defineFramework({
+      framework: NodeUtils.Framework.defineFramework({
         cwd,
         manifest: manifestInfo.content,
       }),

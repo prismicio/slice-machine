@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, FileSystem } from "@slicemachine/core";
+import { Utils, FileSystem, NodeUtils } from "@slicemachine/core";
 
 import storybook from "../../../../server/src/api/storybook";
 
@@ -21,7 +21,7 @@ export function moveStories(
   // create the new story
   storybook.generateStories(
     path.join(__dirname, "../../../"),
-    Utils.Framework.defineFramework({ cwd }),
+    NodeUtils.Framework.defineFramework({ cwd }),
     cwd,
     libraryName,
     sliceName

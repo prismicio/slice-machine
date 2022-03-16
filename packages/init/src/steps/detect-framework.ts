@@ -1,5 +1,5 @@
-import { Utils } from "@slicemachine/core";
-import { Models } from "@slicemachine/core";
+import { Utils, Models, NodeUtils } from "@slicemachine/core";
+// import { Models } from "@slicemachine/core";
 import * as inquirer from "inquirer";
 
 export type FrameworkResult = {
@@ -10,7 +10,7 @@ export type FrameworkResult = {
 export async function promptForFramework(): Promise<FrameworkResult> {
   const choices = Models.SupportedFrameworks.map((framework) => {
     return {
-      name: Utils.Framework.fancyName(framework),
+      name: NodeUtils.Framework.fancyName(framework),
       value: framework,
     };
   });
@@ -45,7 +45,7 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
   spinner.start();
 
   try {
-    const maybeFramework = Utils.Framework.defineFramework({
+    const maybeFramework = NodeUtils.Framework.defineFramework({
       cwd,
       supportedFrameworks: Object.values(Models.Frameworks),
     });
@@ -57,9 +57,9 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
       return await promptForFramework();
     }
 
-    const nameToPrint = Utils.Framework.fancyName(maybeFramework);
+    const nameToPrint = NodeUtils.Framework.fancyName(maybeFramework);
 
-    if (!Utils.Framework.isFrameworkSupported(maybeFramework)) {
+    if (!NodeUtils.Framework.isFrameworkSupported(maybeFramework)) {
       Utils.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
