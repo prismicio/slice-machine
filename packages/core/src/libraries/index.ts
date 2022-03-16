@@ -52,7 +52,6 @@ export function handleLibraryPath(
           pathToSlice,
           infos: componentInfo,
           model,
-          migrated: false,
         },
       ];
     },

@@ -36,7 +36,6 @@ const commonExpect = (
   expect(component.model.name).toEqual("CallToAction");
   expect(component.infos.isDirectory).toEqual(true);
 
-  expect(component.migrated).toEqual(false);
   return result;
 };
 

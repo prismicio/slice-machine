@@ -36,7 +36,6 @@ export interface Component {
   pathToSlice: string;
   infos: ComponentInfo;
   model: SliceAsObject;
-  migrated: boolean;
 }
 
 export interface Screenshot {
