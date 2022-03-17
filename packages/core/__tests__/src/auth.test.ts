@@ -3,11 +3,10 @@ import * as authHelpers from "../../src/auth/helpers";
 import { Auth } from "../../src/auth";
 import * as Utils from "../../src/utils";
 import * as communication from "../../src/core/communication";
-import { PrismicSharedConfigManager } from "../../src/filesystem/PrismicSharedConfig";
+import { PrismicSharedConfigManager } from "../../src/node-utils/PrismicSharedConfig";
 import { Roles } from "../../src/models";
 
-jest.mock("../../src/filesystem");
-jest.mock("../../src/filesystem/PrismicSharedConfig");
+jest.mock("../../src/node-utils/PrismicSharedConfig");
 jest.mock("../../src/core/communication");
 jest.mock("../../src/utils/poll");
 

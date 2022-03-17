@@ -8,7 +8,7 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem, Utils, NodeUtils } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
@@ -36,7 +36,7 @@ export const getBackendState = async (
         Math.floor(newTokenResponse.status / 100) === 2
       ) {
         const newToken = await newTokenResponse.text();
-        FileSystem.PrismicSharedConfigManager.setAuthCookie(newToken);
+        NodeUtils.PrismicSharedConfigManager.setAuthCookie(newToken);
 
         // set the short ID if it doesn't exist yet.
         if (!env.prismicData.shortId) await setShortId(env, newToken);

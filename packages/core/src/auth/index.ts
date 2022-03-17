@@ -2,7 +2,7 @@ import { startServerAndOpenBrowser } from "../auth/helpers";
 import { Poll, Endpoints } from "../utils";
 import type { UserInfo } from "../models";
 import * as Communication from "../core/communication";
-import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
+import { PrismicSharedConfigManager } from "../node-utils/PrismicSharedConfig";
 
 async function startAuth({
   base,

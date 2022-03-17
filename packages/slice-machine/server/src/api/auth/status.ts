@@ -1,4 +1,4 @@
-import { FileSystem } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { RequestWithEnv } from "../http/common";
 import { setShortId } from "../services/setShortId";
@@ -7,7 +7,7 @@ export default async function handler(
   req: RequestWithEnv
 ): Promise<CheckAuthStatusResponse> {
   try {
-    const authToken = FileSystem.PrismicSharedConfigManager.getAuth();
+    const authToken = NodeUtils.PrismicSharedConfigManager.getAuth();
     if (!Boolean(authToken)) {
       return { status: "pending" };
     }

@@ -11,14 +11,14 @@ jest.mock("@slicemachine/core", () => {
 
   return {
     ...actualCore,
-    FileSystem: {
+    NodeUtils: {
       retrieveJsonPackage: jest.fn<boolean, [{ cwd: string }]>(),
     },
   };
 });
 
 describe("simulator controller", () => {
-  const retrieveJsonPackage = Core.FileSystem.retrieveJsonPackage as jest.Mock;
+  const retrieveJsonPackage = Core.NodeUtils.retrieveJsonPackage as jest.Mock;
 
   test("it should return all checks ko when no preview url is sent", async () => {
     const requestWithoutPreviewUrl = {

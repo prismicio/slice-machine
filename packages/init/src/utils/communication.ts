@@ -6,7 +6,7 @@ import {
   Utils,
   Models,
   Communication,
-  FileSystem,
+  NodeUtils,
   CONSTS,
 } from "@slicemachine/core";
 
@@ -51,7 +51,7 @@ export async function validateSessionAndGetProfile(
   info: Models.UserInfo;
   profile: Models.UserProfile | null;
 } | null> {
-  const config = FileSystem.PrismicSharedConfigManager.get();
+  const config = NodeUtils.PrismicSharedConfigManager.get();
 
   if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
   if (base != config.base) return Promise.resolve(null); // not the same base so it doesn't
@@ -62,7 +62,7 @@ export async function validateSessionAndGetProfile(
       () => null
     );
     if (profile?.shortId) {
-      FileSystem.PrismicSharedConfigManager.setProperties({
+      NodeUtils.PrismicSharedConfigManager.setProperties({
         shortId: profile.shortId,
       });
     }
