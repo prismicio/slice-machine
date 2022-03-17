@@ -210,7 +210,7 @@ describe("SMTracker", () => {
     smTracker.initialize(dumpSegmentKey);
     await smTracker.groupLibraries([], dumpRepoKey, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
-    expect(NativeTrackerMocks.group).toHaveBeenCalledWith({
+    expect(NativeTrackerMocks.group).toHaveBeenCalledWith(dumpRepoKey, {
       repoName: dumpRepoKey,
       downloadedLibs: [],
       downloadedLibsCount: 0,
