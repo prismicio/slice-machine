@@ -1,19 +1,19 @@
 import path from "path";
 import moduleAlias from "module-alias";
-import { FileSystem } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 
-type PackageWithModuleAliases = FileSystem.JsonPackage & {
+type PackageWithModuleAliases = NodeUtils.JsonPackage & {
   _moduleAliases: Record<string, string>;
 };
 
 const isAPackageHasModuleAliases = (
-  jsonPackage: FileSystem.JsonPackage | PackageWithModuleAliases
+  jsonPackage: NodeUtils.JsonPackage | PackageWithModuleAliases
 ): jsonPackage is PackageWithModuleAliases => {
   return jsonPackage.hasOwnProperty("_moduleAliases");
 };
 
 export function resolveAliases(cwd: string): void {
-  const pkg = FileSystem.retrieveJsonPackage(cwd);
+  const pkg = NodeUtils.retrieveJsonPackage(cwd);
   if (!pkg.content || !isAPackageHasModuleAliases(pkg.content)) {
     return;
   }

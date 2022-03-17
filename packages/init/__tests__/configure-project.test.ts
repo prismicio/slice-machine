@@ -34,9 +34,6 @@ jest.mock("@slicemachine/core", () => {
         boolean,
         [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
-    },
-    FileSystem: {
-      ...actualCore.FileSystem,
       addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     },
     Utils: {
@@ -46,7 +43,7 @@ jest.mock("@slicemachine/core", () => {
         exists: jest.fn<boolean, [pathToFile: string]>(),
         mkdir: jest.fn<
           string | undefined,
-          [target: string, option: { resursive: boolean }]
+          [target: string, option: { recursive: boolean }]
         >(),
       },
       spinner: () => ({
@@ -78,7 +75,7 @@ describe("configure-project", () => {
   const retrieveManifestMock = Core.NodeUtils.retrieveManifest as jest.Mock;
   const createManifestMock = Core.NodeUtils.createManifest as jest.Mock;
   const patchManifestMock = Core.NodeUtils.patchManifest as jest.Mock;
-  const addJsonPackageSmScriptMock = Core.FileSystem
+  const addJsonPackageSmScriptMock = Core.NodeUtils
     .addJsonPackageSmScript as jest.Mock;
 
   const { exists, mkdir } = Core.Utils.Files;

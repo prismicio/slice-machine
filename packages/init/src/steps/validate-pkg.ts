@@ -1,7 +1,7 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { Utils, NodeUtils } from "@slicemachine/core";
 
 export function validatePkg(cwd: string): void {
-  const jsonPackage = FileSystem.retrieveJsonPackage(cwd);
+  const jsonPackage = NodeUtils.retrieveJsonPackage(cwd);
   if (!jsonPackage.exists) {
     Utils.writeError(`package.json not found. Are you in the right folder?`);
     return process.exit(-1);

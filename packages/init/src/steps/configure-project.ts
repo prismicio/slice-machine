@@ -1,7 +1,6 @@
-import { FileSystem, Utils, CONSTS, NodeUtils } from "@slicemachine/core";
+import { Utils, CONSTS, NodeUtils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
-import { JsonPackage } from "@slicemachine/core/build/filesystem";
 
 type Base = Utils.Endpoints.Base;
 
@@ -22,7 +21,7 @@ export function configureProject(
 
   try {
     const manifest = NodeUtils.retrieveManifest(cwd);
-    const packageJson = FileSystem.retrieveJsonPackage(cwd);
+    const packageJson = NodeUtils.retrieveJsonPackage(cwd);
 
     const sliceMachineVersionInstalled =
       getTheSliceMachineVersionInstalled(packageJson);
@@ -52,7 +51,7 @@ export function configureProject(
       Utils.Files.mkdir(pathToSlicesFolder, { recursive: true });
 
     // add slicemachine script to package.json.
-    FileSystem.addJsonPackageSmScript(cwd);
+    NodeUtils.addJsonPackageSmScript(cwd);
 
     spinner.succeed("Project configured! Ready to start");
   } catch {
@@ -62,7 +61,7 @@ export function configureProject(
 }
 
 const getTheSliceMachineVersionInstalled = (
-  packageJson: NodeUtils.FileContent<JsonPackage>
+  packageJson: NodeUtils.FileContent<NodeUtils.JsonPackage>
 ) => {
   const sliceMachinePackageInstalled = Object.entries(
     packageJson.content?.devDependencies || {}
