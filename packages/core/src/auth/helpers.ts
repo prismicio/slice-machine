@@ -1,10 +1,12 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import { bold, underline, spinner, writeError } from "../utils";
+import { logs } from "../node-utils";
 import { PrismicSharedConfigManager } from "../node-utils/PrismicSharedConfig";
 import { Cookie } from "../utils";
 
 import { DEFAULT_BASE, DEFAULT_SERVER_PORT } from "../consts";
+
+const { bold, underline, spinner, writeError } = logs;
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
