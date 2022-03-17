@@ -12,9 +12,7 @@ export const MockLibraryInfo: (
       href: "http://myscreenshotuploaded",
       pathToSlice: "/slice1",
       infos: {
-        sliceName: "slice1",
         fileName: "slice1/models.json",
-        isDirectory: false,
         extension: "js",
         model: {
           id: "slice1",
@@ -50,13 +48,12 @@ export const MockLibraryInfo: (
           ],
         },
         screenshotPaths: {},
-        meta: { id: "slice1" },
       },
       model: {
-        id: "slice1",
+        id: "sliceId",
         type: "SharedSlice",
-        name: "slice1",
-        description: "slice1",
+        name: "SliceName",
+        description: "slice description",
         variations: [
           {
             id: "default-slice",
