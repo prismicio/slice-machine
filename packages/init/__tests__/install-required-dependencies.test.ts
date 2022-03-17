@@ -5,7 +5,7 @@ import { installRequiredDependencies } from "../src/steps";
 import path from "path";
 import os from "os";
 
-type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
+type SpinnerReturnType = ReturnType<typeof Core.NodeUtils.logs.spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
@@ -16,17 +16,20 @@ jest.mock("@slicemachine/core", () => {
 
   return {
     ...actualCore,
-    Utils: {
-      ...actualCore.Utils,
+    NodeUtils: {
+      // fragile test issue
+      ...actualCore.NodeUtils,
       Files: {
-        ...actualCore.Utils.Files,
+        ...actualCore.NodeUtils.Files,
         exists: jest.fn(),
       },
-      spinner: () => ({
-        start: startFn,
-        succeed: successFn,
-        fail: failFn,
-      }),
+      logs: {
+        spinner: () => ({
+          start: startFn,
+          succeed: successFn,
+          fail: failFn,
+        }),
+      },
     },
   };
 });
@@ -37,7 +40,7 @@ describe("install required dependency", () => {
   });
 
   const fakeCWD = "..";
-  const fileExistsMock = Core.Utils.Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
+  const fileExistsMock = Core.NodeUtils.Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
 
   test("it should use yarn to install Slice Machine", async () => {
     const spy = jest

@@ -13,10 +13,12 @@ export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  return `${Utils.cyan.dim(`${address.protocol}//`)}${repoName}${Utils.cyan.dim(
-    `.${address.hostname}`
-  )}`;
+  const repoName = value
+    ? NodeUtils.logs.cyan(value)
+    : NodeUtils.logs.dim.cyan("repo-name");
+  return `${NodeUtils.logs.cyan.dim(
+    `${address.protocol}//`
+  )}${repoName}${NodeUtils.logs.cyan.dim(`.${address.hostname}`)}`;
 }
 
 export async function promptForRepoDomain(
@@ -25,7 +27,7 @@ export async function promptForRepoDomain(
 ): Promise<string> {
   const address = new URL(base);
 
-  Utils.writeInfo(
+  NodeUtils.logs.writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
   );
 
@@ -64,18 +66,18 @@ export function makeReposPretty(base: string) {
     address.hostname = `${domain}.${address.hostname}`;
     if (Models.canUpdateCustomTypes(role) === false) {
       return {
-        name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
+        name: `${NodeUtils.logs.purple.dim("Use")} ${NodeUtils.logs.bold.dim(
           name
-        )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
+        )} ${NodeUtils.logs.purple.dim(`"${address.hostname}"`)}`,
         value: domain,
         disabled: "Unauthorized",
       };
     }
 
     return {
-      name: `${Utils.purple("Use")} ${Utils.bold(name)} ${Utils.purple(
-        `"${address.hostname}"`
-      )}`,
+      name: `${NodeUtils.logs.purple("Use")} ${NodeUtils.logs.bold(
+        name
+      )} ${NodeUtils.logs.purple(`"${address.hostname}"`)}`,
       value: domain,
     };
   };
@@ -107,9 +109,9 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${Utils.purple("Create a")} ${Utils.bold("new")} ${Utils.purple(
-      "Repository"
-    )}`,
+    name: `${NodeUtils.logs.purple("Create a")} ${NodeUtils.logs.bold(
+      "new"
+    )} ${NodeUtils.logs.purple("Repository")}`,
     value: CREATE_REPO,
   };
 

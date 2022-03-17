@@ -1,4 +1,4 @@
-import { Communication, Utils } from "@slicemachine/core";
+import { Communication, NodeUtils } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 
 export function createRepository(
@@ -7,7 +7,7 @@ export function createRepository(
   cookies: string,
   base: string
 ): Promise<string> {
-  const spinner = Utils.spinner("Creating Prismic Repository");
+  const spinner = NodeUtils.logs.spinner("Creating Prismic Repository");
   spinner.start();
 
   return Communication.createRepository(domain, cookies, framework, base)
@@ -23,10 +23,14 @@ export function createRepository(
     .catch((error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);
       if (error.message) {
-        Utils.writeError(error.message);
+        NodeUtils.logs.writeError(error.message);
       }
-      Utils.writeError(`We failed to create you new prismic repository`);
-      console.log(`Run ${Utils.bold("npx @slicemachine/init")} again!`);
+      NodeUtils.logs.writeError(
+        `We failed to create you new prismic repository`
+      );
+      console.log(
+        `Run ${NodeUtils.logs.bold("npx @slicemachine/init")} again!`
+      );
       process.exit(-1);
     });
 }

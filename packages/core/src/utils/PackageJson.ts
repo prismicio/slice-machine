@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
-import Files from "./files";
+import Files from "../node-utils/files";
 export const PackageJson = t.exact(
   t.partial({
     name: t.union([t.string, t.void]),

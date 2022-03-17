@@ -2,7 +2,7 @@ import { describe, expect, test, jest, afterEach } from "@jest/globals";
 import * as fs from "fs";
 import { mocked } from "jest-mock";
 import { detectFramework } from "../src/steps";
-import { Utils, Models } from "@slicemachine/core";
+import { Models, NodeUtils } from "@slicemachine/core";
 import { stderr } from "stdout-stderr";
 import inquirer from "inquirer";
 
@@ -61,7 +61,7 @@ describe("detect-framework", () => {
     });
     expect(fs.lstatSync).toHaveBeenCalled();
     expect(fakeError).toBeCalledWith(
-      `${Utils.error("Error!")} Framework not detected`
+      `${NodeUtils.logs.error("Error!")} Framework not detected`
     );
   });
 
@@ -114,10 +114,10 @@ describe("detect-framework", () => {
 
     expect(exitSpy).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalledWith(
-      `${Utils.error("Error!")} Gatsby is currently not supported`
+      `${NodeUtils.logs.error("Error!")} Gatsby is currently not supported`
     );
     expect(logSpy).toHaveBeenCalledWith(
-      `Please run ${Utils.bold(
+      `Please run ${NodeUtils.logs.bold(
         "npx @slicemachine/init"
       )} in a Nuxt or Next.js project`
     );

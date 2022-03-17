@@ -1,5 +1,5 @@
 import { JsonPackagePath, FileContent } from "./paths";
-import { Files } from "../utils";
+import Files from "./files";
 import type { PackageJson } from "types-package-json";
 import { SCRIPT_NAME, SCRIPT_VALUE } from "../consts";
 

@@ -6,6 +6,7 @@ import { createRepository } from "../src/utils/create-repo";
 import { stdout, stderr } from "stdout-stderr";
 
 jest.mock("@slicemachine/core", () => ({
+  // fragile test issue, wy did we keep this version and not the other?
   Communication: {
     createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
   },
@@ -14,18 +15,20 @@ jest.mock("@slicemachine/core", () => ({
       next: "next",
     },
   },
-  Utils: {
-    spinner: jest.fn().mockReturnValue({
-      start: jest.fn(),
-      stop: jest.fn(),
-      fail: jest.fn(),
-      succeed: jest.fn(),
-    }),
-    CONSTS: {
-      DEFAULT_BASE: "https://prismic.io",
+  NodeUtils: {
+    logs: {
+      spinner: jest.fn().mockReturnValue({
+        start: jest.fn(),
+        stop: jest.fn(),
+        fail: jest.fn(),
+        succeed: jest.fn(),
+      }),
+      writeError: jest.fn(),
+      bold: jest.fn(),
     },
-    writeError: jest.fn(),
-    bold: jest.fn(),
+  },
+  CONSTS: {
+    DEFAULT_BASE: "https://prismic.io",
   },
 }));
 

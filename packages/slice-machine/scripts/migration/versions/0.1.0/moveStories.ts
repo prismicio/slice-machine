@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, NodeUtils } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 
 import storybook from "../../../../server/src/api/storybook";
 
@@ -14,8 +14,8 @@ export function moveStories(
     .stories();
 
   const customStories =
-    Utils.Files.exists(customStoriesPath) &&
-    Utils.Files.readString(customStoriesPath);
+    NodeUtils.Files.exists(customStoriesPath) &&
+    NodeUtils.Files.readString(customStoriesPath);
   if (!customStories) return;
 
   // create the new story
@@ -28,5 +28,5 @@ export function moveStories(
   );
 
   // remove old stories
-  Utils.Files.remove(customStoriesPath);
+  NodeUtils.Files.remove(customStoriesPath);
 }

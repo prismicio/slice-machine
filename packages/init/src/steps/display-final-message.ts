@@ -1,11 +1,11 @@
-import { Utils, CONSTS, NodeUtils } from "@slicemachine/core";
+import { CONSTS, NodeUtils } from "@slicemachine/core";
 
 export function displayFinalMessage(cwd: string): void {
-  const yarnLock = Utils.Files.exists(NodeUtils.YarnLockPath(cwd));
+  const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
   const command = `${yarnLock ? "yarn" : "npm"} run ${CONSTS.SCRIPT_NAME}`;
 
   console.log(
-    `${Utils.white("■")} Run ${Utils.purple(
+    `${NodeUtils.logs.white("■")} Run ${NodeUtils.logs.purple(
       command
     )} to now launch Slice Machine`
   );

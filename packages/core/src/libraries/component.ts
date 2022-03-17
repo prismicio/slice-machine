@@ -9,7 +9,7 @@ import {
 import { pascalize } from "../utils/str";
 
 import { resolvePathsToScreenshot } from "./screenshot";
-import Files from "../utils/files";
+import Files from "../node-utils/files";
 import { resolvePathsToMock } from "./mocks";
 import { getOrElseW } from "fp-ts/lib/Either";
 import { Slice, SliceAsObject } from "../models/Slice";

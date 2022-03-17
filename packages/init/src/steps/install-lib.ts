@@ -1,4 +1,4 @@
-import { Utils, Models } from "@slicemachine/core";
+import { Models, NodeUtils } from "@slicemachine/core";
 import tmp from "tmp";
 import AdmZip from "adm-zip";
 import fsExtra from "fs-extra";
@@ -35,7 +35,7 @@ export async function installLib(
   libGithubPath: string,
   branch = "HEAD"
 ): Promise<string[] | undefined> {
-  const spinner = Utils.spinner(
+  const spinner = NodeUtils.logs.spinner(
     `Installing the ${libGithubPath} lib in your project...`
   );
 
@@ -72,12 +72,12 @@ export async function installLib(
     if (dependencies) await pkgManager.install(dependencies);
 
     // generate meta file
-    Utils.Files.write(path.join(libDestinationFolder, "meta.json"), {
+    NodeUtils.Files.write(path.join(libDestinationFolder, "meta.json"), {
       name: pkgJson.name,
     });
 
     // retrieve all slices lib paths
-    const manifest = Utils.Files.readEntity<Error | Models.Manifest>(
+    const manifest = NodeUtils.Files.readEntity<Error | Models.Manifest>(
       path.join(projectPath, "sm.json"),
       (payload: unknown) => {
         return getOrElseW(

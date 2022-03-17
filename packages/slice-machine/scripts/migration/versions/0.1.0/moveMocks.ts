@@ -1,4 +1,4 @@
-import { Utils, NodeUtils } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 
 export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
   const customMocksPath = NodeUtils.CustomPaths(cwd)
@@ -7,8 +7,8 @@ export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
     .mocks();
 
   const customMocks =
-    Utils.Files.exists(customMocksPath) &&
-    Utils.Files.readString(customMocksPath);
+    NodeUtils.Files.exists(customMocksPath) &&
+    NodeUtils.Files.readString(customMocksPath);
   if (!customMocks) return;
 
   const generatedMocksPath = NodeUtils.GeneratedPaths(cwd)
@@ -17,8 +17,8 @@ export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
     .mocks();
 
   // write the new file
-  Utils.Files.write(generatedMocksPath, customMocks);
+  NodeUtils.Files.write(generatedMocksPath, customMocks);
 
   // remove the old one
-  Utils.Files.remove(customMocksPath);
+  NodeUtils.Files.remove(customMocksPath);
 }

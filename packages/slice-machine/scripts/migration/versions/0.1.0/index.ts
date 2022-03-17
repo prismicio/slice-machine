@@ -20,7 +20,8 @@ const migration: Migration = {
   main: async function main({ cwd }) {
     // remove old mocks
     const pathToOldMocks = path.join(cwd, ".slicemachine", "mocks.json");
-    if (Utils.Files.exists(pathToOldMocks)) Utils.Files.remove(pathToOldMocks);
+    if (NodeUtils.Files.exists(pathToOldMocks))
+      NodeUtils.Files.remove(pathToOldMocks);
 
     const manifest = NodeUtils.retrieveManifest(cwd);
 
@@ -33,7 +34,7 @@ const migration: Migration = {
 
         if (isLocal && pathExists) {
           const libraryName = path.basename(pathToLib);
-          const sliceNames = Utils.Files.readDirectory(slash(pathToSlices))
+          const sliceNames = NodeUtils.Files.readDirectory(slash(pathToSlices))
             .map((curr: string) => path.join(pathToSlices, curr))
             .filter((e: string) => fs.statSync(e).isDirectory())
             .map((slicePath: string) => path.basename(slicePath));

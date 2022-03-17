@@ -14,7 +14,7 @@ export function configureProject(
   sliceLibPath: string[] = [],
   tracking = true
 ): void {
-  const spinner = Utils.spinner(
+  const spinner = NodeUtils.logs.spinner(
     `Configuring your ${framework.value} & Prismic project...`
   );
   spinner.start();
@@ -47,8 +47,9 @@ export function configureProject(
     const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)
       .library("slices")
       .value();
-    if (!Utils.Files.exists(pathToSlicesFolder))
-      Utils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+    if (!NodeUtils.Files.exists(pathToSlicesFolder)) {
+      NodeUtils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+    }
 
     // add slicemachine script to package.json.
     NodeUtils.addJsonPackageSmScript(cwd);

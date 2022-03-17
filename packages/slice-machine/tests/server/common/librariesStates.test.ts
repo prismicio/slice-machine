@@ -1,7 +1,7 @@
 import fs from "fs";
 import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
-import { FileSystem, Utils, NodeUtils } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 import * as LibrariesState from "../../../server/src/api/common/LibrariesState";
 
 jest.mock(`fs`, () => {
@@ -26,7 +26,7 @@ describe("server.generateLibraryState", () => {
     LibrariesState.generateState(MockedBackendEnv);
 
     const pathToState = NodeUtils.LibrariesStatePath(MockedBackendEnv.cwd);
-    expect(Utils.Files.exists(pathToState)).toBeTruthy();
+    expect(NodeUtils.Files.exists(pathToState)).toBeTruthy();
 
     const data = fs.readFileSync(pathToState, { encoding: "utf-8" });
 

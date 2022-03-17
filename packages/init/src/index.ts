@@ -1,4 +1,4 @@
-import { Utils, NodeUtils, CONSTS } from "@slicemachine/core";
+import { NodeUtils, CONSTS } from "@slicemachine/core";
 import Tracker from "./utils/tracker";
 
 import {
@@ -30,7 +30,7 @@ async function init() {
   Tracker.get().trackInitStart();
 
   console.log(
-    Utils.purple(
+    NodeUtils.logs.purple(
       "You're about to configure Slicemachine... Press ctrl + C to cancel"
     )
   );
@@ -86,6 +86,6 @@ async function init() {
 try {
   void init();
 } catch (error) {
-  if (error instanceof Error) Utils.writeError(error.message);
+  if (error instanceof Error) NodeUtils.logs.writeError(error.message);
   else console.error(error);
 }

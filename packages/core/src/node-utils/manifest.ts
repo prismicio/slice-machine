@@ -1,4 +1,4 @@
-import { Files } from "../utils";
+import Files from "./files";
 import { FileContent, SMConfigPath } from "./paths";
 import { Manifest } from "../models/Manifest";
 

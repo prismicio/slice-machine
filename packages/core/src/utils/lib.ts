@@ -1,5 +1,5 @@
 import path from "path";
-import Files from "./files";
+import Files from "../node-utils/files";
 
 enum Prefix {
   A = "@/",

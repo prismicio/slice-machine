@@ -9,7 +9,7 @@ import {
 import * as Core from "@slicemachine/core";
 import { configureProject } from "../src/steps";
 
-type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
+type SpinnerReturnType = ReturnType<typeof Core.NodeUtils.logs.spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
@@ -35,22 +35,21 @@ jest.mock("@slicemachine/core", () => {
         [{ cwd: string; data: Partial<Core.Models.Manifest> }]
       >(),
       addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
-    },
-    Utils: {
-      ...actualCore.Utils,
       Files: {
-        ...actualCore.Utils.Files,
+        ...actualCore.NodeUtils.Files,
         exists: jest.fn<boolean, [pathToFile: string]>(),
         mkdir: jest.fn<
           string | undefined,
           [target: string, option: { recursive: boolean }]
         >(),
       },
-      spinner: () => ({
-        start: startFn,
-        succeed: successFn,
-        fail: failFn,
-      }),
+      logs: {
+        spinner: () => ({
+          start: startFn,
+          succeed: successFn,
+          fail: failFn,
+        }),
+      },
     },
   };
 });
@@ -78,7 +77,7 @@ describe("configure-project", () => {
   const addJsonPackageSmScriptMock = Core.NodeUtils
     .addJsonPackageSmScript as jest.Mock;
 
-  const { exists, mkdir } = Core.Utils.Files;
+  const { exists, mkdir } = Core.NodeUtils.Files;
   const fileExistsMock = exists as jest.Mock;
   const mkdirMock = mkdir as jest.Mock;
 

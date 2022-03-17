@@ -8,7 +8,7 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { Utils, NodeUtils } from "@slicemachine/core";
+import { NodeUtils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
@@ -69,7 +69,7 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
-    packageManager: Utils.Files.exists(NodeUtils.YarnLockPath(cwd))
+    packageManager: NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd))
       ? "yarn"
       : "npm",
     shortId: prismicData.shortId,

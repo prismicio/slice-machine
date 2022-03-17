@@ -1,5 +1,6 @@
 import { getOrElseW } from "fp-ts/lib/Either";
-import { Files, Cookie } from "../utils";
+import { Cookie } from "../utils";
+import Files from "./files";
 import { PrismicConfigPath } from "./paths";
 import { PrismicSharedConfig } from "../models/PrismicSharedConfig";
 

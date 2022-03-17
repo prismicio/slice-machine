@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import Files from "../utils/files";
+import Files from "../node-utils/files";
 import { getInfoFromPath } from "../utils/lib";
 import { getComponentInfo } from "./component";
 import { Library, Component, LibraryMeta } from "../models/Library";
