@@ -46,7 +46,7 @@ const customTypeModel: CustomType<ArrayTabs> = {
   ],
 };
 
-describe("[Custom type sagas]", () => {
+describe("[Selected Custom type sagas]", () => {
   describe("[saveCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions on success", () => {
       const saga = testSaga(saveCustomTypeSaga);

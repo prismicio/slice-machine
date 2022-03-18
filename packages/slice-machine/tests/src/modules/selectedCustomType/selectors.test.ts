@@ -10,7 +10,7 @@ import {
 
 const model = CustomType.fromJsonModel(jsonModel.id, jsonModel);
 
-describe("[Custom type selectors]", () => {
+describe("[Selected Custom type selectors]", () => {
   describe("[selectCustomTypeStatus]", () => {
     test("it computes correct status 1/4", () => {
       const customTypeStatus = selectCustomTypeStatus({

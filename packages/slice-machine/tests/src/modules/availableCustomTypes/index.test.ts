@@ -17,11 +17,9 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
-const dummyCustomTypesState: AvailableCustomTypesStoreType = {
-  map: {},
-};
+const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
-describe("[Custom types module]", () => {
+describe("[Available Custom types module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
       expect(availableCustomTypesReducer(dummyCustomTypesState, {})).toEqual(
@@ -47,10 +45,8 @@ describe("[Custom types module]", () => {
         availableCustomTypesReducer(dummyCustomTypesState, action)
       ).toEqual({
         ...dummyCustomTypesState,
-        map: {
-          about: {
-            local: dummyServerState.customTypes[0],
-          },
+        about: {
+          local: dummyServerState.customTypes[0],
         },
       });
     });
@@ -76,11 +72,8 @@ describe("[Custom types module]", () => {
         availableCustomTypesReducer(dummyCustomTypesState, action)
       ).toEqual({
         ...dummyCustomTypesState,
-        map: {
-          ...dummyCustomTypesState.map,
-          [createdCustomType.id]: {
-            local: createdCustomType,
-          },
+        [createdCustomType.id]: {
+          local: createdCustomType,
         },
       });
     });

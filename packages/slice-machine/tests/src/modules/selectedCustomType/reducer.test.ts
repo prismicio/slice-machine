@@ -29,7 +29,7 @@ const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   initialMockConfig: {},
 };
 
-describe("[Custom type module]", () => {
+describe("[Selected Custom type module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
       expect(selectedCustomTypeReducer(dummyCustomTypesState, {})).toEqual(

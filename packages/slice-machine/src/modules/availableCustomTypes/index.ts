@@ -41,19 +41,19 @@ type CustomTypesActions =
 // Selectors
 export const selectAllCustomTypes = (
   store: SliceMachineStoreType
-): FrontEndCustomType[] => Object.values(store.availableCustomTypes.map);
+): FrontEndCustomType[] => Object.values(store.availableCustomTypes);
 
 export const selectAllCustomTypeIds = (
   store: SliceMachineStoreType
-): string[] => Object.keys(store.availableCustomTypes.map);
+): string[] => Object.keys(store.availableCustomTypes);
 
 export const selectCustomTypeById = (
   store: SliceMachineStoreType,
   id: string
-): FrontEndCustomType | null => store.availableCustomTypes.map[id];
+): FrontEndCustomType | null => store.availableCustomTypes[id];
 
 export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
-  Object.values(store.availableCustomTypes.map).length;
+  Object.values(store.availableCustomTypes).length;
 
 // Reducer
 export const availableCustomTypesReducer: Reducer<
@@ -63,28 +63,27 @@ export const availableCustomTypesReducer: Reducer<
   if (!state) return null;
 
   switch (action.type) {
-    case getType(refreshStateCreator):
-      const map = normalizeFrontendCustomTypes(
+    case getType(refreshStateCreator): {
+      const normalizedNewCustomType = normalizeFrontendCustomTypes(
         action.payload.localCustomTypes,
         action.payload.remoteCustomTypes
       );
 
       return {
         ...state,
-        map,
+        ...normalizedNewCustomType,
       };
-    case getType(createCustomTypeCreator.success):
+    }
+    case getType(createCustomTypeCreator.success): {
       const normalizedNewCustomType = normalizeFrontendCustomType(
         action.payload.newCustomType
       );
 
       return {
         ...state,
-        map: {
-          ...state.map,
-          ...normalizedNewCustomType,
-        },
+        ...normalizedNewCustomType,
       };
+    }
     default:
       return state;
   }
