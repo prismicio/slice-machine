@@ -1,8 +1,14 @@
 import { MouseEventHandler, useState } from "react";
-import { CustomTypeState } from "@lib/models/ui/CustomTypeState";
 import { AiOutlinePlus } from "react-icons/ai";
 
-import { Box, Button, Flex, Theme, useThemeUI } from "theme-ui";
+import {
+  Box,
+  Button,
+  Flex,
+  Theme,
+  ThemeUIStyleObject,
+  useThemeUI,
+} from "theme-ui";
 import { Tabs, TabPanel } from "react-tabs";
 
 import { HiOutlineCog } from "react-icons/hi";
@@ -18,13 +24,18 @@ import CreateModal from "../TabModal/create";
 import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
-import CustomTypeStore from "src/models/customType/store";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
+import { TabAsArray } from "@models/common/CustomType/tab";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
 
 enum ModalType {
   CREATE = "create",
-  UPDATE = "udate",
+  UPDATE = "update",
 }
+
 interface EditState {
   title: string;
   type: ModalType.UPDATE;
@@ -55,23 +66,23 @@ const Icon = ({
   />
 );
 
-const CtTabs = ({
-  sx,
-  Model,
-  store,
-  renderTab,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sx?: any;
-  Model: CustomTypeState;
-  store: CustomTypeStore;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  renderTab: Function;
-}) => {
+interface CustomTypeTabsProps {
+  sx?: ThemeUIStyleObject;
+  renderTab: (tab: TabAsArray) => JSX.Element;
+}
+
+const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {
+  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+  }));
   const { theme } = useThemeUI();
+  const { createCustomTypeTab, updateCustomTypeTab, deleteCustomTypeTab } =
+    useSliceMachineActions();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [state, setState] = useState<ModalState | undefined>();
+
+  if (!currentCustomType) return null;
 
   return (
     <Box sx={{ bg: "backgroundClear" }}>
@@ -85,7 +96,7 @@ const CtTabs = ({
           style={{ width: "100%" }}
         >
           <TabList>
-            {Model.current.tabs.map((tab, i) => (
+            {currentCustomType.tabs.map((tab, i) => (
               <Tab
                 key={tab.key}
                 style={{
@@ -107,7 +118,7 @@ const CtTabs = ({
                           title: "Edit Tab",
                           type: ModalType.UPDATE,
                           key: tab.key,
-                          allowDelete: Model.current.tabs.length > 1,
+                          allowDelete: currentCustomType.tabs.length > 1,
                         });
                       }}
                     />
@@ -129,7 +140,7 @@ const CtTabs = ({
               </Button>
             </Tab>
           </TabList>
-          {Model.current.tabs.map((tab) => (
+          {currentCustomType.tabs.map((tab) => (
             <TabPanel key={tab.key}>{renderTab(tab)}</TabPanel>
           ))}
           <TabPanel key={"new-tab"} />
@@ -139,12 +150,12 @@ const CtTabs = ({
         <CreateModal
           {...state}
           isOpen
-          tabIds={Model.current.tabs.map((e) => e.key.toLowerCase())}
+          tabIds={currentCustomType.tabs.map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
           onSubmit={({ id }: { id: string }) => {
-            store.createTab(id);
+            createCustomTypeTab(id);
             // current.tabs is not updated yet
-            setTabIndex(Model.current.tabs.length);
+            setTabIndex(currentCustomType.tabs.length);
           }}
         />
       ) : null}
@@ -152,7 +163,7 @@ const CtTabs = ({
         <UpdateModal
           {...state}
           isOpen
-          tabIds={Model.current.tabs
+          tabIds={currentCustomType.tabs
             .filter((e) => e.key !== state.key)
             .map((e) => e.key.toLowerCase())}
           close={() => setState(undefined)}
@@ -164,11 +175,10 @@ const CtTabs = ({
             actionType: UpdateModalActionType;
           }) => {
             if (actionType === UpdateModalActionType.UPDATE) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              return store.tab(state.key).update(id);
+              updateCustomTypeTab(state.key, id);
             }
             if (actionType === UpdateModalActionType.DELETE) {
-              store.tab(state.key).delete();
+              deleteCustomTypeTab(state.key);
               setTabIndex(0);
             }
           }}
@@ -178,4 +188,4 @@ const CtTabs = ({
   );
 };
 
-export default CtTabs;
+export default CustomTypeTabs;

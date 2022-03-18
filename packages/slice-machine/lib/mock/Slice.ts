@@ -25,6 +25,7 @@ export default function MockSlice(
   const variations = model.variations.map((variation) => {
     const mock = createEmptyMock(sliceName, variation);
     const handler: (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fields?: any[],
       mocks?: Record<string, unknown>
     ) => Models.VariationMock["primary"] = handleFields(Widgets);

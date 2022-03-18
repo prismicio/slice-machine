@@ -1,38 +1,35 @@
 import {
   createCustomTypeSaga,
   createCustomTypeCreator,
-  customTypesReducer,
-} from "@src/modules/customTypes";
+  availableCustomTypesReducer,
+} from "@src/modules/availableCustomTypes";
 import { testSaga } from "redux-saga-test-plan";
-import { CustomTypesStoreType } from "@src/modules/customTypes/types";
+import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
 import { refreshStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
 import { saveCustomType } from "@src/apiClient";
-import { createCustomType } from "@src/modules/customTypes/factory";
+import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
-const dummyCustomTypesState: CustomTypesStoreType = {
-  localCustomTypes: [],
-  remoteCustomTypes: [],
-};
+const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
-describe("[Custom types module]", () => {
+describe("[Available Custom types module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
-      expect(customTypesReducer(dummyCustomTypesState, {})).toEqual(
+      expect(availableCustomTypesReducer(dummyCustomTypesState, {})).toEqual(
         dummyCustomTypesState
       );
     });
 
     it("should return the initial state if no matching action", () => {
       expect(
-        customTypesReducer(dummyCustomTypesState, { type: "NO.MATCH" })
+        availableCustomTypesReducer(dummyCustomTypesState, { type: "NO.MATCH" })
       ).toEqual(dummyCustomTypesState);
     });
 
@@ -44,9 +41,13 @@ describe("[Custom types module]", () => {
         libraries: dummyServerState.libraries,
       });
 
-      expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
+      expect(
+        availableCustomTypesReducer(dummyCustomTypesState, action)
+      ).toEqual({
         ...dummyCustomTypesState,
-        localCustomTypes: dummyServerState.customTypes,
+        about: {
+          local: dummyServerState.customTypes[0],
+        },
       });
     });
     it("should update the custom types state given CUSTOM_TYPES/CREATE.SUCCESS action", () => {
@@ -67,12 +68,13 @@ describe("[Custom types module]", () => {
         newCustomType: createdCustomType,
       });
 
-      expect(customTypesReducer(dummyCustomTypesState, action)).toEqual({
+      expect(
+        availableCustomTypesReducer(dummyCustomTypesState, action)
+      ).toEqual({
         ...dummyCustomTypesState,
-        localCustomTypes: [
-          createdCustomType,
-          ...dummyCustomTypesState.localCustomTypes,
-        ],
+        [createdCustomType.id]: {
+          local: createdCustomType,
+        },
       });
     });
   });

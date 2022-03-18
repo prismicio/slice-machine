@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { CustomTypesStoreType } from "./types";
+import { AvailableCustomTypesStoreType, FrontEndCustomType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
@@ -11,8 +11,12 @@ import { saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
-import { createCustomType } from "@src/modules/customTypes/factory";
+import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import {
+  normalizeFrontendCustomType,
+  normalizeFrontendCustomTypes,
+} from "@src/normalizers/customType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -35,34 +39,51 @@ type CustomTypesActions =
   | ActionType<typeof createCustomTypeCreator>;
 
 // Selectors
-export const selectLocalCustomTypes = (store: SliceMachineStoreType) =>
-  store.customTypes.localCustomTypes;
+export const selectAllCustomTypes = (
+  store: SliceMachineStoreType
+): FrontEndCustomType[] => Object.values(store.availableCustomTypes);
 
-export const selectRemoteCustomTypes = (store: SliceMachineStoreType) =>
-  store.customTypes.remoteCustomTypes;
+export const selectAllCustomTypeIds = (
+  store: SliceMachineStoreType
+): string[] => Object.keys(store.availableCustomTypes);
+
+export const selectCustomTypeById = (
+  store: SliceMachineStoreType,
+  id: string
+): FrontEndCustomType | null => store.availableCustomTypes[id];
+
+export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
+  Object.values(store.availableCustomTypes).length;
 
 // Reducer
-export const customTypesReducer: Reducer<
-  CustomTypesStoreType | null,
+export const availableCustomTypesReducer: Reducer<
+  AvailableCustomTypesStoreType | null,
   CustomTypesActions
 > = (state, action) => {
   if (!state) return null;
 
   switch (action.type) {
-    case getType(refreshStateCreator):
+    case getType(refreshStateCreator): {
+      const normalizedNewCustomType = normalizeFrontendCustomTypes(
+        action.payload.localCustomTypes,
+        action.payload.remoteCustomTypes
+      );
+
       return {
         ...state,
-        remoteCustomTypes: action.payload.remoteCustomTypes,
-        localCustomTypes: action.payload.localCustomTypes,
+        ...normalizedNewCustomType,
       };
-    case getType(createCustomTypeCreator.success):
+    }
+    case getType(createCustomTypeCreator.success): {
+      const normalizedNewCustomType = normalizeFrontendCustomType(
+        action.payload.newCustomType
+      );
+
       return {
         ...state,
-        localCustomTypes: [
-          action.payload.newCustomType,
-          ...state.localCustomTypes,
-        ],
+        ...normalizedNewCustomType,
       };
+    }
     default:
       return state;
   }
@@ -108,6 +129,6 @@ function* watchCreateCustomType() {
 }
 
 // Saga Exports
-export function* watchCustomTypeSagas() {
+export function* watchAvailableCustomTypesSagas() {
   yield fork(watchCreateCustomType);
 }
