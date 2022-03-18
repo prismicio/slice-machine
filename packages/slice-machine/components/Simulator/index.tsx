@@ -46,8 +46,8 @@ export default function Simulator() {
   }
 
   const sliceView = useMemo(
-    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
-    [Model.infos.model.id, variation.id]
+    () => [{ sliceID: Model.model.id, variationID: variation.id }],
+    [Model.model.id, variation.id]
   );
 
   return (
