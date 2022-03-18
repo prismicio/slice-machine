@@ -3,7 +3,7 @@ import { Field } from "@models/common/CustomType/fields";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
-export type CustomTypeActions =
+export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
   | ActionType<typeof saveCustomTypeCreator>
   | ActionType<typeof pushCustomTypeCreator>

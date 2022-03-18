@@ -1,10 +1,10 @@
 import { Reducer } from "redux";
-import { CustomTypeStoreType } from "./types";
+import { SelectedCustomTypeStoreType } from "./types";
 import { getType } from "typesafe-actions";
 import {
   createTabCreator,
   updateTabCreator,
-  CustomTypeActions,
+  SelectedCustomTypeActions,
   initCustomTypeStoreCreator,
   addFieldCreator,
   deleteTabCreator,
@@ -40,9 +40,9 @@ import { Group } from "@models/common/CustomType/group";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 // Reducer
-export const customTypeReducer: Reducer<
-  CustomTypeStoreType,
-  CustomTypeActions
+export const selectedCustomTypeReducer: Reducer<
+  SelectedCustomTypeStoreType,
+  SelectedCustomTypeActions
 > = (state = null, action) => {
   switch (action.type) {
     case getType(initCustomTypeStoreCreator):

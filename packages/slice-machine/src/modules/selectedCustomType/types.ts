@@ -4,7 +4,7 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 export type PoolOfFields = ReadonlyArray<{ key: string; value: Field }>;
 
-export type CustomTypeStoreType = {
+export type SelectedCustomTypeStoreType = {
   model: CustomType<ArrayTabs>;
   initialModel: CustomType<ArrayTabs>;
   remoteModel: CustomType<ArrayTabs> | null;

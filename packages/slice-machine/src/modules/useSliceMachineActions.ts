@@ -48,7 +48,7 @@ import {
   deleteGroupFieldMockConfigCreator,
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
-} from "@src/modules/customType";
+} from "@src/modules/selectedCustomType";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { Field } from "@models/common/CustomType/fields";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";

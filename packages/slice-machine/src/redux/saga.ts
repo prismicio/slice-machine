@@ -2,7 +2,7 @@ import { fork } from "redux-saga/effects";
 
 import { watchSimulatorSagas } from "@src/modules/simulator";
 import { watchCustomTypesSagas } from "@src/modules/customTypes";
-import { watchCustomTypeSagas } from "@src/modules/customType";
+import { watchSelectedCustomTypeSagas } from "@src/modules/selectedCustomType";
 import { watchSliceSagas } from "@src/modules/slices";
 import { watchToasterSagas } from "@src/modules/toaster";
 
@@ -12,5 +12,5 @@ export default function* rootSaga() {
   yield fork(watchCustomTypesSagas);
   yield fork(watchSliceSagas);
   yield fork(watchToasterSagas);
-  yield fork(watchCustomTypeSagas);
+  yield fork(watchSelectedCustomTypeSagas);
 }

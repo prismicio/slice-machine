@@ -26,7 +26,7 @@ import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
-} from "@src/modules/customType";
+} from "@src/modules/selectedCustomType";
 
 interface TabZoneProps {
   tabId: string;

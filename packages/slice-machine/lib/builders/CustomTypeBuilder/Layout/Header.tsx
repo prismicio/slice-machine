@@ -12,7 +12,7 @@ import {
   selectCurrentCustomType,
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications,
-} from "@src/modules/customType";
+} from "@src/modules/selectedCustomType";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 

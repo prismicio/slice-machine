@@ -5,14 +5,14 @@ import { pushCustomType, saveCustomType } from "@src/apiClient";
 import {
   pushCustomTypeSaga,
   saveCustomTypeSaga,
-} from "@src/modules/customType/sagas";
+} from "@src/modules/selectedCustomType/sagas";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
   pushCustomTypeCreator,
   saveCustomTypeCreator,
   selectCurrentCustomType,
   selectCurrentMockConfig,
-} from "@src/modules/customType";
+} from "@src/modules/selectedCustomType";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 
 const customTypeModel: CustomType<ArrayTabs> = {

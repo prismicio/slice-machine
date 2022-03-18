@@ -6,7 +6,7 @@ import jsonModel from "./__mockData__/model.json";
 import {
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications,
-} from "@src/modules/customType";
+} from "@src/modules/selectedCustomType";
 
 const model = CustomType.fromJsonModel(jsonModel.id, jsonModel);
 
@@ -14,7 +14,7 @@ describe("[Custom type selectors]", () => {
   describe("[selectCustomTypeStatus]", () => {
     test("it computes correct status 1/4", () => {
       const customTypeStatus = selectCustomTypeStatus({
-        customType: {
+        selectedCustomType: {
           model,
           remoteModel: null,
         },
@@ -24,7 +24,7 @@ describe("[Custom type selectors]", () => {
     });
     test("it computes correct status 2/4", () => {
       const customTypeStatus = selectCustomTypeStatus({
-        customType: {
+        selectedCustomType: {
           model,
           remoteModel: model,
         },
@@ -34,7 +34,7 @@ describe("[Custom type selectors]", () => {
     });
     test("it computes correct status 3/4", () => {
       const customTypeStatus = selectCustomTypeStatus({
-        customType: {
+        selectedCustomType: {
           model,
           remoteModel: { ...model, label: `differ-from-${model.label}` },
         },
@@ -43,7 +43,7 @@ describe("[Custom type selectors]", () => {
     });
     test("it computes correct status 4/4", () => {
       const customTypeStatus = selectCustomTypeStatus({
-        customType: {
+        selectedCustomType: {
           model,
           remoteModel: { ...model, tabs: {} },
         },
@@ -55,7 +55,7 @@ describe("[Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 1/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
-          customType: {
+          selectedCustomType: {
             model,
             initialModel: null,
             mockConfig: {},
@@ -69,7 +69,7 @@ describe("[Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 2/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
-          customType: {
+          selectedCustomType: {
             model,
             initialModel: model,
             mockConfig: {},
@@ -83,7 +83,7 @@ describe("[Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 3/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
-          customType: {
+          selectedCustomType: {
             model,
             initialModel: { ...model, label: `differ-from-${model.label}` },
             mockConfig: {},
@@ -96,7 +96,7 @@ describe("[Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 4/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
-          customType: {
+          selectedCustomType: {
             model,
             initialModel: { ...model, tabs: {} },
             mockConfig: {},

@@ -1,9 +1,9 @@
 import { TabAsArray } from "@models/common/CustomType/tab";
-import { CustomTypeStoreType } from "@src/modules/customType/types";
+import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 
 const updateTab =
-  (state: CustomTypeStoreType, tabId: string) =>
-  (mutate: (v: TabAsArray) => TabAsArray): CustomTypeStoreType => {
+  (state: SelectedCustomTypeStoreType, tabId: string) =>
+  (mutate: (v: TabAsArray) => TabAsArray): SelectedCustomTypeStoreType => {
     if (!state) return state;
 
     const tabs = state.model.tabs.map((tab) => {
@@ -21,9 +21,9 @@ const updateTab =
   };
 
 const deleteTab = (
-  state: CustomTypeStoreType,
+  state: SelectedCustomTypeStoreType,
   tabId: string
-): CustomTypeStoreType => {
+): SelectedCustomTypeStoreType => {
   if (!state) return state;
   const tabs = state.model.tabs.filter((v) => v.key !== tabId);
 

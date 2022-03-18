@@ -6,22 +6,22 @@ import {
   addFieldCreator,
   createSliceZoneCreator,
   createTabCreator,
-  customTypeReducer,
+  selectedCustomTypeReducer,
   deleteFieldCreator,
   initCustomTypeStoreCreator,
   reorderFieldCreator,
   replaceFieldCreator,
   replaceSharedSliceCreator,
   updateTabCreator,
-} from "@src/modules/customType";
-import { CustomTypeStoreType } from "@src/modules/customType/types";
+} from "@src/modules/selectedCustomType";
+import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 import * as widgets from "@models/common/widgets/withGroup";
 import equal from "fast-deep-equal";
 
 const customTypeModel = CustomType.fromJsonModel(jsonModel.id, jsonModel);
 const customTypeAsArray = CustomType.toArray(customTypeModel);
 
-const dummyCustomTypesState: CustomTypeStoreType = {
+const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   model: customTypeAsArray,
   initialModel: customTypeAsArray,
   remoteModel: null,
@@ -32,20 +32,20 @@ const dummyCustomTypesState: CustomTypeStoreType = {
 describe("[Custom type module]", () => {
   describe("[Reducer]", () => {
     it("should return the initial state if no action", () => {
-      expect(customTypeReducer(dummyCustomTypesState, {})).toEqual(
+      expect(selectedCustomTypeReducer(dummyCustomTypesState, {})).toEqual(
         dummyCustomTypesState
       );
     });
 
     it("should return the initial state if no matching action", () => {
       expect(
-        customTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" })
+        selectedCustomTypeReducer(dummyCustomTypesState, { type: "NO.MATCH" })
       ).toEqual(dummyCustomTypesState);
     });
 
     it("should update the custom type state given CUSTOM_TYPE/INIT action", () => {
       expect(
-        customTypeReducer(
+        selectedCustomTypeReducer(
           dummyCustomTypesState,
           initCustomTypeStoreCreator({
             model: customTypeAsArray,
@@ -64,7 +64,7 @@ describe("[Custom type module]", () => {
     it("should update the custom type state given CUSTOM_TYPE/CREATE_TAB action", () => {
       const newTabId = "Tab1";
       const previousTabLength = dummyCustomTypesState.model.tabs.length;
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         createTabCreator({
           tabId: newTabId,
@@ -75,7 +75,7 @@ describe("[Custom type module]", () => {
       expect(tabs[tabs.length - 1].key).toBe(newTabId);
 
       /** Don't create a second tab with same key */
-      const newState2 = customTypeReducer(
+      const newState2 = selectedCustomTypeReducer(
         dummyCustomTypesState,
         createTabCreator({
           tabId: newTabId,
@@ -87,7 +87,7 @@ describe("[Custom type module]", () => {
     it("should update the custom type state given CUSTOM_TYPE/UPDATE_TAB action if the tab is found", () => {
       const newTabId = "Tab1";
       const initialTab = dummyCustomTypesState.model.tabs[0];
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         updateTabCreator({
           newTabId,
@@ -101,7 +101,7 @@ describe("[Custom type module]", () => {
       const newTabId = "Tab1";
       const initialTab = dummyCustomTypesState.model.tabs[0];
       const unknownTabId = `some___${initialTab.key}`;
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         updateTabCreator({
           newTabId,
@@ -119,7 +119,7 @@ describe("[Custom type module]", () => {
     it("should add a field into a custom type given CUSTOM_TYPE/ADD_FIELD action", () => {
       const fieldId = "fieldId";
       const initialTab = dummyCustomTypesState.model.tabs[0];
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         addFieldCreator({
           tabId: initialTab.key,
@@ -134,7 +134,7 @@ describe("[Custom type module]", () => {
     });
     it("should remove a field into a custom type given CUSTOM_TYPE/DELETE_FIELD action", () => {
       const initialTab = dummyCustomTypesState.model.tabs[0];
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         deleteFieldCreator({
           tabId: initialTab.key,
@@ -151,7 +151,7 @@ describe("[Custom type module]", () => {
       const fieldIdA = initialTab.value[0].key;
       const fieldIdB = initialTab.value[1].key;
       const fieldIdC = initialTab.value[2].key;
-      const newState = customTypeReducer(
+      const newState = selectedCustomTypeReducer(
         dummyCustomTypesState,
         reorderFieldCreator({
           tabId: initialTab.key,
@@ -163,7 +163,7 @@ describe("[Custom type module]", () => {
       expect(newState.model.tabs[0].value[0].key).toEqual(fieldIdB);
       expect(newState.model.tabs[0].value[1].key).toEqual(fieldIdA);
 
-      const newState2 = customTypeReducer(
+      const newState2 = selectedCustomTypeReducer(
         newState,
         reorderFieldCreator({
           tabId: initialTab.key,
@@ -175,7 +175,7 @@ describe("[Custom type module]", () => {
       expect(newState2.model.tabs[0].value[0].key).toEqual(fieldIdA);
       expect(newState2.model.tabs[0].value[1].key).toEqual(fieldIdB);
 
-      const newState3 = customTypeReducer(
+      const newState3 = selectedCustomTypeReducer(
         newState2,
         reorderFieldCreator({
           tabId: initialTab.key,
@@ -188,7 +188,7 @@ describe("[Custom type module]", () => {
       expect(newState3.model.tabs[0].value[1].key).toEqual(fieldIdC);
       expect(newState3.model.tabs[0].value[2].key).toEqual(fieldIdA);
 
-      const newState4 = customTypeReducer(
+      const newState4 = selectedCustomTypeReducer(
         newState3,
         reorderFieldCreator({
           tabId: initialTab.key,
@@ -204,7 +204,7 @@ describe("[Custom type module]", () => {
   });
   it("should create a empty slicezone into a custom type given CUSTOM_TYPE/CREATE_SLICE_ZONE action", () => {
     const initialTab = dummyCustomTypesState.model.tabs[0];
-    const newState = customTypeReducer(
+    const newState = selectedCustomTypeReducer(
       dummyCustomTypesState,
       createSliceZoneCreator({
         tabId: initialTab.key,
@@ -218,7 +218,7 @@ describe("[Custom type module]", () => {
   });
   it("should place slices inside a slicezone given CUSTOM_TYPE/REPLACE_SHARED_SLICE action", () => {
     const initialTab = dummyCustomTypesState.model.tabs[0];
-    const newState = customTypeReducer(
+    const newState = selectedCustomTypeReducer(
       dummyCustomTypesState,
       createSliceZoneCreator({
         tabId: initialTab.key,
@@ -227,7 +227,7 @@ describe("[Custom type module]", () => {
 
     const keys = ["Slice1", "Slice2", "Slice3", "Slice4"];
 
-    const newState2 = customTypeReducer(
+    const newState2 = selectedCustomTypeReducer(
       newState,
       replaceSharedSliceCreator({
         tabId: initialTab.key,
@@ -244,7 +244,7 @@ describe("[Custom type module]", () => {
     const initialTab = dummyCustomTypesState.model.tabs[0];
     const field = initialTab.value[0];
 
-    const newState = customTypeReducer(
+    const newState = selectedCustomTypeReducer(
       dummyCustomTypesState,
       replaceFieldCreator({
         tabId: initialTab.key,
@@ -265,7 +265,7 @@ describe("[Custom type module]", () => {
     const initialTab = dummyCustomTypesState.model.tabs[0];
     const field = initialTab.value[0];
 
-    const newState = customTypeReducer(
+    const newState = selectedCustomTypeReducer(
       dummyCustomTypesState,
       replaceFieldCreator({
         tabId: initialTab.key,
@@ -282,7 +282,7 @@ describe("[Custom type module]", () => {
     const field = initialTab.value[0];
     const newPlaceholder = `differ-from-${field.value.config.placeholder}`;
 
-    const newState = customTypeReducer(
+    const newState = selectedCustomTypeReducer(
       dummyCustomTypesState,
       replaceFieldCreator({
         tabId: initialTab.key,

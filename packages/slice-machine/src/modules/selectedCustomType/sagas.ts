@@ -6,11 +6,11 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import {
   pushCustomTypeCreator,
   saveCustomTypeCreator,
-} from "@src/modules/customType/actions";
+} from "@src/modules/selectedCustomType/actions";
 import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
-} from "@src/modules/customType/index";
+} from "@src/modules/selectedCustomType/index";
 import { pushCustomType, saveCustomType } from "@src/apiClient";
 import axios from "axios";
 import { CustomType } from "@models/common/CustomType";
@@ -117,7 +117,7 @@ function* watchPushCustomType() {
 }
 
 // Saga Exports
-export function* watchCustomTypeSagas() {
+export function* watchSelectedCustomTypeSagas() {
   yield fork(watchSaveCustomType);
   yield fork(watchPushCustomType);
 }
