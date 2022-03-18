@@ -29,7 +29,12 @@ export interface Component {
   from: string;
   href: string;
   pathToSlice: string;
-  infos: ComponentInfo;
+  fileName: string | null;
+  extension: string | null;
+  screenshotPaths: {
+    [variationId: string]: Screenshot;
+  };
+  mock?: ReadonlyArray<VariationMock>;
   model: SliceAsObject;
 }
 

@@ -71,20 +71,20 @@ test("it finds slice in local library", () => {
 
 test("it finds slice component in local library", () => {
   const component = testPrefix("@/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it finds slice component in ~ library", () => {
   const component = testPrefix("~/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it finds slice component in / library", () => {
   const component = testPrefix("/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it ignores non slice folders", () => {
