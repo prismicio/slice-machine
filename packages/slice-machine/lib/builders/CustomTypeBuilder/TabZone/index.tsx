@@ -43,8 +43,8 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     createSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-    updateWidgetMockConfig,
-    deleteWidgetMockConfig,
+    updateFieldMockConfig,
+    deleteFieldMockConfig,
   } = useSliceMachineActions();
 
   const { currentCustomType, mockConfig, poolOfFields } = useSelector(
@@ -61,7 +61,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
 
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    deleteWidgetMockConfig(mockConfig, fieldId);
+    deleteFieldMockConfig(mockConfig, fieldId);
     deleteCustomTypeField(tabId, fieldId);
   };
 
@@ -123,9 +123,9 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
       return;
     }
     if (mockValue) {
-      updateWidgetMockConfig(mockConfig, previousKey, newKey, mockValue);
+      updateFieldMockConfig(mockConfig, previousKey, newKey, mockValue);
     } else {
-      deleteWidgetMockConfig(mockConfig, newKey);
+      deleteFieldMockConfig(mockConfig, newKey);
     }
     replaceCustomTypeField(tabId, previousKey, newKey, value);
   };

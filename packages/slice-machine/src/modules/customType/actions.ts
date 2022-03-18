@@ -9,6 +9,8 @@ export type CustomTypeActions =
   | ActionType<typeof pushCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
   | ActionType<typeof deleteFieldMockConfigCreator>
+  | ActionType<typeof updateGroupFieldMockConfigCreator>
+  | ActionType<typeof deleteGroupFieldMockConfigCreator>
   | ActionType<typeof createTabCreator>
   | ActionType<typeof updateTabCreator>
   | ActionType<typeof deleteTabCreator>
@@ -46,20 +48,50 @@ export const pushCustomTypeCreator = createAsyncAction(
 // Mock config actions
 export const updateFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/UPDATE_FIELD_MOCK_CONFIG"
-)<{ mockConfig: CustomTypeMockConfig }>();
+)<{
+  customTypeMockConfig: CustomTypeMockConfig;
+  previousFieldId: string;
+  fieldId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+}>();
 
 export const deleteFieldMockConfigCreator = createAction(
   "CUSTOM_TYPE/DELETE_FIELD_MOCK_CONFIG"
-)<{ mockConfig: CustomTypeMockConfig }>();
+)<{
+  customTypeMockConfig: CustomTypeMockConfig;
+  fieldId: string;
+}>();
+
+export const updateGroupFieldMockConfigCreator = createAction(
+  "CUSTOM_TYPE/UPDATE_GROUP_FIELD_MOCK_CONFIG"
+)<{
+  customTypeMockConfig: CustomTypeMockConfig;
+  groupId: string;
+  previousFieldId: string;
+  fieldId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+}>();
+
+export const deleteGroupFieldMockConfigCreator = createAction(
+  "CUSTOM_TYPE/DELETE_GROUP_FIELD_MOCK_CONFIG"
+)<{
+  customTypeMockConfig: CustomTypeMockConfig;
+  groupId: string;
+  fieldId: string;
+}>();
 
 // Tab actions
 export const createTabCreator = createAction("CUSTOM_TYPE/CREATE_TAB")<{
   tabId: string;
 }>();
+
 export const updateTabCreator = createAction("CUSTOM_TYPE/UPDATE_TAB")<{
   tabId: string;
   newTabId: string;
 }>();
+
 export const deleteTabCreator = createAction("CUSTOM_TYPE/DELETE_TAB")<{
   tabId: string;
 }>();
@@ -70,16 +102,19 @@ export const addFieldCreator = createAction("CUSTOM_TYPE/ADD_FIELD")<{
   fieldId: string;
   field: Field;
 }>();
+
 export const deleteFieldCreator = createAction("CUSTOM_TYPE/DELETE_FIELD")<{
   tabId: string;
   fieldId: string;
 }>();
+
 export const replaceFieldCreator = createAction("CUSTOM_TYPE/REPLACE_FIELD")<{
   tabId: string;
   previousFieldId: string;
   newFieldId: string;
   value: Field;
 }>();
+
 export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
   tabId: string;
   start: number;
@@ -92,6 +127,7 @@ export const createSliceZoneCreator = createAction(
 )<{
   tabId: string;
 }>();
+
 export const replaceSharedSliceCreator = createAction(
   "CUSTOM_TYPE/REPLACE_SHARED_SLICE"
 )<{
@@ -99,6 +135,7 @@ export const replaceSharedSliceCreator = createAction(
   sliceKeys: string[];
   preserve: string[];
 }>();
+
 export const deleteSharedSliceCreator = createAction(
   "CUSTOM_TYPE/DELETE_SHARED_SLICE"
 )<{
@@ -115,6 +152,7 @@ export const addFieldIntoGroupCreator = createAction(
   fieldId: string;
   field: Field;
 }>();
+
 export const replaceFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/REPLACE_FIELD"
 )<{
@@ -124,6 +162,7 @@ export const replaceFieldIntoGroupCreator = createAction(
   newFieldId: string;
   value: Field;
 }>();
+
 export const reorderFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/REORDER_FIELD"
 )<{
@@ -132,6 +171,7 @@ export const reorderFieldIntoGroupCreator = createAction(
   start: number;
   end: number;
 }>();
+
 export const deleteFieldIntoGroupCreator = createAction(
   "CUSTOM_TYPE/GROUP/DELETE_FIELD"
 )<{

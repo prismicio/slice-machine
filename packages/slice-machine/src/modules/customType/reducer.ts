@@ -22,6 +22,8 @@ import {
   replaceFieldIntoGroupCreator,
   saveCustomTypeCreator,
   pushCustomTypeCreator,
+  updateGroupFieldMockConfigCreator,
+  deleteGroupFieldMockConfigCreator,
 } from "./actions";
 import { Tab } from "@models/common/CustomType/tab";
 import {
@@ -35,6 +37,7 @@ import StateHelpers from "./stateHelpers";
 import { CustomType } from "@models/common/CustomType";
 import { AsArray, GroupField } from "@models/common/widgets/Group/type";
 import { Group } from "@models/common/CustomType/group";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 // Reducer
 export const customTypeReducer: Reducer<
@@ -207,22 +210,64 @@ export const customTypeReducer: Reducer<
         )
       );
     }
-    case getType(updateFieldMockConfigCreator):
+    case getType(updateFieldMockConfigCreator): {
       if (!state) return state;
-
+      if (!action.payload.customTypeMockConfig) return state;
+      const updatedConfig = CustomTypeMockConfig.updateFieldMockConfig(
+        action.payload.customTypeMockConfig,
+        action.payload.previousFieldId,
+        action.payload.fieldId,
+        action.payload.value
+      );
       return {
         ...state,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        mockConfig: action.payload.mockConfig,
+        mockConfig: updatedConfig,
       };
+    }
     case getType(deleteFieldMockConfigCreator):
       if (!state) return state;
+      if (!action.payload.customTypeMockConfig) return state;
+
+      const updatedConfig = CustomTypeMockConfig.deleteFieldMockConfig(
+        action.payload.customTypeMockConfig,
+        action.payload.fieldId
+      );
 
       return {
         ...state,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        mockConfig: action.payload.mockConfig,
+        mockConfig: updatedConfig,
       };
+    case getType(updateGroupFieldMockConfigCreator): {
+      if (!state) return state;
+
+      const updatedConfig = CustomTypeMockConfig.updateGroupFieldMockConfig(
+        action.payload.customTypeMockConfig,
+        action.payload.groupId,
+        action.payload.previousFieldId,
+        action.payload.fieldId,
+        action.payload.value
+      );
+
+      return {
+        ...state,
+        mockConfig: updatedConfig,
+      };
+    }
+    case getType(deleteGroupFieldMockConfigCreator): {
+      if (!state) return state;
+      if (!action.payload.customTypeMockConfig) return state;
+
+      const updatedConfig = CustomTypeMockConfig.deleteGroupFieldMockConfig(
+        action.payload.customTypeMockConfig,
+        action.payload.groupId,
+        action.payload.fieldId
+      );
+
+      return {
+        ...state,
+        mockConfig: updatedConfig,
+      };
+    }
     case getType(addFieldIntoGroupCreator): {
       const { tabId, groupId, fieldId, field } = action.payload;
       return StateHelpers.updateTab(

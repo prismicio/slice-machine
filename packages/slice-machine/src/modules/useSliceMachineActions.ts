@@ -44,13 +44,11 @@ import {
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
+  updateGroupFieldMockConfigCreator,
+  deleteGroupFieldMockConfigCreator,
+  deleteFieldMockConfigCreator,
+  updateFieldMockConfigCreator,
 } from "@src/modules/customType";
-import {
-  deleteWidgetGroupMockConfig as deleteWidgetGroupMockConfigHelper,
-  deleteWidgetMockConfig as deleteWidgetMockConfigHelper,
-  updateWidgetGroupMockConfig as updateWidgetGroupMockConfigHelper,
-  updateWidgetMockConfig as updateWidgetMockConfigHelper,
-} from "@src/modules/customType/mockHelpers";
 import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { Field } from "@models/common/CustomType/fields";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
@@ -150,12 +148,57 @@ const useSliceMachineActions = () => {
     sliceKeys: string[],
     preserve: string[]
   ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
-  const updateWidgetMockConfig = updateWidgetMockConfigHelper(dispatch);
-  const deleteWidgetMockConfig = deleteWidgetMockConfigHelper(dispatch);
-  const updateWidgetGroupMockConfig =
-    updateWidgetGroupMockConfigHelper(dispatch);
-  const deleteWidgetGroupMockConfig =
-    deleteWidgetGroupMockConfigHelper(dispatch);
+  const updateFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    previousFieldId: string,
+    fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any
+  ) =>
+    dispatch(
+      updateFieldMockConfigCreator({
+        customTypeMockConfig,
+        previousFieldId,
+        fieldId,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value,
+      })
+    );
+  const deleteFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ) =>
+    dispatch(deleteFieldMockConfigCreator({ customTypeMockConfig, fieldId }));
+  const updateGroupFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    groupId: string,
+    previousFieldId: string,
+    fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any
+  ) =>
+    dispatch(
+      updateGroupFieldMockConfigCreator({
+        customTypeMockConfig,
+        groupId,
+        previousFieldId,
+        fieldId,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value,
+      })
+    );
+  const deleteGroupFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    groupId: string,
+    fieldId: string
+  ) =>
+    dispatch(
+      deleteGroupFieldMockConfigCreator({
+        customTypeMockConfig,
+        groupId,
+        fieldId,
+      })
+    );
   const addFieldIntoGroup = (
     tabId: string,
     groupId: string,
@@ -240,10 +283,10 @@ const useSliceMachineActions = () => {
     createSliceZone,
     deleteCustomTypeSharedSlice,
     replaceCustomTypeSharedSlice,
-    updateWidgetMockConfig,
-    deleteWidgetMockConfig,
-    updateWidgetGroupMockConfig,
-    deleteWidgetGroupMockConfig,
+    updateFieldMockConfig,
+    deleteFieldMockConfig,
+    updateGroupFieldMockConfig,
+    deleteGroupFieldMockConfig,
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,

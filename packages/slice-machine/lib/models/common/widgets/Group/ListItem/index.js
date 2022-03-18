@@ -45,8 +45,8 @@ const CustomListItem = ({
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
   const {
-    updateWidgetGroupMockConfig,
-    deleteWidgetGroupMockConfig,
+    updateGroupFieldMockConfig,
+    deleteGroupFieldMockConfig,
     addFieldIntoGroup,
     deleteFieldIntoGroup,
     replaceFieldIntoGroup,
@@ -92,7 +92,7 @@ const CustomListItem = ({
     }
     if (mockValue) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      updateWidgetGroupMockConfig(
+      updateGroupFieldMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
@@ -103,7 +103,7 @@ const CustomListItem = ({
       );
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      deleteWidgetGroupMockConfig(
+      deleteGroupFieldMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         mockConfig,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
@@ -132,7 +132,7 @@ const CustomListItem = ({
 
   const onDeleteItem = (key) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
-    deleteWidgetGroupMockConfig(mockConfig, groupItem.key, key);
+    deleteGroupFieldMockConfig(mockConfig, groupItem.key, key);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     deleteFieldIntoGroup(tabId, groupItem.key, key);
   };
