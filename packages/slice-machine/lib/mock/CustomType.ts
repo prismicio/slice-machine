@@ -62,10 +62,7 @@ export default async function MockCustomType(
     const { fields, groups, sliceZone } = Tab.organiseFields(tab);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mockedFields = fieldsHandler(
-      fields.map((e) => [e.key, e.value]),
-      mockConfig
-    );
+    const mockedFields = fieldsHandler(fields as [], mockConfig);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     customTypeMock.data = {
       ...customTypeMock.data,

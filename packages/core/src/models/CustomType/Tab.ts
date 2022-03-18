@@ -14,6 +14,7 @@ import {
   LegacySlice,
   SharedSliceRef,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { getOrElseW } from "fp-ts/lib/Either";
 
 export const TabFields = t.array(
   t.type({
@@ -36,9 +37,23 @@ export type TabSM = t.TypeOf<typeof TabSM>;
 
 export const Tabs = {
   toSM(key: string, tab: DynamicSection): TabSM {
-    const maybeSliceZone = Object.entries(tab).find(
+    const maybeSz = Object.entries(tab).find(
       ([, value]) => value.type === WidgetTypes.Slices
-    ) as SlicesSM | undefined;
+    );
+    const maybeSliceZone = (() => {
+      if (!maybeSz) return;
+      return getOrElseW(() => {
+        () => {
+          console.warn(`Invalid slicezone in tab ${key}`);
+          return;
+        };
+      })(
+        SlicesSM.decode({
+          key: maybeSz[0],
+          value: maybeSz[1],
+        })
+      );
+    })();
 
     return {
       key,
