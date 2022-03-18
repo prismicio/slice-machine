@@ -6,7 +6,7 @@ import { SelectRepeatable } from "./components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectAllCustomTypeIds } from "@src/modules/customTypes";
+import { selectAllCustomTypeIds } from "@src/modules/availableCustomTypes";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";

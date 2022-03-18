@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { createCustomType } from "@src/modules/customTypes/factory";
+import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
 
 describe("[Custom types factory]", () => {

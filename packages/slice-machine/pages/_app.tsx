@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
     const { store, persistor } = configureStore({
       environment: serverState.env,
-      customTypes: {
+      availableCustomTypes: {
         map: normalizedCustomTypes,
       },
       slices: {

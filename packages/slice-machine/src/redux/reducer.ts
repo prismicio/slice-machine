@@ -9,7 +9,7 @@ import { loadingReducer } from "@src/modules/loading";
 import { userContextReducer } from "@src/modules/userContext";
 import { environmentReducer } from "@src/modules/environment";
 import { simulatorReducer } from "@src/modules/simulator";
-import { customTypesReducer } from "@src/modules/customTypes";
+import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { selectedCustomTypeReducer } from "@src/modules/selectedCustomType";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
@@ -24,7 +24,7 @@ const createReducer = (): Reducer =>
     userContext: userContextReducer,
     environment: environmentReducer,
     simulator: simulatorReducer,
-    customTypes: customTypesReducer,
+    availableCustomTypes: availableCustomTypesReducer,
     selectedCustomType: selectedCustomTypeReducer,
     slices: slicesReducer,
     router: routerReducer,

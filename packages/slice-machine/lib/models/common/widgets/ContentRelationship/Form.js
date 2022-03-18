@@ -9,7 +9,7 @@ import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 import { useSelector } from "react-redux";
-import { selectAllCustomTypes } from "@src/modules/customTypes";
+import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 
 const FormFields = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

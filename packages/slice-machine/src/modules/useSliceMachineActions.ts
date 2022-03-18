@@ -22,7 +22,7 @@ import {
   connectToSimulatorIframeCreator,
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
-import { createCustomTypeCreator } from "@src/modules/customTypes";
+import { createCustomTypeCreator } from "@src/modules/availableCustomTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";

@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { CustomTypesStoreType, FrontEndCustomType } from "./types";
+import { AvailableCustomTypesStoreType, FrontEndCustomType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { CustomType, ObjectTabs } from "@models/common/CustomType";
@@ -11,7 +11,7 @@ import { saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
-import { createCustomType } from "@src/modules/customTypes/factory";
+import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
   normalizeFrontendCustomType,
@@ -41,23 +41,23 @@ type CustomTypesActions =
 // Selectors
 export const selectAllCustomTypes = (
   store: SliceMachineStoreType
-): FrontEndCustomType[] => Object.values(store.customTypes.map);
+): FrontEndCustomType[] => Object.values(store.availableCustomTypes.map);
 
 export const selectAllCustomTypeIds = (
   store: SliceMachineStoreType
-): string[] => Object.keys(store.customTypes.map);
+): string[] => Object.keys(store.availableCustomTypes.map);
 
 export const selectCustomTypeById = (
   store: SliceMachineStoreType,
   id: string
-): FrontEndCustomType | null => store.customTypes.map[id];
+): FrontEndCustomType | null => store.availableCustomTypes.map[id];
 
 export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
-  Object.values(store.customTypes.map).length;
+  Object.values(store.availableCustomTypes.map).length;
 
 // Reducer
-export const customTypesReducer: Reducer<
-  CustomTypesStoreType | null,
+export const availableCustomTypesReducer: Reducer<
+  AvailableCustomTypesStoreType | null,
   CustomTypesActions
 > = (state, action) => {
   if (!state) return null;
@@ -130,6 +130,6 @@ function* watchCreateCustomType() {
 }
 
 // Saga Exports
-export function* watchCustomTypesSagas() {
+export function* watchAvailableCustomTypesSagas() {
   yield fork(watchCreateCustomType);
 }

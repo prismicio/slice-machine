@@ -26,7 +26,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracker";
-import { selectCustomTypeCount } from "@src/modules/customTypes";
+import { selectCustomTypeCount } from "@src/modules/availableCustomTypes";
 
 Modal.setAppElement("#__next");
 

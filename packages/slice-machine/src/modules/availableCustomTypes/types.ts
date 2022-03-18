@@ -5,6 +5,6 @@ export type FrontEndCustomType = {
   remote?: CustomType<ObjectTabs>;
 };
 
-export type CustomTypesStoreType = {
+export type AvailableCustomTypesStoreType = {
   map: Record<string, FrontEndCustomType>;
 };

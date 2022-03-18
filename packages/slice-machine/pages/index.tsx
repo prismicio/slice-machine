@@ -10,13 +10,13 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import {
   selectCustomTypeCount,
   selectAllCustomTypes,
-} from "@src/modules/customTypes";
+} from "@src/modules/availableCustomTypes";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
-import { FrontEndCustomType } from "@src/modules/customTypes/types";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 
 const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
   customTypes,
