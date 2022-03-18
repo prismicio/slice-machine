@@ -2,12 +2,12 @@ import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../src/auth/helpers";
 import { Auth } from "../../src/auth";
 import * as Utils from "../../src/utils";
-import * as communication from "../../src/core/communication";
+import { Communication } from "../../src/prismic";
 import { PrismicSharedConfigManager } from "../../src/node-utils/PrismicSharedConfig";
 import { Roles } from "../../src/models";
 
 jest.mock("../../src/node-utils/PrismicSharedConfig");
-jest.mock("../../src/core/communication");
+jest.mock("../../src/prismic/communication");
 jest.mock("../../src/utils/poll");
 
 describe("communication", () => {
@@ -80,7 +80,7 @@ describe("communication", () => {
     const mockedConfig = PrismicSharedConfigManager.get as jest.Mock;
     mockedConfig.mockReturnValue({ base: fakeBase, cookies: "" });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = Communication.validateSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -103,7 +103,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = Communication.validateSession as jest.Mock;
     mockedValidate.mockReturnValue(
       Promise.resolve({
         email: "fake@prismic.io",
@@ -126,7 +126,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = Communication.validateSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.reject("unauthorized"));
 
     const result = await Auth.validateSession(fakeBase);
@@ -149,7 +149,7 @@ describe("communication", () => {
       cookies: "that's some real cookie data",
     });
 
-    const mockedValidate = communication.validateSession as jest.Mock;
+    const mockedValidate = Communication.validateSession as jest.Mock;
     mockedValidate.mockReturnValue(Promise.resolve(userInfo));
 
     const result = await Auth.validateSession(fakeBase);

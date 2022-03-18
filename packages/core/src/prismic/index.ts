@@ -1,7 +1,9 @@
 import type { Manifest, Frameworks } from "../models";
 import * as Communication from "./communication";
 import { Repositories } from "../models/Repositories";
+
 export * as Communication from "./communication";
+
 export interface Core {
   cwd: string;
   base: string;

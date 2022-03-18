@@ -6,9 +6,9 @@ import {
   afterEach,
   jest,
 } from "@jest/globals";
-import * as communication from "../../../src/core/communication";
+import * as communication from "../../src/prismic/communication";
 import nock from "nock";
-import { Frameworks, Roles } from "../../../src/models";
+import { Frameworks, Roles } from "../../src/models";
 
 describe("communication", () => {
   afterEach(() => {
