@@ -1,4 +1,4 @@
-import { Communication, NodeUtils } from "@slicemachine/core";
+import { NodeUtils, Prismic } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 
 export function createRepository(
@@ -10,7 +10,12 @@ export function createRepository(
   const spinner = NodeUtils.logs.spinner("Creating Prismic Repository");
   spinner.start();
 
-  return Communication.createRepository(domain, cookies, framework, base)
+  return Prismic.Communication.createRepository(
+    domain,
+    cookies,
+    framework,
+    base
+  )
     .then((res) => {
       const addressUrl = new URL(base);
       const repoDomainName = res.data.domain || domain;

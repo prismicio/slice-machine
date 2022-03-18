@@ -3,6 +3,7 @@ import * as Communication from "./communication";
 import { Repositories } from "../models/Repositories";
 
 export * as Communication from "./communication";
+export * as Endpoints from "./endpoints";
 
 export interface Core {
   cwd: string;
@@ -11,7 +12,7 @@ export interface Core {
 
   /*CustomTypes?: {
     get: (apiEndpoint: string, token: string, customTypeId: string) => Promise<any>,
-    getAll: (apiEndpoint: string, token: string) => Promise<any>,
+1    getAll: (apiEndpoint: string, token: string) => Promise<any>,
     insert: (apiEndpoint: string, token: string, data: any) => Promise<void>,
     update: (apiEndpoint: string, token: string, data: any) => Promise<void>,
     remove: (apiEndpoint: string, token: string, customTypeId: string) => Promise<void>

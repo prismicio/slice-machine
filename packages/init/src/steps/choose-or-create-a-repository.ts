@@ -1,12 +1,6 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import {
-  Communication,
-  Utils,
-  Models,
-  CONSTS,
-  NodeUtils,
-} from "@slicemachine/core";
+import { Prismic, Utils, Models, CONSTS, NodeUtils } from "@slicemachine/core";
 import { createRepository } from "../utils/create-repo";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
@@ -42,7 +36,7 @@ export async function promptForRepoDomain(
         transformer: (value) =>
           prettyRepoName(address, String(value || defaultValue)),
         async validate(name: string) {
-          const result = await Communication.validateRepositoryName(
+          const result = await Prismic.Communication.validateRepositoryName(
             name,
             base,
             false
@@ -134,7 +128,7 @@ export async function chooseOrCreateARepository(
   domain?: string
 ): Promise<string> {
   const token = Utils.Cookie.parsePrismicAuthToken(cookies);
-  const repos = await Communication.listRepositories(token, base);
+  const repos = await Prismic.Communication.listRepositories(token, base);
 
   const hasRepo = domain && repos.find((d) => d.domain === domain);
   if (hasRepo) return domain;

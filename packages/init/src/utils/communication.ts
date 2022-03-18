@@ -2,13 +2,7 @@ import axios from "axios";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
-import {
-  Utils,
-  Models,
-  Communication,
-  NodeUtils,
-  CONSTS,
-} from "@slicemachine/core";
+import { Utils, Models, Prismic, NodeUtils, CONSTS } from "@slicemachine/core";
 
 export async function getUserProfile(
   cookies: string,
@@ -57,7 +51,10 @@ export async function validateSessionAndGetProfile(
   if (base != config.base) return Promise.resolve(null); // not the same base so it doesn't
 
   try {
-    const info = await Communication.validateSession(config.cookies, base);
+    const info = await Prismic.Communication.validateSession(
+      config.cookies,
+      base
+    );
     const profile = await getUserProfile(config.cookies, base).catch(
       () => null
     );

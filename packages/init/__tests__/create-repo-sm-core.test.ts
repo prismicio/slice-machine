@@ -7,8 +7,10 @@ import { stdout, stderr } from "stdout-stderr";
 
 jest.mock("@slicemachine/core", () => ({
   // fragile test issue, wy did we keep this version and not the other?
-  Communication: {
-    createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
+  Prismic: {
+    Communication: {
+      createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
+    },
   },
   Models: {
     Frameworks: {
@@ -48,7 +50,7 @@ describe("mocking the core example: not advised", () => {
     );
     stderr.stop();
     stdout.stop();
-    expect(mockCore.Communication.createRepository).toHaveBeenCalled();
+    expect(mockCore.Prismic.Communication.createRepository).toHaveBeenCalled();
     expect(exitSpy).toHaveBeenCalled();
   });
 });

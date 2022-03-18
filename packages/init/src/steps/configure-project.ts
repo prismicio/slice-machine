@@ -1,8 +1,8 @@
-import { Utils, CONSTS, NodeUtils } from "@slicemachine/core";
+import { CONSTS, NodeUtils, Prismic } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
 
-type Base = Utils.Endpoints.Base;
+type Base = Prismic.Endpoints.Base;
 
 const defaultSliceMachineVersion = "0.0.41";
 
@@ -31,7 +31,7 @@ export function configureProject(
       ...(manifestAlreadyExistWithContent
         ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
-      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(
+      apiEndpoint: Prismic.Endpoints.buildRepositoryEndpoint(
         base,
         repositoryDomainName
       ),

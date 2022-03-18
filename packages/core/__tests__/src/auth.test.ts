@@ -1,8 +1,7 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../src/auth/helpers";
 import { Auth } from "../../src/auth";
-import * as Utils from "../../src/utils";
-import { Communication } from "../../src/prismic";
+import { Communication, Endpoints } from "../../src/prismic";
 import { PrismicSharedConfigManager } from "../../src/node-utils/PrismicSharedConfig";
 import { Roles } from "../../src/models";
 
@@ -16,7 +15,7 @@ describe("communication", () => {
   });
 
   const fakeBase = "https://fake.io";
-  const endpoints = Utils.Endpoints.buildEndpoints(fakeBase);
+  const endpoints = Endpoints.buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
     const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");

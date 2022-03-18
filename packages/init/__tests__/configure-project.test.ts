@@ -64,7 +64,8 @@ describe("configure-project", () => {
   });
 
   const fakeCwd = "./";
-  const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
+  const fakeBase =
+    "https://music.to.my.hears.io" as Core.Prismic.Endpoints.Base;
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
     value: Core.Models.Frameworks.react,
