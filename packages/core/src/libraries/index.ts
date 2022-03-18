@@ -1,10 +1,14 @@
 import fs from "fs";
 import path from "path";
+import * as t from "io-ts";
+import { getOrElseW } from "fp-ts/lib/Either";
 
-import Files from "../node-utils/files";
-import { getInfoFromPath } from "../utils/lib";
+import { Files } from "../node-utils";
+import { getInfoFromPath } from "./path";
 import { getComponentInfo } from "./component";
-import { Library, Component, LibraryMeta } from "../models/Library";
+import { Library, Component } from "../models/Library";
+
+export * from "./screenshot";
 
 export function handleLibraryPath(
   cwd: string,
@@ -79,4 +83,27 @@ export function libraries(
     .filter(Boolean) as ReadonlyArray<Library<Component>>;
 }
 
-export * from "./screenshot";
+export const LibraryMeta = {
+  reader: t.exact(
+    t.partial({
+      name: t.string,
+      version: t.string,
+    })
+  ),
+  build(libPath: string): t.TypeOf<typeof this.reader> | undefined {
+    const meta = Files.safeReadEntity(
+      path.join(libPath, "meta.json"),
+      (payload) => {
+        return getOrElseW(() => null)(LibraryMeta.reader.decode(payload));
+      }
+    );
+    if (!meta) return;
+
+    return {
+      name: meta.name,
+      version: meta.version,
+    };
+  },
+};
+
+export type LibraryMeta = t.TypeOf<typeof LibraryMeta.reader>;

@@ -1,6 +1,6 @@
 import { Screenshot } from "../models";
 import path from "path";
-import Files from "../node-utils/files";
+import { Files } from "../node-utils";
 
 export enum Extensions {
   jpeg = "jpeg",
