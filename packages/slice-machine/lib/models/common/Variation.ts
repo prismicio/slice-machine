@@ -1,7 +1,7 @@
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import type Models from "@slicemachine/core/build/src/models";
-import { VariationSM, FieldsSM } from "@slicemachine/core/build/src/models";
-("./CustomType/fields");
+import { VariationSM } from "@slicemachine/core/build/src/models/Slice";
+import { FieldsSM } from "@slicemachine/core/build/src/models/Fields";
 
 import camelCase from "lodash/camelCase";
 

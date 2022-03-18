@@ -1,6 +1,10 @@
-import { ArrayTabs, CustomType } from "../common/CustomType";
-import { Field } from "../common/CustomType/fields";
-import { TabAsArray } from "../common/CustomType/tab";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import {
+  CustomTypeSM,
+  TabSM,
+} from "@slicemachine/core/build/src/models/CustomType";
+import { GroupSM } from "@slicemachine/core/build/src/models/Group";
 
 export enum CustomTypeStatus {
   New = "NEW_CT",
@@ -8,12 +12,15 @@ export enum CustomTypeStatus {
   Synced = "SYNCED",
 }
 
-type PoolOfFields = ReadonlyArray<{ key: string; value: Field }>;
+type PoolOfFields = ReadonlyArray<{
+  key: string;
+  value: NestableWidget | UID | GroupSM;
+}>;
 
 export interface CustomTypeState {
-  current: CustomType<ArrayTabs>;
-  initialCustomType: CustomType<ArrayTabs>;
-  remoteCustomType: CustomType<ArrayTabs> | undefined;
+  current: CustomTypeSM;
+  initialCustomType: CustomTypeSM;
+  remoteCustomType: CustomTypeSM | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +31,7 @@ export interface CustomTypeState {
 }
 
 export const CustomTypeState = {
-  tab(state: CustomTypeState, tabId?: string): TabAsArray | undefined {
+  tab(state: CustomTypeState, tabId?: string): TabSM | undefined {
     if (state.current.tabs.length) {
       if (tabId) return state.current.tabs.find((v) => v.key === tabId);
       return state.current.tabs[0];
@@ -32,7 +39,7 @@ export const CustomTypeState = {
   },
 
   updateTab(state: CustomTypeState, tabId: string) {
-    return (mutate: (v: TabAsArray) => TabAsArray): CustomTypeState => {
+    return (mutate: (v: TabSM) => TabSM): CustomTypeState => {
       const tabs = state.current.tabs.map((v) => {
         if (v.key === tabId) return mutate(v);
         else return v;
@@ -57,8 +64,8 @@ export const CustomTypeState = {
       },
     };
   },
-  getPool(tabs: ArrayTabs): PoolOfFields {
-    return tabs.reduce<PoolOfFields>((acc: PoolOfFields, curr: TabAsArray) => {
+  getPool(tabs: Array<TabSM>): PoolOfFields {
+    return tabs.reduce<PoolOfFields>((acc: PoolOfFields, curr: TabSM) => {
       return [...acc, ...curr.value];
     }, []);
   },

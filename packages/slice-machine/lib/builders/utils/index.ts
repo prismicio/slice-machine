@@ -1,8 +1,9 @@
-import { AnyWidget } from "@lib/models/common/widgets/Widget";
-import { Media } from "@lib/models/common/widgets/Link/type";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { GroupSM } from "@slicemachine/core/build/src/models/Group";
 
 interface Widgets {
-  [x: string]: AnyWidget;
+  [x: string]: NestableWidget | UID | GroupSM;
 }
 
 export const findWidgetByConfigOrType = (
@@ -14,9 +15,9 @@ export const findWidgetByConfigOrType = (
   if (type === "Link") {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     switch (config?.select) {
-      case Media.document:
+      case "document":
         return widgets.ContentRelationship;
-      case Media.media:
+      case "media":
         return widgets.LinkToMedia;
       default:
         return widgets.Link;

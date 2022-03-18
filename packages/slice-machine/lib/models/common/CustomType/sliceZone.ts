@@ -1,117 +1,62 @@
-export enum SliceType {
-  SharedSlice = "SharedSlice",
-  Slice = "Slice",
-}
+import {
+  SlicesTypes,
+  CompositeSlice,
+  LegacySlice,
+} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import SliceState from "@lib/models/ui/SliceState";
 
-export interface SharedSlice {
-  type: SliceType.SharedSlice;
-}
-
-export interface NonSharedSlice {
-  type: SliceType.Slice;
-}
-
-export interface NonSharedSliceInSliceZone {
+export type NonSharedSliceInSliceZone = {
   key: string;
-  value: {
-    type: SliceType.Slice;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [x: string]: any;
-  };
-}
-
-export type SliceZoneType = "Slices";
-export const sliceZoneType: SliceZoneType = "Slices";
-
-export interface SliceZone {
-  type: SliceZoneType;
-  fieldset: string;
-  config: {
-    choices: {
-      [x: string]: SharedSlice | NonSharedSlice;
-    };
-  };
-}
-
-export interface SliceZoneAsArray {
-  key: string;
-  value: ReadonlyArray<{ key: string; value: SharedSlice | NonSharedSlice }>;
+  value: LegacySlice | CompositeSlice;
+};
+export interface SliceZoneSlice {
+  type: SlicesTypes;
+  payload: SliceState | NonSharedSliceInSliceZone;
 }
 
 export const SliceZone = {
-  toArray(key: string, sz: SliceZone): SliceZoneAsArray {
-    return {
-      key,
-      value: Object.entries(sz.config.choices).map(([key, value]) => ({
+  addSharedSlice(sz: SlicesSM, key: string): SlicesSM {
+    const value = sz.value.concat([
+      {
         key,
-        value,
-      })),
-    };
-  },
-  toObject(sz: SliceZoneAsArray): SliceZone {
-    return {
-      type: sliceZoneType,
-      fieldset: "Slice Zone",
-      config: {
-        choices: sz.value.reduce(
-          (acc, curr) => ({
-            ...acc,
-            [curr.key]: curr.value,
-          }),
-          {}
-        ),
+        value: {
+          type: SlicesTypes.SharedSlice,
+        },
       },
-    };
-  },
-  addSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
-    if (sz.value.find((e) => e.key === key)) {
-      return sz;
-    }
+    ]);
     return {
       ...sz,
-      value: [
-        ...sz.value,
-        {
-          key,
-          value: {
-            type: SliceType.SharedSlice,
-          },
-        },
-      ],
+      value,
     };
   },
   replaceSharedSlice(
-    sz: SliceZoneAsArray,
+    sz: SlicesSM,
     keys: ReadonlyArray<string>,
     preserve: ReadonlyArray<string> = []
-  ): SliceZoneAsArray {
+  ): SlicesSM {
+    const value = sz.value
+      .filter(({ key }) => preserve.includes(key))
+      .concat(
+        keys.map((key) => ({
+          key,
+          value: { type: SlicesTypes.SharedSlice },
+        }))
+      );
     return {
       ...sz,
-      value: sz.value
-        .filter((e) => preserve.includes(e.key))
-        .concat(
-          keys.map((key) => ({
-            key,
-            value: {
-              type: SliceType.SharedSlice,
-            },
-          }))
-        ),
+      value,
     };
   },
-  removeSharedSlice(sz: SliceZoneAsArray, key: string): SliceZoneAsArray {
+  removeSharedSlice(sz: SlicesSM, key: string): SlicesSM {
+    const value = sz.value.filter(({ key: k }) => k === key);
+
     return {
       ...sz,
-      value: sz.value.filter((e) => e.key !== key),
+      value,
     };
   },
-  createEmpty(): SliceZone {
-    return {
-      type: sliceZoneType,
-      fieldset: "Slice Zone",
-      config: {
-        choices: {},
-      },
-    };
+  createEmpty(key: string): SlicesSM {
+    return { key, value: [] };
   },
 };

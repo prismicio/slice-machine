@@ -1,26 +1,22 @@
 import { useReducer } from "react";
 import equal from "fast-deep-equal";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { CustomTypeState, CustomTypeStatus } from "@models/ui/CustomTypeState";
 
 import reducer from "./reducer";
 import CustomTypeStore from "./store";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 export function useModelReducer({
   customType,
-  remoteCustomType: remoteCustomTypeObject,
+  remoteCustomType,
   initialMockConfig = {},
 }: {
-  customType: CustomType<ObjectTabs>;
-  remoteCustomType: CustomType<ObjectTabs> | undefined;
+  customType: CustomTypeSM;
+  remoteCustomType: CustomTypeSM | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialMockConfig: any;
 }): [CustomTypeState, CustomTypeStore] {
-  const current = CustomType.toArray(customType);
-
-  const remoteCustomType = remoteCustomTypeObject
-    ? CustomType.toArray(remoteCustomTypeObject)
-    : undefined;
+  const current = customType;
 
   const __status = (() => {
     if (!remoteCustomType) {

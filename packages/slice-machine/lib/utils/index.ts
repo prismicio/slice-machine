@@ -2,12 +2,12 @@ import * as yup from "yup";
 import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { FieldType } from "../models/common/CustomType/fields";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
 import { VariationSM } from "@slicemachine/core/build/src/models";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,7 +51,7 @@ export const compareVariations = (
     rhs.map((e) => ({ ...e, imageUrl: undefined }))
   );
 };
-export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
+export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
   TYPE_NAME,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields: DefaultFields,

@@ -1,32 +1,21 @@
-import path from "path";
+import * as t from "io-ts";
 import glob from "glob";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import {
-  CustomType,
-  CustomTypeJsonModel,
-  ObjectTabs,
-} from "@lib/models/common/CustomType";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/src/models/CustomType/index";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { getOrElseW } from "fp-ts/lib/Either";
 
-const handleMatch = (matches: string[], env: BackendEnvironment) => {
-  return matches.reduce((acc: Array<CustomType<ObjectTabs>>, p: string) => {
-    const key = path.basename(path.dirname(p));
-    const pathToPreview = path.join(path.dirname(p), "index.png");
+const handleMatch = (matches: string[]) => {
+  return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsonCustomType: CustomTypeJsonModel = Files.readJson(p);
-      return [
-        ...acc,
-        {
-          ...CustomType.fromJsonModel(key, jsonCustomType),
-          previewUrl: Files.exists(pathToPreview)
-            ? `${env.baseUrl}/api/__preview?q=${encodeURIComponent(
-                path.join(path.dirname(p), "index.png")
-              )}&uniq=${Math.random()}`
-            : undefined,
-        },
-      ];
+      const jsonCustomType: CustomType = Files.readJson(p);
+      return [...acc, CustomTypes.toSM(jsonCustomType)];
     } catch (e) {
       return acc;
     }
@@ -35,23 +24,31 @@ const handleMatch = (matches: string[], env: BackendEnvironment) => {
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
-): Promise<{ remoteCustomTypes: CustomTypeJsonModel[] }> => {
+): Promise<{ remoteCustomTypes: CustomTypeSM[] }> => {
   if (!env.isUserLoggedIn) return { remoteCustomTypes: [] };
 
   try {
     const res = await env.client.getCustomTypes();
     const { remoteCustomTypes } = await (async (): Promise<{
-      remoteCustomTypes: CustomTypeJsonModel[];
+      remoteCustomTypes: CustomTypeSM[];
     }> => {
       if (res.status > 209) {
         return { remoteCustomTypes: [] };
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const remoteCustomTypes = await (res.json
-        ? res.json()
+      const result = await (res.json
+        ? (res.json() as Promise<Array<unknown>>)
         : Promise.resolve([]));
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { remoteCustomTypes };
+      const remoteCustomTypes = getOrElseW<unknown, CustomType[]>(() => {
+        console.warn("Unable to parse remote custom types.");
+        return [];
+      })(t.array(CustomType).decode(result));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      return {
+        remoteCustomTypes: remoteCustomTypes.map((c: CustomType) =>
+          CustomTypes.toSM(c)
+        ),
+      };
     })();
     return { remoteCustomTypes };
   } catch (e) {
@@ -59,18 +56,18 @@ const fetchRemoteCustomTypes = async (
   }
 };
 
-const saveCustomType = (
-  cts: ReadonlyArray<CustomTypeJsonModel>,
-  cwd: string
-) => {
+const saveCustomType = (cts: ReadonlyArray<CustomTypeSM>, cwd: string) => {
   for (const ct of cts) {
-    Files.write(CustomTypesPaths(cwd).customType(ct.id).model(), ct);
+    Files.write(
+      CustomTypesPaths(cwd).customType(ct.id).model(),
+      CustomTypes.fromSM(ct)
+    );
   }
 };
 
 export default async function handler(env: BackendEnvironment): Promise<{
-  customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  customTypes: ReadonlyArray<CustomTypeSM>;
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
 }> {
   const { cwd } = env;
 
@@ -86,11 +83,7 @@ export default async function handler(env: BackendEnvironment): Promise<{
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const matches = glob.sync(`${pathToCustomTypes}/**/index.json`);
   return {
-    customTypes: handleMatch(matches, env),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    remoteCustomTypes: remoteCustomTypes.map((ct: any) =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-      CustomType.fromJsonModel(ct.id, ct)
-    ),
+    customTypes: handleMatch(matches),
+    remoteCustomTypes,
   };
 }

@@ -9,7 +9,8 @@ import Actions, {
 import saveCustomType from "./actions/save";
 import pushCustomType from "./actions/push";
 
-import { Field } from "@lib/models/common/CustomType/fields";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export default class CustomTypeStore implements Store {
   constructor(
@@ -47,7 +48,7 @@ export default class CustomTypeStore implements Store {
       delete: (): void => {
         this.dispatch({ type: Actions.DeleteTab, payload: { tabId } });
       },
-      addWidget: (id: string, field: Field): void => {
+      addWidget: (id: string, field: NestableWidget | UID): void => {
         this.dispatch({
           type: Actions.AddWidget,
           payload: { tabId, id, field },
@@ -59,7 +60,7 @@ export default class CustomTypeStore implements Store {
       replaceWidget: (
         previousKey: string,
         newKey: string,
-        value: Field
+        value: NestableWidget | UID
       ): void => {
         this.dispatch({
           type: Actions.ReplaceWidget,
@@ -99,7 +100,7 @@ export default class CustomTypeStore implements Store {
       // eslint-disable-next-line @typescript-eslint/ban-types
       group: (groupId: string): Record<string, Function> => {
         return {
-          addWidget: (id: string, field: Field): void => {
+          addWidget: (id: string, field: NestableWidget): void => {
             this.dispatch({
               type: Actions.GroupAddWidget,
               payload: { tabId, groupId, id, field },
@@ -108,7 +109,7 @@ export default class CustomTypeStore implements Store {
           replaceWidget: (
             previousKey: string,
             newKey: string,
-            value: Field
+            value: NestableWidget
           ): void => {
             this.dispatch({
               type: Actions.GroupReplaceWidget,

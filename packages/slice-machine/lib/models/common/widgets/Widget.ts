@@ -1,10 +1,16 @@
+import {
+  UID,
+  WidgetTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
-
-import { FieldType, Field } from "../CustomType/fields";
-
-export interface Widget<F extends Field, S extends AnyObjectSchema> {
-  TYPE_NAME: FieldType;
+import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+export interface Widget<
+  F extends NestableWidget | UID | GroupSM,
+  S extends AnyObjectSchema
+> {
+  TYPE_NAME: WidgetTypes;
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleMockContent?: Function;
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,5 +36,9 @@ export interface Widget<F extends Field, S extends AnyObjectSchema> {
   Form?: (props: any) => React.ReactElement;
 }
 
+export const DEFAULT_CONFIG = {
+  label: "",
+  placeholder: "",
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
 export type AnyWidget = Widget<any, any>;

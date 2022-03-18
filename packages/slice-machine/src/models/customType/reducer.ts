@@ -7,18 +7,19 @@ import { Tab } from "@lib/models/common/CustomType/tab";
 
 import Actions from "./actions";
 import { Group } from "@lib/models/common/CustomType/group";
-import {
-  SliceZone,
-  SliceZoneAsArray,
-  sliceZoneType,
-} from "@lib/models/common/CustomType/sliceZone";
+import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
 import { CustomType } from "@lib/models/common/CustomType";
 
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { Field } from "@lib/models/common/CustomType/fields";
-import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
+import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import {
+  UID,
+  WidgetTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 export default function reducer(
   prevState: CustomTypeState,
@@ -89,20 +90,24 @@ export default function reducer(
       case Actions.AddWidget: {
         const { tabId, field, id } = action.payload as {
           tabId: string;
-          field: Field;
+          field: NestableWidget | UID;
           id: string;
         };
         try {
-          if (field.type !== sliceZoneType) {
-            const CurrentWidget: AnyWidget = Widgets[field.type];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            CurrentWidget.schema.validateSync(field, { stripUnknown: false });
-            return CustomTypeState.updateTab(
-              prevState,
-              tabId
-            )((tab) => Tab.addWidget(tab, id, field));
+          if (
+            field.type === WidgetTypes.Range ||
+            field.type === WidgetTypes.IntegrationField ||
+            field.type === WidgetTypes.Separator
+          ) {
+            throw new Error("Unsupported Field Type.");
           }
-          return prevState;
+          const CurrentWidget = Widgets[field.type];
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+          CurrentWidget.schema.validateSync(field, { stripUnknown: false });
+          return CustomTypeState.updateTab(
+            prevState,
+            tabId
+          )((tab) => Tab.addWidget(tab, id, field));
         } catch (err) {
           console.error(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -123,19 +128,23 @@ export default function reducer(
           tabId: string;
           previousKey: string;
           newKey: string;
-          value: Field;
+          value: NestableWidget | UID;
         };
         try {
-          if (value.type !== sliceZoneType) {
-            const CurrentWidget: AnyWidget = Widgets[value.type];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            CurrentWidget.schema.validateSync(value, { stripUnknown: false });
-            return CustomTypeState.updateTab(
-              prevState,
-              tabId
-            )((tab) => Tab.replaceWidget(tab, previousKey, newKey, value));
+          if (
+            value.type === WidgetTypes.Range ||
+            value.type === WidgetTypes.IntegrationField ||
+            value.type === WidgetTypes.Separator
+          ) {
+            throw new Error("Unsupported Field Type.");
           }
-          return prevState;
+          const CurrentWidget: AnyWidget = Widgets[value.type];
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+          CurrentWidget.schema.validateSync(value, { stripUnknown: false });
+          return CustomTypeState.updateTab(
+            prevState,
+            tabId
+          )((tab) => Tab.replaceWidget(tab, previousKey, newKey, value));
         } catch (err) {
           console.error(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -201,7 +210,7 @@ export default function reducer(
           tabId
         )((tab) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
+          Tab.updateSliceZone(tab)((sliceZone: SlicesSM) =>
             SliceZone.addSharedSlice(sliceZone, sliceKey)
           )
         );
@@ -217,7 +226,7 @@ export default function reducer(
           tabId
         )((tab) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
+          Tab.updateSliceZone(tab)((sliceZone: SlicesSM) =>
             SliceZone.replaceSharedSlice(sliceZone, sliceKeys, preserve)
           )
         );
@@ -232,7 +241,7 @@ export default function reducer(
           tabId
         )((tab) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          Tab.updateSliceZone(tab)((sliceZone: SliceZoneAsArray) =>
+          Tab.updateSliceZone(tab)((sliceZone: SlicesSM) =>
             SliceZone.removeSharedSlice(sliceZone, sliceKey)
           )
         );
@@ -255,7 +264,7 @@ export default function reducer(
           tabId: string;
           groupId: string;
           id: string;
-          field: Field;
+          field: NestableWidget;
         };
         return CustomTypeState.updateTab(
           prevState,
@@ -264,7 +273,7 @@ export default function reducer(
           Tab.updateGroup(
             tab,
             groupId
-          )((group: GroupField<AsArray>) =>
+          )((group: GroupSM) =>
             Group.addWidget(group, { key: id, value: field })
           )
         );
@@ -276,7 +285,7 @@ export default function reducer(
             groupId: string;
             previousKey: string;
             newKey: string;
-            value: Field;
+            value: NestableWidget;
           };
         return CustomTypeState.updateTab(
           prevState,
@@ -285,7 +294,7 @@ export default function reducer(
           Tab.updateGroup(
             tab,
             groupId
-          )((group: GroupField<AsArray>) =>
+          )((group: GroupSM) =>
             Group.replaceWidget(group, previousKey, newKey, value)
           )
         );
@@ -303,7 +312,7 @@ export default function reducer(
           Tab.updateGroup(
             tab,
             groupId
-          )((group: GroupField<AsArray>) => Group.deleteWidget(group, key))
+          )((group: GroupSM) => Group.deleteWidget(group, key))
         );
       }
       case Actions.GroupReorderWidget: {
@@ -320,9 +329,7 @@ export default function reducer(
           Tab.updateGroup(
             tab,
             groupId
-          )((group: GroupField<AsArray>) =>
-            Group.reorderWidget(group, start, end)
-          )
+          )((group: GroupSM) => Group.reorderWidget(group, start, end))
         );
       }
       default:
@@ -350,7 +357,7 @@ export default function reducer(
 
 const findAvailableKey = (
   startI: number,
-  existingSliceZones: (SliceZoneAsArray | null)[]
+  existingSliceZones: (SlicesSM | null)[]
 ) => {
   for (let i = startI; i < Infinity; i++) {
     const key = `slices${i.toString()}`;

@@ -2,7 +2,6 @@ import { Reducer } from "redux";
 import { CustomTypesStoreType } from "./types";
 import { ActionType, createAsyncAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
@@ -13,6 +12,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
 import { createCustomType } from "@src/modules/customTypes/factory";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -26,7 +26,7 @@ export const createCustomTypeCreator = createAsyncAction(
     repeatable: boolean;
   },
   {
-    newCustomType: CustomType<ObjectTabs>;
+    newCustomType: CustomTypeSM;
   }
 >();
 

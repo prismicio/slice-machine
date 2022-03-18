@@ -31,13 +31,14 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
-    "@prismicio/types-internal": "^0.2.7",
+    "@prismicio/types-internal": "^0.2.8",
     "axios": "^0.26.0",
     "chalk": "^4.1.2",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
     "fs-extra": "^10.0.0",
     "io-ts": "^2.2.16",
+    "io-ts-types": "^0.5.16",
     "open": "^8.2.1",
     "ora": "^5.4.1",
     "prompt": "^1.2.0"

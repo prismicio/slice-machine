@@ -13,10 +13,10 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 const CustomTypeTable: React.FC<{
-  customTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  customTypes: ReadonlyArray<CustomTypeSM>;
 }> = ({ customTypes }) => {
   const firstColumnWidth = "35%";
   const secondColumnWidth = "50%";

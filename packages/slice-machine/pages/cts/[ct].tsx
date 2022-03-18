@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 
 import { useModelReducer } from "src/models/customType/modelReducer";
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
@@ -11,10 +10,11 @@ import {
   selectLocalCustomTypes,
   selectRemoteCustomTypes,
 } from "@src/modules/customTypes";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 type CustomTypeBuilderWithProviderProps = {
-  customType: CustomType<ObjectTabs>;
-  remoteCustomType?: CustomType<ObjectTabs>;
+  customType: CustomTypeSM;
+  remoteCustomType?: CustomTypeSM;
 };
 
 const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =

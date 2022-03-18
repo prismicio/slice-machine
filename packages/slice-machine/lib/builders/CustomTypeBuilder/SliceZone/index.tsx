@@ -1,11 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
 import { LibrariesContext } from "@src/models/libraries/context";
-import {
-  SliceType,
-  NonSharedSliceInSliceZone,
-  SliceZoneAsArray,
-} from "@lib/models/common/CustomType/sliceZone";
 
 import SliceState from "@lib/models/ui/SliceState";
 import LibraryState from "@lib/models/ui/LibraryState";
@@ -16,14 +11,15 @@ import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 import SlicesList from "./List";
 import EmptyState from "./EmptyState";
-
-export interface SliceZoneSlice {
-  type: SliceType;
-  payload: SliceState | NonSharedSliceInSliceZone;
-}
+import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  NonSharedSliceInSliceZone,
+  SliceZoneSlice,
+} from "@lib/models/common/CustomType/sliceZone";
 
 const mapAvailableAndSharedSlices = (
-  sliceZone: SliceZoneAsArray,
+  sliceZone: SlicesSM,
   libraries: ReadonlyArray<LibraryState> | null
 ) => {
   const availableSlices = (libraries || []).reduce(
@@ -46,12 +42,12 @@ const mapAvailableAndSharedSlices = (
       },
       { key, value }
     ) => {
-      if (value.type === SliceType.Slice) {
+      if (value.type === SlicesTypes.Slice) {
         return {
           ...acc,
           slicesInSliceZone: [
             ...acc.slicesInSliceZone,
-            { type: SliceType.Slice, payload: { key, value } },
+            { type: SlicesTypes.Slice, payload: { key, value } },
           ],
         };
       }
@@ -64,7 +60,7 @@ const mapAvailableAndSharedSlices = (
           ...acc,
           slicesInSliceZone: [
             ...acc.slicesInSliceZone,
-            { type: SliceType.SharedSlice, payload: maybeSliceState },
+            { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
           ],
         };
       }
@@ -83,7 +79,7 @@ const SliceZone = ({
   onCreateSliceZone,
 }: {
   tabId: string;
-  sliceZone: SliceZoneAsArray;
+  sliceZone: SlicesSM;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -107,12 +103,12 @@ const SliceZone = ({
   }, [notFound]);
 
   const sharedSlicesInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SliceType.SharedSlice)
+    .filter((e) => e.type === SlicesTypes.SharedSlice)
     .map((e) => e.payload) as ReadonlyArray<SliceState>;
 
   /* Preserve these keys in SliceZone */
   const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SliceType.Slice)
+    .filter((e) => e.type === SlicesTypes.Slice)
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
 
   const onAddNewSlice = () => {

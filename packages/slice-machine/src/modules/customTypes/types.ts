@@ -1,6 +1,6 @@
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 export type CustomTypesStoreType = {
-  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  localCustomTypes: ReadonlyArray<CustomTypeSM>;
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
 };

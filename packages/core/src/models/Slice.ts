@@ -5,18 +5,13 @@ import {
   SharedSlice,
   Variation,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { getOrElseW } from "fp-ts/lib/Either";
+import { FieldsSM } from "./Fields";
 
 export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
 }
-
-export const FieldsSM = t.array(
-  t.type({ key: t.string, value: NestableWidget })
-);
-export type FieldsSM = t.TypeOf<typeof FieldsSM>;
 
 export const VariationSM = t.intersection([
   t.type({

@@ -1,6 +1,5 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 
-import { CustomType } from "@lib/models/common/CustomType";
 import { CustomTypeState } from "@models/ui/CustomTypeState";
 import ActionType from "./";
 import { ToastPayload } from "@src/modules/toaster/utils";
@@ -19,7 +18,7 @@ export default function save(
         method: "POST",
         body: JSON.stringify({
           ...customType,
-          model: CustomType.toObject(customType.current),
+          model: customType.current,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: customType.mockConfig,
         }),

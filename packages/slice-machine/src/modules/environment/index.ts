@@ -5,17 +5,17 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
 import { SliceSM } from "@slicemachine/core/build/src/models";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   env: FrontEndEnvironment;
-  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  localCustomTypes: ReadonlyArray<CustomTypeSM>;
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
   libraries: ReadonlyArray<LibraryUI>;
   remoteSlices: ReadonlyArray<SliceSM>;
 }>();
