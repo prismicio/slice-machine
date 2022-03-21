@@ -1,7 +1,6 @@
 import { getOrElseW } from "fp-ts/lib/Either";
 import { Cookie } from "../utils";
-import Files from "./files";
-import { PrismicConfigPath } from "./paths";
+import { Files, PrismicConfigPath } from "../node-utils";
 import { PrismicSharedConfig } from "../models/PrismicSharedConfig";
 
 export const DEFAULT_CONFIG: PrismicSharedConfig = {

@@ -1,4 +1,4 @@
-import { NodeUtils, CONSTS } from "@slicemachine/core";
+import { NodeUtils, CONSTS, Prismic } from "@slicemachine/core";
 import Tracker from "./utils/tracker";
 
 import {
@@ -48,7 +48,7 @@ async function init() {
   }
 
   // retrieve tokens for api calls
-  const config = NodeUtils.PrismicSharedConfigManager.get();
+  const config = Prismic.PrismicSharedConfigManager.get();
 
   // detect the framework used by the project
   const frameworkResult = await detectFramework(cwd);

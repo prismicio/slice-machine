@@ -1,4 +1,4 @@
-import { NodeUtils, Utils } from "@slicemachine/core";
+import { Prismic, Utils } from "@slicemachine/core";
 
 type StartResponse = {
   err?: Error;
@@ -8,7 +8,7 @@ type StartResponse = {
 export default async function handler(): Promise<StartResponse> {
   try {
     // Reset the prismic auth cookie
-    NodeUtils.PrismicSharedConfigManager.setProperties({
+    Prismic.PrismicSharedConfigManager.setProperties({
       cookies: Utils.Cookie.serializeCookies([]),
     });
     return {};

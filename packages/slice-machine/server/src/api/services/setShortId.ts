@@ -1,6 +1,6 @@
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { NodeUtils } from "@slicemachine/core";
+import { Prismic } from "@slicemachine/core";
 import { UserProfile } from "@slicemachine/core/build/models";
 import preferWroomBase from "../../../../lib/utils/preferWroomBase";
 
@@ -11,7 +11,7 @@ export async function setShortId(
   const base = preferWroomBase(env.manifest.apiEndpoint);
 
   return DefaultClient.profile(base, authToken).then((profile) => {
-    NodeUtils.PrismicSharedConfigManager.setProperties({
+    Prismic.PrismicSharedConfigManager.setProperties({
       shortId: profile.shortId,
     });
     return profile;

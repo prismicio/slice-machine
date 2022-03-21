@@ -2,7 +2,7 @@ import axios from "axios";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
-import { Utils, Models, Prismic, NodeUtils, CONSTS } from "@slicemachine/core";
+import { Utils, Models, Prismic, CONSTS } from "@slicemachine/core";
 
 export async function getUserProfile(
   cookies: string,
@@ -45,7 +45,7 @@ export async function validateSessionAndGetProfile(
   info: Models.UserInfo;
   profile: Models.UserProfile | null;
 } | null> {
-  const config = NodeUtils.PrismicSharedConfigManager.get();
+  const config = Prismic.PrismicSharedConfigManager.get();
 
   if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
   if (base != config.base) return Promise.resolve(null); // not the same base so it doesn't
@@ -59,7 +59,7 @@ export async function validateSessionAndGetProfile(
       () => null
     );
     if (profile?.shortId) {
-      NodeUtils.PrismicSharedConfigManager.setProperties({
+      Prismic.PrismicSharedConfigManager.setProperties({
         shortId: profile.shortId,
       });
     }

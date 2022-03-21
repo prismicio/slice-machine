@@ -1,7 +1,7 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
 import { logs } from "../node-utils";
-import { PrismicSharedConfigManager } from "../node-utils/PrismicSharedConfig";
+import { PrismicSharedConfigManager } from "../prismic";
 import { Cookie } from "../utils";
 
 import { DEFAULT_BASE, DEFAULT_SERVER_PORT } from "../consts";

@@ -1,11 +1,14 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../src/auth/helpers";
 import { Auth } from "../../src/auth";
-import { Communication, Endpoints } from "../../src/prismic";
-import { PrismicSharedConfigManager } from "../../src/node-utils/PrismicSharedConfig";
+import {
+  Communication,
+  Endpoints,
+  PrismicSharedConfigManager,
+} from "../../src/prismic";
 import { Roles } from "../../src/models";
 
-jest.mock("../../src/node-utils/PrismicSharedConfig");
+jest.mock("../../src/prismic/SharedConfig");
 jest.mock("../../src/prismic/communication");
 jest.mock("../../src/utils/poll");
 
