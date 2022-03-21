@@ -28,7 +28,8 @@ jobs:
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NEXT_PUBLIC_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
+          NEXT_PUBLIC_SM_UI_SEGMENT_KEY: Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG
+          PUBLIC_SM_INIT_SEGMENT_KEY: JfTfmHaATChc4xueS7RcCBsixI71dJIJ
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
