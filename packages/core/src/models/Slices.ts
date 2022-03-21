@@ -19,7 +19,7 @@ export const SlicesSM = t.type({
 });
 export type SlicesSM = t.TypeOf<typeof SlicesSM>;
 
-export const Groups = {
+export const SliceZone = {
   fromSM(slices: SlicesSM): DynamicSlices {
     return getOrElseW(() => {
       throw new Error("Error while parsing an SM slicezone");
@@ -38,11 +38,15 @@ export const Groups = {
   },
 
   toSM(key: string, slices: DynamicSlices): SlicesSM {
-    return {
-      key,
-      value: Object.entries(slices.config?.choices || []).map(
-        ([key, value]) => ({ key, value })
-      ),
-    };
+    return getOrElseW(() => {
+      throw new Error("Error while parsing a prismic slicezone");
+    })(
+      SlicesSM.decode({
+        key,
+        value: Object.entries(slices.config?.choices || []).map(
+          ([key, value]) => ({ key, value })
+        ),
+      })
+    );
   },
 };
