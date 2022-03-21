@@ -3,7 +3,7 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType";
+} from "@slicemachine/core/build/src/models/CustomType/index";
 
 export function readCustomType(path: string): CustomTypeSM {
   const ct: CustomType = Files.readJson(path);

@@ -12,7 +12,7 @@ import { useEffect } from "react";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomTypeSM;
-  remoteCustomType: CustomTypeSM | null | undefined;
+  remoteCustomType: CustomTypeSM | undefined;
 };
 
 const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =

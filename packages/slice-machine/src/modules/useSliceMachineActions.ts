@@ -116,7 +116,7 @@ const useSliceMachineActions = () => {
   // Custom type module
   const initCustomTypeStore = (
     model: CustomTypeSM,
-    remoteModel: CustomTypeSM | null | undefined,
+    remoteModel: CustomTypeSM | undefined,
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());

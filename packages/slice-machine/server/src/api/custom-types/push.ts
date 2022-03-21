@@ -18,9 +18,7 @@ import {
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   smModel: CustomTypeSM,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   remoteCustomType: CustomTypeSM | undefined
 ) => {
   const model = CustomTypes.fromSM(smModel);

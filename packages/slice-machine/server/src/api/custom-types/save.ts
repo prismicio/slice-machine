@@ -26,7 +26,6 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     value: mockConfig,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   IO.CustomType.writeCustomType(modelPath, model);
   const mocked = await mock(
     model,

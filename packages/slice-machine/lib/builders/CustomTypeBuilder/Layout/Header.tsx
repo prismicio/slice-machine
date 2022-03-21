@@ -1,8 +1,6 @@
 import React from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 
-import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
-
 import Header from "../../../../components/Header";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { MdSpaceDashboard } from "react-icons/md";
@@ -15,6 +13,7 @@ import {
 } from "@src/modules/selectedCustomType";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
 
 const CustomTypeHeader = () => {
   const {

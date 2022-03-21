@@ -1,7 +1,9 @@
 import { SliceMachineStoreType } from "@src/redux/type";
 import equal from "fast-deep-equal";
-import { CustomTypeStatus } from "@models/ui/CustomTypeState";
-import { PoolOfFields } from "@src/modules/selectedCustomType/types";
+import {
+  PoolOfFields,
+  CustomTypeStatus,
+} from "@src/modules/selectedCustomType/types";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,

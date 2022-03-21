@@ -31,7 +31,7 @@ export type SelectedCustomTypeActions =
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomTypeSM;
-  remoteModel: CustomTypeSM | null | undefined;
+  remoteModel: CustomTypeSM | undefined;
   mockConfig: CustomTypeMockConfig;
 }>();
 
