@@ -9,6 +9,7 @@ import {
 } from "@slicemachine/core/build/src/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { getOrElseW } from "fp-ts/lib/Either";
+import * as IO from "../io";
 
 const handleMatch = (matches: string[]) => {
   return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
@@ -58,9 +59,9 @@ const fetchRemoteCustomTypes = async (
 
 const saveCustomType = (cts: ReadonlyArray<CustomTypeSM>, cwd: string) => {
   for (const ct of cts) {
-    Files.write(
+    IO.CustomType.writeCustomType(
       CustomTypesPaths(cwd).customType(ct.id).model(),
-      CustomTypes.fromSM(ct)
+      ct
     );
   }
 };

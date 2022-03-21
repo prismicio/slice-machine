@@ -1,9 +1,7 @@
-import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+import { TabField } from "@slicemachine/core/build/src/models/CustomType";
 
 interface Widgets {
-  [x: string]: NestableWidget | UID | GroupSM;
+  [x: string]: TabField;
 }
 
 export const findWidgetByConfigOrType = (

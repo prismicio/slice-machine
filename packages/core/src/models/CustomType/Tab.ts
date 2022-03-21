@@ -110,3 +110,5 @@ export const Tabs = {
     return fields;
   },
 };
+
+export type TabField = NestableWidget | UID | GroupSM;

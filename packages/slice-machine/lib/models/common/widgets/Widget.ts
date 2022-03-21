@@ -1,15 +1,8 @@
-import {
-  UID,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
-export interface Widget<
-  F extends NestableWidget | UID | GroupSM,
-  S extends AnyObjectSchema
-> {
+import { TabField } from "@slicemachine/core/build/src/models/CustomType";
+export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: WidgetTypes;
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleMockContent?: Function;

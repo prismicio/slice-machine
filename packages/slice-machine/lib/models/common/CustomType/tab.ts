@@ -1,21 +1,18 @@
-import {
-  UID,
-  WidgetTypes,
-} from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets/slices/Slices";
-import { TabSM } from "@slicemachine/core/build/src/models/CustomType/Tab";
+import {
+  TabSM,
+  TabField,
+} from "@slicemachine/core/build/src/models/CustomType/Tab";
 import { GroupSM } from "@slicemachine/core/build/src/models/Group";
 import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
 import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
 
 interface OrganisedFields {
-  fields: ReadonlyArray<{ key: string; value: NestableWidget | UID }>;
+  fields: ReadonlyArray<{ key: string; value: TabField }>;
   groups: ReadonlyArray<{ key: string; value: GroupSM }>;
   sliceZone?: DynamicSlices;
 }
-
-type TabWidget = NestableWidget | UID | GroupSM;
 
 export const Tab = {
   init(id: string): TabSM {
@@ -46,7 +43,7 @@ export const Tab = {
       };
     };
   },
-  addWidget(tab: TabSM, id: string, widget: TabWidget): TabSM {
+  addWidget(tab: TabSM, id: string, widget: TabField): TabSM {
     const elem = { key: id, value: widget };
 
     return {
@@ -58,7 +55,7 @@ export const Tab = {
     tab: TabSM,
     previousKey: string,
     newKey: string,
-    value: TabWidget
+    value: TabField
   ): TabSM {
     return {
       ...tab,
@@ -74,13 +71,13 @@ export const Tab = {
     };
   },
   reorderWidget(tab: TabSM, start: number, end: number): TabSM {
-    const reorderedWidget: { key: string; value: TabWidget } | undefined =
+    const reorderedWidget: { key: string; value: TabField } | undefined =
       tab.value[start];
     if (!reorderedWidget)
       throw new Error(`Unable to reorder the widget at index ${start}.`);
 
     const reorderedArea = tab.value.reduce<
-      Array<{ key: string; value: TabWidget }>
+      Array<{ key: string; value: TabField }>
     >((acc, widget, index: number) => {
       const elems = [widget, reorderedWidget];
       switch (index) {
@@ -119,10 +116,7 @@ export const Tab = {
 
   organiseFields(tabSM: TabSM) {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(
-      (
-        acc: OrganisedFields,
-        current: { key: string; value: NestableWidget | UID | GroupSM }
-      ) => {
+      (acc: OrganisedFields, current: { key: string; value: TabField }) => {
         switch (current.value.type) {
           case WidgetTypes.UID:
             return acc;
@@ -140,7 +134,7 @@ export const Tab = {
               ...acc,
               fields: [
                 ...acc.fields,
-                current as { key: string; value: NestableWidget | UID },
+                current as { key: string; value: TabField },
               ],
             };
         }

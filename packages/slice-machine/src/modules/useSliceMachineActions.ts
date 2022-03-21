@@ -49,9 +49,12 @@ import {
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
 } from "@src/modules/selectedCustomType";
-import { ArrayTabs, CustomType } from "@models/common/CustomType";
-import { Field } from "@models/common/CustomType/fields";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import {
+  CustomTypeSM,
+  TabField,
+} from "@slicemachine/core/build/src/models/CustomType";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -112,8 +115,8 @@ const useSliceMachineActions = () => {
 
   // Custom type module
   const initCustomTypeStore = (
-    model: CustomType<ArrayTabs>,
-    remoteModel: CustomType<ArrayTabs> | null,
+    model: CustomTypeSM,
+    remoteModel: CustomTypeSM | null | undefined,
     mockConfig: CustomTypeMockConfig
   ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
   const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
@@ -124,8 +127,11 @@ const useSliceMachineActions = () => {
     dispatch(deleteTabCreator({ tabId }));
   const updateCustomTypeTab = (tabId: string, newTabId: string) =>
     dispatch(updateTabCreator({ tabId, newTabId }));
-  const addCustomTypeField = (tabId: string, fieldId: string, field: Field) =>
-    dispatch(addFieldCreator({ tabId, fieldId, field }));
+  const addCustomTypeField = (
+    tabId: string,
+    fieldId: string,
+    field: TabField
+  ) => dispatch(addFieldCreator({ tabId, fieldId, field }));
   const deleteCustomTypeField = (tabId: string, fieldId: string) =>
     dispatch(deleteFieldCreator({ tabId, fieldId }));
   const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
@@ -134,7 +140,7 @@ const useSliceMachineActions = () => {
     tabId: string,
     previousFieldId: string,
     newFieldId: string,
-    value: Field
+    value: TabField
   ) =>
     dispatch(
       replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
@@ -203,7 +209,7 @@ const useSliceMachineActions = () => {
     tabId: string,
     groupId: string,
     fieldId: string,
-    field: Field
+    field: NestableWidget
   ) => dispatch(addFieldIntoGroupCreator({ tabId, groupId, fieldId, field }));
   const deleteFieldIntoGroup = (
     tabId: string,
@@ -221,7 +227,7 @@ const useSliceMachineActions = () => {
     groupId: string,
     previousFieldId: string,
     newFieldId: string,
-    value: Field
+    value: NestableWidget
   ) =>
     dispatch(
       replaceFieldIntoGroupCreator({

@@ -1,7 +1,10 @@
 import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
-import { Field } from "@models/common/CustomType/fields";
-import { ArrayTabs, CustomType } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import {
+  CustomTypeSM,
+  TabField,
+} from "@slicemachine/core/build/src/models/CustomType";
 
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
@@ -27,8 +30,8 @@ export type SelectedCustomTypeActions =
   | ActionType<typeof deleteSharedSliceCreator>;
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
-  model: CustomType<ArrayTabs>;
-  remoteModel: CustomType<ArrayTabs> | null;
+  model: CustomTypeSM;
+  remoteModel: CustomTypeSM | null | undefined;
   mockConfig: CustomTypeMockConfig;
 }>();
 
@@ -100,7 +103,7 @@ export const deleteTabCreator = createAction("CUSTOM_TYPE/DELETE_TAB")<{
 export const addFieldCreator = createAction("CUSTOM_TYPE/ADD_FIELD")<{
   tabId: string;
   fieldId: string;
-  field: Field;
+  field: TabField;
 }>();
 
 export const deleteFieldCreator = createAction("CUSTOM_TYPE/DELETE_FIELD")<{
@@ -112,7 +115,7 @@ export const replaceFieldCreator = createAction("CUSTOM_TYPE/REPLACE_FIELD")<{
   tabId: string;
   previousFieldId: string;
   newFieldId: string;
-  value: Field;
+  value: TabField;
 }>();
 
 export const reorderFieldCreator = createAction("CUSTOM_TYPE/REORDER_FIELD")<{
@@ -150,7 +153,7 @@ export const addFieldIntoGroupCreator = createAction(
   tabId: string;
   groupId: string;
   fieldId: string;
-  field: Field;
+  field: NestableWidget;
 }>();
 
 export const replaceFieldIntoGroupCreator = createAction(
@@ -160,7 +163,7 @@ export const replaceFieldIntoGroupCreator = createAction(
   groupId: string;
   previousFieldId: string;
   newFieldId: string;
-  value: Field;
+  value: NestableWidget;
 }>();
 
 export const reorderFieldIntoGroupCreator = createAction(

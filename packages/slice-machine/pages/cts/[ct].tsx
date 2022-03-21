@@ -12,7 +12,7 @@ import { useEffect } from "react";
 
 type CustomTypeBuilderWithProviderProps = {
   customType: CustomTypeSM;
-  remoteCustomType?: CustomTypeSM;
+  remoteCustomType: CustomTypeSM | null | undefined;
 };
 
 const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =
@@ -30,11 +30,7 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
     );
 
     useEffect(() => {
-      initCustomTypeStore(
-        customType,
-        remoteCustomType,
-        initialMockConfig
-      );
+      initCustomTypeStore(customType, remoteCustomType, initialMockConfig);
     }, []);
 
     return <CustomTypeBuilder />;

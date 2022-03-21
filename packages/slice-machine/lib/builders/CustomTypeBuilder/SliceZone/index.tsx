@@ -73,7 +73,7 @@ const mapAvailableAndSharedSlices = (
 
 interface SliceZoneProps {
   tabId: string;
-  sliceZone: SlicesSM | null;
+  sliceZone?: SlicesSM | null | undefined;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onSelectSharedSlices: Function;
   onRemoveSharedSlice: (sliceId: string) => void;

@@ -1,10 +1,8 @@
-import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import {
   CustomTypeSM,
+  TabField,
   TabSM,
 } from "@slicemachine/core/build/src/models/CustomType";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
 
 export enum CustomTypeStatus {
   New = "NEW_CT",
@@ -14,7 +12,7 @@ export enum CustomTypeStatus {
 
 type PoolOfFields = ReadonlyArray<{
   key: string;
-  value: NestableWidget | UID | GroupSM;
+  value: TabField;
 }>;
 
 export interface CustomTypeState {

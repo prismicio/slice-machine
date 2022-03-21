@@ -14,9 +14,6 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import SliceZone from "../SliceZone";
 
 import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
-import { AsArray } from "@models/common/widgets/Group/type";
-import { SliceZoneAsArray } from "@models/common/CustomType/sliceZone";
-import { Field } from "@lib/models/common/CustomType/fields";
 import { Widget } from "@models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -27,11 +24,16 @@ import {
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
 } from "@src/modules/selectedCustomType";
+import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import {
+  TabField,
+  TabFields,
+} from "@slicemachine/core/build/src/models/CustomType";
 
 interface TabZoneProps {
   tabId: string;
-  sliceZone: SliceZoneAsArray | null;
-  fields: AsArray;
+  sliceZone?: SlicesSM | null | undefined;
+  fields: TabFields;
 }
 
 const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
@@ -84,7 +86,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     }
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const widget: Widget<Field, AnyObjectSchema> = Widgets[widgetTypeName];
+    const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
     const friendlyName = createFriendlyFieldNameWithId(id);
     addCustomTypeField(tabId, id, widget.create(friendlyName));
   };
@@ -113,7 +115,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   }: {
     apiId: string;
     newKey: string;
-    value: Field;
+    value: TabField;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockValue: any;
   }) => {
@@ -152,7 +154,6 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         title="Static Zone"
         dataTip={""}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
         fields={fields}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component

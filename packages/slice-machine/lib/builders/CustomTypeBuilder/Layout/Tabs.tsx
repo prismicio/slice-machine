@@ -25,11 +25,11 @@ import UpdateModal, {
   ActionType as UpdateModalActionType,
 } from "../TabModal/update";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
-import { TabAsArray } from "@models/common/CustomType/tab";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
+import { TabSM } from "@slicemachine/core/build/src/models/CustomType";
 
 enum ModalType {
   CREATE = "create",
@@ -68,7 +68,7 @@ const Icon = ({
 
 interface CustomTypeTabsProps {
   sx?: ThemeUIStyleObject;
-  renderTab: (tab: TabAsArray) => JSX.Element;
+  renderTab: (tab: TabSM) => JSX.Element;
 }
 
 const CustomTypeTabs: React.FC<CustomTypeTabsProps> = ({ sx, renderTab }) => {

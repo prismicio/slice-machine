@@ -14,14 +14,11 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
 import { Widget } from "@lib/models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
-import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+import { TabField } from "@slicemachine/core/build/src/models/CustomType";
 
-type ListItemWidget = NestableWidget | UID | GroupSM;
-type Item<F extends ListItemWidget> = { key: string; value: F };
+type Item<F extends TabField> = { key: string; value: F };
 
-interface ListItemProps<F extends ListItemWidget, S extends AnyObjectSchema> {
+interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   item: Item<F>;
   index: number;
   deleteItem: (key: string) => void;
@@ -40,7 +37,7 @@ interface ListItemProps<F extends ListItemWidget, S extends AnyObjectSchema> {
   children: React.ReactNode;
 }
 
-function ListItem<F extends ListItemWidget, S extends AnyObjectSchema>({
+function ListItem<F extends TabField, S extends AnyObjectSchema>({
   item,
   index,
   deleteItem,
