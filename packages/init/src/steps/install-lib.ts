@@ -8,8 +8,9 @@ import fs from "fs";
 import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import { PackageManager, Dependencies } from "../utils/PackageManager";
-import { PackageJsonHelper } from "@slicemachine/core/build/utils/PackageJson";
 import Tracker from "../utils/tracker";
+
+const { PackageJsonHelper } = NodeUtils;
 
 const downloadFile = async (reqUrl: string): Promise<string> => {
   const res = await axios.get<Buffer>(reqUrl, { responseType: "arraybuffer" });
