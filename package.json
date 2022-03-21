@@ -14,8 +14,10 @@
     "build": "lerna run build && npm run test",
     "prettier:check": "prettier --check .",
     "pretty": "prettier --write .",
+    "bump:alpha": "lerna version prerelease --preid alpha --exact --yes",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
-    "publish:production": "NEXT_PUBLIC_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
+    "bump:production": "lerna version --conventional-graduate --exact",
+    "publish:production": "NEXT_PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "prepare": "husky install"
