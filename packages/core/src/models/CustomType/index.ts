@@ -3,6 +3,7 @@ import { withFallback } from "io-ts-types";
 import * as t from "io-ts";
 import { Tabs, TabSM } from "./Tab";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { getOrElseW } from "fp-ts/lib/Either";
 
 export const CustomTypeSM = t.exact(
   t.intersection([
@@ -25,21 +26,29 @@ export const CustomTypes = {
     const tabs: Array<TabSM> = Object.entries(ct.json).map(
       ([tabKey, tabValue]) => Tabs.toSM(tabKey, tabValue)
     );
-    return {
-      ...ct,
-      tabs,
-    };
+    return getOrElseW(() => {
+      throw new Error("Error while parsing a prismic custom type.");
+    })(
+      CustomTypeSM.decode({
+        ...ct,
+        tabs,
+      })
+    );
   },
   fromSM(ct: CustomTypeSM): CustomType {
-    return {
-      ...ct,
-      json: ct.tabs.reduce((acc, tab) => {
-        return {
-          ...acc,
-          [tab.key]: Tabs.fromSM(tab),
-        };
-      }, {}),
-    };
+    return getOrElseW(() => {
+      throw new Error("Error while parsing an SM custom type.");
+    })(
+      CustomType.decode({
+        ...ct,
+        json: ct.tabs.reduce((acc, tab) => {
+          return {
+            ...acc,
+            [tab.key]: Tabs.fromSM(tab),
+          };
+        }, {}),
+      })
+    );
   },
 };
 
