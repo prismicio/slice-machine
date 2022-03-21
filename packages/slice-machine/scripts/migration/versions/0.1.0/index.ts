@@ -3,7 +3,7 @@ import path from "path";
 import slash from "slash";
 import { Migration } from "../../migrate";
 
-import { Utils, NodeUtils } from "@slicemachine/core";
+import { NodeUtils, Libraries } from "@slicemachine/core";
 
 import { scopePreviewToDefaultVariation } from "./scopePreviewToDefaultVariation";
 import { moveMocks } from "./moveMocks";
@@ -30,7 +30,7 @@ const migration: Migration = {
 
       (libraries || []).forEach((lib: string) => {
         const { isLocal, pathExists, pathToSlices, pathToLib } =
-          Utils.lib.getInfoFromPath(cwd, lib);
+          Libraries.getInfoFromPath(cwd, lib);
 
         if (isLocal && pathExists) {
           const libraryName = path.basename(pathToLib);

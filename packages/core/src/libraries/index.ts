@@ -8,7 +8,10 @@ import { getInfoFromPath } from "./path";
 import { getComponentInfo } from "./component";
 import { Library, Component } from "../models/Library";
 
+export * from "./component";
 export * from "./screenshot";
+export * from "./path";
+export * from "./mocks";
 
 export function handleLibraryPath(
   cwd: string,
