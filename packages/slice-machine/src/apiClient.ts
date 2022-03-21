@@ -35,6 +35,15 @@ export const saveCustomType = (
   return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
+export const pushCustomType = (
+  customTypeId: string
+): Promise<AxiosResponse> => {
+  return axios.get(
+    `/api/custom-types/push?id=${customTypeId}`,
+    defaultAxiosConfig
+  );
+};
+
 /** Slice Routes **/
 
 export const createSlice = (

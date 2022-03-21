@@ -22,6 +22,7 @@ jest.mock("@segment/analytics-next", () => {
 });
 
 const mockDispatch = jest.fn();
+jest.mock("react-beautiful-dnd", () => {});
 jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
   useDispatch: () => mockDispatch,
@@ -61,7 +62,7 @@ describe("LoginModal", () => {
   div.id = "__next";
   document.body.appendChild(div);
 
-  test("when given a prismic url in env it should open to primsic.io/dashboard", () => {
+  test("when given a prismic url in env it should open to prismic.io/dashboard", () => {
     useSelectorMock.mockImplementation(() => ({
       env: {
         sliceMachineAPIUrl: "http://localhost:9999/",

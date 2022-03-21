@@ -16,8 +16,7 @@ import { getFramework } from "@src/modules/environment";
 
 const FieldZone = ({
   fields,
-  store,
-  Model,
+  mockConfig,
   title,
   tabId,
   enterEditMode,
@@ -30,8 +29,8 @@ const FieldZone = ({
   renderHintBase,
   isRepeatable,
 }) => {
-  const { framework } = useSelector((store) => ({
-    framework: getFramework(store),
+  const { framework } = useSelector((state) => ({
+    framework: getFramework(state),
   }));
 
   return (
@@ -74,9 +73,7 @@ const FieldZone = ({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   index,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  store,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  Model,
+                  mockConfig,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
                   tabId,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

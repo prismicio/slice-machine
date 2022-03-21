@@ -104,15 +104,24 @@ export interface CustomTypeMockConfig {
 }
 
 export const CustomTypeMockConfig = {
-  getCustomTypeMockConfig(globalMockConfig: GlobalMockConfig, ctId: string) {
+  getCustomTypeMockConfig(
+    globalMockConfig: GlobalMockConfig,
+    ctId: string
+  ): CustomTypeMockConfig {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return globalMockConfig?._cts?.[ctId] || {};
   },
-  getFieldMockConfig(ctMockConfig: CustomTypeMockConfig, fieldId: string) {
+  getFieldMockConfig(
+    ctMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ): CustomTypeMockConfig {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return ctMockConfig[fieldId] || {};
   },
-  deleteFieldMockConfig(ctMockConfig: CustomTypeMockConfig, fieldId: string) {
+  deleteFieldMockConfig(
+    ctMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ): CustomTypeMockConfig {
     return {
       ...ctMockConfig,
       [fieldId]: undefined,

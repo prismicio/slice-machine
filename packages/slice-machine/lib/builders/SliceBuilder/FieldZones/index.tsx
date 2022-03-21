@@ -118,9 +118,8 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   return (
     <>
       <Zone
-        Model={Model}
-        store={undefined}
         tabId={undefined}
+        mockConfig={Model.mockConfig}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -144,10 +143,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       />
       <Box mt={4} />
       <Zone
-        isRepeatable
-        Model={Model}
-        store={undefined}
         tabId={undefined}
+        isRepeatable
+        mockConfig={Model.mockConfig}
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}

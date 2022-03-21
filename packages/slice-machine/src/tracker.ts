@@ -13,6 +13,7 @@ enum EventType {
   SliceSimulatorSetup = "SliceMachine Slice Simulator Setup",
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   PageView = "SliceMachine Page View",
+  OpenVideoTutorials = "SliceMachine Open Video Tutorials",
 }
 
 export enum ContinueOnboardingType {
@@ -69,14 +70,17 @@ export class SMTracker {
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
 
-  async #group(attributes: Record<string, unknown> = {}): Promise<void> {
+  async #group(
+    groupId: string,
+    attributes: Record<string, unknown> = {}
+  ): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
     return this.#client
       .then((client): void => {
-        void client.group(attributes);
+        void client.group(groupId, attributes);
       })
       .catch(() => console.warn(`Couldn't report group: Tracking error`));
   }
@@ -116,12 +120,22 @@ export class SMTracker {
 
     const downloadedLibs = libs.filter((l) => l.meta.isDownloaded);
 
-    await this.#group({
+    await this.#group(repoName, {
       repoName: repoName,
       manualLibsCount: libs.filter((l) => l.meta.isManual).length,
       downloadedLibsCount: downloadedLibs.length,
       npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
       downloadedLibs: downloadedLibs.map((l) => l.meta.name || "Unknown"),
+      slicemachineVersion: version,
+    });
+  }
+
+  async trackClickOnVideoTutorials(
+    framework: Frameworks,
+    version: string
+  ): Promise<void> {
+    await this.#trackEvent(EventType.OpenVideoTutorials, {
+      framework,
       slicemachineVersion: version,
     });
   }

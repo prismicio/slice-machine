@@ -1,11 +1,10 @@
 import { VariationSM } from "@slicemachine/core/build/src/models";
 import { ComponentUI, LibStatus, ScreenshotUI } from "../common/ComponentUI";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
 interface SliceState extends ComponentUI {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mockConfig: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialMockConfig: any;
+  mockConfig: CustomTypeMockConfig;
+  initialMockConfig: CustomTypeMockConfig;
 
   remoteVariations: ReadonlyArray<VariationSM>;
   initialVariations: ReadonlyArray<VariationSM>;
