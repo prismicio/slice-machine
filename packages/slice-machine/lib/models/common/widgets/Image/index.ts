@@ -56,7 +56,8 @@ export const ImageWidget: Widget<Image, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Image,
     config: {
-      ...DEFAULT_CONFIG,
+      constraint: {},
+      thumbnails: [],
       label,
     },
   }),

@@ -33,6 +33,7 @@ export const GroupWidget: Widget<GroupSM, typeof schema> = {
     type: WidgetTypes.Group,
     config: {
       label,
+      fields: [],
     },
   }),
   CustomListItem,

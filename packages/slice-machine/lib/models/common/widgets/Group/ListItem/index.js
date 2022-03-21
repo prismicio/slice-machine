@@ -141,7 +141,6 @@ const CustomListItem = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
   };
-
   return (
     <Fragment>
       <ListItem
