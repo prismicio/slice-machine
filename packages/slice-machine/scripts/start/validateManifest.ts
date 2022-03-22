@@ -1,6 +1,7 @@
 import boxen from "boxen";
-import { CONSTS, NodeUtils } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
 import { ManifestState, ManifestInfo } from "../../lib/env/manifest";
+import chalk from "chalk";
 
 export function validateManifest(manifest: ManifestInfo): {
   isManifestValid: boolean;
@@ -27,7 +28,7 @@ See below for more info 👇`,
 
     case ManifestState.NotFound: {
       console.log(
-        `Run ${NodeUtils.logs.bold(
+        `Run ${chalk.bold(
           `"${CONSTS.INIT_COMMAND}"`
         )} command to configure your project`
       );

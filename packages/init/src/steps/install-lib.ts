@@ -9,6 +9,7 @@ import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import { PackageManager, Dependencies } from "../utils/PackageManager";
 import Tracker from "../utils/tracker";
+import { logs } from "../utils";
 
 const { PackageJsonHelper } = NodeUtils;
 
@@ -36,7 +37,7 @@ export async function installLib(
   libGithubPath: string,
   branch = "HEAD"
 ): Promise<string[] | undefined> {
-  const spinner = NodeUtils.logs.spinner(
+  const spinner = logs.spinner(
     `Installing the ${libGithubPath} lib in your project...`
   );
 

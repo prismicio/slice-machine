@@ -8,12 +8,22 @@ import {
 } from "@jest/globals";
 import * as Core from "@slicemachine/core";
 import { configureProject } from "../src/steps";
+import type { spinner } from "../src/utils/logs";
 
-type SpinnerReturnType = ReturnType<typeof Core.NodeUtils.logs.spinner>;
+type SpinnerReturnType = ReturnType<typeof spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
+
+jest.mock("../src/utils/logs", () => ({
+  spinner: () => ({
+    start: startFn,
+    succeed: successFn,
+    fail: failFn,
+  }),
+}));
+
 jest.mock("@slicemachine/core", () => {
   // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
   const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
@@ -42,13 +52,6 @@ jest.mock("@slicemachine/core", () => {
           string | undefined,
           [target: string, option: { recursive: boolean }]
         >(),
-      },
-      logs: {
-        spinner: () => ({
-          start: startFn,
-          succeed: successFn,
-          fail: failFn,
-        }),
       },
     },
   };

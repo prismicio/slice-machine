@@ -1,6 +1,7 @@
 import { CONSTS, NodeUtils, Prismic } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import { FrameworkResult } from "./detect-framework";
+import { logs } from "../utils";
 
 type Base = Prismic.Endpoints.Base;
 
@@ -14,7 +15,7 @@ export function configureProject(
   sliceLibPath: string[] = [],
   tracking = true
 ): void {
-  const spinner = NodeUtils.logs.spinner(
+  const spinner = logs.spinner(
     `Configuring your ${framework.value} & Prismic project...`
   );
   spinner.start();

@@ -1,6 +1,5 @@
-import { NodeUtils, CONSTS, Prismic } from "@slicemachine/core";
+import { CONSTS, Prismic } from "@slicemachine/core";
 import Tracker from "./utils/tracker";
-
 import {
   installRequiredDependencies,
   validatePkg,
@@ -11,7 +10,7 @@ import {
   detectFramework,
   installLib,
 } from "./steps";
-import { findArgument } from "./utils";
+import { findArgument, logs } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -30,7 +29,7 @@ async function init() {
   Tracker.get().trackInitStart();
 
   console.log(
-    NodeUtils.logs.purple(
+    logs.purple(
       "You're about to configure Slicemachine... Press ctrl + C to cancel"
     )
   );
@@ -86,6 +85,6 @@ async function init() {
 try {
   void init();
 } catch (error) {
-  if (error instanceof Error) NodeUtils.logs.writeError(error.message);
+  if (error instanceof Error) logs.writeError(error.message);
   else console.error(error);
 }

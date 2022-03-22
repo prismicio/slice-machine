@@ -4,12 +4,7 @@ import * as initUtils from "../src/utils";
 import { installRequiredDependencies } from "../src/steps";
 import path from "path";
 import os from "os";
-
-type SpinnerReturnType = ReturnType<typeof Core.NodeUtils.logs.spinner>;
-
-const startFn = jest.fn<SpinnerReturnType, string[]>();
-const successFn = jest.fn<SpinnerReturnType, string[]>();
-const failFn = jest.fn<SpinnerReturnType, string[]>();
+import { stderr } from "stdout-stderr";
 
 jest.mock("@slicemachine/core", () => {
   const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
@@ -22,13 +17,6 @@ jest.mock("@slicemachine/core", () => {
       Files: {
         ...actualCore.NodeUtils.Files,
         exists: jest.fn(),
-      },
-      logs: {
-        spinner: () => ({
-          start: startFn,
-          succeed: successFn,
-          fail: failFn,
-        }),
       },
     },
   };
@@ -50,15 +38,21 @@ describe("install required dependency", () => {
     fileExistsMock.mockReturnValueOnce(true); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
 
+    stderr.start();
+
     await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       `yarn add -D ${Core.CONSTS.SM_PACKAGE_NAME}`
     );
 
-    expect(successFn).toHaveBeenCalled();
-    expect(failFn).not.toHaveBeenCalled();
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
+    );
   });
 
   test("it should use npm to install Slice Machine", async () => {
@@ -68,16 +62,21 @@ describe("install required dependency", () => {
 
     fileExistsMock.mockReturnValueOnce(false); // verify if yarn lock file exists
     fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
+    stderr.start();
 
     await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       `npm install --save-dev ${Core.CONSTS.SM_PACKAGE_NAME}`
     );
 
-    expect(successFn).toHaveBeenCalled();
-    expect(failFn).not.toHaveBeenCalled();
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
+    );
   });
 
   test("when using react it should install @prismicio/client and @prismicio/react and @prismicio/helpers", async () => {
@@ -90,11 +89,20 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
+    stderr.start();
+
     await installRequiredDependencies(fakedir, Core.Models.Frameworks.react);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @prismicio/react @prismicio/client @prismicio/helpers"
+    );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
     );
   });
 
@@ -108,11 +116,20 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
+    stderr.start();
+
     await installRequiredDependencies(fakedir, Core.Models.Frameworks.next);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @prismicio/react @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
+    );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
     );
   });
 
@@ -126,11 +143,20 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
+    stderr.start();
+
     await installRequiredDependencies(fakedir, Core.Models.Frameworks.svelte);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save prismic-dom @prismicio/client"
+    );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
     );
   });
 
@@ -144,11 +170,20 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
+    stderr.start();
+
     await installRequiredDependencies(fakedir, Core.Models.Frameworks.nuxt);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue"
+    );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
     );
   });
 
@@ -162,11 +197,20 @@ describe("install required dependency", () => {
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
+    stderr.start();
+
     await installRequiredDependencies(fakedir, Core.Models.Frameworks.vue);
+
+    stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @prismicio/vue @prismicio/client prismic-dom"
+    );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
     );
   });
 });

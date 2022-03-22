@@ -160,6 +160,8 @@ describe("choose-or-create-repo", () => {
 
     createRepositoryMock.mockImplementation(() => Promise.resolve(domain));
 
+    jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
+
     const promptSpy = jest
       .spyOn(inquirer, "prompt")
       .mockReturnValue(

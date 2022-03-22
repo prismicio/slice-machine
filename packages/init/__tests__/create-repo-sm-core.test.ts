@@ -17,18 +17,6 @@ jest.mock("@slicemachine/core", () => ({
       next: "next",
     },
   },
-  NodeUtils: {
-    logs: {
-      spinner: jest.fn().mockReturnValue({
-        start: jest.fn(),
-        stop: jest.fn(),
-        fail: jest.fn(),
-        succeed: jest.fn(),
-      }),
-      writeError: jest.fn(),
-      bold: jest.fn(),
-    },
-  },
   CONSTS: {
     DEFAULT_BASE: "https://prismic.io",
   },
@@ -40,6 +28,9 @@ describe("mocking the core example: not advised", () => {
     const exitSpy = jest
       .spyOn(process, "exit")
       .mockImplementationOnce(() => undefined as never);
+
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
+
     stderr.start();
     stdout.start();
     await createRepository(

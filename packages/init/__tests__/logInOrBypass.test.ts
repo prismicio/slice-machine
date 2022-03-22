@@ -6,13 +6,15 @@ import {
   afterAll,
   afterEach,
 } from "@jest/globals";
-import { Auth, Models } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
 import { loginOrBypass } from "../src/steps/loginOrBypass";
 import nock from "nock";
 import * as fs from "fs";
 import { stderr } from "stdout-stderr";
 import * as path from "path";
 import * as os from "os";
+
+import { Auth } from "../src/utils";
 
 jest.mock("fs");
 

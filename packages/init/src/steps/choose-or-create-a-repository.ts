@@ -2,17 +2,16 @@ import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
 import { Prismic, Utils, Models, CONSTS, NodeUtils } from "@slicemachine/core";
 import { createRepository } from "../utils/create-repo";
+import { logs } from "../utils";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 const DEFAULT_BASE = CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value
-    ? NodeUtils.logs.cyan(value)
-    : NodeUtils.logs.dim.cyan("repo-name");
-  return `${NodeUtils.logs.cyan.dim(
-    `${address.protocol}//`
-  )}${repoName}${NodeUtils.logs.cyan.dim(`.${address.hostname}`)}`;
+  const repoName = value ? logs.cyan(value) : logs.dim.cyan("repo-name");
+  return `${logs.cyan.dim(`${address.protocol}//`)}${repoName}${logs.cyan.dim(
+    `.${address.hostname}`
+  )}`;
 }
 
 export async function promptForRepoDomain(
@@ -21,7 +20,7 @@ export async function promptForRepoDomain(
 ): Promise<string> {
   const address = new URL(base);
 
-  NodeUtils.logs.writeInfo(
+  logs.writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
   );
 
@@ -60,18 +59,18 @@ export function makeReposPretty(base: string) {
     address.hostname = `${domain}.${address.hostname}`;
     if (Models.canUpdateCustomTypes(role) === false) {
       return {
-        name: `${NodeUtils.logs.purple.dim("Use")} ${NodeUtils.logs.bold.dim(
+        name: `${logs.purple.dim("Use")} ${logs.bold.dim(
           name
-        )} ${NodeUtils.logs.purple.dim(`"${address.hostname}"`)}`,
+        )} ${logs.purple.dim(`"${address.hostname}"`)}`,
         value: domain,
         disabled: "Unauthorized",
       };
     }
 
     return {
-      name: `${NodeUtils.logs.purple("Use")} ${NodeUtils.logs.bold(
-        name
-      )} ${NodeUtils.logs.purple(`"${address.hostname}"`)}`,
+      name: `${logs.purple("Use")} ${logs.bold(name)} ${logs.purple(
+        `"${address.hostname}"`
+      )}`,
       value: domain,
     };
   };
@@ -103,9 +102,9 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${NodeUtils.logs.purple("Create a")} ${NodeUtils.logs.bold(
-      "new"
-    )} ${NodeUtils.logs.purple("Repository")}`,
+    name: `${logs.purple("Create a")} ${logs.bold("new")} ${logs.purple(
+      "Repository"
+    )}`,
     value: CREATE_REPO,
   };
 

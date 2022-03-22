@@ -1,5 +1,5 @@
 import path from "path";
-import { execCommand } from "../utils";
+import { execCommand, logs } from "../utils";
 import { CONSTS, Models, NodeUtils } from "@slicemachine/core";
 
 const {
@@ -41,7 +41,7 @@ export async function installRequiredDependencies(
     : "npm install --save-dev";
   const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
 
-  const spinner = NodeUtils.logs.spinner("Downloading Slice Machine");
+  const spinner = logs.spinner("Downloading Slice Machine");
   spinner.start();
 
   const { stderr } = await execCommand(
@@ -63,7 +63,7 @@ export async function installRequiredDependencies(
   }
 
   spinner.fail();
-  NodeUtils.logs.writeWarning(
+  logs.writeWarning(
     `could not install ${SM_PACKAGE_NAME}. Please do it manually!`
   );
 }

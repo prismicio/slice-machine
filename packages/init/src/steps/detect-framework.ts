@@ -1,5 +1,6 @@
 import { Models, NodeUtils } from "@slicemachine/core";
 import * as inquirer from "inquirer";
+import { logs } from "../utils";
 
 export type FrameworkResult = {
   value: Models.Frameworks;
@@ -33,11 +34,11 @@ export async function promptForFramework(): Promise<FrameworkResult> {
 }
 
 export async function detectFramework(cwd: string): Promise<FrameworkResult> {
-  const failMessage = `Please run ${NodeUtils.logs.bold(
+  const failMessage = `Please run ${logs.bold(
     "npx @slicemachine/init"
   )} in a Nuxt or Next.js project`;
 
-  const spinner = NodeUtils.logs.spinner(
+  const spinner = logs.spinner(
     "Detecting framework to install correct dependencies"
   );
 
@@ -52,19 +53,19 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     spinner.stop();
 
     if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
-      NodeUtils.logs.writeError("Framework not detected");
+      logs.writeError("Framework not detected");
       return await promptForFramework();
     }
 
     const nameToPrint = NodeUtils.Framework.fancyName(maybeFramework);
 
     if (!NodeUtils.Framework.isFrameworkSupported(maybeFramework)) {
-      NodeUtils.logs.writeError(`${nameToPrint} is currently not supported`);
+      logs.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
     }
 
-    NodeUtils.logs.writeCheck(`${nameToPrint} detected`);
+    logs.writeCheck(`${nameToPrint} detected`);
 
     return {
       value: maybeFramework,
@@ -74,7 +75,7 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     spinner.fail("package.json not found");
 
     if (error instanceof Error && error.message) {
-      NodeUtils.logs.writeError(error.message);
+      logs.writeError(error.message);
     } else {
       console.log(failMessage);
     }

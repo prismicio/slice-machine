@@ -1,11 +1,7 @@
-import { startServerAndOpenBrowser } from "../auth/helpers";
-import { Poll } from "../utils";
-import type { UserInfo } from "../models";
-import {
-  Communication,
-  Endpoints,
-  PrismicSharedConfigManager,
-} from "../prismic";
+import { Utils, Prismic, Models } from "@slicemachine/core";
+import { startServerAndOpenBrowser } from "./helpers";
+
+const { Communication, Endpoints, PrismicSharedConfigManager } = Prismic;
 
 async function startAuth({
   base,
@@ -19,9 +15,9 @@ async function startAuth({
   const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
   try {
     // We wait 3 minutes before timeout
-    await Poll.startPolling<UserInfo | null, UserInfo>(
+    await Utils.Poll.startPolling<Models.UserInfo | null, Models.UserInfo>(
       () => Auth.validateSession(base),
-      (user): user is UserInfo => !!user,
+      (user): user is Models.UserInfo => !!user,
       3000,
       60
     );
@@ -49,7 +45,9 @@ export const Auth = {
     });
   },
   logout: (): void => PrismicSharedConfigManager.remove(),
-  validateSession: async (requiredBase: string): Promise<UserInfo | null> => {
+  validateSession: async (
+    requiredBase: string
+  ): Promise<Models.UserInfo | null> => {
     const config = PrismicSharedConfigManager.get();
 
     if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
