@@ -25,17 +25,10 @@ export const ComponentInfo = {
   },
 };
 
-export interface Component {
+export interface Component extends ComponentInfo {
   from: string;
   href: string;
   pathToSlice: string;
-  fileName: string | null;
-  extension: string | null;
-  screenshotPaths: {
-    [variationId: string]: Screenshot;
-  };
-  mock?: ReadonlyArray<VariationMock>;
-  model: SliceAsObject;
 }
 
 export interface Screenshot {
