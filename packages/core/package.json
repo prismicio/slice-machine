@@ -11,7 +11,8 @@
     "./node-utils": "./build/node-utils/index.js",
     "./prismic": "./build/prismic/index.js",
     "./utils": "./build/utils/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./build/*": "./build/*.js"
   },
   "engines": {
     "node": ">=12"
