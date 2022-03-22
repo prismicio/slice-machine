@@ -5,9 +5,12 @@
   "main": "./build/index.js",
   "exports": {
     ".": "./build/index.js",
-    "./core": "./build/src/core/index.js",
-    "./utils": "./build/src/utils/index.js",
-    "./filesystem": "./build/src/filesystem/index.js",
+    "./consts": "./build/consts/index.js",
+    "./libraries": "./build/libraries/index.js",
+    "./models": "./build/models/index.js",
+    "./node-utils": "./build/node-utils/index.js",
+    "./prismic": "./build/prismic/index.js",
+    "./utils": "./build/utils/index.js",
     "./build/*": "./build/*.js",
     "./package.json": "./package.json"
   },
