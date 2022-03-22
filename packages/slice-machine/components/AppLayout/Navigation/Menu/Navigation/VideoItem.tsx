@@ -4,13 +4,19 @@ import Item from "@components/AppLayout/Navigation/Menu/Navigation/Item";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { Close, Flex, Paragraph } from "theme-ui";
 import style from "./VideoItem.module.css";
+import Tracker from "@src/tracker";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 type VideoItemProps = {
   hasSeenTutorialsTooTip: boolean;
   onClose: () => void;
+  framework: Frameworks;
+  sliceMachineVersion: string;
 };
 
 const VideoItem: React.FC<VideoItemProps> = ({
+  sliceMachineVersion,
+  framework,
   hasSeenTutorialsTooTip,
   onClose,
 }) => {
@@ -18,6 +24,10 @@ const VideoItem: React.FC<VideoItemProps> = ({
   const id = "video-tool-tip";
 
   const handleClose = () => {
+    void Tracker.get().trackClickOnVideoTutorials(
+      framework,
+      sliceMachineVersion
+    );
     onClose();
   };
 

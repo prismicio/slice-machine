@@ -26,8 +26,8 @@ const mapAvailableAndSharedSlices = (
   sliceZone: SliceZoneAsArray,
   libraries: ReadonlyArray<LibraryState> | null
 ) => {
-  const availableSlices = (libraries || []).reduce(
-    (acc: ReadonlyArray<SliceState>, curr: LibraryState) => {
+  const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
+    (acc, curr: LibraryState) => {
       return [...acc, ...curr.components.map((e) => e[0])];
     },
     []
@@ -75,21 +75,21 @@ const mapAvailableAndSharedSlices = (
   return { availableSlices, slicesInSliceZone, notFound };
 };
 
-const SliceZone = ({
+interface SliceZoneProps {
+  tabId: string;
+  sliceZone: SliceZoneAsArray | null;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  onSelectSharedSlices: Function;
+  onRemoveSharedSlice: (sliceId: string) => void;
+  onCreateSliceZone: () => void;
+}
+
+const SliceZone: React.FC<SliceZoneProps> = ({
   tabId,
   sliceZone,
   onSelectSharedSlices,
   onRemoveSharedSlice,
   onCreateSliceZone,
-}: {
-  tabId: string;
-  sliceZone: SliceZoneAsArray;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onSelectSharedSlices: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onRemoveSharedSlice: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onCreateSliceZone: Function;
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const libraries = useContext(LibrariesContext);

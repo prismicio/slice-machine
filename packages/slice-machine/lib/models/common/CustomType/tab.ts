@@ -167,12 +167,6 @@ export const Tab = {
       sliceZone: SliceZone.toArray(key, SliceZone.createEmpty()),
     };
   },
-  deleteSliceZone(tab: TabAsArray): TabAsArray {
-    return {
-      ...tab,
-      sliceZone: null,
-    };
-  },
 
   organiseFields(tab: TabAsObject) {
     const tabAsArray = Tab.toArray("", tab);

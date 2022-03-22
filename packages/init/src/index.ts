@@ -22,7 +22,8 @@ async function init() {
   const maybeRepositorySubdomain = findArgument(process.argv, "repository");
 
   Tracker.get().initialize(
-    process.env.NEXT_PUBLIC_SEGMENT_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+    process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
+      "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
     isTrackingAvailable
   );
 

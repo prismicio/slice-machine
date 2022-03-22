@@ -29,6 +29,7 @@ import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 import { ConnectedRouter } from "connected-next-router";
 import { getState } from "@src/apiClient";
+import { normalizeFrontendCustomTypes } from "@src/normalizers/customType";
 
 const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   const { setColorMode } = useThemeUI();
@@ -61,11 +62,15 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       return;
     }
 
+    const normalizedCustomTypes = normalizeFrontendCustomTypes(
+      serverState.customTypes,
+      serverState.remoteCustomTypes
+    );
+
     const { store, persistor } = configureStore({
       environment: serverState.env,
-      customTypes: {
-        localCustomTypes: serverState.customTypes,
-        remoteCustomTypes: serverState.remoteCustomTypes,
+      availableCustomTypes: {
+        ...normalizedCustomTypes,
       },
       slices: {
         libraries: serverState.libraries,

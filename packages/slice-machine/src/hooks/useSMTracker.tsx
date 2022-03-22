@@ -34,7 +34,8 @@ const useSMTracker = () => {
 
   useEffect(() => {
     Tracker.get().initialize(
-      process.env.NEXT_PUBLIC_SEGMENT_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
+        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
       isTrackingAvailable
     );
 
@@ -43,13 +44,13 @@ const useSMTracker = () => {
     shorId && Tracker.get().identifyUser(shorId);
 
     // For initial loading
-    void Tracker.get().page(framework, currentVersion);
+    void Tracker.get().trackPageView(framework, currentVersion);
   }, []);
 
   // For handling page change
   useEffect(() => {
     const handleRouteChange = () => {
-      void Tracker.get().page(framework, currentVersion);
+      void Tracker.get().trackPageView(framework, currentVersion);
     };
     // When the component is mounted, subscribe to router changes
     // and log those page views
