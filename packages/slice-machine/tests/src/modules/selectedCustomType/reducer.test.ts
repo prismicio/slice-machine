@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
-import { CustomType } from "@lib/models/common/CustomType";
-
+import { CustomTypes } from "@slicemachine/core/build/src/models/CustomType/index";
 import jsonModel from "./__mockData__/model.json";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import {
   addFieldCreator,
   createSliceZoneCreator,
@@ -18,8 +18,7 @@ import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/typ
 import * as widgets from "@models/common/widgets/withGroup";
 import equal from "fast-deep-equal";
 
-const customTypeModel = CustomType.fromJsonModel(jsonModel.id, jsonModel);
-const customTypeAsArray = CustomType.toArray(customTypeModel);
+const customTypeAsArray = CustomTypes.toSM(jsonModel as unknown as CustomType);
 
 const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   model: customTypeAsArray,

@@ -72,7 +72,6 @@ describe("MockSlice", () => {
     const mockConfig = {};
 
     const result = MockSlice(model.name, model, mockConfig);
-    console.log({ result: JSON.stringify(result, null, 2) });
 
     expect(result).toEqual(wanted);
   });

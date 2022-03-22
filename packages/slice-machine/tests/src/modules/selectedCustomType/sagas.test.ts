@@ -13,9 +13,10 @@ import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
-import { ArrayTabs, CustomType } from "@models/common/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
-const customTypeModel: CustomType<ArrayTabs> = {
+const customTypeModel: CustomTypeSM = {
   id: "about",
   label: "My Cool About Page",
   repeatable: false,
@@ -27,7 +28,7 @@ const customTypeModel: CustomType<ArrayTabs> = {
         {
           key: "title",
           value: {
-            type: "StructuredText",
+            type: WidgetTypes.RichText,
             config: {
               label: "",
               placeholder: "",
@@ -53,9 +54,7 @@ describe("[Selected Custom type sagas]", () => {
 
       saga.next().select(selectCurrentCustomType);
       saga.next(customTypeModel).select(selectCurrentMockConfig);
-      saga
-        .next({})
-        .call(saveCustomType, CustomType.toObject(customTypeModel), {});
+      saga.next({}).call(saveCustomType, customTypeModel, {});
 
       saga.next().put(saveCustomTypeCreator.success());
       saga.next().put(

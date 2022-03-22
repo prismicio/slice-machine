@@ -14,8 +14,8 @@ import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -51,17 +51,17 @@ describe("[Available Custom types module]", () => {
       });
     });
     it("should update the custom types state given CUSTOM_TYPES/CREATE.SUCCESS action", () => {
-      const createdCustomType: CustomType<ObjectTabs> = {
+      const createdCustomType: CustomTypeSM = {
         id: "id",
         label: "lama",
         repeatable: false,
         status: true,
-        tabs: {
-          Main: {
+        tabs: [
+          {
             key: "Main",
-            value: {},
+            value: [],
           },
-        },
+        ],
       };
 
       const action = createCustomTypeCreator.success({

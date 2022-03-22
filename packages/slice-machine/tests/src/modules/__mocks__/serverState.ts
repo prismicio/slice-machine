@@ -1,6 +1,6 @@
 import ServerState from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models";
-import { FieldType } from "@models/common/CustomType/fields";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const dummyServerState: Pick<
   ServerState,
@@ -17,12 +17,12 @@ export const dummyServerState: Pick<
       tracking: false,
       localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
     },
-    updateVersionInfo: {
+    packageManager: "npm",
+    changelog: {
       currentVersion: "0.2.0",
-      latestVersion: "0.1.2",
-      packageManager: "npm",
-      updateCommand: "npm i --save-dev slice-machine-ui",
+      latestNonBreakingVersion: "0.1.2",
       updateAvailable: false,
+      versions: [],
     },
     mockConfig: {},
     framework: Frameworks.next,
@@ -35,23 +35,26 @@ export const dummyServerState: Pick<
       label: "My Cool About Page",
       repeatable: false,
       status: true,
-      tabs: {
-        Main: {
+      tabs: [
+        {
           key: "Main",
-          value: {
-            title: {
-              type: FieldType.StructuredText,
-              config: {
-                label: "",
-                placeholder: "",
-                allowTargetBlank: true,
-                single:
-                  "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+          value: [
+            {
+              key: "title",
+              value: {
+                type: WidgetTypes.RichText,
+                config: {
+                  label: "",
+                  placeholder: "",
+                  allowTargetBlank: true,
+                  single:
+                    "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+                },
               },
             },
-          },
+          ],
         },
-      },
+      ],
     },
   ],
   remoteCustomTypes: [],

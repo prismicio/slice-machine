@@ -1,7 +1,6 @@
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { findWidgetByConfigOrType } from "@builders/utils";
-import { FieldType } from "@models/common/CustomType/fields";
-import { Media } from "@lib/models/common/widgets/Link/type";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const dumbConfig = {
   label: "",
@@ -16,7 +15,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Image
+      WidgetTypes.Image
     );
     expect(widgetFound).toEqual(Widgets.Image);
   });
@@ -24,7 +23,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Color
+      WidgetTypes.Color
     );
     expect(widgetFound).toEqual(Widgets.Color);
   });
@@ -32,7 +31,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.UID
+      WidgetTypes.UID
     );
     expect(widgetFound).toEqual(Widgets.UID);
   });
@@ -40,7 +39,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Group
+      WidgetTypes.Group
     );
     expect(widgetFound).toEqual(Widgets.Group);
   });
@@ -48,7 +47,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.GeoPoint
+      WidgetTypes.GeoPoint
     );
     expect(widgetFound).toEqual(Widgets.GeoPoint);
   });
@@ -56,7 +55,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Select
+      WidgetTypes.Select
     );
     expect(widgetFound).toEqual(Widgets.Select);
   });
@@ -64,7 +63,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Boolean
+      WidgetTypes.BooleanField
     );
     expect(widgetFound).toEqual(Widgets.Boolean);
   });
@@ -72,7 +71,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Date
+      WidgetTypes.Date
     );
     expect(widgetFound).toEqual(Widgets.Date);
   });
@@ -80,7 +79,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Timestamp
+      WidgetTypes.Timestamp
     );
     expect(widgetFound).toEqual(Widgets.Timestamp);
   });
@@ -88,7 +87,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Number
+      WidgetTypes.Number
     );
     expect(widgetFound).toEqual(Widgets.Number);
   });
@@ -96,7 +95,7 @@ describe("utils/findWidgetByConfigOrType", () => {
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       dumbConfig,
-      FieldType.Link
+      WidgetTypes.Link
     );
     expect(widgetFound).toEqual(Widgets.Link);
   });
@@ -104,12 +103,12 @@ describe("utils/findWidgetByConfigOrType", () => {
     const contentRelationshipConfig = {
       label: "",
       placeholder: "",
-      select: Media.document,
+      select: "document",
     };
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       contentRelationshipConfig,
-      FieldType.Link
+      WidgetTypes.Link
     );
     expect(widgetFound).toEqual(Widgets.ContentRelationship);
   });
@@ -117,12 +116,12 @@ describe("utils/findWidgetByConfigOrType", () => {
     const contentRelationshipConfig = {
       label: "",
       placeholder: "",
-      select: Media.media,
+      select: "media",
     };
     const widgetFound = findWidgetByConfigOrType(
       Widgets,
       contentRelationshipConfig,
-      FieldType.Link
+      WidgetTypes.Link
     );
     expect(widgetFound).toEqual(Widgets.LinkToMedia);
   });
