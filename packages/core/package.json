@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.5-alpha.3",
+  "version": "1.1.5-alpha.5",
   "private": false,
   "main": "./build/index.js",
   "exports": {
@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "watch": "tsc --project tsconfig.json --watch",
-    "lint": "eslint --ext .ts .",
+    "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts .",
     "lint:precommit": "eslint",
     "audit": "better-npm-audit audit -l high -p",
     "prepublishOnly": "npm run test && npm run build",

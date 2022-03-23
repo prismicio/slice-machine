@@ -23,12 +23,12 @@ const redirect = (
   isSimulator?: boolean
 ): void => {
   if (!variation) {
-    void router.push(`/${model.href}/${model.infos.sliceName}`);
+    void router.push(`/${model.href}/${model.model.name}`);
     return;
   }
   const params = Links.variation({
     lib: model.href,
-    sliceName: model.infos.sliceName,
+    sliceName: model.model.name,
     variationId: variation?.id,
     isSimulator,
   });

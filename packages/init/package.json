@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/init",
-  "version": "1.1.5-alpha.3",
+  "version": "1.1.5-alpha.5",
   "description": "The easiest way to add Slice Machine to your project",
   "license": "MIT",
   "bin": {
@@ -10,7 +10,7 @@
     "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix",
     "build": "npm run tsc && siroc build",
-    "lint": "eslint --ext .ts .",
+    "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts .",
     "lint:precommit": "eslint",
     "prepublishOnly": "npm run test && npm run build",
     "test": "jest",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
-    "@slicemachine/core": "1.1.5-alpha.3",
+    "@slicemachine/core": "1.1.5-alpha.5",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",
     "axios": "^0.24.0",

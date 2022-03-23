@@ -278,7 +278,6 @@ const allFieldComponent = {
         },
       },
     ],
-    nameConflict: { sliceName: "AllFields", id: "all_fields" },
     screenshotPaths: {
       "default-slice": {
         path: "tests/project/slices/AllFields/default-slice/preview.jpeg",

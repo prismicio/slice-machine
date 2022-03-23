@@ -129,7 +129,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           href={createStorybookUrl({
             storybook: storybookUrl,
             libraryName: Model.from,
-            sliceName: Model.infos.sliceName,
+            sliceName: Model.model.name,
             variationId: variation.id,
           })}
         >

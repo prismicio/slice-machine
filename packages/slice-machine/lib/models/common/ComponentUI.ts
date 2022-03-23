@@ -67,7 +67,7 @@ export const ComponentUI = {
     return {
       ...component,
       screenshotUrls: buildScreenshotUrls(
-        component.infos.screenshotPaths,
+        component.screenshotPaths,
         env.baseUrl
       ),
       __status: computeStatus(component, remoteSlices),
