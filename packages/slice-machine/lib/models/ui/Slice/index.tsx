@@ -179,7 +179,7 @@ export const SharedSlice = {
                 </Fragment>
               )}
               <Heading sx={{ flex: 1 }} as="h6">
-                {slice.infos.sliceName}
+                {slice.model.name}
               </Heading>
             </Flex>
             <SliceVariations

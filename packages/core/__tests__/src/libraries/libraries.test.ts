@@ -33,10 +33,8 @@ const commonExpect = (
   expect(component.href).toEqual(href || libName);
   expect(component.pathToSlice).toEqual(`./${libName}`);
 
-  expect(component.infos.sliceName).toEqual("CallToAction");
-  expect(component.infos.isDirectory).toEqual(true);
+  expect(component.model.name).toEqual("CallToAction");
 
-  expect(component.migrated).toEqual(false);
   return result;
 };
 
@@ -73,20 +71,20 @@ test("it finds slice in local library", () => {
 
 test("it finds slice component in local library", () => {
   const component = testPrefix("@/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it finds slice component in ~ library", () => {
   const component = testPrefix("~/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it finds slice component in / library", () => {
   const component = testPrefix("/");
-  expect(component.infos.fileName).toEqual("index");
-  expect(component.infos.extension).toEqual("svelte");
+  expect(component.fileName).toEqual("index");
+  expect(component.extension).toEqual("svelte");
 });
 
 test("it ignores non slice folders", () => {

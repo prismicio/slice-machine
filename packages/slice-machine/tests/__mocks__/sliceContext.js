@@ -179,10 +179,6 @@ export default {
           },
         },
       ],
-      nameConflict: {
-        sliceName: "MyNewSlice",
-        id: "my_new_slice",
-      },
       screenshotPaths: {},
     },
     migrated: false,

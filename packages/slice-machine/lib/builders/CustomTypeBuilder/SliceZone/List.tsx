@@ -16,7 +16,7 @@ const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
         // NonsharedSlice
         return (slice.payload as NonSharedSliceInSliceZone).key;
       }
-      return (slice.payload as SliceState).infos.sliceName;
+      return (slice.payload as SliceState).model.name;
     }}
     renderElem={(slice: SliceZoneSlice) => {
       if (slice.type === SliceType.Slice) {
