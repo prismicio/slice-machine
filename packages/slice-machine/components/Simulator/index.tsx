@@ -32,8 +32,7 @@ export default function Simulator() {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Tracker.get().trackOpenSliceSimulator(framework, version);
+    void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
 
   const [state, setState] = useState({ size: Size.FULL });
