@@ -107,12 +107,6 @@ export const Tab = {
       sliceZone: SliceZone.createEmpty(key),
     };
   },
-  deleteSliceZone(tab: TabSM): TabSM {
-    return {
-      ...tab,
-      sliceZone: undefined,
-    };
-  },
 
   organiseFields(tabSM: TabSM) {
     const { fields, groups } = tabSM.value.reduce<OrganisedFields>(

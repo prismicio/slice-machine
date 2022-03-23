@@ -34,7 +34,8 @@ const useSMTracker = () => {
 
   useEffect(() => {
     Tracker.get().initialize(
-      process.env.NEXT_PUBLIC_SEGMENT_KEY || "JfTfmHaATChc4xueS7RcCBsixI71dJIJ",
+      process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
+        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
       isTrackingAvailable
     );
 
