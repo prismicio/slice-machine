@@ -1,8 +1,6 @@
 import React from "react";
 import CodeBlock, { Item, RenderHintBaseFN, WidgetsType } from "../CodeBlock";
 
-// const DOCS_README = 'https://github.com/prismicio/prismic-reactjs';
-
 const wrapRepeatable = (code: string): string =>
   `
 { slice?.items?.map((item, i) => ${code}) }
@@ -14,35 +12,31 @@ const createDefaultField =
     `<${tag} ${useKey ? appendKey(fieldText) : ""}>{ ${fieldText} }</${tag}>`;
 
 const handleDateCode = (fieldText: string, useKey?: boolean): string =>
-  `
-/* import { asDate } from '@prismicio/helpers' */
+  `/* import { asDate } from '@prismicio/helpers' */
 <span ${
     useKey ? appendKey(fieldText) : ""
   }>{ asDate(${fieldText}).toString() }</span>
 `;
 
 const handleLinkCode = (fieldText: string, useKey?: boolean): string =>
-  `
-/* import { PrismicLink } from '@prismicio/react' */
+  `/* import { PrismicLink } from '@prismicio/react' */
 <PrismicLink ${
     useKey ? appendKey(fieldText) : ""
   } field={${fieldText}}>My Link</a>
 `;
 
 const handleDocumentLinkCode = (fieldText: string, useKey?: boolean): string =>
-  `
-/* import { PrismicLink } from '@prismicio/react' */
+  `/* import { PrismicLink } from '@prismicio/react' */
 <PrismicLink ${
     useKey ? appendKey(fieldText) : ""
   } document={${fieldText}}>My Link</a>
 `;
 
 const handleEmbedCode = (fieldText: string, useKey?: boolean): string =>
-  `
-// you might want to use a lib here (eg. react-oembed-container)
+  `// you might want to use a lib here (eg. react-oembed-container)
 <div ${
     useKey ? appendKey(fieldText) : ""
-  } dangerouslySetInnerHTML={{ __html: ${fieldText} }} />
+  } dangerouslySetInnerHTML={{ __html: ${fieldText}.html }} />
 `;
 
 const appendKey = (id: string): string => `key={\`${id}-\${i}\`}`;
