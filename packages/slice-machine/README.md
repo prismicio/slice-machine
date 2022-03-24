@@ -54,6 +54,8 @@ To start the SliceMachine locally you need to :
 3) Run the SliceMachine frontend (next server) into a second terminal
 > `cd packages/slice-machine && npm run dev`
 4) Open the SliceMachine in your browser `http://localhost:9999`
+5) (optional) When working on the `@slicemachine/core` package you have to run an extra watcher
+> `cd packages/core && npm run watch`
 
 SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
 
