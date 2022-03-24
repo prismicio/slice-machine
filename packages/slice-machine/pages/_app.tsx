@@ -18,10 +18,14 @@ import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
 import "src/css/toaster.css";
+import "src/css/intercom.css";
 
 import "highlight.js/styles/atom-one-dark.css";
 
 import ServerState from "lib/models/server/ServerState";
+
+import { getIsTrackingAvailable } from "@src/modules/environment";
+import Tracker from "@src/tracker";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
@@ -77,6 +81,12 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
         remoteSlices: serverState.remoteSlices,
       },
     });
+
+    Tracker.get().initialize(
+      process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
+        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
+      getIsTrackingAvailable(store.getState())
+    );
 
     setSMStore({ store, persistor });
   }, [serverState]);

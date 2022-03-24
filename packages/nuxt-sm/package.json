@@ -1,6 +1,6 @@
 {
   "name": "nuxt-sm",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-alpha.4",
   "description": "A Nuxt module for SliceMachine",
   "main": "src/index.js",
   "directories": {
@@ -9,7 +9,7 @@
   "dependencies": {
     "consola": "^2.11.3",
     "slash": "^3.0.0",
-    "sm-commons": "^0.0.21"
+    "sm-commons": "0.1.5-alpha.4"
   },
   "devDependencies": {
     "better-npm-audit": "^3.4.0",
@@ -19,13 +19,10 @@
     "jest": "^27.2.5",
     "vue-essential-slices": "0.0.7"
   },
-  "resolutions": {
-    "sm-commons/**/trim-newlines": ">=3.0.1 <4.0.0 || >=4.0.1"
-  },
   "scripts": {
     "test": "jest",
     "lint": "eslint --ext .js .",
-    "audit": "better-npm-audit audit -l high -p -x 1065069",
+    "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix"
   },
   "repository": {

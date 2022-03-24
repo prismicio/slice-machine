@@ -66,11 +66,11 @@ export function formatComponent(
   return {
     library: slice.from,
     id: slice.model.id,
-    name: slice.infos.meta.name,
-    description: slice.infos.meta.description,
+    name: slice.model.name,
+    description: slice.model.description,
     model: Slices.fromSM(slice.model),
     mocks: (
-      slice.infos.mock || []
+      slice.mock || []
     ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
@@ -79,14 +79,13 @@ export function formatComponent(
       {}
     ),
     meta: {
-      fileName: slice.infos.fileName,
-      isDirectory: slice.infos.isDirectory,
-      extension: slice.infos.extension,
+      fileName: slice.fileName,
+      extension: slice.extension,
     },
-    screenshotPaths: !slice.infos.screenshotPaths
+    screenshotPaths: !slice.screenshotPaths
       ? {}
       : Object.entries(
-          slice.infos.screenshotPaths
+          slice.screenshotPaths
         ).reduce<Models.LibrariesState.ComponentScreenshots>(
           (acc, [variationId, screenshot]) => {
             return {

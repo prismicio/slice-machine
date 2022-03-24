@@ -1,6 +1,6 @@
 {
   "name": "next-slicezone",
-  "version": "0.2.5-alpha.2",
+  "version": "0.2.5-alpha.4",
   "description": "A component that maps other components to Prismic slices",
   "source": "src/index.js",
   "main": "dist/index.js",
@@ -10,7 +10,7 @@
     "build": "rollup -c",
     "prepublishOnly": "yarn build && yarn test",
     "lint": "eslint --ext .js,.jsx .",
-    "audit": "better-npm-audit audit -l high -p -x 1065069",
+    "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix",
     "test": "jest"
   },
@@ -32,7 +32,7 @@
   "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "dependencies": {
     "slash": "^3.0.0",
-    "sm-commons": "^0.0.21"
+    "sm-commons": "0.1.5-alpha.4"
   },
   "peerDependencies": {
     "react": ">=16.14.0",

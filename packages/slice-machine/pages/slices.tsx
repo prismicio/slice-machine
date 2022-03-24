@@ -179,7 +179,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                       <Grid
                         elems={components.map(([e]) => e)}
                         defineElementKey={(slice: SliceState) =>
-                          slice.infos.sliceName
+                          slice.model.name
                         }
                         renderElem={(slice: SliceState) => {
                           return SharedSlice.render({

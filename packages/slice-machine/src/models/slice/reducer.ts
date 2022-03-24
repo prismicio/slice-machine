@@ -40,14 +40,6 @@ export function reducer(
           initialScreenshotUrls: prevState.screenshotUrls,
           remoteVariations: prevState.variations,
         };
-      case SliceActions.UpdateMetadata:
-        return {
-          ...prevState,
-          infos: {
-            ...prevState.infos,
-            ...(action.payload as Models.ComponentMetadata),
-          },
-        };
       case SliceActions.CopyVariation: {
         const { key, name, copied } = action.payload as {
           key: string;

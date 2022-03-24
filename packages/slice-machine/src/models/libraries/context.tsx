@@ -37,7 +37,7 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
               env.mockConfig,
               lib.name,
-              component.infos.sliceName
+              component.model.name
             ),
             remoteSlice: remoteSlices?.find((e) => e.id === component.model.id),
           })

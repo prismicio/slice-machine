@@ -33,14 +33,16 @@ describe("server.generateLibraryState", () => {
     expect(JSON.parse(data)).toEqual({
       "@slices": {
         components: {
-          slice1: {
+          sliceId: {
             library: "@slices",
-            id: "slice1",
+            id: "sliceId",
+            description: "slice description",
+            name: "SliceName",
             model: {
-              id: "slice1",
+              id: "sliceId",
               type: "SharedSlice",
-              name: "slice1",
-              description: "slice1",
+              name: "SliceName",
+              description: "slice description",
               variations: [
                 {
                   id: "default-slice",
@@ -74,7 +76,6 @@ describe("server.generateLibraryState", () => {
             mocks: {},
             meta: {
               fileName: "slice1/models.json",
-              isDirectory: false,
               extension: "js",
             },
             screenshotPaths: {},

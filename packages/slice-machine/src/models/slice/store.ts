@@ -30,8 +30,6 @@ export default class SliceStore implements Store {
   };
   save = saveSlice(this.dispatch);
   push = pushSlice(this.dispatch);
-  updateMetadata = (value: Models.ComponentMetadata): void =>
-    this.dispatch({ type: SliceActions.UpdateMetadata, payload: value });
   copyVariation = (key: string, name: string, copied: VariationSM): void =>
     this.dispatch({
       type: SliceActions.CopyVariation,

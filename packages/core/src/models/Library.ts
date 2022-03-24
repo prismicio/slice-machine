@@ -5,20 +5,12 @@ import Files from "../utils/files";
 import { SliceMock, SliceSM } from "./Slice";
 
 export interface ComponentInfo {
-  sliceName: string;
   fileName: string | null;
-  isDirectory: boolean;
   extension: string | null;
   model: SliceSM;
-  nameConflict: {
-    sliceName: string;
-    id: string;
-  } | null;
-
   screenshotPaths: {
     [variationId: string]: Screenshot;
   };
-  meta: ComponentMetadata;
   mock?: SliceMock;
 }
 
@@ -32,19 +24,10 @@ export const ComponentInfo = {
   },
 };
 
-export interface ComponentMetadata {
-  id: string;
-  name?: string;
-  description?: string;
-}
-
-export interface Component {
+export interface Component extends ComponentInfo {
   from: string;
   href: string;
   pathToSlice: string;
-  infos: ComponentInfo;
-  model: SliceSM;
-  migrated: boolean;
 }
 
 export interface Screenshot {

@@ -93,13 +93,12 @@ export const SliceHandler = ({ children }: { children: any }) => {
 
   const lib = libraries?.find((l) => l?.name === libParam.replace(/--/g, "/"));
   if (!lib) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.replace("/");
+    void router.replace("/");
     return null;
   }
 
   const slice = lib.components.find(
-    ([state]) => state.infos.sliceName === router.query.sliceName
+    ([state]) => state.model.name === router.query.sliceName
   );
 
   if (!slice) {
@@ -122,16 +121,15 @@ export const SliceHandler = ({ children }: { children: any }) => {
       return SliceState.variation(slice[0]);
     }
   })();
+
   if (!variation) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.replace("/");
+    void router.replace("/");
     return null;
   }
 
   // variation not in the URL but a default variation was found
   if (!variationParam) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.replace(`/${lib.name}/${slice[0].infos.sliceName}/${variation.id}`);
+    void router.replace(`/${lib.name}/${slice[0].model.name}/${variation.id}`);
   }
 
   return (
