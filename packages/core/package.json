@@ -3,17 +3,6 @@
   "version": "1.1.5-alpha.5",
   "private": false,
   "main": "./build/index.js",
-  "exports": {
-    ".": "./build/index.js",
-    "./consts": "./build/consts/index.js",
-    "./libraries": "./build/libraries/index.js",
-    "./models": "./build/models/index.js",
-    "./node-utils": "./build/node-utils/index.js",
-    "./prismic": "./build/prismic/index.js",
-    "./utils": "./build/utils/index.js",
-    "./package.json": "./package.json",
-    "./build/*": "./build/*.js"
-  },
   "engines": {
     "node": ">=12"
   },
