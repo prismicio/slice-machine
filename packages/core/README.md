@@ -6,8 +6,6 @@ Primitive operations and data models for the Slicemachine world.
 
 The core is structured in sub-packages that can be used and imported independently. Although most of the operations it provides are filesystem based, you should be able to import Models and utilities in browser-based environments.
 
-
-
 ## Node-Utils
 
 Query and parse Slicemachine data in the Filesystem
