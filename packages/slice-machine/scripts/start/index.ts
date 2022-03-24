@@ -1,5 +1,5 @@
 import path from "path";
-import { Framework } from "@slicemachine/core/build/node-utils";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 // Don't remove those lines, they resolve aliases
 import { resolveAliases } from "../../lib/env/resolveAliases";
@@ -35,7 +35,7 @@ async function run(): Promise<void> {
   const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
   const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);
 
-  const framework = Framework.defineFramework({
+  const framework = NodeUtils.Framework.defineFramework({
     cwd,
     manifest: manifest.content || undefined,
   });
