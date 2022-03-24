@@ -1,5 +1,7 @@
-import { CONSTS, NodeUtils, Prismic } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
+import * as Prismic from "@slicemachine/core/build/prismic";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
 import { logs } from "../utils";
 

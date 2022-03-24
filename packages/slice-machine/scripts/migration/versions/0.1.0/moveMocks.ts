@@ -1,4 +1,4 @@
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 export function moveMocks(cwd: string, libraryName: string, sliceName: string) {
   const customMocksPath = NodeUtils.CustomPaths(cwd)

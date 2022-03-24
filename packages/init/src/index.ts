@@ -1,4 +1,5 @@
-import { CONSTS, Prismic } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
+import Prismic from "@slicemachine/core/build/prismic";
 import Tracker from "./utils/tracker";
 import {
   installRequiredDependencies,

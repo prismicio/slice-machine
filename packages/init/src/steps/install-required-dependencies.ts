@@ -1,6 +1,7 @@
 import path from "path";
 import { execCommand, logs } from "../utils";
-import { CONSTS, Models, NodeUtils } from "@slicemachine/core";
+import { CONSTS, Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 const {
   PRISMIC_CLIENT,

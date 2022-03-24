@@ -1,4 +1,4 @@
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { logs } from "../utils";
 
 export function validatePkg(cwd: string): void {

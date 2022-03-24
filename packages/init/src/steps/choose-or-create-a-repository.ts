@@ -1,6 +1,8 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Prismic, Utils, Models, CONSTS, NodeUtils } from "@slicemachine/core";
+import { Utils, Models, CONSTS } from "@slicemachine/core";
+import * as Prismic from "@slicemachine/core/build/prismic";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { createRepository } from "../utils/create-repo";
 import { logs } from "../utils";
 

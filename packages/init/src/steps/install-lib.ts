@@ -1,4 +1,5 @@
-import { Models, NodeUtils } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import tmp from "tmp";
 import AdmZip from "adm-zip";
 import fsExtra from "fs-extra";

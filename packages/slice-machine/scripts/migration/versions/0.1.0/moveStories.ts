@@ -1,5 +1,5 @@
 import path from "path";
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 import storybook from "../../../../server/src/api/storybook";
 

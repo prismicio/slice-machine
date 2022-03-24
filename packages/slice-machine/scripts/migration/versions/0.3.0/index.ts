@@ -1,5 +1,5 @@
-import { Models, NodeUtils } from "@slicemachine/core";
-
+import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { Migration } from "../../migrate";
 
 // Migration to write previousNext or previousNuxt into the sm.json

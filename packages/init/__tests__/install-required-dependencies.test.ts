@@ -1,26 +1,18 @@
 import { jest, describe, afterEach, test, expect } from "@jest/globals";
-import * as Core from "@slicemachine/core";
-import * as initUtils from "../src/utils";
-import { installRequiredDependencies } from "../src/steps";
 import path from "path";
 import os from "os";
+import fs from "fs";
+import { Models, CONSTS } from "@slicemachine/core";
+import * as initUtils from "../src/utils";
+import { installRequiredDependencies } from "../src/steps";
+
 import { stderr } from "stdout-stderr";
-
-jest.mock("@slicemachine/core", () => {
-  const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
-
-  return {
-    ...actualCore,
-    NodeUtils: {
-      // fragile test issue
-      ...actualCore.NodeUtils,
-      Files: {
-        ...actualCore.NodeUtils.Files,
-        exists: jest.fn(),
-      },
-    },
-  };
-});
+class ErrnoException extends Error {
+  errno?: number | undefined;
+  code?: string | undefined;
+  path?: string | undefined;
+  syscall?: string | undefined;
+}
 
 describe("install required dependency", () => {
   void afterEach(() => {
@@ -28,26 +20,25 @@ describe("install required dependency", () => {
   });
 
   const fakeCWD = "..";
-  const fileExistsMock = Core.NodeUtils.Files.exists as jest.Mock; // eslint-disable-line @typescript-eslint/unbound-method
 
   test("it should use yarn to install Slice Machine", async () => {
     const spy = jest
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(true); // verify if yarn lock file exists
-    fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockReturnValueOnce({} as fs.Stats) // verify if yarn lock file exists
+      .mockReturnValueOnce({} as fs.Stats); // verify package has been installed
 
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
 
     stderr.stop();
 
     expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith(
-      `yarn add -D ${Core.CONSTS.SM_PACKAGE_NAME}`
-    );
+    expect(spy).toHaveBeenCalledWith(`yarn add -D ${CONSTS.SM_PACKAGE_NAME}`);
 
     expect(stderr.output).toContain("Downloading Slice Machine");
     expect(stderr.output).toContain(
@@ -60,17 +51,24 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false); // verify if yarn lock file exists
-    fileExistsMock.mockReturnValueOnce(true); // verify package has been installed
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
+
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
 
     stderr.stop();
 
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      `npm install --save-dev ${Core.CONSTS.SM_PACKAGE_NAME}`
+      `npm install --save-dev ${CONSTS.SM_PACKAGE_NAME}`
     );
 
     expect(stderr.output).toContain("Downloading Slice Machine");
@@ -84,14 +82,20 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false);
-    fileExistsMock.mockReturnValueOnce(true);
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.react);
+    await installRequiredDependencies(fakedir, Models.Frameworks.react);
 
     stderr.stop();
 
@@ -111,14 +115,20 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false);
-    fileExistsMock.mockReturnValueOnce(true);
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.next);
+    await installRequiredDependencies(fakedir, Models.Frameworks.next);
 
     stderr.stop();
 
@@ -138,14 +148,20 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false);
-    fileExistsMock.mockReturnValueOnce(true);
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.svelte);
+    await installRequiredDependencies(fakedir, Models.Frameworks.svelte);
 
     stderr.stop();
 
@@ -165,14 +181,20 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false);
-    fileExistsMock.mockReturnValueOnce(true);
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakedir, Models.Frameworks.nuxt);
 
     stderr.stop();
 
@@ -192,14 +214,20 @@ describe("install required dependency", () => {
       .spyOn(initUtils, "execCommand")
       .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
 
-    fileExistsMock.mockReturnValueOnce(false);
-    fileExistsMock.mockReturnValueOnce(true);
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
 
     const fakedir = path.join(os.tmpdir(), "install-deps");
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Core.Models.Frameworks.vue);
+    await installRequiredDependencies(fakedir, Models.Frameworks.vue);
 
     stderr.stop();
 

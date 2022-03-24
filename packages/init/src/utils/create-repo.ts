@@ -1,6 +1,6 @@
-import { Prismic } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import * as logs from "./logs";
+import * as Prismic from "@slicemachine/core/build/prismic";
 
 export function createRepository(
   domain: string,

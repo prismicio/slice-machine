@@ -2,7 +2,8 @@ import axios from "axios";
 import * as t from "io-ts";
 import { pipe } from "fp-ts/function";
 import { fold } from "fp-ts/Either";
-import { Utils, Models, Prismic, CONSTS } from "@slicemachine/core";
+import { Utils, Models, CONSTS } from "@slicemachine/core";
+import * as Prismic from "@slicemachine/core/build/prismic";
 
 export async function getUserProfile(
   cookies: string,

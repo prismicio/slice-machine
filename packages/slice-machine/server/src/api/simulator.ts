@@ -1,8 +1,9 @@
-import { CONSTS, NodeUtils } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
 import { simulatorIsSupported } from "@lib/utils";
 import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
+import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils";
 
 const {
   PREVIOUS_REACT_PACKAGE_NAME,
@@ -67,7 +68,7 @@ export default async function handler(
     response.manifest = "ko";
   }
 
-  const packageJson = NodeUtils.retrieveJsonPackage(cwd);
+  const packageJson = retrieveJsonPackage(cwd);
 
   if (!packageJson.exists || !packageJson.content) {
     const message =

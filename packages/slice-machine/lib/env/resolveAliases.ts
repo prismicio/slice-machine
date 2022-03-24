@@ -1,6 +1,6 @@
 import path from "path";
 import moduleAlias from "module-alias";
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 type PackageWithModuleAliases = NodeUtils.JsonPackage & {
   _moduleAliases: Record<string, string>;

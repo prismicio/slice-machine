@@ -1,40 +1,31 @@
 // We mock the getEnv service
-import * as Core from "@slicemachine/core";
-
 import simulatorHandler from "../../../server/src/api/simulator";
 import "@testing-library/jest-dom";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-
-jest.mock("@slicemachine/core", () => {
-  const actualCore = jest.requireActual("@slicemachine/core");
-
-  return {
-    ...actualCore,
-    NodeUtils: {
-      retrieveJsonPackage: jest.fn<boolean, [{ cwd: string }]>(),
-    },
-  };
-});
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import { RequestWithEnv } from "server/src/api/http/common";
+import fs from "fs";
 
 describe("simulator controller", () => {
-  const retrieveJsonPackage = Core.NodeUtils.retrieveJsonPackage as jest.Mock;
-
   test("it should return all checks ko when no preview url is sent", async () => {
     const requestWithoutPreviewUrl = {
       env: {
         framework: Frameworks.next,
         manifest: {},
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {},
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithoutPreviewUrl
     );
@@ -50,15 +41,18 @@ describe("simulator controller", () => {
           localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {},
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
@@ -74,19 +68,22 @@ describe("simulator controller", () => {
           localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {
           "@prismicio/slice-simulator-react": "^2.6.12",
           "prismic-reactjs": "^0.3.0",
           "next-slicezone": "^0.1.0",
         },
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
@@ -102,19 +99,22 @@ describe("simulator controller", () => {
           localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {
           "@prismicio/slice-simulator-react": "^2.6.12",
           "@prismicio/react": "^0.3.0",
           "@prismicio/helpers": "^0",
         },
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
@@ -130,11 +130,13 @@ describe("simulator controller", () => {
           localSliceSimulatorURL: "http://localhost:3001/slice-simulator",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {
           "@prismicio/slice-simulator-vue": "^2.6.12",
           "nuxt-sm": "^0.3.0",
@@ -142,8 +144,9 @@ describe("simulator controller", () => {
           "@nuxtjs/prismic": "^0.0.28",
         },
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );
@@ -159,18 +162,21 @@ describe("simulator controller", () => {
           localSliceSimulatorURL: "http://localhost:3001/slice-simulator",
         },
       },
-    };
+    } as RequestWithEnv;
 
-    retrieveJsonPackage.mockReturnValue({
-      exists: true,
-      content: {
+    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
+    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+      JSON.stringify({
+        name: "",
+        version: "",
         dependencies: {
           "@prismicio/slice-simulator-vue": "^2.6.12",
           "@nuxtjs/prismic": "^0.0.28",
         },
         devDependencies: {},
-      },
-    });
+      })
+    );
+
     const previewCheckResponse: SimulatorCheckResponse = await simulatorHandler(
       requestWithPreviewUrl
     );

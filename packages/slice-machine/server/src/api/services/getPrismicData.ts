@@ -1,18 +1,22 @@
 import { ok, err, Result } from "neverthrow";
 
 import PrismicData from "@lib/models/common/PrismicData";
-import { Utils, Prismic } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
+import {
+  PrismicSharedConfigManager,
+  DEFAULT_CONFIG,
+} from "@slicemachine/core/build/prismic";
 
 export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
   try {
-    const prismicConfig = Prismic.PrismicSharedConfigManager.get();
+    const prismicConfig = PrismicSharedConfigManager.get();
 
     const prismicData: PrismicData = {
       shortId: prismicConfig.shortId,
     };
 
-    if (prismicConfig.cookies === Prismic.DEFAULT_CONFIG.cookies) {
+    if (prismicConfig.cookies === DEFAULT_CONFIG.cookies) {
       return ok(prismicData);
     }
 

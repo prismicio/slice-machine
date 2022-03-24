@@ -1,17 +1,21 @@
 import { test, expect, jest, describe } from "@jest/globals";
 import { mocked } from "jest-mock";
 
-import * as core from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
 import { createRepository } from "../src/utils/create-repo";
 import { stdout, stderr } from "stdout-stderr";
+import Prismic from "@slicemachine/core/build/prismic";
 
-jest.mock("@slicemachine/core", () => ({
-  // fragile test issue, wy did we keep this version and not the other?
-  Prismic: {
+jest.mock("@slicemachine/core/build/prismic", () => {
+  return {
     Communication: {
       createRepository: jest.fn().mockImplementation(() => Promise.reject({})),
     },
-  },
+  };
+});
+
+jest.mock("@slicemachine/core", () => ({
+  // fragile test issue, wy did we keep this version and not the other?
   Models: {
     Frameworks: {
       next: "next",
@@ -24,7 +28,7 @@ jest.mock("@slicemachine/core", () => ({
 
 describe("mocking the core example: not advised", () => {
   test("mock core to make sure create repo is called", async () => {
-    const mockCore = mocked(core, true);
+    const mockedPrismic = mocked(Prismic, true);
     const exitSpy = jest
       .spyOn(process, "exit")
       .mockImplementationOnce(() => undefined as never);
@@ -35,13 +39,13 @@ describe("mocking the core example: not advised", () => {
     stdout.start();
     await createRepository(
       "foo-bar",
-      core.Models.Frameworks.next,
+      Models.Frameworks.next,
       "https://prismic.io",
       "prismic-auth=abcd"
     );
     stderr.stop();
     stdout.stop();
-    expect(mockCore.Prismic.Communication.createRepository).toHaveBeenCalled();
+    expect(mockedPrismic.Communication.createRepository).toHaveBeenCalled();
     expect(exitSpy).toHaveBeenCalled();
   });
 });

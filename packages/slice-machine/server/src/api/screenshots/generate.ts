@@ -1,7 +1,7 @@
 import type Models from "@slicemachine/core/build/models";
 import Files from "@lib/utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import Puppeteer from "./puppeteer";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 import {

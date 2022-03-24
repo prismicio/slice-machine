@@ -1,4 +1,4 @@
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { Migration, MigrationParams } from "./migrate";
 
 export async function run(

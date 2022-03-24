@@ -1,5 +1,5 @@
 import compareVersions from "compare-versions";
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 import MIGRATIONS from "./versions";
 import { run } from "./run";

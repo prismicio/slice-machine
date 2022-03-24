@@ -10,7 +10,7 @@ import * as authHelpers from "../../src/utils/auth/helpers";
 import { Auth } from "../../src/utils/auth";
 
 import { Roles } from "@slicemachine/core/src/models";
-import { Prismic } from "@slicemachine/core";
+import { Endpoints } from "@slicemachine/core/build/prismic";
 import fs from "fs";
 import nock from "nock";
 
@@ -22,7 +22,7 @@ describe("auth", () => {
   });
 
   const fakeBase = "https://fake.io";
-  const endpoints = Prismic.Endpoints.buildEndpoints(fakeBase);
+  const endpoints = Endpoints.buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
     const fakeProfile = {

@@ -1,4 +1,5 @@
-import { Models, NodeUtils } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import * as inquirer from "inquirer";
 import { logs } from "../utils";
 

@@ -1,4 +1,4 @@
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { execCommand } from "../utils";
 
 export type Dependency = string | { name: string; version: string };

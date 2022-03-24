@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { NodeUtils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 // Move the screenshot to the default variation folder
 export function scopePreviewToDefaultVariation(
