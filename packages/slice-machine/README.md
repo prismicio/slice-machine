@@ -43,6 +43,27 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 
 **Submitting code changes**: For small fixes, feel free to [open a PR][repo-pull-requests] with a description of your changes. For large changes, please first [open an issue][repo-feature-request] so we can discuss if and how the changes should be implemented.
 
+### Development scripts
+
+To start the SliceMachine locally you need to :
+
+1) Install the project dependencies
+> `make install`
+2) Run the SliceMachine backend (express server) into a first terminal
+> `cd packages/slice-machine && npm run dev-server`
+3) Run the SliceMachine frontend (next server) into a second terminal
+> `cd packages/slice-machine && npm run dev`
+4) Open the SliceMachine in your browser `http://localhost:9999`
+
+SliceMachine is organized as a monorepo using Lerna. Useful scripts include:
+
+#### `make clean`
+> a command that clean all the project dependencies and reinstall the SliceMachine from scratch
+#### `npm run test`
+> boolean check if unit tests all pass - uses jest
+#### `npm run lint`
+> boolean check if code conforms to linting rules - uses eslint
+
 ## License
 
 ```
