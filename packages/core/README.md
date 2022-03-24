@@ -1,4 +1,4 @@
-# Slicemachine Core
+# Slice Machine Core
 
 Primitive operations and data models for the Slicemachine world.
 
@@ -6,36 +6,9 @@ Primitive operations and data models for the Slicemachine world.
 
 The core is structured in sub-packages that can be used and imported independently. Although most of the operations it provides are filesystem based, you should be able to import Models and utilities in browser-based environments.
 
-## Auth
 
-Authenticate users based on their Prismic Shared Config file (`~/.prismic`).
 
-### Example use
-
-```javascript
-import { DEFAULT_BASE } from "@slicemachine/core/build/consts";
-import { Auth } from "@slicemachine/core/build/auth";
-
-(async () => {
-  await Auth.login(DEFAULT_BASE);
-  const user = await Auth.validateSession(DEFAULT_BASE);
-  console.log({ user });
-})();
-```
-
-### Available methods
-
-```javascript
-await Auth.login(DEFAULT_BASE /* https://prismic.io */);
-
-await Auth.signup(DEFAULT_BASE /* https://prismic.io */);
-
-await Auth.logout();
-
-await Auth.validateSession(DEFAULT_BASE /* https://prismic.io */);
-```
-
-## Fs Utils
+## Node-Utils
 
 Query and parse Slicemachine data in the Filesystem
 
@@ -99,7 +72,7 @@ import {
 })();
 ```
 
-### Libraries (wip)
+## Libraries (wip)
 
 An essential data model in Slicemachine is `Library`: a set of components
 that hold code, Prismic Slice model, screenshots and mocks.
@@ -107,7 +80,7 @@ that hold code, Prismic Slice model, screenshots and mocks.
 Once registered, retrieve them from the Filesystem
 
 ```javascript
-import { libraries } from "@slicemachine/core/build/node-utils";
+import { libraries } from "@slicemachine/core/build/libraries";
 
 (async () => {
   const cwd = "./";
@@ -133,15 +106,15 @@ import { libraries } from "@slicemachine/core/build/node-utils";
 })();
 ```
 
-### Models
+## Models
 
 Types (+ helpers) of Slicemachine data models
 
-### Prismic
+## Prismic
 
 Helpers to interact with Prismic and Prismic Shared Config object (~/.prismic)
 
-### Utils (expanding)
+## Utils (expanding)
 
 Various helpers to deal with Slicemachine specifics
 
