@@ -11,6 +11,9 @@ const wrapRepeatable = (code: string): string =>
 const createCodeFromTag = (tag: string) => (fieldText: string) =>
   `<${tag} :field="${fieldText}" />`;
 
+const createPrismicEmbed = (fieldText: string) =>
+  `<prismic-embed :field="${fieldText}.html" />`;
+
 const createPrismicLink = (fieldText: string) =>
   `<prismic-link :field="${fieldText}">My Link</prismic-link>`;
 
@@ -35,7 +38,7 @@ const codeByWidgetType = (
   [Widgets.Date?.TYPE_NAME]: (fieldText: string) =>
     `<span>{{ ${fieldText} }}</span>`,
   [Widgets.Timestamp?.TYPE_NAME]: createDefaultField(),
-  [Widgets.Embed?.TYPE_NAME]: createCodeFromTag("prismic-embed"),
+  [Widgets.Embed?.TYPE_NAME]: createPrismicEmbed,
   [Widgets.Number?.TYPE_NAME]: createDefaultField(),
   [Widgets.GeoPoint?.TYPE_NAME]: createDefaultField(),
   [Widgets.Color?.TYPE_NAME]: (fieldText: string) =>
