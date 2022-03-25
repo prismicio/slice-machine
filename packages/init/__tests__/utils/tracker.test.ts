@@ -84,7 +84,7 @@ describe("InitTracker", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackInitStart();
+    smTracker.trackInitStart(undefined);
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
@@ -106,7 +106,7 @@ describe("InitTracker", () => {
     });
 
     // Logged in call
-    smTracker.trackInitStart();
+    smTracker.trackInitStart("repoName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
@@ -114,7 +114,9 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Start",
-      properties: {},
+      properties: {
+        repo: "repoName",
+      },
     });
   });
 
@@ -161,7 +163,7 @@ describe("InitTracker", () => {
     smTracker.initialize(dumpSegmentKey, false);
     smTracker.identifyUser("userId");
     smTracker.trackInitDone(Models.Frameworks.next, "repoName");
-    smTracker.trackInitStart();
+    smTracker.trackInitStart("repoName");
     smTracker.trackDownloadLibrary("libraryName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
