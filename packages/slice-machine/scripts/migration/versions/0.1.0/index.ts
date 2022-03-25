@@ -3,8 +3,8 @@ import path from "path";
 import slash from "slash";
 import { Migration } from "../../migrate";
 
-import { FileSystem, Utils } from "@slicemachine/core";
-
+import * as Libraries from "@slicemachine/core/build/libraries";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { scopePreviewToDefaultVariation } from "./scopePreviewToDefaultVariation";
 import { moveMocks } from "./moveMocks";
 import { moveStories } from "./moveStories";
@@ -20,20 +20,21 @@ const migration: Migration = {
   main: async function main({ cwd }) {
     // remove old mocks
     const pathToOldMocks = path.join(cwd, ".slicemachine", "mocks.json");
-    if (Utils.Files.exists(pathToOldMocks)) Utils.Files.remove(pathToOldMocks);
+    if (NodeUtils.Files.exists(pathToOldMocks))
+      NodeUtils.Files.remove(pathToOldMocks);
 
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
 
     if (manifest.exists && manifest.content) {
       const { libraries } = manifest.content;
 
       (libraries || []).forEach((lib: string) => {
         const { isLocal, pathExists, pathToSlices, pathToLib } =
-          Utils.lib.getInfoFromPath(cwd, lib);
+          Libraries.getInfoFromPath(cwd, lib);
 
         if (isLocal && pathExists) {
           const libraryName = path.basename(pathToLib);
-          const sliceNames = Utils.Files.readDirectory(slash(pathToSlices))
+          const sliceNames = NodeUtils.Files.readDirectory(slash(pathToSlices))
             .map((curr: string) => path.join(pathToSlices, curr))
             .filter((e: string) => fs.statSync(e).isDirectory())
             .map((slicePath: string) => path.basename(slicePath));

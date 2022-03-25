@@ -1,4 +1,4 @@
-import { retrieveJsonPackage, JsonPackage } from "../filesystem";
+import { retrieveJsonPackage, JsonPackage } from "./pkg";
 import { Frameworks, SupportedFrameworks } from "../models/Framework";
 import { Manifest } from "../models/Manifest";
 

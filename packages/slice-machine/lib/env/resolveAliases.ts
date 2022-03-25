@@ -1,19 +1,22 @@
 import path from "path";
+import {
+  JsonPackage,
+  retrieveJsonPackage,
+} from "@slicemachine/core/build/node-utils";
 import moduleAlias from "module-alias";
-import { FileSystem } from "@slicemachine/core";
 
-interface PackageWithModuleAliases extends FileSystem.JsonPackage {
+type PackageWithModuleAliases = JsonPackage & {
   _moduleAliases?: Record<string, string>;
-}
+};
 
 const isAPackageHasModuleAliases = (
-  jsonPackage: FileSystem.JsonPackage | PackageWithModuleAliases
+  jsonPackage: JsonPackage | PackageWithModuleAliases
 ): jsonPackage is PackageWithModuleAliases => {
   return (jsonPackage as object).hasOwnProperty("_moduleAliases");
 };
 
 export function resolveAliases(cwd: string): void {
-  const pkg = FileSystem.retrieveJsonPackage(cwd);
+  const pkg = retrieveJsonPackage(cwd);
   const pkgContent = pkg.content as PackageWithModuleAliases;
   if (!pkgContent || !isAPackageHasModuleAliases(pkgContent)) {
     return;

@@ -1,10 +1,9 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
 import { Slices } from "@slicemachine/core/build/src/models/Slice";
-const { handleLibraryPath } = Libraries;
-const { LibrariesStatePath } = FileSystem;
+import { handleLibraryPath } from "@slicemachine/core/build/libraries";
+import { LibrariesStatePath, Files } from "@slicemachine/core/build/node-utils";
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,
@@ -17,7 +16,7 @@ export function generateState(env: BackendEnvironment): void {
     .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 
   const state = formatLibraries(libraries);
-  Utils.Files.write(LibrariesStatePath(env.cwd), state);
+  Files.write(LibrariesStatePath(env.cwd), state);
 }
 
 export function formatLibraries(
@@ -49,10 +48,9 @@ export function formatLibrary(
 }
 
 function getImageDimensions(imagePath: string | undefined) {
-  if (!imagePath || !Utils.Files.exists(imagePath))
-    return DEFAULT_IMAGE_DIMENSIONS;
+  if (!imagePath || !Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
 
-  const imageBuffer = Utils.Files.readBuffer(imagePath);
+  const imageBuffer = Files.readBuffer(imagePath);
   const result = probe.sync(imageBuffer);
 
   if (!result) return DEFAULT_IMAGE_DIMENSIONS;

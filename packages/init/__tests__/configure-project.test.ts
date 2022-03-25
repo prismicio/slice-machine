@@ -6,51 +6,55 @@ import {
   expect,
   beforeEach,
 } from "@jest/globals";
-import * as Core from "@slicemachine/core";
+// import * as Core from "@slicemachine/core";
 import { configureProject } from "../src/steps";
+import type { spinner } from "../src/utils/logs";
+import NodeUtils from "@slicemachine/core/build/node-utils";
+import Prismic from "@slicemachine/core/build/prismic";
+import { Models } from "@slicemachine/core";
 
-type SpinnerReturnType = ReturnType<typeof Core.Utils.spinner>;
+type SpinnerReturnType = ReturnType<typeof spinner>;
 
 const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
 
-jest.mock("@slicemachine/core", () => {
-  const actualCore = jest.requireActual("@slicemachine/core") as typeof Core;
+jest.mock("../src/utils/logs", () => ({
+  spinner: () => ({
+    start: startFn,
+    succeed: successFn,
+    fail: failFn,
+  }),
+}));
+
+jest.mock("@slicemachine/core/build/node-utils", () => {
+  // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
+  const actualCore = jest.requireActual(
+    "@slicemachine/core/build/node-utils"
+  ) as typeof NodeUtils;
 
   return {
     ...actualCore,
-    FileSystem: {
-      ...actualCore.FileSystem,
-      retrieveManifest: jest.fn<
-        Core.FileSystem.FileContent<Core.Models.Manifest>,
-        [{ cwd: string }]
+    retrieveManifest: jest.fn<
+      NodeUtils.FileContent<Models.Manifest>,
+      [{ cwd: string }]
+    >(),
+    createManifest: jest.fn<
+      void,
+      [{ cwd: string; manifest: Models.Manifest }]
+    >(),
+    patchManifest: jest.fn<
+      boolean,
+      [{ cwd: string; data: Partial<Models.Manifest> }]
+    >(),
+    addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
+    Files: {
+      ...actualCore.Files,
+      exists: jest.fn<boolean, [pathToFile: string]>(),
+      mkdir: jest.fn<
+        string | undefined,
+        [target: string, option: { recursive: boolean }]
       >(),
-      createManifest: jest.fn<
-        void,
-        [{ cwd: string; manifest: Core.Models.Manifest }]
-      >(),
-      patchManifest: jest.fn<
-        boolean,
-        [{ cwd: string; data: Partial<Core.Models.Manifest> }]
-      >(),
-      addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
-    },
-    Utils: {
-      ...actualCore.Utils,
-      Files: {
-        ...actualCore.Utils.Files,
-        exists: jest.fn<boolean, [pathToFile: string]>(),
-        mkdir: jest.fn<
-          string | undefined,
-          [target: string, option: { resursive: boolean }]
-        >(),
-      },
-      spinner: () => ({
-        start: startFn,
-        succeed: successFn,
-        fail: failFn,
-      }),
     },
   };
 });
@@ -65,20 +69,20 @@ describe("configure-project", () => {
   });
 
   const fakeCwd = "./";
-  const fakeBase = "https://music.to.my.hears.io" as Core.Utils.Endpoints.Base;
+  const fakeBase = "https://music.to.my.hears.io" as Prismic.Endpoints.Base;
   const fakeRepository = "testing-repo";
   const fakeFrameworkStats = {
-    value: Core.Utils.Framework.Frameworks.react,
+    value: Models.Frameworks.react,
     manuallyAdded: false,
   };
 
-  const retrieveManifestMock = Core.FileSystem.retrieveManifest as jest.Mock;
-  const createManifestMock = Core.FileSystem.createManifest as jest.Mock;
-  const patchManifestMock = Core.FileSystem.patchManifest as jest.Mock;
-  const addJsonPackageSmScriptMock = Core.FileSystem
-    .addJsonPackageSmScript as jest.Mock;
+  const retrieveManifestMock = NodeUtils.retrieveManifest as jest.Mock;
+  const createManifestMock = NodeUtils.createManifest as jest.Mock;
+  const patchManifestMock = NodeUtils.patchManifest as jest.Mock;
+  const addJsonPackageSmScriptMock =
+    NodeUtils.addJsonPackageSmScript as jest.Mock;
 
-  const { exists, mkdir } = Core.Utils.Files;
+  const { exists, mkdir } = NodeUtils.Files;
   const fileExistsMock = exists as jest.Mock;
   const mkdirMock = mkdir as jest.Mock;
 
@@ -107,7 +111,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.Frameworks.react,
+        framework: Models.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
@@ -130,7 +134,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.Frameworks.react,
+        framework: Models.Frameworks.react,
       },
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
@@ -190,7 +194,7 @@ describe("configure-project", () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
-        framework: Core.Utils.Framework.Frameworks.react,
+        framework: Models.Frameworks.react,
       },
     });
     patchManifestMock.mockImplementation(() => {

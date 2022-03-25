@@ -7,12 +7,12 @@ import {
   ReleaseNote,
   VersionKind,
 } from "@lib/models/common/versions";
-import { FileSystem } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 export async function getPackageChangelog(
   dependencyCwd: string
 ): Promise<PackageChangelog> {
-  const pkg = FileSystem.retrieveJsonPackage(dependencyCwd);
+  const pkg = NodeUtils.retrieveJsonPackage(dependencyCwd);
   const pkgContent = pkg.content as { name?: string; version: string };
   if (!pkg.exists || !pkgContent?.name) {
     return {

@@ -1,6 +1,6 @@
 import router from "next/router";
 import { Box, Text, Flex } from "theme-ui";
-import * as Models from "@slicemachine/core/build/src/models";
+import * as Models from "@slicemachine/core/build/models";
 
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
 import * as Links from "@lib/builders/SliceBuilder/links";

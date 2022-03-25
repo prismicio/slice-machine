@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { simulatorIsSupported } from "@lib/utils";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 describe("simulatorIsSupported", () => {
   test("Can create Storybook url from variation id", () => {

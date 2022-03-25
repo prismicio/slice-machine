@@ -1,5 +1,5 @@
 import path from "path";
-import { Utils, FileSystem } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 import storybook from "../../../../server/src/api/storybook";
 
@@ -8,25 +8,25 @@ export function moveStories(
   libraryName: string,
   sliceName: string
 ) {
-  const customStoriesPath = FileSystem.CustomPaths(cwd)
+  const customStoriesPath = NodeUtils.CustomPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .stories();
 
   const customStories =
-    Utils.Files.exists(customStoriesPath) &&
-    Utils.Files.readString(customStoriesPath);
+    NodeUtils.Files.exists(customStoriesPath) &&
+    NodeUtils.Files.readString(customStoriesPath);
   if (!customStories) return;
 
   // create the new story
   storybook.generateStories(
     path.join(__dirname, "../../../"),
-    Utils.Framework.defineFramework({ cwd }),
+    NodeUtils.Framework.defineFramework({ cwd }),
     cwd,
     libraryName,
     sliceName
   );
 
   // remove old stories
-  Utils.Files.remove(customStoriesPath);
+  NodeUtils.Files.remove(customStoriesPath);
 }

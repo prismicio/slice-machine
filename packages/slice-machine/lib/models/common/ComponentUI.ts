@@ -1,5 +1,9 @@
-import * as Models from "@slicemachine/core/build/src/models";
-import { SliceSM } from "@slicemachine/core/build/src/models";
+import {
+  SliceSM,
+  VariationSM,
+  Screenshot,
+  Component,
+} from "@slicemachine/core/build/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
 
@@ -22,7 +26,7 @@ export const createScreenshotUI = (
 export const buildScreenshotUrls = (
   screenshotPaths:
     | {
-        [variationId: string]: Models.Screenshot;
+        [variationId: string]: Screenshot;
       }
     | undefined,
   baseUrl: string
@@ -50,18 +54,18 @@ export enum LibStatus {
   NewSlice = "NEW_SLICE",
 }
 
-export interface ScreenshotUI extends Models.Screenshot {
+export interface ScreenshotUI extends Screenshot {
   url: string;
 }
 
-export interface ComponentUI extends Models.Component {
+export interface ComponentUI extends Component {
   __status: LibStatus;
-  screenshotUrls?: Record<Models.VariationSM["id"], ScreenshotUI>;
+  screenshotUrls?: Record<VariationSM["id"], ScreenshotUI>;
 }
 
 export const ComponentUI = {
   build(
-    component: Models.Component,
+    component: Component,
     remoteSlices: ReadonlyArray<SliceSM>,
     env: BackendEnvironment
   ): ComponentUI {
@@ -77,7 +81,7 @@ export const ComponentUI = {
 };
 
 function computeStatus(
-  component: Models.Component,
+  component: Component,
   remoteSlices: ReadonlyArray<SliceSM>
 ): LibStatus {
   const slice = remoteSlices.find((s) => component.model.id === s.id);

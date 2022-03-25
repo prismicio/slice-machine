@@ -1,6 +1,7 @@
 import path from "path";
-import { execCommand } from "../utils";
-import { Utils, FileSystem, Models } from "@slicemachine/core";
+import { execCommand, logs } from "../utils";
+import { CONSTS, Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 const {
   PRISMIC_CLIENT,
@@ -12,7 +13,7 @@ const {
   SLICE_SIMULATOR_REACT,
   SLICE_SIMULATOR_VUE,
   PRISMIC_HELPERS,
-} = Utils.CONSTS;
+} = CONSTS;
 
 function depsForFramework(framework: Models.Frameworks): string {
   switch (framework) {
@@ -35,13 +36,13 @@ export async function installRequiredDependencies(
   cwd: string,
   framework: Models.Frameworks
 ): Promise<void> {
-  const yarnLock = Utils.Files.exists(FileSystem.YarnLockPath(cwd));
+  const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
   const installDevDependencyCommand = yarnLock
     ? "yarn add -D"
     : "npm install --save-dev";
   const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
 
-  const spinner = Utils.spinner("Downloading Slice Machine");
+  const spinner = logs.spinner("Downloading Slice Machine");
   spinner.start();
 
   const { stderr } = await execCommand(
@@ -52,10 +53,10 @@ export async function installRequiredDependencies(
   if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
 
   const pathToPkg = path.join(
-    FileSystem.PackagePaths(cwd).value(),
+    NodeUtils.PackagePaths(cwd).value(),
     SM_PACKAGE_NAME
   );
-  const isPackageInstalled = Utils.Files.exists(pathToPkg);
+  const isPackageInstalled = NodeUtils.Files.exists(pathToPkg);
 
   if (isPackageInstalled || !stderr.length) {
     spinner.succeed("Slice Machine was installed successfully");
@@ -63,7 +64,7 @@ export async function installRequiredDependencies(
   }
 
   spinner.fail();
-  Utils.writeWarning(
+  logs.writeWarning(
     `could not install ${SM_PACKAGE_NAME}. Please do it manually!`
   );
 }

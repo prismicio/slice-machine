@@ -2,7 +2,7 @@ import * as yup from "yup";
 import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
