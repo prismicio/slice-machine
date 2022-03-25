@@ -1,4 +1,4 @@
-import faker from "faker";
+import faker from "@faker-js/faker";
 import * as Widgets from "./misc/widgets";
 import { Tab } from "@lib/models/common/CustomType/tab";
 
