@@ -15,8 +15,8 @@ const handleMatch = (matches: string[]) => {
   return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsonCustomType: CustomType = Files.readJson(p);
-      return [...acc, CustomTypes.toSM(jsonCustomType)];
+      const smModel = IO.CustomType.readCustomType(p);
+      return [...acc, smModel];
     } catch (e) {
       return acc;
     }
