@@ -1,5 +1,5 @@
 import React from "react";
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { useModelReducer } from "../slice/context";
 
 import { FrontEndEnvironment } from "lib/models/common/Environment";

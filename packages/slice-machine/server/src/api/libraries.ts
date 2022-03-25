@@ -1,4 +1,5 @@
-import { Libraries, Models } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import * as Libraries from "@slicemachine/core/build/libraries";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
 

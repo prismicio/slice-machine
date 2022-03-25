@@ -10,14 +10,12 @@ jest.mock(`fs`, () => {
   return vol;
 });
 
-jest.mock(`@slicemachine/core`, () => {
-  const actualCore = jest.requireActual("@slicemachine/core");
+jest.mock(`@slicemachine/core/build/libraries`, () => {
+  const actualCore = jest.requireActual("@slicemachine/core/build/libraries");
   return {
     ...actualCore,
-    Libraries: {
-      libraries: (cwd: string, libs: string[]) =>
-        libs.map((lib) => MockLibraryInfo(lib)),
-    },
+    libraries: (cwd: string, libs: string[]) =>
+      libs.map((lib) => MockLibraryInfo(lib)),
   };
 });
 

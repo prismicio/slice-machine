@@ -1,4 +1,5 @@
-import { Utils } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import tmp from "tmp";
 import AdmZip from "adm-zip";
 import fsExtra from "fs-extra";
@@ -8,13 +9,10 @@ import fs from "fs";
 import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import { PackageManager, Dependencies } from "../utils/PackageManager";
-import { PackageJsonHelper } from "@slicemachine/core/build/src/utils/PackageJson";
-import {
-  Manifest,
-  ManifestHelper,
-} from "@slicemachine/core/build/src/models/Manifest";
-import Files from "@slicemachine/core/build/src/utils/files";
 import Tracker from "../utils/tracker";
+import { logs } from "../utils";
+
+const { PackageJsonHelper } = NodeUtils;
 
 const downloadFile = async (reqUrl: string): Promise<string> => {
   const res = await axios.get<Buffer>(reqUrl, { responseType: "arraybuffer" });
@@ -40,7 +38,7 @@ export async function installLib(
   libGithubPath: string,
   branch = "HEAD"
 ): Promise<string[] | undefined> {
-  const spinner = Utils.spinner(
+  const spinner = logs.spinner(
     `Installing the ${libGithubPath} lib in your project...`
   );
 
@@ -77,22 +75,22 @@ export async function installLib(
     if (dependencies) await pkgManager.install(dependencies);
 
     // generate meta file
-    Files.write(path.join(libDestinationFolder, "meta.json"), {
+    NodeUtils.Files.write(path.join(libDestinationFolder, "meta.json"), {
       name: pkgJson.name,
     });
 
     // retrieve all slices lib paths
-    const manifest = Files.readEntity<Error | Manifest>(
+    const manifest = NodeUtils.Files.readEntity<Error | Models.Manifest>(
       path.join(projectPath, "sm.json"),
       (payload: unknown) => {
         return getOrElseW(
           () => new Error(`Unable to parse sm.json from lib ${libGithubPath}`)
-        )(Manifest.decode(payload));
+        )(Models.Manifest.decode(payload));
       }
     );
     if (manifest instanceof Error) throw manifest;
 
-    const localLibs = ManifestHelper.localLibraries(manifest).map(
+    const localLibs = Models.ManifestHelper.localLibraries(manifest).map(
       ({ path }) => {
         return `~/${name}/${path.replace("src/", "")}`;
       }

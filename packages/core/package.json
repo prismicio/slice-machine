@@ -3,14 +3,6 @@
   "version": "1.1.5-alpha.5",
   "private": false,
   "main": "./build/index.js",
-  "exports": {
-    ".": "./build/index.js",
-    "./core": "./build/src/core/index.js",
-    "./utils": "./build/src/utils/index.js",
-    "./filesystem": "./build/src/filesystem/index.js",
-    "./build/*": "./build/*.js",
-    "./package.json": "./package.json"
-  },
   "engines": {
     "node": ">=12"
   },
@@ -26,20 +18,11 @@
     "audit-fix": "npm audit fix",
     "test": "jest"
   },
-  "peerDependencies": {
-    "ora": "^5.4.1"
-  },
   "dependencies": {
-    "@hapi/hapi": "^20.2.0",
     "axios": "^0.26.0",
-    "chalk": "^4.1.2",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
-    "fs-extra": "^10.0.0",
-    "io-ts": "^2.2.16",
-    "open": "^8.2.1",
-    "ora": "^5.4.1",
-    "prompt": "^1.2.0"
+    "io-ts": "^2.2.16"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -47,13 +30,10 @@
     "@babel/preset-typescript": "^7.15.0",
     "@types/axios": "^0.14.0",
     "@types/cookie": "^0.4.1",
-    "@types/fs-extra": "^9.0.13",
-    "@types/hapi__hapi": "^20.0.9",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "babel-jest": "^27.2.4",
     "better-npm-audit": "^3.4.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",

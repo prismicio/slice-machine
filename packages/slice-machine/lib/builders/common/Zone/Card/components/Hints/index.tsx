@@ -3,7 +3,7 @@ import * as Renderers from "./Renderers";
 
 import type { Item, RenderHintBaseFN, WidgetsType } from "./CodeBlock";
 
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 const FrameworkRenderers = {
   [Frameworks.nuxt]: Renderers.nuxt,

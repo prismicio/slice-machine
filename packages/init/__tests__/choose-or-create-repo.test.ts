@@ -19,7 +19,6 @@ import nock from "nock";
 import { Models } from "@slicemachine/core";
 
 import * as fs from "fs";
-import { Repositories } from "@slicemachine/core/build/src/models/Repositories";
 
 jest.mock("fs");
 jest.mock("../src/utils/create-repo");
@@ -160,6 +159,8 @@ describe("choose-or-create-repo", () => {
     nock(userServiceURL).get("/repositories").reply(200, []);
 
     createRepositoryMock.mockImplementation(() => Promise.resolve(domain));
+
+    jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
     const promptSpy = jest
       .spyOn(inquirer, "prompt")
@@ -321,7 +322,7 @@ describe("maybeStickTheRepoToTheTopOfTheList", () => {
 
 describe("sortReposForPrompt", () => {
   test("sort without pre-configured repo-name", () => {
-    const repos: Repositories = [
+    const repos: Models.Repositories = [
       { name: "foo-bar", domain: "foo-bar", role: Models.Roles.WRITER },
       { name: "qwerty", domain: "qwerty", role: Models.Roles.ADMIN },
     ];
@@ -340,7 +341,7 @@ describe("sortReposForPrompt", () => {
   });
 
   test("sort with pre-configure repo-name", () => {
-    const repos: Repositories = [
+    const repos: Models.Repositories = [
       { name: "foo-bar", domain: "foo-bar", role: Models.Roles.WRITER },
       { name: "qwerty", domain: "qwerty", role: Models.Roles.ADMIN },
     ];

@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { LibrariesContext } from "../libraries/context";
 import { useContext } from "react";
 import SliceStore from "./store";

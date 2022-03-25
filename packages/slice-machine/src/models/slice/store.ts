@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { Field } from "../../../lib/models/common/CustomType/fields";
 
 import {

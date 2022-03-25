@@ -1,14 +1,18 @@
 import path from "path";
 import * as t from "io-ts";
-import { ComponentInfo, Screenshot } from "../models/Library";
+import { getOrElseW } from "fp-ts/lib/Either";
+
+import {
+  Slice,
+  AsObject,
+  Screenshot,
+  ComponentInfo,
+  VariationAsObject,
+} from "../models";
 
 import { resolvePathsToScreenshot } from "./screenshot";
-import Files from "../utils/files";
+import Files from "../node-utils/files";
 import { resolvePathsToMock } from "./mocks";
-import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice } from "../models/Slice";
-import { VariationAsObject, AsObject } from "../models/Variation";
-
 import Errors from "../utils/errors";
 
 /** take a path to slice and return its name  */

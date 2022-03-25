@@ -1,10 +1,10 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import * as yup from "yup";
 import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
 import { FieldType } from "../models/common/CustomType/fields";
-import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
+import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";

@@ -1,6 +1,9 @@
+import * as t from "io-ts";
+import { getOrElseW } from "fp-ts/Either";
 import { JsonPackagePath, FileContent } from "./paths";
-import { CONSTS, Files } from "../utils";
+import Files from "./files";
 import type { PackageJson } from "types-package-json";
+import { SCRIPT_NAME, SCRIPT_VALUE } from "../consts";
 
 export type JsonPackage = PackageJson;
 
@@ -45,9 +48,29 @@ export function addJsonPackageSmScript(cwd: string): boolean {
 
   const { scripts = {} } = pkg.content;
 
-  if (scripts[CONSTS.SCRIPT_NAME]) return false;
+  if (scripts[SCRIPT_NAME]) return false;
 
   return patchJsonPackage(cwd, {
-    scripts: { ...scripts, [CONSTS.SCRIPT_NAME]: CONSTS.SCRIPT_VALUE },
+    scripts: { ...scripts, [SCRIPT_NAME]: SCRIPT_VALUE },
   });
 }
+
+// taken from PackageJsonJHelpers in utils
+export const PackageJsonC = t.exact(
+  t.partial({
+    name: t.union([t.string, t.void]),
+    dependencies: t.record(t.string, t.string),
+  })
+);
+
+export type PackageJsonC = t.TypeOf<typeof PackageJsonC>;
+
+export const PackageJsonHelper = {
+  fromPath(pkgPath: string): Error | PackageJsonC {
+    return Files.readEntity<PackageJsonC>(pkgPath, (payload: unknown) => {
+      return getOrElseW(() => new Error(`Unable to decode package.json`))(
+        PackageJsonC.decode(payload)
+      );
+    });
+  },
+};

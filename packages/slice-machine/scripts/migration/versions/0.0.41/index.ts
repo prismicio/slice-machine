@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import glob from "glob";
 import slash from "slash";
-import { FileSystem, Utils } from "@slicemachine/core";
-
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import * as Libraries from "@slicemachine/core/build/libraries";
 import { Migration } from "../../migrate";
 import prompts from "prompts";
 
@@ -25,7 +25,7 @@ const migration: Migration = {
       if (!doTheMigration.yes) return;
     }
 
-    const manifest = FileSystem.retrieveManifest(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
     if (!manifest.exists || !manifest.content) return;
 
     try {
@@ -35,9 +35,8 @@ const migration: Migration = {
 
       const { libraries } = manifest.content;
       if (!libraries) return;
-
       libraries.forEach((lib: string) => {
-        const { isLocal, pathExists, pathToSlices } = Utils.lib.getInfoFromPath(
+        const { isLocal, pathExists, pathToSlices } = Libraries.getInfoFromPath(
           cwd,
           lib
         );

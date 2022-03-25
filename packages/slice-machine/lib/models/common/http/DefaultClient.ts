@@ -1,10 +1,10 @@
 import path from "path";
 import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import Files from "../../../utils/files";
 
-import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
+import { UserProfile } from "@slicemachine/core/build/models/UserProfile";
 import axios from "axios";
 
 interface ApiSettings {

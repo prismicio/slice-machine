@@ -8,11 +8,12 @@ import ServerError from "@lib/models/server/ServerError";
 
 import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { FileSystem, Utils } from "@slicemachine/core";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
 import { setShortId } from "./services/setShortId";
 import preferWroomBase from "../../../lib/utils/preferWroomBase";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
 
 export const getBackendState = async (
   configErrors: Record<string, ServerError>,
@@ -36,7 +37,7 @@ export const getBackendState = async (
         Math.floor(newTokenResponse.status / 100) === 2
       ) {
         const newToken = await newTokenResponse.text();
-        FileSystem.PrismicSharedConfigManager.setAuthCookie(newToken);
+        PrismicSharedConfigManager.setAuthCookie(newToken);
 
         // set the short ID if it doesn't exist yet.
         if (!env.prismicData.shortId) await setShortId(env, newToken);
@@ -69,9 +70,7 @@ export default async function handler(
   const frontEndEnv: FrontEndEnvironment = {
     ...frontEnv,
     sliceMachineAPIUrl: baseUrl,
-    packageManager: Utils.Files.exists(FileSystem.YarnLockPath(cwd))
-      ? "yarn"
-      : "npm",
+    packageManager: Files.exists(YarnLockPath(cwd)) ? "yarn" : "npm",
     shortId: prismicData.shortId,
   };
 

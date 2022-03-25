@@ -1,6 +1,6 @@
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import FakeClient from "@lib/models/common/http/FakeClient";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 const backendEnvironment: BackendEnvironment = {
   isUserLoggedIn: false,

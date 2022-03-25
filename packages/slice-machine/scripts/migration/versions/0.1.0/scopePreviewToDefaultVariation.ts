@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { Utils, FileSystem } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 // Move the screenshot to the default variation folder
 export function scopePreviewToDefaultVariation(
@@ -8,12 +8,12 @@ export function scopePreviewToDefaultVariation(
   libraryName: string,
   sliceName: string
 ) {
-  const slicePath = FileSystem.GeneratedPaths(cwd)
+  const slicePath = NodeUtils.GeneratedPaths(cwd)
     .library(libraryName)
     .slice(sliceName)
     .value();
 
-  const generatedSlicePreview = Utils.Files.readFirstOf([
+  const generatedSlicePreview = NodeUtils.Files.readFirstOf([
     path.join(slicePath, "preview.png"),
     path.join(slicePath, "preview.jpg"),
   ])((v) => v);
@@ -24,7 +24,7 @@ export function scopePreviewToDefaultVariation(
 
   const generatedVariationPreviewPath = path.join(dirname, "default", fileName);
 
-  Utils.Files.mkdir(path.dirname(generatedVariationPreviewPath), {
+  NodeUtils.Files.mkdir(path.dirname(generatedVariationPreviewPath), {
     recursive: true,
   });
   fs.renameSync(generatedSlicePreview.path, generatedVariationPreviewPath);

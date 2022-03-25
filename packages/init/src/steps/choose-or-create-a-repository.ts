@@ -1,15 +1,17 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Communication, Utils, FileSystem, Models } from "@slicemachine/core";
-import { parsePrismicAuthToken } from "@slicemachine/core/build/src/utils/cookie";
+import { Utils, Models, CONSTS } from "@slicemachine/core";
+import * as Prismic from "@slicemachine/core/build/prismic";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { createRepository } from "../utils/create-repo";
+import { logs } from "../utils";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
-const DEFAULT_BASE = Utils.CONSTS.DEFAULT_BASE;
+const DEFAULT_BASE = CONSTS.DEFAULT_BASE;
 
 export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value ? Utils.cyan(value) : Utils.dim.cyan("repo-name");
-  return `${Utils.cyan.dim(`${address.protocol}//`)}${repoName}${Utils.cyan.dim(
+  const repoName = value ? logs.cyan(value) : logs.dim.cyan("repo-name");
+  return `${logs.cyan.dim(`${address.protocol}//`)}${repoName}${logs.cyan.dim(
     `.${address.hostname}`
   )}`;
 }
@@ -20,7 +22,7 @@ export async function promptForRepoDomain(
 ): Promise<string> {
   const address = new URL(base);
 
-  Utils.writeInfo(
+  logs.writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
   );
 
@@ -32,10 +34,10 @@ export async function promptForRepoDomain(
         type: "input",
         required: true,
         default: defaultValue,
-        transformer: (value) =>
-          prettyRepoName(address, String(value || defaultValue)),
+        transformer: (value: string) =>
+          prettyRepoName(address, value || defaultValue),
         async validate(name: string) {
-          const result = await Communication.validateRepositoryName(
+          const result = await Prismic.Communication.validateRepositoryName(
             name,
             base,
             false
@@ -59,16 +61,16 @@ export function makeReposPretty(base: string) {
     address.hostname = `${domain}.${address.hostname}`;
     if (Models.canUpdateCustomTypes(role) === false) {
       return {
-        name: `${Utils.purple.dim("Use")} ${Utils.bold.dim(
+        name: `${logs.purple.dim("Use")} ${logs.bold.dim(
           name
-        )} ${Utils.purple.dim(`"${address.hostname}"`)}`,
+        )} ${logs.purple.dim(`"${address.hostname}"`)}`,
         value: domain,
         disabled: "Unauthorized",
       };
     }
 
     return {
-      name: `${Utils.purple("Use")} ${Utils.bold(name)} ${Utils.purple(
+      name: `${logs.purple("Use")} ${logs.bold(name)} ${logs.purple(
         `"${address.hostname}"`
       )}`,
       value: domain,
@@ -102,13 +104,13 @@ export function sortReposForPrompt(
   cwd: string
 ): RepoPrompts {
   const createNew = {
-    name: `${Utils.purple("Create a")} ${Utils.bold("new")} ${Utils.purple(
+    name: `${logs.purple("Create a")} ${logs.bold("new")} ${logs.purple(
       "Repository"
     )}`,
     value: CREATE_REPO,
   };
 
-  const maybeConfiguredRepoName = FileSystem.maybeRepoNameFromSMFile(cwd, base);
+  const maybeConfiguredRepoName = NodeUtils.maybeRepoNameFromSMFile(cwd, base);
 
   return repos
     .reverse()
@@ -126,8 +128,8 @@ export async function chooseOrCreateARepository(
   base = DEFAULT_BASE,
   domain?: string
 ): Promise<string> {
-  const token = parsePrismicAuthToken(cookies);
-  const repos = await Communication.listRepositories(token, base);
+  const token = Utils.Cookie.parsePrismicAuthToken(cookies);
+  const repos = await Prismic.Communication.listRepositories(token, base);
 
   const hasRepo = domain && repos.find((d) => d.domain === domain);
   if (hasRepo) return domain;

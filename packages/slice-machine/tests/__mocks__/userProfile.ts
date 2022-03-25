@@ -1,4 +1,4 @@
-import { UserProfile } from "@slicemachine/core/build/src/models";
+import { UserProfile } from "@slicemachine/core/build/models";
 
 const mockUserProfile: UserProfile = {
   userId: "fakeUserId",

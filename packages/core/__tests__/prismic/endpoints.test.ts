@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { Endpoints } from "../../../src/utils";
+import { Endpoints } from "../../src/prismic";
 
 describe("endpoints", () => {
   const baseDomain = "music.to.my.hears.io";

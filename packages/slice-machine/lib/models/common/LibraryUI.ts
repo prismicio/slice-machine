@@ -1,9 +1,14 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type {
+  LibraryMeta,
+  Library,
+  Component,
+  SliceAsObject,
+} from "@slicemachine/core/build/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 
 const LibraryUIMeta = {
-  build(isLocal: boolean, libMeta?: Models.LibraryMeta) {
+  build(isLocal: boolean, libMeta?: LibraryMeta) {
     const libName = libMeta?.name;
 
     const baseMeta = {
@@ -23,20 +28,20 @@ const LibraryUIMeta = {
   },
 };
 
-interface LibraryUIMeta extends Models.LibraryMeta {
+interface LibraryUIMeta extends LibraryMeta {
   isNodeModule: boolean;
   isDownloaded: boolean;
   isManual: boolean;
 }
 
-export interface LibraryUI extends Models.Library<ComponentUI> {
+export interface LibraryUI extends Library<ComponentUI> {
   meta: LibraryUIMeta;
 }
 
 export const LibraryUI = {
   build(
-    lib: Models.Library<Models.Component>,
-    remoteSlices: ReadonlyArray<Models.SliceAsObject>,
+    lib: Library<Component>,
+    remoteSlices: ReadonlyArray<SliceAsObject>,
     env: BackendEnvironment
   ): LibraryUI {
     const components = lib.components.map((c) =>

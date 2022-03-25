@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { ComponentUI, LibStatus, ScreenshotUI } from "../common/ComponentUI";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
