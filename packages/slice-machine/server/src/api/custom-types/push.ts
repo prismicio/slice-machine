@@ -14,7 +14,7 @@ import { RequestWithEnv } from "../http/common";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType/index";
+} from "@slicemachine/core/build/models/CustomType/index";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,

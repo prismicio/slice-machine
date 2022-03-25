@@ -5,8 +5,8 @@ import { Tab } from "@lib/models/common/CustomType/tab";
 import { handleFields } from "./misc/handlers";
 
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { GroupSM } from "@slicemachine/core/build/models/Group";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 interface Mock {
   id: string;

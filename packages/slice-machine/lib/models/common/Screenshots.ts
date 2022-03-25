@@ -1,5 +1,5 @@
 import { ScreenshotUI } from "./ComponentUI";
-import { VariationSM } from "@slicemachine/core/build/src/models";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
 

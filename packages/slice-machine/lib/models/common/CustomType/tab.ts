@@ -3,10 +3,10 @@ import { DynamicSlices } from "@prismicio/types-internal/lib/customtypes/widgets
 import {
   TabSM,
   TabField,
-} from "@slicemachine/core/build/src/models/CustomType/Tab";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+} from "@slicemachine/core/build/models/CustomType/Tab";
+import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
-import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 
 interface OrganisedFields {
   fields: ReadonlyArray<{ key: string; value: TabField }>;

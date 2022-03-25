@@ -24,11 +24,11 @@ import {
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
 } from "@src/modules/selectedCustomType";
-import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import {
   TabField,
   TabFields,
-} from "@slicemachine/core/build/src/models/CustomType";
+} from "@slicemachine/core/build/models/CustomType";
 
 interface TabZoneProps {
   tabId: string;

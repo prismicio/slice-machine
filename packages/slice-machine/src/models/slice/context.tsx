@@ -7,10 +7,7 @@ import { reducer } from "./reducer";
 
 import SliceState from "@lib/models/ui/SliceState";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import {
-  SliceSM,
-  VariationSM,
-} from "@slicemachine/core/build/src/models/Slice";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
 
 export type ContextProps = {
   Model: SliceState;

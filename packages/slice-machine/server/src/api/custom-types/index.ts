@@ -6,7 +6,7 @@ import { CustomTypesPaths } from "@lib/models/paths";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType/index";
+} from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { getOrElseW } from "fp-ts/lib/Either";
 import * as IO from "../io";

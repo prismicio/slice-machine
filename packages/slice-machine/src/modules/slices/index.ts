@@ -16,7 +16,7 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { SliceSM } from "@slicemachine/core/build/src/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(

@@ -1,4 +1,4 @@
-import { SliceSM } from "@slicemachine/core/build/src/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 import type {
   LibraryMeta,
   Library,

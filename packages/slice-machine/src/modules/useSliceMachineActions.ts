@@ -53,7 +53,7 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,
   TabField,
-} from "@slicemachine/core/build/src/models/CustomType";
+} from "@slicemachine/core/build/models/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const useSliceMachineActions = () => {

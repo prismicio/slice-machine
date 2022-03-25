@@ -7,7 +7,7 @@ import { ApiError } from "@lib/models/server/ApiResult";
 
 import { s3DefaultPrefix } from "@lib/consts";
 import { onError } from "../common/error";
-import { SliceSM } from "@slicemachine/core/build/src/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 export const purge = async (
   env: BackendEnvironment,

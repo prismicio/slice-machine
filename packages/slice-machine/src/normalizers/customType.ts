@@ -1,6 +1,6 @@
 import { normalize, NormalizedSchema, schema } from "normalizr";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 // Define a users schema
 const customTypeSchema = new schema.Entity("customTypes");

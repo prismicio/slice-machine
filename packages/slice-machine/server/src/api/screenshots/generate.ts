@@ -8,7 +8,7 @@ import {
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/src/models";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import * as IO from "../io";
 
 type FailedScreenshot = {

@@ -8,7 +8,7 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import type { SliceBody } from "@models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
 import { ApiResult } from "@lib/models/server/ApiResult";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/src/models";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import * as IO from "../io";
 
 export async function pushSlice(
