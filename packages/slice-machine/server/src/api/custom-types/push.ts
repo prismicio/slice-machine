@@ -2,7 +2,6 @@ import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
 
 import { onError } from "../common/error";
-import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
