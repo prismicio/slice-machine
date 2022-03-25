@@ -3,8 +3,10 @@ import * as Widgets from "./misc/widgets";
 import { snakelize } from "../utils/str";
 import { handleFields } from "./misc/handlers";
 import { FieldsSM } from "@slicemachine/core/build/src/models/Fields";
-import { SliceSM } from "@slicemachine/core/build/src/models/Slice";
-import { VariationSM } from "@slicemachine/core/build/src/models";
+import {
+  SliceSM,
+  VariationSM,
+} from "@slicemachine/core/build/src/models/Slice";
 
 const createEmptyMock = (
   sliceName: string,
