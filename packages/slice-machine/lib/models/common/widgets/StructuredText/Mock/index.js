@@ -1,4 +1,4 @@
-import faker from "faker";
+import faker from "@faker-js/faker";
 import { LoremIpsum } from "lorem-ipsum";
 import { handleMockConfig as generateImageMock } from "../../Image/Mock";
 

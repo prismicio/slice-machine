@@ -1,5 +1,5 @@
 import MockSlice from "../../../lib/mock/Slice";
-import faker from "faker";
+import faker from "@faker-js/faker";
 
 jest.mock("lorem-ipsum", () => {
   return {
