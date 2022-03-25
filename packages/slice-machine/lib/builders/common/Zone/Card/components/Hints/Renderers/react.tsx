@@ -22,14 +22,14 @@ const handleLinkCode = (fieldText: string, useKey?: boolean): string =>
   `/* import { PrismicLink } from '@prismicio/react' */
 <PrismicLink ${
     useKey ? appendKey(fieldText) : ""
-  } field={${fieldText}}>My Link</a>
+  } field={${fieldText}}>My Link</PrismicLink>
 `;
 
 const handleDocumentLinkCode = (fieldText: string, useKey?: boolean): string =>
   `/* import { PrismicLink } from '@prismicio/react' */
 <PrismicLink ${
     useKey ? appendKey(fieldText) : ""
-  } document={${fieldText}}>My Link</a>
+  } document={${fieldText}}>My Link</PrismicLink>
 `;
 
 const handleEmbedCode = (fieldText: string, useKey?: boolean): string =>
