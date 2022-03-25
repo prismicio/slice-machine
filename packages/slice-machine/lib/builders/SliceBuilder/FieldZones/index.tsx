@@ -6,7 +6,7 @@ import { transformKeyAccessor } from "@utils/str";
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
 import type { Models } from "@slicemachine/core";
-import { WidgetsArea } from "@slicemachine/core/build/src/models/Slice";
+import { WidgetsArea } from "@slicemachine/core/build/models/Slice";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";

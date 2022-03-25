@@ -1,12 +1,11 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
+import * as Prismic from "@slicemachine/core/build/prismic";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
-import {
-  FileContent,
-  JsonPackage,
-} from "@slicemachine/core/build/src/filesystem";
+import { logs } from "../utils";
 
-type Base = Utils.Endpoints.Base;
+type Base = Prismic.Endpoints.Base;
 
 const defaultSliceMachineVersion = "0.0.41";
 
@@ -18,14 +17,14 @@ export function configureProject(
   sliceLibPath: string[] = [],
   tracking = true
 ): void {
-  const spinner = Utils.spinner(
+  const spinner = logs.spinner(
     `Configuring your ${framework.value} & Prismic project...`
   );
   spinner.start();
 
   try {
-    const manifest = FileSystem.retrieveManifest(cwd);
-    const packageJson = FileSystem.retrieveJsonPackage(cwd);
+    const manifest = NodeUtils.retrieveManifest(cwd);
+    const packageJson = NodeUtils.retrieveJsonPackage(cwd);
 
     const sliceMachineVersionInstalled =
       getTheSliceMachineVersionInstalled(packageJson);
@@ -35,7 +34,7 @@ export function configureProject(
       ...(manifestAlreadyExistWithContent
         ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
-      apiEndpoint: Utils.Endpoints.buildRepositoryEndpoint(
+      apiEndpoint: Prismic.Endpoints.buildRepositoryEndpoint(
         base,
         repositoryDomainName
       ),
@@ -44,18 +43,19 @@ export function configureProject(
       ...(!tracking ? { tracking } : {}),
     };
 
-    if (!manifest.exists) FileSystem.createManifest(cwd, manifestUpdated);
-    else FileSystem.patchManifest(cwd, manifestUpdated);
+    if (!manifest.exists) NodeUtils.createManifest(cwd, manifestUpdated);
+    else NodeUtils.patchManifest(cwd, manifestUpdated);
 
     // create the default slices folder if it doesn't exist.
-    const pathToSlicesFolder = FileSystem.CustomPaths(cwd)
+    const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)
       .library("slices")
       .value();
-    if (!Utils.Files.exists(pathToSlicesFolder))
-      Utils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+    if (!NodeUtils.Files.exists(pathToSlicesFolder)) {
+      NodeUtils.Files.mkdir(pathToSlicesFolder, { recursive: true });
+    }
 
     // add slicemachine script to package.json.
-    FileSystem.addJsonPackageSmScript(cwd);
+    NodeUtils.addJsonPackageSmScript(cwd);
 
     spinner.succeed("Project configured! Ready to start");
   } catch {
@@ -65,12 +65,12 @@ export function configureProject(
 }
 
 const getTheSliceMachineVersionInstalled = (
-  packageJson: FileContent<JsonPackage>
+  packageJson: NodeUtils.FileContent<NodeUtils.JsonPackage>
 ) => {
   const sliceMachinePackageInstalled = Object.entries(
     packageJson.content?.devDependencies || {}
   ).find((devDependency) => {
-    if (devDependency[0] === Utils.CONSTS.SM_PACKAGE_NAME) {
+    if (devDependency[0] === CONSTS.SM_PACKAGE_NAME) {
       return devDependency;
     }
   });

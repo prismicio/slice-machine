@@ -1,11 +1,12 @@
 import path from "path";
 import * as t from "io-ts";
-import { ComponentInfo, Screenshot } from "../models/Library";
+import { getOrElseW } from "fp-ts/lib/Either";
+
+import { Screenshot, ComponentInfo } from "../models";
 
 import { resolvePathsToScreenshot } from "./screenshot";
-import Files from "../utils/files";
+import Files from "../node-utils/files";
 import { resolvePathsToMock } from "./mocks";
-import { getOrElseW } from "fp-ts/lib/Either";
 import { Slices, VariationSM } from "../models/Slice";
 
 import Errors from "../utils/errors";

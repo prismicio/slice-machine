@@ -1,8 +1,8 @@
 import Files from "@lib/utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { FileSystem } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import Puppeteer from "./puppeteer";
-import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
+import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,
@@ -50,10 +50,7 @@ export async function generateScreenshot(
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
-    FileSystem.CustomPaths(env.cwd)
-      .library(libraryName)
-      .slice(sliceName)
-      .model()
+    NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
   );
 
   const variationIds: VariationSM["id"][] = slice.variations.map((v) => v.id);
@@ -107,7 +104,7 @@ async function generateForVariation(
     slice.id
   )}&vid=${encodeURIComponent(variationId)}`;
 
-  const pathToFile = FileSystem.GeneratedPaths(env.cwd)
+  const pathToFile = NodeUtils.GeneratedPaths(env.cwd)
     .library(libraryName)
     .slice(slice.name)
     .variation(variationId)

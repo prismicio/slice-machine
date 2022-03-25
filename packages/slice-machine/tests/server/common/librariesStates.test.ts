@@ -1,7 +1,7 @@
 import fs from "fs";
 import MockedBackendEnv from "../../__mocks__/backendEnvironment";
 import { MockLibraryInfo } from "../../__mocks__/libraryState";
-import { FileSystem, Utils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import * as LibrariesState from "../../../server/src/api/common/LibrariesState";
 
 jest.mock(`fs`, () => {
@@ -9,13 +9,11 @@ jest.mock(`fs`, () => {
   return vol;
 });
 
-jest.mock(`@slicemachine/core`, () => {
-  const actualCore = jest.requireActual("@slicemachine/core");
+jest.mock(`@slicemachine/core/build/libraries`, () => {
+  const actualCore = jest.requireActual("@slicemachine/core/build/libraries");
   return {
     ...actualCore,
-    Libraries: {
-      handleLibraryPath: (cwd: string, lib: string) => MockLibraryInfo(lib),
-    },
+    handleLibraryPath: (cwd: string, lib: string) => MockLibraryInfo(lib),
   };
 });
 
@@ -25,8 +23,8 @@ describe("server.generateLibraryState", () => {
   it("should generate a file in the .slicemachine folder with the right content", () => {
     LibrariesState.generateState(MockedBackendEnv);
 
-    const pathToState = FileSystem.LibrariesStatePath(MockedBackendEnv.cwd);
-    expect(Utils.Files.exists(pathToState)).toBeTruthy();
+    const pathToState = NodeUtils.LibrariesStatePath(MockedBackendEnv.cwd);
+    expect(NodeUtils.Files.exists(pathToState)).toBeTruthy();
 
     const data = fs.readFileSync(pathToState, { encoding: "utf-8" });
 

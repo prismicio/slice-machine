@@ -1,5 +1,4 @@
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import type Models from "@slicemachine/core/build/src/models";
 import {
   ActionType as VariationActions,
   updateWidgetMockConfig,
@@ -11,7 +10,7 @@ import {
 import { ActionType as SliceActions, saveSlice, pushSlice } from "./actions";
 
 import Store from "@lib/models/ui/Store";
-import { VariationSM } from "@slicemachine/core/build/src/models";
+import { VariationSM, WidgetsArea } from "@slicemachine/core/build/models";
 
 export default class SliceStore implements Store {
   constructor(
@@ -44,7 +43,7 @@ export default class SliceStore implements Store {
         variationId
       ),
       addWidget: (
-        widgetsArea: Models.WidgetsArea,
+        widgetsArea: WidgetsArea,
         key: string,
         value: NestableWidget
       ): void => {
@@ -54,7 +53,7 @@ export default class SliceStore implements Store {
         });
       },
       replaceWidget: (
-        widgetsArea: Models.WidgetsArea,
+        widgetsArea: WidgetsArea,
         previousKey: string,
         newKey: string,
         value: NestableWidget
@@ -65,7 +64,7 @@ export default class SliceStore implements Store {
         });
       },
       reorderWidget: (
-        widgetsArea: Models.WidgetsArea,
+        widgetsArea: WidgetsArea,
         start: number,
         end: number
       ): void => {
@@ -74,7 +73,7 @@ export default class SliceStore implements Store {
           payload: { variationId, widgetsArea, start, end },
         });
       },
-      removeWidget: (widgetsArea: Models.WidgetsArea, key: string): void => {
+      removeWidget: (widgetsArea: WidgetsArea, key: string): void => {
         this.dispatch({
           type: VariationActions.RemoveWidget,
           payload: { variationId, widgetsArea, key },

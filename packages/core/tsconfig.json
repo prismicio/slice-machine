@@ -20,7 +20,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "declaration": true,
-    "outDir": "./build"
+    "outDir": "./build",
+    "rootDir": "./src"
   },
   "exclude": ["node_modules", "build", "__tests__"]
 }

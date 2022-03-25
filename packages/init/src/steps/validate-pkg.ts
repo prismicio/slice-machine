@@ -1,13 +1,14 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import { logs } from "../utils";
 
 export function validatePkg(cwd: string): void {
-  const jsonPackage = FileSystem.retrieveJsonPackage(cwd);
+  const jsonPackage = NodeUtils.retrieveJsonPackage(cwd);
   if (!jsonPackage.exists) {
-    Utils.writeError(`package.json not found. Are you in the right folder?`);
+    logs.writeError(`package.json not found. Are you in the right folder?`);
     return process.exit(-1);
   }
   if (!jsonPackage.content) {
-    Utils.writeError(`could not parse package.json.`);
+    logs.writeError(`could not parse package.json.`);
     return process.exit(-1);
   }
 }

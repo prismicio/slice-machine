@@ -3,7 +3,7 @@ import { getOrElseW } from "fp-ts/Either";
 import upload from "./upload";
 import Files from "../../../utils/files";
 
-import { UserProfile } from "@slicemachine/core/build/src/models/UserProfile";
+import { UserProfile } from "@slicemachine/core/build/models/UserProfile";
 import axios from "axios";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 

@@ -1,6 +1,6 @@
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 import { LibraryUI } from "@models/common/LibraryUI";
 
 // These events should be sync with the tracking Plan on segment.

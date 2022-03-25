@@ -1,6 +1,6 @@
-import { Utils, FileSystem } from "@slicemachine/core";
+import { CONSTS } from "@slicemachine/core";
+import Prismic from "@slicemachine/core/build/prismic";
 import Tracker from "./utils/tracker";
-
 import {
   installRequiredDependencies,
   validatePkg,
@@ -11,11 +11,11 @@ import {
   detectFramework,
   installLib,
 } from "./steps";
-import { findArgument } from "./utils";
+import { findArgument, logs } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
-  const base = findArgument(process.argv, "base") || Utils.CONSTS.DEFAULT_BASE;
+  const base = findArgument(process.argv, "base") || CONSTS.DEFAULT_BASE;
   const lib: string | undefined = findArgument(process.argv, "library");
   const branch: string | undefined = findArgument(process.argv, "branch");
   const isTrackingAvailable =
@@ -31,7 +31,7 @@ async function init() {
   Tracker.get().trackInitStart();
 
   console.log(
-    Utils.purple(
+    logs.purple(
       "You're about to configure Slicemachine... Press ctrl + C to cancel"
     )
   );
@@ -49,7 +49,7 @@ async function init() {
   }
 
   // retrieve tokens for api calls
-  const config = FileSystem.PrismicSharedConfigManager.get();
+  const config = Prismic.PrismicSharedConfigManager.get();
 
   // detect the framework used by the project
   const frameworkResult = await detectFramework(cwd);
@@ -87,6 +87,6 @@ async function init() {
 try {
   void init();
 } catch (error) {
-  if (error instanceof Error) Utils.writeError(error.message);
+  if (error instanceof Error) logs.writeError(error.message);
   else console.error(error);
 }

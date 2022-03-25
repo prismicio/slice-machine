@@ -24,7 +24,7 @@ import {
   getFramework,
   selectIsSimulatorAvailableForFramework,
 } from "@src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";

@@ -1,8 +1,13 @@
 import * as hapi from "@hapi/hapi";
 import open from "open";
-import { CONSTS, bold, underline, spinner, writeError } from "../utils";
-import { PrismicSharedConfigManager } from "../filesystem/PrismicSharedConfig";
-import { Cookie } from "../utils";
+import * as logs from "../logs";
+import { Utils, CONSTS } from "@slicemachine/core";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+
+const { Cookie } = Utils;
+const { DEFAULT_BASE, DEFAULT_SERVER_PORT } = CONSTS;
+
+const { bold, underline, spinner, writeError } = logs;
 
 export type HandlerData = { email: string; cookies: ReadonlyArray<string> };
 
@@ -110,8 +115,8 @@ export function askSingleChar(title: string): Promise<string> {
 export async function startServerAndOpenBrowser(
   url: string,
   action: "login" | "signup",
-  base: string = CONSTS.DEFAULT_BASE,
-  port: number = CONSTS.DEFAULT_SERVER_PORT
+  base: string = DEFAULT_BASE,
+  port: number = DEFAULT_SERVER_PORT
 ): Promise<{
   onLoginFail: () => void;
 }> {

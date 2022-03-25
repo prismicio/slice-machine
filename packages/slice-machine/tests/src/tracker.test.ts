@@ -11,7 +11,7 @@ import TrackerSingleton, {
   ContinueOnboardingType,
   SMTracker,
 } from "@src/tracker";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("@segment/analytics-next");
 

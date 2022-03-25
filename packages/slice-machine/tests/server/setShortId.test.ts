@@ -3,7 +3,7 @@ import MockedBackendEnv from "../__mocks__/backendEnvironment";
 import { setShortId } from "../../server/src/api/services/setShortId";
 import { vol } from "memfs";
 import * as os from "os";
-import { PrismicSharedConfig } from "@slicemachine/core/build/src/models";
+import { PrismicSharedConfig } from "@slicemachine/core/build/models";
 import nock from "nock";
 import path from "path";
 

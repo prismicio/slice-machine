@@ -1,4 +1,4 @@
-import { Utils, FileSystem } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { execCommand } from "../utils";
 
 export type Dependency = string | { name: string; version: string };
@@ -32,7 +32,7 @@ export interface PackageManager {
 
 export const PackageManager = {
   get(cwd: string): PackageManager {
-    if (Utils.Files.exists(FileSystem.YarnLockPath(cwd))) {
+    if (NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd))) {
       return Yarn;
     }
     return Npm;

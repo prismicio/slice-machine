@@ -1,6 +1,6 @@
 import ServerAnalytics from "analytics-node";
 import { v4 as uuidv4 } from "uuid";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Models } from "@slicemachine/core";
 
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
@@ -94,7 +94,7 @@ export class InitTracker {
     this._trackEvent(EventType.InitStart);
   }
 
-  trackInitDone(framework: Frameworks, repoDomain: string): void {
+  trackInitDone(framework: Models.Frameworks, repoDomain: string): void {
     this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
   }
 }

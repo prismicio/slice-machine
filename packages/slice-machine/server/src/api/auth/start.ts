@@ -1,4 +1,5 @@
-import { FileSystem, Utils } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 
 type StartResponse = {
   err?: Error;
@@ -8,7 +9,7 @@ type StartResponse = {
 export default async function handler(): Promise<StartResponse> {
   try {
     // Reset the prismic auth cookie
-    FileSystem.PrismicSharedConfigManager.setProperties({
+    PrismicSharedConfigManager.setProperties({
       cookies: Utils.Cookie.serializeCookies([]),
     });
     return {};
