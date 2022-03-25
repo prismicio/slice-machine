@@ -10,16 +10,18 @@ import { ApiResult } from "@lib/models/server/ApiResult";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
-import { CustomType } from "@lib/models/common/CustomType";
 import { RequestWithEnv } from "../http/common";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/src/models/CustomType/index";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  model: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  remoteCustomType: any
+  smModel: CustomTypeSM,
+  remoteCustomType: CustomTypeSM | undefined
 ) => {
+  const model = CustomTypes.fromSM(smModel);
   if (remoteCustomType) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return client.updateCustomType(model);
@@ -72,10 +74,10 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     .customType(id as string)
     .model();
 
-  let model;
+  let model: CustomTypeSM;
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    model = Files.readJson(modelPath);
+    model = CustomTypes.toSM(Files.readJson(modelPath));
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;
@@ -96,7 +98,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   const sliceKeysToPush: string[] = [];
   for (const [, tab] of Object.entries(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    CustomType.fromJsonModel(model.id, model).tabs
+    model.tabs
   )) {
     const { sliceZone } = Tab.organiseFields(tab);
     if (sliceZone?.value) {
@@ -125,7 +127,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
       try {
         console.log("[custom-types/push] Pushing slice", sliceKey);
         await pushSlice(state.env, state.remoteSlices, {
-          sliceName: slice.infos.sliceName,
+          sliceName: slice.model.name,
           from: slice.from,
         });
       } catch (e) {

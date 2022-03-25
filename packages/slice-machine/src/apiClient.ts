@@ -1,14 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-import {
-  CustomType,
-  ObjectTabs,
-  SaveCustomTypeBody,
-} from "@models/common/CustomType";
+import { SaveCustomTypeBody } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -27,7 +24,7 @@ export const getState = (): Promise<AxiosResponse<ServerState>> => {
 /** Custom Type Routes **/
 
 export const saveCustomType = (
-  customType: CustomType<ObjectTabs>,
+  customType: CustomTypeSM,
   mockConfig: CustomTypeMockConfig
 ): Promise<AxiosResponse> => {
   const requestBody: SaveCustomTypeBody = {
@@ -36,6 +33,15 @@ export const saveCustomType = (
   };
 
   return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
+};
+
+export const pushCustomType = (
+  customTypeId: string
+): Promise<AxiosResponse> => {
+  return axios.get(
+    `/api/custom-types/push?id=${customTypeId}`,
+    defaultAxiosConfig
+  );
 };
 
 /** Slice Routes **/

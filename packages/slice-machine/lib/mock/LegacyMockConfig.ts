@@ -4,6 +4,7 @@ import { fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/function";
 
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { Block } from "@prismicio/types-internal/lib/documents/widgets/nestable/StructuredTextContent/Block";
 import {
   NestableWidgetMockConfig,
@@ -26,10 +27,6 @@ import {
 } from "@prismicio/mocks";
 import { EmbedContent } from "@prismicio/types-internal/lib/documents/widgets/nestable/EmbedContent";
 import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
-
-export type PartialRecord<T> = {
-  [P in string]?: T;
-};
 
 export const DefaultConfig = {
   GeoPoint: null,
@@ -402,7 +399,7 @@ export function buildNestableMockConfig(
 
 export function buildWidgetMockConfig(
   widget: DynamicWidget,
-  legacyWidgetMockConfig?: PartialRecord<unknown> | undefined
+  legacyWidgetMockConfig?: Partial<Record<string, unknown>> | undefined
 ): NestableWidgetMockConfig | GroupMockConfig | undefined {
   if (!legacyWidgetMockConfig) return;
   switch (widget.type) {
@@ -446,21 +443,21 @@ export function buildWidgetMockConfig(
 }
 
 export function buildFieldsMockConfig(
-  fieldsModels: PartialRecord<{ type: string }>,
+  fieldsModels: Partial<Record<string, NestableWidget>>,
   fieldsMockConfig?: Record<string, unknown>
 ): Record<string, NestableWidgetMockConfig> {
-  const models = Object.entries(fieldsModels || {}).filter(Boolean) as Array<
-    [string, { type: string }]
+  const model = Object.entries(fieldsModels).filter((f) => Boolean(f)) as Array<
+    [string, NestableWidget]
   >;
 
-  return models.reduce<Record<string, NestableWidgetMockConfig>>(
-    (acc, [fieldKey, { type }]) => {
+  return model.reduce<Record<string, NestableWidgetMockConfig>>(
+    (acc, [key, value]) => {
       const fieldLegacyMockConfig = buildNestableMockConfig(
-        type as WidgetTypes,
-        fieldsMockConfig?.[fieldKey]
+        value.type,
+        fieldsMockConfig?.[key]
       );
       const field = fieldLegacyMockConfig
-        ? { [fieldKey]: fieldLegacyMockConfig }
+        ? { [key]: fieldLegacyMockConfig }
         : {};
       return {
         ...acc,

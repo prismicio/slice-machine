@@ -23,10 +23,7 @@ export function generate(
       if (
         !Files.exists(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          GeneratedPaths(env.cwd)
-            .library(c.from)
-            .slice(c.infos.sliceName)
-            .mocks()
+          GeneratedPaths(env.cwd).library(c.from).slice(c.model.name).mocks()
         )
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -36,15 +33,12 @@ export function generate(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
             getGobalMockConfig(env.cwd),
             c.from,
-            c.infos.sliceName
+            c.model.name
           )
         );
         Files.write(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          GeneratedPaths(env.cwd)
-            .library(c.from)
-            .slice(c.infos.sliceName)
-            .mocks(),
+          GeneratedPaths(env.cwd).library(c.from).slice(c.model.name).mocks(),
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           mocks
         );

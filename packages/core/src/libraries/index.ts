@@ -50,9 +50,11 @@ export function handleLibraryPath(
           from,
           href: from.replace(/\//g, "--"),
           pathToSlice,
-          infos: componentInfo,
+          fileName: componentInfo.fileName,
+          extension: componentInfo.extension,
+          screenshotPaths: componentInfo.screenshotPaths,
+          mock: componentInfo.mock,
           model,
-          migrated: false,
         },
       ];
     },

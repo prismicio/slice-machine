@@ -1,9 +1,18 @@
 # Ignore artifacts:
+.github/
 packages/slice-machine/build
+packages/slice-machine/coverage
 packages/slice-machine/tests/project/
 packages/slice-machine/templates/
 packages/slice-machine/out
+packages/core/build
+packages/core/coverage
+packages/init/build
+packages/init/coverage
+packages/next-slicezone/dist
+packages/nuxt-sm/src/sm-resolver.js
 packages/**/package.json
 packages/**/package-lock.json
+README.md
 package.json
 package-lock.json

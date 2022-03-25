@@ -1,4 +1,3 @@
-import { Models } from "@slicemachine/core";
 import {
   SharedSlice,
   SlicesTypes,
@@ -10,11 +9,12 @@ import {
   generateSliceMock,
   renderSliceMock,
 } from "@prismicio/mocks";
-import { buildFieldsMockConfig, PartialRecord } from "./LegacyMockConfig";
+import { buildFieldsMockConfig } from "./LegacyMockConfig";
+import { Slices, SliceSM } from "@slicemachine/core/build/src/models";
 
 function buildVariationMockConfig(
-  model: Models.VariationAsObject,
-  legacyVariationMockConfig?: PartialRecord<Record<string, unknown>>
+  model: Variation,
+  legacyVariationMockConfig?: Partial<Record<string, Record<string, unknown>>>
 ): VariationMockConfig {
   const primaryFields =
     model.primary &&
@@ -33,8 +33,10 @@ function buildVariationMockConfig(
 }
 
 export function buildSliceMockConfig(
-  model: Models.SliceAsObject,
-  legacyMockConfig: PartialRecord<PartialRecord<PartialRecord<unknown>>>
+  model: SharedSlice,
+  legacyMockConfig: Partial<
+    Record<string, Partial<Record<string, Partial<Record<string, unknown>>>>>
+  >
 ): ReadonlyArray<SharedSliceMockConfig> {
   const variationConfigs: Record<string, VariationMockConfig> =
     model.variations.reduce((acc, variationModel) => {
@@ -57,9 +59,10 @@ export function buildSliceMockConfig(
 }
 
 export default function MockSlice(
-  model: Models.SliceAsObject,
+  smModel: SliceSM,
   legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
 ): unknown[] {
+  const model = Slices.fromSM(smModel);
   const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
   const sliceModel: SharedSlice = {
     ...model,

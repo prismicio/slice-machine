@@ -12,7 +12,7 @@ import ScreenSizes, { Size } from "../ScreenSizes";
 type PropTypes = {
   title: string;
   Model: SliceState;
-  variation: Models.VariationAsArray | undefined;
+  variation: Models.VariationSM | undefined;
   handleScreenSizeChange: (screen: { size: Size }) => void;
   size: Size;
 };
@@ -23,12 +23,12 @@ const redirect = (
   isSimulator?: boolean
 ): void => {
   if (!variation) {
-    void router.push(`/${model.href}/${model.infos.sliceName}`);
+    void router.push(`/${model.href}/${model.model.name}`);
     return;
   }
   const params = Links.variation({
     lib: model.href,
-    sliceName: model.infos.sliceName,
+    sliceName: model.model.name,
     variationId: variation?.id,
     isSimulator,
   });

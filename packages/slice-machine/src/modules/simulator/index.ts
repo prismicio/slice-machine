@@ -230,7 +230,7 @@ function* checkSetupSaga(
       } = yield race({
         iframeCheckOk: take(getType(connectToSimulatorIframeCreator.success)),
         iframeCheckKO: take(getType(connectToSimulatorIframeCreator.failure)),
-        timeout: delay(2500),
+        timeout: delay(10000),
       });
 
       if (iframeCheckOk && action.payload.callback) {
@@ -270,17 +270,17 @@ function* checkSetupSaga(
     yield call(failCheckSetupSaga);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    yield put(checkSimulatorSetupCreator.failure(error));
+    yield put(checkSimulatorSetupCreator.failure(error as Error));
   }
 }
 
 export function* failCheckSetupSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const isPreviewAvailableForFramework: boolean = yield select(
+  const framework = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const isPreviewAvailableForFramework = (yield select(
     selectIsSimulatorAvailableForFramework
-  );
+  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
 
   if (!isPreviewAvailableForFramework) {
     return;
@@ -296,13 +296,14 @@ export function* failCheckSetupSaga() {
 }
 
 function* trackOpenSetupDrawerSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const version: string = yield select(getCurrentVersion);
+  const framework: Frameworks = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const version: string = (yield select(getCurrentVersion)) as ReturnType<
+    typeof getCurrentVersion
+  >;
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  Tracker.get().trackSliceSimulatorSetup(framework, version);
+  void Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
 // Saga watchers

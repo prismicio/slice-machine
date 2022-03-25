@@ -7,11 +7,7 @@ import {
 import { EnvironmentStoreType } from "@src/modules/environment/types";
 import { dummyServerState } from "./__mocks__/serverState";
 
-const dummyEnvironmentState: EnvironmentStoreType = {
-  env: dummyServerState.env,
-  warnings: [],
-  configErrors: {},
-};
+const dummyEnvironmentState: EnvironmentStoreType = dummyServerState.env;
 
 describe("[Environment module]", () => {
   describe("[Reducer]", () => {
@@ -27,24 +23,19 @@ describe("[Environment module]", () => {
       ).toEqual(dummyEnvironmentState);
     });
 
-    it("should update the environment state given STATE/GET.RESPONSE action", () => {
+    it("should update the environment state given STATE/REFRESH.RESPONSE action", () => {
       const action = refreshStateCreator({
         env: {
           ...dummyServerState.env,
           repo: "newUrl",
         },
-        configErrors: dummyServerState.configErrors,
-        warnings: dummyServerState.warnings,
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
       });
 
       expect(environmentReducer(dummyEnvironmentState, action)).toEqual({
         ...dummyEnvironmentState,
-        env: {
-          ...dummyEnvironmentState.env,
-          repo: "newUrl",
-        },
+        repo: "newUrl",
       });
     });
   });

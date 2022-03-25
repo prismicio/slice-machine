@@ -62,6 +62,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const initialConfig = {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...createInitialValues(removeProp(FormFields, "id")),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     ...initialModelValues.config,
@@ -103,7 +104,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
     config: validatedSchema ? validatedSchema.config : initialConfig,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     [MockConfigKey]: deepMerge(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       MockConfigForm?.initialValues || {},
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
       getFieldMockConfig({ apiId }) || {}
@@ -135,13 +136,14 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
         formId={formId}
         initialValues={initialValues}
         validationSchema={validationSchema}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         FormFields={FormFields}
         onSave={({ newKey, value }, mockValue) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
           const maybeUpdatedMockValue =
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             MockConfigForm?.onSave && mockValue && Object.keys(mockValue).length
-              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
                 MockConfigForm.onSave(mockValue, value)
               : mockValue;
 
@@ -217,6 +219,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
                     theme={theme}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     text={label || id}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     WidgetIcon={WidgetIcon}
                   />
                   <Close // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
@@ -255,6 +258,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
                 <CustomForm {...props} fields={fields} />
               ) : (
                 <FlexGrid>
+                  {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
                   {Object.entries(FormFields).map(([key, field]) => (
                     <Col key={key}>
                       <WidgetFormField

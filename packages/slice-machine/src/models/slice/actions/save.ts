@@ -1,4 +1,3 @@
-import { Variation } from "@lib/models/common/Variation";
 import { fetchApi } from "@lib/builders/common/fetch";
 import SliceState from "@lib/models/ui/SliceState";
 import { ToastPayload } from "@src/modules/toaster/utils";
@@ -21,12 +20,11 @@ export default function save(
       params: {
         method: "POST",
         body: JSON.stringify({
-          sliceName: slice.infos.sliceName,
+          sliceName: slice.model.name,
           from: slice.from,
           model: {
             ...slice.model,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            variations: slice.variations.map(Variation.toObject),
+            variations: slice.variations,
           },
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           mockConfig: slice.mockConfig,

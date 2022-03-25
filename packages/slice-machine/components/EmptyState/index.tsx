@@ -1,9 +1,11 @@
-import { Button, Text, Heading, Flex } from "theme-ui";
+import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
+import React from "react";
 
 interface Props {
   title: string;
   onCreateNew: () => void;
   buttonText: string;
+  isLoading: boolean;
   documentationComponent: React.ReactNode;
 }
 
@@ -11,20 +13,21 @@ const EmptyState: React.FunctionComponent<Props> = ({
   title,
   onCreateNew,
   buttonText,
+  isLoading,
   documentationComponent,
 }) => (
   <Flex
     sx={(theme) => ({
       maxWidth: "480px",
       flexDirection: "column",
-      border: `1px solid ${theme.colors?.grey01 as string}`,
+      border: `1px solid ${theme.colors?.grey02 as string}`,
     })}
   >
     <Flex
       sx={(theme) => ({
         flexDirection: "column",
         p: 4,
-        borderBottom: `1px solid ${theme.colors?.grey01 as string}`,
+        borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
       })}
     >
       <Heading
@@ -53,7 +56,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
           mr: 4,
         }}
       >
-        {buttonText}
+        {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
       </Button>
       <Text
         sx={{

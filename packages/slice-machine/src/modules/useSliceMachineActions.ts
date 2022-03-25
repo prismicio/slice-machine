@@ -22,14 +22,39 @@ import {
   connectToSimulatorIframeCreator,
 } from "@src/modules/simulator";
 import ServerState from "@models/server/ServerState";
-import {
-  createCustomTypeCreator,
-  saveCustomTypeCreator,
-} from "@src/modules/customTypes";
-import { CustomTypeState } from "@models/ui/CustomTypeState";
+import { createCustomTypeCreator } from "@src/modules/availableCustomTypes";
 import { createSliceCreator } from "@src/modules/slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import {
+  initCustomTypeStoreCreator,
+  createTabCreator,
+  deleteTabCreator,
+  updateTabCreator,
+  addFieldCreator,
+  deleteFieldCreator,
+  reorderFieldCreator,
+  replaceFieldCreator,
+  deleteSharedSliceCreator,
+  replaceSharedSliceCreator,
+  createSliceZoneCreator,
+  saveCustomTypeCreator,
+  pushCustomTypeCreator,
+  addFieldIntoGroupCreator,
+  deleteFieldIntoGroupCreator,
+  reorderFieldIntoGroupCreator,
+  replaceFieldIntoGroupCreator,
+  updateGroupFieldMockConfigCreator,
+  deleteGroupFieldMockConfigCreator,
+  deleteFieldMockConfigCreator,
+  updateFieldMockConfigCreator,
+} from "@src/modules/selectedCustomType";
+import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import {
+  CustomTypeSM,
+  TabField,
+} from "@slicemachine/core/build/src/models/CustomType";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -87,8 +112,132 @@ const useSliceMachineActions = () => {
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
-  const saveCustomType = (modelPayload: CustomTypeState) =>
-    dispatch(saveCustomTypeCreator({ modelPayload }));
+
+  // Custom type module
+  const initCustomTypeStore = (
+    model: CustomTypeSM,
+    remoteModel: CustomTypeSM | undefined,
+    mockConfig: CustomTypeMockConfig
+  ) => dispatch(initCustomTypeStoreCreator({ model, mockConfig, remoteModel }));
+  const saveCustomType = () => dispatch(saveCustomTypeCreator.request());
+  const pushCustomType = () => dispatch(pushCustomTypeCreator.request());
+  const createCustomTypeTab = (tabId: string) =>
+    dispatch(createTabCreator({ tabId }));
+  const deleteCustomTypeTab = (tabId: string) =>
+    dispatch(deleteTabCreator({ tabId }));
+  const updateCustomTypeTab = (tabId: string, newTabId: string) =>
+    dispatch(updateTabCreator({ tabId, newTabId }));
+  const addCustomTypeField = (
+    tabId: string,
+    fieldId: string,
+    field: TabField
+  ) => dispatch(addFieldCreator({ tabId, fieldId, field }));
+  const deleteCustomTypeField = (tabId: string, fieldId: string) =>
+    dispatch(deleteFieldCreator({ tabId, fieldId }));
+  const reorderCustomTypeField = (tabId: string, start: number, end: number) =>
+    dispatch(reorderFieldCreator({ tabId, start, end }));
+  const replaceCustomTypeField = (
+    tabId: string,
+    previousFieldId: string,
+    newFieldId: string,
+    value: TabField
+  ) =>
+    dispatch(
+      replaceFieldCreator({ tabId, previousFieldId, newFieldId, value })
+    );
+  const createSliceZone = (tabId: string) =>
+    dispatch(createSliceZoneCreator({ tabId }));
+  const deleteCustomTypeSharedSlice = (tabId: string, sliceId: string) =>
+    dispatch(deleteSharedSliceCreator({ tabId, sliceId }));
+  const replaceCustomTypeSharedSlice = (
+    tabId: string,
+    sliceKeys: string[],
+    preserve: string[]
+  ) => dispatch(replaceSharedSliceCreator({ tabId, sliceKeys, preserve }));
+  const updateFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    previousFieldId: string,
+    fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any
+  ) =>
+    dispatch(
+      updateFieldMockConfigCreator({
+        customTypeMockConfig,
+        previousFieldId,
+        fieldId,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value,
+      })
+    );
+  const deleteFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    fieldId: string
+  ) =>
+    dispatch(deleteFieldMockConfigCreator({ customTypeMockConfig, fieldId }));
+  const updateGroupFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    groupId: string,
+    previousFieldId: string,
+    fieldId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any
+  ) =>
+    dispatch(
+      updateGroupFieldMockConfigCreator({
+        customTypeMockConfig,
+        groupId,
+        previousFieldId,
+        fieldId,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value,
+      })
+    );
+  const deleteGroupFieldMockConfig = (
+    customTypeMockConfig: CustomTypeMockConfig,
+    groupId: string,
+    fieldId: string
+  ) =>
+    dispatch(
+      deleteGroupFieldMockConfigCreator({
+        customTypeMockConfig,
+        groupId,
+        fieldId,
+      })
+    );
+  const addFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    fieldId: string,
+    field: NestableWidget
+  ) => dispatch(addFieldIntoGroupCreator({ tabId, groupId, fieldId, field }));
+  const deleteFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    fieldId: string
+  ) => dispatch(deleteFieldIntoGroupCreator({ tabId, groupId, fieldId }));
+  const reorderFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    start: number,
+    end: number
+  ) => dispatch(reorderFieldIntoGroupCreator({ tabId, groupId, start, end }));
+  const replaceFieldIntoGroup = (
+    tabId: string,
+    groupId: string,
+    previousFieldId: string,
+    newFieldId: string,
+    value: NestableWidget
+  ) =>
+    dispatch(
+      replaceFieldIntoGroupCreator({
+        tabId,
+        groupId,
+        previousFieldId,
+        newFieldId,
+        value,
+      })
+    );
 
   // Slice module
   const createSlice = (sliceName: string, libName: string) =>
@@ -103,8 +252,6 @@ const useSliceMachineActions = () => {
     dispatch(
       refreshStateCreator({
         env: serverState.env,
-        warnings: serverState.warnings,
-        configErrors: serverState.configErrors,
         remoteCustomTypes: serverState.remoteCustomTypes,
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
@@ -129,7 +276,27 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
+    initCustomTypeStore,
     saveCustomType,
+    pushCustomType,
+    createCustomTypeTab,
+    updateCustomTypeTab,
+    deleteCustomTypeTab,
+    addCustomTypeField,
+    deleteCustomTypeField,
+    reorderCustomTypeField,
+    replaceCustomTypeField,
+    createSliceZone,
+    deleteCustomTypeSharedSlice,
+    replaceCustomTypeSharedSlice,
+    updateFieldMockConfig,
+    deleteFieldMockConfig,
+    updateGroupFieldMockConfig,
+    deleteGroupFieldMockConfig,
+    addFieldIntoGroup,
+    deleteFieldIntoGroup,
+    reorderFieldIntoGroup,
+    replaceFieldIntoGroup,
     createSlice,
     sendAReview,
     skipReview,

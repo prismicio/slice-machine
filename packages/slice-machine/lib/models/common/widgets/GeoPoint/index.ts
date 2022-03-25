@@ -5,8 +5,8 @@ import { MockConfigForm } from "./Mock/Form";
 import { DefaultFields } from "../../../../forms/defaults";
 
 import { Widget } from "../Widget";
-import { GeoPointField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { GeoPoint } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** : {
   "type" : "GeoPoint",
@@ -44,11 +44,16 @@ const Meta = {
   description: "A field for storing geo-coordinates",
 };
 
-export const GeoPointWidget: Widget<GeoPointField, typeof schema> = {
-  create: (label: string) => new GeoPointField({ label }),
+export const GeoPointWidget: Widget<GeoPoint, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.GeoPoint,
+    config: {
+      label,
+    },
+  }),
   MockConfigForm,
   FormFields,
-  TYPE_NAME: FieldType.GeoPoint,
+  TYPE_NAME: WidgetTypes.GeoPoint,
   schema,
   Meta,
 };

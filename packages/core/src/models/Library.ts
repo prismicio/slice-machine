@@ -2,25 +2,16 @@ import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 import path from "path";
 import Files from "../utils/files";
-import { VariationMock } from "./Variation";
-import { SliceAsObject } from "./Slice";
+import { SliceMock, SliceSM } from "./Slice";
 
 export interface ComponentInfo {
-  sliceName: string;
   fileName: string | null;
-  isDirectory: boolean;
   extension: string | null;
-  model: SliceAsObject;
-  nameConflict: {
-    sliceName: string;
-    id: string;
-  } | null;
-
+  model: SliceSM;
   screenshotPaths: {
     [variationId: string]: Screenshot;
   };
-  meta: ComponentMetadata;
-  mock?: ReadonlyArray<VariationMock>;
+  mock?: SliceMock;
 }
 
 export const ComponentInfo = {
@@ -33,19 +24,10 @@ export const ComponentInfo = {
   },
 };
 
-export interface ComponentMetadata {
-  id: string;
-  name?: string;
-  description?: string;
-}
-
-export interface Component {
+export interface Component extends ComponentInfo {
   from: string;
   href: string;
   pathToSlice: string;
-  infos: ComponentInfo;
-  model: SliceAsObject;
-  migrated: boolean;
 }
 
 export interface Screenshot {

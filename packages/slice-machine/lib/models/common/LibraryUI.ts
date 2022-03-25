@@ -1,4 +1,5 @@
 import type Models from "@slicemachine/core/build/src/models";
+import { SliceSM } from "@slicemachine/core/build/src/models";
 import { ComponentUI } from "./ComponentUI";
 import { BackendEnvironment } from "./Environment";
 
@@ -36,7 +37,7 @@ export interface LibraryUI extends Models.Library<ComponentUI> {
 export const LibraryUI = {
   build(
     lib: Models.Library<Models.Component>,
-    remoteSlices: ReadonlyArray<Models.SliceAsObject>,
+    remoteSlices: ReadonlyArray<SliceSM>,
     env: BackendEnvironment
   ): LibraryUI {
     const components = lib.components.map((c) =>

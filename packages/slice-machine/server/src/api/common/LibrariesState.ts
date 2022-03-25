@@ -2,6 +2,7 @@ import type Models from "@slicemachine/core/build/src/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
+import { Slices } from "@slicemachine/core/build/src/models/Slice";
 const { handleLibraryPath } = Libraries;
 const { LibrariesStatePath } = FileSystem;
 
@@ -65,12 +66,12 @@ export function formatComponent(
   return {
     library: slice.from,
     id: slice.model.id,
-    name: slice.infos.meta.name,
-    description: slice.infos.meta.description,
-    model: slice.model,
+    name: slice.model.name,
+    description: slice.model.description,
+    model: Slices.fromSM(slice.model),
     mocks: (
-      slice.infos.mock || []
-    ).reduce<Models.LibrariesState.ComponentMocks>(
+      slice.mock || []
+    ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
         [variationMock.variation]: variationMock,
@@ -78,14 +79,13 @@ export function formatComponent(
       {}
     ),
     meta: {
-      fileName: slice.infos.fileName,
-      isDirectory: slice.infos.isDirectory,
-      extension: slice.infos.extension,
+      fileName: slice.fileName,
+      extension: slice.extension,
     },
-    screenshotPaths: !slice.infos.screenshotPaths
+    screenshotPaths: !slice.screenshotPaths
       ? {}
       : Object.entries(
-          slice.infos.screenshotPaths
+          slice.screenshotPaths
         ).reduce<Models.LibrariesState.ComponentScreenshots>(
           (acc, [variationId, screenshot]) => {
             return {

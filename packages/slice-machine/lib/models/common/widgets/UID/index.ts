@@ -14,9 +14,11 @@ import { MdVpnKey } from "react-icons/md";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { Widget } from "../Widget";
-import { UIDField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import {
+  UID,
+  WidgetTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const FormFields = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -46,10 +48,13 @@ const Meta = {
   description: "Unique Identifier",
 };
 
-export const UIDWidget: Widget<UIDField, typeof schema> = {
-  create: (label: string) => new UIDField({ label }),
+export const UIDWidget: Widget<UID, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.UID,
+    config: { ...DEFAULT_CONFIG, label },
+  }),
   Meta,
   schema,
-  TYPE_NAME: FieldType.UID,
+  TYPE_NAME: WidgetTypes.UID,
   FormFields,
 };

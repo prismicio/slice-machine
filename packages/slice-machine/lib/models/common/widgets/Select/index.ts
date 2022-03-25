@@ -8,9 +8,9 @@ import { removeProp } from "../../../../utils";
 import FormFields from "./FormFields";
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { SelectField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {
@@ -38,12 +38,19 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
-export const SelectWidget: Widget<SelectField, typeof schema> = {
+export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   MockConfigForm,
-  create: (label: string) => new SelectField({ label }),
+  create: (label: string) => ({
+    type: WidgetTypes.Select,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+      options: ["1", "2"],
+    },
+  }),
   schema,
   Meta,
-  TYPE_NAME: FieldType.Select,
+  TYPE_NAME: WidgetTypes.Select,
 };

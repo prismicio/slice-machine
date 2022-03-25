@@ -4,12 +4,8 @@ import ItemsList from "./Navigation/List";
 import Logo from "../Menu/Logo";
 import { LinkProps } from "..";
 
-import NotLoggedIn from "./Navigation/NotLoggedIn";
-
-import { warningStates } from "@lib/consts";
-
 import { useSelector } from "react-redux";
-import { getChangelog, getWarnings } from "@src/modules/environment";
+import { getChangelog, getFramework } from "@src/modules/environment";
 import {
   getUpdatesViewed,
   userHashasSeenTutorialsTooTip,
@@ -17,7 +13,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
-import WarningItem from "./Navigation/WarningItem";
+import ChangelogItem from "./Navigation/ChangelogItem";
 import VideoItem from "@components/AppLayout/Navigation/Menu/Navigation/VideoItem";
 
 const UpdateInfo: React.FC<{
@@ -88,10 +84,10 @@ const UpdateInfo: React.FC<{
 const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
   links,
 }) => {
-  const { warnings, changelog, updatesViewed, hasSeenTutorialsTooTip } =
+  const { changelog, updatesViewed, hasSeenTutorialsTooTip, framework } =
     useSelector((store: SliceMachineStoreType) => ({
-      warnings: getWarnings(store),
       changelog: getChangelog(store),
+      framework: getFramework(store),
       updatesViewed: getUpdatesViewed(store),
       hasSeenTutorialsTooTip: userHashasSeenTutorialsTooTip(store),
     }));
@@ -106,10 +102,6 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
     updatesViewed &&
     updatesViewed.latest === latestVersion?.versionNumber &&
     updatesViewed.latestNonBreaking === changelog.latestNonBreakingVersion;
-
-  const isNotLoggedIn = !!warnings.find(
-    (e) => e.key === warningStates.NOT_CONNECTED
-  );
 
   const router = useRouter();
 
@@ -138,13 +130,14 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
               hasSeenUpdate={hasSeenLatestUpdates}
             />
           )}
-          {isNotLoggedIn && <NotLoggedIn />}
           <VideoItem
+            framework={framework}
+            sliceMachineVersion={changelog.currentVersion}
             hasSeenTutorialsTooTip={hasSeenTutorialsTooTip}
             onClose={setSeenTutorialsToolTip}
           />
           <Divider variant="sidebar" />
-          <WarningItem currentVersion={changelog.currentVersion} />
+          <ChangelogItem currentVersion={changelog.currentVersion} />
         </Box>
       </Box>
     </Box>

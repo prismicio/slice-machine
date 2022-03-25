@@ -5,19 +5,16 @@ import { Frameworks } from "@slicemachine/core/build/src/models";
 const backendEnvironment: BackendEnvironment = {
   isUserLoggedIn: false,
   cwd: "/test",
-  prismicData: {
-    base: "https://fakebase.io",
-  },
   manifest: {
     apiEndpoint: "https://myFakeRepo.prismic.io/api/v2",
     libraries: ["@slices"],
   },
-  updateVersionInfo: {
+  prismicData: {},
+  changelog: {
     currentVersion: "0.2.0",
-    latestVersion: "0.2.0",
-    packageManager: "npm",
-    updateCommand: "npm update ?",
+    latestNonBreakingVersion: "0.2.0",
     updateAvailable: true,
+    versions: [],
   },
   mockConfig: {},
   framework: Frameworks.next,

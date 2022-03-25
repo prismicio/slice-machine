@@ -1,13 +1,13 @@
-import type Models from "@slicemachine/core/build/src/models";
 import * as yup from "yup";
 import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
-import { FieldType } from "../models/common/CustomType/fields";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
+import { VariationSM } from "@slicemachine/core/build/src/models";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,7 +18,10 @@ export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
 export const ensureDnDDestination = (result: {
   destination?: { droppableId: string; index: number };
   source: { index: number; droppableId: string };
-}) => {
+}): result is {
+  destination: undefined;
+  source: { index: number; droppableId: string };
+} => {
   if (!result.destination || result.source.index === result.destination.index) {
     return true;
   }
@@ -43,15 +46,15 @@ export const ensureWidgetTypeExistence = (
 };
 
 export const compareVariations = (
-  lhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>,
-  rhs: ReadonlyArray<Models.VariationAsObject | Models.VariationAsArray>
+  lhs: ReadonlyArray<VariationSM>,
+  rhs: ReadonlyArray<VariationSM>
 ) => {
   return equal(
     lhs.map((e) => ({ ...e, imageUrl: undefined })),
     rhs.map((e) => ({ ...e, imageUrl: undefined }))
   );
 };
-export const createDefaultWidgetValues = (TYPE_NAME: FieldType) => ({
+export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
   TYPE_NAME,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields: DefaultFields,

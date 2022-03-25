@@ -1,7 +1,7 @@
 import { LibraryUI } from "@models/common/LibraryUI";
-import type { Models } from "@slicemachine/core";
+import { SliceSM } from "@slicemachine/core/build/src/models";
 
 export type SlicesStoreType = {
   libraries: ReadonlyArray<LibraryUI>;
-  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  remoteSlices: ReadonlyArray<SliceSM>;
 };

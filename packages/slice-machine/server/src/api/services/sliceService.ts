@@ -1,5 +1,4 @@
 import path from "path";
-import type Models from "@slicemachine/core/build/src/models";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/src/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
@@ -8,28 +7,34 @@ import DefaultClient from "@models/common/http/DefaultClient";
 import FakeClient from "@models/common/http/FakeClient";
 import { snakelize } from "@lib/utils/str";
 import { ApiError } from "@lib/models/server/ApiResult";
+import {
+  Slices,
+  SliceSM,
+  VariationSM,
+} from "@slicemachine/core/build/src/models/Slice";
 
 export const createOrUpdate = async (
-  slices: ReadonlyArray<Models.SliceAsObject>,
+  slices: ReadonlyArray<SliceSM>,
   sliceName: string,
-  model: Models.SliceAsObject,
+  model: SliceSM,
   client: DefaultClient | FakeClient
 ) => {
+  const prismicModel = Slices.fromSM(model);
   if (slices.find((e) => e.id === snakelize(sliceName))) {
-    return await client.updateSlice(model);
+    return await client.updateSlice(prismicModel);
   } else {
-    return await client.insertSlice(model);
+    return await client.insertSlice(prismicModel);
   }
 };
 
 export async function uploadScreenshots(
   env: BackendEnvironment,
-  sliceModel: Models.SliceAsObject,
+  sliceModel: SliceSM,
   sliceName: string,
   from: string
 ): Promise<{ [variationId: string]: string | null }> {
   const variationIds: string[] = sliceModel.variations.map(
-    (v: Models.VariationAsObject) => v.id
+    (v: VariationSM) => v.id
   );
 
   const imageUrlsByVariation: { [variationId: string]: string | null } = {};

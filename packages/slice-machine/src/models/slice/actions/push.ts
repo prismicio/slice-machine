@@ -11,7 +11,7 @@ export default function push(
   return async (slice: SliceState, setData: (data: ToastPayload) => void) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchApi({
-      url: `/api/slices/push?sliceName=${slice.infos.sliceName}&from=${slice.from}`,
+      url: `/api/slices/push?sliceName=${slice.model.name}&from=${slice.from}`,
       setData,
       successMessage: "Model was correctly saved to Prismic!",
       onSuccess() {

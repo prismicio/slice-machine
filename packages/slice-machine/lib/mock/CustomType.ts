@@ -1,5 +1,5 @@
 import {
-  CustomType as PrismicCustomType,
+  CustomType,
   flattenWidgets,
 } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import {
@@ -9,19 +9,22 @@ import {
   renderDocumentMock,
 } from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { CustomTypeJsonModel } from "../models/common/CustomType";
-import { PartialRecord, buildWidgetMockConfig } from "./LegacyMockConfig";
+import { buildWidgetMockConfig } from "./LegacyMockConfig";
 import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/src/models/CustomType";
 
 function buildDocumentMockConfig(
-  model: PrismicCustomType,
+  model: CustomType,
   legacyMockConfig: CustomTypeMockConfig
 ): DocumentMockConfig {
   const widgets = flattenWidgets(model);
   const widgetsConfig = widgets.reduce<
     Partial<Record<WidgetKey, DocWidgetMockConfig>>
   >((acc, [key, w]) => {
-    const legacyFieldConfig: PartialRecord<unknown> | undefined =
+    const legacyFieldConfig: Partial<Record<string, unknown>> | undefined =
       legacyMockConfig[key];
     if (!legacyFieldConfig) return acc;
 
@@ -35,10 +38,10 @@ function buildDocumentMockConfig(
 }
 
 export default function MockCustomType(
-  model: CustomTypeJsonModel,
+  model: CustomTypeSM,
   legacyMockConfig: CustomTypeMockConfig
 ) {
-  const prismicModel = model as unknown as PrismicCustomType;
+  const prismicModel = CustomTypes.fromSM(model);
   const documentMockConfig = buildDocumentMockConfig(
     prismicModel,
     legacyMockConfig

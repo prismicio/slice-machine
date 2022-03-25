@@ -1,32 +1,29 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
 import { LibrariesContext } from "@src/models/libraries/context";
-import {
-  SliceType,
-  NonSharedSliceInSliceZone,
-  SliceZoneAsArray,
-} from "@lib/models/common/CustomType/sliceZone";
 
 import SliceState from "@lib/models/ui/SliceState";
 import LibraryState from "@lib/models/ui/LibraryState";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 
-import Form from "./Form";
+import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 import SlicesList from "./List";
-
-export interface SliceZoneSlice {
-  type: SliceType;
-  payload: SliceState | NonSharedSliceInSliceZone;
-}
+import EmptyState from "./EmptyState";
+import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  NonSharedSliceInSliceZone,
+  SliceZoneSlice,
+} from "@lib/models/common/CustomType/sliceZone";
 
 const mapAvailableAndSharedSlices = (
-  sliceZone: SliceZoneAsArray,
+  sliceZone: SlicesSM,
   libraries: ReadonlyArray<LibraryState> | null
 ) => {
-  const availableSlices = (libraries || []).reduce(
-    (acc: ReadonlyArray<SliceState>, curr: LibraryState) => {
+  const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
+    (acc, curr: LibraryState) => {
       return [...acc, ...curr.components.map((e) => e[0])];
     },
     []
@@ -45,17 +42,17 @@ const mapAvailableAndSharedSlices = (
       },
       { key, value }
     ) => {
-      if (value.type === SliceType.Slice) {
+      if (value.type === SlicesTypes.Slice) {
         return {
           ...acc,
           slicesInSliceZone: [
             ...acc.slicesInSliceZone,
-            { type: SliceType.Slice, payload: { key, value } },
+            { type: SlicesTypes.Slice, payload: { key, value } },
           ],
         };
       }
       const maybeSliceState = availableSlices.find(
-        (state) => state.infos.meta.id === key
+        (state) => state.model.id === key
       );
 
       if (maybeSliceState) {
@@ -63,7 +60,7 @@ const mapAvailableAndSharedSlices = (
           ...acc,
           slicesInSliceZone: [
             ...acc.slicesInSliceZone,
-            { type: SliceType.SharedSlice, payload: maybeSliceState },
+            { type: SlicesTypes.SharedSlice, payload: maybeSliceState },
           ],
         };
       }
@@ -74,21 +71,21 @@ const mapAvailableAndSharedSlices = (
   return { availableSlices, slicesInSliceZone, notFound };
 };
 
-const SliceZone = ({
+interface SliceZoneProps {
+  tabId: string;
+  sliceZone?: SlicesSM | null | undefined;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  onSelectSharedSlices: Function;
+  onRemoveSharedSlice: (sliceId: string) => void;
+  onCreateSliceZone: () => void;
+}
+
+const SliceZone: React.FC<SliceZoneProps> = ({
   tabId,
   sliceZone,
   onSelectSharedSlices,
   onRemoveSharedSlice,
   onCreateSliceZone,
-}: {
-  tabId: string;
-  sliceZone: SliceZoneAsArray;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onSelectSharedSlices: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onRemoveSharedSlice: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onCreateSliceZone: Function;
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const libraries = useContext(LibrariesContext);
@@ -106,18 +103,25 @@ const SliceZone = ({
   }, [notFound]);
 
   const sharedSlicesInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SliceType.SharedSlice)
+    .filter((e) => e.type === SlicesTypes.SharedSlice)
     .map((e) => e.payload) as ReadonlyArray<SliceState>;
 
   /* Preserve these keys in SliceZone */
   const nonSharedSlicesKeysInSliceZone = slicesInSliceZone
-    .filter((e) => e.type === SliceType.Slice)
+    .filter((e) => e.type === SlicesTypes.Slice)
     .map((e) => (e.payload as NonSharedSliceInSliceZone).key);
+
+  const onAddNewSlice = () => {
+    if (!sliceZone) {
+      onCreateSliceZone();
+    }
+    setFormIsOpen(true);
+  };
 
   return (
     <Box my={3}>
       <ZoneHeader
-        Heading={<Heading as="h6">SliceZone</Heading>}
+        Heading={<Heading as="h6">Slice Zone</Heading>}
         Actions={
           <Flex sx={{ alignItems: "center" }}>
             {sliceZone ? (
@@ -125,40 +129,25 @@ const SliceZone = ({
                 data.{sliceZone.key}
               </Text>
             ) : null}
-            <Button
-              variant="buttons.darkSmall"
-              onClick={() => {
-                if (!sliceZone) {
-                  onCreateSliceZone();
-                }
-                setFormIsOpen(true);
-              }}
-            >
-              {sliceZone ? "Edit" : "Add"} slices
-            </Button>
+            {!!slicesInSliceZone.length && (
+              <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
+                Update Slice Zone
+              </Button>
+            )}
           </Flex>
         }
       />
-
-      <SlicesList slices={slicesInSliceZone} />
-
       {!slicesInSliceZone.length ? (
-        <Flex
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "200px",
-          }}
-        >
-          <p>No slices selected</p>
-        </Flex>
-      ) : null}
-      <Form
+        <EmptyState onAddNewSlice={onAddNewSlice} />
+      ) : (
+        <SlicesList slices={slicesInSliceZone} />
+      )}
+      <UpdateSliceZoneModal
         isOpen={formIsOpen}
         formId={`tab-slicezone-form-${tabId}`}
         availableSlices={availableSlices}
         slicesInSliceZone={sharedSlicesInSliceZone}
-        onSubmit={({ sliceKeys }: { sliceKeys: [string] }) =>
+        onSubmit={({ sliceKeys }) =>
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           onSelectSharedSlices(sliceKeys, nonSharedSlicesKeysInSliceZone)
         }

@@ -13,9 +13,9 @@ import { MockConfigForm } from "./Mock/Form";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { Widget } from "../Widget";
-import { TimestampField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { Widget, DEFAULT_CONFIG } from "../Widget";
+import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = DefaultFields;
@@ -35,12 +35,15 @@ const Meta = {
   description: "A calendar date picker with time",
 };
 
-export const TimestampWidget: Widget<TimestampField, typeof schema> = {
+export const TimestampWidget: Widget<Timestamp, typeof schema> = {
   MockConfigForm,
-  create: (label: string) => new TimestampField({ label }),
+  create: (label: string) => ({
+    type: WidgetTypes.Timestamp,
+    config: { ...DEFAULT_CONFIG, label },
+  }),
   schema,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: FieldType.Timestamp,
+  TYPE_NAME: WidgetTypes.Timestamp,
   Meta,
 };

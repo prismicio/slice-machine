@@ -2,8 +2,6 @@ import * as yup from "yup";
 import { BsToggleOn } from "react-icons/bs";
 import { MockConfigForm } from "./Mock/Form";
 
-import { BooleanField } from "./type";
-
 /** {
     "type" : "Boolean",
     "config" : {
@@ -19,8 +17,9 @@ import { createValidationSchema } from "../../../../forms";
 import { DefaultFields } from "../../../../forms/defaults";
 import { Input, CheckBox } from "../../../../forms/fields";
 
-import { FieldType } from "../../CustomType/fields";
 import { Widget } from "../Widget";
+import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const Meta = {
   icon: BsToggleOn,
@@ -60,9 +59,17 @@ const schema = yup.object().shape({
 });
 
 export const BooleanWidget: Widget<BooleanField, typeof schema> = {
-  TYPE_NAME: FieldType.Boolean,
+  TYPE_NAME: WidgetTypes.BooleanField,
   MockConfigForm,
-  create: (label: string) => new BooleanField({ label }),
+  create: (label: string) => ({
+    type: WidgetTypes.BooleanField,
+    config: {
+      label,
+      placeholder_false: "false",
+      placeholder_true: "true",
+      default_value: false,
+    },
+  }),
   Meta,
   schema,
   FormFields,

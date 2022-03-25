@@ -3,25 +3,21 @@ import { EnvironmentStoreType } from "./types";
 import { ActionType, createAction, getType } from "typesafe-actions";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { FrontEndEnvironment } from "@models/common/Environment";
-import Warning from "@models/common/Warning";
-import { ConfigErrors } from "@models/server/ServerState";
 import { Frameworks } from "@slicemachine/core/build/src/models/Framework";
 import { simulatorIsSupported } from "@lib/utils";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
-import type { Models } from "@slicemachine/core";
+import { SliceSM } from "@slicemachine/core/build/src/models";
+import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   env: FrontEndEnvironment;
-  warnings: ReadonlyArray<Warning>;
-  configErrors: ConfigErrors;
-  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
-  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>;
+  localCustomTypes: ReadonlyArray<CustomTypeSM>;
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
   libraries: ReadonlyArray<LibraryUI>;
-  remoteSlices: ReadonlyArray<Models.SliceAsObject>;
+  remoteSlices: ReadonlyArray<SliceSM>;
 }>();
 
 type EnvironmentActions = ActionType<typeof refreshStateCreator>;
@@ -29,46 +25,39 @@ type EnvironmentActions = ActionType<typeof refreshStateCreator>;
 // Selectors
 export const getEnvironment = (
   store: SliceMachineStoreType
-): FrontEndEnvironment => store.environment.env;
+): FrontEndEnvironment => store.environment;
 
 export const selectSimulatorUrl = (
   store: SliceMachineStoreType
 ): string | undefined => {
-  return store.environment.env.manifest.localSliceSimulatorURL;
+  return store.environment.manifest.localSliceSimulatorURL;
 };
 
 export const getFramework = (store: SliceMachineStoreType): Frameworks =>
-  store.environment.env.framework;
+  store.environment.framework;
 
 export const getShortId = (store: SliceMachineStoreType): string | undefined =>
-  store.environment.env.shortId;
+  store.environment.shortId;
 
 export const getRepoName = (store: SliceMachineStoreType): string | undefined =>
-  store.environment.env.repo;
+  store.environment.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
   store: SliceMachineStoreType
 ): boolean => {
-  return simulatorIsSupported(store.environment.env.framework);
+  return simulatorIsSupported(store.environment.framework);
 };
-
-export const getWarnings = (
-  store: SliceMachineStoreType
-): ReadonlyArray<Warning> => store.environment.warnings;
-
-export const getConfigErrors = (store: SliceMachineStoreType): ConfigErrors =>
-  store.environment.configErrors;
 
 export const getChangelog = (
   store: SliceMachineStoreType
 ): PackageChangelog => {
-  return store.environment.env.changelog;
+  return store.environment.changelog;
 };
 
 export const getPackageManager = (
   store: SliceMachineStoreType
 ): PackageManager => {
-  return store.environment.env.packageManager;
+  return store.environment.packageManager;
 };
 
 export const getCurrentVersion = (store: SliceMachineStoreType): string => {
@@ -80,15 +69,15 @@ export const getIsTrackingAvailable = (
   store: SliceMachineStoreType
 ): boolean => {
   return (
-    store.environment.env.manifest.tracking === undefined ||
-    store.environment.env.manifest.tracking
+    store.environment.manifest.tracking === undefined ||
+    store.environment.manifest.tracking
   );
 };
 
 export const getStorybookUrl = (
   store: SliceMachineStoreType
 ): string | null => {
-  return store.environment.env.manifest.storybook || null;
+  return store.environment.manifest.storybook || null;
 };
 
 export const getLinkToTroubleshootingDocs = (
@@ -141,9 +130,7 @@ export const environmentReducer: Reducer<
     case getType(refreshStateCreator):
       return {
         ...state,
-        env: action.payload.env,
-        warnings: action.payload.warnings,
-        configErrors: action.payload.configErrors,
+        ...action.payload.env,
       };
     default:
       return state;

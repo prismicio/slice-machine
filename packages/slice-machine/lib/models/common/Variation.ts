@@ -1,9 +1,7 @@
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import type Models from "@slicemachine/core/build/src/models";
-import {
-  VariationAsArray,
-  VariationAsObject,
-} from "@slicemachine/core/build/src/models";
-("./CustomType/fields");
+import { VariationSM } from "@slicemachine/core/build/src/models/Slice";
+import { FieldsSM } from "@slicemachine/core/build/src/models/Fields";
 
 import camelCase from "lodash/camelCase";
 
@@ -12,63 +10,31 @@ export const Variation = {
     return camelCase(str);
   },
 
-  toObject(variation: Models.VariationAsArray): Models.VariationAsObject {
-    return {
-      ...variation,
-      primary: variation.primary?.reduce(
-        (acc, { key, value }) => ({ ...acc, [key]: value }),
-        {}
-      ),
-      items: variation.items?.reduce(
-        (acc, { key, value }) => ({ ...acc, [key]: value }),
-        {}
-      ),
-    };
-  },
-
-  toArray(variation: Models.VariationAsObject): Models.VariationAsArray {
-    return {
-      ...variation,
-      primary: Object.entries(variation.primary || {}).map(([key, value]) => ({
-        key,
-        value,
-      })),
-      items: Object.entries(variation.items || {}).map(([key, value]) => ({
-        key,
-        value,
-      })),
-    };
-  },
-
   reorderWidget(
-    variation: Models.VariationAsArray,
+    variation: VariationSM,
     widgetsArea: Models.WidgetsArea,
     start: number,
     end: number
-  ): Models.VariationAsArray {
+  ): VariationSM {
     const widgets = variation[widgetsArea] || [];
-    const reorderedWidget:
-      | { key: string; value: Models.CustomType.Fields.Field }
-      | undefined = widgets && widgets[start];
+    const reorderedWidget: { key: string; value: NestableWidget } | undefined =
+      widgets && widgets[start];
     if (!reorderedWidget)
       throw new Error(
         `Unable to reorder the widget at index ${start}. the list of widgets contains only ${widgets.length} elements.`
       );
 
-    const reorderedArea = widgets.reduce<Models.AsArray>(
-      (acc, widget, index) => {
-        const elems = [widget, reorderedWidget];
-        switch (index) {
-          case start:
-            return acc;
-          case end:
-            return [...acc, ...(end > start ? elems : elems.reverse())];
-          default:
-            return [...acc, widget];
-        }
-      },
-      []
-    );
+    const reorderedArea = widgets.reduce<FieldsSM>((acc, widget, index) => {
+      const elems = [widget, reorderedWidget];
+      switch (index) {
+        case start:
+          return acc;
+        case end:
+          return [...acc, ...(end > start ? elems : elems.reverse())];
+        default:
+          return [...acc, widget];
+      }
+    }, []);
     return {
       ...variation,
       [widgetsArea]: reorderedArea,
@@ -76,17 +42,17 @@ export const Variation = {
   },
 
   replaceWidget(
-    variation: Models.VariationAsArray,
+    variation: VariationSM,
     widgetsArea: Models.WidgetsArea,
     previousKey: string,
     newKey: string,
-    newValue: Models.CustomType.Fields.Field
-  ): Models.VariationAsArray {
+    newValue: NestableWidget
+  ): VariationSM {
     const widgets = variation[widgetsArea] || [];
 
     return {
       ...variation,
-      [widgetsArea]: widgets.reduce((acc: Models.AsArray, { key, value }) => {
+      [widgetsArea]: widgets.reduce((acc: FieldsSM, { key, value }) => {
         if (key === previousKey) {
           return acc.concat([{ key: newKey, value: newValue }]);
         } else {
@@ -97,11 +63,11 @@ export const Variation = {
   },
 
   addWidget(
-    variation: Models.VariationAsArray,
+    variation: VariationSM,
     widgetsArea: Models.WidgetsArea,
     key: string,
-    value: Models.CustomType.Fields.Field
-  ): Models.VariationAsArray {
+    value: NestableWidget
+  ): VariationSM {
     return {
       ...variation,
       [widgetsArea]: variation[widgetsArea]?.concat([{ key, value }]),
@@ -109,10 +75,10 @@ export const Variation = {
   },
 
   deleteWidget(
-    variation: Models.VariationAsArray,
+    variation: VariationSM,
     widgetsArea: Models.WidgetsArea,
     widgetKey: string
-  ): Models.VariationAsArray {
+  ): VariationSM {
     return {
       ...variation,
       [widgetsArea]: variation[widgetsArea]?.filter(
@@ -121,11 +87,7 @@ export const Variation = {
     };
   },
 
-  copyValue<T extends VariationAsObject | VariationAsArray>(
-    variation: T,
-    key: string,
-    name: string
-  ): T {
+  copyValue(variation: VariationSM, key: string, name: string): VariationSM {
     return {
       ...variation,
       id: key,

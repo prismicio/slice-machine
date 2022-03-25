@@ -3,12 +3,12 @@ import { MdAttachment } from "react-icons/md";
 
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
 import Form, { FormFields } from "@lib/models/common/widgets/Link/Form";
-import { LinkToMediaField } from "@lib/models/common/widgets/LinkToMedia/type";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const Meta = {
   icon: MdAttachment,
@@ -33,14 +33,21 @@ const schema = yup.object().shape({
   config: linkToMediaConfigSchema.optional(),
 });
 
-export const LinkToMediaWidget: Widget<LinkToMediaField, typeof schema> = {
+export const LinkToMediaWidget: Widget<Link, typeof schema> = {
   MockConfigForm,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   schema,
   Form,
-  create: (label: string) => new LinkToMediaField({ label }),
-  TYPE_NAME: FieldType.Link,
+  create: (label: string) => ({
+    type: WidgetTypes.Link,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+      select: "media",
+    },
+  }),
+  TYPE_NAME: WidgetTypes.Link,
   CUSTOM_NAME: "LinkToMedia",
 };

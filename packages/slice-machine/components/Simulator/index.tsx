@@ -32,8 +32,7 @@ export default function Simulator() {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Tracker.get().trackOpenSliceSimulator(framework, version);
+    void Tracker.get().trackOpenSliceSimulator(framework, version);
   }, []);
 
   const [state, setState] = useState({ size: Size.FULL });
@@ -47,14 +46,14 @@ export default function Simulator() {
   }
 
   const sliceView = useMemo(
-    () => [{ sliceID: Model.infos.model.id, variationID: variation.id }],
-    [Model.infos.model.id, variation.id]
+    () => [{ sliceID: Model.model.id, variationID: variation.id }],
+    [Model.model.id, variation.id]
   );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
-        title={Model.infos.sliceName}
+        title={Model.model.name}
         Model={Model}
         variation={variation}
         handleScreenSizeChange={handleScreenSizeChange}

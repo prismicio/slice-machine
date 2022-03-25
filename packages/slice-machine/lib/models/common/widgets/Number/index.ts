@@ -2,9 +2,9 @@ import { AiOutlineFieldNumber } from "react-icons/ai";
 import { createDefaultWidgetValues } from "../../../../utils";
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { NumberField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** {
     "type" : "Number",
@@ -15,7 +15,7 @@ import { FieldType } from "../../CustomType/fields";
   } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Number);
+const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Number);
 
 const Meta = {
   icon: AiOutlineFieldNumber,
@@ -23,12 +23,18 @@ const Meta = {
   description: "Numbers",
 };
 
-export const NumberWidget: Widget<NumberField, typeof schema> = {
-  create: (label: string) => new NumberField({ label }),
+export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.Number,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+    },
+  }),
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: FieldType.Number,
+  TYPE_NAME: WidgetTypes.Number,
   schema,
   Meta,
 };

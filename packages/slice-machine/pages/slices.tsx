@@ -122,8 +122,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                   }}
                 >
                   <EmptyState
-                    title={"Slices"}
+                    title={"What are Slices?"}
                     onCreateNew={openCreateSliceModal}
+                    isLoading={isCreatingSlice}
                     buttonText={"Create one"}
                     documentationComponent={
                       <>
@@ -178,7 +179,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                       <Grid
                         elems={components.map(([e]) => e)}
                         defineElementKey={(slice: SliceState) =>
-                          slice.infos.sliceName
+                          slice.model.name
                         }
                         renderElem={(slice: SliceState) => {
                           return SharedSlice.render({

@@ -4,10 +4,9 @@ import { FiLink2 } from "react-icons/fi";
 
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { FieldType } from "../../CustomType/fields";
-
-import { LinkField } from "./type";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /**
 * {
@@ -90,13 +89,19 @@ const schema = yup.object().shape({
   config: linkConfigSchema.optional(),
 });
 
-export const LinkWidget: Widget<LinkField, typeof schema> = {
+export const LinkWidget: Widget<Link, typeof schema> = {
   MockConfigForm,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   schema,
   Form,
-  create: (label: string) => new LinkField({ label }),
-  TYPE_NAME: FieldType.Link,
+  create: (label: string) => ({
+    type: WidgetTypes.Link,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+    },
+  }),
+  TYPE_NAME: WidgetTypes.Link,
 };
