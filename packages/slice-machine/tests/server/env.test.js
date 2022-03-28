@@ -86,7 +86,10 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://test.wroom.io/api/v2" }`,
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://test.wroom.io/api/v2",
+            framework: Models.Frameworks.vanillajs,
+          }),
           "package.json": "{}",
           ".storybook/main.js": `import { getStoriesPaths } from '...'`,
         },
@@ -104,7 +107,10 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.wroom.io/api/v2",
+            framework: "next",
+          }),
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
         },
@@ -120,7 +126,10 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.wroom.io/api/v2",
+            framework: "none",
+          }),
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
         },
@@ -136,7 +145,10 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2" }`,
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.wroom.io/api/v2",
+            framework: "next",
+          }),
           "package.json": "{}",
           "nuxt.config.js": `stories: [".slicemachine/assets"]`,
           ".slicemachine/mock-config.json": `{ "field": "value" }`,
@@ -156,14 +168,17 @@ describe("getEnv", () => {
    none: null
 
    */
-  test("it finds the right framework in package.json", async () => {
+  test("it finds the right framework in sm.json", async () => {
     for await (const framework of Models.SupportedFrameworks) {
       fs.reset();
       fs.use(
         Volume.fromJSON(
           {
-            "sm.json": `{ "apiEndpoint": "https://api-1.wroom.io/api/v2", "storybook": "localhost:6666" }`,
-            "package.json": `{ "scripts": { "storybook": "start-storybook" }, "dependencies": { "${framework}": "1.1.0" } }`,
+            "sm.json": JSON.stringify({
+              apiEndpoint: "https://api-1.wroom.io/api/v2",
+              framework: framework,
+            }),
+            "package.json": `{}`,
             "nuxt.config.js": `stories: [".slicemachine/assets"]`,
             ".slicemachine/mock-config.json": `{ "field": "value" }`,
           },
@@ -194,7 +209,7 @@ describe("getEnv", () => {
     expect(env.framework).toEqual(key);
   });
 
-  test("it defaults to vanilla framework if not found in manifest", async () => {
+  test("when framework is not found in manifest, it writes an error to the console and throws the error", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -208,8 +223,16 @@ describe("getEnv", () => {
       )
     );
 
-    const { env } = await getEnv(TMP);
-    expect(env.framework).toEqual("vanillajs");
+    const message =
+      'Property "framework" must be one of "none", "nuxt", "previousNuxt", "next", "gatsby", "vue", "react", "svelte", "vanillajs", "previousNext".';
+
+    const errorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    expect(() => getEnv(TMP)).rejects.toThrow(message);
+
+    expect(errorSpy).toHaveBeenCalledWith(message);
   });
 
   test("it should take the auth from .prismic and base from sm.json", async () => {
@@ -217,7 +240,10 @@ describe("getEnv", () => {
     fs.use(
       Volume.fromJSON(
         {
-          "sm.json": '{"apiEndpoint": "https://api-1.wroom.io/api/v2"}',
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.wroom.io/api/v2",
+            framework: "next",
+          }),
           "package.json": "{}",
         },
         TMP

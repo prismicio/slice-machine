@@ -23,6 +23,7 @@ export enum ManifestState {
   MissingEndpoint = "MissingEndpoint",
   InvalidEndpoint = "InvalidEndpoint",
   InvalidJson = "InvalidJson",
+  InvalidFramework = "InvalidFramework",
 }
 
 const Messages = {
@@ -33,6 +34,9 @@ const Messages = {
   [ManifestState.InvalidEndpoint]:
     'Property "apiEndpoint" is invalid (./sm.json).',
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
+  [ManifestState.InvalidFramework]: `Property "framework" must be one of "${Object.values(
+    Models.Frameworks
+  ).join('", "')}".`,
 };
 
 export function extractRepo(parsedRepo: ParseResult): string | undefined {
@@ -47,6 +51,10 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
     default:
       return;
   }
+}
+
+function validateFramework(framework?: string): boolean {
+  return framework && framework in Models.Frameworks ? true : false;
 }
 
 function validateEndpoint(endpoint: string, parsedRepo: ParseResult): boolean {
@@ -98,6 +106,17 @@ function validate(manifest: Models.Manifest): ManifestInfo {
       content: null,
     };
   }
+
+  const validFramework = validateFramework(manifest.framework);
+
+  if (!validFramework) {
+    return {
+      state: ManifestState.InvalidFramework,
+      message: Messages[ManifestState.InvalidFramework],
+      content: null,
+    };
+  }
+
   return {
     state: ManifestState.Valid,
     message: Messages[ManifestState.Valid],
