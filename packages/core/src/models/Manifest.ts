@@ -7,7 +7,8 @@ class ApiEndPointType extends t.Type<string> {
       "apiEndpoint",
       (input: unknown): input is string => typeof input === "string",
       (input, context) => {
-        if (typeof input !== "string") return t.failure(input, context);
+        if (typeof input !== "string")
+          return t.failure(input, context, "apiEndpoint should be a string");
         const regx = new RegExp(
           "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test)/api/v2/?$",
           "gi"
@@ -33,10 +34,10 @@ export const Manifest = t.intersection([
     apiEndpoint,
   }),
   t.partial({
+    framework: FrameworksC,
     storybook: t.string,
     localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),
-    framework: FrameworksC,
     chromaticAppId: t.string,
     _latest: t.string,
     tracking: t.boolean,
