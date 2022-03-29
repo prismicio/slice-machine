@@ -224,7 +224,7 @@ describe("getEnv", () => {
     );
 
     const message =
-      'Property "framework" must be one of "none", "nuxt", "previousNuxt", "next", "gatsby", "vue", "react", "svelte", "vanillajs", "previousNext".';
+      '[sm.json] Expecting "none" | "nuxt" | "previousNuxt" | "next" | "gatsby" | "vue" | "react" | "svelte" | "vanillajs" | "previousNext" at 0.framework but instead got: undefined';
 
     const errorSpy = jest
       .spyOn(console, "error")
@@ -232,7 +232,7 @@ describe("getEnv", () => {
 
     expect(() => getEnv(TMP)).rejects.toThrow(message);
 
-    expect(errorSpy).toHaveBeenCalledWith(message);
+    expect(errorSpy).toHaveBeenLastCalledWith(message);
   });
 
   test("it should take the auth from .prismic and base from sm.json", async () => {

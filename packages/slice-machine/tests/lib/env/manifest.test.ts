@@ -27,15 +27,26 @@ describe("lib/env/manifest", () => {
       })
     );
 
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementationOnce(() => undefined);
-
     const result = handleManifest(os.tmpdir());
 
     expect(result.content).toBeNull();
-    expect(result.state).toEqual("InvalidFramework");
-    expect(result.message).toContain('Property "framework" must be one of ');
-    expect(errorSpy).toHaveBeenCalled();
+    expect(result.state).toEqual("InvalidJson");
+    expect(result.message).toEqual(
+      '[sm.json] Expecting "none" | "nuxt" | "previousNuxt" | "next" | "gatsby" | "vue" | "react" | "svelte" | "vanillajs" | "previousNext" at 0.framework but instead got: undefined'
+    );
   });
+
+  // test("loads of errors", () => {
+  //   jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
+  //   jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
+  //     JSON.stringify({
+  //       apiEndpoint: "https://example.io/api/v2",
+  //       framework: "fgoo"
+  //     })
+  //   );
+
+  //   const result = handleManifest(os.tmpdir());
+
+  //   expect(result.content).toBeNull();
+  // })
 });
