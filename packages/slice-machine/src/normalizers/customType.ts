@@ -21,7 +21,14 @@ const normalizeCustomTypes = (
     customTypes: Record<string, CustomType<ObjectTabs>>;
   },
   string[]
-> => normalize(customTypesData, [customTypeSchema]);
+> => {
+  if (!customTypesData.length)
+    return {
+      entities: { customTypes: {} },
+      result: [],
+    };
+  return normalize(customTypesData, [customTypeSchema]);
+};
 
 export const normalizeFrontendCustomType = (
   localCustomType: CustomType<ObjectTabs>,
