@@ -32,9 +32,9 @@ const apiEndpoint = new ApiEndPointType();
 export const Manifest = t.intersection([
   t.type({
     apiEndpoint,
+    framework: FrameworksC,
   }),
   t.partial({
-    framework: FrameworksC,
     storybook: t.string,
     localSliceSimulatorURL: t.string,
     libraries: t.array(t.string),
