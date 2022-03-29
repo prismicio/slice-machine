@@ -30,7 +30,8 @@ export function configureProject(
       getTheSliceMachineVersionInstalled(packageJson);
 
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
-    const manifestUpdated: Models.Manifest = {
+
+    const manifestUpdated: Partial<Models.Manifest> = {
       ...(manifestAlreadyExistWithContent
         ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
@@ -43,8 +44,7 @@ export function configureProject(
       ...(!tracking ? { tracking } : {}),
     };
 
-    if (!manifest.exists) NodeUtils.createManifest(cwd, manifestUpdated);
-    else NodeUtils.patchManifest(cwd, manifestUpdated);
+    NodeUtils.createOrUpdateManifest(cwd, manifestUpdated);
 
     // create the default slices folder if it doesn't exist.
     const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)

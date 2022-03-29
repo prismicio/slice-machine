@@ -47,6 +47,10 @@ jest.mock("@slicemachine/core/build/node-utils", () => {
       boolean,
       [{ cwd: string; data: Partial<Models.Manifest> }]
     >(),
+    createOrUpdateManifest: jest.fn<
+      void,
+      [{ cwd: string; data: Partial<Models.Manifest> }]
+    >(),
     addJsonPackageSmScript: jest.fn<boolean, [{ cwd: string }]>(),
     Files: {
       ...actualCore.Files,
@@ -79,6 +83,8 @@ describe("configure-project", () => {
   const retrieveManifestMock = NodeUtils.retrieveManifest as jest.Mock;
   const createManifestMock = NodeUtils.createManifest as jest.Mock;
   const patchManifestMock = NodeUtils.patchManifest as jest.Mock;
+  const createOrUpdateManifestMock =
+    NodeUtils.createOrUpdateManifest as jest.Mock;
   const addJsonPackageSmScriptMock =
     NodeUtils.addJsonPackageSmScript as jest.Mock;
 
@@ -87,6 +93,9 @@ describe("configure-project", () => {
   const mkdirMock = mkdir as jest.Mock;
 
   test("it should create a new manifest if it doesn't exist yet", () => {
+    // vol.fromJSON({
+    //   "package.json": JSON.stringify({ dependencies: {"react": "1.1.1"}})
+    // } ,fakeCwd)
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
@@ -96,7 +105,7 @@ describe("configure-project", () => {
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).toHaveBeenCalledWith("./", {
+    expect(createOrUpdateManifestMock).toHaveBeenCalledWith("./", {
       _latest: "0.0.41",
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       libraries: ["@/slices"],
@@ -120,7 +129,7 @@ describe("configure-project", () => {
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+    expect(createOrUpdateManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
       libraries: ["@/slices"],
@@ -145,7 +154,7 @@ describe("configure-project", () => {
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+    expect(createOrUpdateManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
       libraries: ["@/slices", "@/material/slices"],
@@ -171,41 +180,20 @@ describe("configure-project", () => {
     expect(failFn).toHaveBeenCalled();
   });
 
-  test("it should fail if create manifest throws", () => {
+  test("it should fail if create or update manifest throws", () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
     });
-    createManifestMock.mockImplementation(() => {
+    createOrUpdateManifestMock.mockImplementation(() => {
       throw new Error("fake error to test the catch");
     });
 
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).toBeCalled();
+    expect(createOrUpdateManifestMock).toBeCalled();
     expect(patchManifestMock).not.toBeCalled();
-
-    expect(successFn).not.toHaveBeenCalled();
-    expect(failFn).toHaveBeenCalled();
-  });
-
-  test("it should fail if patch manifest throws", () => {
-    retrieveManifestMock.mockReturnValue({
-      exists: true,
-      content: {
-        framework: Models.Frameworks.react,
-      },
-    });
-    patchManifestMock.mockImplementation(() => {
-      throw new Error("fake error to test the catch");
-    });
-
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
-
-    expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toBeCalled();
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
@@ -216,7 +204,7 @@ describe("configure-project", () => {
       exists: false,
       content: null,
     });
-    createManifestMock.mockReturnValue(null); // we don't care about this void.
+    createOrUpdateManifestMock.mockReturnValue(null); // we don't care about this void.
     addJsonPackageSmScriptMock.mockImplementation(() => {
       throw new Error("fake error to test the catch");
     });
@@ -224,7 +212,7 @@ describe("configure-project", () => {
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).toBeCalled();
+    expect(createOrUpdateManifestMock).toBeCalled();
     expect(patchManifestMock).not.toBeCalled();
 
     expect(successFn).not.toHaveBeenCalled();
