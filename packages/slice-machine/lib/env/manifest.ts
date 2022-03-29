@@ -9,6 +9,7 @@ import {
 import { Models } from "@slicemachine/core";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
+import { formatValidationErrors } from "io-ts-reporters";
 
 export interface ManifestInfo {
   state: ManifestState;
@@ -144,8 +145,12 @@ function handleManifest(cwd: string): ManifestInfo {
       Models.Manifest.decode(json),
       fold(
         // failure handler
-        () => {
-          throw new Error();
+        (errors) => {
+          const messages = formatValidationErrors(errors);
+          messages.forEach((error) => {
+            console.error("[sm.json] " + error);
+          });
+          return validate(json as Models.Manifest);
         },
         // success handler
         (manifest) => validate(manifest)

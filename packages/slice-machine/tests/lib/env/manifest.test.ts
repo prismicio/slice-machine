@@ -27,10 +27,15 @@ describe("lib/env/manifest", () => {
       })
     );
 
+    const errorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementationOnce(() => undefined);
+
     const result = handleManifest(os.tmpdir());
 
     expect(result.content).toBeNull();
     expect(result.state).toEqual("InvalidFramework");
     expect(result.message).toContain('Property "framework" must be one of ');
+    expect(errorSpy).toHaveBeenCalled();
   });
 });
