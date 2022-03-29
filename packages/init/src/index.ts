@@ -48,6 +48,8 @@ async function init() {
     Tracker.get().identifyUser(user.profile.shortId);
   }
 
+  Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
+
   // retrieve tokens for api calls
   const config = Prismic.PrismicSharedConfigManager.get();
 
