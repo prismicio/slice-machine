@@ -37,6 +37,7 @@
     "start-slicemachine": "bin/start.js"
   },
   "dependencies": {
+    "@babel/register": "^7.17.7",
     "@faker-js/faker": "^6.0.0",
     "@slicemachine/core": "1.1.5-alpha.12",
     "@svgr/webpack": "^5.4.0",
@@ -85,7 +86,6 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@babel/register": "^7.17.7",
     "@prismicio/slice-simulator-com": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",
