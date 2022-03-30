@@ -41,6 +41,8 @@ jobs:
         run: lerna run lint
       - name: Audit
         run: lerna run audit
+      - name: Install prod dependencies only
+        run: lerna clean --yes && lerna bootstrap -- --production
       - name: Build slice machine init
         working-directory: ./packages/init
         run: npm run build
