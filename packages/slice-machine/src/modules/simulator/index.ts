@@ -24,7 +24,7 @@ import {
   getFramework,
   selectIsSimulatorAvailableForFramework,
 } from "@src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
@@ -275,12 +275,12 @@ function* checkSetupSaga(
 }
 
 export function* failCheckSetupSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const isPreviewAvailableForFramework: boolean = yield select(
+  const framework = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const isPreviewAvailableForFramework = (yield select(
     selectIsSimulatorAvailableForFramework
-  );
+  )) as ReturnType<typeof selectIsSimulatorAvailableForFramework>;
 
   if (!isPreviewAvailableForFramework) {
     return;
@@ -296,13 +296,14 @@ export function* failCheckSetupSaga() {
 }
 
 function* trackOpenSetupDrawerSaga() {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const framework: Frameworks = yield select(getFramework);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const version: string = yield select(getCurrentVersion);
+  const framework: Frameworks = (yield select(getFramework)) as ReturnType<
+    typeof getFramework
+  >;
+  const version: string = (yield select(getCurrentVersion)) as ReturnType<
+    typeof getCurrentVersion
+  >;
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  Tracker.get().trackSliceSimulatorSetup(framework, version);
+  void Tracker.get().trackSliceSimulatorSetup(framework, version);
 }
 
 // Saga watchers

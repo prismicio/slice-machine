@@ -1,6 +1,7 @@
-import { Utils } from "@slicemachine/core";
 import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import * as inquirer from "inquirer";
+import { logs } from "../utils";
 
 export type FrameworkResult = {
   value: Models.Frameworks;
@@ -10,7 +11,7 @@ export type FrameworkResult = {
 export async function promptForFramework(): Promise<FrameworkResult> {
   const choices = Models.SupportedFrameworks.map((framework) => {
     return {
-      name: Utils.Framework.fancyName(framework),
+      name: NodeUtils.Framework.fancyName(framework),
       value: framework,
     };
   });
@@ -34,18 +35,18 @@ export async function promptForFramework(): Promise<FrameworkResult> {
 }
 
 export async function detectFramework(cwd: string): Promise<FrameworkResult> {
-  const failMessage = `Please run ${Utils.bold(
+  const failMessage = `Please run ${logs.bold(
     "npx @slicemachine/init"
   )} in a Nuxt or Next.js project`;
 
-  const spinner = Utils.spinner(
+  const spinner = logs.spinner(
     "Detecting framework to install correct dependencies"
   );
 
   spinner.start();
 
   try {
-    const maybeFramework = Utils.Framework.defineFramework({
+    const maybeFramework = NodeUtils.Framework.defineFramework({
       cwd,
       supportedFrameworks: Object.values(Models.Frameworks),
     });
@@ -53,19 +54,19 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     spinner.stop();
 
     if (!maybeFramework || maybeFramework === Models.Frameworks.vanillajs) {
-      Utils.writeError("Framework not detected");
+      logs.writeError("Framework not detected");
       return await promptForFramework();
     }
 
-    const nameToPrint = Utils.Framework.fancyName(maybeFramework);
+    const nameToPrint = NodeUtils.Framework.fancyName(maybeFramework);
 
-    if (!Utils.Framework.isFrameworkSupported(maybeFramework)) {
-      Utils.writeError(`${nameToPrint} is currently not supported`);
+    if (!NodeUtils.Framework.isFrameworkSupported(maybeFramework)) {
+      logs.writeError(`${nameToPrint} is currently not supported`);
       console.log(failMessage);
       process.exit(1);
     }
 
-    Utils.writeCheck(`${nameToPrint} detected`);
+    logs.writeCheck(`${nameToPrint} detected`);
 
     return {
       value: maybeFramework,
@@ -75,7 +76,7 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     spinner.fail("package.json not found");
 
     if (error instanceof Error && error.message) {
-      Utils.writeError(error.message);
+      logs.writeError(error.message);
     } else {
       console.log(failMessage);
     }

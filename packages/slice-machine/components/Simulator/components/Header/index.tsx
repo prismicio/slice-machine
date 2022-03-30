@@ -1,6 +1,6 @@
 import router from "next/router";
 import { Box, Text, Flex } from "theme-ui";
-import * as Models from "@slicemachine/core/build/src/models";
+import * as Models from "@slicemachine/core/build/models";
 
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
 import * as Links from "@lib/builders/SliceBuilder/links";
@@ -23,12 +23,12 @@ const redirect = (
   isSimulator?: boolean
 ): void => {
   if (!variation) {
-    void router.push(`/${model.href}/${model.infos.sliceName}`);
+    void router.push(`/${model.href}/${model.model.name}`);
     return;
   }
   const params = Links.variation({
     lib: model.href,
-    sliceName: model.infos.sliceName,
+    sliceName: model.model.name,
     variationId: variation?.id,
     isSimulator,
   });

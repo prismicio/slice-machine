@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { Variation } from "../../../lib/models/common/Variation";
 import equal from "fast-deep-equal";
 import SliceState from "../../../lib/models/ui/SliceState";
@@ -39,14 +39,6 @@ export function reducer(
           __status: LibStatus.Synced,
           initialScreenshotUrls: prevState.screenshotUrls,
           remoteVariations: prevState.variations,
-        };
-      case SliceActions.UpdateMetadata:
-        return {
-          ...prevState,
-          infos: {
-            ...prevState.infos,
-            ...(action.payload as Models.ComponentMetadata),
-          },
         };
       case SliceActions.CopyVariation: {
         const { key, name, copied } = action.payload as {

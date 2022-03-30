@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import React, { useEffect, useState } from "react";
 import { Popover } from "react-tiny-popover";
 

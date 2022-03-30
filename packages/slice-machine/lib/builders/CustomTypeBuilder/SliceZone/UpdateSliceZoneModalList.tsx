@@ -17,7 +17,7 @@ const UpdateSliceZoneModalList: React.FC<{
       <Grid
         gridTemplateMinPx="200px"
         elems={availableSlices}
-        defineElementKey={(slice: SliceState) => slice.infos.sliceName}
+        defineElementKey={(slice: SliceState) => slice.model.name}
         renderElem={(slice: SliceState) => {
           return SharedSlice.render({
             bordered: true,
@@ -38,17 +38,17 @@ const UpdateSliceZoneModalList: React.FC<{
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     const isInSliceZone = values.sliceKeys.includes(
-                      slice.infos.meta.id
+                      slice.model.id
                     );
                     if (isInSliceZone) {
                       return arrayHelpers.remove(
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                        values.sliceKeys.indexOf(slice.infos.meta.id)
+                        values.sliceKeys.indexOf(slice.model.id)
                       );
                     }
-                    arrayHelpers.push(slice.infos.meta.id);
+                    arrayHelpers.push(slice.model.id);
                   }}
-                  key={`${slice.from}-${slice.infos.sliceName}`}
+                  key={`${slice.from}-${slice.model.name}`}
                 >
                   {children}
                 </div>
@@ -56,9 +56,7 @@ const UpdateSliceZoneModalList: React.FC<{
             },
             CustomStatus: ({ slice }: { slice: SliceState }) => {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-              const isInSliceZone = values.sliceKeys.includes(
-                slice.infos.meta.id
-              );
+              const isInSliceZone = values.sliceKeys.includes(slice.model.id);
               return isInSliceZone ? (
                 <Checkbox value="true" defaultChecked />
               ) : (

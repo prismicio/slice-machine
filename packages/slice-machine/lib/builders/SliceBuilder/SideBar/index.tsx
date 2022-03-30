@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { Box, Button, Spinner, Text } from "theme-ui";
 import Link from "next/link";
 
@@ -129,7 +129,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
           href={createStorybookUrl({
             storybook: storybookUrl,
             libraryName: Model.from,
-            sliceName: Model.infos.sliceName,
+            sliceName: Model.model.name,
             variationId: variation.id,
           })}
         >

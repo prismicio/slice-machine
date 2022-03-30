@@ -1,10 +1,11 @@
 import ServerAnalytics from "analytics-node";
 import { v4 as uuidv4 } from "uuid";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Models } from "@slicemachine/core";
 
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
   InitStart = "SliceMachine Init Start",
+  InitIdentify = "SliceMachine Init Identify",
   InitDone = "SliceMachine Init Done",
 }
 
@@ -90,11 +91,15 @@ export class InitTracker {
     this._trackEvent(EventType.DownloadLibrary, { library });
   }
 
-  trackInitStart(): void {
-    this._trackEvent(EventType.InitStart);
+  trackInitIdentify(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
   }
 
-  trackInitDone(framework: Frameworks, repoDomain: string): void {
+  trackInitStart(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitStart, { repo: repoDomain });
+  }
+
+  trackInitDone(framework: Models.Frameworks, repoDomain: string): void {
     this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
   }
 }

@@ -35,7 +35,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
       close={close}
       onSubmit={(values: SliceZoneFormValues) => onSubmit(values)}
       initialValues={{
-        sliceKeys: slicesInSliceZone.map((slice) => slice.infos.meta.id),
+        sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}
       content={{
         title: "Update Slice Zone",

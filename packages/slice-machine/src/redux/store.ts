@@ -24,7 +24,7 @@ declare const window: {
 
 export default function configureStore(
   preloadedState: Partial<SliceMachineStoreType> = {}
-): { store: Store; persistor: Persistor } {
+): { store: Store<SliceMachineStoreType>; persistor: Persistor } {
   const middlewares = [sagaMiddleware, routerMiddleware];
   const enhancers = [applyMiddleware(...middlewares)];
 

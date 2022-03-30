@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { Field } from "../../../lib/models/common/CustomType/fields";
 
 import {
@@ -30,8 +30,6 @@ export default class SliceStore implements Store {
   };
   save = saveSlice(this.dispatch);
   push = pushSlice(this.dispatch);
-  updateMetadata = (value: Models.ComponentMetadata): void =>
-    this.dispatch({ type: SliceActions.UpdateMetadata, payload: value });
   copyVariation = (
     key: string,
     name: string,

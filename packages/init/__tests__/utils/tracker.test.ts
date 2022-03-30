@@ -3,7 +3,7 @@ import ServerAnalytics from "analytics-node";
 import "uuid";
 
 import TrackerSingleton, { InitTracker } from "../../src/utils/tracker";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Models } from "@slicemachine/core";
 
 jest.mock("analytics-node");
 jest.mock("uuid", () => ({
@@ -84,7 +84,7 @@ describe("InitTracker", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackInitStart();
+    smTracker.trackInitStart(undefined);
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
@@ -106,7 +106,7 @@ describe("InitTracker", () => {
     });
 
     // Logged in call
-    smTracker.trackInitStart();
+    smTracker.trackInitStart("repoName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
@@ -114,7 +114,49 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Start",
+      properties: {
+        repo: "repoName",
+      },
+    });
+  });
+
+  test("should send a track init identify event", () => {
+    const smTracker = new InitTracker();
+    smTracker.initialize(dumpSegmentKey);
+    // Anonymous call
+    smTracker.trackInitIdentify(undefined);
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+      anonymousId: "uuid",
+      event: "SliceMachine Init Identify",
       properties: {},
+    });
+
+    smTracker.identifyUser("userId");
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+      anonymousId: "uuid",
+      userId: "userId",
+    });
+
+    // Logged in call
+    smTracker.trackInitIdentify("repoName");
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+      userId: "userId",
+      event: "SliceMachine Init Identify",
+      properties: {
+        repo: "repoName",
+      },
     });
   });
 
@@ -122,7 +164,7 @@ describe("InitTracker", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackInitDone(Frameworks.next, "repoName");
+    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
@@ -130,7 +172,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       anonymousId: "uuid",
       event: "SliceMachine Init Done",
-      properties: { framework: Frameworks.next, repo: "repoName" },
+      properties: { framework: Models.Frameworks.next, repo: "repoName" },
     });
 
     smTracker.identifyUser("userId");
@@ -144,7 +186,7 @@ describe("InitTracker", () => {
     });
 
     // Logged in call
-    smTracker.trackInitDone(Frameworks.next, "repoName");
+    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
@@ -152,7 +194,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Done",
-      properties: { framework: Frameworks.next, repo: "repoName" },
+      properties: { framework: Models.Frameworks.next, repo: "repoName" },
     });
   });
 
@@ -160,8 +202,9 @@ describe("InitTracker", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey, false);
     smTracker.identifyUser("userId");
-    smTracker.trackInitDone(Frameworks.next, "repoName");
-    smTracker.trackInitStart();
+    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
+    smTracker.trackInitStart("repoName");
+    smTracker.trackInitIdentify("repoName");
     smTracker.trackDownloadLibrary("libraryName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method

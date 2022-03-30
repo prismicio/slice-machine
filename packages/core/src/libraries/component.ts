@@ -1,29 +1,19 @@
 import path from "path";
 import * as t from "io-ts";
-import {
-  ComponentInfo,
-  ComponentMetadata,
-  Screenshot,
-} from "../models/Library";
+import { getOrElseW } from "fp-ts/lib/Either";
 
-import { pascalize } from "../utils/str";
+import {
+  Slice,
+  AsObject,
+  Screenshot,
+  ComponentInfo,
+  VariationAsObject,
+} from "../models";
 
 import { resolvePathsToScreenshot } from "./screenshot";
-import Files from "../utils/files";
+import Files from "../node-utils/files";
 import { resolvePathsToMock } from "./mocks";
-import { getOrElseW } from "fp-ts/lib/Either";
-import { Slice, SliceAsObject } from "../models/Slice";
-import { VariationAsObject, AsObject } from "../models/Variation";
-
 import Errors from "../utils/errors";
-
-function getMeta(model: SliceAsObject): ComponentMetadata {
-  return {
-    id: model.id,
-    name: model.name,
-    description: model.description,
-  };
-}
 
 /** take a path to slice and return its name  */
 function getComponentName(slicePath: string): string | undefined {
@@ -102,10 +92,10 @@ function fromJsonFile<T>(
 function getFileInfoFromPath(
   slicePath: string,
   componentName: string
-): { fileName: string | null; extension: string | null; isDirectory: boolean } {
+): { fileName: string | null; extension: string | null } {
   const isDirectory = Files.isDirectory(slicePath);
   if (!isDirectory) {
-    return { ...splitExtension(slicePath), isDirectory: false };
+    return { ...splitExtension(slicePath) };
   }
 
   const files = Files.readDirectory(slicePath);
@@ -114,9 +104,9 @@ function getFileInfoFromPath(
   if (match) {
     const maybeFileComponent = findComponentFile(files, componentName);
     if (maybeFileComponent) {
-      return { ...splitExtension(maybeFileComponent), isDirectory: true };
+      return { ...splitExtension(maybeFileComponent) };
     }
-    return { fileName: null, extension: null, isDirectory: true };
+    return { fileName: null, extension: null };
   }
   throw new Error(
     `[slice-machine] Could not find module file for component "${componentName}" at path "${slicePath}"`
@@ -149,7 +139,7 @@ export function getComponentInfo(
     return;
   }
 
-  const { fileName, extension, isDirectory } = fileInfo;
+  const { fileName, extension } = fileInfo;
 
   const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
     getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
@@ -188,9 +178,6 @@ export function getComponentInfo(
       {}
     );
 
-  const nameConflict =
-    sliceName !== pascalize(model.id) ? { sliceName, id: model.id } : null;
-
   /* This illustrates the requirement for apps to pass paths to mocks */
   const maybeMock = resolvePathsToMock({
     paths: assetsPaths,
@@ -199,14 +186,10 @@ export function getComponentInfo(
   });
 
   return {
-    sliceName,
     fileName,
-    isDirectory,
     extension,
     model,
-    meta: getMeta(model),
     mock: maybeMock?.value,
-    nameConflict,
     screenshotPaths,
   };
 }

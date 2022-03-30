@@ -1,5 +1,6 @@
-import { Utils, Auth, Models } from "@slicemachine/core";
+import { Models } from "@slicemachine/core";
 import { validateSessionAndGetProfile } from "../utils/communication";
+import { logs, Auth } from "../utils";
 
 export async function loginOrBypass(base: string): Promise<{
   info: Models.UserInfo;
@@ -10,7 +11,7 @@ export async function loginOrBypass(base: string): Promise<{
   );
   if (user) {
     const email = user.info.email;
-    Utils.writeCheck(`Logged in as ${Utils.bold(email)}`);
+    logs.writeCheck(`Logged in as ${logs.bold(email)}`);
     return user;
   } else {
     await Auth.login(base);

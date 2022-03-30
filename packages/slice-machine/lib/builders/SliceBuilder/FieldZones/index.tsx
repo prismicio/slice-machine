@@ -6,7 +6,7 @@ import { transformKeyAccessor } from "@utils/str";
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
 import type { Models } from "@slicemachine/core";
-import { WidgetsArea } from "@slicemachine/core/build/src/models/Variation";
+import { WidgetsArea } from "@slicemachine/core/build/models/Variation";
 
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
@@ -118,7 +118,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   return (
     <>
       <Zone
-        Model={Model}
+        mockConfig={Model.mockConfig}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -144,7 +144,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Box mt={4} />
       <Zone
         isRepeatable
-        Model={Model}
+        mockConfig={Model.mockConfig}
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}

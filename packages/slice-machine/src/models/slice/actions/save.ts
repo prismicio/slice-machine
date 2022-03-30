@@ -21,7 +21,7 @@ export default function save(
       params: {
         method: "POST",
         body: JSON.stringify({
-          sliceName: slice.infos.sliceName,
+          sliceName: slice.model.name,
           from: slice.from,
           model: {
             ...slice.model,

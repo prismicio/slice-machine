@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import { GeneratedPaths } from "@lib/models/paths";

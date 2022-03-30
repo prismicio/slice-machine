@@ -7,7 +7,6 @@ export type ComponentMocks = t.TypeOf<typeof ComponentMocks>;
 
 export const ComponentMeta = t.type({
   fileName: t.union([t.string, t.null]),
-  isDirectory: t.boolean,
   extension: t.union([t.string, t.null]),
 });
 export type ComponentMeta = t.TypeOf<typeof ComponentMeta>;
@@ -39,7 +38,7 @@ export const Component = t.intersection([
 ]);
 export type Component = t.TypeOf<typeof Component>;
 
-// dictionnary of componentId -> component
+// dictionary of componentId -> component
 export const Library = t.type({
   name: t.union([t.string, t.undefined]),
   version: t.union([t.string, t.undefined]),
@@ -47,6 +46,6 @@ export const Library = t.type({
 });
 export type Library = t.TypeOf<typeof Library>;
 
-// dictionnary of libraryId -> components
+// dictionary of libraryId -> components
 export const Libraries = t.record(t.string, Library);
 export type Libraries = t.TypeOf<typeof Libraries>;

@@ -5,7 +5,7 @@ import {
   resolvePathsToScreenshot,
   createPathToScreenshot,
   Extensions,
-} from "@slicemachine/core/build/src/libraries/screenshot";
+} from "@slicemachine/core/build/libraries/screenshot";
 import {
   createScreenshotUI,
   ScreenshotUI,

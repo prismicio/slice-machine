@@ -1,5 +1,5 @@
-import { FileSystem, Utils, Models } from "@slicemachine/core";
-
+import { Models } from "@slicemachine/core";
+import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { Migration } from "../../migrate";
 
 // Migration to write previousNext or previousNuxt into the sm.json
@@ -8,10 +8,10 @@ const migration: Migration = {
   // eslint-disable-next-line @typescript-eslint/require-await
   main: async function main({ cwd }): Promise<void> {
     try {
-      const manifest = FileSystem.retrieveManifest(cwd);
+      const manifest = NodeUtils.retrieveManifest(cwd);
       if (!manifest.exists || !manifest.content) return;
 
-      const framework = Utils.Framework.defineFramework({ cwd });
+      const framework = NodeUtils.Framework.defineFramework({ cwd });
 
       if (
         framework !== Models.Frameworks.next &&
@@ -30,7 +30,7 @@ const migration: Migration = {
         framework: frameworkToSet,
       };
 
-      FileSystem.patchManifest(cwd, patchedManifest);
+      NodeUtils.patchManifest(cwd, patchedManifest);
     } catch (e) {
       console.log(e);
     }

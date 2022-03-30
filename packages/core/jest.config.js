@@ -11,7 +11,6 @@ module.exports = {
   coverageDirectory: "coverage",
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
-    "^.+\\.js$": "babel-jest",
   },
   transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
 };

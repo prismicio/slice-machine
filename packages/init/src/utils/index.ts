@@ -1,5 +1,7 @@
 import util from "util";
 import { exec } from "child_process";
+export * as logs from "./logs";
+export { Auth } from "./auth";
 
 export function findArgument(args: string[], name: string): string | undefined {
   const flagIndex: number = args.indexOf(`--${name}`);

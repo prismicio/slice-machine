@@ -1,9 +1,8 @@
-import type Models from "@slicemachine/core/build/src/models";
+import type Models from "@slicemachine/core/build/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { FileSystem, Libraries, Utils } from "@slicemachine/core";
 import probe from "probe-image-size";
-const { handleLibraryPath } = Libraries;
-const { LibrariesStatePath } = FileSystem;
+import { handleLibraryPath } from "@slicemachine/core/build/libraries";
+import { LibrariesStatePath, Files } from "@slicemachine/core/build/node-utils";
 
 const DEFAULT_IMAGE_DIMENSIONS = {
   width: undefined,
@@ -16,7 +15,7 @@ export function generateState(env: BackendEnvironment): void {
     .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
 
   const state = formatLibraries(libraries);
-  Utils.Files.write(LibrariesStatePath(env.cwd), state);
+  Files.write(LibrariesStatePath(env.cwd), state);
 }
 
 export function formatLibraries(
@@ -48,10 +47,9 @@ export function formatLibrary(
 }
 
 function getImageDimensions(imagePath: string | undefined) {
-  if (!imagePath || !Utils.Files.exists(imagePath))
-    return DEFAULT_IMAGE_DIMENSIONS;
+  if (!imagePath || !Files.exists(imagePath)) return DEFAULT_IMAGE_DIMENSIONS;
 
-  const imageBuffer = Utils.Files.readBuffer(imagePath);
+  const imageBuffer = Files.readBuffer(imagePath);
   const result = probe.sync(imageBuffer);
 
   if (!result) return DEFAULT_IMAGE_DIMENSIONS;
@@ -65,12 +63,10 @@ export function formatComponent(
   return {
     library: slice.from,
     id: slice.model.id,
-    name: slice.infos.meta.name,
-    description: slice.infos.meta.description,
+    name: slice.model.name,
+    description: slice.model.description,
     model: slice.model,
-    mocks: (
-      slice.infos.mock || []
-    ).reduce<Models.LibrariesState.ComponentMocks>(
+    mocks: (slice.mock || []).reduce<Models.LibrariesState.ComponentMocks>(
       (acc, variationMock) => ({
         ...acc,
         [variationMock.variation]: variationMock,
@@ -78,14 +74,13 @@ export function formatComponent(
       {}
     ),
     meta: {
-      fileName: slice.infos.fileName,
-      isDirectory: slice.infos.isDirectory,
-      extension: slice.infos.extension,
+      fileName: slice.fileName,
+      extension: slice.extension,
     },
-    screenshotPaths: !slice.infos.screenshotPaths
+    screenshotPaths: !slice.screenshotPaths
       ? {}
       : Object.entries(
-          slice.infos.screenshotPaths
+          slice.screenshotPaths
         ).reduce<Models.LibrariesState.ComponentScreenshots>(
           (acc, [variationId, screenshot]) => {
             return {

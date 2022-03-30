@@ -11,7 +11,7 @@ import TrackerSingleton, {
   ContinueOnboardingType,
   SMTracker,
 } from "@src/tracker";
-import { Frameworks } from "@slicemachine/core/build/src/models";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("@segment/analytics-next");
 
@@ -210,7 +210,7 @@ describe("SMTracker", () => {
     smTracker.initialize(dumpSegmentKey);
     await smTracker.groupLibraries([], dumpRepoKey, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
-    expect(NativeTrackerMocks.group).toHaveBeenCalledWith({
+    expect(NativeTrackerMocks.group).toHaveBeenCalledWith(dumpRepoKey, {
       repoName: dumpRepoKey,
       downloadedLibs: [],
       downloadedLibsCount: 0,

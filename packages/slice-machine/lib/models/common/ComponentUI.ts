@@ -1,4 +1,4 @@
-import * as Models from "@slicemachine/core/build/src/models";
+import * as Models from "@slicemachine/core/build/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
 
@@ -67,7 +67,7 @@ export const ComponentUI = {
     return {
       ...component,
       screenshotUrls: buildScreenshotUrls(
-        component.infos.screenshotPaths,
+        component.screenshotPaths,
         env.baseUrl
       ),
       __status: computeStatus(component, remoteSlices),
