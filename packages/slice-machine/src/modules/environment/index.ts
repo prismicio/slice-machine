@@ -8,8 +8,8 @@ import { simulatorIsSupported } from "@lib/utils";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
-import { SliceSM } from "@slicemachine/core/build/src/models";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { SliceSM } from "@slicemachine/core/build/models";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{

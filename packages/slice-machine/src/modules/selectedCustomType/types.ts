@@ -2,7 +2,7 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,
   TabField,
-} from "@slicemachine/core/build/src/models/CustomType";
+} from "@slicemachine/core/build/models/CustomType";
 
 export enum CustomTypeStatus {
   New = "NEW_CT",

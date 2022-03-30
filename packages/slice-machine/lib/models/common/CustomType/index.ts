@@ -1,6 +1,6 @@
 import { CustomTypeMockConfig } from "../MockConfig";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
-import { SlicesSM } from "@slicemachine/core/build/src/models/Slices";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 
 export interface SaveCustomTypeBody {
   model: CustomTypeSM;

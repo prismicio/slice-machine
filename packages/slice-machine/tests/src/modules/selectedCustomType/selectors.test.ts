@@ -6,7 +6,7 @@ import {
   selectIsCurrentCustomTypeHasPendingModifications,
 } from "@src/modules/selectedCustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import { CustomTypes } from "@slicemachine/core/build/src/models/CustomType";
+import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
 
 const model = CustomTypes.toSM(jsonModel as unknown as CustomType);

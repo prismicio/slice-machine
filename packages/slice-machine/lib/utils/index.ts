@@ -6,7 +6,7 @@ import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
-import { VariationSM } from "@slicemachine/core/build/src/models";
+import { VariationSM } from "@slicemachine/core/build/models";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {

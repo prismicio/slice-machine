@@ -90,8 +90,8 @@ export class InitTracker {
     this._trackEvent(EventType.DownloadLibrary, { library });
   }
 
-  trackInitStart(): void {
-    this._trackEvent(EventType.InitStart);
+  trackInitStart(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
   trackInitDone(framework: Models.Frameworks, repoDomain: string): void {

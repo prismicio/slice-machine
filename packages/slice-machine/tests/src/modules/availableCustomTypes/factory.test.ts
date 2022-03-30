@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 describe("[Custom types factory]", () => {
   describe("[createCustomType]", () => {

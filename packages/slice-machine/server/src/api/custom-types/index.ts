@@ -6,7 +6,7 @@ import { CustomTypesPaths } from "@lib/models/paths";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType/index";
+} from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { getOrElseW } from "fp-ts/lib/Either";
 import * as IO from "../io";
@@ -15,8 +15,8 @@ const handleMatch = (matches: string[]) => {
   return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsonCustomType: CustomType = Files.readJson(p);
-      return [...acc, CustomTypes.toSM(jsonCustomType)];
+      const smModel = IO.CustomType.readCustomType(p);
+      return [...acc, smModel];
     } catch (e) {
       return acc;
     }

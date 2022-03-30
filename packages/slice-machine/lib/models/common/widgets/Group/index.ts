@@ -3,7 +3,7 @@ import { DefaultFields } from "@lib/forms/defaults";
 import { MdPlaylistAdd } from "react-icons/md";
 import { Widget } from "../Widget";
 import CustomListItem from "./ListItem";
-import { GroupSM } from "@slicemachine/core/build/src/models/Group";
+import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const Meta = {

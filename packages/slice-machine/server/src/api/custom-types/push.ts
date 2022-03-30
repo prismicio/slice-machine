@@ -2,7 +2,6 @@ import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
 
 import { onError } from "../common/error";
-import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
@@ -14,7 +13,8 @@ import { RequestWithEnv } from "../http/common";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType/index";
+} from "@slicemachine/core/build/models/CustomType/index";
+import * as IO from "../io";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
@@ -77,7 +77,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   let model: CustomTypeSM;
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    model = CustomTypes.toSM(Files.readJson(modelPath));
+    model = IO.CustomType.readCustomType(modelPath);
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;

@@ -9,7 +9,7 @@ import { upload } from "../../../server/src/api/services/uploadScreenshotClient"
 import DefaultClient from "../../../lib/models/common/http/DefaultClient";
 import allFieldSliceObject from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
-import { Slices } from "@slicemachine/core/build/src/models/Slice";
+import { Slices } from "@slicemachine/core/build/models/Slice";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 const allFieldSliceModel = Slices.toSM(allFieldSliceObject);

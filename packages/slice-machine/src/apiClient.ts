@@ -5,7 +5,7 @@ import { SaveCustomTypeBody } from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
-import { CustomTypeSM } from "@slicemachine/core/build/src/models/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 const defaultAxiosConfig = {
   withCredentials: true,

@@ -10,7 +10,7 @@ import {
   renderSliceMock,
 } from "@prismicio/mocks";
 import { buildFieldsMockConfig } from "./LegacyMockConfig";
-import { Slices, SliceSM } from "@slicemachine/core/build/models";
+import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 
 function buildVariationMockConfig(
   model: Variation,

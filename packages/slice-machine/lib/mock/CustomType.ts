@@ -14,7 +14,7 @@ import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
 import {
   CustomTypes,
   CustomTypeSM,
-} from "@slicemachine/core/build/src/models/CustomType";
+} from "@slicemachine/core/build/models/CustomType";
 
 function buildDocumentMockConfig(
   model: CustomType,

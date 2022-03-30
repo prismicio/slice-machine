@@ -6,7 +6,7 @@ import LibraryState from "lib/models/ui/LibraryState";
 import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import { SliceMockConfig } from "lib/models/common/MockConfig";
-import { SliceSM } from "@slicemachine/core/build/src/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 export const LibrariesContext =
   React.createContext<ReadonlyArray<LibraryState> | null>(null);

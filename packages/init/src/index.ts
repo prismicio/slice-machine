@@ -28,7 +28,7 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitStart();
+  Tracker.get().trackInitStart(maybeRepositorySubdomain);
 
   console.log(
     logs.purple(

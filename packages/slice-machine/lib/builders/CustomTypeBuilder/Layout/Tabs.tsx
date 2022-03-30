@@ -29,7 +29,7 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
-import { TabSM } from "@slicemachine/core/build/src/models/CustomType";
+import { TabSM } from "@slicemachine/core/build/models/CustomType";
 
 enum ModalType {
   CREATE = "create",
