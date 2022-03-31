@@ -10,6 +10,7 @@ import { Flex as FlexGrid, Col } from "components/Flex";
 
 import { MockConfigKey } from "../../../../../consts";
 import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
+import { Patterns } from "@prismicio/mocks/lib/generators/widgets/nestable/RichText/RichTextMockConfig";
 
 const dataTip = `To generate mock content, we'll use the selected pattern.<br/>A pattern is an array of RichText options, repeated "block" times.`;
 
@@ -164,7 +165,7 @@ const Form = () => {
 const findValidPattern = (config) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const patternEntry = Object.entries(Patterns).find(([, pat]) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     pat.test(config)
   );
   if (patternEntry) {
