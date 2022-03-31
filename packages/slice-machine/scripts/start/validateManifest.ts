@@ -1,5 +1,5 @@
 import boxen from "boxen";
-import { CONSTS } from "@slicemachine/core";
+import { CONSTS, Models } from "@slicemachine/core";
 import { ManifestState, ManifestInfo } from "../../lib/env/manifest";
 import chalk from "chalk";
 
@@ -20,6 +20,22 @@ See below for more info 👇`,
     );
 
     console.log("\n--- ℹ️  How to solve this: ---\n");
+  }
+
+  if (
+    manifest.state === ManifestState.Valid &&
+    manifest.content?.framework === Models.Frameworks.none
+  ) {
+    const frameworks = Object.values(Models.Frameworks).filter(
+      (d) => d !== Models.Frameworks.none
+    );
+    const message = boxen(
+      `🟡 Framework not set in sm.json.
+Please set "framework" to one of [ ${frameworks.join(", ")} ]
+`,
+      { padding: 1, borderColor: "yellow" }
+    );
+    console.log(message);
   }
 
   switch (manifest.state) {
