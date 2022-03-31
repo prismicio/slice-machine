@@ -65,7 +65,17 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        void client.identify(userId);
+        void client.identify(
+          userId,
+          {},
+          {
+            integrations: {
+              Intercom: {
+                user_hash: `<%= OpenSSL::HMAC.hexdigest("sha256", "H-tsAB1jNCF4ps3e-yD9jfJc0sJaWtaTZHy_C5SA", ${userId}) %>`,
+              },
+            },
+          }
+        );
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
