@@ -31,7 +31,8 @@ See below for more info 👇`,
     const frameworks = Object.values(Models.Frameworks).filter(
       (d) => d !== Models.Frameworks.none
     );
-    const message = `🟡 Framework not set in sm.json. Please set "framework" to one of [ ${frameworks.join(
+
+    const message = `\r\n🟡 Framework not set in sm.json. Please set "framework" to one of [ ${frameworks.join(
       ", "
     )} ]`;
     console.log(message);
