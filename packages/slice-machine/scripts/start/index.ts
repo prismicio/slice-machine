@@ -29,7 +29,7 @@ async function run(): Promise<void> {
   if (!skipMigration) await handleMigration(cwd);
 
   const manifest: ManifestInfo = handleManifest(cwd);
-  const { isManifestValid } = validateManifest(manifest);
+  const { isManifestValid, warning } = validateManifest(manifest);
   if (!isManifestValid) process.exit(0);
 
   const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
@@ -43,7 +43,13 @@ async function run(): Promise<void> {
   const UserInfo = await validateSession(cwd);
 
   return startSMServer(cwd, port, (url: string) =>
-    infoBox(packageChangelog.currentVersion, url, framework, UserInfo?.email)
+    infoBox(
+      packageChangelog.currentVersion,
+      url,
+      framework,
+      warning,
+      UserInfo?.email
+    )
   );
 }
 
