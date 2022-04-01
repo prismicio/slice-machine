@@ -43,7 +43,7 @@
     "@prismicio/slice-simulator-com": "^0.2.0",
     "@prismicio/types-internal": "^0.2.8",
     "@reach/menu-button": "^0.16.2",
-    "@slicemachine/core": "1.1.5-alpha.9",
+    "@slicemachine/core": "1.1.5-alpha.8",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",
     "axios": "^0.26.0",

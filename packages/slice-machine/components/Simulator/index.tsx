@@ -1,9 +1,11 @@
+import { SharedSliceEditor, themeClass } from "@prismicio/editor-fields";
 import React, { useEffect, useMemo, useState } from "react";
 import { useContext } from "react";
 
 import { Flex } from "theme-ui";
 
 import { SliceContext } from "@src/models/slice/context";
+import { Slices } from "@slicemachine/core/build/models/Slice";
 
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
@@ -50,6 +52,14 @@ export default function Simulator() {
     [Model.model.id, variation.id]
   );
 
+  const content = Model.mock?.find(
+    (content) => content.variation === variation.id
+  );
+  const sharedSlice = Slices.fromSM(Model.model);
+
+  console.log("content", content);
+  console.log("sharedSlice", sharedSlice);
+
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
@@ -64,6 +74,18 @@ export default function Simulator() {
         simulatorUrl={simulatorUrl}
         sliceView={sliceView}
       />
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+      <div className={themeClass}>
+        <SharedSliceEditor
+          content={content}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          onContentChange={(content) => {
+            console.log("onContentChange", content);
+          }}
+          sharedSlice={sharedSlice}
+        />
+      </div>
     </Flex>
   );
 }
