@@ -39,7 +39,7 @@
   "dependencies": {
     "@babel/register": "^7.17.7",
     "@faker-js/faker": "^6.0.0",
-    "@slicemachine/core": "1.1.5",
+    "@slicemachine/core": "1.1.6-alpha.0",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",
     "axios": "^0.26.0",
