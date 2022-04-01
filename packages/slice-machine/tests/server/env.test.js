@@ -209,7 +209,7 @@ describe("getEnv", () => {
     expect(env.framework).toEqual(key);
   });
 
-  test("when framework is not found in manifest, it writes an error to the console and throws the error", async () => {
+  test("when framework is not found in manifest, it defaults to none", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -223,16 +223,8 @@ describe("getEnv", () => {
       )
     );
 
-    const message =
-      '[sm.json] Expecting "none" | "nuxt" | "previousNuxt" | "next" | "gatsby" | "vue" | "react" | "svelte" | "vanillajs" | "previousNext" at 0.framework but instead got: undefined';
-
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    expect(() => getEnv(TMP)).rejects.toThrow(message);
-
-    expect(errorSpy).toHaveBeenLastCalledWith(message);
+    const result = await getEnv(TMP);
+    expect(result.env.manifest.framework).toEqual("none");
   });
 
   test("it should take the auth from .prismic and base from sm.json", async () => {

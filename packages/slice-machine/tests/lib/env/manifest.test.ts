@@ -19,7 +19,7 @@ describe("lib/env/manifest", () => {
     expect(result.state).toEqual("Valid");
   });
 
-  test("it should return an 'invalid' result if framework is not defined", () => {
+  test("when frame work is invalid it should default to 'none'", () => {
     jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
     jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
       JSON.stringify({
@@ -29,11 +29,8 @@ describe("lib/env/manifest", () => {
 
     const result = handleManifest(os.tmpdir());
 
-    expect(result.content).toBeNull();
-    expect(result.state).toEqual("InvalidJson");
-    expect(result.message).toEqual(
-      '[sm.json] Expecting "none" | "nuxt" | "previousNuxt" | "next" | "gatsby" | "vue" | "react" | "svelte" | "vanillajs" | "previousNext" at 0.framework but instead got: undefined'
-    );
+    expect(result.state).toEqual("Valid");
+    expect(result.content?.framework).toEqual("none");
   });
 
   // test("loads of errors", () => {
