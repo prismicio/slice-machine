@@ -47,8 +47,8 @@ async function run(): Promise<void> {
   );
 }
 
-function start() {
-  run().catch((err) => {
+function start(): Promise<void> {
+  return run().catch((err) => {
     console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
     console.error("Full error: ", err);
   });
@@ -59,5 +59,5 @@ export default start;
 const isCli = require.main === module;
 
 if (isCli) {
-  start();
+  void start();
 }
