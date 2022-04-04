@@ -52,7 +52,18 @@ describe("SMTracker", () => {
 
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.identify).toHaveBeenCalledTimes(1);
-    expect(NativeTrackerMocks.identify).toHaveBeenCalledWith("userId");
+    expect(NativeTrackerMocks.identify).toHaveBeenCalledWith(
+      "userId",
+      {},
+      {
+        integrations: {
+          Intercom: {
+            user_hash:
+              "b601fbe77a2b1d5c10275d7b9ca1066c26d9fd9d5132a08dbe386c032403537a",
+          },
+        },
+      }
+    );
   });
 
   test("should send a track review event", async () => {
