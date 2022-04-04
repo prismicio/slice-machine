@@ -2,6 +2,7 @@ import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { LibraryUI } from "@models/common/LibraryUI";
+import crypto from "crypto";
 
 // These events should be sync with the tracking Plan on segment.
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
@@ -58,7 +59,7 @@ export class SMTracker {
       );
   }
 
-  async #identify(userId: string): Promise<void> {
+  async #identify(shortId: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
@@ -66,12 +67,18 @@ export class SMTracker {
     return this.#client
       .then((client): void => {
         void client.identify(
-          userId,
+          shortId,
           {},
           {
             integrations: {
               Intercom: {
-                user_hash: `<%= OpenSSL::HMAC.hexdigest("sha256", "H-tsAB1jNCF4ps3e-yD9jfJc0sJaWtaTZHy_C5SA", ${userId}) %>`,
+                user_hash: crypto
+                  .createHmac(
+                    "sha256",
+                    "_o2I4MG8Wpp2ibOszbRbZlWiP9gIJhUEOyn3xwKV"
+                  )
+                  .update(shortId)
+                  .digest("hex"),
               },
             },
           }
@@ -115,8 +122,8 @@ export class SMTracker {
     });
   }
 
-  async identifyUser(userId: string): Promise<void> {
-    await this.#identify(userId);
+  async identifyUser(shortId: string): Promise<void> {
+    await this.#identify(shortId);
   }
 
   async groupLibraries(

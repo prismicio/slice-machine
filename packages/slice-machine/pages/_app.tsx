@@ -84,7 +84,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
     Tracker.get().initialize(
       process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
-        "cGjidifKefYb6EPaGaqpt8rQXkv5TD6P",
+        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
       getIsTrackingAvailable(store.getState())
     );
 

@@ -13,11 +13,11 @@ import { getLibraries } from "@src/modules/slices";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const { libraries, repoName, shorId, currentVersion, framework } =
+  const { libraries, repoName, shortId, currentVersion, framework } =
     useSelector((state: SliceMachineStoreType) => ({
       currentVersion: getCurrentVersion(state),
       framework: getFramework(state),
-      shorId: getShortId(state),
+      shortId: getShortId(state),
       repoName: getRepoName(state),
       libraries: getLibraries(state),
     }));
@@ -27,7 +27,7 @@ const useSMTracker = () => {
   useEffect(() => {
     void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
 
-    shorId && Tracker.get().identifyUser(shorId);
+    shortId && Tracker.get().identifyUser(shortId);
 
     // For initial loading
     void Tracker.get().trackPageView(framework, currentVersion);

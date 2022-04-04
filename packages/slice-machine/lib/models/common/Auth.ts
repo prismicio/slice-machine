@@ -2,5 +2,5 @@
 
 export type CheckAuthStatusResponse = {
   status: "error" | "ok" | "pending";
-  userId?: string;
+  shortId?: string;
 };
