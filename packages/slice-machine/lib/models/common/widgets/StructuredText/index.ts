@@ -9,10 +9,11 @@ import { MockConfigForm } from "./Mock/Form";
 import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
-import { Widget } from "../Widget";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
 
-import { StructuredTextField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { optionValues } from "./options";
+import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**
  * {
@@ -39,16 +40,23 @@ const schema = yup.object().shape({
   config: createValidationSchema(removeProp(FormFields, "id")),
 });
 
-export const StructuredTextWidget: Widget<StructuredTextField, typeof schema> =
-  {
-    create: (label: string) => new StructuredTextField({ label }),
-    handleMockConfig,
-    handleMockContent,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    FormFields,
-    Meta,
-    schema,
-    TYPE_NAME: FieldType.StructuredText,
-    Form,
-    MockConfigForm,
-  };
+export const StructuredTextWidget: Widget<RichText, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.RichText,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+      allowTargetBlank: true,
+      single: optionValues.join(","),
+    },
+  }),
+  handleMockConfig,
+  handleMockContent,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  FormFields,
+  Meta,
+  schema,
+  TYPE_NAME: WidgetTypes.RichText,
+  Form,
+  MockConfigForm,
+};

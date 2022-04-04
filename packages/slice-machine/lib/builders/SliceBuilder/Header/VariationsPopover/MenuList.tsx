@@ -3,9 +3,9 @@ import type Models from "@slicemachine/core/build/models";
 import { Box, Flex, Text } from "theme-ui";
 
 const MenuList: React.FunctionComponent<{
-  defaultValue: Models.VariationAsArray;
-  variations: ReadonlyArray<Models.VariationAsArray>;
-  onChange: (selected: Models.VariationAsArray) => void;
+  defaultValue: Models.VariationSM;
+  variations: ReadonlyArray<Models.VariationSM>;
+  onChange: (selected: Models.VariationSM) => void;
   MenuItemAction?: React.ReactElement;
 }> = ({ defaultValue, variations, MenuItemAction, onChange }) => {
   return (
@@ -55,10 +55,10 @@ const MenuList: React.FunctionComponent<{
 export default MenuList;
 
 const MenuItem: React.FunctionComponent<{
-  value: Models.VariationAsArray;
+  value: Models.VariationSM;
   isActive: boolean;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick: ((v: Models.VariationAsArray) => void) | Function;
+  onClick: ((v: Models.VariationSM) => void) | Function;
 }> = ({ value, isActive, onClick }) => {
   return (
     <Box

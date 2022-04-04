@@ -10,10 +10,10 @@ import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
-import { ImageField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
-/** 
+/**
  * {
     "type": "Image",
     "config": {
@@ -49,14 +49,21 @@ const Meta = {
   description: "A responsive image field with constraints",
 };
 
-export const ImageWidget: Widget<ImageField, typeof schema> = {
+export const ImageWidget: Widget<Image, typeof schema> = {
   Meta,
   Form,
   schema,
-  create: (label: string) => new ImageField({ label }),
+  create: (label: string) => ({
+    type: WidgetTypes.Image,
+    config: {
+      constraint: {},
+      thumbnails: [],
+      label,
+    },
+  }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   FormFields,
-  TYPE_NAME: FieldType.Image,
+  TYPE_NAME: WidgetTypes.Image,
 };

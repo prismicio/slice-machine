@@ -25,7 +25,7 @@ const MemoizedImagePreview = memo(ImagePreview);
 
 type SideBarProps = {
   Model: SliceState;
-  variation: Models.VariationAsArray;
+  variation: Models.VariationSM;
   imageLoading: boolean;
   onScreenshot: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

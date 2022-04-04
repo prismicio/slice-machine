@@ -1,6 +1,6 @@
-import { SliceAsObject } from "@slicemachine/core/build/models";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
-const allFieldSliceModel: SliceAsObject = {
+const allFieldSliceModel = {
   id: "all_fields",
   type: "SharedSlice",
   name: "AllFields",
@@ -9,6 +9,7 @@ const allFieldSliceModel: SliceAsObject = {
     {
       id: "default-slice",
       name: "Default slice",
+      imageUrl: "",
       docURL: "...",
       version: "sktwi1xtmkfgx8626",
       description: "AllFields",
@@ -119,6 +120,7 @@ const allFieldSliceModel: SliceAsObject = {
     {
       id: "newVar",
       name: "NewVar",
+      imageUrl: "",
       docURL: "...",
       version: "sktwi1xtmkfgx8626",
       description: "AllFields",
@@ -227,6 +229,6 @@ const allFieldSliceModel: SliceAsObject = {
       items: {},
     },
   ],
-};
+} as unknown as SharedSlice;
 
 export default allFieldSliceModel;

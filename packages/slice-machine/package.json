@@ -38,6 +38,8 @@
   },
   "dependencies": {
     "@babel/register": "^7.17.7",
+    "@prismicio/slice-simulator-com": "^0.2.0",
+    "@prismicio/types-internal": "^0.2.7",
     "@faker-js/faker": "^6.0.0",
     "@slicemachine/core": "1.1.6-alpha.1",
     "@svgr/webpack": "^5.4.0",

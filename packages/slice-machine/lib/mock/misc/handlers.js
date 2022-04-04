@@ -44,7 +44,7 @@ export const handleFields =
   (Widgets) =>
   (fields = [], mocks = {}) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return fields.reduce((acc, [key, value]) => {
+    return fields.reduce((acc, { key, value }) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const typeName = value.type;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment

@@ -4,7 +4,6 @@ export * from "./Library";
 export * from "./Repositories";
 export * from "./Repository";
 export * from "./Slice";
-export * from "./Variation";
 export * from "./UserProfile";
 export * from "./UserInfo";
 export * from "./Framework";

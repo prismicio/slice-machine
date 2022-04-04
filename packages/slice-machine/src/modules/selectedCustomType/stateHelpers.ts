@@ -1,9 +1,9 @@
-import { TabAsArray } from "@models/common/CustomType/tab";
+import { TabSM } from "@slicemachine/core/build/models/CustomType";
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 
 const updateTab =
   (state: SelectedCustomTypeStoreType, tabId: string) =>
-  (mutate: (v: TabAsArray) => TabAsArray): SelectedCustomTypeStoreType => {
+  (mutate: (v: TabSM) => TabSM): SelectedCustomTypeStoreType => {
     if (!state) return state;
 
     const tabs = state.model.tabs.map((tab) => {

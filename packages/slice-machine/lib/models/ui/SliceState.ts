@@ -1,4 +1,4 @@
-import type Models from "@slicemachine/core/build/models";
+import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI, LibStatus, ScreenshotUI } from "../common/ComponentUI";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 
@@ -6,9 +6,9 @@ interface SliceState extends ComponentUI {
   mockConfig: CustomTypeMockConfig;
   initialMockConfig: CustomTypeMockConfig;
 
-  remoteVariations: ReadonlyArray<Models.VariationAsArray>;
-  initialVariations: ReadonlyArray<Models.VariationAsArray>;
-  variations: ReadonlyArray<Models.VariationAsArray>;
+  remoteVariations: ReadonlyArray<VariationSM>;
+  initialVariations: ReadonlyArray<VariationSM>;
+  variations: ReadonlyArray<VariationSM>;
 
   initialScreenshotUrls?: {
     [variationId: string]: ScreenshotUI;
@@ -19,10 +19,7 @@ interface SliceState extends ComponentUI {
 }
 
 const SliceState = {
-  variation(
-    state: SliceState,
-    variationId?: string
-  ): Models.VariationAsArray | undefined {
+  variation(state: SliceState, variationId?: string): VariationSM | undefined {
     if (state.variations.length) {
       if (variationId)
         return state.variations.find((v) => v.id === variationId);
@@ -31,9 +28,7 @@ const SliceState = {
   },
 
   updateVariation(state: SliceState, variationId: string) {
-    return (
-      mutate: (v: Models.VariationAsArray) => Models.VariationAsArray
-    ): SliceState => {
+    return (mutate: (v: VariationSM) => VariationSM): SliceState => {
       const variations = state.variations.map((v) => {
         if (v.id === variationId) return mutate(v);
         else return v;

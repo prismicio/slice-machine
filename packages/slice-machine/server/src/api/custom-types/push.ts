@@ -2,7 +2,6 @@ import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
 
 import { onError } from "../common/error";
-import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import FakeClient from "@lib/models/common/http/FakeClient";
@@ -10,16 +9,19 @@ import { ApiResult } from "@lib/models/server/ApiResult";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
-import { CustomType } from "@lib/models/common/CustomType";
 import { RequestWithEnv } from "../http/common";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/models/CustomType/index";
+import * as IO from "../io";
 
 const createOrUpdate = (
   client: DefaultClient | FakeClient,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  model: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  remoteCustomType: any
+  smModel: CustomTypeSM,
+  remoteCustomType: CustomTypeSM | undefined
 ) => {
+  const model = CustomTypes.fromSM(smModel);
   if (remoteCustomType) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return client.updateCustomType(model);
@@ -72,10 +74,10 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     .customType(id as string)
     .model();
 
-  let model;
+  let model: CustomTypeSM;
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    model = Files.readJson(modelPath);
+    model = IO.CustomType.readCustomType(modelPath);
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;
@@ -96,7 +98,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   const sliceKeysToPush: string[] = [];
   for (const [, tab] of Object.entries(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    CustomType.fromJsonModel(model.id, model).tabs
+    model.tabs
   )) {
     const { sliceZone } = Tab.organiseFields(tab);
     if (sliceZone?.value) {

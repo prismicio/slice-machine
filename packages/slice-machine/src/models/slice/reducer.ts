@@ -3,8 +3,6 @@ import { Variation } from "../../../lib/models/common/Variation";
 import equal from "fast-deep-equal";
 import SliceState from "../../../lib/models/ui/SliceState";
 
-import { Field, FieldType } from "../../../lib/models/common/CustomType/fields";
-import { sliceZoneType } from "../../../lib/models/common/CustomType/sliceZone";
 import { AnyWidget } from "../../../lib/models/common/widgets/Widget";
 import * as Widgets from "../../../lib/models/common/widgets";
 
@@ -17,6 +15,8 @@ import {
   ScreenshotUI,
 } from "../../../lib/models/common/ComponentUI";
 import { compareVariations } from "../../../lib/utils";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 export function reducer(
   prevState: SliceState,
@@ -44,12 +44,12 @@ export function reducer(
         const { key, name, copied } = action.payload as {
           key: string;
           name: string;
-          copied: Models.VariationAsArray;
+          copied: Models.VariationSM;
         };
         return {
           ...prevState,
           variations: prevState.variations.concat([
-            Variation.copyValue<Models.VariationAsArray>(copied, key, name),
+            Variation.copyValue(copied, key, name),
           ]),
         };
       }
@@ -94,10 +94,14 @@ export function reducer(
           variationId: string;
           widgetsArea: Models.WidgetsArea;
           key: string;
-          value: Field;
+          value: NestableWidget;
         };
         try {
-          if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
+          if (
+            value.type !== WidgetTypes.Range &&
+            value.type !== WidgetTypes.Separator &&
+            value.type !== WidgetTypes.IntegrationField
+          ) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
@@ -122,10 +126,14 @@ export function reducer(
             widgetsArea: Models.WidgetsArea;
             previousKey: string;
             newKey: string;
-            value: Field;
+            value: NestableWidget;
           };
         try {
-          if (value.type !== sliceZoneType && value.type !== FieldType.Group) {
+          if (
+            value.type !== WidgetTypes.Range &&
+            value.type !== WidgetTypes.Separator &&
+            value.type !== WidgetTypes.IntegrationField
+          ) {
             const CurrentWidget: AnyWidget = Widgets[value.type];
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             CurrentWidget.schema.validateSync(value, { stripUnknown: false });
