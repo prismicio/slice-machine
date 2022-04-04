@@ -209,7 +209,7 @@ describe("getEnv", () => {
     expect(env.framework).toEqual(key);
   });
 
-  test("when framework is not found in manifest, it defaults to none", async () => {
+  test("when framework in manifest it should throw an error", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -223,8 +223,9 @@ describe("getEnv", () => {
       )
     );
 
-    const result = await getEnv(TMP);
-    expect(result.env.manifest.framework).toEqual("none");
+    expect(() => getEnv(TMP)).rejects.toThrow(
+      'Property "framework" in (./sm.json) must be one of "none", "nuxt", "previousNuxt", "next", "gatsby", "vue", "react", "svelte", "vanillajs", "previousNext".'
+    );
   });
 
   test("it should take the auth from .prismic and base from sm.json", async () => {

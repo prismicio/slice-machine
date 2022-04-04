@@ -5,7 +5,6 @@ export default function infoBox(
   currentVersion: string,
   port: string,
   framework: string,
-  warning: boolean,
   userEmail?: string
 ) {
   if (!currentVersion) {
@@ -24,7 +23,7 @@ export default function infoBox(
       `),
       {
         padding: 1,
-        borderColor: warning ? "yellow" : "green",
+        borderColor: "green",
       }
     )
   );

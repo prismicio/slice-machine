@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-import { withFallback } from "io-ts-types/lib/withFallback";
 
 export enum Frameworks {
   none = "none",
@@ -14,21 +13,18 @@ export enum Frameworks {
   previousNext = "previousNext",
 }
 
-export const FrameworksC = withFallback(
-  t.keyof({
-    [Frameworks.none]: null,
-    [Frameworks.nuxt]: null,
-    [Frameworks.previousNuxt]: null,
-    [Frameworks.next]: null,
-    [Frameworks.gatsby]: null,
-    [Frameworks.vue]: null,
-    [Frameworks.react]: null,
-    [Frameworks.svelte]: null,
-    [Frameworks.vanillajs]: null,
-    [Frameworks.previousNext]: null,
-  }),
-  Frameworks.none
-);
+export const FrameworksC = t.keyof({
+  [Frameworks.none]: null,
+  [Frameworks.nuxt]: null,
+  [Frameworks.previousNuxt]: null,
+  [Frameworks.next]: null,
+  [Frameworks.gatsby]: null,
+  [Frameworks.vue]: null,
+  [Frameworks.react]: null,
+  [Frameworks.svelte]: null,
+  [Frameworks.vanillajs]: null,
+  [Frameworks.previousNext]: null,
+});
 
 export const SupportedFrameworks: Frameworks[] = [
   Frameworks.none,
