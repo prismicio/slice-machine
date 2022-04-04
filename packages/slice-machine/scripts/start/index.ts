@@ -47,13 +47,17 @@ async function run(): Promise<void> {
   );
 }
 
-export default run;
-
-const isCli = require.main === module;
-
-if (isCli) {
+function start() {
   run().catch((err) => {
     console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
     console.error("Full error: ", err);
   });
+}
+
+export default start;
+
+const isCli = require.main === module;
+
+if (isCli) {
+  start();
 }
