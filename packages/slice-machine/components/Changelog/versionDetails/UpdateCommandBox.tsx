@@ -56,7 +56,7 @@ export const UpdateCommandBox: React.FC<UpdateCommandBoxProps> = ({
 
         <Button
           variant="secondary"
-          onClick={() => navigator.clipboard.writeText(updateCommand)}
+          onClick={() => void navigator.clipboard.writeText(updateCommand)}
         >
           Copy
         </Button>

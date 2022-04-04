@@ -80,7 +80,7 @@ const Header: React.FC<{
                     variations={Model.variations}
                     onNewVariation={() => setShowVariationModal(true)}
                     onChange={(v) =>
-                      router.push(
+                      void router.push(
                         ...Links.variation({
                           lib: Model.href,
                           sliceName: Model.model.name,
@@ -115,7 +115,7 @@ const Header: React.FC<{
             onClose={() => setShowVariationModal(false)}
             onSubmit={(id, name, copiedVariation) => {
               store.copyVariation(id, name, copiedVariation);
-              return router.push(
+              void router.push(
                 ...Links.variation({
                   lib: Model.href,
                   sliceName: Model.model.name,
