@@ -10,14 +10,14 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 
 const VarationsPopover: React.FunctionComponent<{
   buttonSx?: ThemeUICSSObject;
-  defaultValue?: Models.VariationAsArray;
+  defaultValue?: Models.VariationSM;
   // eslint-disable-next-line @typescript-eslint/ban-types
   onNewVariation?: Function;
-  variations: ReadonlyArray<Models.VariationAsArray>;
-  onChange: (selected: Models.VariationAsArray) => void;
+  variations: ReadonlyArray<Models.VariationSM>;
+  onChange: (selected: Models.VariationSM) => void;
 }> = ({ buttonSx, defaultValue, variations, onNewVariation, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [current, setCurrent] = useState<Models.VariationAsArray>(
+  const [current, setCurrent] = useState<Models.VariationSM>(
     defaultValue || variations[0]
   );
 
@@ -28,7 +28,7 @@ const VarationsPopover: React.FunctionComponent<{
   }, [defaultValue]);
 
   const TRANSITION_DURATION = 200; //ms
-  const handleChange = function (variation: Models.VariationAsArray) {
+  const handleChange = function (variation: Models.VariationSM) {
     setIsOpen(false);
     setCurrent(variation);
     setTimeout(() => onChange(variation), TRANSITION_DURATION + 10); // time to properly close the popover with transition

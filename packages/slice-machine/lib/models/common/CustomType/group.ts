@@ -1,51 +1,36 @@
-import { Field } from "../CustomType/fields";
-import { GroupField, AsArray, AsObject } from "../widgets/Group/type";
-
-// export type GroupField<AsArray> = ReadonlyArray<{key: string, value: Field }>
-
-// export interface GroupField<AsArray> {
-//   key: string,
-//   type: string
-//   value: {
-//     label: string,
-//     fields: GroupField<AsArray>
-//   }
-// }
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { GroupSM } from "@slicemachine/core/build/models/Group";
 
 export const Group = {
   addWidget(
-    group: GroupField<AsArray>,
-    newField: { key: string; value: Field }
-  ): GroupField<AsArray> {
+    group: GroupSM,
+    newField: { key: string; value: NestableWidget }
+  ): GroupSM {
     return {
       ...group,
       config: {
         ...group.config,
-        fields: [...group.config.fields, newField],
+        fields: [...(group.config?.fields || []), newField],
       },
     };
   },
-  deleteWidget(group: GroupField<AsArray>, wkey: string): GroupField<AsArray> {
+  deleteWidget(group: GroupSM, wkey: string): GroupSM {
     return {
       ...group,
       config: {
         ...group.config,
-        fields: group.config.fields.filter(({ key }) => key !== wkey),
+        fields: (group.config?.fields || []).filter(({ key }) => key !== wkey),
       },
     };
   },
-  reorderWidget(
-    group: GroupField<AsArray>,
-    start: number,
-    end: number
-  ): GroupField<AsArray> {
-    const reorderedWidget: { key: string; value: Field } | undefined =
-      group.config.fields[start];
+  reorderWidget(group: GroupSM, start: number, end: number): GroupSM {
+    const reorderedWidget: { key: string; value: NestableWidget } | undefined =
+      group.config?.fields?.[start];
     if (!reorderedWidget)
       throw new Error(`Unable to reorder the widget at index ${start}.`);
 
-    const reorderedArea = group.config.fields.reduce<
-      ReadonlyArray<{ key: string; value: Field }>
+    const reorderedArea = (group.config?.fields || []).reduce<
+      Array<{ key: string; value: NestableWidget }>
     >((acc, field, index) => {
       const elems = [field, reorderedWidget];
       switch (index) {
@@ -67,16 +52,16 @@ export const Group = {
     };
   },
   replaceWidget(
-    group: GroupField<AsArray>,
+    group: GroupSM,
     previousKey: string,
     newKey: string,
-    value: Field
-  ): GroupField<AsArray> {
+    value: NestableWidget
+  ): GroupSM {
     return {
       ...group,
       config: {
         ...group.config,
-        fields: group.config.fields.map((t) => {
+        fields: (group.config?.fields || []).map((t) => {
           if (t.key === previousKey) {
             return {
               key: newKey,
@@ -85,30 +70,6 @@ export const Group = {
           }
           return t;
         }),
-      },
-    };
-  },
-  toArray(group: GroupField<AsObject>): GroupField<AsArray> {
-    return {
-      ...group,
-      config: {
-        ...group.config,
-        fields: Object.entries(group.config.fields).map(([key, value]) => ({
-          key,
-          value,
-        })),
-      },
-    };
-  },
-  toObject(group: GroupField<AsArray>): GroupField<AsObject> {
-    return {
-      ...group,
-      config: {
-        ...group.config,
-        fields: group.config.fields.reduce(
-          (acc, { key, value }) => ({ ...acc, [key]: value }),
-          {}
-        ),
       },
     };
   },

@@ -1,14 +1,15 @@
 import "@testing-library/jest-dom";
-import { CustomTypeStatus } from "@lib/models/ui/CustomTypeState";
-import { CustomType } from "@lib/models/common/CustomType";
 
 import jsonModel from "./__mockData__/model.json";
 import {
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications,
 } from "@src/modules/selectedCustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
+import { CustomTypes } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
 
-const model = CustomType.fromJsonModel(jsonModel.id, jsonModel);
+const model = CustomTypes.toSM(jsonModel as unknown as CustomType);
 
 describe("[Selected Custom type selectors]", () => {
   describe("[selectCustomTypeStatus]", () => {

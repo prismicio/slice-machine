@@ -4,9 +4,9 @@ import Form, { FormFields } from "./Form";
 import { MdSettingsEthernet } from "react-icons/md";
 
 import { Widget } from "../Widget";
-import { FieldType } from "../../CustomType/fields";
-import { ContentRelationshipField } from "./type";
 import { linkConfigSchema } from "../Link";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /**
  * {
@@ -46,14 +46,17 @@ const schema = yup.object().shape({
   config: contentRelationShipConfigSchema,
 });
 
-export const ContentRelationshipWidget: Widget<
-  ContentRelationshipField,
-  typeof schema
-> = {
-  create: (label: string) => new ContentRelationshipField({ label }),
+export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.Link,
+    config: {
+      label,
+      select: "document",
+    },
+  }),
   Meta,
   schema,
-  TYPE_NAME: FieldType.ContentRelationship,
+  TYPE_NAME: WidgetTypes.Link,
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,

@@ -44,6 +44,7 @@ describe("server.generateLibraryState", () => {
               variations: [
                 {
                   id: "default-slice",
+                  imageUrl: "",
                   name: "Default slice",
                   docURL: "...",
                   version: "sktwi1xtmkfgx8626",
@@ -66,6 +67,7 @@ describe("server.generateLibraryState", () => {
                       },
                     },
                   },
+                  items: {},
                 },
               ],
             },

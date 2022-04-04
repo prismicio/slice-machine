@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.5",
+  "version": "1.1.6-alpha.1",
   "private": false,
   "main": "./build/index.js",
   "engines": {
@@ -19,10 +19,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@prismicio/types-internal": "^0.2.8",
     "axios": "^0.26.0",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
-    "io-ts": "^2.2.16"
+    "io-ts": "^2.2.16",
+    "io-ts-types": "^0.5.16"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

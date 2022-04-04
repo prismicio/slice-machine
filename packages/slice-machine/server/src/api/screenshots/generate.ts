@@ -1,4 +1,3 @@
-import type Models from "@slicemachine/core/build/models";
 import Files from "@lib/utils/files";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
@@ -9,9 +8,11 @@ import {
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
+import * as IO from "../io";
 
 type FailedScreenshot = {
-  variationId: Models.VariationAsObject["id"];
+  variationId: VariationSM["id"];
   error: Error;
 };
 
@@ -48,17 +49,14 @@ export async function generateScreenshot(
   sliceName: string
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const slice: Models.SliceAsObject = Files.readJson(
+  const slice = IO.Slice.readSlice(
     NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
   );
 
-  const variationIds: Models.VariationAsObject["id"][] = slice.variations.map(
-    (v: Models.VariationAsObject) => v.id
-  );
+  const variationIds: VariationSM["id"][] = slice.variations.map((v) => v.id);
 
   const promises: Promise<ScreenshotUI>[] = variationIds.map(
-    (id: Models.VariationAsObject["id"]) =>
-      generateForVariation(env, libraryName, slice, id)
+    (id: VariationSM["id"]) => generateForVariation(env, libraryName, slice, id)
   );
 
   const results = await Promise.allSettled(promises);
@@ -96,7 +94,7 @@ export async function generateScreenshot(
 async function generateForVariation(
   env: BackendEnvironment,
   libraryName: string,
-  slice: Models.SliceAsObject,
+  slice: SliceSM,
   variationId: string
 ): Promise<ScreenshotUI> {
   const screenshotUrl = `${

@@ -1,8 +1,8 @@
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 export type FrontEndCustomType = {
-  local: CustomType<ObjectTabs>;
-  remote?: CustomType<ObjectTabs>;
+  local: CustomTypeSM;
+  remote?: CustomTypeSM;
 };
 
 export type AvailableCustomTypesStoreType = Record<string, FrontEndCustomType>;

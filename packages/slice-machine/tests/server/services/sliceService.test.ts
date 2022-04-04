@@ -7,10 +7,12 @@ import {
 import { upload } from "../../../server/src/api/services/uploadScreenshotClient";
 
 import DefaultClient from "../../../lib/models/common/http/DefaultClient";
-import allFieldSliceModel from "../../__mocks__/sliceModel";
+import allFieldSliceObject from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
+import { Slices } from "@slicemachine/core/build/models/Slice";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
+const allFieldSliceModel = Slices.toSM(allFieldSliceObject);
 const mockUpdateSlice = jest.fn();
 const mockInsertSlice = jest.fn();
 jest.mock("../../../lib/models/common/http/DefaultClient", () => {
@@ -48,7 +50,7 @@ describe("Slice Service", () => {
         new DefaultClient("cwd", "base", "repo", "auth")
       );
       expect(mockInsertSlice).toHaveBeenCalledTimes(1);
-      expect(mockInsertSlice).toHaveBeenCalledWith(allFieldSliceModel);
+      expect(mockInsertSlice).toHaveBeenCalledWith(allFieldSliceObject);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(0);
     });
 
@@ -61,7 +63,7 @@ describe("Slice Service", () => {
       );
       expect(mockInsertSlice).toHaveBeenCalledTimes(0);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(1);
-      expect(mockUpdateSlice).toHaveBeenCalledWith(allFieldSliceModel);
+      expect(mockUpdateSlice).toHaveBeenCalledWith(allFieldSliceObject);
     });
   });
 

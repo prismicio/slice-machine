@@ -1,19 +1,18 @@
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
-import type Models from "@slicemachine/core/build/models";
 import { LibrariesContext } from "../libraries/context";
 import { useContext } from "react";
 import SliceStore from "./store";
 import { reducer } from "./reducer";
 
 import SliceState from "@lib/models/ui/SliceState";
-import Slice from "@lib/models/common/Slice";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
 
 export type ContextProps = {
   Model: SliceState;
   store: SliceStore;
-  variation: Models.VariationAsArray;
+  variation: VariationSM;
 };
 export const SliceContext = React.createContext<Partial<ContextProps>>({});
 SliceContext.displayName = "SliceContext";
@@ -28,24 +27,23 @@ export function useModelReducer({
   mockConfig,
 }: {
   slice: ComponentUI;
-  remoteSlice?: Models.SliceAsObject;
+  remoteSlice?: SliceSM;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
 }): [SliceState, SliceStore] {
   const { model, ...rest } = slice;
 
-  const variations = Slice.toArray(model).variations;
   const initialState: SliceState = {
     model,
     ...rest,
-    variations,
+    variations: model.variations,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     mockConfig,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialMockConfig: mockConfig,
-    remoteVariations: remoteSlice ? Slice.toArray(remoteSlice).variations : [],
+    remoteVariations: remoteSlice ? remoteSlice.variations : [],
     initialScreenshotUrls: rest.screenshotUrls,
-    initialVariations: variations,
+    initialVariations: model.variations,
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -57,7 +55,7 @@ export function useModelReducer({
 type SliceProviderProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
-  variation: Models.VariationAsArray;
+  variation: VariationSM;
 };
 
 const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({

@@ -1,6 +1,7 @@
 import type Models from "@slicemachine/core/build/models";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import probe from "probe-image-size";
+import { Slices } from "@slicemachine/core/build/models/Slice";
 import { handleLibraryPath } from "@slicemachine/core/build/libraries";
 import { LibrariesStatePath, Files } from "@slicemachine/core/build/node-utils";
 
@@ -65,8 +66,10 @@ export function formatComponent(
     id: slice.model.id,
     name: slice.model.name,
     description: slice.model.description,
-    model: slice.model,
-    mocks: (slice.mock || []).reduce<Models.LibrariesState.ComponentMocks>(
+    model: Slices.fromSM(slice.model),
+    mocks: (
+      slice.mock || []
+    ).reduce<Models.LibrariesState.ComponentMocksRecord>(
       (acc, variationMock) => ({
         ...acc,
         [variationMock.variation]: variationMock,
