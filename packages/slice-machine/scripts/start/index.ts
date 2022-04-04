@@ -30,7 +30,7 @@ async function run(): Promise<void> {
 
   const manifest: ManifestInfo = handleManifest(cwd);
   const { isManifestValid } = validateManifest(manifest);
-  if (!isManifestValid) process.exit(0);
+  if (!isManifestValid) return process.exit(0);
 
   const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
   const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);
@@ -47,7 +47,13 @@ async function run(): Promise<void> {
   );
 }
 
-run().catch((err) => {
-  console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
-  console.error("Full error: ", err);
-});
+export default run;
+
+const isCli = require.main === module;
+
+if (isCli) {
+  run().catch((err) => {
+    console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
+    console.error("Full error: ", err);
+  });
+}

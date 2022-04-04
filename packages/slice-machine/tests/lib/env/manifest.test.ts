@@ -37,7 +37,7 @@ describe("lib/env/manifest", () => {
     );
   });
 
-  test("when framework is an undefined framework it should return an invalid result with a message", () => {
+  test("when framework is an undefined in sm.json it should be fine", () => {
     jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
     jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
       JSON.stringify({
@@ -47,24 +47,7 @@ describe("lib/env/manifest", () => {
 
     const result = handleManifest(os.tmpdir());
 
-    expect(result.content).toBeNull();
-    expect(result.state).toEqual("InvalidFramework");
-    expect(result.message).toEqual(
-      'Property "framework" in (./sm.json) must be one of "none", "nuxt", "previousNuxt", "next", "gatsby", "vue", "react", "svelte", "vanillajs", "previousNext".'
-    );
+    expect(result.content).not.toBeNull();
+    expect(result.state).toEqual("Valid");
   });
-
-  // test("loads of errors", () => {
-  //   jest.spyOn(fs, "existsSync").mockReturnValueOnce(true);
-  //   jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
-  //     JSON.stringify({
-  //       apiEndpoint: "https://example.io/api/v2",
-  //       framework: "fgoo"
-  //     })
-  //   );
-
-  //   const result = handleManifest(os.tmpdir());
-
-  //   expect(result.content).toBeNull();
-  // })
 });

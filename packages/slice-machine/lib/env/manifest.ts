@@ -38,7 +38,7 @@ const Messages = {
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
   [ManifestState.InvalidFramework]: `Property "framework" in (./sm.json) must be one of "${Object.values(
     Models.Frameworks
-  ).join('", "')}".`,
+  ).join('", "')}". Or remove it and SM will guess`,
 };
 
 export function extractRepo(parsedRepo: ParseResult): string | undefined {
@@ -56,7 +56,8 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
 }
 
 function validateFramework(framework?: string): boolean {
-  return framework && framework in Models.Frameworks ? true : false;
+  if (framework === undefined) return true;
+  return framework in Models.Frameworks;
 }
 
 function validateEndpoint(endpoint: string, parsedRepo: ParseResult): boolean {
@@ -147,7 +148,7 @@ function handleManifest(cwd: string): ManifestInfo {
       fold<t.Errors, Models.Manifest, ManifestInfo>(
         // failure handler
         (errors) => {
-          const messages = formatValidationErrors(errors);
+          const messages = formatValidationErrors(errors, {});
           const message = messages
             .map((error) => "[sm.json] " + error)
             .join("\n");

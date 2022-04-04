@@ -168,7 +168,7 @@ describe("getEnv", () => {
    none: null
 
    */
-  test("it finds the right framework in sm.json", async () => {
+  test("it finds the right framework in package.json", async () => {
     for await (const framework of Models.SupportedFrameworks) {
       fs.reset();
       fs.use(
@@ -176,9 +176,11 @@ describe("getEnv", () => {
           {
             "sm.json": JSON.stringify({
               apiEndpoint: "https://api-1.wroom.io/api/v2",
-              framework: framework,
             }),
-            "package.json": `{}`,
+            "package.json": JSON.stringify({
+              scripts: { storybook: "start-storybook" },
+              dependencies: { [framework]: "1.1.0" },
+            }),
             "nuxt.config.js": `stories: [".slicemachine/assets"]`,
             ".slicemachine/mock-config.json": `{ "field": "value" }`,
           },
@@ -209,7 +211,7 @@ describe("getEnv", () => {
     expect(env.framework).toEqual(key);
   });
 
-  test("when framework in manifest it should throw an error", async () => {
+  test("it defaults to vanilla framework if not found in manifest", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -223,9 +225,8 @@ describe("getEnv", () => {
       )
     );
 
-    expect(() => getEnv(TMP)).rejects.toThrow(
-      'Property "framework" in (./sm.json) must be one of "none", "nuxt", "previousNuxt", "next", "gatsby", "vue", "react", "svelte", "vanillajs", "previousNext".'
-    );
+    const { env } = await getEnv(TMP);
+    expect(env.framework).toEqual("vanillajs");
   });
 
   test("it should take the auth from .prismic and base from sm.json", async () => {
