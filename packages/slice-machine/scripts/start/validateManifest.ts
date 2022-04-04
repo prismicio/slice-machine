@@ -54,6 +54,7 @@ See below for more info 👇`,
     }
 
     case ManifestState.InvalidFramework: {
+      console.log("Set framework in your config to a valid value");
       return { isManifestValid: false };
     }
 
