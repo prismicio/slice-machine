@@ -1,16 +1,13 @@
 import Files from "./files";
 import { FileContent, SMConfigPath } from "./paths";
 import { Manifest } from "../models/Manifest";
-import { pipe } from "fp-ts/lib/function";
-import { fold } from "fp-ts/lib/Either";
+import { getOrElseW } from "fp-ts/lib/Either";
 import { formatValidationErrors } from "io-ts-reporters";
 import * as t from "io-ts";
 
 export function createManifest(cwd: string, manifest: Manifest): void {
   const manifestPath = SMConfigPath(cwd);
-  Files.write(manifestPath, JSON.stringify(manifest, null, 2), {
-    recursive: false,
-  });
+  Files.write(manifestPath, manifest, { recursive: false });
 }
 
 export function retrieveManifest(cwd: string): FileContent<Manifest> {
@@ -71,20 +68,13 @@ export function createOrUpdateManifest(
   data: Partial<Manifest>
 ): void {
   const maybeManifest: FileContent<Manifest> = retrieveManifest(cwd);
-
-  const updatedManifest = pipe(
-    Manifest.decode({ ...maybeManifest.content, ...data }),
-    fold(
-      (errors: t.Errors) => {
-        const messages = formatValidationErrors(errors);
-        messages.forEach((message) => {
-          console.error("[core/sm.json] " + message);
-        });
-        throw errors;
-      },
-      (data) => data
-    )
-  );
+  const updatedManifest = getOrElseW((errors: t.Errors) => {
+    const messages = formatValidationErrors(errors);
+    messages.forEach((message) => {
+      console.error("[core/sm.json] " + message);
+    });
+    throw errors;
+  })(Manifest.decode({ ...maybeManifest.content, ...data }));
 
   return createManifest(cwd, updatedManifest);
 }
