@@ -38,9 +38,8 @@
   },
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@prismicio/slice-simulator-com": "^0.2.0",
-    "@prismicio/types-internal": "^0.2.7",
     "@faker-js/faker": "^6.0.0",
+    "@prismicio/types-internal": "^0.2.7",
     "@slicemachine/core": "1.1.6-alpha.1",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",
@@ -161,7 +160,6 @@
     "react-redux": "^7.2.6",
     "react-select": "^5.2.2",
     "react-tabs": "^3.1.1",
-    "react-tidy": "^1.1.0",
     "react-tiny-popover": "^7.0.1",
     "react-toastify": "^8.2.0",
     "react-tooltip": "^4.2.8",
