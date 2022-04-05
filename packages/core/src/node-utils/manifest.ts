@@ -20,15 +20,9 @@ export function retrieveManifest(cwd: string): FileContent<Manifest> {
     };
   }
 
-  const maybeContent = Files.safeReadJson(manifestPath);
-
-  const content = getOrElseW((errors: t.Errors) => {
-    const messages = formatValidationErrors(errors);
-    messages.forEach((message) => {
-      console.log("[core/sm.json] " + message);
-    });
-    return null;
-  })(Manifest.decode(maybeContent));
+  const content: Manifest | null = Files.safeReadJson(
+    manifestPath
+  ) as Manifest | null;
 
   return {
     exists: true,
@@ -87,8 +81,17 @@ export function createOrUpdateManifest(
 }
 
 export function updateManifestSMVersion(cwd: string, version: string): boolean {
-  const manifest: FileContent<Manifest> = retrieveManifest(cwd);
-  if (manifest.content?._latest) return false; // if _latest already exists, we should not update this version otherwise we'd break the migration system
+  const maybeManifest: FileContent<Manifest> = retrieveManifest(cwd);
+
+  const content = getOrElseW((errors: t.Errors) => {
+    const messages = formatValidationErrors(errors);
+    messages.forEach((message) => {
+      console.log("[core/sm.json] " + message);
+    });
+    return null;
+  })(Manifest.decode(maybeManifest.content));
+
+  if (content?._latest) return false; // if _latest already exists, we should not update this version otherwise we'd break the migration system
 
   return patchManifest(cwd, { _latest: version });
 }
