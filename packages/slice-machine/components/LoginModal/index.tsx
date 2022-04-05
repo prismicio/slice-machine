@@ -152,7 +152,7 @@ const LoginModal: React.FunctionComponent = () => {
               width: 240,
               mb: 3,
             }}
-            onClick={onClick}
+            onClick={() => void onClick()}
           >
             {isLoginLoading ? (
               <Spinner color="#FFF" size={16} />
