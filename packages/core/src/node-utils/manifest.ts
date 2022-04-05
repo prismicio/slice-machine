@@ -20,9 +20,16 @@ export function retrieveManifest(cwd: string): FileContent<Manifest> {
     };
   }
 
-  const content: Manifest | null = Files.safeReadJson(
-    manifestPath
-  ) as Manifest | null;
+  const maybeContent = Files.safeReadJson(manifestPath);
+
+  const content = getOrElseW((errors: t.Errors) => {
+    const messages = formatValidationErrors(errors);
+    messages.forEach((message) => {
+      console.log("[core/sm.json] " + message);
+    });
+    return null;
+  })(Manifest.decode(maybeContent));
+
   return {
     exists: true,
     content,

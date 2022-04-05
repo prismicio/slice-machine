@@ -14,6 +14,8 @@ describe("maybeRepoNameFromSMFile", () => {
     jest.resetAllMocks();
   });
 
+  jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
+
   test("should return null if sm.json is not found", () => {
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
     const result = maybeRepoNameFromSMFile(__dirname, "https://prismic.io");
@@ -63,7 +65,7 @@ describe("maybeRepoNameFromSMFile", () => {
   });
 
   test("should return the repo name from the apiEdinpoint", () => {
-    const fakeConfig = { apiEndpoint: "https://foo-bar.prismic.io" };
+    const fakeConfig = { apiEndpoint: "https://foo-bar.prismic.io/api/v2" };
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
     jest
