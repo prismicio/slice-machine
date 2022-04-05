@@ -1,6 +1,5 @@
 import * as t from "io-ts";
 import { Frameworks, FrameworksC } from "./Framework";
-import { fromUrl, parseDomain, ParseResultType } from "parse-domain";
 
 const apiEndpoint = new t.Type<string>(
   "apiEndpoint",
@@ -9,26 +8,24 @@ const apiEndpoint = new t.Type<string>(
     if (typeof input !== "string")
       return t.failure(input, context, "apiEndpoint should be a string");
 
-    const endpoint = fromUrl(input);
-    const parsedRepo = parseDomain(endpoint);
-
-    if (parsedRepo.type !== ParseResultType.Listed)
-      return t.failure(input, context, "could not parse apiEndpoint");
-
-    if (parsedRepo.subDomains.length === 0) {
-      return t.failure(input, context, "could not parse apiEndpoint");
-    }
-
-    if (!input.endsWith("api/v2") && !input.endsWith("api/v2/")) {
+    try {
+      new URL(input);
+    } catch {
       return t.failure(
         input,
         context,
-        "could not parse apiEndpoint, apiEndpoint should end with api/v2"
+        "could not parse apiEndpoint: invalid url."
       );
     }
 
-    if (!parsedRepo.labels[0] || !parsedRepo.subDomains[0]) {
-      return t.failure(input, context, "could not parse apiEndpoint");
+    const url = new URL(input);
+
+    if (/\/api\/v2\/?$/.test(url.pathname) === false) {
+      return t.failure(
+        input,
+        context,
+        'apiEndpoint should end with "/api/v2".'
+      );
     }
 
     const regx = new RegExp(

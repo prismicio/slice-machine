@@ -45,7 +45,7 @@ export function defineFramework({
 }: {
   cwd: string;
   supportedFrameworks?: Frameworks[];
-  manifest?: Partial<Manifest>;
+  manifest?: Manifest;
 }): Frameworks {
   if (manifest?.framework && isFrameworkSupported(manifest.framework))
     return manifest.framework;
