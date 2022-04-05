@@ -25,7 +25,7 @@ describe("Changelog.migrate", () => {
     vol.fromJSON(
       {
         "sm.json": JSON.stringify({
-          apiEndpoint: "fakeapiendpoint",
+          apiEndpoint: "https://fake.prismic.io/api/v2",
         }),
       },
       CwdTmp
@@ -45,7 +45,7 @@ describe("Changelog.migrate", () => {
     vol.fromJSON(
       {
         "sm.json": JSON.stringify({
-          apiEndpoint: "fakeapiendpoint",
+          apiEndpoint: "https://fake.prismic.io/api/v2",
           _latest: "0.0.45",
         }),
       },
@@ -68,7 +68,7 @@ describe("Changelog.migrate", () => {
     vol.fromJSON(
       {
         "sm.json": JSON.stringify({
-          apiEndpoint: "fakeapiendpoint",
+          apiEndpoint: "https://fake.prismic.io/api/v2",
           _latest: "100.0.0",
         }),
       },

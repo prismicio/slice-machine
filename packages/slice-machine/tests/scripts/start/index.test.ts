@@ -112,6 +112,7 @@ describe("start script", () => {
 
     jest.spyOn(process, "cwd").mockReturnValue(TMP);
     jest.spyOn(console, "log").mockImplementation(() => undefined);
+    jest.spyOn(console, "info").mockImplementation(() => undefined);
 
     const fakeChild = jest
       .spyOn(child_process, "spawn")
