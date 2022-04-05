@@ -17,10 +17,7 @@ import { validateSession } from "./validateSession";
 
 async function run(): Promise<void> {
   const cwd: string = process.cwd(); // project running the script
-  const port: string =
-    findArgument(process.argv, "pepe").value ||
-    findArgument(process.argv, "port").value ||
-    "9999";
+  const port: string = findArgument(process.argv, "port").value || "9999";
   const skipMigration: boolean = findArgument(
     process.argv,
     "skipMigration"
