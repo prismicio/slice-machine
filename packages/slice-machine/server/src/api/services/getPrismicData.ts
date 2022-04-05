@@ -14,6 +14,7 @@ export default function getPrismicData(): Result<PrismicData, ErrorWithStatus> {
 
     const prismicData: PrismicData = {
       shortId: prismicConfig.shortId,
+      intercomHash: prismicConfig.intercomHash,
     };
 
     if (prismicConfig.cookies === DEFAULT_CONFIG.cookies) {

@@ -10,7 +10,7 @@ import { generate } from "./common/generate";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { RequestWithEnv } from "./http/common";
 import ServerState from "@models/server/ServerState";
-import { setShortId } from "./services/setShortId";
+import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
 import preferWroomBase from "../../../lib/utils/preferWroomBase";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
@@ -39,8 +39,9 @@ export const getBackendState = async (
         const newToken = await newTokenResponse.text();
         PrismicSharedConfigManager.setAuthCookie(newToken);
 
-        // set the short ID if it doesn't exist yet.
-        if (!env.prismicData.shortId) await setShortId(env, newToken);
+        // set the user profile if it doesn't exist yet.
+        if (!env.prismicData.shortId || !env.prismicData.intercomHash)
+          await getAndSetUserProfile(env, newToken);
       }
     } catch (e) {
       console.error("[Refresh token]: Internal error : ", e);
