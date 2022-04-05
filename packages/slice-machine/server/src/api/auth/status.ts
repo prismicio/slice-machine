@@ -14,7 +14,11 @@ export default async function handler(
 
     const profile = await getAndSetUserProfile(req.env, authToken);
 
-    return { status: "ok", shortId: profile.shortId };
+    return {
+      status: "ok",
+      shortId: profile.shortId,
+      intercomHash: profile.intercomHash,
+    };
   } catch (e) {
     console.error(e);
     return { status: "error" };

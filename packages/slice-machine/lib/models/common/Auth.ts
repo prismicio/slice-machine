@@ -3,4 +3,5 @@
 export type CheckAuthStatusResponse = {
   status: "error" | "ok" | "pending";
   shortId?: string;
+  intercomHash?: string;
 };

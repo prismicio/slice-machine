@@ -30,6 +30,7 @@ import { ToasterType } from "@src/modules/toaster";
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";
   shortId: string;
+  intercomHash: string;
 }
 
 const LoginModal: React.FunctionComponent = () => {
@@ -59,18 +60,20 @@ const LoginModal: React.FunctionComponent = () => {
       startLoadingLogin();
       await startAuth();
       window.open(loginRedirectUrl, "_blank");
-      const { shortId } = await startPolling<
+      const { shortId, intercomHash } = await startPolling<
         CheckAuthStatusResponse,
         ValidAuthStatus
       >(
         checkAuthStatus,
         (status: CheckAuthStatusResponse): status is ValidAuthStatus =>
-          status.status === "ok" && Boolean(status.shortId),
+          status.status === "ok" &&
+          Boolean(status.shortId) &&
+          Boolean(status.intercomHash),
         3000,
         60
       );
 
-      void Tracker.get().identifyUser(shortId);
+      void Tracker.get().identifyUser(shortId, intercomHash);
 
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();

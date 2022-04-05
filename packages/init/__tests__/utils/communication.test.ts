@@ -35,6 +35,7 @@ describe("communication.getUserPrfile", () => {
       .reply(200, {
         userId: "1234",
         shortId: "12",
+        intercomHash: "intercomHash",
         email: "batman@example.com",
         firstName: "Bat",
         lastName: "Man",
@@ -70,6 +71,7 @@ describe("communication.validateSessionAndGetProfile", () => {
   const email = "batman@example.com";
   const userId = "1234567";
   const shortId = "12";
+  const intercomHash = "intercomHash";
   const type = "USER";
   const repositories = {
     "foo-repo": { dbid: "abcd", role: Models.Roles.OWNER },
@@ -152,6 +154,7 @@ describe("communication.validateSessionAndGetProfile", () => {
       .reply(200, {
         userId,
         shortId,
+        intercomHash,
         email,
         firstName,
         lastName,

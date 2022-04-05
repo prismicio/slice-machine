@@ -59,7 +59,7 @@ export class SMTracker {
       );
   }
 
-  async #identify(shortId: string): Promise<void> {
+  async #identify(shortId: string, intercomHash: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
@@ -72,13 +72,7 @@ export class SMTracker {
           {
             integrations: {
               Intercom: {
-                user_hash: crypto
-                  .createHmac(
-                    "sha256",
-                    "_o2I4MG8Wpp2ibOszbRbZlWiP9gIJhUEOyn3xwKV"
-                  )
-                  .update(shortId)
-                  .digest("hex"),
+                user_hash: intercomHash,
               },
             },
           }
@@ -122,8 +116,8 @@ export class SMTracker {
     });
   }
 
-  async identifyUser(shortId: string): Promise<void> {
-    await this.#identify(shortId);
+  async identifyUser(shortId: string, intercomHash: string): Promise<void> {
+    await this.#identify(shortId, intercomHash);
   }
 
   async groupLibraries(

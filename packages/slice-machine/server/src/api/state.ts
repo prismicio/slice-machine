@@ -73,6 +73,7 @@ export default async function handler(
     sliceMachineAPIUrl: baseUrl,
     packageManager: Files.exists(YarnLockPath(cwd)) ? "yarn" : "npm",
     shortId: prismicData.shortId,
+    intercomHash: prismicData.intercomHash,
   };
 
   return {

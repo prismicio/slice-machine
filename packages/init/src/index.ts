@@ -45,7 +45,7 @@ async function init() {
 
   // If we get the info from the profile we want to identify all the previous events sent or continue in anonymous mode
   if (user.profile) {
-    Tracker.get().identifyUser(user.profile.shortId);
+    Tracker.get().identifyUser(user.profile.shortId, user.profile.intercomHash);
   }
 
   Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
