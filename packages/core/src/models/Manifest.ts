@@ -1,54 +1,48 @@
 import * as t from "io-ts";
 import { Frameworks, FrameworksC } from "./Framework";
 import { fromUrl, parseDomain, ParseResultType } from "parse-domain";
-class ApiEndPointType extends t.Type<string> {
-  constructor() {
-    super(
-      "apiEndpoint",
-      (input: unknown): input is string => typeof input === "string",
-      (input, context) => {
-        if (typeof input !== "string")
-          return t.failure(input, context, "apiEndpoint should be a string");
 
-        const endpoint = fromUrl(input);
-        const parsedRepo = parseDomain(endpoint);
+const apiEndpoint = new t.Type<string>(
+  "apiEndpoint",
+  (input: unknown): input is string => typeof input === "string",
+  (input, context) => {
+    if (typeof input !== "string")
+      return t.failure(input, context, "apiEndpoint should be a string");
 
-        if (parsedRepo.type !== ParseResultType.Listed)
-          return t.failure(input, context, "could not parse apiEndpoint");
+    const endpoint = fromUrl(input);
+    const parsedRepo = parseDomain(endpoint);
 
-        if (parsedRepo.subDomains.length === 0) {
-          return t.failure(input, context, "could not parse apiEndpoint");
-        }
+    if (parsedRepo.type !== ParseResultType.Listed)
+      return t.failure(input, context, "could not parse apiEndpoint");
 
-        if (!input.endsWith("api/v2") && !input.endsWith("api/v2/")) {
-          return t.failure(
-            input,
-            context,
-            "could not parse apiEndpoint, apiEndpoint should end with api/v2"
-          );
-        }
+    if (parsedRepo.subDomains.length === 0) {
+      return t.failure(input, context, "could not parse apiEndpoint");
+    }
 
-        if (!parsedRepo.labels[0] || !parsedRepo.subDomains[0]) {
-          return t.failure(input, context, "could not parse apiEndpoint");
-        }
+    if (!input.endsWith("api/v2") && !input.endsWith("api/v2/")) {
+      return t.failure(
+        input,
+        context,
+        "could not parse apiEndpoint, apiEndpoint should end with api/v2"
+      );
+    }
 
-        const regx = new RegExp(
-          "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test)/api/v2/?$",
-          "gi"
-        );
-        const result = regx.test(input);
-        return result
-          ? t.success(input)
-          : t.failure(
-              input,
-              context,
-              `apiEndpoint should match ${regx.source}`
-            );
-      },
-      t.identity
+    if (!parsedRepo.labels[0] || !parsedRepo.subDomains[0]) {
+      return t.failure(input, context, "could not parse apiEndpoint");
+    }
+
+    const regx = new RegExp(
+      "^https?://[a-z0-9][a-z0-9-]{2,}[a-z0-9](.cdn)?.(prismic.io|wroom.io|wroom.test)/api/v2/?$",
+      "gi"
     );
-  }
-}
+    const result = regx.test(input);
+
+    return result
+      ? t.success(input)
+      : t.failure(input, context, `apiEndpoint should match ${regx.source}`);
+  },
+  t.identity
+);
 
 export const FrameworkCodec = new t.Type<Frameworks>(
   "framework",
@@ -69,8 +63,6 @@ export const FrameworkCodec = new t.Type<Frameworks>(
   },
   t.identity
 );
-
-const apiEndpoint = new ApiEndPointType();
 
 export const Manifest = t.intersection([
   t.type({
