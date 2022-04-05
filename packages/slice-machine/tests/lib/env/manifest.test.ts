@@ -33,7 +33,7 @@ describe("lib/env/manifest", () => {
     expect(result.content).toBeNull();
     expect(result.state).toEqual("InvalidJson");
     expect(result.message).toEqual(
-      '[sm.json] Expecting "none" | "nuxt" | "previousNuxt" | "next" | "gatsby" | "vue" | "react" | "svelte" | "vanillajs" | "previousNext" at 1.framework but instead got: "foo"'
+      '[sm.json] Expecting framework at 1.framework but instead got: "foo" (framework should be one of none, nuxt, previousNuxt, next, gatsby, vue, react, svelte, vanillajs, previousNext. Set framework to one of these values or remove it and slice-machine will guess the framework.)'
     );
   });
 
