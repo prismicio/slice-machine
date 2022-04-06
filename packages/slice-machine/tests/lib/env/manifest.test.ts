@@ -13,7 +13,7 @@ describe("lib/env/manifest", () => {
       })
     );
 
-    const result = handleManifest(os.tmpdir());
+    const result = handleManifest(os.tmpdir(), true);
 
     expect(result.content).not.toBeNull();
     expect(result.state).toEqual("Valid");
@@ -28,7 +28,7 @@ describe("lib/env/manifest", () => {
       })
     );
 
-    const result = handleManifest(os.tmpdir());
+    const result = handleManifest(os.tmpdir(), true);
 
     expect(result.content).toBeNull();
     expect(result.state).toEqual("InvalidJson");
@@ -45,7 +45,7 @@ describe("lib/env/manifest", () => {
       })
     );
 
-    const result = handleManifest(os.tmpdir());
+    const result = handleManifest(os.tmpdir(), true);
 
     expect(result.content).not.toBeNull();
     expect(result.state).toEqual("Valid");

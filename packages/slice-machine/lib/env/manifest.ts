@@ -6,9 +6,6 @@ import {
 } from "parse-domain";
 import { Models } from "@slicemachine/core";
 import { retrieveManifest } from "@slicemachine/core/build/node-utils";
-import { fold } from "fp-ts/Either";
-import { pipe } from "fp-ts/function";
-import * as t from "io-ts";
 import { formatValidationErrors } from "io-ts-reporters";
 
 export interface ManifestInfo {
@@ -44,8 +41,8 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
   }
 }
 
-function handleManifest(cwd: string): ManifestInfo {
-  const maybeManifest = retrieveManifest(cwd);
+function handleManifest(cwd: string, validate = false): ManifestInfo {
+  const maybeManifest = retrieveManifest(cwd, validate);
   if (maybeManifest.exists === false) {
     return {
       state: ManifestState.NotFound,
@@ -53,34 +50,35 @@ function handleManifest(cwd: string): ManifestInfo {
       content: null,
     };
   }
-  return pipe(
-    Models.Manifest.decode(maybeManifest.content),
-    fold<t.Errors, Models.Manifest, ManifestInfo>(
-      (errors) => {
-        const messages = formatValidationErrors(errors, {});
-        const message = messages
-          .map((error) => "[sm.json] " + error)
-          .join("\n");
 
-        return {
-          state: ManifestState.InvalidJson,
-          message,
-          content: null,
-        };
-      },
-      (manifest) => {
-        const endpoint = fromUrl(manifest.apiEndpoint);
-        const parsedRepo = parseDomain(endpoint);
-        const repo = extractRepo(parsedRepo);
-        return {
-          state: ManifestState.Valid,
-          message: Messages[ManifestState.Valid],
-          content: manifest,
-          repo,
-        };
-      }
-    )
-  );
+  if (maybeManifest.errors) {
+    const messages = formatValidationErrors(maybeManifest.errors, {});
+    const message = messages.map((error) => "[sm.json] " + error).join("\n");
+
+    return {
+      state: ManifestState.InvalidJson,
+      message,
+      content: null,
+    };
+  }
+
+  if (maybeManifest.content === null) {
+    return {
+      state: ManifestState.InvalidJson,
+      message: Messages[ManifestState.InvalidJson],
+      content: null,
+    };
+  }
+
+  const endpoint = fromUrl(maybeManifest.content.apiEndpoint);
+  const parsedRepo = parseDomain(endpoint);
+  const repo = extractRepo(parsedRepo);
+  return {
+    state: ManifestState.Valid,
+    message: Messages[ManifestState.Valid],
+    content: maybeManifest.content,
+    repo,
+  };
 }
 
 export default handleManifest;

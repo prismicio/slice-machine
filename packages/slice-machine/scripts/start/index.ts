@@ -25,7 +25,7 @@ async function run(): Promise<void> {
 
   if (!skipMigration) await handleMigration(cwd);
 
-  const manifest: ManifestInfo = handleManifest(cwd);
+  const manifest: ManifestInfo = handleManifest(cwd, true);
   const { isManifestValid } = validateManifest(manifest);
   if (!isManifestValid) return process.exit(0);
 

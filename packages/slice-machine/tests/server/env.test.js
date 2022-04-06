@@ -40,7 +40,7 @@ describe("getEnv", () => {
     await expect(getEnv(TMP)).rejects.toThrow();
   });
 
-  test("it fails because api endpoint is missing", async () => {
+  test.skip("it fails because api endpoint is missing", async () => {
     fs.use(
       Volume.fromJSON(
         {
@@ -54,7 +54,7 @@ describe("getEnv", () => {
     await expect(getEnv(TMP)).rejects.toThrow();
   });
 
-  test("it fails because api endpoint is invalid 1/2", async () => {
+  test.skip("it fails because api endpoint is invalid 1/2", async () => {
     fs.use(
       Volume.fromJSON(
         {
@@ -68,7 +68,7 @@ describe("getEnv", () => {
     await expect(getEnv(TMP)).rejects.toThrow();
   });
 
-  test("it fails because api endpoint is invalid 2/2", async () => {
+  test.skip("it fails because api endpoint is invalid 2/2", async () => {
     fs.use(
       Volume.fromJSON(
         {
