@@ -24,7 +24,6 @@ export enum ManifestState {
   MissingEndpoint = "MissingEndpoint",
   InvalidEndpoint = "InvalidEndpoint",
   InvalidJson = "InvalidJson",
-  InvalidFramework = "InvalidFramework",
 }
 
 const Messages = {
@@ -35,9 +34,6 @@ const Messages = {
   [ManifestState.InvalidEndpoint]:
     'Property "apiEndpoint" is invalid (./sm.json).',
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
-  [ManifestState.InvalidFramework]: `Property "framework" in (./sm.json) must be one of "${Object.values(
-    Models.Frameworks
-  ).join('", "')}". Or remove it and SM will guess`,
 };
 
 export function extractRepo(parsedRepo: ParseResult): string | undefined {
