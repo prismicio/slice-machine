@@ -32,6 +32,13 @@ module.exports = withPlugins(
             },
             use: ["@svgr/webpack"],
           });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          config.resolve.alias = {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            ...config.resolve.alias,
+            react: path.dirname(require.resolve("react")),
+            "react-dom": path.dirname(require.resolve("react-dom")),
+          };
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return config;

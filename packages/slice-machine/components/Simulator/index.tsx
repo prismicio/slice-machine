@@ -76,15 +76,19 @@ export default function Simulator() {
       />
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <div className={themeClass}>
-        <SharedSliceEditor
-          content={content!}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          onContentChange={(content) => {
-            console.log("onContentChange", content);
-          }}
-          sharedSlice={sharedSlice}
-        />
+        {content === undefined ? (
+          <pre>Error: content is undefined.</pre>
+        ) : (
+          <SharedSliceEditor
+            content={content}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            onContentChange={(content) => {
+              console.log("onContentChange", content);
+            }}
+            sharedSlice={sharedSlice}
+          />
+        )}
       </div>
     </Flex>
   );
