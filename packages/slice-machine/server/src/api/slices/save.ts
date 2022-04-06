@@ -14,12 +14,13 @@ import { BackendEnvironment } from "@lib/models/common/Environment";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody, SliceSaveResponse } from "@lib/models/common/Slice";
+import * as IO from "../io";
 
 export async function handler(
   env: BackendEnvironment,
-  { sliceName, from, model, mockConfig }: SliceSaveBody
+  { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
 ): Promise<SliceSaveResponse> {
-  await onBeforeSaveSlice({ from, sliceName, model }, env);
+  await onBeforeSaveSlice({ from, sliceName }, env);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const updatedMockConfig = mockConfig
@@ -35,7 +36,7 @@ export async function handler(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
-  Files.write(modelPath, model);
+  IO.Slice.writeSlice(modelPath, smModel);
 
   const hasCustomMocks = Files.exists(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -48,7 +49,7 @@ export async function handler(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const mocks = mock(
       sliceName,
-      model,
+      smModel,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       SliceMockConfig.getSliceMockConfig(updatedMockConfig, from, sliceName)
     );

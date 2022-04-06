@@ -5,6 +5,7 @@ import { Models } from "@slicemachine/core";
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
   InitStart = "SliceMachine Init Start",
+  InitIdentify = "SliceMachine Init Identify",
   InitDone = "SliceMachine Init Done",
 }
 
@@ -90,8 +91,12 @@ export class InitTracker {
     this._trackEvent(EventType.DownloadLibrary, { library });
   }
 
-  trackInitStart(): void {
-    this._trackEvent(EventType.InitStart);
+  trackInitIdentify(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
+  }
+
+  trackInitStart(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
   trackInitDone(framework: Models.Frameworks, repoDomain: string): void {

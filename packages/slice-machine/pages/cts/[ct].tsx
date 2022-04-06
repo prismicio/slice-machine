@@ -1,18 +1,18 @@
 import { useRouter } from "next/router";
 
-import { CustomType, ObjectTabs } from "@lib/models/common/CustomType";
 import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useEffect } from "react";
 
 type CustomTypeBuilderWithProviderProps = {
-  customType: CustomType<ObjectTabs>;
-  remoteCustomType?: CustomType<ObjectTabs>;
+  customType: CustomTypeSM;
+  remoteCustomType: CustomTypeSM | undefined;
 };
 
 const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =
@@ -30,11 +30,7 @@ const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWi
     );
 
     useEffect(() => {
-      initCustomTypeStore(
-        CustomType.toArray(customType),
-        remoteCustomType ? CustomType.toArray(remoteCustomType) : null,
-        initialMockConfig
-      );
+      initCustomTypeStore(customType, remoteCustomType, initialMockConfig);
     }, []);
 
     return <CustomTypeBuilder />;

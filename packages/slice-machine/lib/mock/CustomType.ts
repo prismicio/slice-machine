@@ -1,13 +1,12 @@
-import faker from "faker";
+import faker from "@faker-js/faker";
 import * as Widgets from "./misc/widgets";
-
-import { CustomType, ObjectTabs } from "../models/common/CustomType";
 import { Tab } from "@lib/models/common/CustomType/tab";
 
 import { handleFields } from "./misc/handlers";
 
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { AsArray, GroupField } from "@lib/models/common/widgets/Group/type";
+import { GroupSM } from "@slicemachine/core/build/models/Group";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 interface Mock {
   id: string;
@@ -18,12 +17,9 @@ interface Mock {
 
 const fieldsHandler = handleFields(Widgets);
 
-const groupHandler = (
-  group: GroupField<AsArray>,
-  mockConfig: CustomTypeMockConfig
-) => {
+const groupHandler = (group: GroupSM, mockConfig: CustomTypeMockConfig) => {
   const items = [];
-  const entries = group.config.fields.map((e) => [e.key, e.value]);
+  const entries = group.config?.fields;
   for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
     items.push(fieldsHandler(entries, mockConfig));
   }
@@ -43,14 +39,14 @@ const createEmptyMock = (type: string) => ({
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function MockCustomType(
-  model: CustomType<ObjectTabs>,
+  model: CustomTypeSM,
   mockConfig: CustomTypeMockConfig
 ) {
   const customTypeMock: Mock = createEmptyMock(model.id);
-  const maybeUid = Object.entries(model.tabs).reduce((acc, curr) => {
-    const maybeWidgetUid = Object.entries(curr[1]).find(
+  const maybeUid = model.tabs.reduce((acc, curr) => {
+    const maybeWidgetUid = Object.entries(curr.value).find(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-member-access
-      ([_, e]) => e.type === "UID"
+      ([_, e]) => e.value.type === "UID"
     );
     if (!acc && maybeWidgetUid) {
       return curr;
@@ -66,10 +62,7 @@ export default async function MockCustomType(
     const { fields, groups, sliceZone } = Tab.organiseFields(tab);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mockedFields = fieldsHandler(
-      fields.map((e) => [e.key, e.value]),
-      mockConfig
-    );
+    const mockedFields = fieldsHandler(fields as [], mockConfig);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     customTypeMock.data = {
       ...customTypeMock.data,

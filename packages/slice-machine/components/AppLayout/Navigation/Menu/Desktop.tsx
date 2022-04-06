@@ -125,7 +125,7 @@ const Desktop: React.FunctionComponent<{ links: LinkProps[] }> = ({
                   latest: latestVersion && latestVersion.versionNumber,
                   latestNonBreaking: changelog.latestNonBreakingVersion,
                 });
-                return router.push("/changelog");
+                void router.push("/changelog");
               }}
               hasSeenUpdate={hasSeenLatestUpdates}
             />

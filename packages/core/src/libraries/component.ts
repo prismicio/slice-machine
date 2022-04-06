@@ -2,18 +2,15 @@ import path from "path";
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/lib/Either";
 
-import {
-  Slice,
-  AsObject,
-  Screenshot,
-  ComponentInfo,
-  VariationAsObject,
-} from "../models";
+import { Screenshot, ComponentInfo } from "../models";
 
 import { resolvePathsToScreenshot } from "./screenshot";
 import Files from "../node-utils/files";
 import { resolvePathsToMock } from "./mocks";
+import { Slices, VariationSM } from "../models/Slice";
+
 import Errors from "../utils/errors";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 /** take a path to slice and return its name  */
 function getComponentName(slicePath: string): string | undefined {
@@ -143,7 +140,7 @@ export function getComponentInfo(
 
   const model = fromJsonFile(path.join(slicePath, "model.json"), (payload) =>
     getOrElseW((e: t.Errors) => new Error(Errors.report(e)))(
-      Slice(AsObject).decode(payload)
+      SharedSlice.decode(payload)
     )
   );
   if (!model) {
@@ -158,8 +155,9 @@ export function getComponentInfo(
     return;
   }
 
-  const screenshotPaths = (model.variations || [])
-    .map((v: VariationAsObject) => {
+  const smModel = Slices.toSM(model);
+  const screenshotPaths = (smModel.variations || [])
+    .map((v: VariationSM) => {
       const activeScreenshot = resolvePathsToScreenshot({
         paths: assetsPaths,
         from,
@@ -188,7 +186,7 @@ export function getComponentInfo(
   return {
     fileName,
     extension,
-    model,
+    model: smModel,
     mock: maybeMock?.value,
     screenshotPaths,
   };

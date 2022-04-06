@@ -3,9 +3,9 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { EmbedField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 /**  {
   "type" : "Embed",
@@ -16,7 +16,7 @@ import { FieldType } from "../../CustomType/fields";
 } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Embed);
+const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Embed);
 
 const Meta = {
   icon: FiCode,
@@ -24,14 +24,20 @@ const Meta = {
   description: "Embed videos, songs, tweets, slides, …",
 };
 
-export const EmbedWidget: Widget<EmbedField, typeof schema> = {
-  create: (label: string) => new EmbedField({ label }),
+export const EmbedWidget: Widget<Embed, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.Embed,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+    },
+  }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: FieldType.Embed,
+  TYPE_NAME: WidgetTypes.Embed,
   schema,
   Meta,
 };

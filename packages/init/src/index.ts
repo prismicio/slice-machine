@@ -28,7 +28,7 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitStart();
+  Tracker.get().trackInitStart(maybeRepositorySubdomain);
 
   console.log(
     logs.purple(
@@ -47,6 +47,8 @@ async function init() {
   if (user.profile) {
     Tracker.get().identifyUser(user.profile.shortId);
   }
+
+  Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
 
   // retrieve tokens for api calls
   const config = Prismic.PrismicSharedConfigManager.get();

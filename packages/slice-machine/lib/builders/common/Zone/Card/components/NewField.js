@@ -6,9 +6,9 @@ import { validateId } from "@lib/forms/defaults";
 import { createInitialValues, createValidationSchema } from "@lib/forms";
 
 import * as Widgets from "@lib/models/common/widgets/withGroup";
-import { FieldType } from "@lib/models/common/CustomType/fields";
 
 import ErrorTooltip from "./ErrorTooltip";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 const RefInput = (args) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -40,7 +40,7 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
 
   const initialValues = {
     ...createInitialValues(FormFields),
-    ...(widgetTypeName === FieldType.UID ? { id: "uid" } : {}),
+    ...(widgetTypeName === WidgetTypes.UID ? { id: "uid" } : {}),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     widgetTypeName,
   };

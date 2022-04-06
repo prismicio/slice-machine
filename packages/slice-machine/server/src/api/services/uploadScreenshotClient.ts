@@ -1,4 +1,3 @@
-import type Models from "@slicemachine/core/build/models";
 import { snakelize } from "@lib/utils/str";
 import path from "path";
 import uniqid from "uniqid";
@@ -8,10 +7,11 @@ import { ApiError } from "@lib/models/server/ApiResult";
 
 import { s3DefaultPrefix } from "@lib/consts";
 import { onError } from "../common/error";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 export const purge = async (
   env: BackendEnvironment,
-  slices: ReadonlyArray<Models.SliceAsObject>,
+  slices: ReadonlyArray<SliceSM>,
   sliceName: string
 ): Promise<{ err?: ApiError }> => {
   if (slices.find((e) => e.id === snakelize(sliceName))) {

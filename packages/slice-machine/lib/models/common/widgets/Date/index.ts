@@ -3,9 +3,9 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { Widget } from "../Widget";
-import { DateField } from "./type";
-import { FieldType } from "../../CustomType/fields";
+import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Date } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 /** {
   "type" : "Date",
@@ -16,7 +16,7 @@ import { FieldType } from "../../CustomType/fields";
 } */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { FormFields, schema } = createDefaultWidgetValues(FieldType.Date);
+const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Date);
 
 const Meta = {
   icon: MdDateRange,
@@ -24,14 +24,20 @@ const Meta = {
   description: "A calendar date picker",
 };
 
-export const DateWidget: Widget<DateField, typeof schema> = {
-  create: (label: string) => new DateField({ label }),
+export const DateWidget: Widget<Date, typeof schema> = {
+  create: (label: string) => ({
+    type: WidgetTypes.Date,
+    config: {
+      ...DEFAULT_CONFIG,
+      label,
+    },
+  }),
   handleMockConfig,
   handleMockContent,
   MockConfigForm,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  TYPE_NAME: FieldType.Date,
+  TYPE_NAME: WidgetTypes.Date,
   schema,
   Meta,
 };
