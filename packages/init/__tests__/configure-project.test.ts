@@ -93,9 +93,6 @@ describe("configure-project", () => {
   const mkdirMock = mkdir as jest.Mock;
 
   test("it should create a new manifest if it doesn't exist yet", () => {
-    // vol.fromJSON({
-    //   "package.json": JSON.stringify({ dependencies: {"react": "1.1.1"}})
-    // } ,fakeCwd)
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
