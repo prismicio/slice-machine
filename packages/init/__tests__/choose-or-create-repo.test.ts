@@ -351,7 +351,7 @@ describe("sortReposForPrompt", () => {
     jest
       .spyOn(fs, "readFileSync")
       .mockImplementationOnce(() =>
-        JSON.stringify({ apiEndpoint: "https://foo-bar.prismic.io/api.v2" })
+        JSON.stringify({ apiEndpoint: "https://foo-bar.prismic.io/api/v2" })
       );
 
     const [first, second, third] = sortReposForPrompt(

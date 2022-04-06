@@ -36,18 +36,6 @@ See below for more info 👇`,
       return { isManifestValid: false };
     }
 
-    case ManifestState.MissingEndpoint:
-      console.log(
-        'Add a property "apiEndpoint" to your config.\nExample: https://my-repo.prismic.io/api/v2\n\n'
-      );
-      return { isManifestValid: false };
-
-    case ManifestState.InvalidEndpoint:
-      console.log(
-        "Update your config file with a valid Prismic endpoint.\nExample: https://my-repo.prismic.io/api/v2\n\n"
-      );
-      return { isManifestValid: false };
-
     case ManifestState.InvalidJson: {
       console.log("Update your config file with a valid JSON structure.");
       return { isManifestValid: false };

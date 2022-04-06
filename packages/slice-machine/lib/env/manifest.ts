@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import {
   parseDomain,
   fromUrl,
@@ -7,8 +5,8 @@ import {
   ParseResult,
 } from "parse-domain";
 import { Models } from "@slicemachine/core";
-import { fold } from "fp-ts/Either";
-import { pipe } from "fp-ts/function";
+import { retrieveManifest } from "@slicemachine/core/build/node-utils";
+import { formatValidationErrors } from "io-ts-reporters";
 
 export interface ManifestInfo {
   state: ManifestState;
@@ -20,18 +18,12 @@ export interface ManifestInfo {
 export enum ManifestState {
   Valid = "Valid",
   NotFound = "NotFound",
-  MissingEndpoint = "MissingEndpoint",
-  InvalidEndpoint = "InvalidEndpoint",
   InvalidJson = "InvalidJson",
 }
 
 const Messages = {
   [ManifestState.Valid]: "Manifest is correctly setup.",
   [ManifestState.NotFound]: "Could not find manifest file (./sm.json).",
-  [ManifestState.MissingEndpoint]:
-    'Property "apiEndpoint" is missing in manifest (./sm.json).',
-  [ManifestState.InvalidEndpoint]:
-    'Property "apiEndpoint" is invalid (./sm.json).',
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
 };
 
@@ -49,66 +41,9 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
   }
 }
 
-function validateEndpoint(endpoint: string, parsedRepo: ParseResult): boolean {
-  try {
-    switch (parsedRepo.type) {
-      case ParseResultType.Listed: {
-        if (!parsedRepo?.subDomains?.length) {
-          return false;
-        }
-        if (!endpoint.endsWith("api/v2") && !endpoint.endsWith("api/v2/")) {
-          return false;
-        }
-        return true;
-      }
-      default: {
-        return false;
-      }
-    }
-  } catch (e) {
-    const message =
-      "[api/env]: Unrecoverable error. Could not parse api endpoint. Exiting..";
-    console.error(message);
-    return false;
-  }
-}
-
-function validate(manifest: Models.Manifest): ManifestInfo {
-  if (!manifest.apiEndpoint) {
-    return {
-      state: ManifestState.MissingEndpoint,
-      message: Messages[ManifestState.MissingEndpoint],
-      content: null,
-    };
-  }
-  const endpoint = fromUrl(manifest.apiEndpoint);
-  const parsedRepo = parseDomain(endpoint);
-  if (!validateEndpoint(manifest.apiEndpoint, parsedRepo)) {
-    return {
-      state: ManifestState.InvalidEndpoint,
-      message: Messages[ManifestState.InvalidEndpoint],
-      content: null,
-    };
-  }
-  const repo = extractRepo(parsedRepo);
-  if (!repo) {
-    return {
-      state: ManifestState.InvalidEndpoint,
-      message: Messages[ManifestState.InvalidEndpoint],
-      content: null,
-    };
-  }
-  return {
-    state: ManifestState.Valid,
-    message: Messages[ManifestState.Valid],
-    content: manifest,
-    repo,
-  };
-}
-
-function handleManifest(cwd: string): ManifestInfo {
-  const pathToSm = path.join(cwd, "sm.json");
-  if (!fs.existsSync(pathToSm)) {
+function handleManifest(cwd: string, validate = false): ManifestInfo {
+  const maybeManifest = retrieveManifest(cwd, validate);
+  if (maybeManifest.exists === false) {
     return {
       state: ManifestState.NotFound,
       message: Messages[ManifestState.NotFound],
@@ -116,29 +51,34 @@ function handleManifest(cwd: string): ManifestInfo {
     };
   }
 
-  try {
-    const f = fs.readFileSync(pathToSm, "utf-8");
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const json = JSON.parse(f);
+  if (maybeManifest.errors) {
+    const messages = formatValidationErrors(maybeManifest.errors, {});
+    const message = messages.map((error) => "[sm.json] " + error).join("\n");
 
-    return pipe(
-      Models.Manifest.decode(json),
-      fold(
-        // failure handler
-        () => {
-          throw new Error();
-        },
-        // success handler
-        (manifest) => validate(manifest)
-      )
-    );
-  } catch (e) {
+    return {
+      state: ManifestState.InvalidJson,
+      message,
+      content: null,
+    };
+  }
+
+  if (maybeManifest.content === null) {
     return {
       state: ManifestState.InvalidJson,
       message: Messages[ManifestState.InvalidJson],
       content: null,
     };
   }
+
+  const endpoint = fromUrl(maybeManifest.content.apiEndpoint);
+  const parsedRepo = parseDomain(endpoint);
+  const repo = extractRepo(parsedRepo);
+  return {
+    state: ManifestState.Valid,
+    message: Messages[ManifestState.Valid],
+    content: maybeManifest.content,
+    repo,
+  };
 }
 
 export default handleManifest;

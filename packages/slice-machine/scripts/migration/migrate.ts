@@ -19,6 +19,8 @@ export async function migrate(params: MigrationParams) {
   const projectCWD = params.cwd;
   const smConfig = NodeUtils.retrieveManifest(projectCWD);
 
+  if (smConfig.errors) return;
+
   const latestMigrationVersion: string | undefined = smConfig.content?._latest;
 
   const migrationsToRun: Migration[] = MIGRATIONS.filter((m) => {

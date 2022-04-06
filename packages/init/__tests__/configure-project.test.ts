@@ -119,7 +119,6 @@ describe("configure-project", () => {
     configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).not.toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
@@ -144,7 +143,6 @@ describe("configure-project", () => {
     ]);
 
     expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).not.toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.music.to.my.hears.io/api/v2",
       framework: "react",
@@ -171,7 +169,7 @@ describe("configure-project", () => {
     expect(failFn).toHaveBeenCalled();
   });
 
-  test("it should fail if create manifest throws", () => {
+  test("it should fail if create or update manifest throws", () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
@@ -185,27 +183,6 @@ describe("configure-project", () => {
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
     expect(patchManifestMock).not.toBeCalled();
-
-    expect(successFn).not.toHaveBeenCalled();
-    expect(failFn).toHaveBeenCalled();
-  });
-
-  test("it should fail if patch manifest throws", () => {
-    retrieveManifestMock.mockReturnValue({
-      exists: true,
-      content: {
-        framework: Models.Frameworks.react,
-      },
-    });
-    patchManifestMock.mockImplementation(() => {
-      throw new Error("fake error to test the catch");
-    });
-
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
-
-    expect(retrieveManifestMock).toBeCalled();
-    expect(createManifestMock).not.toBeCalled();
-    expect(patchManifestMock).toBeCalled();
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
