@@ -29,10 +29,6 @@ export enum ManifestState {
 const Messages = {
   [ManifestState.Valid]: "Manifest is correctly setup.",
   [ManifestState.NotFound]: "Could not find manifest file (./sm.json).",
-  [ManifestState.MissingEndpoint]:
-    'Property "apiEndpoint" is missing in manifest (./sm.json).',
-  [ManifestState.InvalidEndpoint]:
-    'Property "apiEndpoint" is invalid (./sm.json).',
   [ManifestState.InvalidJson]: "Could not parse manifest (./sm.json).",
 };
 
