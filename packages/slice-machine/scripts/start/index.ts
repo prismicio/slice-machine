@@ -52,9 +52,3 @@ function start(): Promise<void> {
 }
 
 export default start;
-
-const isCli = require.main === module;
-
-if (isCli) {
-  void start();
-}
