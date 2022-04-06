@@ -21,8 +21,6 @@ export interface ManifestInfo {
 export enum ManifestState {
   Valid = "Valid",
   NotFound = "NotFound",
-  MissingEndpoint = "MissingEndpoint",
-  InvalidEndpoint = "InvalidEndpoint",
   InvalidJson = "InvalidJson",
 }
 
