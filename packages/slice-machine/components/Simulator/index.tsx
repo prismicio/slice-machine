@@ -77,7 +77,7 @@ export default function Simulator() {
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <div className={themeClass}>
         <SharedSliceEditor
-          content={content}
+          content={content!}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           onContentChange={(content) => {
