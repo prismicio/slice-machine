@@ -3,6 +3,7 @@ import { UserProfile } from "@slicemachine/core/build/models";
 const mockUserProfile: UserProfile = {
   userId: "fakeUserId",
   shortId: "fakeShortUserId",
+  intercomHash: "intercomHash",
   email: "fakeEmail",
   firstName: "fakeFirstname",
   lastName: "fakeLastname",

@@ -8,26 +8,36 @@ import {
   getFramework,
   getRepoName,
   getShortId,
+  getIntercomHash,
 } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const { libraries, repoName, shorId, currentVersion, framework } =
-    useSelector((state: SliceMachineStoreType) => ({
-      currentVersion: getCurrentVersion(state),
-      framework: getFramework(state),
-      shorId: getShortId(state),
-      repoName: getRepoName(state),
-      libraries: getLibraries(state),
-    }));
+  const {
+    libraries,
+    repoName,
+    shortId,
+    intercomHash,
+    currentVersion,
+    framework,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    currentVersion: getCurrentVersion(state),
+    framework: getFramework(state),
+    shortId: getShortId(state),
+    intercomHash: getIntercomHash(state),
+    repoName: getRepoName(state),
+    libraries: getLibraries(state),
+  }));
 
   const router = useRouter();
 
   useEffect(() => {
     void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
 
-    shorId && Tracker.get().identifyUser(shorId);
+    shortId &&
+      intercomHash &&
+      Tracker.get().identifyUser(shortId, intercomHash);
 
     // For initial loading
     void Tracker.get().trackPageView(framework, currentVersion);

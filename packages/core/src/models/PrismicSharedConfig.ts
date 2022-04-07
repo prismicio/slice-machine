@@ -6,7 +6,8 @@ export const PrismicSharedConfig = t.intersection([
     cookies: t.string,
   }),
   t.partial({
-    shortId: t.union([t.string, t.undefined]),
+    shortId: t.string,
+    intercomHash: t.string,
     oauthAccessToken: t.string,
     authUrl: t.string,
   }),

@@ -9,6 +9,7 @@ describe("DefaultClient", () => {
       const response = {
         userId: "userId",
         shortId: "shortId",
+        intercomHash: "intercomHash",
         email: "email",
         firstName: "firstName",
         lastName: "lastName",

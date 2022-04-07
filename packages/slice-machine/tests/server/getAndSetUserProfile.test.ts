@@ -1,6 +1,6 @@
 import MockedUserProfile from "../__mocks__/userProfile";
 import MockedBackendEnv from "../__mocks__/backendEnvironment";
-import { setShortId } from "../../server/src/api/services/setShortId";
+import { getAndSetUserProfile } from "../../server/src/api/services/getAndSetUserProfile";
 import { vol } from "memfs";
 import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/models";
@@ -17,7 +17,7 @@ describe("setShortId", () => {
     vol.reset();
   });
 
-  test("it should set the short ID", async () => {
+  test("it should set the short ID and the intercom hash", async () => {
     const fakeCookie = "biscuits";
     const sharedConfig: PrismicSharedConfig = {
       base: "fakeBase",
@@ -34,7 +34,7 @@ describe("setShortId", () => {
       .get("/profile")
       .reply(200, JSON.stringify(MockedUserProfile));
 
-    const res = await setShortId(MockedBackendEnv, fakeCookie);
+    const res = await getAndSetUserProfile(MockedBackendEnv, fakeCookie);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -44,6 +44,7 @@ describe("setShortId", () => {
     const expectedPrismicSharedConfig: PrismicSharedConfig = {
       ...sharedConfig,
       shortId: MockedUserProfile.shortId,
+      intercomHash: MockedUserProfile.intercomHash,
     };
     expect(JSON.parse(newPrismicSharedConfig)).toEqual(
       expectedPrismicSharedConfig
@@ -67,9 +68,9 @@ describe("setShortId", () => {
       .get("/profile")
       .reply(200, {});
 
-    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
-      "Unable to parse profile: {}"
-    );
+    expect(() =>
+      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
+    ).rejects.toThrow("Unable to parse profile: {}");
   });
 
   test("on network issues should throw an error", async () => {
@@ -89,8 +90,8 @@ describe("setShortId", () => {
       .get("/profile")
       .reply(403);
 
-    expect(() => setShortId(MockedBackendEnv, fakeCookie)).rejects.toThrow(
-      "Request failed with status code 403"
-    );
+    expect(() =>
+      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
+    ).rejects.toThrow("Request failed with status code 403");
   });
 });

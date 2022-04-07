@@ -48,11 +48,21 @@ describe("SMTracker", () => {
   test("should send a identify event", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey);
-    await smTracker.identifyUser("userId");
+    await smTracker.identifyUser("userId", "intercomHash");
 
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.identify).toHaveBeenCalledTimes(1);
-    expect(NativeTrackerMocks.identify).toHaveBeenCalledWith("userId");
+    expect(NativeTrackerMocks.identify).toHaveBeenCalledWith(
+      "userId",
+      {},
+      {
+        integrations: {
+          Intercom: {
+            user_hash: "intercomHash",
+          },
+        },
+      }
+    );
   });
 
   test("should send a track review event", async () => {
@@ -231,7 +241,7 @@ describe("SMTracker", () => {
   test("shouldn't send any events when tracker is disable", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey, false);
-    await smTracker.identifyUser("userId");
+    await smTracker.identifyUser("userId", "intercomhash");
     await smTracker.trackReview(Frameworks.next, 3, "comment");
     await smTracker.trackOnboardingSkip(1);
     await smTracker.trackOnboardingContinue(
