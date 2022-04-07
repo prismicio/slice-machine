@@ -40,7 +40,7 @@
     "@babel/register": "^7.11.5",
     "@prismicio/api-renderer": "^0.1.1",
 		"@prismicio/editor-fields": "file:../../../prismic-editor/packages/editor-fields",
-    "@prismicio/mocks": "^0.1.0",
+    "@prismicio/mocks": "^0.1.1",
     "@prismicio/slice-simulator-com": "^0.2.0",
     "@prismicio/types-internal": "^0.2.9",
     "@reach/menu-button": "^0.16.2",

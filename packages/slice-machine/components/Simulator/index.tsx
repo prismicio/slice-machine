@@ -61,21 +61,26 @@ export default function Simulator() {
   console.log("sharedSlice", sharedSlice);
 
   return (
-    <Flex sx={{ height: "100vh", flexDirection: "column" }}>
-      <Header
-        title={Model.model.name}
-        Model={Model}
-        variation={variation}
-        handleScreenSizeChange={handleScreenSizeChange}
-        size={state.size}
-      />
-      <IframeRenderer
-        size={state.size}
-        simulatorUrl={simulatorUrl}
-        sliceView={sliceView}
-      />
+    <Flex sx={{ height: "100vh", flexDirection: "row" }}>
+      <Flex sx={{ flex: 1, flexDirection: "column" }}>
+        <Header
+          title={Model.model.name}
+          Model={Model}
+          variation={variation}
+          handleScreenSizeChange={handleScreenSizeChange}
+          size={state.size}
+        />
+        <IframeRenderer
+          size={state.size}
+          simulatorUrl={simulatorUrl}
+          sliceView={sliceView}
+        />
+      </Flex>
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <div className={themeClass}>
+      <Flex
+        className={themeClass}
+        sx={{ flexDirection: "column", minWidth: "444px" }}
+      >
         {content === undefined ? (
           <pre>Error: content is undefined.</pre>
         ) : (
@@ -89,7 +94,7 @@ export default function Simulator() {
             sharedSlice={sharedSlice}
           />
         )}
-      </div>
+      </Flex>
     </Flex>
   );
 }
