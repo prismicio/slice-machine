@@ -1,5 +1,5 @@
 import compareVersions from "compare-versions";
-import * as NodeUtils from "@slicemachine/core/build/node-utils";
+import { Manifest } from "@slicemachine/core/build/models";
 
 import MIGRATIONS from "./versions";
 import { run } from "./run";
@@ -15,13 +15,8 @@ export interface MigrationParams {
 }
 
 // on postinstall of sliceMachine UI, set the _latest to the current version if it doesn't exist yet.
-export async function migrate(params: MigrationParams) {
-  const projectCWD = params.cwd;
-  const smConfig = NodeUtils.retrieveManifest(projectCWD);
-
-  if (smConfig.errors) return;
-
-  const latestMigrationVersion: string | undefined = smConfig.content?._latest;
+export async function migrate(params: MigrationParams, manifest: Manifest) {
+  const latestMigrationVersion: string | undefined = manifest._latest;
 
   const migrationsToRun: Migration[] = MIGRATIONS.filter((m) => {
     return compareVersions.compare(
