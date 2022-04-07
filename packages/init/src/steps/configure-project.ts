@@ -30,6 +30,7 @@ export function configureProject(
       getTheSliceMachineVersionInstalled(packageJson);
 
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
+
     const manifestUpdated: Models.Manifest = {
       ...(manifestAlreadyExistWithContent
         ? manifest.content

@@ -30,7 +30,7 @@ describe("Scripts.start.validateManifest", () => {
     jest.spyOn(global.console, "log").mockImplementation(() => null);
 
     const { isManifestValid } = validateManifest({
-      state: ManifestState.MissingEndpoint,
+      state: ManifestState.InvalidJson,
       message: "",
       content: null,
     });
@@ -42,7 +42,7 @@ describe("Scripts.start.validateManifest", () => {
     jest.spyOn(global.console, "log").mockImplementation(() => null);
 
     const { isManifestValid } = validateManifest({
-      state: ManifestState.InvalidEndpoint,
+      state: ManifestState.InvalidJson,
       message: "",
       content: null,
     });
