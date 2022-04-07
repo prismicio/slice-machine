@@ -42,43 +42,51 @@ export function extractRepo(parsedRepo: ParseResult): string | undefined {
 }
 
 function handleManifest(cwd: string, validate = false): ManifestInfo {
-  const maybeManifest = retrieveManifest(cwd, validate);
-  if (maybeManifest.exists === false) {
+  try {
+    const maybeManifest = retrieveManifest(cwd, validate);
+    if (maybeManifest.exists === false) {
+      return {
+        state: ManifestState.NotFound,
+        message: Messages[ManifestState.NotFound],
+        content: null,
+      };
+    }
+
+    if (maybeManifest.errors) {
+      const messages = formatValidationErrors(maybeManifest.errors, {});
+      const message = messages.map((error) => "[sm.json] " + error).join("\n");
+
+      return {
+        state: ManifestState.InvalidJson,
+        message,
+        content: null,
+      };
+    }
+
+    if (maybeManifest.content === null) {
+      return {
+        state: ManifestState.InvalidJson,
+        message: Messages[ManifestState.InvalidJson],
+        content: null,
+      };
+    }
+
+    const endpoint = fromUrl(maybeManifest.content.apiEndpoint);
+    const parsedRepo = parseDomain(endpoint);
+    const repo = extractRepo(parsedRepo);
     return {
-      state: ManifestState.NotFound,
-      message: Messages[ManifestState.NotFound],
-      content: null,
+      state: ManifestState.Valid,
+      message: Messages[ManifestState.Valid],
+      content: maybeManifest.content,
+      repo,
     };
-  }
-
-  if (maybeManifest.errors) {
-    const messages = formatValidationErrors(maybeManifest.errors, {});
-    const message = messages.map((error) => "[sm.json] " + error).join("\n");
-
-    return {
-      state: ManifestState.InvalidJson,
-      message,
-      content: null,
-    };
-  }
-
-  if (maybeManifest.content === null) {
+  } catch (e) {
     return {
       state: ManifestState.InvalidJson,
       message: Messages[ManifestState.InvalidJson],
       content: null,
     };
   }
-
-  const endpoint = fromUrl(maybeManifest.content.apiEndpoint);
-  const parsedRepo = parseDomain(endpoint);
-  const repo = extractRepo(parsedRepo);
-  return {
-    state: ManifestState.Valid,
-    message: Messages[ManifestState.Valid],
-    content: maybeManifest.content,
-    repo,
-  };
 }
 
 export default handleManifest;
