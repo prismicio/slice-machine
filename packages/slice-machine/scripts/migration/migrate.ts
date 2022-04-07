@@ -12,11 +12,12 @@ export interface Migration {
 export interface MigrationParams {
   cwd: string;
   ignorePromptForTest: boolean;
+  manifest: Manifest;
 }
 
 // on postinstall of sliceMachine UI, set the _latest to the current version if it doesn't exist yet.
-export async function migrate(params: MigrationParams, manifest: Manifest) {
-  const latestMigrationVersion: string | undefined = manifest._latest;
+export async function migrate(params: MigrationParams) {
+  const latestMigrationVersion: string | undefined = params.manifest._latest;
 
   const migrationsToRun: Migration[] = MIGRATIONS.filter((m) => {
     return compareVersions.compare(

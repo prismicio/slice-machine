@@ -9,7 +9,7 @@ export async function handleMigration(
   if (!retrieveManifest(cwd).exists) return;
 
   try {
-    await migrate({ cwd, ignorePromptForTest: false }, manifest);
+    await migrate({ cwd, ignorePromptForTest: false, manifest });
   } catch (e: unknown) {
     console.error(
       "An error occurred while migrating file system. Continuing..."

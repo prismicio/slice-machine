@@ -32,7 +32,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePromptForTest: true }, manifest);
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true, manifest });
 
     expect(runMock).toHaveBeenCalled();
     const migrationToExecute = runMock.mock.calls[0][0];
@@ -54,7 +54,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePromptForTest: true }, manifest);
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true, manifest });
 
     expect(runMock).toHaveBeenCalled();
 
@@ -78,7 +78,7 @@ describe("Changelog.migrate", () => {
       CwdTmp
     );
 
-    await migrate({ cwd: CwdTmp, ignorePromptForTest: true }, manifest);
+    await migrate({ cwd: CwdTmp, ignorePromptForTest: true, manifest });
 
     // should not execute any migrations
     expect(runMock).not.toHaveBeenCalled();
