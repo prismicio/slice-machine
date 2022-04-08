@@ -54,9 +54,8 @@ export default function Simulator() {
   );
 
   const sharedSlice = useMemo(() => Slices.fromSM(Model.model), [Model.model]);
-  const initialContent = useMemo(
-    () => Model.mock?.find((content) => content.variation === variation.id),
-    [Model.mock, variation]
+  const initialContent = Model.mock?.find(
+    (content) => content.variation === variation.id
   );
   const [content, setContent] = useState<SharedSliceContent | undefined>(
     initialContent
