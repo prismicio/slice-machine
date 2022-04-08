@@ -75,7 +75,7 @@ export default function Simulator() {
   );
 
   return (
-    <Flex sx={{ height: "100vh", flexDirection: "row" }}>
+    <Flex sx={{ flexDirection: "row", height: "100vh" }}>
       <Flex sx={{ flex: 1, flexDirection: "column" }}>
         <Header
           title={Model.model.name}
