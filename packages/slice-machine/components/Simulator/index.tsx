@@ -1,5 +1,4 @@
 import { SharedSliceEditor, themeClass } from "@prismicio/editor-fields";
-import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import { renderSliceMock } from "@prismicio/mocks";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
@@ -57,9 +56,7 @@ export default function Simulator() {
   const initialContent = Model.mock?.find(
     (content) => content.variation === variation.id
   );
-  const [content, setContent] = useState<SharedSliceContent | undefined>(
-    initialContent
-  );
+  const [content, setContent] = useState(initialContent);
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
   if (variation.id !== prevVariationId) {
     setContent(initialContent);
@@ -105,9 +102,7 @@ export default function Simulator() {
         ) : (
           <SharedSliceEditor
             content={content}
-            onContentChange={(content: SharedSliceContent) => {
-              setContent(content);
-            }}
+            onContentChange={setContent}
             sharedSlice={sharedSlice}
           />
         )}
