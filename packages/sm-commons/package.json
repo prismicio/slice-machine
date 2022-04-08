@@ -1,6 +1,6 @@
 {
   "name": "sm-commons",
-  "version": "0.1.6-alpha.3",
+  "version": "0.1.6-alpha.4",
   "description": "A set of common utilities for slice machine libraries",
   "typings": "index.d.ts",
   "scripts": {

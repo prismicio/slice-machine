@@ -1,6 +1,6 @@
 {
   "name": "vue-slicezone",
-  "version": "0.1.6-alpha.3",
+  "version": "0.1.6-alpha.4",
   "description": "A component that maps other components to Prismic slices",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,6 @@
     "eslint-plugin-vue": "^7.17.0"
   },
   "dependencies": {
-    "sm-commons": "0.1.6-alpha.3"
+    "sm-commons": "0.1.6-alpha.4"
   }
 }
