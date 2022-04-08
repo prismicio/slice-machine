@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.3.5-alpha.6",
+  "version": "0.3.5",
   "private": false,
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
@@ -40,7 +40,7 @@
     "@babel/register": "^7.17.7",
     "@faker-js/faker": "^6.0.0",
     "@prismicio/types-internal": "^0.2.7",
-    "@slicemachine/core": "1.1.6-alpha.6",
+    "@slicemachine/core": "1.1.6",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",
     "axios": "^0.26.0",
