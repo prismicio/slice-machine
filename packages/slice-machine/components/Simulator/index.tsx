@@ -92,7 +92,13 @@ export default function Simulator() {
       </Flex>
       <Flex
         className={themeClass}
-        sx={{ flexDirection: "column", width: "444px" }}
+        sx={{
+          backgroundColor: "#F9F8F9",
+          borderInlineStart: "1px solid #DCDBDD",
+          flexDirection: "column",
+          padding: "72px 24px 36px 23px",
+          width: "444px",
+        }}
       >
         {content === undefined ? (
           <pre>Error: content is undefined.</pre>
