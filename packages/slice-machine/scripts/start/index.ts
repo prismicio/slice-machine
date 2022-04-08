@@ -23,11 +23,11 @@ async function run(): Promise<void> {
     "skipMigration"
   ).exists;
 
-  if (!skipMigration) await handleMigration(cwd);
-
   const manifest: ManifestInfo = handleManifest(cwd, true);
   const { isManifestValid } = validateManifest(manifest);
-  if (!isManifestValid) return process.exit(0);
+  if (!isManifestValid || !manifest.content) return process.exit(0);
+
+  if (!skipMigration) await handleMigration(cwd, manifest.content);
 
   const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
   const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);

@@ -35,6 +35,11 @@ export function retrieveManifest(
     };
   }
 
+  if (!content) {
+    // TODO: not this
+    throw new Error("Could not parse sm.json");
+  }
+
   return pipe(
     Manifest.decode(content),
     fold<t.Errors, Manifest, FileContent<Manifest, t.Errors>>(
