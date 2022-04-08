@@ -15,6 +15,7 @@ import getEnv from "../../services/getEnv";
 import { snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
 import { DEFAULT_VARIATION_ID } from "@lib/consts";
+import * as IO from "../../io";
 
 import save from "../save";
 
@@ -97,10 +98,10 @@ export default async function handler({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   if (Files.exists(pathToModel)) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    const model = Files.readJson(pathToModel);
+    const smModel = IO.Slice.readSlice(pathToModel);
     const res = await save({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      body: { sliceName, from, model, mockConfig: {} },
+      body: { sliceName, from, model: smModel, mockConfig: {} },
     });
     return { ...res, variationId: DEFAULT_VARIATION_ID };
   }

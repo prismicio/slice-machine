@@ -1,14 +1,14 @@
 import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import { maybeRepoNameFromSMFile } from "../../src/node-utils/manifest";
 
-import * as fs from "fs";
-
-jest.mock("fs");
+import fs from "fs";
 
 describe("maybeRepoNameFromSMFile", () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
+
+  jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
   test("should return null if sm.json is not found", () => {
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => undefined);
@@ -59,7 +59,7 @@ describe("maybeRepoNameFromSMFile", () => {
   });
 
   test("should return the repo name from the apiEdinpoint", () => {
-    const fakeConfig = { apiEndpoint: "https://foo-bar.prismic.io" };
+    const fakeConfig = { apiEndpoint: "https://foo-bar.prismic.io/api/v2" };
 
     jest.spyOn(fs, "lstatSync").mockImplementationOnce(() => ({} as fs.Stats));
     jest

@@ -1,13 +1,21 @@
-import { ArrayTabs, CustomType } from "@models/common/CustomType";
-import { Field } from "@models/common/CustomType/fields";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
+import {
+  CustomTypeSM,
+  TabField,
+} from "@slicemachine/core/build/models/CustomType";
 
-export type PoolOfFields = ReadonlyArray<{ key: string; value: Field }>;
+export enum CustomTypeStatus {
+  New = "NEW_CT",
+  Modified = "MODIFIED",
+  Synced = "SYNCED",
+}
+
+export type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 
 export type SelectedCustomTypeStoreType = {
-  model: CustomType<ArrayTabs>;
-  initialModel: CustomType<ArrayTabs>;
-  remoteModel: CustomType<ArrayTabs> | null;
+  model: CustomTypeSM;
+  initialModel: CustomTypeSM;
+  remoteModel: CustomTypeSM | undefined;
   mockConfig: CustomTypeMockConfig;
   initialMockConfig: CustomTypeMockConfig;
 } | null;

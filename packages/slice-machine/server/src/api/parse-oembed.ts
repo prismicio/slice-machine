@@ -11,6 +11,6 @@ export default async function handler(url: string) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     console.error(`[parse-oembed] Error: ${e}`);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    return { oembed: null, err: e.toString() };
+    return { oembed: null, err: (e as Error).toString() };
   }
 }

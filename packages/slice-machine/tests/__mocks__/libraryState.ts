@@ -1,3 +1,5 @@
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import type { Models } from "@slicemachine/core";
 
 export const MockLibraryInfo: (
@@ -16,34 +18,42 @@ export const MockLibraryInfo: (
       screenshotPaths: {},
       model: {
         id: "sliceId",
-        type: "SharedSlice",
+        type: SlicesTypes.SharedSlice,
         name: "SliceName",
         description: "slice description",
         variations: [
           {
             id: "default-slice",
+            imageUrl: "",
             name: "Default slice",
             docURL: "...",
             version: "sktwi1xtmkfgx8626",
             description: "MyAwesomeSlice",
-            primary: {
-              title: {
-                type: "StructuredText",
-                config: {
-                  single: "heading1",
-                  label: "Title",
-                  placeholder: "This is where it all begins...",
+            primary: [
+              {
+                key: "title",
+                value: {
+                  type: WidgetTypes.RichText,
+                  config: {
+                    single: "heading1",
+                    label: "Title",
+                    placeholder: "This is where it all begins...",
+                  },
                 },
               },
-              description: {
-                type: "StructuredText",
-                config: {
-                  single: "paragraph",
-                  label: "Description",
-                  placeholder: "A nice description of your product",
+              {
+                key: "description",
+                value: {
+                  type: WidgetTypes.RichText,
+                  config: {
+                    single: "paragraph",
+                    label: "Description",
+                    placeholder: "A nice description of your product",
+                  },
                 },
               },
-            },
+            ],
+            items: [],
           },
         ],
       },

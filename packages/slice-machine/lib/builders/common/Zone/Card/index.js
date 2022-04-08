@@ -112,6 +112,7 @@ const FieldZone = ({
                     renderHintBase={renderHintBase}
                     framework={framework}
                     Widgets={Widgets}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                   />
                 );

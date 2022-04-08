@@ -16,7 +16,7 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import type { Models } from "@slicemachine/core";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -37,7 +37,7 @@ export const getLibraries = (
 
 export const getRemoteSlices = (
   store: SliceMachineStoreType
-): ReadonlyArray<Models.SliceAsObject> => store.slices.remoteSlices;
+): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
 // Reducer
 export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (

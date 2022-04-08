@@ -1,16 +1,15 @@
-import { VariationMock } from "./Variation";
-import { SliceAsObject } from "./Slice";
+import { SliceMock, SliceSM } from "./Slice";
 import type { LibraryMeta } from "../libraries";
 
 export type { LibraryMeta } from "../libraries";
 export interface ComponentInfo {
   fileName: string | null;
   extension: string | null;
-  model: SliceAsObject;
+  model: SliceSM;
   screenshotPaths: {
     [variationId: string]: Screenshot;
   };
-  mock?: ReadonlyArray<VariationMock>;
+  mock?: SliceMock;
 }
 
 export const ComponentInfo = {

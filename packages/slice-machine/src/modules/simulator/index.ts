@@ -270,7 +270,7 @@ function* checkSetupSaga(
     yield call(failCheckSetupSaga);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    yield put(checkSimulatorSetupCreator.failure(error));
+    yield put(checkSimulatorSetupCreator.failure(error as Error));
   }
 }
 

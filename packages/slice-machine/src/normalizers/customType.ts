@@ -1,24 +1,24 @@
 import { normalize, NormalizedSchema, schema } from "normalizr";
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 // Define a users schema
 const customTypeSchema = new schema.Entity("customTypes");
 
 const normalizeCustomType = (
-  customTypesData: CustomType<ObjectTabs>
+  customTypesData: CustomTypeSM
 ): NormalizedSchema<
   {
-    customTypes: Record<string, CustomType<ObjectTabs>>;
+    customTypes: Record<string, CustomTypeSM>;
   },
   string[]
 > => normalize(customTypesData, customTypeSchema);
 
 const normalizeCustomTypes = (
-  customTypesData: ReadonlyArray<CustomType<ObjectTabs>>
+  customTypesData: ReadonlyArray<CustomTypeSM>
 ): NormalizedSchema<
   {
-    customTypes: Record<string, CustomType<ObjectTabs>>;
+    customTypes: Record<string, CustomTypeSM>;
   },
   string[]
 > => {
@@ -31,8 +31,8 @@ const normalizeCustomTypes = (
 };
 
 export const normalizeFrontendCustomType = (
-  localCustomType: CustomType<ObjectTabs>,
-  remoteCustomType?: CustomType<ObjectTabs>
+  localCustomType: CustomTypeSM,
+  remoteCustomType?: CustomTypeSM
 ) => {
   const { entities: localEntities } = normalizeCustomType(localCustomType);
 
@@ -66,8 +66,8 @@ export const normalizeFrontendCustomType = (
 };
 
 export const normalizeFrontendCustomTypes = (
-  localCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>,
-  remoteCustomTypes: ReadonlyArray<CustomType<ObjectTabs>>
+  localCustomTypes: ReadonlyArray<CustomTypeSM>,
+  remoteCustomTypes: ReadonlyArray<CustomTypeSM>
 ): Record<string, FrontEndCustomType> => {
   const { entities: localEntities } = normalizeCustomTypes(localCustomTypes);
   const { entities: remoteEntities } = normalizeCustomTypes(remoteCustomTypes);

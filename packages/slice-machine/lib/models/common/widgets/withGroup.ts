@@ -1,4 +1,4 @@
-export { Boolean } from ".";
+export { Boolean } from "./";
 export { Color } from ".";
 export { ContentRelationship } from ".";
 export { Date } from ".";

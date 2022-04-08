@@ -1,7 +1,7 @@
 import { ScreenshotUI } from "./ComponentUI";
-import type { Models } from "@slicemachine/core";
+import { VariationSM } from "@slicemachine/core/build/models";
 
-export type Screenshots = Record<Models.VariationAsObject["id"], ScreenshotUI>;
+export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
 
 export interface ScreenshotRequest {
   libraryName: string;

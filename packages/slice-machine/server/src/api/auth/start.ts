@@ -16,7 +16,7 @@ export default async function handler(): Promise<StartResponse> {
   } catch (e) {
     return {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      err: e,
+      err: e as Error,
     };
   }
 }

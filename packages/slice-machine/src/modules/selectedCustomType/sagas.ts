@@ -13,7 +13,6 @@ import {
 } from "@src/modules/selectedCustomType/index";
 import { pushCustomType, saveCustomType } from "@src/apiClient";
 import axios from "axios";
-import { CustomType } from "@models/common/CustomType";
 import { modalOpenCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 
@@ -30,11 +29,7 @@ export function* saveCustomTypeSaga() {
       return;
     }
 
-    yield call(
-      saveCustomType,
-      CustomType.toObject(currentCustomType),
-      currentMockConfig
-    );
+    yield call(saveCustomType, currentCustomType, currentMockConfig);
     yield put(saveCustomTypeCreator.success());
     yield put(
       openToasterCreator({

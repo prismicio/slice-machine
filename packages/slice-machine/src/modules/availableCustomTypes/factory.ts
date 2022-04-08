@@ -1,18 +1,18 @@
-import { CustomType, ObjectTabs } from "@models/common/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 export const createCustomType = (
   id: string,
   label: string,
   repeatable: boolean
-): CustomType<ObjectTabs> => ({
+): CustomTypeSM => ({
   id,
   label,
   repeatable,
-  tabs: {
-    Main: {
+  tabs: [
+    {
       key: "Main",
-      value: {},
+      value: [],
     },
-  },
+  ],
   status: true,
 });

@@ -13,12 +13,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 
 import { FaBars } from "react-icons/fa";
 import { Widget } from "@lib/models/common/widgets/Widget";
-import { Field } from "@lib/models/common/CustomType/fields";
 import { AnyObjectSchema } from "yup";
+import { TabField } from "@slicemachine/core/build/models/CustomType";
 
-type Item<F extends Field> = { key: string; value: F };
+type Item<F extends TabField> = { key: string; value: F };
 
-interface ListItemProps<F extends Field, S extends AnyObjectSchema> {
+interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   item: Item<F>;
   index: number;
   deleteItem: (key: string) => void;
@@ -37,7 +37,7 @@ interface ListItemProps<F extends Field, S extends AnyObjectSchema> {
   children: React.ReactNode;
 }
 
-function ListItem<F extends Field, S extends AnyObjectSchema>({
+function ListItem<F extends TabField, S extends AnyObjectSchema>({
   item,
   index,
   deleteItem,
