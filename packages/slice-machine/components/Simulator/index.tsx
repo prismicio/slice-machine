@@ -1,6 +1,7 @@
 import { SharedSliceEditor, themeClass } from "@prismicio/editor-fields";
-import React, { useEffect, useMemo, useState } from "react";
-import { useContext } from "react";
+import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
+import { renderSliceMock } from "@prismicio/mocks";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { Flex } from "theme-ui";
 
@@ -52,13 +53,26 @@ export default function Simulator() {
     [Model.model.id, variation.id]
   );
 
-  const content = Model.mock?.find(
-    (content) => content.variation === variation.id
+  const sharedSlice = useMemo(() => Slices.fromSM(Model.model), [Model.model]);
+  const initialContent = useMemo(
+    () => Model.mock?.find((content) => content.variation === variation.id),
+    [Model.mock, variation]
   );
-  const sharedSlice = Slices.fromSM(Model.model);
-
-  console.log("content", content);
-  console.log("sharedSlice", sharedSlice);
+  const [content, setContent] = useState<SharedSliceContent | undefined>(
+    initialContent
+  );
+  const [prevVariationId, setPrevVariationId] = useState(variation.id);
+  if (variation.id !== prevVariationId) {
+    setContent(initialContent);
+    setPrevVariationId(variation.id);
+  }
+  const apiContent = useMemo(
+    () =>
+      content === initialContent || content === undefined
+        ? undefined
+        : renderSliceMock(sharedSlice, content),
+    [sharedSlice, initialContent, content]
+  );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "row" }}>
@@ -71,25 +85,23 @@ export default function Simulator() {
           size={state.size}
         />
         <IframeRenderer
+          apiContent={apiContent}
           size={state.size}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
         />
       </Flex>
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <Flex
         className={themeClass}
-        sx={{ flexDirection: "column", minWidth: "444px" }}
+        sx={{ flexDirection: "column", width: "444px" }}
       >
         {content === undefined ? (
           <pre>Error: content is undefined.</pre>
         ) : (
           <SharedSliceEditor
             content={content}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            onContentChange={(content) => {
-              console.log("onContentChange", content);
+            onContentChange={(content: SharedSliceContent) => {
+              setContent(content);
             }}
             sharedSlice={sharedSlice}
           />

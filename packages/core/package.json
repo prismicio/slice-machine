@@ -19,7 +19,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@prismicio/types-internal": "^0.2.9",
+    "@prismicio/types-internal": "^0.2.10",
     "axios": "^0.26.0",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",

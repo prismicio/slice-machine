@@ -48,6 +48,7 @@ function useSimulatorClient(): readonly [
 }
 
 type IframeRendererProps = {
+  apiContent?: unknown;
   size: Size;
   simulatorUrl: string | undefined;
   sliceView: SliceView;
@@ -55,6 +56,7 @@ type IframeRendererProps = {
 };
 
 const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
+  apiContent,
   size,
   simulatorUrl,
   sliceView,
@@ -65,7 +67,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     useSliceMachineActions();
   useEffect((): void => {
     if (!simulatorUrl) {
-      connectToSimulatorFailure();
+      if (dryRun) connectToSimulatorFailure();
       return;
     }
     if (client === undefined) {
@@ -73,22 +75,26 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
     }
 
     if (!client.connected) {
-      connectToSimulatorFailure();
+      if (dryRun) connectToSimulatorFailure();
       console.warn("Trying to use a disconnected simulator client.");
       return;
     }
 
     const updateSliceZone = async () => {
-      await client.setSliceZoneFromSliceIDs(sliceView);
+      if (apiContent === undefined) {
+        await client.setSliceZoneFromSliceIDs(sliceView);
+      } else {
+        await client.setSliceZone(apiContent);
+      }
     };
     updateSliceZone()
       .then(() => {
-        connectToSimulatorSuccess();
+        if (dryRun) connectToSimulatorSuccess();
       })
       .catch(() => {
-        connectToSimulatorFailure();
+        if (dryRun) connectToSimulatorFailure();
       });
-  }, [client, size, sliceView]);
+  }, [client, size, sliceView, apiContent]);
 
   return (
     <Box

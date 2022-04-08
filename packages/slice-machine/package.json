@@ -38,11 +38,10 @@
   },
   "dependencies": {
     "@babel/register": "^7.11.5",
-    "@prismicio/api-renderer": "^0.1.1",
 		"@prismicio/editor-fields": "file:../../../prismic-editor/packages/editor-fields",
-    "@prismicio/mocks": "^0.1.1",
+    "@prismicio/mocks": "^0.1.4",
     "@prismicio/slice-simulator-com": "^0.2.0",
-    "@prismicio/types-internal": "^0.2.9",
+    "@prismicio/types-internal": "^0.2.10",
     "@reach/menu-button": "^0.16.2",
     "@slicemachine/core": "1.1.5-alpha.9",
     "@svgr/webpack": "^5.4.0",
