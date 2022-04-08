@@ -84,7 +84,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       if (apiContent === undefined) {
         await client.setSliceZoneFromSliceIDs(sliceView);
       } else {
-        await client.setSliceZone(apiContent);
+        await client.setSliceZone([apiContent]);
       }
     };
     updateSliceZone()
