@@ -28,11 +28,12 @@ const screens = [
 
 export const iframeSizes = {
   [Size.FULL]: {
-    width: "100vw",
+    width: "100%",
     height: "calc(100vh - 70px)",
   },
   [Size.TABLET]: {
-    width: "50vw",
+    width: "50%",
+    minWidth: "340px",
     pt: 4,
     height: "calc(600px)",
   },
