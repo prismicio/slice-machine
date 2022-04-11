@@ -1,6 +1,6 @@
 {
   "name": "next-slicezone",
-  "version": "0.2.6",
+  "version": "0.2.7-alpha.0",
   "description": "A component that maps other components to Prismic slices",
   "source": "src/index.js",
   "main": "dist/index.js",
@@ -32,7 +32,7 @@
   "gitHead": "29ddeeeb62e0bb8eb07476e1cee1d47c8618653d",
   "dependencies": {
     "slash": "^3.0.0",
-    "sm-commons": "0.1.6"
+    "sm-commons": "0.1.7-alpha.0"
   },
   "peerDependencies": {
     "react": ">=16.14.0",
