@@ -89,7 +89,11 @@ describe("loginOrBypass", () => {
 
     expect(fs.writeFileSync).toHaveBeenLastCalledWith(
       path.join(os.homedir(), ".prismic"),
-      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      JSON.stringify(
+        { base: fakeBase, cookies: fakeCookie, shortId, intercomHash },
+        null,
+        2
+      ),
       "utf8"
     );
   });
@@ -138,7 +142,11 @@ describe("loginOrBypass", () => {
     expect(result?.profile?.intercomHash).toEqual(intercomHash);
     expect(fs.writeFileSync).toBeCalledWith(
       path.join(os.homedir(), ".prismic"),
-      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      JSON.stringify(
+        { base: fakeBase, cookies: fakeCookie, shortId, intercomHash },
+        null,
+        2
+      ),
       "utf8"
     );
   });
