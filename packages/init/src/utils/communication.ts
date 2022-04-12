@@ -62,6 +62,7 @@ export async function validateSessionAndGetProfile(
     if (profile?.shortId) {
       Prismic.PrismicSharedConfigManager.setProperties({
         shortId: profile.shortId,
+        intercomHash: profile.intercomHash,
       });
     }
     return { info, profile };

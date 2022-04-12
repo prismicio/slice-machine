@@ -35,13 +35,15 @@ const useSMTracker = () => {
   useEffect(() => {
     void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
 
-    shortId &&
-      intercomHash &&
-      Tracker.get().identifyUser(shortId, intercomHash);
-
     // For initial loading
     void Tracker.get().trackPageView(framework, currentVersion);
   }, []);
+
+  // Handles if the user login/logout outside of the app.
+  useEffect(() => {
+    if (shortId && intercomHash)
+      void Tracker.get().identifyUser(shortId, intercomHash);
+  }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {
