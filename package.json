@@ -15,7 +15,7 @@
     "prettier:check": "prettier --check .",
     "pretty": "prettier --write .",
     "bump:interactive":"lerna version prerelease --preid alpha --force-publish=slice-machine-ui,@slicemachine/core,@slicemachine/init --no-push --no-git-tag-version --exact",
-    "bump:alpha": "lerna version prerelease --preid alpha --exact --yes",
+    "bump:alpha": "lerna version prerelease --preid alpha --force-publish=slice-machine-ui,@slicemachine/core,@slicemachine/init --exact --yes",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
     "bump:production": "lerna version --conventional-graduate --exact",
     "publish:production": "NEXT_PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package",
