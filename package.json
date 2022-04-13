@@ -14,7 +14,7 @@
     "build": "lerna run build && npm run test",
     "prettier:check": "prettier --check .",
     "pretty": "prettier --write .",
-    "bump:interactive":"lerna version --preid alpha --no-push --no-git-tag-version --exact",
+    "bump:interactive":"lerna version --preid alpha --force-publish=slice-machine-ui,@slicemachine/core,@slicemachine/init --no-push --no-git-tag-version --exact",
     "bump:alpha": "lerna version prerelease --preid alpha --exact --yes",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
     "bump:production": "lerna version --conventional-graduate --exact",
