@@ -29,9 +29,5 @@ export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   Form?: (props: any) => React.ReactElement;
 }
 
-export const DEFAULT_CONFIG = {
-  label: "",
-  placeholder: "",
-};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
 export type AnyWidget = Widget<any, any>;

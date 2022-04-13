@@ -15,7 +15,7 @@ import { handleMockConfig, handleMockContent } from "./Mock";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
@@ -40,7 +40,10 @@ const Meta = {
 export const TextWidget: Widget<Text, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Text,
-    config: { ...DEFAULT_CONFIG, label },
+    config: {
+      label,
+      placeholder: "",
+    },
   }),
   MockConfigForm,
   handleMockConfig,

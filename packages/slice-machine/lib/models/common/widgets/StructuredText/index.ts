@@ -9,7 +9,7 @@ import { MockConfigForm } from "./Mock/Form";
 import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { optionValues } from "./options";
@@ -44,8 +44,8 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.RichText,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
       allowTargetBlank: true,
       single: optionValues.join(","),
     },
