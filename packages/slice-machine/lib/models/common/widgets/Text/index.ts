@@ -15,7 +15,7 @@ import { handleMockConfig, handleMockContent } from "./Mock";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 

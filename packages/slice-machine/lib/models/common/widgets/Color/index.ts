@@ -3,7 +3,7 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { handleMockContent, handleMockConfig } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 
 import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
