@@ -32,8 +32,8 @@ export const ColorWidget: Widget<Color, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Color,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   MockConfigForm,

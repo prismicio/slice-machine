@@ -5,7 +5,7 @@ import { FiLink2 } from "react-icons/fi";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
@@ -67,7 +67,11 @@ export const linkConfigSchema = yup
     label: yup.string().optional(),
     useAsTitle: yup.boolean().optional(),
     placeholder: yup.string().optional(),
-    select: yup.string().optional().oneOf([null, "media", "document", "web"]),
+    select: yup
+      .string()
+      .optional()
+      .oneOf(["media", "document", "web", null])
+      .nullable(),
     customtypes: yup.array(yup.string()).strict().optional(),
     masks: yup.array(yup.string()).optional(),
     tags: yup.array(yup.string()).optional(),
@@ -98,8 +102,9 @@ export const LinkWidget: Widget<Link, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Link,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
+      select: null,
     },
   }),
   TYPE_NAME: WidgetTypes.Link,

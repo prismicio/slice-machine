@@ -28,8 +28,8 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Number,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   MockConfigForm,

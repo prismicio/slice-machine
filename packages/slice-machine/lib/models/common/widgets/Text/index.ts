@@ -40,7 +40,10 @@ const Meta = {
 export const TextWidget: Widget<Text, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Text,
-    config: { ...DEFAULT_CONFIG, label },
+    config: {
+      label,
+      placeholder: "",
+    },
   }),
   MockConfigForm,
   handleMockConfig,

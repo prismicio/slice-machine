@@ -68,9 +68,9 @@ export const BooleanWidget: Widget<BooleanField, typeof schema> = {
     type: WidgetTypes.BooleanField,
     config: {
       label,
-      placeholder_false: "false",
-      placeholder_true: "true",
       default_value: false,
+      placeholder_true: "true",
+      placeholder_false: "false",
     },
   }),
   Meta,
