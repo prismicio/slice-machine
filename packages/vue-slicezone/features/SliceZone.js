@@ -158,6 +158,7 @@ export default {
       // skip if not parsed correctly
       if (!sliceName) continue;
       scopedSlots[sliceName] = scopedSlots[sliceName] || {};
+      // TODO: dev warning if found duplicate entries for the same slot
       scopedSlots[sliceName][sliceSlot || "default"] = this.$scopedSlots[name];
     }
 
