@@ -35,10 +35,7 @@ export function retrieveManifest(
     };
   }
 
-  if (!content) {
-    // TODO: not this
-    throw new Error("Could not parse sm.json");
-  }
+  if (!content) throw new Error("Could not parse sm.json");
 
   return pipe(
     Manifest.decode(content),
