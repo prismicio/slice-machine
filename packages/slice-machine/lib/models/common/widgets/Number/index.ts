@@ -3,7 +3,7 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
@@ -28,8 +28,8 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Number,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   MockConfigForm,

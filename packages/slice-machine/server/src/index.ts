@@ -14,6 +14,8 @@ import proxy from "express-http-proxy";
 import fetch from "node-fetch";
 import { resolveAliases } from "../../lib/env/resolveAliases";
 
+// fake comment used to trigger the CI.
+
 declare let global: {
   fetch: typeof fetch;
   appRoot: string;

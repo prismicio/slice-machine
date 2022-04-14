@@ -3,7 +3,7 @@ import { createDefaultWidgetValues } from "../../../../utils";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
@@ -28,8 +28,8 @@ export const EmbedWidget: Widget<Embed, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Embed,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   handleMockConfig,

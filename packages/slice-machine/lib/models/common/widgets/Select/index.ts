@@ -9,7 +9,7 @@ import FormFields from "./FormFields";
 import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
@@ -48,8 +48,8 @@ export const SelectWidget: Widget<Select, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Select,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
       options: ["1", "2"],
     },
   }),
