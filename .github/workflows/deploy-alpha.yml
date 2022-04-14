@@ -25,6 +25,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
         run: npm ci
+      - name: Clean any changes that occured
+        uses: actions/checkout@v2
+        with:
+          ref: '.'
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
