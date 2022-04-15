@@ -1,0 +1,106 @@
+{
+  "id": "contact_section_split_two_tone",
+  "type": "SharedSlice",
+  "name": "ContactSectionSplitTwoTone",
+  "description": "ContactSectionSplitTwoTone",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ContactSectionSplitTwoTone",
+      "primary": {
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "Get in touch",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "description": {
+          "config": {
+            "label": "Description",
+            "placeholder": "This is why you should subscribe",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "address": {
+          "config": {
+            "label": "Address",
+            "placeholder": "742 Evergreen Terrace, OR 12345",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "phone": {
+          "config": {
+            "label": "Phone number",
+            "placeholder": "+1 (555) 123-4567"
+          },
+          "type": "Text"
+        },
+        "email": {
+          "config": {
+            "label": "Contact Email",
+            "placeholder": "support@example.com"
+          },
+          "type": "Text"
+        },
+        "careerText": {
+          "config": {
+            "label": "Career Text",
+            "placeholder": "Looking for careers?",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "careerLink": {
+          "config": {
+            "label": "CareerLink",
+            "placeholder": "",
+            "select": "web",
+            "allowTargetBlank": false
+          },
+          "type": "Link"
+        },
+        "CareerLinkText": {
+          "config": {
+            "label": "CareerLinkText",
+            "placeholder": "View all job openings"
+          },
+          "type": "Text"
+        },
+        "cta": {
+          "config": {
+            "label": "Call to action",
+            "placeholder": "Submit"
+          },
+          "type": "Text"
+        }
+      },
+      "items": {
+        "field": {
+          "config": {
+            "label": "Field ID",
+            "placeholder": "ID of the field"
+          },
+          "type": "Text"
+        },
+        "fieldPlaceholder": {
+          "config": {
+            "label": "Field Placeholder",
+            "placeholder": "Field Placeholder"
+          },
+          "type": "Text"
+        }
+      }
+    }
+  ]
+}

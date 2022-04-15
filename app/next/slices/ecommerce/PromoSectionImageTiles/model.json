@@ -1,0 +1,145 @@
+{
+  "id": "promo_section_image_tiles",
+  "type": "SharedSlice",
+  "name": "PromoSectionImageTiles",
+  "description": "PromoSectionImageTiles",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "PromoSectionImageTiles",
+      "primary": {
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "Enter main title here.."
+          },
+          "type": "Text"
+        },
+        "subtitle": {
+          "config": {
+            "label": "Secondary Title",
+            "placeholder": "Enter secondary title here..."
+          },
+          "type": "Text"
+        },
+        "linkLabel": {
+          "config": {
+            "label": "CTA Label",
+            "placeholder": "This is the label of the Link"
+          },
+          "type": "Text"
+        },
+        "link": {
+          "type": "Link",
+          "config": {
+            "label": "CTA Link",
+            "select": "document"
+          }
+        },
+        "backgroundColor": {
+          "config": {
+            "label": "backgroundColor",
+            "placeholder": ""
+          },
+          "type": "Color"
+        },
+        "image1": {
+          "config": {
+            "label": "Image 1",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image2": {
+          "config": {
+            "label": "Image 2",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image3": {
+          "config": {
+            "label": "Image 3",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image4": {
+          "config": {
+            "label": "Image 4",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image5": {
+          "config": {
+            "label": "Image 5",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image6": {
+          "config": {
+            "label": "Image 6",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image7": {
+          "config": {
+            "label": "Image 7",
+            "constraint": {
+              "width": 176,
+              "height": 256
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "personalisationid": {
+          "config": {
+            "label": "personalisationid",
+            "placeholder": "For personalization use only"
+          },
+          "type": "Text"
+        },
+        "intent": {
+          "type": "IntegrationFields",
+          "config": {
+            "catalog": "demo-sm-next-ecom--intents",
+            "label": "Uniform Intent"
+          }
+        }
+      },
+      "items": {},
+      "imageUrl": "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format"
+    }
+  ]
+}

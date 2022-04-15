@@ -1,0 +1,25 @@
+{
+  "id": "content_section_centered_embed",
+  "type": "SharedSlice",
+  "name": "ContentSectionCenteredEmbed",
+  "description": "ContentSectionCenteredEmbed",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ContentSectionCenteredEmbed",
+      "primary": {
+        "EmbedItem": {
+          "config": {
+            "label": "EmbedItem",
+            "placeholder": "Embed Item"
+          },
+          "type": "Embed"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

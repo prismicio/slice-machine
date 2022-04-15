@@ -1,0 +1,105 @@
+{
+  "id": "hero_banner",
+  "type": "SharedSlice",
+  "name": "HeroBanner",
+  "description": "HeroBanner",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeroBanner",
+      "primary": {
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "This is your title..."
+          },
+          "type": "Text"
+        },
+        "description": {
+          "config": {
+            "label": "Description",
+            "placeholder": "This will appear below the title..."
+          },
+          "type": "Text"
+        },
+        "image": {
+          "config": {
+            "label": "Banner Image",
+            "constraint": {
+              "width": 1024,
+              "height": 325
+            },
+            "thumbnails": [
+              {
+                "name": "mobile",
+                "width": 600,
+                "height": 410
+              }
+            ]
+          },
+          "type": "Image"
+        },
+        "cta": {
+          "config": {
+            "label": "CTA Label",
+            "placeholder": "This is the label of the button..."
+          },
+          "type": "Text"
+        },
+        "CTALink": {
+          "config": {
+            "label": "Linked page",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "withoutCta",
+      "name": "Without CTA",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeroBanner",
+      "primary": {
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "This is your title..."
+          },
+          "type": "Text"
+        },
+        "description": {
+          "config": {
+            "label": "Description",
+            "placeholder": "This will appear below the title..."
+          },
+          "type": "Text"
+        },
+        "image": {
+          "config": {
+            "label": "Banner Image",
+            "constraint": {
+              "width": 1024,
+              "height": 325
+            },
+            "thumbnails": [
+              {
+                "name": "mobile",
+                "width": 600,
+                "height": 410
+              }
+            ]
+          },
+          "type": "Image"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

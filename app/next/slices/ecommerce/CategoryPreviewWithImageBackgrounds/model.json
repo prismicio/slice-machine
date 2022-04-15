@@ -1,0 +1,147 @@
+{
+  "id": "category_preview_with_image_backgrounds",
+  "type": "SharedSlice",
+  "name": "CategoryPreviewWithImageBackgrounds",
+  "description": "CategoryPreviewWithImageBackgrounds",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "CategoryPreviewWithImageBackgrounds",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "linkLabel": {
+          "config": {
+            "label": "Link Label",
+            "placeholder": "See more..."
+          },
+          "type": "Text"
+        },
+        "link": {
+          "config": {
+            "label": "Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "imageLeft": {
+          "config": {
+            "label": "Left Image",
+            "constraint": {
+              "width": 592,
+              "height": 592
+            },
+            "thumbnails": [
+              {
+                "name": "mobile",
+                "width": 560,
+                "height": 280
+              }
+            ]
+          },
+          "type": "Image"
+        },
+        "imageLeftTitle": {
+          "config": {
+            "label": "Left Image Title",
+            "placeholder": "My first Category..."
+          },
+          "type": "Text"
+        },
+        "imageLeftCta": {
+          "config": {
+            "label": "Left Image CTA",
+            "placeholder": "My first category description..."
+          },
+          "type": "Text"
+        },
+        "leftImageLink": {
+          "config": {
+            "label": "Left Image Linked Document",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "imageTopRight": {
+          "config": {
+            "label": "Top Right Image",
+            "constraint": {
+              "width": 592,
+              "height": 280
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "imageTopRightTitle": {
+          "config": {
+            "label": "Top Right Image Title",
+            "placeholder": "My second category..."
+          },
+          "type": "Text"
+        },
+        "imageTopRightCta": {
+          "config": {
+            "label": "Top Right Image CTA",
+            "placeholder": "My second category description..."
+          },
+          "type": "Text"
+        },
+        "topRightImageLink": {
+          "config": {
+            "label": "Top Right Image Linked Document",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "imageBottomRight": {
+          "config": {
+            "label": "Bottom Right Image",
+            "constraint": {
+              "width": 592,
+              "height": 280
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "imageBottomRightTitle": {
+          "config": {
+            "label": "Bottom Right Image Title",
+            "placeholder": "My third category..."
+          },
+          "type": "Text"
+        },
+        "imageBottomRightCta": {
+          "config": {
+            "label": "Bottom Right Image CTA",
+            "placeholder": "My third category description..."
+          },
+          "type": "Text"
+        },
+        "bottomRightImageLink": {
+          "config": {
+            "label": "Bottom Right Image Linked Document",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

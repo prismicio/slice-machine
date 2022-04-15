@@ -1,0 +1,56 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "promo_section_fading_background_testimonials",
+    "items": [
+      {
+        "quote": "maximize web-enabled eyeballs",
+        "attribution": "unleash out-of-the-box niches"
+      },
+      {
+        "quote": "engage interactive models",
+        "attribution": "architect synergistic architectures"
+      },
+      {
+        "quote": "target back-end communities",
+        "attribution": "transition interactive applications"
+      },
+      {
+        "quote": "grow vertical ROI",
+        "attribution": "brand bricks-and-clicks networks"
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Matrix impactful communities",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Ad officia mollit occaecat.",
+          "spans": []
+        }
+      ],
+      "cta": "benchmark user-centric ROI",
+      "link": {
+        "link_type": "Web",
+        "url": "http://twitter.com"
+      },
+      "quotesTitle": "disintermediate world-class technologies",
+      "image": {
+        "dimensions": {
+          "width": 1216,
+          "height": 956
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1589321599763-d66926c29613?w=1216&h=956&fit=crop"
+      }
+    }
+  }
+]

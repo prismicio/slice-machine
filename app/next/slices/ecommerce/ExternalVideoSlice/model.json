@@ -1,0 +1,25 @@
+{
+  "id": "external_video_slice",
+  "type": "SharedSlice",
+  "name": "ExternalVideoSlice",
+  "description": "ExternalVideoSlice",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ExternalVideoSlice",
+      "primary": {
+        "video": {
+          "type": "IntegrationFields",
+          "config": {
+            "catalog": "demo-sm-next-ecom--external_videos",
+            "label": "Video"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
