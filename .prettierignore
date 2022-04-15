@@ -16,3 +16,4 @@ packages/**/package-lock.json
 README.md
 package.json
 package-lock.json
+app/**
