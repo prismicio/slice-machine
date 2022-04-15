@@ -93,6 +93,7 @@ export default function Simulator() {
           backgroundColor: "#F9F8F9",
           borderInlineStart: "1px solid #DCDBDD",
           flexDirection: "column",
+          overflowY: "scroll",
           padding: "72px 24px 36px 23px",
           width: "444px",
         }}
