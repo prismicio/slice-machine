@@ -1,5 +1,6 @@
 # Ignore artifacts:
 .github/
+packages/slice-machine/.next
 packages/slice-machine/build
 packages/slice-machine/coverage
 packages/slice-machine/tests/project/
