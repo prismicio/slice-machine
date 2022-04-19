@@ -11,7 +11,7 @@ describe("onboarding skip", () => {
 
     cy.get("[data-cy=skip-onboarding]").click();
 
-    cy.location("pathname", { timeout: 1000 }).should("eq", "/");
+    cy.location("pathname", { timeout: 5000 }).should("eq", "/");
 
     cy.getLocalStorage("persist:root").should(
       "include",
