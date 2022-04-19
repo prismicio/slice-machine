@@ -8,6 +8,7 @@ import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { SliceSM } from "@slicemachine/core/build/models";
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
@@ -16,6 +17,7 @@ type CreateSliceModalProps = {
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
   libraries: ReadonlyArray<LibraryUI>;
+  remoteSlices: ReadonlyArray<SliceSM>;
 };
 
 type FormValues = { sliceName: string; from: string };
@@ -26,6 +28,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   onSubmit,
   close,
   libraries,
+  remoteSlices,
 }) => {
   return (
     <ModalFormCard
@@ -58,12 +61,13 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           };
         }
 
-        const usedNamesInLib = libraries.reduce((acc, lib) => {
-          if (lib.name !== from) return acc;
-          return lib.components.map((slice) => slice.model.name);
-        }, [] as string[]);
+        const localNames = libraries.map((lib) =>
+          lib.components.map((slice) => slice.model.name)
+        );
+        const remoteNames = remoteSlices.map((slice) => slice.name);
+        const usedNames = [...localNames, ...remoteNames];
 
-        if (usedNamesInLib.includes(sliceName)) {
+        if (usedNames.includes(sliceName)) {
           return { sliceName: "Slice name is already taken." };
         }
       }}
