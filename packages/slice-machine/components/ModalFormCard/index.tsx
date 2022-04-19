@@ -125,7 +125,7 @@ function ModalCard<Values>({
                     <Button
                       form={formId}
                       type="submit"
-                      disabled={!isValid && isSubmitting && isLoading}
+                      disabled={!isValid || isSubmitting || isLoading}
                       isLoading={isLoading}
                     >
                       {buttonLabel}

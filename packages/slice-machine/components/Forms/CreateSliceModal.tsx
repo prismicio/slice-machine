@@ -44,7 +44,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
         sliceName: "",
         from: libraries[0].name,
       }}
-      validate={({ sliceName, from }) => {
+      validate={({ sliceName }) => {
         if (!sliceName) {
           return { sliceName: "Cannot be empty" };
         }
@@ -61,7 +61,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           };
         }
 
-        const localNames = libraries.map((lib) =>
+        const localNames = libraries.flatMap((lib) =>
           lib.components.map((slice) => slice.model.name)
         );
         const remoteNames = remoteSlices.map((slice) => slice.name);

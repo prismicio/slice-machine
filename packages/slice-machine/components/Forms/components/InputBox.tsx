@@ -29,6 +29,13 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
       autoComplete="off"
       {...(dataCy ? { "data-cy": dataCy } : null)}
     />
-    {error ? <Text sx={{ color: "error", mt: 1 }}>{error}</Text> : null}
+    {error ? (
+      <Text
+        data-cy={dataCy ? `${dataCy}-error` : "input-error"}
+        sx={{ color: "error", mt: 1 }}
+      >
+        {error}
+      </Text>
+    ) : null}
   </Box>
 );
