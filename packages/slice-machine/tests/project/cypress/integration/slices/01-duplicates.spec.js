@@ -1,4 +1,4 @@
-describe("Create Slices", () => {
+describe("Duplicate Slices", () => {
   const name = "DuplicateSlices"
   const lib = "slices"
   beforeEach(() => {
