@@ -6,28 +6,34 @@ import { SelectRepeatable } from "./components/SelectRepeatable";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { selectAllCustomTypeIds } from "@src/modules/availableCustomTypes";
+import {
+  selectAllCustomTypeIds,
+  selectAllCustomTypeLabels,
+} from "@src/modules/availableCustomTypes";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { FormikErrors } from "formik";
 
-const CreateCustomTypeModal: React.FunctionComponent = () => {
+const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
     useSliceMachineActions();
 
-  const { customTypeIds, isCreateCustomTypeModalOpen, isCreatingCustomType } =
-    useSelector((store: SliceMachineStoreType) => ({
-      customTypeIds: selectAllCustomTypeIds(store),
-      isCreateCustomTypeModalOpen: isModalOpen(
-        store,
-        ModalKeysEnum.CREATE_CUSTOM_TYPE
-      ),
-      isCreatingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.CREATE_CUSTOM_TYPE
-      ),
-    }));
+  const {
+    customTypeIds,
+    isCreateCustomTypeModalOpen,
+    isCreatingCustomType,
+    customTypeLabels,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    customTypeIds: selectAllCustomTypeIds(store),
+    customTypeLabels: selectAllCustomTypeLabels(store),
+    isCreateCustomTypeModalOpen: isModalOpen(
+      store,
+      ModalKeysEnum.CREATE_CUSTOM_TYPE
+    ),
+    isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
+  }));
 
   return (
     <ModalFormCard
@@ -51,23 +57,38 @@ const CreateCustomTypeModal: React.FunctionComponent = () => {
         label: "",
       }}
       validate={({ id, label }) => {
+        const errors: FormikErrors<{
+          repeatable: boolean;
+          id: string;
+          label: string;
+        }> = {};
+
         if (!label || !label.length) {
-          return { label: "Cannot be empty" };
+          errors.label = "Cannot be empty.";
         }
+
+        if (!errors.label && customTypeLabels.includes(label)) {
+          errors.label = "Custom Type name is already taken.";
+        }
+
         if (!id || !id.length) {
-          return { id: "ID cannot be empty" };
+          errors.id = "ID cannot be empty.";
         }
-        if (id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
-          return { id: "Invalid id: No special characters allowed" };
+
+        if (!errors.id && id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
+          errors.id = "Invalid id: No special characters allowed.";
         }
         if (
+          !errors.id &&
           id &&
           customTypeIds
             .map((customTypeId) => customTypeId.toLowerCase())
             .includes(id)
         ) {
-          return { id: `ID "${id}" exists already` };
+          errors.id = `ID "${id}" exists already.`;
         }
+
+        return Object.keys(errors).length > 0 ? errors : undefined;
       }}
       content={{
         title: "Create a new custom type",
