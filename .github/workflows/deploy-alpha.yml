@@ -25,9 +25,9 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
-        run: npm ci
-      - name: Build Core
-        run: lerna run build --scope=@slicemachine/core
+        run: |
+          npm ci
+          git checkout .
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -37,5 +37,6 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
+          lerna run build --scope=@slicemachine/core
           npm run bump:alpha
           npm run publish:alpha
