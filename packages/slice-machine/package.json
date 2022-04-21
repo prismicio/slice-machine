@@ -30,7 +30,7 @@
     "slicemachine": "start-slicemachine --port 9999",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -l high -p -x 1069985",
+    "audit": "better-npm-audit audit -l high -p -x 1070206",
     "audit-fix": "npm audit fix"
   },
   "bin": {
