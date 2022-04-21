@@ -25,9 +25,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
-        run: |
-          npm ci
-          git checkout .
+        run: npm ci
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
