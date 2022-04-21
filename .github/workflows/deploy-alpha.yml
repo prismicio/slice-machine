@@ -26,6 +26,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
         run: npm ci
+      - name: Build Core
+        run: lerna run build --scope=@slicemachine/core
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
