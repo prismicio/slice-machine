@@ -15,7 +15,7 @@ type CustomTypeBuilderWithProviderProps = {
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =
+const CustomTypeBuilderWithProvider: React.FC<CustomTypeBuilderWithProviderProps> =
   ({ customType, remoteCustomType }) => {
     const { initCustomTypeStore } = useSliceMachineActions();
     const { env } = useSelector((store: SliceMachineStoreType) => ({

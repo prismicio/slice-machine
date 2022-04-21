@@ -21,6 +21,7 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 
 const CreateSliceButton = ({
   onClick,
@@ -45,12 +46,13 @@ const SlicesIndex: React.FunctionComponent = () => {
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
 
-  const { isCreateSliceModalOpen, isCreatingSlice } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { isCreateSliceModalOpen, isCreatingSlice, localLibs, remoteLibs } =
+    useSelector((store: SliceMachineStoreType) => ({
       isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
       isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-    })
-  );
+      localLibs: getLibraries(store),
+      remoteLibs: getRemoteSlices(store),
+    }));
 
   const _onCreate = ({
     sliceName,
@@ -201,7 +203,8 @@ const SlicesIndex: React.FunctionComponent = () => {
           isCreatingSlice={isCreatingSlice}
           isOpen={isCreateSliceModalOpen}
           close={closeCreateSliceModal}
-          libraries={localLibraries}
+          libraries={localLibs}
+          remoteSlices={remoteLibs}
           onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
         />
       )}
