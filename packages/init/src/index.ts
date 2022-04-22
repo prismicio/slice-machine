@@ -86,9 +86,11 @@ async function init() {
   displayFinalMessage(cwd);
 }
 
-try {
-  void init();
-} catch (error) {
-  if (error instanceof Error) logs.writeError(error.message);
-  else console.error(error);
-}
+init()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    if (error instanceof Error) logs.writeError(error.message);
+    else console.error(error);
+  });
