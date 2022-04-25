@@ -1,0 +1,28 @@
+{
+  "id": "menu-tab",
+  "label": "Menu Tab",
+  "repeatable": true,
+  "status": true,
+  "json": {
+    "Main": {
+      "title": {
+        "config": {
+          "label": "Title",
+          "placeholder": "This is title of the tab..."
+        },
+        "type": "Text"
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "menu_sub_tab": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

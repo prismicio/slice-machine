@@ -1,0 +1,62 @@
+{
+  "id": "8027b84e-e405-42f3-ad5c-d636c305e99f",
+  "uid": "est-in-animi",
+  "type": "blog-page",
+  "data": {
+    "title": [
+      {
+        "type": "heading1",
+        "text": "E-enable out-of-the-box interfaces",
+        "spans": []
+      }
+    ],
+    "category": [
+      {
+        "type": "heading1",
+        "text": "Streamline transparent synergies",
+        "spans": []
+      }
+    ],
+    "description": [
+      {
+        "type": "paragraph",
+        "text": "Voluptate incididunt labore sunt cillum cillum nulla do fugiat labore reprehenderit duis exercitation non sunt tempor. Laborum adipisicing aliqua exercitation do nisi. Tempor mollit eu id sint sint ut dolor.",
+        "spans": []
+      }
+    ],
+    "meta_title": "recontextualize dynamic synergies",
+    "meta_description": "scale impactful users",
+    "canonicalLink": {
+      "link_type": "Web",
+      "url": "http://twitter.com"
+    },
+    "social_cards": [
+      {
+        "social_card_image": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=900&h=500&fit=crop"
+        },
+        "social_card_title": "incubate viral niches",
+        "social_card_description": "deliver customized bandwidth"
+      },
+      {
+        "social_card_image": {
+          "dimensions": {
+            "width": 900,
+            "height": 500
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482?w=900&h=500&fit=crop"
+        },
+        "social_card_title": "evolve leading-edge bandwidth",
+        "social_card_description": "morph B2C technologies"
+      }
+    ]
+  }
+}

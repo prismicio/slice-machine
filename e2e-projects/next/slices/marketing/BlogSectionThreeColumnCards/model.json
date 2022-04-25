@@ -1,0 +1,80 @@
+{
+  "id": "blog_section_three_column_cards",
+  "type": "SharedSlice",
+  "name": "BlogSectionThreeColumnCards",
+  "description": "BlogSectionThreeColumnCards",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "BlogSectionThreeColumnCards",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        }
+      },
+      "items": {
+        "article": {
+          "config": {
+            "label": "article",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "image": {
+          "config": {
+            "label": "image",
+            "constraint": {},
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "author": {
+          "config": {
+            "label": "author",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "authorImage": {
+          "config": {
+            "label": "authorImage",
+            "constraint": {},
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "date": {
+          "config": {
+            "label": "date",
+            "placeholder": ""
+          },
+          "type": "Date"
+        },
+        "minutesToRead": {
+          "config": {
+            "label": "minutesToRead",
+            "placeholder": ""
+          },
+          "type": "Number"
+        }
+      }
+    }
+  ]
+}

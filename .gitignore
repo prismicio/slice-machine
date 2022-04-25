@@ -7,6 +7,11 @@
 ehthumbs.db
 Thumbs.db
 
+e2e-projects/**/.next
+
+cypress/videos/**
+cypress/screeshots/**
+
 # IDE Specific
 nbproject
 .~lock.*

@@ -1,0 +1,56 @@
+{
+  "id": "product_overview_with_image_grid",
+  "type": "SharedSlice",
+  "name": "ProductOverviewWithImageGrid",
+  "description": "ProductOverviewWithImageGrid",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ProductOverviewWithImageGrid",
+      "primary": {
+        "product": {
+          "type": "IntegrationFields",
+          "config": {
+            "catalog": "cimsirp--products",
+            "label": "Top Product"
+          }
+        },
+        "description": {
+          "config": {
+            "label": "Product Descripition",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+            "labels": [
+              "text-sm",
+              "text-lg"
+            ]
+          },
+          "type": "StructuredText"
+        },
+        "highlights": {
+          "config": {
+            "label": "Highlights",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "list-item"
+          },
+          "type": "StructuredText"
+        },
+        "details": {
+          "config": {
+            "label": "Details",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          },
+          "type": "StructuredText"
+        }
+      },
+      "items": {}
+    }
+  ]
+}
