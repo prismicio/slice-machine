@@ -17,4 +17,4 @@ packages/**/package-lock.json
 README.md
 package.json
 package-lock.json
-app/**
+e2e-projects/**

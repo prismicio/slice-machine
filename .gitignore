@@ -7,9 +7,10 @@
 ehthumbs.db
 Thumbs.db
 
-app/**/.next
+e2e-projects/**/.next
 
-E2E/videos/**
+cypress/videos/**
+cypress/screeshots/**
 
 # IDE Specific
 nbproject

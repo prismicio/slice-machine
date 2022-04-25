@@ -236,7 +236,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/CategoryPreviewWithImageBackgrounds/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/CategoryPreviewWithImageBackgrounds/default-slice/preview.png",
             "width": 800,
             "height": 612
           }
@@ -393,7 +393,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/CategoryPreviewWithScrollingCards/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/CategoryPreviewWithScrollingCards/default-slice/preview.png",
             "width": 800,
             "height": 560
           }
@@ -533,7 +533,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/ChartSlice/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/ChartSlice/default-slice/preview.png",
             "width": 800,
             "height": 1109
           }
@@ -585,7 +585,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/ExternalVideoSlice/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/ExternalVideoSlice/default-slice/preview.png",
             "width": 800,
             "height": 600
           }
@@ -772,12 +772,12 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/HeroBanner/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/HeroBanner/default-slice/preview.png",
             "width": 800,
             "height": 482
           },
           "withoutCta": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/HeroBanner/withoutCta/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/HeroBanner/withoutCta/preview.png",
             "width": 800,
             "height": 400
           }
@@ -1112,7 +1112,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/ProductFeaturesWithWideImages/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/ProductFeaturesWithWideImages/default-slice/preview.png",
             "width": 800,
             "height": 3217
           }
@@ -1327,12 +1327,12 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/ecommerce/ProductListWithCta/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/ecommerce/ProductListWithCta/default-slice/preview.png",
             "width": 2598,
             "height": 1048
           },
           "customProducts": {
-            "path": "../../app/next/slices/ecommerce/ProductListWithCta/customProducts/preview.png",
+            "path": "../../e2e-projects/next/slices/ecommerce/ProductListWithCta/customProducts/preview.png",
             "width": 2598,
             "height": 1048
           }
@@ -1437,7 +1437,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/ecommerce/ProductOverviewWithImageGrid/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/ecommerce/ProductOverviewWithImageGrid/default-slice/preview.png",
             "width": 1886,
             "height": 1398
           }
@@ -1593,7 +1593,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/PromoSectionFadingBackgroundTestimonials/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/PromoSectionFadingBackgroundTestimonials/default-slice/preview.png",
             "width": 800,
             "height": 1046
           }
@@ -1811,7 +1811,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/PromoSectionFullWidthWithOverlappingImageTiles/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/PromoSectionFullWidthWithOverlappingImageTiles/default-slice/preview.png",
             "width": 800,
             "height": 488
           }
@@ -2055,7 +2055,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/PromoSectionImageTiles/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/PromoSectionImageTiles/default-slice/preview.png",
             "width": 800,
             "height": 510
           }
@@ -2217,12 +2217,12 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/PromoSectionWithBackgroundImage/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/PromoSectionWithBackgroundImage/default-slice/preview.png",
             "width": 800,
             "height": 646
           },
           "cameraInsurance": {
-            "path": "../../app/next/.slicemachine/assets/slices/ecommerce/PromoSectionWithBackgroundImage/cameraInsurance/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/PromoSectionWithBackgroundImage/cameraInsurance/preview.png",
             "width": 800,
             "height": 674
           }
@@ -2430,7 +2430,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/marketing/BlogSectionThreeColumnCards/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/marketing/BlogSectionThreeColumnCards/default-slice/preview.png",
             "width": 1168,
             "height": 756
           }
@@ -2609,7 +2609,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/ContactSectionSplitTwoTone/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/ContactSectionSplitTwoTone/default-slice/preview.png",
             "width": 800,
             "height": 1046
           }
@@ -2696,7 +2696,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/ContentSectionCentered/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/ContentSectionCentered/default-slice/preview.png",
             "width": 800,
             "height": 192
           }
@@ -2762,7 +2762,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/marketing/ContentSectionCenteredEmbed/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/marketing/ContentSectionCenteredEmbed/default-slice/preview.png",
             "width": 1510,
             "height": 740
           }
@@ -2841,7 +2841,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/ContentSectionCenteredImage/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/ContentSectionCenteredImage/default-slice/preview.png",
             "width": 800,
             "height": 492
           }
@@ -2974,7 +2974,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/ContentSectionTwoColumnsWithImage/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/ContentSectionTwoColumnsWithImage/default-slice/preview.png",
             "width": 800,
             "height": 822
           }
@@ -3156,7 +3156,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/FeaturedSectionCentered22/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/FeaturedSectionCentered22/default-slice/preview.png",
             "width": 800,
             "height": 724
           }
@@ -3232,7 +3232,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/HeaderSectionSimpleCentered/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/HeaderSectionSimpleCentered/default-slice/preview.png",
             "width": 800,
             "height": 320
           }
@@ -3384,7 +3384,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/HeroSectionSplit/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/HeroSectionSplit/default-slice/preview.png",
             "width": 800,
             "height": 886
           }
@@ -3428,7 +3428,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/marketing/Separator/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/marketing/Separator/default-slice/preview.png",
             "width": 620,
             "height": 99
           }
@@ -3641,7 +3641,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/.slicemachine/assets/slices/marketing/StatsSectionSplitWithImage/default-slice/preview.png",
+            "path": "../../e2e-projects/next/.slicemachine/assets/slices/marketing/StatsSectionSplitWithImage/default-slice/preview.png",
             "width": 800,
             "height": 1424
           }
@@ -3738,7 +3738,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/navigation/FooterColumn/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/navigation/FooterColumn/default-slice/preview.png",
             "width": 442,
             "height": 356
           }
@@ -3837,7 +3837,7 @@
         },
         "screenshotPaths": {
           "default-slice": {
-            "path": "../../app/next/slices/navigation/MenuSubTab/default-slice/preview.png",
+            "path": "../../e2e-projects/next/slices/navigation/MenuSubTab/default-slice/preview.png",
             "width": 358,
             "height": 372
           }
