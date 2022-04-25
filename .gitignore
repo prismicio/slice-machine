@@ -9,6 +9,8 @@ Thumbs.db
 
 app/**/.next
 
+E2E/videos/**
+
 # IDE Specific
 nbproject
 .~lock.*

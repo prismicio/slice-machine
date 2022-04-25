@@ -2,5 +2,12 @@
   "baseUrl": "http://localhost:9999",
   "viewportWidth": 1920,
   "viewportHeight": 1080,
-  "defaultCommandTimeout": 10000
+  "defaultCommandTimeout": 10000,
+  "downloadsFolder": "E2E/downloads",
+  "fixturesFolder": "E2E/fixtures",
+  "integrationFolder": "E2E/integration",
+  "screenshotsFolder": "E2E/screenshots",
+  "supportFile": "E2E/support/index.js",
+  "videosFolder": "E2E/videos",
+  "pluginsFile": "E2E/plugins/index.js"
 }
