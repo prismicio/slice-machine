@@ -16,6 +16,7 @@ jobs:
           path: |
             node_modules
             */*/node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-lerna-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-lerna-
