@@ -4,7 +4,7 @@ describe("Duplicate Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `${lib}/${name}`);
+    cy.task("rmrf", `e2e-projects/next/${lib}/${name}`);
   });
 
   it("A user can not create two slices with the same name", () => {

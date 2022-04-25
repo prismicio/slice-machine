@@ -5,7 +5,7 @@ describe("Duplicate custom types", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `customtypes/${id}`);
+    cy.task("rmrf", `e2e-projects/next/customtypes/${id}`);
     cy.setupSliceMachineUserContext();
     cy.visit("/");
     // loading spinner
