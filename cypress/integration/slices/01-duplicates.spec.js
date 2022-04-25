@@ -1,17 +1,17 @@
 describe("Duplicate Slices", () => {
   const name = "DuplicateSlices";
-  const lib = "slices";
+  const lib = "slices--ecommerce";
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `e2e-projects/next/${lib}/${name}`);
+    cy.task("rmrf", `e2e-projects/next/slices/ecommerce/${name}`);
   });
 
   it("A user can not create two slices with the same name", () => {
     cy.setupSliceMachineUserContext();
 
     // create first slice
-    cy.visit(`/${lib}`);
+    cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=create-slice]"));
     cy.get("[data-cy=create-slice]").click();
     cy.get("[data-cy=create-slice-modal]").should("be.visible");
@@ -29,7 +29,7 @@ describe("Duplicate Slices", () => {
     );
 
     // do it again
-    cy.visit(`/${lib}`);
+    cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=create-slice]"));
     cy.get("[data-cy=create-slice]").click();
     cy.get("[data-cy=create-slice-modal]").should("be.visible");
