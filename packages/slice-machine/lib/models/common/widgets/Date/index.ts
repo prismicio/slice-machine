@@ -2,7 +2,7 @@ import { MdDateRange } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import { Date } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
@@ -27,8 +27,8 @@ export const DateWidget: Widget<Date, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Date,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   MockConfigForm,

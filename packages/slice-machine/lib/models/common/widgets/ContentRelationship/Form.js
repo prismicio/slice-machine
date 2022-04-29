@@ -34,13 +34,16 @@ const WidgetForm = ({
     label: ct.local.label,
   }));
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const selectValues = formValues.config.customtypes.map((id) => {
-    const ct = customTypes.find(
-      (frontendCustomType) => frontendCustomType.local.id === id
-    );
-    return { value: ct?.local.id, label: ct?.local.label };
-  });
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+  const selectValues = formValues.config.customtypes
+    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      formValues.config.customtypes.map((id) => {
+        const ct = customTypes.find(
+          (frontendCustomType) => frontendCustomType.local.id === id
+        );
+        return { value: ct?.local.id, label: ct?.local.label };
+      })
+    : null;
 
   return (
     <FlexGrid>

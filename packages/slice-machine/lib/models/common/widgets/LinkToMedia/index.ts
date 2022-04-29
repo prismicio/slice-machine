@@ -3,7 +3,7 @@ import { MdAttachment } from "react-icons/md";
 
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
 import Form, { FormFields } from "@lib/models/common/widgets/Link/Form";
@@ -43,8 +43,8 @@ export const LinkToMediaWidget: Widget<Link, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Link,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
       select: "media",
     },
   }),

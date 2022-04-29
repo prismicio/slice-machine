@@ -1,0 +1,83 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "promo_section_full_width_with_overlapping_image_tiles",
+    "items": [],
+    "primary": {
+      "title1": [
+        {
+          "type": "heading1",
+          "text": "Integrate seamless solutions",
+          "spans": []
+        }
+      ],
+      "title2": [
+        {
+          "type": "heading1",
+          "text": "Scale synergistic paradigms",
+          "spans": []
+        }
+      ],
+      "image1": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?w=288&h=288&fit=crop"
+      },
+      "image2": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1596195689404-24d8a8d1c6ea?w=288&h=288&fit=crop"
+      },
+      "image3": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1600804931749-2da4ce26c869?w=288&h=288&fit=crop"
+      },
+      "image4": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1576662712957-9c79ae1280f8?w=288&h=288&fit=crop"
+      },
+      "image5": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1589321599763-d66926c29613?w=288&h=288&fit=crop"
+      },
+      "image6": {
+        "dimensions": {
+          "width": 288,
+          "height": 288
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1537498425277-c283d32ef9db?w=288&h=288&fit=crop"
+      },
+      "ctaLink": {
+        "link_type": "Web",
+        "url": "http://twitter.com"
+      },
+      "linkLabel": "facilitate synergistic supply-chains"
+    }
+  }
+]

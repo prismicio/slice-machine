@@ -8,30 +8,42 @@ import {
   getFramework,
   getRepoName,
   getShortId,
+  getIntercomHash,
 } from "@src/modules/environment";
 import { getLibraries } from "@src/modules/slices";
 import { useRouter } from "next/router";
 
 const useSMTracker = () => {
-  const { libraries, repoName, shorId, currentVersion, framework } =
-    useSelector((state: SliceMachineStoreType) => ({
-      currentVersion: getCurrentVersion(state),
-      framework: getFramework(state),
-      shorId: getShortId(state),
-      repoName: getRepoName(state),
-      libraries: getLibraries(state),
-    }));
+  const {
+    libraries,
+    repoName,
+    shortId,
+    intercomHash,
+    currentVersion,
+    framework,
+  } = useSelector((state: SliceMachineStoreType) => ({
+    currentVersion: getCurrentVersion(state),
+    framework: getFramework(state),
+    shortId: getShortId(state),
+    intercomHash: getIntercomHash(state),
+    repoName: getRepoName(state),
+    libraries: getLibraries(state),
+  }));
 
   const router = useRouter();
 
   useEffect(() => {
     void Tracker.get().groupLibraries(libraries, repoName, currentVersion);
 
-    shorId && Tracker.get().identifyUser(shorId);
-
     // For initial loading
     void Tracker.get().trackPageView(framework, currentVersion);
   }, []);
+
+  // Handles if the user login/logout outside of the app.
+  useEffect(() => {
+    if (shortId && intercomHash)
+      void Tracker.get().identifyUser(shortId, intercomHash);
+  }, [shortId, intercomHash]);
 
   // For handling page change
   useEffect(() => {

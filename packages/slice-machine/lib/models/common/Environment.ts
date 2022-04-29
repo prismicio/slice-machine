@@ -22,6 +22,7 @@ export interface BackendEnvironment {
 
 export interface FrontEndEnvironment {
   shortId?: string;
+  intercomHash?: string;
   manifest: Models.Manifest;
   repo?: string;
   changelog: PackageChangelog;

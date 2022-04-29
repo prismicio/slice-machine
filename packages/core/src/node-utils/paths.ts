@@ -1,9 +1,10 @@
 import path from "path";
 import * as os from "os";
 
-export interface FileContent<T> {
+export interface FileContent<T, E = void> {
   exists: boolean;
   content: T | null;
+  errors?: E;
 }
 
 export interface Paths {

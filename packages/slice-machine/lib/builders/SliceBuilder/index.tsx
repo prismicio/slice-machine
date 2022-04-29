@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect, useMemo } from "react";
-import { useIsMounted } from "react-tidy";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
 import { SliceContext } from "src/models/slice/context";
@@ -50,7 +49,6 @@ const SliceBuilder: React.FunctionComponent = () => {
 
   if (!store || !Model || !variation) return null;
 
-  const isMounted = useIsMounted();
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
 
@@ -62,14 +60,14 @@ const SliceBuilder: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (Model.isTouched && isMounted) {
+    if (Model.isTouched) {
       setData(initialState);
     }
   }, [Model.isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
-    if (data.done && isMounted) {
+    if (data.done) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       handleRemoteResponse(openToaster)(data);
@@ -104,10 +102,10 @@ const SliceBuilder: React.FunctionComponent = () => {
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        onPush={() => store.push(Model, onPush)}
+        onPush={() => void store.push(Model, onPush)}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        onSave={() => store.save(Model, setData)}
+        onSave={() => void store.save(Model, setData)}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
       />

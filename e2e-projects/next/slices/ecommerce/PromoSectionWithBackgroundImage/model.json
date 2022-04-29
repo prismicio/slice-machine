@@ -1,0 +1,84 @@
+{
+  "id": "promo_section_with_background_image",
+  "type": "SharedSlice",
+  "name": "PromoSectionWithBackgroundImage",
+  "description": "PromoSectionWithBackgroundImage",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "PromoSectionWithBackgroundImage",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "image": {
+          "config": {
+            "label": "Image",
+            "constraint": {
+              "width": 1216,
+              "height": 482
+            },
+            "thumbnails": [
+              {
+                "name": "mobile",
+                "width": 605,
+                "height": 443
+              }
+            ]
+          },
+          "type": "Image"
+        },
+        "link": {
+          "config": {
+            "label": "Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "linkLabel": {
+          "config": {
+            "label": "Link Label",
+            "placeholder": "This is the text of the button"
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "cameraInsurance",
+      "name": "Camera Insurance",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "PromoSectionWithBackgroundImage",
+      "primary": {
+        "link": {
+          "config": {
+            "label": "Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

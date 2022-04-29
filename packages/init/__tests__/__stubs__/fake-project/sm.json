@@ -1,4 +1,5 @@
 {
   "apiEndpoint": "https://foo-bar.prismic.io/api/v2",
-  "libraries": ["~/slices"]
+  "libraries": ["~/slices"],
+  "framework": "none"
 }

@@ -36,6 +36,7 @@ describe("loginOrBypass", () => {
   const email = "batman@example.com";
   const userId = "1234567";
   const shortId = "12";
+  const intercomHash = "intercomHash";
   const type = "USER";
   const repositories = {
     "foo-repo": { dbid: "abcd", role: Models.Roles.OWNER },
@@ -65,6 +66,7 @@ describe("loginOrBypass", () => {
       .reply(200, {
         userId,
         shortId,
+        intercomHash,
         email,
         firstName,
         lastName,
@@ -80,13 +82,18 @@ describe("loginOrBypass", () => {
 
     expect(result?.profile?.email).toEqual(email);
     expect(result?.profile?.shortId).toEqual(shortId);
+    expect(result?.profile?.intercomHash).toEqual(intercomHash);
     expect(result?.profile?.userId).toEqual(userId);
 
     expect(stderr.output).toContain(email);
 
     expect(fs.writeFileSync).toHaveBeenLastCalledWith(
       path.join(os.homedir(), ".prismic"),
-      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      JSON.stringify(
+        { base: fakeBase, cookies: fakeCookie, shortId, intercomHash },
+        null,
+        2
+      ),
       "utf8"
     );
   });
@@ -121,6 +128,7 @@ describe("loginOrBypass", () => {
       .reply(200, {
         userId,
         shortId,
+        intercomHash,
         email,
         firstName,
         lastName,
@@ -131,9 +139,14 @@ describe("loginOrBypass", () => {
     expect(result).not.toBeNull();
     expect(result?.info).not.toBeNull();
     expect(result?.profile?.shortId).toEqual(shortId);
+    expect(result?.profile?.intercomHash).toEqual(intercomHash);
     expect(fs.writeFileSync).toBeCalledWith(
       path.join(os.homedir(), ".prismic"),
-      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      JSON.stringify(
+        { base: fakeBase, cookies: fakeCookie, shortId, intercomHash },
+        null,
+        2
+      ),
       "utf8"
     );
   });

@@ -58,14 +58,24 @@ export class SMTracker {
       );
   }
 
-  async #identify(userId: string): Promise<void> {
+  async #identify(shortId: string, intercomHash: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
     return this.#client
       .then((client): void => {
-        void client.identify(userId);
+        void client.identify(
+          shortId,
+          {},
+          {
+            integrations: {
+              Intercom: {
+                user_hash: intercomHash,
+              },
+            },
+          }
+        );
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
@@ -105,8 +115,8 @@ export class SMTracker {
     });
   }
 
-  async identifyUser(userId: string): Promise<void> {
-    await this.#identify(userId);
+  async identifyUser(shortId: string, intercomHash: string): Promise<void> {
+    await this.#identify(shortId, intercomHash);
   }
 
   async groupLibraries(

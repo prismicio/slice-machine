@@ -45,8 +45,10 @@ async function init() {
 
   // If we get the info from the profile we want to identify all the previous events sent or continue in anonymous mode
   if (user.profile) {
-    Tracker.get().identifyUser(user.profile.shortId);
+    Tracker.get().identifyUser(user.profile.shortId, user.profile.intercomHash);
   }
+
+  Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
 
   // retrieve tokens for api calls
   const config = Prismic.PrismicSharedConfigManager.get();
@@ -84,9 +86,11 @@ async function init() {
   displayFinalMessage(cwd);
 }
 
-try {
-  void init();
-} catch (error) {
-  if (error instanceof Error) logs.writeError(error.message);
-  else console.error(error);
-}
+init()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    if (error instanceof Error) logs.writeError(error.message);
+    else console.error(error);
+  });

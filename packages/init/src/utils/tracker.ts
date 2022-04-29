@@ -5,6 +5,7 @@ import { Models } from "@slicemachine/core";
 export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
   InitStart = "SliceMachine Init Start",
+  InitIdentify = "SliceMachine Init Identify",
   InitDone = "SliceMachine Init Done",
 }
 
@@ -52,7 +53,7 @@ export class InitTracker {
     }
   }
 
-  _identifyEvent(userId: string): void {
+  _identifyEvent(userId: string, intercomHash: string): void {
     if (!this._isTrackingPossible(this.#client)) {
       return;
     }
@@ -61,6 +62,11 @@ export class InitTracker {
       this.#client.identify({
         userId,
         anonymousId: this.#anonymousId,
+        integrations: {
+          Intercom: {
+            user_hash: intercomHash,
+          },
+        },
       });
     } catch {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
@@ -81,13 +87,17 @@ export class InitTracker {
 
   /** Public methods **/
 
-  identifyUser(userId: string): void {
+  identifyUser(userId: string, intercomHash: string): void {
     this.#userId = userId;
-    this._identifyEvent(userId);
+    this._identifyEvent(userId, intercomHash);
   }
 
   trackDownloadLibrary(library: string): void {
     this._trackEvent(EventType.DownloadLibrary, { library });
+  }
+
+  trackInitIdentify(repoDomain: string | undefined): void {
+    this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
   }
 
   trackInitStart(repoDomain: string | undefined): void {

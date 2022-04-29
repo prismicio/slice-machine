@@ -93,7 +93,7 @@ const Form = () => {
           value={state.url || ""}
           placeholder="https://www.youtube.com/watch?v=fiOwHYFkUz0"
           onFocus={(e) => e.target.select()}
-          onChange={(e) => getOembed(e.target.value.trim())}
+          onChange={(e) => void getOembed(e.target.value.trim())}
         />
         <InputDeleteIcon onClick={reset} />
         <Box mt={2}>

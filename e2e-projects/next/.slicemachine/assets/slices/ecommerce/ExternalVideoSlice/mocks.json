@@ -1,0 +1,9 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "external_video_slice",
+    "items": [],
+    "primary": {}
+  }
+]

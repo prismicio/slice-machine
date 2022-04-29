@@ -1,0 +1,55 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "contact_section_split_two_tone",
+    "items": [
+      {
+        "field": "leverage virtual convergence",
+        "fieldPlaceholder": "redefine dynamic portals"
+      },
+      {
+        "field": "cultivate cutting-edge functionalities",
+        "fieldPlaceholder": "target world-class content"
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "paragraph",
+          "text": "Eiusmod pariatur incididunt veniam id deserunt laboris eiusmod incididunt elit pariatur eiusmod. Duis reprehenderit ea sunt qui incididunt et id aute officia non ullamco tempor mollit labore ad. Laborum culpa sint id veniam quis sunt dolore magna ex cupidatat consectetur sit do nisi minim.",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Ullamco officia officia nostrud ullamco incididunt ea anim qui aliqua culpa. Tempor veniam eiusmod aliqua voluptate.",
+          "spans": []
+        }
+      ],
+      "address": [
+        {
+          "type": "paragraph",
+          "text": "Quis amet sunt adipisicing pariatur pariatur eu. Eu aliquip ex eu magna tempor proident nulla laborum culpa elit consectetur ex voluptate adipisicing laborum. Ex do magna id excepteur exercitation culpa.",
+          "spans": []
+        }
+      ],
+      "phone": "deploy cutting-edge e-tailers",
+      "email": "mesh seamless partnerships",
+      "careerText": [
+        {
+          "type": "paragraph",
+          "text": "Reprehenderit ad sunt sunt reprehenderit cupidatat excepteur cillum pariatur in voluptate. Reprehenderit esse pariatur proident dolore do excepteur consequat ad duis consequat aute.",
+          "spans": []
+        }
+      ],
+      "careerLink": {
+        "link_type": "Web",
+        "url": "http://twitter.com"
+      },
+      "CareerLinkText": "brand global methodologies",
+      "cta": "orchestrate efficient mindshare"
+    }
+  }
+]

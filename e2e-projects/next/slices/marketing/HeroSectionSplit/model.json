@@ -1,0 +1,84 @@
+{
+  "id": "hero_section_split",
+  "type": "SharedSlice",
+  "name": "HeroSectionSplit",
+  "description": "HeroSectionSplit",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeroSectionSplit",
+      "primary": {
+        "title1": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title1",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "title2": {
+          "config": {
+            "label": "Title2",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          },
+          "type": "StructuredText"
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "cta1": {
+          "config": {
+            "label": "CTA1",
+            "placeholder": "",
+            "select": "document",
+            "allowTargetBlank": false
+          },
+          "type": "Link"
+        },
+        "ctaLabel1": {
+          "config": {
+            "label": "CTALabel1",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "cta2": {
+          "config": {
+            "label": "CTA2",
+            "placeholder": "",
+            "select": "document",
+            "allowTargetBlank": false
+          },
+          "type": "Link"
+        },
+        "ctaLabel2": {
+          "config": {
+            "label": "CTALabel2",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "image": {
+          "config": {
+            "label": "Image",
+            "constraint": {},
+            "thumbnails": []
+          },
+          "type": "Image"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

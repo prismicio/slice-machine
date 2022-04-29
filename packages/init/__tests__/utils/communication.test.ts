@@ -35,6 +35,7 @@ describe("communication.getUserPrfile", () => {
       .reply(200, {
         userId: "1234",
         shortId: "12",
+        intercomHash: "intercomHash",
         email: "batman@example.com",
         firstName: "Bat",
         lastName: "Man",
@@ -70,6 +71,7 @@ describe("communication.validateSessionAndGetProfile", () => {
   const email = "batman@example.com";
   const userId = "1234567";
   const shortId = "12";
+  const intercomHash = "intercomHash";
   const type = "USER";
   const repositories = {
     "foo-repo": { dbid: "abcd", role: Models.Roles.OWNER },
@@ -129,7 +131,7 @@ describe("communication.validateSessionAndGetProfile", () => {
     expect(result?.profile).toBeNull();
   });
 
-  test("is should validate the session and get the users profile", async () => {
+  test("it should validate the session and get the users profile", async () => {
     jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
     jest.spyOn(fs, "writeFileSync");
 
@@ -152,6 +154,7 @@ describe("communication.validateSessionAndGetProfile", () => {
       .reply(200, {
         userId,
         shortId,
+        intercomHash,
         email,
         firstName,
         lastName,
@@ -164,11 +167,16 @@ describe("communication.validateSessionAndGetProfile", () => {
 
     expect(result?.info.email).toEqual(email);
     expect(result?.profile?.shortId).toEqual(shortId);
+    expect(result?.profile?.intercomHash).toEqual(intercomHash);
     expect(result?.profile?.userId).toEqual(userId);
 
     expect(fs.writeFileSync).toHaveBeenLastCalledWith(
       path.join(os.homedir(), ".prismic"),
-      JSON.stringify({ base: fakeBase, cookies: fakeCookie, shortId }, null, 2),
+      JSON.stringify(
+        { base: fakeBase, cookies: fakeCookie, shortId, intercomHash },
+        null,
+        2
+      ),
       "utf8"
     );
   });

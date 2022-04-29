@@ -39,6 +39,10 @@ export const getFramework = (store: SliceMachineStoreType): Frameworks =>
 export const getShortId = (store: SliceMachineStoreType): string | undefined =>
   store.environment.shortId;
 
+export const getIntercomHash = (
+  store: SliceMachineStoreType
+): string | undefined => store.environment.intercomHash;
+
 export const getRepoName = (store: SliceMachineStoreType): string | undefined =>
   store.environment.repo;
 

@@ -13,7 +13,7 @@ import { MockConfigForm } from "./Mock/Form";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { Widget, DEFAULT_CONFIG } from "../Widget";
+import { Widget } from "../Widget";
 import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
@@ -39,7 +39,10 @@ export const TimestampWidget: Widget<Timestamp, typeof schema> = {
   MockConfigForm,
   create: (label: string) => ({
     type: WidgetTypes.Timestamp,
-    config: { ...DEFAULT_CONFIG, label },
+    config: {
+      label,
+      placeholder: "",
+    },
   }),
   schema,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

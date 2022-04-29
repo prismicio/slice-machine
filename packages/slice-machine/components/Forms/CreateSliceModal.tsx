@@ -7,7 +7,8 @@ import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
-
+import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { SliceSM } from "@slicemachine/core/build/models";
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
@@ -15,7 +16,8 @@ type CreateSliceModalProps = {
   isCreatingSlice: boolean;
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
-  libraries: ReadonlyArray<{ name: string }>;
+  libraries: ReadonlyArray<LibraryUI>;
+  remoteSlices: ReadonlyArray<SliceSM>;
 };
 
 type FormValues = { sliceName: string; from: string };
@@ -26,73 +28,87 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
   onSubmit,
   close,
   libraries,
-}) => (
-  <ModalFormCard
-    dataCy={"create-slice-modal"}
-    isOpen={isOpen}
-    widthInPx="530px"
-    isLoading={isCreatingSlice}
-    formId={formId}
-    close={close}
-    buttonLabel="Create"
-    onSubmit={(values: FormValues) => onSubmit(values)}
-    initialValues={{
-      sliceName: "",
-      from: libraries[0].name,
-    }}
-    validate={({ sliceName }) => {
-      if (!sliceName) {
-        return { sliceName: "Cannot be empty" };
-      }
-      if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
-        return { sliceName: "No special characters allowed" };
-      }
-      const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
-      if (cased !== sliceName.trim()) {
-        return { sliceName: "Value has to be PascalCased" };
-      }
+  remoteSlices,
+}) => {
+  return (
+    <ModalFormCard
+      dataCy={"create-slice-modal"}
+      isOpen={isOpen}
+      widthInPx="530px"
+      isLoading={isCreatingSlice}
+      formId={formId}
+      close={close}
+      buttonLabel="Create"
+      onSubmit={(values: FormValues) => onSubmit(values)}
+      initialValues={{
+        sliceName: "",
+        from: libraries[0].name,
+      }}
+      validate={({ sliceName }) => {
+        if (!sliceName) {
+          return { sliceName: "Cannot be empty" };
+        }
+        if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
+          return { sliceName: "No special characters allowed" };
+        }
+        const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
+        if (cased !== sliceName.trim()) {
+          return { sliceName: "Value has to be PascalCased" };
+        }
+        if (RESERVED_SLICE_NAME.includes(sliceName)) {
+          return {
+            sliceName: `${sliceName} is reserved for Slice Machine use`,
+          };
+        }
 
-      if (RESERVED_SLICE_NAME.includes(sliceName)) {
-        return { sliceName: `${sliceName} is reserved for Slice Machine use` };
-      }
-    }}
-    content={{
-      title: "Create a new slice",
-    }}
-  >
-    {({ touched, values, setFieldValue, errors }) => (
-      <Box>
-        <InputBox
-          name="sliceName"
-          label="Slice Name"
-          placeholder="MySlice"
-          error={touched.sliceName ? errors.sliceName : undefined}
-          dataCy={"slice-name-input"}
-        />
-        <Label htmlFor="origin" sx={{ mb: 2 }}>
-          Target Library
-        </Label>
-        <Select
-          name="origin"
-          options={libraries.map((v) => ({ value: v.name, label: v.name }))}
-          onChange={(v: { label: string; value: string } | null) =>
-            v ? setFieldValue("from", v.value) : null
-          }
-          defaultValue={{ value: values.from, label: values.from }}
-          theme={(theme) => {
-            return {
-              ...theme,
-              colors: {
-                ...theme.colors,
-                text: "text",
-                primary: "background",
-              },
-            };
-          }}
-        />
-      </Box>
-    )}
-  </ModalFormCard>
-);
+        const localNames = libraries.flatMap((lib) =>
+          lib.components.map((slice) => slice.model.name)
+        );
+        const remoteNames = remoteSlices.map((slice) => slice.name);
+        const usedNames = [...localNames, ...remoteNames];
+
+        if (usedNames.includes(sliceName)) {
+          return { sliceName: "Slice name is already taken." };
+        }
+      }}
+      content={{
+        title: "Create a new slice",
+      }}
+    >
+      {({ touched, values, setFieldValue, errors }) => (
+        <Box>
+          <InputBox
+            name="sliceName"
+            label="Slice Name"
+            placeholder="MySlice"
+            error={touched.sliceName ? errors.sliceName : undefined}
+            dataCy={"slice-name-input"}
+          />
+          <Label htmlFor="origin" sx={{ mb: 2 }}>
+            Target Library
+          </Label>
+          <Select
+            name="origin"
+            options={libraries.map((v) => ({ value: v.name, label: v.name }))}
+            onChange={(v: { label: string; value: string } | null) =>
+              v ? setFieldValue("from", v.value) : null
+            }
+            defaultValue={{ value: values.from, label: values.from }}
+            theme={(theme) => {
+              return {
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  text: "text",
+                  primary: "background",
+                },
+              };
+            }}
+          />
+        </Box>
+      )}
+    </ModalFormCard>
+  );
+};
 
 export default CreateSliceModal;

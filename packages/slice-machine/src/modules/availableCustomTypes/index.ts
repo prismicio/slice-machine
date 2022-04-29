@@ -47,6 +47,20 @@ export const selectAllCustomTypeIds = (
   store: SliceMachineStoreType
 ): string[] => Object.keys(store.availableCustomTypes);
 
+export const selectAllCustomTypeLabels = (
+  store: SliceMachineStoreType
+): string[] => {
+  return Object.values(store.availableCustomTypes)
+    .flatMap((localAndRemote) => {
+      return Object.values(localAndRemote);
+    })
+    .reduce((acc, ct) => {
+      if (ct.label) return [...acc, ct.label];
+
+      return acc;
+    }, [] as string[]);
+};
+
 export const selectCustomTypeById = (
   store: SliceMachineStoreType,
   id: string

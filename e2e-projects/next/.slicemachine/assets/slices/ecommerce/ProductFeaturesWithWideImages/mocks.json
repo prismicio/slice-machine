@@ -1,0 +1,236 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "product_features_with_wide_images",
+    "items": [
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Ex laborum irure cupidatat in aliqua nostrud sunt culpa.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Sit velit mollit mollit adipisicing dolor veniam anim velit ad voluptate fugiat anim elit. Occaecat consequat est veniam officia laboris exercitation nostrud duis.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1471897488648-5eae4ac6686b?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1471897488648-5eae4ac6686b?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Enim dolor ea sunt cillum in irure sunt consectetur do sint. Laboris dolore fugiat sint qui enim aliqua ea sit.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Eu ullamco voluptate deserunt nulla. Elit laboris sit commodo veniam quis esse.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Fugiat exercitation laborum anim est proident nisi ullamco pariatur Lorem veniam in nisi est eu mollit. Magna nostrud magna laborum commodo consectetur id. Veniam aute reprehenderit aute.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Ullamco adipisicing officia culpa ut elit nostrud quis amet deserunt. Dolor culpa ea laborum laborum cupidatat consequat. Velit velit est et aliquip qui mollit nulla laborum ut sunt nisi deserunt anim.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Qui pariatur velit nulla eiusmod.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Proident quis ipsum excepteur minim veniam officia do laboris. Quis aute anim consectetur proident sint fugiat qui. Enim et consectetur et officia dolore Lorem aute voluptate ut reprehenderit.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Do sunt esse tempor in. Dolore incididunt Lorem proident reprehenderit fugiat non velit commodo incididunt aute. Anim consequat cillum nostrud minim in do aliqua excepteur.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Ea ad dolor eiusmod ullamco Lorem elit incididunt elit mollit est. Aliqua do cupidatat ullamco velit enim irure incididunt cillum consectetur pariatur Lorem ex incididunt esse commodo.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "image": {
+          "dimensions": {
+            "width": 800,
+            "height": 320
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=800&h=320&fit=crop",
+          "mobile": {
+            "dimensions": {
+              "width": 352,
+              "height": 141
+            },
+            "alt": "Placeholder image",
+            "copyright": null,
+            "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=352&h=141&fit=crop"
+          }
+        },
+        "title": [
+          {
+            "type": "paragraph",
+            "text": "Aliquip proident excepteur adipisicing incididunt et proident sit irure proident commodo consectetur adipisicing commodo mollit. Nisi laborum ullamco ut nisi ut ex esse ut exercitation sunt reprehenderit voluptate. Minim esse magna ad labore laborum eiusmod esse nulla consectetur.",
+            "spans": []
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "text": "Sint in elit mollit nulla ea velit anim anim id aliqua commodo.",
+            "spans": []
+          }
+        ]
+      }
+    ],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Engage value-added schemas",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Ipsum deserunt laboris nostrud ipsum et aliquip culpa dolor.",
+          "spans": []
+        }
+      ],
+      "subtitle": [
+        {
+          "type": "paragraph",
+          "text": "Dolor esse elit voluptate Lorem elit nulla ut voluptate laboris.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

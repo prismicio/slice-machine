@@ -32,13 +32,18 @@ describe("InitTracker", () => {
   test("should send a identify event", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
   });
 
@@ -57,7 +62,7 @@ describe("InitTracker", () => {
       properties: { library: "libraryName" },
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
@@ -65,6 +70,11 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
@@ -95,7 +105,7 @@ describe("InitTracker", () => {
       properties: {},
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
@@ -103,6 +113,11 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
@@ -114,6 +129,51 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Start",
+      properties: {
+        repo: "repoName",
+      },
+    });
+  });
+
+  test("should send a track init identify event", () => {
+    const smTracker = new InitTracker();
+    smTracker.initialize(dumpSegmentKey);
+    // Anonymous call
+    smTracker.trackInitIdentify(undefined);
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+      anonymousId: "uuid",
+      event: "SliceMachine Init Identify",
+      properties: {},
+    });
+
+    smTracker.identifyUser("userId", "intercomHash");
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+      anonymousId: "uuid",
+      userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
+    });
+
+    // Logged in call
+    smTracker.trackInitIdentify("repoName");
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+      userId: "userId",
+      event: "SliceMachine Init Identify",
       properties: {
         repo: "repoName",
       },
@@ -135,7 +195,7 @@ describe("InitTracker", () => {
       properties: { framework: Models.Frameworks.next, repo: "repoName" },
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
@@ -143,6 +203,11 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
@@ -161,9 +226,10 @@ describe("InitTracker", () => {
   test("shouldn't send any events when tracker is disable", () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey, false);
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
     smTracker.trackInitDone(Models.Frameworks.next, "repoName");
     smTracker.trackInitStart("repoName");
+    smTracker.trackInitIdentify("repoName");
     smTracker.trackDownloadLibrary("libraryName");
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
