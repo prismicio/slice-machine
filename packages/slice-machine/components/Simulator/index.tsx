@@ -53,8 +53,15 @@ export default function Simulator() {
   );
 
   const sharedSlice = useMemo(() => Slices.fromSM(Model.model), [Model.model]);
-  const initialContent = Model.mock?.find(
-    (content) => content.variation === variation.id
+  const initialContent = useMemo(
+    () =>
+      Model.mock?.find((content) => content.variation === variation.id) ?? {
+        __TYPE__: "SharedSliceContent" as const,
+        variation: variation.id,
+        primary: {},
+        items: [],
+      },
+    [Model.mock, variation.id]
   );
   const [content, setContent] = useState(initialContent);
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
@@ -64,7 +71,7 @@ export default function Simulator() {
   }
   const apiContent = useMemo(
     () =>
-      content === initialContent || content === undefined
+      content === initialContent
         ? undefined
         : renderSliceMock(sharedSlice, content),
     [sharedSlice, initialContent, content]
@@ -98,15 +105,11 @@ export default function Simulator() {
           width: "444px",
         }}
       >
-        {content === undefined ? (
-          <pre>Error: content is undefined.</pre>
-        ) : (
-          <SharedSliceEditor
-            content={content}
-            onContentChange={setContent}
-            sharedSlice={sharedSlice}
-          />
-        )}
+        <SharedSliceEditor
+          content={content}
+          onContentChange={setContent}
+          sharedSlice={sharedSlice}
+        />
       </Flex>
     </Flex>
   );
