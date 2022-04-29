@@ -1,59 +1,108 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "promo_section_with_background_image",
-    "items": [],
     "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Revolutionize virtual web-readiness",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Aute velit pariatur culpa eiusmod reprehenderit sint nostrud cupidatat eu dolore veniam ullamco ad exercitation. Laborum anim laborum velit.",
-          "spans": []
-        }
-      ],
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Exclaimed"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Laborum amet occaecat quis ut."
+            }
+          }
+        ]
+      },
       "image": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
           "width": 1216,
           "height": 482
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482?w=1216&h=482&fit=crop",
-        "mobile": {
-          "dimensions": {
-            "width": 605,
-            "height": 443
+        "width": 1216,
+        "height": 482,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
           },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482?w=605&h=443&fit=crop"
+          "background": "transparent"
+        },
+        "thumbnails": {
+          "mobile": {
+            "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6",
+            "origin": {
+              "id": "mobile",
+              "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6",
+              "width": 605,
+              "height": 443
+            },
+            "width": 605,
+            "height": 443,
+            "edit": {
+              "zoom": 1,
+              "crop": {
+                "x": 0,
+                "y": 0
+              },
+              "background": "transparent"
+            }
+          }
         }
       },
       "link": {
-        "link_type": "Web",
-        "url": "https://slicemachine.dev"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
-      "linkLabel": "synergize rich infrastructures"
-    }
+      "linkLabel": {
+        "__TYPE__": "FieldContent",
+        "value": "cookies",
+        "type": "Text"
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   },
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "cameraInsurance",
-    "name": "Camera Insurance",
-    "slice_type": "promo_section_with_background_image",
-    "items": [],
     "primary": {
       "link": {
-        "link_type": "Web",
-        "url": "https://slicemachine.dev"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       }
-    }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

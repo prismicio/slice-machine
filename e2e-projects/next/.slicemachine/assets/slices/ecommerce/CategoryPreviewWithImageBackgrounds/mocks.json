@@ -1,76 +1,171 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "category_preview_with_image_backgrounds",
-    "items": [],
     "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Synergize web-enabled functionalities",
-          "spans": []
-        }
-      ],
-      "linkLabel": "expedite e-business bandwidth",
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Speak"
+            }
+          }
+        ]
+      },
+      "linkLabel": {
+        "__TYPE__": "FieldContent",
+        "value": "sport",
+        "type": "Text"
+      },
       "link": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
       "imageLeft": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1587840171670-8b850147754e",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1587840171670-8b850147754e",
           "width": 592,
           "height": 592
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1493119508027-2b584f234d6c?w=592&h=592&fit=crop",
-        "mobile": {
-          "dimensions": {
-            "width": 560,
-            "height": 280
+        "width": 592,
+        "height": 592,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
           },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1493119508027-2b584f234d6c?w=560&h=280&fit=crop"
+          "background": "transparent"
+        },
+        "thumbnails": {
+          "mobile": {
+            "url": "https://images.unsplash.com/photo-1593642532973-d31b6557fa68",
+            "origin": {
+              "id": "mobile",
+              "url": "https://images.unsplash.com/photo-1593642532973-d31b6557fa68",
+              "width": 560,
+              "height": 280
+            },
+            "width": 560,
+            "height": 280,
+            "edit": {
+              "zoom": 1,
+              "crop": {
+                "x": 0,
+                "y": 0
+              },
+              "background": "transparent"
+            }
+          }
         }
       },
-      "imageLeftTitle": "redefine collaborative e-business",
-      "imageLeftCta": "engineer innovative action-items",
+      "imageLeftTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "wrote",
+        "type": "Text"
+      },
+      "imageLeftCta": {
+        "__TYPE__": "FieldContent",
+        "value": "spent",
+        "type": "Text"
+      },
       "leftImageLink": {
-        "link_type": "Web",
-        "url": "https://prismic.io"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
       "imageTopRight": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88",
           "width": 592,
           "height": 280
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=592&h=280&fit=crop"
+        "width": 592,
+        "height": 280,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
-      "imageTopRightTitle": "transform wireless supply-chains",
-      "imageTopRightCta": "synergize dot-com mindshare",
+      "imageTopRightTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "continent",
+        "type": "Text"
+      },
+      "imageTopRightCta": {
+        "__TYPE__": "FieldContent",
+        "value": "layers",
+        "type": "Text"
+      },
       "topRightImageLink": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
       "imageBottomRight": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1531771686035-25f47595c87a",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1531771686035-25f47595c87a",
           "width": 592,
           "height": 280
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=592&h=280&fit=crop"
+        "width": 592,
+        "height": 280,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
-      "imageBottomRightTitle": "incentivize integrated relationships",
-      "imageBottomRightCta": "implement leading-edge schemas",
+      "imageBottomRightTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "orange",
+        "type": "Text"
+      },
+      "imageBottomRightCta": {
+        "__TYPE__": "FieldContent",
+        "value": "evidence",
+        "type": "Text"
+      },
       "bottomRightImageLink": {
-        "link_type": "Web",
-        "url": "https://prismic.io"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       }
-    }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

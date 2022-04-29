@@ -1,55 +1,102 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "contact_section_split_two_tone",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Laborum qui magna sint proident eu."
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Ea sit velit excepteur culpa nulla."
+            }
+          }
+        ]
+      },
+      "address": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Irure ipsum quis fugiat veniam tempor aliquip officia. Ex qui anim officia consequat Lorem sit voluptate aute."
+            }
+          }
+        ]
+      },
+      "phone": {
+        "__TYPE__": "FieldContent",
+        "value": "importance",
+        "type": "Text"
+      },
+      "email": {
+        "__TYPE__": "FieldContent",
+        "value": "son",
+        "type": "Text"
+      },
+      "careerText": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Do enim sint sint sit officia adipisicing pariatur aliquip voluptate commodo. Pariatur cillum deserunt non deserunt. Reprehenderit eiusmod nulla dolor officia."
+            }
+          }
+        ]
+      },
+      "careerLink": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "url": "http://google.com",
+          "__TYPE__": "ExternalLink"
+        }
+      },
+      "CareerLinkText": {
+        "__TYPE__": "FieldContent",
+        "value": "clay",
+        "type": "Text"
+      },
+      "cta": {
+        "__TYPE__": "FieldContent",
+        "value": "particular",
+        "type": "Text"
+      }
+    },
     "items": [
       {
-        "field": "leverage virtual convergence",
-        "fieldPlaceholder": "redefine dynamic portals"
-      },
-      {
-        "field": "cultivate cutting-edge functionalities",
-        "fieldPlaceholder": "target world-class content"
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "field",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "saddle",
+              "type": "Text"
+            }
+          ],
+          [
+            "fieldPlaceholder",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "crew",
+              "type": "Text"
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "paragraph",
-          "text": "Eiusmod pariatur incididunt veniam id deserunt laboris eiusmod incididunt elit pariatur eiusmod. Duis reprehenderit ea sunt qui incididunt et id aute officia non ullamco tempor mollit labore ad. Laborum culpa sint id veniam quis sunt dolore magna ex cupidatat consectetur sit do nisi minim.",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Ullamco officia officia nostrud ullamco incididunt ea anim qui aliqua culpa. Tempor veniam eiusmod aliqua voluptate.",
-          "spans": []
-        }
-      ],
-      "address": [
-        {
-          "type": "paragraph",
-          "text": "Quis amet sunt adipisicing pariatur pariatur eu. Eu aliquip ex eu magna tempor proident nulla laborum culpa elit consectetur ex voluptate adipisicing laborum. Ex do magna id excepteur exercitation culpa.",
-          "spans": []
-        }
-      ],
-      "phone": "deploy cutting-edge e-tailers",
-      "email": "mesh seamless partnerships",
-      "careerText": [
-        {
-          "type": "paragraph",
-          "text": "Reprehenderit ad sunt sunt reprehenderit cupidatat excepteur cillum pariatur in voluptate. Reprehenderit esse pariatur proident dolore do excepteur consequat ad duis consequat aute.",
-          "spans": []
-        }
-      ],
-      "careerLink": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
-      },
-      "CareerLinkText": "brand global methodologies",
-      "cta": "orchestrate efficient mindshare"
-    }
+    ]
   }
 ]

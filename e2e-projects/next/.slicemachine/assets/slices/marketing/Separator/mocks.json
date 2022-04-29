@@ -1,9 +1,13 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "separator",
-    "items": [],
-    "primary": {}
+    "primary": {},
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

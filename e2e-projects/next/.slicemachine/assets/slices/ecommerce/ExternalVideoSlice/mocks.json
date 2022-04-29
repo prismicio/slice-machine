@@ -1,9 +1,18 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "external_video_slice",
-    "items": [],
-    "primary": {}
+    "primary": {
+      "video": {
+        "__TYPE__": "IntegrationFieldsContent",
+        "value": "integration-field-product-id"
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

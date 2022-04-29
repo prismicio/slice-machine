@@ -1,50 +1,92 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "hero_section_split",
-    "items": [],
     "primary": {
-      "title1": [
-        {
-          "type": "heading1",
-          "text": "Brand efficient technologies",
-          "spans": []
-        }
-      ],
-      "title2": [
-        {
-          "type": "heading1",
-          "text": "Matrix efficient platforms",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Velit et ipsum anim. Laborum ut magna ad enim reprehenderit nostrud consectetur ea officia qui.",
-          "spans": []
-        }
-      ],
+      "title1": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Valuable"
+            }
+          }
+        ]
+      },
+      "title2": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Teacher"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Sint irure excepteur irure dolore dolor cillum elit nisi nostrud tempor pariatur."
+            }
+          }
+        ]
+      },
       "cta1": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
-      "ctaLabel1": "enable killer partnerships",
+      "ctaLabel1": {
+        "__TYPE__": "FieldContent",
+        "value": "creature",
+        "type": "Text"
+      },
       "cta2": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
       },
-      "ctaLabel2": "transition next-generation interfaces",
+      "ctaLabel2": {
+        "__TYPE__": "FieldContent",
+        "value": "home",
+        "type": "Text"
+      },
       "image": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5",
           "width": 900,
           "height": 500
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=900&h=500&fit=crop"
+        "width": 900,
+        "height": 500,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       }
-    }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

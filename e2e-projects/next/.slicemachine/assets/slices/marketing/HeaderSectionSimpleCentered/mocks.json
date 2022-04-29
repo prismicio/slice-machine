@@ -1,24 +1,36 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "header_section_simple_centered",
-    "items": [],
     "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Repurpose compelling niches",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Nostrud consectetur fugiat sint consectetur tempor ea qui id anim dolor.",
-          "spans": []
-        }
-      ]
-    }
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Heavy"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Sunt nisi adipisicing elit ea laboris ut ipsum elit. Nulla voluptate commodo eu dolore exercitation ea velit."
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

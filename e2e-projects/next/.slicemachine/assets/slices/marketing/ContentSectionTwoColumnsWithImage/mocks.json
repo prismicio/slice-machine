@@ -1,48 +1,84 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "content_section_two_columns_with_image",
-    "items": [],
     "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Integrate dot-com ROI",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Nisi est nulla quis dolore laborum anim deserunt in incididunt ullamco. Ullamco nulla in aliquip.",
-          "spans": []
-        }
-      ],
-      "superTitle": "deploy magnetic networks",
-      "text": [
-        {
-          "type": "paragraph",
-          "text": "Dolore officia aliquip ipsum. Qui ad est est magna adipisicing laborum id eu elit laborum duis non non sint. Reprehenderit in reprehenderit aute cillum quis nisi esse aute mollit irure culpa irure.",
-          "spans": []
-        }
-      ],
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Stared"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Quis esse consectetur esse occaecat aute laborum."
+            }
+          }
+        ]
+      },
+      "superTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "solid",
+        "type": "Text"
+      },
+      "text": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Ea duis aute nulla commodo labore et qui adipisicing laboris. Fugiat duis cillum elit sit anim sint deserunt ut. Nulla et do proident aliquip tempor nulla laborum Lorem."
+            }
+          }
+        ]
+      },
       "image": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1587905069134-008460d7a636",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1587905069134-008460d7a636",
           "width": 900,
           "height": 500
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1607582278043-57198ac8da43?w=900&h=500&fit=crop"
+        "width": 900,
+        "height": 500,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
-      "caption": [
-        {
-          "type": "paragraph",
-          "text": "Fugiat anim excepteur ex minim consequat magna anim ea culpa quis nostrud labore fugiat incididunt occaecat. Exercitation nostrud ex qui deserunt voluptate.",
-          "spans": []
-        }
-      ]
-    }
+      "caption": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Dolor et voluptate dolor minim eiusmod nulla."
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

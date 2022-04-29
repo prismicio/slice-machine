@@ -1,55 +1,75 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "chart_slice",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Shall"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Nostrud dolor irure fugiat elit ut ex et anim ad fugiat irure enim eiusmod in aute."
+            }
+          }
+        ]
+      },
+      "additionalInfoTitle": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Esse dolore tempor est esse. Pariatur excepteur sint ipsum laborum aliqua aliqua adipisicing."
+            }
+          }
+        ]
+      },
+      "additionalInfo": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Nostrud sit elit et sint. Dolor nostrud magna magna cillum est fugiat reprehenderit est ad adipisicing mollit et dolor voluptate."
+            }
+          }
+        ]
+      }
+    },
     "items": [
       {
-        "percentageShare": 5467,
-        "entityLabel": "enhance transparent infrastructures"
-      },
-      {
-        "percentageShare": 1955,
-        "entityLabel": "streamline B2B vortals"
-      },
-      {
-        "percentageShare": 6415,
-        "entityLabel": "empower granular applications"
-      },
-      {
-        "percentageShare": 9513,
-        "entityLabel": "empower plug-and-play web services"
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "percentageShare",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "93.11795703586078",
+              "type": "Number"
+            }
+          ],
+          [
+            "entityLabel",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "clear",
+              "type": "Text"
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Target global paradigms",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Nulla deserunt fugiat aliquip aliqua cillum occaecat culpa irure adipisicing cillum occaecat cillum in labore sint. Consequat irure anim anim magna non cillum ut nulla aute in. Consectetur pariatur eiusmod cupidatat irure magna et ea.",
-          "spans": []
-        }
-      ],
-      "additionalInfoTitle": [
-        {
-          "type": "paragraph",
-          "text": "Ad ex ex esse irure consectetur.",
-          "spans": []
-        }
-      ],
-      "additionalInfo": [
-        {
-          "type": "paragraph",
-          "text": "Duis deserunt ex ex laborum est culpa veniam occaecat mollit ut incididunt.",
-          "spans": []
-        }
-      ]
-    }
+    ]
   }
 ]

@@ -1,40 +1,38 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "menu_sub_tab",
+    "primary": {
+      "sectionTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "apartment",
+        "type": "Text"
+      }
+    },
     "items": [
       {
-        "subSectionTitle": "scale viral markets",
-        "subSectionLink": {
-          "link_type": "Web",
-          "url": "http://twitter.com"
-        }
-      },
-      {
-        "subSectionTitle": "recontextualize back-end ROI",
-        "subSectionLink": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        }
-      },
-      {
-        "subSectionTitle": "leverage proactive communities",
-        "subSectionLink": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        }
-      },
-      {
-        "subSectionTitle": "repurpose visionary e-business",
-        "subSectionLink": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "subSectionTitle",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "she",
+              "type": "Text"
+            }
+          ],
+          [
+            "subSectionLink",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "sectionTitle": "synthesize dot-com solutions"
-    }
+    ]
   }
 ]

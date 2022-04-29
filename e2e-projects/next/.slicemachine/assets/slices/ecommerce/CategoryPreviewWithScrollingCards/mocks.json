@@ -1,71 +1,80 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "category_preview_with_scrolling_cards",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Drove"
+            }
+          }
+        ]
+      },
+      "CTA": {
+        "__TYPE__": "FieldContent",
+        "value": "society",
+        "type": "Text"
+      },
+      "CTALink": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
+      }
+    },
     "items": [
       {
-        "image": {
-          "dimensions": {
-            "width": 224,
-            "height": 320
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1600861194802-a2b11076bc51?w=224&h=320&fit=crop"
-        },
-        "title": "utilize plug-and-play portals",
-        "link": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "image": {
-          "dimensions": {
-            "width": 224,
-            "height": 320
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1471897488648-5eae4ac6686b?w=224&h=320&fit=crop"
-        },
-        "title": "extend innovative e-tailers",
-        "link": {
-          "link_type": "Web",
-          "url": "http://twitter.com"
-        }
-      },
-      {
-        "image": {
-          "dimensions": {
-            "width": 224,
-            "height": 320
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=224&h=320&fit=crop"
-        },
-        "title": "productize open-source relationships",
-        "link": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "image",
+            {
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6",
+                "width": 224,
+                "height": 320
+              },
+              "width": 224,
+              "height": 320,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              },
+              "thumbnails": {}
+            }
+          ],
+          [
+            "title",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "spell",
+              "type": "Text"
+            }
+          ],
+          [
+            "link",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Incentivize magnetic markets",
-          "spans": []
-        }
-      ],
-      "CTA": "redefine bricks-and-clicks functionalities",
-      "CTALink": {
-        "link_type": "Web",
-        "url": "https://slicemachine.dev"
-      }
-    }
+    ]
   }
 ]

@@ -1,33 +1,38 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "footer_column",
+    "primary": {
+      "section_title": {
+        "__TYPE__": "FieldContent",
+        "value": "press",
+        "type": "Text"
+      }
+    },
     "items": [
       {
-        "link": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        },
-        "link_label": "generate bricks-and-clicks bandwidth"
-      },
-      {
-        "link": {
-          "link_type": "Web",
-          "url": "https://slicemachine.dev"
-        },
-        "link_label": "transition killer applications"
-      },
-      {
-        "link": {
-          "link_type": "Web",
-          "url": "https://slicemachine.dev"
-        },
-        "link_label": "mesh strategic users"
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "link",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ],
+          [
+            "link_label",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "throw",
+              "type": "Text"
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "section_title": "enhance real-time architectures"
-    }
+    ]
   }
 ]

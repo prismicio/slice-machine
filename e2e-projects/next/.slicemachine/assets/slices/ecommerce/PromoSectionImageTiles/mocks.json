@@ -1,82 +1,197 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "promo_section_image_tiles",
-    "items": [],
     "primary": {
-      "title": "optimize virtual e-services",
-      "subtitle": "unleash viral schemas",
-      "linkLabel": "engage integrated e-tailers",
-      "link": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+      "title": {
+        "__TYPE__": "FieldContent",
+        "value": "move",
+        "type": "Text"
       },
-      "backgroundColor": "#ad4add",
+      "subtitle": {
+        "__TYPE__": "FieldContent",
+        "value": "independent",
+        "type": "Text"
+      },
+      "linkLabel": {
+        "__TYPE__": "FieldContent",
+        "value": "pink",
+        "type": "Text"
+      },
+      "link": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
+      },
+      "backgroundColor": {
+        "__TYPE__": "FieldContent",
+        "value": "#5dc6ee",
+        "type": "Color"
+      },
       "image1": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1589652717521-10c0d092dea9",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1589652717521-10c0d092dea9",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image2": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1493119508027-2b584f234d6c?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image3": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1547394765-185e1e68f34e",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1547394765-185e1e68f34e",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image4": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image5": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1551739440-5dd934d3a94a",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1607582278038-6bebbd4d7b72?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image6": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1493119508027-2b584f234d6c",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1493119508027-2b584f234d6c",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
       "image7": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482",
           "width": 176,
           "height": 256
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=176&h=256&fit=crop"
+        "width": 176,
+        "height": 256,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       },
-      "personalisationid": "iterate vertical paradigms"
-    }
+      "personalisationid": {
+        "__TYPE__": "FieldContent",
+        "value": "them",
+        "type": "Text"
+      },
+      "intent": {
+        "__TYPE__": "IntegrationFieldsContent",
+        "value": "integration-field-product-id"
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

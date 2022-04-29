@@ -1,106 +1,119 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "blog_section_three_column_cards",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Search"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Exercitation nulla velit occaecat minim officia fugiat proident."
+            }
+          }
+        ]
+      }
+    },
     "items": [
       {
-        "article": {
-          "link_type": "Web",
-          "url": "https://slicemachine.dev"
-        },
-        "image": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1587840171670-8b850147754e?w=900&h=500&fit=crop"
-        },
-        "author": "incubate leading-edge networks",
-        "authorImage": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=900&h=500&fit=crop"
-        },
-        "date": "2019-07-20",
-        "minutesToRead": 9155
-      },
-      {
-        "article": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        },
-        "image": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=900&h=500&fit=crop"
-        },
-        "author": "visualize web-enabled eyeballs",
-        "authorImage": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1576662712957-9c79ae1280f8?w=900&h=500&fit=crop"
-        },
-        "date": "2019-03-26",
-        "minutesToRead": 8062
-      },
-      {
-        "article": {
-          "link_type": "Web",
-          "url": "http://twitter.com"
-        },
-        "image": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1593642633279-1796119d5482?w=900&h=500&fit=crop"
-        },
-        "author": "aggregate virtual technologies",
-        "authorImage": {
-          "dimensions": {
-            "width": 900,
-            "height": 500
-          },
-          "alt": "Placeholder image",
-          "copyright": null,
-          "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=900&h=500&fit=crop"
-        },
-        "date": "2015-01-14",
-        "minutesToRead": 9978
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "article",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ],
+          [
+            "image",
+            {
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+                "width": 900,
+                "height": 500
+              },
+              "width": 900,
+              "height": 500,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              },
+              "thumbnails": {}
+            }
+          ],
+          [
+            "author",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "please",
+              "type": "Text"
+            }
+          ],
+          [
+            "authorImage",
+            {
+              "__TYPE__": "ImageContent",
+              "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1587614295999-6c1c13675117",
+                "width": 900,
+                "height": 500
+              },
+              "width": 900,
+              "height": 500,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              },
+              "thumbnails": {}
+            }
+          ],
+          [
+            "date",
+            {
+              "__TYPE__": "FieldContent",
+              "type": "Date",
+              "value": "2012-07-25"
+            }
+          ],
+          [
+            "minutesToRead",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "64.95266123460586",
+              "type": "Number"
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Transition dynamic infrastructures",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Ad fugiat do occaecat commodo nostrud exercitation.",
-          "spans": []
-        }
-      ]
-    }
+    ]
   }
 ]

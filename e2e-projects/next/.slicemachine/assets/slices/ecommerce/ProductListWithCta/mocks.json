@@ -1,88 +1,113 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "product_list_with_cta",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Melted"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Ullamco fugiat sit tempor. Culpa duis nostrud eiusmod. Nostrud anim sunt minim ea."
+            }
+          }
+        ]
+      },
+      "link": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
+      }
+    },
     "items": [
       {
-        "productLink": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "productLink": {
-          "link_type": "Web",
-          "url": "https://slicemachine.dev"
-        }
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "topProduct",
+            {
+              "__TYPE__": "IntegrationFieldsContent",
+              "value": "integration-field-product-id"
+            }
+          ],
+          [
+            "productLink",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Redefine world-class portals",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Sint cillum do laborum. Consequat Lorem non ea pariatur.",
-          "spans": []
-        }
-      ],
-      "link": {
-        "link_type": "Web",
-        "url": "http://google.com"
-      }
-    }
+    ]
   },
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "customProducts",
-    "name": "Custom Products",
-    "slice_type": "product_list_with_cta",
+    "primary": {
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Operation"
+            }
+          }
+        ]
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Ipsum nostrud non aute cillum excepteur dolore do ad. Lorem cillum laborum ex voluptate qui esse nisi voluptate consequat laboris ipsum officia pariatur dolore consequat."
+            }
+          }
+        ]
+      }
+    },
     "items": [
       {
-        "productLink": {
-          "link_type": "Web",
-          "url": "http://google.com"
-        }
-      },
-      {
-        "productLink": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "productLink": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
-      },
-      {
-        "productLink": {
-          "link_type": "Web",
-          "url": "https://prismic.io"
-        }
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "topProduct",
+            {
+              "__TYPE__": "IntegrationFieldsContent",
+              "value": "integration-field-product-id"
+            }
+          ],
+          [
+            "productLink",
+            {
+              "__TYPE__": "LinkContent",
+              "value": {
+                "id": "mock_document_id",
+                "__TYPE__": "DocumentLink"
+              }
+            }
+          ]
+        ]
       }
-    ],
-    "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Maximize cutting-edge e-commerce",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Sint ullamco duis veniam magna dolore elit enim.",
-          "spans": []
-        }
-      ]
-    }
+    ]
   }
 ]

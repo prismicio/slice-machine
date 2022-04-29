@@ -1,31 +1,51 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "product_overview_with_image_grid",
-    "items": [],
     "primary": {
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Magna exercitation consectetur ipsum. Velit reprehenderit proident laboris non.",
-          "spans": []
-        }
-      ],
-      "highlights": [
-        {
-          "type": "paragraph",
-          "text": "Proident velit anim eiusmod ipsum dolor eu et tempor. Dolore pariatur aliquip voluptate irure qui fugiat non reprehenderit nulla nisi voluptate occaecat. Non Lorem adipisicing culpa aute pariatur aute ea anim labore.",
-          "spans": []
-        }
-      ],
-      "details": [
-        {
-          "type": "paragraph",
-          "text": "Labore ut nisi occaecat elit elit exercitation excepteur enim incididunt cillum ad pariatur dolor. Ad fugiat duis eu nulla fugiat consectetur proident. Enim eu occaecat fugiat proident do.",
-          "spans": []
-        }
-      ]
-    }
+      "product": {
+        "__TYPE__": "IntegrationFieldsContent",
+        "value": "integration-field-product-id"
+      },
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Irure reprehenderit ullamco laborum ipsum. Amet quis nisi culpa veniam tempor ut non velit aliquip voluptate deserunt excepteur incididunt ipsum occaecat."
+            }
+          }
+        ]
+      },
+      "highlights": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Velit reprehenderit aliquip tempor cillum laboris ut. Do esse laborum aute voluptate labore anim. Nisi nostrud veniam sit Lorem."
+            }
+          }
+        ]
+      },
+      "details": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Incididunt nisi quis eu cillum eiusmod non dolore ea enim deserunt nisi mollit sunt est. Do aliqua deserunt consectetur aliqua incididunt adipisicing eiusmod sint in laborum exercitation sint mollit nostrud. Incididunt Lorem nostrud qui minim."
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]

@@ -1,56 +1,91 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "promo_section_fading_background_testimonials",
-    "items": [
-      {
-        "quote": "maximize web-enabled eyeballs",
-        "attribution": "unleash out-of-the-box niches"
-      },
-      {
-        "quote": "engage interactive models",
-        "attribution": "architect synergistic architectures"
-      },
-      {
-        "quote": "target back-end communities",
-        "attribution": "transition interactive applications"
-      },
-      {
-        "quote": "grow vertical ROI",
-        "attribution": "brand bricks-and-clicks networks"
-      }
-    ],
     "primary": {
-      "title": [
-        {
-          "type": "heading1",
-          "text": "Matrix impactful communities",
-          "spans": []
-        }
-      ],
-      "description": [
-        {
-          "type": "paragraph",
-          "text": "Ad officia mollit occaecat.",
-          "spans": []
-        }
-      ],
-      "cta": "benchmark user-centric ROI",
-      "link": {
-        "link_type": "Web",
-        "url": "http://twitter.com"
+      "title": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Direct"
+            }
+          }
+        ]
       },
-      "quotesTitle": "disintermediate world-class technologies",
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Quis aliqua commodo deserunt labore."
+            }
+          }
+        ]
+      },
+      "cta": {
+        "__TYPE__": "FieldContent",
+        "value": "weight",
+        "type": "Text"
+      },
+      "link": {
+        "__TYPE__": "LinkContent",
+        "value": {
+          "id": "mock_document_id",
+          "__TYPE__": "DocumentLink"
+        }
+      },
+      "quotesTitle": {
+        "__TYPE__": "FieldContent",
+        "value": "avoid",
+        "type": "Text"
+      },
       "image": {
-        "dimensions": {
+        "__TYPE__": "ImageContent",
+        "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb",
+        "origin": {
+          "id": "main",
+          "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb",
           "width": 1216,
           "height": 956
         },
-        "alt": "Placeholder image",
-        "copyright": null,
-        "url": "https://images.unsplash.com/photo-1589321599763-d66926c29613?w=1216&h=956&fit=crop"
+        "width": 1216,
+        "height": 956,
+        "edit": {
+          "zoom": 1,
+          "crop": {
+            "x": 0,
+            "y": 0
+          },
+          "background": "transparent"
+        },
+        "thumbnails": {}
       }
-    }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": [
+          [
+            "quote",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "value",
+              "type": "Text"
+            }
+          ],
+          [
+            "attribution",
+            {
+              "__TYPE__": "FieldContent",
+              "value": "likely",
+              "type": "Text"
+            }
+          ]
+        ]
+      }
+    ]
   }
 ]

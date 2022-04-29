@@ -1,42 +1,121 @@
 [
   {
+    "__TYPE__": "SharedSliceContent",
     "variation": "default-slice",
-    "name": "Default slice",
-    "slice_type": "content_section_centered",
-    "items": [],
     "primary": {
-      "description": [
-        {
-          "type": "heading1",
-          "text": "Strategize intuitive e-services",
-          "spans": []
-        },
-        {
-          "type": "paragraph",
-          "text": "Magna magna reprehenderit laboris id adipisicing esse ut occaecat nulla proident exercitation nisi officia duis magna. Proident esse laborum mollit sint eu laboris et sint cupidatat sit magna proident.",
-          "spans": []
-        },
-        {
-          "type": "heading1",
-          "text": "Benchmark end-to-end initiatives",
-          "spans": []
-        },
-        {
-          "type": "paragraph",
-          "text": "Deserunt elit proident irure in incididunt Lorem occaecat et proident aliqua fugiat anim.",
-          "spans": []
-        },
-        {
-          "type": "heading1",
-          "text": "Brand user-centric web-readiness",
-          "spans": []
-        },
-        {
-          "type": "paragraph",
-          "text": "In cillum velit nostrud consectetur ea esse laboris laborum irure aliqua duis. Adipisicing adipisicing eu do cupidatat esse qui adipisicing in nostrud.",
-          "spans": []
-        }
-      ]
-    }
+      "description": {
+        "__TYPE__": "StructuredTextContent",
+        "value": [
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Vegetable"
+            }
+          },
+          {
+            "type": "image",
+            "data": {
+              "url": "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1",
+                "width": 900,
+                "height": 500
+              },
+              "width": 900,
+              "height": 500,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              }
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Aliqua incididunt adipisicing et ex id sint labore elit in. Nisi in dolore ut cillum quis qui duis. Fugiat elit nulla tempor minim irure deserunt mollit veniam quis laboris irure adipisicing eiusmod excepteur do."
+            }
+          },
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Worth"
+            }
+          },
+          {
+            "type": "image",
+            "data": {
+              "url": "https://images.unsplash.com/photo-1586952518485-11b180e92764",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1586952518485-11b180e92764",
+                "width": 900,
+                "height": 500
+              },
+              "width": 900,
+              "height": 500,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              }
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Culpa ea nostrud exercitation fugiat irure ad et commodo fugiat. Ullamco pariatur ut duis est ipsum pariatur id nisi aute incididunt."
+            }
+          },
+          {
+            "type": "heading1",
+            "content": {
+              "text": "Practical"
+            }
+          },
+          {
+            "type": "image",
+            "data": {
+              "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88",
+              "origin": {
+                "id": "main",
+                "url": "https://images.unsplash.com/photo-1589321578146-4c1ba445cc88",
+                "width": 900,
+                "height": 500
+              },
+              "width": 900,
+              "height": 500,
+              "edit": {
+                "zoom": 1,
+                "crop": {
+                  "x": 0,
+                  "y": 0
+                },
+                "background": "transparent"
+              }
+            }
+          },
+          {
+            "type": "paragraph",
+            "content": {
+              "text": "Exercitation laborum mollit non. Amet aliquip nisi aliquip duis esse ex mollit qui irure aliquip dolore magna reprehenderit tempor labore."
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "__TYPE__": "GroupItemContent",
+        "value": []
+      }
+    ]
   }
 ]
