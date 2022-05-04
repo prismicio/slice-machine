@@ -17,6 +17,7 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
+import { saveCustomTypeCreator } from "../selectedCustomType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -36,7 +37,8 @@ export const createCustomTypeCreator = createAsyncAction(
 
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof createCustomTypeCreator>;
+  | ActionType<typeof createCustomTypeCreator>
+  | ActionType<typeof saveCustomTypeCreator>; // save of custom type in the builder
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -98,6 +100,23 @@ export const availableCustomTypesReducer: Reducer<
         ...normalizedNewCustomType,
       };
     }
+
+    case getType(saveCustomTypeCreator.success): {
+      const updatedCustomType: CustomTypeSM = action.payload;
+
+      // local should be updated after a save.
+      const actualCustomType = state[updatedCustomType.id];
+      const normalizedNewCustomType = normalizeFrontendCustomType(
+        updatedCustomType,
+        actualCustomType.remote
+      );
+
+      return {
+        ...state,
+        ...normalizedNewCustomType,
+      };
+    }
+
     default:
       return state;
   }

@@ -30,7 +30,7 @@ export function* saveCustomTypeSaga() {
     }
 
     yield call(saveCustomType, currentCustomType, currentMockConfig);
-    yield put(saveCustomTypeCreator.success());
+    yield put(saveCustomTypeCreator.success(currentCustomType));
     yield put(
       openToasterCreator({
         message: "Model & mocks have been generated successfully!",

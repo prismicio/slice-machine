@@ -22,7 +22,6 @@ const customTypeAsArray = CustomTypes.toSM(jsonModel as unknown as CustomType);
 
 const dummyCustomTypesState: SelectedCustomTypeStoreType = {
   model: customTypeAsArray,
-  initialModel: customTypeAsArray,
   remoteModel: null,
   mockConfig: {},
   initialMockConfig: {},
@@ -54,7 +53,6 @@ describe("[Selected Custom type module]", () => {
         )
       ).toEqual({
         model: customTypeAsArray,
-        initialModel: customTypeAsArray,
         remoteModel: null,
         mockConfig: {},
         initialMockConfig: {},

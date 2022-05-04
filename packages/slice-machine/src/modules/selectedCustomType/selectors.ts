@@ -9,6 +9,7 @@ import {
   CustomTypeSM,
   TabSM,
 } from "@slicemachine/core/build/models/CustomType";
+import { selectCustomTypeById } from "../availableCustomTypes";
 
 // Selectors
 export const selectCurrentCustomType = (
@@ -41,11 +42,13 @@ export const selectIsCurrentCustomTypeHasPendingModifications = (
   store: SliceMachineStoreType
 ) => {
   if (!store.selectedCustomType) return false;
+  const initialModel = selectCustomTypeById(
+    store,
+    store.selectedCustomType.model.id
+  );
+
   return (
-    !equal(
-      store.selectedCustomType.initialModel,
-      store.selectedCustomType.model
-    ) ||
+    !equal(initialModel?.local, store.selectedCustomType.model) ||
     !equal(
       store.selectedCustomType.initialMockConfig,
       store.selectedCustomType.mockConfig

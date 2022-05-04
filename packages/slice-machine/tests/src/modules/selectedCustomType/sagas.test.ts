@@ -56,7 +56,7 @@ describe("[Selected Custom type sagas]", () => {
       saga.next(customTypeModel).select(selectCurrentMockConfig);
       saga.next({}).call(saveCustomType, customTypeModel, {});
 
-      saga.next().put(saveCustomTypeCreator.success());
+      saga.next().put(saveCustomTypeCreator.success(customTypeModel));
       saga.next().put(
         openToasterCreator({
           message: "Model & mocks have been generated successfully!",

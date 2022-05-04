@@ -56,9 +56,11 @@ describe("[Selected Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 1/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
+          availableCustomTypes: {
+            // no custom type here, as if changes weren't saved yet
+          },
           selectedCustomType: {
             model,
-            initialModel: null,
             mockConfig: {},
             initialMockConfig: {},
           },
@@ -70,9 +72,13 @@ describe("[Selected Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 2/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
+          availableCustomTypes: {
+            [model.id]: {
+              local: model,
+            },
+          },
           selectedCustomType: {
             model,
-            initialModel: model,
             mockConfig: {},
             initialMockConfig: {},
           },
@@ -84,9 +90,13 @@ describe("[Selected Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 3/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
+          availableCustomTypes: {
+            [model.id]: {
+              local: { ...model, label: `differ-from-${model.label}` },
+            },
+          },
           selectedCustomType: {
             model,
-            initialModel: { ...model, label: `differ-from-${model.label}` },
             mockConfig: {},
             initialMockConfig: {},
           },
@@ -97,9 +107,13 @@ describe("[Selected Custom type selectors]", () => {
     test("it computes correctly the state of the modifications 4/4", () => {
       const customTypeStatus = selectIsCurrentCustomTypeHasPendingModifications(
         {
+          availableCustomTypes: {
+            [model.id]: {
+              local: { ...model, tabs: {} },
+            },
+          },
           selectedCustomType: {
             model,
-            initialModel: { ...model, tabs: {} },
             mockConfig: {},
             initialMockConfig: {},
           },

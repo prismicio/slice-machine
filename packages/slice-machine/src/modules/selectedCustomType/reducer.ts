@@ -47,7 +47,6 @@ export const selectedCustomTypeReducer: Reducer<
       return {
         ...state,
         model: action.payload.model,
-        initialModel: action.payload.model,
         remoteModel: action.payload.remoteModel,
         mockConfig: action.payload.mockConfig,
         initialMockConfig: action.payload.mockConfig,
@@ -57,7 +56,6 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        initialModel: state.model,
         initialMockConfig: state.mockConfig,
       };
     }
@@ -66,7 +64,6 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        initialModel: state.model,
         remoteModel: state.model,
       };
     case getType(createTabCreator):
