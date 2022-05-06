@@ -21,6 +21,10 @@ const server = setupServer(
   })
 );
 
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
 describe("CreateCustomTypeModal", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -31,13 +35,6 @@ describe("CreateCustomTypeModal", () => {
   document.body.appendChild(div);
 
   test("when a slice is created the tracker should be called", async () => {
-    // const fakeCustomTypeTracker = jest.fn().mockImplementation(() => Promise.resolve())
-    // jest.spyOn(tracker, 'get').mockImplementation(() => {
-    //   return {
-    //     trackCreatCustomType: fakeCustomTypeTracker,
-    //   } as any
-    // })
-
     const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
     const fakeAnalytics = jest
       .spyOn(AnalyticsBrowser, "standalone")
@@ -79,8 +76,6 @@ describe("CreateCustomTypeModal", () => {
     await act(async () => {
       fireEvent.click(submitButton);
     });
-
-    // expect(fakeCustomTypeTracker).toHaveBeenCalledWith({id: fakeId, name: fakeName, repeatable: true, repo: fakeRepo})
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Created",
