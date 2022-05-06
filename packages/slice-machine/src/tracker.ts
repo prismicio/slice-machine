@@ -1,4 +1,8 @@
-import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
+import type {
+  Analytics as ClientAnalytics,
+  Options,
+  Context,
+} from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { LibraryUI } from "@models/common/LibraryUI";
@@ -24,16 +28,56 @@ export enum ContinueOnboardingType {
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
 }
 
+function addRepoToAttribute(repo: string, attributes: Options): Options {
+  return {
+    ...attributes,
+    context: {
+      ...attributes.context,
+      groupId: {
+        Repository: repo,
+      },
+    },
+  };
+}
+
+type SegmentWrapper = Pick<ClientAnalytics, "identify" | "group"> & {
+  track: (
+    eventType: AllSliceMachineEventType,
+    attributes: Options
+  ) => Promise<Context>;
+};
+
+const setupAnalyticsBrowser = async (
+  segmentKey: string,
+  repo: string
+): Promise<SegmentWrapper> => {
+  const client = await AnalyticsBrowser.standalone(segmentKey);
+
+  async function track(
+    eventType: AllSliceMachineEventType,
+    attributes: Options
+  ): Promise<Context> {
+    const payload = addRepoToAttribute(repo, attributes);
+    return client.track(eventType, payload);
+  }
+
+  return {
+    identify: client.group.bind(this),
+    group: client.group.bind(this),
+    track,
+  };
+};
+
 export class SMTracker {
-  #client: Promise<ClientAnalytics> | null = null;
+  #client: Promise<SegmentWrapper> | null = null;
   #isTrackingActive = true;
 
-  initialize(segmentKey: string, isTrackingActive = true): void {
+  initialize(segmentKey: string, repo: string, isTrackingActive = true): void {
     try {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
-      this.#client = AnalyticsBrowser.standalone(segmentKey);
+      this.#client = setupAnalyticsBrowser(segmentKey, repo);
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
       console.warn(error);
@@ -96,8 +140,8 @@ export class SMTracker {
   }
 
   #isTrackingPossible(
-    client: Promise<ClientAnalytics> | null
-  ): client is Promise<ClientAnalytics> {
+    client: Promise<SegmentWrapper> | null
+  ): client is Promise<SegmentWrapper> {
     return this.#isTrackingActive && !!client;
   }
 
