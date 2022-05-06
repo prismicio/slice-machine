@@ -62,7 +62,7 @@ const setupAnalyticsBrowser = async (
   }
 
   return {
-    identify: client.group.bind(this),
+    identify: client.identify.bind(this),
     group: client.group.bind(this),
     track,
   };
