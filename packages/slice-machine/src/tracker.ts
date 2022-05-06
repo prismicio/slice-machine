@@ -197,7 +197,6 @@ export class SMTracker {
   async trackCreateCustomType(customTypeInfo: {
     id: string;
     name: string;
-    repo?: string;
     repeatable: boolean;
   }): Promise<void> {
     const { id, name, repeatable } = customTypeInfo;
