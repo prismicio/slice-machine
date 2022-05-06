@@ -245,7 +245,7 @@ describe("SMTracker", () => {
     const name = "testing";
     const repeatable = true;
     const repo = "repo-name";
-    await smTracker.trackCreatCustomType({ id, name, repeatable, repo });
+    await smTracker.trackCreateCustomType({ id, name, repeatable, repo });
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Custom Type Created",
