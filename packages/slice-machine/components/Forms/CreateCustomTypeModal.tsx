@@ -15,7 +15,6 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
-import { getRepoName } from "@src/modules/environment";
 
 import Tracker from "@src/tracker";
 
@@ -24,13 +23,11 @@ const CreateCustomTypeModal: React.FC = () => {
     useSliceMachineActions();
 
   const {
-    repoName,
     customTypeIds,
     isCreateCustomTypeModalOpen,
     isCreatingCustomType,
     customTypeLabels,
   } = useSelector((store: SliceMachineStoreType) => ({
-    repoName: getRepoName(store),
     customTypeIds: selectAllCustomTypeIds(store),
     customTypeLabels: selectAllCustomTypeLabels(store),
     isCreateCustomTypeModalOpen: isModalOpen(
@@ -55,7 +52,6 @@ const CreateCustomTypeModal: React.FC = () => {
       id,
       name,
       repeatable,
-      repo: repoName,
     });
     createCustomType(id, name, repeatable);
   };

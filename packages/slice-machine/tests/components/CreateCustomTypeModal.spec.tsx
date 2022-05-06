@@ -79,7 +79,7 @@ describe("CreateCustomTypeModal", () => {
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Created",
-      { id: fakeId, name: fakeName, type: "repeatable", repo: fakeRepo }
+      { id: fakeId, name: fakeName, type: "repeatable" }
     );
   });
 });

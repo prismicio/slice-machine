@@ -200,10 +200,10 @@ export class SMTracker {
     repo?: string;
     repeatable: boolean;
   }): Promise<void> {
-    const { id, name, repo, repeatable } = customTypeInfo;
+    const { id, name, repeatable } = customTypeInfo;
     const type = repeatable ? "repeatable" : "single";
 
-    const data = { id, name, repo, type };
+    const data = { id, name, type };
 
     return this.#trackEvent(EventType.CreateCustomType, data);
   }
