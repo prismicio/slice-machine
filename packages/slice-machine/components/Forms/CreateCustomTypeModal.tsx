@@ -50,8 +50,8 @@ const CreateCustomTypeModal: React.FC = () => {
     repeatable: boolean;
   }) => {
     const name = label || id;
-    // notes repo name could be empty, and will the tracker be initialized?
-    void Tracker.get().trackCreatCustomType({
+
+    void Tracker.get().trackCreateCustomType({
       id,
       name,
       repeatable,

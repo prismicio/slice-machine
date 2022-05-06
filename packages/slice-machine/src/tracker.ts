@@ -194,7 +194,7 @@ export class SMTracker {
     });
   }
 
-  trackCreatCustomType(customTypeInfo: {
+  trackCreateCustomType(customTypeInfo: {
     id: string;
     name: string;
     repo?: string;
@@ -209,7 +209,6 @@ export class SMTracker {
   }
 }
 
-// is this supposed to be a singleton?
 const Tracker = (() => {
   let smTrackerInstance: SMTracker;
 
