@@ -194,7 +194,7 @@ export class SMTracker {
     });
   }
 
-  trackCreateCustomType(customTypeInfo: {
+  async trackCreateCustomType(customTypeInfo: {
     id: string;
     name: string;
     repo?: string;
