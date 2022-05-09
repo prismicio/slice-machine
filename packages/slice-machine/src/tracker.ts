@@ -47,27 +47,6 @@ type SegmentWrapper = Pick<ClientAnalytics, "identify" | "group"> & {
   ) => Promise<Context>;
 };
 
-const setupAnalyticsBrowser = async (
-  segmentKey: string,
-  repo: string
-): Promise<SegmentWrapper> => {
-  const client = await AnalyticsBrowser.standalone(segmentKey);
-
-  async function track(
-    eventType: AllSliceMachineEventType,
-    attributes: Options
-  ): Promise<Context> {
-    const payload = addRepoToAttribute(repo, attributes);
-    return client.track(eventType, payload);
-  }
-
-  return {
-    identify: client.identify.bind(this),
-    group: client.group.bind(this),
-    track,
-  };
-};
-
 export class SMTracker {
   #client: Promise<SegmentWrapper> | null = null;
   #isTrackingActive = true;
@@ -77,7 +56,7 @@ export class SMTracker {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
-      this.#client = setupAnalyticsBrowser(segmentKey, repo);
+      this.#client = this.#setupAnalyticsBrowser(segmentKey, repo);
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
       console.warn(error);
@@ -85,6 +64,31 @@ export class SMTracker {
   }
 
   /** Private methods **/
+
+  async #setupAnalyticsBrowser(
+    segmentKey: string,
+    repo: string
+  ): Promise<SegmentWrapper> {
+    const client = await AnalyticsBrowser.standalone(segmentKey);
+
+    async function track(
+      eventType: AllSliceMachineEventType,
+      attributes: Options
+    ): Promise<Context> {
+      const payload = addRepoToAttribute(repo, attributes);
+      return client.track(eventType, payload);
+    }
+
+    return {
+      identify: (
+        ...args: Parameters<ClientAnalytics["identify"]>
+      ): ReturnType<ClientAnalytics["identify"]> => client.identify(...args),
+      group: (
+        ...args: Parameters<ClientAnalytics["group"]>
+      ): ReturnType<ClientAnalytics["group"]> => client.group(...args),
+      track,
+    };
+  }
 
   async #trackEvent(
     eventType: AllSliceMachineEventType,

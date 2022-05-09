@@ -9,7 +9,7 @@ export interface BackendEnvironment {
   cwd: string;
   prismicData: PrismicData;
   manifest: Models.Manifest;
-  repo?: string;
+  repo: string;
   changelog: PackageChangelog;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mockConfig: any;
@@ -24,7 +24,7 @@ export interface FrontEndEnvironment {
   shortId?: string;
   intercomHash?: string;
   manifest: Models.Manifest;
-  repo?: string;
+  repo: string;
   changelog: PackageChangelog;
   packageManager: PackageManager;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

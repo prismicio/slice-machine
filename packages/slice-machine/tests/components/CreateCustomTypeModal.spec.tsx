@@ -35,6 +35,11 @@ describe("CreateCustomTypeModal", () => {
   document.body.appendChild(div);
 
   test("when a slice is created the tracker should be called", async () => {
+    const fakeId = "testing-id";
+    const fakeName = "testing-name";
+    const fakeRepo = "foo";
+    const fakeSegmentKey = "fakeId";
+
     const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
     const fakeAnalytics = jest
       .spyOn(AnalyticsBrowser, "standalone")
@@ -43,13 +48,9 @@ describe("CreateCustomTypeModal", () => {
       } as any);
 
     // will have to assume tracker is initialized?
-    await Tracker.get().initialize("foo");
+    await Tracker.get().initialize(fakeSegmentKey, fakeRepo);
 
     expect(fakeAnalytics).toHaveBeenCalled();
-
-    const fakeId = "testing-id";
-    const fakeName = "testing-name";
-    const fakeRepo = "foo";
 
     const App = await render(<CreateCustomTypeModal />, {
       preloadedState: {
@@ -79,7 +80,12 @@ describe("CreateCustomTypeModal", () => {
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Created",
-      { id: fakeId, name: fakeName, type: "repeatable" }
+      {
+        id: fakeId,
+        name: fakeName,
+        type: "repeatable",
+        context: { groupId: { Repository: fakeRepo } },
+      }
     );
   });
 });
