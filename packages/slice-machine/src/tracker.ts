@@ -1,11 +1,10 @@
 import type {
   Analytics as ClientAnalytics,
   Options,
-  Context,
 } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
-import { LibraryUI } from "@models/common/LibraryUI";
+import { LibraryUI } from "../lib/models/common/LibraryUI";
 
 // These events should be sync with the tracking Plan on segment.
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
@@ -28,7 +27,7 @@ export enum ContinueOnboardingType {
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
 }
 
-function addRepoToAttribute(repo: string, attributes: Options): Options {
+function addRepoToAttributes(repo: string, attributes: Options): Options {
   return {
     ...attributes,
     context: {
@@ -40,23 +39,18 @@ function addRepoToAttribute(repo: string, attributes: Options): Options {
   };
 }
 
-type SegmentWrapper = Pick<ClientAnalytics, "identify" | "group"> & {
-  track: (
-    eventType: AllSliceMachineEventType,
-    attributes: Options
-  ) => Promise<Context>;
-};
-
 export class SMTracker {
-  #client: Promise<SegmentWrapper> | null = null;
+  #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
+  #repository: string;
 
   initialize(segmentKey: string, repo: string, isTrackingActive = true): void {
+    this.#repository = repo;
     try {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
-      this.#client = this.#setupAnalyticsBrowser(segmentKey, repo);
+      this.#client = AnalyticsBrowser.standalone(segmentKey);
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
       console.warn(error);
@@ -65,41 +59,19 @@ export class SMTracker {
 
   /** Private methods **/
 
-  async #setupAnalyticsBrowser(
-    segmentKey: string,
-    repo: string
-  ): Promise<SegmentWrapper> {
-    const client = await AnalyticsBrowser.standalone(segmentKey);
-
-    async function track(
-      eventType: AllSliceMachineEventType,
-      attributes: Options
-    ): Promise<Context> {
-      const payload = addRepoToAttribute(repo, attributes);
-      return client.track(eventType, payload);
-    }
-
-    return {
-      identify: (
-        ...args: Parameters<ClientAnalytics["identify"]>
-      ): ReturnType<ClientAnalytics["identify"]> => client.identify(...args),
-      group: (
-        ...args: Parameters<ClientAnalytics["group"]>
-      ): ReturnType<ClientAnalytics["group"]> => client.group(...args),
-      track,
-    };
-  }
-
   async #trackEvent(
     eventType: AllSliceMachineEventType,
-    attributes: Record<string, unknown> = {}
+    attributes: Options = {}
   ): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
+
+    const data = addRepoToAttributes(this.#repository, attributes);
+
     return this.#client
       .then((client): void => {
-        void client.track(eventType, attributes);
+        void client.track(eventType, data);
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
@@ -144,8 +116,8 @@ export class SMTracker {
   }
 
   #isTrackingPossible(
-    client: Promise<SegmentWrapper> | null
-  ): client is Promise<SegmentWrapper> {
+    client: Promise<ClientAnalytics> | null
+  ): client is Promise<ClientAnalytics> {
     return this.#isTrackingActive && !!client;
   }
 
