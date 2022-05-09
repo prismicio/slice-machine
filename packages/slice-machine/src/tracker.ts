@@ -14,6 +14,7 @@ enum EventType {
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
+  CreateCustomType = "SliceMachine Custom Type Created",
 }
 
 export enum ContinueOnboardingType {
@@ -48,7 +49,6 @@ export class SMTracker {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
-
     return this.#client
       .then((client): void => {
         void client.track(eventType, attributes);
@@ -188,10 +188,23 @@ export class SMTracker {
     return this.#trackEvent(continueOnboardingEventType);
   }
 
-  trackOnboardingSkip(screenSkipped: number): Promise<void> {
+  async trackOnboardingSkip(screenSkipped: number): Promise<void> {
     return this.#trackEvent(EventType.OnboardingSkip, {
       screenSkipped,
     });
+  }
+
+  async trackCreateCustomType(customTypeInfo: {
+    id: string;
+    name: string;
+    repeatable: boolean;
+  }): Promise<void> {
+    const { id, name, repeatable } = customTypeInfo;
+    const type = repeatable ? "repeatable" : "single";
+
+    const data = { id, name, type };
+
+    return this.#trackEvent(EventType.CreateCustomType, data);
   }
 }
 

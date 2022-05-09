@@ -16,6 +16,8 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
 
+import Tracker from "@src/tracker";
+
 const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
     useSliceMachineActions();
@@ -35,6 +37,25 @@ const CreateCustomTypeModal: React.FC = () => {
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
 
+  const createCustomTypeAndTrack = ({
+    id,
+    label,
+    repeatable,
+  }: {
+    id: string;
+    label: string;
+    repeatable: boolean;
+  }) => {
+    const name = label || id;
+
+    void Tracker.get().trackCreateCustomType({
+      id,
+      name,
+      repeatable,
+    });
+    createCustomType(id, name, repeatable);
+  };
+
   return (
     <ModalFormCard
       dataCy="create-ct-modal"
@@ -43,13 +64,7 @@ const CreateCustomTypeModal: React.FC = () => {
       formId="create-custom-type"
       buttonLabel={"Create"}
       close={closeCreateCustomTypeModal}
-      onSubmit={(values) => {
-        createCustomType(
-          values.id,
-          values.label || values.id,
-          values.repeatable
-        );
-      }}
+      onSubmit={createCustomTypeAndTrack}
       isLoading={isCreatingCustomType}
       initialValues={{
         repeatable: true,

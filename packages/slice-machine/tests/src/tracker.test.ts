@@ -238,6 +238,24 @@ describe("SMTracker", () => {
     expect(NativeTrackerMocks.group).toHaveBeenCalledTimes(0);
   });
 
+  test("it should send a create custom type event", async () => {
+    const smTracker = new SMTracker();
+    smTracker.initialize(dumpSegmentKey);
+    const id = "test";
+    const name = "testing";
+    const repeatable = true;
+    await smTracker.trackCreateCustomType({ id, name, repeatable });
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
+    expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
+      "SliceMachine Custom Type Created",
+      {
+        id,
+        name,
+        type: "repeatable",
+      }
+    );
+  });
+
   test("shouldn't send any events when tracker is disable", async () => {
     const smTracker = new SMTracker();
     smTracker.initialize(dumpSegmentKey, false);
