@@ -12,7 +12,10 @@ type PackageWithModuleAliases = JsonPackage & {
 const isAPackageHasModuleAliases = (
   jsonPackage: JsonPackage | PackageWithModuleAliases
 ): jsonPackage is PackageWithModuleAliases => {
-  return jsonPackage.hasOwnProperty("_moduleAliases");
+  return (
+    typeof jsonPackage === typeof {} &&
+    jsonPackage.hasOwnProperty("_moduleAliases")
+  );
 };
 
 export function resolveAliases(cwd: string): void {

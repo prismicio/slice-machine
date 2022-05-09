@@ -13,7 +13,7 @@ export async function getPackageChangelog(
   dependencyCwd: string
 ): Promise<PackageChangelog> {
   const pkg = NodeUtils.retrieveJsonPackage(dependencyCwd);
-  if (!pkg.exists || !pkg.content?.name)
+  if (!pkg.exists || !pkg.content || !pkg.content?.name)
     return {
       currentVersion: "",
       updateAvailable: false,
