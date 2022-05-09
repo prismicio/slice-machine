@@ -42,7 +42,7 @@ function addRepoToAttributes(repo: string, attributes: Options): Options {
 export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
-  #repository: string;
+  #repository = "";
 
   initialize(segmentKey: string, repo: string, isTrackingActive = true): void {
     this.#repository = repo;
