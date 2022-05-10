@@ -1,5 +1,10 @@
-import { SharedSliceEditor, themeClass } from "@prismicio/editor-fields";
+import {
+  SharedSliceEditor,
+  defaultSharedSliceContent,
+  themeClass,
+} from "@prismicio/editor-fields";
 import { renderSliceMock } from "@prismicio/mocks";
+import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { Flex } from "theme-ui";
@@ -53,14 +58,11 @@ export default function Simulator() {
   );
 
   const sharedSlice = useMemo(() => Slices.fromSM(Model.model), [Model.model]);
-  const initialContent = useMemo(
+  const initialContent = useMemo<SharedSliceContent>(
     () =>
-      Model.mock?.find((content) => content.variation === variation.id) ?? {
-        __TYPE__: "SharedSliceContent" as const,
-        variation: variation.id,
-        primary: {},
-        items: [],
-      },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      Model.mock?.find((content) => content.variation === variation.id) ??
+      defaultSharedSliceContent(variation.id),
     [Model.mock, variation.id]
   );
   const [content, setContent] = useState(initialContent);
