@@ -102,17 +102,17 @@ export class InitTracker {
 
   trackInitIdentify(repoDomain: string | undefined): void {
     if (repoDomain) this.#repository = repoDomain;
-    this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
+    this._trackEvent(EventType.InitIdentify);
   }
 
   trackInitStart(repoDomain: string | undefined): void {
     if (repoDomain) this.#repository = repoDomain;
-    this._trackEvent(EventType.InitStart, { repo: repoDomain });
+    this._trackEvent(EventType.InitStart);
   }
 
   trackInitDone(framework: Models.Frameworks, repoDomain: string): void {
     if (repoDomain) this.#repository = repoDomain;
-    this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
+    this._trackEvent(EventType.InitDone, { framework });
   }
 }
 

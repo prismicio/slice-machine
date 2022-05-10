@@ -129,9 +129,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Start",
-      properties: {
-        repo: "repoName",
-      },
+      properties: {},
       context: {
         groupId: {
           Repository: "repoName",
@@ -179,9 +177,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Identify",
-      properties: {
-        repo: "repoName",
-      },
+      properties: {},
       context: {
         groupId: {
           Repository: "repoName",
@@ -202,7 +198,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       anonymousId: "uuid",
       event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      properties: { framework: Models.Frameworks.next },
       context: { groupId: { Repository: "repoName" } },
     });
 
@@ -230,7 +226,7 @@ describe("InitTracker", () => {
     expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
       userId: "userId",
       event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      properties: { framework: Models.Frameworks.next },
       context: { groupId: { Repository: "repoName" } },
     });
   });
