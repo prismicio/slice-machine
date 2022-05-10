@@ -27,18 +27,6 @@ export enum ContinueOnboardingType {
   OnboardingContinueScreen3 = "SliceMachine Onboarding Continue Screen 3",
 }
 
-function addRepoToAttributes(repo: string, attributes: Options): Options {
-  return {
-    ...attributes,
-    context: {
-      ...attributes.context,
-      groupId: {
-        Repository: repo,
-      },
-    },
-  };
-}
-
 export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
