@@ -49,7 +49,7 @@ export class SMTracker {
 
   async #trackEvent(
     eventType: AllSliceMachineEventType,
-    attributes: Record<string, unknown>
+    attributes: Record<string, unknown> = {}
   ): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;

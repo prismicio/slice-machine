@@ -103,7 +103,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Start",
-      undefined,
+      {},
       { context }
     );
   });
@@ -151,7 +151,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen Intro",
-      undefined,
+      {},
       { context }
     );
   });
@@ -165,7 +165,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 1",
-      undefined,
+      {},
       { context }
     );
   });
@@ -179,7 +179,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 2",
-      undefined,
+      {},
       { context }
     );
   });
@@ -193,7 +193,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 3",
-      undefined,
+      {},
       { context }
     );
   });
