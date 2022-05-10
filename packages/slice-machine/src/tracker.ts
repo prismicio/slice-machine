@@ -1,7 +1,4 @@
-import type {
-  Analytics as ClientAnalytics,
-  Options,
-} from "@segment/analytics-next";
+import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { LibraryUI } from "../lib/models/common/LibraryUI";
