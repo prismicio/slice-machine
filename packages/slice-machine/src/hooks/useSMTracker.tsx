@@ -59,7 +59,7 @@ const useSMTracker = () => {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, []);
+  }, [router.events]); // could be the bug with multiple page view being sent
 
   return;
 };
