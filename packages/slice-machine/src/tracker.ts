@@ -61,17 +61,17 @@ export class SMTracker {
 
   async #trackEvent(
     eventType: AllSliceMachineEventType,
-    attributes: Options = {}
+    attributes: Record<string, unknown>
   ): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
-    const data = addRepoToAttributes(this.#repository, attributes);
-
     return this.#client
       .then((client): void => {
-        void client.track(eventType, data);
+        void client.track(eventType, attributes, {
+          context: { groupId: { Repository: this.#repository } },
+        });
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
