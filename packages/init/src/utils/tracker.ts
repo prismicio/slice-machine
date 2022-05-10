@@ -16,6 +16,7 @@ export class InitTracker {
   #isTrackingActive = true;
   #anonymousId = "";
   #userId: string | null = null;
+  #repository = "";
 
   initialize(segmentKey: string, isTrackingActive = true): void {
     try {
@@ -47,6 +48,9 @@ export class InitTracker {
         event: eventType,
         ...identifier,
         properties: attributes,
+        ...(this.#repository
+          ? { context: { groupId: { Repository: this.#repository } } }
+          : {}),
       });
     } catch {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
@@ -97,14 +101,17 @@ export class InitTracker {
   }
 
   trackInitIdentify(repoDomain: string | undefined): void {
+    if (repoDomain) this.#repository = repoDomain;
     this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
   }
 
   trackInitStart(repoDomain: string | undefined): void {
+    if (repoDomain) this.#repository = repoDomain;
     this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
   trackInitDone(framework: Models.Frameworks, repoDomain: string): void {
+    if (repoDomain) this.#repository = repoDomain;
     this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
   }
 }

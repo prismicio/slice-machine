@@ -132,6 +132,11 @@ describe("InitTracker", () => {
       properties: {
         repo: "repoName",
       },
+      context: {
+        groupId: {
+          Repository: "repoName",
+        },
+      },
     });
   });
 
@@ -177,6 +182,11 @@ describe("InitTracker", () => {
       properties: {
         repo: "repoName",
       },
+      context: {
+        groupId: {
+          Repository: "repoName",
+        },
+      },
     });
   });
 
@@ -193,6 +203,7 @@ describe("InitTracker", () => {
       anonymousId: "uuid",
       event: "SliceMachine Init Done",
       properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      context: { groupId: { Repository: "repoName" } },
     });
 
     smTracker.identifyUser("userId", "intercomHash");
@@ -220,6 +231,7 @@ describe("InitTracker", () => {
       userId: "userId",
       event: "SliceMachine Init Done",
       properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      context: { groupId: { Repository: "repoName" } },
     });
   });
 
