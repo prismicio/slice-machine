@@ -77,6 +77,8 @@ describe("SMTracker", () => {
         comment: "comment",
         framework: "next",
         rating: 3,
+      },
+      {
         context,
       }
     );
@@ -89,7 +91,8 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Skip",
-      { screenSkipped: 1, context }
+      { screenSkipped: 1 },
+      { context }
     );
   });
 
@@ -100,6 +103,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Start",
+      undefined,
       { context }
     );
   });
@@ -114,6 +118,8 @@ describe("SMTracker", () => {
       {
         framework: "next",
         version: "0.2.0",
+      },
+      {
         context,
       }
     );
@@ -129,6 +135,8 @@ describe("SMTracker", () => {
       {
         framework: "next",
         version: "0.2.0",
+      },
+      {
         context,
       }
     );
@@ -143,6 +151,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen Intro",
+      undefined,
       { context }
     );
   });
@@ -156,6 +165,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 1",
+      undefined,
       { context }
     );
   });
@@ -169,6 +179,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 2",
+      undefined,
       { context }
     );
   });
@@ -182,6 +193,7 @@ describe("SMTracker", () => {
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 3",
+      undefined,
       { context }
     );
   });
@@ -196,6 +208,8 @@ describe("SMTracker", () => {
       {
         framework: Frameworks.next,
         slicemachineVersion: "0.2.0",
+      },
+      {
         context,
       }
     );
@@ -216,6 +230,8 @@ describe("SMTracker", () => {
         slicemachineVersion: "0.2.0",
         title: "",
         url: "http://localhost/",
+      },
+      {
         context,
       }
     );
@@ -258,8 +274,8 @@ describe("SMTracker", () => {
         id,
         name,
         type: "repeatable",
-        context,
-      }
+      },
+      { context }
     );
   });
 

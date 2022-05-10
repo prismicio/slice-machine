@@ -84,8 +84,8 @@ describe("CreateCustomTypeModal", () => {
         id: fakeId,
         name: fakeName,
         type: "repeatable",
-        context: { groupId: { Repository: fakeRepo } },
-      }
+      },
+      { context: { groupId: { Repository: fakeRepo } } }
     );
   });
 });
