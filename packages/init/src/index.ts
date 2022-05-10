@@ -28,7 +28,7 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitStart(maybeRepositorySubdomain);
+  void Tracker.get().trackInitStart(maybeRepositorySubdomain);
 
   console.log(
     logs.purple(
@@ -48,7 +48,7 @@ async function init() {
     Tracker.get().identifyUser(user.profile.shortId, user.profile.intercomHash);
   }
 
-  Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
+  void Tracker.get().trackInitIdentify(maybeRepositorySubdomain);
 
   // retrieve tokens for api calls
   const config = Prismic.PrismicSharedConfigManager.get();
@@ -80,7 +80,10 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitDone(frameworkResult.value, repositoryDomainName);
+  await Tracker.get().trackInitDone(
+    frameworkResult.value,
+    repositoryDomainName
+  );
 
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd);
