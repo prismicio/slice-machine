@@ -73,7 +73,7 @@ async function init() {
   const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
 
   // configure the SM.json file and the json package file of the project..
-  configureProject(
+  await configureProject(
     cwd,
     base,
     repositoryDomainName,
@@ -81,8 +81,6 @@ async function init() {
     sliceLibPath,
     isTrackingAvailable
   );
-
-  await Tracker.get().trackInitDone(frameworkResult.value);
 
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd);
