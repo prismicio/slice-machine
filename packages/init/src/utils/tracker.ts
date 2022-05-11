@@ -93,6 +93,10 @@ export class InitTracker {
 
   /** Public methods **/
 
+  setRepository(repository: string) {
+    this.#repository = repository;
+  }
+
   identifyUser(userId: string, intercomHash: string): void {
     this.#userId = userId;
     return this._identifyEvent(userId, intercomHash);
@@ -102,21 +106,15 @@ export class InitTracker {
     return this._trackEvent(EventType.DownloadLibrary, { library });
   }
 
-  trackInitIdentify(repoDomain: string | undefined): Promise<void> {
-    if (repoDomain) this.#repository = repoDomain;
+  trackInitIdentify(): Promise<void> {
     return this._trackEvent(EventType.InitIdentify);
   }
 
   trackInitStart(repoDomain: string | undefined): Promise<void> {
-    if (repoDomain) this.#repository = repoDomain;
-    return this._trackEvent(EventType.InitStart);
+    return this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
-  trackInitDone(
-    framework: Models.Frameworks,
-    repoDomain: string
-  ): Promise<void> {
-    if (repoDomain) this.#repository = repoDomain;
+  trackInitDone(framework: Models.Frameworks): Promise<void> {
     return this._trackEvent(EventType.InitDone, { framework });
   }
 }
