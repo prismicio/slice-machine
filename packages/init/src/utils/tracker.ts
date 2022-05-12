@@ -16,6 +16,7 @@ export class InitTracker {
   #isTrackingActive = true;
   #anonymousId = "";
   #userId: string | null = null;
+  #repository: string | null = null;
 
   initialize(segmentKey: string, isTrackingActive = true): void {
     try {
@@ -35,22 +36,27 @@ export class InitTracker {
   _trackEvent(
     eventType: EventType,
     attributes: Record<string, unknown> = {}
-  ): void {
-    if (!this._isTrackingPossible(this.#client)) {
-      return;
-    }
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this._isTrackingPossible(this.#client)) {
+        return resolve();
+      }
 
-    const identifier = this._createSegmentIdentifier();
-
-    try {
-      this.#client.track({
+      const identifier = this._createSegmentIdentifier();
+      const payload = {
         event: eventType,
         ...identifier,
         properties: attributes,
+        ...(this.#repository
+          ? { context: { groupId: { Repository: this.#repository } } }
+          : {}),
+      };
+
+      return this.#client.track(payload, () => {
+        // if(_) return reject(_)
+        return resolve();
       });
-    } catch {
-      // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
-    }
+    });
   }
 
   _identifyEvent(userId: string, intercomHash: string): void {
@@ -87,25 +93,29 @@ export class InitTracker {
 
   /** Public methods **/
 
+  setRepository(repository: string) {
+    this.#repository = repository;
+  }
+
   identifyUser(userId: string, intercomHash: string): void {
     this.#userId = userId;
-    this._identifyEvent(userId, intercomHash);
+    return this._identifyEvent(userId, intercomHash);
   }
 
-  trackDownloadLibrary(library: string): void {
-    this._trackEvent(EventType.DownloadLibrary, { library });
+  trackDownloadLibrary(library: string): Promise<void> {
+    return this._trackEvent(EventType.DownloadLibrary, { library });
   }
 
-  trackInitIdentify(repoDomain: string | undefined): void {
-    this._trackEvent(EventType.InitIdentify, { repo: repoDomain });
+  trackInitIdentify(): Promise<void> {
+    return this._trackEvent(EventType.InitIdentify);
   }
 
-  trackInitStart(repoDomain: string | undefined): void {
-    this._trackEvent(EventType.InitStart, { repo: repoDomain });
+  trackInitStart(repoDomain: string | undefined): Promise<void> {
+    return this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
-  trackInitDone(framework: Models.Frameworks, repoDomain: string): void {
-    this._trackEvent(EventType.InitDone, { framework, repo: repoDomain });
+  trackInitDone(framework: Models.Frameworks): Promise<void> {
+    return this._trackEvent(EventType.InitDone, { framework });
   }
 }
 

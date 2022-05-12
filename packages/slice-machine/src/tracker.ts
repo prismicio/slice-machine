@@ -1,7 +1,7 @@
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
-import { LibraryUI } from "@models/common/LibraryUI";
+import { LibraryUI } from "../lib/models/common/LibraryUI";
 
 // These events should be sync with the tracking Plan on segment.
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
@@ -27,8 +27,10 @@ export enum ContinueOnboardingType {
 export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
+  #repository = "";
 
-  initialize(segmentKey: string, isTrackingActive = true): void {
+  initialize(segmentKey: string, repo: string, isTrackingActive = true): void {
+    this.#repository = repo;
     try {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
@@ -49,9 +51,12 @@ export class SMTracker {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
+
     return this.#client
       .then((client): void => {
-        void client.track(eventType, attributes);
+        void client.track(eventType, attributes, {
+          context: { groupId: { Repository: this.#repository } },
+        });
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)

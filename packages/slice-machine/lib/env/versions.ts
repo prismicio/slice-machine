@@ -6,14 +6,14 @@ import {
   PackageVersion,
   ReleaseNote,
   VersionKind,
-} from "@lib/models/common/versions";
+} from "../models/common/versions";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
 export async function getPackageChangelog(
   dependencyCwd: string
 ): Promise<PackageChangelog> {
   const pkg = NodeUtils.retrieveJsonPackage(dependencyCwd);
-  if (!pkg.exists || !pkg.content?.name)
+  if (!pkg.exists || !pkg.content || !pkg.content?.name)
     return {
       currentVersion: "",
       updateAvailable: false,

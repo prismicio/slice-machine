@@ -43,7 +43,7 @@ export const getIntercomHash = (
   store: SliceMachineStoreType
 ): string | undefined => store.environment.intercomHash;
 
-export const getRepoName = (store: SliceMachineStoreType): string | undefined =>
+export const getRepoName = (store: SliceMachineStoreType): string =>
   store.environment.repo;
 
 export const selectIsSimulatorAvailableForFramework = (
