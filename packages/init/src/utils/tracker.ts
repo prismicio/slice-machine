@@ -16,7 +16,7 @@ export class InitTracker {
   #isTrackingActive = true;
   #anonymousId = "";
   #userId: string | null = null;
-  #repository = "";
+  #repository: string | null = null;
 
   initialize(segmentKey: string, isTrackingActive = true): void {
     try {
