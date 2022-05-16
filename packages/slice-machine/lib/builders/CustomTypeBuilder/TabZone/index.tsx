@@ -144,6 +144,9 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
+    void Tracker.get().trackCustomTypeSliceAdded({
+      customTypeId: currentCustomType.id,
+    });
     replaceCustomTypeSharedSlice(tabId, keys, preserve);
   };
 
