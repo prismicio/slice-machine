@@ -15,6 +15,7 @@ enum EventType {
   PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
   CreateCustomType = "SliceMachine Custom Type Created",
+  CustomTypeFieldAdded = "SliceMachine Custom Type Field Added",
 }
 
 export enum ContinueOnboardingType {
@@ -210,6 +211,27 @@ export class SMTracker {
     const data = { id, name, type };
 
     return this.#trackEvent(EventType.CreateCustomType, data);
+  }
+
+  async trackCustomTypeFieldAdded({
+    fieldId,
+    customTypeId,
+    zone,
+    type,
+  }: {
+    fieldId: string;
+    customTypeId: string;
+    zone: "static" | "repeatable";
+    type: string;
+  }): Promise<void> {
+    const data = {
+      id: fieldId,
+      name: customTypeId,
+      zone,
+      type,
+    };
+
+    return this.#trackEvent(EventType.CustomTypeFieldAdded, data);
   }
 }
 
