@@ -34,6 +34,7 @@ const UpdateSliceZoneModalList: React.FC<{
             }) => {
               return (
                 <div
+                  data-testid="slicezone-modal-item"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

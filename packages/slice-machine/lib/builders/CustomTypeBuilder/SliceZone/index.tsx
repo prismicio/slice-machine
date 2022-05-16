@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
-import { LibrariesContext } from "@src/models/libraries/context";
-
+import { LibrariesContext } from "../../../../src/models/libraries/context";
 import SliceState from "@lib/models/ui/SliceState";
 import LibraryState from "@lib/models/ui/LibraryState";
 
