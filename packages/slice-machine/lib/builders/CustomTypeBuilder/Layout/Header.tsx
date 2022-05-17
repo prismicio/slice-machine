@@ -2,18 +2,19 @@ import React from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 
 import Header from "../../../../components/Header";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import useSliceMachineActions from "../../../../src/modules/useSliceMachineActions";
 import { MdSpaceDashboard } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
+import { SliceMachineStoreType } from "../../../../src/redux/type";
 import {
   selectCurrentCustomType,
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications,
-} from "@src/modules/selectedCustomType";
+} from "../../../../src/modules/selectedCustomType";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
+import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
+import Tracker from "../../../../src/tracker";
 
 const CustomTypeHeader = () => {
   const {
@@ -39,6 +40,11 @@ const CustomTypeHeader = () => {
       return {
         onClick: () => {
           saveCustomType();
+          void Tracker.get().trackCustomTypeSaved({
+            id: currentCustomType.id,
+            name: currentCustomType.label,
+            type: currentCustomType.repeatable ? "repeatable" : "single",
+          });
         },
         children: (
           <span>

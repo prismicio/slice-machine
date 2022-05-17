@@ -323,4 +323,96 @@ describe("Custom Type Builder", () => {
       { context: { groupId: { Repository: "repoName" } } }
     );
   });
+
+  test("it should sendd a tracking event when the user saves a custoom-type", async () => {
+    const customTypeId = "a-page";
+
+    singletonRouter.push({
+      pathname: "cts/[ct]",
+      query: { ct: customTypeId },
+    });
+
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment: {
+          framework: "next",
+          mockConfig: { _cts: { [customTypeId]: {} } },
+        },
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
+                },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          mockConfig: {},
+          initialMockConfig: {},
+        },
+      },
+    });
+
+    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    fireEvent.click(addButton);
+
+    const uid = screen.getByText("UID");
+    fireEvent.click(uid);
+
+    const saveFieldButton = screen.getByText("Add");
+
+    await act(async () => {
+      fireEvent.click(saveFieldButton);
+    });
+
+    expect(fakeTracker).toHaveBeenCalledWith(
+      "SliceMachine Custom Type Field Added",
+      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
+      { context: { groupId: { Repository: "repoName" } } }
+    );
+
+    const saveCustomType = screen.getByText("Save to File System");
+
+    await act(async () => {
+      fireEvent.click(saveCustomType);
+    });
+
+    expect(fakeTracker).toHaveBeenLastCalledWith(
+      "SliceMachine Custom Type Saved",
+      { type: "repeatable", id: customTypeId, name: customTypeId },
+      { context: { groupId: { Repository: "repoName" } } }
+    );
+  });
 });
