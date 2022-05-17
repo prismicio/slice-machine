@@ -16,7 +16,7 @@ import {
 import React from "react";
 import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
 import singletonRouter from "next/router";
-import { render, fireEvent, act, screen } from "../test-utils";
+import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import Tracker from "../../src/tracker";
@@ -422,10 +422,12 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveCustomType);
     });
 
-    expect(fakeTracker).toHaveBeenLastCalledWith(
-      "SliceMachine Custom Type Saved",
-      { type: "repeatable", id: customTypeId, name: customTypeId },
-      { context: { groupId: { Repository: "repoName" } } }
-    );
+    await waitFor(() => {
+      expect(fakeTracker).toHaveBeenLastCalledWith(
+        "SliceMachine Custom Type Saved",
+        { type: "repeatable", id: customTypeId, name: customTypeId },
+        { context: { groupId: { Repository: "repoName" } } }
+      );
+    });
   });
 });
