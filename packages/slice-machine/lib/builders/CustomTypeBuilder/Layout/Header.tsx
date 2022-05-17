@@ -14,7 +14,6 @@ import {
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
-import Tracker from "../../../../src/tracker";
 
 const CustomTypeHeader = () => {
   const {
@@ -40,11 +39,6 @@ const CustomTypeHeader = () => {
       return {
         onClick: () => {
           saveCustomType();
-          void Tracker.get().trackCustomTypeSaved({
-            id: currentCustomType.id,
-            name: currentCustomType.label,
-            type: currentCustomType.repeatable ? "repeatable" : "single",
-          });
         },
         children: (
           <span>

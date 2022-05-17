@@ -1,31 +1,28 @@
 import { useDispatch } from "react-redux";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { ModalKeysEnum } from "@src/modules/modal/types";
-import { modalCloseCreator, modalOpenCreator } from "@src/modules/modal";
-import {
-  startLoadingActionCreator,
-  stopLoadingActionCreator,
-} from "@src/modules/loading";
+import { LoadingKeysEnum } from "./loading/types";
+import { ModalKeysEnum } from "./modal/types";
+import { modalCloseCreator, modalOpenCreator } from "./modal";
+import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
 import {
   finishOnboardingCreator,
   sendAReviewCreator,
   skipReviewCreator,
   updatesViewedCreator,
   hasSeenTutorialsTooTipCreator,
-} from "@src/modules/userContext";
-import { refreshStateCreator } from "@src/modules/environment";
+} from "./userContext";
+import { refreshStateCreator } from "./environment";
 import {
   openSetupDrawerCreator,
   closeSetupDrawerCreator,
   toggleSetupDrawerStepCreator,
   checkSimulatorSetupCreator,
   connectToSimulatorIframeCreator,
-} from "@src/modules/simulator";
+} from "./simulator";
 import ServerState from "@models/server/ServerState";
-import { createCustomTypeCreator } from "@src/modules/availableCustomTypes";
-import { createSliceCreator } from "@src/modules/slices";
+import { createCustomTypeCreator } from "./availableCustomTypes";
+import { createSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
-import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { openToasterCreator, ToasterType } from "./toaster";
 import {
   initCustomTypeStoreCreator,
   createTabCreator,
@@ -48,7 +45,7 @@ import {
   deleteGroupFieldMockConfigCreator,
   deleteFieldMockConfigCreator,
   updateFieldMockConfigCreator,
-} from "@src/modules/selectedCustomType";
+} from "./selectedCustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,

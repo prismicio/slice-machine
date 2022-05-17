@@ -11,6 +11,7 @@ import {
   beforeEach,
   expect,
   beforeAll,
+  afterAll,
 } from "@jest/globals";
 import React from "react";
 import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
@@ -20,8 +21,20 @@ import mockRouter from "next-router-mock";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import Tracker from "../../src/tracker";
 import LibrariesProvider from "../../src/models/libraries/context";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
+
+const server = setupServer(
+  rest.post("/api/custom-types/save", (_, res, ctx) => {
+    return res(ctx.json({}));
+  })
+);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe("Custom Type Builder", () => {
   const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
