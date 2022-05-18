@@ -337,7 +337,7 @@ describe("Custom Type Builder", () => {
     );
   });
 
-  test("it should send a tracking event when the user saves a custoom-type", async () => {
+  test("it should send a tracking event when the user saves a custom-type", async () => {
     const customTypeId = "a-page";
 
     singletonRouter.push({
@@ -526,7 +526,7 @@ describe("Custom Type Builder", () => {
     expect(fakeTracker).toHaveBeenCalledTimes(1);
   });
 
-  test.only("when the user pushes a custom-type it should send a tracking event", async () => {
+  test("when the user pushes a custom-type it should send a tracking event", async () => {
     const customTypeId = "a-page";
 
     server.use(
