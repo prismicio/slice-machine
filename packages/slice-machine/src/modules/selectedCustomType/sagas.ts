@@ -59,6 +59,10 @@ export function* pushCustomTypeSaga() {
     }
 
     yield call(pushCustomType, currentCustomType.id);
+    void Tracker.get().trackCustomTypePushed({
+      id: currentCustomType.id,
+      name: currentCustomType.label || currentCustomType.id,
+    });
     yield put(pushCustomTypeCreator.success());
     yield put(
       openToasterCreator({
