@@ -29,6 +29,7 @@ const LibraryHandler: React.FunctionComponent<LibraryHandlerProps> = ({
       return {
         name: lib.name,
         isLocal: lib.isLocal,
+        // THIS CAN LEAD TO BUGS IF MORE COMPONENTS ARE ADDED OR REMOVED
         components: lib.components.map((component) =>
           useModelReducer({
             slice: component,
