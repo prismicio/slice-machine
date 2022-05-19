@@ -27,8 +27,14 @@ import SlicesIndex from "../../pages/slices";
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
 const server = setupServer(
-  rest.post("/api/slices/save", (_, res, ctx) => {
-    return res(ctx.json({}));
+  rest.post("/api/slices/create", (_, res, ctx) => {
+    return res(
+      ctx.json({
+        screenshots: {},
+        warning: null,
+        variationId: "default",
+      })
+    );
   })
 );
 
@@ -62,14 +68,102 @@ describe("slices", () => {
     mockRouter.setCurrentUrl("/slices");
   });
 
-  test("When user creates a slice it should send a tracking event", () => {
+  test("When user creates a slice it should send a tracking event", async () => {
     const environment = {
       framework: "next",
       mockConfig: { _cts: {} },
     };
 
-    const libraries = [];
-
+    const libraries = [
+      {
+        path: "./slices",
+        isLocal: true,
+        name: "slices",
+        meta: {
+          isNodeModule: false,
+          isDownloaded: false,
+          isManual: true,
+        },
+        components: [
+          {
+            from: "slices",
+            href: "slices",
+            pathToSlice: "./slices",
+            fileName: "index",
+            extension: "js",
+            screenshotPaths: {},
+            mock: [
+              {
+                variation: "default",
+                name: "Default",
+                slice_type: "test_slice",
+                items: [],
+                primary: {
+                  title: [
+                    {
+                      type: "heading1",
+                      text: "Cultivate granular e-services",
+                      spans: [],
+                    },
+                  ],
+                  description: [
+                    {
+                      type: "paragraph",
+                      text: "Anim in commodo exercitation qui. Elit cillum officia mollit dolore. Commodo voluptate sit est proident ea proident dolor esse ad.",
+                      spans: [],
+                    },
+                  ],
+                },
+              },
+            ],
+            model: {
+              id: "test_slice",
+              type: "SharedSlice",
+              name: "TestSlice",
+              description: "TestSlice",
+              variations: [
+                {
+                  id: "default",
+                  name: "Default",
+                  docURL: "...",
+                  version: "sktwi1xtmkfgx8626",
+                  description: "TestSlice",
+                  primary: [
+                    {
+                      key: "title",
+                      value: {
+                        type: "StructuredText",
+                        config: {
+                          single: "heading1",
+                          label: "Title",
+                          placeholder: "This is where it all begins...",
+                        },
+                      },
+                    },
+                    {
+                      key: "description",
+                      value: {
+                        type: "StructuredText",
+                        config: {
+                          single: "paragraph",
+                          label: "Description",
+                          placeholder: "A nice description of your feature",
+                        },
+                      },
+                    },
+                  ],
+                  items: [],
+                  imageUrl:
+                    "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+                },
+              ],
+            },
+            screenshotUrls: {},
+            __status: "NEW_SLICE",
+          },
+        ],
+      },
+    ];
     const App = render(
       <LibrariesProvider
         env={environment}
@@ -89,6 +183,31 @@ describe("slices", () => {
       }
     );
 
-    App.debug();
+    const createOneButton = document.querySelector('[data-cy="create-slice"]');
+    await act(async () => {
+      fireEvent.click(createOneButton);
+    });
+
+    const nameInput = document.querySelector('[data-cy="slice-name-input"]');
+    await act(async () => {
+      fireEvent.change(nameInput, { target: { value: "FooBar" } });
+    });
+
+    const submitButton = screen.getByText("Create");
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
+
+    // very hacky, done because of bug where calling Router.router.push causes issues with re-renders and context
+    delete window.location;
+    window.location = {} as Location;
+
+    await waitFor(() => {
+      expect(fakeTracker).toHaveBeenCalledWith(
+        "SliceMachine Slice Created",
+        { id: "FooBar", name: "slices" },
+        { context: { groupId: { Repository: "repoName" } } }
+      );
+    });
   });
 });
