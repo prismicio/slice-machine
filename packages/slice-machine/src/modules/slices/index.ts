@@ -18,6 +18,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../../src/tracker";
+import Router from "next/router";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -73,10 +74,12 @@ export function* createSliceSaga({
     name: payload.libName,
   });
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  // changing this to use next/router  call(Router.router.push,...) causes bugs in some contexts.
-  window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
+  const addr = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;
+  Router.router
+    ? void Router.router.push("/[lib]/[sliceName]/[variation]", addr)
+    : (window.location.href = addr);
 }
 
 // Saga watchers
