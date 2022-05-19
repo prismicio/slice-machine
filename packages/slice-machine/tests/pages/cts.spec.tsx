@@ -11,17 +11,30 @@ import {
   beforeEach,
   expect,
   beforeAll,
+  afterAll,
 } from "@jest/globals";
 import React from "react";
 import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
 import singletonRouter from "next/router";
-import { render, fireEvent, act, screen } from "../test-utils";
+import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import Tracker from "../../src/tracker";
 import LibrariesProvider from "../../src/models/libraries/context";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
+
+const server = setupServer(
+  rest.post("/api/custom-types/save", (_, res, ctx) => {
+    return res(ctx.json({}));
+  })
+);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe("Custom Type Builder", () => {
   const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
@@ -322,5 +335,194 @@ describe("Custom Type Builder", () => {
       { customTypeId },
       { context: { groupId: { Repository: "repoName" } } }
     );
+  });
+
+  test("it should send a tracking event when the user saves a custoom-type", async () => {
+    const customTypeId = "a-page";
+
+    singletonRouter.push({
+      pathname: "cts/[ct]",
+      query: { ct: customTypeId },
+    });
+
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment: {
+          framework: "next",
+          mockConfig: { _cts: { [customTypeId]: {} } },
+        },
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
+                },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          mockConfig: {},
+          initialMockConfig: {},
+        },
+      },
+    });
+
+    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    fireEvent.click(addButton);
+
+    const uid = screen.getByText("UID");
+    fireEvent.click(uid);
+
+    const saveFieldButton = screen.getByText("Add");
+
+    await act(async () => {
+      fireEvent.click(saveFieldButton);
+    });
+
+    expect(fakeTracker).toHaveBeenCalledWith(
+      "SliceMachine Custom Type Field Added",
+      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
+      { context: { groupId: { Repository: "repoName" } } }
+    );
+
+    const saveCustomType = screen.getByText("Save to File System");
+
+    await act(async () => {
+      fireEvent.click(saveCustomType);
+    });
+
+    await waitFor(() => {
+      expect(fakeTracker).toHaveBeenLastCalledWith(
+        "SliceMachine Custom Type Saved",
+        { type: "repeatable", id: customTypeId, name: customTypeId },
+        { context: { groupId: { Repository: "repoName" } } }
+      );
+    });
+  });
+
+  test("if saving fails a it should not send the save event", async () => {
+    server.use(
+      rest.post("/api/custom-types/save", (_, res, ctx) => {
+        return res(ctx.status(500), ctx.json({}));
+      })
+    );
+    const customTypeId = "a-page";
+
+    singletonRouter.push({
+      pathname: "cts/[ct]",
+      query: { ct: customTypeId },
+    });
+
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment: {
+          framework: "next",
+          mockConfig: { _cts: { [customTypeId]: {} } },
+        },
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
+                },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          mockConfig: {},
+          initialMockConfig: {},
+        },
+      },
+    });
+
+    const addButton = screen.getByTestId("empty-zone-add-new-field");
+    fireEvent.click(addButton);
+
+    const uid = screen.getByText("UID");
+    fireEvent.click(uid);
+
+    const saveFieldButton = screen.getByText("Add");
+
+    await act(async () => {
+      fireEvent.click(saveFieldButton);
+    });
+
+    expect(fakeTracker).toHaveBeenCalledWith(
+      "SliceMachine Custom Type Field Added",
+      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
+      { context: { groupId: { Repository: "repoName" } } }
+    );
+
+    const saveCustomType = screen.getByText("Save to File System");
+
+    await act(async () => {
+      fireEvent.click(saveCustomType);
+    });
+
+    await new Promise((r) => setTimeout(r, 1000));
+
+    expect(fakeTracker).toHaveBeenCalledTimes(1);
   });
 });
