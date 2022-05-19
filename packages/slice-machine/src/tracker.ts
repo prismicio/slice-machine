@@ -254,6 +254,7 @@ export class SMTracker {
   async trackCustomTypePushed(data: {
     id: string;
     name: string;
+    type: "single" | "repeatable";
   }): Promise<void> {
     return this.#trackEvent(EventType.CustomTypePushed, data);
   }

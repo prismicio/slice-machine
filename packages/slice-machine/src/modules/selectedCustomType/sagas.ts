@@ -62,6 +62,7 @@ export function* pushCustomTypeSaga() {
     void Tracker.get().trackCustomTypePushed({
       id: currentCustomType.id,
       name: currentCustomType.label || currentCustomType.id,
+      type: currentCustomType.repeatable ? "repeatable" : "single",
     });
     yield put(pushCustomTypeCreator.success());
     yield put(
