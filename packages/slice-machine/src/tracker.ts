@@ -18,6 +18,7 @@ enum EventType {
   CustomTypeFieldAdded = "SliceMachine Custom Type Field Added",
   CustomTypeSliceZoneUpdated = "SliceMachine Slicezone Updated",
   CustomTypeSaved = "SliceMachine Custom Type Saved",
+  CustomTypePushed = "SliceMachine Custom Type Pushed",
 }
 
 export enum ContinueOnboardingType {
@@ -248,6 +249,14 @@ export class SMTracker {
     type: "single" | "repeatable";
   }): Promise<void> {
     return this.#trackEvent(EventType.CustomTypeSaved, data);
+  }
+
+  async trackCustomTypePushed(data: {
+    id: string;
+    name: string;
+    type: "single" | "repeatable";
+  }): Promise<void> {
+    return this.#trackEvent(EventType.CustomTypePushed, data);
   }
 }
 

@@ -337,7 +337,7 @@ describe("Custom Type Builder", () => {
     );
   });
 
-  test("it should send a tracking event when the user saves a custoom-type", async () => {
+  test("it should send a tracking event when the user saves a custom-type", async () => {
     const customTypeId = "a-page";
 
     singletonRouter.push({
@@ -524,5 +524,87 @@ describe("Custom Type Builder", () => {
     await new Promise((r) => setTimeout(r, 1000));
 
     expect(fakeTracker).toHaveBeenCalledTimes(1);
+  });
+
+  test("when the user pushes a custom-type it should send a tracking event", async () => {
+    const customTypeId = "a-page";
+
+    server.use(
+      rest.get("/api/custom-types/push", (req, res, ctx) => {
+        expect(req.url.searchParams.get("id")).toEqual(customTypeId);
+        return res(ctx.json({}));
+      })
+    );
+
+    singletonRouter.push({
+      pathname: "cts/[ct]",
+      query: { ct: customTypeId },
+    });
+
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment: {
+          framework: "next",
+          mockConfig: { _cts: { [customTypeId]: {} } },
+        },
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
+                },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
+              },
+            ],
+          },
+          mockConfig: {},
+          initialMockConfig: {},
+        },
+      },
+    });
+
+    const pushButton = screen.getByText("Push to Prismic");
+    await act(async () => {
+      fireEvent.click(pushButton);
+    });
+
+    await waitFor(() => {
+      expect(fakeTracker).toHaveBeenCalledWith(
+        "SliceMachine Custom Type Pushed",
+        { id: customTypeId, name: customTypeId, type: "repeatable" },
+        { context: { groupId: { Repository: "repoName" } } }
+      );
+    });
   });
 });
