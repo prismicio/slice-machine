@@ -76,7 +76,7 @@ describe("update notification", () => {
     });
 
     cy.visit("/");
-    cy.contains("Learn more").should("exist");
+    cy.contains("Learn more", { timeout: 60000 }).should("exist");
     cy.get("[data-testid=the-red-dot]").should("not.exist");
   });
 

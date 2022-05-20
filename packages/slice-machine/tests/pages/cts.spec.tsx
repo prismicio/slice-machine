@@ -602,7 +602,7 @@ describe("Custom Type Builder", () => {
     await waitFor(() => {
       expect(fakeTracker).toHaveBeenCalledWith(
         "SliceMachine Custom Type Pushed",
-        { id: customTypeId, name: customTypeId },
+        { id: customTypeId, name: customTypeId, type: "repeatable" },
         { context: { groupId: { Repository: "repoName" } } }
       );
     });
