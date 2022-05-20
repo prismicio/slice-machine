@@ -32,7 +32,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
 }) => {
   return (
     <ModalFormCard
-      dataCy={"create-slice-modal"}
+      dataCy="create-slice-modal"
       isOpen={isOpen}
       widthInPx="530px"
       isLoading={isCreatingSlice}
@@ -82,7 +82,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
             label="Slice Name"
             placeholder="MySlice"
             error={touched.sliceName ? errors.sliceName : undefined}
-            dataCy={"slice-name-input"}
+            dataCy="slice-name-input"
           />
           <Label htmlFor="origin" sx={{ mb: 2 }}>
             Target Library
