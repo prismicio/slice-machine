@@ -205,7 +205,7 @@ describe("slices", () => {
     await waitFor(() => {
       expect(fakeTracker).toHaveBeenCalledWith(
         "SliceMachine Slice Created",
-        { id: "FooBar", name: "slices" },
+        { id: "FooBar", name: "FooBar", library: "slices" },
         { context: { groupId: { Repository: "repoName" } } }
       );
     });

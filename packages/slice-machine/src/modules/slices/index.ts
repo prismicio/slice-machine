@@ -70,7 +70,8 @@ export function* createSliceSaga({
   )) as SagaReturnType<typeof createSlice>;
   void Tracker.get().trackCreateSlice({
     id: payload.sliceName,
-    name: payload.libName,
+    name: payload.sliceName,
+    library: payload.libName,
   });
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   // changing this to use next/router  call(Router.router.push,...) causes bugs in some contexts.

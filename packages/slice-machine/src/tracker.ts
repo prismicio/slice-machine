@@ -259,7 +259,11 @@ export class SMTracker {
     return this.#trackEvent(EventType.CustomTypePushed, data);
   }
 
-  async trackCreateSlice(data: { id: string; name: string }): Promise<void> {
+  async trackCreateSlice(data: {
+    id: string;
+    name: string;
+    library: string;
+  }): Promise<void> {
     return this.#trackEvent(EventType.SliceCreated, data);
   }
 }
