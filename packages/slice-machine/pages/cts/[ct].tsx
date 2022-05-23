@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 
-import CustomTypeBuilder from "@lib/builders/CustomTypeBuilder";
+import CustomTypeBuilder from "../../lib/builders/CustomTypeBuilder";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getEnvironment } from "@src/modules/environment";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { selectCustomTypeById } from "@src/modules/availableCustomTypes";
+import { selectCustomTypeById } from "../../src/modules/availableCustomTypes";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useEffect } from "react";
 
@@ -15,7 +15,7 @@ type CustomTypeBuilderWithProviderProps = {
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-const CustomTypeBuilderWithProvider: React.FunctionComponent<CustomTypeBuilderWithProviderProps> =
+const CustomTypeBuilderWithProvider: React.FC<CustomTypeBuilderWithProviderProps> =
   ({ customType, remoteCustomType }) => {
     const { initCustomTypeStore } = useSliceMachineActions();
     const { env } = useSelector((store: SliceMachineStoreType) => ({

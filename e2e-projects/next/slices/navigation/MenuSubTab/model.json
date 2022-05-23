@@ -1,0 +1,41 @@
+{
+  "id": "menu_sub_tab",
+  "type": "SharedSlice",
+  "name": "MenuSubTab",
+  "description": "MenuSubTab",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "MenuSubTab",
+      "primary": {
+        "sectionTitle": {
+          "config": {
+            "label": "Section Title",
+            "placeholder": ""
+          },
+          "type": "Text"
+        }
+      },
+      "items": {
+        "subSectionTitle": {
+          "config": {
+            "label": "Sub Section Title",
+            "placeholder": ""
+          },
+          "type": "Text"
+        },
+        "subSectionLink": {
+          "config": {
+            "label": "Sub Section Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      }
+    }
+  ]
+}

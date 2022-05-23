@@ -1,0 +1,48 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "content_section_two_columns_with_image",
+    "items": [],
+    "primary": {
+      "title": [
+        {
+          "type": "heading1",
+          "text": "Integrate dot-com ROI",
+          "spans": []
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Nisi est nulla quis dolore laborum anim deserunt in incididunt ullamco. Ullamco nulla in aliquip.",
+          "spans": []
+        }
+      ],
+      "superTitle": "deploy magnetic networks",
+      "text": [
+        {
+          "type": "paragraph",
+          "text": "Dolore officia aliquip ipsum. Qui ad est est magna adipisicing laborum id eu elit laborum duis non non sint. Reprehenderit in reprehenderit aute cillum quis nisi esse aute mollit irure culpa irure.",
+          "spans": []
+        }
+      ],
+      "image": {
+        "dimensions": {
+          "width": 900,
+          "height": 500
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1607582278043-57198ac8da43?w=900&h=500&fit=crop"
+      },
+      "caption": [
+        {
+          "type": "paragraph",
+          "text": "Fugiat anim excepteur ex minim consequat magna anim ea culpa quis nostrud labore fugiat incididunt occaecat. Exercitation nostrud ex qui deserunt voluptate.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

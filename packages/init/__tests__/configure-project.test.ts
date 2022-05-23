@@ -12,6 +12,7 @@ import type { spinner } from "../src/utils/logs";
 import NodeUtils from "@slicemachine/core/build/node-utils";
 import Prismic from "@slicemachine/core/build/prismic";
 import { Models } from "@slicemachine/core";
+import Tracker from "../src/utils/tracker";
 
 type SpinnerReturnType = ReturnType<typeof spinner>;
 
@@ -26,6 +27,17 @@ jest.mock("../src/utils/logs", () => ({
     fail: failFn,
   }),
 }));
+
+const MockTracker = jest.fn((_, cb: () => void) => cb());
+const MockIdentify = jest.fn().mockReturnThis();
+jest.mock("analytics-node", () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      track: MockTracker,
+      identify: MockIdentify,
+    };
+  });
+});
 
 jest.mock("@slicemachine/core/build/node-utils", () => {
   // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
@@ -62,6 +74,8 @@ jest.mock("@slicemachine/core/build/node-utils", () => {
 describe("configure-project", () => {
   void beforeEach(() => {
     jest.spyOn(process, "exit").mockImplementation((number) => number as never);
+    Tracker.get().initialize("foo");
+    Tracker.get().setRepository("repoName");
   });
 
   void afterEach(() => {
@@ -86,14 +100,20 @@ describe("configure-project", () => {
   const fileExistsMock = exists as jest.Mock;
   const mkdirMock = mkdir as jest.Mock;
 
-  test("it should create a new manifest if it doesn't exist yet", () => {
+  test("it should create a new manifest if it doesn't exist yet", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toHaveBeenCalledWith("./", {
@@ -105,9 +125,10 @@ describe("configure-project", () => {
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
-  test("it should patch the existing manifest", () => {
+  test("it should patch the existing manifest", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
@@ -116,7 +137,13 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
@@ -127,9 +154,10 @@ describe("configure-project", () => {
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
-  test("it should patch the existing manifest with external lib", () => {
+  test("it should patch the existing manifest with external lib", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
       content: {
@@ -138,9 +166,13 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, [
-      "@/material/slices",
-    ]);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      ["@/material/slices"]
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
@@ -151,15 +183,22 @@ describe("configure-project", () => {
 
     expect(successFn).toHaveBeenCalled();
     expect(failFn).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
-  test("it should fail if retrieve manifest throws", () => {
+  test("it should fail if retrieve manifest throws", async () => {
     retrieveManifestMock.mockImplementation(() => {
       throw new Error("fake error to test the catch");
     });
 
     // process.exit should throw
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -167,9 +206,10 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
+    expect(MockTracker).not.toHaveBeenCalled();
   });
 
-  test("it should fail if create or update manifest throws", () => {
+  test("it should fail if create or update manifest throws", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
@@ -178,7 +218,13 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -186,9 +232,10 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
+    expect(MockTracker).not.toHaveBeenCalled();
   });
 
-  test("it should fail if add SM script throws", () => {
+  test("it should fail if add SM script throws", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: false,
       content: null,
@@ -198,7 +245,13 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -206,9 +259,10 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
+    expect(MockTracker).not.toHaveBeenCalled();
   });
 
-  test("it should create a slice folder if it doesnt exists.", () => {
+  test("it should create a slice folder if it doesnt exists.", async () => {
     // situation where the SM.Json doesn't exists.
     retrieveManifestMock.mockReturnValue({
       exists: false,
@@ -219,12 +273,18 @@ describe("configure-project", () => {
     // only called to verify if slice folder exists.
     fileExistsMock.mockReturnValue(false);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats
+    );
 
     expect(mkdirMock).toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
-  test("it shouldn' create a slice folder if it exists.", () => {
+  test("it shouldn' create a slice folder if it exists.", async () => {
     // situation where the SM.Json doesn't exists.
     retrieveManifestMock.mockReturnValue({
       exists: false,
@@ -234,8 +294,14 @@ describe("configure-project", () => {
     // only called to verify if slice folder exists.
     fileExistsMock.mockReturnValue(true);
 
-    configureProject(fakeCwd, fakeBase, fakeRepository, fakeFrameworkStats);
+    await configureProject(
+      fakeCwd,
+      fakeBase,
+      fakeRepository,
+      fakeFrameworkStats
+    );
 
     expect(mkdirMock).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 });

@@ -100,7 +100,7 @@ export async function installLib(
       `Slice library "${libGithubPath}" was installed successfully`
     );
 
-    Tracker.get().trackDownloadLibrary(libGithubPath);
+    void Tracker.get().trackDownloadLibrary(libGithubPath);
     return localLibs;
   } catch (error) {
     spinner.fail(`Error installing ${libGithubPath} lib!`);

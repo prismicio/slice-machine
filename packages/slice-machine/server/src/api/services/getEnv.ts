@@ -40,7 +40,7 @@ function validate(config: Models.Manifest): ConfigErrors {
   return errors;
 }
 
-function extractRepo(parsedRepo: ParseResult): string | undefined {
+function extractRepo(parsedRepo: ParseResult): string {
   switch (parsedRepo.type) {
     case ParseResultType.Listed:
       if (parsedRepo.labels.length) {
@@ -50,7 +50,7 @@ function extractRepo(parsedRepo: ParseResult): string | undefined {
         return parsedRepo.subDomains[0];
       }
     default:
-      return;
+      return "";
   }
 }
 

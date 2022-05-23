@@ -1,0 +1,26 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "content_section_centered_image",
+    "items": [],
+    "primary": {
+      "description": [
+        {
+          "type": "paragraph",
+          "text": "Quis dolor et aliquip enim enim excepteur nostrud in eiusmod enim deserunt sit dolor excepteur enim. Laborum culpa esse anim aliqua adipisicing exercitation voluptate amet.",
+          "spans": []
+        }
+      ],
+      "image": {
+        "dimensions": {
+          "width": 900,
+          "height": 500
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?w=900&h=500&fit=crop"
+      }
+    }
+  }
+]

@@ -1,0 +1,117 @@
+{
+  "id": "promo_section_full_width_with_overlapping_image_tiles",
+  "type": "SharedSlice",
+  "name": "PromoSectionFullWidthWithOverlappingImageTiles",
+  "description": "PromoSectionFullWidthWithOverlappingImageTiles",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "PromoSectionFullWidthWithOverlappingImageTiles",
+      "primary": {
+        "title1": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title first line",
+            "placeholder": "This is where it all begins....",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "title2": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title second line",
+            "placeholder": "Second line of the title...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "image1": {
+          "config": {
+            "label": "First Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image2": {
+          "config": {
+            "label": "Second Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image3": {
+          "config": {
+            "label": "Third Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image4": {
+          "config": {
+            "label": "Fourth Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image5": {
+          "config": {
+            "label": "Fifth Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "image6": {
+          "config": {
+            "label": "Sixth Image",
+            "constraint": {
+              "width": 288,
+              "height": 288
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "ctaLink": {
+          "config": {
+            "label": "Call to action label",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "linkLabel": {
+          "config": {
+            "label": "Call to Action Label",
+            "placeholder": "Click here..."
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

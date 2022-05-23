@@ -1,0 +1,82 @@
+{
+  "id": "promo_section_fading_background_testimonials",
+  "type": "SharedSlice",
+  "name": "PromoSectionFadingBackgroundTestimonials",
+  "description": "PromoSectionFadingBackgroundTestimonials",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "PromoSectionFadingBackgroundTestimonials",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "cta": {
+          "config": {
+            "label": "CTA",
+            "placeholder": "Call to action label"
+          },
+          "type": "Text"
+        },
+        "link": {
+          "config": {
+            "label": "CTA Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        },
+        "quotesTitle": {
+          "config": {
+            "label": "Title of quotes section",
+            "placeholder": "What are people saying?"
+          },
+          "type": "Text"
+        },
+        "image": {
+          "config": {
+            "label": "Background Image",
+            "constraint": {
+              "width": 1216,
+              "height": 956
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        }
+      },
+      "items": {
+        "quote": {
+          "config": {
+            "label": "Quote Text",
+            "placeholder": "This is the text of the quote"
+          },
+          "type": "Text"
+        },
+        "attribution": {
+          "config": {
+            "label": "Quote Author",
+            "placeholder": "This is the author of the quote"
+          },
+          "type": "Text"
+        }
+      }
+    }
+  ]
+}
