@@ -2,29 +2,20 @@ import {
   describe,
   // expect,
   test,
-  jest,
+  // jest,
   //  afterEach,
   //  beforeAll,
   //  beforeEach
 } from "@jest/globals";
 
 // import memfs from "memfs";
-import fs from "fs";
+
 import npath from "path";
 import { sendStarterData } from "../src/steps";
 
-import modelStub from "./__stubs__/fake-project/slices/MySlice/model.json";
-import os from "os";
-
 import nock from "nock";
 
-const actualFs = jest.requireActual("fs") as typeof fs;
-const imageData = actualFs.readFileSync(
-  npath.join(__dirname, "__stubs__", "preview.png"),
-  "utf-8"
-);
-
-const TMP_DIR = os.tmpdir();
+const TMP_DIR = npath.join(__dirname, "__stubs__", "fake-project");
 
 describe("send starter data", () => {
   // beforeEach(() => {
@@ -36,75 +27,10 @@ describe("send starter data", () => {
     const repo = "bbbbbbb";
     const base = "https://prismic.io";
     const cookies = `prismic-auth=${token}`;
-    const smJson = {
-      libraries: ["@/slices"],
-    };
+    // const smJson = {
+    //   libraries: ["@/slices"],
+    // };
 
-    jest.spyOn(fs, "lstatSync").mockImplementation((...args) => {
-      console.log("lstatSync");
-      console.log(args);
-      const [path] = args;
-      if (
-        path === npath.join(TMP_DIR, "sm.json") ||
-        path === npath.join(TMP_DIR, "slices") ||
-        path === npath.join(TMP_DIR, "slices", "MySlice", "model.json") ||
-        path ===
-          npath.join(
-            TMP_DIR,
-            "slices",
-            "MySlice",
-            "default-slice",
-            "preview.jpeg"
-          )
-      ) {
-        return {} as fs.Stats;
-      }
-
-      if (path === npath.join(TMP_DIR, "slices", "MySlice")) {
-        return {
-          isDirectory: () => true,
-        } as fs.Stats;
-      }
-      return actualFs.lstatSync(...args);
-    });
-
-    jest.spyOn(fs, "readFileSync").mockImplementation((...args) => {
-      const [path, options] = args;
-      if (path.toString().endsWith("sm.json")) {
-        return JSON.stringify(smJson);
-      }
-      if (path.toString().endsWith("model.json")) {
-        return JSON.stringify(modelStub);
-      }
-
-      if (path.toString().endsWith("preview.png")) {
-        return imageData;
-      }
-
-      return actualFs.readFileSync(path, options);
-    });
-
-    jest.spyOn(fs, "readdirSync").mockImplementation((...args) => {
-      const [path, options] = args;
-      console.log("readdirSync");
-      console.log(args);
-      if (path === npath.join(TMP_DIR, "slices")) {
-        return ["MySlice"] as unknown as fs.Dirent[];
-      }
-      if (path === npath.join(TMP_DIR, "slices", "MySlice")) {
-        return ["model.json", "index..js"] as unknown as fs.Dirent[];
-      }
-      return actualFs.readdirSync(path, options);
-    });
-
-    jest.spyOn(fs, "mkdirSync").mockImplementation((...args) => {
-      console.log("mkdirsync");
-      console.log(args);
-      return "";
-    });
-    //  const hasSM = fs.lstatSync(path.join(TMP_DIR, "sm.json"))
-    // console.log({hasSM})
-    // slices check and maybe post
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
         repository: repo,
@@ -155,9 +81,3 @@ describe("send starter data", () => {
     await sendStarterData(repo, base, cookies, TMP_DIR);
   });
 });
-
-// curl \
-// -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImlkIjoiNWNkM2VjN2ExMTAwMDA4OTRiMDRhYzA2IiwiZGF0ZSI6MTY1MzM5NDgzOCwiaWF0IjoxNjUzMzk0ODM4fQ.cSSX9Kwp4OTZ9SlAwQ4YHlw4pmoQFfRDKBBu1UJCfjM" \
-// -H "repository: sm-test-init-11-05-22" \
-// -H "User-Agent: slice-machine" \
-// https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/create
