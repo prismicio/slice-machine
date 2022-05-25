@@ -4,7 +4,6 @@ import { pushSlice } from "../slices/push";
 import { onError } from "../common/error";
 import { CustomTypesPaths } from "@lib/models/paths";
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient from "@lib/models/common/http/FakeClient";
 import { ApiResult } from "@lib/models/server/ApiResult";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
@@ -17,7 +16,7 @@ import {
 import * as IO from "../io";
 
 const createOrUpdate = (
-  client: DefaultClient | FakeClient,
+  client: DefaultClient,
   smModel: CustomTypeSM,
   remoteCustomType: CustomTypeSM | undefined
 ) => {

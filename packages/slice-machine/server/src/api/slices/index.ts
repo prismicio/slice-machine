@@ -1,14 +1,13 @@
 import getEnv from "../services/getEnv";
 
 import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient, { FakeResponse } from "@lib/models/common/http/FakeClient";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (
-  client: DefaultClient | FakeClient
+  client: DefaultClient
 ): Promise<{
-  err: Response | FakeResponse | null;
+  err: Response | null;
   slices: Array<SliceSM>;
 }> => {
   try {
