@@ -18,18 +18,11 @@ import nock from "nock";
 const TMP_DIR = npath.join(__dirname, "__stubs__", "fake-project");
 
 describe("send starter data", () => {
-  // beforeEach(() => {
-  //   vol.reset()
-  // })
-
   test("should send slices and images from the file system to prismic", async () => {
     const token = "aaaaaaa";
     const repo = "bbbbbbb";
     const base = "https://prismic.io";
     const cookies = `prismic-auth=${token}`;
-    // const smJson = {
-    //   libraries: ["@/slices"],
-    // };
 
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
@@ -41,9 +34,9 @@ describe("send starter data", () => {
     smApi.get("/slices").reply(200, []);
     // smApi.post('/slices/insert').reply(200) // note may have to be update if there will be any conflicts
 
-    const fakeS3Url = "https://s3.amazonaws.com/prismic-io";
-    // acl reequest
-    // const acl =
+    const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+    // Mock ACL
     nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
       reqheaders: {
         repository: repo,
@@ -70,11 +63,18 @@ describe("send starter data", () => {
         err: null,
       });
 
-    // const s3 =
+    // Mock S3
     nock(fakeS3Url)
       .post("/", (body) => {
         if (!body) return false;
-        return true;
+        if (typeof body !== "string") return false;
+        const text = Buffer.from(body, "hex").toString();
+        const keyRegExp =
+          /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
+        const hasKey = keyRegExp.test(text);
+        const fileRegexp = /form-data; name="file"; filename="preview.png"/;
+        const hasFile = fileRegexp.test(text);
+        return hasKey && hasFile;
       })
       .reply(204);
 

@@ -8,6 +8,7 @@ import path from "path";
 import FormData from "form-data";
 import mime from "mime";
 import fs from "fs";
+import uniqid from "uniqid";
 
 async function setupS3(repository: string, authorization: string) {
   const acl = await axios
@@ -25,22 +26,15 @@ async function setupS3(repository: string, authorization: string) {
         "User-Agent": "slice-machine",
       },
     })
-    .then((res) => {
-      console.log(res);
-      return res.data;
-    })
-    .catch((e) => {
-      console.error(e);
-      throw e;
-    });
+    .then((res) => res.data);
 
-  console.log({ acl });
+  // console.log({ acl });
 
   return async (sliceName: string, variationId: string, filePath: string) => {
     const filename = path.basename(filePath);
     const key = `${repository}/shared-slices/${snakeCase(
       sliceName
-    )}/${snakeCase(variationId)}/${filename}`;
+    )}/${snakeCase(variationId)}-${uniqid()}/${filename}`;
 
     const form = new FormData();
     Object.entries(acl.values.fields).forEach(([key, value]) => {
@@ -53,10 +47,11 @@ async function setupS3(repository: string, authorization: string) {
     form.append("file", fs.createReadStream(filePath), {
       filename,
     });
-
+    // console.log({acl})
     const res = await axios.post(acl.values.url, form, {
       headers: form.getHeaders(),
     });
+    // console.log({res})
 
     const s3ImageUrl = `${acl.imgixEndpoint}/${key}`;
 
@@ -80,7 +75,8 @@ export async function sendStarterData(
   cookies: string,
   cwd: string
 ) {
-  console.log({ repository, base, cookies, cwd });
+  console.log(base);
+  // console.log({ repository, base, cookies, cwd });
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
   const authorization = `Bearer ${authTokenFromCookie}`;
   // type this later as the slices in the api may not be the same as the slices in sm
@@ -105,9 +101,8 @@ export async function sendStarterData(
   // },[])
 
   // read sm.json to check for slices, if there are none do nothing :)
-  console.log({ cwd });
   const smJson = retrieveManifest(cwd);
-  console.log({ smJson });
+  // console.log({ smJson });
 
   if (smJson.content && smJson.content.libraries) {
     const libs = Libraries.libraries(cwd, smJson.content.libraries);
@@ -117,13 +112,15 @@ export async function sendStarterData(
     }, []);
 
     const sendToS3 = await setupS3(repository, authorization);
-    components.map(({ screenshotPaths, model }) => {
-      model.variations.map(async (variation) => {
+    // something is wrong here
+    components.map(async ({ screenshotPaths, model }) => {
+      const p = model.variations.map(async (variation) => {
         const pathToScreenShot = screenshotPaths[variation.id];
         if (pathToScreenShot && pathToScreenShot.path) {
           await sendToS3(model.id, variation.id, pathToScreenShot.path);
         }
       });
+      return Promise.all(p);
     }); // question can s3 handel multiple files at once?
 
     // screen shots need to go first and the imageUrl is added to the
