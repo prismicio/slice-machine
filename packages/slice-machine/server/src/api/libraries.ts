@@ -16,9 +16,7 @@ interface LibrariesResult {
   clientError?: ErrorWithStatus;
 }
 
-async function getAndValidateSlices(
-  env: BackendEnvironment
-): Promise<{
+async function getAndValidateSlices(env: BackendEnvironment): Promise<{
   remoteSlices: LibrariesResult["remoteSlices"];
   clientError?: LibrariesResult["clientError"];
 }> {
