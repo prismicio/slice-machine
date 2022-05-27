@@ -1,11 +1,11 @@
 import getEnv from "../services/getEnv";
 
-import DefaultClient from "@lib/models/common/http/DefaultClient";
+import { Client } from "@lib/models/server/Client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (
-  client: DefaultClient
+  client: Client
 ): Promise<{
   err: Response | null;
   slices: Array<SliceSM>;
@@ -22,6 +22,7 @@ export const getSlices = async (
     return { slices: [], err: e as Response };
   }
 };
+
 export default async function handler() {
   const { env } = await getEnv();
   return await getSlices(env.client);

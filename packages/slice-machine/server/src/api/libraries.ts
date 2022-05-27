@@ -12,48 +12,54 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/s
 
 interface LibrariesResult {
   remoteSlices: ReadonlyArray<SliceSM>;
-  clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<LibraryUI>;
+  clientError?: ErrorWithStatus;
+}
+
+async function getAndValidateSlices(
+  env: BackendEnvironment
+): Promise<{
+  remoteSlices: LibrariesResult["remoteSlices"];
+  clientError?: LibrariesResult["clientError"];
+}> {
+  const response: Response = await env.client.getSlice();
+
+  if (response.status > 209) {
+    return {
+      remoteSlices: [],
+      clientError: new ErrorWithStatus(response.statusText, response.status),
+    };
+  }
+
+  const json: unknown = await (response.json
+    ? response.json()
+    : Promise.resolve([]));
+
+  return fold(
+    () => ({
+      remoteSlices: [],
+      clientError: new ErrorWithStatus(
+        "Invalid slices detected while fetching.",
+        400
+      ),
+    }),
+    (slices: Array<SharedSlice>) => {
+      const smSlices = slices.map((r) => Slices.toSM(r));
+
+      return { remoteSlices: smSlices };
+    }
+  )(t.array(SharedSlice).decode(json));
 }
 
 export default async function handler(
   env: BackendEnvironment
 ): Promise<LibrariesResult> {
   try {
-    const res = await env.client.getSlice();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { remoteSlices, clientError } = await (async () => {
-      if (res.status > 209) {
-        return {
-          remoteSlices: [] as Array<SharedSlice>,
-          clientError: new ErrorWithStatus(res.statusText, res.status),
-        };
-      }
-      if (!env.isUserLoggedIn) {
-        return { remoteSlices: [] as Array<SharedSlice> };
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const r = await (res.json ? res.json() : Promise.resolve([]));
-
-      return fold(
-        () => ({
-          remoteSlices: [] as Array<SharedSlice>,
-          clientError: new ErrorWithStatus(
-            "Invalid slices detected while fetching.",
-            400
-          ),
-        }),
-        (slices: Array<SharedSlice>) => {
-          return { remoteSlices: slices };
-        }
-      )(t.array(SharedSlice).decode(r as unknown));
-    })();
-
-    const smRemoteSlices = remoteSlices.map((r) => Slices.toSM(r));
+    const { remoteSlices, clientError } = await getAndValidateSlices(env);
 
     if (!env.manifest.libraries)
       return {
-        remoteSlices: smRemoteSlices,
+        remoteSlices: remoteSlices,
         libraries: [],
         clientError: clientError,
       };
@@ -62,13 +68,13 @@ export default async function handler(
 
     const withFlags = libraries.map((lib) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      LibraryUI.build(lib, smRemoteSlices, env)
+      LibraryUI.build(lib, remoteSlices, env)
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return {
       clientError: clientError,
       libraries: withFlags,
-      remoteSlices: smRemoteSlices,
+      remoteSlices: remoteSlices,
     };
   } catch (e) {
     return {

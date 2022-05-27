@@ -6,6 +6,7 @@ import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/models";
 import nock from "nock";
 import path from "path";
+import { FetchMock } from "../__mocks__/fetchMock";
 
 jest.mock(`fs`, () => {
   const { vol } = jest.requireActual("memfs");
@@ -28,13 +29,13 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(200, JSON.stringify(MockedUserProfile));
+    FetchMock(
+      "https://user.internal-prismic.io/profile",
+      200,
+      MockedUserProfile
+    );
 
-    const res = await getAndSetUserProfile(MockedBackendEnv, fakeCookie);
+    const res = await getAndSetUserProfile(MockedBackendEnv);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -62,15 +63,11 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(200, {});
+    FetchMock("https://user.internal-prismic.io/profile", 200, {});
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Unable to parse profile: {}");
+    await expect(getAndSetUserProfile(MockedBackendEnv)).rejects.toEqual(
+      "Unable to parse profile: {}"
+    );
   });
 
   test("on network issues should throw an error", async () => {
@@ -84,14 +81,10 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(403);
+    FetchMock("https://user.internal-prismic.io/profile", 500);
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Request failed with status code 403");
+    await expect(getAndSetUserProfile(MockedBackendEnv)).rejects.toEqual(
+      "Unable to retrieve profile with status code 500"
+    );
   });
 });

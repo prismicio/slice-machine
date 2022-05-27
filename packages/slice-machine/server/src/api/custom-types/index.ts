@@ -26,8 +26,6 @@ const handleMatch = (matches: string[]) => {
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
 ): Promise<{ remoteCustomTypes: CustomTypeSM[] }> => {
-  if (!env.isUserLoggedIn) return { remoteCustomTypes: [] };
-
   try {
     const res = await env.client.getCustomTypes();
     const { remoteCustomTypes } = await (async (): Promise<{
