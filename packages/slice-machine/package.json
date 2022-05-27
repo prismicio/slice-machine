@@ -29,7 +29,7 @@
     "bundle": "npm run build && npm run export-build",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -l high -p",
+    "audit": "better-npm-audit audit -l high -p -x 1070404",
     "audit-fix": "npm audit fix"
   },
   "bin": {
