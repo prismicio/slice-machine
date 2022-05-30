@@ -118,6 +118,15 @@ export const CustomTypeMockConfig = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return ctMockConfig[fieldId] || {};
   },
+  getGroupFieldMockConfig(
+    ctMockConfig: CustomTypeMockConfig,
+    groupId: string,
+    fieldId: string
+  ): Partial<Record<string, unknown>> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    const groupConfig = this.getFieldMockConfig(ctMockConfig, groupId);
+    return (groupConfig[fieldId] || {}) as Partial<Record<string, unknown>>;
+  },
   deleteFieldMockConfig(
     ctMockConfig: CustomTypeMockConfig,
     fieldId: string
