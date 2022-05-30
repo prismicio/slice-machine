@@ -78,6 +78,29 @@ describe("send starter data", () => {
       })
       .reply(204);
 
+    const imageUrlRegexp =
+      /https:\/\/images.prismic.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
+
+    type Body = {
+      variations: Array<{ imageUrl: string }>;
+    };
+
+    smApi
+      .post("/slices/insert", (d) => {
+        const body = d as unknown as Body;
+        if (!body) return false;
+        if (typeof body !== "object") return false;
+        if ("variations" in body === false) return false;
+        if (Array.isArray(body.variations) === false) return false;
+        return (
+          body &&
+          body.variations &&
+          body.variations.length &&
+          imageUrlRegexp.test(body.variations[0].imageUrl)
+        );
+      })
+      .reply(200);
+
     await sendStarterData(repo, base, cookies, TMP_DIR);
   });
 });

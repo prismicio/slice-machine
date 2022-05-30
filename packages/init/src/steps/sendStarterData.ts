@@ -22,7 +22,7 @@ async function setupS3(repository: string, authorization: string) {
     }>("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/create", {
       headers: {
         repository,
-        authorization,
+        Authorization: authorization,
         "User-Agent": "slice-machine",
       },
     })
@@ -30,7 +30,11 @@ async function setupS3(repository: string, authorization: string) {
 
   // console.log({ acl });
 
-  return async (sliceName: string, variationId: string, filePath: string) => {
+  return async (
+    sliceName: string,
+    variationId: string,
+    filePath: string
+  ): Promise<string> => {
     const filename = path.basename(filePath);
     const key = `${repository}/shared-slices/${snakeCase(
       sliceName
@@ -65,7 +69,7 @@ async function setupS3(repository: string, authorization: string) {
       throw new Error(msg);
     }
 
-    return { s3ImageUrl };
+    return s3ImageUrl;
   };
 }
 
@@ -83,7 +87,7 @@ export async function sendStarterData(
   const remoteSlices = await axios
     .get<Array<unknown>>("https://customtypes.prismic.io/slices", {
       headers: {
-        authorization,
+        Authorization: authorization,
         repository,
       },
     })
@@ -94,18 +98,12 @@ export async function sendStarterData(
     console.log("Slices Found Do Something");
   }
 
-  // Cloud save a lot of effort and use the library state file if path to screen shot was relevant
-  // const libraryState = await fs.readFile(LibrariesStatePath(cwd), 'utf-8') as unknown as Models.LibrariesState.Libraries
-  // const components = Object.values(libraryState).reduce<LibrariesState.Component[]>((acc, curr) => {
-  //   return [...acc, ...Object.values(curr.components)]
-  // },[])
-
   // read sm.json to check for slices, if there are none do nothing :)
   const smJson = retrieveManifest(cwd);
   // console.log({ smJson });
 
   if (smJson.content && smJson.content.libraries) {
-    const libs = Libraries.libraries(cwd, smJson.content.libraries);
+    const libs = Libraries.libraries(cwd, smJson.content.libraries); // change this
 
     const components = libs.reduce<Array<Component>>((acc, lib) => {
       return [...acc, ...lib.components];
@@ -113,23 +111,42 @@ export async function sendStarterData(
 
     const sendToS3 = await setupS3(repository, authorization);
     // something is wrong here
-    components.map(async ({ screenshotPaths, model }) => {
-      const p = model.variations.map(async (variation) => {
+    const modelPromises = components.map(async ({ screenshotPaths, model }) => {
+      const variationsReq = model.variations.map(async (variation) => {
         const pathToScreenShot = screenshotPaths[variation.id];
         if (pathToScreenShot && pathToScreenShot.path) {
-          await sendToS3(model.id, variation.id, pathToScreenShot.path);
+          const imageUrl = await sendToS3(
+            model.id,
+            variation.id,
+            pathToScreenShot.path
+          ).catch(() => "");
+          return {
+            ...variation,
+            ...(imageUrl ? { imageUrl } : {}), // is image url needed by the api?
+          };
+        } else {
+          return variation;
         }
       });
-      return Promise.all(p);
-    }); // question can s3 handel multiple files at once?
+      const variations = await Promise.all(variationsReq);
+      return {
+        ...model,
+        variations,
+      };
+    });
 
-    // screen shots need to go first and the imageUrl is added to the
+    const models = await Promise.all(modelPromises);
+    const p = models.map(async (model) => {
+      return axios.post("https://customtypes.prismic.io/slices/insert", model, {
+        headers: {
+          Authorization: authorization,
+          repository,
+          "User-Agent": "slice-machine",
+        },
+      });
+    });
 
-    // const modelsToSend = components.map(async ({model}) => {
-    //   return axios.post(slicesEndpointURL + '/insert', model, { headers }) // how to handel errors
-    // })
-
-    // Promise.all(modelsToSend)
+    return Promise.all(p);
   }
 
   // generate the library-state.json packages/slice-machine/server/src/api/common/LibrariesState.ts
