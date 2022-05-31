@@ -1,14 +1,4 @@
-import {
-  describe,
-  // expect,
-  test,
-  // jest,
-  //  afterEach,
-  //  beforeAll,
-  //  beforeEach
-} from "@jest/globals";
-
-// import memfs from "memfs";
+import { describe, test } from "@jest/globals";
 
 import npath from "path";
 import { sendStarterData } from "../src/steps";
@@ -32,7 +22,6 @@ describe("send starter data", () => {
     });
 
     smApi.get("/slices").reply(200, []);
-    // smApi.post('/slices/insert').reply(200) // note may have to be update if there will be any conflicts
 
     const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
@@ -93,10 +82,11 @@ describe("send starter data", () => {
         if ("variations" in body === false) return false;
         if (Array.isArray(body.variations) === false) return false;
         return (
-          body &&
-          body.variations &&
-          body.variations.length &&
-          imageUrlRegexp.test(body.variations[0].imageUrl)
+          (body &&
+            body.variations &&
+            body.variations.length &&
+            imageUrlRegexp.test(body.variations[0].imageUrl)) ||
+          false
         );
       })
       .reply(200);
