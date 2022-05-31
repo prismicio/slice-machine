@@ -14,4 +14,5 @@ module.exports = {
     "^.+\\.js$": "babel-jest",
   },
   testTimeout: 15000,
+  testPathIgnorePatterns: ["/node_modules/", "/__stubs__/"],
 };
