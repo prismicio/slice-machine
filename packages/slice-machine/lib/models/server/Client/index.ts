@@ -1,3 +1,4 @@
+import fetch, { Response } from "node-fetch";
 import { getOrElseW } from "fp-ts/Either";
 import { UserProfile } from "@slicemachine/core/build/models";
 

@@ -1,3 +1,5 @@
+import { Response } from "node-fetch";
+
 export type ApiError = {
   err: Response | Error;
   status: number;

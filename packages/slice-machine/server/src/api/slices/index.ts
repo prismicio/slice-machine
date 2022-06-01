@@ -2,6 +2,7 @@ import getEnv from "../services/getEnv";
 
 import { Client } from "@lib/models/server/Client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
+import { Response } from "node-fetch";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (
@@ -15,8 +16,8 @@ export const getSlices = async (
     if (res.status !== 200) {
       return { err: res, slices: [] };
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const slices: Array<SharedSlice> = await res.json();
+
+    const slices = (await res.json()) as Array<SharedSlice>;
     return { err: null, slices: slices.map((s) => Slices.toSM(s)) };
   } catch (e) {
     return { slices: [], err: e as Response };
