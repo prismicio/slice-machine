@@ -12,7 +12,7 @@ export default async function handler(
       return { status: "pending" };
     }
 
-    const profile = await getAndSetUserProfile(req.env);
+    const profile = await getAndSetUserProfile(req.env.client);
 
     return {
       status: "ok",

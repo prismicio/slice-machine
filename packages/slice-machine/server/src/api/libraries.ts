@@ -1,6 +1,5 @@
 import * as t from "io-ts";
 import { fold } from "fp-ts/lib/Either";
-import { Response } from "node-fetch";
 import * as Libraries from "@slicemachine/core/build/libraries";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";

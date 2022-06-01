@@ -2,7 +2,6 @@ import getEnv from "../services/getEnv";
 
 import { Client } from "@lib/models/server/Client";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
-import { Response } from "node-fetch";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 export const getSlices = async (

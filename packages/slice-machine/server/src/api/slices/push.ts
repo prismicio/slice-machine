@@ -1,4 +1,3 @@
-import { Response } from "node-fetch";
 import getEnv from "../services/getEnv";
 import { getSlices } from "./";
 

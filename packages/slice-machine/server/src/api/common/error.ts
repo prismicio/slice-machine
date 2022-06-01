@@ -1,4 +1,3 @@
-import { Response } from "node-fetch";
 import { ApiError } from "@models/server/ApiResult";
 
 export const onError = (

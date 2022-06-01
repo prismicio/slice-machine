@@ -30,7 +30,7 @@ export const getBackendState = async (
 
         // set the user profile if it doesn't exist yet.
         if (!env.prismicData.shortId || !env.prismicData.intercomHash)
-          return getAndSetUserProfile(env);
+          return getAndSetUserProfile(env.client);
       })
       .catch((error: Error) =>
         console.error("[Refresh token]: Internal error : ", error.message)

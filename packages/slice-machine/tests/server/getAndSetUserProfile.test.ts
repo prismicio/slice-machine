@@ -4,9 +4,8 @@ import { getAndSetUserProfile } from "../../server/src/api/services/getAndSetUse
 import { vol } from "memfs";
 import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/models";
-import nock from "nock";
+import fetchMock from "fetch-mock";
 import path from "path";
-import { FetchMock } from "../__mocks__/fetchMock";
 
 jest.mock(`fs`, () => {
   const { vol } = jest.requireActual("memfs");
@@ -16,6 +15,7 @@ jest.mock(`fs`, () => {
 describe("setShortId", () => {
   afterEach(() => {
     vol.reset();
+    fetchMock.reset();
   });
 
   test("it should set the short ID and the intercom hash", async () => {
@@ -29,13 +29,12 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    FetchMock(
-      "https://user.internal-prismic.io/profile",
-      200,
-      MockedUserProfile
-    );
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 200,
+      body: JSON.stringify(MockedUserProfile),
+    });
 
-    const res = await getAndSetUserProfile(MockedBackendEnv);
+    const res = await getAndSetUserProfile(MockedBackendEnv.client);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -63,9 +62,12 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    FetchMock("https://user.internal-prismic.io/profile", 200, {});
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 200,
+      body: {},
+    });
 
-    await expect(getAndSetUserProfile(MockedBackendEnv)).rejects.toEqual(
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
       "Unable to parse profile: {}"
     );
   });
@@ -81,10 +83,12 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    FetchMock("https://user.internal-prismic.io/profile", 500);
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 403,
+    });
 
-    await expect(getAndSetUserProfile(MockedBackendEnv)).rejects.toEqual(
-      "Unable to retrieve profile with status code 500"
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
+      "Unable to retrieve profile with status code 403"
     );
   });
 });
