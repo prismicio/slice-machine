@@ -32,6 +32,13 @@ export async function configureProject(
 
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
 
+    const libs =
+      manifest.content &&
+      manifest.content.libraries &&
+      manifest.content.libraries.length > 0
+        ? manifest.content.libraries
+        : ["@/slices"];
+
     const manifestUpdated: Models.Manifest = {
       ...(manifestAlreadyExistWithContent
         ? manifest.content
@@ -40,7 +47,7 @@ export async function configureProject(
         base,
         repositoryDomainName
       ),
-      libraries: ["@/slices", ...sliceLibPath],
+      libraries: [...libs, ...sliceLibPath], // odd case here for staters
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
     };
@@ -52,7 +59,10 @@ export async function configureProject(
     const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)
       .library("slices")
       .value();
-    if (!NodeUtils.Files.exists(pathToSlicesFolder)) {
+    if (
+      !NodeUtils.Files.exists(pathToSlicesFolder) &&
+      libs.includes("@/slices")
+    ) {
       NodeUtils.Files.mkdir(pathToSlicesFolder, { recursive: true });
     }
 
