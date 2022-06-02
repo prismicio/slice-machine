@@ -95,7 +95,8 @@ export async function sendStarterData(
 
   if (remoteSlices.length) {
     // do prompt about slices
-    console.log("Slices Found Do Something");
+    console.warn("Slices Found Do Something");
+    return Promise.resolve();
   }
 
   // read sm.json to check for slices, if there are none do nothing :)
@@ -146,7 +147,7 @@ export async function sendStarterData(
       });
     });
 
-    return Promise.all(p);
+    await Promise.all(p);
   }
 
   // generate the library-state.json packages/slice-machine/server/src/api/common/LibrariesState.ts

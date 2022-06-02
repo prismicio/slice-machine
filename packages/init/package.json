@@ -63,6 +63,7 @@
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-jest": "^24.4.0",
     "jest": "^27.4.7",
+    "memfs": "^3.4.4",
     "mock-stdin": "^1.0.0",
     "nock": "^13.1.3",
     "siroc": "^0.16.0",
