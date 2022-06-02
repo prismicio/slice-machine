@@ -44,7 +44,7 @@ async function setupS3(
       };
       imgixEndpoint: string;
       err: null | string;
-    }>(alcProvider, {
+    }>(alcProvider + "create", {
       headers: {
         repository,
         Authorization: authorization,
@@ -162,9 +162,9 @@ export async function sendStarterData(
     });
 
     const models = await Promise.all(modelPromises);
-    const insertSlicecsUrl = endpoints.Models + "slices/insert";
+    const insertSliceUrl = endpoints.Models + "slices/insert";
     const p = models.map(async (model) => {
-      return axios.post(insertSlicecsUrl, model, {
+      return axios.post(insertSliceUrl, model, {
         headers: {
           Authorization: authorization,
           repository,

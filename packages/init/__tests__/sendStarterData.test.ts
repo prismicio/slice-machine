@@ -1,18 +1,13 @@
 import { describe, test, jest, afterEach, expect } from "@jest/globals";
-
 import npath from "path";
 import { sendStarterData } from "../src/steps";
-
 import nock from "nock";
-import fs from "fs";
-import { vol } from "memfs";
+import mockfs from "mock-fs";
 import os from "os";
+import mock from "mock-fs";
 
-const nfs = jest.requireActual("fs") as typeof fs;
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
-const PROJECT_DIR = npath.join(
-  npath.join(__dirname, "__stubs__", "fake-project")
-);
+
 const IMAGE_DATA_PATH = npath.join(
   ".slicemachine",
   "assets",
@@ -22,39 +17,45 @@ const IMAGE_DATA_PATH = npath.join(
   "preview.png"
 );
 const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
-const IMAGE_DATA = nfs.readFileSync(
-  npath.join(PROJECT_DIR, IMAGE_DATA_PATH),
-  "utf-8"
-);
-const MODEL_DATA = nfs.readFileSync(
-  npath.join(PROJECT_DIR, MODEL_PATH),
-  "utf-8"
-);
-const SM_DATA = nfs.readFileSync(npath.join(PROJECT_DIR, "sm.json"), "utf-8");
 
 describe("send starter data", () => {
-  jest.mock("fs", () => {
-    return vol;
-  });
-
   afterEach(() => {
-    vol.reset();
+    mock.restore();
   });
 
   const token = "aaaaaaa";
   const repo = "bbbbbbb";
   const base = "https://prismic.io";
   const cookies = `prismic-auth=${token}`;
+  const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
   test("should send slices and images from the file system to prismic", async () => {
-    vol.fromJSON(
-      {
-        [IMAGE_DATA_PATH]: IMAGE_DATA,
-        [MODEL_PATH]: MODEL_DATA,
-        "sm.json": SM_DATA,
+    mockfs({
+      [TMP_DIR]: {
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              npath.join(__dirname, "__stubs__", "fake-project", MODEL_PATH)
+            ),
+            default: {
+              "preview.png": mockfs.load(
+                npath.join(
+                  __dirname,
+                  "__stubs__",
+                  "fake-project",
+                  IMAGE_DATA_PATH
+                )
+              ),
+            },
+          },
+        },
+        "sm.json": JSON.stringify({
+          apiEndpoint: "https://foo-bar.prismic.io/api/v2",
+          libraries: ["@/slices"],
+          framework: "none",
+        }),
       },
-      TMP_DIR
-    );
+    });
 
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
@@ -64,8 +65,6 @@ describe("send starter data", () => {
     });
 
     smApi.get("/slices").reply(200, []);
-
-    const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
     // Mock ACL
     nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
@@ -123,13 +122,8 @@ describe("send starter data", () => {
         if (typeof body !== "object") return false;
         if ("variations" in body === false) return false;
         if (Array.isArray(body.variations) === false) return false;
-        return (
-          (body &&
-            body.variations &&
-            body.variations.length &&
-            imageUrlRegexp.test(body.variations[0].imageUrl)) ||
-          false
-        );
+        if (body.variations.length === 0) return false;
+        return imageUrlRegexp.test(body.variations[0].imageUrl);
       })
       .reply(200);
 
@@ -137,7 +131,9 @@ describe("send starter data", () => {
   });
 
   test("it should warn the user if they have remote slices", async () => {
-    vol.fromJSON({}, TMP_DIR);
+    mockfs({
+      [TMP_DIR]: {},
+    });
 
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
@@ -158,7 +154,9 @@ describe("send starter data", () => {
   });
 
   test("it should do nothin when there is no sm.json", async () => {
-    vol.fromJSON({}, TMP_DIR);
+    mockfs({
+      [TMP_DIR]: {},
+    });
 
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
@@ -174,15 +172,42 @@ describe("send starter data", () => {
   });
 
   test("when run in a partially setup repo (from init) it should do nothing", async () => {
-    vol.fromJSON(
-      {
+    mockfs({
+      [TMP_DIR]: {
         "sm.json": JSON.stringify({
           apiEndpoint: "https://foo-bar.prismic.io/api/v2",
-          libraries: ["~/slices"],
+          libraries: ["@/slices"],
+          framework: "none",
         }),
       },
-      TMP_DIR
-    );
+    });
+
+    // Mock ACL
+    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
+      reqheaders: {
+        repository: repo,
+        Authorization: `Bearer ${token}`,
+        "User-Agent": "slice-machine",
+      },
+    })
+      .get("/prod/create")
+      .reply(200, {
+        values: {
+          url: fakeS3Url,
+          fields: {
+            acl: "public-read",
+            "Content-Disposition": "inline",
+            bucket: "prismic-io",
+            "X-Amz-Algorithm": "a",
+            "X-Amz-Credential": "a",
+            "X-Amz-Date": "a",
+            Policy: "a",
+            "X-Amz-Signature": "a",
+          },
+        },
+        imgixEndpoint: "https://images.prismic.io",
+        err: null,
+      });
 
     const smApi = nock("https://customtypes.prismic.io", {
       reqheaders: {
@@ -198,14 +223,32 @@ describe("send starter data", () => {
   });
 
   test("it can send slices and images to wroom.io", async () => {
-    vol.fromJSON(
-      {
-        [IMAGE_DATA_PATH]: IMAGE_DATA,
-        [MODEL_PATH]: MODEL_DATA,
-        "sm.json": SM_DATA,
+    mockfs({
+      [TMP_DIR]: {
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              npath.join(__dirname, "__stubs__", "fake-project", MODEL_PATH)
+            ),
+            default: {
+              "preview.png": mockfs.load(
+                npath.join(
+                  __dirname,
+                  "__stubs__",
+                  "fake-project",
+                  IMAGE_DATA_PATH
+                )
+              ),
+            },
+          },
+        },
+        "sm.json": JSON.stringify({
+          apiEndpoint: "https://foo-bar.wroom.io/api/v2",
+          libraries: ["@/slices"],
+          framework: "none",
+        }),
       },
-      TMP_DIR
-    );
+    });
 
     const smApi = nock("https://customtypes.wroom.io", {
       reqheaders: {
