@@ -125,7 +125,7 @@ export async function sendStarterData(
   const smJson = retrieveManifest(cwd);
 
   if (smJson.content && smJson.content.libraries) {
-    const libs = Libraries.libraries(cwd, smJson.content.libraries); // change this
+    const libs = Libraries.libraries(cwd, smJson.content.libraries);
 
     const components = libs.reduce<Array<Component>>((acc, lib) => {
       return [...acc, ...lib.components];
