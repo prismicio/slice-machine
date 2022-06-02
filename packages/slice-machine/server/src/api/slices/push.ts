@@ -72,18 +72,6 @@ export async function pushSlice(
 const handler = async (query: SliceBody): Promise<ApiResult> => {
   const { sliceName, from } = query;
   const { env } = await getEnv();
-
-  if (!env.isUserLoggedIn) {
-    console.error("[slice/push] An error occurred while fetching slices.");
-    const message =
-      "Error: Could not fetch remote slices. Please log in to Prismic!";
-    return {
-      err: new Error(message),
-      reason: message,
-      status: 403,
-    };
-  }
-
   const { slices, err } = await getSlices(env.client);
 
   if (err) {
@@ -91,9 +79,8 @@ const handler = async (query: SliceBody): Promise<ApiResult> => {
 
     const errorExplanation =
       err.status === 403
-        ? "Please log in to Prismic!"
-        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `You don\'t have access to the repo \"${env.repo}\"`;
+        ? "Could not fetch remote slices. Please log in to Prismic!"
+        : `You don\'t have access to the repository \"${env.repo}\"`;
 
     return onError(
       err,

@@ -3,8 +3,7 @@ import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/scr
 
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import DefaultClient from "@models/common/http/DefaultClient";
-import FakeClient from "@models/common/http/FakeClient";
+import { Client } from "@lib/models/server/Client";
 import { snakelize } from "@lib/utils/str";
 import { ApiError } from "@lib/models/server/ApiResult";
 import {
@@ -17,7 +16,7 @@ export const createOrUpdate = async (
   slices: ReadonlyArray<SliceSM>,
   sliceName: string,
   model: SliceSM,
-  client: DefaultClient | FakeClient
+  client: Client
 ) => {
   const prismicModel = Slices.fromSM(model);
   if (slices.find((e) => e.id === snakelize(sliceName))) {
