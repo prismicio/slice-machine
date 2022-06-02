@@ -10,7 +10,32 @@ import mime from "mime";
 import fs from "fs";
 import uniqid from "uniqid";
 
-async function setupS3(repository: string, authorization: string) {
+type ApisEndpoints = {
+  Models: string;
+  AclProvider: string;
+};
+
+const ProductionApisEndpoints: ApisEndpoints = {
+  Models: "https://customtypes.prismic.io/",
+  AclProvider: "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
+};
+
+const StageApisEndpoints: ApisEndpoints = {
+  Models: "https://customtypes.wroom.io/",
+  AclProvider: "https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
+};
+
+const getEdnpointsForBase = (base: string): ApisEndpoints => {
+  const url = new URL(base);
+  if (url.hostname === "wroom.io") return StageApisEndpoints;
+  return ProductionApisEndpoints;
+};
+
+async function setupS3(
+  repository: string,
+  authorization: string,
+  alcProvider: string
+) {
   const acl = await axios
     .get<{
       values: {
@@ -19,7 +44,7 @@ async function setupS3(repository: string, authorization: string) {
       };
       imgixEndpoint: string;
       err: null | string;
-    }>("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/create", {
+    }>(alcProvider, {
       headers: {
         repository,
         Authorization: authorization,
@@ -27,8 +52,6 @@ async function setupS3(repository: string, authorization: string) {
       },
     })
     .then((res) => res.data);
-
-  // console.log({ acl });
 
   return async (
     sliceName: string,
@@ -51,11 +74,10 @@ async function setupS3(repository: string, authorization: string) {
     form.append("file", fs.createReadStream(filePath), {
       filename,
     });
-    // console.log({acl})
+
     const res = await axios.post(acl.values.url, form, {
       headers: form.getHeaders(),
     });
-    // console.log({res})
 
     const s3ImageUrl = `${acl.imgixEndpoint}/${key}`;
 
@@ -79,13 +101,14 @@ export async function sendStarterData(
   cookies: string,
   cwd: string
 ) {
-  console.log(base);
-  // console.log({ repository, base, cookies, cwd });
+  const endpoints = getEdnpointsForBase(base);
+
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
   const authorization = `Bearer ${authTokenFromCookie}`;
+
   // type this later as the slices in the api may not be the same as the slices in sm
   const remoteSlices = await axios
-    .get<Array<unknown>>("https://customtypes.prismic.io/slices", {
+    .get<Array<unknown>>(endpoints.Models + "slices", {
       headers: {
         Authorization: authorization,
         repository,
@@ -99,9 +122,7 @@ export async function sendStarterData(
     return Promise.resolve();
   }
 
-  // read sm.json to check for slices, if there are none do nothing :)
   const smJson = retrieveManifest(cwd);
-  // console.log({ smJson });
 
   if (smJson.content && smJson.content.libraries) {
     const libs = Libraries.libraries(cwd, smJson.content.libraries); // change this
@@ -110,8 +131,12 @@ export async function sendStarterData(
       return [...acc, ...lib.components];
     }, []);
 
-    const sendToS3 = await setupS3(repository, authorization);
-    // something is wrong here
+    const sendToS3 = await setupS3(
+      repository,
+      authorization,
+      endpoints.AclProvider
+    );
+
     const modelPromises = components.map(async ({ screenshotPaths, model }) => {
       const variationsReq = model.variations.map(async (variation) => {
         const pathToScreenShot = screenshotPaths[variation.id];
@@ -137,8 +162,9 @@ export async function sendStarterData(
     });
 
     const models = await Promise.all(modelPromises);
+    const insertSlicecsUrl = endpoints.Models + "slices/insert";
     const p = models.map(async (model) => {
-      return axios.post("https://customtypes.prismic.io/slices/insert", model, {
+      return axios.post(insertSlicecsUrl, model, {
         headers: {
           Authorization: authorization,
           repository,
