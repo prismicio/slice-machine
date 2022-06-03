@@ -5,6 +5,7 @@ import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
 import mock from "mock-fs";
+import inquirer from "inquirer";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -127,12 +128,19 @@ describe("send starter data", () => {
       })
       .reply(200);
 
-    await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    expect(result).toBeTruthy();
   });
 
   test("it should warn the user if they have remote slices", async () => {
     mockfs({
-      [TMP_DIR]: {},
+      [TMP_DIR]: {
+        "sm.json": JSON.stringify({
+          apiEndpoint: "https://foo-bar.wroom.io/api/v2",
+          libraries: ["@/slices"],
+          framework: "none",
+        }),
+      },
     });
 
     const smApi = nock("https://customtypes.prismic.io", {
@@ -144,31 +152,22 @@ describe("send starter data", () => {
 
     smApi.get("/slices").reply(200, [{}]);
 
-    const warnSpy = jest
-      .spyOn(console, "warn")
-      .mockImplementation(() => undefined);
+    const promptSpy = jest
+      .spyOn(inquirer, "prompt")
+      .mockResolvedValue({ pushSlices: false });
 
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
-    expect(warnSpy).toHaveBeenCalledWith("Slices Found Do Something");
-    expect(result).toBeUndefined();
+    expect(promptSpy).toHaveBeenCalled();
+    expect(result).toBeTruthy();
   });
 
-  test("it should do nothin when there is no sm.json", async () => {
+  test("it should do nothing when there is no sm.json", async () => {
     mockfs({
       [TMP_DIR]: {},
     });
 
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, []);
-
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
-    expect(result).toBeUndefined();
+    expect(result).toBeFalsy();
   });
 
   test("when run in a partially setup repo (from init) it should do nothing", async () => {
@@ -219,7 +218,7 @@ describe("send starter data", () => {
     smApi.get("/slices").reply(200, []);
 
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
-    expect(result).toBeUndefined();
+    expect(result).toBeTruthy();
   });
 
   test("it can send slices and images to wroom.io", async () => {
@@ -327,6 +326,12 @@ describe("send starter data", () => {
       })
       .reply(200);
 
-    await sendStarterData(repo, "https://wroom.io", cookies, TMP_DIR);
+    const result = await sendStarterData(
+      repo,
+      "https://wroom.io",
+      cookies,
+      TMP_DIR
+    );
+    expect(result).toBeTruthy();
   });
 });

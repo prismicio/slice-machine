@@ -9,6 +9,7 @@ import FormData from "form-data";
 import mime from "mime";
 import fs from "fs";
 import uniqid from "uniqid";
+import * as inquirer from "inquirer";
 
 type ApisEndpoints = {
   Models: string;
@@ -106,6 +107,10 @@ export async function sendStarterData(
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
   const authorization = `Bearer ${authTokenFromCookie}`;
 
+  const smJson = retrieveManifest(cwd);
+
+  if (smJson.exists === false) return Promise.resolve(false);
+
   // type this later as the slices in the api may not be the same as the slices in sm
   const remoteSlices = await axios
     .get<Array<unknown>>(endpoints.Models + "slices", {
@@ -118,11 +123,21 @@ export async function sendStarterData(
 
   if (remoteSlices.length) {
     // do prompt about slices
-    console.warn("Slices Found Do Something");
-    return Promise.resolve();
-  }
 
-  const smJson = retrieveManifest(cwd);
+    const pushAnyway = await inquirer
+      .prompt<{ pushSlices: boolean }>([
+        {
+          type: "confirm",
+          name: "pushSlices",
+          default: false,
+          message:
+            "Your repository already contains Slices. Do you want to continue pushing your local Slices?",
+        },
+      ])
+      .then((res) => res.pushSlices);
+
+    if (pushAnyway === false) return Promise.resolve(true);
+  }
 
   if (smJson.content && smJson.content.libraries) {
     const libs = Libraries.libraries(cwd, smJson.content.libraries);
@@ -177,5 +192,5 @@ export async function sendStarterData(
   }
 
   // generate the library-state.json packages/slice-machine/server/src/api/common/LibrariesState.ts
-  return Promise.resolve();
+  return Promise.resolve(true);
 }
