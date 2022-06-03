@@ -13,4 +13,5 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
   transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
+  testPathIgnorePatterns: ["node_modules", "__tests__/__mocks__"],
 };

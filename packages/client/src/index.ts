@@ -5,16 +5,21 @@ import { UserProfile } from "@slicemachine/core/build/models"
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices"
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType"
 
-import { ApplicationMode } from "models/ApplicationMode"
-import { getAndValidateResponse } from "./utils"
+import { ApplicationMode } from "./models/ApplicationMode"
+import type { UploadParameters } from "./models/UploadParameters";
+import { AclCreateResult } from "./models/Acl"
 import {
   ApisEndpoints,
   ProductionApisEndpoints,
   StageApisEndpoints,
 } from "./models/ApisEndpoints"
-import { upload, UploadParams } from "./utils/upload"
-import { AclCreateResult } from "./models/Acl"
 
+import { getAndValidateResponse } from "./utils"
+import { upload } from "./utils/upload"
+
+
+// exporting models to be used with the Client.
+export { ApplicationMode }
 export class Client {
   apisEndpoints: ApisEndpoints
   repository: string | null
@@ -39,6 +44,7 @@ export class Client {
     }
   }
 
+  // setters to provide flexibility
   updateAuthenticationToken(newToken: string) {
     this.authenticationToken = newToken
   }
@@ -104,7 +110,7 @@ export class Client {
     )
   }
 
-  async getSlice(): Promise<SharedSlice[]> {
+  async getSlices(): Promise<SharedSlice[]> {
     return getAndValidateResponse<SharedSlice[]>(
       this._get(`${this.apisEndpoints.Models}slices`),
       "shared slices",
@@ -138,7 +144,7 @@ export class Client {
 
   async createImagesAcl(): Promise<AclCreateResult> {
     return getAndValidateResponse<AclCreateResult>(
-      this._get(`${this.apisEndpoints.AclProvider}/create`),
+      this._get(`${this.apisEndpoints.AclProvider}create`),
       "acl",
       AclCreateResult
     )
@@ -148,7 +154,7 @@ export class Client {
     return this._post(`${this.apisEndpoints.AclProvider}delete-folder`, { sliceName })
   }
 
-  async uploadImageAcl(params: UploadParams): Promise<number | undefined> {
+  async uploadImageAcl(params: UploadParameters): Promise<number | undefined> {
     return upload(params)
   }
 }

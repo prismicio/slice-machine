@@ -1,14 +1,7 @@
 import fs from "fs";
 import FormData from "form-data";
 import mime from "mime";
-
-export type UploadParams = {
-  url: string;
-  fields: Record<string, string>;
-  key: string;
-  filename: string;
-  pathToFile: string;
-};
+import { UploadParameters } from '../models/UploadParameters';
 
 export function upload({
   url,
@@ -16,7 +9,7 @@ export function upload({
   key,
   filename,
   pathToFile,
-}: UploadParams): Promise<number | undefined> {
+}: UploadParameters): Promise<number | undefined> {
   const fileExtension = filename.split(".").pop();
 
   const form = new FormData();
