@@ -30,6 +30,9 @@ jobs:
       - name: Build slice machine core
         working-directory: ./packages/core
         run: npm run build
+      - name: Build slice machine client
+        working-directory: ./packages/client
+        run: npm run build
       - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
