@@ -33,7 +33,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt, false);
 
     stderr.stop();
 
@@ -62,7 +62,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakeCWD, Models.Frameworks.nuxt, false);
 
     stderr.stop();
 
@@ -95,7 +95,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.react);
+    await installRequiredDependencies(fakedir, Models.Frameworks.react, false);
 
     stderr.stop();
 
@@ -128,7 +128,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.next);
+    await installRequiredDependencies(fakedir, Models.Frameworks.next, false);
 
     stderr.stop();
 
@@ -161,7 +161,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.svelte);
+    await installRequiredDependencies(fakedir, Models.Frameworks.svelte, false);
 
     stderr.stop();
 
@@ -194,7 +194,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.nuxt);
+    await installRequiredDependencies(fakedir, Models.Frameworks.nuxt, false);
 
     stderr.stop();
 
@@ -227,7 +227,7 @@ describe("install required dependency", () => {
 
     stderr.start();
 
-    await installRequiredDependencies(fakedir, Models.Frameworks.vue);
+    await installRequiredDependencies(fakedir, Models.Frameworks.vue, false);
 
     stderr.stop();
 
@@ -235,6 +235,37 @@ describe("install required dependency", () => {
     expect(spy).toHaveBeenCalledWith(
       "npm install --save @prismicio/vue @prismicio/client prismic-dom"
     );
+
+    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain(
+      "✔ Slice Machine was installed successfully"
+    );
+  });
+
+  test("it will not add extra dependencies when told to skip dependencies", async () => {
+    const spy = jest
+      .spyOn(initUtils, "execCommand")
+      .mockImplementation(() => Promise.resolve({ stderr: "", stdout: "" }));
+
+    jest
+      .spyOn(fs, "lstatSync")
+      .mockImplementationOnce(() => {
+        const e = new ErrnoException();
+        e.code = "ENOENT";
+        throw e;
+      })
+      .mockReturnValueOnce({} as fs.Stats);
+
+    const fakedir = path.join(os.tmpdir(), "install-deps");
+
+    stderr.start();
+
+    await installRequiredDependencies(fakedir, Models.Frameworks.vue, true);
+
+    stderr.stop();
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith("npm install");
 
     expect(stderr.output).toContain("Downloading Slice Machine");
     expect(stderr.output).toContain(
