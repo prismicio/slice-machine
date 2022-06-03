@@ -3,6 +3,7 @@ import { parsePrismicAuthToken } from "@slicemachine/core/build/utils/cookie";
 import { retrieveManifest } from "@slicemachine/core/build/node-utils";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import type { Component } from "@slicemachine/core/build/models/Library";
+import { Slices } from "@slicemachine/core/build/models/Slice";
 import snakeCase from "lodash.snakecase";
 import path from "path";
 import FormData from "form-data";
@@ -10,6 +11,7 @@ import mime from "mime";
 import fs from "fs";
 import uniqid from "uniqid";
 import * as inquirer from "inquirer";
+import { logs } from "../utils";
 
 type ApisEndpoints = {
   Models: string;
@@ -113,13 +115,15 @@ export async function sendStarterData(
 
   // type this later as the slices in the api may not be the same as the slices in sm
   const remoteSlices = await axios
-    .get<Array<unknown>>(endpoints.Models + "slices", {
+    .get<Array<{ id: string }>>(endpoints.Models + "slices", {
       headers: {
         Authorization: authorization,
         repository,
       },
     })
-    .then((res) => res.data);
+    .then((res) => {
+      return Array.isArray(res.data) ? res.data.map((model) => model.id) : [];
+    });
 
   if (remoteSlices.length) {
     // do prompt about slices
@@ -138,6 +142,9 @@ export async function sendStarterData(
 
     if (pushAnyway === false) return Promise.resolve(true);
   }
+
+  const spinner = logs.spinner("Pushing existing models to your repository");
+  spinner.start();
 
   if (smJson.content && smJson.content.libraries) {
     const libs = Libraries.libraries(cwd, smJson.content.libraries);
@@ -177,20 +184,38 @@ export async function sendStarterData(
     });
 
     const models = await Promise.all(modelPromises);
-    const insertSliceUrl = endpoints.Models + "slices/insert";
-    const p = models.map(async (model) => {
-      return axios.post(insertSliceUrl, model, {
-        headers: {
-          Authorization: authorization,
-          repository,
-          "User-Agent": "slice-machine",
-        },
-      });
+
+    const p = models.map((model) => {
+      const data = Slices.fromSM(model);
+      const updateOrInsertUrl = `${endpoints.Models}slices/${
+        remoteSlices.includes(model.id) ? "update" : "insert"
+      }`;
+      return axios
+        .post(updateOrInsertUrl, data, {
+          headers: {
+            Authorization: authorization,
+            repository,
+          },
+        })
+        .then((res) => {
+          if (Math.floor(res.status / 100) !== 2) {
+            console.log(
+              `[ERROR: ${res.status}] SENDING SLICE ${model.id} | ${res.statusText}`
+            );
+          }
+        })
+        .catch((err) => {
+          if (err instanceof Error) {
+            console.log(`[ERROR] SENDING SLICE ${err.message}`);
+          } else {
+            console.log(`[ERROR] SENDING SLICE ${String(err)}`);
+          }
+        });
     });
 
     await Promise.all(p);
   }
 
-  // generate the library-state.json packages/slice-machine/server/src/api/common/LibrariesState.ts
+  spinner.succeed();
   return Promise.resolve(true);
 }
