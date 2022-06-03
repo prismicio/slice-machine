@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.0",
+    "@prismicio/types-internal": "^0.2.8",
     "@slicemachine/core": "1.1.10-alpha.0",
     "adm-zip": "^0.5.9",
     "analytics-node": "^6.0.0",

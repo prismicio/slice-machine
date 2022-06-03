@@ -8,6 +8,9 @@ import mock from "mock-fs";
 import inquirer from "inquirer";
 import { stderr } from "stdout-stderr";
 
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { isLeft } from "fp-ts/lib/Either";
+
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
 const IMAGE_DATA_PATH = npath.join(
@@ -30,6 +33,18 @@ describe("send starter data", () => {
   const base = "https://prismic.io";
   const cookies = `prismic-auth=${token}`;
   const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+  function validateS3Body(body: unknown) {
+    if (!body) return false;
+    if (typeof body !== "string") return false;
+    const text = Buffer.from(body, "hex").toString();
+    const keyRegExp =
+      /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
+    const hasKey = keyRegExp.test(text);
+    const fileRegexp = /form-data; name="file"; filename="preview.png"/;
+    const hasFile = fileRegexp.test(text);
+    return hasKey && hasFile;
+  }
 
   test("should send slices and images from the file system to prismic", async () => {
     mockfs({
@@ -96,36 +111,17 @@ describe("send starter data", () => {
       });
 
     // Mock S3
-    nock(fakeS3Url)
-      .post("/", (body) => {
-        if (!body) return false;
-        if (typeof body !== "string") return false;
-        const text = Buffer.from(body, "hex").toString();
-        const keyRegExp =
-          /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
-        const hasKey = keyRegExp.test(text);
-        const fileRegexp = /form-data; name="file"; filename="preview.png"/;
-        const hasFile = fileRegexp.test(text);
-        return hasKey && hasFile;
-      })
-      .reply(204);
+    nock(fakeS3Url).post("/", validateS3Body).reply(204);
 
     const imageUrlRegexp =
       /https:\/\/images.prismic.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
 
-    type Body = {
-      variations: Array<{ imageUrl: string }>;
-    };
-
     smApi
       .post("/slices/insert", (d) => {
-        const body = d as unknown as Body;
-        if (!body) return false;
-        if (typeof body !== "object") return false;
-        if ("variations" in body === false) return false;
-        if (Array.isArray(body.variations) === false) return false;
-        if (body.variations.length === 0) return false;
-        return imageUrlRegexp.test(body.variations[0].imageUrl);
+        const body = SharedSlice.decode(d);
+        if (isLeft(body)) return false;
+        if (body.right.variations.length === 0) return false;
+        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
       })
       .reply(200);
 
@@ -297,41 +293,17 @@ describe("send starter data", () => {
       });
 
     // Mock S3
-    nock(fakeS3Url)
-      .post("/", (body) => {
-        if (!body) return false;
-        if (typeof body !== "string") return false;
-        const text = Buffer.from(body, "hex").toString();
-        const keyRegExp =
-          /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
-        const hasKey = keyRegExp.test(text);
-        const fileRegexp = /form-data; name="file"; filename="preview.png"/;
-        const hasFile = fileRegexp.test(text);
-        return hasKey && hasFile;
-      })
-      .reply(204);
+    nock(fakeS3Url).post("/", validateS3Body).reply(204);
 
     const imageUrlRegexp =
       /https:\/\/images.wroom.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
 
-    type Body = {
-      variations: Array<{ imageUrl: string }>;
-    };
-
     smApi
       .post("/slices/insert", (d) => {
-        const body = d as unknown as Body;
-        if (!body) return false;
-        if (typeof body !== "object") return false;
-        if ("variations" in body === false) return false;
-        if (Array.isArray(body.variations) === false) return false;
-        return (
-          (body &&
-            body.variations &&
-            body.variations.length &&
-            imageUrlRegexp.test(body.variations[0].imageUrl)) ||
-          false
-        );
+        const body = SharedSlice.decode(d);
+        if (isLeft(body)) return false;
+        if (body.right.variations.length === 0) return false;
+        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
       })
       .reply(200);
 
@@ -418,41 +390,17 @@ describe("send starter data", () => {
       });
 
     // Mock S3
-    nock(fakeS3Url)
-      .post("/", (body) => {
-        if (!body) return false;
-        if (typeof body !== "string") return false;
-        const text = Buffer.from(body, "hex").toString();
-        const keyRegExp =
-          /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
-        const hasKey = keyRegExp.test(text);
-        const fileRegexp = /form-data; name="file"; filename="preview.png"/;
-        const hasFile = fileRegexp.test(text);
-        return hasKey && hasFile;
-      })
-      .reply(204);
+    nock(fakeS3Url).post("/", validateS3Body).reply(204);
 
     const imageUrlRegexp =
       /https:\/\/images.wroom.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
 
-    type Body = {
-      variations: Array<{ imageUrl: string }>;
-    };
-
     smApi
       .post("/slices/update", (d) => {
-        const body = d as unknown as Body;
-        if (!body) return false;
-        if (typeof body !== "object") return false;
-        if ("variations" in body === false) return false;
-        if (Array.isArray(body.variations) === false) return false;
-        return (
-          (body &&
-            body.variations &&
-            body.variations.length &&
-            imageUrlRegexp.test(body.variations[0].imageUrl)) ||
-          false
-        );
+        const body = SharedSlice.decode(d);
+        if (isLeft(body)) return false;
+        if (body.right.variations.length === 0) return false;
+        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
       })
       .reply(200);
 
