@@ -90,7 +90,10 @@ export class Client {
       this._get(`${this.apisEndpoints.Authentication}refreshtoken?token=${this.authenticationToken}`),
       "refreshed authentication token",
       t.string
-    )
+    ).then(newToken => {
+      this.updateAuthenticationToken(newToken)
+      return newToken
+    })
   }
 
   async profile(): Promise<UserProfile> {
