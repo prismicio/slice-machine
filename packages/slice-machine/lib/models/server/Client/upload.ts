@@ -2,19 +2,21 @@ import fs from "fs";
 import FormData from "form-data";
 import mime from "mime";
 
-function upload({
+export type UploadParams = {
+  url: string;
+  fields: Record<string, string>;
+  key: string;
+  filename: string;
+  pathToFile: string;
+};
+
+export function upload({
   url,
   fields,
   key,
   filename,
   pathToFile,
-}: {
-  url: string;
-  fields: { [key: string]: string };
-  key: string;
-  filename: string;
-  pathToFile: string;
-}): Promise<number | undefined> {
+}: UploadParams): Promise<number | undefined> {
   const fileExtension = filename.split(".").pop();
 
   const form = new FormData();
@@ -34,5 +36,3 @@ function upload({
     });
   });
 }
-
-export default upload;

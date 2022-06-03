@@ -14,6 +14,7 @@ import { AnalyticsBrowser } from "@segment/analytics-next";
 import Tracker from "../../src/tracker";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
+global.console = { ...global.console, error: jest.fn() };
 
 const server = setupServer(
   rest.post("/api/custom-types/save", (_, res, ctx) => {

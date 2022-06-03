@@ -1,9 +1,12 @@
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import FakeClient from "@lib/models/common/http/FakeClient";
+import { ApplicationMode } from "@lib/models/server/ApplicationMode";
+import { Client } from "@lib/models/server/Client";
 import { Frameworks } from "@slicemachine/core/build/models";
 
+export const fakeAuthenticationToken = "fakeAuthenticationToken";
+
 const backendEnvironment: BackendEnvironment = {
-  isUserLoggedIn: false,
+  applicationMode: ApplicationMode.PROD,
   cwd: "/test",
   manifest: {
     apiEndpoint: "https://myFakeRepo.prismic.io/api/v2",
@@ -19,7 +22,12 @@ const backendEnvironment: BackendEnvironment = {
   mockConfig: {},
   framework: Frameworks.next,
   baseUrl: "https://fakebase.io",
-  client: new FakeClient(),
+  repo: "fakeRepository",
+  client: new Client(
+    ApplicationMode.PROD,
+    "fakeRepository",
+    fakeAuthenticationToken
+  ),
 };
 
 export default backendEnvironment;

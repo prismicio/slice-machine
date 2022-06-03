@@ -1,11 +1,13 @@
 import PrismicData from "./PrismicData";
 import type { Models } from "@slicemachine/core";
-import DefaultClient from "./http/DefaultClient";
-import FakeClient from "./http/FakeClient";
 import { PackageChangelog } from "./versions";
 import { PackageManager } from "./PackageManager";
 
+import { ApplicationMode } from "../server/ApplicationMode";
+import { Client } from "../server/Client";
+
 export interface BackendEnvironment {
+  applicationMode: ApplicationMode;
   cwd: string;
   prismicData: PrismicData;
   manifest: Models.Manifest;
@@ -15,9 +17,7 @@ export interface BackendEnvironment {
   mockConfig: any;
   framework: Models.Frameworks;
   baseUrl: string;
-  // Here to replace the fake client
-  isUserLoggedIn: boolean;
-  client: DefaultClient | FakeClient;
+  client: Client;
 }
 
 export interface FrontEndEnvironment {

@@ -1,7 +1,5 @@
-import { FakeResponse } from "../common/http/FakeClient";
-
 export type ApiError = {
-  err: Response | FakeResponse | Error;
+  err: Response | Error;
   status: number;
   reason: string;
 };

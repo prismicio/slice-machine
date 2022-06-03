@@ -1,6 +1,8 @@
 import MockSlice from "../../../lib/mock/Slice";
 import faker from "@faker-js/faker";
 
+global.console = { ...global.console, error: jest.fn() };
+
 jest.mock("lorem-ipsum", () => {
   return {
     __edModule: true,
