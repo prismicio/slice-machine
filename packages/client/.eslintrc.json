@@ -17,5 +17,8 @@
     "plugin:jest/recommended",
     "eslint-config-prettier"
   ],
-  "ignorePatterns": ["build"]
+  "ignorePatterns": ["build"],
+  "rules": {
+    "jest/no-mocks-import": "off"
+  }
 }
