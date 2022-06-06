@@ -29,7 +29,7 @@
     "bundle": "npm run build && npm run export-build",
     "lint": "eslint --cache --cache-location .caches/eslint --cache-strategy content --ext .ts,.tsx,.js,.jsx .",
     "lint:precommit": "eslint",
-    "audit": "better-npm-audit audit -l high -p -x 1070404",
+    "audit": "better-npm-audit audit -l high -p",
     "audit-fix": "npm audit fix"
   },
   "bin": {
@@ -67,7 +67,6 @@
     "lorem-ipsum": "^2.0.3",
     "mime": "^2.5.2",
     "module-alias": "^2.2.2",
-    "multer": "^1.4.2",
     "node-fetch": "^2.6.7",
     "neverthrow": "^4.2.1",
     "npm-registry-fetch": "^12.0.1",
