@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from "axios";
+import axios, { AxiosError, AxiosPromise } from "axios";
 import * as t from "io-ts";
 
 import { UserProfile } from "@slicemachine/core/build/models";
@@ -6,6 +6,8 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/s
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
 import { ApplicationMode } from "./models/ApplicationMode";
+import type { ClientError } from "./models/ClientError";
+import { getStatus, getMessage } from "./models/ClientError";
 import type { UploadParameters } from "./models/UploadParameters";
 import { AclCreateResult } from "./models/Acl";
 import {
@@ -18,7 +20,7 @@ import { getAndValidateResponse } from "./utils";
 import { upload } from "./utils/upload";
 
 // exporting models to be used with the Client.
-export { ApplicationMode };
+export { ApplicationMode, ClientError };
 export class Client {
   apisEndpoints: ApisEndpoints;
   repository: string | null;
@@ -76,7 +78,14 @@ export class Client {
   }
 
   _post(url: string, data: Record<string, unknown>): AxiosPromise {
-    return this._fetch("post", url, data);
+    return this._fetch("post", url, data).catch((error: Error | AxiosError) => {
+      const status: number = getStatus(error);
+      const message: string = getMessage(error);
+
+      // Making sure the error is typed
+      const clientError: ClientError = { status, message }
+      return Promise.reject(clientError);
+    });
   }
 
   async validateAuthenticationToken(): Promise<boolean> {
@@ -84,10 +93,15 @@ export class Client {
       `${this.apisEndpoints.Authentication}validate?token=${this.authenticationToken}`
     )
       .then(() => true)
-      .catch((error) => {
-        if (axios.isAxiosError(error) && error.response?.status == 401)
-          return false;
-        else throw error;
+      .catch((error: Error | AxiosError) => {
+        const status: number = getStatus(error);
+        if (status == 401) return false
+
+        const message: string = getMessage(error);
+
+        // Making sure the error is typed
+        const clientError: ClientError = { status, message }
+        return Promise.reject(clientError);
       });
   }
 

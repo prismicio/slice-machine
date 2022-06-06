@@ -1,6 +1,7 @@
 import axios, { AxiosPromise } from "axios";
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
+import { ClientError, getStatus } from '../models/ClientError';
 
 export function getAndValidateResponse<Expected>(
   getRequest: AxiosPromise,
@@ -16,14 +17,18 @@ export function getAndValidateResponse<Expected>(
       )(decoder.decode(response.data));
     })
     .catch((error: Error | string) => {
-      if (axios.isAxiosError(error) && error.response)
-        return Promise.reject(
-          `Unable to retrieve ${ressource} with status code ${error.response.status}`
-        );
-      else if (typeof error == "string") return Promise.reject(error);
-      else
-        return Promise.reject(
-          `Unable to retrieve ${ressource}: ${error.message}`
-        );
+      const status: number = typeof error == "string"
+        ? 500
+        : getStatus(error);
+ 
+      const message: string = axios.isAxiosError(error) && error.response
+        ? `Unable to retrieve ${ressource} with status code ${error.response.status}`
+        : typeof error == "string"
+          ? error
+          : `Unable to retrieve ${ressource}: ${error.message}`
+
+      // Making sure the error is typed
+      const clientError: ClientError = { status, message }
+      return Promise.reject(clientError);
     });
 }

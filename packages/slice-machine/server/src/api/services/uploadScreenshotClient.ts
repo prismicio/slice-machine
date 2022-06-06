@@ -8,7 +8,6 @@ import { ApiError } from "@lib/models/server/ApiResult";
 import { s3DefaultPrefix } from "@lib/consts";
 import { onError } from "../common/error";
 import { SliceSM } from "@slicemachine/core/build/models";
-import { AclCreateResult } from "@lib/models/server/Client/Acl";
 
 export const purge = async (
   env: BackendEnvironment,
@@ -17,15 +16,17 @@ export const purge = async (
 ): Promise<{ err?: ApiError }> => {
   if (slices.find((e) => e.id === snakelize(sliceName))) {
     console.log("\n[slice/push]: purging images folder");
-    const deleteRes = await env.client.deleteImagesFolderAcl({
-      sliceName: snakelize(sliceName),
-    });
-    if (deleteRes.status > 209) {
-      const msg =
-        "[slice/push] An error occurred while purging slice folder - please contact support";
-      console.error(msg);
-      return { err: onError(null, msg) };
-    }
+
+    return env.client
+      .deleteImagesFolderAcl(snakelize(sliceName))
+      .then(() => ({}))
+      .catch(() => {
+        const msg =
+          "[slice/push] An error occurred while purging slice folder - please contact support";
+        console.error(msg);
+
+        return { err: onError(msg) };
+      });
   }
 
   return {};
@@ -39,7 +40,7 @@ export const upload = async (
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
   console.log("[slice/push]: uploading variation preview");
 
-  const aclResult: AclCreateResult = await env.client.createImagesAcl();
+  const aclResult = await env.client.createImagesAcl();
 
   // An error happened in the ACL creation
   const errorMessage: string | undefined =
@@ -47,7 +48,7 @@ export const upload = async (
   if (errorMessage) {
     console.error(errorMessage);
     console.error(`Full error: ${JSON.stringify(aclResult)}`);
-    return { err: onError(null, errorMessage) };
+    return { err: onError(errorMessage) };
   }
 
   const {
@@ -75,7 +76,7 @@ export const upload = async (
     console.error(msg);
     postStatus && console.error(`Error code: "${postStatus}"`);
 
-    return { err: onError(null, msg) };
+    return { err: onError(msg) };
   }
 
   return { s3ImageUrl };

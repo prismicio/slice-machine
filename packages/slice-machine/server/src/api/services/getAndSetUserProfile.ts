@@ -1,4 +1,4 @@
-import { Client } from "@lib/models/server/Client";
+import { Client } from "@slicemachine/client";
 import { UserProfile } from "@slicemachine/core/build/models";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 

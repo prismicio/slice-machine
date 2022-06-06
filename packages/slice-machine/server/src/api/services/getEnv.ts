@@ -6,15 +6,11 @@ import {
 } from "parse-domain";
 
 import { Models } from "@slicemachine/core";
+import { Client, ApplicationMode } from "@slicemachine/client";
 import { Framework } from "@slicemachine/core/build/node-utils";
 
 import type { BackendEnvironment } from "@lib/models/common/Environment";
 import type { ConfigErrors } from "@lib/models/server/ServerState";
-import { Client } from "@lib/models/server/Client";
-import {
-  ApplicationMode,
-  getApplicationMode,
-} from "@lib/models/server/ApplicationMode";
 import { getPackageChangelog } from "@lib/env/versions";
 import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
 import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
@@ -55,6 +51,15 @@ function extractRepo(parsedRepo: ParseResult): string {
     default:
       return "";
   }
+}
+
+export function getApplicationMode(
+  apiEndpoint: Models.Manifest["apiEndpoint"]
+): ApplicationMode {
+  if (apiEndpoint.includes("prismic.io")) return ApplicationMode.PROD;
+  else if (apiEndpoint.includes("wroom.io")) return ApplicationMode.STAGE;
+  else if (apiEndpoint.includes("wroom.test")) return ApplicationMode.DEV;
+  else throw new Error(`Unknown application mode for ${apiEndpoint}`);
 }
 
 export default async function getEnv(

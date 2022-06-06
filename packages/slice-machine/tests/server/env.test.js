@@ -3,12 +3,7 @@ import { Volume } from "memfs";
 
 import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
-
-import {
-  ProductionApisEndpoints,
-  StageApisEndpoints,
-} from "../../lib/models/server/Client/ApisEndpoints";
-import { ApplicationMode } from "../../lib/models/server/ApplicationMode";
+import { ApplicationMode } from "@slicemachine/client";
 
 import os from "os";
 
@@ -234,76 +229,6 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.framework).toEqual("vanillajs");
-  });
-
-  test("it's client should use autentication token from .prismic", async () => {
-    fs.reset();
-    fs.use(
-      Volume.fromJSON(
-        {
-          "sm.json": JSON.stringify({
-            apiEndpoint: "https://api-1.prismic.io/api/v2",
-            framework: "next",
-          }),
-          "package.json": "{}",
-        },
-        TMP
-      )
-    );
-
-    fs.use(
-      Volume.fromJSON(
-        {
-          ".prismic": JSON.stringify({
-            base: "https://prismic.io",
-            cookies: "prismic-auth=biscuits",
-          }),
-        },
-        os.homedir()
-      )
-    );
-
-    const { env } = await getEnv(TMP);
-    expect(env.client.authenticationToken).toEqual("biscuits");
-  });
-
-  test("it's client should use production apisEndpoints", async () => {
-    fs.reset();
-    fs.use(
-      Volume.fromJSON(
-        {
-          "sm.json": JSON.stringify({
-            apiEndpoint: "https://api-1.prismic.io/api/v2",
-            framework: "next",
-          }),
-          "package.json": "{}",
-        },
-        TMP
-      )
-    );
-
-    const { env } = await getEnv(TMP);
-    expect(env.client.apisEndpoints).toEqual(ProductionApisEndpoints);
-  });
-
-  test("it's client should use staging apisEndpoints", async () => {
-    fs.reset();
-    fs.use(
-      Volume.fromJSON(
-        {
-          "sm.json": JSON.stringify({
-            apiEndpoint: "https://api-1.wroom.io/api/v2",
-            framework: "next",
-          }),
-          "package.json": "{}",
-        },
-        TMP
-      )
-    );
-
-    const { env } = await getEnv(TMP);
-
-    expect(env.client.apisEndpoints).toEqual(StageApisEndpoints);
   });
 
   test("it's application mode should be production", async () => {

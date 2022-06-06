@@ -39,6 +39,7 @@
     "@babel/register": "^7.17.7",
     "@faker-js/faker": "^6.0.0",
     "@prismicio/types-internal": "^0.2.7",
+    "@slicemachine/client": "1.1.10-alpha.0",
     "@slicemachine/core": "1.1.10-alpha.0",
     "@svgr/webpack": "^5.4.0",
     "atob": "^2.1.2",

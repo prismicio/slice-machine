@@ -4,7 +4,7 @@ import { getAndSetUserProfile } from "../../server/src/api/services/getAndSetUse
 import { vol } from "memfs";
 import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/models";
-import fetchMock from "fetch-mock";
+import nock from "nock";
 import path from "path";
 
 jest.mock(`fs`, () => {
@@ -15,7 +15,7 @@ jest.mock(`fs`, () => {
 describe("setShortId", () => {
   afterEach(() => {
     vol.reset();
-    fetchMock.reset();
+    nock.cleanAll();
   });
 
   test("it should set the short ID and the intercom hash", async () => {
@@ -29,10 +29,9 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
-      status: 200,
-      body: JSON.stringify(MockedUserProfile),
-    });
+    nock("https://user.internal-prismic.io")
+      .get("/profile")
+      .reply(200, JSON.stringify(MockedUserProfile));
 
     const res = await getAndSetUserProfile(MockedBackendEnv.client);
     expect(res).toEqual(MockedUserProfile);
@@ -62,13 +61,13 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
-      status: 200,
-      body: {},
-    });
+    nock("https://user.internal-prismic.io").get("/profile").reply(200, {});
 
     await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
-      "Unable to parse profile: {}"
+      {
+        message: "Unable to parse user profile: {}",
+        status: 500,
+      }
     );
   });
 
@@ -83,12 +82,13 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
-      status: 403,
-    });
+    nock("https://user.internal-prismic.io").get("/profile").reply(403);
 
     await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
-      "Unable to retrieve profile with status code 403"
+      {
+        message: "Unable to retrieve user profile with status code 403",
+        status: 403,
+      }
     );
   });
 });
