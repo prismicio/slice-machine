@@ -1,105 +1,107 @@
-import axios, { AxiosPromise } from "axios"
-import * as t from 'io-ts'
+import axios, { AxiosPromise } from "axios";
+import * as t from "io-ts";
 
-import { UserProfile } from "@slicemachine/core/build/models"
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices"
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType"
+import { UserProfile } from "@slicemachine/core/build/models";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
-import { ApplicationMode } from "./models/ApplicationMode"
+import { ApplicationMode } from "./models/ApplicationMode";
 import type { UploadParameters } from "./models/UploadParameters";
-import { AclCreateResult } from "./models/Acl"
+import { AclCreateResult } from "./models/Acl";
 import {
   ApisEndpoints,
   ProductionApisEndpoints,
   StageApisEndpoints,
-} from "./models/ApisEndpoints"
+} from "./models/ApisEndpoints";
 
-import { getAndValidateResponse } from "./utils"
-import { upload } from "./utils/upload"
-
+import { getAndValidateResponse } from "./utils";
+import { upload } from "./utils/upload";
 
 // exporting models to be used with the Client.
-export { ApplicationMode }
+export { ApplicationMode };
 export class Client {
-  apisEndpoints: ApisEndpoints
-  repository: string | null
-  authenticationToken: string
+  apisEndpoints: ApisEndpoints;
+  repository: string | null;
+  authenticationToken: string;
 
   constructor(
     applicationMode: ApplicationMode,
     repository: string | null,
     authenticationToken: string
   ) {
-    this.repository = repository
-    this.authenticationToken = authenticationToken
+    this.repository = repository;
+    this.authenticationToken = authenticationToken;
 
     if (applicationMode === ApplicationMode.PROD)
-      this.apisEndpoints = ProductionApisEndpoints
+      this.apisEndpoints = ProductionApisEndpoints;
     else if (applicationMode === ApplicationMode.STAGE)
-      this.apisEndpoints = StageApisEndpoints
+      this.apisEndpoints = StageApisEndpoints;
     else {
-
       // Dev
-      this.apisEndpoints = ProductionApisEndpoints
+      this.apisEndpoints = ProductionApisEndpoints;
     }
   }
 
   // setters to provide flexibility
   updateAuthenticationToken(newToken: string) {
-    this.authenticationToken = newToken
+    this.authenticationToken = newToken;
   }
 
   updateRepository(repository: string | null) {
-    this.repository = repository
+    this.repository = repository;
   }
 
   // private methods
   _fetch(
-    method: 'get' | 'post',
+    method: "get" | "post",
     url: string,
     data?: Record<string, unknown>
   ): AxiosPromise {
     const headers = {
       Authorization: `Bearer ${this.authenticationToken}`,
       "User-Agent": "slice-machine",
-      ...this.repository ? { repository: this.repository } : {}
-    }
+      ...(this.repository ? { repository: this.repository } : {}),
+    };
 
     return axios({
       method,
       url,
       data,
-      headers
-    })
+      headers,
+    });
   }
 
   _get(url: string): AxiosPromise {
-    return this._fetch('get', url)
+    return this._fetch("get", url);
   }
 
   _post(url: string, data: Record<string, unknown>): AxiosPromise {
-    return this._fetch('post', url, data)
+    return this._fetch("post", url, data);
   }
 
   async validateAuthenticationToken(): Promise<boolean> {
     return this._get(
       `${this.apisEndpoints.Authentication}validate?token=${this.authenticationToken}`
-    ).then(() => true)
-    .catch(error => {
-      if (axios.isAxiosError(error) && error.response?.status == 401) return false
-      else throw error
-    })
+    )
+      .then(() => true)
+      .catch((error) => {
+        if (axios.isAxiosError(error) && error.response?.status == 401)
+          return false;
+        else throw error;
+      });
   }
 
   async refreshAuthenticationToken(): Promise<string> {
     return getAndValidateResponse<string>(
-      this._get(`${this.apisEndpoints.Authentication}refreshtoken?token=${this.authenticationToken}`),
+      this._get(
+        `${this.apisEndpoints.Authentication}refreshtoken?token=${this.authenticationToken}`
+      ),
       "refreshed authentication token",
       t.string
-    ).then(newToken => {
-      this.updateAuthenticationToken(newToken)
-      return newToken
-    })
+    ).then((newToken) => {
+      this.updateAuthenticationToken(newToken);
+      return newToken;
+    });
   }
 
   async profile(): Promise<UserProfile> {
@@ -107,7 +109,7 @@ export class Client {
       this._get(`${this.apisEndpoints.Users}profile`),
       "user profile",
       UserProfile
-    )
+    );
   }
 
   async getSlices(): Promise<SharedSlice[]> {
@@ -115,7 +117,7 @@ export class Client {
       this._get(`${this.apisEndpoints.Models}slices`),
       "shared slices",
       t.array(SharedSlice)
-    )
+    );
   }
 
   async getCustomTypes(): Promise<CustomType[]> {
@@ -123,23 +125,29 @@ export class Client {
       this._get(`${this.apisEndpoints.Models}customtypes`),
       "custom types",
       t.array(CustomType)
-    )
+    );
   }
 
   async insertCustomType(customType: CustomType): Promise<AxiosPromise> {
-    return this._post(`${this.apisEndpoints.Models}customtypes/insert`, customType)
+    return this._post(
+      `${this.apisEndpoints.Models}customtypes/insert`,
+      customType
+    );
   }
 
   async updateCustomType(customType: CustomType): Promise<AxiosPromise> {
-    return this._post(`${this.apisEndpoints.Models}customtypes/update`, customType)
+    return this._post(
+      `${this.apisEndpoints.Models}customtypes/update`,
+      customType
+    );
   }
 
   async insertSlice(sharedSlice: SharedSlice): Promise<AxiosPromise> {
-    return this._post(`${this.apisEndpoints.Models}slices/insert`, sharedSlice)
+    return this._post(`${this.apisEndpoints.Models}slices/insert`, sharedSlice);
   }
 
   async updateSlice(sharedSlice: SharedSlice): Promise<AxiosPromise> {
-    return this._post(`${this.apisEndpoints.Models}slices/update`, sharedSlice)
+    return this._post(`${this.apisEndpoints.Models}slices/update`, sharedSlice);
   }
 
   async createImagesAcl(): Promise<AclCreateResult> {
@@ -147,14 +155,16 @@ export class Client {
       this._get(`${this.apisEndpoints.AclProvider}create`),
       "acl",
       AclCreateResult
-    )
+    );
   }
 
   async deleteImagesFolderAcl(sliceName: string): Promise<AxiosPromise> {
-    return this._post(`${this.apisEndpoints.AclProvider}delete-folder`, { sliceName })
+    return this._post(`${this.apisEndpoints.AclProvider}delete-folder`, {
+      sliceName,
+    });
   }
 
   async uploadImageAcl(params: UploadParameters): Promise<number | undefined> {
-    return upload(params)
+    return upload(params);
   }
 }

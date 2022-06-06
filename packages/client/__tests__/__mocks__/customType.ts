@@ -1,4 +1,4 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType"
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const customTypeMock: CustomType = {
@@ -17,7 +17,7 @@ export const customTypeMock: CustomType = {
         },
         type: WidgetTypes.RichText,
       },
-    }
+    },
   },
-  status: true
-}
+  status: true,
+};

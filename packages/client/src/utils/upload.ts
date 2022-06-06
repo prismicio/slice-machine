@@ -1,7 +1,7 @@
 import fs from "fs";
 import FormData from "form-data";
 import mime from "mime";
-import { UploadParameters } from '../models/UploadParameters';
+import { UploadParameters } from "../models/UploadParameters";
 
 export function upload({
   url,

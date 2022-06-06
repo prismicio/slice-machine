@@ -1,59 +1,86 @@
-import nock from 'nock';
+import nock from "nock";
 
-import { Client, ApplicationMode } from '../src';
-import { ProductionApisEndpoints, StageApisEndpoints } from '../src/models/ApisEndpoints'
+import { Client, ApplicationMode } from "../src";
+import {
+  ProductionApisEndpoints,
+  StageApisEndpoints,
+} from "../src/models/ApisEndpoints";
 
-import { userProfileMock } from './__mocks__/userProfile';
-import { sharedSliceMock } from './__mocks__/sharedSlice';
-import { customTypeMock } from './__mocks__/customType';
-import { aclCreateResultMock } from './__mocks__/aclCreateResult';
+import { userProfileMock } from "./__mocks__/userProfile";
+import { sharedSliceMock } from "./__mocks__/sharedSlice";
+import { customTypeMock } from "./__mocks__/customType";
+import { aclCreateResultMock } from "./__mocks__/aclCreateResult";
 
-const repository = "dragonborn"
-const authenticationToken = "biscuit"
+const repository = "dragonborn";
+const authenticationToken = "biscuit";
 
-describe('Client - Internal properties', () => {
-  it('should set the authentication token and repository on the constructor', () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+describe("Client - Internal properties", () => {
+  it("should set the authentication token and repository on the constructor", () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    expect(client.repository).toBe(repository)
-    expect(client.authenticationToken).toBe(authenticationToken)
-  })  
-
-  it('should use production endpoints', () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
-
-    expect(client.apisEndpoints).toEqual(ProductionApisEndpoints);    
+    expect(client.repository).toBe(repository);
+    expect(client.authenticationToken).toBe(authenticationToken);
   });
 
-  it('should use staging endpoints', () => {
-    const client = new Client(ApplicationMode.STAGE, repository, authenticationToken)
+  it("should use production endpoints", () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    expect(client.apisEndpoints).toEqual(StageApisEndpoints);    
+    expect(client.apisEndpoints).toEqual(ProductionApisEndpoints);
   });
 
-  it('should update the internal repository', () => {
-    const client = new Client(ApplicationMode.STAGE, repository, authenticationToken)
-    expect(client.repository).toBe(repository)
-    client.updateRepository('damn')
-    expect(client.repository).toBe('damn')   
+  it("should use staging endpoints", () => {
+    const client = new Client(
+      ApplicationMode.STAGE,
+      repository,
+      authenticationToken
+    );
+
+    expect(client.apisEndpoints).toEqual(StageApisEndpoints);
   });
 
-  it('should update the internal authentication token', () => {
-    const client = new Client(ApplicationMode.STAGE, repository, authenticationToken)
-    expect(client.authenticationToken).toBe(authenticationToken)
-    client.updateAuthenticationToken('damn')
-    expect(client.authenticationToken).toBe('damn')   
+  it("should update the internal repository", () => {
+    const client = new Client(
+      ApplicationMode.STAGE,
+      repository,
+      authenticationToken
+    );
+    expect(client.repository).toBe(repository);
+    client.updateRepository("damn");
+    expect(client.repository).toBe("damn");
+  });
+
+  it("should update the internal authentication token", () => {
+    const client = new Client(
+      ApplicationMode.STAGE,
+      repository,
+      authenticationToken
+    );
+    expect(client.authenticationToken).toBe(authenticationToken);
+    client.updateAuthenticationToken("damn");
+    expect(client.authenticationToken).toBe("damn");
   });
 });
 
-describe('Client - Calls', () => {
+describe("Client - Calls", () => {
   afterEach(() => {
     nock.cleanAll();
   });
 
   // -- VALIDATE AUTHENTICATION TOKEN -- //
-  it('validateAuthenticationToken - should validate that the token is ok', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("validateAuthenticationToken - should validate that the token is ok", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/validate")
@@ -63,8 +90,12 @@ describe('Client - Calls', () => {
     await expect(client.validateAuthenticationToken()).resolves.toBe(true);
   });
 
-  it('validateAuthenticationToken - should reply that the token is invalid', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("validateAuthenticationToken - should reply that the token is invalid", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/validate")
@@ -72,10 +103,14 @@ describe('Client - Calls', () => {
       .reply(401);
 
     await expect(client.validateAuthenticationToken()).resolves.toBe(false);
-  }); 
-  
-  it('validateAuthenticationToken - should throw for any other errors', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  });
+
+  it("validateAuthenticationToken - should throw for any other errors", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/validate")
@@ -83,49 +118,65 @@ describe('Client - Calls', () => {
       .reply(500);
 
     await expect(client.validateAuthenticationToken()).rejects.toThrow();
-  }); 
-
+  });
 
   // -- REFRESH AUTHENTICATION TOKEN -- //
-  it('refreshAuthenticationToken - should refresh the token and return the new one', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("refreshAuthenticationToken - should refresh the token and return the new one", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/refreshtoken")
       .query({ token: client.authenticationToken })
-      .reply(200, 'newToken');
+      .reply(200, "newToken");
 
-    await expect(client.refreshAuthenticationToken()).resolves.toBe('newToken');
+    await expect(client.refreshAuthenticationToken()).resolves.toBe("newToken");
   });
 
-  it('refreshAuthenticationToken - should set the new token internally on refresh', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("refreshAuthenticationToken - should set the new token internally on refresh", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/refreshtoken")
       .query({ token: client.authenticationToken })
-      .reply(200, 'newToken');
+      .reply(200, "newToken");
 
-    expect(client.authenticationToken).toBe(authenticationToken)
-    await expect(client.refreshAuthenticationToken()).resolves.toBe('newToken');
-    expect(client.authenticationToken).toBe('newToken')
+    expect(client.authenticationToken).toBe(authenticationToken);
+    await expect(client.refreshAuthenticationToken()).resolves.toBe("newToken");
+    expect(client.authenticationToken).toBe("newToken");
   });
 
-  it('refreshAuthenticationToken - should throw if no token is returned by the authentication api', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("refreshAuthenticationToken - should throw if no token is returned by the authentication api", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Authentication)
       .get("/refreshtoken")
       .query({ token: client.authenticationToken })
-      .reply(200, { newToken: 'newToken' });
+      .reply(200, { newToken: "newToken" });
 
-    await expect(client.refreshAuthenticationToken()).rejects.toContain('Unable to parse');
+    await expect(client.refreshAuthenticationToken()).rejects.toContain(
+      "Unable to parse"
+    );
   });
-
 
   // -- PROFILE -- //
-  it('profile - should succeed returning a user profile', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("profile - should succeed returning a user profile", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Users)
       .get("/profile")
@@ -134,30 +185,39 @@ describe('Client - Calls', () => {
     await expect(client.profile()).resolves.toEqual(userProfileMock);
   });
 
-  it('profile - should throw if the user profile format is not right', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("profile - should throw if the user profile format is not right", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Users)
       .get("/profile")
       .reply(200, { name: "blabla" });
 
-    await expect(client.profile()).rejects.toContain('Unable to parse');
+    await expect(client.profile()).rejects.toContain("Unable to parse");
   });
 
-  it('profile - should throw if it gets a bad response', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("profile - should throw if it gets a bad response", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Users)
-      .get("/profile")
-      .reply(404);
+    nock(client.apisEndpoints.Users).get("/profile").reply(404);
 
-    await expect(client.profile()).rejects.toContain('Unable to retrieve');
+    await expect(client.profile()).rejects.toContain("Unable to retrieve");
   });
-
 
   // -- GET SLICES -- //
-  it('getSlices - should succeed returning a shared slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getSlices - should succeed returning a shared slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Models)
       .get("/slices")
@@ -168,30 +228,39 @@ describe('Client - Calls', () => {
     expect(result[0]).toEqual(sharedSliceMock);
   });
 
-  it('getSlices - should throw if the user profile format is not right', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getSlices - should throw if the user profile format is not right", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Models)
       .get("/slices")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.getSlices()).rejects.toContain('Unable to parse');
+    await expect(client.getSlices()).rejects.toContain("Unable to parse");
   });
 
-  it('getSlices - should throw if it gets a bad response', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getSlices - should throw if it gets a bad response", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .get("/slices")
-      .reply(404);
+    nock(client.apisEndpoints.Models).get("/slices").reply(404);
 
-    await expect(client.getSlices()).rejects.toContain('Unable to retrieve');
+    await expect(client.getSlices()).rejects.toContain("Unable to retrieve");
   });
-
 
   // -- GET CUSTOM TYPES -- //
-  it('getCustomTypes - should succeed returning a custom type', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getCustomTypes - should succeed returning a custom type", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Models)
       .get("/customtypes")
@@ -202,165 +271,205 @@ describe('Client - Calls', () => {
     expect(result[0]).toEqual(customTypeMock);
   });
 
-  it('getCustomTypes - should throw if the user profile format is not right', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getCustomTypes - should throw if the user profile format is not right", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.Models)
       .get("/customtypes")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.getCustomTypes()).rejects.toContain('Unable to parse');
+    await expect(client.getCustomTypes()).rejects.toContain("Unable to parse");
   });
 
-  it('getCustomTypes - should throw if it gets a bad response', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("getCustomTypes - should throw if it gets a bad response", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .get("/customtypes")
-      .reply(404);
+    nock(client.apisEndpoints.Models).get("/customtypes").reply(404);
 
-    await expect(client.getCustomTypes()).rejects.toContain('Unable to retrieve');
+    await expect(client.getCustomTypes()).rejects.toContain(
+      "Unable to retrieve"
+    );
   });
-
 
   // -- INSERT CUSTOM TYPE -- //
-  it('insertCustomType - should succeed inserting a custom type', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("insertCustomType - should succeed inserting a custom type", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/customtypes/insert")
-      .reply(200);
+    nock(client.apisEndpoints.Models).post("/customtypes/insert").reply(200);
 
-      await expect(client.insertCustomType(customTypeMock)).resolves.not.toThrow();
+    await expect(
+      client.insertCustomType(customTypeMock)
+    ).resolves.not.toThrow();
   });
 
-  it('insertCustomType - should fail inserting a custom type', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("insertCustomType - should fail inserting a custom type", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/customtypes/insert")
-      .reply(500);
+    nock(client.apisEndpoints.Models).post("/customtypes/insert").reply(500);
 
-      await expect(client.insertCustomType(customTypeMock)).rejects.toThrow();
+    await expect(client.insertCustomType(customTypeMock)).rejects.toThrow();
   });
-
 
   // -- UPDATE CUSTOM TYPE -- //
-  it('updateCustomType - should succeed updating a custom type', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("updateCustomType - should succeed updating a custom type", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/customtypes/update")
-      .reply(200);
+    nock(client.apisEndpoints.Models).post("/customtypes/update").reply(200);
 
-      await expect(client.updateCustomType(customTypeMock)).resolves.not.toThrow();
+    await expect(
+      client.updateCustomType(customTypeMock)
+    ).resolves.not.toThrow();
   });
 
-  it('updateCustomType - should fail updating a custom type', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("updateCustomType - should fail updating a custom type", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/customtypes/update")
-      .reply(500);
+    nock(client.apisEndpoints.Models).post("/customtypes/update").reply(500);
 
-      await expect(client.updateCustomType(customTypeMock)).rejects.toThrow();
+    await expect(client.updateCustomType(customTypeMock)).rejects.toThrow();
   });
-
 
   // -- INSERT SLICE -- //
-  it('insertSlice - should succeed inserting a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("insertSlice - should succeed inserting a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/slices/insert")
-      .reply(200);
+    nock(client.apisEndpoints.Models).post("/slices/insert").reply(200);
 
-      await expect(client.insertSlice(sharedSliceMock)).resolves.not.toThrow();
+    await expect(client.insertSlice(sharedSliceMock)).resolves.not.toThrow();
   });
 
-  it('insertSlice - should fail inserting a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("insertSlice - should fail inserting a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/slices/insert")
-      .reply(500);
+    nock(client.apisEndpoints.Models).post("/slices/insert").reply(500);
 
-      await expect(client.insertSlice(sharedSliceMock)).rejects.toThrow();
+    await expect(client.insertSlice(sharedSliceMock)).rejects.toThrow();
   });
-
 
   // -- UPDATE SLICE -- //
-  it('updateSlice - should succeed updating a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("updateSlice - should succeed updating a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/slices/update")
-      .reply(200);
+    nock(client.apisEndpoints.Models).post("/slices/update").reply(200);
 
-      await expect(client.updateSlice(sharedSliceMock)).resolves.not.toThrow();
+    await expect(client.updateSlice(sharedSliceMock)).resolves.not.toThrow();
   });
 
-  it('updateSlice - should fail updating a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("updateSlice - should fail updating a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.Models)
-      .post("/slices/update")
-      .reply(500);
+    nock(client.apisEndpoints.Models).post("/slices/update").reply(500);
 
-      await expect(client.updateSlice(sharedSliceMock)).rejects.toThrow();
+    await expect(client.updateSlice(sharedSliceMock)).rejects.toThrow();
   });
-
 
   // -- CREATE IMAGE ACL -- //
-  it('createImagesAcl - should succeed creating an ACL', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("createImagesAcl - should succeed creating an ACL", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.AclProvider)
       .get("/create")
       .reply(200, aclCreateResultMock);
 
-      await expect(client.createImagesAcl()).resolves.toEqual(aclCreateResultMock);
+    await expect(client.createImagesAcl()).resolves.toEqual(
+      aclCreateResultMock
+    );
   });
 
-  it('createImagesAcl - should throw if the ACL return is not the right format', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("createImagesAcl - should throw if the ACL return is not the right format", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
     nock(client.apisEndpoints.AclProvider)
       .get("/create")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.createImagesAcl()).rejects.toContain('Unable to parse');
+    await expect(client.createImagesAcl()).rejects.toContain("Unable to parse");
   });
 
-  it('createImagesAcl - should throw if it gets a bad response', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("createImagesAcl - should throw if it gets a bad response", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.AclProvider)
-      .get("/create")
-      .reply(404);
+    nock(client.apisEndpoints.AclProvider).get("/create").reply(404);
 
-    await expect(client.createImagesAcl()).rejects.toContain('Unable to retrieve');
+    await expect(client.createImagesAcl()).rejects.toContain(
+      "Unable to retrieve"
+    );
   });
-
 
   // -- DELETE IMAGE FOLDER ACL -- //
-  it('deleteImagesFolderAcl - should succeed updating a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("deleteImagesFolderAcl - should succeed updating a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.AclProvider)
-      .post("/delete-folder")
-      .reply(200);
+    nock(client.apisEndpoints.AclProvider).post("/delete-folder").reply(200);
 
-      await expect(client.deleteImagesFolderAcl('slice')).resolves.not.toThrow();
+    await expect(client.deleteImagesFolderAcl("slice")).resolves.not.toThrow();
   });
 
-  it('deleteImagesFolderAcl - should fail updating a slice', async () => {
-    const client = new Client(ApplicationMode.PROD, repository, authenticationToken)
+  it("deleteImagesFolderAcl - should fail updating a slice", async () => {
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
 
-    nock(client.apisEndpoints.AclProvider)
-      .post("/delete-folder")
-      .reply(500);
+    nock(client.apisEndpoints.AclProvider).post("/delete-folder").reply(500);
 
-      await expect(client.deleteImagesFolderAcl('slice')).rejects.toThrow();
+    await expect(client.deleteImagesFolderAcl("slice")).rejects.toThrow();
   });
 });

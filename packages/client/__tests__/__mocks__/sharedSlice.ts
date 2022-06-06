@@ -1,4 +1,7 @@
-import { SharedSlice, SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  SharedSlice,
+  SlicesTypes,
+} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const sharedSliceMock: SharedSlice = {
@@ -229,4 +232,4 @@ export const sharedSliceMock: SharedSlice = {
       items: {},
     },
   ],
-}
+};
