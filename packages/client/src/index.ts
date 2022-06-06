@@ -83,7 +83,7 @@ export class Client {
       const message: string = getMessage(error);
 
       // Making sure the error is typed
-      const clientError: ClientError = { status, message }
+      const clientError: ClientError = { status, message };
       return Promise.reject(clientError);
     });
   }
@@ -95,12 +95,12 @@ export class Client {
       .then(() => true)
       .catch((error: Error | AxiosError) => {
         const status: number = getStatus(error);
-        if (status == 401) return false
+        if (status == 401) return false;
 
         const message: string = getMessage(error);
 
         // Making sure the error is typed
-        const clientError: ClientError = { status, message }
+        const clientError: ClientError = { status, message };
         return Promise.reject(clientError);
       });
   }

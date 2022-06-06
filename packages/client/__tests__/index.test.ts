@@ -1,6 +1,6 @@
 import nock from "nock";
 
-import { Client, ApplicationMode } from "../src";
+import { Client, ApplicationMode, ClientError } from "../src";
 import {
   ProductionApisEndpoints,
   StageApisEndpoints,
@@ -117,7 +117,10 @@ describe("Client - Calls", () => {
       .query({ token: client.authenticationToken })
       .reply(500);
 
-    await expect(client.validateAuthenticationToken()).rejects.toThrow();
+    expect.assertions(1);
+    return client.validateAuthenticationToken().catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 
   // -- REFRESH AUTHENTICATION TOKEN -- //
@@ -165,9 +168,10 @@ describe("Client - Calls", () => {
       .query({ token: client.authenticationToken })
       .reply(200, { newToken: "newToken" });
 
-    await expect(client.refreshAuthenticationToken()).rejects.toContain(
-      "Unable to parse"
-    );
+    expect.assertions(1);
+    return client.refreshAuthenticationToken().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   // -- PROFILE -- //
@@ -196,7 +200,10 @@ describe("Client - Calls", () => {
       .get("/profile")
       .reply(200, { name: "blabla" });
 
-    await expect(client.profile()).rejects.toContain("Unable to parse");
+    expect.assertions(1);
+    return client.profile().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   it("profile - should throw if it gets a bad response", async () => {
@@ -208,7 +215,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Users).get("/profile").reply(404);
 
-    await expect(client.profile()).rejects.toContain("Unable to retrieve");
+    expect.assertions(1);
+    return client.profile().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to retrieve");
+    });
   });
 
   // -- GET SLICES -- //
@@ -239,7 +249,10 @@ describe("Client - Calls", () => {
       .get("/slices")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.getSlices()).rejects.toContain("Unable to parse");
+    expect.assertions(1);
+    return client.getSlices().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   it("getSlices - should throw if it gets a bad response", async () => {
@@ -251,7 +264,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).get("/slices").reply(404);
 
-    await expect(client.getSlices()).rejects.toContain("Unable to retrieve");
+    expect.assertions(1);
+    return client.getSlices().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to retrieve");
+    });
   });
 
   // -- GET CUSTOM TYPES -- //
@@ -282,7 +298,10 @@ describe("Client - Calls", () => {
       .get("/customtypes")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.getCustomTypes()).rejects.toContain("Unable to parse");
+    expect.assertions(1);
+    return client.getCustomTypes().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   it("getCustomTypes - should throw if it gets a bad response", async () => {
@@ -294,9 +313,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).get("/customtypes").reply(404);
 
-    await expect(client.getCustomTypes()).rejects.toContain(
-      "Unable to retrieve"
-    );
+    expect.assertions(1);
+    return client.getCustomTypes().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to retrieve");
+    });
   });
 
   // -- INSERT CUSTOM TYPE -- //
@@ -323,7 +343,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).post("/customtypes/insert").reply(500);
 
-    await expect(client.insertCustomType(customTypeMock)).rejects.toThrow();
+    expect.assertions(1);
+    return client.insertCustomType(customTypeMock).catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 
   // -- UPDATE CUSTOM TYPE -- //
@@ -350,7 +373,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).post("/customtypes/update").reply(500);
 
-    await expect(client.updateCustomType(customTypeMock)).rejects.toThrow();
+    expect.assertions(1);
+    return client.updateCustomType(customTypeMock).catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 
   // -- INSERT SLICE -- //
@@ -375,7 +401,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).post("/slices/insert").reply(500);
 
-    await expect(client.insertSlice(sharedSliceMock)).rejects.toThrow();
+    expect.assertions(1);
+    return client.insertSlice(sharedSliceMock).catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 
   // -- UPDATE SLICE -- //
@@ -400,7 +429,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.Models).post("/slices/update").reply(500);
 
-    await expect(client.updateSlice(sharedSliceMock)).rejects.toThrow();
+    expect.assertions(1);
+    return client.updateSlice(sharedSliceMock).catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 
   // -- CREATE IMAGE ACL -- //
@@ -431,7 +463,10 @@ describe("Client - Calls", () => {
       .get("/create")
       .reply(200, [{ name: "blabla" }]);
 
-    await expect(client.createImagesAcl()).rejects.toContain("Unable to parse");
+    expect.assertions(1);
+    return client.createImagesAcl().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   it("createImagesAcl - should throw if it gets a bad response", async () => {
@@ -443,6 +478,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.AclProvider).get("/create").reply(404);
 
+    expect.assertions(1);
+    return client.createImagesAcl().catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to retrieve");
+    });
     await expect(client.createImagesAcl()).rejects.toContain(
       "Unable to retrieve"
     );
@@ -470,6 +509,9 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.AclProvider).post("/delete-folder").reply(500);
 
-    await expect(client.deleteImagesFolderAcl("slice")).rejects.toThrow();
+    expect.assertions(1);
+    return client.deleteImagesFolderAcl("slice").catch((e: ClientError) => {
+      expect(e.status).toBe(500);
+    });
   });
 });

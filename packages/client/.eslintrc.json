@@ -19,6 +19,7 @@
   ],
   "ignorePatterns": ["build"],
   "rules": {
-    "jest/no-mocks-import": "off"
+    "jest/no-mocks-import": "off",
+    "jest/no-conditional-expect": "off"
   }
 }

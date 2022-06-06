@@ -2,6 +2,7 @@ import nock from "nock";
 import axios from "axios";
 import * as t from "io-ts";
 import { getAndValidateResponse } from "../../src/utils";
+import { ClientError } from "../../src";
 
 describe("Utils - getAndValidateResponse", () => {
   afterEach(() => {
@@ -25,9 +26,14 @@ describe("Utils - getAndValidateResponse", () => {
 
     nock(url).get("/").reply(200, expectedResult);
 
-    await expect(
-      getAndValidateResponse<number>(axios.get(url), "fakeRessource", t.number)
-    ).rejects.toContain("Unable to parse");
+    expect.assertions(1);
+    return getAndValidateResponse<number>(
+      axios.get(url),
+      "fakeRessource",
+      t.number
+    ).catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to parse");
+    });
   });
 
   it("should fail to the ressource the ressource", async () => {
@@ -35,8 +41,13 @@ describe("Utils - getAndValidateResponse", () => {
 
     nock(url).get("/").reply(404);
 
-    await expect(
-      getAndValidateResponse<number>(axios.get(url), "fakeRessource", t.number)
-    ).rejects.toContain("Unable to retrieve");
+    expect.assertions(1);
+    return getAndValidateResponse<number>(
+      axios.get(url),
+      "fakeRessource",
+      t.number
+    ).catch((e: ClientError) => {
+      expect(e.message).toContain("Unable to retrieve");
+    });
   });
 });
