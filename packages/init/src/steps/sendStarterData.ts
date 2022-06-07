@@ -60,7 +60,7 @@ async function setupS3(
     sliceName: string,
     variationId: string,
     filePath: string
-  ): Promise<string> => {
+  ): Promise<string | null> => {
     const filename = path.basename(filePath);
     const key = `${repository}/shared-slices/${snakeCase(
       sliceName
@@ -78,23 +78,34 @@ async function setupS3(
       filename,
     });
 
-    const res = await axios.post(acl.values.url, form, {
-      headers: form.getHeaders(),
-    });
+    const errorMessage = `[slice/push] An error occurred while uploading preview images for ${sliceName}-${variationId} - please contact support`;
 
-    const s3ImageUrl = `${acl.imgixEndpoint}/${key}`;
-
-    if (res.status !== 204) {
-      const msg =
-        "[slice/push] An error occurred while uploading files - please contact support";
-      console.error(msg);
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      console.error(`Error code: "${res.status}"`);
-
-      throw new Error(msg);
-    }
-
-    return s3ImageUrl;
+    return axios
+      .post(acl.values.url, form, {
+        headers: form.getHeaders(),
+      })
+      .then((res) => {
+        if (res.status !== 204) {
+          console.log(errorMessage);
+          console.log(`Error code: "${res.status}"`);
+          return null;
+        } else {
+          return `${acl.imgixEndpoint}/${key}`;
+        }
+      })
+      .catch((err) => {
+        console.log(errorMessage);
+        if (axios.isAxiosError(err) && err.response) {
+          console.log(
+            `[Error: ${err.response.status}] ${err.response.statusText}`
+          );
+        } else if (err instanceof Error) {
+          console.log(err.message);
+        } else {
+          console.log(String(err));
+        }
+        return null;
+      });
   };
 }
 
@@ -169,10 +180,10 @@ export async function sendStarterData(
             model.id,
             variation.id,
             pathToScreenShot.path
-          ).catch(() => "");
+          );
           return {
             ...variation,
-            ...(imageUrl ? { imageUrl } : {}), // is image url needed by the api?
+            ...(imageUrl ? { imageUrl } : {}),
           };
         } else {
           return variation;
