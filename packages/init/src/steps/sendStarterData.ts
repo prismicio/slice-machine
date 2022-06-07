@@ -199,18 +199,15 @@ export async function sendStarterData(
             repository,
           },
         })
-        .then((res) => {
-          if (Math.floor(res.status / 100) !== 2) {
-            console.log(
-              `[ERROR: ${res.status}] SENDING SLICE ${model.id} | ${res.statusText}`
-            );
-          }
-        })
         .catch((err) => {
-          if (err instanceof Error) {
-            console.log(`[ERROR] SENDING SLICE ${err.message}`);
+          if (axios.isAxiosError(err) && err.response) {
+            console.log(
+              `[ERROR: ${err.response.status}] SENDING SLICE ${model.id} | ${err.response.statusText}`
+            );
+          } else if (err instanceof Error) {
+            console.log(`[ERROR] SENDING SLICE ${model.id} ${err.message}`);
           } else {
-            console.log(`[ERROR] SENDING SLICE ${String(err)}`);
+            console.log(`[ERROR] SENDING SLICE ${model.id} ${String(err)}`);
           }
         });
     });
