@@ -64,7 +64,7 @@ export async function installRequiredDependencies(
 ): Promise<void> {
   const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
 
-  const spinner = logs.spinner("Downloading Slice Machine");
+  const spinner = logs.spinner("Installing Slice Machine");
   spinner.start();
 
   const stderr = await (skipDependencies

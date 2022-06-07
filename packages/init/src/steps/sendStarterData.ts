@@ -143,7 +143,9 @@ export async function sendStarterData(
     if (pushAnyway === false) return Promise.resolve(true);
   }
 
-  const spinner = logs.spinner("Pushing existing models to your repository");
+  const spinner = logs.spinner(
+    "Pushing existing Slice models to your repository"
+  );
   spinner.start();
 
   if (smJson.content && smJson.content.libraries) {

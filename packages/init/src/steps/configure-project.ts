@@ -18,8 +18,9 @@ export async function configureProject(
   sliceLibPath: string[] = [],
   tracking = true
 ): Promise<void> {
+  const frameworkName = NodeUtils.Framework.fancyName(framework.value);
   const spinner = logs.spinner(
-    `Configuring your ${framework.value} & Prismic project...`
+    `Configuring your ${frameworkName} and Prismic project...`
   );
   spinner.start();
 
