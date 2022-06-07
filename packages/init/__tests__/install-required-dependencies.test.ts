@@ -40,7 +40,7 @@ describe("install required dependency", () => {
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(`yarn add -D ${CONSTS.SM_PACKAGE_NAME}`);
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -71,7 +71,7 @@ describe("install required dependency", () => {
       `npm install --save-dev ${CONSTS.SM_PACKAGE_NAME}`
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -104,7 +104,7 @@ describe("install required dependency", () => {
       "npm install --save @prismicio/react @prismicio/client @prismicio/helpers"
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -137,7 +137,7 @@ describe("install required dependency", () => {
       "npm install --save @prismicio/react @prismicio/client @prismicio/slice-simulator-react @prismicio/helpers"
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -170,7 +170,7 @@ describe("install required dependency", () => {
       "npm install --save prismic-dom @prismicio/client"
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -203,7 +203,7 @@ describe("install required dependency", () => {
       "npm install --save @nuxtjs/prismic @prismicio/slice-simulator-vue"
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -236,7 +236,7 @@ describe("install required dependency", () => {
       "npm install --save @prismicio/vue @prismicio/client prismic-dom"
     );
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
@@ -267,7 +267,7 @@ describe("install required dependency", () => {
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith("npm install");
 
-    expect(stderr.output).toContain("Downloading Slice Machine");
+    expect(stderr.output).toContain("Installing Slice Machine");
     expect(stderr.output).toContain(
       "✔ Slice Machine was installed successfully"
     );
