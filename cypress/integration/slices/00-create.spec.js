@@ -1,7 +1,7 @@
 describe("Create Slices", () => {
   const name = "TestSlice";
   const lib = "slices--ecommerce"; // name of the first lib of the next project.
-  const path = 'e2e-projects/next/slices/ecommerce'; // path to th library 
+  const path = "e2e-projects/next/slices/ecommerce"; // path to th library
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
