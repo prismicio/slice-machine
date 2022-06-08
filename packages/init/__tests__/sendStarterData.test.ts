@@ -141,6 +141,23 @@ describe("send starter data", () => {
           libraries: ["@/slices"],
           framework: "none",
         }),
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              npath.join(__dirname, "__stubs__", "fake-project", MODEL_PATH)
+            ),
+            default: {
+              "preview.png": mockfs.load(
+                npath.join(
+                  __dirname,
+                  "__stubs__",
+                  "fake-project",
+                  IMAGE_DATA_PATH
+                )
+              ),
+            },
+          },
+        },
       },
     });
 

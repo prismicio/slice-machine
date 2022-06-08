@@ -10,6 +10,7 @@ import {
   Component,
   ComponentInfo,
   VariationSM,
+  SliceSM,
 } from "@slicemachine/core/build/models";
 
 export type ALC = {
@@ -63,7 +64,7 @@ function createS3Key(
   sliceName: string,
   variationId: string,
   filename: string
-) {
+): string {
   return `${repository}/shared-slices/${snakeCase(sliceName)}/${snakeCase(
     variationId
   )}-${uniqid()}/${filename}`;
@@ -114,7 +115,7 @@ async function maybeAddImageUrlToVariation(
   modelId: string,
   pathToScreenShot: string,
   variation: VariationSM
-) {
+): Promise<VariationSM> {
   const imageUrl = await sendVariationPreviewToS3(
     acl,
     repository,
@@ -136,7 +137,7 @@ async function addImageUrlsToVariations(
   modelId: string,
   screenshotPaths: ComponentInfo["screenshotPaths"],
   variations: Array<VariationSM>
-) {
+): Promise<Array<VariationSM>> {
   return Promise.all(
     variations.map(async (variation) => {
       const screenshot = screenshotPaths[variation.id];
@@ -157,7 +158,7 @@ async function maybeUpdateModelVariationsWithImageUrl(
   acl: ALC,
   repository: string,
   component: Component
-) {
+): Promise<SliceSM> {
   const { screenshotPaths, model } = component;
   const variations = await addImageUrlsToVariations(
     acl,
@@ -177,7 +178,7 @@ export async function addImageUrlsToModelVariations(
   acl: ALC,
   repository: string,
   components: Array<Component>
-) {
+): Promise<Array<SliceSM>> {
   return Promise.all(
     components.map(async (component) =>
       maybeUpdateModelVariationsWithImageUrl(acl, repository, component)

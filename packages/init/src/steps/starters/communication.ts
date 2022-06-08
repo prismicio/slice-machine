@@ -26,7 +26,7 @@ async function sendModelToPrismic(
   customTypesApiEndpoint: string,
   remoteSliceIds: Array<string>,
   model: SliceSM
-) {
+): Promise<void> {
   const data = Slices.fromSM(model);
   const updateOrInsertUrl = `${customTypesApiEndpoint}slices/${
     remoteSliceIds.includes(model.id) ? "update" : "insert"
@@ -38,6 +38,9 @@ async function sendModelToPrismic(
         Authorization: authorization,
         repository,
       },
+    })
+    .then(() => {
+      return;
     })
     .catch((err) => {
       if (axios.isAxiosError(err) && err.response) {
@@ -58,7 +61,7 @@ export async function sendManyModelsToPrismic(
   customTypesApiEndpoint: string,
   remoteSliceIds: Array<string>,
   models: Array<SliceSM>
-) {
+): Promise<void> {
   return Promise.all(
     models.map((model) =>
       sendModelToPrismic(
@@ -69,5 +72,7 @@ export async function sendManyModelsToPrismic(
         model
       )
     )
-  );
+  ).then(() => {
+    return;
+  });
 }

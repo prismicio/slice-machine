@@ -1,16 +1,9 @@
 import { parsePrismicAuthToken } from "@slicemachine/core/build/utils/cookie";
 import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import type { Component } from "@slicemachine/core/build/models/Library";
 import path from "path";
-import { logs } from "../utils";
 import { getEndpointsFromBase } from "./starters/endpoints";
-import { createAcl, addImageUrlsToModelVariations } from "./starters/s3";
-import { promptToPushSlices } from "./starters/prompts";
-import {
-  getRemoteSliceIds,
-  sendManyModelsToPrismic,
-} from "./starters/communication";
+import { sendSlices } from "./starters/slices";
 
 export async function sendStarterData(
   repository: string,
@@ -29,54 +22,9 @@ export async function sendStarterData(
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
   const authorization = `Bearer ${authTokenFromCookie}`;
 
-  // type this later as the slices in the api may not be the same as the slices in sm
-  const remoteSlices = await getRemoteSliceIds(
-    endpoints.Models,
-    repository,
-    authorization
-  );
+  if (!smJson.content || !smJson.content.libraries)
+    return Promise.resolve(false);
 
-  if (remoteSlices.length) {
-    // do prompt about slices
-
-    const pushAnyway = await promptToPushSlices();
-
-    if (pushAnyway === false) return Promise.resolve(true);
-  }
-
-  const spinner = logs.spinner(
-    "Pushing existing Slice models to your repository"
-  );
-  spinner.start();
-
-  if (smJson.content && smJson.content.libraries) {
-    const libs = Libraries.libraries(cwd, smJson.content.libraries);
-
-    const acl = await createAcl(
-      endpoints.AclProvider,
-      repository,
-      authorization
-    );
-
-    const components = libs.reduce<Array<Component>>((acc, lib) => {
-      return [...acc, ...lib.components];
-    }, []);
-
-    const models = await addImageUrlsToModelVariations(
-      acl,
-      repository,
-      components
-    );
-
-    await sendManyModelsToPrismic(
-      repository,
-      authorization,
-      endpoints.Models,
-      remoteSlices,
-      models
-    );
-  }
-
-  spinner.succeed();
-  return Promise.resolve(true);
+  const libs = Libraries.libraries(cwd, smJson.content.libraries);
+  return sendSlices(endpoints, repository, authorization, libs);
 }
