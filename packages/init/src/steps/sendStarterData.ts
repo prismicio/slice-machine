@@ -86,8 +86,8 @@ async function setupS3(
       })
       .then((res) => {
         if (res.status !== 204) {
-          console.log(errorMessage);
-          console.log(`Error code: "${res.status}"`);
+          logs.writeError(errorMessage);
+          logs.writeError(`${res.status}: ${res.statusText}`);
           return null;
         } else {
           return `${acl.imgixEndpoint}/${key}`;
@@ -96,13 +96,11 @@ async function setupS3(
       .catch((err) => {
         console.log(errorMessage);
         if (axios.isAxiosError(err) && err.response) {
-          console.log(
-            `[Error: ${err.response.status}] ${err.response.statusText}`
-          );
+          logs.writeError(`${err.response.status}: ${err.response.statusText}`);
         } else if (err instanceof Error) {
-          console.log(err.message);
+          logs.writeError(err.message);
         } else {
-          console.log(String(err));
+          logs.writeError(String(err));
         }
         return null;
       });
@@ -215,13 +213,13 @@ export async function sendStarterData(
         })
         .catch((err) => {
           if (axios.isAxiosError(err) && err.response) {
-            console.log(
-              `[ERROR: ${err.response.status}] SENDING SLICE ${model.id} | ${err.response.statusText}`
+            logs.writeError(
+              `SENDING SLICE ${model.id} | [${err.response.status}]: ${err.response.statusText}`
             );
           } else if (err instanceof Error) {
-            console.log(`[ERROR] SENDING SLICE ${model.id} ${err.message}`);
+            logs.writeError(`SENDING SLICE ${model.id} ${err.message}`);
           } else {
-            console.log(`[ERROR] SENDING SLICE ${model.id} ${String(err)}`);
+            logs.writeError(`SENDING SLICE ${model.id} ${String(err)}`);
           }
         });
     });
