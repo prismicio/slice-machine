@@ -94,7 +94,7 @@ async function setupS3(
         }
       })
       .catch((err) => {
-        console.log(errorMessage);
+        logs.writeError(errorMessage);
         if (axios.isAxiosError(err) && err.response) {
           logs.writeError(`${err.response.status}: ${err.response.statusText}`);
         } else if (err instanceof Error) {
@@ -199,32 +199,32 @@ export async function sendStarterData(
       })
     );
 
-    const p = models.map((model) => {
-      const data = Slices.fromSM(model);
-      const updateOrInsertUrl = `${endpoints.Models}slices/${
-        remoteSlices.includes(model.id) ? "update" : "insert"
-      }`;
-      return axios
-        .post(updateOrInsertUrl, data, {
-          headers: {
-            Authorization: authorization,
-            repository,
-          },
-        })
-        .catch((err) => {
-          if (axios.isAxiosError(err) && err.response) {
-            logs.writeError(
-              `SENDING SLICE ${model.id} | [${err.response.status}]: ${err.response.statusText}`
-            );
-          } else if (err instanceof Error) {
-            logs.writeError(`SENDING SLICE ${model.id} ${err.message}`);
-          } else {
-            logs.writeError(`SENDING SLICE ${model.id} ${String(err)}`);
-          }
-        });
-    });
-
-    await Promise.all(p);
+    await Promise.all(
+      models.map((model) => {
+        const data = Slices.fromSM(model);
+        const updateOrInsertUrl = `${endpoints.Models}slices/${
+          remoteSlices.includes(model.id) ? "update" : "insert"
+        }`;
+        return axios
+          .post(updateOrInsertUrl, data, {
+            headers: {
+              Authorization: authorization,
+              repository,
+            },
+          })
+          .catch((err) => {
+            if (axios.isAxiosError(err) && err.response) {
+              logs.writeError(
+                `SENDING SLICE ${model.id} | [${err.response.status}]: ${err.response.statusText}`
+              );
+            } else if (err instanceof Error) {
+              logs.writeError(`SENDING SLICE ${model.id} ${err.message}`);
+            } else {
+              logs.writeError(`SENDING SLICE ${model.id} ${String(err)}`);
+            }
+          });
+      })
+    );
   }
 
   spinner.succeed();
