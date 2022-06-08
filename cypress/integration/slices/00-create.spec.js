@@ -1,10 +1,11 @@
 describe("Create Slices", () => {
   const name = "TestSlice";
   const lib = "slices--ecommerce"; // name of the first lib of the next project.
+  const path = 'e2e-projects/next/slices/ecommerce'; // path to th library 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `${lib}/${name}`);
+    cy.task("rmrf", `${path}/${name}`);
   });
 
   it("A user can create a slice", () => {
@@ -16,12 +17,12 @@ describe("Create Slices", () => {
 
     cy.get("input[data-cy=slice-name-input]").type(name);
     cy.get("[data-cy=create-slice-modal]").submit();
-    cy.location("pathname", { timeout: 5000 }).should(
+    cy.location("pathname", { timeout: 10000 }).should(
       "eq",
       `/${lib}/${name}/default`
     );
     cy.visit(`/${lib}/${name}/default`);
-    cy.location("pathname", { timeout: 5000 }).should(
+    cy.location("pathname", { timeout: 10000 }).should(
       "eq",
       `/${lib}/${name}/default`
     );

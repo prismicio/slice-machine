@@ -18,12 +18,12 @@ describe("Duplicate Slices", () => {
 
     cy.get("input[data-cy=slice-name-input]").type(name);
     cy.get("[data-cy=create-slice-modal]").submit();
-    cy.location("pathname", { timeout: 5000 }).should(
+    cy.location("pathname", { timeout: 20000 }).should(
       "eq",
       `/${lib}/${name}/default`
     );
     cy.visit(`/${lib}/${name}/default`);
-    cy.location("pathname", { timeout: 5000 }).should(
+    cy.location("pathname", { timeout: 20000 }).should(
       "eq",
       `/${lib}/${name}/default`
     );
