@@ -1,7 +1,9 @@
+import { ApplicationMode } from "@slicemachine/client";
 import util from "util";
 import { exec } from "child_process";
 export * as logs from "./logs";
 export { Auth } from "./auth";
+export * from "./client";
 
 export function findArgument(args: string[], name: string): string | undefined {
   const flagIndex: number = args.indexOf(`--${name}`);
@@ -18,3 +20,18 @@ export function findArgument(args: string[], name: string): string | undefined {
 export const execCommand: (
   command: string
 ) => Promise<{ stderr: string; stdout: string }> = util.promisify(exec);
+
+export function getApplicationMode(
+  argumentValue: string | undefined
+): ApplicationMode | null {
+  switch (argumentValue) {
+    case ApplicationMode.PROD:
+      return ApplicationMode.PROD;
+    case ApplicationMode.STAGE:
+      return ApplicationMode.STAGE;
+    case ApplicationMode.DEV:
+      return ApplicationMode.DEV;
+    default:
+      return null;
+  }
+}

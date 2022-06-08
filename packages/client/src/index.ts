@@ -5,22 +5,27 @@ import { UserProfile } from "@slicemachine/core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
-import { ApplicationMode } from "./models/ApplicationMode";
-import type { ClientError } from "./models/ClientError";
-import { getStatus, getMessage } from "./models/ClientError";
-import type { UploadParameters } from "./models/UploadParameters";
-import { AclCreateResult } from "./models/Acl";
+import type { ClientError, UploadParameters } from "./models";
 import {
+  ApplicationMode,
+  getStatus,
+  getMessage,
   ApisEndpoints,
   ProductionApisEndpoints,
   StageApisEndpoints,
-} from "./models/ApisEndpoints";
+  AclCreateResult,
+} from "./models";
 
 import { getAndValidateResponse } from "./utils";
 import { upload } from "./utils/upload";
 
 // exporting models to be used with the Client.
-export { ApplicationMode, ClientError };
+export * from "./models";
+
+// exporting utils so the client calls can be replicated for speficic calls to a consumer.
+export * from "./utils";
+
+// exporting the client itself.
 export class Client {
   apisEndpoints: ApisEndpoints;
   repository: string | null;
@@ -57,19 +62,19 @@ export class Client {
   _fetch(
     method: "get" | "post",
     url: string,
-    data?: Record<string, unknown>
+    data?: Record<string, unknown>,
+    headers?: Record<string, unknown>
   ): AxiosPromise {
-    const headers = {
-      Authorization: `Bearer ${this.authenticationToken}`,
-      "User-Agent": "slice-machine",
-      ...(this.repository ? { repository: this.repository } : {}),
-    };
-
     return axios({
       method,
       url,
       data,
-      headers,
+      headers: {
+        Authorization: `Bearer ${this.authenticationToken}`,
+        "User-Agent": "slice-machine",
+        ...(this.repository ? { repository: this.repository } : {}),
+        ...headers,
+      },
     });
   }
 

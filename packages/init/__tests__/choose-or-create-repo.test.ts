@@ -17,11 +17,15 @@ import { createRepository } from "../src/utils/create-repo";
 
 import nock from "nock";
 import { Models } from "@slicemachine/core";
+import { ApplicationMode } from "@slicemachine/client";
+import { Client } from "../src/utils";
 
 import * as fs from "fs";
 
 jest.mock("fs");
 jest.mock("../src/utils/create-repo");
+
+Client.initialize(ApplicationMode.PROD, "theBatman");
 
 const createRepositoryMock = createRepository as jest.Mock;
 
@@ -52,8 +56,6 @@ describe("choose-or-create-repo", () => {
 
   test("if user has no repos it asks them to create a repo", async () => {
     const repoDomain = "repoDomain";
-    const base = "https://prismic.io";
-    const cookies = "prismic-auth=biscuits;";
     const userServiceURL = "https://user.internal-prismic.io";
 
     nock(userServiceURL).get("/repositories").reply(200, []);
@@ -66,28 +68,16 @@ describe("choose-or-create-repo", () => {
     createRepositoryMock.mockImplementation(() => repoDomain);
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base
-    );
+    const result = await chooseOrCreateARepository(fakeCwd, framework);
 
-    expect(createRepositoryMock).toHaveBeenCalledWith(
-      repoDomain,
-      framework,
-      cookies,
-      base
-    );
+    expect(createRepositoryMock).toHaveBeenCalledWith(repoDomain, framework);
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
     expect(result).toEqual(repoDomain);
   });
 
   test("it allows a user to create a new repo", async () => {
     const repoDomain = "test";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL)
       .get("/repositories")
@@ -96,7 +86,7 @@ describe("choose-or-create-repo", () => {
     jest
       .spyOn(inquirer, "prompt")
       .mockReturnValueOnce(
-        Promise.resolve({ chosenRepo: CREATE_REPO }) as ReturnType<
+        Promise.resolve({ chosenRepository: CREATE_REPO }) as ReturnType<
           typeof inquirer.prompt
         >
       )
@@ -107,28 +97,16 @@ describe("choose-or-create-repo", () => {
     createRepositoryMock.mockImplementation(() => Promise.resolve(repoDomain));
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base
-    );
+    const result = await chooseOrCreateARepository(fakeCwd, framework);
 
-    expect(createRepositoryMock).toHaveBeenCalledWith(
-      repoDomain,
-      framework,
-      cookies,
-      base
-    );
+    expect(createRepositoryMock).toHaveBeenCalledWith(repoDomain, framework);
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
     expect(result).toEqual(repoDomain);
   });
 
   test("when given project and project exists, the project is pre-selected and the user is not asked to select a project", async () => {
     const domain = "foo-bar";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL)
       .get("/repositories")
@@ -138,13 +116,7 @@ describe("choose-or-create-repo", () => {
 
     const promptSpy = jest.spyOn(inquirer, "prompt");
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base,
-      domain
-    );
+    const result = await chooseOrCreateARepository(fakeCwd, framework, domain);
 
     expect(promptSpy).not.toHaveBeenCalled();
     expect(result).toEqual(domain);
@@ -152,9 +124,7 @@ describe("choose-or-create-repo", () => {
 
   test("when the given a project and the project does not exist in the users repo's it should prompt them for a repo", async () => {
     const domain = "foo-bar";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL).get("/repositories").reply(200, []);
 
@@ -170,13 +140,7 @@ describe("choose-or-create-repo", () => {
         >
       );
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base,
-      domain
-    );
+    const result = await chooseOrCreateARepository(fakeCwd, framework, domain);
 
     expect(promptSpy).toHaveBeenCalledTimes(1);
     expect(promptSpy).toHaveBeenLastCalledWith(
@@ -187,14 +151,7 @@ describe("choose-or-create-repo", () => {
 });
 
 describe("prettyRepoName", () => {
-  test("should contain the base url, and a placeholder", () => {
-    const address = new URL("https://prismic.io");
-    const result = prettyRepoName(address);
-    expect(result).toContain("repo-name");
-    expect(result).toContain(".prismic.io");
-  });
-
-  test("shohuld contain the value from user input", () => {
+  test("should contain the value from user input", () => {
     const address = new URL("https://prismic.io");
     const result = prettyRepoName(address, "foo-bar");
     expect(result).toContain("foo-bar");

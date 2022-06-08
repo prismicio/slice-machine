@@ -1,19 +1,17 @@
 import * as inquirer from "inquirer";
 import Separator from "inquirer/lib/objects/separator";
-import { Utils, Models, CONSTS } from "@slicemachine/core";
-import * as Prismic from "@slicemachine/core/build/prismic";
+import { Models } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { createRepository } from "../utils/create-repo";
-import { logs } from "../utils";
+import { validateRepositoryName } from "../utils/validateRepositoryName";
+import { Client, logs } from "../utils";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
-const DEFAULT_BASE = CONSTS.DEFAULT_BASE;
 
-export function prettyRepoName(address: URL, value?: string): string {
-  const repoName = value ? logs.cyan(value) : logs.dim.cyan("repo-name");
-  return `${logs.cyan.dim(`${address.protocol}//`)}${repoName}${logs.cyan.dim(
-    `.${address.hostname}`
-  )}`;
+export function prettyRepoName(address: URL, domain: string): string {
+  return `${logs.cyan.dim(`${address.protocol}//`)}${logs.cyan(
+    domain
+  )}${logs.cyan.dim(`.${address.hostname}`)}`;
 }
 
 export async function promptForRepoDomain(
@@ -34,15 +32,9 @@ export async function promptForRepoDomain(
         type: "input",
         required: true,
         default: defaultValue,
-        transformer: (value: string) =>
-          prettyRepoName(address, value || defaultValue),
+        transformer: (value: string) => prettyRepoName(address, value),
         async validate(name: string) {
-          const result = await Prismic.Communication.validateRepositoryName(
-            name,
-            base,
-            false
-          );
-          return result === name || result;
+          return validateRepositoryName(name);
         },
       },
     ])
@@ -124,45 +116,60 @@ export function sortReposForPrompt(
 export async function chooseOrCreateARepository(
   cwd: string,
   framework: Models.Frameworks,
-  cookies: string,
-  base = DEFAULT_BASE,
-  domain?: string
+  preSelectedRepository?: string
 ): Promise<string> {
-  const token = Utils.Cookie.parsePrismicAuthToken(cookies);
-  const repos = await Prismic.Communication.listRepositories(token, base);
+  const repositories: Models.Repository[] = await Client.listRepositories();
 
-  const hasRepo = domain && repos.find((d) => d.domain === domain);
-  if (hasRepo) return domain;
+  const isPreSelectedValid =
+    preSelectedRepository &&
+    repositories.find(
+      (repository) => repository.domain === preSelectedRepository
+    );
+  if (isPreSelectedValid) return preSelectedRepository;
 
-  if (repos.length === 0) {
-    const domainName = await promptForRepoDomain(base, domain);
-    return await createRepository(domainName, framework, cookies, base);
+  // No repository to display, ask for a new repository name to create it.
+  if (repositories.length === 0) {
+    const domainName = await promptForRepoDomain(
+      Client.get().apisEndpoints.Wroom,
+      preSelectedRepository
+    );
+    await createRepository(domainName, framework);
+    return domainName;
   }
 
-  const choices = sortReposForPrompt(repos, base, cwd);
-
+  // prepare the list of repositories to display
+  const choices = sortReposForPrompt(
+    repositories,
+    Client.get().apisEndpoints.Wroom,
+    cwd
+  );
   const numberOfDisabledRepos = choices.filter((repo) => {
     if (repo instanceof Separator) return false;
     return repo.disabled;
   }).length;
 
-  const res = await inquirer.prompt<{ chosenRepo: string }>([
+  // display the list of repositories and wait for the user to choose one.
+  const promptResult = await inquirer.prompt<{ chosenRepository: string }>([
     {
       type: "list",
-      name: "chosenRepo",
+      name: "chosenRepository",
       default: 0,
       required: true,
       message: "Connect a Prismic Repository or create a new one",
       choices,
       pageSize: numberOfDisabledRepos + 2 <= 7 ? 7 : numberOfDisabledRepos + 2,
-      // loop: false
     },
   ]);
 
-  if (res.chosenRepo === CREATE_REPO) {
-    const domainName = await promptForRepoDomain(base, domain);
-    return await createRepository(domainName, framework, cookies, base);
+  // If the user has chosen to create a new repository.
+  if (promptResult.chosenRepository === CREATE_REPO) {
+    const domainName = await promptForRepoDomain(
+      Client.get().apisEndpoints.Wroom,
+      preSelectedRepository
+    );
+    await createRepository(domainName, framework);
+    return domainName;
   }
 
-  return res.chosenRepo;
+  return promptResult.chosenRepository;
 }

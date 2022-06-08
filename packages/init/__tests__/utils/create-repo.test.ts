@@ -10,19 +10,13 @@ describe("createRepository", () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
     const framework = Models.Frameworks.svelte;
-    const cookies = "prismic-auth=biscuits;";
 
     nock(base)
       .post("/authentication/newrepository?app=slicemachine")
       .reply(200, { domain });
 
     stderr.start();
-    const createdRepoDomain = await createRepository(
-      domain,
-      framework,
-      cookies,
-      base
-    );
+    const createdRepoDomain = await createRepository(domain, framework);
     stderr.stop();
     expect(createdRepoDomain).toBe(domain);
     expect(stderr.output).toContain(domain);
@@ -34,19 +28,13 @@ describe("createRepository", () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
     const framework = Models.Frameworks.next;
-    const cookies = "prismic-auth=biscuits;";
 
     nock(base)
       .post("/authentication/newrepository?app=slicemachine")
       .reply(200, {});
 
     stderr.start();
-    const createdRepoDomain = await createRepository(
-      domain,
-      framework,
-      cookies,
-      base
-    );
+    const createdRepoDomain = await createRepository(domain, framework);
     stderr.stop();
     expect(createdRepoDomain).toBe(domain);
     expect(stderr.output).toContain(domain);
@@ -58,7 +46,6 @@ describe("createRepository", () => {
     const domain = "foo-bar";
     const base = "https://prismic.io";
     const framework = Models.Frameworks.vanillajs;
-    const cookies = "prismic-auth=biscuits;";
 
     nock(base)
       .post("/authentication/newrepository?app=slicemachine")
@@ -71,7 +58,7 @@ describe("createRepository", () => {
 
     stderr.start();
     stdout.start();
-    await createRepository(domain, framework, cookies, base);
+    await createRepository(domain, framework);
     stderr.stop();
     stdout.stop();
     expect(stderr.output).toContain("Error creating repository");

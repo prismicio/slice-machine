@@ -1,10 +1,10 @@
-import { Utils, Models } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 import { startServerAndOpenBrowser } from "./helpers";
 import {
-  Communication,
   Endpoints,
   PrismicSharedConfigManager,
 } from "@slicemachine/core/build/prismic";
+import { Client } from "../client";
 
 async function startAuth({
   base,
@@ -18,9 +18,9 @@ async function startAuth({
   const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
   try {
     // We wait 3 minutes before timeout
-    await Utils.Poll.startPolling<Models.UserInfo | null, Models.UserInfo>(
-      () => Auth.validateSession(base),
-      (user): user is Models.UserInfo => !!user,
+    await Utils.Poll.startPolling<boolean, boolean>(
+      () => Auth.validateSession(),
+      (isSessionValid): isSessionValid is boolean => isSessionValid == true,
       3000,
       60
     );
@@ -39,25 +39,26 @@ export const Auth = {
       action: "login",
     });
   },
-  signup: async (base: string): Promise<void> => {
-    const endpoints = Endpoints.buildEndpoints(base);
-    return startAuth({
-      base,
-      url: endpoints.Dashboard.cliSignup,
-      action: "signup",
-    });
-  },
-  logout: (): void => PrismicSharedConfigManager.remove(),
-  validateSession: async (
-    requiredBase: string
-  ): Promise<Models.UserInfo | null> => {
-    const config = PrismicSharedConfigManager.get();
+  validateSession: async (): Promise<boolean> => {
+    const authToken = PrismicSharedConfigManager.getAuth();
 
-    if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
-    if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
+    // update client's token
+    Client.get().updateAuthenticationToken(authToken);
 
-    return Communication.validateSession(config.cookies, requiredBase).catch(
-      () => null
-    );
+    // verify token is by retrieving the profile, update the config if need be.
+    return Client.get()
+      .profile()
+      .then((userProfile) => {
+        const config = PrismicSharedConfigManager.get();
+
+        if (!config.shortId || !config.intercomHash) {
+          PrismicSharedConfigManager.setProperties({
+            shortId: userProfile.shortId,
+            intercomHash: userProfile.intercomHash,
+          });
+        }
+        return true;
+      })
+      .catch(() => false);
   },
 };

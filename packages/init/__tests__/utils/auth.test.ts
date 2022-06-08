@@ -7,12 +7,15 @@ import {
   beforeEach,
 } from "@jest/globals";
 import * as authHelpers from "../../src/utils/auth/helpers";
-import { Auth } from "../../src/utils/auth";
+import { Auth, Client } from "../../src/utils";
 
 import { Roles } from "@slicemachine/core/src/models";
 import { Endpoints } from "@slicemachine/core/build/prismic";
 import fs from "fs";
 import nock from "nock";
+import { ApplicationMode } from "@slicemachine/client";
+
+Client.initialize(ApplicationMode.PROD, "theBatman");
 
 describe("auth", () => {
   beforeEach(() => nock.cleanAll());
@@ -21,7 +24,7 @@ describe("auth", () => {
     jest.clearAllMocks();
   });
 
-  const fakeBase = "https://fake.io";
+  const fakeBase = "https://prismic.io/";
   const endpoints = Endpoints.buildEndpoints(fakeBase);
 
   test("login should always have the same parameters", async () => {
@@ -39,7 +42,7 @@ describe("auth", () => {
 
     jest.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(fakeCookie)); // called more than once?
 
-    nock("https://auth.fake.io")
+    nock("https://auth.prismic.io")
       .get("/validate?token=biscuits")
       .reply(200, fakeProfile);
 
@@ -52,36 +55,6 @@ describe("auth", () => {
     });
 
     await Auth.login(fakeBase);
-  });
-
-  test("signup should always open the browser at the same url", async () => {
-    const fakeProfile = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {},
-    };
-
-    jest.spyOn(fs, "lstatSync").mockReturnValue({} as fs.Stats);
-    const fakeCookie = {
-      base: fakeBase,
-      cookies: "prismic-auth=biscuits",
-    };
-
-    jest.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(fakeCookie)); // called more than once?
-
-    nock("https://auth.fake.io")
-      .get("/validate?token=biscuits")
-      .reply(200, fakeProfile);
-    const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");
-
-    spy.mockImplementation((url, action, base) => {
-      expect(url).toEqual(endpoints.Dashboard.cliSignup);
-      expect(action).toEqual("signup");
-      expect(base).toEqual(fakeBase);
-      return Promise.resolve({ onLoginFail: () => null });
-    });
-
-    await Auth.signup(fakeBase);
   });
 
   test("isHandler should work", () => {
@@ -124,7 +97,7 @@ describe("auth", () => {
       .spyOn(fs, "readFileSync")
       .mockReturnValueOnce(JSON.stringify({ base: fakeBase, cookies: "" }));
 
-    const result = await Auth.validateSession(fakeBase);
+    const result = await Auth.validateSession();
     expect(result).toBe(null);
   });
 
@@ -138,7 +111,7 @@ describe("auth", () => {
       .spyOn(fs, "readFileSync")
       .mockReturnValueOnce(JSON.stringify(fakeCookie));
 
-    const result = await Auth.validateSession(fakeBase);
+    const result = await Auth.validateSession();
     expect(result).toBe(null);
   });
 
@@ -154,7 +127,7 @@ describe("auth", () => {
 
     nock("https://auth.prismic.io").get("/validate?token=biscuits").reply(401);
 
-    const result = await Auth.validateSession(fakeBase);
+    const result = await Auth.validateSession();
     expect(result).toBe(null);
   });
 
@@ -183,7 +156,7 @@ describe("auth", () => {
       .get("/validate?token=biscuits")
       .reply(200, wanted);
 
-    const got = await Auth.validateSession(fakeCookie.base);
+    const got = await Auth.validateSession();
     expect(got).toEqual(wanted);
   });
 });

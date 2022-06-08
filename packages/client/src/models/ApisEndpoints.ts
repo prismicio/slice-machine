@@ -1,4 +1,5 @@
 export interface ApisEndpoints {
+  Wroom: string;
   Authentication: string;
   Models: string;
   Users: string;
@@ -6,6 +7,7 @@ export interface ApisEndpoints {
 }
 
 export const ProductionApisEndpoints: ApisEndpoints = {
+  Wroom: "https://prismic.io/",
   Authentication: "https://auth.prismic.io/",
   Models: "https://customtypes.prismic.io/",
   Users: "https://user.internal-prismic.io/",
@@ -13,6 +15,7 @@ export const ProductionApisEndpoints: ApisEndpoints = {
 };
 
 export const StageApisEndpoints: ApisEndpoints = {
+  Wroom: "https://wroom.io/",
   Authentication: "https://auth.wroom.io/",
   Models: "https://customtypes.wroom.io/",
   Users: "https://user.wroom.io/",
