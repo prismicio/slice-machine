@@ -174,31 +174,32 @@ export async function sendStarterData(
       endpoints.AclProvider
     );
 
-    const modelPromises = components.map(async ({ screenshotPaths, model }) => {
-      const variationsReq = model.variations.map(async (variation) => {
-        const pathToScreenShot = screenshotPaths[variation.id];
-        if (pathToScreenShot && pathToScreenShot.path) {
-          const imageUrl = await sendToS3(
-            model.id,
-            variation.id,
-            pathToScreenShot.path
-          );
-          return {
-            ...variation,
-            ...(imageUrl ? { imageUrl } : {}),
-          };
-        } else {
-          return variation;
-        }
-      });
-      const variations = await Promise.all(variationsReq);
-      return {
-        ...model,
-        variations,
-      };
-    });
-
-    const models = await Promise.all(modelPromises);
+    const models = await Promise.all(
+      components.map(async ({ screenshotPaths, model }) => {
+        const variations = await Promise.all(
+          model.variations.map(async (variation) => {
+            const pathToScreenShot = screenshotPaths[variation.id];
+            if (pathToScreenShot && pathToScreenShot.path) {
+              const imageUrl = await sendToS3(
+                model.id,
+                variation.id,
+                pathToScreenShot.path
+              );
+              return {
+                ...variation,
+                ...(imageUrl ? { imageUrl } : {}),
+              };
+            } else {
+              return variation;
+            }
+          })
+        );
+        return {
+          ...model,
+          variations,
+        };
+      })
+    );
 
     const p = models.map((model) => {
       const data = Slices.fromSM(model);
