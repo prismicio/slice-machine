@@ -1,6 +1,6 @@
 import axios from "axios";
 import { parsePrismicAuthToken } from "@slicemachine/core/build/utils/cookie";
-import { retrieveManifest } from "@slicemachine/core/build/node-utils";
+import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import type { Component } from "@slicemachine/core/build/models/Library";
 import { Slices } from "@slicemachine/core/build/models/Slice";
@@ -115,14 +115,16 @@ export async function sendStarterData(
   cookies: string,
   cwd: string
 ) {
+  const smJson = retrieveManifest(cwd);
+  const hasDocuments = Files.exists(path.join(cwd, "documents"));
+
+  if (smJson.exists === false || hasDocuments === false)
+    return Promise.resolve(false);
+
   const endpoints = getEdnpointsForBase(base);
 
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
   const authorization = `Bearer ${authTokenFromCookie}`;
-
-  const smJson = retrieveManifest(cwd);
-
-  if (smJson.exists === false) return Promise.resolve(false);
 
   // type this later as the slices in the api may not be the same as the slices in sm
   const remoteSlices = await axios

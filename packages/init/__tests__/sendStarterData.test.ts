@@ -71,6 +71,7 @@ describe("send starter data", () => {
           libraries: ["@/slices"],
           framework: "none",
         }),
+        documents: {},
       },
     });
 
@@ -134,6 +135,7 @@ describe("send starter data", () => {
   test("it should warn the user if they have remote slices", async () => {
     mockfs({
       [TMP_DIR]: {
+        documents: {},
         "sm.json": JSON.stringify({
           apiEndpoint: "https://foo-bar.wroom.io/api/v2",
           libraries: ["@/slices"],
@@ -163,7 +165,7 @@ describe("send starter data", () => {
     expect(result).toBeTruthy();
   });
 
-  test("it should do nothing when there is no sm.json", async () => {
+  test("it should do nothing when there is no documents directory", async () => {
     mockfs({
       [TMP_DIR]: {},
     });
@@ -183,52 +185,17 @@ describe("send starter data", () => {
       },
     });
 
-    // Mock ACL
-    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
-      .get("/prod/create")
-      .reply(200, {
-        values: {
-          url: fakeS3Url,
-          fields: {
-            acl: "public-read",
-            "Content-Disposition": "inline",
-            bucket: "prismic-io",
-            "X-Amz-Algorithm": "a",
-            "X-Amz-Credential": "a",
-            "X-Amz-Date": "a",
-            Policy: "a",
-            "X-Amz-Signature": "a",
-          },
-        },
-        imgixEndpoint: "https://images.prismic.io",
-        err: null,
-      });
-
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, []);
-
     stderr.start();
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
     stderr.stop();
 
-    expect(result).toBeTruthy();
+    expect(result).toBeFalsy();
   });
 
   test("it can send slices and images to wroom.io", async () => {
     mockfs({
       [TMP_DIR]: {
+        documents: {},
         slices: {
           MySlice: {
             "model.json": mockfs.load(
@@ -324,6 +291,7 @@ describe("send starter data", () => {
   test("when the remote slice exists it should call the update endpoint", async () => {
     mockfs({
       [TMP_DIR]: {
+        documents: {},
         slices: {
           MySlice: {
             "model.json": mockfs.load(
