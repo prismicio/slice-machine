@@ -1,6 +1,7 @@
 import { describe, test, jest, afterEach, expect } from "@jest/globals";
 import npath from "path";
 import { sendStarterData } from "../src/steps";
+import { readCustomTypes } from "../src/steps/starters/custom-types";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
@@ -10,6 +11,7 @@ import { stderr } from "stdout-stderr";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { isLeft } from "fp-ts/lib/Either";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -400,5 +402,55 @@ describe("send starter data", () => {
 
     stderr.stop();
     expect(result).toBeTruthy();
+  });
+});
+
+describe("starters/custom-types", () => {
+  afterEach(() => {
+    mock.restore();
+  });
+
+  describe("#readCustomtypes", () => {
+    test("when ./customtypes is not found it should return an empty array", () => {
+      mockfs({
+        [TMP_DIR]: {},
+      });
+      const want: Array<CustomTypeSM> = [];
+      const got = readCustomTypes(TMP_DIR);
+      expect(got).toEqual(want);
+    });
+
+    test("when ./customtypes is not an directory is should return an empty array", () => {
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: "fooo",
+        },
+      });
+      const want: Array<CustomTypeSM> = [];
+      const got = readCustomTypes(TMP_DIR);
+      expect(got).toEqual(want);
+    });
+
+    test("when ./customtypes is a direc tory it should read the file contents from that directory", () => {
+      const CT = {
+        id: "blog-page",
+        label: "Blog Page",
+        repeatable: true,
+        status: true,
+      };
+      const CT_ON_DISK = { ...CT, json: {} };
+      const CT_IN_SM = { ...CT, tabs: [] };
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: {
+            BlogPage: JSON.stringify(CT_ON_DISK),
+          },
+        },
+      });
+
+      const want = [CT_IN_SM];
+      const got = readCustomTypes(TMP_DIR);
+      expect(got).toEqual(want);
+    });
   });
 });
