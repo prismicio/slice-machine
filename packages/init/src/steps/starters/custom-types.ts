@@ -7,6 +7,7 @@ import {
   sendManyCustomTypesToPrismic,
 } from "./communication";
 import { promptToPushCustomTypes } from "./prompts";
+import { getEndpointsFromBase } from "./endpoints";
 
 export function readCustomTypes(cwd: string): Array<CustomType> {
   const dir = path.join(cwd, "customtypes");
@@ -35,9 +36,11 @@ export function readCustomTypes(cwd: string): Array<CustomType> {
 export async function sendCustomTypesFromStarter(
   repository: string,
   authorization: string,
-  customTypeApiEndpoint: string,
+  base: string,
   cwd: string
 ) {
+  const customTypeApiEndpoint = getEndpointsFromBase(base).Models;
+
   const customTypes = readCustomTypes(cwd);
   if (customTypes.length === 0) return Promise.resolve(false);
 

@@ -520,12 +520,11 @@ describe("starters/custom-types", () => {
       mockfs({
         [TMP_DIR]: {},
       });
-      const customTypeEndpoint = "https://customtypes.prismic.io";
 
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
-        customTypeEndpoint,
+        base,
         TMP_DIR
       );
 
@@ -554,7 +553,7 @@ describe("starters/custom-types", () => {
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
-        customTypeEndpoint,
+        base,
         TMP_DIR
       );
 
@@ -586,7 +585,7 @@ describe("starters/custom-types", () => {
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
-        customTypeEndpoint,
+        base,
         TMP_DIR
       );
 
@@ -623,7 +622,7 @@ describe("starters/custom-types", () => {
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
-        customTypeEndpoint,
+        base,
         TMP_DIR
       );
 
