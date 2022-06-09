@@ -4,15 +4,23 @@ import nock from "nock";
 import { createRepository } from "../../src/utils/create-repo";
 import { stderr, stdout } from "stdout-stderr";
 import { Models } from "@slicemachine/core";
+import { Client } from "../../src/utils";
+import { ApplicationMode } from "@slicemachine/client";
+
+Client.initialize(ApplicationMode.PROD, "theBatman");
 
 describe("createRepository", () => {
+  const domain = "foo-bar";
+  const base = Client.get().apisEndpoints.Wroom;
+
   test("when successful it will have called the endpoint and displayed a success message", async () => {
-    const domain = "foo-bar";
-    const base = "https://prismic.io";
     const framework = Models.Frameworks.svelte;
 
     nock(base)
-      .post("/authentication/newrepository?app=slicemachine")
+      .post("/authentication/newrepository")
+      .query({
+        app: "slicemachine",
+      })
       .reply(200, { domain });
 
     stderr.start();
@@ -25,12 +33,13 @@ describe("createRepository", () => {
   });
 
   test("success without domain in the response", async () => {
-    const domain = "foo-bar";
-    const base = "https://prismic.io";
     const framework = Models.Frameworks.next;
 
     nock(base)
-      .post("/authentication/newrepository?app=slicemachine")
+      .post("/authentication/newrepository")
+      .query({
+        app: "slicemachine",
+      })
       .reply(200, {});
 
     stderr.start();
@@ -43,12 +52,13 @@ describe("createRepository", () => {
   });
 
   test("when a error code is returned it will inform the user that their was an error", async () => {
-    const domain = "foo-bar";
-    const base = "https://prismic.io";
     const framework = Models.Frameworks.vanillajs;
 
     nock(base)
-      .post("/authentication/newrepository?app=slicemachine")
+      .post("/authentication/newrepository")
+      .query({
+        app: "slicemachine",
+      })
       .reply(500, {});
 
     const fakeExit = jest

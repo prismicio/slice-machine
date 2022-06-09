@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { Models } from "@slicemachine/core";
-import Prismic from "@slicemachine/core/build/prismic";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 import {
   Client as ClientModel,
   ApplicationMode,
@@ -42,7 +42,7 @@ export const Client = (() => {
           `${client.apisEndpoints.Wroom}authentication/newrepository?app=slicemachine`,
           data,
           {
-            Cookie: Prismic.PrismicSharedConfigManager.get().cookies,
+            Cookie: PrismicSharedConfigManager.get().cookies,
             "User-Agent": "prismic-cli/sm", // special user agent just for this route.
           }
         )
