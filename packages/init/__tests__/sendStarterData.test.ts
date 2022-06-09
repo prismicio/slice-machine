@@ -432,14 +432,13 @@ describe("starters/custom-types", () => {
     });
 
     test("when ./customtypes is a direc tory it should read the file contents from that directory", () => {
-      const CT = {
+      const CT_ON_DISK = {
         id: "blog-page",
         label: "Blog Page",
         repeatable: true,
         status: true,
+        json: {},
       };
-      const CT_ON_DISK = { ...CT, json: {} };
-      const CT_IN_SM = { ...CT, tabs: [] };
       mockfs({
         [TMP_DIR]: {
           customtypes: {
@@ -448,7 +447,7 @@ describe("starters/custom-types", () => {
         },
       });
 
-      const want = [CT_IN_SM];
+      const want = [CT_ON_DISK];
       const got = readCustomTypes(TMP_DIR);
       expect(got).toEqual(want);
     });
