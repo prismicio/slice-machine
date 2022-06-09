@@ -1,4 +1,5 @@
-import { Component, Library } from "@slicemachine/core/build/models";
+import { Component } from "@slicemachine/core/build/models";
+import * as Libraries from "@slicemachine/core/build/libraries";
 import { logs } from "../../utils";
 import { getRemoteSliceIds, sendManyModelsToPrismic } from "./communication";
 import { ApiEndpoints } from "./endpoints";
@@ -9,8 +10,11 @@ export async function sendSlices(
   endpoints: ApiEndpoints,
   repository: string,
   authorization: string,
-  libraries: Readonly<Array<Library<Component>>>
+  libraryPaths: Array<string>,
+  cwd: string
 ) {
+  const libraries = Libraries.libraries(cwd, libraryPaths);
+
   const remoteSlices = await getRemoteSliceIds(
     endpoints.Models,
     repository,

@@ -4,6 +4,18 @@ import axios from "axios";
 import { logs } from "../../utils";
 import type { ApiEndpoints } from "./endpoints";
 
+function handelErrors(prefix: string, err: unknown) {
+  if (axios.isAxiosError(err) && err.response) {
+    logs.writeError(
+      `${prefix} | [${err.response.status}]: ${err.response.statusText}`
+    );
+  } else if (err instanceof Error) {
+    logs.writeError(`${prefix} ${err.message}`);
+  } else {
+    logs.writeError(`${prefix} ${String(err)}`);
+  }
+}
+
 export async function getRemoteSliceIds(
   customTypeApiEndpoint: ApiEndpoints["Models"],
   repository: string,
@@ -44,15 +56,7 @@ async function sendModelToPrismic(
       return;
     })
     .catch((err) => {
-      if (axios.isAxiosError(err) && err.response) {
-        logs.writeError(
-          `SENDING SLICE ${model.id} | [${err.response.status}]: ${err.response.statusText}`
-        );
-      } else if (err instanceof Error) {
-        logs.writeError(`SENDING SLICE ${model.id} ${err.message}`);
-      } else {
-        logs.writeError(`SENDING SLICE ${model.id} ${String(err)}`);
-      }
+      handelErrors(`SENDING SLICE ${model.id},`, err);
     });
 }
 
@@ -123,8 +127,7 @@ async function sendCustomTypeToPrismic(
       return;
     })
     .catch((err) => {
-      console.error(err);
-      return;
+      handelErrors(`SENDING CUSTOM TYPE ${customType.id}`, err);
     });
 }
 

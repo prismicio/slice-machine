@@ -609,7 +609,7 @@ describe("starters/custom-types", () => {
         .matchHeader("repository", repo)
         .matchHeader("Authorization", `Bearer ${token}`)
         .get("/customtypes")
-        .reply(200, [CT_ON_DISK.id])
+        .reply(200, [CT_ON_DISK])
         .post("/customtypes/update")
         .reply(204, (_, body) => {
           const result = CustomType.decode(body);

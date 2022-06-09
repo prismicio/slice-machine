@@ -1,6 +1,5 @@
 import { parsePrismicAuthToken } from "@slicemachine/core/build/utils/cookie";
 import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
-import * as Libraries from "@slicemachine/core/build/libraries";
 import path from "path";
 import { getEndpointsFromBase } from "./starters/endpoints";
 import { sendSlices } from "./starters/slices";
@@ -25,6 +24,11 @@ export async function sendStarterData(
   if (!smJson.content || !smJson.content.libraries)
     return Promise.resolve(false);
 
-  const libs = Libraries.libraries(cwd, smJson.content.libraries);
-  return sendSlices(endpoints, repository, authorization, libs);
+  return sendSlices(
+    endpoints,
+    repository,
+    authorization,
+    smJson.content.libraries,
+    cwd
+  );
 }
