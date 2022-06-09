@@ -32,18 +32,14 @@ function depsForFramework(framework: Models.Frameworks): string {
   }
 }
 
-export async function installRequiredDependencies(
-  cwd: string,
-  framework: Models.Frameworks
-): Promise<void> {
-  const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
-  const installDevDependencyCommand = yarnLock
+async function addAndInstallDeps(
+  framework: Models.Frameworks,
+  useYarn = false
+): Promise<string> {
+  const installDevDependencyCommand = useYarn
     ? "yarn add -D"
     : "npm install --save-dev";
-  const installDependencyCommand = yarnLock ? "yarn add" : "npm install --save";
-
-  const spinner = logs.spinner("Downloading Slice Machine");
-  spinner.start();
+  const installDependencyCommand = useYarn ? "yarn add" : "npm install --save";
 
   const { stderr } = await execCommand(
     `${installDevDependencyCommand} ${SM_PACKAGE_NAME}`
@@ -51,6 +47,29 @@ export async function installRequiredDependencies(
 
   const deps = depsForFramework(framework);
   if (deps) await execCommand(`${installDependencyCommand} ${deps}`);
+
+  return stderr;
+}
+
+async function installDeps(useYarn = false): Promise<string> {
+  const installCommand = useYarn ? "yarn" : "npm install";
+  const { stderr } = await execCommand(installCommand);
+  return stderr;
+}
+
+export async function installRequiredDependencies(
+  cwd: string,
+  framework: Models.Frameworks,
+  skipDependencies: boolean
+): Promise<void> {
+  const yarnLock = NodeUtils.Files.exists(NodeUtils.YarnLockPath(cwd));
+
+  const spinner = logs.spinner("Installing Slice Machine");
+  spinner.start();
+
+  const stderr = await (skipDependencies
+    ? installDeps(yarnLock)
+    : addAndInstallDeps(framework, yarnLock));
 
   const pathToPkg = path.join(
     NodeUtils.PackagePaths(cwd).value(),
