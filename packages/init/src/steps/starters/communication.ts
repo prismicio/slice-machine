@@ -1,3 +1,4 @@
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import axios from "axios";
 import { logs } from "../../utils";
@@ -70,6 +71,78 @@ export async function sendManyModelsToPrismic(
         customTypesApiEndpoint,
         remoteSliceIds,
         model
+      )
+    )
+  ).then(() => {
+    return;
+  });
+}
+
+function stripLastSlash(str: string) {
+  return str.replace(/\/*$/g, "");
+}
+
+export function getRemoteCustomTypeIds(
+  customTypeApiEndpoint: ApiEndpoints["Models"],
+  repository: string,
+  authorization: string
+): Promise<Array<string>> {
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/customtypes`;
+  return axios
+    .get<CustomType[]>(addr, {
+      headers: {
+        Authorization: `Bearer ${authorization}`,
+        repository,
+      },
+    })
+    .then((res) => {
+      return Array.isArray(res.data) ? res.data.map((ct) => ct.id) : [];
+    });
+}
+
+async function sendCustomTypeToPrismic(
+  repository: string,
+  authorization: string,
+  customTypeApiEndpoint: string,
+  remoteCustomTypeIds: Array<string>,
+  customType: CustomType
+): Promise<void> {
+  const shouldUpdate = remoteCustomTypeIds.includes(customType.id);
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/customtypes/${
+    shouldUpdate ? "update" : "insert"
+  }`;
+
+  return axios
+    .post(addr, customType, {
+      headers: {
+        repository,
+        Authorization: `Bearer ${authorization}`,
+      },
+    })
+    .then(() => {
+      return;
+    })
+    .catch((err) => {
+      console.error(err);
+      return;
+    });
+}
+
+export async function sendManyCustomTypesToPrismic(
+  repository: string,
+  authorization: string,
+  customTypeApiEndpoint: string,
+  remoteCustomTypeIds: Array<string>,
+  customTypes: Array<CustomType>
+): Promise<void> {
+  return Promise.all(
+    customTypes.map((customType) =>
+      sendCustomTypeToPrismic(
+        repository,
+        authorization,
+        customTypeApiEndpoint,
+        remoteCustomTypeIds,
+        customType
       )
     )
   ).then(() => {

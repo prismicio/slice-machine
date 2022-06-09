@@ -2,6 +2,10 @@ import { describe, test, jest, afterEach, expect } from "@jest/globals";
 import npath from "path";
 import { sendStarterData } from "../src/steps";
 import { readCustomTypes } from "../src/steps/starters/custom-types";
+import {
+  getRemoteCustomTypeIds,
+  sendManyCustomTypesToPrismic,
+} from "../src/steps/starters/communication";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
@@ -10,8 +14,10 @@ import inquirer from "inquirer";
 import { stderr } from "stdout-stderr";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { isLeft } from "fp-ts/lib/Either";
+import { isLeft, isRight } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import _ from "lodash";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -25,28 +31,29 @@ const IMAGE_DATA_PATH = npath.join(
 );
 const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
 
+const token = "aaaaaaa";
+const repo = "bbbbbbb";
+const base = "https://prismic.io";
+const cookies = `prismic-auth=${token}`;
+const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+function validateS3Body(body: unknown) {
+  if (!body) return false;
+  if (typeof body !== "string") return false;
+  const text = Buffer.from(body, "hex").toString();
+  const keyRegExp =
+    /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
+  const hasKey = keyRegExp.test(text);
+  const fileRegexp = /form-data; name="file"; filename="preview.png"/;
+  const hasFile = fileRegexp.test(text);
+  return hasKey && hasFile;
+}
+
 describe("send starter data", () => {
   afterEach(() => {
     mock.restore();
+    nock.cleanAll();
   });
-
-  const token = "aaaaaaa";
-  const repo = "bbbbbbb";
-  const base = "https://prismic.io";
-  const cookies = `prismic-auth=${token}`;
-  const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
-
-  function validateS3Body(body: unknown) {
-    if (!body) return false;
-    if (typeof body !== "string") return false;
-    const text = Buffer.from(body, "hex").toString();
-    const keyRegExp =
-      /form-data; name="key"[^]*[\w\d]+\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview\.png/gm;
-    const hasKey = keyRegExp.test(text);
-    const fileRegexp = /form-data; name="file"; filename="preview.png"/;
-    const hasFile = fileRegexp.test(text);
-    return hasKey && hasFile;
-  }
 
   test("should send slices and images from the file system to prismic", async () => {
     mockfs({
@@ -77,24 +84,18 @@ describe("send starter data", () => {
       },
     });
 
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const smApi = nock("https://customtypes.prismic.io")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`);
 
     smApi.get("/slices").reply(200, []);
 
     // Mock ACL
-    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
+    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com")
       .get("/prod/create")
+      .matchHeader("User-Agent", "slice-machine")
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .matchHeader("repository", repo)
       .reply(200, {
         values: {
           url: fakeS3Url,
@@ -163,12 +164,9 @@ describe("send starter data", () => {
       },
     });
 
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const smApi = nock("https://customtypes.prismic.io")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`);
 
     smApi.get("/slices").reply(200, [{}]);
 
@@ -240,25 +238,19 @@ describe("send starter data", () => {
       },
     });
 
-    const smApi = nock("https://customtypes.wroom.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const smApi = nock("https://customtypes.wroom.io")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`);
 
     smApi.get("/slices").reply(200, []);
 
     const fakeS3Url = "https://s3.amazonaws.com/wroom-io/";
 
     // Mock ACL
-    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
+    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .matchHeader("User-Agent", "slice-machine")
       .get("/stage/create")
       .reply(200, {
         values: {
@@ -336,12 +328,9 @@ describe("send starter data", () => {
       },
     });
 
-    const smApi = nock("https://customtypes.wroom.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const smApi = nock("https://customtypes.wroom.io")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`);
 
     smApi.get("/slices").reply(200, [{ id: "my_slice" }]);
 
@@ -350,13 +339,10 @@ describe("send starter data", () => {
     const fakeS3Url = "https://s3.amazonaws.com/wroom-io/";
 
     // Mock ACL
-    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
+    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .matchHeader("User-Agent", "slice-machine")
       .get("/stage/create")
       .reply(200, {
         values: {
@@ -410,6 +396,14 @@ describe("starters/custom-types", () => {
     mock.restore();
   });
 
+  const CT_ON_DISK = {
+    id: "blog-page",
+    label: "Blog Page",
+    repeatable: true,
+    status: true,
+    json: {},
+  };
+
   describe("#readCustomtypes", () => {
     test("when ./customtypes is not found it should return an empty array", () => {
       mockfs({
@@ -432,13 +426,6 @@ describe("starters/custom-types", () => {
     });
 
     test("when ./customtypes is a direc tory it should read the file contents from that directory", () => {
-      const CT_ON_DISK = {
-        id: "blog-page",
-        label: "Blog Page",
-        repeatable: true,
-        status: true,
-        json: {},
-      };
       mockfs({
         [TMP_DIR]: {
           customtypes: {
@@ -450,6 +437,74 @@ describe("starters/custom-types", () => {
       const want = [CT_ON_DISK];
       const got = readCustomTypes(TMP_DIR);
       expect(got).toEqual(want);
+    });
+  });
+
+  describe("#getRemoteCustomTypeIds", () => {
+    test("it should return an array of remote slice ids", async () => {
+      const customTypeEndpoint = "https://customtypes.prismic.io/";
+      nock(customTypeEndpoint)
+        .get("/customtypes")
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .reply(200, [CT_ON_DISK]);
+
+      const wanted = [CT_ON_DISK].map((ct) => ct.id);
+      const got = await getRemoteCustomTypeIds(customTypeEndpoint, repo, token);
+
+      expect(got).toEqual(wanted);
+    });
+  });
+
+  describe("#sendManyCustomTypesToPrismic", () => {
+    const CT_ON_DISK = {
+      id: "blog-page",
+      label: "Blog Page",
+      repeatable: true,
+      status: true,
+      json: {},
+    };
+
+    test("when there are no remote custom type is should send new slices", async () => {
+      expect.assertions(1);
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+      nock(customTypeEndpoint)
+        .post("/customtypes/insert")
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .reply(200, (_, body) => {
+          const result = CustomType.decode(body);
+          expect(isRight(result)).toBeTruthy();
+        });
+
+      await sendManyCustomTypesToPrismic(
+        repo,
+        token,
+        customTypeEndpoint,
+        [],
+        [CT_ON_DISK]
+      );
+    });
+
+    test("when there are remote custom type that have the same id as local ones it'll update the custom type", async () => {
+      expect.assertions(1);
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+      nock(customTypeEndpoint)
+        .post("/customtypes/update")
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .reply(204, (_, body) => {
+          const result = CustomType.decode(body);
+          expect(isRight(result)).toBeTruthy();
+        });
+
+      await sendManyCustomTypesToPrismic(
+        repo,
+        token,
+        customTypeEndpoint,
+        [CT_ON_DISK.id],
+        [CT_ON_DISK]
+      );
     });
   });
 });
