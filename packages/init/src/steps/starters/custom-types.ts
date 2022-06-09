@@ -2,6 +2,11 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import path from "path";
 import { Files } from "@slicemachine/core/build/node-utils";
 import { isLeft } from "fp-ts/lib/Either";
+import {
+  getRemoteCustomTypeIds,
+  sendManyCustomTypesToPrismic,
+} from "./communication";
+import { promptToPushCustomTypes } from "./prompts";
 
 export function readCustomTypes(cwd: string): Array<CustomType> {
   const dir = path.join(cwd, "customtypes");
@@ -25,4 +30,34 @@ export function readCustomTypes(cwd: string): Array<CustomType> {
   }, []);
 
   return files;
+}
+
+export async function sendCustomTypesFromStarter(
+  repository: string,
+  authorization: string,
+  customTypeApiEndpoint: string,
+  cwd: string
+) {
+  const customTypes = readCustomTypes(cwd);
+  if (customTypes.length === 0) return Promise.resolve(false);
+
+  const remoteCustomTypeIds = await getRemoteCustomTypeIds(
+    customTypeApiEndpoint,
+    repository,
+    authorization
+  );
+  if (remoteCustomTypeIds.length) {
+    const shouldPush = await promptToPushCustomTypes();
+    if (shouldPush === false) return Promise.resolve(false);
+  }
+
+  await sendManyCustomTypesToPrismic(
+    repository,
+    authorization,
+    customTypeApiEndpoint,
+    remoteCustomTypeIds,
+    customTypes
+  );
+
+  return Promise.resolve(true);
 }

@@ -1,7 +1,10 @@
 import { describe, test, jest, afterEach, expect } from "@jest/globals";
 import npath from "path";
 import { sendStarterData } from "../src/steps";
-import { readCustomTypes } from "../src/steps/starters/custom-types";
+import {
+  readCustomTypes,
+  sendCustomTypesFromStarter,
+} from "../src/steps/starters/custom-types";
 import {
   getRemoteCustomTypeIds,
   sendManyCustomTypesToPrismic,
@@ -505,6 +508,126 @@ describe("starters/custom-types", () => {
         [CT_ON_DISK.id],
         [CT_ON_DISK]
       );
+    });
+  });
+
+  describe("#sendCustomTypesFromStarter", () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test("when there are no custom types it should do nothing", async () => {
+      mockfs({
+        [TMP_DIR]: {},
+      });
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+
+      const result = await sendCustomTypesFromStarter(
+        repo,
+        token,
+        customTypeEndpoint,
+        TMP_DIR
+      );
+
+      expect(result).toBeFalsy();
+    });
+
+    test("when the user has custom types and remote remote custom-types it should prompt them", async () => {
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: JSON.stringify(CT_ON_DISK),
+        },
+      });
+
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+
+      nock(customTypeEndpoint)
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .get("/customtypes")
+        .reply(200, [CT_ON_DISK]);
+
+      jest
+        .spyOn(inquirer, "prompt")
+        .mockResolvedValue({ pushCustomTypes: false });
+
+      const result = await sendCustomTypesFromStarter(
+        repo,
+        token,
+        customTypeEndpoint,
+        TMP_DIR
+      );
+
+      expect(result).toBeFalsy();
+    });
+
+    test("is should send the custom-types to prismic", async () => {
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: {
+            BlogPage: JSON.stringify(CT_ON_DISK),
+          },
+        },
+      });
+
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+
+      nock(customTypeEndpoint)
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .get("/customtypes")
+        .reply(200, [])
+        .post("/customtypes/insert")
+        .reply(204, (_, body) => {
+          const result = CustomType.decode(body);
+          expect(isRight(result)).toBeTruthy();
+        });
+
+      const result = await sendCustomTypesFromStarter(
+        repo,
+        token,
+        customTypeEndpoint,
+        TMP_DIR
+      );
+
+      expect(result).toBeTruthy();
+    });
+
+    test("if the user confirms, it should update remote custom-types", async () => {
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: {
+            BlogPage: JSON.stringify(CT_ON_DISK),
+          },
+        },
+      });
+
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+
+      // expect.assertions(2)
+      nock(customTypeEndpoint)
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .get("/customtypes")
+        .reply(200, [CT_ON_DISK.id])
+        .post("/customtypes/update")
+        .reply(204, (_, body) => {
+          const result = CustomType.decode(body);
+          expect(isRight(result)).toBeTruthy();
+        });
+
+      jest
+        .spyOn(inquirer, "prompt")
+        .mockResolvedValue({ pushCustomTypes: true });
+
+      const result = await sendCustomTypesFromStarter(
+        repo,
+        token,
+        customTypeEndpoint,
+        TMP_DIR
+      );
+
+      expect(result).toBeTruthy();
     });
   });
 });
