@@ -21,10 +21,11 @@ export async function getRemoteSliceIds(
   repository: string,
   authorization: string
 ): Promise<Array<string>> {
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/slices`;
   return axios
-    .get<Array<{ id: string }>>(customTypeApiEndpoint + "slices", {
+    .get<Array<{ id: string }>>(addr, {
       headers: {
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         repository,
       },
     })
@@ -48,7 +49,7 @@ async function sendModelToPrismic(
   return axios
     .post(updateOrInsertUrl, data, {
       headers: {
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         repository,
       },
     })

@@ -16,13 +16,14 @@ export async function sendSlicesFromStarter(
   const endpoints = getEndpointsFromBase(base);
   const libraries = Libraries.libraries(cwd, libraryPaths);
 
+  if (libraries.length === 0) return Promise.resolve(false);
+
+  // console.log(endpoints.Models, repository, authorization)
   const remoteSlices = await getRemoteSliceIds(
     endpoints.Models,
     repository,
     authorization
   );
-
-  if (libraries.length === 0) return Promise.resolve(false);
 
   if (remoteSlices.length) {
     // do prompt about slices

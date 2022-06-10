@@ -31,7 +31,7 @@ export async function createAcl(
     .get<ALC>(address + "create", {
       headers: {
         repository,
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         "User-Agent": "slice-machine",
       },
     })
