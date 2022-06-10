@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosPromise } from "axios";
+import axios, { AxiosError, AxiosPromise, AxiosRequestHeaders } from "axios";
 import * as t from "io-ts";
 
 import { UserProfile } from "@slicemachine/core/build/models";
@@ -63,7 +63,7 @@ export class Client {
     method: "get" | "post",
     url: string,
     data?: Record<string, unknown>,
-    headers?: Record<string, unknown>
+    headers?: AxiosRequestHeaders
   ): AxiosPromise {
     return axios({
       method,

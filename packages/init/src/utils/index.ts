@@ -26,11 +26,9 @@ export function getApplicationMode(
 ): ApplicationMode | null {
   switch (argumentValue) {
     case ApplicationMode.PROD:
-      return ApplicationMode.PROD;
     case ApplicationMode.STAGE:
-      return ApplicationMode.STAGE;
     case ApplicationMode.DEV:
-      return ApplicationMode.DEV;
+      return argumentValue;
     default:
       return null;
   }

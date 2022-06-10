@@ -6,10 +6,10 @@ import {
   StageApisEndpoints,
 } from "../src/models/ApisEndpoints";
 
-import { userProfileMock } from "./__mocks__/userProfile";
-import { sharedSliceMock } from "./__mocks__/sharedSlice";
-import { customTypeMock } from "./__mocks__/customType";
-import { aclCreateResultMock } from "./__mocks__/aclCreateResult";
+import { userProfileMock } from "./__stubs__/userProfile";
+import { sharedSliceMock } from "./__stubs__/sharedSlice";
+import { customTypeMock } from "./__stubs__/customType";
+import { aclCreateResultMock } from "./__stubs__/aclCreateResult";
 
 const repository = "dragonborn";
 const authenticationToken = "biscuit";
