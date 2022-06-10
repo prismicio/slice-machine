@@ -7,17 +7,10 @@ import mockfs from "mock-fs";
 import os from "os";
 import mock from "mock-fs";
 import inquirer from "inquirer";
-// import { stderr } from "stdout-stderr";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import {
-  isLeft,
-  // isRight
-} from "fp-ts/lib/Either";
+import { isLeft } from "fp-ts/lib/Either";
 import { stderr } from "stdout-stderr";
-// import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-// import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-// import _ from "lodash";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 const PATH_TO_STUB_PROJECT = npath.join(

@@ -2,6 +2,7 @@ import { parsePrismicAuthToken } from "@slicemachine/core/build/utils/cookie";
 import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
 import path from "path";
 import { sendSlicesFromStarter } from "./starters/slices";
+import { sendCustomTypesFromStarter } from "./starters/custom-types";
 
 export async function sendStarterData(
   repository: string,
@@ -16,16 +17,18 @@ export async function sendStarterData(
     return Promise.resolve(false);
 
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
-  const authorization = `Bearer ${authTokenFromCookie}`;
 
-  if (!smJson.content || !smJson.content.libraries)
+  if (!smJson.content || !smJson.content.libraries) {
     return Promise.resolve(false);
+  } else {
+    await sendSlicesFromStarter(
+      base,
+      repository,
+      authTokenFromCookie,
+      smJson.content.libraries,
+      cwd
+    );
+  }
 
-  return sendSlicesFromStarter(
-    base,
-    repository,
-    authorization,
-    smJson.content.libraries,
-    cwd
-  );
+  return sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
 }

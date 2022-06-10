@@ -42,6 +42,7 @@ export async function sendCustomTypesFromStarter(
   const customTypeApiEndpoint = getEndpointsFromBase(base).Models;
 
   const customTypes = readCustomTypes(cwd);
+
   if (customTypes.length === 0) return Promise.resolve(false);
 
   const remoteCustomTypeIds = await getRemoteCustomTypeIds(
@@ -49,6 +50,7 @@ export async function sendCustomTypesFromStarter(
     repository,
     authorization
   );
+
   if (remoteCustomTypeIds.length) {
     const shouldPush = await promptToPushCustomTypes();
     if (shouldPush === false) return Promise.resolve(false);

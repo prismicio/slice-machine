@@ -18,7 +18,6 @@ export async function sendSlicesFromStarter(
 
   if (libraries.length === 0) return Promise.resolve(false);
 
-  // console.log(endpoints.Models, repository, authorization)
   const remoteSlices = await getRemoteSliceIds(
     endpoints.Models,
     repository,
