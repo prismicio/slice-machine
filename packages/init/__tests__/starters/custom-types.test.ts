@@ -17,6 +17,7 @@ import inquirer from "inquirer";
 import { isRight } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { stderr } from "stdout-stderr";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -62,7 +63,9 @@ describe("starters/custom-types", () => {
       mockfs({
         [TMP_DIR]: {
           customtypes: {
-            BlogPage: JSON.stringify(CT_ON_DISK),
+            "blog-page": {
+              "index.json": JSON.stringify(CT_ON_DISK),
+            },
           },
         },
       });
@@ -164,7 +167,11 @@ describe("starters/custom-types", () => {
     test("when the user has custom types and remote remote custom-types it should prompt them", async () => {
       mockfs({
         [TMP_DIR]: {
-          customtypes: JSON.stringify(CT_ON_DISK),
+          customtypes: {
+            "blog-page": {
+              "index.json": JSON.stringify(CT_ON_DISK),
+            },
+          },
         },
       });
 
@@ -194,7 +201,9 @@ describe("starters/custom-types", () => {
       mockfs({
         [TMP_DIR]: {
           customtypes: {
-            BlogPage: JSON.stringify(CT_ON_DISK),
+            "blog-page": {
+              "index.json": JSON.stringify(CT_ON_DISK),
+            },
           },
         },
       });
@@ -212,21 +221,28 @@ describe("starters/custom-types", () => {
           expect(isRight(result)).toBeTruthy();
         });
 
+      stderr.start();
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
         base,
         TMP_DIR
       );
+      stderr.stop();
 
       expect(result).toBeTruthy();
+      expect(stderr.output).toContain(
+        "✔ Pushing existing custom types to your repository"
+      );
     });
 
     test("if the user confirms, it should update remote custom-types", async () => {
       mockfs({
         [TMP_DIR]: {
           customtypes: {
-            BlogPage: JSON.stringify(CT_ON_DISK),
+            "blog-page": {
+              "index.json": JSON.stringify(CT_ON_DISK),
+            },
           },
         },
       });
@@ -249,14 +265,19 @@ describe("starters/custom-types", () => {
         .spyOn(inquirer, "prompt")
         .mockResolvedValue({ pushCustomTypes: true });
 
+      stderr.start();
       const result = await sendCustomTypesFromStarter(
         repo,
         token,
         base,
         TMP_DIR
       );
+      stderr.stop();
 
       expect(result).toBeTruthy();
+      expect(stderr.output).toContain(
+        "✔ Pushing existing custom types to your repository"
+      );
     });
   });
 });

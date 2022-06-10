@@ -97,7 +97,9 @@ describe("send starter data", () => {
       [TMP_DIR]: {
         documents: {},
         customtypes: {
-          BlogPage: JSON.stringify(CT_ON_DISK),
+          "blog-page": {
+            "index.json": JSON.stringify(CT_ON_DISK),
+          },
         },
         "sm.json": JSON.stringify(smJson),
         slices: {

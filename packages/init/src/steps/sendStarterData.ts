@@ -18,9 +18,7 @@ export async function sendStarterData(
 
   const authTokenFromCookie = parsePrismicAuthToken(cookies);
 
-  if (!smJson.content || !smJson.content.libraries) {
-    return Promise.resolve(false);
-  } else {
+  if (smJson.content && smJson.content.libraries) {
     await sendSlicesFromStarter(
       base,
       repository,

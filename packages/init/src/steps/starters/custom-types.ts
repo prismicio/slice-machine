@@ -8,6 +8,7 @@ import {
 } from "./communication";
 import { promptToPushCustomTypes } from "./prompts";
 import { getEndpointsFromBase } from "./endpoints";
+import { logs } from "../../utils";
 
 export function readCustomTypes(cwd: string): Array<CustomType> {
   const dir = path.join(cwd, "customtypes");
@@ -17,7 +18,7 @@ export function readCustomTypes(cwd: string): Array<CustomType> {
   const fileNames = Files.readDirectory(dir);
 
   const files = fileNames.reduce<Array<CustomType>>((acc, fileName) => {
-    const filePath = path.join(dir, fileName);
+    const filePath = path.join(dir, fileName, "index.json");
     const json = Files.safeReadJson(filePath);
 
     if (!json) return acc;
@@ -56,6 +57,11 @@ export async function sendCustomTypesFromStarter(
     if (shouldPush === false) return Promise.resolve(false);
   }
 
+  const spinner = logs.spinner(
+    "Pushing existing custom types to your repository"
+  );
+  spinner.start();
+
   await sendManyCustomTypesToPrismic(
     repository,
     authorization,
@@ -63,6 +69,8 @@ export async function sendCustomTypesFromStarter(
     remoteCustomTypeIds,
     customTypes
   );
+
+  spinner.succeed();
 
   return Promise.resolve(true);
 }
