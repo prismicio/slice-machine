@@ -50,12 +50,14 @@ export class Client {
   }
 
   // setters to provide flexibility
-  updateAuthenticationToken(newToken: string) {
+  updateAuthenticationToken(newToken: string): Client {
     this.authenticationToken = newToken;
+    return this
   }
 
-  updateRepository(repository: string | null) {
+  updateRepository(repository: string | null): Client {
     this.repository = repository;
+    return this
   }
 
   // private methods
