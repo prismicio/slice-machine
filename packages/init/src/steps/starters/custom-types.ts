@@ -25,8 +25,14 @@ export function readCustomTypes(cwd: string): Array<CustomType> {
 
     const file = CustomType.decode(json);
 
-    if (file instanceof Error) return acc;
-    if (isLeft(file)) return acc;
+    if (file instanceof Error) {
+      logs.writeError(`reading ${filePath}: ${file.message}`);
+      return acc;
+    }
+    if (isLeft(file)) {
+      logs.writeError(`validating ${filePath}: ${JSON.stringify(file.left)}`);
+      return acc;
+    }
 
     return [...acc, file.right];
   }, []);
