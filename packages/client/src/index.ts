@@ -52,12 +52,12 @@ export class Client {
   // setters to provide flexibility
   updateAuthenticationToken(newToken: string): Client {
     this.authenticationToken = newToken;
-    return this
+    return this;
   }
 
   updateRepository(repository: string | null): Client {
     this.repository = repository;
-    return this
+    return this;
   }
 
   // private methods
