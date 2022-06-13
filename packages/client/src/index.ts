@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosPromise, AxiosRequestHeaders } from "axios";
+import axios, { AxiosError, AxiosPromise, AxiosRequestConfig } from "axios";
 import * as t from "io-ts";
 
 import { UserProfile } from "@slicemachine/core/build/models";
@@ -61,12 +61,12 @@ export class Client {
   }
 
   // private methods
-  _fetch(
-    method: "get" | "post",
-    url: string,
-    data?: Record<string, unknown>,
-    headers?: AxiosRequestHeaders
-  ): AxiosPromise {
+  _fetch({
+    method,
+    url,
+    data,
+    headers,
+  }: AxiosRequestConfig<Record<string, unknown>>): AxiosPromise {
     return axios({
       method,
       url,
@@ -81,18 +81,20 @@ export class Client {
   }
 
   _get(url: string): AxiosPromise {
-    return this._fetch("get", url);
+    return this._fetch({ method: "get", url });
   }
 
   _post(url: string, data: Record<string, unknown>): AxiosPromise {
-    return this._fetch("post", url, data).catch((error: Error | AxiosError) => {
-      const status: number = getStatus(error);
-      const message: string = getMessage(error);
+    return this._fetch({ method: "post", url, data }).catch(
+      (error: Error | AxiosError) => {
+        const status: number = getStatus(error);
+        const message: string = getMessage(error);
 
-      // Making sure the error is typed
-      const clientError: ClientError = { status, message };
-      return Promise.reject(clientError);
-    });
+        // Making sure the error is typed
+        const clientError: ClientError = { status, message };
+        return Promise.reject(clientError);
+      }
+    );
   }
 
   async validateAuthenticationToken(): Promise<boolean> {

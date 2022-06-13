@@ -24,15 +24,15 @@ export class InitClient extends Client {
       role: "developer",
     };
 
-    return this._fetch(
-      "post",
-      `${this.apisEndpoints.Wroom}authentication/newrepository?app=slicemachine`,
-      data,
-      {
+    return this._fetch({
+      method: "post",
+      url: `${this.apisEndpoints.Wroom}authentication/newrepository?app=slicemachine`,
+      data: data,
+      headers: {
         Cookie: PrismicSharedConfigManager.get().cookies,
         "User-Agent": "prismic-cli/sm", // special user agent just for this route.
-      }
-    ).then(() => domain);
+      },
+    }).then(() => domain);
   }
 
   async domainExist(domain: string): Promise<boolean> {

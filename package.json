@@ -9,6 +9,7 @@
     "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
+    "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
     "audit": "lerna run audit",
     "lint": "lerna run lint",
     "lint-staged": "lint-staged",
@@ -56,6 +57,10 @@
     "**/packages/init/**/*.@(js|jsx|ts|tsx|)": [
       "prettier --write --ignore-unknown",
       "npm --prefix ./packages/init run lint:precommit"
+    ],
+    "**/packages/client/**/*.@(js|jsx|ts|tsx|)": [
+      "prettier --write --ignore-unknown",
+      "npm --prefix ./packages/client run lint:precommit"
     ],
     "**/packages/next-slicezone/**/*": "prettier --write --ignore-unknown",
     "**/packages/nuxt-sm/**/*": "prettier --write --ignore-unknown",
