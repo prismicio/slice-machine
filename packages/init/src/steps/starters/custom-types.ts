@@ -1,6 +1,5 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import path from "path";
-import { Files } from "@slicemachine/core/build/node-utils";
+import { Files, CustomTypesPaths } from "@slicemachine/core/build/node-utils";
 import { isLeft } from "fp-ts/lib/Either";
 import {
   getRemoteCustomTypeIds,
@@ -11,14 +10,15 @@ import { getEndpointsFromBase } from "./endpoints";
 import { logs } from "../../utils";
 
 export function readCustomTypes(cwd: string): Array<CustomType> {
-  const dir = path.join(cwd, "customtypes");
+  const customTypePaths = CustomTypesPaths(cwd);
+  const dir = customTypePaths.value();
 
   if (Files.isDirectory(dir) === false) return [];
 
   const fileNames = Files.readDirectory(dir);
 
   const files = fileNames.reduce<Array<CustomType>>((acc, fileName) => {
-    const filePath = path.join(dir, fileName, "index.json");
+    const filePath = customTypePaths.customType(fileName).model();
     const json = Files.safeReadJson(filePath);
 
     if (!json) return acc;
