@@ -4,7 +4,7 @@ import { Models } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { createRepository } from "../utils/create-repo";
 import { validateRepositoryName } from "../utils/validateRepositoryName";
-import { Client, logs } from "../utils";
+import { InitClient, logs } from "../utils";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 
@@ -15,10 +15,10 @@ export function prettyRepoName(address: URL, domain: string): string {
 }
 
 export async function promptForRepoDomain(
-  base: string,
+  client: InitClient,
   defaultValue?: string
 ): Promise<string> {
-  const address = new URL(base);
+  const address = new URL(client.apisEndpoints.Wroom);
 
   logs.writeInfo(
     "The name acts as a domain/endpoint for your content repo and should be completely unique."
@@ -32,9 +32,10 @@ export async function promptForRepoDomain(
         type: "input",
         required: true,
         default: defaultValue,
-        transformer: (value: string) => prettyRepoName(address, value),
+        transformer: (value: string | undefined) =>
+          prettyRepoName(address, value || defaultValue || "repository"),
         async validate(name: string) {
-          return validateRepositoryName(name);
+          return validateRepositoryName(client, name);
         },
       },
     ])
@@ -114,11 +115,12 @@ export function sortReposForPrompt(
 }
 
 export async function chooseOrCreateARepository(
+  client: InitClient,
   cwd: string,
   framework: Models.Frameworks,
   preSelectedRepository?: string
 ): Promise<string> {
-  const repositories: Models.Repository[] = await Client.listRepositories();
+  const repositories: Models.Repository[] = await client.listRepositories();
 
   const isPreSelectedValid =
     preSelectedRepository &&
@@ -129,18 +131,15 @@ export async function chooseOrCreateARepository(
 
   // No repository to display, ask for a new repository name to create it.
   if (repositories.length === 0) {
-    const domainName = await promptForRepoDomain(
-      Client.get().apisEndpoints.Wroom,
-      preSelectedRepository
-    );
-    await createRepository(domainName, framework);
+    const domainName = await promptForRepoDomain(client, preSelectedRepository);
+    await createRepository(client, domainName, framework);
     return domainName;
   }
 
   // prepare the list of repositories to display
   const choices = sortReposForPrompt(
     repositories,
-    Client.get().apisEndpoints.Wroom,
+    client.apisEndpoints.Wroom,
     cwd
   );
   const numberOfDisabledRepos = choices.filter((repo) => {
@@ -163,11 +162,8 @@ export async function chooseOrCreateARepository(
 
   // If the user has chosen to create a new repository.
   if (promptResult.chosenRepository === CREATE_REPO) {
-    const domainName = await promptForRepoDomain(
-      Client.get().apisEndpoints.Wroom,
-      preSelectedRepository
-    );
-    await createRepository(domainName, framework);
+    const domainName = await promptForRepoDomain(client, preSelectedRepository);
+    await createRepository(client, domainName, framework);
     return domainName;
   }
 

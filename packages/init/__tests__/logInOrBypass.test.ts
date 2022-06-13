@@ -12,12 +12,23 @@ import nock from "nock";
 import * as fs from "fs";
 import { stderr } from "stdout-stderr";
 
-import { Auth, Client } from "../src/utils";
+import { Auth, InitClient } from "../src/utils";
 
 jest.mock("fs");
 
 const fakeToken = "biscuits";
-Client.initialize(ApplicationMode.PROD, fakeToken);
+const fakeCookie = `prismic-auth=${fakeToken}`;
+const fakeRepository = "dragonborn";
+const fakeBase = "https://prismic.io";
+
+const firstName = "bat";
+const lastName = "man";
+const email = "batman@example.com";
+const userId = "1234567";
+const shortId = "12";
+const intercomHash = "intercomHash";
+
+const client = new InitClient(ApplicationMode.PROD, fakeRepository, fakeToken);
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -28,16 +39,6 @@ afterAll(() => {
 });
 
 describe("loginOrBypass", () => {
-  const fakeCookie = `prismic-auth=${fakeToken}`;
-  const fakeBase = "https://prismic.io";
-
-  const firstName = "bat";
-  const lastName = "man";
-  const email = "batman@example.com";
-  const userId = "1234567";
-  const shortId = "12";
-  const intercomHash = "intercomHash";
-
   test("it should validate the session and get the users profile", async () => {
     jest.spyOn(fs, "lstatSync").mockImplementation(() => ({} as fs.Stats));
     jest.spyOn(fs, "writeFileSync");
@@ -56,7 +57,7 @@ describe("loginOrBypass", () => {
       });
 
     stderr.start();
-    const result = await loginOrBypass();
+    const result = await loginOrBypass(client);
     stderr.stop();
 
     // profile should be defined
@@ -98,7 +99,7 @@ describe("loginOrBypass", () => {
         lastName,
       });
 
-    const result = await loginOrBypass();
+    const result = await loginOrBypass(client);
 
     expect(result).not.toBeNull();
     expect(result.email).toEqual(email);

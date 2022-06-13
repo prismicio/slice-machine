@@ -4,22 +4,26 @@ import {
   Endpoints,
   PrismicSharedConfigManager,
 } from "@slicemachine/core/build/prismic";
-import { Client } from "../client";
+import { InitClient } from "../client";
 
 async function startAuth({
-  base,
+  client,
   url,
   action,
 }: {
-  base: string;
+  client: InitClient;
   url: string;
   action: "signup" | "login";
 }): Promise<void> {
-  const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
+  const { onLoginFail } = await startServerAndOpenBrowser(
+    url,
+    action,
+    client.apisEndpoints.Wroom
+  );
   try {
     // We wait 3 minutes before timeout
     await Utils.Poll.startPolling<boolean, boolean>(
-      () => Auth.validateSession(),
+      () => Auth.validateSession(client),
       (isSessionValid): isSessionValid is boolean => isSessionValid == true,
       3000,
       60
@@ -31,22 +35,20 @@ async function startAuth({
 }
 
 export const Auth = {
-  login: async (base: string): Promise<void> => {
-    const endpoints = Endpoints.buildEndpoints(base);
+  login: async (client: InitClient): Promise<void> => {
+    const endpoints = Endpoints.buildEndpoints(client.apisEndpoints.Wroom);
     return startAuth({
-      base,
+      client,
       url: endpoints.Dashboard.cliLogin,
       action: "login",
     });
   },
-  validateSession: async (): Promise<boolean> => {
+  validateSession: async (client: InitClient): Promise<boolean> => {
     const authToken = PrismicSharedConfigManager.getAuth();
 
-    // update client's token
-    Client.get().updateAuthenticationToken(authToken);
-
     // verify token is by retrieving the profile, update the config if need be.
-    return Client.get()
+    return client
+      .updateAuthenticationToken(authToken)
       .profile()
       .then((userProfile) => {
         const config = PrismicSharedConfigManager.get();

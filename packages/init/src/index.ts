@@ -11,7 +11,7 @@ import {
   detectFramework,
   installLib,
 } from "./steps";
-import { findArgument, logs, getApplicationMode, Client } from "./utils";
+import { findArgument, logs, getApplicationMode, InitClient } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -36,7 +36,11 @@ async function init() {
   void Tracker.get().trackInitStart(preSelectedRepository);
 
   // initializing the client with what we have for now.
-  Client.initialize(mode, Prismic.PrismicSharedConfigManager.getAuth());
+  const client = new InitClient(
+    mode,
+    null,
+    Prismic.PrismicSharedConfigManager.getAuth()
+  );
 
   console.log(
     logs.purple(
@@ -48,7 +52,7 @@ async function init() {
   validatePkg(cwd);
 
   // login
-  const user = await loginOrBypass();
+  const user = await loginOrBypass(client);
 
   Tracker.get().identifyUser(user.shortId, user.intercomHash);
   void Tracker.get().trackInitIdentify();
@@ -58,13 +62,14 @@ async function init() {
 
   // select the repository used with the project.
   const repository = await chooseOrCreateARepository(
+    client,
     cwd,
     frameworkResult.value,
     preSelectedRepository
   );
 
   Tracker.get().setRepository(repository);
-  Client.get().updateRepository(repository);
+  client.updateRepository(repository);
 
   // Install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
@@ -73,6 +78,7 @@ async function init() {
 
   // configure the SM.json file and the json package file of the project..
   await configureProject(
+    client,
     cwd,
     repository,
     frameworkResult,

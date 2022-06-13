@@ -1,9 +1,11 @@
 import { Models } from "@slicemachine/core";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
-import { logs, Auth, Client } from "../utils";
+import { logs, Auth, InitClient } from "../utils";
 
-export async function loginOrBypass(): Promise<Models.UserProfile> {
-  const user: Models.UserProfile | null = await Client.get()
+export async function loginOrBypass(
+  client: InitClient
+): Promise<Models.UserProfile> {
+  const user: Models.UserProfile | null = await client
     .profile()
     .catch(() => null);
 
@@ -13,11 +15,11 @@ export async function loginOrBypass(): Promise<Models.UserProfile> {
     return user;
   }
 
-  await Auth.login(Client.get().apisEndpoints.Wroom);
+  await Auth.login(client);
 
   // update token used to make calls.
-  Client.get().updateAuthenticationToken(PrismicSharedConfigManager.getAuth());
+  client.updateAuthenticationToken(PrismicSharedConfigManager.getAuth());
 
-  const userAfterLogin: Models.UserProfile = await Client.get().profile();
+  const userAfterLogin: Models.UserProfile = await client.profile();
   return userAfterLogin;
 }

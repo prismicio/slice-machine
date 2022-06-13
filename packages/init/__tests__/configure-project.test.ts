@@ -12,7 +12,7 @@ import NodeUtils from "@slicemachine/core/build/node-utils";
 import { Models } from "@slicemachine/core";
 import Tracker from "../src/utils/tracker";
 import { ApplicationMode } from "@slicemachine/client";
-import { Client } from "../src/utils";
+import { InitClient } from "../src/utils";
 
 type SpinnerReturnType = ReturnType<typeof spinner>;
 
@@ -20,7 +20,7 @@ const startFn = jest.fn<SpinnerReturnType, string[]>();
 const successFn = jest.fn<SpinnerReturnType, string[]>();
 const failFn = jest.fn<SpinnerReturnType, string[]>();
 
-Client.initialize(ApplicationMode.PROD, "theBatman");
+const client = new InitClient(ApplicationMode.PROD, null, "theBatman");
 
 jest.mock("../src/utils/logs", () => ({
   spinner: () => ({
@@ -108,7 +108,13 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toHaveBeenCalledWith("./", {
@@ -132,7 +138,13 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
@@ -155,9 +167,13 @@ describe("configure-project", () => {
     });
     addJsonPackageSmScriptMock.mockReturnValue(true);
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, [
-      "@/material/slices",
-    ]);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      ["@/material/slices"]
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
@@ -177,7 +193,13 @@ describe("configure-project", () => {
     });
 
     // process.exit should throw
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).not.toBeCalled();
@@ -197,7 +219,13 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -218,7 +246,13 @@ describe("configure-project", () => {
       throw new Error("fake error to test the catch");
     });
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats, []);
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      fakeFrameworkStats,
+      []
+    );
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toBeCalled();
@@ -240,7 +274,7 @@ describe("configure-project", () => {
     // only called to verify if slice folder exists.
     fileExistsMock.mockReturnValue(false);
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats);
+    await configureProject(client, fakeCwd, fakeRepository, fakeFrameworkStats);
 
     expect(mkdirMock).toHaveBeenCalled();
     expect(MockTracker).toHaveBeenCalled();
@@ -256,7 +290,7 @@ describe("configure-project", () => {
     // only called to verify if slice folder exists.
     fileExistsMock.mockReturnValue(true);
 
-    await configureProject(fakeCwd, fakeRepository, fakeFrameworkStats);
+    await configureProject(client, fakeCwd, fakeRepository, fakeFrameworkStats);
 
     expect(mkdirMock).not.toHaveBeenCalled();
     expect(MockTracker).toHaveBeenCalled();

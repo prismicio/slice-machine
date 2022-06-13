@@ -1,6 +1,9 @@
-import { Client } from "./client";
+import { InitClient } from "./client";
 
-export async function validateRepositoryName(name: string): Promise<boolean> {
+export async function validateRepositoryName(
+  client: InitClient,
+  name: string
+): Promise<boolean> {
   const domain = name.trim();
   const errors = [];
 
@@ -30,5 +33,5 @@ export async function validateRepositoryName(name: string): Promise<boolean> {
     return Promise.reject(new Error(msg));
   }
 
-  return Client.domainExist(domain).catch(() => false);
+  return client.domainExist(domain).catch(() => false);
 }
