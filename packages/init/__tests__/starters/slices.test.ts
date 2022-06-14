@@ -386,4 +386,136 @@ describe("sendSlicesFromStarter", () => {
 
     expect(result).toBeTruthy();
   });
+
+  test("when it fails to send a slice, the process should exit", async () => {
+    const smJson = {
+      apiEndpoint: "https://foo-bar.wroom.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "none",
+    };
+
+    mockfs({
+      [TMP_DIR]: {
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              npath.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
+            ),
+            default: {
+              "preview.png": mockfs.load(
+                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              ),
+            },
+          },
+        },
+        "sm.json": JSON.stringify(smJson),
+      },
+    });
+
+    const smApi = nock("https://customtypes.wroom.io")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`);
+
+    smApi.get("/slices").reply(200, []);
+
+    smApi.post("/slices/insert").reply(400);
+
+    const fakeS3Url = "https://s3.amazonaws.com/wroom-io/";
+
+    // Mock ACL
+    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/")
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .matchHeader("User-Agent", "slice-machine")
+      .get("/stage/create")
+      .reply(200, {
+        values: {
+          url: fakeS3Url,
+          fields: {
+            acl: "public-read",
+            "Content-Disposition": "inline",
+            bucket: "prismic-io",
+            "X-Amz-Algorithm": "a",
+            "X-Amz-Credential": "a",
+            "X-Amz-Date": "a",
+            Policy: "a",
+            "X-Amz-Signature": "a",
+          },
+        },
+        imgixEndpoint: "https://images.wroom.io",
+        err: null,
+      });
+
+    // Mock S3
+    nock(fakeS3Url).post("/", validateS3Body).reply(204);
+
+    const exitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementationOnce(() => undefined as never);
+
+    const errorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    stderr.start();
+    const result = await sendSlicesFromStarter(
+      "https://wroom.io",
+      repo,
+      token,
+      smJson.libraries,
+      TMP_DIR
+    );
+    stderr.stop();
+
+    expect(exitSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalled();
+
+    expect(stderr.output).toContain(
+      "Pushing existing Slice models to your repository"
+    );
+    expect(result).toBeTruthy();
+  });
+
+  test.skip("when a slice is invalid, it should alert the user and exit", async () => {
+    const smJson = {
+      apiEndpoint: "https://foo-bar.wroom.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "none",
+    };
+    mockfs({
+      [TMP_DIR]: {
+        slices: {
+          MySlice: {
+            "model.json": JSON.stringify({}),
+            default: {
+              "preview.png": mockfs.load(
+                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              ),
+            },
+          },
+        },
+        "sm.json": JSON.stringify(smJson),
+      },
+    });
+
+    const exitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementationOnce(() => undefined as never);
+
+    const errorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    const result = await sendSlicesFromStarter(
+      "https://wroom.io",
+      repo,
+      token,
+      smJson.libraries,
+      TMP_DIR
+    );
+
+    expect(exitSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalled();
+    expect(result).toBeTruthy();
+  });
 });

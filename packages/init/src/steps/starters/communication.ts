@@ -57,7 +57,11 @@ async function sendModelToPrismic(
       return;
     })
     .catch((err) => {
-      handelErrors(`SENDING SLICE ${model.id},`, err);
+      handelErrors(
+        `sending slice ${model.id},  please try again. If the problem persists, contact us.`,
+        err
+      );
+      throw err;
     });
 }
 
@@ -78,9 +82,13 @@ export async function sendManyModelsToPrismic(
         model
       )
     )
-  ).then(() => {
-    return;
-  });
+  )
+    .then(() => {
+      return;
+    })
+    .catch(() => {
+      process.exit(1);
+    });
 }
 
 function stripLastSlash(str: string) {
@@ -129,7 +137,7 @@ async function sendCustomTypeToPrismic(
     })
     .catch((err) => {
       handelErrors(
-        `SENDING CUSTOM TYPE ${customType.id}, please try again. If the problem persists, contact us.`,
+        `sending custom type ${customType.id}, please try again. If the problem persists, contact us.`,
         err
       );
       throw err;
