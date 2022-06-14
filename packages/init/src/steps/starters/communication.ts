@@ -128,7 +128,11 @@ async function sendCustomTypeToPrismic(
       return;
     })
     .catch((err) => {
-      handelErrors(`SENDING CUSTOM TYPE ${customType.id}`, err);
+      handelErrors(
+        `SENDING CUSTOM TYPE ${customType.id}, please try again. If the problem persists, contact us.`,
+        err
+      );
+      throw err;
     });
 }
 
@@ -149,7 +153,11 @@ export async function sendManyCustomTypesToPrismic(
         customType
       )
     )
-  ).then(() => {
-    return;
-  });
+  )
+    .then(() => {
+      return;
+    })
+    .catch(() => {
+      process.exit(1);
+    });
 }

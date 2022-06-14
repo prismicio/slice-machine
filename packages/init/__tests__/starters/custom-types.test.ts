@@ -279,5 +279,53 @@ describe("starters/custom-types", () => {
         "✔ Pushing existing custom types to your repository"
       );
     });
+
+    test("when there's an error sending custom types it should exit", async () => {
+      const exitSpy = jest
+        .spyOn(process, "exit")
+        .mockImplementationOnce(() => undefined as never);
+
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => undefined);
+      mockfs({
+        [TMP_DIR]: {
+          customtypes: {
+            "blog-page": {
+              "index.json": JSON.stringify(CT_ON_DISK),
+            },
+          },
+        },
+      });
+
+      const customTypeEndpoint = "https://customtypes.prismic.io";
+
+      // expect.assertions(2)
+      nock(customTypeEndpoint)
+        .matchHeader("repository", repo)
+        .matchHeader("Authorization", `Bearer ${token}`)
+        .get("/customtypes")
+        .reply(200, [])
+        .post("/customtypes/insert")
+        .reply(400, (_, body) => {
+          const result = CustomType.decode(body);
+          expect(isRight(result)).toBeTruthy();
+        });
+
+      stderr.start();
+
+      const result = await sendCustomTypesFromStarter(
+        repo,
+        token,
+        base,
+        TMP_DIR
+      );
+
+      stderr.stop();
+
+      expect(exitSpy).toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalled();
+      expect(result).toBeTruthy();
+    });
   });
 });
