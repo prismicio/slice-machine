@@ -329,7 +329,7 @@ describe("starters/custom-types", () => {
     });
   });
 
-  test.skip("If a custom-type if invalid, it should exit", async () => {
+  test.todo("If a custom-type if invalid, it should exit", async () => {
     const exitSpy = jest
       .spyOn(process, "exit")
       .mockImplementationOnce(() => undefined as never);
