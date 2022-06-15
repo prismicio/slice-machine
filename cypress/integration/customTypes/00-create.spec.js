@@ -16,7 +16,6 @@ describe("Custom Types specs", () => {
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
     cy.get("input[data-cy=ct-name-input]").type(name);
-    cy.get("input[data-cy=ct-id-input]").type(id);
     cy.get("[data-cy=create-ct-modal]").submit();
     cy.location("pathname", { timeout: 5000 }).should("eq", `/cts/${id}`);
     cy.visit(`/cts/${id}`);
