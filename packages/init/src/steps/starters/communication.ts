@@ -1,17 +1,31 @@
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { Slices, SliceSM } from "@slicemachine/core/build/models";
 import axios from "axios";
 import { logs } from "../../utils";
 import type { ApiEndpoints } from "./endpoints";
+
+function handelErrors(prefix: string, err: unknown) {
+  if (axios.isAxiosError(err) && err.response) {
+    logs.writeError(
+      `${prefix} | [${err.response.status}]: ${err.response.statusText}`
+    );
+  } else if (err instanceof Error) {
+    logs.writeError(`${prefix} ${err.message}`);
+  } else {
+    logs.writeError(`${prefix} ${String(err)}`);
+  }
+}
 
 export async function getRemoteSliceIds(
   customTypeApiEndpoint: ApiEndpoints["Models"],
   repository: string,
   authorization: string
 ): Promise<Array<string>> {
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/slices`;
   return axios
-    .get<Array<{ id: string }>>(customTypeApiEndpoint + "slices", {
+    .get<Array<{ id: string }>>(addr, {
       headers: {
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         repository,
       },
     })
@@ -35,7 +49,7 @@ async function sendModelToPrismic(
   return axios
     .post(updateOrInsertUrl, data, {
       headers: {
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         repository,
       },
     })
@@ -43,15 +57,11 @@ async function sendModelToPrismic(
       return;
     })
     .catch((err) => {
-      if (axios.isAxiosError(err) && err.response) {
-        logs.writeError(
-          `SENDING SLICE ${model.id} | [${err.response.status}]: ${err.response.statusText}`
-        );
-      } else if (err instanceof Error) {
-        logs.writeError(`SENDING SLICE ${model.id} ${err.message}`);
-      } else {
-        logs.writeError(`SENDING SLICE ${model.id} ${String(err)}`);
-      }
+      handelErrors(
+        `sending slice ${model.id},  please try again. If the problem persists, contact us.`,
+        err
+      );
+      throw err;
     });
 }
 
@@ -72,7 +82,90 @@ export async function sendManyModelsToPrismic(
         model
       )
     )
-  ).then(() => {
-    return;
-  });
+  )
+    .then(() => {
+      return;
+    })
+    .catch(() => {
+      process.exit(1);
+    });
+}
+
+function stripLastSlash(str: string) {
+  return str.replace(/\/*$/g, "");
+}
+
+export function getRemoteCustomTypeIds(
+  customTypeApiEndpoint: ApiEndpoints["Models"],
+  repository: string,
+  authorization: string
+): Promise<Array<string>> {
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/customtypes`;
+  return axios
+    .get<CustomType[]>(addr, {
+      headers: {
+        Authorization: `Bearer ${authorization}`,
+        repository,
+      },
+    })
+    .then((res) => {
+      return Array.isArray(res.data) ? res.data.map((ct) => ct.id) : [];
+    });
+}
+
+async function sendCustomTypeToPrismic(
+  repository: string,
+  authorization: string,
+  customTypeApiEndpoint: string,
+  remoteCustomTypeIds: Array<string>,
+  customType: CustomType
+): Promise<void> {
+  const shouldUpdate = remoteCustomTypeIds.includes(customType.id);
+  const addr = `${stripLastSlash(customTypeApiEndpoint)}/customtypes/${
+    shouldUpdate ? "update" : "insert"
+  }`;
+
+  return axios
+    .post(addr, customType, {
+      headers: {
+        repository,
+        Authorization: `Bearer ${authorization}`,
+      },
+    })
+    .then(() => {
+      return;
+    })
+    .catch((err) => {
+      handelErrors(
+        `sending custom type ${customType.id}, please try again. If the problem persists, contact us.`,
+        err
+      );
+      throw err;
+    });
+}
+
+export async function sendManyCustomTypesToPrismic(
+  repository: string,
+  authorization: string,
+  customTypeApiEndpoint: string,
+  remoteCustomTypeIds: Array<string>,
+  customTypes: Array<CustomType>
+): Promise<void> {
+  return Promise.all(
+    customTypes.map((customType) =>
+      sendCustomTypeToPrismic(
+        repository,
+        authorization,
+        customTypeApiEndpoint,
+        remoteCustomTypeIds,
+        customType
+      )
+    )
+  )
+    .then(() => {
+      return;
+    })
+    .catch(() => {
+      process.exit(1);
+    });
 }

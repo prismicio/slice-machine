@@ -31,19 +31,19 @@ export async function createAcl(
     .get<ALC>(address + "create", {
       headers: {
         repository,
-        Authorization: authorization,
+        Authorization: `Bearer ${authorization}`,
         "User-Agent": "slice-machine",
       },
     })
     .then((res) => res.data);
 }
 
-function createFormForS3(
+async function createFormForS3(
   key: string,
   filename: string,
   filePath: string,
   acl: ALC
-): FormData {
+): Promise<FormData | null> {
   const form = new FormData();
   Object.entries(acl.values.fields).forEach(([k, value]) => {
     form.append(k, value);
@@ -52,11 +52,16 @@ function createFormForS3(
   const contentType = mime.getType(filePath);
   contentType && form.append("Content-Type", contentType);
 
-  form.append("file", fs.createReadStream(filePath), {
-    filename,
-  });
-
-  return form;
+  return fs.promises
+    .readFile(filePath)
+    .then((file) => {
+      form.append("file", file, { filename });
+      return form;
+    })
+    .catch(() => {
+      logs.writeError(`Error reading preview image: ${filename}`);
+      return null;
+    });
 }
 
 function createS3Key(
@@ -79,13 +84,22 @@ async function sendVariationPreviewToS3(
 ): Promise<string | null> {
   const filename = path.basename(filePath);
   const key = createS3Key(repository, sliceName, variationId, filename);
-  const form = createFormForS3(key, filename, filePath, acl);
+  const form = await createFormForS3(key, filename, filePath, acl);
+  if (form === null) return null;
+  if (form.hasKnownLength() === false) {
+    logs.writeError(
+      `[slice/push] An error occurred while uploading preview image ${filePath} as length in unknown`
+    );
+  }
 
   const errorMessage = `[slice/push] An error occurred while uploading preview images for ${sliceName}-${variationId} - please contact support`;
 
   return axios
     .post(acl.values.url, form, {
-      headers: form.getHeaders(),
+      headers: {
+        ...form.getHeaders(),
+        "Content-Length": String(form.getLengthSync()),
+      },
     })
     .then((res) => {
       if (res.status !== 204) {
