@@ -6,13 +6,15 @@ interface GridProps<T> {
   renderElem: (elem: T, index: number) => JSX.Element | null;
   defineElementKey: (elem: T) => string;
   gridTemplateMinPx?: string;
+  gridGap?: string;
 }
 
 function Grid<T>({
   elems,
-  gridTemplateMinPx = "320px",
   renderElem,
   defineElementKey,
+  gridTemplateMinPx = "320px",
+  gridGap = "16px",
 }: GridProps<T>): JSX.Element {
   return (
     <Box
@@ -20,7 +22,7 @@ function Grid<T>({
       sx={{
         display: "grid",
         gridTemplateColumns: `repeat(auto-fill, minmax(${gridTemplateMinPx}, 1fr))`,
-        gridGap: "16px",
+        gridGap: gridGap,
         pt: 2,
         mb: 3,
       }}

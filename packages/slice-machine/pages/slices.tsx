@@ -189,6 +189,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                             slice,
                           });
                         }}
+                        gridGap="32px 16px"
                       />
                     </Flex>
                   );
