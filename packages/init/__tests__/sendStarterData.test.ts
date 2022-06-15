@@ -4,11 +4,11 @@ import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
-import mock from "mock-fs";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { stderr } from "stdout-stderr";
+import t from "io-ts";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -56,7 +56,7 @@ function validateS3Body(body: unknown) {
 
 describe("send starter data", () => {
   afterEach(() => {
-    mock.restore();
+    mockfs.restore();
     nock.cleanAll();
   });
 
@@ -86,7 +86,7 @@ describe("send starter data", () => {
     expect(result).toBeFalsy();
   });
 
-  test("when there are slices and custom types is should send them", async () => {
+  test("when there are slices, custom types and documents i should send them", async () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.prismic.io/api/v2",
       libraries: ["@/slices"],
@@ -95,7 +95,7 @@ describe("send starter data", () => {
 
     mockfs({
       [TMP_DIR]: {
-        documents: {},
+        documents: mockfs.load(npath.join(PATH_TO_STUB_PROJECT, "documents")),
         customtypes: {
           "blog-page": {
             "index.json": JSON.stringify(CT_ON_DISK),
@@ -168,10 +168,24 @@ describe("send starter data", () => {
         return worked;
       });
 
+    const prismicUrl = new URL(smJson.apiEndpoint);
+
+    const docsNock = nock(prismicUrl.origin)
+      .matchHeader("Cookie", `prismic-auth=${token}`)
+      .post("/starters/documents")
+      .reply(200, (_, body) => {
+        const docs = t.record(t.string, t.string).decode(body);
+        const result = isRight(docs);
+        expect(result).toBeTruthy();
+        return result;
+      });
+
     stderr.start();
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
     stderr.stop();
     expect(result).toBeTruthy();
+
+    expect(docsNock.done()).toBeTruthy();
 
     expect.assertions(3);
   });
