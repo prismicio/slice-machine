@@ -6,7 +6,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
+    "postinstall": "lerna bootstrap --no-private && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
     "audit": "lerna run audit",
