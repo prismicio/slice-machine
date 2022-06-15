@@ -18,12 +18,12 @@ describe("slugify", () => {
     expect(slugify("validstring")).toBe("validstring");
   });
   test("removes whitespaces at either end", () => {
-    expect(slugify(" whitespaces ")).toBe("whitespacebefore");
+    expect(slugify(" whitespaces ")).toBe("whitespaces");
   });
   test("converts spaces in the middle into hyphens", () => {
     expect(slugify("string with hyphens")).toBe("string-with-hyphens");
   });
-  test("converts uppercase letters into lowecase", () => {
+  test("converts uppercase letters into lowercase", () => {
     expect(slugify("stringWithUppercases")).toBe("stringwithuppercases");
   });
   test("converts special characters", () => {
