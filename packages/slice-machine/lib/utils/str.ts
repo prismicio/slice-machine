@@ -32,3 +32,12 @@ export function createStorybookId(str: string): string {
   const camel = camelCase(str);
   return `_${camel[0].toUpperCase()}${camel.slice(1)}`;
 }
+
+export const slugify = (input: string) => {
+  const nowhitespace = input.trim().replaceAll(" ", "-");
+  const normalised = nowhitespace
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  return normalised.toLowerCase();
+};

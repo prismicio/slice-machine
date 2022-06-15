@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box } from "theme-ui";
 
 import ModalFormCard from "@components/ModalFormCard";
@@ -17,6 +18,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
 
 import Tracker from "@src/tracker";
+import { slugify } from "@lib/utils/str";
 
 const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
@@ -36,6 +38,8 @@ const CreateCustomTypeModal: React.FC = () => {
     ),
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
+
+  const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
 
   const createCustomTypeAndTrack = ({
     id,
@@ -63,7 +67,10 @@ const CreateCustomTypeModal: React.FC = () => {
       widthInPx="530px"
       formId="create-custom-type"
       buttonLabel={"Create"}
-      close={closeCreateCustomTypeModal}
+      close={() => {
+        closeCreateCustomTypeModal();
+        setIsIdFieldPristine(true);
+      }}
       onSubmit={createCustomTypeAndTrack}
       isLoading={isCreatingCustomType}
       initialValues={{
@@ -109,7 +116,7 @@ const CreateCustomTypeModal: React.FC = () => {
         title: "Create a new custom type",
       }}
     >
-      {({ errors }) => (
+      {({ errors, setFieldValue }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
@@ -118,6 +125,12 @@ const CreateCustomTypeModal: React.FC = () => {
             dataCy="ct-name-input"
             placeholder="My Custom Type"
             error={errors.label}
+            onChange={(e) => {
+              setFieldValue("label", e.target.value);
+              if (isIdFieldPristine) {
+                setFieldValue("id", slugify(e.target.value));
+              }
+            }}
           />
           <InputBox
             name="id"
@@ -125,6 +138,10 @@ const CreateCustomTypeModal: React.FC = () => {
             label="Custom Type ID"
             placeholder="my-custom-type"
             error={errors.id}
+            onChange={(e) => {
+              setFieldValue("id", e.target.value);
+              setIsIdFieldPristine(false);
+            }}
           />
         </Box>
       )}
