@@ -1,7 +1,7 @@
 import {
   SharedSliceEditor,
+  ThemeProvider,
   defaultSharedSliceContent,
-  themeClass,
 } from "@prismicio/editor-fields";
 import { renderSliceMock } from "@prismicio/mocks";
 import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
@@ -97,7 +97,6 @@ export default function Simulator() {
         />
       </Flex>
       <Flex
-        className={themeClass}
         sx={{
           backgroundColor: "#F9F8F9",
           borderInlineStart: "1px solid #DCDBDD",
@@ -107,11 +106,13 @@ export default function Simulator() {
           width: "444px",
         }}
       >
-        <SharedSliceEditor
-          content={content}
-          onContentChange={setContent}
-          sharedSlice={sharedSlice}
-        />
+        <ThemeProvider>
+          <SharedSliceEditor
+            content={content}
+            onContentChange={setContent}
+            sharedSlice={sharedSlice}
+          />
+        </ThemeProvider>
       </Flex>
     </Flex>
   );
