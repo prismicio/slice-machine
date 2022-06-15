@@ -175,6 +175,7 @@ describe("send starter data", () => {
       .post("/starters/documents")
       .reply(200, (_, body) => {
         const docs = t.record(t.string, t.string).decode(body);
+        // todo: check signature
         const result = isRight(docs);
         expect(result).toBeTruthy();
         return result;
