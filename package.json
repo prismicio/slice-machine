@@ -20,7 +20,6 @@
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive":"lerna version prerelease --preid alpha --no-push --exact --no-private",
-    "bump:interactive:default": "lerna version prerelease --preid alpha --no-push --exact --no-private",
     "bump:alpha": "lerna version prerelease --no-changelog --exact --yes --no-private",
     "bump:production": "lerna version --conventional-graduate --exact --no-private",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
