@@ -2,6 +2,51 @@ import path from "path";
 import fs from "fs";
 import axios from "axios";
 
+import * as t from "io-ts";
+import { getOrElseW } from "fp-ts/Either";
+
+const SignatureFileReader = t.type({
+  signature: t.string,
+});
+
+type SignatureFile = t.TypeOf<typeof SignatureFileReader>;
+
+export async function readSignatureFile(cwd: string): Promise<SignatureFile> {
+  const pathToFile = path.join(cwd, "documents", "index.json");
+  return fs.promises.readFile(pathToFile, "utf-8").then((res) => {   
+    const data = JSON.parse(res) as unknown
+    return getOrElseW(() => {
+      throw new Error("Undable to read document signature file");
+    })(SignatureFileReader.decode(data));
+  });
+}
+
+async function lsdir(dir: string): Promise<Array<string>> {
+  return fs.promises.readdir(dir)
+  .then(dirs => {
+    return dirs.filter(async name => {
+      return fs.promises.stat(path.join(dir, name)).then(stat => stat.isDirectory()).catch(() => false)
+    })
+  })
+}
+
+async function lsfiles(dir: string): Promise<Array<string>> {
+  return fs.promises.readdir(dir)
+  .then(dirs => {
+    return dirs.filter(async name => {
+      return fs.promises.stat(path.join(dir, name)).then(stat => stat.isFile()).catch(() => false)
+    })
+  })
+}
+
+
+export async function readDocuments(cwd: string) {
+  const documentDir = path.join(cwd, "documents")
+  const dirs = await lsdir(documentDir)
+  return dirs
+}
+
+
 export const sendDocumentsFromStarter = (
   repository: string,
   authorization: string,
@@ -43,8 +88,13 @@ export const sendDocumentsFromStarter = (
     documents: JSON.stringify(documentPayload),
   };
 
+  const prismicUrl = new URL(base)
+  prismicUrl.hostname = `${repository}.${prismicUrl.hostname}`
+  prismicUrl.pathname = "starters/documents"
+  const addr = prismicUrl.toString()
+
   axios
-    .post(`https://${repository}.prismic.io/starters/documents`, payload, {
+    .post(addr, payload, {
       headers: {
         Cookie: `prismic-auth=${authorization}`,
       },
