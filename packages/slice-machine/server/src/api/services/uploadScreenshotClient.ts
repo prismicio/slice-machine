@@ -1,13 +1,9 @@
 import { snakelize } from "@lib/utils/str";
-import path from "path";
-import uniqid from "uniqid";
-
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { ApiError } from "@lib/models/server/ApiResult";
-
-import { s3DefaultPrefix } from "@lib/consts";
+import { ApiError, isApiError } from "@lib/models/server/ApiResult";
 import { onError } from "../common/error";
 import { SliceSM } from "@slicemachine/core/build/models";
+import { Acl, ClientError } from "@slicemachine/client";
 
 export const purge = async (
   env: BackendEnvironment,
@@ -18,7 +14,7 @@ export const purge = async (
     console.log("\n[slice/push]: purging images folder");
 
     return env.client
-      .deleteImagesFolderAcl(snakelize(sliceName))
+      .deleteScreenshotFolder(snakelize(sliceName))
       .then(() => ({}))
       .catch(() => {
         const msg =
@@ -40,44 +36,30 @@ export const upload = async (
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
   console.log("[slice/push]: uploading variation preview");
 
-  const aclResult = await env.client.createImagesAcl();
+  const aclOrErr: Acl | ApiError = await env.client
+    .createAcl()
+    .catch((error: ClientError) => {
+      // An error happened in the ACL creation
+      console.error(error.message);
+      return onError(error.message);
+    });
 
-  // An error happened in the ACL creation
-  const errorMessage: string | undefined =
-    aclResult.error || aclResult.Message || aclResult.message;
-  if (errorMessage) {
-    console.error(errorMessage);
-    console.error(`Full error: ${JSON.stringify(aclResult)}`);
-    return { err: onError(errorMessage) };
-  }
+  if (isApiError(aclOrErr)) return { err: aclOrErr };
 
-  const {
-    values: { url, fields },
-    imgixEndpoint,
-  } = aclResult;
+  return env.client
+    .uploadScreenshot({
+      acl: aclOrErr,
+      sliceName,
+      variationId,
+      filePath,
+    })
+    .then((assetUrl) => ({ s3ImageUrl: assetUrl }))
+    .catch((error: ClientError) => {
+      const msg =
+        "[slice/push] An error occurred while uploading files - please contact support";
+      console.error(msg);
+      console.error(`Full error: ${error.message}`);
 
-  const filename = path.basename(filePath);
-  const key = `${env.repo}/${s3DefaultPrefix}/${snakelize(
-    sliceName
-  )}/${snakelize(variationId)}-${uniqid()}/${filename}`;
-  const postStatus = await env.client.uploadImageAcl({
-    url,
-    fields,
-    key,
-    filename,
-    pathToFile: filePath,
-  });
-
-  const s3ImageUrl = `${imgixEndpoint}/${key}`;
-
-  if (postStatus !== 204) {
-    const msg =
-      "[slice/push] An error occurred while uploading files - please contact support";
-    console.error(msg);
-    postStatus && console.error(`Error code: "${postStatus}"`);
-
-    return { err: onError(msg) };
-  }
-
-  return { s3ImageUrl };
+      return { err: onError(msg) };
+    });
 };

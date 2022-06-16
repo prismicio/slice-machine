@@ -280,7 +280,7 @@ describe("configure-project", () => {
     expect(MockTracker).toHaveBeenCalled();
   });
 
-  test("it shouldn' create a slice folder if it exists.", async () => {
+  test("it shouldn't create a slice folder if it exists.", async () => {
     // situation where the SM.Json doesn't exists.
     retrieveManifestMock.mockReturnValue({
       exists: false,
@@ -294,5 +294,30 @@ describe("configure-project", () => {
 
     expect(mkdirMock).not.toHaveBeenCalled();
     expect(MockTracker).toHaveBeenCalled();
+  });
+
+  test("it should not update the libraries property in sm.json if it exists", async () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: true,
+      content: {
+        framework: Models.Frameworks.react,
+        libraries: ["./slices2"],
+      },
+    });
+
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+    // only called to verify if slice folder exists.
+    fileExistsMock.mockReturnValue(true);
+
+    await configureProject(client, fakeCwd, fakeRepository, fakeFrameworkStats);
+
+    expect(mkdirMock).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
+
+    expect(patchManifestMock).toHaveBeenCalledWith("./", {
+      apiEndpoint: "https://testing-repo.prismic.io/api/v2",
+      framework: "react",
+      libraries: ["./slices2"],
+    });
   });
 });

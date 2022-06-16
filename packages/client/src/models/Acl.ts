@@ -18,3 +18,9 @@ export const AclCreateResult = t.exact(
 );
 
 export type AclCreateResult = t.TypeOf<typeof AclCreateResult>;
+
+export interface Acl {
+  url: string;
+  fields: Record<string, string>;
+  imgixEndpoint: string;
+}

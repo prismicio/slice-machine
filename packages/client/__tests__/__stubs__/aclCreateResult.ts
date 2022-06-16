@@ -6,5 +6,4 @@ export const aclCreateResultMock: AclCreateResult = {
     fields: {},
   },
   imgixEndpoint: "fakeImgixendpoint",
-  message: "no error, it's ok",
 };

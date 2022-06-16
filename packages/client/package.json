@@ -25,13 +25,15 @@
     "mime": "^2.5.2",
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",
-    "io-ts": "^2.2.16"
+    "io-ts": "^2.2.16",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@types/jest": "^27.0.2",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.10.5",
+    "@types/uniqid": "^5.3.2",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "better-npm-audit": "^3.4.0",

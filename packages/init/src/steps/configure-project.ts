@@ -16,8 +16,9 @@ export async function configureProject(
   sliceLibPath: string[] = [],
   tracking = true
 ): Promise<void> {
+  const frameworkName = NodeUtils.Framework.fancyName(framework.value);
   const spinner = logs.spinner(
-    `Configuring your ${framework.value} & Prismic project...`
+    `Configuring your ${frameworkName} and Prismic project...`
   );
   spinner.start();
 
@@ -30,6 +31,13 @@ export async function configureProject(
 
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
 
+    const libs =
+      manifest.content &&
+      manifest.content.libraries &&
+      manifest.content.libraries.length > 0
+        ? manifest.content.libraries
+        : ["@/slices"];
+
     const manifestUpdated: Models.Manifest = {
       ...(manifestAlreadyExistWithContent
         ? manifest.content
@@ -38,7 +46,7 @@ export async function configureProject(
         client.apisEndpoints.Wroom,
         repositoryDomainName
       ),
-      libraries: ["@/slices", ...sliceLibPath],
+      libraries: [...libs, ...sliceLibPath], // odd case here for staters
       ...(framework.manuallyAdded ? { framework: framework.value } : {}),
       ...(!tracking ? { tracking } : {}),
     };
@@ -50,7 +58,10 @@ export async function configureProject(
     const pathToSlicesFolder = NodeUtils.CustomPaths(cwd)
       .library("slices")
       .value();
-    if (!NodeUtils.Files.exists(pathToSlicesFolder)) {
+    if (
+      !NodeUtils.Files.exists(pathToSlicesFolder) &&
+      libs.includes("@/slices")
+    ) {
       NodeUtils.Files.mkdir(pathToSlicesFolder, { recursive: true });
     }
 

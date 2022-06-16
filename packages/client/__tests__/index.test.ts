@@ -435,8 +435,8 @@ describe("Client - Calls", () => {
     });
   });
 
-  // -- CREATE IMAGE ACL -- //
-  it("createImagesAcl - should succeed creating an ACL", async () => {
+  // -- CREATE ACL -- //
+  it("createAcl - should succeed creating an ACL", async () => {
     const client = new Client(
       ApplicationMode.PROD,
       repository,
@@ -447,12 +447,14 @@ describe("Client - Calls", () => {
       .get("/create")
       .reply(200, aclCreateResultMock);
 
-    await expect(client.createImagesAcl()).resolves.toEqual(
-      aclCreateResultMock
-    );
+    await expect(client.createAcl()).resolves.toEqual({
+      url: aclCreateResultMock.values.url,
+      fields: aclCreateResultMock.values.fields,
+      imgixEndpoint: aclCreateResultMock.imgixEndpoint,
+    });
   });
 
-  it("createImagesAcl - should throw if the ACL return is not the right format", async () => {
+  it("createAcl - should throw if the ACL return is not the right format", async () => {
     const client = new Client(
       ApplicationMode.PROD,
       repository,
@@ -464,7 +466,7 @@ describe("Client - Calls", () => {
       .reply(200, [{ name: "blabla" }]);
 
     expect.assertions(1);
-    return client.createImagesAcl().catch((e: ClientError) => {
+    return client.createAcl().catch((e: ClientError) => {
       expect(e.message).toContain("Unable to parse");
     });
   });
@@ -479,16 +481,13 @@ describe("Client - Calls", () => {
     nock(client.apisEndpoints.AclProvider).get("/create").reply(404);
 
     expect.assertions(1);
-    return client.createImagesAcl().catch((e: ClientError) => {
+    return client.createAcl().catch((e: ClientError) => {
       expect(e.message).toContain("Unable to retrieve");
     });
-    await expect(client.createImagesAcl()).rejects.toContain(
-      "Unable to retrieve"
-    );
   });
 
-  // -- DELETE IMAGE FOLDER ACL -- //
-  it("deleteImagesFolderAcl - should succeed updating a slice", async () => {
+  // -- DELETE SCREENSHOT FOLDER -- //
+  it("deleteScreenshotFolder - should succeed updating a slice", async () => {
     const client = new Client(
       ApplicationMode.PROD,
       repository,
@@ -497,10 +496,10 @@ describe("Client - Calls", () => {
 
     nock(client.apisEndpoints.AclProvider).post("/delete-folder").reply(200);
 
-    await expect(client.deleteImagesFolderAcl("slice")).resolves.not.toThrow();
+    await expect(client.deleteScreenshotFolder("slice")).resolves.not.toThrow();
   });
 
-  it("deleteImagesFolderAcl - should fail updating a slice", async () => {
+  it("deleteScreenshotFolder - should fail updating a slice", async () => {
     const client = new Client(
       ApplicationMode.PROD,
       repository,
@@ -510,7 +509,7 @@ describe("Client - Calls", () => {
     nock(client.apisEndpoints.AclProvider).post("/delete-folder").reply(500);
 
     expect.assertions(1);
-    return client.deleteImagesFolderAcl("slice").catch((e: ClientError) => {
+    return client.deleteScreenshotFolder("slice").catch((e: ClientError) => {
       expect(e.status).toBe(500);
     });
   });

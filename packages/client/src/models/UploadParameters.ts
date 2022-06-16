@@ -1,7 +1,8 @@
+import { Acl } from "./Acl";
+
 export type UploadParameters = {
-  url: string;
-  fields: Record<string, string>;
-  key: string;
-  filename: string;
-  pathToFile: string;
+  acl: Acl;
+  sliceName: string;
+  variationId: string;
+  filePath: string;
 };

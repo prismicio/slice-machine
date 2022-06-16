@@ -5,7 +5,7 @@ import { UserProfile } from "@slicemachine/core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
-import type { ClientError, UploadParameters } from "./models";
+import type { Acl, ClientError, UploadParameters } from "./models";
 import {
   ApplicationMode,
   getStatus,
@@ -17,7 +17,7 @@ import {
 } from "./models";
 
 import { getAndValidateResponse } from "./utils";
-import { upload } from "./utils/upload";
+import { uploadScreenshot } from "./utils/uploadScreenshot";
 
 // exporting models to be used with the Client.
 export * from "./models";
@@ -173,21 +173,54 @@ export class Client {
     return this._post(`${this.apisEndpoints.Models}slices/update`, sharedSlice);
   }
 
-  async createImagesAcl(): Promise<AclCreateResult> {
+  async createAcl(): Promise<Acl> {
     return getAndValidateResponse<AclCreateResult>(
       this._get(`${this.apisEndpoints.AclProvider}create`),
       "acl",
       AclCreateResult
-    );
+    ).then((result: AclCreateResult) => {
+      const errorMessage: string | undefined =
+        result.error || result.Message || result.message;
+
+      if (errorMessage) {
+        const error: ClientError = { status: 500, message: errorMessage };
+        return Promise.reject(error);
+      }
+
+      const {
+        values: { url, fields },
+        imgixEndpoint,
+      } = result;
+
+      return {
+        url,
+        fields,
+        imgixEndpoint,
+      };
+    });
   }
 
-  async deleteImagesFolderAcl(sliceName: string): Promise<AxiosPromise> {
+  async deleteScreenshotFolder(sliceName: string): Promise<AxiosPromise> {
     return this._post(`${this.apisEndpoints.AclProvider}delete-folder`, {
       sliceName,
     });
   }
 
-  async uploadImageAcl(params: UploadParameters): Promise<number | undefined> {
-    return upload(params);
+  // return the url of the new asset;
+  async uploadScreenshot(params: UploadParameters): Promise<string> {
+    if (!this.repository)
+      return Promise.reject({
+        status: 500,
+        message: "Repository missing to send screenshots",
+      });
+    return uploadScreenshot({ ...params, repository: this.repository }).catch(
+      (error: Error) => {
+        const clientError: ClientError = {
+          status: 500,
+          message: error.message,
+        };
+        return Promise.reject(clientError);
+      }
+    );
   }
 }
