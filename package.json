@@ -6,7 +6,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
+    "postinstall": "lerna bootstrap --no-private && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
     "build-essential": "npm run build --prefix packages/core && npm run build --prefix packages/client",
@@ -20,10 +20,9 @@
     "test:e2e:dev": "start-server-and-test 'npm run dev --prefix e2e-projects/next' http://localhost:3500 'npm run slicemachine --prefix e2e-projects/next' http://localhost:9999 'cypress open'",
     "::changeset": "npm run changeset add && git add .changeset && git commit -m '[release:changelog] update changeset'; echo 'We commited your changeset. You should defo push this master ✌️'",
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
-    "bump:interactive":"lerna version prerelease --preid alpha --no-push --exact",
-    "bump:interactive:default": "lerna version prerelease --preid alpha --force-publish=slice-machine-ui,@slicemachine/core,@slicemachine/init --no-push --exact",
-    "bump:alpha": "lerna version prerelease --no-changelog --exact --yes",
-    "bump:production": "lerna version --conventional-graduate --exact",
+    "bump:interactive":"lerna version prerelease --preid alpha --no-push --exact --no-private",
+    "bump:alpha": "lerna version prerelease --no-changelog --exact --yes --no-private",
+    "bump:production": "lerna version --conventional-graduate --exact --no-private",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
     "publish:production": "NEXT_PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
   },

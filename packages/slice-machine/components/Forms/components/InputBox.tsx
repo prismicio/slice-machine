@@ -8,6 +8,7 @@ type InputBoxProps = {
   placeholder: string;
   error?: string;
   dataCy?: string;
+  onChange?: (input: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const InputBox: React.FunctionComponent<InputBoxProps> = ({
@@ -16,6 +17,7 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
   placeholder,
   error,
   dataCy,
+  onChange,
 }) => (
   <Box mb={3}>
     <Label htmlFor={name} mb={2}>
@@ -27,6 +29,7 @@ export const InputBox: React.FunctionComponent<InputBoxProps> = ({
       placeholder={placeholder}
       as={Input}
       autoComplete="off"
+      {...(onChange ? { onChange } : null)}
       {...(dataCy ? { "data-cy": dataCy } : null)}
     />
     {error ? (

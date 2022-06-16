@@ -1,20 +1,24 @@
-import { describe, test, jest, afterEach, expect } from "@jest/globals";
+import { describe, test, afterEach, expect } from "@jest/globals";
 import npath from "path";
 import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
 import mock from "mock-fs";
-import inquirer from "inquirer";
-import { stderr } from "stdout-stderr";
-
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { isLeft } from "fp-ts/lib/Either";
 import { InitClient } from "../src/utils";
 import { ApplicationMode } from "@slicemachine/client";
-import SliceJson from "./__stubs__/fake-project/slices/MySlice/model.json";
+import { stderr } from "stdout-stderr";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
+
+const token = "aaaaaaa";
+const repo = "bbbbbbb";
+const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+const PATH_TO_STUB_PROJECT = npath.join(__dirname, "__stubs__", "fake-project");
 
 const IMAGE_DATA_PATH = npath.join(
   ".slicemachine",
@@ -24,11 +28,19 @@ const IMAGE_DATA_PATH = npath.join(
   "default",
   "preview.png"
 );
+
 const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
 
-const token = "aaaaaaa";
-const repo = "bbbbbbb";
-const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+const CT_ON_DISK = {
+  id: "blog-page",
+  label: "Blog Page",
+  repeatable: true,
+  status: true,
+  json: {},
+};
+
+const imageUrlRegexp =
+  /https:\/\/images.prismic.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
 
 function validateS3Body(body: unknown) {
   if (!body) return false;
@@ -43,60 +55,75 @@ function validateS3Body(body: unknown) {
 }
 
 const clientProd = new InitClient(ApplicationMode.PROD, repo, token);
-const clientStage = new InitClient(ApplicationMode.STAGE, repo, token);
 
 describe("send starter data", () => {
   afterEach(() => {
     mock.restore();
   });
 
-  test("should send slices and images from the file system to prismic", async () => {
+  test("it should do nothing when there is no documents directory", async () => {
+    mockfs({
+      [TMP_DIR]: {},
+    });
+
+    const result = await sendStarterData(clientProd, TMP_DIR);
+    expect(result).toBeFalsy();
+  });
+
+  test("it should do nothing when there are no slices or custom types", async () => {
+    const smJson = {
+      apiEndpoint: "https://foo-bar.prismic.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "none",
+    };
     mockfs({
       [TMP_DIR]: {
+        documents: {},
+        "sm.json": JSON.stringify(smJson),
+      },
+    });
+
+    const result = await sendStarterData(clientProd, TMP_DIR);
+    expect(result).toBeFalsy();
+  });
+
+  test("when there are slices and custom types is should send them", async () => {
+    const smJson = {
+      apiEndpoint: "https://foo-bar.prismic.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "none",
+    };
+
+    mockfs({
+      [TMP_DIR]: {
+        documents: {},
+        customtypes: {
+          "blog-page": {
+            "index.json": JSON.stringify(CT_ON_DISK),
+          },
+        },
+        "sm.json": JSON.stringify(smJson),
         slices: {
           MySlice: {
             "model.json": mockfs.load(
-              npath.join(__dirname, "__stubs__", "fake-project", MODEL_PATH)
+              npath.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
             ),
             default: {
               "preview.png": mockfs.load(
-                npath.join(
-                  __dirname,
-                  "__stubs__",
-                  "fake-project",
-                  IMAGE_DATA_PATH
-                )
+                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
               ),
             },
           },
         },
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://foo-bar.prismic.io/api/v2",
-          libraries: ["@/slices"],
-          framework: "none",
-        }),
-        documents: {},
       },
     });
-
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, []);
 
     // Mock ACL
-    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
+    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com")
       .get("/prod/create")
+      .matchHeader("User-Agent", "slice-machine")
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .matchHeader("repository", repo)
       .reply(200, {
         values: {
           url: fakeS3Url,
@@ -115,280 +142,40 @@ describe("send starter data", () => {
         err: null,
       });
 
-    // Mock S3
     nock(fakeS3Url).post("/", validateS3Body).reply(204);
 
-    const imageUrlRegexp =
-      /https:\/\/images.prismic.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
-
-    smApi
+    const customTypeEndpoint = "https://customtypes.prismic.io";
+    nock(customTypeEndpoint)
+      .matchHeader("repository", repo)
+      .matchHeader("Authorization", `Bearer ${token}`)
+      .get("/slices")
+      .reply(200, [])
       .post("/slices/insert", (d) => {
         const body = SharedSlice.decode(d);
         if (isLeft(body)) return false;
         if (body.right.variations.length === 0) return false;
-        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
+        const worked = imageUrlRegexp.test(body.right.variations[0].imageUrl);
+        expect(worked).toBeTruthy();
+        return worked;
       })
-      .reply(200);
-
-    stderr.start();
-    const result = await sendStarterData(clientProd, TMP_DIR);
-    stderr.stop();
-    expect(result).toBeTruthy();
-  });
-
-  test("it should warn the user if they have remote slices", async () => {
-    mockfs({
-      [TMP_DIR]: {
-        documents: {},
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://foo-bar.prismic.io/api/v2",
-          libraries: ["@/slices"],
-          framework: "none",
-        }),
-        slices: {
-          MySlice: {
-            "model.json": JSON.stringify(SliceJson),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(
-                  __dirname,
-                  "__stubs__",
-                  "fake-project",
-                  IMAGE_DATA_PATH
-                )
-              ),
-            },
-          },
-        },
-      },
-    });
-
-    const smApi = nock("https://customtypes.prismic.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, [SliceJson]);
-
-    const promptSpy = jest
-      .spyOn(inquirer, "prompt")
-      .mockResolvedValue({ pushSlices: false });
-
-    stderr.start();
-    const result = await sendStarterData(clientProd, TMP_DIR);
-    stderr.stop();
-
-    expect(promptSpy).toHaveBeenCalled();
-    expect(result).toBeTruthy();
-  });
-
-  test("it should do nothing when there is no documents directory", async () => {
-    mockfs({
-      [TMP_DIR]: {},
-    });
-
-    const result = await sendStarterData(clientProd, TMP_DIR);
-    expect(result).toBeFalsy();
-  });
-
-  test("when run in a partially setup repo (from init) it should do nothing", async () => {
-    mockfs({
-      [TMP_DIR]: {
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://foo-bar.prismic.io/api/v2",
-          libraries: ["@/slices"],
-          framework: "none",
-        }),
-      },
-    });
-
-    stderr.start();
-    const result = await sendStarterData(clientProd, TMP_DIR);
-    stderr.stop();
-
-    expect(result).toBeFalsy();
-  });
-
-  test("it can send slices and images to wroom.io", async () => {
-    mockfs({
-      [TMP_DIR]: {
-        documents: {},
-        slices: {
-          MySlice: {
-            "model.json": mockfs.load(
-              npath.join(__dirname, "__stubs__", "fake-project", MODEL_PATH)
-            ),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(
-                  __dirname,
-                  "__stubs__",
-                  "fake-project",
-                  IMAGE_DATA_PATH
-                )
-              ),
-            },
-          },
-        },
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://foo-bar.wroom.io/api/v2",
-          libraries: ["@/slices"],
-          framework: "none",
-        }),
-      },
-    });
-
-    const smApi = nock("https://customtypes.wroom.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, []);
-
-    const fakeS3Url = "https://s3.amazonaws.com/wroom-io/";
-
-    // Mock ACL
-    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
-      .get("/stage/create")
-      .reply(200, {
-        values: {
-          url: fakeS3Url,
-          fields: {
-            acl: "public-read",
-            "Content-Disposition": "inline",
-            bucket: "prismic-io",
-            "X-Amz-Algorithm": "a",
-            "X-Amz-Credential": "a",
-            "X-Amz-Date": "a",
-            Policy: "a",
-            "X-Amz-Signature": "a",
-          },
-        },
-        imgixEndpoint: "https://images.wroom.io",
-        err: null,
+      .reply(200)
+      .get("/customtypes")
+      .reply(200, [])
+      .post("/customtypes/insert")
+      .reply(200, (_, body) => {
+        const result = CustomType.decode(body);
+        const worked = isRight(result);
+        expect(worked).toBeTruthy();
+        return worked;
       });
 
-    // Mock S3
-    nock(fakeS3Url).post("/", validateS3Body).reply(204);
-
-    const imageUrlRegexp =
-      /https:\/\/images.wroom.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
-
-    smApi
-      .post("/slices/insert", (d) => {
-        const body = SharedSlice.decode(d);
-        if (isLeft(body)) return false;
-        if (body.right.variations.length === 0) return false;
-        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
-      })
-      .reply(200);
-
     stderr.start();
 
-    const result = await sendStarterData(clientStage, TMP_DIR);
-
-    stderr.stop();
-
-    expect(result).toBeTruthy();
-  });
-
-  test("when the remote slice exists it should call the update endpoint", async () => {
-    mockfs({
-      [TMP_DIR]: {
-        documents: {},
-        slices: {
-          MySlice: {
-            "model.json": JSON.stringify(SliceJson),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(
-                  __dirname,
-                  "__stubs__",
-                  "fake-project",
-                  IMAGE_DATA_PATH
-                )
-              ),
-            },
-          },
-        },
-        "sm.json": JSON.stringify({
-          apiEndpoint: "https://foo-bar.wroom.io/api/v2",
-          libraries: ["@/slices"],
-          framework: "none",
-        }),
-      },
-    });
-
-    const smApi = nock("https://customtypes.wroom.io", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    smApi.get("/slices").reply(200, [SliceJson]);
-
-    jest.spyOn(inquirer, "prompt").mockResolvedValue({ pushSlices: true });
-
-    const fakeS3Url = "https://s3.amazonaws.com/wroom-io/";
-
-    // Mock ACL
-    nock("https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/", {
-      reqheaders: {
-        repository: repo,
-        Authorization: `Bearer ${token}`,
-        "User-Agent": "slice-machine",
-      },
-    })
-      .get("/stage/create")
-      .reply(200, {
-        values: {
-          url: fakeS3Url,
-          fields: {
-            acl: "public-read",
-            "Content-Disposition": "inline",
-            bucket: "prismic-io",
-            "X-Amz-Algorithm": "a",
-            "X-Amz-Credential": "a",
-            "X-Amz-Date": "a",
-            Policy: "a",
-            "X-Amz-Signature": "a",
-          },
-        },
-        imgixEndpoint: "https://images.wroom.io",
-        err: null,
-      });
-
-    // Mock S3
-    nock(fakeS3Url).post("/", validateS3Body).reply(204);
-
-    const imageUrlRegexp =
-      /https:\/\/images.wroom.io\/bbbbbbb\/shared-slices\/my_slice\/default-[0-9a-z]+\/preview.png/;
-
-    smApi
-      .post("/slices/update", (d) => {
-        const body = SharedSlice.decode(d);
-        if (isLeft(body)) return false;
-        if (body.right.variations.length === 0) return false;
-        return imageUrlRegexp.test(body.right.variations[0].imageUrl);
-      })
-      .reply(200);
-
-    stderr.start();
-
-    const result = await sendStarterData(clientStage, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR);
 
     stderr.stop();
     expect(result).toBeTruthy();
+
+    expect.assertions(3);
   });
 });
