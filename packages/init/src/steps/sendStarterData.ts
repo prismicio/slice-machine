@@ -3,6 +3,7 @@ import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
 import path from "path";
 import { sendSlicesFromStarter } from "./starters/slices";
 import { sendCustomTypesFromStarter } from "./starters/custom-types";
+import { sendDocumentsFromStarter } from "./starters/documents";
 
 export async function sendStarterData(
   repository: string,
@@ -28,5 +29,7 @@ export async function sendStarterData(
     );
   }
 
-  return sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
+  await sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
+
+  return sendDocumentsFromStarter(repository, base, authTokenFromCookie, cwd);
 }

@@ -192,3 +192,40 @@ describe("send starter data", () => {
     expect.assertions(3);
   });
 });
+
+describe("readSignature", () => {
+  test("it should read the signature file", () => {
+    mockfs({
+      [TMP_DIR]: {
+        documents: {
+          "index.json": JSON.stringify({ signature: "xyz" }),
+        },
+      },
+    });
+  });
+});
+
+describe("readDocuments", () => {
+  test("it should read all the documents from the documents directory", () => {
+    mockfs({
+      [TMP_DIR]: {
+        documents: {
+          "en-gb": {
+            fooo: JSON.stringify({
+              uid: "home",
+              title: [
+                { type: "heading1", content: { text: "Hello", spans: [] } },
+              ],
+              uid_TYPE: "UID",
+              uid_POSITION: 0,
+              title_TYPE: "StructuredText",
+              title_POSITION: 1,
+              slugs_INTERNAL: ["hello"],
+              uids_INTERNAL: [],
+            }),
+          },
+        },
+      },
+    });
+  });
+});
