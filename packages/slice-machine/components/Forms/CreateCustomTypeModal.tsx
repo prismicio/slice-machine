@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
 
 import ModalFormCard from "@components/ModalFormCard";
@@ -19,6 +19,12 @@ import { FormikErrors } from "formik";
 
 import Tracker from "@src/tracker";
 import { slugify } from "@lib/utils/str";
+
+interface FormValues {
+  id: string;
+  label: string;
+  repeatable: boolean;
+}
 
 const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
@@ -41,15 +47,7 @@ const CreateCustomTypeModal: React.FC = () => {
 
   const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
 
-  const createCustomTypeAndTrack = ({
-    id,
-    label,
-    repeatable,
-  }: {
-    id: string;
-    label: string;
-    repeatable: boolean;
-  }) => {
+  const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
     const name = label || id;
 
     void Tracker.get().trackCreateCustomType({
@@ -62,15 +60,20 @@ const CreateCustomTypeModal: React.FC = () => {
 
   const handleLabelChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setFieldValue: (
-      field: string,
-      value: string,
+    values: FormValues,
+    setValues: (
+      values: SetStateAction<FormValues>,
       shouldValidate?: boolean
     ) => void
   ) => {
-    setFieldValue("label", e.target.value);
     if (isIdFieldPristine) {
-      setFieldValue("id", slugify(e.target.value));
+      setValues({
+        ...values,
+        label: e.target.value,
+        id: slugify(e.target.value),
+      });
+    } else {
+      setValues({ ...values, label: e.target.value });
     }
   };
 
@@ -142,7 +145,7 @@ const CreateCustomTypeModal: React.FC = () => {
         title: "Create a new custom type",
       }}
     >
-      {({ errors, setFieldValue }) => (
+      {({ errors, setValues, setFieldValue, values }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
@@ -151,7 +154,7 @@ const CreateCustomTypeModal: React.FC = () => {
             dataCy="ct-name-input"
             placeholder="My Custom Type"
             error={errors.label}
-            onChange={(e) => handleLabelChange(e, setFieldValue)}
+            onChange={(e) => handleLabelChange(e, values, setValues)}
           />
           <InputBox
             name="id"
