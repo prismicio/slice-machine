@@ -46,6 +46,9 @@ describe("readSignatureFile", () => {
 });
 
 describe("readDocuments", () => {
+  afterEach(() => {
+    mockfs.restore();
+  });
   test("it should read all the documents from the documents directory", async () => {
     const fakeDocs = JSON.stringify({
       uid: "home",

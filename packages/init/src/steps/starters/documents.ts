@@ -30,14 +30,14 @@ async function lsdir(dir: string): Promise<Array<string>> {
   })
 }
 
-async function lsfiles(dir: string): Promise<Array<string>> {
-  return fs.promises.readdir(dir)
-  .then(dirs => {
-    return dirs.filter(async name => {
-      return fs.promises.stat(path.join(dir, name)).then(stat => stat.isFile()).catch(() => false)
-    })
-  })
-}
+// async function lsfiles(dir: string): Promise<Array<string>> {
+//   return fs.promises.readdir(dir)
+//   .then(dirs => {
+//     return dirs.filter(async name => {
+//       return fs.promises.stat(path.join(dir, name)).then(stat => stat.isFile()).catch(() => false)
+//     })
+//   })
+// }
 
 
 export async function readDocuments(cwd: string) {
