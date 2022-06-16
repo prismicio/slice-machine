@@ -60,6 +60,32 @@ const CreateCustomTypeModal: React.FC = () => {
     createCustomType(id, name, repeatable);
   };
 
+  const handleLabelChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (
+      field: string,
+      value: string,
+      shouldValidate?: boolean
+    ) => void
+  ) => {
+    setFieldValue("label", e.target.value);
+    if (isIdFieldPristine) {
+      setFieldValue("id", slugify(e.target.value));
+    }
+  };
+
+  const handleIdChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (
+      field: string,
+      value: string,
+      shouldValidate?: boolean
+    ) => void
+  ) => {
+    setFieldValue("id", e.target.value);
+    setIsIdFieldPristine(false);
+  };
+
   return (
     <ModalFormCard
       dataCy="create-ct-modal"
@@ -125,12 +151,7 @@ const CreateCustomTypeModal: React.FC = () => {
             dataCy="ct-name-input"
             placeholder="My Custom Type"
             error={errors.label}
-            onChange={(e) => {
-              setFieldValue("label", e.target.value);
-              if (isIdFieldPristine) {
-                setFieldValue("id", slugify(e.target.value));
-              }
-            }}
+            onChange={(e) => handleLabelChange(e, setFieldValue)}
           />
           <InputBox
             name="id"
@@ -138,10 +159,7 @@ const CreateCustomTypeModal: React.FC = () => {
             label="Custom Type ID"
             placeholder="my-custom-type"
             error={errors.id}
-            onChange={(e) => {
-              setFieldValue("id", e.target.value);
-              setIsIdFieldPristine(false);
-            }}
+            onChange={(e) => handleIdChange(e, setFieldValue)}
           />
         </Box>
       )}
