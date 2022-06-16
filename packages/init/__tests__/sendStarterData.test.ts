@@ -178,6 +178,7 @@ describe("send starter data", () => {
         // todo: check signature
         const result = isRight(docs);
         expect(result).toBeTruthy();
+
         return result;
       });
 

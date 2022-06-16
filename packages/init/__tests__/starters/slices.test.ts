@@ -49,7 +49,7 @@ function validateS3Body(body: unknown) {
 
 describe("sendSlicesFromStarter", () => {
   afterEach(() => {
-    mock.restore();
+    mockfs.restore();
     nock.cleanAll();
   });
 
