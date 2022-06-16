@@ -4,6 +4,7 @@ import axios from "axios";
 
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
+import { handelErrors } from "./communication";
 
 const SignatureFileReader = t.type({
   signature: t.string,
@@ -13,111 +14,84 @@ type SignatureFile = t.TypeOf<typeof SignatureFileReader>;
 
 export async function readSignatureFile(cwd: string): Promise<SignatureFile> {
   const pathToFile = path.join(cwd, "documents", "index.json");
-  return fs.promises.readFile(pathToFile, "utf-8").then((res) => {   
-    const data = JSON.parse(res) as unknown
+  return fs.promises.readFile(pathToFile, "utf-8").then((res) => {
+    const data = JSON.parse(res) as unknown;
     return getOrElseW(() => {
-      throw new Error("Undable to read document signature file");
+      throw new Error("Unable to read document signature file");
     })(SignatureFileReader.decode(data));
   });
 }
 
 async function lsdir(dir: string): Promise<Array<string>> {
-  return fs.promises.readdir(dir)
-  .then(dirs => {
-    return dirs.filter(async name => {
-      return fs.promises.stat(path.join(dir, name)).then(stat => stat.isDirectory()).catch(() => false)
-    })
-  })
+  return fs.promises.readdir(dir).then((dirs) => {
+    return dirs
+      .filter((name) => fs.statSync(path.join(dir, name)).isDirectory())
+      .map((subdirectory) => path.join(dir, subdirectory));
+  });
 }
 
-// async function lsfiles(dir: string): Promise<Array<string>> {
-//   return fs.promises.readdir(dir)
-//   .then(dirs => {
-//     return dirs.filter(async name => {
-//       return fs.promises.stat(path.join(dir, name)).then(stat => stat.isFile()).catch(() => false)
-//     })
-//   })
-// }
-
+async function lsfiles(dir: string): Promise<Array<string>> {
+  return fs.promises.readdir(dir).then((dirs) => {
+    return dirs
+      .filter((name) => fs.statSync(path.join(dir, name)).isFile())
+      .map((file) => path.join(dir, file));
+  });
+}
 
 export async function readDocuments(cwd: string) {
-  const documentDir = path.join(cwd, "documents")
-  const dirs = await lsdir(documentDir)
-  return dirs
+  const documentDir = path.join(cwd, "documents");
+  const dirs = await lsdir(documentDir);
+
+  const files = (await Promise.all(dirs.map((dir) => lsfiles(dir)))).flat();
+
+  return files.reduce<Record<string, string>>((acc, file) => {
+    const fileContent = fs.readFileSync(file, "utf-8");
+    const filename = path.parse(file).name;
+    acc[filename] = fileContent;
+    return acc;
+  }, {});
 }
 
-
-export const sendDocumentsFromStarter = (
+export const sendDocumentsFromStarter = async (
   repository: string,
   authorization: string,
   base: string,
   cwd: string
-) => {
+): Promise<boolean> => {
   const pathToDocuments = path.join(cwd, "documents");
   const pathToSignatureFile = path.join(pathToDocuments, "index.json");
 
   if (!fs.existsSync(pathToSignatureFile)) {
-    return;
+    return false;
   }
 
-  const signatureObj = JSON.parse(
-    fs.readFileSync(pathToSignatureFile, "utf-8")
-  );
-
-  const directories = fs
-    .readdirSync(path.join(pathToDocuments))
-    .filter((file) =>
-      fs.statSync(path.join(pathToDocuments, file)).isDirectory()
-    );
-
-  const documentPayload = directories.reduce((acc, directory) => {
-    const directoryPath = path.join(pathToDocuments, directory);
-    const files = fs.readdirSync(directoryPath);
-    files.forEach((file) => {
-      const documentObj = fs.readFileSync(
-        path.join(directoryPath, file),
-        "utf-8"
-      );
-      acc[path.parse(file).name] = documentObj;
-    });
-    return acc;
-  }, {} as Record<string, string>);
+  const signatureObj = await readSignatureFile(cwd);
+  const documents = await readDocuments(cwd);
 
   const payload = {
     signature: signatureObj.signature,
-    documents: JSON.stringify(documentPayload),
+    documents: JSON.stringify(documents),
   };
 
-  const prismicUrl = new URL(base)
-  prismicUrl.hostname = `${repository}.${prismicUrl.hostname}`
-  prismicUrl.pathname = "starters/documents"
-  const addr = prismicUrl.toString()
+  const prismicUrl = new URL(base);
+  prismicUrl.hostname = `${repository}.${prismicUrl.hostname}`;
+  prismicUrl.pathname = "starters/documents";
+  const endpointURL = prismicUrl.toString();
 
-  axios
-    .post(addr, payload, {
+  return axios
+    .post(endpointURL, payload, {
       headers: {
         Cookie: `prismic-auth=${authorization}`,
       },
     })
     .then(() => {
-      return;
+      return true;
     })
-    .catch(() => {
-      return;
+    .catch((e) => {
+      handelErrors(
+        "sending documents, please try again. If the problem persists, contact us.",
+        e
+      );
+      process.exit(1);
     });
-
-  // Load files from the documents directory (signature: documents/index.json)
-
-  // documents
-  // en-us
-  // edefefef.json
-  // end-gb
-  // en-gb
-  //index.json => signature
-
-  // {
-  // signature: "34fbecc5b263e17dba2cd597119489a17b7343d6"
-  // documents: JSON.stringify({"Xs5vWREAACYAIvvr=#=Xs5vWREAACYAIvvs=#=top_menu=#=Xs5vWREAACYAIvvt=#=en-us=#=y": "...."})
-  //}
-  return;
 };

@@ -1,4 +1,4 @@
-import { describe, test, afterEach, expect } from "@jest/globals";
+import { describe, test, afterEach, expect, jest } from "@jest/globals";
 import npath from "path";
 import { sendStarterData } from "../src/steps";
 import nock from "nock";
@@ -8,7 +8,7 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { stderr } from "stdout-stderr";
-import t from "io-ts";
+import * as t from "io-ts";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -87,8 +87,12 @@ describe("send starter data", () => {
   });
 
   test("when there are slices, custom types and documents i should send them", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
     const smJson = {
-      apiEndpoint: "https://foo-bar.prismic.io/api/v2",
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
       framework: "none",
     };
@@ -170,7 +174,7 @@ describe("send starter data", () => {
 
     const prismicUrl = new URL(smJson.apiEndpoint);
 
-    const docsNock = nock(prismicUrl.origin)
+    nock(prismicUrl.origin)
       .matchHeader("Cookie", `prismic-auth=${token}`)
       .post("/starters/documents")
       .reply(200, (_, body) => {
@@ -186,9 +190,8 @@ describe("send starter data", () => {
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
     stderr.stop();
     expect(result).toBeTruthy();
+    expect(processExitSpy).not.toBeCalled();
 
-    expect(docsNock.done()).toBeTruthy();
-
-    expect.assertions(3);
+    expect.assertions(5);
   });
 });

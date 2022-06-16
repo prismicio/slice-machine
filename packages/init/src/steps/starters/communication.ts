@@ -4,7 +4,7 @@ import axios from "axios";
 import { logs } from "../../utils";
 import type { ApiEndpoints } from "./endpoints";
 
-function handelErrors(prefix: string, err: unknown) {
+export function handelErrors(prefix: string, err: unknown) {
   if (axios.isAxiosError(err) && err.response) {
     logs.writeError(
       `${prefix} | [${err.response.status}]: ${err.response.statusText}`

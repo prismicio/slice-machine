@@ -10,7 +10,7 @@ export async function sendStarterData(
   base: string,
   cookies: string,
   cwd: string
-) {
+): Promise<boolean> {
   const smJson = retrieveManifest(cwd);
   const hasDocuments = Files.exists(path.join(cwd, "documents"));
 
