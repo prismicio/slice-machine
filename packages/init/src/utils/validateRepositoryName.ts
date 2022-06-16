@@ -33,5 +33,12 @@ export async function validateRepositoryName(
     return Promise.reject(new Error(msg));
   }
 
-  return client.domainExist(domain).catch(() => false);
+  return client
+    .domainExist(domain)
+    .then((isAvailable) =>
+      isAvailable
+        ? true
+        : Promise.reject(new Error(`${name} is already in use`))
+    )
+    .catch(() => Promise.reject(new Error(`${name} is already in use`)));
 }

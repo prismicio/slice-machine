@@ -34,9 +34,7 @@ export async function promptForRepoDomain(
         default: defaultValue,
         transformer: (value: string | undefined) =>
           prettyRepoName(address, value || defaultValue || "repository"),
-        async validate(name: string) {
-          return validateRepositoryName(client, name);
-        },
+        validate: (name: string) => validateRepositoryName(client, name),
       },
     ])
     .then((res) => res.repoDomain);

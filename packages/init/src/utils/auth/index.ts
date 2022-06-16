@@ -51,14 +51,11 @@ export const Auth = {
       .updateAuthenticationToken(authToken)
       .profile()
       .then((userProfile) => {
-        const config = PrismicSharedConfigManager.get();
-
-        if (!config.shortId || !config.intercomHash) {
-          PrismicSharedConfigManager.setProperties({
-            shortId: userProfile.shortId,
-            intercomHash: userProfile.intercomHash,
-          });
-        }
+        // settings shortId and IntercomHash as we switch between dev and prod.
+        PrismicSharedConfigManager.setProperties({
+          shortId: userProfile.shortId,
+          intercomHash: userProfile.intercomHash,
+        });
         return true;
       })
       .catch(() => false);
