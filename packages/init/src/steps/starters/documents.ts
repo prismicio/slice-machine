@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
@@ -84,24 +84,31 @@ export const sendDocumentsFromStarter = async (
   const spinner = logs.spinner("Pushing existing documents to your repository");
   spinner.start();
 
-  await axios
+  return axios
     .post(endpointURL, payload, {
       headers: {
         "User-Agent": "prismic-cli/0",
         Cookie: cookies,
       },
     })
-    .catch((e) => {
-      handelErrors(
-        "sending documents, please try again. If the problem persists, contact us.",
-        e
-      );
+    .then(() => {
+      spinner.succeed();
+      fs.rmSync(pathToDocuments, { recursive: true, force: true });
+      return true;
+    })
+    .catch((e: AxiosError) => {
+      spinner.fail();
+      if (e.response?.data === "Repository should not contain documents") {
+        logs.writeError(
+          "The selected repository is not empty, documents cannot be uploaded. Please choose an empty repository or delete the documents contained in your repository."
+        );
+      } else {
+        handelErrors(
+          "sending documents, please try again. If the problem persists, contact us.",
+          e
+        );
+      }
+
       process.exit(1);
     });
-
-  spinner.succeed();
-
-  fs.rmSync(pathToDocuments, { recursive: true, force: true });
-
-  return Promise.resolve(true);
 };
