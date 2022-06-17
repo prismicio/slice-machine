@@ -81,6 +81,7 @@ export const sendDocumentsFromStarter = async (
   return axios
     .post(endpointURL, payload, {
       headers: {
+        "User-Agent": "prismic-cli/0",
         Cookie: cookies,
       },
     })
