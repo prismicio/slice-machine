@@ -35,15 +35,20 @@ export async function sendSlices(
   );
   spinner.start();
 
-  const acl: Acl = await client.createAcl().catch((error: ClientError) => {
-    writeError(
-      "Uploading screenshots for your slices failed, please contact us."
-    );
-    writeError(error.message, "Full error:");
-    process.exit(1);
-  });
+  const acl: Acl | null = await client
+    .createAcl()
+    .catch((error: ClientError) => {
+      writeError(
+        "Uploading screenshots for your slices failed, please contact us."
+      );
+      writeError(error.message, "Full error:");
+      return null;
+    });
 
-  const models = await updateSlicesWithScreenshots(client, acl, components);
+  // If the acl failed to be created, don't mind the screenshots.
+  const models = acl
+    ? await updateSlicesWithScreenshots(client, acl, components)
+    : components.map((component) => component.model);
 
   await Promise.all(
     models.map(async (model) => {
