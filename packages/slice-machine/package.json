@@ -87,6 +87,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@segment/analytics-next": "^1.32.1",
     "@prismicio/slice-simulator-com": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",
