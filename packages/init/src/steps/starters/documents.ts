@@ -65,7 +65,7 @@ export const sendDocumentsFromStarter = async (
   const pathToSignatureFile = path.join(pathToDocuments, "index.json");
 
   if (!fs.existsSync(pathToSignatureFile)) {
-    return false;
+    return Promise.resolve(false);
   }
 
   const signatureObj = await readSignatureFile(cwd);
@@ -84,16 +84,12 @@ export const sendDocumentsFromStarter = async (
   const spinner = logs.spinner("Pushing existing documents to your repository");
   spinner.start();
 
-  return axios
+  await axios
     .post(endpointURL, payload, {
       headers: {
         "User-Agent": "prismic-cli/0",
         Cookie: cookies,
       },
-    })
-    .then(() => {
-      spinner.succeed();
-      return true;
     })
     .catch((e) => {
       handelErrors(
@@ -102,4 +98,10 @@ export const sendDocumentsFromStarter = async (
       );
       process.exit(1);
     });
+
+  spinner.succeed();
+
+  fs.rmSync(pathToDocuments, { recursive: true, force: true });
+
+  return Promise.resolve(true);
 };

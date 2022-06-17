@@ -9,6 +9,8 @@ import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { stderr } from "stdout-stderr";
 import * as t from "io-ts";
+import fs from "fs";
+import path from "path";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
@@ -186,6 +188,8 @@ describe("send starter data", () => {
         return result;
       });
 
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
     stderr.start();
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
     stderr.stop();
@@ -202,6 +206,8 @@ describe("send starter data", () => {
       "✔ Pushing existing documents to your repository"
     );
 
-    expect.assertions(8);
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
+
+    expect.assertions(10);
   });
 });
