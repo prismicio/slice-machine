@@ -46,7 +46,7 @@ describe("readDocuments", () => {
     mockfs.restore();
   });
   test("it should read all the documents from the documents directory", async () => {
-    const fakeDocs = JSON.stringify({
+    const fakeDocs = {
       uid: "home",
       title: [{ type: "heading1", content: { text: "Hello", spans: [] } }],
       uid_TYPE: "UID",
@@ -55,13 +55,13 @@ describe("readDocuments", () => {
       title_POSITION: 1,
       slugs_INTERNAL: ["hello"],
       uids_INTERNAL: [],
-    });
+    };
 
     mockfs({
       [TMP_DIR]: {
         documents: {
           "en-gb": {
-            "fooo.json": fakeDocs,
+            "fooo.json": JSON.stringify(fakeDocs),
           },
           "index.json": "index.json content",
         },
@@ -69,6 +69,6 @@ describe("readDocuments", () => {
     });
 
     const result = await readDocuments(TMP_DIR);
-    expect(result).toEqual({ fooo: fakeDocs });
+    expect(result).toEqual(JSON.stringify({ fooo: fakeDocs }));
   });
 });
