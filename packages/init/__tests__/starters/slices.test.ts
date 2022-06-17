@@ -5,7 +5,6 @@ import { sendSlicesFromStarter } from "../../src/steps/starters/slices";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
-import mock from "mock-fs";
 import inquirer from "inquirer";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";

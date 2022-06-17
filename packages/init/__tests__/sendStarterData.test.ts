@@ -176,7 +176,7 @@ describe("send starter data", () => {
 
     nock(prismicUrl.origin)
       .matchHeader("Cookie", `prismic-auth=${token}`)
-      .post("/starters/documents")
+      .post("/starter/documents")
       .reply(200, (_, body) => {
         const docs = t.record(t.string, t.string).decode(body);
         // todo: check signature

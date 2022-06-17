@@ -31,5 +31,5 @@ export async function sendStarterData(
 
   await sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
 
-  return sendDocumentsFromStarter(repository, authTokenFromCookie, base, cwd);
+  return sendDocumentsFromStarter(repository, cookies, base, cwd);
 }

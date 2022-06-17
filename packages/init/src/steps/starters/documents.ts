@@ -54,7 +54,7 @@ export async function readDocuments(cwd: string) {
 
 export const sendDocumentsFromStarter = async (
   repository: string,
-  authorization: string,
+  cookies: string,
   base: string,
   cwd: string
 ): Promise<boolean> => {
@@ -75,13 +75,13 @@ export const sendDocumentsFromStarter = async (
 
   const prismicUrl = new URL(base);
   prismicUrl.hostname = `${repository}.${prismicUrl.hostname}`;
-  prismicUrl.pathname = "starters/documents";
+  prismicUrl.pathname = "starter/documents";
   const endpointURL = prismicUrl.toString();
 
   return axios
     .post(endpointURL, payload, {
       headers: {
-        Cookie: `prismic-auth=${authorization}`,
+        Cookie: cookies,
       },
     })
     .then(() => {
