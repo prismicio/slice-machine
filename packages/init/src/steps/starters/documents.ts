@@ -44,10 +44,10 @@ export async function readDocuments(cwd: string) {
 
   const files = (await Promise.all(dirs.map((dir) => lsfiles(dir)))).flat();
 
-  return files.reduce<Record<string, string>>((acc, file) => {
+  return files.reduce<Record<string, unknown>>((acc, file) => {
     const fileContent = fs.readFileSync(file, "utf-8");
     const filename = path.parse(file).name;
-    acc[filename] = fileContent;
+    acc[filename] = JSON.parse(fileContent);
     return acc;
   }, {});
 }
