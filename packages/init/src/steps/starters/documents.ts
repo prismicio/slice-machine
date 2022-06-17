@@ -44,12 +44,14 @@ export async function readDocuments(cwd: string) {
 
   const files = (await Promise.all(dirs.map((dir) => lsfiles(dir)))).flat();
 
-  return files.reduce<Record<string, unknown>>((acc, file) => {
+  const documentObj = files.reduce<Record<string, unknown>>((acc, file) => {
     const fileContent = fs.readFileSync(file, "utf-8");
     const filename = path.parse(file).name;
     acc[filename] = JSON.parse(fileContent);
     return acc;
   }, {});
+
+  return JSON.stringify(documentObj);
 }
 
 export const sendDocumentsFromStarter = async (
@@ -66,11 +68,11 @@ export const sendDocumentsFromStarter = async (
   }
 
   const signatureObj = await readSignatureFile(cwd);
-  const documents = await readDocuments(cwd);
+  const documentsStr = await readDocuments(cwd);
 
   const payload = {
     signature: signatureObj.signature,
-    documents: JSON.stringify(documents),
+    documents: documentsStr,
   };
 
   const prismicUrl = new URL(base);
