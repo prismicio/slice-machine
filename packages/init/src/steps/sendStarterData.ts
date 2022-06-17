@@ -3,13 +3,14 @@ import { retrieveManifest, Files } from "@slicemachine/core/build/node-utils";
 import path from "path";
 import { sendSlicesFromStarter } from "./starters/slices";
 import { sendCustomTypesFromStarter } from "./starters/custom-types";
+import { sendDocumentsFromStarter } from "./starters/documents";
 
 export async function sendStarterData(
   repository: string,
   base: string,
   cookies: string,
   cwd: string
-) {
+): Promise<boolean> {
   const smJson = retrieveManifest(cwd);
   const hasDocuments = Files.exists(path.join(cwd, "documents"));
 
@@ -28,5 +29,7 @@ export async function sendStarterData(
     );
   }
 
-  return sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
+  await sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
+
+  return sendDocumentsFromStarter(repository, cookies, base, cwd);
 }
