@@ -4,7 +4,7 @@ import axios from "axios";
 import { logs } from "../../utils";
 import type { ApiEndpoints } from "./endpoints";
 
-export function handelErrors(prefix: string, err: unknown) {
+export function handleErrors(prefix: string, err: unknown) {
   if (axios.isAxiosError(err) && err.response) {
     logs.writeError(
       `${prefix} | [${err.response.status}]: ${err.response.statusText}`
@@ -57,7 +57,7 @@ async function sendModelToPrismic(
       return;
     })
     .catch((err) => {
-      handelErrors(
+      handleErrors(
         `sending slice ${model.id},  please try again. If the problem persists, contact us.`,
         err
       );
@@ -136,7 +136,7 @@ async function sendCustomTypeToPrismic(
       return;
     })
     .catch((err) => {
-      handelErrors(
+      handleErrors(
         `sending custom type ${customType.id}, please try again. If the problem persists, contact us.`,
         err
       );

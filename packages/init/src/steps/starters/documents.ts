@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
-import { handelErrors } from "./communication";
+import { handleErrors } from "./communication";
 import { logs } from "../../utils";
 
 const SignatureFileReader = t.type({
@@ -103,7 +103,7 @@ export const sendDocumentsFromStarter = async (
           "The selected repository is not empty, documents cannot be uploaded. Please choose an empty repository or delete the documents contained in your repository."
         );
       } else {
-        handelErrors(
+        handleErrors(
           "sending documents, please try again. If the problem persists, contact us.",
           e
         );
