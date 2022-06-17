@@ -189,9 +189,19 @@ describe("send starter data", () => {
     stderr.start();
     const result = await sendStarterData(repo, base, cookies, TMP_DIR);
     stderr.stop();
+
     expect(result).toBeTruthy();
     expect(processExitSpy).not.toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing documents to your repository"
+    );
 
-    expect.assertions(5);
+    expect.assertions(8);
   });
 });

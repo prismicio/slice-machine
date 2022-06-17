@@ -5,6 +5,7 @@ import axios from "axios";
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
 import { handelErrors } from "./communication";
+import { logs } from "../../utils";
 
 const SignatureFileReader = t.type({
   signature: t.string,
@@ -80,6 +81,9 @@ export const sendDocumentsFromStarter = async (
   prismicUrl.pathname = "starter/documents";
   const endpointURL = prismicUrl.toString();
 
+  const spinner = logs.spinner("Pushing existing documents to your repository");
+  spinner.start();
+
   return axios
     .post(endpointURL, payload, {
       headers: {
@@ -88,6 +92,7 @@ export const sendDocumentsFromStarter = async (
       },
     })
     .then(() => {
+      spinner.succeed();
       return true;
     })
     .catch((e) => {
