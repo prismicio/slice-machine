@@ -73,7 +73,7 @@ describe("send starter data", () => {
       [TMP_DIR]: {},
     });
 
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     expect(result).toBeFalsy();
   });
 
@@ -90,11 +90,11 @@ describe("send starter data", () => {
       },
     });
 
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     expect(result).toBeFalsy();
   });
 
-  test("when there are slices, custom types and documents i should send them", async () => {
+  test("when there are slices, custom types and documents it should send them", async () => {
     const processExitSpy = jest
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
@@ -112,7 +112,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     stderr.stop();
 
     expect(result).toBeTruthy();
@@ -150,7 +150,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     stderr.stop();
 
     expect(result).toBeFalsy();
@@ -162,6 +162,44 @@ describe("send starter data", () => {
       "✔ Pushing existing custom types to your repository"
     );
     expect(stderr.output).toContain(
+      "✖ Pushing existing documents to your repository"
+    );
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    expect.assertions(9);
+  });
+
+  test("when sendDocs is false it should not send the documents", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    const smJson = {
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
+      libraries: ["@/slices"],
+      framework: "none",
+    };
+
+    mockFiles(smJson);
+
+    mockApiCalls(smJson, false);
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    stderr.start();
+    const result = await sendStarterData(repo, base, cookies, false, TMP_DIR);
+    stderr.stop();
+
+    expect(result).toBeTruthy();
+    expect(processExitSpy).not.toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).not.toContain(
       "✖ Pushing existing documents to your repository"
     );
 

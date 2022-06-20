@@ -9,6 +9,7 @@ export async function sendStarterData(
   repository: string,
   base: string,
   cookies: string,
+  sendDocs = true,
   cwd: string
 ): Promise<boolean> {
   const smJson = retrieveManifest(cwd);
@@ -30,6 +31,10 @@ export async function sendStarterData(
   }
 
   await sendCustomTypesFromStarter(repository, authTokenFromCookie, base, cwd);
+
+  if (sendDocs === false) {
+    return Promise.resolve(true);
+  }
 
   return sendDocumentsFromStarter(repository, cookies, base, cwd);
 }

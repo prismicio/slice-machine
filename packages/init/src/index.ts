@@ -22,6 +22,7 @@ async function init() {
   const isTrackingAvailable =
     findArgument(process.argv, "tracking") !== "false";
   const maybeRepositorySubdomain = findArgument(process.argv, "repository");
+  const sendDocs = findArgument(process.argv, "no-docs") ? true : false;
 
   Tracker.get().initialize(
     process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
@@ -74,6 +75,7 @@ async function init() {
     repositoryDomainName,
     config.base,
     config.cookies,
+    sendDocs,
     cwd
   ); // will be false if no sm.json is found
 
