@@ -24,7 +24,7 @@ describe("display final message", () => {
     displayFinalMessage(TMP_DIR, false, FAKE_REPO, FAKE_BASE);
     stdout.stop();
     expect(stdout.output).toContain(
-      "■ Run npm run slicemachine to start Slice Machine and create your first Custom Type"
+      "■ Run npm run slicemachine to launch Slice Machine and create your first Custom Type"
     );
   });
 
@@ -39,7 +39,7 @@ describe("display final message", () => {
     displayFinalMessage(TMP_DIR, false, FAKE_REPO, FAKE_BASE);
     stdout.stop();
     expect(stdout.output).toContain(
-      "■ Run yarn run slicemachine to start Slice Machine and create your first Custom Type"
+      "■ Run yarn run slicemachine to launch Slice Machine and create your first Custom Type"
     );
   });
 
