@@ -23,7 +23,9 @@ export function displayFinalMessage(
     console.log(message);
   } else {
     console.log(
-      `${logs.white("■")} Run ${logs.purple(command)} to start Slice Machine`
+      `${logs.white("■")} Run ${logs.purple(
+        command
+      )} to launch Slice Machine and create your first Custom Type`
     );
   }
 }
