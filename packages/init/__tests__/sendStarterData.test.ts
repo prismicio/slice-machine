@@ -1,5 +1,4 @@
 import { describe, test, afterEach, expect, jest } from "@jest/globals";
-import npath from "path";
 import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
@@ -18,7 +17,7 @@ interface SmJson {
   framework: string;
 }
 
-const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
+const TMP_DIR = path.join(os.tmpdir(), "sm-init-starter-test");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
@@ -26,9 +25,9 @@ const base = "https://prismic.io";
 const cookies = `prismic-auth=${token}`;
 const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
-const PATH_TO_STUB_PROJECT = npath.join(__dirname, "__stubs__", "fake-project");
+const PATH_TO_STUB_PROJECT = path.join(__dirname, "__stubs__", "fake-project");
 
-const IMAGE_DATA_PATH = npath.join(
+const IMAGE_DATA_PATH = path.join(
   ".slicemachine",
   "assets",
   "slices",
@@ -37,7 +36,7 @@ const IMAGE_DATA_PATH = npath.join(
   "preview.png"
 );
 
-const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
+const MODEL_PATH = path.join("slices", "MySlice", "model.json");
 
 const CT_ON_DISK = {
   id: "blog-page",
@@ -222,7 +221,7 @@ describe("send starter data", () => {
 const mockFiles = (smJson: SmJson) => {
   mockfs({
     [TMP_DIR]: {
-      documents: mockfs.load(npath.join(PATH_TO_STUB_PROJECT, "documents")),
+      documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
       customtypes: {
         "blog-page": {
           "index.json": JSON.stringify(CT_ON_DISK),
@@ -232,11 +231,11 @@ const mockFiles = (smJson: SmJson) => {
       slices: {
         MySlice: {
           "model.json": mockfs.load(
-            npath.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
+            path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
           ),
           default: {
             "preview.png": mockfs.load(
-              npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
             ),
           },
         },
