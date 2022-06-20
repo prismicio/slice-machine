@@ -179,7 +179,7 @@ describe("send starter data", () => {
     expect.assertions(11);
   });
 
-  test("when sendDocs is false it should not send the documents", async () => {
+  test("when sendDocs is false it should not send the documents and remove the folder", async () => {
     const processExitSpy = jest
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
@@ -212,7 +212,7 @@ describe("send starter data", () => {
       "✖ Pushing existing documents to your repository"
     );
 
-    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
 
     expect.assertions(9);
   });
