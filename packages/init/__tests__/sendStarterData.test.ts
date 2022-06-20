@@ -137,6 +137,10 @@ describe("send starter data", () => {
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
 
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementationOnce(() => undefined);
+
     const smJson = {
       apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
@@ -167,7 +171,12 @@ describe("send starter data", () => {
 
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
-    expect.assertions(9);
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(consoleErrorSpy.mock.calls[0][0]).toContain(
+      "The selected repository is not empty, documents cannot be uploaded. Please choose an empty repository or delete the documents contained in your repository."
+    );
+
+    expect.assertions(11);
   });
 
   test("when sendDocs is false it should not send the documents", async () => {
