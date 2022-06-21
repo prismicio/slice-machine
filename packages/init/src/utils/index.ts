@@ -15,6 +15,11 @@ export function findArgument(args: string[], name: string): string | undefined {
   return flagValue;
 }
 
+export function findFlag(args: string[], name: string): boolean {
+  const toFind = `--${name}`;
+  return args.includes(toFind);
+}
+
 export const execCommand: (
   command: string
 ) => Promise<{ stderr: string; stdout: string }> = util.promisify(exec);
