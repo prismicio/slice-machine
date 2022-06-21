@@ -1,5 +1,4 @@
 import { describe, test, afterEach, expect, jest } from "@jest/globals";
-import npath from "path";
 import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
@@ -18,7 +17,7 @@ interface SmJson {
   framework: string;
 }
 
-const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
+const TMP_DIR = path.join(os.tmpdir(), "sm-init-starter-test");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
@@ -26,9 +25,9 @@ const base = "https://prismic.io";
 const cookies = `prismic-auth=${token}`;
 const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
-const PATH_TO_STUB_PROJECT = npath.join(__dirname, "__stubs__", "fake-project");
+const PATH_TO_STUB_PROJECT = path.join(__dirname, "__stubs__", "fake-project");
 
-const IMAGE_DATA_PATH = npath.join(
+const IMAGE_DATA_PATH = path.join(
   ".slicemachine",
   "assets",
   "slices",
@@ -37,7 +36,7 @@ const IMAGE_DATA_PATH = npath.join(
   "preview.png"
 );
 
-const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
+const MODEL_PATH = path.join("slices", "MySlice", "model.json");
 
 const CT_ON_DISK = {
   id: "blog-page",
@@ -73,7 +72,7 @@ describe("send starter data", () => {
       [TMP_DIR]: {},
     });
 
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     expect(result).toBeFalsy();
   });
 
@@ -90,11 +89,11 @@ describe("send starter data", () => {
       },
     });
 
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     expect(result).toBeFalsy();
   });
 
-  test("when there are slices, custom types and documents i should send them", async () => {
+  test("when there are slices, custom types and documents it should send them", async () => {
     const processExitSpy = jest
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
@@ -112,7 +111,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     stderr.stop();
 
     expect(result).toBeTruthy();
@@ -137,6 +136,10 @@ describe("send starter data", () => {
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
 
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementationOnce(() => undefined);
+
     const smJson = {
       apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
@@ -150,7 +153,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, TMP_DIR);
+    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
     stderr.stop();
 
     expect(result).toBeFalsy();
@@ -167,6 +170,49 @@ describe("send starter data", () => {
 
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(consoleErrorSpy.mock.calls[0][0]).toContain(
+      "The selected repository is not empty, documents cannot be uploaded. Please choose an empty repository or delete the documents contained in your repository."
+    );
+
+    expect.assertions(11);
+  });
+
+  test("when sendDocs is false it should not send the documents and remove the folder", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    const smJson = {
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
+      libraries: ["@/slices"],
+      framework: "none",
+    };
+
+    mockFiles(smJson);
+
+    mockApiCalls(smJson, false);
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    stderr.start();
+    const result = await sendStarterData(repo, base, cookies, false, TMP_DIR);
+    stderr.stop();
+
+    expect(result).toBeTruthy();
+    expect(processExitSpy).not.toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).not.toContain(
+      "✖ Pushing existing documents to your repository"
+    );
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
+
     expect.assertions(9);
   });
 });
@@ -175,7 +221,7 @@ describe("send starter data", () => {
 const mockFiles = (smJson: SmJson) => {
   mockfs({
     [TMP_DIR]: {
-      documents: mockfs.load(npath.join(PATH_TO_STUB_PROJECT, "documents")),
+      documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
       customtypes: {
         "blog-page": {
           "index.json": JSON.stringify(CT_ON_DISK),
@@ -185,11 +231,11 @@ const mockFiles = (smJson: SmJson) => {
       slices: {
         MySlice: {
           "model.json": mockfs.load(
-            npath.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
+            path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
           ),
           default: {
             "preview.png": mockfs.load(
-              npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
             ),
           },
         },
