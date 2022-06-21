@@ -23,9 +23,7 @@ describe("display final message", () => {
     stdout.start();
     displayFinalMessage(TMP_DIR, false, FAKE_REPO, FAKE_BASE);
     stdout.stop();
-    expect(stdout.output).toContain(
-      "■ Run npm run slicemachine to launch Slice Machine and create your first Custom Type"
-    );
+    expect(stdout.output).toContain("npm run slicemachine");
   });
 
   test("when not using a starter but using yarn", () => {
@@ -38,9 +36,7 @@ describe("display final message", () => {
     stdout.start();
     displayFinalMessage(TMP_DIR, false, FAKE_REPO, FAKE_BASE);
     stdout.stop();
-    expect(stdout.output).toContain(
-      "■ Run yarn run slicemachine to launch Slice Machine and create your first Custom Type"
-    );
+    expect(stdout.output).toContain("yarn run slicemachine");
   });
 
   test("when wasStarter is set to true", () => {
