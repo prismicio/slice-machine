@@ -12,7 +12,7 @@ import {
   installLib,
   sendStarterData,
 } from "./steps";
-import { findArgument, logs } from "./utils";
+import { findArgument, logs, findFlag } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -22,7 +22,7 @@ async function init() {
   const isTrackingAvailable =
     findArgument(process.argv, "tracking") !== "false";
   const maybeRepositorySubdomain = findArgument(process.argv, "repository");
-  const sendDocs = findArgument(process.argv, "no-docs") ? true : false;
+  const sendDocs = findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
     process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
