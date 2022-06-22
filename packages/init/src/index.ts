@@ -22,7 +22,7 @@ async function init() {
   const isTrackingAvailable =
     findArgument(process.argv, "tracking") !== "false";
   const maybeRepositorySubdomain = findArgument(process.argv, "repository");
-  const sendDocs = findFlag(process.argv, "no-docs");
+  const sendDocs = !findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
     process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
