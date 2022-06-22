@@ -19,7 +19,10 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
-import { createCustomTypeCreator } from "./availableCustomTypes";
+import {
+  createCustomTypeCreator,
+  renameCustomTypeCreator,
+} from "./availableCustomTypes";
 import { createSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "./toaster";
@@ -86,6 +89,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+  const closeRenameCustomTypeModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+  const openRenameCustomTypeModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -109,6 +116,13 @@ const useSliceMachineActions = () => {
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const renameCustomType = (customTypeId: string, newCustomTypeName: string) =>
+    dispatch(
+      renameCustomTypeCreator.request({
+        customTypeId,
+        newCustomTypeName,
+      })
+    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -273,6 +287,7 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
+    renameCustomType,
     initCustomTypeStore,
     saveCustomType,
     pushCustomType,
@@ -301,6 +316,8 @@ const useSliceMachineActions = () => {
     setSeenTutorialsToolTip,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
+    openRenameCustomTypeModal,
+    closeRenameCustomTypeModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openToaster,

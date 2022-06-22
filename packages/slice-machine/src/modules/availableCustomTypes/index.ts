@@ -34,9 +34,19 @@ export const createCustomTypeCreator = createAsyncAction(
   }
 >();
 
+export const renameCustomTypeCreator = createAsyncAction(
+  "CUSTOM_TYPES/RENAME.REQUEST",
+  "CUSTOM_TYPES/RENAME.RESPONSE",
+  "CUSTOM_TYPES/RENAME.FAILURE"
+)<{
+  customTypeId: string;
+  newCustomTypeName: string;
+}>();
+
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof createCustomTypeCreator>;
+  | ActionType<typeof createCustomTypeCreator>
+  | ActionType<typeof renameCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
