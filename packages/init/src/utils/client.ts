@@ -45,7 +45,11 @@ export class InitClient extends Client {
     );
   }
 
-  async pushDocuments(signature: string, documents: Record<string, unknown>) {
+  async pushDocuments(
+    signature: string,
+    documents: Record<string, unknown>,
+    cookies: string
+  ) {
     if (!this.repository) throw new Error("Repository undefined in the client");
     const repositoryDirectUrl = new URL(this.apisEndpoints.Wroom);
     repositoryDirectUrl.hostname = `${this.repository}.${repositoryDirectUrl.hostname}`;
@@ -55,6 +59,7 @@ export class InitClient extends Client {
       url: `${repositoryDirectUrl.toString()}starter/documents`,
       data: { signature, documents },
       headers: {
+        Cookie: cookies,
         "User-Agent": "prismic-cli/0", // special user agent just for this route.
       },
     });

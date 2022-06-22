@@ -5,6 +5,7 @@ import type { AxiosError } from "axios";
 import * as t from "io-ts";
 import { getOrElseW } from "fp-ts/Either";
 import { InitClient, logs, lsdir, lsfiles } from "../../utils";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic/SharedConfig";
 
 const SignatureFileReader = t.type({
   signature: t.string,
@@ -61,7 +62,11 @@ export async function sendDocuments(
   spinner.start();
 
   return client
-    .pushDocuments(signatureObj.signature, documents)
+    .pushDocuments(
+      signatureObj.signature,
+      documents,
+      PrismicSharedConfigManager.get().cookies
+    )
     .then(() => {
       spinner.succeed();
       fs.rmSync(pathToDocuments, { recursive: true, force: true });
