@@ -57,7 +57,7 @@ export class InitClient extends Client {
     return this._fetch({
       method: "post",
       url: `${repositoryDirectUrl.toString()}starter/documents`,
-      data: { signature, documents },
+      data: { signature, documents: JSON.stringify(documents) },
       headers: {
         Cookie: cookies,
         "User-Agent": "prismic-cli/0", // special user agent just for this route.
