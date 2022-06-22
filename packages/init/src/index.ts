@@ -97,12 +97,7 @@ async function init() {
   await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
 
   // Ask the user to run slice-machine.
-  displayFinalMessage(
-    cwd,
-    wasStarter,
-    client.repository,
-    client.apisEndpoints.Wroom
-  );
+  displayFinalMessage(cwd, wasStarter, repository, client.apisEndpoints.Wroom);
 }
 
 init()
