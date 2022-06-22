@@ -231,42 +231,4 @@ describe("starters/custom-types", () => {
       expect(result).toBeTruthy();
     });
   });
-
-  test.skip("If a custom-type if invalid, it should exit", async () => {
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementationOnce(() => undefined as never);
-
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    mockfs({
-      [TMP_DIR]: {
-        customtypes: {
-          "blog-page": {
-            "index.json": JSON.stringify({ invalid: true }),
-          },
-        },
-      },
-    });
-
-    const customTypeEndpoint = "https://customtypes.prismic.io";
-
-    nock(customTypeEndpoint)
-      .matchHeader("repository", repo)
-      .matchHeader("Authorization", `Bearer ${token}`)
-      .get("/customtypes")
-      .reply(200, []);
-
-    stderr.start();
-
-    const result = await sendCustomTypes(client, TMP_DIR);
-
-    stderr.stop();
-
-    expect(exitSpy).toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalled();
-    expect(result).toBeTruthy();
-  });
 });

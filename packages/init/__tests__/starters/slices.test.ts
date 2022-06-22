@@ -5,7 +5,6 @@ import { sendSlices } from "../../src/steps/starters/slices";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
-import mock from "mock-fs";
 import inquirer from "inquirer";
 
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
@@ -55,7 +54,7 @@ function validateS3Body(body: unknown) {
 
 describe("sendSlicesFromStarter", () => {
   afterEach(() => {
-    mock.restore();
+    mockfs.restore();
     nock.cleanAll();
   });
 
@@ -437,42 +436,6 @@ describe("sendSlicesFromStarter", () => {
     expect(stderr.output).toContain(
       "Pushing existing Slice models to your repository"
     );
-    expect(result).toBeTruthy();
-  });
-
-  test.skip("when a slice is invalid, it should alert the user and exit", async () => {
-    const smJson = {
-      apiEndpoint: "https://foo-bar.wroom.io/api/v2",
-      libraries: ["@/slices"],
-    };
-    mockfs({
-      [TMP_DIR]: {
-        slices: {
-          MySlice: {
-            "model.json": JSON.stringify({}),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
-              ),
-            },
-          },
-        },
-        "sm.json": JSON.stringify(smJson),
-      },
-    });
-
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementationOnce(() => undefined as never);
-
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    const result = await sendSlices(clientStage, TMP_DIR, smJson);
-
-    expect(exitSpy).toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalled();
     expect(result).toBeTruthy();
   });
 });

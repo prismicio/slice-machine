@@ -4,6 +4,7 @@ import { exec } from "child_process";
 export * as logs from "./logs";
 export { Auth } from "./auth";
 export * from "./client";
+export * from "./fs";
 
 export function findArgument(args: string[], name: string): string | undefined {
   const flagIndex: number = args.indexOf(`--${name}`);
@@ -15,6 +16,11 @@ export function findArgument(args: string[], name: string): string | undefined {
 
   if (flagValue.startsWith("--")) return;
   return flagValue;
+}
+
+export function findFlag(args: string[], name: string): boolean {
+  const toFind = `--${name}`;
+  return args.includes(toFind);
 }
 
 export const execCommand: (

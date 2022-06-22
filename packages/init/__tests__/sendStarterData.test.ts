@@ -1,26 +1,27 @@
-import { describe, test, afterEach, expect } from "@jest/globals";
-import npath from "path";
+import { describe, test, afterEach, expect, jest } from "@jest/globals";
 import { sendStarterData } from "../src/steps";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
-import mock from "mock-fs";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { InitClient } from "../src/utils";
 import { ApplicationMode } from "@slicemachine/client";
 import { stderr } from "stdout-stderr";
+import fs from "fs";
+import path from "path";
+import { Manifest } from "@slicemachine/core/build/models";
 
-const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
+const TMP_DIR = path.join(os.tmpdir(), "sm-init-starter-test");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
 const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
-const PATH_TO_STUB_PROJECT = npath.join(__dirname, "__stubs__", "fake-project");
+const PATH_TO_STUB_PROJECT = path.join(__dirname, "__stubs__", "fake-project");
 
-const IMAGE_DATA_PATH = npath.join(
+const IMAGE_DATA_PATH = path.join(
   ".slicemachine",
   "assets",
   "slices",
@@ -29,7 +30,7 @@ const IMAGE_DATA_PATH = npath.join(
   "preview.png"
 );
 
-const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
+const MODEL_PATH = path.join("slices", "MySlice", "model.json");
 
 const CT_ON_DISK = {
   id: "blog-page",
@@ -58,7 +59,8 @@ const clientProd = new InitClient(ApplicationMode.PROD, repo, token);
 
 describe("send starter data", () => {
   afterEach(() => {
-    mock.restore();
+    mockfs.restore();
+    nock.cleanAll();
   });
 
   test("it should do nothing when there is no documents directory", async () => {
@@ -66,7 +68,7 @@ describe("send starter data", () => {
       [TMP_DIR]: {},
     });
 
-    const result = await sendStarterData(clientProd, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     expect(result).toBeFalsy();
   });
 
@@ -74,7 +76,6 @@ describe("send starter data", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.prismic.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
     mockfs({
       [TMP_DIR]: {
@@ -83,99 +84,221 @@ describe("send starter data", () => {
       },
     });
 
-    const result = await sendStarterData(clientProd, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     expect(result).toBeFalsy();
   });
 
-  test("when there are slices and custom types is should send them", async () => {
+  test("when there are slices, custom types and documents it should send them", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
     const smJson = {
-      apiEndpoint: "https://foo-bar.prismic.io/api/v2",
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
-      framework: "none",
     };
 
-    mockfs({
-      [TMP_DIR]: {
-        documents: {},
-        customtypes: {
-          "blog-page": {
-            "index.json": JSON.stringify(CT_ON_DISK),
-          },
+    mockFiles(smJson);
+
+    mockApiCalls(smJson, false);
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    stderr.start();
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
+    stderr.stop();
+
+    expect(result).toBeTruthy();
+    expect(processExitSpy).not.toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing documents to your repository"
+    );
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
+
+    expect.assertions(9);
+  });
+
+  test("when pushing documents to a repository that already has some, the init script fails", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementationOnce(() => undefined);
+
+    const smJson = {
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
+      libraries: ["@/slices"],
+    };
+
+    mockFiles(smJson);
+
+    mockApiCalls(smJson, true);
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    stderr.start();
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
+    stderr.stop();
+
+    expect(result).toBeFalsy();
+    expect(processExitSpy).toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✖ Pushing existing documents to your repository"
+    );
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(consoleErrorSpy.mock.calls[0][0]).toContain(
+      "The selected repository is not empty, documents cannot be uploaded. Please choose an empty repository or delete the documents contained in your repository."
+    );
+
+    expect.assertions(11);
+  });
+
+  test("when sendDocs is false it should not send the documents and remove the folder", async () => {
+    const processExitSpy = jest
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    const smJson = {
+      apiEndpoint: `https://${repo}.prismic.io/api/v2`,
+      libraries: ["@/slices"],
+    };
+
+    mockFiles(smJson);
+
+    mockApiCalls(smJson, false);
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
+
+    stderr.start();
+    const result = await sendStarterData(clientProd, TMP_DIR, false);
+    stderr.stop();
+
+    expect(result).toBeTruthy();
+    expect(processExitSpy).not.toBeCalled();
+    expect(stderr.output).toContain(
+      "✔ Pushing existing Slice models to your repository"
+    );
+    expect(stderr.output).toContain(
+      "✔ Pushing existing custom types to your repository"
+    );
+    expect(stderr.output).not.toContain(
+      "✖ Pushing existing documents to your repository"
+    );
+
+    expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
+
+    expect.assertions(9);
+  });
+});
+
+//////// HELPER METHODS ////////
+const mockFiles = (smJson: Manifest) => {
+  mockfs({
+    [TMP_DIR]: {
+      documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
+      customtypes: {
+        "blog-page": {
+          "index.json": JSON.stringify(CT_ON_DISK),
         },
-        "sm.json": JSON.stringify(smJson),
-        slices: {
-          MySlice: {
-            "model.json": mockfs.load(
-              npath.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
+      },
+      "sm.json": JSON.stringify(smJson),
+      slices: {
+        MySlice: {
+          "model.json": mockfs.load(
+            path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
+          ),
+          default: {
+            "preview.png": mockfs.load(
+              path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
             ),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
-              ),
-            },
           },
         },
       },
+    },
+  });
+};
+
+const mockApiCalls = (smJson: Manifest, existingDocsInRepository: boolean) => {
+  nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com")
+    .get("/prod/create")
+    .matchHeader("User-Agent", "slice-machine")
+    .matchHeader("Authorization", `Bearer ${token}`)
+    .matchHeader("repository", repo)
+    .reply(200, {
+      values: {
+        url: fakeS3Url,
+        fields: {
+          acl: "public-read",
+          "Content-Disposition": "inline",
+          bucket: "prismic-io",
+          "X-Amz-Algorithm": "a",
+          "X-Amz-Credential": "a",
+          "X-Amz-Date": "a",
+          Policy: "a",
+          "X-Amz-Signature": "a",
+        },
+      },
+      imgixEndpoint: "https://images.prismic.io",
+      err: null,
     });
 
-    // Mock ACL
-    nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com")
-      .get("/prod/create")
-      .matchHeader("User-Agent", "slice-machine")
-      .matchHeader("Authorization", `Bearer ${token}`)
-      .matchHeader("repository", repo)
-      .reply(200, {
-        values: {
-          url: fakeS3Url,
-          fields: {
-            acl: "public-read",
-            "Content-Disposition": "inline",
-            bucket: "prismic-io",
-            "X-Amz-Algorithm": "a",
-            "X-Amz-Credential": "a",
-            "X-Amz-Date": "a",
-            Policy: "a",
-            "X-Amz-Signature": "a",
-          },
-        },
-        imgixEndpoint: "https://images.prismic.io",
-        err: null,
-      });
+  nock(fakeS3Url).post("/", validateS3Body).reply(204);
 
-    nock(fakeS3Url).post("/", validateS3Body).reply(204);
+  const customTypeEndpoint = "https://customtypes.prismic.io";
+  nock(customTypeEndpoint)
+    .matchHeader("repository", repo)
+    .matchHeader("Authorization", `Bearer ${token}`)
+    .get("/slices")
+    .reply(200, [])
+    .post("/slices/insert", (d) => {
+      const body = SharedSlice.decode(d);
+      if (isLeft(body)) return false;
+      if (body.right.variations.length === 0) return false;
+      const worked = imageUrlRegexp.test(body.right.variations[0].imageUrl);
+      expect(worked).toBeTruthy();
+      return worked;
+    })
+    .reply(200)
+    .get("/customtypes")
+    .reply(200, [])
+    .post("/customtypes/insert")
+    .reply(200, (_, body) => {
+      const result = CustomType.decode(body);
+      const worked = isRight(result);
+      expect(worked).toBeTruthy();
+      return worked;
+    });
 
-    const customTypeEndpoint = "https://customtypes.prismic.io";
-    nock(customTypeEndpoint)
-      .matchHeader("repository", repo)
-      .matchHeader("Authorization", `Bearer ${token}`)
-      .get("/slices")
-      .reply(200, [])
-      .post("/slices/insert", (d) => {
-        const body = SharedSlice.decode(d);
-        if (isLeft(body)) return false;
-        if (body.right.variations.length === 0) return false;
-        const worked = imageUrlRegexp.test(body.right.variations[0].imageUrl);
-        expect(worked).toBeTruthy();
-        return worked;
-      })
-      .reply(200)
-      .get("/customtypes")
-      .reply(200, [])
-      .post("/customtypes/insert")
-      .reply(200, (_, body) => {
-        const result = CustomType.decode(body);
-        const worked = isRight(result);
-        expect(worked).toBeTruthy();
-        return worked;
-      });
+  const prismicUrl = new URL(smJson.apiEndpoint);
 
-    stderr.start();
+  const documentsNock = nock(prismicUrl.origin)
+    .matchHeader("Authorization", `Bearer ${token}`)
+    .post("/starter/documents");
 
-    const result = await sendStarterData(clientProd, TMP_DIR);
-
-    stderr.stop();
-    expect(result).toBeTruthy();
-
-    expect.assertions(3);
-  });
-});
+  if (existingDocsInRepository) {
+    documentsNock.reply(400, () => {
+      return "Repository should not contain documents";
+    });
+  } else {
+    // we don't have to know what the api does, just return the good result.
+    documentsNock.reply(200);
+  }
+};

@@ -12,7 +12,13 @@ import {
   installLib,
   sendStarterData,
 } from "./steps";
-import { findArgument, logs, getApplicationMode, InitClient } from "./utils";
+import {
+  findArgument,
+  findFlag,
+  logs,
+  getApplicationMode,
+  InitClient,
+} from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -27,6 +33,7 @@ async function init() {
     process.argv,
     "repository"
   );
+  const pushDocuments = !findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
     process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
@@ -74,7 +81,7 @@ async function init() {
 
   const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
 
-  const wasStarter = await sendStarterData(client, cwd); // will be false if no sm.json is found
+  const wasStarter = await sendStarterData(client, cwd, pushDocuments); // will be false if no sm.json is found
 
   // configure the SM.json file and the json package file of the project..
   await configureProject(
@@ -90,7 +97,12 @@ async function init() {
   await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
 
   // Ask the user to run slice-machine.
-  displayFinalMessage(cwd);
+  displayFinalMessage(
+    cwd,
+    wasStarter,
+    client.repository,
+    client.apisEndpoints.Wroom
+  );
 }
 
 init()
