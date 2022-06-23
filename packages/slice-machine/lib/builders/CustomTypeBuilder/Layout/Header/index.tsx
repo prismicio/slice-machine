@@ -35,7 +35,9 @@ const CustomTypeHeader = () => {
         }
         SecondaryBreadcrumb={
           <Box sx={{ fontWeight: "thin" }} as="span">
-            <Text ml={2}>/ {currentCustomType.label} </Text>
+            <Text ml={2} data-cy="custom-type-secondary-breadcrumb">
+              / {currentCustomType.label}
+            </Text>
           </Box>
         }
         breadrumbHref="/"
@@ -44,6 +46,7 @@ const CustomTypeHeader = () => {
             <SliceMachineIconButton
               Icon={MdModeEdit}
               label="Edit custom type name"
+              data-cy="edit-custom-type"
               sx={{
                 cursor: "pointer",
                 color: theme.colors?.icons,
