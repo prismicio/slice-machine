@@ -211,35 +211,38 @@ describe("send starter data", () => {
 
 //////// HELPER METHODS ////////
 const mockFiles = (smJson: Manifest) => {
-  mockfs({
-    [TMP_DIR]: {
-      documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
-      customtypes: {
-        "blog-page": {
-          "index.json": JSON.stringify(CT_ON_DISK),
+  mockfs(
+    {
+      [TMP_DIR]: {
+        documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
+        customtypes: {
+          "blog-page": {
+            "index.json": JSON.stringify(CT_ON_DISK),
+          },
         },
-      },
-      "sm.json": JSON.stringify(smJson),
-      slices: {
-        MySlice: {
-          "model.json": mockfs.load(
-            path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
-          ),
-          default: {
-            "preview.png": mockfs.load(
-              path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+        "sm.json": JSON.stringify(smJson),
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
             ),
+            default: {
+              "preview.png": mockfs.load(
+                path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              ),
+            },
           },
         },
       },
+      [os.homedir()]: {
+        ".prismic": JSON.stringify({
+          base: clientProd.apisEndpoints.Wroom,
+          cookies: `prismic-auth=${clientProd.authenticationToken}`,
+        }),
+      },
     },
-    [os.homedir()]: {
-      ".prismic": JSON.stringify({
-        base: clientProd.apisEndpoints.Wroom,
-        cookies: `prismic-auth=${clientProd.authenticationToken}`,
-      }),
-    },
-  });
+    { createCwd: false, createTmp: false }
+  );
 };
 
 const mockApiCalls = (smJson: Manifest, existingDocsInRepository: boolean) => {
