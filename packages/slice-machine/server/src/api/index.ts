@@ -191,12 +191,11 @@ router.post(
 
 router.patch(
   "/custom-types/rename",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-misused-promises
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const payload = await renameCustomType(req);
 
     if (isApiError(payload)) {

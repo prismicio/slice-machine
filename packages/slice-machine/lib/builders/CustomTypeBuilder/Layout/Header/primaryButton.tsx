@@ -26,13 +26,13 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   );
   const { saveCustomType, pushCustomType } = useSliceMachineActions();
 
-  const buttonProps = (() => {
-    if (hasPendingModifications) {
-      return {
-        onClick: () => {
+  if (hasPendingModifications) {
+    return (
+      <Button
+        onClick={() => {
           saveCustomType();
-        },
-        children: (
+        }}
+        children={
           <span>
             {isSavingCustomType ? (
               <Spinner
@@ -44,21 +44,22 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             ) : null}
             Save to File System
           </span>
-        ),
-      };
-    }
-    if (
-      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
-        customTypeStatus
-      )
-    ) {
-      return {
-        onClick: () => {
+        }
+      />
+    );
+  }
+
+  if (
+    [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(customTypeStatus)
+  ) {
+    return (
+      <Button
+        onClick={() => {
           if (!isPushingCustomType) {
             pushCustomType();
           }
-        },
-        children: (
+        }}
+        children={
           <span>
             {isPushingCustomType ? (
               <Spinner
@@ -70,11 +71,10 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             ) : null}
             Push to Prismic
           </span>
-        ),
-      };
-    }
-    return { variant: "disabled", children: "Synced with Prismic" };
-  })();
+        }
+      />
+    );
+  }
 
-  return <Button {...buttonProps} />;
+  return <Button variant={"disabled"} children={"Synced with Prismic"} />;
 };
