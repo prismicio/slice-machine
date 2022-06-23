@@ -42,13 +42,11 @@ describe("choose-or-create-repo", () => {
   test("prompts user to select a repo", async () => {
     const base = "https://prismic.io";
 
-    jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({
-          repoDomain: fakeRepository,
-        }) as unknown as ReturnType<typeof inquirer.prompt>
-      );
+    jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
     const result = await promptForRepoDomain(client, base);
 
@@ -62,13 +60,11 @@ describe("choose-or-create-repo", () => {
 
     nock(userServiceURL).get("/repositories").reply(200, []);
 
-    jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({
-          repoDomain: fakeRepository,
-        }) as unknown as ReturnType<typeof inquirer.prompt>
-      );
+    jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
     createRepositoryMock.mockImplementation(() => fakeRepository);
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
@@ -152,13 +148,11 @@ describe("choose-or-create-repo", () => {
 
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const promptSpy = jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({
-          repoDomain: fakeRepository,
-        }) as unknown as ReturnType<typeof inquirer.prompt>
-      );
+    const promptSpy = jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
 
     const result = await chooseOrCreateARepository(
       client,
