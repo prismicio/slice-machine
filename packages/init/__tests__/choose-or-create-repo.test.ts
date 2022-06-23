@@ -45,9 +45,9 @@ describe("choose-or-create-repo", () => {
     jest
       .spyOn(inquirer, "prompt")
       .mockReturnValue(
-        Promise.resolve({ repoDomain: fakeRepository }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          repoDomain: fakeRepository,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
     const result = await promptForRepoDomain(client, base);
@@ -65,9 +65,9 @@ describe("choose-or-create-repo", () => {
     jest
       .spyOn(inquirer, "prompt")
       .mockReturnValue(
-        Promise.resolve({ repoDomain: fakeRepository }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          repoDomain: fakeRepository,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       );
     createRepositoryMock.mockImplementation(() => fakeRepository);
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
@@ -93,14 +93,14 @@ describe("choose-or-create-repo", () => {
     jest
       .spyOn(inquirer, "prompt")
       .mockReturnValueOnce(
-        Promise.resolve({ chosenRepository: CREATE_REPO }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          chosenRepository: CREATE_REPO,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       )
       .mockReturnValueOnce(
-        Promise.resolve({ repoDomain: fakeRepository }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          repoDomain: fakeRepository,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       );
 
     createRepositoryMock.mockImplementation(() =>
@@ -155,9 +155,9 @@ describe("choose-or-create-repo", () => {
     const promptSpy = jest
       .spyOn(inquirer, "prompt")
       .mockReturnValue(
-        Promise.resolve({ repoDomain: fakeRepository }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          repoDomain: fakeRepository,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       );
 
     const result = await chooseOrCreateARepository(

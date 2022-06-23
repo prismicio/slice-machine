@@ -233,6 +233,12 @@ const mockFiles = (smJson: Manifest) => {
         },
       },
     },
+    [os.homedir()]: {
+      ".prismic": JSON.stringify({
+        base: clientProd.apisEndpoints.Wroom,
+        cookies: `prismic-auth=${clientProd.authenticationToken}`,
+      }),
+    },
   });
 };
 
