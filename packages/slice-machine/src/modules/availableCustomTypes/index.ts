@@ -17,7 +17,6 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
-import { cloneDeep } from "lodash";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -119,8 +118,10 @@ export const availableCustomTypesReducer: Reducer<
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
 
-      const newCustomType = cloneDeep(state[id]);
-      newCustomType.local.label = newName;
+      const newCustomType = {
+        ...state[id],
+        local: { ...state[id].local, label: newName },
+      };
 
       return {
         ...state,
