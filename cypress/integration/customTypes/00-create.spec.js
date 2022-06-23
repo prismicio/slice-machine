@@ -1,15 +1,11 @@
 describe("Custom Types specs", () => {
-  let name = "My Test";
-  let id = "my-test";
+  const name = "My Test";
+  const id = "my-test";
 
   beforeEach(() => {
-    const ID = Math.floor(10000 + Math.random() * 90000);
-    name = `My Test ${ID}`;
-    id = `my-test-${ID}`;
-
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `customtypes/${id}`);
+    cy.task("rmrf", `e2e-projects/next/customtypes/${id}`);
   });
 
   it("A user can create and rename a custom type", () => {
