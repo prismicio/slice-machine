@@ -16,7 +16,6 @@ export function WithEnv(
     const { env, errors } = await getEnv();
 
     const reqWithEnv = (() => {
-      // TODO: this mutates req, so why not assign to req directly ?
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       const r = req as any;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

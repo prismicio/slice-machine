@@ -1,0 +1,67 @@
+{
+  "id": "chart_slice",
+  "type": "SharedSlice",
+  "name": "ChartSlice",
+  "description": "ChartSlice",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ChartSlice",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        },
+        "additionalInfoTitle": {
+          "config": {
+            "label": "additionalInfoTitle",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        },
+        "additionalInfo": {
+          "config": {
+            "label": "additionalInfo",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          },
+          "type": "StructuredText"
+        }
+      },
+      "items": {
+        "percentageShare": {
+          "config": {
+            "label": "Share in percent",
+            "placeholder": "15% ..."
+          },
+          "type": "Number"
+        },
+        "entityLabel": {
+          "config": {
+            "label": "Entity Label",
+            "placeholder": "Leather Goods Business Unit ..."
+          },
+          "type": "Text"
+        }
+      }
+    }
+  ]
+}

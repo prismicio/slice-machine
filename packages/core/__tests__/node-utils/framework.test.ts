@@ -82,7 +82,7 @@ describe("framework.defineFrameworks", () => {
   });
 
   test("it should take the framework from the pkg json if there isn't in the manifest", () => {
-    const fakeManifest: Manifest = {
+    const fakeManifest = {
       apiEndpoint: "fake api endpoint",
     };
 

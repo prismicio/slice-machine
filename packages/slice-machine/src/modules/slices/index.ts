@@ -17,6 +17,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
+import Tracker from "../../../src/tracker";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -67,7 +68,13 @@ export function* createSliceSaga({
     payload.sliceName,
     payload.libName
   )) as SagaReturnType<typeof createSlice>;
+  void Tracker.get().trackCreateSlice({
+    id: payload.sliceName,
+    name: payload.sliceName,
+    library: payload.libName,
+  });
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  // changing this to use next/router  call(Router.router.push,...) causes bugs in some contexts.
   window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;

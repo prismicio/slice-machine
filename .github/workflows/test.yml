@@ -16,6 +16,7 @@ jobs:
           path: |
             node_modules
             */*/node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-lerna-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-lerna-
@@ -48,5 +49,4 @@ jobs:
         working-directory: ./packages/slice-machine
         run: npm run build && npm run export-build
       - name: Running End to End tests
-        working-directory: "./packages/slice-machine/tests/project"
         run: npm i && npm run test:e2e

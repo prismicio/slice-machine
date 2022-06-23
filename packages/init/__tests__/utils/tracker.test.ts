@@ -1,11 +1,20 @@
 import { expect, test } from "@jest/globals";
-import ServerAnalytics from "analytics-node";
 import "uuid";
 
 import TrackerSingleton, { InitTracker } from "../../src/utils/tracker";
 import { Models } from "@slicemachine/core";
 
-jest.mock("analytics-node");
+type noop = () => void;
+const MockTracker = jest.fn((_, cb: noop) => cb());
+const MockIdentify = jest.fn().mockReturnThis();
+jest.mock("analytics-node", () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      track: MockTracker,
+      identify: MockIdentify,
+    };
+  });
+});
 jest.mock("uuid", () => ({
   v4: () => "uuid",
 }));
@@ -31,87 +40,90 @@ describe("InitTracker", () => {
 
   test("should send a identify event", () => {
     const smTracker = new InitTracker();
+
     smTracker.initialize(dumpSegmentKey);
-    smTracker.identifyUser("userId");
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+    smTracker.identifyUser("userId", "intercomHash");
+
+    expect(MockIdentify).toHaveBeenCalledTimes(1);
+    expect(MockIdentify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
   });
 
-  test("should send a track download lib event", () => {
+  test("should send a track download lib event", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackDownloadLibrary("libraryName");
+    await smTracker.trackDownloadLibrary("libraryName");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(1);
+
+    expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Download Library",
       properties: { library: "libraryName" },
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+    expect(MockIdentify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
-    smTracker.trackDownloadLibrary("libraryName");
+    await smTracker.trackDownloadLibrary("libraryName");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(2);
+    expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Download Library",
       properties: { library: "libraryName" },
     });
   });
 
-  test("should send a track init start event", () => {
+  test("should send a track init start event", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackInitStart(undefined);
+    await smTracker.trackInitStart(undefined);
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(1);
+    expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
       event: "SliceMachine Init Start",
       properties: {},
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+    expect(MockIdentify).toHaveBeenCalledTimes(1);
+    expect(MockIdentify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
-    smTracker.trackInitStart("repoName");
+    await smTracker.trackInitStart("repoName");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(2);
+    expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
       event: "SliceMachine Init Start",
       properties: {
@@ -120,55 +132,94 @@ describe("InitTracker", () => {
     });
   });
 
-  test("should send a track init done event", () => {
+  test("should send a track init identify event", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     // Anonymous call
-    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
+    await smTracker.trackInitIdentify();
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(1);
+    expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
-      event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      event: "SliceMachine Init Identify",
+      properties: {},
     });
 
-    smTracker.identifyUser("userId");
+    smTracker.identifyUser("userId", "intercomHash");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(1);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledWith({
+    expect(MockIdentify).toHaveBeenCalledTimes(1);
+    expect(MockIdentify).toHaveBeenCalledWith({
       anonymousId: "uuid",
       userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
     });
 
     // Logged in call
-    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
+    await smTracker.trackInitIdentify();
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(2);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledWith({
+    expect(MockTracker).toHaveBeenCalledTimes(2);
+    expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
-      event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next, repo: "repoName" },
+      event: "SliceMachine Init Identify",
+      properties: {},
     });
   });
 
-  test("shouldn't send any events when tracker is disable", () => {
+  test("should send a track init done event", async () => {
+    const smTracker = new InitTracker();
+    smTracker.initialize(dumpSegmentKey);
+    smTracker.setRepository("repoName");
+    // Anonymous call
+    await smTracker.trackInitDone(Models.Frameworks.next);
+
+    expect(MockTracker).toHaveBeenCalledTimes(1);
+    expect(MockTracker.mock.calls[0][0]).toEqual({
+      anonymousId: "uuid",
+      event: "SliceMachine Init Done",
+      properties: { framework: Models.Frameworks.next },
+      context: { groupId: { Repository: "repoName" } },
+    });
+
+    smTracker.identifyUser("userId", "intercomHash");
+
+    expect(MockIdentify).toHaveBeenCalledTimes(1);
+    expect(MockIdentify).toHaveBeenCalledWith({
+      anonymousId: "uuid",
+      userId: "userId",
+      integrations: {
+        Intercom: {
+          user_hash: "intercomHash",
+        },
+      },
+    });
+
+    // Logged in call
+    await smTracker.trackInitDone(Models.Frameworks.next);
+
+    expect(MockTracker).toHaveBeenCalledTimes(2);
+    expect(MockTracker.mock.calls[1][0]).toEqual({
+      userId: "userId",
+      event: "SliceMachine Init Done",
+      properties: { framework: Models.Frameworks.next },
+      context: { groupId: { Repository: "repoName" } },
+    });
+  });
+
+  test("shouldn't send any events when tracker is disable", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey, false);
-    smTracker.identifyUser("userId");
-    smTracker.trackInitDone(Models.Frameworks.next, "repoName");
-    smTracker.trackInitStart("repoName");
-    smTracker.trackDownloadLibrary("libraryName");
+    smTracker.identifyUser("userId", "intercomHash");
+    smTracker.setRepository("repoName");
+    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitStart("repoName");
+    await smTracker.trackInitIdentify();
+    await smTracker.trackDownloadLibrary("libraryName");
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.identify).toHaveBeenCalledTimes(0);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(ServerAnalytics.prototype.track).toHaveBeenCalledTimes(0);
+    expect(MockIdentify).toHaveBeenCalledTimes(0);
+    expect(MockTracker).toHaveBeenCalledTimes(0);
   });
 });

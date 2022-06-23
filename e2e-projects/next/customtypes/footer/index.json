@@ -1,0 +1,45 @@
+{
+  "id": "footer",
+  "label": "Footer",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "newsletter_title": {
+        "type": "Text",
+        "config": {
+          "label": "Newsletter Title"
+        }
+      },
+      "newsletter_description": {
+        "type": "Text",
+        "config": {
+          "label": "Newsletter Description"
+        }
+      },
+      "newsletter_button": {
+        "type": "Text",
+        "config": {
+          "label": "Newsletter Button"
+        }
+      },
+      "copyright": {
+        "type": "Text",
+        "config": {
+          "label": "Copyright"
+        }
+      },
+      "body": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "footer_column": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

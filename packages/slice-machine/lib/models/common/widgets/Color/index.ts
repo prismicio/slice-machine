@@ -2,7 +2,7 @@ import { MdColorLens } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
 import { MockConfigForm } from "./Mock/Form";
 
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 
 import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
@@ -29,8 +29,8 @@ export const ColorWidget: Widget<Color, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.Color,
     config: {
-      ...DEFAULT_CONFIG,
       label,
+      placeholder: "",
     },
   }),
   MockConfigForm,

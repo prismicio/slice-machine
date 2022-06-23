@@ -4,19 +4,20 @@ import * as Prismic from "@slicemachine/core/build/prismic";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
 import { logs } from "../utils";
+import Tracker from "../utils/tracker";
 
 type Base = Prismic.Endpoints.Base;
 
 const defaultSliceMachineVersion = "0.0.41";
 
-export function configureProject(
+export async function configureProject(
   cwd: string,
   base: Base,
   repositoryDomainName: string,
   framework: FrameworkResult,
   sliceLibPath: string[] = [],
   tracking = true
-): void {
+): Promise<void> {
   const spinner = logs.spinner(
     `Configuring your ${framework.value} & Prismic project...`
   );
@@ -30,6 +31,7 @@ export function configureProject(
       getTheSliceMachineVersionInstalled(packageJson);
 
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
+
     const manifestUpdated: Models.Manifest = {
       ...(manifestAlreadyExistWithContent
         ? manifest.content
@@ -56,6 +58,8 @@ export function configureProject(
 
     // add slicemachine script to package.json.
     NodeUtils.addJsonPackageSmScript(cwd);
+
+    await Tracker.get().trackInitDone(framework.value);
 
     spinner.succeed("Project configured! Ready to start");
   } catch {

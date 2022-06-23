@@ -1,20 +1,15 @@
 import { call, fork, put, select, takeLatest } from "redux-saga/effects";
-import { openToasterCreator, ToasterType } from "@src/modules/toaster";
+import { openToasterCreator, ToasterType } from "../toaster";
 import { getType } from "typesafe-actions";
-import { withLoader } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
-import {
-  pushCustomTypeCreator,
-  saveCustomTypeCreator,
-} from "@src/modules/selectedCustomType/actions";
-import {
-  selectCurrentCustomType,
-  selectCurrentMockConfig,
-} from "@src/modules/selectedCustomType/index";
-import { pushCustomType, saveCustomType } from "@src/apiClient";
+import { withLoader } from "../loading";
+import { LoadingKeysEnum } from "../loading/types";
+import { pushCustomTypeCreator, saveCustomTypeCreator } from "./actions";
+import { selectCurrentCustomType, selectCurrentMockConfig } from "./index";
+import { pushCustomType, saveCustomType } from "../../../src/apiClient";
 import axios from "axios";
-import { modalOpenCreator } from "@src/modules/modal";
-import { ModalKeysEnum } from "@src/modules/modal/types";
+import { modalOpenCreator } from "../modal";
+import { ModalKeysEnum } from "../modal/types";
+import Tracker from "../../../src/tracker";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -30,6 +25,11 @@ export function* saveCustomTypeSaga() {
     }
 
     yield call(saveCustomType, currentCustomType, currentMockConfig);
+    void Tracker.get().trackCustomTypeSaved({
+      id: currentCustomType.id,
+      name: currentCustomType.label || currentCustomType.id,
+      type: currentCustomType.repeatable ? "repeatable" : "single",
+    });
     yield put(saveCustomTypeCreator.success());
     yield put(
       openToasterCreator({
@@ -59,6 +59,11 @@ export function* pushCustomTypeSaga() {
     }
 
     yield call(pushCustomType, currentCustomType.id);
+    void Tracker.get().trackCustomTypePushed({
+      id: currentCustomType.id,
+      name: currentCustomType.label || currentCustomType.id,
+      type: currentCustomType.repeatable ? "repeatable" : "single",
+    });
     yield put(pushCustomTypeCreator.success());
     yield put(
       openToasterCreator({

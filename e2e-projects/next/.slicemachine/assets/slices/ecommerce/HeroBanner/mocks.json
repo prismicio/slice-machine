@@ -1,0 +1,63 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "hero_banner",
+    "items": [],
+    "primary": {
+      "title": "unleash web-enabled users",
+      "description": "deliver enterprise vortals",
+      "image": {
+        "dimensions": {
+          "width": 1024,
+          "height": 325
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1571126770897-2d612d1f7b89?w=1024&h=325&fit=crop",
+        "mobile": {
+          "dimensions": {
+            "width": 600,
+            "height": 410
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1571126770897-2d612d1f7b89?w=600&h=410&fit=crop"
+        }
+      },
+      "cta": "revolutionize rich e-business",
+      "CTALink": {
+        "link_type": "Web",
+        "url": "https://prismic.io"
+      }
+    }
+  },
+  {
+    "variation": "withoutCta",
+    "name": "Without CTA",
+    "slice_type": "hero_banner",
+    "items": [],
+    "primary": {
+      "title": "synergize one-to-one mindshare",
+      "description": "seize e-business partnerships",
+      "image": {
+        "dimensions": {
+          "width": 1024,
+          "height": 325
+        },
+        "alt": "Placeholder image",
+        "copyright": null,
+        "url": "https://images.unsplash.com/photo-1587905069134-008460d7a636?w=1024&h=325&fit=crop",
+        "mobile": {
+          "dimensions": {
+            "width": 600,
+            "height": 410
+          },
+          "alt": "Placeholder image",
+          "copyright": null,
+          "url": "https://images.unsplash.com/photo-1587905069134-008460d7a636?w=600&h=410&fit=crop"
+        }
+      }
+    }
+  }
+]

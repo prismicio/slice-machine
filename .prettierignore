@@ -1,5 +1,6 @@
 # Ignore artifacts:
 .github/
+packages/slice-machine/.next
 packages/slice-machine/build
 packages/slice-machine/coverage
 packages/slice-machine/tests/project/
@@ -16,3 +17,4 @@ packages/**/package-lock.json
 README.md
 package.json
 package-lock.json
+e2e-projects/**

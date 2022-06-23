@@ -6,8 +6,6 @@ import Button from "@components/Button";
 
 import Card from "../Card";
 
-Modal.setAppElement("#__next");
-
 type ModalCardProps<T> = {
   children: (props: {
     isValid: boolean;
@@ -53,6 +51,7 @@ function ModalCard<Values>({
   buttonLabel = "Save",
   dataCy,
 }: ModalCardProps<Values>): JSX.Element {
+  Modal.setAppElement("#__next");
   return (
     <SliceMachineModal
       isOpen={isOpen}
@@ -125,7 +124,7 @@ function ModalCard<Values>({
                     <Button
                       form={formId}
                       type="submit"
-                      disabled={!isValid && isSubmitting && isLoading}
+                      disabled={!isValid || isSubmitting || isLoading}
                       isLoading={isLoading}
                     >
                       {buttonLabel}

@@ -28,7 +28,7 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitStart(maybeRepositorySubdomain);
+  void Tracker.get().trackInitStart(maybeRepositorySubdomain);
 
   console.log(
     logs.purple(
@@ -45,8 +45,10 @@ async function init() {
 
   // If we get the info from the profile we want to identify all the previous events sent or continue in anonymous mode
   if (user.profile) {
-    Tracker.get().identifyUser(user.profile.shortId);
+    Tracker.get().identifyUser(user.profile.shortId, user.profile.intercomHash);
   }
+
+  void Tracker.get().trackInitIdentify();
 
   // retrieve tokens for api calls
   const config = Prismic.PrismicSharedConfigManager.get();
@@ -63,13 +65,15 @@ async function init() {
     maybeRepositorySubdomain
   );
 
+  Tracker.get().setRepository(repositoryDomainName);
+
   // Install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value);
 
   const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
 
   // configure the SM.json file and the json package file of the project..
-  configureProject(
+  await configureProject(
     cwd,
     base,
     repositoryDomainName,
@@ -78,15 +82,15 @@ async function init() {
     isTrackingAvailable
   );
 
-  Tracker.get().trackInitDone(frameworkResult.value, repositoryDomainName);
-
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd);
 }
 
-try {
-  void init();
-} catch (error) {
-  if (error instanceof Error) logs.writeError(error.message);
-  else console.error(error);
-}
+init()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    if (error instanceof Error) logs.writeError(error.message);
+    else console.error(error);
+  });

@@ -1,15 +1,20 @@
 import Files from "./files";
 import { FileContent, SMConfigPath } from "./paths";
 import { Manifest } from "../models/Manifest";
+import { formatValidationErrors } from "io-ts-reporters";
+import * as t from "io-ts";
+import { pipe } from "fp-ts/function";
+import { fold } from "fp-ts/Either";
 
 export function createManifest(cwd: string, manifest: Manifest): void {
   const manifestPath = SMConfigPath(cwd);
-  Files.write(manifestPath, JSON.stringify(manifest, null, "\t"), {
-    recursive: false,
-  });
+  Files.write(manifestPath, manifest, { recursive: false });
 }
 
-export function retrieveManifest(cwd: string): FileContent<Manifest> {
+export function retrieveManifest(
+  cwd: string,
+  validate = false
+): FileContent<Manifest, t.Errors> {
   const manifestPath = SMConfigPath(cwd);
 
   if (!Files.exists(manifestPath)) {
@@ -22,10 +27,25 @@ export function retrieveManifest(cwd: string): FileContent<Manifest> {
   const content: Manifest | null = Files.safeReadJson(
     manifestPath
   ) as Manifest | null;
-  return {
-    exists: true,
-    content,
-  };
+
+  if (validate === false) {
+    return {
+      exists: true,
+      content,
+    };
+  }
+
+  if (!content) throw new Error("Could not parse sm.json");
+
+  return pipe(
+    Manifest.decode(content),
+    fold<t.Errors, Manifest, FileContent<Manifest, t.Errors>>(
+      (errors) => {
+        return { exists: true, content: null, errors };
+      },
+      (manifest) => ({ exists: true, content: manifest })
+    )
+  );
 }
 
 export function maybeRepoNameFromSMFile(
@@ -50,7 +70,7 @@ export function maybeRepoNameFromSMFile(
 }
 
 export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
-  const manifest: FileContent<Manifest> = retrieveManifest(cwd);
+  const manifest = retrieveManifest(cwd);
   if (!manifest.exists || !manifest.content) return false;
 
   const updatedManifest = {
@@ -63,8 +83,18 @@ export function patchManifest(cwd: string, data: Partial<Manifest>): boolean {
 }
 
 export function updateManifestSMVersion(cwd: string, version: string): boolean {
-  const manifest: FileContent<Manifest> = retrieveManifest(cwd);
-  if (manifest.content?._latest) return false; // if _latest already exists, we should not update this version otherwise we'd break the migration system
+  const maybeManifest = retrieveManifest(cwd);
+
+  if (maybeManifest.errors) {
+    const messages = formatValidationErrors(maybeManifest.errors);
+    messages.forEach((message) => {
+      console.log("[core/sm.json] " + message);
+    });
+  }
+
+  const content = maybeManifest.content;
+
+  if (content?._latest) return false; // if _latest already exists, we should not update this version otherwise we'd break the migration system
 
   return patchManifest(cwd, { _latest: version });
 }

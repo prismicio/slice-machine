@@ -1,0 +1,33 @@
+{
+  "id": "header_section_simple_centered",
+  "type": "SharedSlice",
+  "name": "HeaderSectionSimpleCentered",
+  "description": "HeaderSectionSimpleCentered",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "HeaderSectionSimpleCentered",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description",
+            "placeholder": "A nice description of your feature"
+          }
+        }
+      }
+    }
+  ]
+}

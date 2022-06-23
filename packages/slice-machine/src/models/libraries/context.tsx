@@ -2,7 +2,7 @@ import React from "react";
 import { useModelReducer } from "../slice/context";
 
 import { FrontEndEnvironment } from "lib/models/common/Environment";
-import LibraryState from "lib/models/ui/LibraryState";
+import LibraryState from "../../../lib/models/ui/LibraryState";
 import { LibraryUI } from "lib/models/common/LibraryUI";
 
 import { SliceMockConfig } from "lib/models/common/MockConfig";

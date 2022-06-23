@@ -1,5 +1,5 @@
 import React from "react";
-import * as Widgets from "@lib/models/common/widgets/withGroup";
+import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 
 import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
@@ -14,7 +14,7 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 import SliceZone from "../SliceZone";
 
 import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
-import { Widget } from "@models/common/widgets/Widget";
+import { Widget } from "../../../models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useSelector } from "react-redux";
@@ -23,12 +23,13 @@ import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
   selectCurrentPoolOfFields,
-} from "@src/modules/selectedCustomType";
+} from "../../../../src/modules/selectedCustomType";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import {
   TabField,
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
+import Tracker from "../../../../src/tracker";
 
 interface TabZoneProps {
   tabId: string;
@@ -88,6 +89,12 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
     const friendlyName = createFriendlyFieldNameWithId(id);
+    void Tracker.get().trackCustomTypeFieldAdded({
+      fieldId: id,
+      customTypeId: currentCustomType.id,
+      type: widget.TYPE_NAME,
+      zone: "static",
+    });
     addCustomTypeField(tabId, id, widget.create(friendlyName));
   };
 
@@ -137,6 +144,9 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
   };
 
   const onSelectSharedSlices = (keys: string[], preserve: string[] = []) => {
+    void Tracker.get().trackCustomTypeSliceAdded({
+      customTypeId: currentCustomType.id,
+    });
     replaceCustomTypeSharedSlice(tabId, keys, preserve);
   };
 

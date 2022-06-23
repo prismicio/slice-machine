@@ -1,0 +1,108 @@
+{
+  "id": "product_list_with_cta",
+  "type": "SharedSlice",
+  "name": "ProductListWithCta",
+  "description": "ProductListWithCta",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ProductListWithCta",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Call to action",
+            "placeholder": "See more...",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          }
+        },
+        "link": {
+          "config": {
+            "label": "Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      },
+      "items": {
+        "topProduct": {
+          "type": "IntegrationFields",
+          "config": {
+            "catalog": "cimsirp--products",
+            "label": "Top Product"
+          }
+        },
+        "productLink": {
+          "config": {
+            "label": "Product Link",
+            "select": "document",
+            "customtypes": [
+              "product-page"
+            ]
+          },
+          "type": "Link"
+        }
+      }
+    },
+    {
+      "id": "customProducts",
+      "name": "Custom Products",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "ProductListWithCta",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Title",
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "A nice description of your feature",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          }
+        }
+      },
+      "items": {
+        "topProduct": {
+          "type": "IntegrationFields",
+          "config": {
+            "catalog": "cimsirp--custom_products",
+            "label": "Top Product"
+          }
+        },
+        "productLink": {
+          "config": {
+            "label": "Product Link",
+            "select": "document",
+            "customtypes": [
+              "product-page"
+            ]
+          },
+          "type": "Link"
+        }
+      }
+    }
+  ]
+}

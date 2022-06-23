@@ -14,7 +14,7 @@ import { MdVpnKey } from "react-icons/md";
 import { removeProp } from "../../../../utils";
 import { DefaultFields } from "../../../../forms/defaults";
 import { createValidationSchema } from "../../../../forms";
-import { DEFAULT_CONFIG, Widget } from "../Widget";
+import { Widget } from "../Widget";
 import {
   UID,
   WidgetTypes,
@@ -51,7 +51,10 @@ const Meta = {
 export const UIDWidget: Widget<UID, typeof schema> = {
   create: (label: string) => ({
     type: WidgetTypes.UID,
-    config: { ...DEFAULT_CONFIG, label },
+    config: {
+      label,
+      placeholder: "",
+    },
   }),
   Meta,
   schema,

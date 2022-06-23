@@ -1,0 +1,68 @@
+{
+  "id": "category_preview_with_scrolling_cards",
+  "type": "SharedSlice",
+  "name": "CategoryPreviewWithScrollingCards",
+  "description": "CategoryPreviewWithScrollingCards",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "CategoryPreviewWithScrollingCards",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "CTA": {
+          "config": {
+            "label": "CTA",
+            "placeholder": "See more..."
+          },
+          "type": "Text"
+        },
+        "CTALink": {
+          "config": {
+            "label": "CTALink",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      },
+      "items": {
+        "image": {
+          "config": {
+            "label": "Image",
+            "constraint": {
+              "width": 224,
+              "height": 320
+            },
+            "thumbnails": []
+          },
+          "type": "Image"
+        },
+        "title": {
+          "config": {
+            "label": "Title",
+            "placeholder": "Title of the card..."
+          },
+          "type": "Text"
+        },
+        "link": {
+          "config": {
+            "label": "Link",
+            "customtypes": [],
+            "select": "document"
+          },
+          "type": "Link"
+        }
+      }
+    }
+  ]
+}

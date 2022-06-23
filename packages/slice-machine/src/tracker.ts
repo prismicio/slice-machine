@@ -1,7 +1,7 @@
 import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
-import { LibraryUI } from "@models/common/LibraryUI";
+import { LibraryUI } from "../lib/models/common/LibraryUI";
 
 // These events should be sync with the tracking Plan on segment.
 type AllSliceMachineEventType = EventType | ContinueOnboardingType;
@@ -14,6 +14,12 @@ enum EventType {
   SliceSimulatorOpen = "SliceMachine Slice Simulator Open",
   PageView = "SliceMachine Page View",
   OpenVideoTutorials = "SliceMachine Open Video Tutorials",
+  CreateCustomType = "SliceMachine Custom Type Created",
+  CustomTypeFieldAdded = "SliceMachine Custom Type Field Added",
+  CustomTypeSliceZoneUpdated = "SliceMachine Slicezone Updated",
+  CustomTypeSaved = "SliceMachine Custom Type Saved",
+  CustomTypePushed = "SliceMachine Custom Type Pushed",
+  SliceCreated = "SliceMachine Slice Created",
 }
 
 export enum ContinueOnboardingType {
@@ -26,8 +32,10 @@ export enum ContinueOnboardingType {
 export class SMTracker {
   #client: Promise<ClientAnalytics> | null = null;
   #isTrackingActive = true;
+  #repository = "";
 
-  initialize(segmentKey: string, isTrackingActive = true): void {
+  initialize(segmentKey: string, repo: string, isTrackingActive = true): void {
+    this.#repository = repo;
     try {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
@@ -51,21 +59,33 @@ export class SMTracker {
 
     return this.#client
       .then((client): void => {
-        void client.track(eventType, attributes);
+        void client.track(eventType, attributes, {
+          context: { groupId: { Repository: this.#repository } },
+        });
       })
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
       );
   }
 
-  async #identify(userId: string): Promise<void> {
+  async #identify(shortId: string, intercomHash: string): Promise<void> {
     if (!this.#isTrackingPossible(this.#client)) {
       return;
     }
 
     return this.#client
       .then((client): void => {
-        void client.identify(userId);
+        void client.identify(
+          shortId,
+          {},
+          {
+            integrations: {
+              Intercom: {
+                user_hash: intercomHash,
+              },
+            },
+          }
+        );
       })
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
@@ -105,8 +125,8 @@ export class SMTracker {
     });
   }
 
-  async identifyUser(userId: string): Promise<void> {
-    await this.#identify(userId);
+  async identifyUser(shortId: string, intercomHash: string): Promise<void> {
+    await this.#identify(shortId, intercomHash);
   }
 
   async groupLibraries(
@@ -178,10 +198,74 @@ export class SMTracker {
     return this.#trackEvent(continueOnboardingEventType);
   }
 
-  trackOnboardingSkip(screenSkipped: number): Promise<void> {
+  async trackOnboardingSkip(screenSkipped: number): Promise<void> {
     return this.#trackEvent(EventType.OnboardingSkip, {
       screenSkipped,
     });
+  }
+
+  async trackCreateCustomType(customTypeInfo: {
+    id: string;
+    name: string;
+    repeatable: boolean;
+  }): Promise<void> {
+    const { id, name, repeatable } = customTypeInfo;
+    const type = repeatable ? "repeatable" : "single";
+
+    const data = { id, name, type };
+
+    return this.#trackEvent(EventType.CreateCustomType, data);
+  }
+
+  async trackCustomTypeFieldAdded({
+    fieldId,
+    customTypeId,
+    zone,
+    type,
+  }: {
+    fieldId: string;
+    customTypeId: string;
+    zone: "static" | "repeatable";
+    type: string;
+  }): Promise<void> {
+    const data = {
+      id: fieldId,
+      name: customTypeId,
+      zone,
+      type,
+    };
+
+    return this.#trackEvent(EventType.CustomTypeFieldAdded, data);
+  }
+
+  async trackCustomTypeSliceAdded(data: {
+    customTypeId: string;
+  }): Promise<void> {
+    return this.#trackEvent(EventType.CustomTypeSliceZoneUpdated, data);
+  }
+
+  async trackCustomTypeSaved(data: {
+    id: string;
+    name: string;
+    type: "single" | "repeatable";
+  }): Promise<void> {
+    return this.#trackEvent(EventType.CustomTypeSaved, data);
+  }
+
+  async trackCustomTypePushed(data: {
+    id: string;
+    name: string;
+    type: "single" | "repeatable";
+  }): Promise<void> {
+    return this.#trackEvent(EventType.CustomTypePushed, data);
+  }
+
+  async trackCreateSlice(data: {
+    id: string;
+    name: string;
+    library: string;
+  }): Promise<void> {
+    return this.#trackEvent(EventType.SliceCreated, data);
   }
 }
 

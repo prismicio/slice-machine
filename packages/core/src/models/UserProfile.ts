@@ -4,6 +4,7 @@ export const UserProfile = t.exact(
   t.type({
     userId: t.string,
     shortId: t.string,
+    intercomHash: t.string,
     email: t.string,
     firstName: t.string,
     lastName: t.string,
