@@ -27,9 +27,8 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm i
-      - name: Build slice machine core
-        working-directory: ./packages/core
-        run: npm run build
+      - name: Build essential packages used by others
+        run: npm run build-essential
       - name: Running functional and unit tests
         env:
           EMAIL: ${{ secrets.EMAIL }}
