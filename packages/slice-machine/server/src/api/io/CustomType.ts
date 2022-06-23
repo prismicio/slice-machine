@@ -17,6 +17,5 @@ export function writeCustomType(path: string, customType: CustomTypeSM) {
 export function renameCustomType(path: string, newCustomTypeName: string) {
   const ct: CustomType = Files.readJson(path);
   ct.label = newCustomTypeName;
-  console.log("ct: ", ct);
   Files.write(path, ct);
 }
