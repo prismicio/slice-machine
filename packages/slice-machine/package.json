@@ -38,7 +38,7 @@
   "dependencies": {
     "@babel/register": "^7.17.7",
     "@prismicio/api-renderer": "^0.1.7",
-    "@prismicio/mocks": "^0.1.6",
+    "@prismicio/mocks": "^0.1.8",
     "@prismicio/slice-simulator-com": "^0.2.0",
     "@prismicio/types-internal": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
