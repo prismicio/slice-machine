@@ -66,6 +66,7 @@ const CreateCustomtypeForm = ({
       cardProps={{ bodySx: { p: 0 } }}
       onSubmit={(values) => {
         onSubmit(values);
+        close();
       }}
       initialValues={{
         id: "",

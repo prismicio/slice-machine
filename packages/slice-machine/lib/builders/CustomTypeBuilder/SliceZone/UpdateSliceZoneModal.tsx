@@ -33,7 +33,10 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
       isOpen={isOpen}
       formId={formId}
       close={close}
-      onSubmit={(values: SliceZoneFormValues) => onSubmit(values)}
+      onSubmit={(values: SliceZoneFormValues) => {
+        onSubmit(values);
+        close();
+      }}
       initialValues={{
         sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}

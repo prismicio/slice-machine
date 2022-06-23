@@ -39,7 +39,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       formId={formId}
       close={close}
       buttonLabel="Create"
-      onSubmit={(values: FormValues) => onSubmit(values)}
+      onSubmit={(values: FormValues) => {
+        onSubmit(values);
+        close();
+      }}
       initialValues={{
         sliceName: "",
         from: libraries[0].name,

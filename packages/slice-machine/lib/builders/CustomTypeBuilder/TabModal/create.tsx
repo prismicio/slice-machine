@@ -52,6 +52,7 @@ const CreateCustomtypeForm = ({
       close={close}
       onSubmit={(values) => {
         onSubmit(values);
+        close();
       }}
       initialValues={{
         id: "",
