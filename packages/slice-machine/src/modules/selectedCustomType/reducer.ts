@@ -36,6 +36,7 @@ import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
+import { renameCustomTypeCreator } from "../availableCustomTypes";
 
 // Reducer
 export const selectedCustomTypeReducer: Reducer<
@@ -324,6 +325,15 @@ export const selectedCustomTypeReducer: Reducer<
           groupId
         )((group: GroupSM) => Group.reorderWidget(group, start, end))
       );
+    }
+    case getType(renameCustomTypeCreator.success): {
+      if (!state) return state;
+      const newName = action.payload.newCustomTypeName;
+
+      return {
+        ...state,
+        model: { ...state.model, label: newName },
+      };
     }
     default:
       return state;

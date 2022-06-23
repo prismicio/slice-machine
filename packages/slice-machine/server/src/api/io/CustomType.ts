@@ -13,3 +13,10 @@ export function readCustomType(path: string): CustomTypeSM {
 export function writeCustomType(path: string, customType: CustomTypeSM) {
   Files.write(path, CustomTypes.fromSM(customType));
 }
+
+export function renameCustomType(path: string, newCustomTypeName: string) {
+  const ct: CustomType = Files.readJson(path);
+  ct.label = newCustomTypeName;
+  console.log("ct: ", ct);
+  Files.write(path, ct);
+}

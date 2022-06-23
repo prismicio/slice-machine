@@ -44,7 +44,6 @@ const CustomTypeHeader = () => {
             <SliceMachineIconButton
               Icon={MdModeEdit}
               label="Edit custom type name"
-              disabled={isSavingCustomType || isPushingCustomType}
               sx={{
                 cursor: "pointer",
                 color: theme.colors?.icons,

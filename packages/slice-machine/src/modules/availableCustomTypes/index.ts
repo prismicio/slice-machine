@@ -6,7 +6,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { saveCustomType } from "@src/apiClient";
+import { renameCustomType, saveCustomType } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { push } from "connected-next-router";
@@ -17,6 +17,7 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
+import { cloneDeep } from "lodash";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -38,10 +39,16 @@ export const renameCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPES/RENAME.REQUEST",
   "CUSTOM_TYPES/RENAME.RESPONSE",
   "CUSTOM_TYPES/RENAME.FAILURE"
-)<{
-  customTypeId: string;
-  newCustomTypeName: string;
-}>();
+)<
+  {
+    customTypeId: string;
+    newCustomTypeName: string;
+  },
+  {
+    customTypeId: string;
+    newCustomTypeName: string;
+  }
+>();
 
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
@@ -108,6 +115,18 @@ export const availableCustomTypesReducer: Reducer<
         ...normalizedNewCustomType,
       };
     }
+    case getType(renameCustomTypeCreator.success): {
+      const id = action.payload.customTypeId;
+      const newName = action.payload.newCustomTypeName;
+
+      const newCustomType = cloneDeep(state[id]);
+      newCustomType.local.label = newName;
+
+      return {
+        ...state,
+        [id]: newCustomType,
+      };
+    }
     default:
       return state;
   }
@@ -144,15 +163,48 @@ export function* createCustomTypeSaga({
   }
 }
 
+export function* renameCustomTypeSaga({
+  payload,
+}: ReturnType<typeof renameCustomTypeCreator.request>) {
+  try {
+    yield call(
+      renameCustomType,
+      payload.customTypeId,
+      payload.newCustomTypeName
+    );
+    yield put(renameCustomTypeCreator.success(payload));
+    yield put(
+      modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE })
+    );
+    yield put(
+      openToasterCreator({
+        message: "Custom type updated",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Custom type not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+}
+
 // Saga watchers
-function* watchCreateCustomType() {
+function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(createCustomTypeCreator.request),
     withLoader(createCustomTypeSaga, LoadingKeysEnum.CREATE_CUSTOM_TYPE)
+  );
+  yield takeLatest(
+    getType(renameCustomTypeCreator.request),
+    withLoader(renameCustomTypeSaga, LoadingKeysEnum.RENAME_CUSTOM_TYPE)
   );
 }
 
 // Saga Exports
 export function* watchAvailableCustomTypesSagas() {
-  yield fork(watchCreateCustomType);
+  yield fork(handleCustomTypeRequests);
 }

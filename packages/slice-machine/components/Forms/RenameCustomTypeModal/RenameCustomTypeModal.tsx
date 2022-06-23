@@ -21,11 +21,10 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
 
   const handleOnSubmit = (values: { customTypeName: string }) => {
     renameCustomType(customTypeId, values.customTypeName);
-    closeRenameCustomTypeModal();
   };
-  const { isCreateCustomTypeModalOpen } = useSelector(
+  const { isRenameCustomTypeModalOpen } = useSelector(
     (store: SliceMachineStoreType) => ({
-      isCreateCustomTypeModalOpen: isModalOpen(
+      isRenameCustomTypeModalOpen: isModalOpen(
         store,
         ModalKeysEnum.RENAME_CUSTOM_TYPE
       ),
@@ -35,7 +34,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   return (
     <ModalFormCard
       dataCy="rename-custom-type-modal"
-      isOpen={isCreateCustomTypeModalOpen}
+      isOpen={isRenameCustomTypeModalOpen}
       widthInPx="530px"
       formId={`rename-custom-type-modal-${customTypeId}`}
       close={closeRenameCustomTypeModal}
