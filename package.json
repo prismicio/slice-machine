@@ -9,6 +9,7 @@
     "postinstall": "lerna bootstrap && npm install --prefix e2e-projects/next",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run test",
+    "build-essential": "npm run build --prefix packages/core",
     "audit": "lerna run audit",
     "lint": "lerna run lint",
     "lint-staged": "lint-staged",
