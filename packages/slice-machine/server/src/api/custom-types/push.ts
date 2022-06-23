@@ -2,8 +2,8 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
+import { Client, ClientError } from "@slicemachine/client";
 
-import { Client } from "@lib/models/server/Client";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Tab } from "@lib/models/common/CustomType/tab";
 import { CustomTypesPaths } from "@lib/models/paths";
@@ -21,11 +21,7 @@ const createOrUpdate = (
   remoteCustomType: CustomTypeSM | undefined
 ) => {
   const model = CustomTypes.fromSM(smModel);
-  if (remoteCustomType) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return client.updateCustomType(model);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
+  if (remoteCustomType) return client.updateCustomType(model);
   return client.insertCustomType(model);
 };
 
@@ -76,7 +72,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;
     console.error(msg);
-    return onError(null, msg);
+    return onError(msg);
   }
 
   const remoteCustomType = state.remoteCustomTypes.find(
@@ -86,7 +82,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
     const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`;
     console.error(msg);
-    return onError(null, msg);
+    return onError(msg);
   }
 
   const sliceKeysToPush: string[] = [];
@@ -133,15 +129,14 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
 
   console.log("[custom-types/push] Pushing Custom Type...");
 
-  const res = await createOrUpdate(state.env.client, model, remoteCustomType);
-  if (res.status > 209) {
-    const message = res.text ? await res.text() : res.status.toString();
-    const msg = `[custom-types/push] Unexpected error returned. Server message: ${message}`;
-    console.error(msg);
-    return onError(null, msg);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  console.log(`[custom-types/push] Custom Type ${id} was pushed!`);
-  return {};
+  return createOrUpdate(state.env.client, model, remoteCustomType)
+    .then(() => {
+      console.log(`[custom-types/push] Custom Type ${model.id} was pushed!`);
+      return {};
+    })
+    .catch((error: ClientError) => {
+      const msg = `[custom-types/push] Unexpected error: ${error.message}`;
+      console.error(msg);
+      return onError(msg, error.status);
+    });
 }

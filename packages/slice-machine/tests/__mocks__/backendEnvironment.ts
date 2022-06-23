@@ -1,6 +1,5 @@
+import { Client, ApplicationMode } from "@slicemachine/client";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { ApplicationMode } from "@lib/models/server/ApplicationMode";
-import { Client } from "@lib/models/server/Client";
 import { Frameworks } from "@slicemachine/core/build/models";
 
 export const fakeAuthenticationToken = "fakeAuthenticationToken";

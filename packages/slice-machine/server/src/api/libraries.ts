@@ -1,5 +1,3 @@
-import * as t from "io-ts";
-import { fold } from "fp-ts/lib/Either";
 import * as Libraries from "@slicemachine/core/build/libraries";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
@@ -8,7 +6,7 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { ClientError } from "@slicemachine/client";
 
 interface LibrariesResult {
   remoteSlices: ReadonlyArray<SliceSM>;
@@ -16,44 +14,20 @@ interface LibrariesResult {
   clientError?: ErrorWithStatus;
 }
 
-async function getAndValidateSlices(env: BackendEnvironment): Promise<{
-  remoteSlices: LibrariesResult["remoteSlices"];
-  clientError?: LibrariesResult["clientError"];
-}> {
-  const response: Response = await env.client.getSlice();
-
-  if (response.status > 209) {
-    return {
-      remoteSlices: [],
-      clientError: new ErrorWithStatus(response.statusText, response.status),
-    };
-  }
-
-  const json: unknown = await (response.json
-    ? response.json()
-    : Promise.resolve([]));
-
-  return fold(
-    () => ({
-      remoteSlices: [],
-      clientError: new ErrorWithStatus(
-        "Invalid slices detected while fetching.",
-        400
-      ),
-    }),
-    (slices: Array<SharedSlice>) => {
-      const smSlices = slices.map((r) => Slices.toSM(r));
-
-      return { remoteSlices: smSlices };
-    }
-  )(t.array(SharedSlice).decode(json));
-}
-
 export default async function handler(
   env: BackendEnvironment
 ): Promise<LibrariesResult> {
   try {
-    const { remoteSlices, clientError } = await getAndValidateSlices(env);
+    const { remoteSlices, clientError } = await env.client
+      .getSlices()
+      .then((slices) => ({
+        remoteSlices: slices.map((slice) => Slices.toSM(slice)),
+        clientError: undefined,
+      }))
+      .catch((error: ClientError) => ({
+        remoteSlices: [],
+        clientError: new ErrorWithStatus(error.message, error.status),
+      }));
 
     if (!env.manifest.libraries)
       return {

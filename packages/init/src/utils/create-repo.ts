@@ -1,30 +1,24 @@
 import type { Models } from "@slicemachine/core";
 import * as logs from "./logs";
-import * as Prismic from "@slicemachine/core/build/prismic";
+import { InitClient } from "./client";
 
 export function createRepository(
+  client: InitClient,
   domain: string,
-  framework: Models.Frameworks,
-  cookies: string,
-  base: string
+  framework: Models.Frameworks
 ): Promise<string> {
   const spinner = logs.spinner("Creating Prismic Repository");
   spinner.start();
 
-  return Prismic.Communication.createRepository(
-    domain,
-    cookies,
-    framework,
-    base
-  )
-    .then((res) => {
-      const addressUrl = new URL(base);
-      const repoDomainName = res.data.domain || domain;
-      addressUrl.hostname = `${repoDomainName}.${addressUrl.hostname}`;
+  return client
+    .createRepository(domain, framework)
+    .then((domain: string) => {
+      const addressUrl = new URL(client.apisEndpoints.Wroom);
+      addressUrl.hostname = `${domain}.${addressUrl.hostname}`;
       const address = addressUrl.toString();
       spinner.succeed(`We created your new repository ${address}`);
 
-      return repoDomainName;
+      return domain;
     })
     .catch((error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);

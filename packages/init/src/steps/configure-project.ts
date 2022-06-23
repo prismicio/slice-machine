@@ -3,16 +3,14 @@ import type { Models } from "@slicemachine/core";
 import * as Prismic from "@slicemachine/core/build/prismic";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
-import { logs } from "../utils";
+import { InitClient, logs } from "../utils";
 import Tracker from "../utils/tracker";
-
-type Base = Prismic.Endpoints.Base;
 
 const defaultSliceMachineVersion = "0.0.41";
 
 export async function configureProject(
+  client: InitClient,
   cwd: string,
-  base: Base,
   repositoryDomainName: string,
   framework: FrameworkResult,
   sliceLibPath: string[] = [],
@@ -45,7 +43,7 @@ export async function configureProject(
         ? manifest.content
         : { _latest: sliceMachineVersionInstalled }),
       apiEndpoint: Prismic.Endpoints.buildRepositoryEndpoint(
-        base,
+        client.apisEndpoints.Wroom,
         repositoryDomainName
       ),
       libraries: [...libs, ...sliceLibPath], // odd case here for staters

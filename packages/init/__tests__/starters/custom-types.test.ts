@@ -1,13 +1,9 @@
 import { describe, test, jest, afterEach, expect } from "@jest/globals";
 import npath from "path";
 import {
-  readCustomTypes,
-  sendCustomTypesFromStarter,
+  readLocalCustomTypes,
+  sendCustomTypes,
 } from "../../src/steps/starters/custom-types";
-import {
-  getRemoteCustomTypeIds,
-  sendManyCustomTypesToPrismic,
-} from "../../src/steps/starters/communication";
 import nock from "nock";
 import mockfs from "mock-fs";
 import os from "os";
@@ -18,12 +14,15 @@ import { isRight } from "fp-ts/lib/Either";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { stderr } from "stdout-stderr";
+import { InitClient } from "../../src/utils";
+import { ApplicationMode } from "@slicemachine/client";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
-const base = "https://prismic.io";
+
+const client: InitClient = new InitClient(ApplicationMode.PROD, repo, token);
 
 describe("starters/custom-types", () => {
   afterEach(() => {
@@ -44,7 +43,7 @@ describe("starters/custom-types", () => {
         [TMP_DIR]: {},
       });
       const want: Array<CustomTypeSM> = [];
-      const got = readCustomTypes(TMP_DIR);
+      const got = readLocalCustomTypes(TMP_DIR);
       expect(got).toEqual(want);
     });
 
@@ -55,7 +54,7 @@ describe("starters/custom-types", () => {
         },
       });
       const want: Array<CustomTypeSM> = [];
-      const got = readCustomTypes(TMP_DIR);
+      const got = readLocalCustomTypes(TMP_DIR);
       expect(got).toEqual(want);
     });
 
@@ -71,76 +70,8 @@ describe("starters/custom-types", () => {
       });
 
       const want = [CT_ON_DISK];
-      const got = readCustomTypes(TMP_DIR);
+      const got = readLocalCustomTypes(TMP_DIR);
       expect(got).toEqual(want);
-    });
-  });
-
-  describe("#getRemoteCustomTypeIds", () => {
-    test("it should return an array of remote slice ids", async () => {
-      const customTypeEndpoint = "https://customtypes.prismic.io/";
-      nock(customTypeEndpoint)
-        .get("/customtypes")
-        .matchHeader("repository", repo)
-        .matchHeader("Authorization", `Bearer ${token}`)
-        .reply(200, [CT_ON_DISK]);
-
-      const wanted = [CT_ON_DISK].map((ct) => ct.id);
-      const got = await getRemoteCustomTypeIds(customTypeEndpoint, repo, token);
-
-      expect(got).toEqual(wanted);
-    });
-  });
-
-  describe("#sendManyCustomTypesToPrismic", () => {
-    const CT_ON_DISK = {
-      id: "blog-page",
-      label: "Blog Page",
-      repeatable: true,
-      status: true,
-      json: {},
-    };
-
-    test("when there are no remote custom type is should send new slices", async () => {
-      expect.assertions(1);
-      const customTypeEndpoint = "https://customtypes.prismic.io";
-      nock(customTypeEndpoint)
-        .post("/customtypes/insert")
-        .matchHeader("repository", repo)
-        .matchHeader("Authorization", `Bearer ${token}`)
-        .reply(200, (_, body) => {
-          const result = CustomType.decode(body);
-          expect(isRight(result)).toBeTruthy();
-        });
-
-      await sendManyCustomTypesToPrismic(
-        repo,
-        token,
-        customTypeEndpoint,
-        [],
-        [CT_ON_DISK]
-      );
-    });
-
-    test("when there are remote custom type that have the same id as local ones it'll update the custom type", async () => {
-      expect.assertions(1);
-      const customTypeEndpoint = "https://customtypes.prismic.io";
-      nock(customTypeEndpoint)
-        .post("/customtypes/update")
-        .matchHeader("repository", repo)
-        .matchHeader("Authorization", `Bearer ${token}`)
-        .reply(204, (_, body) => {
-          const result = CustomType.decode(body);
-          expect(isRight(result)).toBeTruthy();
-        });
-
-      await sendManyCustomTypesToPrismic(
-        repo,
-        token,
-        customTypeEndpoint,
-        [CT_ON_DISK.id],
-        [CT_ON_DISK]
-      );
     });
   });
 
@@ -154,12 +85,7 @@ describe("starters/custom-types", () => {
         [TMP_DIR]: {},
       });
 
-      const result = await sendCustomTypesFromStarter(
-        repo,
-        token,
-        base,
-        TMP_DIR
-      );
+      const result = await sendCustomTypes(client, TMP_DIR);
 
       expect(result).toBeFalsy();
     });
@@ -187,12 +113,7 @@ describe("starters/custom-types", () => {
         .spyOn(inquirer, "prompt")
         .mockResolvedValue({ pushCustomTypes: false });
 
-      const result = await sendCustomTypesFromStarter(
-        repo,
-        token,
-        base,
-        TMP_DIR
-      );
+      const result = await sendCustomTypes(client, TMP_DIR);
 
       expect(result).toBeFalsy();
     });
@@ -222,12 +143,7 @@ describe("starters/custom-types", () => {
         });
 
       stderr.start();
-      const result = await sendCustomTypesFromStarter(
-        repo,
-        token,
-        base,
-        TMP_DIR
-      );
+      const result = await sendCustomTypes(client, TMP_DIR);
       stderr.stop();
 
       expect(result).toBeTruthy();
@@ -266,12 +182,7 @@ describe("starters/custom-types", () => {
         .mockResolvedValue({ pushCustomTypes: true });
 
       stderr.start();
-      const result = await sendCustomTypesFromStarter(
-        repo,
-        token,
-        base,
-        TMP_DIR
-      );
+      const result = await sendCustomTypes(client, TMP_DIR);
       stderr.stop();
 
       expect(result).toBeTruthy();
@@ -298,10 +209,7 @@ describe("starters/custom-types", () => {
         },
       });
 
-      const customTypeEndpoint = "https://customtypes.prismic.io";
-
-      // expect.assertions(2)
-      nock(customTypeEndpoint)
+      nock(client.apisEndpoints.Models)
         .matchHeader("repository", repo)
         .matchHeader("Authorization", `Bearer ${token}`)
         .get("/customtypes")
@@ -314,12 +222,7 @@ describe("starters/custom-types", () => {
 
       stderr.start();
 
-      const result = await sendCustomTypesFromStarter(
-        repo,
-        token,
-        base,
-        TMP_DIR
-      );
+      const result = await sendCustomTypes(client, TMP_DIR);
 
       stderr.stop();
 
@@ -327,43 +230,5 @@ describe("starters/custom-types", () => {
       expect(errorSpy).toHaveBeenCalled();
       expect(result).toBeTruthy();
     });
-  });
-
-  test.skip("If a custom-type if invalid, it should exit", async () => {
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementationOnce(() => undefined as never);
-
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    mockfs({
-      [TMP_DIR]: {
-        customtypes: {
-          "blog-page": {
-            "index.json": JSON.stringify({ invalid: true }),
-          },
-        },
-      },
-    });
-
-    const customTypeEndpoint = "https://customtypes.prismic.io";
-
-    nock(customTypeEndpoint)
-      .matchHeader("repository", repo)
-      .matchHeader("Authorization", `Bearer ${token}`)
-      .get("/customtypes")
-      .reply(200, []);
-
-    stderr.start();
-
-    const result = await sendCustomTypesFromStarter(repo, token, base, TMP_DIR);
-
-    stderr.stop();
-
-    expect(exitSpy).toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalled();
-    expect(result).toBeTruthy();
   });
 });

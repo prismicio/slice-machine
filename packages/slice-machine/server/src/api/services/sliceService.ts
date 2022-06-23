@@ -1,9 +1,9 @@
 import path from "path";
+import { Client } from "@slicemachine/client";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { Client } from "@lib/models/server/Client";
 import { snakelize } from "@lib/utils/str";
 import { ApiError } from "@lib/models/server/ApiResult";
 import {
@@ -19,10 +19,11 @@ export const createOrUpdate = async (
   client: Client
 ) => {
   const prismicModel = Slices.fromSM(model);
+
   if (slices.find((e) => e.id === snakelize(sliceName))) {
-    return await client.updateSlice(prismicModel);
+    return client.updateSlice(prismicModel);
   } else {
-    return await client.insertSlice(prismicModel);
+    return client.insertSlice(prismicModel);
   }
 };
 

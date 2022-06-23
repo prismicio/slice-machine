@@ -1,47 +1,51 @@
-import {
-  describe,
-  expect,
-  test,
-  afterEach,
-  jest,
-  beforeEach,
-} from "@jest/globals";
+import { describe, expect, test, afterEach, jest } from "@jest/globals";
 import * as authHelpers from "../../src/utils/auth/helpers";
-import { Auth } from "../../src/utils/auth";
+import { Auth, InitClient } from "../../src/utils";
 
-import { Roles } from "@slicemachine/core/src/models";
 import { Endpoints } from "@slicemachine/core/build/prismic";
 import fs from "fs";
 import nock from "nock";
+import { ApplicationMode } from "@slicemachine/client";
+
+const userProfile = {
+  userId: "1234567",
+  shortId: "12",
+  intercomHash: "intercomHash",
+  email: "batman@example.com",
+  firstName: "bat",
+  lastName: "man",
+};
+
+const fakeToken = "biscuits";
+const fakeAuthHeader = `Bearer ${fakeToken}`;
+const fakeCookies = `prismic-auth=${fakeToken}`;
+
+const client = new InitClient(ApplicationMode.PROD, null, fakeToken);
+
+const fakeBase = client.apisEndpoints.Wroom;
+const endpoints = Endpoints.buildEndpoints(fakeBase);
+
+const fakeSharedConfig = {
+  base: fakeBase,
+  cookies: fakeCookies,
+};
 
 describe("auth", () => {
-  beforeEach(() => nock.cleanAll());
-
   afterEach(() => {
     jest.clearAllMocks();
+    nock.cleanAll();
   });
 
-  const fakeBase = "https://fake.io";
-  const endpoints = Endpoints.buildEndpoints(fakeBase);
-
   test("login should always have the same parameters", async () => {
-    const fakeProfile = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {},
-    };
-
     jest.spyOn(fs, "lstatSync").mockReturnValue({} as fs.Stats);
-    const fakeCookie = {
-      base: fakeBase,
-      cookies: "prismic-auth=biscuits",
-    };
+    jest
+      .spyOn(fs, "readFileSync")
+      .mockReturnValue(JSON.stringify(fakeSharedConfig));
 
-    jest.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(fakeCookie)); // called more than once?
-
-    nock("https://auth.fake.io")
-      .get("/validate?token=biscuits")
-      .reply(200, fakeProfile);
+    nock(client.apisEndpoints.Users)
+      .matchHeader("Authorization", fakeAuthHeader)
+      .get("/profile")
+      .reply(200, userProfile);
 
     const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser"); // untestable code, should be refactored
     spy.mockImplementation((url, action, base) => {
@@ -51,37 +55,7 @@ describe("auth", () => {
       return Promise.resolve({ onLoginFail: () => null });
     });
 
-    await Auth.login(fakeBase);
-  });
-
-  test("signup should always open the browser at the same url", async () => {
-    const fakeProfile = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {},
-    };
-
-    jest.spyOn(fs, "lstatSync").mockReturnValue({} as fs.Stats);
-    const fakeCookie = {
-      base: fakeBase,
-      cookies: "prismic-auth=biscuits",
-    };
-
-    jest.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(fakeCookie)); // called more than once?
-
-    nock("https://auth.fake.io")
-      .get("/validate?token=biscuits")
-      .reply(200, fakeProfile);
-    const spy = jest.spyOn(authHelpers, "startServerAndOpenBrowser");
-
-    spy.mockImplementation((url, action, base) => {
-      expect(url).toEqual(endpoints.Dashboard.cliSignup);
-      expect(action).toEqual("signup");
-      expect(base).toEqual(fakeBase);
-      return Promise.resolve({ onLoginFail: () => null });
-    });
-
-    await Auth.signup(fakeBase);
+    await Auth.login(client);
   });
 
   test("isHandler should work", () => {
@@ -118,72 +92,33 @@ describe("auth", () => {
     expect(authHelpers.isHandlerData(nonHandlerData5)).toBe(false);
   });
 
-  test("validate session should return null if there is no cookies", async () => {
+  test("validate session should return false when validate session reject the promise", async () => {
     jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify({ base: fakeBase, cookies: "" }));
+      .mockReturnValueOnce(JSON.stringify(fakeSharedConfig));
 
-    const result = await Auth.validateSession(fakeBase);
-    expect(result).toBe(null);
-  });
+    nock(client.apisEndpoints.Users)
+      .matchHeader("Authorization", fakeAuthHeader)
+      .get("/profile")
+      .reply(401);
 
-  test("validate session should return null if there is different bases", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
-    const fakeCookie = {
-      base: "https://prismic.io",
-      cookies: "prismic-auth=biscuits",
-    };
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify(fakeCookie));
-
-    const result = await Auth.validateSession(fakeBase);
-    expect(result).toBe(null);
-  });
-
-  test("validate session should return null when validate session reject the promise", async () => {
-    const fakeCookie = {
-      base: "https://prismic.io",
-      cookies: "prismic-auth=biscuits",
-    };
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
-    jest
-      .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify(fakeCookie));
-
-    nock("https://auth.prismic.io").get("/validate?token=biscuits").reply(401);
-
-    const result = await Auth.validateSession(fakeBase);
-    expect(result).toBe(null);
+    const result = await Auth.validateSession(client);
+    expect(result).toBe(false);
   });
 
   test("validate session should work", async () => {
-    const fakeCookie = {
-      base: "https://prismic.io",
-      cookies: "prismic-auth=biscuits",
-    };
-
-    const wanted = {
-      email: "fake@prismic.io",
-      type: "USER",
-      repositories: {
-        "foo-repo": { dbid: "abcd", role: Roles.PUBLISHER },
-        qwerty: { dbid: "efgh", role: Roles.WRITER },
-      },
-    };
-
     jest.spyOn(fs, "lstatSync").mockReturnValueOnce({} as fs.Stats);
-    // readFileSync seems to be called more than once :/
     jest
       .spyOn(fs, "readFileSync")
-      .mockReturnValueOnce(JSON.stringify(fakeCookie));
+      .mockReturnValueOnce(JSON.stringify(fakeSharedConfig));
 
-    nock("https://auth.prismic.io")
-      .get("/validate?token=biscuits")
-      .reply(200, wanted);
+    nock(client.apisEndpoints.Users)
+      .matchHeader("Authorization", fakeAuthHeader)
+      .get("/profile")
+      .reply(200, userProfile);
 
-    const got = await Auth.validateSession(fakeCookie.base);
-    expect(got).toEqual(wanted);
+    const got = await Auth.validateSession(client);
+    expect(got).toEqual(true);
   });
 });
