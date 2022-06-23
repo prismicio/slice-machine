@@ -95,11 +95,7 @@ const codeByWidgetType = (
       useKey ? appendKey("color") : ""
     } style={{ color: ${fieldText} }}>Some Text</span>`,
 
-  [Widgets.Text?.TYPE_NAME]: (
-    fieldText: string,
-    useKey?: boolean
-  ) => `/* import { PrismicText } from '@prismicio/react' */
-<PrismicText ${useKey ? appendKey("text") : ""} field={${fieldText}} />`,
+  [Widgets.Text?.TYPE_NAME]: createDefaultField(),
 });
 
 const toReact: React.FC<{

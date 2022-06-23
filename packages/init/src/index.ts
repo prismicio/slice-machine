@@ -10,8 +10,9 @@ import {
   displayFinalMessage,
   detectFramework,
   installLib,
+  sendStarterData,
 } from "./steps";
-import { findArgument, logs } from "./utils";
+import { findArgument, logs, findFlag } from "./utils";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -21,6 +22,7 @@ async function init() {
   const isTrackingAvailable =
     findArgument(process.argv, "tracking") !== "false";
   const maybeRepositorySubdomain = findArgument(process.argv, "repository");
+  const sendDocs = !findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
     process.env.PUBLIC_SM_INIT_SEGMENT_KEY ||
@@ -67,10 +69,15 @@ async function init() {
 
   Tracker.get().setRepository(repositoryDomainName);
 
-  // Install the required dependencies in the project.
-  await installRequiredDependencies(cwd, frameworkResult.value);
-
   const sliceLibPath = lib ? await installLib(cwd, lib, branch) : undefined;
+
+  const wasStarter = await sendStarterData(
+    repositoryDomainName,
+    config.base,
+    config.cookies,
+    sendDocs,
+    cwd
+  ); // will be false if no sm.json is found
 
   // configure the SM.json file and the json package file of the project..
   await configureProject(
@@ -82,8 +89,11 @@ async function init() {
     isTrackingAvailable
   );
 
+  // Install the required dependencies in the project.
+  await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
+
   // Ask the user to run slice-machine.
-  displayFinalMessage(cwd);
+  displayFinalMessage(cwd, wasStarter, repositoryDomainName, config.base);
 }
 
 init()

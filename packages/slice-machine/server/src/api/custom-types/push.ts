@@ -1,23 +1,22 @@
-import { getBackendState } from "../state";
-import { pushSlice } from "../slices/push";
-
-import { onError } from "../common/error";
-import { CustomTypesPaths } from "@lib/models/paths";
-import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient from "@lib/models/common/http/FakeClient";
-import { ApiResult } from "@lib/models/server/ApiResult";
-
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { Tab } from "@lib/models/common/CustomType/tab";
-import { RequestWithEnv } from "../http/common";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
+
+import { Client } from "@lib/models/server/Client";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { Tab } from "@lib/models/common/CustomType/tab";
+import { CustomTypesPaths } from "@lib/models/paths";
+import { ApiResult } from "@lib/models/server/ApiResult";
+
+import { getBackendState } from "../state";
+import { pushSlice } from "../slices/push";
+import { onError } from "../common/error";
+import { RequestWithEnv } from "../http/common";
 import * as IO from "../io";
 
 const createOrUpdate = (
-  client: DefaultClient | FakeClient,
+  client: Client,
   smModel: CustomTypeSM,
   remoteCustomType: CustomTypeSM | undefined
 ) => {
@@ -46,20 +45,15 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     };
   }
 
-  if (state.clientError || !state.env.isUserLoggedIn) {
+  if (state.clientError) {
     const isAnAuthenticationError =
-      !state.env.isUserLoggedIn ||
-      (state.clientError && state.clientError.status === 403);
+      state.clientError && state.clientError.status === 403;
     const errorExplanation = isAnAuthenticationError
       ? "Please log in to Prismic!"
       : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `You don\'t have access to the repo \"${state.env.repo}\"`;
 
-    const errorCode = !state.env.isUserLoggedIn
-      ? 403
-      : state.clientError
-      ? state.clientError.status
-      : 403;
+    const errorCode = state.clientError ? state.clientError.status : 403;
     const message = `Error ${errorCode}: Could not fetch remote custom types. ${errorExplanation}`;
 
     return {

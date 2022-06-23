@@ -1,6 +1,6 @@
-import { expect, test } from "@jest/globals";
+import { expect, test, describe } from "@jest/globals";
 
-import { findArgument } from "../../src/utils";
+import { findArgument, findFlag } from "../../src/utils";
 
 describe("findArgument", () => {
   test("should send undefined if there is no args", () => {
@@ -18,5 +18,19 @@ describe("findArgument", () => {
   test("repository argument", () => {
     const arg = findArgument(["--repository", "foo-bar"], "repository");
     expect(arg).toEqual("foo-bar");
+  });
+});
+
+describe("findFlag", () => {
+  test("it should return true when flag is found in the args", () => {
+    const want = true;
+    const got = findFlag(["--foo"], "foo");
+    expect(got).toEqual(want);
+  });
+
+  test("it should return false when flag is not found", () => {
+    const want = false;
+    const got = findFlag(["--bar", "baz", "--boop"], "foo");
+    expect(got).toEqual(want);
   });
 });

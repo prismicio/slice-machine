@@ -4,7 +4,7 @@ import { getAndSetUserProfile } from "../../server/src/api/services/getAndSetUse
 import { vol } from "memfs";
 import * as os from "os";
 import { PrismicSharedConfig } from "@slicemachine/core/build/models";
-import nock from "nock";
+import fetchMock from "fetch-mock";
 import path from "path";
 
 jest.mock(`fs`, () => {
@@ -15,6 +15,7 @@ jest.mock(`fs`, () => {
 describe("setShortId", () => {
   afterEach(() => {
     vol.reset();
+    fetchMock.reset();
   });
 
   test("it should set the short ID and the intercom hash", async () => {
@@ -28,13 +29,12 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(200, JSON.stringify(MockedUserProfile));
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 200,
+      body: JSON.stringify(MockedUserProfile),
+    });
 
-    const res = await getAndSetUserProfile(MockedBackendEnv, fakeCookie);
+    const res = await getAndSetUserProfile(MockedBackendEnv.client);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -62,15 +62,14 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(200, {});
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 200,
+      body: {},
+    });
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Unable to parse profile: {}");
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
+      "Unable to parse profile: {}"
+    );
   });
 
   test("on network issues should throw an error", async () => {
@@ -84,14 +83,12 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(403);
+    fetchMock.getOnce("https://user.internal-prismic.io/profile", {
+      status: 403,
+    });
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Request failed with status code 403");
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
+      "Unable to retrieve profile with status code 403"
+    );
   });
 });

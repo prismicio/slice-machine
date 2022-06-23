@@ -1,3 +1,4 @@
+import { SetStateAction, useState } from "react";
 import { Box } from "theme-ui";
 
 import ModalFormCard from "@components/ModalFormCard";
@@ -17,6 +18,13 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
 
 import Tracker from "@src/tracker";
+import { slugify } from "@lib/utils/str";
+
+interface FormValues {
+  id: string;
+  label: string;
+  repeatable: boolean;
+}
 
 const CreateCustomTypeModal: React.FC = () => {
   const { createCustomType, closeCreateCustomTypeModal } =
@@ -37,15 +45,9 @@ const CreateCustomTypeModal: React.FC = () => {
     isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
   }));
 
-  const createCustomTypeAndTrack = ({
-    id,
-    label,
-    repeatable,
-  }: {
-    id: string;
-    label: string;
-    repeatable: boolean;
-  }) => {
+  const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
+
+  const createCustomTypeAndTrack = ({ id, label, repeatable }: FormValues) => {
     const name = label || id;
 
     void Tracker.get().trackCreateCustomType({
@@ -56,6 +58,37 @@ const CreateCustomTypeModal: React.FC = () => {
     createCustomType(id, name, repeatable);
   };
 
+  const handleLabelChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    values: FormValues,
+    setValues: (
+      values: SetStateAction<FormValues>,
+      shouldValidate?: boolean
+    ) => void
+  ) => {
+    if (isIdFieldPristine) {
+      setValues({
+        ...values,
+        label: e.target.value,
+        id: slugify(e.target.value),
+      });
+    } else {
+      setValues({ ...values, label: e.target.value });
+    }
+  };
+
+  const handleIdChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (
+      field: string,
+      value: string,
+      shouldValidate?: boolean
+    ) => void
+  ) => {
+    setFieldValue("id", e.target.value);
+    setIsIdFieldPristine(false);
+  };
+
   return (
     <ModalFormCard
       dataCy="create-ct-modal"
@@ -63,7 +96,10 @@ const CreateCustomTypeModal: React.FC = () => {
       widthInPx="530px"
       formId="create-custom-type"
       buttonLabel={"Create"}
-      close={closeCreateCustomTypeModal}
+      close={() => {
+        closeCreateCustomTypeModal();
+        setIsIdFieldPristine(true);
+      }}
       onSubmit={createCustomTypeAndTrack}
       isLoading={isCreatingCustomType}
       initialValues={{
@@ -109,7 +145,7 @@ const CreateCustomTypeModal: React.FC = () => {
         title: "Create a new custom type",
       }}
     >
-      {({ errors }) => (
+      {({ errors, setValues, setFieldValue, values }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
@@ -118,6 +154,7 @@ const CreateCustomTypeModal: React.FC = () => {
             dataCy="ct-name-input"
             placeholder="My Custom Type"
             error={errors.label}
+            onChange={(e) => handleLabelChange(e, values, setValues)}
           />
           <InputBox
             name="id"
@@ -125,6 +162,7 @@ const CreateCustomTypeModal: React.FC = () => {
             label="Custom Type ID"
             placeholder="my-custom-type"
             error={errors.id}
+            onChange={(e) => handleIdChange(e, setFieldValue)}
           />
         </Box>
       )}
