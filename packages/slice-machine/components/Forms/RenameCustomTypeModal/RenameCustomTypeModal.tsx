@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
+import { FormikErrors } from "formik";
+import { selectAllCustomTypeLabels } from "@src/modules/availableCustomTypes";
 
 interface RenameCustomTypeModalProps {
   customTypeName: string;
@@ -22,12 +24,13 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
   const handleOnSubmit = (values: { customTypeName: string }) => {
     renameCustomType(customTypeId, values.customTypeName);
   };
-  const { isRenameCustomTypeModalOpen } = useSelector(
+  const { isRenameCustomTypeModalOpen, customTypeLabels } = useSelector(
     (store: SliceMachineStoreType) => ({
       isRenameCustomTypeModalOpen: isModalOpen(
         store,
         ModalKeysEnum.RENAME_CUSTOM_TYPE
       ),
+      customTypeLabels: selectAllCustomTypeLabels(store),
     })
   );
 
@@ -44,14 +47,33 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         customTypeName: customTypeName,
       }}
       content={{ title: "Rename a custom type" }}
+      validate={({ customTypeName: newName }) => {
+        const errors: FormikErrors<{
+          customTypeName: string;
+        }> = {};
+
+        if (!newName || !newName.length) {
+          errors.customTypeName = "Cannot be empty.";
+        }
+
+        if (
+          !errors.customTypeName &&
+          customTypeLabels.includes(newName) &&
+          customTypeName !== newName
+        ) {
+          errors.customTypeName = "Custom Type name is already taken.";
+        }
+
+        return Object.keys(errors).length > 0 ? errors : undefined;
+      }}
     >
-      {({ touched, errors }) => (
+      {({ errors }) => (
         <Box>
           <InputBox
             name="customTypeName"
             label="Custom Type Name"
             placeholder="MyCustomType"
-            error={touched.customTypeName ? errors.customTypeName : undefined}
+            error={errors.customTypeName}
             dataCy="custom-type-name-input"
           />
         </Box>
