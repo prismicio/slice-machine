@@ -56,6 +56,8 @@ const CreateCustomTypeModal: React.FC = () => {
       repeatable,
     });
     createCustomType(id, name, repeatable);
+    closeCreateCustomTypeModal();
+    setIsIdFieldPristine(true);
   };
 
   const handleLabelChange = (
