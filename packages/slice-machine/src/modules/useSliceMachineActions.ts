@@ -19,7 +19,10 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
-import { createCustomTypeCreator } from "./availableCustomTypes";
+import {
+  createCustomTypeCreator,
+  renameCustomTypeCreator,
+} from "./availableCustomTypes";
 import { createSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "./toaster";
