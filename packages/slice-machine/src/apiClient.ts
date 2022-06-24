@@ -79,6 +79,19 @@ export const createSlice = (
     .then((response: AxiosResponse<{ variationId: string }>) => response.data);
 };
 
+export const renameSlice = (
+  sliceId: string,
+  newSliceName: string,
+  libName: string
+): Promise<AxiosResponse> => {
+  const requestBody = {
+    sliceId,
+    newSliceName,
+    libName,
+  };
+  return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
+};
+
 /** Auth Routes **/
 
 export const startAuth = (): Promise<AxiosResponse<Record<string, never>>> =>
