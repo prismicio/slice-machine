@@ -10,3 +10,9 @@ export function readSlice(path: string): SliceSM {
 export function writeSlice(path: string, slice: SliceSM) {
   Files.write(path, Slices.fromSM(slice));
 }
+
+export function renameSlice(path: string, newSliceName: string) {
+  const slice = readSlice(path);
+  slice.name = newSliceName;
+  writeSlice(path, slice);
+}
