@@ -8,7 +8,7 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice } from "@src/apiClient";
+import { createSlice, renameSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -18,6 +18,7 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../../src/tracker";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -28,6 +29,23 @@ export const createSliceCreator = createAsyncAction(
   sliceName: string;
   libName: string;
 }>();
+
+export const renameSliceCreator = createAsyncAction(
+  "SLICES/RENAME.REQUEST",
+  "SLICES/RENAME.RESPONSE",
+  "SLICES/RENAME.FAILURE"
+)<
+  {
+    sliceId: string;
+    newSliceName: string;
+    libName: string;
+    variationId: string;
+  },
+  {
+    sliceId: string;
+    newSliceName: string;
+  }
+>();
 
 type SlicesActions = ActionType<typeof refreshStateCreator>;
 
@@ -80,15 +98,50 @@ export function* createSliceSaga({
   }/${variationId}`;
 }
 
+export function* renameSliceSaga({
+  payload,
+}: ReturnType<typeof renameSliceCreator.request>) {
+  try {
+    yield call(
+      renameSlice,
+      payload.sliceId,
+      payload.newSliceName,
+      payload.libName
+    );
+    yield put(renameSliceCreator.success(payload));
+    window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
+      payload.newSliceName
+    }/${payload.variationId}`;
+    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+    yield put(
+      openToasterCreator({
+        message: "Slice name updated",
+        type: ToasterType.SUCCESS,
+      })
+    );
+  } catch (e) {
+    yield put(
+      openToasterCreator({
+        message: "Internal Error: Slice name not saved",
+        type: ToasterType.ERROR,
+      })
+    );
+  }
+}
+
 // Saga watchers
-function* watchCreateSlice() {
+function* handleSliceRequests() {
   yield takeLatest(
     getType(createSliceCreator.request),
     withLoader(createSliceSaga, LoadingKeysEnum.CREATE_SLICE)
+  );
+  yield takeLatest(
+    getType(renameSliceCreator.request),
+    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE)
   );
 }
 
 // Saga Exports
 export function* watchSliceSagas() {
-  yield fork(watchCreateSlice);
+  yield fork(handleSliceRequests);
 }
