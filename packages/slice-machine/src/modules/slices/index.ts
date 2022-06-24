@@ -108,11 +108,9 @@ export function* renameSliceSaga({
       payload.newSliceName,
       payload.libName
     );
-    yield put(renameSliceCreator.success(payload));
     window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
     }/${payload.variationId}`;
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     yield put(
       openToasterCreator({
         message: "Slice name updated",
