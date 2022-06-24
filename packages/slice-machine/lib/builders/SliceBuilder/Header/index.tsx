@@ -75,7 +75,7 @@ const Header: React.FC<{
                   </ThemeLinK>
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
-                  <Text ml={2}>
+                  <Text ml={2} data-cy="slice-and-variation-name-header">
                     {`/ ${Model.model.name} / ${variation.name}`}
                   </Text>
                 </Box>
@@ -108,6 +108,7 @@ const Header: React.FC<{
               size={22}
               Icon={MdModeEdit}
               label="Edit slice name"
+              data-cy="edit-slice-name"
               sx={{ cursor: "pointer", color: theme.colors?.icons }}
               onClick={openRenameSliceModal}
               style={{
@@ -152,6 +153,7 @@ const Header: React.FC<{
             sliceName={Model.model.name}
             libName={Model.from}
             variationId={variation.id}
+            data-cy="rename-slice-modal"
           />
         </Flex>
       </Box>

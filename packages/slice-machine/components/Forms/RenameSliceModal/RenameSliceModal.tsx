@@ -42,7 +42,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
       dataCy="rename-slice-modal"
       isOpen={isRenameSliceModalOpen}
       widthInPx="530px"
-      formId={"lololol"}
+      formId={`rename-slice-modal-${sliceId}`}
       close={closeRenameSliceModal}
       buttonLabel="Rename"
       onSubmit={handleOnSubmit}
@@ -85,6 +85,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
           <InputBox
             name="sliceName"
             label="Slice Name"
+            data-cy="slice-name-input"
             placeholder="MySlice"
             error={touched.sliceName ? errors.sliceName : undefined}
             dataCy="slice-name-input"
