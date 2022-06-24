@@ -1,7 +1,6 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 import SliceState from "@lib/models/ui/SliceState";
 import { ToastPayload } from "@src/modules/toaster/utils";
-import { SliceSaveResponse } from "@lib/models/common/Slice";
 import { ActionType } from "./ActionType";
 
 export default function save(
@@ -32,10 +31,9 @@ export default function save(
       },
       setData,
       successMessage: "Models & mocks have been generated successfully!",
-      onSuccess({ screenshots }: SliceSaveResponse) {
+      onSuccess() {
         const savedState = {
           ...slice,
-          screenshotUrls: screenshots,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           initialMockConfig: slice.mockConfig,
           initialVariations: slice.variations,

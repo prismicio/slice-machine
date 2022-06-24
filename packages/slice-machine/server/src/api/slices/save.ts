@@ -8,18 +8,17 @@ import mock from "@lib/mock/Slice";
 import { getConfig, insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { generateScreenshot } from "../screenshots/generate";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
-import { SliceSaveBody, SliceSaveResponse } from "@lib/models/common/Slice";
+import { SliceSaveBody } from "@lib/models/common/Slice";
 import * as IO from "../io";
 
 export async function handler(
   env: BackendEnvironment,
   { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
-): Promise<SliceSaveResponse> {
+): Promise<Record<string, never>> {
   await onBeforeSaveSlice({ from, sliceName }, env);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -69,50 +68,7 @@ export async function handler(
   await onSaveSlice(env);
   console.log("[slice/save]: Libraries index files regenerated!");
 
-  const { screenshots, warning } = await generateScreenshotsWithLogs(
-    env,
-    from,
-    sliceName
-  );
-
-  return { screenshots, warning };
-}
-
-async function generateScreenshotsWithLogs(
-  env: BackendEnvironment,
-  from: string,
-  sliceName: string
-): Promise<SliceSaveResponse> {
-  if (!env.manifest.localSliceSimulatorURL) {
-    const message = "localSliceSimulatorURL not configured on sm.json file";
-    console.log(`[slice/save]: Cannot not generate screenshots: ${message}`);
-
-    return Promise.resolve({ screenshots: {}, warning: message });
-  }
-
-  console.log("[slice/save]: Generating screenshots previews");
-  const { screenshots, failure } = await generateScreenshot(
-    env,
-    from,
-    sliceName
-  );
-
-  if (failure.length) {
-    failure.forEach((f) => {
-      console.log(
-        `[slice/save][Slice: ${sliceName}][variation: ${f.variationId}]: ${f.error.message}`
-      );
-    });
-
-    return {
-      screenshots,
-      warning: `Could not generate previews for variations: ${failure
-        .map((f) => f.variationId)
-        .join(" | ")}`,
-    };
-  }
-
-  return { screenshots, warning: null };
+  return {};
 }
 
 export default async function apiHandler(req: { body: SliceSaveBody }) {
