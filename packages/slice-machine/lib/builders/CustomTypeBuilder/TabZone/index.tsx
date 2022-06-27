@@ -91,6 +91,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
     void Tracker.get().trackCustomTypeFieldAdded({
       fieldId: id,
+      fieldLabel: label,
       customTypeId: currentCustomType.id,
       type: widget.TYPE_NAME,
       zone: "static",

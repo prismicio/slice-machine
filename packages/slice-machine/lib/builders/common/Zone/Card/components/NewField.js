@@ -157,6 +157,7 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                         : "1px solid yellow",
                     },
                   }}
+                  aria-label="label-input"
                 />
                 <ErrorTooltip
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
