@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { Box, Input, Flex, Text, Button, useThemeUI } from "theme-ui";
 
@@ -9,6 +9,7 @@ import * as Widgets from "@lib/models/common/widgets/withGroup";
 
 import ErrorTooltip from "./ErrorTooltip";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { slugify } from "@lib/utils/str";
 
 const RefInput = (args) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -18,6 +19,7 @@ const RefInput = (args) => {
 const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
   const fieldRef = useRef(null);
   const { theme } = useThemeUI();
+  const [isIdFieldPristine, setIsIdFieldPristine] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const widget = Widgets[widgetTypeName];
   if (!widget) {
@@ -36,6 +38,8 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
   const FormFields = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     id: widgetFormFields.id,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    label: widgetFormFields.label,
   };
 
   const initialValues = {
@@ -54,6 +58,30 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
     }
   }, [fieldRef]);
 
+  const handleLabelChange = (e, values, setValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    if (isIdFieldPristine) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      setValues({
+        ...values,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        label: e.target.value,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+        id: slugify(e.target.value),
+      });
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      setValues({ ...values, label: e.target.value });
+    }
+  };
+
+  const handleIdChange = (e, setFieldValue) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    setFieldValue("id", e.target.value);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    setIsIdFieldPristine(false);
+  };
+
   return (
     <Formik
       validateOnChange
@@ -63,7 +91,7 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
       validationSchema={validationSchema}
       initialValues={initialValues}
     >
-      {({ errors }) => (
+      {({ errors, values, setValues, setFieldValue }) => (
         <Form>
           <Flex
             as="li"
@@ -100,10 +128,48 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                   alignItems: "center",
                 }}
               >
-                <Text as="p" sx={{ mr: 3, minWidth: "56px" }}>
-                  field id
+                <Text as="p" sx={{ mr: 3, minWidth: "86px", fontWeight: 500 }}>
+                  Field Name
                 </Text>
                 <Field
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                  onChange={(e) => handleLabelChange(e, values, setValues)}
+                  name="label"
+                  placeholder="Field Name"
+                  type="text"
+                  validate={(value) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    if (!value.length) {
+                      return "This field is required";
+                    }
+                  }}
+                  as={RefInput}
+                  innerRef={fieldRef}
+                  sx={{
+                    border: ({ colors }) =>
+                      errors.label
+                        ? `1px solid tomato`
+                        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                          `1px solid ${colors.primary}`,
+                    "&:focus": {
+                      border: errors.label
+                        ? `1px solid tomato`
+                        : "1px solid yellow",
+                    },
+                  }}
+                />
+                <ErrorTooltip
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  error={errors.label}
+                />
+                <Text
+                  as="p"
+                  sx={{ ml: 3, mr: 3, minWidth: "56px", fontWeight: 500 }}
+                >
+                  field ID
+                </Text>
+                <Field
+                  onChange={(e) => handleIdChange(e, setFieldValue)}
                   name="id"
                   placeholder="myField"
                   type="text"
@@ -117,7 +183,6 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                     })
                   }
                   as={RefInput}
-                  innerRef={fieldRef}
                   sx={{
                     border: ({ colors }) =>
                       errors.id
@@ -131,10 +196,10 @@ const NewField = ({ widgetTypeName, fields, onSave, onCancelNewField }) => {
                     },
                   }}
                 />
-                <ErrorTooltip errors={errors} />
+                <ErrorTooltip error={errors.id} />
               </Flex>
             </Flex>
-            <Box>
+            <Box sx={{ minWidth: 150, ml: 3 }}>
               <Button
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 onClick={onCancelNewField}
