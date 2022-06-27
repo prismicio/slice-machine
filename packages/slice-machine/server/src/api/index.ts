@@ -182,8 +182,6 @@ router.put(
     req: express.Request,
     res: express.Response
   ): Promise<Express.Response> {
-    console.log("endpoint");
-    console.log(req.body);
     const payload = await renameSlice(req);
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
