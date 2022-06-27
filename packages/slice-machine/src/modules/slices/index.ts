@@ -108,9 +108,10 @@ export function* renameSliceSaga({
       payload.newSliceName,
       payload.libName
     );
-    window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
+    const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
     }/${payload.variationId}`;
+    window.location.href = addr;
     yield put(
       openToasterCreator({
         message: "Slice name updated",

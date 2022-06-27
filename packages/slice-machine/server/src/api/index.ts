@@ -179,7 +179,7 @@ router.put(
   "/slices/rename",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
-    req: express.Request,
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await renameSlice(req);

@@ -9,14 +9,17 @@ import fs from "fs";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 
 interface RenameSliceBody {
-  env: BackendEnvironment;
   sliceId: string;
   newSliceName: string;
   libName: string;
 }
 
-export async function renameSlice(req: { body: RenameSliceBody }) {
-  const { sliceId, newSliceName, libName, env } = req.body;
+export async function renameSlice(req: {
+  body: RenameSliceBody;
+  env: BackendEnvironment;
+}) {
+  const { env } = req;
+  const { sliceId, newSliceName, libName } = req.body;
 
   if (!env.manifest.libraries) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, there were no libraries configured in your SM.json.`;
