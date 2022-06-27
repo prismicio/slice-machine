@@ -5,7 +5,6 @@ import {
   GeneratedPaths,
 } from "@slicemachine/core/build/node-utils/paths";
 import * as IO from "../io";
-import getEnv from "../services/getEnv";
 import fs from "fs";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 
@@ -17,8 +16,7 @@ interface RenameSliceBody {
 }
 
 export async function renameSlice(req: { body: RenameSliceBody }) {
-  const { sliceId, newSliceName, libName } = req.body;
-  const { env } = await getEnv();
+  const { sliceId, newSliceName, libName, env } = req.body;
 
   if (!env.manifest.libraries) {
     const message = `[renameSlice] When renaming slice: ${sliceId}, there were no libraries configured in your SM.json.`;
