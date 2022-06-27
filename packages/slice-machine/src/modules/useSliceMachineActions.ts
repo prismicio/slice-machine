@@ -23,7 +23,7 @@ import {
   createCustomTypeCreator,
   renameCustomTypeCreator,
 } from "./availableCustomTypes";
-import { createSliceCreator } from "./slices";
+import { createSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "./toaster";
 import {
@@ -85,6 +85,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  const closeRenameSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+  const openRenameSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const closeCreateCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
@@ -254,6 +258,21 @@ const useSliceMachineActions = () => {
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
 
+  const renameSlice = (
+    sliceId: string,
+    newSliceName: string,
+    libName: string,
+    variationId: string
+  ) =>
+    dispatch(
+      renameSliceCreator.request({
+        sliceId,
+        newSliceName,
+        libName,
+        variationId,
+      })
+    );
+
   // Toaster store
   const openToaster = (message: string, type: ToasterType) =>
     dispatch(openToasterCreator({ message, type }));
@@ -310,6 +329,7 @@ const useSliceMachineActions = () => {
     reorderFieldIntoGroup,
     replaceFieldIntoGroup,
     createSlice,
+    renameSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,
@@ -320,6 +340,8 @@ const useSliceMachineActions = () => {
     closeRenameCustomTypeModal,
     openCreateSliceModal,
     closeCreateSliceModal,
+    openRenameSliceModal,
+    closeRenameSliceModal,
     openToaster,
   };
 };

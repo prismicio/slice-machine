@@ -8,6 +8,7 @@ const mime = require("mime");
 
 import pushSlice from "./slices/push";
 import saveSlice from "./slices/save";
+import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
 import screenshot from "./screenshots/screenshots";
 import customScreenshot from "./screenshots/custom-screenshots";
@@ -172,6 +173,22 @@ router.get(
 
     return res.status(200).json(payload);
   }
+);
+
+router.put(
+  "/slices/rename",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await renameSlice(req);
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
 );
 
 /** Custom Type Routing **/

@@ -1,0 +1,1 @@
+export { RenameSliceModal } from "./RenameSliceModal";
