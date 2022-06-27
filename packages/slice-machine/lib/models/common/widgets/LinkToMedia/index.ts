@@ -7,7 +7,7 @@ import { MockConfigForm } from "./Mock/Form";
 import { Widget } from "../Widget";
 
 import { linkConfigSchema } from "@lib/models/common/widgets/Link";
-import Form, { FormFields } from "@lib/models/common/widgets/Link/Form";
+import Form, { FormFields } from "./Form";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
