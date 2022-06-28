@@ -3,16 +3,18 @@ import { Fragment } from "react";
 import ReactTooltip from "react-tooltip";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-const ErrorTooltip = ({ errors }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (errors && errors.id) {
+interface ErrorTooltip {
+  error?: string;
+}
+
+const ErrorTooltip: React.FC<ErrorTooltip> = ({ error }) => {
+  if (error) {
     return (
       <Fragment>
         <ReactTooltip type="light" multiline border borderColor={"tomato"} />
         <FaRegQuestionCircle
           color={"tomato"}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          data-tip={errors.id}
+          data-tip={error}
           style={{
             position: "relative",
             top: "1px",

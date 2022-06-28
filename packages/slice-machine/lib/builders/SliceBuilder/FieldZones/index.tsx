@@ -15,7 +15,6 @@ import { SliceMockConfig } from "@models/common/MockConfig";
 import SliceState from "@models/ui/SliceState";
 import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
-import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -82,7 +81,15 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   const _onSaveNewField =
     (widgetArea: Models.WidgetsArea) =>
-    ({ id, widgetTypeName }: { id: string; widgetTypeName: string }) => {
+    ({
+      id,
+      label,
+      widgetTypeName,
+    }: {
+      id: string;
+      label: string;
+      widgetTypeName: string;
+    }) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -93,12 +100,10 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         );
       }
 
-      const friendlyName = createFriendlyFieldNameWithId(id);
-
       store
         .variation(variation.id)
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        .addWidget(widgetArea, id, widget.create(friendlyName));
+        .addWidget(widgetArea, id, widget.create(label));
     };
 
   const _onDragEnd =

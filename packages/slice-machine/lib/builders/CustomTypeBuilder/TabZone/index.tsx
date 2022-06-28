@@ -13,7 +13,6 @@ import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 import SliceZone from "../SliceZone";
 
-import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 import { Widget } from "../../../models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -76,9 +75,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
 
   const onSaveNewField = ({
     id,
+    label,
     widgetTypeName,
   }: {
     id: string;
+    label: string;
     widgetTypeName: string;
   }) => {
     // @ts-expect-error We have to create a widget map or a service instead of using export name
@@ -88,14 +89,14 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
-    const friendlyName = createFriendlyFieldNameWithId(id);
     void Tracker.get().trackCustomTypeFieldAdded({
       fieldId: id,
+      fieldLabel: label,
       customTypeId: currentCustomType.id,
       type: widget.TYPE_NAME,
       zone: "static",
     });
-    addCustomTypeField(tabId, id, widget.create(friendlyName));
+    addCustomTypeField(tabId, id, widget.create(label));
   };
 
   const onDragEnd = (result: {

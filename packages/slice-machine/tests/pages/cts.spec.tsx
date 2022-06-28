@@ -23,6 +23,7 @@ import Tracker from "../../src/tracker";
 import LibrariesProvider from "../../src/models/libraries/context";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
@@ -73,7 +74,7 @@ describe("Custom Type Builder", () => {
     const App = render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
-          framework: "next",
+          framework: Frameworks.next,
           mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
@@ -126,8 +127,11 @@ describe("Custom Type Builder", () => {
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -137,7 +141,13 @@ describe("Custom Type Builder", () => {
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
-      { id: "uid", name: "a-page", type: "UID", zone: "static" },
+      {
+        id: "new-field",
+        label: "New Field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
       { context: { groupId: { Repository: "repoName" } } }
     );
   });
@@ -401,8 +411,11 @@ describe("Custom Type Builder", () => {
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -412,7 +425,13 @@ describe("Custom Type Builder", () => {
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
-      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
+      {
+        id: "new-field",
+        label: "New Field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
       { context: { groupId: { Repository: "repoName" } } }
     );
 
@@ -500,8 +519,11 @@ describe("Custom Type Builder", () => {
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -511,7 +533,13 @@ describe("Custom Type Builder", () => {
 
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
-      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
+      {
+        id: "new-field",
+        label: "New Field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
       { context: { groupId: { Repository: "repoName" } } }
     );
 

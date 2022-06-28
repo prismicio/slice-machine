@@ -22,7 +22,6 @@ import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
-import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 /* eslint-disable */
@@ -72,14 +71,12 @@ const CustomListItem = ({
     setEditModalData({ isOpen: false });
   };
 
-  const onSaveNewField = ({ id, widgetTypeName }) => {
+  const onSaveNewField = ({ id, label, widgetTypeName }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const friendlyName = createFriendlyFieldNameWithId(id);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const newWidget = widget.create(friendlyName);
+    const newWidget = widget.create(label);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
