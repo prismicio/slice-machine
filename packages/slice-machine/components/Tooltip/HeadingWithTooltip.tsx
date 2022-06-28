@@ -1,5 +1,5 @@
 import ReactTooltip from "react-tooltip";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Heading } from "theme-ui";
 
 interface HeadingWithTooltip {
@@ -7,6 +7,16 @@ interface HeadingWithTooltip {
 }
 
 export const HeadingWithTooltip: React.FC<HeadingWithTooltip> = ({ text }) => {
+  const headingRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setShowTooltip(
+      headingRef.current &&
+        headingRef.current.offsetWidth < headingRef.current.scrollWidth
+    );
+  }, []);
+
   return (
     <>
       <Heading
@@ -18,19 +28,23 @@ export const HeadingWithTooltip: React.FC<HeadingWithTooltip> = ({ text }) => {
           textOverflow: "ellipsis",
         }}
         as="h6"
+        ref={headingRef}
       >
         {text}
       </Heading>
-      <ReactTooltip
-        id={text}
-        type="dark"
-        multiline
-        border
-        borderColor={"black"}
-        place="bottom"
-      >
-        {text}
-      </ReactTooltip>
+      {showTooltip ? (
+        <ReactTooltip
+          id={text}
+          type="dark"
+          multiline
+          border
+          borderColor={"black"}
+          place="bottom"
+          max-width="192"
+        >
+          {text}
+        </ReactTooltip>
+      ) : null}
     </>
   );
 };
