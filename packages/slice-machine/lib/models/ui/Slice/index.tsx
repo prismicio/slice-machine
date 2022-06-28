@@ -183,9 +183,7 @@ export const SharedSlice = {
                   ) : null}
                 </Fragment>
               )}
-              <Flex sx={{ minWidth: 0 }}>
-                <HeadingWithTooltip text={slice.model.name} />
-              </Flex>
+              <HeadingWithTooltip text={slice.model.name} />
             </Flex>
             <SliceVariations
               variations={slice.variations}

@@ -38,7 +38,7 @@ export const HeadingWithTooltip: React.FC<HeadingWithTooltip> = ({ text }) => {
           type="dark"
           multiline
           border
-          borderColor={"black"}
+          borderColor="black"
           place="bottom"
           max-width="192"
         >
