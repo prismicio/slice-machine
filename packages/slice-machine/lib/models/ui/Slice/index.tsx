@@ -65,7 +65,7 @@ const SliceVariations = ({
   return !hideVariations ? (
     <>
       {variations ? (
-        <Text sx={{ fontSize: 0, color: "textClear" }}>
+        <Text sx={{ fontSize: 0, color: "textClear", flexShrink: 0 }}>
           {variations.length} variation{variations.length > 1 ? "s" : ""}
         </Text>
       ) : null}
