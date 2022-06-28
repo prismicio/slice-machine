@@ -38,11 +38,12 @@ export const createValidationArgs = (args: any, defaultArgs: any) => {
   return null;
 };
 
-export const createInitialValues = (FormFields: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [fieldKey: string]: any;
-}) => {
-  return Object.entries(FormFields).reduce((acc, [key, val]) => {
+export const createInitialValues = <T extends Record<string, any>>(
+  FormFields: T
+) => {
+  return Object.entries(FormFields).reduce<{
+    [key in keyof typeof FormFields]?: any;
+  }>((acc, [key, val]) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     const value = handleDefaultValue(val);
     if (value !== undefined) {
@@ -59,7 +60,7 @@ export const createInitialValues = (FormFields: {
 export const createValidationSchema = (FormFields: {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   [fieldKey: string]: any;
-}) => {
+}): Yup.AnyObjectSchema => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   return Yup.object()
     .shape(

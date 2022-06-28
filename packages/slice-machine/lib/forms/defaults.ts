@@ -7,7 +7,7 @@ export const validateId = ({
 }: {
   value: string;
   fields: Array<{ key: string }>;
-  initialId: string;
+  initialId: string | null;
 }) => {
   const fieldExists = fields.find(({ key }) => key === value);
   if (fieldExists && value !== initialId) {
