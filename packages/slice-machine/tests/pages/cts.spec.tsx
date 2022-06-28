@@ -143,7 +143,6 @@ describe("Custom Type Builder", () => {
       "SliceMachine Custom Type Field Added",
       {
         id: "new-field",
-        label: "New Field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",
@@ -427,7 +426,6 @@ describe("Custom Type Builder", () => {
       "SliceMachine Custom Type Field Added",
       {
         id: "new-field",
-        label: "New Field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",
@@ -535,7 +533,6 @@ describe("Custom Type Builder", () => {
       "SliceMachine Custom Type Field Added",
       {
         id: "new-field",
-        label: "New Field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",

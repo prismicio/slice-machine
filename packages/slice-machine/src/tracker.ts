@@ -219,20 +219,17 @@ export class SMTracker {
 
   async trackCustomTypeFieldAdded({
     fieldId,
-    fieldLabel,
     customTypeId,
     zone,
     type,
   }: {
     fieldId: string;
-    fieldLabel: string;
     customTypeId: string;
     zone: "static" | "repeatable";
     type: string;
   }): Promise<void> {
     const data = {
       id: fieldId,
-      label: fieldLabel,
       name: customTypeId,
       zone,
       type,
