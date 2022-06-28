@@ -1,5 +1,6 @@
 import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
 import React from "react";
+import { Video } from "cloudinary-react";
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   buttonText: string;
   isLoading: boolean;
   documentationComponent: React.ReactNode;
+  videoPublicIdUrl: string;
 }
 
 const EmptyState: React.FunctionComponent<Props> = ({
@@ -15,59 +17,86 @@ const EmptyState: React.FunctionComponent<Props> = ({
   buttonText,
   isLoading,
   documentationComponent,
+  videoPublicIdUrl,
 }) => (
-  <Flex
-    sx={(theme) => ({
-      maxWidth: "480px",
-      flexDirection: "column",
-      border: `1px solid ${theme.colors?.grey02 as string}`,
-    })}
-  >
+  <Flex sx={{ width: "80%", flexWrap: "wrap", justifyContent: "center" }}>
+    <Flex
+      sx={(theme) => ({
+        flex: 1,
+        alignItems: "center",
+        minWidth: "400px",
+        maxWidth: "70%",
+        border: `1px solid ${theme.colors?.grey02 as string}`,
+      })}
+    >
+      <Video
+        cloudName="dmtf1daqp"
+        controls
+        loop
+        style={{
+          maxWidth: "100%",
+          objectFit: "contain",
+        }}
+        publicId={videoPublicIdUrl}
+      />
+    </Flex>
+
     <Flex
       sx={(theme) => ({
         flexDirection: "column",
-        p: 4,
-        borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
+        border: `1px solid ${theme.colors?.grey02 as string}`,
+        flex: 1,
+        minWidth: "400px",
+        maxWidth: "70%",
       })}
     >
-      <Heading
-        as={"h3"}
-        variant={"heading"}
-        sx={{ fontSize: "16px", lineHeight: "24px", mb: 2 }}
+      <Flex
+        sx={(theme) => ({
+          flexDirection: "column",
+          p: 4,
+          borderBottom: `1px solid ${theme.colors?.grey02 as string}`,
+        })}
       >
-        {title}
-      </Heading>
-      <Text variant="xs" sx={{ lineHeight: "24px", fontSize: "13px" }}>
-        {documentationComponent}
-      </Text>
-    </Flex>
-    <Flex
-      sx={{
-        p: 4,
-        alignItems: "center",
-      }}
-    >
-      <Button
-        onClick={onCreateNew}
+        <Heading
+          as={"h3"}
+          variant={"heading"}
+          sx={{ fontSize: "16px", lineHeight: "24px", mb: 2 }}
+        >
+          {title}
+        </Heading>
+        <Text variant="xs" sx={{ lineHeight: "24px", fontSize: "13px" }}>
+          {documentationComponent}
+        </Text>
+      </Flex>
+      <Flex
         sx={{
-          display: "flex",
-          justifyContent: "center",
+          p: 4,
           alignItems: "center",
-          mr: 4,
         }}
       >
-        {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
-      </Button>
-      <Text
-        sx={{
-          fontSize: "12px",
-          color: "grey04",
-          maxWidth: "280px",
-        }}
-      >
-        It will be stored locally and you will be able to push it to your
-        repository
-      </Text>
+        <Button
+          onClick={onCreateNew}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexShrink: 0,
+            mr: 4,
+          }}
+        >
+          {isLoading ? <Spinner color="#FFF" size={14} /> : buttonText}
+        </Button>
+        <Text
+          sx={{
+            fontSize: "12px",
+            color: "grey04",
+            maxWidth: "280px",
+          }}
+        >
+          It will be stored locally and you will be able to push it to your
+          repository
+        </Text>
+      </Flex>
     </Flex>
   </Flex>
 );

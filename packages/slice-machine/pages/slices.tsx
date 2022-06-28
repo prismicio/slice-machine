@@ -128,6 +128,8 @@ const SlicesIndex: React.FunctionComponent = () => {
                     onCreateNew={openCreateSliceModal}
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}
+                    //TODO: Change with the new video once available (before v0.4.1 release)
+                    videoPublicIdUrl="SMONBOARDING/ADD_TO_PAGE"
                     documentationComponent={
                       <>
                         Slices are sections of your website. Prismic documents
