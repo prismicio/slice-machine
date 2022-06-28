@@ -168,7 +168,11 @@ export const SharedSlice = {
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
-            <Flex sx={{ alignItems: "center" }}>
+            <Flex
+              sx={{
+                alignItems: "center",
+              }}
+            >
               {CustomStatus ? (
                 <CustomStatus slice={slice} />
               ) : (
@@ -178,9 +182,18 @@ export const SharedSlice = {
                   ) : null}
                 </Fragment>
               )}
-              <Heading sx={{ flex: 1 }} as="h6">
-                {slice.model.name}
-              </Heading>
+              <Flex sx={{ minWidth: 0 }}>
+                <Heading
+                  sx={{
+                    flex: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                  as="h6"
+                >
+                  {slice.model.name}
+                </Heading>
+              </Flex>
             </Flex>
             <SliceVariations
               variations={slice.variations}
