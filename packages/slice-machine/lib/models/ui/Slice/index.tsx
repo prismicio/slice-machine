@@ -15,6 +15,7 @@ import { LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
+import { HeadingWithTooltip } from "../../../../components/Tooltip/HeadingWithTooltip";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -64,7 +65,7 @@ const SliceVariations = ({
   return !hideVariations ? (
     <>
       {variations ? (
-        <Text sx={{ fontSize: 0, color: "textClear" }}>
+        <Text sx={{ fontSize: 0, color: "textClear", flexShrink: 0 }}>
           {variations.length} variation{variations.length > 1 ? "s" : ""}
         </Text>
       ) : null}
@@ -168,7 +169,11 @@ export const SharedSlice = {
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
-            <Flex sx={{ alignItems: "center" }}>
+            <Flex
+              sx={{
+                alignItems: "center",
+              }}
+            >
               {CustomStatus ? (
                 <CustomStatus slice={slice} />
               ) : (
@@ -178,9 +183,7 @@ export const SharedSlice = {
                   ) : null}
                 </Fragment>
               )}
-              <Heading sx={{ flex: 1 }} as="h6">
-                {slice.model.name}
-              </Heading>
+              <HeadingWithTooltip text={slice.model.name} />
             </Flex>
             <SliceVariations
               variations={slice.variations}
