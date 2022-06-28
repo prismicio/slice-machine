@@ -15,6 +15,7 @@ import { LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
+import { HeadingWithTooltip } from "../../../../components/Tooltip/HeadingWithTooltip";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -183,16 +184,7 @@ export const SharedSlice = {
                 </Fragment>
               )}
               <Flex sx={{ minWidth: 0 }}>
-                <Heading
-                  sx={{
-                    flex: 1,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                  as="h6"
-                >
-                  {slice.model.name}
-                </Heading>
+                <HeadingWithTooltip text={slice.model.name} />
               </Flex>
             </Flex>
             <SliceVariations
