@@ -21,7 +21,7 @@ const { FormFields, schema } = createDefaultWidgetValues(WidgetTypes.Number);
 const Meta = {
   icon: AiOutlineFieldNumber,
   title: "Number",
-  description: "Numbers",
+  description: "A number input field",
 };
 
 export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
