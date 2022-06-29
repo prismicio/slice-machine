@@ -69,7 +69,7 @@ const FormFields = {
       return (
         <FormFieldArray
           label="Options"
-          inputPlaceholder="Select option (eg. 'image_left')"
+          inputPlaceholder="Select option output in API (e.g. 'blueTheme')"
           buttonLabel="Add option"
           {...props}
         />
