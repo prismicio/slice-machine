@@ -86,7 +86,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
             name="sliceName"
             label="Slice Name"
             data-cy="slice-name-input"
-            placeholder="MySlice"
+            placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             error={touched.sliceName ? errors.sliceName : undefined}
             dataCy="slice-name-input"
           />

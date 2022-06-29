@@ -78,7 +78,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
           <InputBox
             name="customTypeName"
             label="Custom Type Name"
-            placeholder="MyCustomType"
+            placeholder="A display name for the Custom type"
             error={errors.customTypeName}
             dataCy="custom-type-name-input"
           />
