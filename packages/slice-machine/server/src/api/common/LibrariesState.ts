@@ -10,10 +10,15 @@ const DEFAULT_IMAGE_DIMENSIONS = {
   height: undefined,
 };
 
-export function generateState(env: BackendEnvironment): void {
-  const libraries = (env.manifest.libraries || [])
-    .map((lib) => handleLibraryPath(env.cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
+export function generateState(
+  env: BackendEnvironment,
+  libs?: readonly Models.Library<Models.Component>[]
+): void {
+  const libraries =
+    libs ||
+    ((env.manifest.libraries || [])
+      .map((lib) => handleLibraryPath(env.cwd, lib))
+      .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>);
 
   const state = formatLibraries(libraries);
   Files.write(LibrariesStatePath(env.cwd), state);

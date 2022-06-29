@@ -127,30 +127,30 @@ router.post(
 router.post(
   "/slices/save",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    req: express.Request,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await saveSlice(req);
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.post(
   "/slices/create",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    req: express.Request<undefined, undefined, SliceBody, SliceBody>,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await createSlice(req.body);
+    const payload = await createSlice(req);
 
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
 
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.get(
