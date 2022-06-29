@@ -58,7 +58,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
         })}
       >
         <Heading
-          as={"h3"}
+          as="h3"
           variant={"heading"}
           sx={{ fontSize: "16px", lineHeight: "24px", mb: 2 }}
         >
