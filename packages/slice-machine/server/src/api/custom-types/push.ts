@@ -1,32 +1,27 @@
-import { getBackendState } from "../state";
-import { pushSlice } from "../slices/push";
-
-import { onError } from "../common/error";
-import { CustomTypesPaths } from "@lib/models/paths";
-import DefaultClient from "@lib/models/common/http/DefaultClient";
-import FakeClient from "@lib/models/common/http/FakeClient";
-import { ApiResult } from "@lib/models/server/ApiResult";
-
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { Tab } from "@lib/models/common/CustomType/tab";
-import { RequestWithEnv } from "../http/common";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
+import { Client, ClientError } from "@slicemachine/client";
+
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { Tab } from "@lib/models/common/CustomType/tab";
+import { CustomTypesPaths } from "@lib/models/paths";
+import { ApiResult } from "@lib/models/server/ApiResult";
+
+import { getBackendState } from "../state";
+import { pushSlice } from "../slices/push";
+import { onError } from "../common/error";
+import { RequestWithEnv } from "../http/common";
 import * as IO from "../io";
 
 const createOrUpdate = (
-  client: DefaultClient | FakeClient,
+  client: Client,
   smModel: CustomTypeSM,
   remoteCustomType: CustomTypeSM | undefined
 ) => {
   const model = CustomTypes.fromSM(smModel);
-  if (remoteCustomType) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return client.updateCustomType(model);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
+  if (remoteCustomType) return client.updateCustomType(model);
   return client.insertCustomType(model);
 };
 
@@ -46,20 +41,15 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     };
   }
 
-  if (state.clientError || !state.env.isUserLoggedIn) {
+  if (state.clientError) {
     const isAnAuthenticationError =
-      !state.env.isUserLoggedIn ||
-      (state.clientError && state.clientError.status === 403);
+      state.clientError && state.clientError.status === 403;
     const errorExplanation = isAnAuthenticationError
       ? "Please log in to Prismic!"
       : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `You don\'t have access to the repo \"${state.env.repo}\"`;
 
-    const errorCode = !state.env.isUserLoggedIn
-      ? 403
-      : state.clientError
-      ? state.clientError.status
-      : 403;
+    const errorCode = state.clientError ? state.clientError.status : 403;
     const message = `Error ${errorCode}: Could not fetch remote custom types. ${errorExplanation}`;
 
     return {
@@ -82,7 +72,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const msg = `[custom-types/push] Model ${id} is invalid.`;
     console.error(msg);
-    return onError(null, msg);
+    return onError(msg);
   }
 
   const remoteCustomType = state.remoteCustomTypes.find(
@@ -92,7 +82,7 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
   if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
     const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`;
     console.error(msg);
-    return onError(null, msg);
+    return onError(msg);
   }
 
   const sliceKeysToPush: string[] = [];
@@ -139,15 +129,14 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
 
   console.log("[custom-types/push] Pushing Custom Type...");
 
-  const res = await createOrUpdate(state.env.client, model, remoteCustomType);
-  if (res.status > 209) {
-    const message = res.text ? await res.text() : res.status.toString();
-    const msg = `[custom-types/push] Unexpected error returned. Server message: ${message}`;
-    console.error(msg);
-    return onError(null, msg);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  console.log(`[custom-types/push] Custom Type ${id} was pushed!`);
-  return {};
+  return createOrUpdate(state.env.client, model, remoteCustomType)
+    .then(() => {
+      console.log(`[custom-types/push] Custom Type ${model.id} was pushed!`);
+      return {};
+    })
+    .catch((error: ClientError) => {
+      const msg = `[custom-types/push] Unexpected error: ${error.message}`;
+      console.error(msg);
+      return onError(msg, error.status);
+    });
 }

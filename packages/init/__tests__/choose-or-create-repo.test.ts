@@ -17,11 +17,17 @@ import { createRepository } from "../src/utils/create-repo";
 
 import nock from "nock";
 import { Models } from "@slicemachine/core";
+import { ApplicationMode } from "@slicemachine/client";
+import { InitClient } from "../src/utils";
 
 import * as fs from "fs";
 
 jest.mock("fs");
 jest.mock("../src/utils/create-repo");
+
+const fakeRepository = "dragonborn";
+const fakeToken = "biscuit";
+const client = new InitClient(ApplicationMode.PROD, fakeRepository, fakeToken);
 
 const createRepositoryMock = createRepository as jest.Mock;
 
@@ -34,60 +40,47 @@ describe("choose-or-create-repo", () => {
   const framework = Models.Frameworks.svelte;
 
   test("prompts user to select a repo", async () => {
-    const repoDomain = "test";
     const base = "https://prismic.io";
 
-    jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({ repoDomain }) as ReturnType<typeof inquirer.prompt>
-      );
+    jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
-    const result = await promptForRepoDomain(base);
+    const result = await promptForRepoDomain(client, base);
 
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
     expect(createRepositoryMock).toHaveBeenCalledTimes(0);
-    expect(result).toBe(repoDomain);
+    expect(result).toBe(fakeRepository);
   });
 
   test("if user has no repos it asks them to create a repo", async () => {
-    const repoDomain = "repoDomain";
-    const base = "https://prismic.io";
-    const cookies = "prismic-auth=biscuits;";
     const userServiceURL = "https://user.internal-prismic.io";
 
     nock(userServiceURL).get("/repositories").reply(200, []);
 
-    jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({ repoDomain }) as ReturnType<typeof inquirer.prompt>
-      );
-    createRepositoryMock.mockImplementation(() => repoDomain);
+    jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
+    createRepositoryMock.mockImplementation(() => fakeRepository);
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base
-    );
+    const result = await chooseOrCreateARepository(client, fakeCwd, framework);
 
     expect(createRepositoryMock).toHaveBeenCalledWith(
-      repoDomain,
-      framework,
-      cookies,
-      base
+      client,
+      fakeRepository,
+      framework
     );
     expect(inquirer.prompt).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(repoDomain);
+    expect(result).toEqual(fakeRepository);
   });
 
   test("it allows a user to create a new repo", async () => {
-    const repoDomain = "test";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL)
       .get("/repositories")
@@ -96,105 +89,90 @@ describe("choose-or-create-repo", () => {
     jest
       .spyOn(inquirer, "prompt")
       .mockReturnValueOnce(
-        Promise.resolve({ chosenRepo: CREATE_REPO }) as ReturnType<
-          typeof inquirer.prompt
-        >
+        Promise.resolve({
+          chosenRepository: CREATE_REPO,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       )
       .mockReturnValueOnce(
-        Promise.resolve({ repoDomain }) as ReturnType<typeof inquirer.prompt>
+        Promise.resolve({
+          repoDomain: fakeRepository,
+        }) as unknown as ReturnType<typeof inquirer.prompt>
       );
 
-    createRepositoryMock.mockImplementation(() => Promise.resolve(repoDomain));
+    createRepositoryMock.mockImplementation(() =>
+      Promise.resolve(fakeRepository)
+    );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      fakeCwd,
-      framework,
-      cookies,
-      base
-    );
+    const result = await chooseOrCreateARepository(client, fakeCwd, framework);
 
     expect(createRepositoryMock).toHaveBeenCalledWith(
-      repoDomain,
-      framework,
-      cookies,
-      base
+      client,
+      fakeRepository,
+      framework
     );
     expect(inquirer.prompt).toHaveBeenCalledTimes(2);
-    expect(result).toEqual(repoDomain);
+    expect(result).toEqual(fakeRepository);
   });
 
   test("when given project and project exists, the project is pre-selected and the user is not asked to select a project", async () => {
-    const domain = "foo-bar";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL)
       .get("/repositories")
       .reply(200, [
-        { domain: domain, name: "Foo Bar", role: Models.Roles.OWNER },
+        { domain: fakeRepository, name: "Foo Bar", role: Models.Roles.OWNER },
       ]);
 
     const promptSpy = jest.spyOn(inquirer, "prompt");
 
     const result = await chooseOrCreateARepository(
+      client,
       fakeCwd,
       framework,
-      cookies,
-      base,
-      domain
+      fakeRepository
     );
 
     expect(promptSpy).not.toHaveBeenCalled();
-    expect(result).toEqual(domain);
+    expect(result).toEqual(fakeRepository);
   });
 
   test("when the given a project and the project does not exist in the users repo's it should prompt them for a repo", async () => {
-    const domain = "foo-bar";
-    const base = "https://prismic.io";
     const userServiceURL = "https://user.internal-prismic.io";
-    const cookies = "prismic-auth=biscuits;";
 
     nock(userServiceURL).get("/repositories").reply(200, []);
 
-    createRepositoryMock.mockImplementation(() => Promise.resolve(domain));
+    createRepositoryMock.mockImplementation(() =>
+      Promise.resolve(fakeRepository)
+    );
 
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const promptSpy = jest
-      .spyOn(inquirer, "prompt")
-      .mockReturnValue(
-        Promise.resolve({ repoDomain: domain }) as ReturnType<
-          typeof inquirer.prompt
-        >
-      );
+    const promptSpy = jest.spyOn(inquirer, "prompt").mockReturnValue(
+      Promise.resolve({
+        repoDomain: fakeRepository,
+      }) as unknown as ReturnType<typeof inquirer.prompt>
+    );
 
     const result = await chooseOrCreateARepository(
+      client,
       fakeCwd,
       framework,
-      cookies,
-      base,
-      domain
+      fakeRepository
     );
 
     expect(promptSpy).toHaveBeenCalledTimes(1);
     expect(promptSpy).toHaveBeenLastCalledWith(
-      expect.arrayContaining([expect.objectContaining({ default: domain })])
+      expect.arrayContaining([
+        expect.objectContaining({ default: fakeRepository }),
+      ])
     );
-    expect(result).toEqual(domain);
+    expect(result).toEqual(fakeRepository);
   });
 });
 
 describe("prettyRepoName", () => {
-  test("should contain the base url, and a placeholder", () => {
-    const address = new URL("https://prismic.io");
-    const result = prettyRepoName(address);
-    expect(result).toContain("repo-name");
-    expect(result).toContain(".prismic.io");
-  });
-
-  test("shohuld contain the value from user input", () => {
+  test("should contain the value from user input", () => {
     const address = new URL("https://prismic.io");
     const result = prettyRepoName(address, "foo-bar");
     expect(result).toContain("foo-bar");

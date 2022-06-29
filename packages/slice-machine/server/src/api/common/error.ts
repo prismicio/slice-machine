@@ -1,11 +1,10 @@
-import { FakeResponse } from "@lib/models/common/http/FakeClient";
-import { ApiError } from "@models/server/ApiResult";
+import type { ApiError } from "@models/server/ApiResult";
 
 export const onError = (
-  r: Response | FakeResponse | null,
-  message = "Unspecified error occurred."
+  message = "Unspecified error occurred.",
+  status?: number
 ): ApiError => ({
-  err: r || new Error(message),
-  status: r && r.status ? r.status : 500,
+  err: new Error(message),
+  status: status || 500,
   reason: message,
 });

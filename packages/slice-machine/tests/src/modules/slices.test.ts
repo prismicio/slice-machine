@@ -35,6 +35,8 @@ describe("[Slices module]", () => {
 
   describe("[createSliceSaga]", () => {
     it("should call the api and dispatch the good actions", () => {
+      jest.spyOn(console, "error").mockImplementationOnce(() => undefined);
+
       const variationId = "variationId";
       const actionPayload = {
         sliceName: "MySlice",

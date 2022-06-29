@@ -15,6 +15,7 @@ jest.mock(`fs`, () => {
 describe("setShortId", () => {
   afterEach(() => {
     vol.reset();
+    nock.cleanAll();
   });
 
   test("it should set the short ID and the intercom hash", async () => {
@@ -28,13 +29,11 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
+    nock("https://user.internal-prismic.io")
       .get("/profile")
       .reply(200, JSON.stringify(MockedUserProfile));
 
-    const res = await getAndSetUserProfile(MockedBackendEnv, fakeCookie);
+    const res = await getAndSetUserProfile(MockedBackendEnv.client);
     expect(res).toEqual(MockedUserProfile);
 
     const newPrismicSharedConfig = vol
@@ -62,15 +61,14 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(200, {});
+    nock("https://user.internal-prismic.io").get("/profile").reply(200, {});
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Unable to parse profile: {}");
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
+      {
+        message: "Unable to parse user profile: {}",
+        status: 500,
+      }
+    );
   });
 
   test("on network issues should throw an error", async () => {
@@ -84,14 +82,13 @@ describe("setShortId", () => {
       os.homedir()
     );
 
-    nock("https://user.internal-prismic.io/", {
-      reqheaders: { Authorization: `Bearer ${fakeCookie}` },
-    })
-      .get("/profile")
-      .reply(403);
+    nock("https://user.internal-prismic.io").get("/profile").reply(403);
 
-    expect(() =>
-      getAndSetUserProfile(MockedBackendEnv, fakeCookie)
-    ).rejects.toThrow("Request failed with status code 403");
+    await expect(getAndSetUserProfile(MockedBackendEnv.client)).rejects.toEqual(
+      {
+        message: "Unable to retrieve user profile with status code 403",
+        status: 403,
+      }
+    );
   });
 });

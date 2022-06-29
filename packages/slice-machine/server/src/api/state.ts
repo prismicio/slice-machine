@@ -1,19 +1,18 @@
-import fetchLibs from "./libraries";
-import fetchCustomTypes from "./custom-types/index";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
+import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
+
 import {
   BackendEnvironment,
   FrontEndEnvironment,
 } from "@lib/models/common/Environment";
 import ServerError from "@lib/models/server/ServerError";
+import ServerState from "@lib/models/server/ServerState";
 
+import fetchLibs from "./libraries";
+import fetchCustomTypes from "./custom-types/index";
 import { generate } from "./common/generate";
-import DefaultClient from "@lib/models/common/http/DefaultClient";
 import { RequestWithEnv } from "./http/common";
-import ServerState from "@models/server/ServerState";
 import { getAndSetUserProfile } from "./services/getAndSetUserProfile";
-import preferWroomBase from "../../../lib/utils/preferWroomBase";
-import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
-import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
 
 export const getBackendState = async (
   configErrors: Record<string, ServerError>,
@@ -22,30 +21,20 @@ export const getBackendState = async (
   const { libraries, remoteSlices, clientError } = await fetchLibs(env);
   const { customTypes, remoteCustomTypes } = await fetchCustomTypes(env);
 
-  const base = preferWroomBase(env.manifest.apiEndpoint);
-
   // Refresh auth
-  if (env.isUserLoggedIn && env.prismicData.auth) {
-    try {
-      const newTokenResponse: Response = await DefaultClient.refreshToken(
-        base,
-        env.prismicData.auth
-      );
-
-      if (
-        newTokenResponse.status &&
-        Math.floor(newTokenResponse.status / 100) === 2
-      ) {
-        const newToken = await newTokenResponse.text();
-        PrismicSharedConfigManager.setAuthCookie(newToken);
+  if (env.prismicData.auth) {
+    await env.client
+      .refreshAuthenticationToken()
+      .then((newAuthenticationToken: string) => {
+        PrismicSharedConfigManager.setAuthCookie(newAuthenticationToken);
 
         // set the user profile if it doesn't exist yet.
         if (!env.prismicData.shortId || !env.prismicData.intercomHash)
-          await getAndSetUserProfile(env, newToken);
-      }
-    } catch (e) {
-      console.error("[Refresh token]: Internal error : ", e);
-    }
+          return getAndSetUserProfile(env.client);
+      })
+      .catch((error: Error) =>
+        console.error("[Refresh token]: Internal error : ", error.message)
+      );
   }
 
   generate(env, libraries);

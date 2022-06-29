@@ -1,4 +1,3 @@
-import * as t from "io-ts";
 import glob from "glob";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import Files from "@lib/utils/files";
@@ -8,8 +7,8 @@ import {
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import { getOrElseW } from "fp-ts/lib/Either";
 import * as IO from "../io";
+import { ClientError } from "@slicemachine/client";
 
 const handleMatch = (matches: string[]) => {
   return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
@@ -26,35 +25,17 @@ const handleMatch = (matches: string[]) => {
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
 ): Promise<{ remoteCustomTypes: CustomTypeSM[] }> => {
-  if (!env.isUserLoggedIn) return { remoteCustomTypes: [] };
-
-  try {
-    const res = await env.client.getCustomTypes();
-    const { remoteCustomTypes } = await (async (): Promise<{
-      remoteCustomTypes: CustomTypeSM[];
-    }> => {
-      if (res.status > 209) {
-        return { remoteCustomTypes: [] };
-      }
-      const result = await (res.json
-        ? (res.json() as Promise<Array<unknown>>)
-        : Promise.resolve([]));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const remoteCustomTypes = getOrElseW<unknown, CustomType[]>(() => {
-        console.warn("Unable to parse remote custom types.");
-        return [];
-      })(t.array(CustomType).decode(result));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return {
-        remoteCustomTypes: remoteCustomTypes.map((c: CustomType) =>
-          CustomTypes.toSM(c)
-        ),
-      };
-    })();
-    return { remoteCustomTypes };
-  } catch (e) {
-    return { remoteCustomTypes: [] };
-  }
+  return env.client
+    .getCustomTypes()
+    .then((customTypes: CustomType[]) => ({
+      remoteCustomTypes: customTypes.map((c: CustomType) =>
+        CustomTypes.toSM(c)
+      ),
+    }))
+    .catch((error: ClientError) => {
+      console.warn(error.message);
+      return { remoteCustomTypes: [] };
+    });
 };
 
 const saveCustomType = (cts: ReadonlyArray<CustomTypeSM>, cwd: string) => {

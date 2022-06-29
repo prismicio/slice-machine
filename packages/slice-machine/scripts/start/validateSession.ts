@@ -1,12 +1,15 @@
-import { Models } from "@slicemachine/core";
-import preferWroomBase from "@lib/utils/preferWroomBase";
-import {
-  Communication,
-  PrismicSharedConfigManager,
-} from "@slicemachine/core/build/prismic";
+import type { Models } from "@slicemachine/core";
+import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 import { retrieveManifest } from "@slicemachine/core/build/node-utils";
 
-export function validateSession(cwd: string): Promise<Models.UserInfo | null> {
+import { Client } from "@slicemachine/client";
+
+import preferWroomBase from "@lib/utils/preferWroomBase";
+import { getApplicationMode } from "../../server/src/api/services/getEnv";
+
+export function validateSession(
+  cwd: string
+): Promise<Models.UserProfile | null> {
   const manifest = retrieveManifest(cwd);
   const config = PrismicSharedConfigManager.get();
 
@@ -18,5 +21,12 @@ export function validateSession(cwd: string): Promise<Models.UserInfo | null> {
   if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
   if (base != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
 
-  return Communication.validateSession(config.cookies, base).catch(() => null);
+  // not using the repository as we just wants the user profile here
+  const client = new Client(
+    getApplicationMode(manifest.content.apiEndpoint),
+    null,
+    PrismicSharedConfigManager.getAuth()
+  );
+
+  return client.profile().catch(() => null);
 }

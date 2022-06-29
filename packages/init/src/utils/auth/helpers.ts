@@ -81,13 +81,17 @@ const authenticationHandler =
     };
   };
 
+function stripTrailingSlash(str: string) {
+  return str.endsWith("/") ? str.slice(0, -1) : str;
+}
+
 function buildServer(base: string, port: number, host: string): hapi.Server {
   const server = hapi.server({
     port,
     host,
     routes: {
       cors: {
-        origin: [base],
+        origin: [stripTrailingSlash(base)],
         headers: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
       },
     },

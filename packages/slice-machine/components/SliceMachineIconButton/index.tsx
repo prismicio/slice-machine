@@ -31,33 +31,34 @@ type SliceMachineIconButtonProps = IconButtonProps & {
   activeSx?: (active: boolean, hasError: boolean | null) => object;
 };
 
-const SliceMachineIconButton: React.FunctionComponent<SliceMachineIconButtonProps> =
-  ({
-    sx = null,
-    onClick = () => null,
-    label,
-    Icon,
-    error = null,
-    size = 18,
-    fitButton = false,
-    active = false,
-    useActive = false,
-    activeSx = defaultActiveSx,
-    ...rest
-  }) => (
-    <IconButton
-      onClick={onClick}
-      aria-label={label}
-      type="button"
-      sx={{
-        ...(fitButton ? { width: size, height: size } : null),
-        ...(useActive && activeSx(active, error)),
-        ...sx,
-      }}
-      {...rest}
-    >
-      <Icon size={size} />
-    </IconButton>
-  );
+const SliceMachineIconButton: React.FunctionComponent<
+  SliceMachineIconButtonProps
+> = ({
+  sx = null,
+  onClick = () => null,
+  label,
+  Icon,
+  error = null,
+  size = 18,
+  fitButton = false,
+  active = false,
+  useActive = false,
+  activeSx = defaultActiveSx,
+  ...rest
+}) => (
+  <IconButton
+    onClick={onClick}
+    aria-label={label}
+    type="button"
+    sx={{
+      ...(fitButton ? { width: size, height: size } : null),
+      ...(useActive && activeSx(active, error)),
+      ...sx,
+    }}
+    {...rest}
+  >
+    <Icon size={size} />
+  </IconButton>
+);
 
 export default SliceMachineIconButton;

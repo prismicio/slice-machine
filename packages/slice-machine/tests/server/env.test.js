@@ -3,6 +3,8 @@ import { Volume } from "memfs";
 
 import getEnv from "../../server/src/api/services/getEnv";
 import { Models } from "@slicemachine/core";
+import { ApplicationMode } from "@slicemachine/client";
+
 import os from "os";
 
 const TMP = "/tmp";
@@ -229,7 +231,26 @@ describe("getEnv", () => {
     expect(env.framework).toEqual("vanillajs");
   });
 
-  test("it should take the auth from .prismic and base from sm.json", async () => {
+  test("it's application mode should be production", async () => {
+    fs.reset();
+    fs.use(
+      Volume.fromJSON(
+        {
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.prismic.io/api/v2",
+            framework: "next",
+          }),
+          "package.json": "{}",
+        },
+        TMP
+      )
+    );
+
+    const { env } = await getEnv(TMP);
+    expect(env.applicationMode).toEqual(ApplicationMode.PROD);
+  });
+
+  test("it's application mode should be staging", async () => {
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -243,21 +264,45 @@ describe("getEnv", () => {
         TMP
       )
     );
+
+    const { env } = await getEnv(TMP);
+    expect(env.applicationMode).toEqual(ApplicationMode.STAGE);
+  });
+
+  test("it's application mode should be development", async () => {
+    fs.reset();
     fs.use(
       Volume.fromJSON(
         {
-          ".prismic": JSON.stringify({
-            base: "https://prismic.io",
-            cookies: "prismic-auth=biscuits",
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.wroom.test/api/v2",
+            framework: "next",
           }),
+          "package.json": "{}",
         },
-        os.homedir()
+        TMP
       )
     );
 
     const { env } = await getEnv(TMP);
-    expect(env.isUserLoggedIn).toBeTruthy();
-    expect(env.client.base).toEqual("https://wroom.io");
-    expect(env.client.auth).toEqual("biscuits");
+    expect(env.applicationMode).toEqual(ApplicationMode.DEV);
+  });
+
+  test("it's application mode should be unknown and it should throw", async () => {
+    fs.reset();
+    fs.use(
+      Volume.fromJSON(
+        {
+          "sm.json": JSON.stringify({
+            apiEndpoint: "https://api-1.fake.io/api/v2",
+            framework: "next",
+          }),
+          "package.json": "{}",
+        },
+        TMP
+      )
+    );
+
+    await expect(getEnv(TMP)).rejects.toThrow();
   });
 });
