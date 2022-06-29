@@ -83,7 +83,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           <InputBox
             name="sliceName"
             label="Slice Name"
-            placeholder="MySlice"
+            placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             error={touched.sliceName ? errors.sliceName : undefined}
             dataCy="slice-name-input"
           />

@@ -154,7 +154,7 @@ const CreateCustomTypeModal: React.FC = () => {
             name="label"
             label="Custom Type Name"
             dataCy="ct-name-input"
-            placeholder="My Custom Type"
+            placeholder="A display name for the Custom type"
             error={errors.label}
             onChange={(e) => handleLabelChange(e, values, setValues)}
           />
@@ -162,7 +162,7 @@ const CreateCustomTypeModal: React.FC = () => {
             name="id"
             dataCy="ct-id-input"
             label="Custom Type ID"
-            placeholder="my-custom-type"
+            placeholder="ID to query the Custom Type in the API (e.g. 'BlogPost')"
             error={errors.id}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />
