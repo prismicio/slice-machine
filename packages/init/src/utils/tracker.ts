@@ -119,7 +119,12 @@ export class InitTracker {
     success: boolean,
     error?: string
   ): Promise<void> {
-    return this._trackEvent(EventType.InitEnd, { framework, success, error });
+    return this._trackEvent(EventType.InitEnd, {
+      framework,
+      repo: this.#repository,
+      success,
+      error,
+    });
   }
 }
 
