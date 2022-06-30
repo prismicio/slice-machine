@@ -107,6 +107,11 @@ export async function installLib(
     if (error instanceof Error) {
       console.error(error.message);
     }
+    await Tracker.get().trackInitEnd(
+      Models.Frameworks.none,
+      false,
+      "Failed to install ${libGithubPath} library"
+    );
     process.exit(-1);
   }
 }
