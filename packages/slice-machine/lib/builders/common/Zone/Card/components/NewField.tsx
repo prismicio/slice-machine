@@ -191,7 +191,7 @@ const NewField: React.FC<NewField> = ({
                     handleIdChange(e, setFieldValue)
                   }
                   name="id"
-                  placeholder="myField"
+                  placeholder="e.g. buttonLink"
                   type="text"
                   validate={(value: string) =>
                     validateId({

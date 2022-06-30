@@ -38,7 +38,7 @@ const Form = () => {
         <Input
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
-          placeholder="Something well put"
+          placeholder="A text string for testing (e.g. 'Call me Ishmael')"
           onChange={(e) => onUpdate(e.target.value)}
         />
         <InputDeleteIcon onClick={onDelete} />

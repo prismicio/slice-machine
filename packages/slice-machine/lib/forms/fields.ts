@@ -52,7 +52,8 @@ export const Input: any = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
   fieldLevelValidation: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue: any
+  defaultValue: any,
+  placeholder: string
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
   const { min, max, required, matches } = conditions || {};
@@ -74,5 +75,6 @@ export const Input: any = (
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     fieldLevelValidation,
     yupType: "string",
+    placeholder: placeholder,
   };
 };
