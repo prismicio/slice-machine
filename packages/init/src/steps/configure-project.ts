@@ -68,10 +68,15 @@ export async function configureProject(
     // add slicemachine script to package.json.
     NodeUtils.addJsonPackageSmScript(cwd);
 
-    await Tracker.get().trackInitEnd(framework.value);
+    await Tracker.get().trackInitEnd(framework.value, true, undefined);
 
     spinner.succeed("Project configured! Ready to start");
-  } catch {
+  } catch (error) {
+    await Tracker.get().trackInitEnd(
+      framework.value,
+      false,
+      "Failed to configure Slice Machine"
+    );
     spinner.fail("Failed to configure Slice Machine");
     process.exit(-1);
   }
