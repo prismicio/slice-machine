@@ -3,7 +3,6 @@ declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
 import Storybook from "../storybook";
 
-import getEnv from "../services/getEnv";
 import mock from "@lib/mock/Slice";
 import { getConfig, insert as insertMockConfig } from "@lib/mock/misc/fs";
 import Files from "@lib/utils/files";
@@ -71,7 +70,9 @@ export async function handler(
   return {};
 }
 
-export default async function apiHandler(req: { body: SliceSaveBody }) {
-  const { env } = await getEnv();
-  return handler(env, req.body);
+export default async function apiHandler(req: {
+  body: SliceSaveBody;
+  env: BackendEnvironment;
+}) {
+  return handler(req.env, req.body);
 }
