@@ -81,9 +81,8 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     } else {
       console.log(failMessage);
     }
-    await Tracker.get().trackInitEnd(
+    await Tracker.get().trackInitEndFail(
       Models.Frameworks.none,
-      false,
       "Framework not detected"
     );
     process.exit(1);

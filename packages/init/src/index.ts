@@ -108,9 +108,8 @@ init()
   .catch(async (error) => {
     if (error instanceof Error) logs.writeError(error.message);
     else console.error(error);
-    await Tracker.get().trackInitEnd(
+    await Tracker.get().trackInitEndFail(
       Models.Frameworks.none,
-      false,
       "Failed to initialise Slice Machine."
     );
   });

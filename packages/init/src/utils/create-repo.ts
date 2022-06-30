@@ -23,9 +23,8 @@ export function createRepository(
     })
     .catch(async (error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);
-      await Tracker.get().trackInitEnd(
+      await Tracker.get().trackInitEndFail(
         framework,
-        false,
         "Failed to create repository"
       );
       if (error.message) {

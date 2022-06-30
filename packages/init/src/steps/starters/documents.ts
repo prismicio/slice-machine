@@ -86,9 +86,8 @@ export async function sendDocuments(
         );
         logs.writeError(`Full error: ${e.code || 500} - ${e.message}`);
       }
-      await Tracker.get().trackInitEnd(
+      await Tracker.get().trackInitEndFail(
         Models.Frameworks.none,
-        false,
         "Failed to push documents"
       );
       process.exit(1);

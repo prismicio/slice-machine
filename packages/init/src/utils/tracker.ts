@@ -114,15 +114,19 @@ export class InitTracker {
     return this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
-  trackInitEnd(
-    framework: Models.Frameworks,
-    success: boolean,
-    error?: string
-  ): Promise<void> {
+  trackInitEndSuccess(framework: Models.Frameworks): Promise<void> {
     return this._trackEvent(EventType.InitEnd, {
       framework,
       repo: this.#repository,
-      success,
+      result: "success",
+    });
+  }
+
+  trackInitEndFail(framework: Models.Frameworks, error: string): Promise<void> {
+    return this._trackEvent(EventType.InitEnd, {
+      framework,
+      repo: this.#repository,
+      result: "error",
       error,
     });
   }
