@@ -207,7 +207,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
   test("it should fail if create or update manifest throws", async () => {
@@ -233,7 +233,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
   test("it should fail if add SM script throws", async () => {
@@ -260,7 +260,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
   });
 
   test("it should create a slice folder if it doesnt exists.", async () => {
