@@ -169,12 +169,12 @@ describe("InitTracker", () => {
     });
   });
 
-  test("should send a track init done event", async () => {
+  test("should send a track init end event", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     smTracker.setRepository("repoName");
     // Anonymous call
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEnd(Models.Frameworks.next);
 
     expect(MockTracker).toHaveBeenCalledTimes(1);
     expect(MockTracker.mock.calls[0][0]).toEqual({
@@ -198,7 +198,7 @@ describe("InitTracker", () => {
     });
 
     // Logged in call
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEnd(Models.Frameworks.next);
 
     expect(MockTracker).toHaveBeenCalledTimes(2);
     expect(MockTracker.mock.calls[1][0]).toEqual({
@@ -214,7 +214,7 @@ describe("InitTracker", () => {
     smTracker.initialize(dumpSegmentKey, false);
     smTracker.identifyUser("userId", "intercomHash");
     smTracker.setRepository("repoName");
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEnd(Models.Frameworks.next);
     await smTracker.trackInitStart("repoName");
     await smTracker.trackInitIdentify();
     await smTracker.trackDownloadLibrary("libraryName");
