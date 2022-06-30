@@ -14,12 +14,10 @@ import {
   afterAll,
 } from "@jest/globals";
 import React from "react";
-import singletonRouter from "next/router";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import Tracker from "../../src/tracker";
-import LibrariesProvider from "../../src/models/libraries/context";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import SlicesIndex from "../../pages/slices";
@@ -164,24 +162,15 @@ describe("slices", () => {
         ],
       },
     ];
-    const App = render(
-      <LibrariesProvider
-        env={environment}
-        libraries={libraries}
-        remoteSlices={[]}
-      >
-        <SlicesIndex />
-      </LibrariesProvider>,
-      {
-        preloadedState: {
-          environment,
-          slices: {
-            libraries,
-            remoteSlices: [],
-          },
+    const App = render(<SlicesIndex />, {
+      preloadedState: {
+        environment,
+        slices: {
+          libraries,
+          remoteSlices: [],
         },
-      }
-    );
+      },
+    });
 
     const createOneButton = document.querySelector('[data-cy="create-slice"]');
     await act(async () => {

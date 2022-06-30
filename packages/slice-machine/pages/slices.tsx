@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
-
-import { LibrariesContext } from "src/models/libraries/context";
 
 import CreateSliceModal from "components/Forms/CreateSliceModal";
 
@@ -21,7 +19,11 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import {
+  getLibraries,
+  getLibrariesState,
+  getRemoteSlices,
+} from "@src/modules/slices";
 
 const CreateSliceButton = ({
   onClick,
@@ -42,17 +44,22 @@ const CreateSliceButton = ({
 );
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const libraries = useContext(LibrariesContext);
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
 
-  const { isCreateSliceModalOpen, isCreatingSlice, localLibs, remoteLibs } =
-    useSelector((store: SliceMachineStoreType) => ({
-      isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
-      isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-      localLibs: getLibraries(store),
-      remoteLibs: getRemoteSlices(store),
-    }));
+  const {
+    isCreateSliceModalOpen,
+    isCreatingSlice,
+    localLibs,
+    remoteLibs,
+    libraries,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
+    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    localLibs: getLibraries(store),
+    remoteLibs: getRemoteSlices(store),
+    libraries: getLibrariesState(store),
+  }));
 
   const _onCreate = ({
     sliceName,

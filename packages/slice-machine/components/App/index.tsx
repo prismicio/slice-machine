@@ -1,6 +1,5 @@
 import React from "react";
 
-import LibrariesProvider from "@src/models/libraries/context";
 import { SliceHandler } from "@src/models/slice/context";
 
 import AppLayout from "../AppLayout";
@@ -13,29 +12,20 @@ import { MissingLibraries } from "@components/MissingLibraries";
 import ToastContainer from "@components/ToasterContainer";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getEnvironment } from "@src/modules/environment";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { getLibraries } from "@src/modules/slices";
 import useSMTracker from "@src/hooks/useSMTracker";
 
 const SliceMachineApp: React.FunctionComponent = ({ children }) => {
-  const { env, libraries, remoteSlices } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      libraries: getLibraries(state),
-      remoteSlices: getRemoteSlices(state),
-      env: getEnvironment(state),
-    })
-  );
+  const { libraries } = useSelector((state: SliceMachineStoreType) => ({
+    libraries: getLibraries(state),
+  }));
 
   useSMTracker();
   useOnboardingRedirection();
   useServerState();
 
   return (
-    <LibrariesProvider
-      remoteSlices={remoteSlices}
-      libraries={libraries}
-      env={env}
-    >
+    <>
       <AppLayout>
         <SliceHandler>
           {libraries?.length ? <>{children}</> : <MissingLibraries />}
@@ -44,7 +34,7 @@ const SliceMachineApp: React.FunctionComponent = ({ children }) => {
       <LoginModal />
       <ReviewModal />
       <ToastContainer />
-    </LibrariesProvider>
+    </>
   );
 };
 

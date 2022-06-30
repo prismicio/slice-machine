@@ -1,13 +1,14 @@
 import React, { useReducer } from "react";
 import { useRouter } from "next/router";
-import { LibrariesContext } from "../libraries/context";
-import { useContext } from "react";
 import SliceStore from "./store";
 import { reducer } from "./reducer";
 
 import SliceState from "@lib/models/ui/SliceState";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getLibrariesState } from "@src/modules/slices";
 
 export type ContextProps = {
   Model: SliceState;
@@ -75,7 +76,9 @@ const SliceProvider: React.FunctionComponent<SliceProviderProps> = ({
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 export const SliceHandler = ({ children }: { children: any }) => {
   const router = useRouter();
-  const libraries = useContext(LibrariesContext);
+  const { libraries } = useSelector((state: SliceMachineStoreType) => ({
+    libraries: getLibrariesState(state),
+  }));
 
   if (!router.query || !router.query.lib || !router.query.sliceName) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
