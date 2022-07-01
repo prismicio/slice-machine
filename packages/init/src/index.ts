@@ -19,6 +19,7 @@ import {
   getApplicationMode,
   InitClient,
 } from "./utils";
+import { Models } from "@slicemachine/core";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -104,7 +105,11 @@ init()
   .then(() => {
     process.exit(0);
   })
-  .catch((error) => {
+  .catch(async (error) => {
     if (error instanceof Error) logs.writeError(error.message);
     else console.error(error);
+    await Tracker.get().trackInitEndFail(
+      Models.Frameworks.none,
+      "Failed to initialise Slice Machine."
+    );
   });

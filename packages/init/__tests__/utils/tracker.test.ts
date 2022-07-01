@@ -169,18 +169,22 @@ describe("InitTracker", () => {
     });
   });
 
-  test("should send a track init done event", async () => {
+  test("should send a track init end event", async () => {
     const smTracker = new InitTracker();
     smTracker.initialize(dumpSegmentKey);
     smTracker.setRepository("repoName");
     // Anonymous call
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEndSuccess(Models.Frameworks.next);
 
     expect(MockTracker).toHaveBeenCalledTimes(1);
     expect(MockTracker.mock.calls[0][0]).toEqual({
       anonymousId: "uuid",
-      event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next },
+      event: "SliceMachine Init End",
+      properties: {
+        framework: Models.Frameworks.next,
+        repo: "repoName",
+        result: "success",
+      },
       context: { groupId: { Repository: "repoName" } },
     });
 
@@ -198,13 +202,17 @@ describe("InitTracker", () => {
     });
 
     // Logged in call
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEndSuccess(Models.Frameworks.next);
 
     expect(MockTracker).toHaveBeenCalledTimes(2);
     expect(MockTracker.mock.calls[1][0]).toEqual({
       userId: "userId",
-      event: "SliceMachine Init Done",
-      properties: { framework: Models.Frameworks.next },
+      event: "SliceMachine Init End",
+      properties: {
+        framework: Models.Frameworks.next,
+        repo: "repoName",
+        result: "success",
+      },
       context: { groupId: { Repository: "repoName" } },
     });
   });
@@ -214,12 +222,35 @@ describe("InitTracker", () => {
     smTracker.initialize(dumpSegmentKey, false);
     smTracker.identifyUser("userId", "intercomHash");
     smTracker.setRepository("repoName");
-    await smTracker.trackInitDone(Models.Frameworks.next);
+    await smTracker.trackInitEndSuccess(Models.Frameworks.next);
     await smTracker.trackInitStart("repoName");
     await smTracker.trackInitIdentify();
     await smTracker.trackDownloadLibrary("libraryName");
 
     expect(MockIdentify).toHaveBeenCalledTimes(0);
     expect(MockTracker).toHaveBeenCalledTimes(0);
+  });
+  test("should send a track init end fail event", async () => {
+    const smTracker = new InitTracker();
+    smTracker.initialize(dumpSegmentKey);
+    smTracker.setRepository("repoName");
+    // Anonymous call
+    await smTracker.trackInitEndFail(
+      Models.Frameworks.next,
+      "this is an error message"
+    );
+
+    expect(MockTracker).toHaveBeenCalledTimes(1);
+    expect(MockTracker.mock.calls[0][0]).toEqual({
+      anonymousId: "uuid",
+      event: "SliceMachine Init End",
+      properties: {
+        framework: Models.Frameworks.next,
+        repo: "repoName",
+        result: "error",
+        error: "this is an error message",
+      },
+      context: { groupId: { Repository: "repoName" } },
+    });
   });
 });
