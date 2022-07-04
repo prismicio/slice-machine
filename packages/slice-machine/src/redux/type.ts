@@ -7,6 +7,7 @@ import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes
 import { SelectedCustomTypeStoreType } from "@src/modules/selectedCustomType/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
 import { RouterState } from "connected-next-router/types";
+import { SelectedSliceStoreType } from "@src/modules/selectedSlice/types";
 
 export type SliceMachineStoreType = {
   modal: ModalStoreType;
@@ -17,5 +18,6 @@ export type SliceMachineStoreType = {
   availableCustomTypes: AvailableCustomTypesStoreType;
   selectedCustomType: SelectedCustomTypeStoreType;
   slices: SlicesStoreType;
+  selectedSlice: SelectedSliceStoreType;
   router: RouterState;
 };

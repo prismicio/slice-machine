@@ -19,6 +19,7 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
+import SliceState from "@lib/models/ui/SliceState";
 import {
   createCustomTypeCreator,
   renameCustomTypeCreator,
@@ -55,6 +56,22 @@ import {
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import {
+  addSliceWidgetCreator,
+  copyVariationSliceCreator,
+  deleteSliceWidgetMockCreator,
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+  initSliceStoreCreator,
+  pushSliceCreator,
+  removeSliceWidgetCreator,
+  reorderSliceWidgetCreator,
+  replaceSliceWidgetCreator,
+  saveSliceCreator,
+  updateSliceWidgetMockCreator,
+} from "./selectedSlice/actions";
+import { Models } from "@slicemachine/core";
+import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -255,6 +272,145 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
+  const initSliceStore = (Model: SliceState) =>
+    dispatch(initSliceStoreCreator({ Model }));
+
+  const addSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    key: string,
+    value: NestableWidget
+  ) => {
+    dispatch(addSliceWidgetCreator({ variationId, widgetsArea, key, value }));
+  };
+
+  const replaceSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    previousKey: string,
+    newKey: string,
+    value: NestableWidget
+  ) => {
+    dispatch(
+      replaceSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        previousKey,
+        newKey,
+        value,
+      })
+    );
+  };
+
+  const reorderSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    start: number,
+    end: number | undefined
+  ) => {
+    dispatch(
+      reorderSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        start,
+        end,
+      })
+    );
+  };
+
+  const removeSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    key: string
+  ) => {
+    dispatch(
+      removeSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        key,
+      })
+    );
+  };
+
+  const updateSliceWidgetMock = (
+    variationId: string,
+    mockConfig: CustomTypeMockConfig,
+    widgetArea: Models.WidgetsArea,
+    previousKey: string,
+    newKey: string,
+    mockValue: any
+  ) => {
+    dispatch(
+      updateSliceWidgetMockCreator({
+        variationId,
+        mockConfig,
+        widgetArea,
+        previousKey,
+        newKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        mockValue,
+      })
+    );
+  };
+
+  const deleteSliceWidgetMock = (
+    variationId: string,
+    mockConfig: CustomTypeMockConfig,
+    widgetArea: Models.WidgetsArea,
+    newKey: string
+  ) => {
+    dispatch(
+      deleteSliceWidgetMockCreator({
+        variationId,
+        mockConfig,
+        widgetArea,
+        newKey,
+      })
+    );
+  };
+
+  const generateSliceScreenshot = (
+    screenshots: Record<string, ScreenshotUI>
+  ) => {
+    dispatch(
+      generateSliceScreenshotCreator({
+        screenshots,
+      })
+    );
+  };
+
+  const generateSliceCustomScreenshot = (
+    variationId: string,
+    screenshot: ScreenshotUI
+  ) => {
+    dispatch(
+      generateSliceCustomScreenshotCreator({
+        variationId,
+        screenshot,
+      })
+    );
+  };
+
+  const saveSlice = (state: SliceState) => {
+    dispatch(
+      saveSliceCreator({
+        state,
+      })
+    );
+  };
+
+  const pushSlice = () => {
+    dispatch(pushSliceCreator());
+  };
+
+  const copyVariationSlice = (
+    key: string,
+    name: string,
+    copied: Models.VariationSM
+  ) => {
+    dispatch(copyVariationSliceCreator({ key, name, copied }));
+  };
+
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
 
@@ -328,6 +484,18 @@ const useSliceMachineActions = () => {
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,
     replaceFieldIntoGroup,
+    initSliceStore,
+    addSliceWidget,
+    replaceSliceWidget,
+    reorderSliceWidget,
+    removeSliceWidget,
+    updateSliceWidgetMock,
+    deleteSliceWidgetMock,
+    generateSliceScreenshot,
+    generateSliceCustomScreenshot,
+    saveSlice,
+    pushSlice,
+    copyVariationSlice,
     createSlice,
     renameSlice,
     sendAReview,
