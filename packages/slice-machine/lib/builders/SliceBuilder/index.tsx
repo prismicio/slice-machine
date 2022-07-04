@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { handleRemoteResponse } from "@src/modules/toaster/utils";
-import { SliceContext } from "src/models/slice/context";
 
 import { Box } from "theme-ui";
 
@@ -18,6 +17,15 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
+import {
+  generateCustomScreenShot,
+  generateScreenShot,
+} from "@src/modules/selectedSlice/screenshot";
+import push from "@src/modules/selectedSlice/push";
+import save from "@src/modules/selectedSlice/save";
+import { useRouter } from "next/router";
+import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import SliceState from "@lib/models/ui/SliceState";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -35,19 +43,43 @@ const initialState: SliceBuilderState = {
   status: null,
 };
 
-const SliceBuilder: React.FunctionComponent = () => {
-  const { Model, store, variation } = useContext(SliceContext);
+interface SliceBuilderProps {
+  initModel: SliceState;
+  initVariationId: string;
+}
 
-  const { openLoginModal, checkSimulatorSetup, openToaster } =
-    useSliceMachineActions();
+const SliceBuilder: React.FC<SliceBuilderProps> = ({
+  initModel,
+  initVariationId,
+}) => {
+  useEffect(() => {
+    initSliceStore(initModel);
+  }, []);
+
+  const { Model } = useSelector((state: SliceMachineStoreType) => ({
+    Model: state.selectedSlice?.Model,
+  }));
+
+  const variation = Model?.variations.find(
+    (variation) => variation.id === initVariationId
+  );
+
+  const {
+    openLoginModal,
+    checkSimulatorSetup,
+    openToaster,
+    initSliceStore,
+    generateSliceScreenshot,
+    generateSliceCustomScreenshot,
+    pushSlice,
+    saveSlice,
+  } = useSliceMachineActions();
   const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
     })
   );
-
-  if (!store || !Model || !variation) return null;
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
@@ -60,10 +92,10 @@ const SliceBuilder: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (Model.isTouched) {
+    if (Model?.isTouched) {
       setData(initialState);
     }
-  }, [Model.isTouched]);
+  }, [Model?.isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
@@ -74,38 +106,41 @@ const SliceBuilder: React.FunctionComponent = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (!store) return;
-
-    return () => store.reset();
-  }, []);
-
   const sliceView = useMemo(
-    () => [{ sliceID: Model.model.id, variationID: variation.id }],
-    [Model.model.id, variation.id]
+    () =>
+      Model && variation
+        ? [{ sliceID: Model.model.id, variationID: variation.id }]
+        : null,
+    [Model?.model.id, variation?.id]
   );
 
+  if (!Model || !variation || !sliceView) return null;
+
   const onTakingCustomScreenshot = () => {
-    checkSimulatorSetup(true, () =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      store
-        .variation(variation.id)
-        .generateScreenShot(Model.from, Model.model.name, setData)
-    );
+    checkSimulatorSetup(true, () => {
+      generateScreenShot(
+        variation.id,
+        Model.from,
+        Model.model.name,
+        setData,
+        (screenshots) => generateSliceScreenshot(screenshots)
+      );
+    });
   };
 
   return (
     <Box sx={{ flex: 1 }}>
       <Header
         Model={Model}
-        store={store}
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        onPush={() => void store.push(Model, onPush)}
+        onPush={() => {
+          push(Model, onPush, () => pushSlice());
+        }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        onSave={() => void store.save(Model, setData)}
+        onSave={() => {
+          save(Model, setData, (state) => saveSlice(state));
+        }}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
       />
@@ -116,22 +151,22 @@ const SliceBuilder: React.FunctionComponent = () => {
             Model={Model}
             variation={variation}
             onScreenshot={onTakingCustomScreenshot}
-            onHandleFile={(file) =>
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              store
-                .variation(variation.id)
-                .generateCustomScreenShot(
-                  Model.from,
-                  Model.model.name,
-                  setData,
-                  file
-                )
-            }
+            onHandleFile={(file: Blob) => {
+              generateCustomScreenShot(
+                variation.id,
+                Model.from,
+                Model.model.name,
+                setData,
+                file,
+                (variationId, screenshot) =>
+                  generateSliceCustomScreenshot(variationId, screenshot)
+              );
+            }}
             imageLoading={data.imageLoading}
           />
         }
       >
-        <FieldZones Model={Model} store={store} variation={variation} />
+        <FieldZones Model={Model} variation={variation} />
       </FlexEditor>
       <SetupDrawer />
       {isWaitingForIframeCheck && (
@@ -146,4 +181,28 @@ const SliceBuilder: React.FunctionComponent = () => {
   );
 };
 
-export default SliceBuilder;
+const SliceBuilderWithRouter = () => {
+  const router = useRouter();
+
+  const { Model } = useSelector((store: SliceMachineStoreType) => ({
+    Model: selectCurrentSlice(
+      store,
+      router.query.lib as string,
+      router.query.sliceName as string
+    ),
+  }));
+
+  if (!Model) {
+    void router.replace("/");
+    return null;
+  }
+
+  return (
+    <SliceBuilder
+      initModel={Model}
+      initVariationId={router.query.variation as string}
+    />
+  );
+};
+
+export default SliceBuilderWithRouter;

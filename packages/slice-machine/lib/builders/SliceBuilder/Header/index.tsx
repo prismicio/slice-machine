@@ -6,23 +6,22 @@ import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 import SaveButton from "./SaveButton";
-import type { ContextProps } from "@src/models/slice/context";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import SliceState from "@lib/models/ui/SliceState";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 const Header: React.FC<{
-  Model: ContextProps["Model"];
-  store: ContextProps["store"];
-  variation: ContextProps["variation"];
+  Model: SliceState;
+  variation: VariationSM;
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
 }> = ({
   Model,
-  store,
   variation,
   onSave,
   onPush,
@@ -34,7 +33,7 @@ const Header: React.FC<{
 
   const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
 
-  const { openRenameSliceModal } = useSliceMachineActions();
+  const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
 
   return (
@@ -136,7 +135,7 @@ const Header: React.FC<{
             isOpen={showVariationModal}
             onClose={() => setShowVariationModal(false)}
             onSubmit={(id, name, copiedVariation) => {
-              store.copyVariation(id, name, copiedVariation);
+              copyVariationSlice(id, name, copiedVariation);
               void router.push(
                 ...Links.variation({
                   lib: Model.href,
