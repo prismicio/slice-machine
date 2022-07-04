@@ -25,7 +25,7 @@ const mapAvailableAndSharedSlices = (
 ) => {
   const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
     (acc, curr: LibraryState) => {
-      return [...acc, ...curr.components.map((e) => e[0])];
+      return [...acc, ...curr.components];
     },
     []
   );
