@@ -188,7 +188,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                         {!isLocal && <p>⚠️ External libraries are read-only</p>}
                       </Flex>
                       <Grid
-                        elems={components.map(([e]) => e)}
+                        elems={components}
                         defineElementKey={(slice: SliceState) =>
                           slice.model.name
                         }
