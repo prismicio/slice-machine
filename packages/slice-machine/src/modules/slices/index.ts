@@ -8,7 +8,7 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, renameSlice } from "@src/apiClient";
+import { createSlice, getState, renameSlice } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -22,16 +22,22 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import LibraryState from "@lib/models/ui/LibraryState";
 import { useModelReducer } from "@src/models/slice/context";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
+import { push } from "connected-next-router";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
   "SLICES/CREATE.REQUEST",
   "SLICES/CREATE.RESPONSE",
   "SLICES/CREATE.FAILURE"
-)<{
-  sliceName: string;
-  libName: string;
-}>();
+)<
+  {
+    sliceName: string;
+    libName: string;
+  },
+  {
+    libraries: readonly LibraryUI[];
+  }
+>();
 
 export const renameSliceCreator = createAsyncAction(
   "SLICES/RENAME.REQUEST",
@@ -50,7 +56,9 @@ export const renameSliceCreator = createAsyncAction(
   }
 >();
 
-type SlicesActions = ActionType<typeof refreshStateCreator>;
+type SlicesActions =
+  | ActionType<typeof refreshStateCreator>
+  | ActionType<typeof createSliceCreator>;
 
 // Selectors
 export const getLibraries = (
@@ -103,6 +111,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: action.payload.libraries,
         remoteSlices: action.payload.remoteSlices,
       };
+    case getType(createSliceCreator.success):
+      return {
+        ...state,
+        libraries: action.payload.libraries,
+      };
     default:
       return state;
   }
@@ -122,11 +135,24 @@ export function* createSliceSaga({
     name: payload.sliceName,
     library: payload.libName,
   });
+  const { data: serverState } = (yield call(getState)) as SagaReturnType<
+    typeof getState
+  >;
+  yield put(createSliceCreator.success({ libraries: serverState.libraries }));
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  // changing this to use next/router  call(Router.router.push,...) causes bugs in some contexts.
-  window.location.href = `/${payload.libName.replace(/\//g, "--")}/${
-    payload.sliceName
-  }/${variationId}`;
+  yield put(
+    push(
+      `/${payload.libName.replace(/\//g, "--")}/${
+        payload.sliceName
+      }/${variationId}`
+    )
+  );
+  yield put(
+    openToasterCreator({
+      message: "Slice saved",
+      type: ToasterType.SUCCESS,
+    })
+  );
 }
 
 export function* renameSliceSaga({
