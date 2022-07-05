@@ -1,7 +1,7 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 import SliceState from "@lib/models/ui/SliceState";
 
-export default async function save(
+export default async function saveSliceApiCall(
   slice: SliceState,
   setData: (data: any) => void,
   callback: (SliceState: SliceState) => void

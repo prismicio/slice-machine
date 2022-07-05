@@ -21,8 +21,8 @@ import {
   generateCustomScreenShot,
   generateScreenShot,
 } from "@src/modules/selectedSlice/screenshot";
-import push from "@src/modules/selectedSlice/push";
-import save from "@src/modules/selectedSlice/save";
+import pushSliceApiCall from "@src/modules/selectedSlice/push";
+import saveSliceApiCall from "@src/modules/selectedSlice/save";
 import { useRouter } from "next/router";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import SliceState from "@lib/models/ui/SliceState";
@@ -136,11 +136,11 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onPush={async () => {
-          await push(Model, onPush, () => pushSlice());
+          await pushSliceApiCall(Model, onPush, () => pushSlice());
         }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onSave={async () => {
-          await save(Model, setData, (state) => saveSlice(state));
+          await saveSliceApiCall(Model, setData, (state) => saveSlice(state));
         }}
         isLoading={data.loading}
         imageLoading={data.imageLoading}

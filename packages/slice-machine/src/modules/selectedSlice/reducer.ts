@@ -193,7 +193,7 @@ export const selectedSliceReducer: Reducer<
         if (prevModel.screenshotUrls?.[variation.id]) {
           return {
             ...acc,
-            [variation.id]: prevModel.screenshotUrls?.[variation.id],
+            [variation.id]: prevModel.screenshotUrls[variation.id],
           };
         }
         return acc;
