@@ -139,8 +139,8 @@ const AppTheme = (): Theme =>
         color: "error",
         fontWeight: "body",
         fontSize: 1,
-        margin: 0,
-        pl: 2,
+        marginLeft: 2,
+        marginBottom: "0!important",
       },
       pre: {
         fontSize: 1,
