@@ -1,7 +1,11 @@
-import { Field } from "formik";
-import { Box, Label, Input, Text } from "theme-ui";
+import { Field, FieldInputProps, FieldMetaProps } from "formik";
+import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
-const getFieldStyles = (isError, isDisabled, isWarning) => {
+const getFieldStyles = (
+  isError: boolean,
+  isDisabled: boolean,
+  isWarning: boolean
+) => {
   const defaultFieldStyles = {
     "&::placeholder": { color: "#C9D0D8" },
   };
@@ -38,15 +42,35 @@ const getFieldStyles = (isError, isDisabled, isWarning) => {
   return fieldStyles;
 };
 
+interface FormFieldInputProps {
+  sx: ThemeUIStyleObject;
+  field: FieldInputProps<string>;
+  meta: FieldMetaProps<string>;
+  formField: {
+    label: string;
+    placeholder: string;
+    fieldLevelValidation?: (arg: {
+      value: string;
+      fields: any;
+      initialId: string;
+    }) => boolean;
+  };
+  fieldName: string;
+  fields: any;
+  initialValues: any;
+}
+
 const FormFieldInput = ({
   sx = {},
   field /* from Formik */,
-  meta = {} /* from Formik */,
+  meta /* from Formik */,
   formField,
   fieldName,
   fields,
   initialValues,
-}) => {
+}: FormFieldInputProps) => {
+  console.log("fields", fields);
+
   return (
     <Box sx={sx}>
       <Label
@@ -66,8 +90,6 @@ const FormFieldInput = ({
       </Label>
       <Field
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        name={fieldName}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id={fieldName}
         type="text"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
@@ -75,8 +97,8 @@ const FormFieldInput = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         {...(formField.fieldLevelValidation
           ? {
-              validate: (value) =>
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+              validate: (value: string) =>
+                formField.fieldLevelValidation &&
                 formField.fieldLevelValidation({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
                   value,
@@ -89,7 +111,7 @@ const FormFieldInput = ({
           : null)}
         {...field}
         as={Input}
-        sx={getFieldStyles(meta.error, false, false)}
+        sx={getFieldStyles(Boolean(meta.error), false, false)}
       />
     </Box>
   );
