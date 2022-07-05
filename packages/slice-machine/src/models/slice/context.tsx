@@ -36,16 +36,14 @@ export function useModelReducer({
   return initialState;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-export const SliceHandler = ({ children }: { children: any }) => {
+export const SliceHandler: React.FC = ({ children }) => {
   const router = useRouter();
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
     libraries: getLibrariesState(state),
   }));
 
   if (!router.query || !router.query.lib || !router.query.sliceName) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return children;
+    return <>{children}</>;
   }
 
   const libParam: string = (() => {
@@ -95,6 +93,5 @@ export const SliceHandler = ({ children }: { children: any }) => {
     void router.replace(`/${lib.name}/${slice.model.name}/${variation.id}`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   return <>{typeof children === "function" ? children(slice) : children}</>;
 };

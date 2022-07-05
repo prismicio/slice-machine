@@ -2,7 +2,7 @@ import { fetchApi } from "@lib/builders/common/fetch";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ScreenshotResponse, Screenshots } from "@models/common/Screenshots";
 
-export function generateScreenShot(
+export async function generateScreenShot(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _variationId: string,
   libraryName: string,
@@ -10,8 +10,7 @@ export function generateScreenShot(
   setData: (data: any) => void,
   callback: (screenshots: Screenshots) => void
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  fetchApi({
+  await fetchApi({
     url: `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
     setData,
     data: {
@@ -25,7 +24,7 @@ export function generateScreenShot(
   });
 }
 
-export function generateCustomScreenShot(
+export async function generateCustomScreenShot(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variationId: string,
   libraryName: string,
@@ -40,8 +39,7 @@ export function generateCustomScreenShot(
   form.append("sliceName", sliceName);
   form.append("variationId", variationId);
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  fetchApi({
+  await fetchApi({
     url: "/api/custom-screenshot",
     setData,
     params: {

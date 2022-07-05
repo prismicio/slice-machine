@@ -1,13 +1,12 @@
 import { fetchApi } from "@lib/builders/common/fetch";
 import SliceState from "@lib/models/ui/SliceState";
 
-export default function save(
+export default async function save(
   slice: SliceState,
   setData: (data: any) => void,
   callback: (SliceState: SliceState) => void
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  fetchApi({
+  await fetchApi({
     url: "/api/slices/save",
     params: {
       method: "POST",
