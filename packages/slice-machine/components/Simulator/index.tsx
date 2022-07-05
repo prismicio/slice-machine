@@ -13,25 +13,23 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { useRouter } from "next/router";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import Router from "next/router";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Simulator() {
-  const router = useRouter();
-
   const { Model } = useSelector((store: SliceMachineStoreType) => ({
     Model: selectCurrentSlice(
       store,
-      router.query.lib as string,
-      router.query.sliceName as string
+      Router.router?.query.lib as string,
+      Router.router?.query.sliceName as string
     ),
   }));
 
   const variation = Model?.variations.find(
-    (variation) => variation.id === (router.query.variation as string)
+    (variation) => variation.id === (Router.router?.query.variation as string)
   );
 
   const { framework, version, simulatorUrl } = useSelector(

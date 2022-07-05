@@ -4,6 +4,7 @@ import {
   fork,
   put,
   SagaReturnType,
+  take,
   takeLatest,
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
@@ -22,7 +23,7 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import LibraryState from "@lib/models/ui/LibraryState";
 import { useModelReducer } from "@src/models/slice/context";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { push } from "connected-next-router";
+import { LOCATION_CHANGE, replace } from "connected-next-router";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -140,13 +141,11 @@ export function* createSliceSaga({
   >;
   yield put(createSliceCreator.success({ libraries: serverState.libraries }));
   yield put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-  yield put(
-    push(
-      `/${payload.libName.replace(/\//g, "--")}/${
-        payload.sliceName
-      }/${variationId}`
-    )
-  );
+  const addr = `/${payload.libName.replace(/\//g, "--")}/${
+    payload.sliceName
+  }/${variationId}`;
+  yield put(replace("/[lib]/[sliceName]/[variation]", addr));
+  yield take(LOCATION_CHANGE);
   yield put(
     openToasterCreator({
       message: "Slice saved",

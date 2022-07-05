@@ -117,8 +117,9 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   if (!Model || !variation || !sliceView) return null;
 
   const onTakingCustomScreenshot = () => {
-    checkSimulatorSetup(true, () => {
-      generateScreenShot(
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    checkSimulatorSetup(true, async () => {
+      await generateScreenShot(
         variation.id,
         Model.from,
         Model.model.name,
@@ -133,13 +134,13 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
       <Header
         Model={Model}
         variation={variation}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        onPush={() => {
-          push(Model, onPush, () => pushSlice());
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
+        onPush={async () => {
+          await push(Model, onPush, () => pushSlice());
         }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        onSave={() => {
-          save(Model, setData, (state) => saveSlice(state));
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
+        onSave={async () => {
+          await save(Model, setData, (state) => saveSlice(state));
         }}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
@@ -151,8 +152,9 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
             Model={Model}
             variation={variation}
             onScreenshot={onTakingCustomScreenshot}
-            onHandleFile={(file: Blob) => {
-              generateCustomScreenShot(
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onHandleFile={async (file: Blob) => {
+              await generateCustomScreenShot(
                 variation.id,
                 Model.from,
                 Model.model.name,

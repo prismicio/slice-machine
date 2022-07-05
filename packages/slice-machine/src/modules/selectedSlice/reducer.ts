@@ -255,7 +255,7 @@ const updateTouchedAndStatus = (model: SliceState) => {
     model.initialScreenshotUrls
   );
 
-  // Should be the slice be pushed ?
+  // True if the remote and local slice variations don't match
   const isModelModified = !compareVariations(
     model.remoteVariations,
     model.initialVariations

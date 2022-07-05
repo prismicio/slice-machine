@@ -15,7 +15,7 @@ import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
-import { push } from "connected-next-router";
+import { LOCATION_CHANGE, replace } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const dummySlicesState: SlicesStoreType = {
@@ -60,7 +60,15 @@ describe("[Slices module]", () => {
       saga
         .next()
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
-      saga.next().put(push(`/MyLib--Components/MySlice/variationId`));
+      saga
+        .next()
+        .put(
+          replace(
+            "/[lib]/[sliceName]/[variation]",
+            "/MyLib--Components/MySlice/variationId"
+          )
+        );
+      saga.next().take(LOCATION_CHANGE);
       saga.next().put(
         openToasterCreator({
           message: "Slice saved",
