@@ -203,7 +203,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           isCreatingSlice={isCreatingSlice}
           isOpen={isCreateSliceModalOpen}
           close={closeCreateSliceModal}
-          libraries={libraries || []}
+          libraries={localLibraries}
           remoteSlices={remoteSlices}
           onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
         />
