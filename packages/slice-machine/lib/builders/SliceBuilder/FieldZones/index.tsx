@@ -13,8 +13,9 @@ import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArr
 
 import { SliceMockConfig } from "@models/common/MockConfig";
 import SliceState from "@models/ui/SliceState";
-import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -27,19 +28,23 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
 type FieldZonesProps = {
   Model: SliceState;
   variation: Models.VariationSM;
-  store: SliceStore;
 };
 
 const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   Model,
-  store,
   variation,
 }) => {
+  const {
+    addSliceWidget,
+    replaceSliceWidget,
+    reorderSliceWidget,
+    removeSliceWidget,
+    updateSliceWidgetMock,
+    deleteSliceWidgetMock,
+  } = useSliceMachineActions();
   const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
-    store
-      .variation(variation.id)
-      .deleteWidgetMockConfig(Model.mockConfig, widgetArea, key);
-    store.variation(variation.id).removeWidget(widgetArea, key);
+    deleteSliceWidgetMock(variation.id, Model.mockConfig, widgetArea, key);
+    removeSliceWidget(variation.id, widgetArea, key);
   };
 
   const _getFieldMockConfig =
@@ -57,26 +62,37 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   const _onSave =
     (widgetArea: Models.WidgetsArea) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ({ apiId: previousKey, newKey, value, mockValue }: any) => {
+    ({
+      apiId: previousKey,
+      newKey,
+      value,
+      mockValue,
+    }: {
+      apiId: string;
+      newKey: string;
+      value: any;
+      mockValue: any;
+    }) => {
       if (mockValue) {
-        store
-          .variation(variation.id)
-          .updateWidgetMockConfig(
-            Model.mockConfig,
-            widgetArea,
-            previousKey,
-            newKey,
-            mockValue
-          );
+        updateSliceWidgetMock(
+          variation.id,
+          Model.mockConfig,
+          widgetArea,
+          previousKey,
+          newKey,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          mockValue
+        );
       } else {
-        store
-          .variation(variation.id)
-          .deleteWidgetMockConfig(Model.mockConfig, widgetArea, newKey);
+        deleteSliceWidgetMock(
+          variation.id,
+          Model.mockConfig,
+          widgetArea,
+          newKey
+        );
       }
-      store
-        .variation(variation.id)
-        .replaceWidget(widgetArea, previousKey, newKey, value);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      replaceSliceWidget(variation.id, widgetArea, previousKey, newKey, value);
     };
 
   const _onSaveNewField =
@@ -100,10 +116,13 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         );
       }
 
-      store
-        .variation(variation.id)
+      addSliceWidget(
+        variation.id,
+        widgetArea,
+        id,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        .addWidget(widgetArea, id, widget.create(label));
+        widget.create(label) as NestableWidget
+      );
     };
 
   const _onDragEnd =
@@ -111,13 +130,12 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       if (ensureDnDDestination(result)) {
         return;
       }
-      store
-        .variation(variation.id)
-        .reorderWidget(
-          widgetArea,
-          result.source.index,
-          result.destination && result.destination.index
-        );
+      reorderSliceWidget(
+        variation.id,
+        widgetArea,
+        result.source.index,
+        result.destination && result.destination.index
+      );
     };
 
   return (

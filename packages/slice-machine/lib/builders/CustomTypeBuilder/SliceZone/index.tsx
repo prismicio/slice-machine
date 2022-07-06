@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
-import { LibrariesContext } from "../../../../src/models/libraries/context";
 import SliceState from "@lib/models/ui/SliceState";
 import LibraryState from "@lib/models/ui/LibraryState";
 
@@ -16,6 +15,9 @@ import {
   NonSharedSliceInSliceZone,
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getLibrariesState } from "@src/modules/slices";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -23,7 +25,7 @@ const mapAvailableAndSharedSlices = (
 ) => {
   const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
     (acc, curr: LibraryState) => {
-      return [...acc, ...curr.components.map((e) => e[0])];
+      return [...acc, ...curr.components];
     },
     []
   );
@@ -87,7 +89,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   onCreateSliceZone,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
-  const libraries = useContext(LibrariesContext);
+  const { libraries } = useSelector((state: SliceMachineStoreType) => ({
+    libraries: getLibrariesState(state),
+  }));
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
     ? mapAvailableAndSharedSlices(sliceZone, libraries)

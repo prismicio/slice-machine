@@ -63,6 +63,97 @@ describe("Custom Type Builder", () => {
     mockRouter.setCurrentUrl("/");
   });
 
+  const libraries = [
+    {
+      path: "./slices",
+      isLocal: true,
+      name: "slices",
+      meta: {
+        isNodeModule: false,
+        isDownloaded: false,
+        isManual: true,
+      },
+      components: [
+        {
+          from: "slices",
+          href: "slices",
+          pathToSlice: "./slices",
+          fileName: "index",
+          extension: "js",
+          screenshotPaths: {},
+          mock: [
+            {
+              variation: "default",
+              name: "Default",
+              slice_type: "test_slice",
+              items: [],
+              primary: {
+                title: [
+                  {
+                    type: "heading1",
+                    text: "Cultivate granular e-services",
+                    spans: [],
+                  },
+                ],
+                description: [
+                  {
+                    type: "paragraph",
+                    text: "Anim in commodo exercitation qui. Elit cillum officia mollit dolore. Commodo voluptate sit est proident ea proident dolor esse ad.",
+                    spans: [],
+                  },
+                ],
+              },
+            },
+          ],
+          model: {
+            id: "test_slice",
+            type: "SharedSlice",
+            name: "TestSlice",
+            description: "TestSlice",
+            variations: [
+              {
+                id: "default",
+                name: "Default",
+                docURL: "...",
+                version: "sktwi1xtmkfgx8626",
+                description: "TestSlice",
+                primary: [
+                  {
+                    key: "title",
+                    value: {
+                      type: "StructuredText",
+                      config: {
+                        single: "heading1",
+                        label: "Title",
+                        placeholder: "This is where it all begins...",
+                      },
+                    },
+                  },
+                  {
+                    key: "description",
+                    value: {
+                      type: "StructuredText",
+                      config: {
+                        single: "paragraph",
+                        label: "Description",
+                        placeholder: "A nice description of your feature",
+                      },
+                    },
+                  },
+                ],
+                items: [],
+                imageUrl:
+                  "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+              },
+            ],
+          },
+          screenshotUrls: {},
+          __status: "NEW_SLICE",
+        },
+      ],
+    },
+  ];
+
   test("should send a tracking event when the user adds a field", async () => {
     const customTypeId = "a-page";
 
@@ -121,6 +212,10 @@ describe("Custom Type Builder", () => {
           mockConfig: {},
           initialMockConfig: {},
         },
+        slices: {
+          remoteSlices: [],
+          libraries: libraries,
+        },
       },
     });
 
@@ -166,159 +261,59 @@ describe("Custom Type Builder", () => {
       mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
-    const libraries = [
-      {
-        path: "./slices",
-        isLocal: true,
-        name: "slices",
-        meta: {
-          isNodeModule: false,
-          isDownloaded: false,
-          isManual: true,
-        },
-        components: [
-          {
-            from: "slices",
-            href: "slices",
-            pathToSlice: "./slices",
-            fileName: "index",
-            extension: "js",
-            screenshotPaths: {},
-            mock: [
-              {
-                variation: "default",
-                name: "Default",
-                slice_type: "test_slice",
-                items: [],
-                primary: {
-                  title: [
-                    {
-                      type: "heading1",
-                      text: "Cultivate granular e-services",
-                      spans: [],
-                    },
-                  ],
-                  description: [
-                    {
-                      type: "paragraph",
-                      text: "Anim in commodo exercitation qui. Elit cillum officia mollit dolore. Commodo voluptate sit est proident ea proident dolor esse ad.",
-                      spans: [],
-                    },
-                  ],
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment,
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
                 },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
               },
             ],
-            model: {
-              id: "test_slice",
-              type: "SharedSlice",
-              name: "TestSlice",
-              description: "TestSlice",
-              variations: [
-                {
-                  id: "default",
-                  name: "Default",
-                  docURL: "...",
-                  version: "sktwi1xtmkfgx8626",
-                  description: "TestSlice",
-                  primary: [
-                    {
-                      key: "title",
-                      value: {
-                        type: "StructuredText",
-                        config: {
-                          single: "heading1",
-                          label: "Title",
-                          placeholder: "This is where it all begins...",
-                        },
-                      },
-                    },
-                    {
-                      key: "description",
-                      value: {
-                        type: "StructuredText",
-                        config: {
-                          single: "paragraph",
-                          label: "Description",
-                          placeholder: "A nice description of your feature",
-                        },
-                      },
-                    },
-                  ],
-                  items: [],
-                  imageUrl:
-                    "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
-                },
-              ],
-            },
-            screenshotUrls: {},
-            __status: "NEW_SLICE",
           },
-        ],
-      },
-    ];
-
-    const App = render(
-      <LibrariesProvider
-        env={environment}
-        libraries={libraries}
-        remoteSlices={[]}
-      >
-        <CreateCustomTypeBuilder />
-      </LibrariesProvider>,
-      {
-        preloadedState: {
-          environment,
-          availableCustomTypes: {
-            [customTypeId]: {
-              local: {
-                id: customTypeId,
-                label: customTypeId,
-                repeatable: true,
-                status: true,
-                tabs: [
-                  {
-                    key: "Main",
-                    value: [],
-                  },
-                ],
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
               },
-            },
+            ],
           },
-          selectedCustomType: {
-            model: {
-              id: "a-page",
-              label: "a-page",
-              repeatable: true,
-              status: true,
-              tabs: [
-                {
-                  key: "Main",
-                  value: [],
-                },
-              ],
-            },
-            initialModel: {
-              id: "a-page",
-              label: "a-page",
-              repeatable: true,
-              status: true,
-              tabs: [
-                {
-                  key: "Main",
-                  value: [],
-                },
-              ],
-            },
-            mockConfig: {},
-            initialMockConfig: {},
-          },
-          slices: {
-            libraries,
-            remoteSlices: [],
-          },
+          mockConfig: {},
+          initialMockConfig: {},
         },
-      }
-    );
+        slices: {
+          libraries,
+          remoteSlices: [],
+        },
+      },
+    });
 
     const addButton = screen.getByTestId("empty-zone-add-a-new-slice");
     await act(async () => {
@@ -403,6 +398,10 @@ describe("Custom Type Builder", () => {
           },
           mockConfig: {},
           initialMockConfig: {},
+        },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
         },
       },
     });
@@ -511,6 +510,10 @@ describe("Custom Type Builder", () => {
           mockConfig: {},
           initialMockConfig: {},
         },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
+        },
       },
     });
 
@@ -615,6 +618,10 @@ describe("Custom Type Builder", () => {
           },
           mockConfig: {},
           initialMockConfig: {},
+        },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
         },
       },
     });

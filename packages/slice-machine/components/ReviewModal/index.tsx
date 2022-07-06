@@ -16,8 +16,6 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { useContext } from "react";
-import { LibrariesContext } from "@src/models/libraries/context";
 import {
   userHasDoneTheOnboarding,
   userHasSendAReview,
@@ -27,6 +25,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracker";
 import { selectCustomTypeCount } from "@src/modules/availableCustomTypes";
+import { getLibrariesState } from "@src/modules/slices";
 
 Modal.setAppElement("#__next");
 
@@ -60,8 +59,6 @@ const SelectReviewComponent = ({ field, form }: FieldProps) => {
 };
 
 const ReviewModal: React.FunctionComponent = () => {
-  const libraries = useContext(LibrariesContext);
-
   const {
     env,
     isReviewLoading,
@@ -69,6 +66,7 @@ const ReviewModal: React.FunctionComponent = () => {
     hasSendAReview,
     hasDoneTheOnboarding,
     customTypeCount,
+    libraries,
   } = useSelector((store: SliceMachineStoreType) => ({
     env: getEnvironment(store),
     isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
@@ -76,6 +74,7 @@ const ReviewModal: React.FunctionComponent = () => {
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
     customTypeCount: selectCustomTypeCount(store),
+    libraries: getLibrariesState(store),
   }));
 
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =

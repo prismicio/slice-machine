@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useContext } from "react";
 
 import { Flex } from "theme-ui";
-
-import { SliceContext } from "@src/models/slice/context";
 
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
@@ -16,12 +13,24 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import Router from "next/router";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Simulator() {
-  const { Model, variation } = useContext(SliceContext);
+  const { Model } = useSelector((store: SliceMachineStoreType) => ({
+    Model: selectCurrentSlice(
+      store,
+      Router.router?.query.lib as string,
+      Router.router?.query.sliceName as string
+    ),
+  }));
+
+  const variation = Model?.variations.find(
+    (variation) => variation.id === (Router.router?.query.variation as string)
+  );
 
   const { framework, version, simulatorUrl } = useSelector(
     (state: SliceMachineStoreType) => ({

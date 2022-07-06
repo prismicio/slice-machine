@@ -11,10 +11,12 @@ import {
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
 
-import { createSlice } from "@src/apiClient";
+import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
+import { LOCATION_CHANGE, push } from "connected-next-router";
+import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],
@@ -42,6 +44,7 @@ describe("[Slices module]", () => {
         sliceName: "MySlice",
         libName: "MyLib/Components",
       };
+      const serverState = { libraries: [] };
       const saga = testSaga(
         createSliceSaga,
         createSliceCreator.request(actionPayload)
@@ -50,9 +53,28 @@ describe("[Slices module]", () => {
       saga
         .next()
         .call(createSlice, actionPayload.sliceName, actionPayload.libName);
+      saga.next({ variationId }).call(getState);
       saga
-        .next({ variationId })
+        .next({ data: serverState })
+        .put(createSliceCreator.success({ libraries: serverState.libraries }));
+      saga
+        .next()
         .put(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+      saga
+        .next()
+        .put(
+          push(
+            "/[lib]/[sliceName]/[variation]",
+            "/MyLib--Components/MySlice/variationId"
+          )
+        );
+      saga.next().take(LOCATION_CHANGE);
+      saga.next().put(
+        openToasterCreator({
+          message: "Slice saved",
+          type: ToasterType.SUCCESS,
+        })
+      );
       saga.next().isDone();
     });
   });
