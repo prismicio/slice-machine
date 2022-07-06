@@ -2,7 +2,7 @@ import { Field, FieldInputProps, FieldMetaProps } from "formik";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
 const getFieldStyles = (
-  isError: boolean | undefined,
+  isError: boolean,
   isDisabled: boolean | undefined,
   isWarning: boolean | undefined
 ) => {
