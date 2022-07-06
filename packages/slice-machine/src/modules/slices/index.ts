@@ -23,7 +23,7 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import LibraryState from "@lib/models/ui/LibraryState";
 import { useModelReducer } from "@src/models/slice/context";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { LOCATION_CHANGE, replace } from "connected-next-router";
+import { LOCATION_CHANGE, push } from "connected-next-router";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -144,7 +144,7 @@ export function* createSliceSaga({
   const addr = `/${payload.libName.replace(/\//g, "--")}/${
     payload.sliceName
   }/${variationId}`;
-  yield put(replace("/[lib]/[sliceName]/[variation]", addr));
+  yield put(push("/[lib]/[sliceName]/[variation]", addr));
   yield take(LOCATION_CHANGE);
   yield put(
     openToasterCreator({
