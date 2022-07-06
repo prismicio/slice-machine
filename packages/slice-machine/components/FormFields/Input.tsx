@@ -56,11 +56,11 @@ interface FormFieldInputProps {
     }) => boolean;
   };
   fieldName: string;
-  fields: any;
-  initialValues: any;
+  fields: Record<string, unknown>;
+  initialValues?: Record<string, string>;
 }
 
-const FormFieldInput = ({
+export const FormFieldInput = ({
   sx = {},
   field /* from Formik */,
   meta /* from Formik */,
@@ -69,19 +69,10 @@ const FormFieldInput = ({
   fields,
   initialValues,
 }: FormFieldInputProps) => {
-  console.log("fields", fields);
-
   return (
     <Box sx={sx}>
-      <Label
-        variant="label.primary"
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        htmlFor={fieldName}
-      >
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          formField.label || fieldName
-        }
+      <Label variant="label.primary" htmlFor={fieldName}>
+        {formField.label || fieldName}
         {meta.touched && meta.error ? (
           <Text as="span" variant="text.labelError">
             {meta.error}
@@ -89,22 +80,16 @@ const FormFieldInput = ({
         ) : null}
       </Label>
       <Field
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id={fieldName}
         type="text"
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
         placeholder={formField.placeholder || formField.label || fieldName}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        {...(formField.fieldLevelValidation
+        {...(formField.fieldLevelValidation && initialValues
           ? {
               validate: (value: string) =>
                 formField.fieldLevelValidation &&
                 formField.fieldLevelValidation({
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
                   value,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   fields,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                   initialId: initialValues.id,
                 }),
             }
@@ -116,5 +101,3 @@ const FormFieldInput = ({
     </Box>
   );
 };
-
-export default FormFieldInput;
