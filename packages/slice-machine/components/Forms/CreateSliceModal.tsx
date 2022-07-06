@@ -7,8 +7,8 @@ import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
+import LibraryState from "@lib/models/ui/LibraryState";
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
@@ -16,7 +16,7 @@ type CreateSliceModalProps = {
   isCreatingSlice: boolean;
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
-  libraries: ReadonlyArray<LibraryUI>;
+  libraries: readonly LibraryState[];
   remoteSlices: ReadonlyArray<SliceSM>;
 };
 

@@ -26,6 +26,7 @@ import saveSliceApiCall from "@src/modules/selectedSlice/save";
 import { useRouter } from "next/router";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import SliceState from "@lib/models/ui/SliceState";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -44,31 +45,15 @@ const initialState: SliceBuilderState = {
 };
 
 interface SliceBuilderProps {
-  initModel: SliceState;
-  initVariationId: string;
+  Model: SliceState;
+  variation: VariationSM | undefined;
 }
 
-const SliceBuilder: React.FC<SliceBuilderProps> = ({
-  initModel,
-  initVariationId,
-}) => {
-  useEffect(() => {
-    initSliceStore(initModel);
-  }, []);
-
-  const { Model } = useSelector((state: SliceMachineStoreType) => ({
-    Model: state.selectedSlice?.Model,
-  }));
-
-  const variation = Model?.variations.find(
-    (variation) => variation.id === initVariationId
-  );
-
+const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
   const {
     openLoginModal,
     checkSimulatorSetup,
     openToaster,
-    initSliceStore,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
     pushSlice,
@@ -114,7 +99,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     [Model?.model.id, variation?.id]
   );
 
-  if (!Model || !variation || !sliceView) return null;
+  if (!variation || !sliceView) return null;
 
   const onTakingCustomScreenshot = () => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -185,6 +170,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
 const SliceBuilderWithRouter = () => {
   const router = useRouter();
+  const { initSliceStore } = useSliceMachineActions();
 
   const { Model } = useSelector((store: SliceMachineStoreType) => ({
     Model: selectCurrentSlice(
@@ -199,12 +185,15 @@ const SliceBuilderWithRouter = () => {
     return null;
   }
 
-  return (
-    <SliceBuilder
-      initModel={Model}
-      initVariationId={router.query.variation as string}
-    />
+  useEffect(() => {
+    initSliceStore(Model);
+  }, []);
+
+  const variation = Model.variations.find(
+    (variation) => variation.id === router.query.variation
   );
+
+  return <SliceBuilder Model={Model} variation={variation} />;
 };
 
 export default SliceBuilderWithRouter;
