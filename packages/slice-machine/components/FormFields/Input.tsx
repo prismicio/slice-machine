@@ -2,9 +2,9 @@ import { Field, FieldInputProps, FieldMetaProps } from "formik";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
 const getFieldStyles = (
-  isError: boolean,
-  isDisabled: boolean,
-  isWarning: boolean
+  isError: boolean | undefined,
+  isDisabled: boolean | undefined,
+  isWarning: boolean | undefined
 ) => {
   const defaultFieldStyles = {
     "&::placeholder": { color: "#C9D0D8" },
@@ -58,6 +58,7 @@ interface FormFieldInputProps {
   fieldName: string;
   fields: Record<string, unknown>;
   initialValues?: Record<string, string>;
+  isDisabled?: boolean;
 }
 
 export const FormFieldInput = ({
@@ -68,6 +69,7 @@ export const FormFieldInput = ({
   fieldName,
   fields,
   initialValues,
+  isDisabled,
 }: FormFieldInputProps) => {
   return (
     <Box sx={sx}>
@@ -96,7 +98,8 @@ export const FormFieldInput = ({
           : null)}
         {...field}
         as={Input}
-        sx={getFieldStyles(Boolean(meta.error), false, false)}
+        sx={getFieldStyles(Boolean(meta.error), Boolean(isDisabled), false)}
+        disabled={isDisabled}
       />
     </Box>
   );
