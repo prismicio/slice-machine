@@ -261,13 +261,16 @@ const updateTouchedAndStatus = (model: SliceState) => {
     model.initialVariations
   );
 
-  if (isModelModified || isScreenshotModified) {
+  if (
+    (isModelModified || isScreenshotModified) &&
+    status !== LibStatus.NewSlice
+  ) {
     status = LibStatus.Modified;
   }
 
   return {
     ...model,
     isTouched: isTouched,
-    _status: status,
+    __status: status,
   };
 };
