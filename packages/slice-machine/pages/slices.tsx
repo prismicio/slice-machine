@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
@@ -20,6 +20,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { getLibrariesState, getRemoteSlices } from "@src/modules/slices";
+import { getState } from "@src/apiClient";
 
 const CreateSliceButton = ({
   onClick,
@@ -40,8 +41,12 @@ const CreateSliceButton = ({
 );
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
-    useSliceMachineActions();
+  const {
+    openCreateSliceModal,
+    closeCreateSliceModal,
+    createSlice,
+    refreshState,
+  } = useSliceMachineActions();
 
   const { isCreateSliceModalOpen, isCreatingSlice, remoteSlices, libraries } =
     useSelector((store: SliceMachineStoreType) => ({
@@ -50,6 +55,11 @@ const SlicesIndex: React.FunctionComponent = () => {
       remoteSlices: getRemoteSlices(store),
       libraries: getLibrariesState(store),
     }));
+
+  useEffect(() => {
+    //TODO: once the slice redux structure refactor is done, remove this and update the library redux state through the selectedSlice actions
+    void getState().then(({ data }) => refreshState(data));
+  }, []);
 
   const _onCreate = ({
     sliceName,
