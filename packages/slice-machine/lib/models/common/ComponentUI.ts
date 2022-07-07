@@ -92,6 +92,8 @@ function computeStatus(
     slice.variations
   );
 
-  if (sameVersion) return LibStatus.Synced;
+  const sameName = component.model.name === slice.name;
+
+  if (sameVersion && sameName) return LibStatus.Synced;
   else return LibStatus.Modified;
 }

@@ -245,7 +245,7 @@ export const selectedSliceReducer: Reducer<
 };
 
 const updateTouchedAndStatus = (model: SliceState) => {
-  let status;
+  let status = model.__status;
 
   const isTouched =
     !equal(model.initialVariations, model.variations) ||
@@ -261,13 +261,11 @@ const updateTouchedAndStatus = (model: SliceState) => {
     model.remoteVariations,
     model.initialVariations
   );
-
-  if (model.__status !== LibStatus.NewSlice) {
-    status = LibStatus.NewSlice;
-  } else if (isModelModified || isScreenshotModified) {
+  if (
+    status !== LibStatus.NewSlice &&
+    (isModelModified || isScreenshotModified)
+  ) {
     status = LibStatus.Modified;
-  } else {
-    status = model.__status;
   }
 
   return {
