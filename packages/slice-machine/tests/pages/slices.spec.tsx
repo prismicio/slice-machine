@@ -21,6 +21,8 @@ import Tracker from "../../src/tracker";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import SlicesIndex from "../../pages/slices";
+import * as ApiCalls from "@src/apiClient";
+import { AxiosResponse } from "axios";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
@@ -162,6 +164,17 @@ describe("slices", () => {
         ],
       },
     ];
+
+    jest.spyOn(ApiCalls, "getState").mockResolvedValue({
+      data: {
+        env: environment,
+        libraries: libraries,
+        customTypes: [],
+        remoteCustomTypes: [],
+        remoteSlices: [],
+      },
+    } as AxiosResponse);
+
     const App = render(<SlicesIndex />, {
       preloadedState: {
         environment,
