@@ -9,6 +9,9 @@ export const validateId = ({
   fields: Array<{ key: string }>;
   initialId: string;
 }) => {
+  if (!value) {
+    return "Field is required";
+  }
   const fieldExists = fields.find(({ key }) => key === value);
   if (fieldExists && value !== initialId) {
     return `Field "${value}" already exists.`;
