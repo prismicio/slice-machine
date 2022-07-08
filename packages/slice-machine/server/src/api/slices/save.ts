@@ -18,7 +18,7 @@ export async function handler(
   env: BackendEnvironment,
   { sliceName, from, model: smModel, mockConfig }: SliceSaveBody
 ): Promise<Record<string, never>> {
-  await onBeforeSaveSlice({ from, sliceName }, env);
+  onBeforeSaveSlice({ from, sliceName }, env);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const updatedMockConfig = mockConfig
