@@ -10,5 +10,5 @@ export default function onBeforeSaveSlice(
     .library(from)
     .slice(sliceName)
     .mocks();
-  Files.flushDirectories(pathToSliceAssetMocks);
+  Files.remove(pathToSliceAssetMocks);
 }

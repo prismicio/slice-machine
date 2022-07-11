@@ -122,7 +122,9 @@ const Files = {
     fs.copyFileSync(src, dest);
   },
   remove(src: string) {
-    fs.unlinkSync(src);
+    if (Files.exists(src)) {
+      fs.unlinkSync(src);
+    }
   },
   removeAll(srcs: ReadonlyArray<string>) {
     srcs.forEach((src) => Files.remove(src));
