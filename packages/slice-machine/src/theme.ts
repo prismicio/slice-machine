@@ -49,6 +49,7 @@ const AppTheme = (): Theme =>
       success: "#3AB97A",
       headSection: "#fff",
       warning: "#E67E22",
+      critical: "#E26049",
       sidebar: "#F1F1F4",
       link: "#5163BA",
       choggleBox: "#5163BA",

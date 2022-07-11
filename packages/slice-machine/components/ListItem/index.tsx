@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { MenuButton, Menu, MenuItem, MenuList } from "@reach/menu-button";
 
-import { Box, Flex, useThemeUI } from "theme-ui";
+import { Box, Flex, useThemeUI, Text } from "theme-ui";
 
 import Li from "../Li";
 import SliceMachineIconButton from "../SliceMachineIconButton";
@@ -15,6 +15,7 @@ import { FaBars } from "react-icons/fa";
 import { Widget } from "@lib/models/common/widgets/Widget";
 import { AnyObjectSchema } from "yup";
 import { TabField } from "@slicemachine/core/build/models/CustomType";
+import { ModelErrors } from "@src/modules/modelErrors/types";
 
 type Item<F extends TabField> = { key: string; value: F };
 
@@ -29,6 +30,7 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   ) => void;
   modelFieldName?: string;
   renderFieldAccessor?: (key: string) => string;
+  getFieldError?: (key: string) => ModelErrors | null;
   HintElement?: JSX.Element;
   CustomEditElement?: JSX.Element;
   CustomEditElements?: JSX.Element[];
@@ -44,9 +46,8 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   enterEditMode,
   modelFieldName,
   renderFieldAccessor,
-
+  getFieldError,
   HintElement,
-
   CustomEditElement,
   CustomEditElements,
   widget,
@@ -61,6 +62,10 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     value: { config },
   } = item;
+
+  const modelError: ModelErrors | null = getFieldError
+    ? getFieldError(key)
+    : null;
 
   return (
     <Fragment>
@@ -91,7 +96,15 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                     bg: "headSection",
                     width: "100%",
                     borderRadius: "3px",
-                    border: (t) => `1px solid ${String(t.colors?.borders)}`,
+                    ...(modelError
+                      ? {
+                          border: "1px solid",
+                          borderColor: "critical",
+                        }
+                      : {
+                          border: (t) =>
+                            `1px solid ${String(t.colors?.borders)}`,
+                        }),
                   }}
                 >
                   <Flex
@@ -110,8 +123,23 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         renderFieldAccessor && renderFieldAccessor(key)
                       }
                       WidgetIcon={widget.Meta.icon}
+                      hasModelError={Boolean(modelError)}
                     />
-                    <Flex>
+                    <Flex sx={{ alignItems: "center" }}>
+                      {modelError && (
+                        <Text
+                          sx={{
+                            fontWeight: "500",
+                            fontSize: "14px",
+                            lineHeight: "16px",
+                            color: "critical",
+                          }}
+                        >
+                          {modelError === ModelErrors.EMPTY_API_ID &&
+                            "It looks like this field is missing an API ID,  add one here"}
+                        </Text>
+                      )}
+
                       {CustomEditElements ? CustomEditElements : null}
                       {CustomEditElement ? (
                         CustomEditElement

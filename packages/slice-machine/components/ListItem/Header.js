@@ -1,6 +1,12 @@
 import { Flex, Text } from "theme-ui";
 
-const ItemHeader = ({ text, sliceFieldName, theme, WidgetIcon }) => (
+const ItemHeader = ({
+  text,
+  sliceFieldName,
+  theme,
+  WidgetIcon,
+  hasModelError,
+}) => (
   <Flex sx={{ alignItems: "center", position: "relative" }}>
     <WidgetIcon
       size={28}
@@ -32,7 +38,7 @@ const ItemHeader = ({ text, sliceFieldName, theme, WidgetIcon }) => (
         display: ["none", "none", "initial"],
         fontSize: "14px",
         ml: 1,
-        color: "textClear",
+        color: hasModelError ? "critical" : "textClear",
       }}
     >
       {sliceFieldName}

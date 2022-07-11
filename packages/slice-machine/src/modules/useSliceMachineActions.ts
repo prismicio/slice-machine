@@ -10,6 +10,10 @@ import {
   updatesViewedCreator,
   hasSeenTutorialsTooTipCreator,
 } from "./userContext";
+import {
+  checkCustomTypeModelErrorsCreator,
+  checkVariationModelErrorsCreator,
+} from "./modelErrors";
 import { refreshStateCreator } from "./environment";
 import {
   openSetupDrawerCreator,
@@ -52,6 +56,7 @@ import {
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -257,6 +262,14 @@ const useSliceMachineActions = () => {
     );
   };
 
+  // Checking for Model error in selected Custom Type / Variation
+  const checkCustomTypeModelErrors = (model: CustomTypeSM) => {
+    dispatch(checkCustomTypeModelErrorsCreator({ model }));
+  };
+  const checkVariationModelErrors = (model: VariationSM) => {
+    dispatch(checkVariationModelErrorsCreator({ model }));
+  };
+
   return {
     checkSimulatorSetup,
     connectToSimulatorFailure,
@@ -304,6 +317,8 @@ const useSliceMachineActions = () => {
     openCreateSliceModal,
     closeCreateSliceModal,
     openToaster,
+    checkCustomTypeModelErrors,
+    checkVariationModelErrors,
   };
 };
 

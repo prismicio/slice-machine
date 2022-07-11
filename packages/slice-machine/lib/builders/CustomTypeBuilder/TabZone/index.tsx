@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 
 import { ensureDnDDestination, ensureWidgetTypeExistence } from "@lib/utils";
 
-import { transformKeyAccessor } from "@utils/str";
+import {
+  renderCustomTypeStaticFieldKeyAccessor,
+  transformKeyAccessor,
+} from "@utils/str";
 
 import Zone from "../../common/Zone";
 
@@ -30,6 +33,9 @@ import {
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
 import Tracker from "../../../../src/tracker";
+import { findModelErrors } from "@src/modules/modelErrors/selectors";
+import { ModelErrorBanner } from "@components/ModelErrorBanner";
+import { ModelErrorsEntry } from "@src/modules/modelErrors/types";
 
 interface TabZoneProps {
   tabId: string;
@@ -48,19 +54,29 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
     replaceCustomTypeSharedSlice,
     updateFieldMockConfig,
     deleteFieldMockConfig,
+    checkCustomTypeModelErrors,
   } = useSliceMachineActions();
 
-  const { currentCustomType, mockConfig, poolOfFields } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { currentCustomType, mockConfig, poolOfFields, modelErrors } =
+    useSelector((store: SliceMachineStoreType) => ({
       currentCustomType: selectCurrentCustomType(store),
       mockConfig: selectCurrentMockConfig(store),
       poolOfFields: selectCurrentPoolOfFields(store),
-    })
-  );
+      modelErrors: findModelErrors(store),
+    }));
 
   if (!currentCustomType || !mockConfig || !poolOfFields) {
     return null;
   }
+
+  const currentCtModelErrors: ModelErrorsEntry =
+    modelErrors.customTypes[currentCustomType.id] || {};
+
+  // Checking model errors
+  useEffect(
+    () => checkCustomTypeModelErrors(currentCustomType),
+    [currentCustomType]
+  );
 
   const onDeleteItem = (fieldId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
@@ -156,6 +172,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
 
   return (
     <>
+      {Object.keys(currentCtModelErrors).length > 0 && <ModelErrorBanner />}
       <Zone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}
@@ -179,7 +196,11 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-        renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
+        renderFieldAccessor={renderCustomTypeStaticFieldKeyAccessor}
+        getFieldError={(key: string) =>
+          currentCtModelErrors[renderCustomTypeStaticFieldKeyAccessor(key)] ||
+          null
+        }
       />
       <SliceZone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

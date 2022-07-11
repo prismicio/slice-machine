@@ -12,6 +12,7 @@ import { simulatorReducer } from "@src/modules/simulator";
 import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { selectedCustomTypeReducer } from "@src/modules/selectedCustomType";
 import { slicesReducer } from "@src/modules/slices";
+import { modelErrorsReducer } from "@src/modules/modelErrors";
 import { routerReducer } from "connected-next-router";
 
 /**
@@ -27,6 +28,7 @@ const createReducer = (): Reducer =>
     availableCustomTypes: availableCustomTypesReducer,
     selectedCustomType: selectedCustomTypeReducer,
     slices: slicesReducer,
+    modelErrors: modelErrorsReducer,
     router: routerReducer,
   });
 

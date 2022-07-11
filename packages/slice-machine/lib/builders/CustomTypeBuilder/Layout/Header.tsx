@@ -1,19 +1,21 @@
 import React from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 
-import Header from "../../../../components/Header";
-import useSliceMachineActions from "../../../../src/modules/useSliceMachineActions";
+import Header from "@components/Header";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { MdSpaceDashboard } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "../../../../src/redux/type";
+import { SliceMachineStoreType } from "@src/redux/type";
 import {
   selectCurrentCustomType,
   selectCustomTypeStatus,
   selectIsCurrentCustomTypeHasPendingModifications,
-} from "../../../../src/modules/selectedCustomType";
+} from "@src/modules/selectedCustomType";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
+import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
+import { findModelErrors } from "@src/modules/modelErrors";
+import { ModelErrorsEntry } from "@src/modules/modelErrors/types";
 
 const CustomTypeHeader = () => {
   const {
@@ -22,6 +24,7 @@ const CustomTypeHeader = () => {
     customTypeStatus,
     isPushingCustomType,
     isSavingCustomType,
+    modelErrors,
   } = useSelector((store: SliceMachineStoreType) => ({
     currentCustomType: selectCurrentCustomType(store),
     hasPendingModifications:
@@ -29,10 +32,17 @@ const CustomTypeHeader = () => {
     customTypeStatus: selectCustomTypeStatus(store),
     isPushingCustomType: isLoading(store, LoadingKeysEnum.PUSH_CUSTOM_TYPE),
     isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
+    modelErrors: findModelErrors(store),
   }));
   const { saveCustomType, pushCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
+
+  const currentCtModelErrors: ModelErrorsEntry | undefined =
+    modelErrors.customTypes[currentCustomType.id];
+  const hasModelErrors = Boolean(
+    currentCtModelErrors && Object.keys(currentCtModelErrors).length > 0
+  );
 
   const buttonProps = (() => {
     if (hasPendingModifications) {
@@ -55,6 +65,15 @@ const CustomTypeHeader = () => {
         ),
       };
     }
+    if (
+      [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
+        customTypeStatus
+      ) &&
+      hasModelErrors
+    ) {
+      return { variant: "disabled", children: "Push to Prismic" };
+    }
+
     if (
       [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(
         customTypeStatus

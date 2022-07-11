@@ -28,6 +28,7 @@ const FieldZone = ({
   NewFieldC,
   renderHintBase,
   isRepeatable,
+  getFieldError,
 }) => {
   const { framework } = useSelector((state) => ({
     framework: getFramework(state),
@@ -86,6 +87,8 @@ const FieldZone = ({
                   enterSelectMode,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   renderFieldAccessor,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+                  getFieldError,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
                   enterEditMode,
                   parentSnapshot: snapshot,

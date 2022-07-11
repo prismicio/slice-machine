@@ -29,6 +29,7 @@ const Zone = ({
   getFieldMockConfig /* access mock configuration of given apiId */,
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
+  getFieldError /* give you the error to display if there is an error with the field */,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -136,6 +137,8 @@ const Zone = ({
         renderFieldAccessor={renderFieldAccessor}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         renderHintBase={renderHintBase}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+        getFieldError={getFieldError}
         enterEditMode={enterEditMode}
         enterSelectMode={enterSelectMode}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

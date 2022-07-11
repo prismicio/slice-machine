@@ -9,6 +9,10 @@ export function transformKeyAccessor(str: string): string {
   return `.${str}`;
 }
 
+export function renderCustomTypeStaticFieldKeyAccessor(key: string): string {
+  return `data${transformKeyAccessor(key)}`;
+}
+
 export function pascalize(str: string): string {
   if (!str) {
     return "";
