@@ -52,14 +52,14 @@ export const renameSliceCreator = createAsyncAction(
     variationId: string;
   },
   {
-    sliceId: string;
-    newSliceName: string;
+    libraries: readonly LibraryUI[];
   }
 >();
 
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
-  | ActionType<typeof createSliceCreator>;
+  | ActionType<typeof createSliceCreator>
+  | ActionType<typeof renameSliceCreator>;
 
 // Selectors
 export const getLibraries = (
@@ -117,6 +117,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: action.payload.libraries,
       };
+    case getType(renameSliceCreator.success):
+      return {
+        ...state,
+        libraries: action.payload.libraries,
+      };
     default:
       return state;
   }
@@ -164,10 +169,17 @@ export function* renameSliceSaga({
       payload.newSliceName,
       payload.libName
     );
+    //TODO: avoid refetch of state. Either manually update all the changes within the reducer,
+    //or make the renameSlice api call return the new libraries, so that it's output can be used.
+    const { data: serverState } = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
+    yield put(renameSliceCreator.success({ libraries: serverState.libraries }));
+    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
     }/${payload.variationId}`;
-    window.location.href = addr;
+    yield put(push(addr));
     yield put(
       openToasterCreator({
         message: "Slice name updated",
