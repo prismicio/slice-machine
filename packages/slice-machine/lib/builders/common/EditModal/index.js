@@ -1,6 +1,7 @@
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
 import deepMerge from "deepmerge";
+import { merge } from "lodash";
 
 import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 
@@ -165,10 +166,7 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
           })();
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const updatedValue = {
-            ...initialModelValues,
-            ...value,
-          };
+          const updatedValue = merge(initialModelValues, value);
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           onSave({

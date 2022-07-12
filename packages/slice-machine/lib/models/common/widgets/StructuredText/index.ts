@@ -31,13 +31,21 @@ const Meta = {
   description: "A rich text field with formatting options",
 };
 
+const ManualFields = {
+  labels: { yupType: "array", validate: {} },
+};
+
 const schema = yup.object().shape({
   type: yup
     .string()
     .matches(/^StructuredText$/, { excludeEmptyString: true })
     .required(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(
+    removeProp(
+      { ...(FormFields as Record<string, unknown>), ...ManualFields },
+      "id"
+    )
+  ),
 });
 
 export const StructuredTextWidget: Widget<RichText, typeof schema> = {
