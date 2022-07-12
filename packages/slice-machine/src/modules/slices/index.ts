@@ -169,6 +169,8 @@ export function* renameSliceSaga({
       payload.newSliceName,
       payload.libName
     );
+    //TODO: avoid refetch of state. Either manually update all the changes within the reducer,
+    //or make the renameSlice api call return the new libraries, so that it's output can be used.
     const { data: serverState } = (yield call(getState)) as SagaReturnType<
       typeof getState
     >;
