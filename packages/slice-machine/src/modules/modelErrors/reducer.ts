@@ -9,6 +9,7 @@ import {
 import {
   checkModelErrorsInCustomType,
   checkModelErrorsInVariation,
+  variationStoreKey,
 } from "./helpers";
 
 export const initialState: ModelErrorsStoreType = {
@@ -34,13 +35,17 @@ export const modelErrorsReducer: Reducer<
     }
 
     case getType(checkVariationModelErrorsCreator): {
+      const key = variationStoreKey(
+        action.payload.sliceId,
+        action.payload.model.id
+      );
       const modelErrors = checkModelErrorsInVariation(action.payload.model);
 
       return {
         ...state,
         variations: {
           ...state.variations,
-          [action.payload.model.id]: modelErrors,
+          [key]: modelErrors,
         },
       };
     }

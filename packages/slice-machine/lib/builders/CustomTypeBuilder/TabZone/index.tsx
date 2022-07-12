@@ -34,7 +34,7 @@ import {
 } from "@slicemachine/core/build/models/CustomType";
 import Tracker from "../../../../src/tracker";
 import { findModelErrors } from "@src/modules/modelErrors/selectors";
-import { ModelErrorBanner } from "@components/ModelErrorBanner";
+import { ModelErrorsBanner } from "@components/ModelErrorsBanner";
 import { ModelErrorsEntry } from "@src/modules/modelErrors/types";
 
 interface TabZoneProps {
@@ -172,7 +172,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
 
   return (
     <>
-      {Object.keys(currentCtModelErrors).length > 0 && <ModelErrorBanner />}
+      {Object.keys(currentCtModelErrors).length > 0 && <ModelErrorsBanner />}
       <Zone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tabId={tabId}

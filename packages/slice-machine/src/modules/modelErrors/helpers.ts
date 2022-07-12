@@ -1,8 +1,20 @@
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { TabFields } from "@slicemachine/core/build/models/CustomType";
+import {
+  CustomTypeSM,
+  TabFields,
+} from "@slicemachine/core/build/models/CustomType";
+import { SliceSM } from "@slicemachine/core/build/models/Slice";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ModelErrorsEntry, ModelErrors } from "./types";
-import { renderCustomTypeStaticFieldKeyAccessor } from "@utils/str";
+import {
+  renderCustomTypeStaticFieldKeyAccessor,
+  renderSliceRepeatableFieldKeyAccessor,
+  renderSliceStaticFieldKeyAccessor,
+} from "@utils/str";
+
+export const variationStoreKey = (
+  sliceId: SliceSM["id"],
+  variationId: VariationSM["id"]
+) => `${sliceId}.${variationId}`;
 
 export function checkModelErrorsInCustomType(
   model: CustomTypeSM
@@ -33,6 +45,33 @@ export function checkModelErrorsInCustomType(
 export function checkModelErrorsInVariation(
   model: VariationSM
 ): ModelErrorsEntry {
-  model;
-  return {};
+  const staticFieldsModelErrors: ModelErrorsEntry = (
+    model.primary || []
+  ).reduce((acc, field) => {
+    if (field.key.length === 0) {
+      return {
+        ...acc,
+        [renderSliceStaticFieldKeyAccessor(field.key)]:
+          ModelErrors.EMPTY_API_ID,
+      };
+    }
+
+    return acc;
+  }, {});
+
+  const repeatableFieldsModelErrors: ModelErrorsEntry = (
+    model.items || []
+  ).reduce((acc, field) => {
+    if (field.key.length === 0) {
+      return {
+        ...acc,
+        [renderSliceRepeatableFieldKeyAccessor(field.key)]:
+          ModelErrors.EMPTY_API_ID,
+      };
+    }
+
+    return acc;
+  }, {});
+
+  return { ...staticFieldsModelErrors, ...repeatableFieldsModelErrors };
 }

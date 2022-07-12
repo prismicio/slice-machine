@@ -266,8 +266,8 @@ const useSliceMachineActions = () => {
   const checkCustomTypeModelErrors = (model: CustomTypeSM) => {
     dispatch(checkCustomTypeModelErrorsCreator({ model }));
   };
-  const checkVariationModelErrors = (model: VariationSM) => {
-    dispatch(checkVariationModelErrorsCreator({ model }));
+  const checkVariationModelErrors = (sliceId: string, model: VariationSM) => {
+    dispatch(checkVariationModelErrorsCreator({ sliceId, model }));
   };
 
   return {

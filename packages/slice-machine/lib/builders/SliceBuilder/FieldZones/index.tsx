@@ -1,7 +1,11 @@
 import { Box } from "theme-ui";
 
 import { ensureDnDDestination } from "@lib/utils";
-import { transformKeyAccessor } from "@utils/str";
+import {
+  renderSliceRepeatableFieldKeyAccessor,
+  renderSliceStaticFieldKeyAccessor,
+  transformKeyAccessor,
+} from "@utils/str";
 
 import Zone from "../../common/Zone";
 import EditModal from "../../common/EditModal";
@@ -16,6 +20,8 @@ import SliceState from "@models/ui/SliceState";
 import SliceStore from "@src/models/slice/store";
 import { DropResult } from "react-beautiful-dnd";
 import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
+import { ModelErrorsEntry } from "@src/modules/modelErrors/types";
+import { ModelErrorsBanner } from "@components/ModelErrorsBanner";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -29,12 +35,14 @@ type FieldZonesProps = {
   Model: SliceState;
   variation: Models.VariationSM;
   store: SliceStore;
+  modelErrors: ModelErrorsEntry;
 };
 
 const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
   Model,
   store,
   variation,
+  modelErrors,
 }) => {
   const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
     store
@@ -117,6 +125,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
 
   return (
     <>
+      {Object.keys(modelErrors).length > 0 && <ModelErrorsBanner />}
       <Zone
         tabId={undefined}
         mockConfig={Model.mockConfig}
@@ -136,9 +145,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
           `slice.primary${transformKeyAccessor(item.key)}`
         }
-        renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          `slice.primary${transformKeyAccessor(key)}`
+        renderFieldAccessor={renderSliceStaticFieldKeyAccessor}
+        getFieldError={(key: string) =>
+          modelErrors[renderSliceStaticFieldKeyAccessor(key)] || null
         }
       />
       <Box mt={4} />
@@ -160,9 +169,9 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
         poolOfFieldsToCheck={variation.items || []}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
-        renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          `slice.items[i]${transformKeyAccessor(key)}`
+        renderFieldAccessor={renderSliceRepeatableFieldKeyAccessor}
+        getFieldError={(key: string) =>
+          modelErrors[renderSliceRepeatableFieldKeyAccessor(key)] || null
         }
       />
     </>

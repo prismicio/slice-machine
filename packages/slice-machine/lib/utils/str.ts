@@ -13,6 +13,14 @@ export function renderCustomTypeStaticFieldKeyAccessor(key: string): string {
   return `data${transformKeyAccessor(key)}`;
 }
 
+export function renderSliceStaticFieldKeyAccessor(key: string): string {
+  return `slice.primary${transformKeyAccessor(key)}`;
+}
+
+export function renderSliceRepeatableFieldKeyAccessor(key: string): string {
+  return `slice.items[i]${transformKeyAccessor(key)}`;
+}
+
 export function pascalize(str: string): string {
   if (!str) {
     return "";

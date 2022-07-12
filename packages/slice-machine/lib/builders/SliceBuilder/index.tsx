@@ -18,6 +18,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
+import { findModelErrors } from "@src/modules/modelErrors";
+import { findModelErrorsForVariation } from "@src/modules/modelErrors/types";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -38,16 +40,32 @@ const initialState: SliceBuilderState = {
 const SliceBuilder: React.FunctionComponent = () => {
   const { Model, store, variation } = useContext(SliceContext);
 
-  const { openLoginModal, checkSimulatorSetup, openToaster } =
-    useSliceMachineActions();
-  const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
+  const {
+    openLoginModal,
+    checkSimulatorSetup,
+    openToaster,
+    checkVariationModelErrors,
+  } = useSliceMachineActions();
+  const { simulatorUrl, isWaitingForIframeCheck, modelErrors } = useSelector(
     (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+      modelErrors: findModelErrors(state),
     })
   );
 
   if (!store || !Model || !variation) return null;
+
+  useEffect(
+    () => checkVariationModelErrors(Model.model.id, variation),
+    [Model, variation]
+  );
+
+  const currentVariationModelErrors = findModelErrorsForVariation(
+    modelErrors,
+    Model.model.id,
+    variation.id
+  );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
@@ -108,6 +126,7 @@ const SliceBuilder: React.FunctionComponent = () => {
         onSave={() => void store.save(Model, setData)}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
+        hasModelErrors={Object.keys(currentVariationModelErrors).length > 0}
       />
       <FlexEditor
         sx={{ py: 4 }}
@@ -131,7 +150,12 @@ const SliceBuilder: React.FunctionComponent = () => {
           />
         }
       >
-        <FieldZones Model={Model} store={store} variation={variation} />
+        <FieldZones
+          Model={Model}
+          store={store}
+          variation={variation}
+          modelErrors={currentVariationModelErrors}
+        />
       </FlexEditor>
       <SetupDrawer />
       {isWaitingForIframeCheck && (

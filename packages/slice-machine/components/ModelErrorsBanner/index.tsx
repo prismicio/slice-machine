@@ -2,11 +2,11 @@ import React from "react";
 import { Box } from "theme-ui";
 import { AiFillExclamationCircle } from "react-icons/ai";
 
-export interface ModelErrorBannerProps {
+export interface ModelErrorsBannerProps {
   text?: string;
 }
 
-export const ModelErrorBanner: React.FC<ModelErrorBannerProps> = ({
+export const ModelErrorsBanner: React.FC<ModelErrorsBannerProps> = ({
   text = "Field value needed. Please add the missing value for each field below, in order to push this Custom Type to Prismic.",
 }) => (
   <Box

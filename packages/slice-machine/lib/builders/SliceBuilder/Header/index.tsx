@@ -17,6 +17,7 @@ const Header: React.FC<{
   onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
+  hasModelErrors: boolean;
 }> = ({
   Model,
   store,
@@ -25,6 +26,7 @@ const Header: React.FC<{
   onPush,
   isLoading,
   imageLoading = false,
+  hasModelErrors,
 }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
@@ -101,7 +103,10 @@ const Header: React.FC<{
             onClick={Model.isTouched ? onSave : onPush}
             loading={isLoading && !imageLoading}
             disabled={
-              isLoading || imageLoading || (!Model.isTouched && !unSynced)
+              isLoading ||
+              imageLoading ||
+              (!Model.isTouched && !unSynced) ||
+              hasModelErrors
             }
           >
             {Model.isTouched

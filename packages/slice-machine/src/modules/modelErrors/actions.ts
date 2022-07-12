@@ -15,5 +15,6 @@ export const checkCustomTypeModelErrorsCreator = createAction(
 export const checkVariationModelErrorsCreator = createAction(
   "MODEL_ERRORS/CHECK_SLICE"
 )<{
+  sliceId: string;
   model: VariationSM;
 }>();
