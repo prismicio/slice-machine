@@ -111,7 +111,11 @@ export class InitTracker {
   }
 
   trackInitStart(repoDomain: string | undefined): Promise<void> {
-    return this._trackEvent(EventType.InitStart, { repo: repoDomain });
+    if (repoDomain) this.setRepository(repoDomain);
+    return this._trackEvent(
+      EventType.InitStart,
+      repoDomain ? { repo: repoDomain } : undefined
+    );
   }
 
   trackInitEndSuccess(framework: Models.Frameworks): Promise<void> {
