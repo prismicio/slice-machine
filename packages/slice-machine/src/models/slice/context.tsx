@@ -1,13 +1,14 @@
 import React from "react";
 
-import SliceState from "@lib/models/ui/SliceState";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@slicemachine/core/build/models/Slice";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getLibrariesState } from "@src/modules/slices";
+import { getLibraries } from "@src/modules/slices";
 import Router from "next/router";
 import { replace } from "connected-next-router";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 export function useModelReducer({
   slice,
@@ -16,30 +17,23 @@ export function useModelReducer({
 }: {
   slice: ComponentUI;
   remoteSlice?: SliceSM;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mockConfig: any;
-}): SliceState {
-  const { model, ...rest } = slice;
-
-  const initialState: SliceState = {
-    model,
-    ...rest,
-    variations: model.variations,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    mockConfig,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  mockConfig: CustomTypeMockConfig;
+}): ExtendedComponentUI {
+  const extendedComponentUI: ExtendedComponentUI = {
+    component: slice,
+    mockConfig: mockConfig,
     initialMockConfig: mockConfig,
     remoteVariations: remoteSlice ? remoteSlice.variations : [],
-    initialScreenshotUrls: rest.screenshotUrls,
-    initialVariations: model.variations,
+    initialVariations: slice.model.variations,
+    initialScreenshotUrls: slice.screenshotUrls,
   };
 
-  return initialState;
+  return extendedComponentUI;
 }
 
 export const SliceHandler: React.FC = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
-    libraries: getLibrariesState(state),
+    libraries: getLibraries(state),
   }));
 
   const urlLib = Router.router?.query?.lib;
@@ -77,11 +71,11 @@ export const SliceHandler: React.FC = ({ children }) => {
   })();
   const variation = (() => {
     if (variationParam) {
-      const maybeVariation = SliceState.variation(slice, variationParam);
-      if (!maybeVariation) return SliceState.variation(slice);
+      const maybeVariation = ComponentUI.variation(slice, variationParam);
+      if (!maybeVariation) return ComponentUI.variation(slice);
       else return maybeVariation;
     } else {
-      return SliceState.variation(slice);
+      return ComponentUI.variation(slice);
     }
   })();
 

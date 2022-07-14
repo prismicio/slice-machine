@@ -10,18 +10,18 @@ import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import SliceState from "@lib/models/ui/SliceState";
 import { VariationSM } from "@slicemachine/core/build/models";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 const Header: React.FC<{
-  Model: SliceState;
+  extendedComponent: ExtendedComponentUI;
   variation: VariationSM;
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
 }> = ({
-  Model,
+  extendedComponent,
   variation,
   onSave,
   onPush,
@@ -31,7 +31,9 @@ const Header: React.FC<{
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
 
-  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
+  const unSynced =
+    ["MODIFIED", "NEW_SLICE"].indexOf(extendedComponent.component.__status) !==
+    -1;
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
@@ -75,7 +77,7 @@ const Header: React.FC<{
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
                   <Text ml={2} data-cy="slice-and-variation-name-header">
-                    {`/ ${Model.model.name} / ${variation.name}`}
+                    {`/ ${extendedComponent.component.model.name} / ${variation.name}`}
                   </Text>
                 </Box>
               </Flex>
@@ -83,13 +85,13 @@ const Header: React.FC<{
                 <Flex sx={{ alignItems: "center" }}>
                   <VariationPopover
                     defaultValue={variation}
-                    variations={Model.variations}
+                    variations={extendedComponent.component.model.variations}
                     onNewVariation={() => setShowVariationModal(true)}
                     onChange={(v) =>
                       void router.push(
                         ...Links.variation({
-                          lib: Model.href,
-                          sliceName: Model.model.name,
+                          lib: extendedComponent.component.href,
+                          sliceName: extendedComponent.component.model.name,
                           variationId: v.id,
                         }).all
                       )
@@ -118,13 +120,15 @@ const Header: React.FC<{
               }}
             />
             <SaveButton
-              onClick={Model.isTouched ? onSave : onPush}
+              onClick={extendedComponent.isTouched ? onSave : onPush}
               loading={isLoading && !imageLoading}
               disabled={
-                isLoading || imageLoading || (!Model.isTouched && !unSynced)
+                isLoading ||
+                imageLoading ||
+                (!extendedComponent.isTouched && !unSynced)
               }
             >
-              {Model.isTouched
+              {extendedComponent.isTouched
                 ? "Save model to filesystem"
                 : unSynced
                 ? "Push Slice to Prismic"
@@ -138,19 +142,19 @@ const Header: React.FC<{
               copyVariationSlice(id, name, copiedVariation);
               void router.push(
                 ...Links.variation({
-                  lib: Model.href,
-                  sliceName: Model.model.name,
+                  lib: extendedComponent.component.href,
+                  sliceName: extendedComponent.component.model.name,
                   variationId: id,
                 }).all
               );
             }}
             initialVariation={variation}
-            variations={Model.variations}
+            variations={extendedComponent.component.model.variations}
           />
           <RenameSliceModal
-            sliceId={Model.model.id}
-            sliceName={Model.model.name}
-            libName={Model.from}
+            sliceId={extendedComponent.component.model.id}
+            sliceName={extendedComponent.component.model.name}
+            libName={extendedComponent.component.from}
             variationId={variation.id}
             data-cy="rename-slice-modal"
           />

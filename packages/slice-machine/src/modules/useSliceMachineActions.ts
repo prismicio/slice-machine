@@ -19,7 +19,6 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
-import SliceState from "@lib/models/ui/SliceState";
 import {
   createCustomTypeCreator,
   renameCustomTypeCreator,
@@ -72,6 +71,7 @@ import {
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ExtendedComponentUI } from "./selectedSlice/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -272,8 +272,8 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
-  const initSliceStore = (Model: SliceState) =>
-    dispatch(initSliceStoreCreator({ Model }));
+  const initSliceStore = (extendedComponentUI: ExtendedComponentUI) =>
+    dispatch(initSliceStoreCreator(extendedComponentUI));
 
   const addSliceWidget = (
     variationId: string,
@@ -391,10 +391,10 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const saveSlice = (state: SliceState) => {
+  const saveSlice = (extendedComponent: ExtendedComponentUI) => {
     dispatch(
       saveSliceCreator({
-        state,
+        extendedComponent,
       })
     );
   };

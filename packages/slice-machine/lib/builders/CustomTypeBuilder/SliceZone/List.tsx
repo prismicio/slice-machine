@@ -1,5 +1,3 @@
-import SliceState from "@lib/models/ui/SliceState";
-
 import Grid from "@components/Grid";
 
 import { SharedSlice, NonSharedSlice } from "@lib/models/ui/Slice";
@@ -9,6 +7,7 @@ import {
   SliceZoneSlice,
 } from "@lib/models/common/CustomType/sliceZone";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
   <Grid
@@ -18,7 +17,7 @@ const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
         // NonsharedSlice
         return (slice.payload as NonSharedSliceInSliceZone).key;
       }
-      return (slice.payload as SliceState).model.name;
+      return (slice.payload as ExtendedComponentUI).component.model.name;
     }}
     renderElem={(slice: SliceZoneSlice) => {
       if (slice.type === SlicesTypes.Slice) {
@@ -31,7 +30,7 @@ const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
       return SharedSlice.render({
         bordered: true,
         displayStatus: true,
-        slice: slice.payload as SliceState,
+        slice: (slice.payload as ExtendedComponentUI).component,
       });
     }}
   />

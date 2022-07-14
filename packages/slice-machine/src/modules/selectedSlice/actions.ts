@@ -1,10 +1,10 @@
 import { ActionType, createAction } from "typesafe-actions";
-import SliceState from "@lib/models/ui/SliceState";
 import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ExtendedComponentUI } from "./types";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -20,9 +20,8 @@ export type SelectedSliceActions =
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>;
 
-export const initSliceStoreCreator = createAction("SLICE/INIT")<{
-  Model: SliceState;
-}>();
+export const initSliceStoreCreator =
+  createAction("SLICE/INIT")<ExtendedComponentUI>();
 
 export const addSliceWidgetCreator = createAction("SLICE/ADD_WIDGET")<{
   variationId: string;
@@ -81,7 +80,7 @@ export const generateSliceCustomScreenshotCreator = createAction(
 )<{ variationId: string; screenshot: ScreenshotUI }>();
 
 export const saveSliceCreator = createAction("SLICE/SAVE")<{
-  state: SliceState;
+  extendedComponent: ExtendedComponentUI;
 }>();
 
 export const pushSliceCreator = createAction("SLICE/PUSH")<undefined>();

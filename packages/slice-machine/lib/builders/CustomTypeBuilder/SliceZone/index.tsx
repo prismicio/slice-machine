@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
-import SliceState from "@lib/models/ui/SliceState";
 import LibraryState from "@lib/models/ui/LibraryState";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
@@ -18,17 +17,17 @@ import {
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibrariesState } from "@src/modules/slices";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
   libraries: ReadonlyArray<LibraryState> | null
 ) => {
-  const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
-    (acc, curr: LibraryState) => {
-      return [...acc, ...curr.components];
-    },
-    []
-  );
+  const availableSlices = (libraries || []).reduce<
+    ReadonlyArray<ExtendedComponentUI>
+  >((acc, curr: LibraryState) => {
+    return [...acc, ...curr.components];
+  }, []);
   const {
     slicesInSliceZone,
     notFound,
@@ -52,9 +51,8 @@ const mapAvailableAndSharedSlices = (
           ],
         };
       }
-      const maybeSliceState = availableSlices.find(
-        (state) => state.model.id === key
-      );
+      const maybeSliceState: ExtendedComponentUI | undefined =
+        availableSlices.find((state) => state.component.model.id === key);
 
       if (maybeSliceState) {
         return {
@@ -107,7 +105,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const sharedSlicesInSliceZone = slicesInSliceZone
     .filter((e) => e.type === SlicesTypes.SharedSlice)
-    .map((e) => e.payload) as ReadonlyArray<SliceState>;
+    .map((e) => e.payload) as ReadonlyArray<ExtendedComponentUI>;
 
   /* Preserve these keys in SliceZone */
   const nonSharedSlicesKeysInSliceZone = slicesInSliceZone

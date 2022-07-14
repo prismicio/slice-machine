@@ -4,7 +4,7 @@ import {
   LegacySlice,
 } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
-import SliceState from "@lib/models/ui/SliceState";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 export type NonSharedSliceInSliceZone = {
   key: string;
@@ -12,7 +12,7 @@ export type NonSharedSliceInSliceZone = {
 };
 export interface SliceZoneSlice {
   type: SlicesTypes;
-  payload: SliceState | NonSharedSliceInSliceZone;
+  payload: ExtendedComponentUI | NonSharedSliceInSliceZone;
 }
 
 export const SliceZone = {

@@ -11,8 +11,10 @@ import { WidgetsArea } from "@slicemachine/core/build/models/Slice";
 import * as Widgets from "@lib/models/common/widgets";
 import sliceBuilderWidgetsArray from "@lib/models/common/widgets/sliceBuilderArray";
 
-import { SliceMockConfig } from "@models/common/MockConfig";
-import SliceState from "@models/ui/SliceState";
+import {
+  CustomTypeMockConfig,
+  SliceMockConfig,
+} from "@models/common/MockConfig";
 import { DropResult } from "react-beautiful-dnd";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
@@ -26,12 +28,12 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
   indeterminate number of times, like FAQs`;
 
 type FieldZonesProps = {
-  Model: SliceState;
+  mockConfig: CustomTypeMockConfig;
   variation: Models.VariationSM;
 };
 
 const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
-  Model,
+  mockConfig,
   variation,
 }) => {
   const {
@@ -43,7 +45,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     deleteSliceWidgetMock,
   } = useSliceMachineActions();
   const _onDeleteItem = (widgetArea: Models.WidgetsArea) => (key: string) => {
-    deleteSliceWidgetMock(variation.id, Model.mockConfig, widgetArea, key);
+    deleteSliceWidgetMock(variation.id, mockConfig, widgetArea, key);
     removeSliceWidget(variation.id, widgetArea, key);
   };
 
@@ -53,7 +55,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return SliceMockConfig.getFieldMockConfig(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
-        Model.mockConfig,
+        mockConfig,
         variation.id,
         widgetArea,
         apiId
@@ -76,7 +78,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       if (mockValue) {
         updateSliceWidgetMock(
           variation.id,
-          Model.mockConfig,
+          mockConfig,
           widgetArea,
           previousKey,
           newKey,
@@ -84,12 +86,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           mockValue
         );
       } else {
-        deleteSliceWidgetMock(
-          variation.id,
-          Model.mockConfig,
-          widgetArea,
-          newKey
-        );
+        deleteSliceWidgetMock(variation.id, mockConfig, widgetArea, newKey);
       }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       replaceSliceWidget(variation.id, widgetArea, previousKey, newKey, value);
@@ -142,7 +139,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
     <>
       <Zone
         tabId={undefined}
-        mockConfig={Model.mockConfig}
+        mockConfig={mockConfig}
         title="Non-Repeatable Zone"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -168,7 +165,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
       <Zone
         tabId={undefined}
         isRepeatable
-        mockConfig={Model.mockConfig}
+        mockConfig={mockConfig}
         title="Repeatable Zone"
         dataTip={dataTipText2}
         widgetsArray={sliceBuilderWidgetsArray}

@@ -1,14 +1,14 @@
-import SliceState from "@lib/models/ui/SliceState";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibrariesState } from "../slices";
+import { ExtendedComponentUI } from "./types";
 
 export const selectCurrentSlice = (
   store: SliceMachineStoreType,
   lib: string,
   sliceName: string
-): SliceState | null => {
-  const openedModel = store.selectedSlice?.Model;
-  if (openedModel?.model.name === sliceName) {
+): ExtendedComponentUI | null => {
+  const openedModel = store.selectedSlice;
+  if (openedModel?.component.model.name === sliceName) {
     return openedModel;
   }
 
@@ -16,11 +16,9 @@ export const selectCurrentSlice = (
   const library = libraries?.find(
     (library) => library.name.replace(/\//g, "--") === lib
   );
-  const Model = library?.components.find(
-    (component) => component.model.name === sliceName
+  const extendedComponent = library?.components.find(
+    (component) => component.component.model.name === sliceName
   );
 
-  if (Model) return Model;
-
-  return null;
+  return extendedComponent || null;
 };
