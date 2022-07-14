@@ -200,9 +200,9 @@ export class Client {
     });
   }
 
-  async deleteScreenshotFolder(sliceName: string): Promise<AxiosPromise> {
+  async deleteScreenshotFolder(sliceId: string): Promise<AxiosPromise> {
     return this._post(`${this.apisEndpoints.AclProvider}delete-folder`, {
-      sliceName,
+      sliceId,
     });
   }
 

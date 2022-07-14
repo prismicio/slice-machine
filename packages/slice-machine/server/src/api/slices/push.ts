@@ -21,7 +21,7 @@ export async function pushSlice(
 
   try {
     const smModel: SliceSM = IO.Slice.readSlice(modelPath);
-    const { err } = await purge(env, slices, sliceName);
+    const { err } = await purge(env, slices, smModel);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 

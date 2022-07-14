@@ -49,7 +49,7 @@ export async function uploadScreenshots(
 
     if (!!screenshot) {
       const { err, s3ImageUrl }: { err?: ApiError; s3ImageUrl?: string } =
-        await upload(env, sliceName, variationId, screenshot.path);
+        await upload(env, sliceModel, variationId, screenshot.path);
 
       if (err) throw new Error(err.reason);
 
