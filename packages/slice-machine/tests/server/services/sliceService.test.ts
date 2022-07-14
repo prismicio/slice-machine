@@ -51,7 +51,7 @@ describe("Slice Service", () => {
       const mockInsertSlice = client.insertSlice as jest.Mock;
       const mockUpdateSlice = client.updateSlice as jest.Mock;
 
-      const result = createOrUpdate([], allFieldSliceModel, client);
+      createOrUpdate([], allFieldSliceModel, client);
       expect(mockInsertSlice).toHaveBeenCalledTimes(1);
       expect(mockInsertSlice).toHaveBeenCalledWith(allFieldSliceObject);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(0);
@@ -62,11 +62,7 @@ describe("Slice Service", () => {
       const mockInsertSlice = client.insertSlice as jest.Mock;
       const mockUpdateSlice = client.updateSlice as jest.Mock;
 
-      const result = createOrUpdate(
-        [allFieldSliceModel],
-        allFieldSliceModel,
-        client
-      );
+      createOrUpdate([allFieldSliceModel], allFieldSliceModel, client);
       expect(mockInsertSlice).toHaveBeenCalledTimes(0);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(1);
       expect(mockUpdateSlice).toHaveBeenCalledWith(allFieldSliceObject);
