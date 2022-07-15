@@ -1,26 +1,28 @@
 import { fetchApi } from "@lib/builders/common/fetch";
-import { ExtendedComponentUI } from "./types";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 export default async function saveSliceApiCall(
-  extendedComponent: ExtendedComponentUI,
+  component: ComponentUI,
+  mockConfig: CustomTypeMockConfig,
   setData: (data: any) => void,
-  callback: (extendedComponent: ExtendedComponentUI) => void
+  callback: () => void
 ) {
   await fetchApi({
     url: "/api/slices/save",
     params: {
       method: "POST",
       body: JSON.stringify({
-        sliceName: extendedComponent.component.model.name,
-        from: extendedComponent.component.from,
-        model: extendedComponent.component.model,
-        mockConfig: extendedComponent.mockConfig,
+        sliceName: component.model.name,
+        from: component.from,
+        model: component.model,
+        mockConfig: mockConfig,
       }),
     },
     setData,
     successMessage: "Models & mocks have been generated successfully!",
     onSuccess() {
-      callback(extendedComponent);
+      callback();
     },
   });
 }

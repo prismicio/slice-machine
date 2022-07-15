@@ -20,9 +20,6 @@ import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../../src/tracker";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import LibraryState from "@lib/models/ui/LibraryState";
-import { useModelReducer } from "@src/models/slice/context";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import {
   generateSliceCustomScreenshotCreator,
@@ -77,34 +74,6 @@ type SlicesActions =
 export const getLibraries = (
   store: SliceMachineStoreType
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
-
-export const getLibrariesState = (
-  store: SliceMachineStoreType
-): ReadonlyArray<LibraryState> | null => {
-  if (!store.slices.libraries) {
-    return null;
-  }
-  return store.slices.libraries.map((lib) => {
-    return {
-      name: lib.name,
-      isLocal: lib.isLocal,
-      components: lib.components.map((component) =>
-        useModelReducer({
-          slice: component,
-          mockConfig: SliceMockConfig.getSliceMockConfig(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-            store.environment.mockConfig,
-            lib.name,
-            component.model.name
-          ),
-          remoteSlice: store.slices.remoteSlices?.find(
-            (e) => e.id === component.model.id
-          ),
-        })
-      ),
-    };
-  });
-};
 
 export const getRemoteSlices = (
   store: SliceMachineStoreType

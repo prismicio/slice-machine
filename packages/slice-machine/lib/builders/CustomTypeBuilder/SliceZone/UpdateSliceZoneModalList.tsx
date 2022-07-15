@@ -5,11 +5,10 @@ import { SharedSlice } from "@lib/models/ui/Slice";
 
 import Grid from "@components/Grid";
 import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
-import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const UpdateSliceZoneModalList: React.FC<{
-  availableSlices: ReadonlyArray<ExtendedComponentUI>;
+  availableSlices: ReadonlyArray<ComponentUI>;
   values: SliceZoneFormValues;
 }> = ({ availableSlices, values }) => (
   <FieldArray
@@ -18,15 +17,13 @@ const UpdateSliceZoneModalList: React.FC<{
       <Grid
         gridTemplateMinPx="200px"
         elems={availableSlices}
-        defineElementKey={(slice: ExtendedComponentUI) =>
-          slice.component.model.name
-        }
-        renderElem={(slice: ExtendedComponentUI) => {
+        defineElementKey={(slice: ComponentUI) => slice.model.name}
+        renderElem={(slice: ComponentUI) => {
           return SharedSlice.render({
             bordered: true,
             displayStatus: false,
             thumbnailHeightPx: "220px",
-            slice: slice.component,
+            slice: slice,
             Wrapper: ({
               slice,
               children,

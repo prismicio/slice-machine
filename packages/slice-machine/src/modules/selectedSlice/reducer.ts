@@ -17,7 +17,7 @@ import {
   SelectedSliceActions,
   updateSliceWidgetMockCreator,
 } from "./actions";
-import { ExtendedComponentUI, SelectedSliceStoreType } from "./types";
+import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
@@ -37,6 +37,7 @@ export const selectedSliceReducer: Reducer<
 > = (prevState = null, action) => {
   switch (action.type) {
     case getType(initSliceStoreCreator): {
+      if (!action.payload) return null;
       return {
         ...prevState,
         component: action.payload.component,
@@ -244,7 +245,7 @@ export const selectedSliceReducer: Reducer<
   }
 };
 
-const updateTouched = (state: ExtendedComponentUI) => {
+const updateTouched = (state: NonNullable<SelectedSliceStoreType>) => {
   const isTouched =
     !equal(state.initialVariations, state.component.model.variations) ||
     !equal(state.initialMockConfig, state.mockConfig);
@@ -252,7 +253,7 @@ const updateTouched = (state: ExtendedComponentUI) => {
   return { ...state, isTouched };
 };
 
-export function updateStatus(state: ExtendedComponentUI) {
+export function updateStatus(state: NonNullable<SelectedSliceStoreType>) {
   const __status = compareVariations(
     state.component.model.variations,
     state.remoteVariations

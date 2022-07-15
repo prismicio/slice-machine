@@ -7,10 +7,10 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import Router from "next/router";
 import { replace } from "connected-next-router";
-import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
-export function useModelReducer({
+export function getExtendedSlice({
   slice,
   remoteSlice,
   mockConfig,
@@ -19,7 +19,7 @@ export function useModelReducer({
   remoteSlice?: SliceSM;
   mockConfig: CustomTypeMockConfig;
 }): ExtendedComponentUI {
-  const extendedComponentUI: ExtendedComponentUI = {
+  return {
     component: slice,
     mockConfig: mockConfig,
     initialMockConfig: mockConfig,
@@ -27,8 +27,6 @@ export function useModelReducer({
     initialVariations: slice.model.variations,
     initialScreenshotUrls: slice.screenshotUrls,
   };
-
-  return extendedComponentUI;
 }
 
 export const SliceHandler: React.FC = ({ children }) => {

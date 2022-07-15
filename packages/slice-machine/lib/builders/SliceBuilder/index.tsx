@@ -126,22 +126,22 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   return (
     <Box sx={{ flex: 1 }}>
       <Header
-        extendedComponent={extendedComponent}
+        component={extendedComponent.component}
+        isTouched={extendedComponent.isTouched}
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onPush={async () => {
-          await pushSliceApiCall(
-            extendedComponent,
-            onPush,
-            (extendedComponent) => pushSlice(extendedComponent)
+          await pushSliceApiCall(extendedComponent.component, onPush, () =>
+            pushSlice(extendedComponent)
           );
         }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onSave={async () => {
           await saveSliceApiCall(
-            extendedComponent,
+            extendedComponent.component,
+            extendedComponent.mockConfig,
             setData,
-            (extendedComponent) => saveSlice(extendedComponent)
+            () => saveSlice(extendedComponent)
           );
         }}
         isLoading={data.loading}
