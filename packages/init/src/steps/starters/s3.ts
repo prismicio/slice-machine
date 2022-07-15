@@ -12,7 +12,7 @@ async function updateVariationWithScreenshot(
   client: InitClient,
   acl: Acl,
   screenshotPaths: ComponentInfo["screenshotPaths"],
-  sliceName: SliceSM["id"],
+  sliceId: SliceSM["id"],
   variation: VariationSM
 ): Promise<VariationSM> {
   const screenshot = screenshotPaths[variation.id];
@@ -21,7 +21,7 @@ async function updateVariationWithScreenshot(
   return client
     .uploadScreenshot({
       acl,
-      sliceName,
+      sliceId,
       variationId: variation.id,
       filePath: screenshot.path,
     })
@@ -33,7 +33,7 @@ async function updateVariationWithScreenshot(
     })
     .catch((error: ClientError) => {
       writeError(
-        `Couldn't upload screenshot slice: ${sliceName} - variation: ${variation.id}`
+        `Couldn't upload screenshot slice: ${sliceId} - variation: ${variation.id}`
       );
       writeError(error.message, "Full error:");
       return variation;

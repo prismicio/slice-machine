@@ -9,10 +9,10 @@ import uniqid from "uniqid";
 function buildScreenshotKey(
   fileName: string,
   repository: string,
-  sliceName: UploadParameters["sliceName"],
+  sliceId: UploadParameters["sliceId"],
   variationId: UploadParameters["variationId"]
 ): string {
-  return `${repository}/shared-slices/${snakelize(sliceName)}/${snakelize(
+  return `${repository}/shared-slices/${sliceId}/${snakelize(
     variationId
   )}-${uniqid()}/${fileName}`;
 }
@@ -20,7 +20,7 @@ function buildScreenshotKey(
 export function uploadScreenshot({
   acl,
   repository,
-  sliceName,
+  sliceId,
   variationId,
   filePath,
 }: UploadParameters & { repository: string }): Promise<string> {
@@ -36,7 +36,7 @@ export function uploadScreenshot({
   const screenshotKey = buildScreenshotKey(
     fileName,
     repository,
-    sliceName,
+    sliceId,
     variationId
   );
   form.append("key", screenshotKey);

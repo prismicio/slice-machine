@@ -1,4 +1,3 @@
-import { snakelize } from "@lib/utils/str";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import { ApiError, isApiError } from "@lib/models/server/ApiResult";
 import { onError } from "../common/error";
@@ -8,13 +7,13 @@ import { Acl, ClientError } from "@slicemachine/client";
 export const purge = async (
   env: BackendEnvironment,
   slices: ReadonlyArray<SliceSM>,
-  sliceName: string
+  sliceId: string
 ): Promise<{ err?: ApiError }> => {
-  if (slices.find((e) => e.id === snakelize(sliceName))) {
+  if (slices.find((e) => e.id === sliceId)) {
     console.log("\n[slice/push]: purging images folder");
 
     return env.client
-      .deleteScreenshotFolder(snakelize(sliceName))
+      .deleteScreenshotFolder(sliceId)
       .then(() => ({}))
       .catch(() => {
         const msg =
@@ -30,7 +29,7 @@ export const purge = async (
 
 export const upload = async (
   env: BackendEnvironment,
-  sliceName: string,
+  sliceId: string,
   variationId: string,
   filePath: string
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
@@ -49,7 +48,7 @@ export const upload = async (
   return env.client
     .uploadScreenshot({
       acl: aclOrErr,
-      sliceName,
+      sliceId,
       variationId,
       filePath,
     })

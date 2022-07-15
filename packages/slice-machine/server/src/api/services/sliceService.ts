@@ -4,7 +4,6 @@ import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/scr
 
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "@lib/models/common/Environment";
-import { snakelize } from "@lib/utils/str";
 import { ApiError } from "@lib/models/server/ApiResult";
 import {
   Slices,
@@ -14,13 +13,12 @@ import {
 
 export const createOrUpdate = async (
   slices: ReadonlyArray<SliceSM>,
-  sliceName: string,
   model: SliceSM,
   client: Client
 ) => {
   const prismicModel = Slices.fromSM(model);
 
-  if (slices.find((e) => e.id === snakelize(sliceName))) {
+  if (slices.find((e) => e.id === model.id)) {
     return client.updateSlice(prismicModel);
   } else {
     return client.insertSlice(prismicModel);
@@ -51,7 +49,7 @@ export async function uploadScreenshots(
 
     if (!!screenshot) {
       const { err, s3ImageUrl }: { err?: ApiError; s3ImageUrl?: string } =
-        await upload(env, sliceName, variationId, screenshot.path);
+        await upload(env, sliceModel.id, variationId, screenshot.path);
 
       if (err) throw new Error(err.reason);
 
