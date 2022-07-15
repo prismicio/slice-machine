@@ -104,7 +104,7 @@ export const ComponentUI = {
   },
 };
 
-function computeStatus(
+export function computeStatus(
   component: Component,
   remoteSlices: ReadonlyArray<SliceSM>
 ): LibStatus {

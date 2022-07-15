@@ -117,7 +117,8 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         extendedComponent.component.from,
         extendedComponent.component.model.name,
         setData,
-        (screenshots) => generateSliceScreenshot(screenshots)
+        (screenshots) =>
+          generateSliceScreenshot(screenshots, extendedComponent.component)
       );
     });
   };
@@ -129,8 +130,10 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onPush={async () => {
-          await pushSliceApiCall(extendedComponent.component, onPush, () =>
-            pushSlice()
+          await pushSliceApiCall(
+            extendedComponent,
+            onPush,
+            (extendedComponent) => pushSlice(extendedComponent)
           );
         }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
@@ -160,7 +163,11 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
                 setData,
                 file,
                 (variationId, screenshot) =>
-                  generateSliceCustomScreenshot(variationId, screenshot)
+                  generateSliceCustomScreenshot(
+                    variationId,
+                    screenshot,
+                    extendedComponent.component
+                  )
               );
             }}
             imageLoading={data.imageLoading}

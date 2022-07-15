@@ -3,7 +3,7 @@ import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
-import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ExtendedComponentUI } from "./types";
 
 export type SelectedSliceActions =
@@ -73,17 +73,19 @@ export const deleteSliceWidgetMockCreator = createAction(
 
 export const generateSliceScreenshotCreator = createAction(
   "SLICE/GENERATE_SCREENSHOT"
-)<{ screenshots: Screenshots }>();
+)<{ screenshots: Screenshots; component: ComponentUI }>();
 
 export const generateSliceCustomScreenshotCreator = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT"
-)<{ variationId: string; screenshot: ScreenshotUI }>();
+)<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
 
 export const saveSliceCreator = createAction("SLICE/SAVE")<{
   extendedComponent: ExtendedComponentUI;
 }>();
 
-export const pushSliceCreator = createAction("SLICE/PUSH")<undefined>();
+export const pushSliceCreator = createAction("SLICE/PUSH")<{
+  extendedComponent: ExtendedComponentUI;
+}>();
 
 export const copyVariationSliceCreator = createAction("SLICE/COPY_VARIATION")<{
   key: string;

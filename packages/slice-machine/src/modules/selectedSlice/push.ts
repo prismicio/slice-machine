@@ -1,17 +1,17 @@
 import { fetchApi } from "@lib/builders/common/fetch";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ExtendedComponentUI } from "./types";
 
 export default async function pushSliceApiCall(
-  component: ComponentUI,
+  extendedComponent: ExtendedComponentUI,
   setData: (data: any) => void,
-  callback: () => void
+  callback: (extendedComponent: ExtendedComponentUI) => void
 ) {
   await fetchApi({
-    url: `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
+    url: `/api/slices/push?sliceName=${extendedComponent.component.model.name}&from=${extendedComponent.component.from}`,
     setData,
     successMessage: "Model was correctly saved to Prismic!",
     onSuccess() {
-      callback();
+      callback(extendedComponent);
     },
   });
 }

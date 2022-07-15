@@ -37,7 +37,7 @@ export const selectedSliceReducer: Reducer<
 > = (prevState = null, action) => {
   switch (action.type) {
     case getType(initSliceStoreCreator): {
-      const newState: SelectedSliceStoreType = {
+      return {
         ...prevState,
         component: action.payload.component,
         mockConfig: action.payload.mockConfig,
@@ -47,7 +47,6 @@ export const selectedSliceReducer: Reducer<
         initialScreenshotUrls: action.payload.initialScreenshotUrls,
         isTouched: action.payload.isTouched,
       };
-      return updateTouchedAndStatus(newState);
     }
     case getType(addSliceWidgetCreator): {
       if (!prevState) return prevState;
@@ -66,7 +65,7 @@ export const selectedSliceReducer: Reducer<
             prevState.component,
             variationId
           )((v) => Variation.addWidget(v, widgetsArea, key, value));
-          return updateTouchedAndStatus({ ...prevState, component });
+          return updateTouched({ ...prevState, component });
         }
         return prevState;
       } catch (err) {
@@ -97,7 +96,7 @@ export const selectedSliceReducer: Reducer<
           )((v) =>
             Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value)
           );
-          return updateTouchedAndStatus({ ...prevState, component });
+          return updateTouched({ ...prevState, component });
         }
         return prevState;
       } catch (err) {
@@ -117,7 +116,7 @@ export const selectedSliceReducer: Reducer<
         prevState.component,
         variationId
       )((v) => Variation.reorderWidget(v, widgetsArea, start, end));
-      return updateTouchedAndStatus({ ...prevState, component });
+      return updateTouched({ ...prevState, component });
     }
     case getType(removeSliceWidgetCreator): {
       if (!prevState) return prevState;
@@ -127,7 +126,7 @@ export const selectedSliceReducer: Reducer<
         prevState.component,
         variationId
       )((v) => Variation.deleteWidget(v, widgetsArea, key));
-      return updateTouchedAndStatus({ ...prevState, component });
+      return updateTouched({ ...prevState, component });
     }
     case getType(updateSliceWidgetMockCreator): {
       if (!prevState) return prevState;
@@ -141,7 +140,7 @@ export const selectedSliceReducer: Reducer<
         action.payload.mockValue
       );
 
-      return updateTouchedAndStatus({
+      return updateTouched({
         ...prevState,
         mockConfig: updatedConfig,
       });
@@ -155,7 +154,7 @@ export const selectedSliceReducer: Reducer<
         action.payload.widgetArea,
         action.payload.newKey
       );
-      return updateTouchedAndStatus({
+      return updateTouched({
         ...prevState,
         mockConfig: updatedConfig,
       });
@@ -166,9 +165,10 @@ export const selectedSliceReducer: Reducer<
       const component: ComponentUI = {
         ...prevState.component,
         screenshotUrls: action.payload.screenshots,
+        __status: LibStatus.Modified,
       };
 
-      return updateTouchedAndStatus({ ...prevState, component });
+      return { ...prevState, component };
     }
     case getType(generateSliceCustomScreenshotCreator): {
       if (!prevState) return prevState;
@@ -195,17 +195,19 @@ export const selectedSliceReducer: Reducer<
       const component: ComponentUI = {
         ...prevState.component,
         screenshotUrls: screenshots,
+        __status: LibStatus.Modified,
       };
 
-      return updateTouchedAndStatus({ ...prevState, component });
+      return { ...prevState, component };
     }
     case getType(saveSliceCreator): {
       if (!prevState) return prevState;
       const extendedComponent = action.payload.extendedComponent;
-      return updateTouchedAndStatus({
+      return updateStatus({
         ...extendedComponent,
         initialMockConfig: extendedComponent.mockConfig,
         initialVariations: extendedComponent.component.model.variations,
+        isTouched: false,
       });
     }
     case getType(pushSliceCreator): {
@@ -216,12 +218,12 @@ export const selectedSliceReducer: Reducer<
         __status: LibStatus.Synced,
       };
 
-      return updateTouchedAndStatus({
+      return {
         ...prevState,
         component,
         remoteVariations: component.model.variations,
         initialScreenshotUrls: component.screenshotUrls,
-      });
+      };
     }
     case getType(copyVariationSliceCreator): {
       if (!prevState) return prevState;
@@ -232,7 +234,7 @@ export const selectedSliceReducer: Reducer<
         ...prevState.component.model,
         variations: prevState.component.model.variations.concat([newVariation]),
       };
-      return updateTouchedAndStatus({
+      return updateTouched({
         ...prevState,
         component: { ...prevState.component, model },
       });
@@ -242,38 +244,21 @@ export const selectedSliceReducer: Reducer<
   }
 };
 
-const updateTouchedAndStatus = (
-  state: ExtendedComponentUI
-): ExtendedComponentUI => {
-  let status = state.component.__status;
-
+const updateTouched = (state: ExtendedComponentUI) => {
   const isTouched =
     !equal(state.initialVariations, state.component.model.variations) ||
     !equal(state.initialMockConfig, state.mockConfig);
 
-  const isScreenshotModified = !equal(
-    state.component.screenshotUrls,
-    state.initialScreenshotUrls
-  );
-
-  // True if the remote and local slice variations don't match
-  const isModelModified = !compareVariations(
-    state.remoteVariations,
-    state.initialVariations
-  );
-  if (
-    status !== LibStatus.NewSlice &&
-    (isModelModified || isScreenshotModified)
-  ) {
-    status = LibStatus.Modified;
-  }
-
-  return {
-    ...state,
-    isTouched: isTouched,
-    component: {
-      ...state.component,
-      __status: status,
-    },
-  };
+  return { ...state, isTouched };
 };
+
+export function updateStatus(state: ExtendedComponentUI) {
+  const __status = compareVariations(
+    state.component.model.variations,
+    state.remoteVariations
+  )
+    ? LibStatus.Synced
+    : LibStatus.Modified;
+
+  return { ...state, component: { ...state.component, __status } };
+}

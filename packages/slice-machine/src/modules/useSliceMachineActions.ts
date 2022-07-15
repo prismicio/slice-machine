@@ -70,7 +70,7 @@ import {
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
-import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ExtendedComponentUI } from "./selectedSlice/types";
 
 const useSliceMachineActions = () => {
@@ -370,23 +370,27 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    screenshots: Record<string, ScreenshotUI>
+    screenshots: Record<string, ScreenshotUI>,
+    component: ComponentUI
   ) => {
     dispatch(
       generateSliceScreenshotCreator({
         screenshots,
+        component,
       })
     );
   };
 
   const generateSliceCustomScreenshot = (
     variationId: string,
-    screenshot: ScreenshotUI
+    screenshot: ScreenshotUI,
+    component: ComponentUI
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator({
         variationId,
         screenshot,
+        component,
       })
     );
   };
@@ -399,8 +403,12 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const pushSlice = () => {
-    dispatch(pushSliceCreator());
+  const pushSlice = (extendedComponent: ExtendedComponentUI) => {
+    dispatch(
+      pushSliceCreator({
+        extendedComponent,
+      })
+    );
   };
 
   const copyVariationSlice = (
