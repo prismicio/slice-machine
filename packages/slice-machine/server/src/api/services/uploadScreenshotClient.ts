@@ -7,13 +7,13 @@ import { Acl, ClientError } from "@slicemachine/client";
 export const purge = async (
   env: BackendEnvironment,
   slices: ReadonlyArray<SliceSM>,
-  model: SliceSM
+  sliceId: string
 ): Promise<{ err?: ApiError }> => {
-  if (slices.find((e) => e.id === model.id)) {
+  if (slices.find((e) => e.id === sliceId)) {
     console.log("\n[slice/push]: purging images folder");
 
     return env.client
-      .deleteScreenshotFolder(model.id)
+      .deleteScreenshotFolder(sliceId)
       .then(() => ({}))
       .catch(() => {
         const msg =
@@ -29,7 +29,7 @@ export const purge = async (
 
 export const upload = async (
   env: BackendEnvironment,
-  model: SliceSM,
+  sliceId: string,
   variationId: string,
   filePath: string
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
@@ -48,7 +48,7 @@ export const upload = async (
   return env.client
     .uploadScreenshot({
       acl: aclOrErr,
-      sliceId: model.id,
+      sliceId,
       variationId,
       filePath,
     })
