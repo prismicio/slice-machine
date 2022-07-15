@@ -7,3 +7,5 @@ export const changelogPath = "changelog/versions";
 export const acceptedImagesTypes = ["png", "jpg", "jpeg"];
 
 export const MockConfigKey = "mockConfig";
+
+export const API_ID_REGEX = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
