@@ -13,18 +13,19 @@ export const selectCurrentSlice = (
     return openedModel;
   }
 
-  const libraries = getLibraries(store);
-  const library = libraries?.find((l) => l.name.replace(/\//g, "--") === lib);
+  const library = getLibraries(store)?.find(
+    (l) => l.name.replace(/\//g, "--") === lib
+  );
   const slice = library?.components.find((c) => c.model.name === sliceName);
 
-  if (!slice || !library) return null;
+  if (!slice) return null;
 
   return getExtendedSlice({
     slice,
     mockConfig: SliceMockConfig.getSliceMockConfig(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
       store.environment.mockConfig,
-      library.name,
+      slice.from,
       slice.model.name
     ),
     remoteSlice: store.slices.remoteSlices?.find(
