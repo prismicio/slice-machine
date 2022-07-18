@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Text, Box, Flex, Heading, Button } from "theme-ui";
-import SliceState from "@lib/models/ui/SliceState";
-import LibraryState from "@lib/models/ui/LibraryState";
 
 import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 
@@ -17,14 +15,16 @@ import {
 } from "@lib/models/common/CustomType/sliceZone";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getLibrariesState } from "@src/modules/slices";
+import { getLibraries } from "@src/modules/slices";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
-  libraries: ReadonlyArray<LibraryState> | null
+  libraries: ReadonlyArray<LibraryUI> | null
 ) => {
-  const availableSlices = (libraries || []).reduce<ReadonlyArray<SliceState>>(
-    (acc, curr: LibraryState) => {
+  const availableSlices = (libraries || []).reduce<ReadonlyArray<ComponentUI>>(
+    (acc, curr: LibraryUI) => {
       return [...acc, ...curr.components];
     },
     []
@@ -52,8 +52,8 @@ const mapAvailableAndSharedSlices = (
           ],
         };
       }
-      const maybeSliceState = availableSlices.find(
-        (state) => state.model.id === key
+      const maybeSliceState: ComponentUI | undefined = availableSlices.find(
+        (slice) => slice.model.id === key
       );
 
       if (maybeSliceState) {
@@ -90,7 +90,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
-    libraries: getLibrariesState(state),
+    libraries: getLibraries(state),
   }));
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
@@ -107,7 +107,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const sharedSlicesInSliceZone = slicesInSliceZone
     .filter((e) => e.type === SlicesTypes.SharedSlice)
-    .map((e) => e.payload) as ReadonlyArray<SliceState>;
+    .map((e) => e.payload) as ReadonlyArray<ComponentUI>;
 
   /* Preserve these keys in SliceZone */
   const nonSharedSlicesKeysInSliceZone = slicesInSliceZone

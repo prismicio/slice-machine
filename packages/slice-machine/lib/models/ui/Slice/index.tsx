@@ -10,8 +10,7 @@ import {
 } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
 
-import SliceState from "../SliceState";
-import { LibStatus } from "../../common/ComponentUI";
+import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
@@ -134,13 +133,13 @@ export const SharedSlice = {
     CustomStatus?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Wrapper?: any /* ? */;
-    slice: SliceState;
+    slice: ComponentUI;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
   }) {
-    const defaultVariation = SliceState.variation(slice);
+    const defaultVariation = ComponentUI.variation(slice);
     if (!defaultVariation) {
       return null;
     }
@@ -186,7 +185,7 @@ export const SharedSlice = {
               <HeadingWithTooltip text={slice.model.name} />
             </Flex>
             <SliceVariations
-              variations={slice.variations}
+              variations={slice.model.variations}
               hideVariations={false}
             />
           </Flex>

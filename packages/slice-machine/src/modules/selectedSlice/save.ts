@@ -1,34 +1,28 @@
 import { fetchApi } from "@lib/builders/common/fetch";
-import SliceState from "@lib/models/ui/SliceState";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
 
 export default async function saveSliceApiCall(
-  slice: SliceState,
+  component: ComponentUI,
+  mockConfig: CustomTypeMockConfig,
   setData: (data: any) => void,
-  callback: (SliceState: SliceState) => void
+  callback: () => void
 ) {
   await fetchApi({
     url: "/api/slices/save",
     params: {
       method: "POST",
       body: JSON.stringify({
-        sliceName: slice.model.name,
-        from: slice.from,
-        model: {
-          ...slice.model,
-          variations: slice.variations,
-        },
-        mockConfig: slice.mockConfig,
+        sliceName: component.model.name,
+        from: component.from,
+        model: component.model,
+        mockConfig: mockConfig,
       }),
     },
     setData,
     successMessage: "Models & mocks have been generated successfully!",
     onSuccess() {
-      const savedState: SliceState = {
-        ...slice,
-        initialMockConfig: slice.mockConfig,
-        initialVariations: slice.variations,
-      };
-      callback(savedState);
+      callback();
     },
   });
 }

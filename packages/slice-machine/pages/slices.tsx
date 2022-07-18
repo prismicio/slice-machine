@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
@@ -8,8 +8,6 @@ import CreateSliceModal from "components/Forms/CreateSliceModal";
 import Header from "components/Header";
 import Grid from "components/Grid";
 
-import LibraryState from "lib/models/ui/LibraryState";
-import SliceState from "lib/models/ui/SliceState";
 import { SharedSlice } from "lib/models/ui/Slice";
 import EmptyState from "components/EmptyState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -19,8 +17,9 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { getLibrariesState, getRemoteSlices } from "@src/modules/slices";
-import { getState } from "@src/apiClient";
+import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const CreateSliceButton = ({
   onClick,
@@ -41,25 +40,16 @@ const CreateSliceButton = ({
 );
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const {
-    openCreateSliceModal,
-    closeCreateSliceModal,
-    createSlice,
-    refreshState,
-  } = useSliceMachineActions();
+  const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
+    useSliceMachineActions();
 
   const { isCreateSliceModalOpen, isCreatingSlice, remoteSlices, libraries } =
     useSelector((store: SliceMachineStoreType) => ({
       isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
       isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
       remoteSlices: getRemoteSlices(store),
-      libraries: getLibrariesState(store),
+      libraries: getLibraries(store),
     }));
-
-  useEffect(() => {
-    //TODO: once the slice redux structure refactor is done, remove this and update the library redux state through the selectedSlice actions
-    void getState().then(({ data }) => refreshState(data));
-  }, []);
 
   const _onCreate = ({
     sliceName,
@@ -71,7 +61,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryState[] | undefined = libraries?.filter(
+  const localLibraries: LibraryUI[] | undefined = libraries?.filter(
     (l) => l.isLocal
   );
 
@@ -155,7 +145,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   />
                 </Flex>
               ) : (
-                libraries.map((lib: LibraryState) => {
+                libraries.map((lib) => {
                   const { name, isLocal, components } = lib;
                   return (
                     <Flex
@@ -188,13 +178,13 @@ const SlicesIndex: React.FunctionComponent = () => {
                       </Flex>
                       <Grid
                         elems={components}
-                        defineElementKey={(slice: SliceState) =>
+                        defineElementKey={(slice: ComponentUI) =>
                           slice.model.name
                         }
-                        renderElem={(slice: SliceState) => {
+                        renderElem={(slice: ComponentUI) => {
                           return SharedSlice.render({
                             displayStatus: true,
-                            slice,
+                            slice: slice,
                           });
                         }}
                         gridGap="32px 16px"

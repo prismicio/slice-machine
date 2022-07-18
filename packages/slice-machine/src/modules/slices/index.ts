@@ -20,10 +20,15 @@ import { LibraryUI } from "@models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../../src/tracker";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import LibraryState from "@lib/models/ui/LibraryState";
-import { useModelReducer } from "@src/models/slice/context";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { LOCATION_CHANGE, push } from "connected-next-router";
+import {
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+  pushSliceCreator,
+  saveSliceCreator,
+} from "../selectedSlice/actions";
+import { computeStatus, LibStatus } from "@lib/models/common/ComponentUI";
+import { Screenshots } from "@lib/models/common/Screenshots";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -59,40 +64,16 @@ export const renameSliceCreator = createAsyncAction(
 type SlicesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createSliceCreator>
-  | ActionType<typeof renameSliceCreator>;
+  | ActionType<typeof renameSliceCreator>
+  | ActionType<typeof saveSliceCreator>
+  | ActionType<typeof pushSliceCreator>
+  | ActionType<typeof generateSliceScreenshotCreator>
+  | ActionType<typeof generateSliceCustomScreenshotCreator>;
 
 // Selectors
 export const getLibraries = (
   store: SliceMachineStoreType
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
-
-export const getLibrariesState = (
-  store: SliceMachineStoreType
-): ReadonlyArray<LibraryState> | null => {
-  if (!store.slices.libraries) {
-    return null;
-  }
-  return store.slices.libraries.map((lib) => {
-    return {
-      name: lib.name,
-      isLocal: lib.isLocal,
-      components: lib.components.map((component) =>
-        useModelReducer({
-          slice: component,
-          mockConfig: SliceMockConfig.getSliceMockConfig(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-            store.environment.mockConfig,
-            lib.name,
-            component.model.name
-          ),
-          remoteSlice: store.slices.remoteSlices?.find(
-            (e) => e.id === component.model.id
-          ),
-        })
-      ),
-    };
-  });
-};
 
 export const getRemoteSlices = (
   store: SliceMachineStoreType
@@ -122,6 +103,106 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: action.payload.libraries,
       };
+    case getType(saveSliceCreator): {
+      const newComponentUI = action.payload.extendedComponent.component;
+      const __status = computeStatus(newComponentUI, state.remoteSlices);
+
+      const newLibraries = state.libraries.map((library) => {
+        if (library.name !== newComponentUI.from) return library;
+        return {
+          ...library,
+          components: library.components.map((component) => {
+            return component.model.id !== newComponentUI.model.id
+              ? component
+              : { ...newComponentUI, __status };
+          }),
+        };
+      });
+
+      return { ...state, libraries: newLibraries };
+    }
+    case getType(pushSliceCreator): {
+      const newComponentUI = action.payload.extendedComponent.component;
+
+      const newRemoteSlices = [...state.remoteSlices];
+
+      const remoteSliceIndex = state.remoteSlices.findIndex(
+        ({ id }) => id === newComponentUI.model.id
+      );
+
+      if (remoteSliceIndex !== -1) {
+        newRemoteSlices[remoteSliceIndex] = newComponentUI.model;
+      } else {
+        newRemoteSlices.push(newComponentUI.model);
+      }
+
+      const newLibraries = state.libraries.map((library) => {
+        if (library.name !== newComponentUI.from) return library;
+        return {
+          ...library,
+          components: library.components.map((component) => {
+            return component.model.id !== newComponentUI.model.id
+              ? component
+              : { ...newComponentUI, __status: LibStatus.Synced };
+          }),
+        };
+      });
+
+      return { ...state, libraries: newLibraries };
+    }
+    case getType(generateSliceScreenshotCreator): {
+      const { screenshots: screenshotUrls, component } = action.payload;
+
+      const newLibraries = state.libraries.map((library) => {
+        if (library.name !== component.from) return library;
+        return {
+          ...library,
+          components: library.components.map((c) => {
+            return component.model.id !== c.model.id
+              ? c
+              : { ...c, screenshotUrls, __status: LibStatus.Modified };
+          }),
+        };
+      });
+
+      return { ...state, libraries: newLibraries };
+    }
+    case getType(generateSliceCustomScreenshotCreator): {
+      const { variationId, screenshot, component } = action.payload;
+
+      const screenshotUrls: Screenshots = component.model.variations.reduce(
+        (acc, variation) => {
+          if (variation.id === variationId) {
+            return {
+              ...acc,
+              [variationId]: screenshot,
+            };
+          }
+          if (component.screenshotUrls?.[variation.id]) {
+            return {
+              ...acc,
+              [variation.id]: component.screenshotUrls[variation.id],
+            };
+          }
+          return acc;
+        },
+        {}
+      );
+
+      const newLibraries = state.libraries.map((library) => {
+        if (library.name !== component.from) return library;
+        return {
+          ...library,
+          components: library.components.map((c) => {
+            return component.model.id !== c.model.id
+              ? c
+              : { ...c, screenshotUrls, __status: LibStatus.Modified };
+          }),
+        };
+      });
+
+      return { ...state, libraries: newLibraries };
+    }
     default:
       return state;
   }

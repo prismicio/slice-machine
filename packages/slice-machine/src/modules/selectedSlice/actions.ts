@@ -1,10 +1,10 @@
 import { ActionType, createAction } from "typesafe-actions";
-import SliceState from "@lib/models/ui/SliceState";
 import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
-import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { SelectedSliceStoreType } from "./types";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -20,9 +20,8 @@ export type SelectedSliceActions =
   | ActionType<typeof pushSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>;
 
-export const initSliceStoreCreator = createAction("SLICE/INIT")<{
-  Model: SliceState;
-}>();
+export const initSliceStoreCreator =
+  createAction("SLICE/INIT")<SelectedSliceStoreType>();
 
 export const addSliceWidgetCreator = createAction("SLICE/ADD_WIDGET")<{
   variationId: string;
@@ -74,17 +73,19 @@ export const deleteSliceWidgetMockCreator = createAction(
 
 export const generateSliceScreenshotCreator = createAction(
   "SLICE/GENERATE_SCREENSHOT"
-)<{ screenshots: Screenshots }>();
+)<{ screenshots: Screenshots; component: ComponentUI }>();
 
 export const generateSliceCustomScreenshotCreator = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT"
-)<{ variationId: string; screenshot: ScreenshotUI }>();
+)<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
 
 export const saveSliceCreator = createAction("SLICE/SAVE")<{
-  state: SliceState;
+  extendedComponent: NonNullable<SelectedSliceStoreType>;
 }>();
 
-export const pushSliceCreator = createAction("SLICE/PUSH")<undefined>();
+export const pushSliceCreator = createAction("SLICE/PUSH")<{
+  extendedComponent: NonNullable<SelectedSliceStoreType>;
+}>();
 
 export const copyVariationSliceCreator = createAction("SLICE/COPY_VARIATION")<{
   key: string;

@@ -20,15 +20,15 @@ export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
 export default function Simulator() {
-  const { Model } = useSelector((store: SliceMachineStoreType) => ({
-    Model: selectCurrentSlice(
+  const { extendedModel } = useSelector((store: SliceMachineStoreType) => ({
+    extendedModel: selectCurrentSlice(
       store,
       Router.router?.query.lib as string,
       Router.router?.query.sliceName as string
     ),
   }));
 
-  const variation = Model?.variations.find(
+  const variation = extendedModel?.component.model.variations.find(
     (variation) => variation.id === (Router.router?.query.variation as string)
   );
 
@@ -50,20 +50,25 @@ export default function Simulator() {
     setState({ ...state, size: screen.size });
   };
 
-  if (!Model || !variation) {
+  if (!extendedModel || !variation) {
     return <div />;
   }
 
   const sliceView = useMemo(
-    () => [{ sliceID: Model.model.id, variationID: variation.id }],
-    [Model.model.id, variation.id]
+    () => [
+      {
+        sliceID: extendedModel.component.model.id,
+        variationID: variation.id,
+      },
+    ],
+    [extendedModel.component.model.id, variation.id]
   );
 
   return (
     <Flex sx={{ height: "100vh", flexDirection: "column" }}>
       <Header
-        title={Model.model.name}
-        Model={Model}
+        title={extendedModel.component.model.name}
+        Model={extendedModel.component}
         variation={variation}
         handleScreenSizeChange={handleScreenSizeChange}
         size={state.size}

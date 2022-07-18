@@ -25,7 +25,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import Tracker from "@src/tracker";
 import { selectCustomTypeCount } from "@src/modules/availableCustomTypes";
-import { getLibrariesState } from "@src/modules/slices";
+import { getLibraries } from "@src/modules/slices";
 
 Modal.setAppElement("#__next");
 
@@ -74,7 +74,7 @@ const ReviewModal: React.FunctionComponent = () => {
     hasSendAReview: userHasSendAReview(store),
     hasDoneTheOnboarding: userHasDoneTheOnboarding(store),
     customTypeCount: selectCustomTypeCount(store),
-    libraries: getLibrariesState(store),
+    libraries: getLibraries(store),
   }));
 
   const { skipReview, sendAReview, startLoadingReview, stopLoadingReview } =

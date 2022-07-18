@@ -25,8 +25,8 @@ import pushSliceApiCall from "@src/modules/selectedSlice/push";
 import saveSliceApiCall from "@src/modules/selectedSlice/save";
 import { useRouter } from "next/router";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
-import SliceState from "@lib/models/ui/SliceState";
 import { VariationSM } from "@slicemachine/core/build/models";
+import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 type SliceBuilderState = {
   imageLoading: boolean;
@@ -45,11 +45,14 @@ const initialState: SliceBuilderState = {
 };
 
 interface SliceBuilderProps {
-  Model: SliceState;
+  extendedComponent: ExtendedComponentUI;
   variation: VariationSM | undefined;
 }
 
-const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
+const SliceBuilder: React.FC<SliceBuilderProps> = ({
+  extendedComponent,
+  variation,
+}) => {
   const {
     openLoginModal,
     checkSimulatorSetup,
@@ -77,10 +80,10 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
   };
 
   useEffect(() => {
-    if (Model?.isTouched) {
+    if (extendedComponent?.isTouched) {
       setData(initialState);
     }
-  }, [Model?.isTouched]);
+  }, [extendedComponent?.isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
@@ -93,10 +96,15 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
 
   const sliceView = useMemo(
     () =>
-      Model && variation
-        ? [{ sliceID: Model.model.id, variationID: variation.id }]
+      extendedComponent && variation
+        ? [
+            {
+              sliceID: extendedComponent.component.model.id,
+              variationID: variation.id,
+            },
+          ]
         : null,
-    [Model?.model.id, variation?.id]
+    [extendedComponent.component.model.id, variation?.id]
   );
 
   if (!variation || !sliceView) return null;
@@ -106,10 +114,11 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
     checkSimulatorSetup(true, async () => {
       await generateScreenShot(
         variation.id,
-        Model.from,
-        Model.model.name,
+        extendedComponent.component.from,
+        extendedComponent.component.model.name,
         setData,
-        (screenshots) => generateSliceScreenshot(screenshots)
+        (screenshots) =>
+          generateSliceScreenshot(screenshots, extendedComponent.component)
       );
     });
   };
@@ -117,15 +126,23 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
   return (
     <Box sx={{ flex: 1 }}>
       <Header
-        Model={Model}
+        component={extendedComponent.component}
+        isTouched={extendedComponent.isTouched}
         variation={variation}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onPush={async () => {
-          await pushSliceApiCall(Model, onPush, () => pushSlice());
+          await pushSliceApiCall(extendedComponent.component, onPush, () =>
+            pushSlice(extendedComponent)
+          );
         }}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
         onSave={async () => {
-          await saveSliceApiCall(Model, setData, (state) => saveSlice(state));
+          await saveSliceApiCall(
+            extendedComponent.component,
+            extendedComponent.mockConfig,
+            setData,
+            () => saveSlice(extendedComponent)
+          );
         }}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
@@ -134,26 +151,33 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({ Model, variation }) => {
         sx={{ py: 4 }}
         SideBar={
           <SideBar
-            Model={Model}
+            component={extendedComponent.component}
             variation={variation}
             onScreenshot={onTakingCustomScreenshot}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onHandleFile={async (file: Blob) => {
               await generateCustomScreenShot(
                 variation.id,
-                Model.from,
-                Model.model.name,
+                extendedComponent.component.from,
+                extendedComponent.component.model.name,
                 setData,
                 file,
                 (variationId, screenshot) =>
-                  generateSliceCustomScreenshot(variationId, screenshot)
+                  generateSliceCustomScreenshot(
+                    variationId,
+                    screenshot,
+                    extendedComponent.component
+                  )
               );
             }}
             imageLoading={data.imageLoading}
           />
         }
       >
-        <FieldZones Model={Model} variation={variation} />
+        <FieldZones
+          mockConfig={extendedComponent.mockConfig}
+          variation={variation}
+        />
       </FlexEditor>
       <SetupDrawer />
       {isWaitingForIframeCheck && (
@@ -172,28 +196,30 @@ const SliceBuilderWithRouter = () => {
   const router = useRouter();
   const { initSliceStore } = useSliceMachineActions();
 
-  const { Model } = useSelector((store: SliceMachineStoreType) => ({
-    Model: selectCurrentSlice(
+  const { extendedModel } = useSelector((store: SliceMachineStoreType) => ({
+    extendedModel: selectCurrentSlice(
       store,
       router.query.lib as string,
       router.query.sliceName as string
     ),
   }));
 
-  if (!Model) {
+  if (!extendedModel) {
     void router.replace("/");
     return null;
   }
 
   useEffect(() => {
-    initSliceStore(Model);
+    initSliceStore(extendedModel);
   }, []);
 
-  const variation = Model.variations.find(
+  const variation = extendedModel.component.model.variations.find(
     (variation) => variation.id === router.query.variation
   );
 
-  return <SliceBuilder Model={Model} variation={variation} />;
+  return (
+    <SliceBuilder extendedComponent={extendedModel} variation={variation} />
+  );
 };
 
 export default SliceBuilderWithRouter;

@@ -78,9 +78,33 @@ export const ComponentUI = {
       __status: computeStatus(component, remoteSlices),
     };
   },
+  variation(
+    component: ComponentUI,
+    variationId?: string
+  ): VariationSM | undefined {
+    if (component.model.variations.length) {
+      if (variationId)
+        return component.model.variations.find((v) => v.id === variationId);
+      return component.model.variations[0];
+    }
+  },
+
+  updateVariation(component: ComponentUI, variationId: string) {
+    return (mutateCallbackFn: (v: VariationSM) => VariationSM): ComponentUI => {
+      const variations = component.model.variations.map((v) => {
+        if (v.id === variationId) return mutateCallbackFn(v);
+        else return v;
+      });
+
+      return {
+        ...component,
+        model: { ...component.model, variations },
+      };
+    };
+  },
 };
 
-function computeStatus(
+export function computeStatus(
   component: Component,
   remoteSlices: ReadonlyArray<SliceSM>
 ): LibStatus {

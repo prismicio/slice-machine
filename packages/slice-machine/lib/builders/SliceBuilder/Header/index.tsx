@@ -10,18 +10,20 @@ import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import SliceState from "@lib/models/ui/SliceState";
 import { VariationSM } from "@slicemachine/core/build/models";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const Header: React.FC<{
-  Model: SliceState;
+  component: ComponentUI;
+  isTouched: boolean | undefined;
   variation: VariationSM;
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
 }> = ({
-  Model,
+  component,
+  isTouched,
   variation,
   onSave,
   onPush,
@@ -31,7 +33,7 @@ const Header: React.FC<{
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
 
-  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
+  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(component.__status) !== -1;
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
@@ -75,7 +77,7 @@ const Header: React.FC<{
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
                   <Text ml={2} data-cy="slice-and-variation-name-header">
-                    {`/ ${Model.model.name} / ${variation.name}`}
+                    {`/ ${component.model.name} / ${variation.name}`}
                   </Text>
                 </Box>
               </Flex>
@@ -83,13 +85,13 @@ const Header: React.FC<{
                 <Flex sx={{ alignItems: "center" }}>
                   <VariationPopover
                     defaultValue={variation}
-                    variations={Model.variations}
+                    variations={component.model.variations}
                     onNewVariation={() => setShowVariationModal(true)}
                     onChange={(v) =>
                       void router.push(
                         ...Links.variation({
-                          lib: Model.href,
-                          sliceName: Model.model.name,
+                          lib: component.href,
+                          sliceName: component.model.name,
                           variationId: v.id,
                         }).all
                       )
@@ -118,13 +120,11 @@ const Header: React.FC<{
               }}
             />
             <SaveButton
-              onClick={Model.isTouched ? onSave : onPush}
+              onClick={isTouched ? onSave : onPush}
               loading={isLoading && !imageLoading}
-              disabled={
-                isLoading || imageLoading || (!Model.isTouched && !unSynced)
-              }
+              disabled={isLoading || imageLoading || (!isTouched && !unSynced)}
             >
-              {Model.isTouched
+              {isTouched
                 ? "Save model to filesystem"
                 : unSynced
                 ? "Push Slice to Prismic"
@@ -138,19 +138,19 @@ const Header: React.FC<{
               copyVariationSlice(id, name, copiedVariation);
               void router.push(
                 ...Links.variation({
-                  lib: Model.href,
-                  sliceName: Model.model.name,
+                  lib: component.href,
+                  sliceName: component.model.name,
                   variationId: id,
                 }).all
               );
             }}
             initialVariation={variation}
-            variations={Model.variations}
+            variations={component.model.variations}
           />
           <RenameSliceModal
-            sliceId={Model.model.id}
-            sliceName={Model.model.name}
-            libName={Model.from}
+            sliceId={component.model.id}
+            sliceName={component.model.name}
+            libName={component.from}
             variationId={variation.id}
             data-cy="rename-slice-modal"
           />

@@ -19,7 +19,6 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
-import SliceState from "@lib/models/ui/SliceState";
 import {
   createCustomTypeCreator,
   renameCustomTypeCreator,
@@ -71,7 +70,8 @@ import {
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
-import { ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ExtendedComponentUI } from "./selectedSlice/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -272,8 +272,8 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
-  const initSliceStore = (Model: SliceState) =>
-    dispatch(initSliceStoreCreator({ Model }));
+  const initSliceStore = (extendedComponentUI: ExtendedComponentUI) =>
+    dispatch(initSliceStoreCreator(extendedComponentUI));
 
   const addSliceWidget = (
     variationId: string,
@@ -370,37 +370,45 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    screenshots: Record<string, ScreenshotUI>
+    screenshots: Record<string, ScreenshotUI>,
+    component: ComponentUI
   ) => {
     dispatch(
       generateSliceScreenshotCreator({
         screenshots,
+        component,
       })
     );
   };
 
   const generateSliceCustomScreenshot = (
     variationId: string,
-    screenshot: ScreenshotUI
+    screenshot: ScreenshotUI,
+    component: ComponentUI
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator({
         variationId,
         screenshot,
+        component,
       })
     );
   };
 
-  const saveSlice = (state: SliceState) => {
+  const saveSlice = (extendedComponent: ExtendedComponentUI) => {
     dispatch(
       saveSliceCreator({
-        state,
+        extendedComponent,
       })
     );
   };
 
-  const pushSlice = () => {
-    dispatch(pushSliceCreator());
+  const pushSlice = (extendedComponent: ExtendedComponentUI) => {
+    dispatch(
+      pushSliceCreator({
+        extendedComponent,
+      })
+    );
   };
 
   const copyVariationSlice = (

@@ -19,12 +19,16 @@ import {
 } from "./actions";
 import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
-import SliceState from "@lib/models/ui/SliceState";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { LibStatus } from "@lib/models/common/ComponentUI";
+import {
+  ComponentUI,
+  LibStatus,
+  ScreenshotUI,
+} from "@lib/models/common/ComponentUI";
 import equal from "fast-deep-equal";
 import { compareVariations } from "@lib/utils";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 // Reducer
 export const selectedSliceReducer: Reducer<
@@ -33,9 +37,16 @@ export const selectedSliceReducer: Reducer<
 > = (prevState = null, action) => {
   switch (action.type) {
     case getType(initSliceStoreCreator): {
+      if (!action.payload) return null;
       return {
         ...prevState,
-        Model: updateTouchedAndStatus(action.payload.Model),
+        component: action.payload.component,
+        mockConfig: action.payload.mockConfig,
+        initialMockConfig: action.payload.initialMockConfig,
+        remoteVariations: action.payload.remoteVariations,
+        initialVariations: action.payload.initialVariations,
+        initialScreenshotUrls: action.payload.initialScreenshotUrls,
+        isTouched: action.payload.isTouched,
       };
     }
     case getType(addSliceWidgetCreator): {
@@ -50,14 +61,12 @@ export const selectedSliceReducer: Reducer<
           const CurrentWidget: AnyWidget = Widgets[value.type];
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           CurrentWidget.schema.validateSync(value, { stripUnknown: false });
-          const newModel = SliceState.updateVariation(
-            prevState.Model,
+
+          const component = ComponentUI.updateVariation(
+            prevState.component,
             variationId
           )((v) => Variation.addWidget(v, widgetsArea, key, value));
-          return {
-            ...prevState,
-            Model: updateTouchedAndStatus(newModel),
-          };
+          return updateTouched({ ...prevState, component });
         }
         return prevState;
       } catch (err) {
@@ -81,17 +90,14 @@ export const selectedSliceReducer: Reducer<
           const CurrentWidget: AnyWidget = Widgets[value.type];
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
           CurrentWidget.schema.validateSync(value, { stripUnknown: false });
-          const newModel = SliceState.updateVariation(
-            prevState.Model,
+
+          const component = ComponentUI.updateVariation(
+            prevState.component,
             variationId
           )((v) =>
             Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value)
           );
-
-          return {
-            ...prevState,
-            Model: updateTouchedAndStatus(newModel),
-          };
+          return updateTouched({ ...prevState, component });
         }
         return prevState;
       } catch (err) {
@@ -107,27 +113,21 @@ export const selectedSliceReducer: Reducer<
       const { variationId, widgetsArea, start, end } = action.payload;
       if (end === undefined) return prevState;
 
-      const newModel = SliceState.updateVariation(
-        prevState.Model,
+      const component = ComponentUI.updateVariation(
+        prevState.component,
         variationId
       )((v) => Variation.reorderWidget(v, widgetsArea, start, end));
-      return {
-        ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-      };
+      return updateTouched({ ...prevState, component });
     }
     case getType(removeSliceWidgetCreator): {
       if (!prevState) return prevState;
       const { variationId, widgetsArea, key } = action.payload;
 
-      const newModel = SliceState.updateVariation(
-        prevState.Model,
+      const component = ComponentUI.updateVariation(
+        prevState.component,
         variationId
       )((v) => Variation.deleteWidget(v, widgetsArea, key));
-      return {
-        ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-      };
+      return updateTouched({ ...prevState, component });
     }
     case getType(updateSliceWidgetMockCreator): {
       if (!prevState) return prevState;
@@ -141,12 +141,10 @@ export const selectedSliceReducer: Reducer<
         action.payload.mockValue
       );
 
-      const newModel = { ...prevState.Model, mockConfig: updatedConfig };
-
-      return {
+      return updateTouched({
         ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-      };
+        mockConfig: updatedConfig,
+      });
     }
     case getType(deleteSliceWidgetMockCreator): {
       if (!prevState) return prevState;
@@ -157,120 +155,111 @@ export const selectedSliceReducer: Reducer<
         action.payload.widgetArea,
         action.payload.newKey
       );
-
-      const newModel = { ...prevState.Model, mockConfig: updatedConfig };
-
-      return {
+      return updateTouched({
         ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-      };
+        mockConfig: updatedConfig,
+      });
     }
     case getType(generateSliceScreenshotCreator): {
       if (!prevState) return prevState;
 
-      const newModel = {
-        ...prevState.Model,
+      const component: ComponentUI = {
+        ...prevState.component,
         screenshotUrls: action.payload.screenshots,
+        __status: LibStatus.Modified,
       };
 
-      return {
-        ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-      };
+      return { ...prevState, component };
     }
     case getType(generateSliceCustomScreenshotCreator): {
       if (!prevState) return prevState;
       const { variationId, screenshot } = action.payload;
-      const { Model: prevModel } = prevState;
+      const prevComponent = prevState.component;
 
-      const screenshots = prevModel.variations.reduce((acc, variation) => {
-        if (variation.id === variationId) {
-          return {
-            ...acc,
-            [variationId]: screenshot,
-          };
-        }
-        if (prevModel.screenshotUrls?.[variation.id]) {
-          return {
-            ...acc,
-            [variation.id]: prevModel.screenshotUrls[variation.id],
-          };
-        }
-        return acc;
-      }, {});
+      const screenshots: Record<string, ScreenshotUI> =
+        prevComponent.model.variations.reduce((acc, variation) => {
+          if (variation.id === variationId) {
+            return {
+              ...acc,
+              [variationId]: screenshot,
+            };
+          }
+          if (prevComponent.screenshotUrls?.[variation.id]) {
+            return {
+              ...acc,
+              [variation.id]: prevComponent.screenshotUrls[variation.id],
+            };
+          }
+          return acc;
+        }, {});
 
-      const newModel = { ...prevModel, screenshotUrls: screenshots };
-
-      return {
-        ...prevState,
-        Model: updateTouchedAndStatus(newModel),
+      const component: ComponentUI = {
+        ...prevState.component,
+        screenshotUrls: screenshots,
+        __status: LibStatus.Modified,
       };
+
+      return { ...prevState, component };
     }
     case getType(saveSliceCreator): {
       if (!prevState) return prevState;
-
-      return {
-        ...prevState,
-        Model: updateTouchedAndStatus(action.payload.state),
-      };
+      const extendedComponent = action.payload.extendedComponent;
+      return updateStatus({
+        ...extendedComponent,
+        initialMockConfig: extendedComponent.mockConfig,
+        initialVariations: extendedComponent.component.model.variations,
+        isTouched: false,
+      });
     }
     case getType(pushSliceCreator): {
       if (!prevState) return prevState;
-      const newModel = {
-        ...prevState.Model,
+
+      const component: ComponentUI = {
+        ...prevState.component,
         __status: LibStatus.Synced,
-        initialScreenshotUrls: prevState.Model.screenshotUrls,
-        remoteVariations: prevState.Model.variations,
       };
 
-      return { ...prevState, Model: updateTouchedAndStatus(newModel) };
+      return {
+        ...prevState,
+        component,
+        remoteVariations: component.model.variations,
+        initialScreenshotUrls: component.screenshotUrls,
+      };
     }
     case getType(copyVariationSliceCreator): {
       if (!prevState) return prevState;
       const { key, name, copied } = action.payload;
       const newVariation = Variation.copyValue(copied, key, name);
-      const newModel = {
-        ...prevState.Model,
-        variations: prevState.Model.variations.concat([newVariation]),
+
+      const model: SliceSM = {
+        ...prevState.component.model,
+        variations: prevState.component.model.variations.concat([newVariation]),
       };
-      return {
+      return updateTouched({
         ...prevState,
-        Model: updateTouchedAndStatus(newModel),
-        variation: newVariation,
-      };
+        component: { ...prevState.component, model },
+      });
     }
     default:
       return prevState;
   }
 };
 
-const updateTouchedAndStatus = (model: SliceState) => {
-  let status = model.__status;
-
+const updateTouched = (state: NonNullable<SelectedSliceStoreType>) => {
   const isTouched =
-    !equal(model.initialVariations, model.variations) ||
-    !equal(model.initialMockConfig, model.mockConfig);
+    !equal(state.initialVariations, state.component.model.variations) ||
+    !equal(state.initialMockConfig, state.mockConfig);
 
-  const isScreenshotModified = !equal(
-    model.screenshotUrls,
-    model.initialScreenshotUrls
-  );
-
-  // True if the remote and local slice variations don't match
-  const isModelModified = !compareVariations(
-    model.remoteVariations,
-    model.initialVariations
-  );
-  if (
-    status !== LibStatus.NewSlice &&
-    (isModelModified || isScreenshotModified)
-  ) {
-    status = LibStatus.Modified;
-  }
-
-  return {
-    ...model,
-    isTouched: isTouched,
-    __status: status,
-  };
+  return { ...state, isTouched };
 };
+
+export function updateStatus(state: NonNullable<SelectedSliceStoreType>) {
+  const __status = compareVariations(
+    state.component.model.variations,
+    state.remoteVariations
+  )
+    ? LibStatus.Synced
+    : LibStatus.Modified;
+
+  return { ...state, component: { ...state.component, __status } };
+}
