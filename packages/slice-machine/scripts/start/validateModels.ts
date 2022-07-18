@@ -11,6 +11,7 @@ import {
   CustomTypesPaths,
 } from "@slicemachine/core/build/node-utils";
 import chalk from "chalk";
+import path from "path";
 
 type ErrorsToDisplay = string[];
 
@@ -82,6 +83,20 @@ const invalidCharacterMessage = (path: string, key: string) =>
     "Invalid characters"
   )}: the following API ID contains invalid characters ${chalk.green(key)}.\n`;
 
+function formatPath(
+  cwd: string,
+  info: { library: string; sliceName: string } | { customTypeId: string }
+): string {
+  const absolutePath =
+    "library" in info
+      ? CustomPaths(cwd).library(info.library).slice(info.sliceName).model() // slice
+      : CustomTypesPaths(cwd).customType(info.customTypeId).model(); // custom type
+
+  const relativePath = path.relative(cwd, absolutePath);
+
+  return "./" + relativePath;
+}
+
 function validateSliceModel(
   cwd: string,
   library: string,
@@ -99,14 +114,14 @@ function validateSliceModel(
   return fields.reduce((acc: ErrorsToDisplay, field) => {
     if (field.key.length === 0) {
       const message = emptyApiIdMessage(
-        CustomPaths(cwd).library(library).slice(model.name).model()
+        formatPath(cwd, { library, sliceName: model.name })
       );
       return [...acc, message];
     }
 
     if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
       const message = invalidCharacterMessage(
-        CustomPaths(cwd).library(library).slice(model.name).model(),
+        formatPath(cwd, { library, sliceName: model.name }),
         field.key
       );
       return [...acc, message];
@@ -125,14 +140,14 @@ function validateCustomTypeModel(
     const fieldsError = fields.reduce((acc: ErrorsToDisplay, field) => {
       if (field.key.length === 0) {
         const message = emptyApiIdMessage(
-          CustomTypesPaths(cwd).customType(model.id).model()
+          formatPath(cwd, { customTypeId: model.id })
         );
         return [...acc, message];
       }
 
       if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
         const message = invalidCharacterMessage(
-          CustomTypesPaths(cwd).customType(model.id).model(),
+          formatPath(cwd, { customTypeId: model.id }),
           field.key
         );
         return [...acc, message];
