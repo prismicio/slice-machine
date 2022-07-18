@@ -4,7 +4,7 @@ import { TabFields } from "@slicemachine/core/build/models/CustomType";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { getLocalCustomTypes } from "@lib/utils/customTypes";
-import { API_ID_REGEX } from "@lib/consts";
+import { API_ID_RETRO_COMPATIBLE_REGEX } from "@lib/consts";
 import boxen from "boxen";
 import {
   CustomPaths,
@@ -104,7 +104,7 @@ function validateSliceModel(
       return [...acc, message];
     }
 
-    if (!API_ID_REGEX.exec(field.key)) {
+    if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
       const message = invalidCharacterMessage(
         CustomPaths(cwd).library(library).slice(model.name).model(),
         field.key
@@ -130,7 +130,7 @@ function validateCustomTypeModel(
         return [...acc, message];
       }
 
-      if (!API_ID_REGEX.exec(field.key)) {
+      if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
         const message = invalidCharacterMessage(
           CustomTypesPaths(cwd).customType(model.id).model(),
           field.key

@@ -30,7 +30,7 @@ export const DefaultFields: any = {
       min: true,
       max: true,
       required: "This field is required",
-      matches: [API_ID_REGEX, "No special characters allowed"],
+      matches: [API_ID_REGEX, "No special characters allowed (except _)"],
     },
     validateId
   ),
