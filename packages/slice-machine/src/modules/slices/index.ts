@@ -324,7 +324,7 @@ export const renamedComponentUI = (
   };
 };
 
-const renameScreenshotPaths = (
+export const renameScreenshotPaths = (
   initialPaths: Record<string, Screenshot>,
   prevName: string,
   newName: string
@@ -350,6 +350,9 @@ export const renameScreenshotUrls = (
   }, {} as Screenshots);
 };
 
-const renameModel = (initialModel: SliceSM, newName: string): SliceSM => {
+export const renameModel = (
+  initialModel: SliceSM,
+  newName: string
+): SliceSM => {
   return { ...initialModel, name: newName };
 };
