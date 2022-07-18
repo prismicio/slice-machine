@@ -17,7 +17,7 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../../src/tracker";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
@@ -27,7 +27,11 @@ import {
   pushSliceCreator,
   saveSliceCreator,
 } from "../selectedSlice/actions";
-import { computeStatus, LibStatus } from "@lib/models/common/ComponentUI";
+import {
+  ComponentUI,
+  computeStatus,
+  LibStatus,
+} from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
 
 // Action Creators
@@ -57,7 +61,9 @@ export const renameSliceCreator = createAsyncAction(
     variationId: string;
   },
   {
-    libraries: readonly LibraryUI[];
+    sliceId: string;
+    newSliceName: string;
+    libName: string;
   }
 >();
 
@@ -98,11 +104,23 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: action.payload.libraries,
       };
-    case getType(renameSliceCreator.success):
+    case getType(renameSliceCreator.success): {
+      const { libName, sliceId, newSliceName } = action.payload;
+      const newLibs = state.libraries.map((library) => {
+        if (library.name !== libName) return library;
+        return {
+          ...library,
+          components: library.components.map((component) => {
+            if (component.model.id !== sliceId) return component;
+            return renamedComponentUI(component, newSliceName);
+          }),
+        };
+      });
       return {
         ...state,
-        libraries: action.payload.libraries,
+        libraries: newLibs,
       };
+    }
     case getType(saveSliceCreator): {
       const newComponentUI = action.payload.extendedComponent.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
@@ -243,19 +261,10 @@ export function* createSliceSaga({
 export function* renameSliceSaga({
   payload,
 }: ReturnType<typeof renameSliceCreator.request>) {
+  const { libName, sliceId, newSliceName } = payload;
   try {
-    yield call(
-      renameSlice,
-      payload.sliceId,
-      payload.newSliceName,
-      payload.libName
-    );
-    //TODO: avoid refetch of state. Either manually update all the changes within the reducer,
-    //or make the renameSlice api call return the new libraries, so that it's output can be used.
-    const { data: serverState } = (yield call(getState)) as SagaReturnType<
-      typeof getState
-    >;
-    yield put(renameSliceCreator.success({ libraries: serverState.libraries }));
+    yield call(renameSlice, sliceId, newSliceName, libName);
+    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
     yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName
@@ -293,3 +302,54 @@ function* handleSliceRequests() {
 export function* watchSliceSagas() {
   yield fork(handleSliceRequests);
 }
+
+export const renamedComponentUI = (
+  initialComponent: ComponentUI,
+  newName: string
+): ComponentUI => {
+  const { model, screenshotPaths, screenshotUrls } = initialComponent;
+  return {
+    ...initialComponent,
+    model: renameModel(model, newName),
+    screenshotPaths: renameScreenshotPaths(
+      screenshotPaths,
+      model.name,
+      newName
+    ),
+    screenshotUrls: renameScreenshotUrls(
+      screenshotUrls || {},
+      model.name,
+      newName
+    ),
+  };
+};
+
+const renameScreenshotPaths = (
+  initialPaths: Record<string, Screenshot>,
+  prevName: string,
+  newName: string
+): Record<string, Screenshot> => {
+  return Object.entries(initialPaths).reduce((acc, [key, screenshot]) => {
+    acc[key] = { path: screenshot.path.replace(prevName, newName) };
+    return acc;
+  }, {} as Record<string, Screenshot>);
+};
+
+export const renameScreenshotUrls = (
+  initialPaths: Screenshots | undefined,
+  prevName: string,
+  newName: string
+): Screenshots => {
+  if (!initialPaths) return {};
+  return Object.entries(initialPaths).reduce((acc, [key, screenshot]) => {
+    acc[key] = {
+      path: screenshot.path.replace(prevName, newName),
+      url: screenshot.url.replace(prevName, newName),
+    };
+    return acc;
+  }, {} as Screenshots);
+};
+
+const renameModel = (initialModel: SliceSM, newName: string): SliceSM => {
+  return { ...initialModel, name: newName };
+};
