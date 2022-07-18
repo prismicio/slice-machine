@@ -90,9 +90,9 @@ export const ComponentUI = {
   },
 
   updateVariation(component: ComponentUI, variationId: string) {
-    return (mutate: (v: VariationSM) => VariationSM): ComponentUI => {
+    return (mutateCallbackFn: (v: VariationSM) => VariationSM): ComponentUI => {
       const variations = component.model.variations.map((v) => {
-        if (v.id === variationId) return mutate(v);
+        if (v.id === variationId) return mutateCallbackFn(v);
         else return v;
       });
 
