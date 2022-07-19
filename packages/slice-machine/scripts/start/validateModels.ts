@@ -83,7 +83,7 @@ const invalidCharacterMessage = (path: string, key: string) =>
     "Invalid characters"
   )}: the following API ID contains invalid characters ${chalk.green(key)}.\n`;
 
-function formatPath(
+export function formatPath(
   cwd: string,
   info: { library: string; sliceName: string } | { customTypeId: string }
 ): string {
@@ -97,7 +97,7 @@ function formatPath(
   return "./" + relativePath;
 }
 
-function validateSliceModel(
+export function validateSliceModel(
   cwd: string,
   library: string,
   model: SliceSM
@@ -131,7 +131,7 @@ function validateSliceModel(
   }, []);
 }
 
-function validateCustomTypeModel(
+export function validateCustomTypeModel(
   cwd: string,
   model: CustomTypeSM
 ): ErrorsToDisplay {
