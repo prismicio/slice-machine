@@ -65,13 +65,6 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
 
-  const onPush = (data: SliceBuilderState) => {
-    setData(data);
-    if (data.error && data.status === 403) {
-      openLoginModal();
-    }
-  };
-
   useEffect(() => {
     if (extendedComponent?.isTouched) {
       setData(initialState);
@@ -116,7 +109,12 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   };
 
   const onPushSlice = () => {
-    pushSlice(extendedComponent, onPush);
+    pushSlice(extendedComponent, (data: SliceBuilderState) => {
+      setData(data);
+      if (data.error && data.status === 403) {
+        openLoginModal();
+      }
+    });
   };
 
   const onSaveSlice = () => {
