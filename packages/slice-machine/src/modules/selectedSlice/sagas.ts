@@ -15,10 +15,10 @@ import {
   pushSliceCreator,
 } from "./actions";
 import {
-  generateSliceScreenshotAxios,
-  generateSliceCustomScreenshotAxios,
-  saveSliceAxios,
-  pushSliceAxios,
+  generateSliceScreenshotApiClient,
+  generateSliceCustomScreenshotApiClient,
+  saveSliceApiClient,
+  pushSliceApiClient,
   renameSlice,
   getState,
 } from "@src/apiClient";
@@ -41,10 +41,10 @@ export function* generateSliceScreenshotSaga({
       imageLoading: true,
     });
     const response = (yield call(
-      generateSliceScreenshotAxios,
+      generateSliceScreenshotApiClient,
       component.model.name,
       component.from
-    )) as SagaReturnType<typeof generateSliceScreenshotAxios>;
+    )) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
     if (response.status > 209) {
       return setData({
         loading: false,
@@ -98,9 +98,9 @@ export function* generateSliceCustomScreenshotSaga({
       imageLoading: true,
     });
     const response = (yield call(
-      generateSliceCustomScreenshotAxios,
+      generateSliceCustomScreenshotApiClient,
       form
-    )) as SagaReturnType<typeof generateSliceCustomScreenshotAxios>;
+    )) as SagaReturnType<typeof generateSliceCustomScreenshotApiClient>;
     if (response.status > 209) {
       return setData({
         loading: false,
@@ -147,9 +147,9 @@ export function* saveSliceSaga({
       message: null,
     });
     const response = (yield call(
-      saveSliceAxios,
+      saveSliceApiClient,
       extendedComponent
-    )) as SagaReturnType<typeof saveSliceAxios>;
+    )) as SagaReturnType<typeof saveSliceApiClient>;
     if (response.status > 209) {
       return setData({
         loading: false,
@@ -204,9 +204,9 @@ export function* pushSliceSaga({
       status: null,
     });
     const response = (yield call(
-      pushSliceAxios,
+      pushSliceApiClient,
       extendedComponent.component
-    )) as SagaReturnType<typeof pushSliceAxios>;
+    )) as SagaReturnType<typeof pushSliceApiClient>;
     if (response.status > 209) {
       return onPush({
         imageLoading: false,

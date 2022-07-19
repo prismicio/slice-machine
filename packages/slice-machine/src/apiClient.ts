@@ -94,7 +94,7 @@ export const renameSlice = (
   return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
-export const generateSliceScreenshotAxios = (
+export const generateSliceScreenshotApiClient = (
   sliceName: string,
   libraryName: string
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
@@ -104,14 +104,14 @@ export const generateSliceScreenshotAxios = (
   );
 };
 
-export const generateSliceCustomScreenshotAxios = (
+export const generateSliceCustomScreenshotApiClient = (
   form: FormData
 ): Promise<AxiosResponse<ScreenshotUI>> => {
   const requestBody = form;
   return axios.post("/api/custom-screenshot", requestBody, defaultAxiosConfig);
 };
 
-export const saveSliceAxios = (
+export const saveSliceApiClient = (
   extendedComponent: ExtendedComponentUI
 ): Promise<AxiosResponse> => {
   const requestBody = {
@@ -123,7 +123,7 @@ export const saveSliceAxios = (
   return axios.post("/api/slices/save", requestBody, defaultAxiosConfig);
 };
 
-export const pushSliceAxios = (
+export const pushSliceApiClient = (
   component: ComponentUI
 ): Promise<AxiosResponse> => {
   return axios.get(
