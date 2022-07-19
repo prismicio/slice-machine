@@ -34,7 +34,7 @@ export function createStorybookId(str: string): string {
 }
 
 export const slugify = (input: string) => {
-  const nowhitespace = input.trim().replace(/ /g, "-");
+  const nowhitespace = input.trim().replace(/ /g, "_");
   const normalised = nowhitespace
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
