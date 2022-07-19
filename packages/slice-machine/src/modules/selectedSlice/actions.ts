@@ -5,6 +5,7 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SelectedSliceStoreType } from "./types";
+import { renameSliceCreator } from "../slices";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -18,7 +19,8 @@ export type SelectedSliceActions =
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof saveSliceCreator>
   | ActionType<typeof pushSliceCreator>
-  | ActionType<typeof copyVariationSliceCreator>;
+  | ActionType<typeof copyVariationSliceCreator>
+  | ActionType<typeof renameSliceCreator>;
 
 export const initSliceStoreCreator =
   createAction("SLICE/INIT")<SelectedSliceStoreType>();

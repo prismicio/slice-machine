@@ -17,7 +17,7 @@ import {
   SelectedSliceActions,
   updateSliceWidgetMockCreator,
 } from "./actions";
-import { SelectedSliceStoreType } from "./types";
+import { ExtendedComponentUI, SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
@@ -29,6 +29,11 @@ import {
 import equal from "fast-deep-equal";
 import { compareVariations } from "@lib/utils";
 import { SliceSM } from "@slicemachine/core/build/models";
+import {
+  renamedComponentUI,
+  renameScreenshotUrls,
+  renameSliceCreator,
+} from "../slices";
 
 // Reducer
 export const selectedSliceReducer: Reducer<
@@ -240,6 +245,11 @@ export const selectedSliceReducer: Reducer<
         component: { ...prevState.component, model },
       });
     }
+    case getType(renameSliceCreator.success): {
+      if (!prevState) return prevState;
+      const { newSliceName } = action.payload;
+      return renamedExtendedComponent(prevState, newSliceName);
+    }
     default:
       return prevState;
   }
@@ -263,3 +273,20 @@ export function updateStatus(state: NonNullable<SelectedSliceStoreType>) {
 
   return { ...state, component: { ...state.component, __status } };
 }
+
+const renamedExtendedComponent = (
+  initialState: ExtendedComponentUI,
+  newName: string
+): ExtendedComponentUI => {
+  const newComponentUI = renamedComponentUI(initialState.component, newName);
+
+  return {
+    ...initialState,
+    component: newComponentUI,
+    initialScreenshotUrls: renameScreenshotUrls(
+      initialState.initialScreenshotUrls,
+      initialState.component.model.name,
+      newName
+    ),
+  };
+};
