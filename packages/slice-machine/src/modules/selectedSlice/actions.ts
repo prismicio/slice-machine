@@ -1,11 +1,12 @@
-import { ActionType, createAction } from "typesafe-actions";
+import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { SelectedSliceStoreType } from "./types";
 import { renameSliceCreator } from "../slices";
+import { ExtendedComponentUI, SelectedSliceStoreType } from "./types";
+import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -73,21 +74,60 @@ export const deleteSliceWidgetMockCreator = createAction(
   newKey: string;
 }>();
 
-export const generateSliceScreenshotCreator = createAction(
-  "SLICE/GENERATE_SCREENSHOT"
-)<{ screenshots: Screenshots; component: ComponentUI }>();
+export const generateSliceScreenshotCreator = createAsyncAction(
+  "SLICE/TAKE_SCREENSHOT.REQUEST",
+  "SLICE/TAKE_SCREENSHOT.RESPONSE",
+  "SLICE/TAKE_SCREENSHOT.FAILURE"
+)<
+  {
+    _variationId: string;
+    component: ComponentUI;
+    setData: (data: any) => void;
+  },
+  { screenshots: Screenshots; component: ComponentUI }
+>();
 
-export const generateSliceCustomScreenshotCreator = createAction(
-  "SLICE/GENERATE_CUSTOM_SCREENSHOT"
-)<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
+export const generateSliceCustomScreenshotCreator = createAsyncAction(
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.REQUEST",
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.RESPONSE",
+  "SLICE/GENERATE_CUSTOM_SCREENSHOT.FAILURE"
+)<
+  {
+    variationId: string;
+    component: ComponentUI;
+    setData: (data: any) => void;
+    file: Blob;
+  },
+  { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
+>();
 
-export const saveSliceCreator = createAction("SLICE/SAVE")<{
-  extendedComponent: NonNullable<SelectedSliceStoreType>;
-}>();
+export const saveSliceCreator = createAsyncAction(
+  "SLICE/SAVE.REQUEST",
+  "SLICE/SAVE.RESPONSE",
+  "SLICE/SAVE.FAILURE"
+)<
+  {
+    extendedComponent: ExtendedComponentUI;
+    setData: (data: any) => void;
+  },
+  {
+    extendedComponent: ExtendedComponentUI;
+  }
+>();
 
-export const pushSliceCreator = createAction("SLICE/PUSH")<{
-  extendedComponent: NonNullable<SelectedSliceStoreType>;
-}>();
+export const pushSliceCreator = createAsyncAction(
+  "SLICE/PUSH.REQUEST",
+  "SLICE/PUSH.RESPONSE",
+  "SLICE/PUSH.FAILURE"
+)<
+  {
+    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    onPush: (data: SliceBuilderState) => void;
+  },
+  {
+    extendedComponent: NonNullable<SelectedSliceStoreType>;
+  }
+>();
 
 export const copyVariationSliceCreator = createAction("SLICE/COPY_VARIATION")<{
   key: string;
