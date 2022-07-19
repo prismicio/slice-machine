@@ -59,7 +59,7 @@ export function validateModels({
       boxen(
         `
       🔴 ${chalk.bold("Field value errors detected")}\n
-      Please follow the instructions below👇, in order to start Slice Machine.\n`,
+      Please follow the instructions below 👇, in order to start Slice Machine.\n`,
         { padding: 1, borderColor: "red" }
       )
     );
