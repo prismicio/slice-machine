@@ -58,9 +58,8 @@ export function validateModels({
     console.log(
       boxen(
         `
-      🔴 Errors were detected in your models!\n
-      Your current models will soon be blocked by our APIs.\n
-      Please follow the instructions 👇 and update your models to be able to Start Slice Machine.\n`,
+      🔴 ${chalk.bold("Field value errors detected")}\n
+      Please follow the instructions below👇, in order to start Slice Machine.\n`,
         { padding: 1, borderColor: "red" }
       )
     );
@@ -74,14 +73,14 @@ export function validateModels({
 }
 
 const emptyApiIdMessage = (path: string) =>
-  `${path}\n${chalk.red(
-    "Empty field API ID"
-  )}: an empty API ID has been detected.\n`;
+  `${path}\n${chalk.red("Empty field API ID")}: Please add an API ID.\n`;
 
 const invalidCharacterMessage = (path: string, key: string) =>
   `${path}\n${chalk.red(
     "Invalid characters"
-  )}: the following API ID contains invalid characters ${chalk.green(key)}.\n`;
+  )}: You can't use special characters except _ for the API ID ${chalk.green(
+    key
+  )}.\n`;
 
 export function formatPath(
   cwd: string,
