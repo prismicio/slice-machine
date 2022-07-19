@@ -15,26 +15,27 @@ type CustomTypeBuilderWithProviderProps = {
   remoteCustomType: CustomTypeSM | undefined;
 };
 
-const CustomTypeBuilderWithProvider: React.FC<CustomTypeBuilderWithProviderProps> =
-  ({ customType, remoteCustomType }) => {
-    const { initCustomTypeStore } = useSliceMachineActions();
-    const { env } = useSelector((store: SliceMachineStoreType) => ({
-      env: getEnvironment(store),
-    }));
+const CustomTypeBuilderWithProvider: React.FC<
+  CustomTypeBuilderWithProviderProps
+> = ({ customType, remoteCustomType }) => {
+  const { initCustomTypeStore } = useSliceMachineActions();
+  const { env } = useSelector((store: SliceMachineStoreType) => ({
+    env: getEnvironment(store),
+  }));
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      env.mockConfig,
-      customType.id
-    );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const initialMockConfig = CustomTypeMockConfig.getCustomTypeMockConfig(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    env.mockConfig,
+    customType.id
+  );
 
-    useEffect(() => {
-      initCustomTypeStore(customType, remoteCustomType, initialMockConfig);
-    }, []);
+  useEffect(() => {
+    initCustomTypeStore(customType, remoteCustomType, initialMockConfig);
+  }, []);
 
-    return <CustomTypeBuilder />;
-  };
+  return <CustomTypeBuilder />;
+};
 
 const CustomTypeBuilderWithRouter = () => {
   const router = useRouter();
