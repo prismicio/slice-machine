@@ -120,8 +120,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: newLibs,
       };
-    }
-    case getType(saveSliceCreator): {
+    case getType(saveSliceCreator.success): {
       const newComponentUI = action.payload.extendedComponent.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
 
@@ -139,7 +138,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(pushSliceCreator): {
+    case getType(pushSliceCreator.success): {
       const newComponentUI = action.payload.extendedComponent.component;
 
       const newRemoteSlices = [...state.remoteSlices];
@@ -168,7 +167,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceScreenshotCreator): {
+    case getType(generateSliceScreenshotCreator.success): {
       const { screenshots: screenshotUrls, component } = action.payload;
 
       const newLibraries = state.libraries.map((library) => {
@@ -185,7 +184,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceCustomScreenshotCreator): {
+    case getType(generateSliceCustomScreenshotCreator.success): {
       const { variationId, screenshot, component } = action.payload;
 
       const screenshotUrls: Screenshots = component.model.variations.reduce(
