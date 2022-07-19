@@ -1,4 +1,4 @@
-import { Input } from "./fields";
+import { Input, InputType } from "./fields";
 
 export const validateId = ({
   value,
@@ -15,9 +15,7 @@ export const validateId = ({
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const DefaultFields: any = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+export const DefaultFields: Record<string, InputType> = {
   label: Input(
     "Label",
     {
@@ -28,7 +26,6 @@ export const DefaultFields: any = {
     undefined,
     "Label for content creators (defaults to field type)"
   ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   id: Input(
     "API ID*",
     {
@@ -44,7 +41,6 @@ export const DefaultFields: any = {
     undefined,
     "A unique identifier for the field (e.g. buttonLink)"
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder: Input(
     "Placeholder",
     {

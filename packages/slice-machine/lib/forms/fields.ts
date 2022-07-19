@@ -40,39 +40,50 @@ const defaultMin = [3, "String is too short. Min: 3"];
 const defaultMax = [35, "String is too long. Max: 35"];
 const defaultRequired = ["Field is required"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Input: any = (
+type FieldLevelValidationFn = (arg: {
+  value: string;
+  fields: any;
+  initialId: string;
+}) => boolean | string | undefined;
+
+export interface InputType {
+  type: FormTypes.INPUT;
+  label: string;
+  validate: any;
+  defaultValue: string | undefined;
+  fieldLevelValidation: FieldLevelValidationFn | undefined | null;
+  yupType: "string";
+  placeholder: string;
+  disabled?: boolean;
+}
+
+export const Input = (
   label: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  conditions: { min: any; max: any; required: any; matches?: any } = {
+  conditions: {
+    min?: (string | number)[] | boolean;
+    max?: (string | number)[] | boolean;
+    required?: string[] | string | boolean;
+    matches?: (string | RegExp)[] | string;
+  } = {
     min: defaultMin,
     max: defaultMax,
     required: defaultRequired,
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  fieldLevelValidation: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue: any,
+  fieldLevelValidation: FieldLevelValidationFn | undefined | null,
+  defaultValue: string | undefined,
   placeholder: string
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+): InputType => {
   const { min, max, required, matches } = conditions || {};
   return {
     type: FormTypes.INPUT,
     label,
     validate: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       required: createValidationArgs(required, defaultRequired),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       min: createValidationArgs(min, defaultMin),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
       max: createValidationArgs(max, defaultMax),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       matches,
     },
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     defaultValue,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     fieldLevelValidation,
     yupType: "string",
     placeholder: placeholder,
