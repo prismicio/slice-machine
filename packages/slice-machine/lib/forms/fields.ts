@@ -51,7 +51,7 @@ export interface InputType {
   label: string;
   validate: any;
   defaultValue: string | undefined;
-  fieldLevelValidation: FieldLevelValidationFn | undefined;
+  fieldLevelValidation: FieldLevelValidationFn | undefined | null;
   yupType: "string";
   placeholder: string;
   disabled?: boolean;
@@ -69,7 +69,7 @@ export const Input = (
     max: defaultMax,
     required: defaultRequired,
   },
-  fieldLevelValidation: FieldLevelValidationFn | undefined,
+  fieldLevelValidation: FieldLevelValidationFn | undefined | null,
   defaultValue: string | undefined,
   placeholder: string
 ): InputType => {
