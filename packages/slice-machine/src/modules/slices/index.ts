@@ -120,6 +120,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         ...state,
         libraries: newLibs,
       };
+    }
     case getType(saveSliceCreator.success): {
       const newComponentUI = action.payload.extendedComponent.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
