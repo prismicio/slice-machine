@@ -1,4 +1,5 @@
 import { Input } from "./fields";
+import { API_ID_REGEX } from "@lib/consts";
 
 export const validateId = ({
   value,
@@ -29,10 +30,7 @@ export const DefaultFields: any = {
       min: true,
       max: true,
       required: "This field is required",
-      matches: [
-        /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/,
-        "No special characters allowed",
-      ],
+      matches: [API_ID_REGEX, "No special characters allowed (except _)"],
     },
     validateId
   ),

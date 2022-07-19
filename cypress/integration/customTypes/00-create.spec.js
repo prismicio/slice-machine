@@ -1,6 +1,6 @@
 describe("Custom Types specs", () => {
   const name = "My Test";
-  const id = "my-test";
+  const id = "my_test";
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
