@@ -17,18 +17,12 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import {
-  generateCustomScreenShot,
-  generateScreenShot,
-} from "@src/modules/selectedSlice/screenshot";
-import pushSliceApiCall from "@src/modules/selectedSlice/push";
-import saveSliceApiCall from "@src/modules/selectedSlice/save";
 import { useRouter } from "next/router";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
-type SliceBuilderState = {
+export type SliceBuilderState = {
   imageLoading: boolean;
   loading: boolean;
   done: boolean;
@@ -55,7 +49,6 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 }) => {
   const {
     openLoginModal,
-    checkSimulatorSetup,
     openToaster,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
@@ -109,18 +102,25 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
   if (!variation || !sliceView) return null;
 
-  const onTakingCustomScreenshot = () => {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    checkSimulatorSetup(true, async () => {
-      await generateScreenShot(
-        variation.id,
-        extendedComponent.component.from,
-        extendedComponent.component.model.name,
-        setData,
-        (screenshots) =>
-          generateSliceScreenshot(screenshots, extendedComponent.component)
-      );
-    });
+  const onTakingSliceScreenshot = () => {
+    generateSliceScreenshot(variation.id, extendedComponent.component, setData);
+  };
+
+  const onTakingSliceCustomScreenshot = (file: Blob) => {
+    generateSliceCustomScreenshot(
+      variation.id,
+      extendedComponent.component,
+      setData,
+      file
+    );
+  };
+
+  const onPushSlice = () => {
+    pushSlice(extendedComponent, onPush);
+  };
+
+  const onSaveSlice = () => {
+    saveSlice(extendedComponent, setData);
   };
 
   return (
@@ -129,21 +129,8 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         component={extendedComponent.component}
         isTouched={extendedComponent.isTouched}
         variation={variation}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
-        onPush={async () => {
-          await pushSliceApiCall(extendedComponent.component, onPush, () =>
-            pushSlice(extendedComponent)
-          );
-        }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
-        onSave={async () => {
-          await saveSliceApiCall(
-            extendedComponent.component,
-            extendedComponent.mockConfig,
-            setData,
-            () => saveSlice(extendedComponent)
-          );
-        }}
+        onPush={onPushSlice}
+        onSave={onSaveSlice}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
       />
@@ -153,23 +140,8 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
           <SideBar
             component={extendedComponent.component}
             variation={variation}
-            onScreenshot={onTakingCustomScreenshot}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onHandleFile={async (file: Blob) => {
-              await generateCustomScreenShot(
-                variation.id,
-                extendedComponent.component.from,
-                extendedComponent.component.model.name,
-                setData,
-                file,
-                (variationId, screenshot) =>
-                  generateSliceCustomScreenshot(
-                    variationId,
-                    screenshot,
-                    extendedComponent.component
-                  )
-              );
-            }}
+            onScreenshot={onTakingSliceScreenshot}
+            onHandleFile={onTakingSliceCustomScreenshot}
             imageLoading={data.imageLoading}
           />
         }
