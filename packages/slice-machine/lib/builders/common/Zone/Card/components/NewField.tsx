@@ -176,7 +176,7 @@ const NewField: React.FC<NewField> = ({
                       ? InputFieldStyles.DISABLED
                       : errors.label
                       ? InputFieldStyles.ERROR
-                      : InputFieldStyles.DEFAULT
+                      : undefined
                   )}
                   aria-label="label-input"
                 />
@@ -208,7 +208,7 @@ const NewField: React.FC<NewField> = ({
                       ? InputFieldStyles.DISABLED
                       : errors.id
                       ? InputFieldStyles.ERROR
-                      : InputFieldStyles.DEFAULT
+                      : undefined
                   )}
                 />
                 <ErrorTooltip error={errors.id} />

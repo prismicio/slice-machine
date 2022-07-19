@@ -6,10 +6,9 @@ export enum InputFieldStyles {
   ERROR,
   DISABLED,
   WARNING,
-  DEFAULT,
 }
 
-export const getInputFieldStyles = (type: InputFieldStyles) => {
+export const getInputFieldStyles = (type?: InputFieldStyles) => {
   const defaultFieldStyles = {
     "&::placeholder": { color: "#C9D0D8" },
   };
@@ -45,9 +44,6 @@ export const getInputFieldStyles = (type: InputFieldStyles) => {
         },
       };
     }
-    case InputFieldStyles.DEFAULT: {
-      return defaultFieldStyles;
-    }
     default: {
       return defaultFieldStyles;
     }
@@ -79,7 +75,7 @@ export const FormFieldInput = ({
     ? InputFieldStyles.ERROR
     : isDisabled || formField.disabled
     ? InputFieldStyles.DISABLED
-    : InputFieldStyles.DEFAULT;
+    : undefined;
 
   return (
     <Box sx={sx}>
