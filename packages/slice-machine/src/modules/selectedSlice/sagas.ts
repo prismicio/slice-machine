@@ -107,6 +107,7 @@ export function* generateSliceCustomScreenshotSaga({
         done: true,
         status: response.status,
         imageLoading: false,
+        error: "Internal Error: Custom screenshot not saved",
       });
     }
     setData({
