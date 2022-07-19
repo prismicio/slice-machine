@@ -240,19 +240,10 @@ export function* pushSliceSaga({
 export function* renameSliceSaga({
   payload,
 }: ReturnType<typeof renameSliceCreator.request>) {
+  const { libName, sliceId, newSliceName } = payload;
   try {
-    yield call(
-      renameSlice,
-      payload.sliceId,
-      payload.newSliceName,
-      payload.libName
-    );
-    //TODO: avoid refetch of state. Either manually update all the changes within the reducer,
-    //or make the renameSlice api call return the new libraries, so that it's output can be used.
-    const { data: serverState } = (yield call(getState)) as SagaReturnType<
-      typeof getState
-    >;
-    yield put(renameSliceCreator.success({ libraries: serverState.libraries }));
+    yield call(renameSlice, sliceId, newSliceName, libName);
+    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
     yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
     const addr = `/${payload.libName.replace(/\//g, "--")}/${
       payload.newSliceName

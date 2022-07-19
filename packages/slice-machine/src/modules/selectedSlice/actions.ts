@@ -5,7 +5,7 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
-import { ExtendedComponentUI, SelectedSliceStoreType } from "./types";
+import { SelectedSliceStoreType } from "./types";
 import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
 
 export type SelectedSliceActions =
