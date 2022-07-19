@@ -1,3 +1,4 @@
+import { InputType } from "@lib/forms/fields";
 import { Field, FieldInputProps, FieldMetaProps } from "formik";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
@@ -57,15 +58,7 @@ interface FormFieldInputProps {
   sx: ThemeUIStyleObject;
   field: FieldInputProps<string>;
   meta: FieldMetaProps<string>;
-  formField: {
-    label: string;
-    placeholder: string;
-    fieldLevelValidation?: (arg: {
-      value: string;
-      fields: any;
-      initialId: string;
-    }) => boolean;
-  };
+  formField: InputType;
   fieldName: string;
   fields: Record<string, unknown>;
   initialValues?: Record<string, string>;
@@ -84,7 +77,7 @@ export const FormFieldInput = ({
 }: FormFieldInputProps) => {
   const style = meta.error
     ? InputFieldStyles.ERROR
-    : isDisabled
+    : isDisabled || formField.disabled
     ? InputFieldStyles.DISABLED
     : InputFieldStyles.DEFAULT;
 
@@ -116,7 +109,7 @@ export const FormFieldInput = ({
         {...field}
         as={Input}
         sx={getInputFieldStyles(style)}
-        disabled={isDisabled}
+        disabled={isDisabled || formField.disabled}
       />
     </Box>
   );
