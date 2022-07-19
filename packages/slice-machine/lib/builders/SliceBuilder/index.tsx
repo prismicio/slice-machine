@@ -54,6 +54,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     generateSliceCustomScreenshot,
     pushSlice,
     saveSlice,
+    checkSimulatorSetup,
   } = useSliceMachineActions();
   const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -100,11 +101,13 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   };
 
   const onTakingSliceCustomScreenshot = (file: Blob) => {
-    generateSliceCustomScreenshot(
-      variation.id,
-      extendedComponent.component,
-      setData,
-      file
+    checkSimulatorSetup(true, () =>
+      generateSliceCustomScreenshot(
+        variation.id,
+        extendedComponent.component,
+        setData,
+        file
+      )
     );
   };
 
