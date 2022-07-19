@@ -25,14 +25,14 @@ const handleDefaultValue = (field: { type: FormTypes; defaultValue: any }) => {
 export const createFieldNameFromKey = (key: string) =>
   key === "id" ? "id" : `config.${key}`;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-export const createValidationArgs = (args: any, defaultArgs: any) => {
+export const createValidationArgs = (
+  args: (string | number)[] | boolean | string | undefined,
+  defaultArgs: (string | number)[]
+) => {
   if (Array.isArray(args)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return args;
   }
   if (typeof args === "boolean" && args) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return defaultArgs;
   }
   return null;

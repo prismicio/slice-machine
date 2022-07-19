@@ -1,6 +1,6 @@
 import { Ref, SetStateAction, useEffect, useRef, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { Box, Input, Flex, Text, Button, useThemeUI, Theme } from "theme-ui";
+import { Box, Input, Flex, Text, Button, useThemeUI } from "theme-ui";
 import * as CSS from "csstype";
 import { AnyObjectSchema } from "yup";
 
@@ -12,6 +12,11 @@ import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import ErrorTooltip from "./ErrorTooltip";
+import { InputType } from "@lib/forms/fields";
+import {
+  getInputFieldStyles,
+  InputFieldStyles,
+} from "@components/FormFields/Input";
 
 interface NewField {
   widgetTypeName: string;
@@ -53,7 +58,7 @@ const NewField: React.FC<NewField> = ({
     return <div>Unexpected error. Contact us for more info.</div>;
   }
 
-  const widgetFormFields = widget.FormFields as { id: string; label: string };
+  const widgetFormFields = widget.FormFields as Record<string, InputType>;
   const WidgetIcon = widget.Meta.icon;
 
   const FormFields = {
@@ -83,7 +88,7 @@ const NewField: React.FC<NewField> = ({
       shouldValidate?: boolean
     ) => void
   ) => {
-    if (isIdFieldPristine) {
+    if (isIdFieldPristine && !FormFields.id.disabled) {
       setValues({
         ...values,
         label: e.target.value,
@@ -166,17 +171,13 @@ const NewField: React.FC<NewField> = ({
                   }}
                   as={RefInput}
                   innerRef={fieldRef}
-                  sx={{
-                    border: ({ colors }: Theme) =>
-                      errors.label
-                        ? `1px solid tomato`
-                        : `1px solid ${colors?.primary?.toString() || ""}`,
-                    "&:focus": {
-                      border: errors.label
-                        ? `1px solid tomato`
-                        : "1px solid yellow",
-                    },
-                  }}
+                  sx={getInputFieldStyles(
+                    FormFields.label.disabled
+                      ? InputFieldStyles.DISABLED
+                      : errors.label
+                      ? InputFieldStyles.ERROR
+                      : InputFieldStyles.DEFAULT
+                  )}
                   aria-label="label-input"
                 />
                 <ErrorTooltip error={errors.label} />
@@ -193,6 +194,7 @@ const NewField: React.FC<NewField> = ({
                   name="id"
                   placeholder="e.g. buttonLink"
                   type="text"
+                  disabled={FormFields.id.disabled}
                   validate={(value: string) =>
                     validateId({
                       value,
@@ -201,17 +203,13 @@ const NewField: React.FC<NewField> = ({
                     })
                   }
                   as={RefInput}
-                  sx={{
-                    border: ({ colors }: Theme) =>
-                      errors.id
-                        ? `1px solid tomato`
-                        : `1px solid ${colors?.primary?.toString() || ""}`,
-                    "&:focus": {
-                      border: errors.id
-                        ? `1px solid tomato`
-                        : "1px solid yellow",
-                    },
-                  }}
+                  sx={getInputFieldStyles(
+                    FormFields.id.disabled
+                      ? InputFieldStyles.DISABLED
+                      : errors.id
+                      ? InputFieldStyles.ERROR
+                      : InputFieldStyles.DEFAULT
+                  )}
                 />
                 <ErrorTooltip error={errors.id} />
               </Flex>

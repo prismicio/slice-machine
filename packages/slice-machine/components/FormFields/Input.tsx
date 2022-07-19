@@ -1,22 +1,27 @@
 import { Field, FieldInputProps, FieldMetaProps } from "formik";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
-const getFieldStyles = (
-  isError: boolean,
-  isDisabled: boolean | undefined,
-  isWarning: boolean | undefined
-) => {
+export enum InputFieldStyles {
+  ERROR,
+  DISABLED,
+  WARNING,
+  DEFAULT,
+}
+
+export const getInputFieldStyles = (type: InputFieldStyles) => {
   const defaultFieldStyles = {
     "&::placeholder": { color: "#C9D0D8" },
   };
-  const fieldStyles = isDisabled
-    ? {
+  switch (type) {
+    case InputFieldStyles.DISABLED: {
+      return {
         ...defaultFieldStyles,
         border: "1px solid #E6E6EA",
         backgroundColor: "#F3F5F7",
-      }
-    : isError
-    ? {
+      };
+    }
+    case InputFieldStyles.ERROR: {
+      return {
         ...defaultFieldStyles,
         border: "1px solid #E26049",
         "&:focus": {
@@ -25,9 +30,10 @@ const getFieldStyles = (
           boxShadow:
             "0 0 0 3px rgba(226, 96, 73, 0.2), inset 0 1px 2px rgba(226, 96, 73, 0.2)",
         },
-      }
-    : isWarning
-    ? {
+      };
+    }
+    case InputFieldStyles.WARNING: {
+      return {
         ...defaultFieldStyles,
         border: "1px solid orange",
         "&:focus": {
@@ -36,10 +42,15 @@ const getFieldStyles = (
           boxShadow:
             "0 0 0 3px rgba(255, 165, 0, 0.2), inset 0 1px 2px rgba(255, 165, 0, 0.2)",
         },
-      }
-    : defaultFieldStyles;
-
-  return fieldStyles;
+      };
+    }
+    case InputFieldStyles.DEFAULT: {
+      return defaultFieldStyles;
+    }
+    default: {
+      return defaultFieldStyles;
+    }
+  }
 };
 
 interface FormFieldInputProps {
@@ -71,6 +82,12 @@ export const FormFieldInput = ({
   initialValues,
   isDisabled,
 }: FormFieldInputProps) => {
+  const style = meta.error
+    ? InputFieldStyles.ERROR
+    : isDisabled
+    ? InputFieldStyles.DISABLED
+    : InputFieldStyles.DEFAULT;
+
   return (
     <Box sx={sx}>
       <Label variant="label.primary" htmlFor={fieldName}>
@@ -98,7 +115,7 @@ export const FormFieldInput = ({
           : null)}
         {...field}
         as={Input}
-        sx={getFieldStyles(Boolean(meta.error), Boolean(isDisabled), false)}
+        sx={getInputFieldStyles(style)}
         disabled={isDisabled}
       />
     </Box>
