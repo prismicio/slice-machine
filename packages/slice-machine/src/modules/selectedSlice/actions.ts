@@ -107,11 +107,11 @@ export const saveSliceCreator = createAsyncAction(
   "SLICE/SAVE.FAILURE"
 )<
   {
-    extendedComponent: ExtendedComponentUI;
+    extendedComponent: NonNullable<SelectedSliceStoreType>;
     setData: (data: any) => void;
   },
   {
-    extendedComponent: ExtendedComponentUI;
+    extendedComponent: NonNullable<SelectedSliceStoreType>;
   }
 >();
 
