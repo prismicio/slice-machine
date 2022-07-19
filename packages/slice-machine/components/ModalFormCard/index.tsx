@@ -78,7 +78,6 @@ function ModalCard<Values>({
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onSubmit={(values) => {
           onSubmit(values);
-          close();
         }}
       >
         {({

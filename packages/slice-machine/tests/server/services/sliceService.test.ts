@@ -6,17 +6,19 @@ import {
 } from "../../../server/src/api/services/sliceService";
 import { upload } from "../../../server/src/api/services/uploadScreenshotClient";
 
-import { Client } from "../../../lib/models/server/Client";
-import { ApplicationMode } from "../../../lib/models/server/ApplicationMode";
 import allFieldSliceObject from "../../__mocks__/sliceModel";
 import backendEnvironment from "../../__mocks__/backendEnvironment";
+import { Client, ApplicationMode } from "@slicemachine/client";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 const allFieldSliceModel = Slices.toSM(allFieldSliceObject);
 
-jest.mock("../../../lib/models/server/Client", () => {
+jest.mock("@slicemachine/client", () => {
+  const originalModule = jest.requireActual("@slicemachine/client");
+
   return {
+    ...originalModule,
     Client: jest.fn().mockImplementation(() => {
       return {
         updateSlice: jest.fn(),
@@ -49,12 +51,7 @@ describe("Slice Service", () => {
       const mockInsertSlice = client.insertSlice as jest.Mock;
       const mockUpdateSlice = client.updateSlice as jest.Mock;
 
-      const result = createOrUpdate(
-        [],
-        allFieldSliceModel.name,
-        allFieldSliceModel,
-        client
-      );
+      createOrUpdate([], allFieldSliceModel, client);
       expect(mockInsertSlice).toHaveBeenCalledTimes(1);
       expect(mockInsertSlice).toHaveBeenCalledWith(allFieldSliceObject);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(0);
@@ -65,12 +62,7 @@ describe("Slice Service", () => {
       const mockInsertSlice = client.insertSlice as jest.Mock;
       const mockUpdateSlice = client.updateSlice as jest.Mock;
 
-      const result = createOrUpdate(
-        [allFieldSliceModel],
-        allFieldSliceModel.name,
-        allFieldSliceModel,
-        client
-      );
+      createOrUpdate([allFieldSliceModel], allFieldSliceModel, client);
       expect(mockInsertSlice).toHaveBeenCalledTimes(0);
       expect(mockUpdateSlice).toHaveBeenCalledTimes(1);
       expect(mockUpdateSlice).toHaveBeenCalledWith(allFieldSliceObject);

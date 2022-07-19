@@ -52,6 +52,7 @@ const CreateCustomtypeForm = ({
       close={close}
       onSubmit={(values) => {
         onSubmit(values);
+        close();
       }}
       initialValues={{
         id: "",
@@ -77,7 +78,7 @@ const CreateCustomtypeForm = ({
           <InputBox
             name="id"
             label="New Tab ID"
-            placeholder="Tab"
+            placeholder="A label for selecting the tab (i.e. not used in the API)"
             error={errors.id}
           />
         </Box>

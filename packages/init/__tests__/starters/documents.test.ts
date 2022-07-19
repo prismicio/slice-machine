@@ -69,6 +69,6 @@ describe("readDocuments", () => {
     });
 
     const result = await readDocuments(TMP_DIR);
-    expect(result).toEqual(JSON.stringify({ fooo: fakeDocs }));
+    expect(result).toEqual({ fooo: fakeDocs });
   });
 });

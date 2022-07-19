@@ -49,7 +49,7 @@ const LoginModal: React.FunctionComponent = () => {
 
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
-    buildEndpoints(prismicBase).Dashboard.cliLogin
+    buildEndpoints(prismicBase + "/").Dashboard.cliLogin
   }&port=${new URL(env.sliceMachineAPIUrl).port}&path=/api/auth`;
   const onClick = async () => {
     if (!loginRedirectUrl) {

@@ -6,23 +6,17 @@ import os from "os";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { InitClient } from "../src/utils";
+import { ApplicationMode } from "@slicemachine/client";
 import { stderr } from "stdout-stderr";
-import * as t from "io-ts";
 import fs from "fs";
 import path from "path";
-
-interface SmJson {
-  apiEndpoint: string;
-  libraries: string[];
-  framework: string;
-}
+import { Manifest } from "@slicemachine/core/build/models";
 
 const TMP_DIR = path.join(os.tmpdir(), "sm-init-starter-test");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
-const base = "https://prismic.io";
-const cookies = `prismic-auth=${token}`;
 const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
 
 const PATH_TO_STUB_PROJECT = path.join(__dirname, "__stubs__", "fake-project");
@@ -61,6 +55,8 @@ function validateS3Body(body: unknown) {
   return hasKey && hasFile;
 }
 
+const clientProd = new InitClient(ApplicationMode.PROD, repo, token);
+
 describe("send starter data", () => {
   afterEach(() => {
     mockfs.restore();
@@ -72,7 +68,7 @@ describe("send starter data", () => {
       [TMP_DIR]: {},
     });
 
-    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     expect(result).toBeFalsy();
   });
 
@@ -80,7 +76,6 @@ describe("send starter data", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.prismic.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
     mockfs({
       [TMP_DIR]: {
@@ -89,7 +84,7 @@ describe("send starter data", () => {
       },
     });
 
-    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     expect(result).toBeFalsy();
   });
 
@@ -101,7 +96,6 @@ describe("send starter data", () => {
     const smJson = {
       apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockFiles(smJson);
@@ -111,7 +105,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     stderr.stop();
 
     expect(result).toBeTruthy();
@@ -128,7 +122,7 @@ describe("send starter data", () => {
 
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(false);
 
-    expect.assertions(10);
+    expect.assertions(9);
   });
 
   test("when pushing documents to a repository that already has some, the init script fails", async () => {
@@ -143,7 +137,6 @@ describe("send starter data", () => {
     const smJson = {
       apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockFiles(smJson);
@@ -153,7 +146,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, true, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, true);
     stderr.stop();
 
     expect(result).toBeFalsy();
@@ -186,7 +179,6 @@ describe("send starter data", () => {
     const smJson = {
       apiEndpoint: `https://${repo}.prismic.io/api/v2`,
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockFiles(smJson);
@@ -196,7 +188,7 @@ describe("send starter data", () => {
     expect(fs.existsSync(path.join(TMP_DIR, "documents"))).toBe(true);
 
     stderr.start();
-    const result = await sendStarterData(repo, base, cookies, false, TMP_DIR);
+    const result = await sendStarterData(clientProd, TMP_DIR, false);
     stderr.stop();
 
     expect(result).toBeTruthy();
@@ -218,33 +210,42 @@ describe("send starter data", () => {
 });
 
 //////// HELPER METHODS ////////
-const mockFiles = (smJson: SmJson) => {
-  mockfs({
-    [TMP_DIR]: {
-      documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
-      customtypes: {
-        "blog-page": {
-          "index.json": JSON.stringify(CT_ON_DISK),
+const mockFiles = (smJson: Manifest) => {
+  mockfs(
+    {
+      [TMP_DIR]: {
+        documents: mockfs.load(path.join(PATH_TO_STUB_PROJECT, "documents")),
+        customtypes: {
+          "blog-page": {
+            "index.json": JSON.stringify(CT_ON_DISK),
+          },
         },
-      },
-      "sm.json": JSON.stringify(smJson),
-      slices: {
-        MySlice: {
-          "model.json": mockfs.load(
-            path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
-          ),
-          default: {
-            "preview.png": mockfs.load(
-              path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+        "sm.json": JSON.stringify(smJson),
+        slices: {
+          MySlice: {
+            "model.json": mockfs.load(
+              path.join(PATH_TO_STUB_PROJECT, MODEL_PATH)
             ),
+            default: {
+              "preview.png": mockfs.load(
+                path.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
+              ),
+            },
           },
         },
       },
+      [os.homedir()]: {
+        ".prismic": JSON.stringify({
+          base: clientProd.apisEndpoints.Wroom,
+          cookies: `prismic-auth=${clientProd.authenticationToken}`,
+        }),
+      },
     },
-  });
+    { createCwd: false, createTmp: false }
+  );
 };
 
-const mockApiCalls = (smJson: SmJson, existingDocsInRepository: boolean) => {
+const mockApiCalls = (smJson: Manifest, existingDocsInRepository: boolean) => {
   nock("https://0yyeb2g040.execute-api.us-east-1.amazonaws.com")
     .get("/prod/create")
     .matchHeader("User-Agent", "slice-machine")
@@ -298,7 +299,7 @@ const mockApiCalls = (smJson: SmJson, existingDocsInRepository: boolean) => {
   const prismicUrl = new URL(smJson.apiEndpoint);
 
   const documentsNock = nock(prismicUrl.origin)
-    .matchHeader("Cookie", `prismic-auth=${token}`)
+    .matchHeader("Authorization", `Bearer ${token}`)
     .post("/starter/documents");
 
   if (existingDocsInRepository) {
@@ -306,13 +307,7 @@ const mockApiCalls = (smJson: SmJson, existingDocsInRepository: boolean) => {
       return "Repository should not contain documents";
     });
   } else {
-    documentsNock.reply(200, (_, body) => {
-      const docs = t.record(t.string, t.string).decode(body);
-      // todo: check signature
-      const result = isRight(docs);
-      expect(result).toBeTruthy();
-
-      return result;
-    });
+    // we don't have to know what the api does, just return the good result.
+    documentsNock.reply(200);
   }
 };

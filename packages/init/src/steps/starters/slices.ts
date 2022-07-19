@@ -1,34 +1,32 @@
-import { Component } from "@slicemachine/core/build/models";
+import { Component, Manifest, Slices } from "@slicemachine/core/build/models";
+import { Acl, ClientError } from "@slicemachine/client";
+import { InitClient, logs } from "../../utils";
 import * as Libraries from "@slicemachine/core/build/libraries";
-import { logs } from "../../utils";
-import { getRemoteSliceIds, sendManyModelsToPrismic } from "./communication";
-import { getEndpointsFromBase } from "./endpoints";
 import { promptToPushSlices } from "./prompts";
-import { addImageUrlsToModelVariations, createAcl } from "./s3";
+import { updateSlicesWithScreenshots } from "./s3";
+import { writeError } from "../../utils/logs";
 
-export async function sendSlicesFromStarter(
-  base: string,
-  repository: string,
-  authorization: string,
-  libraryPaths: Array<string>,
-  cwd: string
-) {
-  const endpoints = getEndpointsFromBase(base);
-  const libraries = Libraries.libraries(cwd, libraryPaths);
+export async function sendSlices(
+  client: InitClient,
+  cwd: string,
+  manifest: Manifest
+): Promise<boolean> {
+  if (!manifest.libraries) return Promise.resolve(false); // No libraries defined
 
-  if (libraries.length === 0) return Promise.resolve(false);
+  const libraries = Libraries.libraries(cwd, manifest.libraries);
+  const components = libraries.reduce<Array<Component>>((acc, lib) => {
+    return [...acc, ...lib.components];
+  }, []);
 
-  const remoteSlices = await getRemoteSliceIds(
-    endpoints.Models,
-    repository,
-    authorization
-  );
+  if (components.length === 0) return Promise.resolve(false); // No slices to send found in the libraries
 
-  if (remoteSlices.length) {
-    // do prompt about slices
+  const remoteSlicesIds: string[] = await client
+    .getSlices()
+    .then((slices) => slices.map((slice) => slice.id));
 
+  // If the repository already has Slices, ask the user to confirm.
+  if (remoteSlicesIds.length) {
     const pushAnyway = await promptToPushSlices();
-
     if (pushAnyway === false) return Promise.resolve(true);
   }
 
@@ -37,25 +35,40 @@ export async function sendSlicesFromStarter(
   );
   spinner.start();
 
-  const acl = await createAcl(endpoints.AclProvider, repository, authorization);
+  const acl: Acl | null = await client
+    .createAcl()
+    .catch((error: ClientError) => {
+      writeError(
+        "Uploading screenshots for your slices failed, please contact us."
+      );
+      writeError(error.message, "Full error:");
+      return null;
+    });
 
-  const components = libraries.reduce<Array<Component>>((acc, lib) => {
-    return [...acc, ...lib.components];
-  }, []);
+  // If the acl failed to be created, don't mind the screenshots.
+  const models = acl
+    ? await updateSlicesWithScreenshots(client, acl, components)
+    : components.map((component) => component.model);
 
-  const models = await addImageUrlsToModelVariations(
-    acl,
-    repository,
-    components
-  );
+  await Promise.all(
+    models.map(async (model) => {
+      const slice = Slices.fromSM(model);
 
-  await sendManyModelsToPrismic(
-    repository,
-    authorization,
-    endpoints.Models,
-    remoteSlices,
-    models
-  );
+      const promise = remoteSlicesIds.includes(slice.id)
+        ? client.updateSlice(slice)
+        : client.insertSlice(slice);
+
+      return promise.catch((error: ClientError) => {
+        logs.writeError(`Sending slice ${model.id} - ${error.message}`);
+
+        // throwing the error again to stop the Promise.all
+        throw error;
+      });
+    })
+  ).catch(() => {
+    // the error about the slice that failed to be pushed should be in the terminal already.
+    process.exit(1);
+  });
 
   spinner.succeed();
   return Promise.resolve(true);

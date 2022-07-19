@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { SimulatorCheckResponse } from "@models/common/Simulator";
-import { SaveCustomTypeBody } from "@models/common/CustomType";
+import {
+  RenameCustomTypeBody,
+  SaveCustomTypeBody,
+} from "@models/common/CustomType";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
@@ -35,6 +38,22 @@ export const saveCustomType = (
   return axios.post("/api/custom-types/save", requestBody, defaultAxiosConfig);
 };
 
+export const renameCustomType = (
+  customTypeId: string,
+  newCustomTypeName: string
+): Promise<AxiosResponse> => {
+  const requestBody: RenameCustomTypeBody = {
+    customTypeId,
+    newCustomTypeName,
+  };
+
+  return axios.patch(
+    `/api/custom-types/rename?id=${customTypeId}`,
+    requestBody,
+    defaultAxiosConfig
+  );
+};
+
 export const pushCustomType = (
   customTypeId: string
 ): Promise<AxiosResponse> => {
@@ -58,6 +77,19 @@ export const createSlice = (
   return axios
     .post(`/api/slices/create`, requestBody, defaultAxiosConfig)
     .then((response: AxiosResponse<{ variationId: string }>) => response.data);
+};
+
+export const renameSlice = (
+  sliceId: string,
+  newSliceName: string,
+  libName: string
+): Promise<AxiosResponse> => {
+  const requestBody = {
+    sliceId,
+    newSliceName,
+    libName,
+  };
+  return axios.put(`/api/slices/rename`, requestBody, defaultAxiosConfig);
 };
 
 /** Auth Routes **/

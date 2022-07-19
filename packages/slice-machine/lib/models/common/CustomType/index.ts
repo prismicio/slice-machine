@@ -7,6 +7,11 @@ export interface SaveCustomTypeBody {
   mockConfig: CustomTypeMockConfig;
 }
 
+export interface RenameCustomTypeBody {
+  customTypeId: string;
+  newCustomTypeName: string;
+}
+
 export const CustomType = {
   getSliceZones(ct: CustomTypeSM): ReadonlyArray<SlicesSM | null> {
     return ct.tabs.map((t) => t.sliceZone || null);

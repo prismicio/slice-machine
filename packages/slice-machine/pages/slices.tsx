@@ -1,17 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { MdHorizontalSplit } from "react-icons/md";
 import { Box, Flex, Button, Text, Spinner, Link } from "theme-ui";
 import Container from "components/Container";
-
-import { LibrariesContext } from "src/models/libraries/context";
 
 import CreateSliceModal from "components/Forms/CreateSliceModal";
 
 import Header from "components/Header";
 import Grid from "components/Grid";
 
-import LibraryState from "lib/models/ui/LibraryState";
-import SliceState from "lib/models/ui/SliceState";
 import { SharedSlice } from "lib/models/ui/Slice";
 import EmptyState from "components/EmptyState";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
@@ -22,6 +18,8 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 
 const CreateSliceButton = ({
   onClick,
@@ -42,16 +40,15 @@ const CreateSliceButton = ({
 );
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const libraries = useContext(LibrariesContext);
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
 
-  const { isCreateSliceModalOpen, isCreatingSlice, localLibs, remoteLibs } =
+  const { isCreateSliceModalOpen, isCreatingSlice, remoteSlices, libraries } =
     useSelector((store: SliceMachineStoreType) => ({
       isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
       isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-      localLibs: getLibraries(store),
-      remoteLibs: getRemoteSlices(store),
+      remoteSlices: getRemoteSlices(store),
+      libraries: getLibraries(store),
     }));
 
   const _onCreate = ({
@@ -64,7 +61,7 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryState[] | undefined = libraries?.filter(
+  const localLibraries: LibraryUI[] | undefined = libraries?.filter(
     (l) => l.isLocal
   );
 
@@ -128,6 +125,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     onCreateNew={openCreateSliceModal}
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}
+                    videoPublicIdUrl="placeholders/What_are_Slices_mrvome"
                     documentationComponent={
                       <>
                         Slices are sections of your website. Prismic documents
@@ -147,7 +145,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   />
                 </Flex>
               ) : (
-                libraries.map((lib: LibraryState) => {
+                libraries.map((lib) => {
                   const { name, isLocal, components } = lib;
                   return (
                     <Flex
@@ -179,14 +177,14 @@ const SlicesIndex: React.FunctionComponent = () => {
                         {!isLocal && <p>⚠️ External libraries are read-only</p>}
                       </Flex>
                       <Grid
-                        elems={components.map(([e]) => e)}
-                        defineElementKey={(slice: SliceState) =>
+                        elems={components}
+                        defineElementKey={(slice: ComponentUI) =>
                           slice.model.name
                         }
-                        renderElem={(slice: SliceState) => {
+                        renderElem={(slice: ComponentUI) => {
                           return SharedSlice.render({
                             displayStatus: true,
-                            slice,
+                            slice: slice,
                           });
                         }}
                         gridGap="32px 16px"
@@ -204,8 +202,8 @@ const SlicesIndex: React.FunctionComponent = () => {
           isCreatingSlice={isCreatingSlice}
           isOpen={isCreateSliceModalOpen}
           close={closeCreateSliceModal}
-          libraries={localLibs}
-          remoteSlices={remoteLibs}
+          libraries={localLibraries}
+          remoteSlices={remoteSlices}
           onSubmit={({ sliceName, from }) => _onCreate({ sliceName, from })}
         />
       )}

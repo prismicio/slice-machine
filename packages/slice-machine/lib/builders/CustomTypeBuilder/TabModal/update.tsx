@@ -66,6 +66,7 @@ const CreateCustomtypeForm = ({
       cardProps={{ bodySx: { p: 0 } }}
       onSubmit={(values) => {
         onSubmit(values);
+        close();
       }}
       initialValues={{
         id: "",
@@ -93,7 +94,7 @@ const CreateCustomtypeForm = ({
             <InputBox
               name="id"
               label="Update Tab ID"
-              placeholder="Tab"
+              placeholder="A label for selecting the tab (i.e. not used in the API)"
               error={errors.id}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFieldValue("id", e.target.value.trim());

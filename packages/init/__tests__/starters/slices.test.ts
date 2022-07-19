@@ -1,6 +1,6 @@
 import { describe, test, jest, afterEach, expect } from "@jest/globals";
 import npath from "path";
-import { sendSlicesFromStarter } from "../../src/steps/starters/slices";
+import { sendSlices } from "../../src/steps/starters/slices";
 
 import nock from "nock";
 import mockfs from "mock-fs";
@@ -10,6 +10,10 @@ import inquirer from "inquirer";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { isLeft } from "fp-ts/lib/Either";
 import { stderr } from "stdout-stderr";
+import { InitClient } from "../../src/utils";
+import { ApplicationMode } from "@slicemachine/client";
+
+import SliceModel from "../__stubs__/fake-project/slices/MySlice/model.json";
 
 const TMP_DIR = npath.join(os.tmpdir(), "sm-init-starter-test");
 const PATH_TO_STUB_PROJECT = npath.join(
@@ -31,8 +35,10 @@ const MODEL_PATH = npath.join("slices", "MySlice", "model.json");
 
 const token = "aaaaaaa";
 const repo = "bbbbbbb";
-const base = "https://prismic.io";
 const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+const clientProd = new InitClient(ApplicationMode.PROD, repo, token);
+const clientStage = new InitClient(ApplicationMode.STAGE, repo, token);
 
 function validateS3Body(body: unknown) {
   if (!body) return false;
@@ -56,7 +62,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.prismic.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
     mockfs({
       [TMP_DIR]: {
@@ -122,13 +127,7 @@ describe("sendSlicesFromStarter", () => {
       .reply(200);
 
     stderr.start();
-    const result = await sendSlicesFromStarter(
-      base,
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientProd, TMP_DIR, smJson);
     stderr.stop();
 
     expect(stderr.output).toContain(
@@ -142,7 +141,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.wroom.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
     mockfs({
       [TMP_DIR]: {
@@ -166,19 +164,13 @@ describe("sendSlicesFromStarter", () => {
       .matchHeader("repository", repo)
       .matchHeader("Authorization", `Bearer ${token}`);
 
-    smApi.get("/slices").reply(200, [{}]);
+    smApi.get("/slices").reply(200, [SliceModel]);
 
     const promptSpy = jest
       .spyOn(inquirer, "prompt")
       .mockResolvedValue({ pushSlices: false });
 
-    const result = await sendSlicesFromStarter(
-      base,
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientProd, TMP_DIR, smJson);
 
     expect(promptSpy).toHaveBeenCalled();
     expect(result).toBeTruthy();
@@ -188,7 +180,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.prismic.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockfs({
@@ -197,13 +188,7 @@ describe("sendSlicesFromStarter", () => {
       },
     });
 
-    const result = await sendSlicesFromStarter(
-      base,
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientProd, TMP_DIR, smJson);
 
     expect(result).toBeFalsy();
   });
@@ -212,7 +197,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.wroom.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockfs({
@@ -281,13 +265,7 @@ describe("sendSlicesFromStarter", () => {
       .reply(200);
 
     stderr.start();
-    const result = await sendSlicesFromStarter(
-      "https://wroom.io",
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientStage, TMP_DIR, smJson);
     stderr.stop();
 
     expect(stderr.output).toContain(
@@ -301,7 +279,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.wroom.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
     mockfs({
       [TMP_DIR]: {
@@ -325,7 +302,7 @@ describe("sendSlicesFromStarter", () => {
       .matchHeader("repository", repo)
       .matchHeader("Authorization", `Bearer ${token}`);
 
-    smApi.get("/slices").reply(200, [{ id: "my_slice" }]);
+    smApi.get("/slices").reply(200, [SliceModel]);
 
     jest.spyOn(inquirer, "prompt").mockResolvedValue({ pushSlices: true });
 
@@ -371,13 +348,7 @@ describe("sendSlicesFromStarter", () => {
       .reply(200);
 
     stderr.start();
-    const result = await sendSlicesFromStarter(
-      "https://wroom.io",
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientStage, TMP_DIR, smJson);
     stderr.stop();
     expect(stderr.output).toContain(
       "Pushing existing Slice models to your repository"
@@ -390,7 +361,6 @@ describe("sendSlicesFromStarter", () => {
     const smJson = {
       apiEndpoint: "https://foo-bar.wroom.io/api/v2",
       libraries: ["@/slices"],
-      framework: "none",
     };
 
     mockfs({
@@ -457,13 +427,7 @@ describe("sendSlicesFromStarter", () => {
       .mockImplementation(() => undefined);
 
     stderr.start();
-    const result = await sendSlicesFromStarter(
-      "https://wroom.io",
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
+    const result = await sendSlices(clientStage, TMP_DIR, smJson);
     stderr.stop();
 
     expect(exitSpy).toHaveBeenCalled();
@@ -472,49 +436,6 @@ describe("sendSlicesFromStarter", () => {
     expect(stderr.output).toContain(
       "Pushing existing Slice models to your repository"
     );
-    expect(result).toBeTruthy();
-  });
-
-  test.skip("when a slice is invalid, it should alert the user and exit", async () => {
-    const smJson = {
-      apiEndpoint: "https://foo-bar.wroom.io/api/v2",
-      libraries: ["@/slices"],
-      framework: "none",
-    };
-    mockfs({
-      [TMP_DIR]: {
-        slices: {
-          MySlice: {
-            "model.json": JSON.stringify({}),
-            default: {
-              "preview.png": mockfs.load(
-                npath.join(PATH_TO_STUB_PROJECT, IMAGE_DATA_PATH)
-              ),
-            },
-          },
-        },
-        "sm.json": JSON.stringify(smJson),
-      },
-    });
-
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementationOnce(() => undefined as never);
-
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    const result = await sendSlicesFromStarter(
-      "https://wroom.io",
-      repo,
-      token,
-      smJson.libraries,
-      TMP_DIR
-    );
-
-    expect(exitSpy).toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalled();
     expect(result).toBeTruthy();
   });
 });

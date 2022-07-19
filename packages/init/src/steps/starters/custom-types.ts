@@ -1,15 +1,11 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { Files, CustomTypesPaths } from "@slicemachine/core/build/node-utils";
 import { isLeft } from "fp-ts/lib/Either";
-import {
-  getRemoteCustomTypeIds,
-  sendManyCustomTypesToPrismic,
-} from "./communication";
 import { promptToPushCustomTypes } from "./prompts";
-import { getEndpointsFromBase } from "./endpoints";
-import { logs } from "../../utils";
+import { InitClient, logs } from "../../utils";
+import { ClientError } from "@slicemachine/client";
 
-export function readCustomTypes(cwd: string): Array<CustomType> {
+export function readLocalCustomTypes(cwd: string): Array<CustomType> {
   const customTypePaths = CustomTypesPaths(cwd);
   const dir = customTypePaths.value();
 
@@ -40,23 +36,15 @@ export function readCustomTypes(cwd: string): Array<CustomType> {
   return files;
 }
 
-export async function sendCustomTypesFromStarter(
-  repository: string,
-  authorization: string,
-  base: string,
-  cwd: string
-) {
-  const customTypeApiEndpoint = getEndpointsFromBase(base).Models;
+export async function sendCustomTypes(client: InitClient, cwd: string) {
+  const localCustomTypes = readLocalCustomTypes(cwd);
 
-  const customTypes = readCustomTypes(cwd);
+  // nothing to push
+  if (localCustomTypes.length === 0) return Promise.resolve(false);
 
-  if (customTypes.length === 0) return Promise.resolve(false);
-
-  const remoteCustomTypeIds = await getRemoteCustomTypeIds(
-    customTypeApiEndpoint,
-    repository,
-    authorization
-  );
+  const remoteCustomTypeIds = await client
+    .getCustomTypes()
+    .then((customTypes) => customTypes.map((customType) => customType.id));
 
   if (remoteCustomTypeIds.length) {
     const shouldPush = await promptToPushCustomTypes();
@@ -68,15 +56,26 @@ export async function sendCustomTypesFromStarter(
   );
   spinner.start();
 
-  await sendManyCustomTypesToPrismic(
-    repository,
-    authorization,
-    customTypeApiEndpoint,
-    remoteCustomTypeIds,
-    customTypes
-  );
+  await Promise.all(
+    localCustomTypes.map(async (customType) => {
+      const promise = remoteCustomTypeIds.includes(customType.id)
+        ? client.updateCustomType(customType)
+        : client.insertCustomType(customType);
+
+      return promise.catch((error: ClientError) => {
+        logs.writeError(
+          `Sending custom type ${customType.id} - ${error.message}`
+        );
+
+        // throwing the error again to stop the Promise.all
+        throw error;
+      });
+    })
+  ).catch(() => {
+    // the error about the custom type that failed to be pushed should be in the terminal already.
+    process.exit(1);
+  });
 
   spinner.succeed();
-
   return Promise.resolve(true);
 }

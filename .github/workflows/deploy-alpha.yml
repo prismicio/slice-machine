@@ -28,6 +28,9 @@ jobs:
         run: |
           npm ci
           git checkout .
+      - name: Build packages used by others
+        run: |
+          npm run build-essential
       - name: Version And Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -37,6 +40,5 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
-          lerna run build --scope=@slicemachine/core
           npm run bump:alpha
           npm run publish:alpha

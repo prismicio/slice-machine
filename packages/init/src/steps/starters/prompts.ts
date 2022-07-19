@@ -22,7 +22,7 @@ export async function promptToPushCustomTypes(): Promise<boolean> {
         name: "pushCustomTypes",
         default: false,
         message:
-          "Your repository already contains Custom Types. Do you want to continue pushing your local Slices?",
+          "Your repository already contains Custom Types. Do you want to continue pushing your local Custom Types?",
       },
     ])
     .then((res) => res.pushCustomTypes);

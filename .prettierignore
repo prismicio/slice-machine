@@ -6,6 +6,8 @@ packages/slice-machine/coverage
 packages/slice-machine/tests/project/
 packages/slice-machine/templates/
 packages/slice-machine/out
+packages/client/build
+packages/client/coverage
 packages/core/build
 packages/core/coverage
 packages/init/build

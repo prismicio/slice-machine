@@ -19,8 +19,11 @@ import {
   connectToSimulatorIframeCreator,
 } from "./simulator";
 import ServerState from "@models/server/ServerState";
-import { createCustomTypeCreator } from "./availableCustomTypes";
-import { createSliceCreator } from "./slices";
+import {
+  createCustomTypeCreator,
+  renameCustomTypeCreator,
+} from "./availableCustomTypes";
+import { createSliceCreator, renameSliceCreator } from "./slices";
 import { UserContextStoreType } from "./userContext/types";
 import { openToasterCreator, ToasterType } from "./toaster";
 import {
@@ -52,6 +55,23 @@ import {
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import {
+  addSliceWidgetCreator,
+  copyVariationSliceCreator,
+  deleteSliceWidgetMockCreator,
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+  initSliceStoreCreator,
+  pushSliceCreator,
+  removeSliceWidgetCreator,
+  reorderSliceWidgetCreator,
+  replaceSliceWidgetCreator,
+  saveSliceCreator,
+  updateSliceWidgetMockCreator,
+} from "./selectedSlice/actions";
+import { Models } from "@slicemachine/core";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ExtendedComponentUI } from "./selectedSlice/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -82,10 +102,18 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
+  const closeRenameSliceModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
+  const openRenameSliceModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
   const closeCreateCustomTypeModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
   const openCreateCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.CREATE_CUSTOM_TYPE }));
+  const closeRenameCustomTypeModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+  const openRenameCustomTypeModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -109,6 +137,13 @@ const useSliceMachineActions = () => {
   // Custom types module
   const createCustomType = (id: string, label: string, repeatable: boolean) =>
     dispatch(createCustomTypeCreator.request({ id, label, repeatable }));
+  const renameCustomType = (customTypeId: string, newCustomTypeName: string) =>
+    dispatch(
+      renameCustomTypeCreator.request({
+        customTypeId,
+        newCustomTypeName,
+      })
+    );
 
   // Custom type module
   const initCustomTypeStore = (
@@ -237,8 +272,170 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
+  const initSliceStore = (extendedComponentUI: ExtendedComponentUI) =>
+    dispatch(initSliceStoreCreator(extendedComponentUI));
+
+  const addSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    key: string,
+    value: NestableWidget
+  ) => {
+    dispatch(addSliceWidgetCreator({ variationId, widgetsArea, key, value }));
+  };
+
+  const replaceSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    previousKey: string,
+    newKey: string,
+    value: NestableWidget
+  ) => {
+    dispatch(
+      replaceSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        previousKey,
+        newKey,
+        value,
+      })
+    );
+  };
+
+  const reorderSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    start: number,
+    end: number | undefined
+  ) => {
+    dispatch(
+      reorderSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        start,
+        end,
+      })
+    );
+  };
+
+  const removeSliceWidget = (
+    variationId: string,
+    widgetsArea: Models.WidgetsArea,
+    key: string
+  ) => {
+    dispatch(
+      removeSliceWidgetCreator({
+        variationId,
+        widgetsArea,
+        key,
+      })
+    );
+  };
+
+  const updateSliceWidgetMock = (
+    variationId: string,
+    mockConfig: CustomTypeMockConfig,
+    widgetArea: Models.WidgetsArea,
+    previousKey: string,
+    newKey: string,
+    mockValue: any
+  ) => {
+    dispatch(
+      updateSliceWidgetMockCreator({
+        variationId,
+        mockConfig,
+        widgetArea,
+        previousKey,
+        newKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        mockValue,
+      })
+    );
+  };
+
+  const deleteSliceWidgetMock = (
+    variationId: string,
+    mockConfig: CustomTypeMockConfig,
+    widgetArea: Models.WidgetsArea,
+    newKey: string
+  ) => {
+    dispatch(
+      deleteSliceWidgetMockCreator({
+        variationId,
+        mockConfig,
+        widgetArea,
+        newKey,
+      })
+    );
+  };
+
+  const generateSliceScreenshot = (
+    screenshots: Record<string, ScreenshotUI>,
+    component: ComponentUI
+  ) => {
+    dispatch(
+      generateSliceScreenshotCreator({
+        screenshots,
+        component,
+      })
+    );
+  };
+
+  const generateSliceCustomScreenshot = (
+    variationId: string,
+    screenshot: ScreenshotUI,
+    component: ComponentUI
+  ) => {
+    dispatch(
+      generateSliceCustomScreenshotCreator({
+        variationId,
+        screenshot,
+        component,
+      })
+    );
+  };
+
+  const saveSlice = (extendedComponent: ExtendedComponentUI) => {
+    dispatch(
+      saveSliceCreator({
+        extendedComponent,
+      })
+    );
+  };
+
+  const pushSlice = (extendedComponent: ExtendedComponentUI) => {
+    dispatch(
+      pushSliceCreator({
+        extendedComponent,
+      })
+    );
+  };
+
+  const copyVariationSlice = (
+    key: string,
+    name: string,
+    copied: Models.VariationSM
+  ) => {
+    dispatch(copyVariationSliceCreator({ key, name, copied }));
+  };
+
   const createSlice = (sliceName: string, libName: string) =>
     dispatch(createSliceCreator.request({ sliceName, libName }));
+
+  const renameSlice = (
+    sliceId: string,
+    newSliceName: string,
+    libName: string,
+    variationId: string
+  ) =>
+    dispatch(
+      renameSliceCreator.request({
+        sliceId,
+        newSliceName,
+        libName,
+        variationId,
+      })
+    );
 
   // Toaster store
   const openToaster = (message: string, type: ToasterType) =>
@@ -273,6 +470,7 @@ const useSliceMachineActions = () => {
     stopLoadingReview,
     startLoadingReview,
     createCustomType,
+    renameCustomType,
     initCustomTypeStore,
     saveCustomType,
     pushCustomType,
@@ -294,15 +492,32 @@ const useSliceMachineActions = () => {
     deleteFieldIntoGroup,
     reorderFieldIntoGroup,
     replaceFieldIntoGroup,
+    initSliceStore,
+    addSliceWidget,
+    replaceSliceWidget,
+    reorderSliceWidget,
+    removeSliceWidget,
+    updateSliceWidgetMock,
+    deleteSliceWidgetMock,
+    generateSliceScreenshot,
+    generateSliceCustomScreenshot,
+    saveSlice,
+    pushSlice,
+    copyVariationSlice,
     createSlice,
+    renameSlice,
     sendAReview,
     skipReview,
     setUpdatesViewed,
     setSeenTutorialsToolTip,
     closeCreateCustomTypeModal,
     openCreateCustomTypeModal,
+    openRenameCustomTypeModal,
+    closeRenameCustomTypeModal,
     openCreateSliceModal,
     closeCreateSliceModal,
+    openRenameSliceModal,
+    closeRenameSliceModal,
     openToaster,
   };
 };

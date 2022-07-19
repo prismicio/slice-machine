@@ -1,12 +1,16 @@
 import { DefaultFields } from "@lib/forms/defaults";
 
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
+import { CheckBox } from "@lib/forms/fields";
 
 import { Col, Flex as FlexGrid } from "components/Flex";
 import { createFieldNameFromKey } from "@lib/forms";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const FormFields = { ...DefaultFields };
+const FormFields = {
+  ...DefaultFields,
+  allowTargetBlank: CheckBox("Allow target blank", false, false),
+};
 
 const Form = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

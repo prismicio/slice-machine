@@ -26,7 +26,7 @@ import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestab
 const Meta = {
   icon: MdDns,
   title: "Select",
-  description: "A select field with formatting options",
+  description: "A dropdown field of options for content creators.",
 };
 
 const schema = yup.object().shape({
