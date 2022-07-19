@@ -3,8 +3,6 @@ import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ScreenshotResponse, Screenshots } from "@models/common/Screenshots";
 
 export async function generateScreenShot(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _variationId: string,
   libraryName: string,
   sliceName: string,
   setData: (data: any) => void,
