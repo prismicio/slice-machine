@@ -113,7 +113,7 @@ export const generateSliceCustomScreenshotApiClient = (
 
 export const saveSliceApiClient = (
   extendedComponent: ExtendedComponentUI
-): Promise<AxiosResponse> => {
+): Promise<AxiosResponse<Record<string, never>>> => {
   const requestBody = {
     sliceName: extendedComponent.component.model.name,
     from: extendedComponent.component.from,
