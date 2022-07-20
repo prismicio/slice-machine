@@ -9,6 +9,8 @@ import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
+import { API_ID_REGEX } from "@lib/consts";
+
 const formId = "create-new-slice";
 
 type CreateSliceModalProps = {
@@ -48,7 +50,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
         if (!sliceName) {
           return { sliceName: "Cannot be empty" };
         }
-        if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
+        if (!API_ID_REGEX.exec(sliceName)) {
           return { sliceName: "No special characters allowed" };
         }
         const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");

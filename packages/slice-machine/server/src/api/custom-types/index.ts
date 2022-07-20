@@ -1,4 +1,3 @@
-import glob from "glob";
 import { BackendEnvironment } from "@lib/models/common/Environment";
 import Files from "@lib/utils/files";
 import { CustomTypesPaths } from "@lib/models/paths";
@@ -9,18 +8,7 @@ import {
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import * as IO from "../io";
 import { ClientError } from "@slicemachine/client";
-
-const handleMatch = (matches: string[]) => {
-  return matches.reduce((acc: Array<CustomTypeSM>, p: string) => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const smModel = IO.CustomType.readCustomType(p);
-      return [...acc, smModel];
-    } catch (e) {
-      return acc;
-    }
-  }, []);
-};
+import { getLocalCustomTypes } from "@lib/utils/customTypes";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
@@ -54,7 +42,6 @@ export default async function handler(env: BackendEnvironment): Promise<{
   const { cwd } = env;
 
   const pathToCustomTypes = CustomTypesPaths(cwd).value();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const folderExists = Files.exists(pathToCustomTypes);
 
   const { remoteCustomTypes } = await fetchRemoteCustomTypes(env);
@@ -62,10 +49,9 @@ export default async function handler(env: BackendEnvironment): Promise<{
   if (!folderExists) {
     saveCustomType(remoteCustomTypes, cwd);
   }
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const matches = glob.sync(`${pathToCustomTypes}/**/index.json`);
+
   return {
-    customTypes: handleMatch(matches),
+    customTypes: getLocalCustomTypes(cwd),
     remoteCustomTypes,
   };
 }

@@ -36,7 +36,7 @@ describe("CreateCustomTypeModal", () => {
   document.body.appendChild(div);
 
   test("when a slice is created the tracker should be called", async () => {
-    const fakeId = "testing-id";
+    const fakeId = "testing_id";
     const fakeName = "testing-name";
     const fakeRepo = "foo";
     const fakeSegmentKey = "fakeId";

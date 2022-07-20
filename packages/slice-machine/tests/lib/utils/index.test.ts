@@ -21,7 +21,7 @@ describe("slugify", () => {
     expect(slugify(" whitespaces ")).toBe("whitespaces");
   });
   test("converts spaces in the middle into hyphens", () => {
-    expect(slugify("string with hyphens")).toBe("string-with-hyphens");
+    expect(slugify("string with hyphens")).toBe("string_with_hyphens");
   });
   test("converts uppercase letters into lowercase", () => {
     expect(slugify("stringWithUppercases")).toBe("stringwithuppercases");
