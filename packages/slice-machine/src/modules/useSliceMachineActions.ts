@@ -70,8 +70,9 @@ import {
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { ExtendedComponentUI } from "./selectedSlice/types";
+import { ComponentUI } from "../../lib/models/common/ComponentUI";
+import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -370,43 +371,55 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    screenshots: Record<string, ScreenshotUI>,
-    component: ComponentUI
+    _variationId: string,
+    component: ComponentUI,
+    setData: (data: any) => void
   ) => {
     dispatch(
-      generateSliceScreenshotCreator({
-        screenshots,
+      generateSliceScreenshotCreator.request({
+        _variationId,
         component,
+        setData,
       })
     );
   };
 
   const generateSliceCustomScreenshot = (
     variationId: string,
-    screenshot: ScreenshotUI,
-    component: ComponentUI
+    component: ComponentUI,
+    setData: (data: any) => void,
+    file: Blob
   ) => {
     dispatch(
-      generateSliceCustomScreenshotCreator({
+      generateSliceCustomScreenshotCreator.request({
         variationId,
-        screenshot,
         component,
+        setData,
+        file,
       })
     );
   };
 
-  const saveSlice = (extendedComponent: ExtendedComponentUI) => {
+  const saveSlice = (
+    extendedComponent: ExtendedComponentUI,
+    setData: (data: any) => void
+  ) => {
     dispatch(
-      saveSliceCreator({
+      saveSliceCreator.request({
         extendedComponent,
+        setData,
       })
     );
   };
 
-  const pushSlice = (extendedComponent: ExtendedComponentUI) => {
+  const pushSlice = (
+    extendedComponent: ExtendedComponentUI,
+    onPush: (data: SliceBuilderState) => void
+  ) => {
     dispatch(
-      pushSliceCreator({
+      pushSliceCreator.request({
         extendedComponent,
+        onPush,
       })
     );
   };

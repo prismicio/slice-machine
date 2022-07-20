@@ -1,9 +1,4 @@
 import "@testing-library/jest-dom";
-import jsonModel from "./__mockData__/model.json";
-import mocks from "./__mockData__/mocks.json";
-import { SelectedSliceStoreType } from "@src/modules/selectedSlice/types";
-import { SliceMock, Slices } from "@slicemachine/core/build/models";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { LibStatus } from "@lib/models/common/ComponentUI";
 import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
 import {
@@ -22,41 +17,14 @@ import {
 import { Models } from "@slicemachine/core";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { getSelectedSliceDummyData } from "./utils";
 
-const dummyModel = Slices.toSM(jsonModel as unknown as SharedSlice);
-
-const dummyModelVariationID = "default-slice";
-
-const dummyMockConfig = {
-  [dummyModelVariationID]: {
-    primary: {
-      section_title: {
-        content: "Content",
-      },
-    },
-  },
-};
-
-const dummyComponentUI = {
-  __status: LibStatus.NewSlice,
-  screenshotUrls: {},
-  from: "slices/libName",
-  href: "slices--libName",
-  pathToSlice: "./slices/libName",
-  fileName: "index",
-  extension: "js",
-  model: dummyModel,
-  screenshotPaths: {},
-  mock: mocks as SliceMock,
-};
-
-const dummySliceState: SelectedSliceStoreType = {
-  component: dummyComponentUI,
-  mockConfig: dummyMockConfig,
-  initialMockConfig: dummyMockConfig,
-  remoteVariations: dummyModel.variations,
-  initialVariations: dummyModel.variations,
-};
+const {
+  dummyModelVariationID,
+  dummyComponentUI,
+  dummyMockConfig,
+  dummySliceState,
+} = getSelectedSliceDummyData();
 
 describe("[Selected Slice module]", () => {
   describe("[Reducer]", () => {
@@ -216,9 +184,10 @@ describe("[Selected Slice module]", () => {
           url: "screenshotUrl",
         },
       };
+
       const newState = selectedSliceReducer(
         dummySliceState,
-        generateSliceScreenshotCreator({
+        generateSliceScreenshotCreator.success({
           screenshots: screenshots,
           component: dummyComponentUI,
         })
@@ -238,7 +207,7 @@ describe("[Selected Slice module]", () => {
       const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
       const newState = selectedSliceReducer(
         dummySliceState,
-        generateSliceCustomScreenshotCreator({
+        generateSliceCustomScreenshotCreator.success({
           variationId: dummyModelVariationID,
           screenshot: { path: "screenshotPath", url: "screenshotUrl" },
           component: dummyComponentUI,
@@ -261,7 +230,7 @@ describe("[Selected Slice module]", () => {
       const newStateToSave = { ...dummySliceState, mockConfig: {} };
       const newState = selectedSliceReducer(
         dummySliceState,
-        saveSliceCreator({ extendedComponent: newStateToSave })
+        saveSliceCreator.success({ extendedComponent: newStateToSave })
       );
 
       const expectedState = {
@@ -278,7 +247,7 @@ describe("[Selected Slice module]", () => {
     it("should update the selected slice state given SLICE/PUSH action", () => {
       const newState = selectedSliceReducer(
         dummySliceState,
-        pushSliceCreator({ extendedComponent: dummySliceState })
+        pushSliceCreator.success({ extendedComponent: dummySliceState })
       );
 
       const expectedState = {

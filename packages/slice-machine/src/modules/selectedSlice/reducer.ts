@@ -165,7 +165,7 @@ export const selectedSliceReducer: Reducer<
         mockConfig: updatedConfig,
       });
     }
-    case getType(generateSliceScreenshotCreator): {
+    case getType(generateSliceScreenshotCreator.success): {
       if (!prevState) return prevState;
 
       const component: ComponentUI = {
@@ -176,7 +176,7 @@ export const selectedSliceReducer: Reducer<
 
       return { ...prevState, component };
     }
-    case getType(generateSliceCustomScreenshotCreator): {
+    case getType(generateSliceCustomScreenshotCreator.success): {
       if (!prevState) return prevState;
       const { variationId, screenshot } = action.payload;
       const prevComponent = prevState.component;
@@ -206,7 +206,7 @@ export const selectedSliceReducer: Reducer<
 
       return { ...prevState, component };
     }
-    case getType(saveSliceCreator): {
+    case getType(saveSliceCreator.success): {
       if (!prevState) return prevState;
       const extendedComponent = action.payload.extendedComponent;
       return updateStatus({
@@ -216,7 +216,7 @@ export const selectedSliceReducer: Reducer<
         isTouched: false,
       });
     }
-    case getType(pushSliceCreator): {
+    case getType(pushSliceCreator.success): {
       if (!prevState) return prevState;
 
       const component: ComponentUI = {
