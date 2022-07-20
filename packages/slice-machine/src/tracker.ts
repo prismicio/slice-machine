@@ -1,4 +1,3 @@
-import type { Analytics as ClientAnalytics } from "@segment/analytics-next";
 import { AnalyticsBrowser } from "@segment/analytics-next";
 import { Frameworks } from "@slicemachine/core/build/models";
 import { LibraryUI } from "../lib/models/common/LibraryUI";
@@ -30,7 +29,7 @@ export enum ContinueOnboardingType {
 }
 
 export class SMTracker {
-  #client: Promise<ClientAnalytics> | null = null;
+  #client: AnalyticsBrowser | null = null;
   #isTrackingActive = true;
   #repository = "";
 
@@ -40,7 +39,19 @@ export class SMTracker {
       this.#isTrackingActive = isTrackingActive;
       // We avoid rewriting a new client if we have already one
       if (!!this.#client) return;
-      this.#client = AnalyticsBrowser.standalone(segmentKey);
+      this.#client = AnalyticsBrowser.load(
+        {
+          writeKey: segmentKey,
+          cdnURL: "https://analytics.wroom.io",
+        },
+        {
+          integrations: {
+            "Segment.io": {
+              apiHost: "toto.wroom.test/v1", // TODO: update this when a new proxy is set up
+            },
+          },
+        }
+      );
     } catch (error) {
       // If the client is not correctly setup we are silently failing as the tracker is not a critical feature
       console.warn(error);
@@ -58,11 +69,10 @@ export class SMTracker {
     }
 
     return this.#client
-      .then((client): void => {
-        void client.track(eventType, attributes, {
-          context: { groupId: { Repository: this.#repository } },
-        });
+      .track(eventType, attributes, {
+        context: { groupId: { Repository: this.#repository } },
       })
+      .then(() => void 0)
       .catch(() =>
         console.warn(`Couldn't report event ${eventType}: Tracking error`)
       );
@@ -74,19 +84,18 @@ export class SMTracker {
     }
 
     return this.#client
-      .then((client): void => {
-        void client.identify(
-          shortId,
-          {},
-          {
-            integrations: {
-              Intercom: {
-                user_hash: intercomHash,
-              },
+      .identify(
+        shortId,
+        {},
+        {
+          integrations: {
+            Intercom: {
+              user_hash: intercomHash,
             },
-          }
-        );
-      })
+          },
+        }
+      )
+      .then(() => void 0)
       .catch(() => console.warn(`Couldn't report identify: Tracking error`));
   }
 
@@ -99,15 +108,14 @@ export class SMTracker {
     }
 
     return this.#client
-      .then((client): void => {
-        void client.group(groupId, attributes);
-      })
+      .group(groupId, attributes)
+      .then(() => void 0)
       .catch(() => console.warn(`Couldn't report group: Tracking error`));
   }
 
   #isTrackingPossible(
-    client: Promise<ClientAnalytics> | null
-  ): client is Promise<ClientAnalytics> {
+    client: AnalyticsBrowser | null
+  ): client is AnalyticsBrowser {
     return this.#isTrackingActive && !!client;
   }
 
