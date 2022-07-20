@@ -28,7 +28,6 @@ export function generate(
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const mocks = mock(
-          c.model.name,
           c.model,
           SliceMockConfig.getSliceMockConfig(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
