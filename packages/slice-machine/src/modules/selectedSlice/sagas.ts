@@ -20,7 +20,6 @@ import {
   saveSliceApiClient,
   pushSliceApiClient,
   renameSlice,
-  getState,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { renameSliceCreator } from "../slices";
