@@ -177,4 +177,18 @@ describe("[Scripts] Start - Validate Models", () => {
     );
     expect(potentialErrors.length).toBe(1);
   });
+
+  test("validateSliceModel should fail if the slice API ID has special characters", () => {
+    const model: SharedSlice = {
+      ...sliceMock,
+      id: "some><>-value",
+    };
+
+    const potentialErrors = validateSliceModel(
+      cwd,
+      sliceLibrary,
+      Slices.toSM(model)
+    );
+    expect(potentialErrors.length).toBe(1);
+  });
 });
