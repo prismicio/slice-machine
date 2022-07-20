@@ -30,7 +30,7 @@ export type SliceBuilderState = {
   status: number | null;
 };
 
-const initialState: SliceBuilderState = {
+export const initialState: SliceBuilderState = {
   imageLoading: false,
   loading: false,
   done: false,
