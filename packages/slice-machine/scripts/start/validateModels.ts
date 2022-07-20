@@ -58,8 +58,10 @@ export function validateModels({
     console.log(
       boxen(
         `
-      🔴 ${chalk.bold("Field value errors detected")}\n
-      Please follow the instructions below 👇, in order to start Slice Machine.\n`,
+      🔴 ${chalk.bold(
+        "Invalid Custom Type and/or Slice models were found while starting Slice Machine"
+      )}\n
+      See the following instructions to fix the issue.\n`,
         { padding: 1, borderColor: "red" }
       )
     );
@@ -78,9 +80,9 @@ function validateApiID(apiId: string, path: string): string | undefined {
   else if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(apiId))
     return `${path}\n${chalk.red(
       "Invalid characters"
-    )}: You can't use special characters except _ for the API ID ${chalk.green(
+    )}: Remove special characters from the API ID “${chalk.green(
       apiId
-    )}.\n`;
+    )}”. Only alphanumeric characters and underscores are allowed.\n`;
 }
 
 export function formatPath(
