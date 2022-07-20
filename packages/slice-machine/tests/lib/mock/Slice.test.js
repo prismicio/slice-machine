@@ -73,7 +73,7 @@ describe("MockSlice", () => {
 
     const mockConfig = {};
 
-    const result = MockSlice(model.name, model, mockConfig);
+    const result = MockSlice(model, mockConfig);
 
     expect(result).toEqual(wanted);
   });
@@ -159,7 +159,7 @@ describe("MockSlice", () => {
       },
     };
 
-    const result = MockSlice(model.name, model, mockConfig);
+    const result = MockSlice(model, mockConfig);
 
     expect(result).toEqual(wanted);
   });
