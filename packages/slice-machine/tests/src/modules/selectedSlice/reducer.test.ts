@@ -216,9 +216,10 @@ describe("[Selected Slice module]", () => {
           url: "screenshotUrl",
         },
       };
+
       const newState = selectedSliceReducer(
         dummySliceState,
-        generateSliceScreenshotCreator({
+        generateSliceScreenshotCreator.success({
           screenshots: screenshots,
           component: dummyComponentUI,
         })
@@ -238,7 +239,7 @@ describe("[Selected Slice module]", () => {
       const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
       const newState = selectedSliceReducer(
         dummySliceState,
-        generateSliceCustomScreenshotCreator({
+        generateSliceCustomScreenshotCreator.success({
           variationId: dummyModelVariationID,
           screenshot: { path: "screenshotPath", url: "screenshotUrl" },
           component: dummyComponentUI,
@@ -261,7 +262,7 @@ describe("[Selected Slice module]", () => {
       const newStateToSave = { ...dummySliceState, mockConfig: {} };
       const newState = selectedSliceReducer(
         dummySliceState,
-        saveSliceCreator({ extendedComponent: newStateToSave })
+        saveSliceCreator.success({ extendedComponent: newStateToSave })
       );
 
       const expectedState = {
@@ -278,7 +279,7 @@ describe("[Selected Slice module]", () => {
     it("should update the selected slice state given SLICE/PUSH action", () => {
       const newState = selectedSliceReducer(
         dummySliceState,
-        pushSliceCreator({ extendedComponent: dummySliceState })
+        pushSliceCreator.success({ extendedComponent: dummySliceState })
       );
 
       const expectedState = {
