@@ -32,7 +32,7 @@ export function validateModels({
   ).reduce((acc: ErrorsToDisplay, librarie) => {
     const sliceModels = librarie.components.map((component) => component.model);
     const librarieErrors = sliceModels.reduce(
-      (acc: ErrorsToDisplay, model) => [
+      (acc: ErrorsToDisplay, model: SliceSM) => [
         ...acc,
         ...validateSliceModel(cwd, librarie.name, model),
       ],
@@ -54,7 +54,7 @@ export function validateModels({
 
   const modelErrors = [...slicesModelErrors, ...customTypesModelsErrors];
 
-  if (modelErrors.length > 1) {
+  if (modelErrors.length > 0) {
     console.log(
       boxen(
         `
@@ -72,15 +72,16 @@ export function validateModels({
   return { areModelsValid: true };
 }
 
-const emptyApiIdMessage = (path: string) =>
-  `${path}\n${chalk.red("Empty field API ID")}: Please add an API ID.\n`;
-
-const invalidCharacterMessage = (path: string, key: string) =>
-  `${path}\n${chalk.red(
-    "Invalid characters"
-  )}: You can't use special characters except _ for the API ID ${chalk.green(
-    key
-  )}.\n`;
+function validateApiID(apiId: string, path: string): string | undefined {
+  if (apiId.length === 0)
+    return `${path}\n${chalk.red("Empty API ID")}: Please add an API ID.\n`;
+  else if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(apiId))
+    return `${path}\n${chalk.red(
+      "Invalid characters"
+    )}: You can't use special characters except _ for the API ID ${chalk.green(
+      apiId
+    )}.\n`;
+}
 
 export function formatPath(
   cwd: string,
@@ -101,6 +102,9 @@ export function validateSliceModel(
   library: string,
   model: SliceSM
 ): ErrorsToDisplay {
+  const slicePath = formatPath(cwd, { library, sliceName: model.name });
+  const sliceIdError = validateApiID(model.id, slicePath);
+
   const fields: FieldsSM = model.variations.reduce(
     (acc: FieldsSM, variation) => {
       const { primary, items } = variation;
@@ -110,49 +114,24 @@ export function validateSliceModel(
     []
   );
 
-  return fields.reduce((acc: ErrorsToDisplay, field) => {
-    if (field.key.length === 0) {
-      const message = emptyApiIdMessage(
-        formatPath(cwd, { library, sliceName: model.name })
-      );
-      return [...acc, message];
-    }
-
-    if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
-      const message = invalidCharacterMessage(
-        formatPath(cwd, { library, sliceName: model.name }),
-        field.key
-      );
-      return [...acc, message];
-    }
-
-    return acc;
+  const fieldsError = fields.reduce((acc: ErrorsToDisplay, field) => {
+    const apiIdError = validateApiID(field.key, slicePath);
+    return apiIdError ? [...acc, apiIdError] : acc;
   }, []);
+
+  return sliceIdError ? [sliceIdError, ...fieldsError] : fieldsError;
 }
 
 export function validateCustomTypeModel(
   cwd: string,
   model: CustomTypeSM
 ): ErrorsToDisplay {
+  const customTypePath = formatPath(cwd, { customTypeId: model.id });
   return model.tabs.reduce((acc: ErrorsToDisplay, tab) => {
     const fields: TabFields = tab.value;
     const fieldsError = fields.reduce((acc: ErrorsToDisplay, field) => {
-      if (field.key.length === 0) {
-        const message = emptyApiIdMessage(
-          formatPath(cwd, { customTypeId: model.id })
-        );
-        return [...acc, message];
-      }
-
-      if (!API_ID_RETRO_COMPATIBLE_REGEX.exec(field.key)) {
-        const message = invalidCharacterMessage(
-          formatPath(cwd, { customTypeId: model.id }),
-          field.key
-        );
-        return [...acc, message];
-      }
-
-      return acc;
+      const apiIdError = validateApiID(field.key, customTypePath);
+      return apiIdError ? [...acc, apiIdError] : acc;
     }, []);
 
     return [...acc, ...fieldsError];
