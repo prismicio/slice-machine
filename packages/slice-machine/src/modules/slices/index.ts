@@ -129,7 +129,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       };
     }
     case getType(saveSliceCreator.success): {
-      const newComponentUI = action.payload.extendedComponent.component;
+      const newComponentUI = action.payload.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
 
       const newLibraries = state.libraries.map((library) => {
@@ -147,7 +147,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       return { ...state, libraries: newLibraries };
     }
     case getType(pushSliceCreator.success): {
-      const newComponentUI = action.payload.extendedComponent.component;
+      const newComponentUI = action.payload.component;
 
       const newRemoteSlices = [...state.remoteSlices];
 

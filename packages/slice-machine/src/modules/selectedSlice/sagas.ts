@@ -138,7 +138,7 @@ export function* generateSliceCustomScreenshotSaga({
 export function* saveSliceSaga({
   payload,
 }: ReturnType<typeof saveSliceCreator.request>) {
-  const { extendedComponent, setData } = payload;
+  const { component, setData } = payload;
   try {
     setData({
       loading: true,
@@ -149,7 +149,7 @@ export function* saveSliceSaga({
     });
     const response = (yield call(
       saveSliceApiClient,
-      extendedComponent
+      component
     )) as SagaReturnType<typeof saveSliceApiClient>;
     if (response.status > 209) {
       return setData({
@@ -172,12 +172,12 @@ export function* saveSliceSaga({
     });
     const remoteSlice = (yield select(
       getRemoteSlice,
-      extendedComponent.component.model.id
+      component.model.id
     )) as ReturnType<typeof getRemoteSlice>;
 
     yield put(
       saveSliceCreator.success({
-        extendedComponent,
+        component,
         remoteSliceVariations: remoteSlice?.variations,
       })
     );
@@ -194,7 +194,7 @@ export function* saveSliceSaga({
 export function* pushSliceSaga({
   payload,
 }: ReturnType<typeof pushSliceCreator.request>) {
-  const { extendedComponent, onPush } = payload;
+  const { component, onPush } = payload;
   try {
     onPush({
       imageLoading: true,
@@ -205,7 +205,7 @@ export function* pushSliceSaga({
     });
     const response = (yield call(
       pushSliceApiClient,
-      extendedComponent.component
+      component
     )) as SagaReturnType<typeof pushSliceApiClient>;
     if (response.status > 209) {
       return onPush({
@@ -223,11 +223,7 @@ export function* pushSliceSaga({
       error: null,
       status: response.status,
     });
-    yield put(
-      pushSliceCreator.success({
-        extendedComponent,
-      })
-    );
+    yield put(pushSliceCreator.success({ component }));
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",

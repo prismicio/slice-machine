@@ -108,11 +108,11 @@ export const saveSliceCreator = createAsyncAction(
   "SLICE/SAVE.FAILURE"
 )<
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
     setData: (data: any) => void;
   },
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
     remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
   }
 >();
@@ -123,11 +123,11 @@ export const pushSliceCreator = createAsyncAction(
   "SLICE/PUSH.FAILURE"
 )<
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
     onPush: (data: SliceBuilderState) => void;
   },
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
   }
 >();
 

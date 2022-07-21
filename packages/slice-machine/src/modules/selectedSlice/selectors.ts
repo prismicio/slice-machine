@@ -1,5 +1,4 @@
 import equal from "fast-deep-equal";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "../slices";
 
@@ -9,7 +8,7 @@ export const selectCurrentSlice = (
   sliceName: string
 ) => {
   const openedModel = store.selectedSlice;
-  if (openedModel?.component.model.name === sliceName) {
+  if (openedModel?.model.name === sliceName) {
     return openedModel;
   }
 
@@ -18,16 +17,7 @@ export const selectCurrentSlice = (
   );
   const slice = library?.components.find((c) => c.model.name === sliceName);
 
-  if (!slice) return null;
-
-  return {
-    component: slice,
-    mockConfig: SliceMockConfig.getSliceMockConfig(
-      store.environment.mockConfig,
-      slice.from,
-      slice.model.name
-    ),
-  };
+  return slice || null;
 };
 
 export const isSelectedSliceTouched = (
@@ -43,12 +33,12 @@ export const isSelectedSliceTouched = (
 
   const sameVariations = equal(
     librarySlice.model.variations,
-    selectedSlice.component.model.variations
+    selectedSlice.model.variations
   );
 
   const sameMockConfig = equal(
     librarySlice.mockConfig,
-    selectedSlice.component.mockConfig
+    selectedSlice.mockConfig
   );
 
   return !sameVariations || !sameMockConfig;
