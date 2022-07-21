@@ -19,6 +19,8 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
+import { getLibrarySlice } from "@src/modules/slices";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 
@@ -38,7 +40,23 @@ describe("[Selected Slice sagas]", () => {
 
       saga
         .next({ status: 200, data: {} })
-        .put(saveSliceCreator.success({ extendedComponent: dummySliceState }));
+        .select(
+          getLibrarySlice,
+          dummySliceState.component.from,
+          dummySliceState.component.model.id
+        );
+
+      const librarySlice: ComponentUI = {
+        ...dummySliceState.component,
+        model: { ...dummySliceState.component.model, variations: [] },
+      };
+
+      saga.next(librarySlice).put(
+        saveSliceCreator.success({
+          extendedComponent: dummySliceState,
+          librarySliceVariations: [],
+        })
+      );
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({

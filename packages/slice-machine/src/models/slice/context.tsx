@@ -1,7 +1,6 @@
 import React from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SliceSM } from "@slicemachine/core/build/models/Slice";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
@@ -12,17 +11,14 @@ import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
 export function getExtendedSlice({
   slice,
-  remoteSlice,
   mockConfig,
 }: {
   slice: ComponentUI;
-  remoteSlice?: SliceSM;
   mockConfig: CustomTypeMockConfig;
 }): ExtendedComponentUI {
   return {
     component: slice,
     mockConfig: mockConfig,
-    remoteVariations: remoteSlice ? remoteSlice.variations : [],
   };
 }
 

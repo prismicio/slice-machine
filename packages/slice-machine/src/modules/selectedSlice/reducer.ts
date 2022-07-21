@@ -42,7 +42,6 @@ export const selectedSliceReducer: Reducer<
         ...prevState,
         component: action.payload.component,
         mockConfig: action.payload.mockConfig,
-        remoteVariations: action.payload.remoteVariations,
       };
     }
     case getType(addSliceWidgetCreator): {
@@ -199,11 +198,11 @@ export const selectedSliceReducer: Reducer<
     }
     case getType(saveSliceCreator.success): {
       if (!prevState) return prevState;
-      const extendedComponent = action.payload.extendedComponent;
+      const { extendedComponent, librarySliceVariations } = action.payload;
 
       const sameVariations = compareVariations(
         extendedComponent.component.model.variations,
-        extendedComponent.remoteVariations
+        librarySliceVariations || []
       );
 
       return {
@@ -222,11 +221,7 @@ export const selectedSliceReducer: Reducer<
         __status: LibStatus.Synced,
       };
 
-      return {
-        ...prevState,
-        component,
-        remoteVariations: component.model.variations,
-      };
+      return { ...prevState, component };
     }
     case getType(copyVariationSliceCreator): {
       if (!prevState) return prevState;
@@ -251,17 +246,6 @@ export const selectedSliceReducer: Reducer<
       return prevState;
   }
 };
-
-export function updateStatus(state: NonNullable<SelectedSliceStoreType>) {
-  const __status = compareVariations(
-    state.component.model.variations,
-    state.remoteVariations
-  )
-    ? LibStatus.Synced
-    : LibStatus.Modified;
-
-  return { ...state, component: { ...state.component, __status } };
-}
 
 const renamedExtendedComponent = (
   initialState: ExtendedComponentUI,

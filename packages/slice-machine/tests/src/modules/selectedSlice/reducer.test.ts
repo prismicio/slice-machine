@@ -201,16 +201,40 @@ describe("[Selected Slice module]", () => {
       });
       expect(newState?.component.__status).toBe(LibStatus.Modified);
     });
-    it("should update the selected slice state given SLICE/SAVE action", () => {
+    it("should update the selected slice state given SLICE/SAVE action when variations are the same", () => {
       const newStateToSave = { ...dummySliceState, mockConfig: {} };
       const newState = selectedSliceReducer(
         dummySliceState,
-        saveSliceCreator.success({ extendedComponent: newStateToSave })
+        saveSliceCreator.success({
+          extendedComponent: newStateToSave,
+          librarySliceVariations: dummySliceState.component.model.variations,
+        })
       );
 
       const expectedState = {
         ...newStateToSave,
         component: { ...newStateToSave.component, __status: LibStatus.Synced },
+      };
+
+      expect(newState).not.toEqual(dummySliceState);
+      expect(newState).toEqual(expectedState);
+    });
+    it("should update the selected slice state given SLICE/SAVE action when variations are different", () => {
+      const newStateToSave = { ...dummySliceState, mockConfig: {} };
+      const newState = selectedSliceReducer(
+        dummySliceState,
+        saveSliceCreator.success({
+          extendedComponent: newStateToSave,
+          librarySliceVariations: [],
+        })
+      );
+
+      const expectedState = {
+        ...newStateToSave,
+        component: {
+          ...newStateToSave.component,
+          __status: LibStatus.Modified,
+        },
       };
 
       expect(newState).not.toEqual(dummySliceState);
@@ -225,7 +249,6 @@ describe("[Selected Slice module]", () => {
       const expectedState = {
         ...dummySliceState,
         component: { ...dummySliceState.component, __status: LibStatus.Synced },
-        remoteVariations: newState?.component.model.variations,
       };
 
       expect(newState).toEqual(expectedState);

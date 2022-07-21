@@ -33,12 +33,9 @@ export const getSelectedSliceDummyData = () => {
     mock: mocks as SliceMock,
   };
 
-  const dummySliceState: SelectedSliceStoreType = {
+  const dummySliceState: NonNullable<SelectedSliceStoreType> = {
     component: dummyComponentUI,
     mockConfig: dummyMockConfig,
-    initialMockConfig: dummyMockConfig,
-    remoteVariations: dummyModel.variations,
-    initialVariations: dummyModel.variations,
   };
 
   return {

@@ -28,9 +28,6 @@ export const selectCurrentSlice = (
       slice.from,
       slice.model.name
     ),
-    remoteSlice: store.slices.remoteSlices?.find(
-      (e) => e.id === slice.model.id
-    ),
   });
 };
 

@@ -251,7 +251,6 @@ export default {
       },
     ],
     mockConfig: {},
-    remoteVariations: [],
   },
   store: {
     reset: () => null,
