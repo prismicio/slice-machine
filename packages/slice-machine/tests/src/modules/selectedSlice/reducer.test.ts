@@ -145,7 +145,7 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.mockConfig["default-slice"].primary).toEqual({
+      expect(newState?.component.mockConfig["default-slice"].primary).toEqual({
         section_title: { content: "NewContent" },
       });
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
@@ -161,7 +161,7 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.mockConfig["default-slice"].primary).toEqual({
+      expect(newState?.component.mockConfig["default-slice"].primary).toEqual({
         section_title: undefined,
       });
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);

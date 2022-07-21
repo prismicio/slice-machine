@@ -41,7 +41,6 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         component: action.payload.component,
-        mockConfig: action.payload.mockConfig,
       };
     }
     case getType(addSliceWidgetCreator): {
@@ -138,7 +137,7 @@ export const selectedSliceReducer: Reducer<
 
       return {
         ...prevState,
-        mockConfig: updatedConfig,
+        component: { ...prevState.component, mockConfig: updatedConfig },
       };
     }
     case getType(deleteSliceWidgetMockCreator): {
@@ -152,7 +151,7 @@ export const selectedSliceReducer: Reducer<
       );
       return {
         ...prevState,
-        mockConfig: updatedConfig,
+        component: { ...prevState.component, mockConfig: updatedConfig },
       };
     }
     case getType(generateSliceScreenshotCreator.success): {

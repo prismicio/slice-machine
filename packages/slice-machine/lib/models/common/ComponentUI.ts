@@ -6,6 +6,7 @@ import {
 } from "@slicemachine/core/build/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
+import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -61,6 +62,7 @@ export interface ScreenshotUI extends Screenshot {
 export interface ComponentUI extends Component {
   __status: LibStatus;
   screenshotUrls?: Record<VariationSM["id"], ScreenshotUI>;
+  mockConfig: CustomTypeMockConfig;
 }
 
 export const ComponentUI = {
@@ -76,6 +78,11 @@ export const ComponentUI = {
         env.baseUrl
       ),
       __status: computeStatus(component, remoteSlices),
+      mockConfig: SliceMockConfig.getSliceMockConfig(
+        env.mockConfig,
+        component.from,
+        component.model.name
+      ),
     };
   },
   variation(

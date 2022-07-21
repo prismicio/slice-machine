@@ -6,21 +6,6 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import Router from "next/router";
 import { replace } from "connected-next-router";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
-
-export function getExtendedSlice({
-  slice,
-  mockConfig,
-}: {
-  slice: ComponentUI;
-  mockConfig: CustomTypeMockConfig;
-}): ExtendedComponentUI {
-  return {
-    component: slice,
-    mockConfig: mockConfig,
-  };
-}
 
 export const SliceHandler: React.FC = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({

@@ -118,7 +118,7 @@ export const saveSliceApiClient = (
     sliceName: extendedComponent.component.model.name,
     from: extendedComponent.component.from,
     model: extendedComponent.component.model,
-    mockConfig: extendedComponent.mockConfig,
+    mockConfig: extendedComponent.component.mockConfig,
   };
   return axios.post("/api/slices/save", requestBody, defaultAxiosConfig);
 };

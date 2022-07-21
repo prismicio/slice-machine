@@ -31,11 +31,11 @@ export const getSelectedSliceDummyData = () => {
     model: dummyModel,
     screenshotPaths: {},
     mock: mocks as SliceMock,
+    mockConfig: dummyMockConfig,
   };
 
   const dummySliceState: NonNullable<SelectedSliceStoreType> = {
     component: dummyComponentUI,
-    mockConfig: dummyMockConfig,
   };
 
   return {

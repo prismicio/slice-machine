@@ -156,7 +156,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         }
       >
         <FieldZones
-          mockConfig={extendedComponent.mockConfig}
+          mockConfig={extendedComponent.component.mockConfig}
           variation={variation}
         />
       </FlexEditor>
