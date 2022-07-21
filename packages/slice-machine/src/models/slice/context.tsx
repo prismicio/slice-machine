@@ -22,10 +22,7 @@ export function getExtendedSlice({
   return {
     component: slice,
     mockConfig: mockConfig,
-    initialMockConfig: mockConfig,
     remoteVariations: remoteSlice ? remoteSlice.variations : [],
-    initialVariations: slice.model.variations,
-    initialScreenshotUrls: slice.screenshotUrls,
   };
 }
 

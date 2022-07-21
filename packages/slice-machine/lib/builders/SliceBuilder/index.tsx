@@ -18,7 +18,10 @@ import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import { useRouter } from "next/router";
-import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import {
+  isSelectedSliceTouched,
+  selectCurrentSlice,
+} from "@src/modules/selectedSlice/selectors";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
 
@@ -56,10 +59,15 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     saveSlice,
     checkSimulatorSetup,
   } = useSliceMachineActions();
-  const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
+  const { simulatorUrl, isWaitingForIframeCheck, isTouched } = useSelector(
     (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+      isTouched: isSelectedSliceTouched(
+        state,
+        extendedComponent.component.from,
+        extendedComponent.component.model.id
+      ),
     })
   );
 
@@ -67,10 +75,10 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   const [data, setData] = useState<SliceBuilderState>(initialState);
 
   useEffect(() => {
-    if (extendedComponent?.isTouched) {
+    if (isTouched) {
       setData(initialState);
     }
-  }, [extendedComponent?.isTouched]);
+  }, [isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
@@ -128,7 +136,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     <Box sx={{ flex: 1 }}>
       <Header
         component={extendedComponent.component}
-        isTouched={extendedComponent.isTouched}
+        isTouched={isTouched}
         variation={variation}
         onPush={onPushSlice}
         onSave={onSaveSlice}

@@ -251,75 +251,7 @@ export default {
       },
     ],
     mockConfig: {},
-    initialMockConfig: {},
     remoteVariations: [],
-    initialScreenshotUrls: {},
-    initialVariations: [
-      {
-        id: "default-slice",
-        name: "Default slice",
-        docURL: "...",
-        version: "sktwi1xtmkfgx8626",
-        description: "MyNewSlice",
-        primary: [
-          {
-            key: "title",
-            value: {
-              type: "StructuredText",
-              config: {
-                single: "heading1",
-                label: "Title",
-                placeholder: "This is where it all begins...",
-              },
-            },
-          },
-          {
-            key: "description",
-            value: {
-              type: "StructuredText",
-              config: {
-                single: "paragraph",
-                label: "Description",
-                placeholder: "A nice description of your product",
-              },
-            },
-          },
-        ],
-        items: [],
-      },
-      {
-        id: "anotherVaritaion",
-        name: "Another Varitaion",
-        docURL: "...",
-        version: "sktwi1xtmkfgx8626",
-        description: "MyNewSlice",
-        primary: [
-          {
-            key: "title",
-            value: {
-              type: "StructuredText",
-              config: {
-                single: "heading1",
-                label: "Title",
-                placeholder: "This is where it all begins...",
-              },
-            },
-          },
-          {
-            key: "description",
-            value: {
-              type: "StructuredText",
-              config: {
-                single: "paragraph",
-                label: "Description",
-                placeholder: "A nice description of your product",
-              },
-            },
-          },
-        ],
-        items: [],
-      },
-    ],
   },
   store: {
     reset: () => null,

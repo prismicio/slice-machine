@@ -42,11 +42,7 @@ describe("[Selected Slice module]", () => {
     it("should update the selected slice state given SELECTED_SLICE/INIT action", () => {
       expect(
         selectedSliceReducer(null, initSliceStoreCreator(dummySliceState))
-      ).toEqual({
-        ...dummySliceState,
-        initialScreenshotUrls: undefined,
-        isTouched: undefined,
-      });
+      ).toEqual(dummySliceState);
     });
     it("should update the selected slice state given SLICE/ADD_WIDGET action", () => {
       const primaryWidgetsInit =
@@ -77,7 +73,6 @@ describe("[Selected Slice module]", () => {
       expect(primaryWidgets?.at(-1)?.key).toBe(newWidget.key);
       expect(primaryWidgets?.at(-1)?.value).toBe(newWidget.value);
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
     it("should update the selected slice state given SLICE/REPLACE_WIDGET action if the tab is found", () => {
       const primaryWidgetsInit =
@@ -115,7 +110,6 @@ describe("[Selected Slice module]", () => {
       expect(replacedWidget).toBeTruthy();
       expect(replacedWidget?.value).toBe(updatedWidget.value);
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
     it("should update the selected slice state given SLICE/REMOVE_WIDGET action", () => {
       const primaryWidgetsInit =
@@ -135,7 +129,6 @@ describe("[Selected Slice module]", () => {
       const primaryWidgets = newState?.component.model.variations[0].primary;
       expect(primaryWidgets?.length).toEqual(0);
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
     it("should update the selected slice state given SLICE/UPDATE_WIDGET_MOCK action", () => {
       const newState = selectedSliceReducer(
@@ -152,12 +145,10 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.initialMockConfig).toEqual(dummyMockConfig);
       expect(newState?.mockConfig["default-slice"].primary).toEqual({
         section_title: { content: "NewContent" },
       });
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
     it("should update the selected slice state given SLICE/DELETE_WIDGET_MOCK action", () => {
       const newState = selectedSliceReducer(
@@ -170,12 +161,10 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.initialMockConfig).toEqual(dummyMockConfig);
       expect(newState?.mockConfig["default-slice"].primary).toEqual({
         section_title: undefined,
       });
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
     it("should update the selected slice state given SLICE/GENERATE_SCREENSHOT action", () => {
       const screenshots = {
@@ -193,15 +182,8 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.initialScreenshotUrls).toEqual(
-        dummySliceState.initialScreenshotUrls
-      );
-      expect(newState?.component.screenshotUrls).not.toEqual(
-        dummySliceState.initialScreenshotUrls
-      );
       expect(newState?.component.screenshotUrls).toEqual(screenshots);
       expect(newState?.component.__status).toBe(LibStatus.Modified);
-      expect(newState?.isTouched).toBe(undefined);
     });
     it("should update the selected slice state given SLICE/GENERATE_CUSTOM_SCREENSHOT action", () => {
       const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
@@ -214,17 +196,10 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.initialScreenshotUrls).toEqual(
-        dummySliceState.initialScreenshotUrls
-      );
-      expect(newState?.component.screenshotUrls).not.toEqual(
-        dummySliceState.initialScreenshotUrls
-      );
       expect(newState?.component.screenshotUrls).toEqual({
         [dummyModelVariationID]: screenshotUI,
       });
       expect(newState?.component.__status).toBe(LibStatus.Modified);
-      expect(newState?.isTouched).toBe(undefined);
     });
     it("should update the selected slice state given SLICE/SAVE action", () => {
       const newStateToSave = { ...dummySliceState, mockConfig: {} };
@@ -236,9 +211,6 @@ describe("[Selected Slice module]", () => {
       const expectedState = {
         ...newStateToSave,
         component: { ...newStateToSave.component, __status: LibStatus.Synced },
-        initialMockConfig: newState?.mockConfig,
-        initialVariations: newState?.component.model.variations,
-        isTouched: false,
       };
 
       expect(newState).not.toEqual(dummySliceState);
@@ -254,8 +226,6 @@ describe("[Selected Slice module]", () => {
         ...dummySliceState,
         component: { ...dummySliceState.component, __status: LibStatus.Synced },
         remoteVariations: newState?.component.model.variations,
-        initialScreenshotUrls: newState?.component.screenshotUrls,
-        isTouched: undefined,
       };
 
       expect(newState).toEqual(expectedState);
@@ -278,7 +248,6 @@ describe("[Selected Slice module]", () => {
       expect(variations?.at(-1)?.id).toEqual("new-variation");
       expect(variations?.at(-1)?.name).toEqual("New Variation");
       expect(newState?.component.__status).toBe(LibStatus.NewSlice);
-      expect(newState?.isTouched).toBe(true);
     });
   });
 });

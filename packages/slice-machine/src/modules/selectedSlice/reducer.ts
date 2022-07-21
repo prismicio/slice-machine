@@ -26,14 +26,9 @@ import {
   LibStatus,
   ScreenshotUI,
 } from "@lib/models/common/ComponentUI";
-import equal from "fast-deep-equal";
 import { compareVariations } from "@lib/utils";
 import { SliceSM } from "@slicemachine/core/build/models";
-import {
-  renamedComponentUI,
-  renameScreenshotUrls,
-  renameSliceCreator,
-} from "../slices";
+import { renamedComponentUI, renameSliceCreator } from "../slices";
 
 // Reducer
 export const selectedSliceReducer: Reducer<
@@ -47,11 +42,7 @@ export const selectedSliceReducer: Reducer<
         ...prevState,
         component: action.payload.component,
         mockConfig: action.payload.mockConfig,
-        initialMockConfig: action.payload.initialMockConfig,
         remoteVariations: action.payload.remoteVariations,
-        initialVariations: action.payload.initialVariations,
-        initialScreenshotUrls: action.payload.initialScreenshotUrls,
-        isTouched: action.payload.isTouched,
       };
     }
     case getType(addSliceWidgetCreator): {
@@ -71,7 +62,7 @@ export const selectedSliceReducer: Reducer<
             prevState.component,
             variationId
           )((v) => Variation.addWidget(v, widgetsArea, key, value));
-          return updateTouched({ ...prevState, component });
+          return { ...prevState, component };
         }
         return prevState;
       } catch (err) {
@@ -102,7 +93,7 @@ export const selectedSliceReducer: Reducer<
           )((v) =>
             Variation.replaceWidget(v, widgetsArea, previousKey, newKey, value)
           );
-          return updateTouched({ ...prevState, component });
+          return { ...prevState, component };
         }
         return prevState;
       } catch (err) {
@@ -122,7 +113,7 @@ export const selectedSliceReducer: Reducer<
         prevState.component,
         variationId
       )((v) => Variation.reorderWidget(v, widgetsArea, start, end));
-      return updateTouched({ ...prevState, component });
+      return { ...prevState, component };
     }
     case getType(removeSliceWidgetCreator): {
       if (!prevState) return prevState;
@@ -132,7 +123,7 @@ export const selectedSliceReducer: Reducer<
         prevState.component,
         variationId
       )((v) => Variation.deleteWidget(v, widgetsArea, key));
-      return updateTouched({ ...prevState, component });
+      return { ...prevState, component };
     }
     case getType(updateSliceWidgetMockCreator): {
       if (!prevState) return prevState;
@@ -146,10 +137,10 @@ export const selectedSliceReducer: Reducer<
         action.payload.mockValue
       );
 
-      return updateTouched({
+      return {
         ...prevState,
         mockConfig: updatedConfig,
-      });
+      };
     }
     case getType(deleteSliceWidgetMockCreator): {
       if (!prevState) return prevState;
@@ -160,10 +151,10 @@ export const selectedSliceReducer: Reducer<
         action.payload.widgetArea,
         action.payload.newKey
       );
-      return updateTouched({
+      return {
         ...prevState,
         mockConfig: updatedConfig,
-      });
+      };
     }
     case getType(generateSliceScreenshotCreator.success): {
       if (!prevState) return prevState;
@@ -209,12 +200,19 @@ export const selectedSliceReducer: Reducer<
     case getType(saveSliceCreator.success): {
       if (!prevState) return prevState;
       const extendedComponent = action.payload.extendedComponent;
-      return updateStatus({
+
+      const sameVariations = compareVariations(
+        extendedComponent.component.model.variations,
+        extendedComponent.remoteVariations
+      );
+
+      return {
         ...extendedComponent,
-        initialMockConfig: extendedComponent.mockConfig,
-        initialVariations: extendedComponent.component.model.variations,
-        isTouched: false,
-      });
+        component: {
+          ...extendedComponent.component,
+          __status: sameVariations ? LibStatus.Synced : LibStatus.Modified,
+        },
+      };
     }
     case getType(pushSliceCreator.success): {
       if (!prevState) return prevState;
@@ -228,7 +226,6 @@ export const selectedSliceReducer: Reducer<
         ...prevState,
         component,
         remoteVariations: component.model.variations,
-        initialScreenshotUrls: component.screenshotUrls,
       };
     }
     case getType(copyVariationSliceCreator): {
@@ -240,10 +237,10 @@ export const selectedSliceReducer: Reducer<
         ...prevState.component.model,
         variations: prevState.component.model.variations.concat([newVariation]),
       };
-      return updateTouched({
+      return {
         ...prevState,
         component: { ...prevState.component, model },
-      });
+      };
     }
     case getType(renameSliceCreator.success): {
       if (!prevState) return prevState;
@@ -253,14 +250,6 @@ export const selectedSliceReducer: Reducer<
     default:
       return prevState;
   }
-};
-
-const updateTouched = (state: NonNullable<SelectedSliceStoreType>) => {
-  const isTouched =
-    !equal(state.initialVariations, state.component.model.variations) ||
-    !equal(state.initialMockConfig, state.mockConfig);
-
-  return { ...state, isTouched };
 };
 
 export function updateStatus(state: NonNullable<SelectedSliceStoreType>) {
@@ -283,10 +272,5 @@ const renamedExtendedComponent = (
   return {
     ...initialState,
     component: newComponentUI,
-    initialScreenshotUrls: renameScreenshotUrls(
-      initialState.initialScreenshotUrls,
-      initialState.component.model.name,
-      newName
-    ),
   };
 };
