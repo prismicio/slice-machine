@@ -19,6 +19,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.9",
     "@prismicio/types-internal": "^0.2.8",
     "cookie": "^0.4.1",
     "fp-ts": "^2.11.5",
