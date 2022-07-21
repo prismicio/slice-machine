@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-import { RESERVED_SLICE_NAME } from "@lib/consts";
+import { RESERVED_SLICE_NAME, API_ID_REGEX } from "@lib/consts";
 import camelCase from "lodash/camelCase";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import startCase from "lodash/startCase";
@@ -56,7 +56,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
         if (!sliceName) {
           return { sliceName: "Cannot be empty" };
         }
-        if (!/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(sliceName)) {
+        if (!API_ID_REGEX.exec(sliceName)) {
           return { sliceName: "No special characters allowed" };
         }
         const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");

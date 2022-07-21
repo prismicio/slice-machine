@@ -237,7 +237,7 @@ describe("Custom Type Builder", () => {
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
       {
-        id: "new-field",
+        id: "new_field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",
@@ -424,7 +424,7 @@ describe("Custom Type Builder", () => {
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
       {
-        id: "new-field",
+        id: "new_field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",
@@ -535,7 +535,7 @@ describe("Custom Type Builder", () => {
     expect(fakeTracker).toHaveBeenCalledWith(
       "SliceMachine Custom Type Field Added",
       {
-        id: "new-field",
+        id: "new_field",
         name: "a-page",
         type: "StructuredText",
         zone: "static",

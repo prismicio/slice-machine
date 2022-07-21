@@ -19,6 +19,7 @@ import { FormikErrors } from "formik";
 
 import Tracker from "@src/tracker";
 import { slugify } from "@lib/utils/str";
+import { API_ID_REGEX } from "@lib/consts";
 
 interface FormValues {
   id: string;
@@ -128,7 +129,7 @@ const CreateCustomTypeModal: React.FC = () => {
           errors.id = "ID cannot be empty.";
         }
 
-        if (!errors.id && id && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.exec(id)) {
+        if (!errors.id && id && !API_ID_REGEX.exec(id)) {
           errors.id = "Invalid id: No special characters allowed.";
         }
         if (
