@@ -197,11 +197,11 @@ export const selectedSliceReducer: Reducer<
     }
     case getType(saveSliceCreator.success): {
       if (!prevState) return prevState;
-      const { extendedComponent, librarySliceVariations } = action.payload;
+      const { extendedComponent, remoteSliceVariations } = action.payload;
 
       const sameVariations = compareVariations(
         extendedComponent.component.model.variations,
-        librarySliceVariations || []
+        remoteSliceVariations || []
       );
 
       return {

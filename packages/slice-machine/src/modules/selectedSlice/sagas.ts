@@ -23,7 +23,7 @@ import {
   renameSlice,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { getLibrarySlice, renameSliceCreator } from "../slices";
+import { getRemoteSlice, renameSliceCreator } from "../slices";
 import { modalCloseCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
@@ -170,17 +170,15 @@ export function* saveSliceSaga({
         response.data.warning ||
         "Models & mocks have been generated successfully!",
     });
-    const librarySlice = (yield select(
-      getLibrarySlice,
-      extendedComponent.component.from,
+    const remoteSlice = (yield select(
+      getRemoteSlice,
       extendedComponent.component.model.id
-    )) as ReturnType<typeof getLibrarySlice>;
+    )) as ReturnType<typeof getRemoteSlice>;
 
-    console.log("--librarySlice--", librarySlice);
     yield put(
       saveSliceCreator.success({
         extendedComponent,
-        librarySliceVariations: librarySlice?.model.variations,
+        remoteSliceVariations: remoteSlice?.variations,
       })
     );
   } catch (e) {

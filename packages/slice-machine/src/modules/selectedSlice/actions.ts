@@ -113,7 +113,7 @@ export const saveSliceCreator = createAsyncAction(
   },
   {
     extendedComponent: NonNullable<SelectedSliceStoreType>;
-    librarySliceVariations: ReadonlyArray<VariationSM> | undefined;
+    remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
   }
 >();
 

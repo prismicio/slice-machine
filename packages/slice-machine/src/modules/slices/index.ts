@@ -81,13 +81,11 @@ export const getLibraries = (
   store: SliceMachineStoreType
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
 
-export const getLibrarySlice = (
+export const getRemoteSlice = (
   store: SliceMachineStoreType,
-  libraryName: string,
   componentId: string
-): ComponentUI | undefined => {
-  const library = store.slices.libraries.find((l) => l.name === libraryName);
-  return library?.components.find((c) => c.model.id === componentId);
+): SliceSM | undefined => {
+  return store.slices.remoteSlices.find((rs) => rs.id === componentId);
 };
 
 export const getRemoteSlices = (
