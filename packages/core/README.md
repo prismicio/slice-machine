@@ -123,6 +123,6 @@ import { pascalize, snakelize } from "@slicemachine/core/build/utils";
   const camelName = "camelName";
 
   const componentName = pascalize(camelName); // CamelName
-  const prismicId = snaeklize(camelName); // camel_name
+  const prismicId = snakelize(camelName); // camel_name
 })();
 ```
