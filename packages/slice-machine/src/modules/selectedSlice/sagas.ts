@@ -6,6 +6,7 @@ import {
   SagaReturnType,
   select,
 } from "redux-saga/effects";
+import axios from "axios";
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
@@ -231,12 +232,25 @@ export function* pushSliceSaga({
       })
     );
   } catch (e) {
-    yield put(
-      openToasterCreator({
-        message: "Internal Error: Slice was not pushed",
-        type: ToasterType.ERROR,
-      })
-    );
+    const status = axios.isAxiosError(e) ? e.response?.status || null : null;
+    onPush({
+      imageLoading: false,
+      loading: false,
+      done: true,
+      status: status,
+      error:
+        status === 403
+          ? "Authentication Error: User is not logged in"
+          : "Internal Error: Slice was not pushed",
+    });
+    if (status !== 403) {
+      yield put(
+        openToasterCreator({
+          message: "Internal Error: Slice was not pushed",
+          type: ToasterType.ERROR,
+        })
+      );
+    }
   }
 }
 

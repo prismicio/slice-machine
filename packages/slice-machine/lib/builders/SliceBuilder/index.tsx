@@ -29,7 +29,7 @@ export type SliceBuilderState = {
   imageLoading: boolean;
   loading: boolean;
   done: boolean;
-  error: null;
+  error: null | string;
   status: number | null;
 };
 
