@@ -11,7 +11,6 @@ import ServerState from "@models/server/ServerState";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { ScreenshotResponse } from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { ExtendedComponentUI } from "./modules/selectedSlice/types";
 
 const defaultAxiosConfig = {
   withCredentials: true,
@@ -112,13 +111,13 @@ export const generateSliceCustomScreenshotApiClient = (
 };
 
 export const saveSliceApiClient = (
-  extendedComponent: ExtendedComponentUI
+  component: ComponentUI
 ): Promise<AxiosResponse<Record<string, never>>> => {
   const requestBody = {
-    sliceName: extendedComponent.component.model.name,
-    from: extendedComponent.component.from,
-    model: extendedComponent.component.model,
-    mockConfig: extendedComponent.mockConfig,
+    sliceName: component.model.name,
+    from: component.from,
+    model: component.model,
+    mockConfig: component.mockConfig,
   };
   return axios.post("/api/slices/save", requestBody, defaultAxiosConfig);
 };
