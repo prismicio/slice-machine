@@ -111,6 +111,7 @@ export class InitTracker {
   }
 
   trackInitStart(repoDomain: string | undefined): Promise<void> {
+    if (repoDomain) this.setRepository(repoDomain);
     return this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
