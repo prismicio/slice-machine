@@ -1,5 +1,4 @@
 import MockSlice from "../../../lib/mock/Slice";
-import faker from "@faker-js/faker";
 
 global.console = { ...global.console, error: jest.fn() };
 
@@ -16,8 +15,6 @@ jest.mock("lorem-ipsum", () => {
 
 describe("MockSlice", () => {
   test("when creating a slice it should return the default mock", () => {
-    jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
-
     const wanted = [
       {
         variation: "default",
@@ -79,8 +76,6 @@ describe("MockSlice", () => {
   });
 
   test("when updating a mock with config", () => {
-    jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
-
     const wanted = [
       {
         variation: "default",
