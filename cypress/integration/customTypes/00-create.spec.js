@@ -22,7 +22,7 @@ describe("Custom Types specs", () => {
     cy.get("input[data-cy=ct-name-input]").type(name);
     cy.get("[data-cy=create-ct-modal]").submit();
     cy.location("pathname", { timeout: 10000 }).should("eq", `/cts/${id}`);
-    cy.readFile(`${path}/${id}/types.ts`).should('contains', name);
+    cy.readFile(`${path}/${id}/types.ts`).should("contains", name);
 
     //edit custom type name
     cy.get('[data-cy="edit-custom-type"]').click();
@@ -36,6 +36,9 @@ describe("Custom Types specs", () => {
     cy.get('[data-cy="custom-type-secondary-breadcrumb"]').contains(
       `/ ${name} - Edited`
     );
-    cy.readFile(`${path}/${id}/types.ts`).should('contains', `${name} - Edited`);
+    cy.readFile(`${path}/${id}/types.ts`).should(
+      "contains",
+      `${name} - Edited`
+    );
   });
 });
