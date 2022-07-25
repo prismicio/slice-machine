@@ -32,6 +32,10 @@ const saveCustomType = (cts: ReadonlyArray<CustomTypeSM>, cwd: string) => {
       CustomTypesPaths(cwd).customType(ct.id).model(),
       ct
     );
+    IO.CustomType.writeCustomTypeTypes(
+      CustomTypesPaths(cwd).customType(ct.id).types(),
+      ct
+    );
   }
 };
 

@@ -36,6 +36,9 @@ export async function handler(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   IO.Slice.writeSlice(modelPath, smModel);
 
+  const typesPath = CustomPaths(env.cwd).library(from).slice(sliceName).types();
+  IO.Slice.writeSliceTypes(typesPath, smModel);
+
   const hasCustomMocks = Files.exists(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     CustomPaths(env.cwd).library(from).slice(sliceName).mocks()

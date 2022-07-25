@@ -11,8 +11,11 @@ export default async function handler(req: RequestWithEnv) {
   const modelPath = CustomTypesPaths(state.env.cwd)
     .customType(customTypeId)
     .model();
+  const typesPath = CustomTypesPaths(state.env.cwd)
+    .customType(customTypeId)
+    .types();
 
-  IO.CustomType.renameCustomType(modelPath, newCustomTypeName);
+  IO.CustomType.renameCustomType(modelPath, typesPath, newCustomTypeName);
 
   return {};
 }

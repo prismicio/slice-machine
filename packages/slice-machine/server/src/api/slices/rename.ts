@@ -63,7 +63,11 @@ export async function renameSlice(req: {
     .library(libName)
     .slice(desiredSlice.model.name);
 
-  IO.Slice.renameSlice(sliceDirectory.model(), newSliceName);
+  IO.Slice.renameSlice(
+    sliceDirectory.model(),
+    sliceDirectory.types(),
+    newSliceName
+  );
 
   fs.renameSync(
     sliceDirectory.value(),

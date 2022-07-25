@@ -12,6 +12,7 @@ export interface Paths {
   customType: (id: string) => {
     value: () => string;
     model: () => string;
+    types: () => string;
     mock: () => string;
   };
   library: (libraryName: string) => {
@@ -22,6 +23,7 @@ export interface Paths {
       stories: (filename?: string) => string;
       mocks: () => string;
       model: () => string;
+      types: () => string;
       variation: (variationId: string) => {
         value: () => string;
         preview: (filename?: string) => string;
@@ -35,6 +37,7 @@ const Paths = (cwd: string, prefix: string): Paths => ({
   customType: (id: string) => ({
     value: () => path.join(Paths(cwd, prefix).value()),
     model: () => path.join(Paths(cwd, prefix).value(), id, "index.json"),
+    types: () => path.join(Paths(cwd, prefix).value(), id, "types.ts"),
     mock: () => path.join(Paths(cwd, prefix).value(), id, "mocks.json"),
   }),
   library: (libraryName: string) => ({
@@ -61,6 +64,11 @@ const Paths = (cwd: string, prefix: string): Paths => ({
         path.join(
           Paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "model.json"
+        ),
+      types: () =>
+        path.join(
+          Paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
+          "types.ts"
         ),
       variation: (variationId: string) => ({
         value: () =>

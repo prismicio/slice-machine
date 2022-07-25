@@ -6,6 +6,7 @@ export const paths = (cwd: string, prefix: string) => ({
     value: (): string => path.join(paths(cwd, prefix).value()),
     model: (): string =>
       path.join(paths(cwd, prefix).value(), id, "index.json"),
+    types: (): string => path.join(paths(cwd, prefix).value(), id, "types.ts"),
     mock: (): string => path.join(paths(cwd, prefix).value(), id, "mocks.json"),
   }),
   library: (libraryName: string) => ({
@@ -32,6 +33,11 @@ export const paths = (cwd: string, prefix: string) => ({
         path.join(
           paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
           "model.json"
+        ),
+      types: (): string =>
+        path.join(
+          paths(cwd, prefix).library(libraryName).slice(sliceName).value(),
+          "types.ts"
         ),
       variation: (variationId: string) => ({
         value: (): string =>
