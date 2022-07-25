@@ -11,7 +11,7 @@ import cpy from "copy-template-dir";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
 
-import { snakelize } from "@lib/utils/str";
+import { pascalize, snakelize } from "@lib/utils/str";
 import Files from "@lib/utils/files";
 import { DEFAULT_VARIATION_ID } from "@lib/consts";
 import * as IO from "../../io";
@@ -35,6 +35,7 @@ const copyTemplate = async (
     await copy(templatePath, path.join(env.cwd, from, sliceName), {
       componentName: sliceName,
       componentId: snakelize(sliceName),
+      pascalId: pascalize(sliceName),
       variationId: DEFAULT_VARIATION_ID,
     });
   } catch (e) {
