@@ -14,7 +14,7 @@ import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
-import { HeadingWithTooltip } from "../../../../components/Tooltip/HeadingWithTooltip";
+import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -182,7 +182,7 @@ export const SharedSlice = {
                   ) : null}
                 </Fragment>
               )}
-              <HeadingWithTooltip text={slice.model.name} />
+              <TextWithTooltip text={slice.model.name} as="h6" />
             </Flex>
             <SliceVariations
               variations={slice.model.variations}

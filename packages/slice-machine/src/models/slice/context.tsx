@@ -1,33 +1,11 @@
 import React from "react";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SliceSM } from "@slicemachine/core/build/models/Slice";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import Router from "next/router";
 import { replace } from "connected-next-router";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
-
-export function getExtendedSlice({
-  slice,
-  remoteSlice,
-  mockConfig,
-}: {
-  slice: ComponentUI;
-  remoteSlice?: SliceSM;
-  mockConfig: CustomTypeMockConfig;
-}): ExtendedComponentUI {
-  return {
-    component: slice,
-    mockConfig: mockConfig,
-    initialMockConfig: mockConfig,
-    remoteVariations: remoteSlice ? remoteSlice.variations : [],
-    initialVariations: slice.model.variations,
-    initialScreenshotUrls: slice.screenshotUrls,
-  };
-}
 
 export const SliceHandler: React.FC = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({

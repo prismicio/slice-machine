@@ -70,8 +70,8 @@ import {
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
-import { ExtendedComponentUI } from "./selectedSlice/types";
+import { ComponentUI } from "../../lib/models/common/ComponentUI";
+import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -272,8 +272,8 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
-  const initSliceStore = (extendedComponentUI: ExtendedComponentUI) =>
-    dispatch(initSliceStoreCreator(extendedComponentUI));
+  const initSliceStore = (component: ComponentUI) =>
+    dispatch(initSliceStoreCreator(component));
 
   const addSliceWidget = (
     variationId: string,
@@ -370,43 +370,52 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    screenshots: Record<string, ScreenshotUI>,
-    component: ComponentUI
+    _variationId: string,
+    component: ComponentUI,
+    setData: (data: any) => void
   ) => {
     dispatch(
-      generateSliceScreenshotCreator({
-        screenshots,
+      generateSliceScreenshotCreator.request({
+        _variationId,
         component,
+        setData,
       })
     );
   };
 
   const generateSliceCustomScreenshot = (
     variationId: string,
-    screenshot: ScreenshotUI,
-    component: ComponentUI
+    component: ComponentUI,
+    setData: (data: any) => void,
+    file: Blob
   ) => {
     dispatch(
-      generateSliceCustomScreenshotCreator({
+      generateSliceCustomScreenshotCreator.request({
         variationId,
-        screenshot,
         component,
+        setData,
+        file,
       })
     );
   };
 
-  const saveSlice = (extendedComponent: ExtendedComponentUI) => {
+  const saveSlice = (component: ComponentUI, setData: (data: any) => void) => {
     dispatch(
-      saveSliceCreator({
-        extendedComponent,
+      saveSliceCreator.request({
+        component,
+        setData,
       })
     );
   };
 
-  const pushSlice = (extendedComponent: ExtendedComponentUI) => {
+  const pushSlice = (
+    component: ComponentUI,
+    onPush: (data: SliceBuilderState) => void
+  ) => {
     dispatch(
-      pushSliceCreator({
-        extendedComponent,
+      pushSliceCreator.request({
+        component,
+        onPush,
       })
     );
   };

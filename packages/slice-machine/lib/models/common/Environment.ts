@@ -3,6 +3,7 @@ import type { Models } from "@slicemachine/core";
 import type { Client, ApplicationMode } from "@slicemachine/client";
 import { PackageChangelog } from "./versions";
 import { PackageManager } from "./PackageManager";
+import { CustomTypeMockConfig } from "./MockConfig";
 
 export interface BackendEnvironment {
   applicationMode: ApplicationMode;
@@ -11,8 +12,7 @@ export interface BackendEnvironment {
   manifest: Models.Manifest;
   repo: string;
   changelog: PackageChangelog;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mockConfig: any;
+  mockConfig: CustomTypeMockConfig;
   framework: Models.Frameworks;
   baseUrl: string;
   client: Client;
@@ -25,8 +25,7 @@ export interface FrontEndEnvironment {
   repo: string;
   changelog: PackageChangelog;
   packageManager: PackageManager;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mockConfig: any;
+  mockConfig: CustomTypeMockConfig;
   framework: Models.Frameworks;
   sliceMachineAPIUrl: string;
 }

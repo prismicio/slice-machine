@@ -1,5 +1,4 @@
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { getExtendedSlice } from "@src/models/slice/context";
+import equal from "fast-deep-equal";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "../slices";
 
@@ -9,7 +8,7 @@ export const selectCurrentSlice = (
   sliceName: string
 ) => {
   const openedModel = store.selectedSlice;
-  if (openedModel?.component.model.name === sliceName) {
+  if (openedModel?.model.name === sliceName) {
     return openedModel;
   }
 
@@ -18,18 +17,29 @@ export const selectCurrentSlice = (
   );
   const slice = library?.components.find((c) => c.model.name === sliceName);
 
-  if (!slice) return null;
+  return slice || null;
+};
 
-  return getExtendedSlice({
-    slice,
-    mockConfig: SliceMockConfig.getSliceMockConfig(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-      store.environment.mockConfig,
-      slice.from,
-      slice.model.name
-    ),
-    remoteSlice: store.slices.remoteSlices?.find(
-      (e) => e.id === slice.model.id
-    ),
-  });
+export const isSelectedSliceTouched = (
+  store: SliceMachineStoreType,
+  lib: string,
+  sliceId: string
+): boolean => {
+  const selectedSlice = store.selectedSlice;
+  const library = getLibraries(store)?.find((l) => l.name === lib);
+  const librarySlice = library?.components.find((c) => c.model.id === sliceId);
+
+  if (!selectedSlice || !librarySlice) return false;
+
+  const sameVariations = equal(
+    librarySlice.model.variations,
+    selectedSlice.model.variations
+  );
+
+  const sameMockConfig = equal(
+    librarySlice.mockConfig,
+    selectedSlice.mockConfig
+  );
+
+  return !sameVariations || !sameMockConfig;
 };

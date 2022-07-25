@@ -17,26 +17,23 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { Size } from "@components/Simulator/components/ScreenSizes";
 import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
-import {
-  generateCustomScreenShot,
-  generateScreenShot,
-} from "@src/modules/selectedSlice/screenshot";
-import pushSliceApiCall from "@src/modules/selectedSlice/push";
-import saveSliceApiCall from "@src/modules/selectedSlice/save";
 import { useRouter } from "next/router";
-import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import {
+  isSelectedSliceTouched,
+  selectCurrentSlice,
+} from "@src/modules/selectedSlice/selectors";
 import { VariationSM } from "@slicemachine/core/build/models";
-import { ExtendedComponentUI } from "@src/modules/selectedSlice/types";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-type SliceBuilderState = {
+export type SliceBuilderState = {
   imageLoading: boolean;
   loading: boolean;
   done: boolean;
-  error: null;
+  error: null | string;
   status: number | null;
 };
 
-const initialState: SliceBuilderState = {
+export const initialState: SliceBuilderState = {
   imageLoading: false,
   loading: false,
   done: false,
@@ -45,45 +42,43 @@ const initialState: SliceBuilderState = {
 };
 
 interface SliceBuilderProps {
-  extendedComponent: ExtendedComponentUI;
+  component: ComponentUI;
   variation: VariationSM | undefined;
 }
 
 const SliceBuilder: React.FC<SliceBuilderProps> = ({
-  extendedComponent,
+  component,
   variation,
 }) => {
   const {
     openLoginModal,
-    checkSimulatorSetup,
     openToaster,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
     pushSlice,
     saveSlice,
+    checkSimulatorSetup,
   } = useSliceMachineActions();
-  const { simulatorUrl, isWaitingForIframeCheck } = useSelector(
+  const { simulatorUrl, isWaitingForIframeCheck, isTouched } = useSelector(
     (state: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(state),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+      isTouched: isSelectedSliceTouched(
+        state,
+        component.from,
+        component.model.id
+      ),
     })
   );
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
 
-  const onPush = (data: SliceBuilderState) => {
-    setData(data);
-    if (data.error && data.status === 403) {
-      openLoginModal();
-    }
-  };
-
   useEffect(() => {
-    if (extendedComponent?.isTouched) {
+    if (isTouched) {
       setData(initialState);
     }
-  }, [extendedComponent?.isTouched]);
+  }, [isTouched]);
 
   // activate/deactivate Success message
   useEffect(() => {
@@ -96,54 +91,50 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
   const sliceView = useMemo(
     () =>
-      extendedComponent && variation
+      component && variation
         ? [
             {
-              sliceID: extendedComponent.component.model.id,
+              sliceID: component.model.id,
               variationID: variation.id,
             },
           ]
         : null,
-    [extendedComponent.component.model.id, variation?.id]
+    [component.model.id, variation?.id]
   );
 
   if (!variation || !sliceView) return null;
 
-  const onTakingCustomScreenshot = () => {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    checkSimulatorSetup(true, async () => {
-      await generateScreenShot(
-        variation.id,
-        extendedComponent.component.from,
-        extendedComponent.component.model.name,
-        setData,
-        (screenshots) =>
-          generateSliceScreenshot(screenshots, extendedComponent.component)
-      );
+  const onTakingSliceScreenshot = () => {
+    generateSliceScreenshot(variation.id, component, setData);
+  };
+
+  const onTakingSliceCustomScreenshot = (file: Blob) => {
+    checkSimulatorSetup(true, () =>
+      generateSliceCustomScreenshot(variation.id, component, setData, file)
+    );
+  };
+
+  const onPushSlice = () => {
+    pushSlice(component, (data: SliceBuilderState) => {
+      setData(data);
+      if (data.error && data.status === 403) {
+        openLoginModal();
+      }
     });
+  };
+
+  const onSaveSlice = () => {
+    saveSlice(component, setData);
   };
 
   return (
     <Box sx={{ flex: 1 }}>
       <Header
-        component={extendedComponent.component}
-        isTouched={extendedComponent.isTouched}
+        component={component}
+        isTouched={isTouched}
         variation={variation}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
-        onPush={async () => {
-          await pushSliceApiCall(extendedComponent.component, onPush, () =>
-            pushSlice(extendedComponent)
-          );
-        }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-misused-promises
-        onSave={async () => {
-          await saveSliceApiCall(
-            extendedComponent.component,
-            extendedComponent.mockConfig,
-            setData,
-            () => saveSlice(extendedComponent)
-          );
-        }}
+        onPush={onPushSlice}
+        onSave={onSaveSlice}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
       />
@@ -151,33 +142,15 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         sx={{ py: 4 }}
         SideBar={
           <SideBar
-            component={extendedComponent.component}
+            component={component}
             variation={variation}
-            onScreenshot={onTakingCustomScreenshot}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onHandleFile={async (file: Blob) => {
-              await generateCustomScreenShot(
-                variation.id,
-                extendedComponent.component.from,
-                extendedComponent.component.model.name,
-                setData,
-                file,
-                (variationId, screenshot) =>
-                  generateSliceCustomScreenshot(
-                    variationId,
-                    screenshot,
-                    extendedComponent.component
-                  )
-              );
-            }}
+            onScreenshot={onTakingSliceScreenshot}
+            onHandleFile={onTakingSliceCustomScreenshot}
             imageLoading={data.imageLoading}
           />
         }
       >
-        <FieldZones
-          mockConfig={extendedComponent.mockConfig}
-          variation={variation}
-        />
+        <FieldZones mockConfig={component.mockConfig} variation={variation} />
       </FlexEditor>
       <SetupDrawer />
       {isWaitingForIframeCheck && (
@@ -196,30 +169,28 @@ const SliceBuilderWithRouter = () => {
   const router = useRouter();
   const { initSliceStore } = useSliceMachineActions();
 
-  const { extendedModel } = useSelector((store: SliceMachineStoreType) => ({
-    extendedModel: selectCurrentSlice(
+  const { component } = useSelector((store: SliceMachineStoreType) => ({
+    component: selectCurrentSlice(
       store,
       router.query.lib as string,
       router.query.sliceName as string
     ),
   }));
 
-  if (!extendedModel) {
+  if (!component) {
     void router.replace("/");
     return null;
   }
 
   useEffect(() => {
-    initSliceStore(extendedModel);
+    initSliceStore(component);
   }, []);
 
-  const variation = extendedModel.component.model.variations.find(
+  const variation = component.model.variations.find(
     (variation) => variation.id === router.query.variation
   );
 
-  return (
-    <SliceBuilder extendedComponent={extendedModel} variation={variation} />
-  );
+  return <SliceBuilder component={component} variation={variation} />;
 };
 
 export default SliceBuilderWithRouter;

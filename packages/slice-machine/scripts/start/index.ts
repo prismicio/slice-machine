@@ -14,6 +14,7 @@ import { handleMigration } from "./handleMigration";
 import { validateManifest } from "./validateManifest";
 import { startSMServer } from "./startSMServer";
 import { validateSession } from "./validateSession";
+import { validateModels } from "./validateModels";
 
 async function run(): Promise<void> {
   const cwd: string = process.cwd(); // project running the script
@@ -29,13 +30,19 @@ async function run(): Promise<void> {
 
   if (!skipMigration) await handleMigration(cwd, manifest.content);
 
-  const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
-  const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);
+  const { areModelsValid } = validateModels({
+    cwd,
+    manifest: manifest.content,
+  });
+  if (!areModelsValid) return process.exit(0);
 
   const framework = NodeUtils.Framework.defineFramework({
     cwd,
-    manifest: manifest.content || undefined,
+    manifest: manifest.content,
   });
+
+  const smNodeModuleDirectory = path.resolve(__dirname, "../../..");
+  const packageChangelog = await getPackageChangelog(smNodeModuleDirectory);
 
   const UserInfo = await validateSession(cwd);
 
@@ -44,7 +51,7 @@ async function run(): Promise<void> {
   );
 }
 
-function start(): Promise<void> {
+async function start(): Promise<void> {
   return run().catch((err) => {
     console.error(`[slice-machine] An unexpected error occurred. Exiting...`);
     console.error("Full error: ", err);

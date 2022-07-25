@@ -9,7 +9,7 @@ import {
 } from "redux-saga/effects";
 import { withLoader } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { createSlice, getState, renameSlice } from "@src/apiClient";
+import { createSlice, getState } from "@src/apiClient";
 import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { Reducer } from "redux";
@@ -81,6 +81,13 @@ export const getLibraries = (
   store: SliceMachineStoreType
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
 
+export const getRemoteSlice = (
+  store: SliceMachineStoreType,
+  componentId: string
+): SliceSM | undefined => {
+  return store.slices.remoteSlices.find((rs) => rs.id === componentId);
+};
+
 export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
@@ -121,8 +128,8 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         libraries: newLibs,
       };
     }
-    case getType(saveSliceCreator): {
-      const newComponentUI = action.payload.extendedComponent.component;
+    case getType(saveSliceCreator.success): {
+      const newComponentUI = action.payload.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
 
       const newLibraries = state.libraries.map((library) => {
@@ -139,8 +146,8 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(pushSliceCreator): {
-      const newComponentUI = action.payload.extendedComponent.component;
+    case getType(pushSliceCreator.success): {
+      const newComponentUI = action.payload.component;
 
       const newRemoteSlices = [...state.remoteSlices];
 
@@ -168,7 +175,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceScreenshotCreator): {
+    case getType(generateSliceScreenshotCreator.success): {
       const { screenshots: screenshotUrls, component } = action.payload;
 
       const newLibraries = state.libraries.map((library) => {
@@ -185,7 +192,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       return { ...state, libraries: newLibraries };
     }
-    case getType(generateSliceCustomScreenshotCreator): {
+    case getType(generateSliceCustomScreenshotCreator.success): {
       const { variationId, screenshot, component } = action.payload;
 
       const screenshotUrls: Screenshots = component.model.variations.reduce(
@@ -258,43 +265,11 @@ export function* createSliceSaga({
   );
 }
 
-export function* renameSliceSaga({
-  payload,
-}: ReturnType<typeof renameSliceCreator.request>) {
-  const { libName, sliceId, newSliceName } = payload;
-  try {
-    yield call(renameSlice, sliceId, newSliceName, libName);
-    yield put(renameSliceCreator.success({ libName, sliceId, newSliceName }));
-    yield put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_SLICE }));
-    const addr = `/${payload.libName.replace(/\//g, "--")}/${
-      payload.newSliceName
-    }/${payload.variationId}`;
-    yield put(push(addr));
-    yield put(
-      openToasterCreator({
-        message: "Slice name updated",
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    yield put(
-      openToasterCreator({
-        message: "Internal Error: Slice name not saved",
-        type: ToasterType.ERROR,
-      })
-    );
-  }
-}
-
 // Saga watchers
 function* handleSliceRequests() {
   yield takeLatest(
     getType(createSliceCreator.request),
     withLoader(createSliceSaga, LoadingKeysEnum.CREATE_SLICE)
-  );
-  yield takeLatest(
-    getType(renameSliceCreator.request),
-    withLoader(renameSliceSaga, LoadingKeysEnum.RENAME_SLICE)
   );
 }
 

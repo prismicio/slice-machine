@@ -1,6 +1,6 @@
 describe("Duplicate custom types", () => {
   const name = "Duplicated Custom Type";
-  const id = "duplicated-custom-type";
+  const id = "duplicated_custom_type";
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
