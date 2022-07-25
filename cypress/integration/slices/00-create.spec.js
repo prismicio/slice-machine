@@ -35,6 +35,7 @@ describe("Create Slices", () => {
       "eq",
       `/${lib}/${sliceName}/default`
     );
+    cy.readFile(`${path}/${sliceName}/types.ts`).should('contains', sliceName);
 
     // edit slice name
     cy.get('[data-cy="edit-slice-name"]').click();
@@ -50,5 +51,6 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
+    cy.readFile(`${path}/${editedSliceName}/types.ts`).should('contains', editedSliceName);
   });
 });
