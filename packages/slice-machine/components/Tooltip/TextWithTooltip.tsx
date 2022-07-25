@@ -1,38 +1,54 @@
 import ReactTooltip from "react-tooltip";
-import React, { useEffect, useRef, useState } from "react";
-import { Heading } from "theme-ui";
+import React, { ElementType, useEffect, useRef, useState } from "react";
+import { Text, ThemeUIStyleObject } from "theme-ui";
 
-interface HeadingWithTooltip {
+interface TextWithTooltipProps {
   text: string;
+  as: ElementType;
+  sx?: ThemeUIStyleObject;
 }
 
-export const HeadingWithTooltip: React.FC<HeadingWithTooltip> = ({ text }) => {
+export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
+  text,
+  as,
+  sx = {},
+}) => {
   const headingRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean | null>(null);
 
-  useEffect(() => {
+  const updateTooltipVisibility = () => {
     setShowTooltip(
       headingRef.current &&
         headingRef.current.offsetWidth < headingRef.current.scrollWidth
     );
+  };
+
+  useEffect(() => {
+    updateTooltipVisibility();
+    window.addEventListener("resize", updateTooltipVisibility);
+    return () => {
+      window.removeEventListener("resize", updateTooltipVisibility);
+    };
   }, []);
 
   return (
     <>
-      <Heading
+      <Text
         data-for={text}
         data-tip
         sx={{
           flex: 1,
           overflow: "hidden",
           textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          ...sx,
         }}
-        as="h6"
+        as={as}
         ref={headingRef}
       >
         {text}
-      </Heading>
-      {showTooltip ? (
+      </Text>
+      {showTooltip && (
         <ReactTooltip
           id={text}
           type="dark"
@@ -44,7 +60,7 @@ export const HeadingWithTooltip: React.FC<HeadingWithTooltip> = ({ text }) => {
         >
           {text}
         </ReactTooltip>
-      ) : null}
+      )}
     </>
   );
 };
