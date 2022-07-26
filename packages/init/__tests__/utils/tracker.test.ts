@@ -129,6 +129,11 @@ describe("InitTracker", () => {
       properties: {
         repo: "repoName",
       },
+      context: {
+        groupId: {
+          Repository: "repoName",
+        },
+      },
     });
   });
 
