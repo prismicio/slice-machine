@@ -1,5 +1,3 @@
-import { Fragment } from "react";
-
 import ReactTooltip from "react-tooltip";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
