@@ -130,6 +130,7 @@ export const CustomTypeMockConfig = {
     ctMockConfig: CustomTypeMockConfig,
     fieldId: string
   ): CustomTypeMockConfig {
+    if (!ctMockConfig[fieldId]) return ctMockConfig;
     return {
       ...ctMockConfig,
       [fieldId]: undefined,
@@ -142,18 +143,12 @@ export const CustomTypeMockConfig = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ) {
+    const newCtMockConfig = { ...ctMockConfig };
+    delete newCtMockConfig[previousFieldId];
     return {
-      ...ctMockConfig,
-      ...(previousFieldId !== fieldId
-        ? {
-            [previousFieldId]: undefined,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            [fieldId]: value,
-          }
-        : {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            [fieldId]: value,
-          }),
+      ...newCtMockConfig,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      [fieldId]: value,
     };
   },
   updateGroupFieldMockConfig(
@@ -164,21 +159,14 @@ export const CustomTypeMockConfig = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
     value: any
   ) {
+    const groupIdMock = this.getFieldMockConfig(ctMockConfig, groupId);
+    delete groupIdMock[previousFieldId];
     return {
       ...ctMockConfig,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       [groupId]: {
-        ...this.getFieldMockConfig(ctMockConfig, groupId),
-        ...(previousFieldId !== fieldId
-          ? {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-              [fieldId]: value,
-              [previousFieldId]: undefined,
-            }
-          : {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-              [fieldId]: value,
-            }),
+        ...groupIdMock,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        [fieldId]: value,
       },
     };
   },
@@ -187,13 +175,14 @@ export const CustomTypeMockConfig = {
     groupId: string,
     fieldId: string
   ) {
+    const groupMock = this.getFieldMockConfig(
+      ctMockConfig,
+      groupId
+    ) as CustomTypeMockConfig;
     return {
       ...ctMockConfig,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      [groupId]: {
-        ...this.getFieldMockConfig(ctMockConfig, groupId),
-        [fieldId]: undefined,
-      },
+      [groupId]: this.deleteFieldMockConfig(groupMock, fieldId),
     };
   },
 };
