@@ -23,7 +23,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import preferWroomBase from "../../lib/utils/preferWroomBase";
 import { ToasterType } from "@src/modules/toaster";
 

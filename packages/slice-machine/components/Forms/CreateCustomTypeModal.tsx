@@ -17,7 +17,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { FormikErrors } from "formik";
 
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import { slugify } from "@lib/utils/str";
 import { API_ID_REGEX } from "@lib/consts";
 

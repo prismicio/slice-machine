@@ -28,7 +28,7 @@ import {
   TabField,
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
-import Tracker from "../../../../src/tracker";
+import Tracker from "../../../../src/tracking/client";
 
 interface TabZoneProps {
   tabId: string;

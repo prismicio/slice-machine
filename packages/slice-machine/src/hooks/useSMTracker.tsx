@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
