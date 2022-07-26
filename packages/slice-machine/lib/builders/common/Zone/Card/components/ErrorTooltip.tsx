@@ -7,25 +7,23 @@ interface ErrorTooltip {
   error?: string;
 }
 
-const ErrorTooltip: React.FC<ErrorTooltip> = ({ error }) => {
+export const ErrorTooltip: React.FC<ErrorTooltip> = ({ error }) => {
   if (error) {
     return (
-      <Fragment>
+      <>
         <ReactTooltip type="light" multiline border borderColor={"tomato"} />
         <FaRegQuestionCircle
           color={"tomato"}
           data-tip={error}
           style={{
             position: "relative",
-            top: "1px",
             right: "24px",
-            width: "24px",
+            height: "24px",
           }}
+          size={56}
         />
-      </Fragment>
+      </>
     );
   }
   return null;
 };
-
-export default ErrorTooltip;
