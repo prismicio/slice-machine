@@ -30,6 +30,7 @@ import {
 import { SliceBody } from "@models/common/Slice";
 import { SaveCustomTypeBody } from "@models/common/CustomType";
 import { isApiError } from "@models/server/ApiResult";
+import tracking from "./tracking";
 
 router.use(
   "/__preview",
@@ -303,6 +304,15 @@ router.post(
       return res.status(500).json(body);
     }
     return res.status(200).json({});
+  })
+);
+
+router.post(
+  "/s",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises,
+  WithEnv(async (req, res): Promise<Express.Response> => {
+    await tracking(req);
+    return res.json({});
   })
 );
 

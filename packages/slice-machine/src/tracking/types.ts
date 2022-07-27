@@ -43,10 +43,6 @@ export interface PageView extends BaseTrackingEvent {
 
 export interface IdentifyUser extends BaseTrackingEvent {
   name: EventNames.IdentifyUser;
-  props: {
-    shortId: string;
-    intercomHash: string;
-  };
 }
 
 export interface GroupLibraries extends BaseTrackingEvent {

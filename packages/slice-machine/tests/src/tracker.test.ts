@@ -45,14 +45,10 @@ describe("SMTracker", () => {
     const smTracker = new SMTracker();
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
-    await smTracker.identifyUser("userId", "intercomHash");
+    await smTracker.identifyUser();
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: EventNames.IdentifyUser,
-      props: {
-        shortId: "userId",
-        intercomHash: "intercomHash",
-      },
     });
   });
 

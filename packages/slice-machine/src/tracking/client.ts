@@ -43,14 +43,13 @@ export class SMTracker {
     );
   }
 
-  async #identify(shortId: string, intercomHash: string): Promise<void> {
+  async #identify(): Promise<void> {
     if (!this.#isTrackingActive) {
       return;
     }
 
     const payload: IdentifyUser = {
       name: EventNames.IdentifyUser,
-      props: { shortId, intercomHash },
     };
 
     return this.#client(payload).catch(() =>
@@ -77,8 +76,8 @@ export class SMTracker {
     await this.#trackEvent(payload);
   }
 
-  async identifyUser(shortId: string, intercomHash: string): Promise<void> {
-    await this.#identify(shortId, intercomHash);
+  async identifyUser(): Promise<void> {
+    await this.#identify();
   }
 
   async groupLibraries(
