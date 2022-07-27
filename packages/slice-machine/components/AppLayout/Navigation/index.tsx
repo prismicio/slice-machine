@@ -4,7 +4,7 @@ import useWindowSize from "src/hooks/useWindowSize";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
-import { MdHorizontalSplit, MdSpaceDashboard } from "react-icons/md";
+import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 
 export interface LinkProps {
   title: string;
@@ -31,6 +31,14 @@ const links: LinkProps[] = [
       return pathname.indexOf("/slices") === 0;
     },
     Icon: MdHorizontalSplit,
+  },
+  {
+    title: "Changes",
+    href: "/changes",
+    match(pathname: string) {
+      return pathname.indexOf("/changes") === 0;
+    },
+    Icon: MdLoop,
   },
 ];
 
