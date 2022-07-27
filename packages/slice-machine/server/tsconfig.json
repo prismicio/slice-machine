@@ -19,10 +19,6 @@
     "inlineSourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@lib/*": ["../lib/*"],
-      "@models/*": ["../lib/models/*"]
-    }
   },
   "include": ["./**/*.ts", "./**/*.js"]
 }

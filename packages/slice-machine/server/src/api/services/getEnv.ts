@@ -9,11 +9,14 @@ import { Models } from "@slicemachine/core";
 import { Client, ApplicationMode } from "@slicemachine/client";
 import { Framework } from "@slicemachine/core/build/node-utils";
 
-import type { BackendEnvironment } from "@lib/models/common/Environment";
-import type { ConfigErrors } from "@lib/models/server/ServerState";
-import { getPackageChangelog } from "@lib/env/versions";
-import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
-import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
+import type { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import type { ConfigErrors } from "../../../../lib/models/server/ServerState";
+import { getPackageChangelog } from "../../../../lib/env/versions";
+import { getConfig as getMockConfig } from "../../../../lib/mock/misc/fs";
+import handleManifest, {
+  ManifestState,
+  ManifestInfo,
+} from "../../../../lib/env/manifest";
 
 import getPrismicData from "./getPrismicData";
 

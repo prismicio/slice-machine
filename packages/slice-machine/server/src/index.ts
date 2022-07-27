@@ -12,7 +12,6 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 import fetch from "node-fetch";
-import { resolveAliases } from "../../lib/env/resolveAliases";
 
 // fake comment used to trigger the CI.
 
@@ -21,10 +20,8 @@ declare let global: {
   appRoot: string;
 };
 
-global.fetch = fetch;
+global.fetch = fetch; // TODO: remove this bit it's still used in screen-shots
 global.appRoot = path.join(__dirname, "../../../");
-
-resolveAliases(global.appRoot);
 
 import api from "./api";
 

@@ -1,17 +1,20 @@
 /** global variable define in server/src/index.js **/
 declare let appRoot: string;
-import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
+import { CustomPaths, GeneratedPaths } from "../../../../lib/models/paths";
 import Storybook from "../storybook";
 
-import mock from "@lib/mock/Slice";
-import { getConfig, insert as insertMockConfig } from "@lib/mock/misc/fs";
-import Files from "@lib/utils/files";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import mock from "../../../../lib/mock/Slice";
+import {
+  getConfig,
+  insert as insertMockConfig,
+} from "../../../../lib/mock/misc/fs";
+import Files from "../../../../lib/utils/files";
+import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
-import { SliceSaveBody } from "@lib/models/common/Slice";
+import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../io";
 
 export async function handler(

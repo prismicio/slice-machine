@@ -1,4 +1,4 @@
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import * as Libraries from "@slicemachine/core/build/libraries";
 import {
   CustomPaths,

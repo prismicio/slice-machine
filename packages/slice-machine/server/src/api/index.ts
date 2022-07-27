@@ -26,10 +26,10 @@ import { RequestWithEnv, WithEnv } from "./http/common";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
-} from "@models/common/Screenshots";
-import { SliceBody } from "@models/common/Slice";
-import { SaveCustomTypeBody } from "@models/common/CustomType";
-import { isApiError } from "@models/server/ApiResult";
+} from "../../../lib/models/common/Screenshots";
+import { SliceBody } from "../../../lib/models/common/Slice";
+import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
+import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
 
 router.use(

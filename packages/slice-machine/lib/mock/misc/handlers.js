@@ -1,4 +1,4 @@
-import * as LinkToMediaMockWidget from "@lib/models/common/widgets/LinkToMedia/Mock";
+import * as LinkToMediaMockWidget from "../../models/common/widgets/LinkToMedia/Mock";
 
 const handleFieldMock = (widget, maybeFieldMock = {}, config) => {
   if (maybeFieldMock.content) {

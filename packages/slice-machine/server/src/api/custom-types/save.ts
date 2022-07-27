@@ -1,12 +1,15 @@
 import getEnv from "../services/getEnv";
-import Files from "@lib/utils/files";
-import { CustomTypesPaths, GeneratedCustomTypesPaths } from "@lib/models/paths";
+import Files from "../../../../lib/utils/files";
+import {
+  CustomTypesPaths,
+  GeneratedCustomTypesPaths,
+} from "../../../../lib/models/paths";
 
-import { insert as insertMockConfig } from "@lib/mock/misc/fs";
+import { insert as insertMockConfig } from "../../../../lib/mock/misc/fs";
 
-import mock from "@lib/mock/CustomType";
-import { CustomTypeMockConfig } from "@lib/models/common/MockConfig";
-import { SaveCustomTypeBody } from "@lib/models/common/CustomType";
+import mock from "../../../../lib/mock/CustomType";
+import { CustomTypeMockConfig } from "../../../../lib/models/common/MockConfig";
+import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
 import * as IO from "../io";
 
 export default async function handler(req: { body: SaveCustomTypeBody }) {
