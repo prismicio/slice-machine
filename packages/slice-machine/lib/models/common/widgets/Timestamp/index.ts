@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { MdDateRange } from "react-icons/md";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 /** {
@@ -37,8 +36,6 @@ const Meta = {
 };
 
 export const TimestampWidget: Widget<Timestamp, typeof schema> = {
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   create: (label: string) => ({
     type: WidgetTypes.Timestamp,

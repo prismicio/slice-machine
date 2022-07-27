@@ -6,7 +6,6 @@ import { createValidationSchema } from "../../../../forms";
 
 import { removeProp } from "../../../../utils";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -61,8 +60,6 @@ export const ImageWidget: Widget<Image, typeof schema> = {
       thumbnails: [],
     },
   }),
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   FormFields,
   TYPE_NAME: WidgetTypes.Image,

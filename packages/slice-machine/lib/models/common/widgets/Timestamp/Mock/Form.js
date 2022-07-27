@@ -1,11 +1,12 @@
 import TimeConfigForm from "components/TimeConfigForm";
-
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 const Form = (props) => {
-  return <TimeConfigForm {...props} initialMockValues={initialValues} />;
+  return (
+    <TimeConfigForm {...props} initialMockValues={DefaultConfig.Timestamp} />
+  );
 };
 
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Timestamp;
 
 export const MockConfigForm = Form;

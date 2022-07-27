@@ -33,6 +33,6 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
     CustomTypeMockConfig.getCustomTypeMockConfig(updatedMockConfig, model.id)
   );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  Files.write(mockPath, mocked);
+  Files.write(mockPath, mocked as object);
   return {};
 }
