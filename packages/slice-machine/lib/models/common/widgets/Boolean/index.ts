@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { BsToggleOn } from "react-icons/bs";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 /** {
@@ -63,8 +62,6 @@ const schema = yup.object().shape({
 
 export const BooleanWidget: Widget<BooleanField, typeof schema> = {
   TYPE_NAME: WidgetTypes.BooleanField,
-  handleMockContent,
-  handleMockConfig,
   MockConfigForm,
   create: (label: string) => ({
     type: WidgetTypes.BooleanField,

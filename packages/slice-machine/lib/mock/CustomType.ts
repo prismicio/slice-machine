@@ -1,88 +1,54 @@
-import faker from "@faker-js/faker";
-import * as Widgets from "./misc/widgets";
-import { Tab } from "..//models/common/CustomType/tab";
-
-import { handleFields } from "./misc/handlers";
-
+import {
+  CustomType,
+  flattenWidgets,
+} from "@prismicio/types-internal/lib/customtypes/CustomType";
+import {
+  DocumentMockConfig,
+  DocWidgetMockConfig,
+  generateDocumentMock,
+  renderDocumentMock,
+} from "@prismicio/mocks";
 import { CustomTypeMockConfig } from "../models/common/MockConfig";
-import { GroupSM } from "@slicemachine/core/build/models/Group";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { buildWidgetMockConfig } from "./LegacyMockConfig";
+import { WidgetKey } from "@prismicio/types-internal/lib/documents/widgets";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@slicemachine/core/build/models/CustomType";
 
-interface Mock {
-  id: string;
-  uid: string | null;
-  type: string;
-  data: { [key: string]: unknown };
+function buildDocumentMockConfig(
+  model: CustomType,
+  legacyMockConfig: CustomTypeMockConfig
+): DocumentMockConfig {
+  const widgets = flattenWidgets(model);
+  const widgetsConfig = widgets.reduce<
+    Partial<Record<WidgetKey, DocWidgetMockConfig>>
+  >((acc, [key, w]) => {
+    const legacyFieldConfig: Partial<Record<string, unknown>> | undefined =
+      legacyMockConfig[key];
+    if (!legacyFieldConfig) return acc;
+
+    const widgetConfig = buildWidgetMockConfig(w, legacyFieldConfig);
+    if (!widgetConfig) return acc;
+
+    return { ...acc, [key]: widgetConfig };
+  }, {});
+
+  return { value: widgetsConfig };
 }
 
-const fieldsHandler = handleFields(Widgets);
-
-const groupHandler = (group: GroupSM, mockConfig: CustomTypeMockConfig) => {
-  const items = [];
-  const entries = group.config?.fields;
-  for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-    items.push(fieldsHandler(entries, mockConfig));
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return items;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const sliceZoneHandler = () => {};
-
-const createEmptyMock = (type: string) => ({
-  id: faker.datatype.uuid(),
-  uid: null,
-  type,
-  data: {},
-});
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export default async function MockCustomType(
+export default function MockCustomType(
   model: CustomTypeSM,
-  mockConfig: CustomTypeMockConfig
+  legacyMockConfig: CustomTypeMockConfig
 ) {
-  const customTypeMock: Mock = createEmptyMock(model.id);
-  const maybeUid = model.tabs.reduce((acc, curr) => {
-    const maybeWidgetUid = Object.entries(curr.value).find(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-member-access
-      ([_, e]) => e.value.type === "UID"
-    );
-    if (!acc && maybeWidgetUid) {
-      return curr;
-    }
-    return acc;
-  });
-
-  if (maybeUid) {
-    customTypeMock.uid = Widgets.UID.handleMockConfig();
-  }
-
-  for (const [, tab] of Object.entries(model.tabs)) {
-    const { fields, groups, sliceZone } = Tab.organiseFields(tab);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const mockedFields = fieldsHandler(fields as [], mockConfig);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    customTypeMock.data = {
-      ...customTypeMock.data,
-      ...mockedFields,
-    };
-    groups.forEach((group) => {
-      const { key, value } = group;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-      const groupMockConfig = CustomTypeMockConfig.getFieldMockConfig(
-        mockConfig,
-        key
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const groupFields = groupHandler(value, groupMockConfig);
-      customTypeMock.data[key] = groupFields;
-    });
-
-    if (sliceZone) {
-      sliceZoneHandler();
-    }
-  }
-  return customTypeMock;
+  const prismicModel = CustomTypes.fromSM(model);
+  const documentMockConfig = buildDocumentMockConfig(
+    prismicModel,
+    legacyMockConfig
+  );
+  return generateDocumentMock(
+    prismicModel,
+    {},
+    documentMockConfig
+  )(renderDocumentMock);
 }

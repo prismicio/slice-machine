@@ -9,7 +9,6 @@ import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 type PropTypes = {
-  title: string;
   Model: ComponentUI;
   variation: Models.VariationSM | undefined;
   handleScreenSizeChange: (screen: { size: Size }) => void;
@@ -35,7 +34,6 @@ const redirect = (
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
-  title,
   Model,
   variation,
   handleScreenSizeChange,
@@ -56,7 +54,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
           alignItems: "center",
         }}
       >
-        <Text mr={2}>{title}</Text>
+        <Text mr={2}>{Model.model.name}</Text>
         {Model.model.variations.length > 1 ? (
           <VarationsPopover
             buttonSx={{ p: 1 }}

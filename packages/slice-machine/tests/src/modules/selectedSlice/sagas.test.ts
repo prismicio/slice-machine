@@ -19,6 +19,8 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
+import { getRemoteSlice } from "@src/modules/slices";
+import { SliceSM } from "@slicemachine/core/build/models";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 
@@ -29,7 +31,7 @@ describe("[Selected Slice sagas]", () => {
       const saga = testSaga(
         saveSliceSaga,
         saveSliceCreator.request({
-          extendedComponent: dummySliceState,
+          component: dummySliceState,
           setData: mockSetData,
         })
       );
@@ -38,7 +40,16 @@ describe("[Selected Slice sagas]", () => {
 
       saga
         .next({ status: 200, data: {} })
-        .put(saveSliceCreator.success({ extendedComponent: dummySliceState }));
+        .select(getRemoteSlice, dummySliceState.model.id);
+
+      const remoteSlice: SliceSM = { ...dummySliceState.model, variations: [] };
+
+      saga.next(remoteSlice).put(
+        saveSliceCreator.success({
+          component: dummySliceState,
+          remoteSliceVariations: remoteSlice.variations,
+        })
+      );
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({
@@ -55,7 +66,7 @@ describe("[Selected Slice sagas]", () => {
       const saga = testSaga(
         saveSliceSaga,
         saveSliceCreator.request({
-          extendedComponent: dummySliceState,
+          component: dummySliceState,
           setData: mockSetData,
         })
       ).next();
@@ -75,16 +86,16 @@ describe("[Selected Slice sagas]", () => {
       const saga = testSaga(
         pushSliceSaga,
         pushSliceCreator.request({
-          extendedComponent: dummySliceState,
+          component: dummySliceState,
           onPush: mockOnPush,
         })
       );
 
-      saga.next().call(pushSliceApiClient, dummySliceState.component);
+      saga.next().call(pushSliceApiClient, dummySliceState);
 
       saga
         .next({ status: 200, data: {} })
-        .put(pushSliceCreator.success({ extendedComponent: dummySliceState }));
+        .put(pushSliceCreator.success({ component: dummySliceState }));
 
       saga.next().put(
         openToasterCreator({
@@ -107,7 +118,7 @@ describe("[Selected Slice sagas]", () => {
       const saga = testSaga(
         pushSliceSaga,
         pushSliceCreator.request({
-          extendedComponent: dummySliceState,
+          component: dummySliceState,
           onPush: mockOnPush,
         })
       ).next();
@@ -129,7 +140,7 @@ describe("[Selected Slice sagas]", () => {
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           _variationId: dummyModelVariationID,
-          component: dummySliceState.component,
+          component: dummySliceState,
           setData: mockSetData,
         })
       );
@@ -138,8 +149,8 @@ describe("[Selected Slice sagas]", () => {
         .next()
         .call(
           generateSliceScreenshotApiClient,
-          dummySliceState.component.model.name,
-          dummySliceState.component.from
+          dummySliceState.model.name,
+          dummySliceState.from
         );
       const response = {
         screenshots: {
@@ -158,7 +169,7 @@ describe("[Selected Slice sagas]", () => {
         .put(
           generateSliceScreenshotCreator.success({
             screenshots: response.screenshots,
-            component: dummySliceState.component,
+            component: dummySliceState,
           })
         );
 
@@ -179,7 +190,7 @@ describe("[Selected Slice sagas]", () => {
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           _variationId: dummyModelVariationID,
-          component: dummySliceState.component,
+          component: dummySliceState,
           setData: mockSetData,
         })
       ).next();

@@ -3,7 +3,7 @@ import { Box, Text, Label, Flex, Radio } from "theme-ui";
 import { useFormikContext } from "formik";
 import { BlockPicker } from "react-color";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -102,6 +102,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Color;
 
 export const MockConfigForm = Form;

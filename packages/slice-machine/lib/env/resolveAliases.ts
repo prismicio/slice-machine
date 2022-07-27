@@ -6,7 +6,7 @@ import {
 import moduleAlias from "module-alias";
 
 type PackageWithModuleAliases = JsonPackage & {
-  _moduleAliases: Record<string, string>;
+  _moduleAliases?: Record<string, string>;
 };
 
 const isAPackageHasModuleAliases = (
@@ -20,12 +20,13 @@ const isAPackageHasModuleAliases = (
 
 export function resolveAliases(cwd: string): void {
   const pkg = retrieveJsonPackage(cwd);
-  if (!pkg.content || !isAPackageHasModuleAliases(pkg.content)) {
+  const pkgContent = pkg.content as PackageWithModuleAliases;
+  if (!pkgContent || !isAPackageHasModuleAliases(pkgContent)) {
     return;
   }
 
   const moduleAliases: [string, string][] = Object.entries(
-    pkg.content._moduleAliases
+    pkgContent._moduleAliases || {}
   );
 
   moduleAliases.forEach(([key, value]) => {

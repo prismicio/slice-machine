@@ -70,7 +70,6 @@ import {
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
 import { Models } from "@slicemachine/core";
-import { ExtendedComponentUI } from "./selectedSlice/types";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 
@@ -273,8 +272,8 @@ const useSliceMachineActions = () => {
     );
 
   // Slice module
-  const initSliceStore = (extendedComponentUI: ExtendedComponentUI) =>
-    dispatch(initSliceStoreCreator(extendedComponentUI));
+  const initSliceStore = (component: ComponentUI) =>
+    dispatch(initSliceStoreCreator(component));
 
   const addSliceWidget = (
     variationId: string,
@@ -400,25 +399,22 @@ const useSliceMachineActions = () => {
     );
   };
 
-  const saveSlice = (
-    extendedComponent: ExtendedComponentUI,
-    setData: (data: any) => void
-  ) => {
+  const saveSlice = (component: ComponentUI, setData: (data: any) => void) => {
     dispatch(
       saveSliceCreator.request({
-        extendedComponent,
+        component,
         setData,
       })
     );
   };
 
   const pushSlice = (
-    extendedComponent: ExtendedComponentUI,
+    component: ComponentUI,
     onPush: (data: SliceBuilderState) => void
   ) => {
     dispatch(
       pushSliceCreator.request({
-        extendedComponent,
+        component,
         onPush,
       })
     );

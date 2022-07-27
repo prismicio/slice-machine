@@ -4,10 +4,6 @@ import { AnyObjectSchema } from "yup";
 import { TabField } from "@slicemachine/core/build/models/CustomType";
 export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: WidgetTypes;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  handleMockContent?: Function;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  handleMockConfig?: Function;
   MockConfigForm?: {
     (): JSX.Element;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

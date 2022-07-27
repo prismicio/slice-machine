@@ -81,6 +81,13 @@ export const getLibraries = (
   store: SliceMachineStoreType
 ): ReadonlyArray<LibraryUI> => store.slices.libraries;
 
+export const getRemoteSlice = (
+  store: SliceMachineStoreType,
+  componentId: string
+): SliceSM | undefined => {
+  return store.slices.remoteSlices.find((rs) => rs.id === componentId);
+};
+
 export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
@@ -122,7 +129,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       };
     }
     case getType(saveSliceCreator.success): {
-      const newComponentUI = action.payload.extendedComponent.component;
+      const newComponentUI = action.payload.component;
       const __status = computeStatus(newComponentUI, state.remoteSlices);
 
       const newLibraries = state.libraries.map((library) => {
@@ -140,7 +147,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       return { ...state, libraries: newLibraries };
     }
     case getType(pushSliceCreator.success): {
-      const newComponentUI = action.payload.extendedComponent.component;
+      const newComponentUI = action.payload.component;
 
       const newRemoteSlices = [...state.remoteSlices];
 

@@ -2,7 +2,6 @@ import * as yup from "yup";
 import Form, { FormFields } from "./Form";
 import { FiLink2 } from "react-icons/fi";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -91,8 +90,6 @@ const schema = yup.object().shape({
 });
 
 export const LinkWidget: Widget<Link, typeof schema> = {
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   Meta,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

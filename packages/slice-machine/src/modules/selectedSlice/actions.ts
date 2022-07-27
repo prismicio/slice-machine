@@ -7,6 +7,7 @@ import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
 import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -107,11 +108,12 @@ export const saveSliceCreator = createAsyncAction(
   "SLICE/SAVE.FAILURE"
 )<
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
     setData: (data: any) => void;
   },
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
+    remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
   }
 >();
 
@@ -121,11 +123,11 @@ export const pushSliceCreator = createAsyncAction(
   "SLICE/PUSH.FAILURE"
 )<
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
     onPush: (data: SliceBuilderState) => void;
   },
   {
-    extendedComponent: NonNullable<SelectedSliceStoreType>;
+    component: ComponentUI;
   }
 >();
 

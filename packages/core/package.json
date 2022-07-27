@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/core",
-  "version": "1.1.12-alpha.3",
+  "version": "1.1.12-alpha.5",
   "private": false,
   "main": "./build/index.js",
   "engines": {
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@babel/runtime": "^7.18.9",
     "@types/cookie": "^0.4.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.5",

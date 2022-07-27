@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { MdTitle } from "react-icons/md";
 import { MockConfigForm } from "./Mock/Form";
-import { handleMockConfig, handleMockContent } from "./Mock";
 /**
 * {
      "type": "Text",
@@ -46,8 +45,6 @@ export const TextWidget: Widget<Text, typeof schema> = {
     },
   }),
   MockConfigForm,
-  handleMockConfig,
-  handleMockContent,
   Meta,
   schema,
   TYPE_NAME: WidgetTypes.Text,
