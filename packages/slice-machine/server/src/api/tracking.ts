@@ -43,7 +43,10 @@ export function sendEvents(
 export default async function handler(req: RequestWithEnv): Promise<void> {
   const data = req.body as TrackingEvents;
   if (isTrackingEvent(data)) {
-    const analytics = new Analytics("YOUR_WRITE_KEY");
+    const analytics = new Analytics(
+      process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
+        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG"
+    );
     sendEvents(
       analytics,
       data,
