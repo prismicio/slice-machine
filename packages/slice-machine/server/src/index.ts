@@ -21,7 +21,7 @@ declare let global: {
 };
 
 global.fetch = fetch; // TODO: remove this bit it's still used in screen-shots
-global.appRoot = path.join(__dirname, "../../../");
+global.appRoot = path.join(__dirname, "../../");
 
 import api from "./api";
 
@@ -30,7 +30,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "64mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const out = path.join(__dirname, "../../..", "out");
+const out = path.join(__dirname, "../..", "out");
 
 const formDataOptions = {
   uploadDir: os.tmpdir(),

@@ -19,11 +19,14 @@ export function sendEvents(
   intercomHash?: string
 ): void {
   if (isGroupLibrariesEvent(event)) {
-    analytics.group({ groupId: event.props.repoName, traits: event.props });
+    analytics.group({
+      ...(userId ? { userId } : { anonymousId }),
+      groupId: event.props.repoName,
+      traits: event.props,
+    });
   } else if (isIdentifyUserEvent(event) && userId && intercomHash) {
     analytics.identify({
-      userId,
-      anonymousId,
+      ...(userId ? { userId } : { anonymousId }),
       integrations: {
         Intercom: {
           user_hash: intercomHash,
