@@ -1,7 +1,7 @@
 /** global variable define in server/src/index.js **/
 declare let appRoot: string;
 import { CustomPaths, GeneratedPaths } from "../../../../lib/models/paths";
-import Storybook from "../storybook";
+import Storybook from "../../../../lib/storybook";
 
 import mock from "../../../../lib/mock/Slice";
 import {
