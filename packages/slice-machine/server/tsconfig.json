@@ -18,7 +18,7 @@
     "esModuleInterop": true,
     "inlineSourceMap": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./**/*.ts", "./**/*.js"]
 }
