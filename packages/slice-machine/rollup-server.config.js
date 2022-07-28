@@ -15,7 +15,7 @@ export default {
         "process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY": process.env
           .NEXT_PUBLIC_SM_UI_SEGMENT_KEY
           ? `"${process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY}"`
-          : '""',
+          : '"Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG"',
       },
       tsconfig: "./server/tsconfig.json",
     }),
