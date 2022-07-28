@@ -45,11 +45,10 @@ export function sendEvents(
 
 export default async function handler(req: RequestWithEnv): Promise<void> {
   const data = req.body as TrackingEvents;
+  const trackingEnabled =
+    req.env.manifest.tracking === undefined || req.env.manifest.tracking;
   const maybeString = process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY;
-  if (
-    (req.env.manifest.tracking === undefined || req.env.manifest.tracking) &&
-    maybeString
-  ) {
+  if (trackingEnabled && maybeString) {
     const analytics = new Analytics(maybeString);
     sendEvents(
       analytics,
