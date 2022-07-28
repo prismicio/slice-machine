@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { getLibraries, getRemoteSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import SliceMachineIconButton from "../components/SliceMachineIconButton";
+import { TextWithGreyBackground } from "../components/Text/TextWithGreyBackground";
 
 const PushChangesButton = ({
   onClick,
@@ -64,7 +65,7 @@ const changes: React.FunctionComponent = () => {
                     height: 36,
                     width: 36,
                   }}
-                  onClick={() => console.log("edit changes")}
+                  onClick={() => console.log("edit changes")} //todo: add onClick for edit
                   style={{
                     color: "#4E4E55",
                     backgroundColor: "#F3F5F7",
@@ -73,7 +74,7 @@ const changes: React.FunctionComponent = () => {
                   }}
                 />
                 <PushChangesButton
-                  onClick={() => console.log("push changes")}
+                  onClick={() => console.log("push changes")} //todo: add push changes feeture
                   loading={false}
                 />
               </>
@@ -82,32 +83,8 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <Flex
-          sx={{
-            alignItems: "center",
-            fontSize: 3,
-            fontWeight: "heading",
-            mt: 40,
-            backgroundColor: "#EEEEEE",
-            borderRadius: 4,
-            padding: "12px 16px",
-          }}
-        >
-          <Text>{"Custom Types X"}</Text>
-        </Flex>
-        <Flex
-          sx={{
-            alignItems: "center",
-            fontSize: 3,
-            fontWeight: "heading",
-            mt: 37,
-            backgroundColor: "#EEEEEE",
-            borderRadius: 4,
-            padding: "12px 16px",
-          }}
-        >
-          <Text>{"Slices X"}</Text>
-        </Flex>
+        <TextWithGreyBackground text={"Custom Types X"} />
+        <TextWithGreyBackground text={"Slices X"} />
       </Box>
     </Container>
   );
