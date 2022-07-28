@@ -1,25 +1,29 @@
 import React, { useState } from "react";
-import { Box, Flex, Text, Link as ThemeLinK } from "theme-ui";
+import { Box, Flex, Text, Link as ThemeLinK, useThemeUI } from "theme-ui";
 import VariationModal from "./VariationModal";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
 import SaveButton from "./SaveButton";
-import type { ContextProps } from "@src/models/slice/context";
-import { MdHorizontalSplit } from "react-icons/md";
+import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
+import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
+import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { VariationSM } from "@slicemachine/core/build/models";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const Header: React.FC<{
-  Model: ContextProps["Model"];
-  store: ContextProps["store"];
-  variation: ContextProps["variation"];
+  component: ComponentUI;
+  isTouched: boolean | undefined;
+  variation: VariationSM;
   onSave: () => void;
   onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
 }> = ({
-  Model,
-  store,
+  component,
+  isTouched,
   variation,
   onSave,
   onPush,
@@ -28,7 +32,11 @@ const Header: React.FC<{
 }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
-  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(Model.__status) !== -1;
+
+  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(component.__status) !== -1;
+
+  const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
+  const { theme } = useThemeUI();
 
   return (
     <Flex
@@ -68,8 +76,8 @@ const Header: React.FC<{
                   </ThemeLinK>
                 </Link>
                 <Box sx={{ fontWeight: "thin" }} as="span">
-                  <Text ml={2}>
-                    {`/ ${Model.model.name} / ${variation.name}`}
+                  <Text ml={2} data-cy="slice-and-variation-name-header">
+                    {`/ ${component.model.name} / ${variation.name}`}
                   </Text>
                 </Box>
               </Flex>
@@ -77,13 +85,13 @@ const Header: React.FC<{
                 <Flex sx={{ alignItems: "center" }}>
                   <VariationPopover
                     defaultValue={variation}
-                    variations={Model.variations}
+                    variations={component.model.variations}
                     onNewVariation={() => setShowVariationModal(true)}
                     onChange={(v) =>
                       void router.push(
                         ...Links.variation({
-                          lib: Model.href,
-                          sliceName: Model.model.name,
+                          lib: component.href,
+                          sliceName: component.model.name,
                           variationId: v.id,
                         }).all
                       )
@@ -96,35 +104,55 @@ const Header: React.FC<{
               </Flex>
             </Flex>
           </Box>
-
-          <SaveButton
-            onClick={Model.isTouched ? onSave : onPush}
-            loading={isLoading && !imageLoading}
-            disabled={
-              isLoading || imageLoading || (!Model.isTouched && !unSynced)
-            }
-          >
-            {Model.isTouched
-              ? "Save model to filesystem"
-              : unSynced
-              ? "Push Slice to Prismic"
-              : "Your Slice is up to date!"}
-          </SaveButton>
+          <Flex sx={{ flexDirection: "row", alignItems: "center" }}>
+            <SliceMachineIconButton
+              size={22}
+              Icon={MdModeEdit}
+              label="Edit slice name"
+              data-cy="edit-slice-name"
+              sx={{ cursor: "pointer", color: theme.colors?.icons }}
+              onClick={openRenameSliceModal}
+              style={{
+                color: "#4E4E55",
+                backgroundColor: "#F3F5F7",
+                border: "1px solid #3E3E4826",
+                marginRight: "8px",
+              }}
+            />
+            <SaveButton
+              onClick={isTouched ? onSave : onPush}
+              loading={isLoading && !imageLoading}
+              disabled={isLoading || imageLoading || (!isTouched && !unSynced)}
+            >
+              {isTouched
+                ? "Save model to filesystem"
+                : unSynced
+                ? "Push Slice to Prismic"
+                : "Your Slice is up to date!"}
+            </SaveButton>
+          </Flex>
           <VariationModal
             isOpen={showVariationModal}
             onClose={() => setShowVariationModal(false)}
             onSubmit={(id, name, copiedVariation) => {
-              store.copyVariation(id, name, copiedVariation);
+              copyVariationSlice(id, name, copiedVariation);
               void router.push(
                 ...Links.variation({
-                  lib: Model.href,
-                  sliceName: Model.model.name,
+                  lib: component.href,
+                  sliceName: component.model.name,
                   variationId: id,
                 }).all
               );
             }}
             initialVariation={variation}
-            variations={Model.variations}
+            variations={component.model.variations}
+          />
+          <RenameSliceModal
+            sliceId={component.model.id}
+            sliceName={component.model.name}
+            libName={component.from}
+            variationId={variation.id}
+            data-cy="rename-slice-modal"
           />
         </Flex>
       </Box>

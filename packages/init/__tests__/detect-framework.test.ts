@@ -46,7 +46,7 @@ describe("detect-framework", () => {
     jest.spyOn(inquirer, "prompt").mockReturnValue(
       Promise.resolve({
         framework: Models.Frameworks.next,
-      }) as ReturnType<typeof inquirer.prompt>
+      }) as unknown as ReturnType<typeof inquirer.prompt>
     );
 
     const fakeError = jest

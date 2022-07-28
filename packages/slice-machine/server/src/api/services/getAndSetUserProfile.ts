@@ -1,16 +1,11 @@
-import DefaultClient from "@lib/models/common/http/DefaultClient";
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import { Client } from "@slicemachine/client";
 import { UserProfile } from "@slicemachine/core/build/models";
-import preferWroomBase from "../../../../lib/utils/preferWroomBase";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 
 export async function getAndSetUserProfile(
-  env: BackendEnvironment,
-  authToken: string
+  client: Client
 ): Promise<UserProfile> {
-  const base = preferWroomBase(env.manifest.apiEndpoint);
-
-  return DefaultClient.profile(base, authToken).then((profile) => {
+  return client.profile().then((profile) => {
     PrismicSharedConfigManager.setProperties({
       shortId: profile.shortId,
       intercomHash: profile.intercomHash,

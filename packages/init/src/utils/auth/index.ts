@@ -1,26 +1,30 @@
-import { Utils, Models } from "@slicemachine/core";
+import { Utils } from "@slicemachine/core";
 import { startServerAndOpenBrowser } from "./helpers";
 import {
-  Communication,
   Endpoints,
   PrismicSharedConfigManager,
 } from "@slicemachine/core/build/prismic";
+import { InitClient } from "../client";
 
 async function startAuth({
-  base,
+  client,
   url,
   action,
 }: {
-  base: string;
+  client: InitClient;
   url: string;
   action: "signup" | "login";
 }): Promise<void> {
-  const { onLoginFail } = await startServerAndOpenBrowser(url, action, base);
+  const { onLoginFail } = await startServerAndOpenBrowser(
+    url,
+    action,
+    client.apisEndpoints.Wroom
+  );
   try {
     // We wait 3 minutes before timeout
-    await Utils.Poll.startPolling<Models.UserInfo | null, Models.UserInfo>(
-      () => Auth.validateSession(base),
-      (user): user is Models.UserInfo => !!user,
+    await Utils.Poll.startPolling<boolean, boolean>(
+      () => Auth.validateSession(client),
+      (isSessionValid): isSessionValid is boolean => isSessionValid == true,
       3000,
       60
     );
@@ -31,33 +35,29 @@ async function startAuth({
 }
 
 export const Auth = {
-  login: async (base: string): Promise<void> => {
-    const endpoints = Endpoints.buildEndpoints(base);
+  login: async (client: InitClient): Promise<void> => {
+    const endpoints = Endpoints.buildEndpoints(client.apisEndpoints.Wroom);
     return startAuth({
-      base,
+      client,
       url: endpoints.Dashboard.cliLogin,
       action: "login",
     });
   },
-  signup: async (base: string): Promise<void> => {
-    const endpoints = Endpoints.buildEndpoints(base);
-    return startAuth({
-      base,
-      url: endpoints.Dashboard.cliSignup,
-      action: "signup",
-    });
-  },
-  logout: (): void => PrismicSharedConfigManager.remove(),
-  validateSession: async (
-    requiredBase: string
-  ): Promise<Models.UserInfo | null> => {
-    const config = PrismicSharedConfigManager.get();
+  validateSession: async (client: InitClient): Promise<boolean> => {
+    const authToken = PrismicSharedConfigManager.getAuth();
 
-    if (!config.cookies.length) return Promise.resolve(null); // default config, logged out.
-    if (requiredBase != config.base) return Promise.resolve(null); // not the same base so it doesn't count.
-
-    return Communication.validateSession(config.cookies, requiredBase).catch(
-      () => null
-    );
+    // verify token is by retrieving the profile, update the config if need be.
+    return client
+      .updateAuthenticationToken(authToken)
+      .profile()
+      .then((userProfile) => {
+        // settings shortId and IntercomHash as we switch between dev and prod.
+        PrismicSharedConfigManager.setProperties({
+          shortId: userProfile.shortId,
+          intercomHash: userProfile.intercomHash,
+        });
+        return true;
+      })
+      .catch(() => false);
   },
 };

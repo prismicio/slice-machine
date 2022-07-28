@@ -5,8 +5,7 @@ import { Flex, Heading, Close, Box, Button as ThemeButton } from "theme-ui";
 import Button from "@components/Button";
 
 import Card from "../Card";
-
-Modal.setAppElement("#__next");
+import { SetStateAction } from "react";
 
 type ModalCardProps<T> = {
   children: (props: {
@@ -21,6 +20,10 @@ type ModalCardProps<T> = {
       shouldValidate?: boolean | undefined
     ) => void;
     values: T;
+    setValues: (
+      values: SetStateAction<T>,
+      shouldValidate?: boolean | undefined
+    ) => void;
   }) => JSX.Element;
   close: () => void;
   isOpen: boolean;
@@ -53,6 +56,7 @@ function ModalCard<Values>({
   buttonLabel = "Save",
   dataCy,
 }: ModalCardProps<Values>): JSX.Element {
+  Modal.setAppElement("#__next");
   return (
     <SliceMachineModal
       isOpen={isOpen}
@@ -74,7 +78,6 @@ function ModalCard<Values>({
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onSubmit={(values) => {
           onSubmit(values);
-          close();
         }}
       >
         {({
@@ -84,6 +87,7 @@ function ModalCard<Values>({
           errors,
           touched,
           setFieldValue,
+          setValues,
         }) => (
           <Form id={formId} {...(dataCy ? { "data-cy": dataCy } : null)}>
             <Card
@@ -141,6 +145,7 @@ function ModalCard<Values>({
                 errors,
                 touched,
                 setFieldValue,
+                setValues,
               })}
             </Card>
           </Form>

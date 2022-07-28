@@ -1,6 +1,6 @@
 import ServerError from "./ServerError";
-import { FrontEndEnvironment } from "@lib/models/common/Environment";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { FrontEndEnvironment } from "../common/Environment";
+import { LibraryUI } from "../common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 

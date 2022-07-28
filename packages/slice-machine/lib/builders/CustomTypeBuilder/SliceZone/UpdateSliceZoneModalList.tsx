@@ -1,14 +1,14 @@
 import { FieldArray } from "formik";
 import { Checkbox } from "theme-ui";
 
-import SliceState from "@lib/models/ui/SliceState";
 import { SharedSlice } from "@lib/models/ui/Slice";
 
 import Grid from "@components/Grid";
 import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const UpdateSliceZoneModalList: React.FC<{
-  availableSlices: ReadonlyArray<SliceState>;
+  availableSlices: ReadonlyArray<ComponentUI>;
   values: SliceZoneFormValues;
 }> = ({ availableSlices, values }) => (
   <FieldArray
@@ -17,23 +17,24 @@ const UpdateSliceZoneModalList: React.FC<{
       <Grid
         gridTemplateMinPx="200px"
         elems={availableSlices}
-        defineElementKey={(slice: SliceState) => slice.model.name}
-        renderElem={(slice: SliceState) => {
+        defineElementKey={(slice: ComponentUI) => slice.model.name}
+        renderElem={(slice: ComponentUI) => {
           return SharedSlice.render({
             bordered: true,
             displayStatus: false,
             thumbnailHeightPx: "220px",
-            slice,
+            slice: slice,
             Wrapper: ({
               slice,
               children,
             }: {
-              slice: SliceState;
+              slice: ComponentUI;
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               children: any;
             }) => {
               return (
                 <div
+                  data-testid="slicezone-modal-item"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -54,7 +55,7 @@ const UpdateSliceZoneModalList: React.FC<{
                 </div>
               );
             },
-            CustomStatus: ({ slice }: { slice: SliceState }) => {
+            CustomStatus: ({ slice }: { slice: ComponentUI }) => {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
               const isInSliceZone = values.sliceKeys.includes(slice.model.id);
               return isInSliceZone ? (

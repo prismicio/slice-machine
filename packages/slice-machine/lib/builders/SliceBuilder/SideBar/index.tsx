@@ -6,7 +6,6 @@ import Link from "next/link";
 import Card from "@components/Card";
 
 import ImagePreview from "./components/ImagePreview";
-import SliceState from "@lib/models/ui/SliceState";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -20,11 +19,12 @@ import {
   getLinkToStorybookDocs,
 } from "@src/modules/environment";
 import { createStorybookUrl } from "@src/utils/storybook";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 const MemoizedImagePreview = memo(ImagePreview);
 
 type SideBarProps = {
-  Model: SliceState;
+  component: ComponentUI;
   variation: Models.VariationSM;
   imageLoading: boolean;
   onScreenshot: () => void;
@@ -33,13 +33,13 @@ type SideBarProps = {
 };
 
 const SideBar: React.FunctionComponent<SideBarProps> = ({
-  Model,
+  component,
   variation,
   imageLoading,
   onScreenshot,
   onHandleFile,
 }) => {
-  const { screenshotUrls } = Model;
+  const { screenshotUrls } = component;
 
   const { checkSimulatorSetup } = useSliceMachineActions();
 
@@ -128,8 +128,8 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
         <Link
           href={createStorybookUrl({
             storybook: storybookUrl,
-            libraryName: Model.from,
-            sliceName: Model.model.name,
+            libraryName: component.from,
+            sliceName: component.model.name,
             variationId: variation.id,
           })}
         >

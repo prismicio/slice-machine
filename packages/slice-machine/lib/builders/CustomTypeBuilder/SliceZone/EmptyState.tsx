@@ -22,7 +22,11 @@ const EmptyState: React.FC<{
           Add your Slices
         </Text>
         <Text sx={{ mb: "24px" }}>Add Slices to your Custom Type</Text>
-        <Button variant="buttons.darkSmall" onClick={onAddNewSlice}>
+        <Button
+          data-testid="empty-zone-add-a-new-slice"
+          variant="buttons.darkSmall"
+          onClick={onAddNewSlice}
+        >
           Add a new Slice
         </Button>
       </Flex>

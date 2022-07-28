@@ -9,7 +9,7 @@
           {
             "type": "heading1",
             "content": {
-              "text": "Shall"
+              "text": "Function"
             }
           }
         ]
@@ -20,7 +20,7 @@
           {
             "type": "paragraph",
             "content": {
-              "text": "Nostrud dolor irure fugiat elit ut ex et anim ad fugiat irure enim eiusmod in aute."
+              "text": "Non velit consequat aliqua exercitation aliquip est pariatur. Magna consequat ex ex cillum."
             }
           }
         ]
@@ -31,7 +31,7 @@
           {
             "type": "paragraph",
             "content": {
-              "text": "Esse dolore tempor est esse. Pariatur excepteur sint ipsum laborum aliqua aliqua adipisicing."
+              "text": "Ad occaecat eu culpa laborum ut. Pariatur sit consectetur nisi sunt et ad adipisicing amet ut laboris nostrud."
             }
           }
         ]
@@ -42,10 +42,14 @@
           {
             "type": "paragraph",
             "content": {
-              "text": "Nostrud sit elit et sint. Dolor nostrud magna magna cillum est fugiat reprehenderit est ad adipisicing mollit et dolor voluptate."
+              "text": "Nisi voluptate deserunt est eu minim anim velit. Non pariatur elit aute. Minim irure in est ad culpa elit minim cillum proident deserunt."
             }
           }
         ]
+      },
+      "eefe": {
+        "__TYPE__": "BooleanContent",
+        "value": false
       }
     },
     "items": [
@@ -56,7 +60,7 @@
             "percentageShare",
             {
               "__TYPE__": "FieldContent",
-              "value": "93.11795703586078",
+              "value": "45",
               "type": "Number"
             }
           ],
@@ -64,7 +68,7 @@
             "entityLabel",
             {
               "__TYPE__": "FieldContent",
-              "value": "clear",
+              "value": "manufacturing",
               "type": "Text"
             }
           ]

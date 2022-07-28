@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import configureStore from "src/redux/store";
+import configureStore from "../src/redux/store";
 import App, { AppContext } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider, BaseStyles, useThemeUI } from "theme-ui";
 
-import theme from "src/theme";
+import theme from "../src/theme";
 
-import LoadingPage from "components/LoadingPage";
-import SliceMachineApp from "components/App";
+import LoadingPage from "../components/LoadingPage";
+import SliceMachineApp from "../components/App";
 
 import "@prismicio/editor-fields/dist/style.css";
 import "react-tabs/style/react-tabs.css";
@@ -23,18 +23,21 @@ import "src/css/intercom.css";
 
 import "highlight.js/styles/atom-one-dark.css";
 
-import ServerState from "lib/models/server/ServerState";
-
-import { getIsTrackingAvailable } from "@src/modules/environment";
-import Tracker from "@src/tracker";
+import ServerState from "../lib/models/server/ServerState";
+import {
+  getIsTrackingAvailable,
+  getRepoName,
+} from "../src/modules/environment";
+import Tracker from "../src/tracker";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
 import { Store } from "redux";
 import { Persistor } from "redux-persist/es/types";
 import { ConnectedRouter } from "connected-next-router";
-import { getState } from "@src/apiClient";
-import { normalizeFrontendCustomTypes } from "@src/normalizers/customType";
+import { getState } from "../src/apiClient";
+import { normalizeFrontendCustomTypes } from "../src/normalizers/customType";
+import Router from "next/router";
 
 const RemoveDarkMode: React.FunctionComponent = ({ children }) => {
   const { setColorMode } = useThemeUI();
@@ -83,10 +86,15 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
       },
     });
 
+    const state = store.getState();
+    const tracking = getIsTrackingAvailable(state);
+    const repoName = getRepoName(state);
+
     Tracker.get().initialize(
       process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
         "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
-      getIsTrackingAvailable(store.getState())
+      repoName,
+      tracking
     );
 
     setSMStore({ store, persistor });
@@ -104,7 +112,7 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
               <LoadingPage />
             ) : (
               <Provider store={smStore.store}>
-                <ConnectedRouter>
+                <ConnectedRouter Router={Router}>
                   <PersistGate loading={null} persistor={smStore.persistor}>
                     <SliceMachineApp>
                       <Component {...pageProps} />

@@ -21,6 +21,7 @@ const ZoneEmptyState = ({
       variant="buttons.darkSmall"
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       onClick={() => onEnterSelectMode()}
+      data-testid="empty-zone-add-new-field"
     >
       <FaPlus
         style={{ marginRight: "8px", position: "relative", top: "2px" }}

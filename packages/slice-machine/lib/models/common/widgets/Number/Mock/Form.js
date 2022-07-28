@@ -38,7 +38,7 @@ const Form = () => {
         <Input
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
-          placeholder="1995"
+          placeholder="A mock number for testing (e.g. '1995')"
           type="number"
           onChange={(e) => onUpdate(e.target.value)}
           sx={{

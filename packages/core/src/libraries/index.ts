@@ -42,7 +42,7 @@ export function handleLibraryPath(
     (acc: Component[], curr: string) => {
       const componentInfo = getComponentInfo(
         curr,
-        [cwd, path.join(cwd, ".slicemachine/assets")],
+        [cwd, path.join(cwd, ".slicemachine", "assets")],
         from
       );
       if (!componentInfo) {

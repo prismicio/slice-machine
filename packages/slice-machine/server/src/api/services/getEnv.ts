@@ -5,18 +5,17 @@ import {
   ParseResultType,
 } from "parse-domain";
 
-import getPrismicData from "./getPrismicData";
+import { Models } from "@slicemachine/core";
+import { Client, ApplicationMode } from "@slicemachine/client";
+import { Framework } from "@slicemachine/core/build/node-utils";
 
+import type { BackendEnvironment } from "@lib/models/common/Environment";
+import type { ConfigErrors } from "@lib/models/server/ServerState";
+import { getPackageChangelog } from "@lib/env/versions";
 import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
 import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
 
-import initClient from "@lib/models/common/http";
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import { ConfigErrors } from "@lib/models/server/ServerState";
-import { Models } from "@slicemachine/core";
-import { Framework } from "@slicemachine/core/build/node-utils";
-import preferWroomBase from "@lib/utils/preferWroomBase";
-import { getPackageChangelog } from "@lib/env/versions";
+import getPrismicData from "./getPrismicData";
 
 // variable declared globally on the index.ts, is the cwd to SM dependency
 declare let appRoot: string;
@@ -40,7 +39,7 @@ function validate(config: Models.Manifest): ConfigErrors {
   return errors;
 }
 
-function extractRepo(parsedRepo: ParseResult): string | undefined {
+function extractRepo(parsedRepo: ParseResult): string {
   switch (parsedRepo.type) {
     case ParseResultType.Listed:
       if (parsedRepo.labels.length) {
@@ -50,8 +49,17 @@ function extractRepo(parsedRepo: ParseResult): string | undefined {
         return parsedRepo.subDomains[0];
       }
     default:
-      return;
+      return "";
   }
+}
+
+export function getApplicationMode(
+  apiEndpoint: Models.Manifest["apiEndpoint"]
+): ApplicationMode {
+  if (apiEndpoint.includes("prismic.io")) return ApplicationMode.PROD;
+  else if (apiEndpoint.includes("wroom.io")) return ApplicationMode.STAGE;
+  else if (apiEndpoint.includes("wroom.test")) return ApplicationMode.DEV;
+  else throw new Error(`Unknown application mode for ${apiEndpoint}`);
 }
 
 export default async function getEnv(
@@ -71,7 +79,10 @@ export default async function getEnv(
     throw new Error(manifestInfo.message);
   }
 
-  const base = preferWroomBase(manifestInfo.content.apiEndpoint);
+  const applicationMode: ApplicationMode = getApplicationMode(
+    manifestInfo.content.apiEndpoint
+  );
+
   const prismicData = getPrismicData();
 
   if (!prismicData.isOk()) {
@@ -85,17 +96,22 @@ export default async function getEnv(
 
   const maybeErrors = validate(manifestInfo.content);
   const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));
-  const repo = extractRepo(parsedRepo);
+  const repository = extractRepo(parsedRepo);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mockConfig = getMockConfig(cwd);
 
-  const client = initClient(cwd, base, repo, prismicData.value.auth);
+  const client = new Client(
+    applicationMode,
+    repository,
+    prismicData.value.auth || ""
+  );
 
   return {
     errors: maybeErrors,
     env: {
+      applicationMode,
       cwd,
-      repo,
+      repo: repository,
       manifest: manifestInfo.content,
       prismicData: prismicData.value,
       changelog: smChangelog,
@@ -105,7 +121,6 @@ export default async function getEnv(
         cwd,
         manifest: manifestInfo.content,
       }),
-      isUserLoggedIn: !!prismicData.value.auth && !!repo,
       baseUrl: `http://localhost:${process.env.PORT || "9999"}`,
       client,
     },

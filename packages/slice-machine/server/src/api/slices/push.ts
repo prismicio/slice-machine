@@ -10,6 +10,7 @@ import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
 import { ApiResult } from "@lib/models/server/ApiResult";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import * as IO from "../io";
+import { ClientError } from "@slicemachine/client";
 
 export async function pushSlice(
   env: BackendEnvironment,
@@ -20,7 +21,7 @@ export async function pushSlice(
 
   try {
     const smModel: SliceSM = IO.Slice.readSlice(modelPath);
-    const { err } = await purge(env, slices, sliceName);
+    const { err } = await purge(env, slices, smModel.id);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 
@@ -44,26 +45,23 @@ export async function pushSlice(
       variations,
     };
 
-    const res = await createOrUpdate(
-      slices,
-      sliceName,
-      modelWithImageUrl,
-      env.client
-    );
+    return createOrUpdate(slices, modelWithImageUrl, env.client)
+      .then(() => {
+        console.log("[slice/push] done!");
+        return {};
+      })
+      .catch((error: ClientError) => {
+        const message = `[slice/push] Slice ${modelWithImageUrl.name}: Unexpected error: ${error.message}`;
 
-    if (res.status > 209) {
-      const message = res.text ? await res.text() : res.status.toString();
-      console.error(
-        `[slice/push] Slice ${sliceName}: Unexpected error returned. Server message: ${message}`
-      );
-      throw new Error(message);
-    }
-    console.log("[slice/push] done!");
-    return {};
+        console.log(message);
+        return onError(
+          "[slice/push] An unexpected error occurred while pushing slice",
+          error.status
+        );
+      });
   } catch (e) {
     console.log(e);
     return onError(
-      e as Response,
       "[slice/push] An unexpected error occurred while pushing slice"
     );
   }
@@ -72,33 +70,17 @@ export async function pushSlice(
 const handler = async (query: SliceBody): Promise<ApiResult> => {
   const { sliceName, from } = query;
   const { env } = await getEnv();
-
-  if (!env.isUserLoggedIn) {
-    console.error("[slice/push] An error occurred while fetching slices.");
-    const message =
-      "Error: Could not fetch remote slices. Please log in to Prismic!";
-    return {
-      err: new Error(message),
-      reason: message,
-      status: 403,
-    };
-  }
-
   const { slices, err } = await getSlices(env.client);
 
   if (err) {
     console.error("[slice/push] An error occurred while fetching slices.");
 
-    const errorExplanation =
+    const message =
       err.status === 403
-        ? "Please log in to Prismic!"
-        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `You don\'t have access to the repo \"${env.repo}\"`;
+        ? "Could not fetch remote slices. Please log in to Prismic!"
+        : `You don\'t have access to the repository \"${env.repo}\"`;
 
-    return onError(
-      err,
-      `Error ${err.status}: Could not fetch remote slices. ${errorExplanation}`
-    );
+    return onError(message, err.status);
   }
 
   return pushSlice(env, slices, { sliceName, from });

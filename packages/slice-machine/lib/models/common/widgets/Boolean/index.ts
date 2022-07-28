@@ -37,14 +37,16 @@ const FormFields = {
     "False Placeholder",
     { required: false },
     null,
-    "false"
+    "false",
+    "Value the content creator sees (Output as 'false' in the API)."
   ),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder_true: Input(
     "True Placeholder",
     { required: false },
     null,
-    "true"
+    "true",
+    "Value the content creator sees (Output as 'true' in the API)"
   ),
   default_value: CheckBox("Default to true"),
 };

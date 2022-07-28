@@ -1,5 +1,3 @@
-import * as t from "io-ts";
-import { fold } from "fp-ts/lib/Either";
 import * as Libraries from "@slicemachine/core/build/libraries";
 
 import { BackendEnvironment } from "@lib/models/common/Environment";
@@ -8,52 +6,32 @@ import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { ClientError } from "@slicemachine/client";
 
 interface LibrariesResult {
   remoteSlices: ReadonlyArray<SliceSM>;
-  clientError: ErrorWithStatus | undefined;
   libraries: ReadonlyArray<LibraryUI>;
+  clientError?: ErrorWithStatus;
 }
 
 export default async function handler(
   env: BackendEnvironment
 ): Promise<LibrariesResult> {
   try {
-    const res = await env.client.getSlice();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { remoteSlices, clientError } = await (async () => {
-      if (res.status > 209) {
-        return {
-          remoteSlices: [] as Array<SharedSlice>,
-          clientError: new ErrorWithStatus(res.statusText, res.status),
-        };
-      }
-      if (!env.isUserLoggedIn) {
-        return { remoteSlices: [] as Array<SharedSlice> };
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const r = await (res.json ? res.json() : Promise.resolve([]));
-
-      return fold(
-        () => ({
-          remoteSlices: [] as Array<SharedSlice>,
-          clientError: new ErrorWithStatus(
-            "Invalid slices detected while fetching.",
-            400
-          ),
-        }),
-        (slices: Array<SharedSlice>) => {
-          return { remoteSlices: slices };
-        }
-      )(t.array(SharedSlice).decode(r as unknown));
-    })();
-
-    const smRemoteSlices = remoteSlices.map((r) => Slices.toSM(r));
+    const { remoteSlices, clientError } = await env.client
+      .getSlices()
+      .then((slices) => ({
+        remoteSlices: slices.map((slice) => Slices.toSM(slice)),
+        clientError: undefined,
+      }))
+      .catch((error: ClientError) => ({
+        remoteSlices: [],
+        clientError: new ErrorWithStatus(error.message, error.status),
+      }));
 
     if (!env.manifest.libraries)
       return {
-        remoteSlices: smRemoteSlices,
+        remoteSlices: remoteSlices,
         libraries: [],
         clientError: clientError,
       };
@@ -62,13 +40,13 @@ export default async function handler(
 
     const withFlags = libraries.map((lib) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      LibraryUI.build(lib, smRemoteSlices, env)
+      LibraryUI.build(lib, remoteSlices, env)
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return {
       clientError: clientError,
       libraries: withFlags,
-      remoteSlices: smRemoteSlices,
+      remoteSlices: remoteSlices,
     };
   } catch (e) {
     return {

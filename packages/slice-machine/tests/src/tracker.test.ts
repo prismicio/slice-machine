@@ -27,6 +27,7 @@ AnalyticsBrowser.standalone.mockImplementation(() =>
 
 const dumpSegmentKey = "dumpSegmentKey";
 const dumpRepoKey = "dumpSegmentKey";
+const context = { groupId: { Repository: dumpRepoKey } };
 
 describe("Tracker Singleton", () => {
   afterEach(() => {
@@ -47,7 +48,7 @@ describe("SMTracker", () => {
 
   test("should send a identify event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.identifyUser("userId", "intercomHash");
 
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
@@ -76,35 +77,40 @@ describe("SMTracker", () => {
         comment: "comment",
         framework: "next",
         rating: 3,
+      },
+      {
+        context,
       }
     );
   });
 
   test("should send a onboarding skip event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingSkip(1);
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Skip",
-      { screenSkipped: 1 }
+      { screenSkipped: 1 },
+      { context }
     );
   });
 
   test("should send a onboarding start event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingStart();
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Start",
-      {}
+      {},
+      { context }
     );
   });
 
   test("should send a slice preview setup event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackSliceSimulatorSetup(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
@@ -112,13 +118,16 @@ describe("SMTracker", () => {
       {
         framework: "next",
         version: "0.2.0",
+      },
+      {
+        context,
       }
     );
   });
 
   test("should send a open slice preview event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOpenSliceSimulator(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
@@ -126,65 +135,72 @@ describe("SMTracker", () => {
       {
         framework: "next",
         version: "0.2.0",
+      },
+      {
+        context,
       }
     );
   });
 
   test("should send a onboarding continue intro event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueIntro
     );
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen Intro",
-      {}
+      {},
+      { context }
     );
   });
 
   test("should send a onboarding continue 1 event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen1
     );
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 1",
-      {}
+      {},
+      { context }
     );
   });
 
   test("should send a onboarding continue 2 event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen2
     );
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 2",
-      {}
+      {},
+      { context }
     );
   });
 
   test("should send a onboarding continue 3 event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackOnboardingContinue(
       ContinueOnboardingType.OnboardingContinueScreen3
     );
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
       "SliceMachine Onboarding Continue Screen 3",
-      {}
+      {},
+      { context }
     );
   });
 
   test("should send a open video tutorials event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
@@ -192,13 +208,16 @@ describe("SMTracker", () => {
       {
         framework: Frameworks.next,
         slicemachineVersion: "0.2.0",
+      },
+      {
+        context,
       }
     );
   });
 
   test("should send a page view event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.trackPageView(Frameworks.next, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
@@ -211,13 +230,16 @@ describe("SMTracker", () => {
         slicemachineVersion: "0.2.0",
         title: "",
         url: "http://localhost/",
+      },
+      {
+        context,
       }
     );
   });
 
   test("should send a group libraries event", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.groupLibraries([], dumpRepoKey, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.group).toHaveBeenCalledWith(dumpRepoKey, {
@@ -232,15 +254,34 @@ describe("SMTracker", () => {
 
   test("shouldn't send a group libraries event when the repo is undefined", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
     await smTracker.groupLibraries([], undefined, "0.2.0");
     expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
     expect(NativeTrackerMocks.group).toHaveBeenCalledTimes(0);
   });
 
+  test("it should send a create custom type event", async () => {
+    const smTracker = new SMTracker();
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey);
+    const id = "test";
+    const name = "testing";
+    const repeatable = true;
+    await smTracker.trackCreateCustomType({ id, name, repeatable });
+    expect(AnalyticsBrowser.standalone).toHaveBeenCalledWith(dumpSegmentKey);
+    expect(NativeTrackerMocks.track).toHaveBeenCalledWith(
+      "SliceMachine Custom Type Created",
+      {
+        id,
+        name,
+        type: "repeatable",
+      },
+      { context }
+    );
+  });
+
   test("shouldn't send any events when tracker is disable", async () => {
     const smTracker = new SMTracker();
-    smTracker.initialize(dumpSegmentKey, false);
+    smTracker.initialize(dumpSegmentKey, dumpRepoKey, false);
     await smTracker.identifyUser("userId", "intercomhash");
     await smTracker.trackReview(Frameworks.next, 3, "comment");
     await smTracker.trackOnboardingSkip(1);

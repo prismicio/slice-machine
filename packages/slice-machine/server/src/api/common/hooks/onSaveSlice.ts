@@ -84,5 +84,5 @@ export default async function onSaveSlice(
     }
   }
 
-  LibrariesState.generateState(env);
+  LibrariesState.generateState(env, libraries);
 }

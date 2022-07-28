@@ -5,11 +5,10 @@ import {
 } from "@prismicio/editor-fields";
 import { renderSliceMock } from "@prismicio/mocks";
 import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Flex } from "theme-ui";
 
-import { SliceContext } from "@src/models/slice/context";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 
 import Header from "./components/Header";
@@ -23,12 +22,41 @@ import {
   selectSimulatorUrl,
 } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
+import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
+import Router from "next/router";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
 
+// debounce specific to a state setter, not generic for any case
+export const debounceState = <I extends object>(
+  func: React.Dispatch<React.SetStateAction<I>>,
+  waitFor: number
+) => {
+  let timeout: NodeJS.Timeout;
+
+  return (arg: I): Promise<void> =>
+    new Promise((resolve) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(() => resolve(func(arg)), waitFor);
+    });
+};
+
 export default function Simulator() {
-  const { Model, variation } = useContext(SliceContext);
+  const { component } = useSelector((store: SliceMachineStoreType) => ({
+    component: selectCurrentSlice(
+      store,
+      Router.router?.query.lib as string,
+      Router.router?.query.sliceName as string
+    ),
+  }));
+
+  const variation = component?.model.variations.find(
+    (variation) => variation.id === (Router.router?.query.variation as string)
+  );
 
   const { framework, version, simulatorUrl } = useSelector(
     (state: SliceMachineStoreType) => ({
@@ -48,24 +76,35 @@ export default function Simulator() {
     setState({ ...state, size: screen.size });
   };
 
-  if (!Model || !variation) {
+  if (!component || !variation) {
     return <div />;
   }
 
   const sliceView = useMemo(
-    () => [{ sliceID: Model.model.id, variationID: variation.id }],
-    [Model.model.id, variation.id]
+    () => [
+      {
+        sliceID: component.model.id,
+        variationID: variation.id,
+      },
+    ],
+    [component.model.id, variation.id]
   );
 
-  const sharedSlice = useMemo(() => Slices.fromSM(Model.model), [Model.model]);
+  const sharedSlice = useMemo(
+    () => Slices.fromSM(component.model),
+    [component.model]
+  );
   const initialContent = useMemo<SharedSliceContent>(
     () =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      Model.mock?.find((content) => content.variation === variation.id) ??
+      component.mock?.find((content) => content.variation === variation.id) ??
       defaultSharedSliceContent(variation.id),
-    [Model.mock, variation.id]
+    [component.mock, variation.id]
   );
+
   const [content, setContent] = useState(initialContent);
+  const debouncedSetContent = debounceState(setContent, 300);
+
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
   if (variation.id !== prevVariationId) {
     setContent(initialContent);
@@ -83,8 +122,7 @@ export default function Simulator() {
     <Flex sx={{ flexDirection: "row", height: "100vh" }}>
       <Flex sx={{ flex: 1, flexDirection: "column" }}>
         <Header
-          title={Model.model.name}
-          Model={Model}
+          Model={component}
           variation={variation}
           handleScreenSizeChange={handleScreenSizeChange}
           size={state.size}
@@ -109,7 +147,7 @@ export default function Simulator() {
         <ThemeProvider>
           <SharedSliceEditor
             content={content}
-            onContentChange={setContent}
+            onContentChange={debouncedSetContent}
             sharedSlice={sharedSlice}
           />
         </ThemeProvider>

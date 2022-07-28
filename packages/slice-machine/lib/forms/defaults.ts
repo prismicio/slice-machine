@@ -1,4 +1,5 @@
-import { Input } from "./fields";
+import { Input, InputType } from "./fields";
+import { API_ID_REGEX } from "@lib/consts";
 
 export const validateId = ({
   value,
@@ -7,35 +8,48 @@ export const validateId = ({
 }: {
   value: string;
   fields: Array<{ key: string }>;
-  initialId: string;
+  initialId: string | null;
 }) => {
+  if (!value) {
+    return "Field is required";
+  }
   const fieldExists = fields.find(({ key }) => key === value);
   if (fieldExists && value !== initialId) {
     return `Field "${value}" already exists.`;
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const DefaultFields: any = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  label: Input("Label", { required: "This field is required", max: true }),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+export const DefaultFields: Record<string, InputType> = {
+  label: Input(
+    "Label",
+    {
+      required: "This field is required",
+      max: true,
+    },
+    undefined,
+    undefined,
+    "Label for content creators (defaults to field type)"
+  ),
   id: Input(
     "API ID*",
     {
       min: true,
       max: true,
       required: "This field is required",
-      matches: [
-        /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/,
-        "No special characters allowed",
-      ],
+      matches: [API_ID_REGEX, "No special characters allowed (except _)"],
     },
-    validateId
+    validateId,
+    undefined,
+    "A unique identifier for the field (e.g. buttonLink)"
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  placeholder: Input("Placeholder", {
-    required: "This field is required",
-    max: true,
-  }),
+  placeholder: Input(
+    "Placeholder",
+    {
+      required: "This field is required",
+      max: true,
+    },
+    undefined,
+    undefined,
+    "Placeholder text for content creators"
+  ),
 };

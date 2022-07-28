@@ -1,6 +1,7 @@
 {
   "name": "sm-commons",
   "version": "0.1.6",
+  "private": true,
   "description": "A set of common utilities for slice machine libraries",
   "typings": "index.d.ts",
   "scripts": {

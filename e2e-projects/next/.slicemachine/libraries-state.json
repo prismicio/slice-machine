@@ -436,7 +436,9 @@
                   "config": {
                     "single": "paragraph",
                     "label": "Description",
-                    "placeholder": "A nice description of your feature"
+                    "placeholder": "A nice description of your feature",
+                    "allowTargetBlank": true,
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                   }
                 },
                 "additionalInfoTitle": {
@@ -444,7 +446,7 @@
                     "label": "additionalInfoTitle",
                     "placeholder": "",
                     "allowTargetBlank": true,
-                    "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                   },
                   "type": "StructuredText"
                 },
@@ -453,9 +455,18 @@
                     "label": "additionalInfo",
                     "placeholder": "",
                     "allowTargetBlank": true,
-                    "single": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                   },
                   "type": "StructuredText"
+                },
+                "eefe": {
+                  "type": "Boolean",
+                  "config": {
+                    "label": "eefe",
+                    "default_value": false,
+                    "placeholder_true": "true",
+                    "placeholder_false": "false"
+                  }
                 }
               },
               "items": {
@@ -484,39 +495,40 @@
             "version": "sktwi1xtmkfgx8626",
             "items": [
               {
-                "percentageShare": 93.11795703586078,
-                "entityLabel": "clear"
+                "percentageShare": 45,
+                "entityLabel": "manufacturing"
               }
             ],
             "primary": {
               "title": [
                 {
                   "type": "heading1",
-                  "text": "Shall",
+                  "text": "Function",
                   "spans": []
                 }
               ],
               "description": [
                 {
                   "type": "paragraph",
-                  "text": "Nostrud dolor irure fugiat elit ut ex et anim ad fugiat irure enim eiusmod in aute.",
+                  "text": "Non velit consequat aliqua exercitation aliquip est pariatur. Magna consequat ex ex cillum.",
                   "spans": []
                 }
               ],
               "additionalInfoTitle": [
                 {
                   "type": "paragraph",
-                  "text": "Esse dolore tempor est esse. Pariatur excepteur sint ipsum laborum aliqua aliqua adipisicing.",
+                  "text": "Ad occaecat eu culpa laborum ut. Pariatur sit consectetur nisi sunt et ad adipisicing amet ut laboris nostrud.",
                   "spans": []
                 }
               ],
               "additionalInfo": [
                 {
                   "type": "paragraph",
-                  "text": "Nostrud sit elit et sint. Dolor nostrud magna magna cillum est fugiat reprehenderit est ad adipisicing mollit et dolor voluptate.",
+                  "text": "Nisi voluptate deserunt est eu minim anim velit. Non pariatur elit aute. Minim irure in est ad culpa elit minim cillum proident deserunt.",
                   "spans": []
                 }
-              ]
+              ],
+              "eefe": false
             },
             "slice_type": "chart_slice"
           }

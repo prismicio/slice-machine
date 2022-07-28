@@ -5,20 +5,18 @@ import * as Models from "@slicemachine/core/build/models";
 import VarationsPopover from "@lib/builders/SliceBuilder/Header/VariationsPopover";
 import * as Links from "@lib/builders/SliceBuilder/links";
 
-import SliceState from "@lib/models/ui/SliceState";
-
 import ScreenSizes, { Size } from "../ScreenSizes";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 type PropTypes = {
-  title: string;
-  Model: SliceState;
+  Model: ComponentUI;
   variation: Models.VariationSM | undefined;
   handleScreenSizeChange: (screen: { size: Size }) => void;
   size: Size;
 };
 
 const redirect = (
-  model: SliceState,
+  model: ComponentUI,
   variation: { id: string } | undefined,
   isSimulator?: boolean
 ): void => {
@@ -36,7 +34,6 @@ const redirect = (
 };
 
 const Header: React.FunctionComponent<PropTypes> = ({
-  title,
   Model,
   variation,
   handleScreenSizeChange,
@@ -57,12 +54,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
           alignItems: "center",
         }}
       >
-        <Text mr={2}>{title}</Text>
-        {Model.variations.length > 1 ? (
+        <Text mr={2}>{Model.model.name}</Text>
+        {Model.model.variations.length > 1 ? (
           <VarationsPopover
             buttonSx={{ p: 1 }}
             defaultValue={variation}
-            variations={Model.variations}
+            variations={Model.model.variations}
             onChange={(v) => redirect(Model, v, true)}
           />
         ) : null}

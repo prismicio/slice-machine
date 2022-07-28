@@ -1,16 +1,16 @@
 import ModalFormCard from "../../../../components/ModalFormCard";
 
-import SliceState from "@lib/models/ui/SliceState";
 import UpdateSliceZoneModalEmptyState from "./UpdateSliceZoneModalEmptyState";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 interface UpdateSliceModalProps {
   isOpen: boolean;
   formId: string;
   close: () => void;
   onSubmit: (values: SliceZoneFormValues) => void;
-  availableSlices: ReadonlyArray<SliceState>;
-  slicesInSliceZone: ReadonlyArray<SliceState>;
+  availableSlices: ReadonlyArray<ComponentUI>;
+  slicesInSliceZone: ReadonlyArray<ComponentUI>;
 }
 
 export type SliceZoneFormValues = {
@@ -33,7 +33,10 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
       isOpen={isOpen}
       formId={formId}
       close={close}
-      onSubmit={(values: SliceZoneFormValues) => onSubmit(values)}
+      onSubmit={(values: SliceZoneFormValues) => {
+        onSubmit(values);
+        close();
+      }}
       initialValues={{
         sliceKeys: slicesInSliceZone.map((slice) => slice.model.id),
       }}
