@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Box, Link as ThemeLink } from "theme-ui";
+import { Box, Flex, Link as ThemeLink } from "theme-ui";
 import type { LinkProps } from "../../";
+import { ChangesIndicator } from "./ChangesIndicator";
 
 export interface ItemProps {
   link: LinkProps;
@@ -38,9 +39,14 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
             onClick={onClick}
           >
             <link.Icon size={24} />
-            <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
-              {link.title}
-            </Box>
+            <Flex sx={{ flex: 1, justifyContent: "space-between" }}>
+              <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
+                {link.title}
+              </Box>
+              {link.numberOfChanges && link.numberOfChanges > 0 && (
+                <ChangesIndicator numberOfChanges={link.numberOfChanges} />
+              )}
+            </Flex>
           </ThemeLink>
         </Link>
       </Box>

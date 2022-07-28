@@ -13,6 +13,7 @@ export interface LinkProps {
   Icon: IconType;
   delimiter?: boolean;
   target?: "_blank";
+  numberOfChanges?: number;
 }
 
 const links: LinkProps[] = [
@@ -39,6 +40,7 @@ const links: LinkProps[] = [
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
+    numberOfChanges: 5,
   },
 ];
 
