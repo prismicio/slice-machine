@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Volume } from "memfs";
 
-import getEnv from "../../server/src/api/services/getEnv";
+import getEnv from "../../../lib/env/getEnv";
 import { Models } from "@slicemachine/core";
 import { ApplicationMode } from "@slicemachine/client";
 
