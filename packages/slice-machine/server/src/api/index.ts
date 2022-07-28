@@ -311,8 +311,9 @@ router.post(
   "/s",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises,
   WithEnv(async (req, res): Promise<Express.Response> => {
-    await tracking(req);
-    return res.json({});
+    return tracking(req)
+      .catch(() => null)
+      .then(() => res.json());
   })
 );
 
