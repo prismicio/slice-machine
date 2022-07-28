@@ -1,5 +1,4 @@
-import React from "react";
-import { Flex, Text } from "theme-ui";
+import { Flex } from "theme-ui";
 
 interface ChangesIndicatorProps {
   numberOfChanges: number;
@@ -11,7 +10,7 @@ export const ChangesIndicator = ({
   return (
     <Flex
       sx={{
-        borderRadius: 50,
+        borderRadius: "50%",
         backgroundColor: "#6548FF1A",
         width: "24px",
         height: "24px",
