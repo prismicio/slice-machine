@@ -297,7 +297,7 @@ router.post(
     const body = req.body;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const payload = postAuth(body);
+    const payload = postAuth(req.env.client.apisEndpoints.Wroom, body);
     if (payload.err) {
       console.error(body);
       return res.status(500).json(body);
