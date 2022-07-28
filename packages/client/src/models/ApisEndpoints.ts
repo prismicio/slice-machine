@@ -1,4 +1,4 @@
-import { addTrailingSlash } from "utils/str";
+import { addTrailingSlash } from "../utils/str";
 
 export interface ApisEndpoints {
   Wroom: string;
