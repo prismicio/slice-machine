@@ -4,7 +4,7 @@ import {
   CustomPaths,
   GeneratedPaths,
 } from "@slicemachine/core/build/node-utils/paths";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 import fs from "fs";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 

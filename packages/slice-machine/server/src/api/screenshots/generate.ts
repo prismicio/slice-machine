@@ -9,7 +9,7 @@ import {
 } from "../../../../lib/models/common/ComponentUI";
 import { Screenshots } from "../../../../lib/models/common/Screenshots";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 
 type FailedScreenshot = {
   variationId: VariationSM["id"];

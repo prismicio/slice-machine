@@ -16,7 +16,7 @@
     "test": "jest",
     "watch-test": "jest --watch",
     "config": "tsc --showConfig",
-    "clean-build": "rimraf ./build/client",
+    "clean-build": "rimraf ./build/client #./build/server/src",
     "postinstall": "node postinstall",
     "prepublishOnly": "npm run bundle",
     "dev-server": "cross-env PORT=9999 CWD=../../e2e-projects/next ENV=SM concurrently \"rollup -w -c ./rollup-server.config.js\" \"nodemon -e ts,js --watch server --watch lib --ignore build/ build/server/index.js\"",

@@ -10,7 +10,7 @@ import { insert as insertMockConfig } from "../../../../lib/mock/misc/fs";
 import mock from "../../../../lib/mock/CustomType";
 import { CustomTypeMockConfig } from "../../../../lib/models/common/MockConfig";
 import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 
 export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();

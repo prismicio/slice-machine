@@ -1,5 +1,5 @@
 import { CustomTypesPaths } from "../../../../lib/models/paths";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 import { getBackendState } from "../state";
 import { RequestWithEnv } from "../http/common";
 import { RenameCustomTypeBody } from "../../../../lib/models/common/CustomType";

@@ -1,5 +1,5 @@
 import getEnv from "../services/getEnv";
-import { getSlices } from "./";
+import { getSlices } from ".";
 
 import { onError } from "../common/error";
 import { purge } from "../services/uploadScreenshotClient";
@@ -9,7 +9,7 @@ import type { SliceBody } from "../../../../lib/models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
 import { ApiResult } from "../../../../lib/models/server/ApiResult";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 import { ClientError } from "@slicemachine/client";
 
 export async function pushSlice(

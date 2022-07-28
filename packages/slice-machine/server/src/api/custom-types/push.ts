@@ -13,7 +13,7 @@ import { getBackendState } from "../state";
 import { pushSlice } from "../slices/push";
 import { onError } from "../common/error";
 import { RequestWithEnv } from "../http/common";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 
 const createOrUpdate = (
   client: Client,

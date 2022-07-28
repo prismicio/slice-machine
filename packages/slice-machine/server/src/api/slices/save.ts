@@ -15,7 +15,7 @@ import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 
 export async function handler(
   env: BackendEnvironment,

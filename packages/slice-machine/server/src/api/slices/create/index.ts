@@ -20,7 +20,7 @@ import {
   DEFAULT_VARIATION_ID,
   RESERVED_SLICE_NAME,
 } from "../../../../../lib/consts";
-import * as IO from "../../io";
+import * as IO from "../../../../../lib/io";
 
 import save from "../save";
 

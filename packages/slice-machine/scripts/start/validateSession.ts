@@ -5,7 +5,7 @@ import { retrieveManifest } from "@slicemachine/core/build/node-utils";
 import { Client } from "@slicemachine/client";
 
 import preferWroomBase from "@lib/utils/preferWroomBase";
-import { getApplicationMode } from "../../server/src/api/services/getEnv";
+import { getApplicationMode } from "../../lib/env/getEnv";
 
 export function validateSession(
   cwd: string

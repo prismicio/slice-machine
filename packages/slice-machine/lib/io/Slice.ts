@@ -1,4 +1,4 @@
-import Files from "../../../../lib/utils/files";
+import Files from "../utils/files";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 

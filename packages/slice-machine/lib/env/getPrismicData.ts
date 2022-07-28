@@ -1,8 +1,8 @@
 import { ok, err, Result } from "neverthrow";
 
-import PrismicData from "../../../../lib/models/common/PrismicData";
+import PrismicData from "../models/common/PrismicData";
 import { Utils } from "@slicemachine/core";
-import ErrorWithStatus from "../../../../lib/models/common/ErrorWithStatus";
+import ErrorWithStatus from "../models/common/ErrorWithStatus";
 import {
   PrismicSharedConfigManager,
   DEFAULT_CONFIG,
