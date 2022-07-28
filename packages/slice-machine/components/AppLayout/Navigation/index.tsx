@@ -5,6 +5,7 @@ import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
 import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
+import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
 
 export interface LinkProps {
   title: string;
@@ -13,7 +14,7 @@ export interface LinkProps {
   Icon: IconType;
   delimiter?: boolean;
   target?: "_blank";
-  numberOfChanges?: number;
+  RightElement?: React.ReactNode;
 }
 
 const links: LinkProps[] = [
@@ -40,7 +41,7 @@ const links: LinkProps[] = [
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
-    numberOfChanges: 5,
+    RightElement: <ChangesIndicator numberOfChanges={5} />,
   },
 ];
 

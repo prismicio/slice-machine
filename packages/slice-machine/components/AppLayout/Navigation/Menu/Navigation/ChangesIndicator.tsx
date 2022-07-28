@@ -7,6 +7,9 @@ interface ChangesIndicatorProps {
 export const ChangesIndicator = ({
   numberOfChanges,
 }: ChangesIndicatorProps) => {
+  if (numberOfChanges === 0) {
+    return null;
+  }
   return (
     <Flex
       sx={{

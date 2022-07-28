@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Box, Flex, Link as ThemeLink } from "theme-ui";
 import type { LinkProps } from "../../";
-import { ChangesIndicator } from "./ChangesIndicator";
 
 export interface ItemProps {
   link: LinkProps;
@@ -43,9 +42,7 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
               <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
                 {link.title}
               </Box>
-              {link.numberOfChanges && link.numberOfChanges > 0 && (
-                <ChangesIndicator numberOfChanges={link.numberOfChanges} />
-              )}
+              {link.RightElement}
             </Flex>
           </ThemeLink>
         </Link>
