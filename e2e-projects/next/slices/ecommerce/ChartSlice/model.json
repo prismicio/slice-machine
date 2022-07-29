@@ -14,9 +14,10 @@
         "title": {
           "type": "StructuredText",
           "config": {
-            "single": "heading1",
             "label": "Title",
-            "placeholder": "This is where it all begins..."
+            "placeholder": "This is where it all begins...",
+            "allowTargetBlank": true,
+            "single": "heading1,heading2,heading3"
           }
         },
         "description": {

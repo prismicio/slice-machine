@@ -9,7 +9,7 @@
           {
             "type": "heading1",
             "content": {
-              "text": "Position"
+              "text": "Piano"
             }
           }
         ]
@@ -20,7 +20,7 @@
           {
             "type": "paragraph",
             "content": {
-              "text": "Exercitation pariatur non cillum."
+              "text": "Laborum eu adipisicing amet."
             }
           }
         ]
@@ -32,7 +32,7 @@
       },
       "study_owner": {
         "__TYPE__": "FieldContent",
-        "value": "standard",
+        "value": "front",
         "type": "Text"
       }
     },
@@ -44,7 +44,7 @@
             "percentageShare",
             {
               "__TYPE__": "FieldContent",
-              "value": "74",
+              "value": "8",
               "type": "Number"
             }
           ],
@@ -52,7 +52,7 @@
             "entityLabel",
             {
               "__TYPE__": "FieldContent",
-              "value": "location",
+              "value": "smaller",
               "type": "Text"
             }
           ]
