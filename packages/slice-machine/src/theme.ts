@@ -14,6 +14,7 @@ const AppTheme = (): Theme =>
       backgroundClear: "#FFF",
       primary: "#6E52FF",
       purpleLight: "#F6F1FC",
+      purpleLight01: "#6548FF1A",
       badge: {
         published: {
           bg: "#E9F6EE",

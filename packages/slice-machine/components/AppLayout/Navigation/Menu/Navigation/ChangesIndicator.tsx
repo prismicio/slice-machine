@@ -14,13 +14,13 @@ export const ChangesIndicator = ({
     <Flex
       sx={{
         borderRadius: "50%",
-        backgroundColor: "#6548FF1A",
+        backgroundColor: "purpleLight01",
         width: "24px",
         height: "24px",
         justifyContent: "center",
         alignItems: "center",
         fontSize: "12px",
-        color: "#5D40F7E5",
+        color: "purple",
         fontWeight: 600,
       }}
     >
