@@ -1,5 +1,5 @@
 import getEnv from "../services/getEnv";
-import Files from "@lib/utils/files";
+import Files from "../../../../lib/utils/files";
 
 import {
   resolvePathsToScreenshot,
@@ -9,8 +9,11 @@ import {
 import {
   createScreenshotUI,
   ScreenshotUI,
-} from "@lib/models/common/ComponentUI";
-import { TmpFile, CustomScreenshotRequest } from "@models/common/Screenshots";
+} from "../../../../lib/models/common/ComponentUI";
+import {
+  TmpFile,
+  CustomScreenshotRequest,
+} from "../../../../lib/models/common/Screenshots";
 
 export default async function handler(
   file: TmpFile,

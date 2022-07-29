@@ -1,13 +1,13 @@
-import mock from "@lib/mock/Slice";
+import mock from "../../../../lib/mock/Slice";
 import * as LibrariesState from "./LibrariesState";
 
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import Files from "@lib/utils/files";
-import { GeneratedPaths } from "@lib/models/paths";
-import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { getConfig as getGobalMockConfig } from "@lib/mock/misc/fs";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import { LibraryUI } from "../../../../lib/models/common/LibraryUI";
+import { ComponentUI } from "../../../../lib/models/common/ComponentUI";
+import Files from "../../../../lib/utils/files";
+import { GeneratedPaths } from "../../../../lib/models/paths";
+import { SliceMockConfig } from "../../../../lib/models/common/MockConfig";
+import { getConfig as getGobalMockConfig } from "../../../../lib/mock/misc/fs";
 
 export function generate(
   env: BackendEnvironment,

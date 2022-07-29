@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import {
@@ -41,8 +41,7 @@ const useSMTracker = () => {
 
   // Handles if the user login/logout outside of the app.
   useEffect(() => {
-    if (shortId && intercomHash)
-      void Tracker.get().identifyUser(shortId, intercomHash);
+    if (shortId && intercomHash) void Tracker.get().identifyUser();
   }, [shortId, intercomHash]);
 
   // For handling page change

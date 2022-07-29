@@ -1,14 +1,14 @@
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import Files from "@lib/utils/files";
-import { CustomTypesPaths } from "@lib/models/paths";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import Files from "../../../../lib/utils/files";
+import { CustomTypesPaths } from "../../../../lib/models/paths";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 import { ClientError } from "@slicemachine/client";
-import { getLocalCustomTypes } from "@lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment

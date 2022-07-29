@@ -1,8 +1,8 @@
-import Files from "@lib/utils/files";
-import { CustomTypesPaths } from "@lib/models/paths";
+import Files from "./files";
+import { CustomTypesPaths } from "../models/paths";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType/index";
 import glob from "glob";
-import * as IO from "../../server/src/api/io";
+import * as IO from "../io";
 
 export function getLocalCustomTypes(cwd: string): CustomTypeSM[] {
   const pathToCustomTypes = CustomTypesPaths(cwd).value();

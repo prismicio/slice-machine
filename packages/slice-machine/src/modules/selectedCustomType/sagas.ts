@@ -9,7 +9,7 @@ import { pushCustomType, saveCustomType } from "../../../src/apiClient";
 import axios from "axios";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
-import Tracker from "../../../src/tracker";
+import Tracker from "../../tracking/client";
 
 export function* saveCustomTypeSaga() {
   try {
