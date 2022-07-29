@@ -253,6 +253,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
+            "slice_id": "category_preview_with_image_backgrounds$bb29175e-2ab3-439f-bbc8-e5af6e383b8f",
             "slice_type": "category_preview_with_image_backgrounds"
           }
         },
@@ -390,6 +391,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
+            "slice_id": "category_preview_with_scrolling_cards$dd954dea-1b7f-4e5a-b522-e6673bd6460c",
             "slice_type": "category_preview_with_scrolling_cards"
           }
         },
@@ -434,38 +436,29 @@
                 "description": {
                   "type": "StructuredText",
                   "config": {
-                    "single": "paragraph",
-                    "label": "Description",
-                    "placeholder": "A nice description of your feature",
+                    "label": "description",
+                    "placeholder": "",
                     "allowTargetBlank": true,
                     "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                   }
                 },
-                "additionalInfoTitle": {
+                "chart_type": {
+                  "type": "Select",
                   "config": {
-                    "label": "additionalInfoTitle",
+                    "label": "Chart Type",
                     "placeholder": "",
-                    "allowTargetBlank": true,
-                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-                  },
-                  "type": "StructuredText"
+                    "options": [
+                      "Pie chart",
+                      "Bar chart"
+                    ],
+                    "default_value": "Pie chart"
+                  }
                 },
-                "additionalInfo": {
+                "study_owner": {
+                  "type": "Text",
                   "config": {
-                    "label": "additionalInfo",
-                    "placeholder": "",
-                    "allowTargetBlank": true,
-                    "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-                  },
-                  "type": "StructuredText"
-                },
-                "eefe": {
-                  "type": "Boolean",
-                  "config": {
-                    "label": "eefe",
-                    "default_value": false,
-                    "placeholder_true": "true",
-                    "placeholder_false": "false"
+                    "label": "Study owner",
+                    "placeholder": ""
                   }
                 }
               },
@@ -495,41 +488,29 @@
             "version": "sktwi1xtmkfgx8626",
             "items": [
               {
-                "percentageShare": 45,
-                "entityLabel": "manufacturing"
+                "percentageShare": 74,
+                "entityLabel": "location"
               }
             ],
             "primary": {
               "title": [
                 {
                   "type": "heading1",
-                  "text": "Function",
+                  "text": "Position",
                   "spans": []
                 }
               ],
               "description": [
                 {
                   "type": "paragraph",
-                  "text": "Non velit consequat aliqua exercitation aliquip est pariatur. Magna consequat ex ex cillum.",
+                  "text": "Exercitation pariatur non cillum.",
                   "spans": []
                 }
               ],
-              "additionalInfoTitle": [
-                {
-                  "type": "paragraph",
-                  "text": "Ad occaecat eu culpa laborum ut. Pariatur sit consectetur nisi sunt et ad adipisicing amet ut laboris nostrud.",
-                  "spans": []
-                }
-              ],
-              "additionalInfo": [
-                {
-                  "type": "paragraph",
-                  "text": "Nisi voluptate deserunt est eu minim anim velit. Non pariatur elit aute. Minim irure in est ad culpa elit minim cillum proident deserunt.",
-                  "spans": []
-                }
-              ],
-              "eefe": false
+              "chart_type": "Pie chart",
+              "study_owner": "standard"
             },
+            "slice_id": "chart_slice$33b1a3ec-e98b-43ca-83c6-ff6d7e2eda3d",
             "slice_type": "chart_slice"
           }
         },
@@ -586,6 +567,7 @@
             "primary": {
               "video": null
             },
+            "slice_id": "external_video_slice$4f2ef2e9-8beb-42cc-b9f2-a8c3208ca6a2",
             "slice_type": "external_video_slice"
           }
         },
@@ -753,6 +735,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
+            "slice_id": "hero_banner$6e5ebedf-5890-4dba-a00d-4359fa37d649",
             "slice_type": "hero_banner"
           },
           "withoutCta": {
@@ -783,6 +766,7 @@
                 }
               }
             },
+            "slice_id": "hero_banner$0047cb8a-4987-4cba-8d7a-24f30ba96da7",
             "slice_type": "hero_banner"
           }
         },
@@ -953,6 +937,7 @@
                 }
               ]
             },
+            "slice_id": "product_features_with_wide_images$1c3df7f4-4ea0-4f03-809f-4d21a66bf413",
             "slice_type": "product_features_with_wide_images"
           }
         },
@@ -1128,6 +1113,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
+            "slice_id": "product_list_with_cta$ec207dd6-65db-4a16-ba55-d3b1e7d515bb",
             "slice_type": "product_list_with_cta"
           },
           "customProducts": {
@@ -1164,6 +1150,7 @@
                 }
               ]
             },
+            "slice_id": "product_list_with_cta$e56a9935-805a-4871-bd52-d6c317d28390",
             "slice_type": "product_list_with_cta"
           }
         },
@@ -1277,6 +1264,7 @@
                 }
               ]
             },
+            "slice_id": "product_overview_with_image_grid$53c87468-ed3a-4e0f-9524-98726a7ffc5f",
             "slice_type": "product_overview_with_image_grid"
           }
         },
@@ -1427,6 +1415,7 @@
                 "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb"
               }
             },
+            "slice_id": "promo_section_fading_background_testimonials$aadd0885-3ada-41fe-8069-6e97374c8287",
             "slice_type": "promo_section_fading_background_testimonials"
           }
         },
@@ -1653,6 +1642,7 @@
               },
               "linkLabel": "bound"
             },
+            "slice_id": "promo_section_full_width_with_overlapping_image_tiles$9fe75df6-ec1c-4eee-a1be-8ee5e7f7e4a6",
             "slice_type": "promo_section_full_width_with_overlapping_image_tiles"
           }
         },
@@ -1906,6 +1896,7 @@
               "personalisationid": "them",
               "intent": null
             },
+            "slice_id": "promo_section_image_tiles$def0e035-4e02-4d85-83e8-9b157bc447ca",
             "slice_type": "promo_section_image_tiles"
           }
         },
@@ -2064,6 +2055,7 @@
               },
               "linkLabel": "cookies"
             },
+            "slice_id": "promo_section_with_background_image$b6cee281-851b-45f6-a67b-7f42fb0830b6",
             "slice_type": "promo_section_with_background_image"
           },
           "cameraInsurance": {
@@ -2084,6 +2076,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
+            "slice_id": "promo_section_with_background_image$70a7b427-9212-4286-899a-ec463adf1770",
             "slice_type": "promo_section_with_background_image"
           }
         },
@@ -2249,6 +2242,7 @@
                 }
               ]
             },
+            "slice_id": "blog_section_three_column_cards$ad8632e0-9589-4084-9fec-5be7067eb6d3",
             "slice_type": "blog_section_three_column_cards"
           }
         },
@@ -2424,6 +2418,7 @@
               "CareerLinkText": "clay",
               "cta": "particular"
             },
+            "slice_id": "contact_section_split_two_tone$d9920e77-e544-42f6-aafd-131f09460109",
             "slice_type": "contact_section_split_two_tone"
           }
         },
@@ -2543,6 +2538,7 @@
                 }
               ]
             },
+            "slice_id": "content_section_centered$8f928ac0-5719-472d-aab5-73eacf4a8ddd",
             "slice_type": "content_section_centered"
           }
         },
@@ -2611,6 +2607,7 @@
                 "version": "1.0"
               }
             },
+            "slice_id": "content_section_centered_embed$0b6de72b-11da-4c15-a135-77b9d0dab527",
             "slice_type": "content_section_centered_embed"
           }
         },
@@ -2692,6 +2689,7 @@
                 "url": "https://images.unsplash.com/photo-1586952518485-11b180e92764"
               }
             },
+            "slice_id": "content_section_centered_image$5a05571e-8df4-4f99-8676-3eff7df1d154",
             "slice_type": "content_section_centered_image"
           }
         },
@@ -2827,6 +2825,7 @@
                 }
               ]
             },
+            "slice_id": "content_section_two_columns_with_image$2d2efa5b-a9f4-454e-b28c-497418886a99",
             "slice_type": "content_section_two_columns_with_image"
           }
         },
@@ -2959,6 +2958,7 @@
                 }
               ]
             },
+            "slice_id": "featured_section_centered22$b64ec097-5f8b-4563-816d-76c70b8006fc",
             "slice_type": "featured_section_centered22"
           }
         },
@@ -3037,6 +3037,7 @@
                 }
               ]
             },
+            "slice_id": "header_section_simple_centered$590c6a2a-e074-48e6-bf39-aa213c6ec778",
             "slice_type": "header_section_simple_centered"
           }
         },
@@ -3203,6 +3204,7 @@
                 "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5"
               }
             },
+            "slice_id": "hero_section_split$4bf73b25-1fcc-4e16-bdaa-ef1046c86e70",
             "slice_type": "hero_section_split"
           }
         },
@@ -3249,6 +3251,7 @@
               {}
             ],
             "primary": {},
+            "slice_id": "separator$21649204-dd7d-4df7-8ed6-f5c625063f2f",
             "slice_type": "separator"
           }
         },
@@ -3398,6 +3401,7 @@
                 "url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2"
               }
             },
+            "slice_id": "stats_section_split_with_image$bb2b5304-74c4-45db-974f-a553eeed44b6",
             "slice_type": "stats_section_split_with_image"
           }
         },
@@ -3487,6 +3491,7 @@
             "primary": {
               "section_title": "press"
             },
+            "slice_id": "footer_column$748f30ab-576a-485f-aeab-8a01da219e8a",
             "slice_type": "footer_column"
           }
         },
@@ -3571,6 +3576,7 @@
             "primary": {
               "sectionTitle": "apartment"
             },
+            "slice_id": "menu_sub_tab$ea963ee2-0eb8-4944-8904-a68ce876fa11",
             "slice_type": "menu_sub_tab"
           }
         },

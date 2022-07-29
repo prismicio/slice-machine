@@ -1,7 +1,7 @@
 import React from 'react'
 import { PrismicRichText } from '@prismicio/react';
 
-import { PieChart, Pie, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, ResponsiveContainer, BarChart, XAxis, YAxis, Bar } from 'recharts';
 
 const ChartSlice = ({ slice }) => (
   <section>
@@ -11,9 +11,10 @@ const ChartSlice = ({ slice }) => (
         <div className="lg:grid lg:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
           {/* Product image */}
           <div className="lg:row-end-1 lg:col-span-4">
-            <div className="aspect-w-4 aspect-h-3 rounded-lg bg-gray-100 overflow-hidden">                  
+            <div className="aspect-w-4 aspect-h-3 rounded-lg bg-gray-100 overflow-hidden">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                { slice.primary.chart_type === 'Pie chart'
+                ? <PieChart>
                   <Pie data={slice.items} nameKey="entityLabel" dataKey="percentageShare" cx="50%" cy="50%" innerRadius={50} outerRadius={90} fill="#5a67d8"
                   label={({
                     cx,
@@ -30,7 +31,7 @@ const ChartSlice = ({ slice }) => (
                     const x = cx + radius * Math.cos(-midAngle * RADIAN);
                     // eslint-disable-next-line
                     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-          
+
                     return (
                       <text
                         x={x}
@@ -46,6 +47,12 @@ const ChartSlice = ({ slice }) => (
                   >
                   </Pie>
                 </PieChart>
+                : <BarChart data={[{ x: 3, y: 2}, { x: 12, y: 20}, { x: 1, y: 6}]}>
+                  <XAxis dataKey="x" />
+                  <YAxis />
+                  <Bar dataKey="y" fill="rgba(106, 110, 229)" />
+                </BarChart>
+                }
               </ResponsiveContainer>
             </div>
           </div>

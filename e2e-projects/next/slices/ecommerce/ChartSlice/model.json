@@ -22,38 +22,29 @@
         "description": {
           "type": "StructuredText",
           "config": {
-            "single": "paragraph",
-            "label": "Description",
-            "placeholder": "A nice description of your feature",
+            "label": "description",
+            "placeholder": "",
             "allowTargetBlank": true,
             "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
           }
         },
-        "additionalInfoTitle": {
+        "chart_type": {
+          "type": "Select",
           "config": {
-            "label": "additionalInfoTitle",
+            "label": "Chart Type",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          },
-          "type": "StructuredText"
+            "options": [
+              "Pie chart",
+              "Bar chart"
+            ],
+            "default_value": "Pie chart"
+          }
         },
-        "additionalInfo": {
+        "study_owner": {
+          "type": "Text",
           "config": {
-            "label": "additionalInfo",
-            "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
-          },
-          "type": "StructuredText"
-        },
-        "eefe": {
-          "type": "Boolean",
-          "config": {
-            "label": "eefe",
-            "default_value": false,
-            "placeholder_true": "true",
-            "placeholder_false": "false"
+            "label": "Study owner",
+            "placeholder": ""
           }
         }
       },

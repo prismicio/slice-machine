@@ -24,26 +24,10 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import Router from "next/router";
+import { throttle } from "lodash";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
-
-// debounce specific to a state setter, not generic for any case
-export const debounceState = <I extends object>(
-  func: React.Dispatch<React.SetStateAction<I>>,
-  waitFor: number
-) => {
-  let timeout: NodeJS.Timeout;
-
-  return (arg: I): Promise<void> =>
-    new Promise((resolve) => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-
-      timeout = setTimeout(() => resolve(func(arg)), waitFor);
-    });
-};
 
 export default function Simulator() {
   const { component } = useSelector((store: SliceMachineStoreType) => ({
@@ -103,19 +87,31 @@ export default function Simulator() {
   );
 
   const [content, setContent] = useState(initialContent);
-  const debouncedSetContent = debounceState(setContent, 300);
+  const initialApiContent = useMemo(
+    () =>
+      renderSliceMock(sharedSlice, content) as {
+        slice_id: string;
+        [k: string]: unknown;
+      },
+    []
+  );
 
   const [prevVariationId, setPrevVariationId] = useState(variation.id);
   if (variation.id !== prevVariationId) {
     setContent(initialContent);
     setPrevVariationId(variation.id);
   }
+
   const apiContent = useMemo(
     () =>
-      content === initialContent
-        ? undefined
-        : renderSliceMock(sharedSlice, content),
-    [sharedSlice, initialContent, content]
+      throttle(() => {
+        if (content === initialContent) return undefined;
+        return {
+          ...(renderSliceMock(sharedSlice, content) as object),
+          slice_id: initialApiContent.slice_id,
+        };
+      }, 10000),
+    [sharedSlice, content, initialContent]
   );
 
   return (
@@ -128,7 +124,7 @@ export default function Simulator() {
           size={state.size}
         />
         <IframeRenderer
-          apiContent={apiContent}
+          apiContent={apiContent()}
           size={state.size}
           simulatorUrl={simulatorUrl}
           sliceView={sliceView}
@@ -147,7 +143,7 @@ export default function Simulator() {
         <ThemeProvider>
           <SharedSliceEditor
             content={content}
-            onContentChange={debouncedSetContent}
+            onContentChange={setContent}
             sharedSlice={sharedSlice}
           />
         </ThemeProvider>

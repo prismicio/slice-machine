@@ -166,7 +166,10 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
           })();
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const updatedValue = merge(initialModelValues, value);
+          const updatedValue = {
+            ...initialModelValues,
+            ...value,
+          };
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           onSave({

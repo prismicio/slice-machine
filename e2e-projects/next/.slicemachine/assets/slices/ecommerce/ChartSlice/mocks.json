@@ -9,7 +9,7 @@
           {
             "type": "heading1",
             "content": {
-              "text": "Function"
+              "text": "Position"
             }
           }
         ]
@@ -20,36 +20,20 @@
           {
             "type": "paragraph",
             "content": {
-              "text": "Non velit consequat aliqua exercitation aliquip est pariatur. Magna consequat ex ex cillum."
+              "text": "Exercitation pariatur non cillum."
             }
           }
         ]
       },
-      "additionalInfoTitle": {
-        "__TYPE__": "StructuredTextContent",
-        "value": [
-          {
-            "type": "paragraph",
-            "content": {
-              "text": "Ad occaecat eu culpa laborum ut. Pariatur sit consectetur nisi sunt et ad adipisicing amet ut laboris nostrud."
-            }
-          }
-        ]
+      "chart_type": {
+        "__TYPE__": "FieldContent",
+        "value": "Pie chart",
+        "type": "Select"
       },
-      "additionalInfo": {
-        "__TYPE__": "StructuredTextContent",
-        "value": [
-          {
-            "type": "paragraph",
-            "content": {
-              "text": "Nisi voluptate deserunt est eu minim anim velit. Non pariatur elit aute. Minim irure in est ad culpa elit minim cillum proident deserunt."
-            }
-          }
-        ]
-      },
-      "eefe": {
-        "__TYPE__": "BooleanContent",
-        "value": false
+      "study_owner": {
+        "__TYPE__": "FieldContent",
+        "value": "standard",
+        "type": "Text"
       }
     },
     "items": [
@@ -60,7 +44,7 @@
             "percentageShare",
             {
               "__TYPE__": "FieldContent",
-              "value": "45",
+              "value": "74",
               "type": "Number"
             }
           ],
@@ -68,7 +52,7 @@
             "entityLabel",
             {
               "__TYPE__": "FieldContent",
-              "value": "manufacturing",
+              "value": "location",
               "type": "Text"
             }
           ]
