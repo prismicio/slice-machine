@@ -61,7 +61,7 @@ const ChartSlice = ({ slice }) => (
           <div className="max-w-2xl mx-auto mt-14 sm:mt-16 lg:max-w-none lg:mt-0 lg:row-end-2 lg:row-span-2 lg:col-span-3">
             <div className="flex flex-col-reverse">
               <div className="mt-4">
-                <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl"><PrismicRichText field={slice.primary.title} /></h1>
+                <div className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl"><PrismicRichText field={slice.primary.title} /></div>
 
                 <h2 id="information-heading" className="sr-only">
                   Product information
@@ -72,10 +72,7 @@ const ChartSlice = ({ slice }) => (
             <p className="text-gray-500 mt-6"><PrismicRichText field={slice.primary.description} /></p>
 
             <div className="border-t border-gray-200 mt-10 pt-10">
-              <h3 className="text-sm font-medium text-gray-900"><PrismicRichText field={slice.primary.additionalInfoTitle} /></h3>
-              <div className="mt-4 prose prose-sm text-gray-500">
-                <PrismicRichText field={slice.primary.additionalInfo} />
-              </div>
+              <h5 className="text-sm font-medium text-gray-900">{slice.primary.study_owner}</h5>
             </div>
           </div>
         </div>
