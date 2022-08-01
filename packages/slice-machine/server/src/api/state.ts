@@ -27,6 +27,7 @@ export const getBackendState = async (
       .refreshAuthenticationToken()
       .then((newAuthenticationToken: string) => {
         PrismicSharedConfigManager.setAuthCookie(newAuthenticationToken);
+        env.client.updateAuthenticationToken(newAuthenticationToken);
 
         // set the user profile if it doesn't exist yet.
         if (!env.prismicData.shortId || !env.prismicData.intercomHash)

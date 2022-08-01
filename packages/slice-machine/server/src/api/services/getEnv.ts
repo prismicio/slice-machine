@@ -1,10 +1,3 @@
-import {
-  fromUrl,
-  parseDomain,
-  ParseResult,
-  ParseResultType,
-} from "parse-domain";
-
 import { Models } from "@slicemachine/core";
 import { Client, ApplicationMode } from "@slicemachine/client";
 import { Framework } from "@slicemachine/core/build/node-utils";
@@ -43,17 +36,18 @@ function validate(config: Models.Manifest): ConfigErrors {
   return errors;
 }
 
-function extractRepo(parsedRepo: ParseResult): string {
-  switch (parsedRepo.type) {
-    case ParseResultType.Listed:
-      if (parsedRepo.labels.length) {
-        return parsedRepo.labels[0];
-      }
-      if (parsedRepo.subDomains.length) {
-        return parsedRepo.subDomains[0];
-      }
-    default:
-      return "";
+function extractRepo(apiEndpoint: Models.Manifest["apiEndpoint"]): string {
+  try {
+    const url = new URL(apiEndpoint);
+    const host = url.host; // myrepo.prismic.io
+    const repository = host.split(".")[0]; // myrepo
+    return repository;
+  } catch (e) {
+    // Should already be covered by the start script.
+    console.error(
+      "It seems your repository API endpoint in your SM.json is wrong. Please start machine again to get instructions on how to fix it."
+    );
+    process.exit(0);
   }
 }
 
@@ -90,8 +84,8 @@ export default async function getEnv(
   const smChangelog = await getPackageChangelog(appRoot);
 
   const maybeErrors = validate(manifestInfo.content);
-  const parsedRepo = parseDomain(fromUrl(manifestInfo.content.apiEndpoint));
-  const repository = extractRepo(parsedRepo);
+
+  const repository = extractRepo(manifestInfo.content.apiEndpoint);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mockConfig = getMockConfig(cwd);
 
