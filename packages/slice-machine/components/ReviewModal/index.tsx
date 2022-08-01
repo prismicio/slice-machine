@@ -23,7 +23,7 @@ import {
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import { selectCustomTypeCount } from "@src/modules/availableCustomTypes";
 import { getLibraries } from "@src/modules/slices";
 

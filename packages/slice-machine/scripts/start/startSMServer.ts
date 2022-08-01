@@ -7,7 +7,7 @@ export function startSMServer(
 ) {
   const smServer: ChildProcessWithoutNullStreams = spawn(
     "node",
-    ["../../server/src/index.js"],
+    ["../../server/index.js"],
     {
       cwd: __dirname,
       env: {

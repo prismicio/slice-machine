@@ -1,8 +1,8 @@
 import { CONSTS } from "@slicemachine/core";
-import { simulatorIsSupported } from "@lib/utils";
+import { simulatorIsSupported } from "../../../lib/utils";
 import { RequestWithEnv } from "./http/common";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
-import { SimulatorCheckResponse } from "@models/common/Simulator";
+import { SimulatorCheckResponse } from "../../../lib/models/common/Simulator";
 import { retrieveJsonPackage } from "@slicemachine/core/build/node-utils";
 
 const {

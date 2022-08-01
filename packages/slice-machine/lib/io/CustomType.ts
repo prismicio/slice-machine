@@ -1,4 +1,4 @@
-import Files from "@lib/utils/files";
+import Files from "../utils/files";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import {
   CustomTypes,

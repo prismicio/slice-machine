@@ -6,6 +6,8 @@ import {
 } from "../../../lib/mock/LegacyMockConfig";
 import { DynamicWidget } from "@prismicio/types-internal/lib/customtypes/widgets/Widget";
 
+jest.spyOn(console, "warn").mockImplementation(() => undefined); // less noise, might be a feature?
+
 describe("CustomTypeMockConfig", () => {
   test("returns undefined if the fieldMockConfig is undefined or not provided", () => {
     expect(buildNestableMockConfig(WidgetTypes.Date)).toBe(undefined);

@@ -2,14 +2,17 @@ import { Models } from "@slicemachine/core";
 import { Client, ApplicationMode } from "@slicemachine/client";
 import { Framework } from "@slicemachine/core/build/node-utils";
 
-import type { BackendEnvironment } from "@lib/models/common/Environment";
-import type { ConfigErrors } from "@lib/models/server/ServerState";
-import { getPackageChangelog } from "@lib/env/versions";
-import { getConfig as getMockConfig } from "@lib/mock/misc/fs";
-import handleManifest, { ManifestState, ManifestInfo } from "@lib/env/manifest";
+import type { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import type { ConfigErrors } from "../../../../lib/models/server/ServerState";
+import { getPackageChangelog } from "../../../../lib/env/versions";
+import { getConfig as getMockConfig } from "../../../../lib/mock/misc/fs";
+import handleManifest, {
+  ManifestState,
+  ManifestInfo,
+} from "../../../../lib/env/manifest";
 
-import getPrismicData from "./getPrismicData";
-import { Manifest } from "@slicemachine/core/build/models";
+import getPrismicData from "../../../../lib/env/getPrismicData";
+import getApplicationMode from "../../../../lib/env/getApplicationMode";
 
 // variable declared globally on the index.ts, is the cwd to SM dependency
 declare let appRoot: string;
@@ -33,7 +36,7 @@ function validate(config: Models.Manifest): ConfigErrors {
   return errors;
 }
 
-function extractRepo(apiEndpoint: Manifest["apiEndpoint"]): string {
+function extractRepo(apiEndpoint: Models.Manifest["apiEndpoint"]): string {
   try {
     const url = new URL(apiEndpoint);
     const host = url.host; // myrepo.prismic.io
@@ -46,15 +49,6 @@ function extractRepo(apiEndpoint: Manifest["apiEndpoint"]): string {
     );
     process.exit(0);
   }
-}
-
-export function getApplicationMode(
-  apiEndpoint: Models.Manifest["apiEndpoint"]
-): ApplicationMode {
-  if (apiEndpoint.includes("prismic.io")) return ApplicationMode.PROD;
-  else if (apiEndpoint.includes("wroom.io")) return ApplicationMode.STAGE;
-  else if (apiEndpoint.includes("wroom.test")) return ApplicationMode.DEV;
-  else throw new Error(`Unknown application mode for ${apiEndpoint}`);
 }
 
 export default async function getEnv(

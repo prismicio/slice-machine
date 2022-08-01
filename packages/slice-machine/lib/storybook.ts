@@ -1,11 +1,11 @@
 import path from "path";
 import TemplateEngine from "ejs";
 
-import Files from "@lib/utils/files";
-import { CustomPaths, GeneratedPaths } from "@lib/models/paths";
+import Files from "./utils/files";
+import { CustomPaths, GeneratedPaths } from "./models/paths";
 import { Models } from "@slicemachine/core";
 
-import { createStorybookId } from "@lib/utils/str";
+import { createStorybookId } from "./utils/str";
 
 const Paths = {
   nuxtTemplate: (appRoot: string) =>
