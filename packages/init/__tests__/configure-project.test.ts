@@ -145,6 +145,70 @@ describe("configure-project", () => {
     expect(MockTracker).toHaveBeenCalled();
   });
 
+  test("it should add the framework to sm.json if frame work was detected", async () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      {
+        value: Models.Frameworks.next,
+        manuallyAdded: true,
+      },
+      []
+    );
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).toHaveBeenCalledWith("./", {
+      _latest: "0.0.41",
+      apiEndpoint: "https://testing-repo.prismic.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "next",
+    });
+    expect(patchManifestMock).not.toBeCalled();
+
+    expect(successFn).toHaveBeenCalled();
+    expect(failFn).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
+  });
+
+  test("should set the framework property if detect frame work had to prompt for the framework", async () => {
+    retrieveManifestMock.mockReturnValue({
+      exists: false,
+      content: null,
+    });
+    addJsonPackageSmScriptMock.mockReturnValue(true);
+
+    await configureProject(
+      client,
+      fakeCwd,
+      fakeRepository,
+      {
+        value: Models.Frameworks.next,
+        manuallyAdded: false,
+      },
+      []
+    );
+
+    expect(retrieveManifestMock).toBeCalled();
+    expect(createManifestMock).toHaveBeenCalledWith("./", {
+      _latest: "0.0.41",
+      apiEndpoint: "https://testing-repo.prismic.io/api/v2",
+      libraries: ["@/slices"],
+      framework: "next",
+    });
+    expect(patchManifestMock).not.toBeCalled();
+
+    expect(successFn).toHaveBeenCalled();
+    expect(failFn).not.toHaveBeenCalled();
+    expect(MockTracker).toHaveBeenCalled();
+  });
+
   test("it should patch the existing manifest", async () => {
     retrieveManifestMock.mockReturnValue({
       exists: true,
