@@ -74,10 +74,7 @@ export default function MockSlice(
     }),
     type: SlicesTypes.SharedSlice,
   };
-  // console.dir({legacyMockConfig, model, sliceMockConfig, sliceModel}, {depth: null})
-  return sliceMockConfig.map((sc) => {
-    // console.log("## MOCK SLICE ###", __filename)
-    // console.dir({sc}, {depth: null})
-    return generateSliceMock(sliceModel, sc)(renderSliceMock); // <-- removes name property from variation
-  });
+  return sliceMockConfig.map((sc) =>
+    generateSliceMock(sliceModel, sc)(renderSliceMock)
+  );
 }
