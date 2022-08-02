@@ -30,13 +30,25 @@ export const VariationSM = t.intersection([
 ]);
 export type VariationSM = t.TypeOf<typeof VariationSM>;
 
-export const VariationMock = t.type({
-  variation: t.string,
-  name: t.string,
-  slice_type: t.string,
-  items: t.array(t.unknown),
-  primary: t.record(t.string, t.unknown),
-});
+// export const VariationMock = t.type({
+//   variation: t.string,
+//   name:  t.string,
+//   slice_type: t.string,
+//   items: t.array(t.unknown),
+//   primary: t.record(t.string, t.unknown),
+// });
+
+export const VariationMock = t.intersection([
+  t.type({
+    variation: t.string,
+    slice_type: t.string,
+    items: t.array(t.unknown),
+    primary: t.record(t.string, t.unknown),
+  }),
+  t.partial({
+    name: t.string,
+  }),
+]);
 export type VariationMock = t.TypeOf<typeof VariationMock>;
 
 export const SliceMock = t.array(VariationMock);

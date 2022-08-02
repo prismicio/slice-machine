@@ -45,8 +45,9 @@ describe("Create Slices", () => {
         return {mock, librariesState}
       })
     }).then(({ mock, librariesState}) => {
-      // cy.log({mock, librariesState})
-      expect(librariesState["slices/ecommerce"].components["test_slice"].mocks["default-slice"]).to.deep.equal(mock[0])
+      const want = mock[0]
+      const got = librariesState["slices/ecommerce"].components["test_slice"].mocks.default
+      expect(got).to.deep.equal(want)
     })
 
     // edit slice name
