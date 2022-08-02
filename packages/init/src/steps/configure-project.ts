@@ -47,7 +47,7 @@ export async function configureProject(
         repositoryDomainName
       ),
       libraries: [...libs, ...sliceLibPath], // odd case here for staters
-      ...(framework.manuallyAdded ? { framework: framework.value } : {}),
+      framework: framework.value,
       ...(!tracking ? { tracking } : {}),
     };
 

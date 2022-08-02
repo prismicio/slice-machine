@@ -137,6 +137,7 @@ describe("configure-project", () => {
       _latest: "0.0.41",
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       libraries: ["@/slices"],
+      framework: "react",
     });
     expect(patchManifestMock).not.toBeCalled();
 
