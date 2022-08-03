@@ -1,12 +1,9 @@
-import { CONSTS } from "@slicemachine/core";
 import type { Models } from "@slicemachine/core";
 import * as Prismic from "@slicemachine/core/build/prismic";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { FrameworkResult } from "./detect-framework";
 import { InitClient, logs } from "../utils";
 import Tracker from "../utils/tracker";
-
-const defaultSliceMachineVersion = "0.0.41";
 
 export async function configureProject(
   client: InitClient,
@@ -24,11 +21,6 @@ export async function configureProject(
 
   try {
     const manifest = NodeUtils.retrieveManifest(cwd);
-    const packageJson = NodeUtils.retrieveJsonPackage(cwd);
-
-    const sliceMachineVersionInstalled =
-      getTheSliceMachineVersionInstalled(packageJson);
-
     const manifestAlreadyExistWithContent = manifest.exists && manifest.content;
 
     const libs =
@@ -39,9 +31,7 @@ export async function configureProject(
         : ["@/slices"];
 
     const manifestUpdated: Models.Manifest = {
-      ...(manifestAlreadyExistWithContent
-        ? manifest.content
-        : { _latest: sliceMachineVersionInstalled }),
+      ...(manifestAlreadyExistWithContent ? manifest.content : {}),
       apiEndpoint: Prismic.Endpoints.buildRepositoryEndpoint(
         client.apisEndpoints.Wroom,
         repositoryDomainName
@@ -80,39 +70,3 @@ export async function configureProject(
     process.exit(-1);
   }
 }
-
-const getTheSliceMachineVersionInstalled = (
-  packageJson: NodeUtils.FileContent<NodeUtils.JsonPackage>
-) => {
-  const sliceMachinePackageInstalled = Object.entries(
-    packageJson.content?.devDependencies || {}
-  ).find((devDependency) => {
-    if (devDependency[0] === CONSTS.SM_PACKAGE_NAME) {
-      return devDependency;
-    }
-  });
-
-  if (!sliceMachinePackageInstalled) {
-    return defaultSliceMachineVersion;
-  }
-
-  const extractedVersion = extractVersionNumberFromSemver(
-    sliceMachinePackageInstalled[1]
-  );
-
-  if (!extractedVersion) {
-    return defaultSliceMachineVersion;
-  }
-
-  return extractedVersion;
-};
-
-const extractVersionNumberFromSemver = (semver: string) => {
-  const versionFound = semver.match(/\d+\.\d+\.\d+/);
-
-  if (versionFound && versionFound.length > 0) {
-    return versionFound[0];
-  }
-
-  return null;
-};
