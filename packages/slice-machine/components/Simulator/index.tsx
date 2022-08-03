@@ -1,8 +1,8 @@
 import {
   SharedSliceEditor,
-  ThemeProvider,
   defaultSharedSliceContent,
 } from "@prismicio/editor-fields";
+import { ThemeProvider } from "@prismicio/editor-ui";
 import { renderSliceMock } from "@prismicio/mocks";
 import type { SharedSliceContent } from "@prismicio/types-internal/lib/documents/widgets/slices";
 import React, { useEffect, useMemo, useState } from "react";

@@ -10,7 +10,7 @@ import theme from "../src/theme";
 import LoadingPage from "../components/LoadingPage";
 import SliceMachineApp from "../components/App";
 
-import "@prismicio/editor-fields/dist/style.css";
+import "@prismicio/editor-ui/dist/style.css";
 import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";

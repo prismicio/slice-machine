@@ -38,7 +38,8 @@
   "dependencies": {
     "@babel/register": "^7.17.7",
     "@prismicio/api-renderer": "^0.2.1",
-    "@prismicio/editor-fields": "file:../../../editor/packages/editor-fields",
+    "@prismicio/editor-fields": "0.1.0-rc.2",
+    "@prismicio/editor-ui": "0.1.0-rc.1",
     "@prismicio/mocks": "^1.0.1",
     "@prismicio/slice-simulator-com": "^0.4.0",
     "@prismicio/types-internal": "^1.0.1",
