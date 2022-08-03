@@ -296,6 +296,7 @@ export const renamedComponentUI = (
       model.name,
       newName
     ),
+    __status: LibStatus.Modified,
   };
 };
 
