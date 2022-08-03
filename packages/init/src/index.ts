@@ -98,7 +98,7 @@ async function init() {
   // Install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
 
-  setVersion();
+  setVersion(cwd);
 
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd, wasStarter, repository, client.apisEndpoints.Wroom);
