@@ -79,8 +79,11 @@ describe("Create Slices", () => {
       });
 
     // fake push
-    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices/ecommerce", {statusCode: 200, body: {}})
-    cy.get('[data-cy="slice-builder-push-or-save-button"]').click()
+    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices/ecommerce", {
+      statusCode: 200,
+      body: {},
+    });
+    cy.get('[data-cy="slice-builder-push-or-save-button"]').click();
 
     // edit slice name
     cy.get('[data-cy="edit-slice-name"]').click();
@@ -97,7 +100,8 @@ describe("Create Slices", () => {
       `/ ${editedSliceName} / Default`
     );
 
-    cy.get('[data-cy="slice-builder-push-or-save-button"]').should("not.be.disabled")
-
+    cy.get('[data-cy="slice-builder-push-or-save-button"]').should(
+      "not.be.disabled"
+    );
   });
 });

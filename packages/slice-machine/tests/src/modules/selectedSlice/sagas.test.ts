@@ -96,14 +96,12 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next({ status: 200, data: {} }).call(getState);
 
-      saga
-        .next({ status: 200, data: { remoteSlices: [] } })
-        .put(
-          pushSliceCreator.success({
-            component: dummySliceState,
-            remoteSlices: [],
-          })
-        );
+      saga.next({ status: 200, data: { remoteSlices: [] } }).put(
+        pushSliceCreator.success({
+          component: dummySliceState,
+          remoteSlices: [],
+        })
+      );
 
       saga.next().put(
         openToasterCreator({
