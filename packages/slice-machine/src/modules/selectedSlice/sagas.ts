@@ -22,6 +22,7 @@ import {
   saveSliceApiClient,
   pushSliceApiClient,
   renameSlice,
+  getState,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { getRemoteSlice, renameSliceCreator } from "../slices";
@@ -224,7 +225,16 @@ export function* pushSliceSaga({
       error: null,
       status: response.status,
     });
-    yield put(pushSliceCreator.success({ component }));
+
+    const { data: serverState } = (yield call(getState)) as SagaReturnType<
+      typeof getState
+    >;
+    yield put(
+      pushSliceCreator.success({
+        component,
+        remoteSlices: serverState.remoteSlices,
+      })
+    );
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",
