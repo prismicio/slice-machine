@@ -56,7 +56,7 @@ export const TextWithTooltip: React.FC<TextWithTooltipProps> = ({
           border
           borderColor="black"
           place="bottom"
-          max-width="192"
+          effect="solid"
         >
           {text}
         </ReactTooltip>

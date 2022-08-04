@@ -1,5 +1,5 @@
 import ReactTooltip from "react-tooltip";
-import { Badge, Text } from "theme-ui";
+import { Badge, Flex, Text } from "theme-ui";
 import { FrontEndCustomType } from "../../src/modules/availableCustomTypes/types";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
 
@@ -43,10 +43,13 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
     StatusEnumToDisplayNameAndTooltip(CustomTypeStatus.New);
 
   return (
-    <Text data-for={`${customType.local.id}-tooltip`} data-tip>
-      <Badge mr="2" variant={CustomTypeStatus.New}>
-        {statusDisplayName}
-      </Badge>
+    <>
+      <Text data-for={`${customType.local.id}-tooltip`} data-tip>
+        <Badge mr="2" variant={CustomTypeStatus.New}>
+          {statusDisplayName}
+        </Badge>
+      </Text>
+
       <ReactTooltip
         id={`${customType.local.id}-tooltip`}
         type="dark"
@@ -54,9 +57,17 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
         border
         borderColor="black"
         place="bottom"
+        effect="solid"
       >
-        {statusTooltip}
+        <Flex
+          sx={{
+            maxWidth: "196px",
+            textAlign: "center",
+          }}
+        >
+          {statusTooltip}
+        </Flex>
       </ReactTooltip>
-    </Text>
+    </>
   );
 };
