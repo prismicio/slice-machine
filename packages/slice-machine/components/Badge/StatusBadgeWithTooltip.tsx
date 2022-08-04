@@ -63,6 +63,7 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
           sx={{
             maxWidth: "196px",
             textAlign: "center",
+            margin: "0 -13px",
           }}
         >
           {statusTooltip}
