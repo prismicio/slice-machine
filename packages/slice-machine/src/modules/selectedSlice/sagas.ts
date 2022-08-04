@@ -226,15 +226,7 @@ export function* pushSliceSaga({
       status: response.status,
     });
 
-    const { data: serverState } = (yield call(getState)) as SagaReturnType<
-      typeof getState
-    >;
-    yield put(
-      pushSliceCreator.success({
-        component,
-        remoteSlices: serverState.remoteSlices,
-      })
-    );
+    yield put(pushSliceCreator.success({ component }));
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",

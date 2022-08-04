@@ -128,7 +128,6 @@ export const pushSliceCreator = createAsyncAction(
   },
   {
     component: ComponentUI;
-    remoteSlices: ReadonlyArray<SliceSM>;
   }
 >();
 

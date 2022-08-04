@@ -148,7 +148,17 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(pushSliceCreator.success): {
       const newComponentUI = action.payload.component;
-      const newRemoteSlices = action.payload.remoteSlices;
+      const newRemoteSlices = [...state.remoteSlices];
+
+      const remoteSliceIndex = state.remoteSlices.findIndex(
+        ({ id }) => id === newComponentUI.model.id
+      );
+
+      if (remoteSliceIndex !== -1) {
+        newRemoteSlices[remoteSliceIndex] = newComponentUI.model;
+      } else {
+        newRemoteSlices.push(newComponentUI.model);
+      }
 
       const newLibraries = state.libraries.map((library) => {
         if (library.name !== newComponentUI.from) return library;
