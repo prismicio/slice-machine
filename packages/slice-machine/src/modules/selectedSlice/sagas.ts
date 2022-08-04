@@ -224,6 +224,7 @@ export function* pushSliceSaga({
       error: null,
       status: response.status,
     });
+
     yield put(pushSliceCreator.success({ component }));
     yield put(
       openToasterCreator({

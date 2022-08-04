@@ -148,7 +148,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(pushSliceCreator.success): {
       const newComponentUI = action.payload.component;
-
       const newRemoteSlices = [...state.remoteSlices];
 
       const remoteSliceIndex = state.remoteSlices.findIndex(
@@ -173,7 +172,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         };
       });
 
-      return { ...state, libraries: newLibraries };
+      return {
+        ...state,
+        libraries: newLibraries,
+        remoteSlices: newRemoteSlices,
+      };
     }
     case getType(generateSliceScreenshotCreator.success): {
       const { screenshots: screenshotUrls, component } = action.payload;
@@ -296,6 +299,7 @@ export const renamedComponentUI = (
       model.name,
       newName
     ),
+    __status: LibStatus.Modified,
   };
 };
 

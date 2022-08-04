@@ -20,6 +20,7 @@ const SaveButton: React.FC<{
     variant={disabled ? "buttons.disabled" : "buttons.primary"}
     disabled={disabled || loading}
     onClick={onClick}
+    data-cy="slice-builder-push-or-save-button"
   >
     {loading && (
       <>
