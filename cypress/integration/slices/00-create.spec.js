@@ -78,6 +78,10 @@ describe("Create Slices", () => {
         expect(got).to.deep.equal(want);
       });
 
+    // fake push
+    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices/ecommerce", {statusCode: 200, body: {}})
+    cy.get('[data-cy="slice-builder-push-or-save-button"]').click()
+
     // edit slice name
     cy.get('[data-cy="edit-slice-name"]').click();
     cy.get("[data-cy=rename-slice-modal]").should("be.visible");
@@ -92,5 +96,8 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
+
+    cy.get('[data-cy="slice-builder-push-or-save-button"]').should("not.be.disabled")
+
   });
 });
