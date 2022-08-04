@@ -90,7 +90,7 @@ export default function Simulator() {
   const initialApiContent = useMemo(
     () =>
       renderSliceMock(sharedSlice, content) as {
-        slice_id: string;
+        id: string;
         [k: string]: unknown;
       },
     []
@@ -108,7 +108,7 @@ export default function Simulator() {
         if (content === initialContent) return undefined;
         return {
           ...(renderSliceMock(sharedSlice, content) as object),
-          slice_id: initialApiContent.slice_id,
+          id: initialApiContent.id,
         };
       }, 10000),
     [sharedSlice, content, initialContent]

@@ -253,7 +253,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
-            "id": "category_preview_with_image_backgrounds$65ca8dda-a8b5-4914-acd7-e7475c164812",
+            "id": "category_preview_with_image_backgrounds$10d98e7c-098c-4d2c-86e9-38d6fe46673f",
             "slice_type": "category_preview_with_image_backgrounds"
           }
         },
@@ -391,7 +391,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
-            "id": "category_preview_with_scrolling_cards$8b90bf42-55cd-461b-855e-0656bbba4a42",
+            "id": "category_preview_with_scrolling_cards$bd8501e3-1f16-4e47-85a4-efe72ee3ccae",
             "slice_type": "category_preview_with_scrolling_cards"
           }
         },
@@ -511,7 +511,7 @@
               "chart_type": "Pie chart",
               "study_owner": "front"
             },
-            "id": "chart_slice$c6c4e0bf-6fcd-4aac-b98c-314e9bc38be1",
+            "id": "chart_slice$78b1cafc-e614-47a4-a82d-99391d00fda3",
             "slice_type": "chart_slice"
           }
         },
@@ -568,7 +568,7 @@
             "primary": {
               "video": null
             },
-            "id": "external_video_slice$828aa386-cf69-4ba3-9ec3-0a407eefda8b",
+            "id": "external_video_slice$02abf823-21c8-4ded-af0f-c8a7e4669348",
             "slice_type": "external_video_slice"
           }
         },
@@ -736,7 +736,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
-            "id": "hero_banner$d26a74f0-831f-4f74-885f-1cfd90643b51",
+            "id": "hero_banner$1a538d6d-0a8d-45c1-ae60-98f7e4c695c2",
             "slice_type": "hero_banner"
           },
           "withoutCta": {
@@ -767,7 +767,7 @@
                 }
               }
             },
-            "id": "hero_banner$d6d82179-405c-41d8-ba6b-ba4873165a2f",
+            "id": "hero_banner$ac41089c-b2d3-4a97-9669-d31903bc1166",
             "slice_type": "hero_banner"
           }
         },
@@ -938,7 +938,7 @@
                 }
               ]
             },
-            "id": "product_features_with_wide_images$0562ec38-8e1b-4a69-b18e-4f4cfaf78388",
+            "id": "product_features_with_wide_images$fc61f787-986f-4e3f-8841-d10e7f00dde7",
             "slice_type": "product_features_with_wide_images"
           }
         },
@@ -1114,7 +1114,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
-            "id": "product_list_with_cta$3236c508-fc41-4b1f-9973-6888a5c6fa61",
+            "id": "product_list_with_cta$ce544c63-7294-4dd5-bb25-efe49b88e374",
             "slice_type": "product_list_with_cta"
           },
           "customProducts": {
@@ -1151,7 +1151,7 @@
                 }
               ]
             },
-            "id": "product_list_with_cta$2f35a2b5-20b4-4534-9ebb-ea519b4ba87f",
+            "id": "product_list_with_cta$894ad602-2e89-4fee-b02c-f9e61ed68c74",
             "slice_type": "product_list_with_cta"
           }
         },
@@ -1265,7 +1265,7 @@
                 }
               ]
             },
-            "id": "product_overview_with_image_grid$97f06786-1bf7-4a9f-a12b-668436a76338",
+            "id": "product_overview_with_image_grid$d87ba4fe-3a23-4b14-a445-7cc894b67aa8",
             "slice_type": "product_overview_with_image_grid"
           }
         },
@@ -1416,7 +1416,7 @@
                 "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb"
               }
             },
-            "id": "promo_section_fading_background_testimonials$5788f907-f65d-4590-bea8-6828fca15f41",
+            "id": "promo_section_fading_background_testimonials$d363ddca-9900-42a7-871f-9ac6ceda760d",
             "slice_type": "promo_section_fading_background_testimonials"
           }
         },
@@ -1643,7 +1643,7 @@
               },
               "linkLabel": "bound"
             },
-            "id": "promo_section_full_width_with_overlapping_image_tiles$1cf416f7-4896-4fb8-950b-5d8678ab2e6e",
+            "id": "promo_section_full_width_with_overlapping_image_tiles$2c584541-b553-49f0-8aa3-1dc6eae8b9da",
             "slice_type": "promo_section_full_width_with_overlapping_image_tiles"
           }
         },
@@ -1897,7 +1897,7 @@
               "personalisationid": "them",
               "intent": null
             },
-            "id": "promo_section_image_tiles$db36bcac-1c9a-4334-aefc-766ecabf52c8",
+            "id": "promo_section_image_tiles$1c9bbfb4-c4c4-40a9-811c-56b90e385193",
             "slice_type": "promo_section_image_tiles"
           }
         },
@@ -2056,7 +2056,7 @@
               },
               "linkLabel": "cookies"
             },
-            "id": "promo_section_with_background_image$0bf970fe-28db-42d6-bd0a-cc6fa7d2043e",
+            "id": "promo_section_with_background_image$1cf70503-4d7d-4b08-beb0-7afe9b121c0c",
             "slice_type": "promo_section_with_background_image"
           },
           "cameraInsurance": {
@@ -2077,7 +2077,7 @@
                 "last_publication_date": "1970-01-01T01:00:00+0000"
               }
             },
-            "id": "promo_section_with_background_image$b95ffced-189b-4963-90a3-75dd39ced099",
+            "id": "promo_section_with_background_image$6d74cf16-37d2-4ccf-bfee-a8d147810b56",
             "slice_type": "promo_section_with_background_image"
           }
         },
@@ -2243,7 +2243,7 @@
                 }
               ]
             },
-            "id": "blog_section_three_column_cards$d934eb83-0dd7-4b32-9d9b-12a6f62d27cc",
+            "id": "blog_section_three_column_cards$b03b1f74-6ed1-46fa-a798-78b2ab1cda8c",
             "slice_type": "blog_section_three_column_cards"
           }
         },
@@ -2419,7 +2419,7 @@
               "CareerLinkText": "clay",
               "cta": "particular"
             },
-            "id": "contact_section_split_two_tone$72815ae1-7535-43db-85a3-791faddb9a61",
+            "id": "contact_section_split_two_tone$6eea6ac2-5971-4891-8d6b-e1ba5a98201e",
             "slice_type": "contact_section_split_two_tone"
           }
         },
@@ -2539,7 +2539,7 @@
                 }
               ]
             },
-            "id": "content_section_centered$cee9696d-84f6-4c73-9087-e0159c949fa8",
+            "id": "content_section_centered$545a61c4-205b-4314-a625-14d5bb316c8f",
             "slice_type": "content_section_centered"
           }
         },
@@ -2608,7 +2608,7 @@
                 "version": "1.0"
               }
             },
-            "id": "content_section_centered_embed$e6cb8829-a455-43bb-a312-ee8bc9aedbe5",
+            "id": "content_section_centered_embed$d3271261-d1a2-4e3a-9f43-35f8e31290d7",
             "slice_type": "content_section_centered_embed"
           }
         },
@@ -2690,7 +2690,7 @@
                 "url": "https://images.unsplash.com/photo-1586952518485-11b180e92764"
               }
             },
-            "id": "content_section_centered_image$fbb3748e-1052-4516-8cc4-6d129c8e148c",
+            "id": "content_section_centered_image$f0de4eb1-ac1b-41da-926c-76449af1d557",
             "slice_type": "content_section_centered_image"
           }
         },
@@ -2826,7 +2826,7 @@
                 }
               ]
             },
-            "id": "content_section_two_columns_with_image$b1efd64c-e25c-46d2-af28-c075e60d0f39",
+            "id": "content_section_two_columns_with_image$a731c2eb-19e7-4b99-abfc-305d8fe8e9c8",
             "slice_type": "content_section_two_columns_with_image"
           }
         },
@@ -2959,7 +2959,7 @@
                 }
               ]
             },
-            "id": "featured_section_centered22$88829934-30ab-4724-b77d-17faec69910e",
+            "id": "featured_section_centered22$e695d7bd-bd1a-4023-8939-a0aa64b144da",
             "slice_type": "featured_section_centered22"
           }
         },
@@ -3038,7 +3038,7 @@
                 }
               ]
             },
-            "id": "header_section_simple_centered$e2354579-5268-4dce-9826-48296e2bcad3",
+            "id": "header_section_simple_centered$2a39f331-9980-44c2-9af9-8fd8be372aef",
             "slice_type": "header_section_simple_centered"
           }
         },
@@ -3205,7 +3205,7 @@
                 "url": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5"
               }
             },
-            "id": "hero_section_split$ad7af70d-353e-4364-9505-8885f90b345c",
+            "id": "hero_section_split$a09b3f73-5b21-403b-b24e-fc407a12189b",
             "slice_type": "hero_section_split"
           }
         },
@@ -3252,7 +3252,7 @@
               {}
             ],
             "primary": {},
-            "id": "separator$9d793824-2be4-4183-9802-9bc603b331a5",
+            "id": "separator$2d3f6d30-ea7c-415e-b657-055e22c1dce5",
             "slice_type": "separator"
           }
         },
@@ -3402,7 +3402,7 @@
                 "url": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2"
               }
             },
-            "id": "stats_section_split_with_image$150b53c2-d278-44b5-a3c5-fab10aedb82c",
+            "id": "stats_section_split_with_image$19277438-c4b0-4899-99c4-def6af605d7c",
             "slice_type": "stats_section_split_with_image"
           }
         },
@@ -3492,7 +3492,7 @@
             "primary": {
               "section_title": "press"
             },
-            "id": "footer_column$f49cba0a-9d07-43c0-be50-46c78bd8ffb2",
+            "id": "footer_column$12ddd973-f0aa-40f5-923f-2287f16741a6",
             "slice_type": "footer_column"
           }
         },
@@ -3577,7 +3577,7 @@
             "primary": {
               "sectionTitle": "apartment"
             },
-            "id": "menu_sub_tab$94e3f1c9-509f-43ec-b191-38f3af9c58b2",
+            "id": "menu_sub_tab$f7021e84-332e-47c4-970e-5ef42a1a418e",
             "slice_type": "menu_sub_tab"
           }
         },
