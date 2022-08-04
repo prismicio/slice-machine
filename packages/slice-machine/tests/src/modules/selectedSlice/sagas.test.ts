@@ -12,6 +12,7 @@ import {
 } from "../../../../src/modules/selectedSlice/actions";
 import {
   generateSliceScreenshotApiClient,
+  getState,
   pushSliceApiClient,
   saveSliceApiClient,
 } from "../../../../src/apiClient";
@@ -93,9 +94,16 @@ describe("[Selected Slice sagas]", () => {
 
       saga.next().call(pushSliceApiClient, dummySliceState);
 
+      saga.next({ status: 200, data: {} }).call(getState);
+
       saga
-        .next({ status: 200, data: {} })
-        .put(pushSliceCreator.success({ component: dummySliceState }));
+        .next({ status: 200, data: { remoteSlices: [] } })
+        .put(
+          pushSliceCreator.success({
+            component: dummySliceState,
+            remoteSlices: [],
+          })
+        );
 
       saga.next().put(
         openToasterCreator({
