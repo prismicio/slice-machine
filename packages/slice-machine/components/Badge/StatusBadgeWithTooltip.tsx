@@ -28,7 +28,7 @@ const StatusEnumToDisplayNameAndTooltip = (status: CustomTypeStatus) => {
       return {
         statusDisplayName: "Unknown",
         statusTooltip:
-          "Data from the remote repository could not be fetched (unknown error)",
+          "Data from the remote repository could not be fetched (unknown error).",
       };
   }
 };
