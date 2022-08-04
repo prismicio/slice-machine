@@ -15,6 +15,7 @@ type PostAuthResponse = {
 };
 
 export default function handler(
+  wroomEndpoint: string,
   authRequest: Record<string, unknown>
 ): PostAuthResponse {
   return fold(
@@ -23,6 +24,7 @@ export default function handler(
     }),
     (authRequest: AuthRequest) => {
       PrismicSharedConfigManager.setProperties({
+        base: wroomEndpoint,
         cookies: Utils.Cookie.serializeCookies(authRequest.cookies),
       });
       return {};

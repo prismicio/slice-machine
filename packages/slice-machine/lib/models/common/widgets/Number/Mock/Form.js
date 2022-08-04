@@ -2,7 +2,7 @@ import { Box, Text, Label, Input } from "theme-ui";
 import { useFormikContext } from "formik";
 import InputDeleteIcon from "components/InputDeleteIcon";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import { MockConfigKey } from "../../../../../consts";
 
@@ -38,7 +38,7 @@ const Form = () => {
         <Input
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
-          placeholder="1995"
+          placeholder="A mock number for testing (e.g. '1995')"
           type="number"
           onChange={(e) => onUpdate(e.target.value)}
           sx={{
@@ -56,6 +56,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Number;
 
 export const MockConfigForm = Form;

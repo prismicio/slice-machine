@@ -1,6 +1,5 @@
 import type Models from "@slicemachine/core/build/models";
 import { SliceMockConfig } from "./MockConfig";
-import { Screenshots } from "./Screenshots";
 
 export interface SliceBody {
   sliceName: string;
@@ -12,11 +11,6 @@ export interface SliceSaveBody extends SliceBody {
   mockConfig?: SliceMockConfig;
 }
 
-export interface SliceSaveResponse {
-  screenshots: Screenshots;
-  warning: string | null;
-}
-
-export interface SliceCreateResponse extends SliceSaveResponse {
+export interface SliceCreateResponse {
   variationId: string;
 }

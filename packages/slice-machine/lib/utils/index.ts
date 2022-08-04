@@ -75,27 +75,6 @@ export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
   }),
 });
 
-export const createDefaultHandleMockContentFunction = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
-  widget: Widget<any, any>,
-  TYPE_NAME: string,
-  checkFn: ({}, {}) => boolean
-) => {
-  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/ban-types
-  return function handleMockContent(mockContent: {}, config: {}) {
-    if (!checkFn(mockContent, config)) {
-      console.error(
-        `Type check for type "${TYPE_NAME}" failed. Using default mock configuration`
-      );
-      if (widget.handleMockConfig) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return widget.handleMockConfig(null, config);
-      }
-    }
-    return mockContent;
-  };
-};
-
 export const sanitizeSbId = (str: string) => {
   return str
     .toLowerCase()

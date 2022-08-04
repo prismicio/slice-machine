@@ -1,7 +1,7 @@
 import path from "path";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 
-import storybook from "../../../../server/src/api/storybook";
+import storybook from "../../../../lib/storybook";
 
 export function moveStories(
   cwd: string,

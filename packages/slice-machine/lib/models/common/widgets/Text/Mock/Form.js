@@ -2,9 +2,8 @@ import { Box, Text, Label, Input } from "theme-ui";
 import { useFormikContext } from "formik";
 import InputDeleteIcon from "components/InputDeleteIcon";
 
-import { initialValues } from ".";
-
 import { MockConfigKey } from "../../../../../consts";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 const Form = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -38,7 +37,7 @@ const Form = () => {
         <Input
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={contentValue || ""}
-          placeholder="Something well put"
+          placeholder="A text string for testing (e.g. 'Call me Ishmael')"
           onChange={(e) => onUpdate(e.target.value)}
         />
         <InputDeleteIcon onClick={onDelete} />
@@ -47,6 +46,6 @@ const Form = () => {
   );
 };
 
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Text;
 
 export const MockConfigForm = Form;

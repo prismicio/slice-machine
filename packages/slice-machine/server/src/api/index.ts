@@ -8,6 +8,7 @@ const mime = require("mime");
 
 import pushSlice from "./slices/push";
 import saveSlice from "./slices/save";
+import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
 import screenshot from "./screenshots/screenshots";
 import customScreenshot from "./screenshots/custom-screenshots";
@@ -15,6 +16,7 @@ import parseOembed from "./parse-oembed";
 import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
+import renameCustomType from "./custom-types/rename";
 import pushCustomType from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
@@ -24,10 +26,11 @@ import { RequestWithEnv, WithEnv } from "./http/common";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
-} from "@models/common/Screenshots";
-import { SliceBody } from "@models/common/Slice";
-import { SaveCustomTypeBody } from "@models/common/CustomType";
-import { isApiError } from "@models/server/ApiResult";
+} from "../../../lib/models/common/Screenshots";
+import { SliceBody } from "../../../lib/models/common/Slice";
+import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
+import { isApiError } from "../../../lib/models/server/ApiResult";
+import tracking from "./tracking";
 
 router.use(
   "/__preview",
@@ -125,30 +128,30 @@ router.post(
 router.post(
   "/slices/save",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    req: express.Request,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
     const payload = await saveSlice(req);
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.post(
   "/slices/create",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    req: express.Request<undefined, undefined, SliceBody, SliceBody>,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await createSlice(req.body);
+    const payload = await createSlice(req);
 
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
 
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.get(
@@ -173,6 +176,22 @@ router.get(
   }
 );
 
+router.put(
+  "/slices/rename",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await renameSlice(req);
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
+);
+
 /** Custom Type Routing **/
 
 router.post(
@@ -186,6 +205,23 @@ router.post(
     const payload = await saveCustomType(req);
     return res.status(200).json(payload);
   }
+);
+
+router.patch(
+  "/custom-types/rename",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  WithEnv(async function (
+    req: RequestWithEnv,
+    res: express.Response
+  ): Promise<Express.Response> {
+    const payload = await renameCustomType(req);
+
+    if (isApiError(payload)) {
+      return res.status(payload.status).json(payload);
+    }
+
+    return res.status(200).json(payload);
+  })
 );
 
 router.get(
@@ -262,12 +298,22 @@ router.post(
     const body = req.body;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const payload = postAuth(body);
+    const payload = postAuth(req.env.client.apisEndpoints.Wroom, body);
     if (payload.err) {
       console.error(body);
       return res.status(500).json(body);
     }
     return res.status(200).json({});
+  })
+);
+
+router.post(
+  "/s",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises,
+  WithEnv(async (req, res): Promise<Express.Response> => {
+    return tracking(req)
+      .catch(() => null)
+      .then(() => res.json());
   })
 );
 

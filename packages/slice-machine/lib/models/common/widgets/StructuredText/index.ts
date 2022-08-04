@@ -3,7 +3,6 @@ import Form, { FormFields } from "./Form";
 
 import { MdTextFields } from "react-icons/md";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { createValidationSchema } from "../../../../forms";
@@ -31,13 +30,21 @@ const Meta = {
   description: "A rich text field with formatting options",
 };
 
+const ManualFields = {
+  labels: { yupType: "array", validate: {} },
+};
+
 const schema = yup.object().shape({
   type: yup
     .string()
     .matches(/^StructuredText$/, { excludeEmptyString: true })
     .required(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-  config: createValidationSchema(removeProp(FormFields, "id")),
+  config: createValidationSchema(
+    removeProp(
+      { ...(FormFields as Record<string, unknown>), ...ManualFields },
+      "id"
+    )
+  ),
 });
 
 export const StructuredTextWidget: Widget<RichText, typeof schema> = {
@@ -50,8 +57,6 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
       single: optionValues.join(","),
     },
   }),
-  handleMockConfig,
-  handleMockContent,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   Meta,

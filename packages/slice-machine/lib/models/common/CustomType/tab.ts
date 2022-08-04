@@ -5,7 +5,7 @@ import {
   TabField,
 } from "@slicemachine/core/build/models/CustomType/Tab";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
-import { SliceZone } from "@lib/models/common/CustomType/sliceZone";
+import { SliceZone } from "./sliceZone";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 
 interface OrganisedFields {

@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { BsToggleOn } from "react-icons/bs";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 /** {
@@ -38,14 +37,16 @@ const FormFields = {
     "False Placeholder",
     { required: false },
     null,
-    "false"
+    "false",
+    "Value the content creator sees (Output as 'false' in the API)."
   ),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   placeholder_true: Input(
     "True Placeholder",
     { required: false },
     null,
-    "true"
+    "true",
+    "Value the content creator sees (Output as 'true' in the API)"
   ),
   default_value: CheckBox("Default to true"),
 };
@@ -61,8 +62,6 @@ const schema = yup.object().shape({
 
 export const BooleanWidget: Widget<BooleanField, typeof schema> = {
   TYPE_NAME: WidgetTypes.BooleanField,
-  handleMockContent,
-  handleMockConfig,
   MockConfigForm,
   create: (label: string) => ({
     type: WidgetTypes.BooleanField,

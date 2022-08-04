@@ -11,6 +11,7 @@ import {
   detectFramework,
   installLib,
   sendStarterData,
+  setVersion,
 } from "./steps";
 import {
   findArgument,
@@ -19,6 +20,7 @@ import {
   getApplicationMode,
   InitClient,
 } from "./utils";
+import { Models } from "@slicemachine/core";
 
 async function init() {
   const cwd = findArgument(process.argv, "cwd") || process.cwd();
@@ -96,6 +98,8 @@ async function init() {
   // Install the required dependencies in the project.
   await installRequiredDependencies(cwd, frameworkResult.value, wasStarter);
 
+  setVersion(cwd);
+
   // Ask the user to run slice-machine.
   displayFinalMessage(cwd, wasStarter, repository, client.apisEndpoints.Wroom);
 }
@@ -104,7 +108,11 @@ init()
   .then(() => {
     process.exit(0);
   })
-  .catch((error) => {
+  .catch(async (error) => {
     if (error instanceof Error) logs.writeError(error.message);
     else console.error(error);
+    await Tracker.get().trackInitEndFail(
+      Models.Frameworks.none,
+      "Failed to initialise Slice Machine."
+    );
   });

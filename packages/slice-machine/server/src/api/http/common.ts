@@ -1,7 +1,7 @@
 import express from "express";
 import getEnv from "../services/getEnv";
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import ServerError from "@lib/models/server/ServerError";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import ServerError from "../../../../lib/models/server/ServerError";
 
 export interface RequestWithEnv extends express.Request {
   env: BackendEnvironment;

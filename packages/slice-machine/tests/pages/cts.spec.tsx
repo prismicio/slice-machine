@@ -18,11 +18,9 @@ import CreateCustomTypeBuilder from "../../pages/cts/[ct]";
 import singletonRouter from "next/router";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
-import { AnalyticsBrowser } from "@segment/analytics-next";
-import Tracker from "../../src/tracker";
-import LibrariesProvider from "../../src/models/libraries/context";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
+import { rest, RestContext } from "msw";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
@@ -37,21 +35,10 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe("Custom Type Builder", () => {
-  const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
-
   beforeAll(async () => {
     const div = document.createElement("div");
     div.setAttribute("id", "__next");
     document.body.appendChild(div);
-
-    const fakeAnalytics = jest
-      .spyOn(AnalyticsBrowser, "standalone")
-      .mockResolvedValue({
-        track: fakeTracker,
-      } as any);
-
-    await Tracker.get().initialize("foo", "repoName");
-    expect(fakeAnalytics).toHaveBeenCalled();
   });
 
   afterEach(() => {
@@ -62,7 +49,103 @@ describe("Custom Type Builder", () => {
     mockRouter.setCurrentUrl("/");
   });
 
+  const libraries = [
+    {
+      path: "./slices",
+      isLocal: true,
+      name: "slices",
+      meta: {
+        isNodeModule: false,
+        isDownloaded: false,
+        isManual: true,
+      },
+      components: [
+        {
+          from: "slices",
+          href: "slices",
+          pathToSlice: "./slices",
+          fileName: "index",
+          extension: "js",
+          screenshotPaths: {},
+          mock: [
+            {
+              variation: "default",
+              name: "Default",
+              slice_type: "test_slice",
+              items: [],
+              primary: {
+                title: [
+                  {
+                    type: "heading1",
+                    text: "Cultivate granular e-services",
+                    spans: [],
+                  },
+                ],
+                description: [
+                  {
+                    type: "paragraph",
+                    text: "Anim in commodo exercitation qui. Elit cillum officia mollit dolore. Commodo voluptate sit est proident ea proident dolor esse ad.",
+                    spans: [],
+                  },
+                ],
+              },
+            },
+          ],
+          model: {
+            id: "test_slice",
+            type: "SharedSlice",
+            name: "TestSlice",
+            description: "TestSlice",
+            variations: [
+              {
+                id: "default",
+                name: "Default",
+                docURL: "...",
+                version: "sktwi1xtmkfgx8626",
+                description: "TestSlice",
+                primary: [
+                  {
+                    key: "title",
+                    value: {
+                      type: "StructuredText",
+                      config: {
+                        single: "heading1",
+                        label: "Title",
+                        placeholder: "This is where it all begins...",
+                      },
+                    },
+                  },
+                  {
+                    key: "description",
+                    value: {
+                      type: "StructuredText",
+                      config: {
+                        single: "paragraph",
+                        label: "Description",
+                        placeholder: "A nice description of your feature",
+                      },
+                    },
+                  },
+                ],
+                items: [],
+                imageUrl:
+                  "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
+              },
+            ],
+          },
+          screenshotUrls: {},
+          __status: "NEW_SLICE",
+        },
+      ],
+    },
+  ];
+
   test("should send a tracking event when the user adds a field", async () => {
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
+    server.use(rest.post("/api/s", trackingSpy));
+
     const customTypeId = "a-page";
 
     singletonRouter.push({
@@ -73,7 +156,7 @@ describe("Custom Type Builder", () => {
     const App = render(<CreateCustomTypeBuilder />, {
       preloadedState: {
         environment: {
-          framework: "next",
+          framework: Frameworks.next,
           mockConfig: { _cts: { [customTypeId]: {} } },
         },
         availableCustomTypes: {
@@ -120,14 +203,21 @@ describe("Custom Type Builder", () => {
           mockConfig: {},
           initialMockConfig: {},
         },
+        slices: {
+          remoteSlices: [],
+          libraries: libraries,
+        },
       },
     });
 
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -135,14 +225,24 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveFieldButton);
     });
 
-    expect(fakeTracker).toHaveBeenCalledWith(
-      "SliceMachine Custom Type Field Added",
-      { id: "uid", name: "a-page", type: "UID", zone: "static" },
-      { context: { groupId: { Repository: "repoName" } } }
-    );
+    expect(trackingSpy).toHaveBeenCalled();
+    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Custom Type Field Added",
+      props: {
+        id: "new_field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
+    });
   });
 
   test("should send a tracking event when the user adds a slice", async () => {
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
+    server.use(rest.post("/api/s", trackingSpy));
+
     const customTypeId = "a-page";
 
     singletonRouter.push({
@@ -157,159 +257,59 @@ describe("Custom Type Builder", () => {
       mockConfig: { _cts: { [customTypeId]: {} } },
     };
 
-    const libraries = [
-      {
-        path: "./slices",
-        isLocal: true,
-        name: "slices",
-        meta: {
-          isNodeModule: false,
-          isDownloaded: false,
-          isManual: true,
-        },
-        components: [
-          {
-            from: "slices",
-            href: "slices",
-            pathToSlice: "./slices",
-            fileName: "index",
-            extension: "js",
-            screenshotPaths: {},
-            mock: [
-              {
-                variation: "default",
-                name: "Default",
-                slice_type: "test_slice",
-                items: [],
-                primary: {
-                  title: [
-                    {
-                      type: "heading1",
-                      text: "Cultivate granular e-services",
-                      spans: [],
-                    },
-                  ],
-                  description: [
-                    {
-                      type: "paragraph",
-                      text: "Anim in commodo exercitation qui. Elit cillum officia mollit dolore. Commodo voluptate sit est proident ea proident dolor esse ad.",
-                      spans: [],
-                    },
-                  ],
+    const App = render(<CreateCustomTypeBuilder />, {
+      preloadedState: {
+        environment,
+        availableCustomTypes: {
+          [customTypeId]: {
+            local: {
+              id: customTypeId,
+              label: customTypeId,
+              repeatable: true,
+              status: true,
+              tabs: [
+                {
+                  key: "Main",
+                  value: [],
                 },
+              ],
+            },
+          },
+        },
+        selectedCustomType: {
+          model: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
               },
             ],
-            model: {
-              id: "test_slice",
-              type: "SharedSlice",
-              name: "TestSlice",
-              description: "TestSlice",
-              variations: [
-                {
-                  id: "default",
-                  name: "Default",
-                  docURL: "...",
-                  version: "sktwi1xtmkfgx8626",
-                  description: "TestSlice",
-                  primary: [
-                    {
-                      key: "title",
-                      value: {
-                        type: "StructuredText",
-                        config: {
-                          single: "heading1",
-                          label: "Title",
-                          placeholder: "This is where it all begins...",
-                        },
-                      },
-                    },
-                    {
-                      key: "description",
-                      value: {
-                        type: "StructuredText",
-                        config: {
-                          single: "paragraph",
-                          label: "Description",
-                          placeholder: "A nice description of your feature",
-                        },
-                      },
-                    },
-                  ],
-                  items: [],
-                  imageUrl:
-                    "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format",
-                },
-              ],
-            },
-            screenshotUrls: {},
-            __status: "NEW_SLICE",
           },
-        ],
-      },
-    ];
-
-    const App = render(
-      <LibrariesProvider
-        env={environment}
-        libraries={libraries}
-        remoteSlices={[]}
-      >
-        <CreateCustomTypeBuilder />
-      </LibrariesProvider>,
-      {
-        preloadedState: {
-          environment,
-          availableCustomTypes: {
-            [customTypeId]: {
-              local: {
-                id: customTypeId,
-                label: customTypeId,
-                repeatable: true,
-                status: true,
-                tabs: [
-                  {
-                    key: "Main",
-                    value: [],
-                  },
-                ],
+          initialModel: {
+            id: "a-page",
+            label: "a-page",
+            repeatable: true,
+            status: true,
+            tabs: [
+              {
+                key: "Main",
+                value: [],
               },
-            },
+            ],
           },
-          selectedCustomType: {
-            model: {
-              id: "a-page",
-              label: "a-page",
-              repeatable: true,
-              status: true,
-              tabs: [
-                {
-                  key: "Main",
-                  value: [],
-                },
-              ],
-            },
-            initialModel: {
-              id: "a-page",
-              label: "a-page",
-              repeatable: true,
-              status: true,
-              tabs: [
-                {
-                  key: "Main",
-                  value: [],
-                },
-              ],
-            },
-            mockConfig: {},
-            initialMockConfig: {},
-          },
-          slices: {
-            libraries,
-            remoteSlices: [],
-          },
+          mockConfig: {},
+          initialMockConfig: {},
         },
-      }
-    );
+        slices: {
+          libraries,
+          remoteSlices: [],
+        },
+      },
+    });
 
     const addButton = screen.getByTestId("empty-zone-add-a-new-slice");
     await act(async () => {
@@ -330,14 +330,19 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveButton);
     });
 
-    expect(fakeTracker).toHaveBeenCalledWith(
-      "SliceMachine Slicezone Updated",
-      { customTypeId },
-      { context: { groupId: { Repository: "repoName" } } }
-    );
+    expect(trackingSpy).toHaveBeenCalled();
+    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Slicezone Updated",
+      props: { customTypeId },
+    });
   });
 
   test("it should send a tracking event when the user saves a custom-type", async () => {
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
+    server.use(rest.post("/api/s", trackingSpy));
+
     const customTypeId = "a-page";
 
     singletonRouter.push({
@@ -395,14 +400,21 @@ describe("Custom Type Builder", () => {
           mockConfig: {},
           initialMockConfig: {},
         },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
+        },
       },
     });
 
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -410,11 +422,16 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveFieldButton);
     });
 
-    expect(fakeTracker).toHaveBeenCalledWith(
-      "SliceMachine Custom Type Field Added",
-      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
-      { context: { groupId: { Repository: "repoName" } } }
-    );
+    expect(trackingSpy).toHaveBeenCalled();
+    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Custom Type Field Added",
+      props: {
+        id: "new_field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
+    });
 
     const saveCustomType = screen.getByText("Save to File System");
 
@@ -422,20 +439,23 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveCustomType);
     });
 
-    await waitFor(() => {
-      expect(fakeTracker).toHaveBeenLastCalledWith(
-        "SliceMachine Custom Type Saved",
-        { type: "repeatable", id: customTypeId, name: customTypeId },
-        { context: { groupId: { Repository: "repoName" } } }
-      );
-    });
+    await waitFor(() =>
+      expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+        name: "SliceMachine Custom Type Saved",
+        props: { type: "repeatable", id: customTypeId, name: customTypeId },
+      })
+    );
   });
 
   test("if saving fails a it should not send the save event", async () => {
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
     server.use(
       rest.post("/api/custom-types/save", (_, res, ctx) => {
         return res(ctx.status(500), ctx.json({}));
-      })
+      }),
+      rest.post("/api/s", trackingSpy)
     );
     const customTypeId = "a-page";
 
@@ -494,14 +514,21 @@ describe("Custom Type Builder", () => {
           mockConfig: {},
           initialMockConfig: {},
         },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
+        },
       },
     });
 
     const addButton = screen.getByTestId("empty-zone-add-new-field");
     fireEvent.click(addButton);
 
-    const uid = screen.getByText("UID");
-    fireEvent.click(uid);
+    const richText = screen.getByText("Rich Text");
+    fireEvent.click(richText);
+
+    const nameInput = screen.getByLabelText("label-input");
+    fireEvent.change(nameInput, { target: { value: "New Field" } });
 
     const saveFieldButton = screen.getByText("Add");
 
@@ -509,11 +536,15 @@ describe("Custom Type Builder", () => {
       fireEvent.click(saveFieldButton);
     });
 
-    expect(fakeTracker).toHaveBeenCalledWith(
-      "SliceMachine Custom Type Field Added",
-      { id: "uid", name: customTypeId, type: "UID", zone: "static" },
-      { context: { groupId: { Repository: "repoName" } } }
-    );
+    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Custom Type Field Added",
+      props: {
+        id: "new_field",
+        name: "a-page",
+        type: "StructuredText",
+        zone: "static",
+      },
+    });
 
     const saveCustomType = screen.getByText("Save to File System");
 
@@ -523,17 +554,22 @@ describe("Custom Type Builder", () => {
 
     await new Promise((r) => setTimeout(r, 1000));
 
-    expect(fakeTracker).toHaveBeenCalledTimes(1);
+    expect(trackingSpy).toBeCalledTimes(1);
   });
 
   test("when the user pushes a custom-type it should send a tracking event", async () => {
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
+
     const customTypeId = "a-page";
 
     server.use(
       rest.get("/api/custom-types/push", (req, res, ctx) => {
         expect(req.url.searchParams.get("id")).toEqual(customTypeId);
         return res(ctx.json({}));
-      })
+      }),
+      rest.post("/api/s", trackingSpy)
     );
 
     singletonRouter.push({
@@ -590,6 +626,10 @@ describe("Custom Type Builder", () => {
           },
           mockConfig: {},
           initialMockConfig: {},
+        },
+        slices: {
+          libraries: libraries,
+          remoteSlices: [],
         },
       },
     });
@@ -600,11 +640,10 @@ describe("Custom Type Builder", () => {
     });
 
     await waitFor(() => {
-      expect(fakeTracker).toHaveBeenCalledWith(
-        "SliceMachine Custom Type Pushed",
-        { id: customTypeId, name: customTypeId, type: "repeatable" },
-        { context: { groupId: { Repository: "repoName" } } }
-      );
+      expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+        name: "SliceMachine Custom Type Pushed",
+        props: { id: customTypeId, name: customTypeId, type: "repeatable" },
+      });
     });
   });
 });

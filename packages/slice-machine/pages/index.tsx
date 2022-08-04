@@ -125,6 +125,7 @@ const CustomTypes: React.FunctionComponent = () => {
             onCreateNew={openCreateCustomTypeModal}
             isLoading={isCreatingCustomType}
             buttonText={"Create one"}
+            videoPublicIdUrl="placeholders/What_are_Custom_Types_swrc44"
             documentationComponent={
               <>
                 Custom Types are models for your documents. They are the place

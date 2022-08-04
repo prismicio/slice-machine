@@ -7,8 +7,8 @@ import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 import { InputBox } from "./components/InputBox";
 import { RESERVED_SLICE_NAME } from "@lib/consts";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { SliceSM } from "@slicemachine/core/build/models";
+import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { API_ID_REGEX } from "@lib/consts";
 
 const formId = "create-new-slice";
@@ -18,7 +18,7 @@ type CreateSliceModalProps = {
   isCreatingSlice: boolean;
   onSubmit: ({ sliceName, from }: { sliceName: string; from: string }) => void;
   close: () => void;
-  libraries: ReadonlyArray<LibraryUI>;
+  libraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
 };
 
@@ -41,7 +41,10 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
       formId={formId}
       close={close}
       buttonLabel="Create"
-      onSubmit={(values: FormValues) => onSubmit(values)}
+      onSubmit={(values: FormValues) => {
+        onSubmit(values);
+        close();
+      }}
       initialValues={{
         sliceName: "",
         from: libraries[0].name,
@@ -82,7 +85,7 @@ const CreateSliceModal: React.FunctionComponent<CreateSliceModalProps> = ({
           <InputBox
             name="sliceName"
             label="Slice Name"
-            placeholder="MySlice"
+            placeholder="Pascalised Slice API ID (e.g. TextBlock)"
             error={touched.sliceName ? errors.sliceName : undefined}
             dataCy="slice-name-input"
           />

@@ -22,7 +22,6 @@ import sliceBuilderArray from "@lib/models/common/widgets/sliceBuilderArray";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
 
 import ListItem from "@components/ListItem";
-import { createFriendlyFieldNameWithId } from "@src/utils/fieldNameCreator";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 /* eslint-disable */
@@ -59,10 +58,15 @@ const CustomListItem = ({
     setSelectMode(false);
   };
 
+  /* eslint-disable */
   const getFieldMockConfig = ({ apiId }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    return CustomTypeMockConfig.getFieldMockConfig(mockConfig, apiId);
+    return CustomTypeMockConfig.getGroupFieldMockConfig(
+      mockConfig,
+      groupItem.key,
+      apiId
+    );
   };
+  /* eslint-enable */
 
   const onCancelNewField = () => {
     setNewFieldData(null);
@@ -72,47 +76,48 @@ const CustomListItem = ({
     setEditModalData({ isOpen: false });
   };
 
-  const onSaveNewField = ({ id, widgetTypeName }) => {
+  const onSaveNewField = ({ id, label, widgetTypeName }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const widget = Widgets[widgetTypeName];
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const friendlyName = createFriendlyFieldNameWithId(id);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const newWidget = widget.create(friendlyName);
+    const newWidget = widget.create(label);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
     addFieldIntoGroup(tabId, groupItem.key, id, newWidget);
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value, mockValue }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
     }
     if (mockValue) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       updateGroupFieldMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
         mockConfig,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
         groupItem.key,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         previousKey,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         newKey,
         mockValue
       );
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       deleteGroupFieldMockConfig(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
         mockConfig,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
         groupItem.key,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         previousKey
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
     replaceFieldIntoGroup(tabId, groupItem.key, previousKey, newKey, value);
   };
 
@@ -123,17 +128,21 @@ const CustomListItem = ({
     }
 
     reorderFieldIntoGroup(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       tabId,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       groupItem.key,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       result.source.index,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       result.destination.index
     );
   };
 
   const onDeleteItem = (key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
     deleteGroupFieldMockConfig(mockConfig, groupItem.key, key);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     deleteFieldIntoGroup(tabId, groupItem.key, key);
   };
 

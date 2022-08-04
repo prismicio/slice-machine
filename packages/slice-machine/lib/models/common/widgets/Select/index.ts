@@ -6,7 +6,6 @@ import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 
 import FormFields from "./FormFields";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -27,7 +26,7 @@ import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestab
 const Meta = {
   icon: MdDns,
   title: "Select",
-  description: "A select field with formatting options",
+  description: "A dropdown field of options for content creators.",
 };
 
 const schema = yup.object().shape({
@@ -42,8 +41,6 @@ const schema = yup.object().shape({
 export const SelectWidget: Widget<Select, typeof schema> = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
-  handleMockConfig,
-  handleMockContent,
   MockConfigForm,
   create: (label: string) => ({
     type: WidgetTypes.Select,

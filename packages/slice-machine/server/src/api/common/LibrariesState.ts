@@ -1,5 +1,5 @@
 import type Models from "@slicemachine/core/build/models";
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import probe from "probe-image-size";
 import { Slices } from "@slicemachine/core/build/models/Slice";
 import { handleLibraryPath } from "@slicemachine/core/build/libraries";
@@ -10,10 +10,15 @@ const DEFAULT_IMAGE_DIMENSIONS = {
   height: undefined,
 };
 
-export function generateState(env: BackendEnvironment): void {
-  const libraries = (env.manifest.libraries || [])
-    .map((lib) => handleLibraryPath(env.cwd, lib))
-    .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>;
+export function generateState(
+  env: BackendEnvironment,
+  libs?: readonly Models.Library<Models.Component>[]
+): void {
+  const libraries =
+    libs ||
+    ((env.manifest.libraries || [])
+      .map((lib) => handleLibraryPath(env.cwd, lib))
+      .filter(Boolean) as ReadonlyArray<Models.Library<Models.Component>>);
 
   const state = formatLibraries(libraries);
   Files.write(LibrariesStatePath(env.cwd), state);

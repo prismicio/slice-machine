@@ -13,6 +13,7 @@ import { availableCustomTypesReducer } from "@src/modules/availableCustomTypes";
 import { selectedCustomTypeReducer } from "@src/modules/selectedCustomType";
 import { slicesReducer } from "@src/modules/slices";
 import { routerReducer } from "connected-next-router";
+import { selectedSliceReducer } from "@src/modules/selectedSlice/reducer";
 
 /**
  * Creates the main reducer
@@ -27,6 +28,7 @@ const createReducer = (): Reducer =>
     availableCustomTypes: availableCustomTypesReducer,
     selectedCustomType: selectedCustomTypeReducer,
     slices: slicesReducer,
+    selectedSlice: selectedSliceReducer,
     router: routerReducer,
   });
 

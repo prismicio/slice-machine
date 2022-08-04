@@ -5,6 +5,7 @@ import {
   CustomTypeSM,
   TabField,
 } from "@slicemachine/core/build/models/CustomType";
+import { renameCustomTypeCreator } from "../availableCustomTypes";
 
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
@@ -27,7 +28,8 @@ export type SelectedCustomTypeActions =
   | ActionType<typeof replaceFieldIntoGroupCreator>
   | ActionType<typeof reorderFieldIntoGroupCreator>
   | ActionType<typeof deleteFieldIntoGroupCreator>
-  | ActionType<typeof deleteSharedSliceCreator>;
+  | ActionType<typeof deleteSharedSliceCreator>
+  | ActionType<typeof renameCustomTypeCreator>;
 
 export const initCustomTypeStoreCreator = createAction("CUSTOM_TYPE/INIT")<{
   model: CustomTypeSM;

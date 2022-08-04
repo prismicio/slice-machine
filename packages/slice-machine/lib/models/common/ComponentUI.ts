@@ -6,6 +6,7 @@ import {
 } from "@slicemachine/core/build/models";
 import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
+import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 
 export const createScreenshotUrl = (
   baseUrl: string,
@@ -61,6 +62,7 @@ export interface ScreenshotUI extends Screenshot {
 export interface ComponentUI extends Component {
   __status: LibStatus;
   screenshotUrls?: Record<VariationSM["id"], ScreenshotUI>;
+  mockConfig: CustomTypeMockConfig;
 }
 
 export const ComponentUI = {
@@ -76,11 +78,40 @@ export const ComponentUI = {
         env.baseUrl
       ),
       __status: computeStatus(component, remoteSlices),
+      mockConfig: SliceMockConfig.getSliceMockConfig(
+        env.mockConfig,
+        component.from,
+        component.model.name
+      ),
+    };
+  },
+  variation(
+    component: ComponentUI,
+    variationId?: string
+  ): VariationSM | undefined {
+    if (component.model.variations.length) {
+      if (variationId)
+        return component.model.variations.find((v) => v.id === variationId);
+      return component.model.variations[0];
+    }
+  },
+
+  updateVariation(component: ComponentUI, variationId: string) {
+    return (mutateCallbackFn: (v: VariationSM) => VariationSM): ComponentUI => {
+      const variations = component.model.variations.map((v) => {
+        if (v.id === variationId) return mutateCallbackFn(v);
+        else return v;
+      });
+
+      return {
+        ...component,
+        model: { ...component.model, variations },
+      };
     };
   },
 };
 
-function computeStatus(
+export function computeStatus(
   component: Component,
   remoteSlices: ReadonlyArray<SliceSM>
 ): LibStatus {
@@ -92,6 +123,8 @@ function computeStatus(
     slice.variations
   );
 
-  if (sameVersion) return LibStatus.Synced;
+  const sameName = component.model.name === slice.name;
+
+  if (sameVersion && sameName) return LibStatus.Synced;
   else return LibStatus.Modified;
 }

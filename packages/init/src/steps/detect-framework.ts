@@ -2,6 +2,7 @@ import { Models } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import * as inquirer from "inquirer";
 import { logs } from "../utils";
+import Tracker from "../utils/tracker";
 
 export type FrameworkResult = {
   value: Models.Frameworks;
@@ -80,7 +81,10 @@ export async function detectFramework(cwd: string): Promise<FrameworkResult> {
     } else {
       console.log(failMessage);
     }
-
+    await Tracker.get().trackInitEndFail(
+      Models.Frameworks.none,
+      "Framework not detected"
+    );
     process.exit(1);
   }
 }

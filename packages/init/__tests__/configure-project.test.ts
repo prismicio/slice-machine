@@ -22,6 +22,18 @@ const failFn = jest.fn<SpinnerReturnType, string[]>();
 
 const client = new InitClient(ApplicationMode.PROD, null, "theBatman");
 
+const trackingEventOutput = {
+  anonymousId: "uuid",
+  event: "SliceMachine Init End",
+  properties: {
+    framework: "react",
+    repo: "repoName",
+    result: "error",
+    error: "Failed to configure Slice Machine",
+  },
+  context: { groupId: { Repository: "repoName" } },
+};
+
 jest.mock("../src/utils/logs", () => ({
   spinner: () => ({
     start: startFn,
@@ -40,6 +52,10 @@ jest.mock("analytics-node", () => {
     };
   });
 });
+
+jest.mock("uuid", () => ({
+  v4: () => "uuid",
+}));
 
 jest.mock("@slicemachine/core/build/node-utils", () => {
   // fragile test problem... If I change the core now I have to manage the mocks, we could mock the fs or calls to fs and not have to deal with this issue?
@@ -118,7 +134,6 @@ describe("configure-project", () => {
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toHaveBeenCalledWith("./", {
-      _latest: "0.0.41",
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       libraries: ["@/slices"],
     });
@@ -207,7 +222,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker.mock.calls[0][0]).toEqual(trackingEventOutput);
   });
 
   test("it should fail if create or update manifest throws", async () => {
@@ -233,7 +248,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker.mock.calls[0][0]).toEqual(trackingEventOutput);
   });
 
   test("it should fail if add SM script throws", async () => {
@@ -260,7 +275,7 @@ describe("configure-project", () => {
 
     expect(successFn).not.toHaveBeenCalled();
     expect(failFn).toHaveBeenCalled();
-    expect(MockTracker).not.toHaveBeenCalled();
+    expect(MockTracker.mock.calls[0][0]).toEqual(trackingEventOutput);
   });
 
   test("it should create a slice folder if it doesnt exists.", async () => {

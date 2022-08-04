@@ -1,15 +1,15 @@
 import getEnv from "../services/getEnv";
-import { getSlices } from "./";
+import { getSlices } from ".";
 
 import { onError } from "../common/error";
 import { purge } from "../services/uploadScreenshotClient";
-import { CustomPaths } from "@lib/models/paths";
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import type { SliceBody } from "@models/common/Slice";
+import { CustomPaths } from "../../../../lib/models/paths";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import type { SliceBody } from "../../../../lib/models/common/Slice";
 import { uploadScreenshots, createOrUpdate } from "../services/sliceService";
-import { ApiResult } from "@lib/models/server/ApiResult";
+import { ApiResult } from "../../../../lib/models/server/ApiResult";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
-import * as IO from "../io";
+import * as IO from "../../../../lib/io";
 import { ClientError } from "@slicemachine/client";
 
 export async function pushSlice(
@@ -21,7 +21,7 @@ export async function pushSlice(
 
   try {
     const smModel: SliceSM = IO.Slice.readSlice(modelPath);
-    const { err } = await purge(env, slices, sliceName);
+    const { err } = await purge(env, slices, smModel.id);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
     if (err) return err;
 
@@ -45,13 +45,13 @@ export async function pushSlice(
       variations,
     };
 
-    return createOrUpdate(slices, sliceName, modelWithImageUrl, env.client)
+    return createOrUpdate(slices, modelWithImageUrl, env.client)
       .then(() => {
         console.log("[slice/push] done!");
         return {};
       })
       .catch((error: ClientError) => {
-        const message = `[slice/push] Slice ${sliceName}: Unexpected error: ${error.message}`;
+        const message = `[slice/push] Slice ${modelWithImageUrl.name}: Unexpected error: ${error.message}`;
 
         console.log(message);
         return onError(

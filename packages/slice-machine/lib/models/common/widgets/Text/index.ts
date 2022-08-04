@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { MdTitle } from "react-icons/md";
 import { MockConfigForm } from "./Mock/Form";
-import { handleMockConfig, handleMockContent } from "./Mock";
 /**
 * {
      "type": "Text",
@@ -34,7 +33,7 @@ const schema = yup.object().shape({
 const Meta = {
   icon: MdTitle,
   title: "Key Text",
-  description: "Text content",
+  description: "A simple text string field",
 };
 
 export const TextWidget: Widget<Text, typeof schema> = {
@@ -46,8 +45,6 @@ export const TextWidget: Widget<Text, typeof schema> = {
     },
   }),
   MockConfigForm,
-  handleMockConfig,
-  handleMockContent,
   Meta,
   schema,
   TYPE_NAME: WidgetTypes.Text,

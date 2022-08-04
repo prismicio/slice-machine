@@ -14,15 +14,14 @@ import {
   afterAll,
 } from "@jest/globals";
 import React from "react";
-import singletonRouter from "next/router";
 import { render, fireEvent, act, screen, waitFor } from "../test-utils";
 import mockRouter from "next-router-mock";
-import { AnalyticsBrowser } from "@segment/analytics-next";
-import Tracker from "../../src/tracker";
-import LibrariesProvider from "../../src/models/libraries/context";
+import { CreateSlice } from "../../src/tracking/types";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
+import { rest, RestContext } from "msw";
 import SlicesIndex from "../../pages/slices";
+import * as ApiCalls from "@src/apiClient";
+import { AxiosResponse } from "axios";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
@@ -43,21 +42,10 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe("slices", () => {
-  const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
-
   beforeAll(async () => {
     const div = document.createElement("div");
     div.setAttribute("id", "__next");
     document.body.appendChild(div);
-
-    const fakeAnalytics = jest
-      .spyOn(AnalyticsBrowser, "standalone")
-      .mockResolvedValue({
-        track: fakeTracker,
-      } as any);
-
-    await Tracker.get().initialize("foo", "repoName");
-    expect(fakeAnalytics).toHaveBeenCalled();
   });
 
   afterEach(() => {
@@ -164,24 +152,32 @@ describe("slices", () => {
         ],
       },
     ];
-    const App = render(
-      <LibrariesProvider
-        env={environment}
-        libraries={libraries}
-        remoteSlices={[]}
-      >
-        <SlicesIndex />
-      </LibrariesProvider>,
-      {
-        preloadedState: {
-          environment,
-          slices: {
-            libraries,
-            remoteSlices: [],
-          },
+
+    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
+      return res(ctx.json({}));
+    });
+
+    server.use(rest.post<CreateSlice>("/api/s", trackingSpy));
+
+    jest.spyOn(ApiCalls, "getState").mockResolvedValue({
+      data: {
+        env: environment,
+        libraries: libraries,
+        customTypes: [],
+        remoteCustomTypes: [],
+        remoteSlices: [],
+      },
+    } as AxiosResponse);
+
+    const App = render(<SlicesIndex />, {
+      preloadedState: {
+        environment,
+        slices: {
+          libraries,
+          remoteSlices: [],
         },
-      }
-    );
+      },
+    });
 
     const createOneButton = document.querySelector('[data-cy="create-slice"]');
     await act(async () => {
@@ -198,16 +194,11 @@ describe("slices", () => {
       fireEvent.click(submitButton);
     });
 
-    // very hacky, done because of bug where calling Router.router.push causes issues with re-renders and context
-    delete window.location;
-    window.location = {} as Location;
+    await waitFor(() => expect(trackingSpy).toHaveBeenCalled());
 
-    await waitFor(() => {
-      expect(fakeTracker).toHaveBeenCalledWith(
-        "SliceMachine Slice Created",
-        { id: "FooBar", name: "FooBar", library: "slices" },
-        { context: { groupId: { Repository: "repoName" } } }
-      );
+    expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Slice Created",
+      props: { id: "FooBar", name: "FooBar", library: "slices" },
     });
   });
 });

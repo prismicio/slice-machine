@@ -2,6 +2,8 @@ import {
   createCustomTypeSaga,
   createCustomTypeCreator,
   availableCustomTypesReducer,
+  renameCustomTypeCreator,
+  renameCustomTypeSaga,
 } from "@src/modules/availableCustomTypes";
 import { testSaga } from "redux-saga-test-plan";
 import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
@@ -9,7 +11,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import "@testing-library/jest-dom";
 
 import { dummyServerState } from "../__mocks__/serverState";
-import { saveCustomType } from "@src/apiClient";
+import { renameCustomType, saveCustomType } from "@src/apiClient";
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { push } from "connected-next-router";
 import { modalCloseCreator } from "@src/modules/modal";
@@ -123,6 +125,102 @@ describe("[Available Custom types module]", () => {
       );
 
       saga.next().call(saveCustomType, customTypeCreated, {});
+      saga.throw(new Error()).put(
+        openToasterCreator({
+          message: "Internal Error: Custom type not saved",
+          type: ToasterType.ERROR,
+        })
+      );
+      saga.next().isDone();
+    });
+  });
+
+  it("should update the custom types state given CUSTOM_TYPES/RENAME.RESPONSE action", () => {
+    const customType1: CustomTypeSM = {
+      id: "id_1",
+      label: "label_1",
+      repeatable: false,
+      status: true,
+      tabs: [],
+    };
+    const customType2: CustomTypeSM = {
+      id: "id_2",
+      label: "label_2",
+      repeatable: false,
+      status: true,
+      tabs: [],
+    };
+    const updatedCustomType2: CustomTypeSM = {
+      id: "id_2",
+      label: "label NEW",
+      repeatable: false,
+      status: true,
+      tabs: [],
+    };
+
+    const existingCustomTypes: AvailableCustomTypesStoreType = {
+      id_1: { local: customType1 },
+      id_2: { local: customType2, remote: customType2 },
+    };
+
+    const action = renameCustomTypeCreator.success({
+      customTypeId: "id_2",
+      newCustomTypeName: "label NEW",
+    });
+
+    expect(availableCustomTypesReducer(existingCustomTypes, action)).toEqual({
+      id_1: { local: customType1 },
+      id_2: { local: updatedCustomType2, remote: customType2 },
+    });
+  });
+
+  describe("[renameCustomTypeSaga]", () => {
+    it("should call the api and dispatch the good actions on success", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        newCustomTypeName: "newName",
+      };
+      const saga = testSaga(
+        renameCustomTypeSaga,
+        renameCustomTypeCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(
+          renameCustomType,
+          actionPayload.customTypeId,
+          actionPayload.newCustomTypeName
+        );
+      saga.next().put(renameCustomTypeCreator.success(actionPayload));
+      saga
+        .next()
+        .put(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+      saga.next().put(
+        openToasterCreator({
+          message: "Custom type updated",
+          type: ToasterType.SUCCESS,
+        })
+      );
+      saga.next().isDone();
+    });
+    it("should call the api and dispatch the good actions on failure", () => {
+      const actionPayload = {
+        customTypeId: "id",
+        newCustomTypeName: "newName",
+      };
+      const saga = testSaga(
+        renameCustomTypeSaga,
+        renameCustomTypeCreator.request(actionPayload)
+      );
+
+      saga
+        .next()
+        .call(
+          renameCustomType,
+          actionPayload.customTypeId,
+          actionPayload.newCustomTypeName
+        );
       saga.throw(new Error()).put(
         openToasterCreator({
           message: "Internal Error: Custom type not saved",

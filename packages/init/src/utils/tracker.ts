@@ -6,7 +6,7 @@ export enum EventType {
   DownloadLibrary = "SliceMachine Download Library",
   InitStart = "SliceMachine Init Start",
   InitIdentify = "SliceMachine Init Identify",
-  InitDone = "SliceMachine Init Done",
+  InitEnd = "SliceMachine Init End",
 }
 
 type SegmentIdentifier = { userId: string } | { anonymousId: string };
@@ -111,11 +111,25 @@ export class InitTracker {
   }
 
   trackInitStart(repoDomain: string | undefined): Promise<void> {
+    if (repoDomain) this.setRepository(repoDomain);
     return this._trackEvent(EventType.InitStart, { repo: repoDomain });
   }
 
-  trackInitDone(framework: Models.Frameworks): Promise<void> {
-    return this._trackEvent(EventType.InitDone, { framework });
+  trackInitEndSuccess(framework: Models.Frameworks): Promise<void> {
+    return this._trackEvent(EventType.InitEnd, {
+      framework,
+      repo: this.#repository,
+      result: "success",
+    });
+  }
+
+  trackInitEndFail(framework: Models.Frameworks, error: string): Promise<void> {
+    return this._trackEvent(EventType.InitEnd, {
+      framework,
+      repo: this.#repository,
+      result: "error",
+      error,
+    });
   }
 }
 

@@ -1,6 +1,7 @@
 import type { Models } from "@slicemachine/core";
 import * as logs from "./logs";
 import { InitClient } from "./client";
+import Tracker from "../utils/tracker";
 
 export function createRepository(
   client: InitClient,
@@ -20,8 +21,12 @@ export function createRepository(
 
       return domain;
     })
-    .catch((error: Error) => {
+    .catch(async (error: Error) => {
       spinner.fail(`Error creating repository ${domain}`);
+      await Tracker.get().trackInitEndFail(
+        framework,
+        "Failed to create repository"
+      );
       if (error.message) {
         logs.writeError(error.message);
       }

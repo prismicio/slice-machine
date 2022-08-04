@@ -1,6 +1,5 @@
 import Modal from "react-modal";
 import SliceMachineModal from "@components/SliceMachineModal";
-import deepMerge from "deepmerge";
 
 import { Box, Close, Flex, Button, useThemeUI } from "theme-ui";
 
@@ -20,6 +19,7 @@ import WidgetFormField from "./Field";
 
 import { findWidgetByConfigOrType } from "../../utils";
 import { removeProp } from "@lib/utils";
+import { deepMerge } from "@lib/utils/obj";
 
 if (process.env.NODE_ENV !== "test") {
   Modal.setAppElement("#__next");
@@ -164,12 +164,8 @@ const EditModal = ({ close, data, fields, onSave, getFieldMockConfig }) => {
             return null;
           })();
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const updatedValue = {
-            ...initialModelValues,
-            ...value,
-          };
-
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
+          const updatedValue = { ...initialModelValues, ...value };
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           onSave({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
