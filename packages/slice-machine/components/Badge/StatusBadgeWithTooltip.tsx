@@ -1,4 +1,3 @@
-import React from "react";
 import ReactTooltip from "react-tooltip";
 import { Badge, Text } from "theme-ui";
 import { FrontEndCustomType } from "../../src/modules/availableCustomTypes/types";
@@ -33,10 +32,12 @@ const StatusEnumToDisplayNameAndTooltip = (status: CustomTypeStatus) => {
   }
 };
 
-export const StatusBadgeWithTooltip = ({
-  customType,
-}: {
+interface StatusBadgeWithTooltipProps {
   customType: FrontEndCustomType;
+}
+
+export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
+  customType,
 }) => {
   const { statusDisplayName, statusTooltip } =
     StatusEnumToDisplayNameAndTooltip(CustomTypeStatus.New);
