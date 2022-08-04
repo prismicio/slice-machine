@@ -7,7 +7,7 @@ import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
 import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
+import { VariationSM } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
