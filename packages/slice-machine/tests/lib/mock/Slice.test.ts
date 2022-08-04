@@ -1,7 +1,8 @@
 import "@testing-library/jest-dom";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM, SliceMock } from "@slicemachine/core/build/models";
+import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
 
 jest.mock("lorem-ipsum", () => {
@@ -79,6 +80,8 @@ describe("MockSlice", () => {
     result[0].primary.title[0].text = "RANDOM_VALUE";
 
     expect(result).toEqual(wanted);
+    expect(isRight(SliceMock.decode(result))).toBeTruthy();
+    // needs to be readable by core/mocks/models SliceMock
   });
 
   test("when updating a mock with config", () => {
@@ -167,5 +170,6 @@ describe("MockSlice", () => {
     result[0].primary.title[0].text = "RANDOM_VALUE";
 
     expect(result).toEqual(wanted);
+    expect(isRight(SliceMock.decode(result))).toBeTruthy();
   });
 });

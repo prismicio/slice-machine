@@ -1,6 +1,6 @@
 {
   "name": "@slicemachine/client",
-  "version": "1.1.12-alpha.5",
+  "version": "1.1.12-alpha.8",
   "main": "./build/index.js",
   "engines": {
     "node": ">=12"
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@prismicio/types-internal": "^1.0.1",
-    "@slicemachine/core": "1.1.12-alpha.4",
+    "@slicemachine/core": "1.1.12-alpha.7",
     "axios": "^0.27.2",
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",

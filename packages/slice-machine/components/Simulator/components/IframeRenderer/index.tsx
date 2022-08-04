@@ -26,7 +26,7 @@ function useSimulatorClient(): readonly [
         setClient(clientRef.current);
         const reconnect = async () => {
           setClient(undefined);
-          await clientRef.current?.connect(true);
+          await clientRef.current?.connect({}, true);
           setClient(clientRef.current);
         };
         observerRef.current = new MutationObserver((mutations) => {
@@ -84,7 +84,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       if (apiContent === undefined) {
         await client.setSliceZoneFromSliceIDs(sliceView);
       } else {
-        await client.setSliceZone([apiContent]);
+        await client.setSliceZone([apiContent as any]);
       }
     };
     updateSliceZone()

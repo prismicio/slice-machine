@@ -24,7 +24,7 @@
     "bump:alpha": "lerna version prerelease --no-changelog --exact --yes --no-private",
     "bump:production": "lerna version --conventional-graduate --exact --no-private",
     "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
-    "publish:production": "NEXT_PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
+    "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
   },
   "devDependencies": {
     "husky": "^7.0.2",

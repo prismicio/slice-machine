@@ -16,6 +16,22 @@ import {
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
+import { setupServer } from "msw/node";
+import { rest, RestContext } from "msw";
+
+const server = setupServer();
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: any, res: any, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("/api/s", spy));
+
 const customTypeModel: CustomTypeSM = {
   id: "about",
   label: "My Cool About Page",
@@ -50,6 +66,8 @@ const customTypeModel: CustomTypeSM = {
 describe("[Selected Custom type sagas]", () => {
   describe("[saveCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions on success", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
       const saga = testSaga(saveCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
@@ -79,6 +97,9 @@ describe("[Selected Custom type sagas]", () => {
   });
   describe("[pushCustomTypeSaga]", () => {
     it("should call the api and dispatch the good actions on success", () => {
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker); // warnings happen without this
+
       const saga = testSaga(pushCustomTypeSaga);
 
       saga.next().select(selectCurrentCustomType);
@@ -92,6 +113,9 @@ describe("[Selected Custom type sagas]", () => {
         })
       );
       saga.next().isDone();
+
+      // expect(fakeTracker).toHaveBeenCalled()
+      // expect(fakeTracker.mock.calls[0][0].body).toEqual({})
     });
     it("should open a error toaster on internal error", () => {
       const saga = testSaga(saveCustomTypeSaga).next();

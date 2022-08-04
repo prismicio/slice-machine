@@ -24,11 +24,8 @@ import "src/css/intercom.css";
 import "highlight.js/styles/atom-one-dark.css";
 
 import ServerState from "../lib/models/server/ServerState";
-import {
-  getIsTrackingAvailable,
-  getRepoName,
-} from "../src/modules/environment";
-import Tracker from "../src/tracker";
+import { getIsTrackingAvailable } from "../src/modules/environment";
+import Tracker from "../src/tracking/client";
 
 import Head from "next/head";
 import { AppInitialProps } from "next/dist/shared/lib/utils";
@@ -88,14 +85,8 @@ function MyApp({ Component, pageProps }: AppContext & AppInitialProps) {
 
     const state = store.getState();
     const tracking = getIsTrackingAvailable(state);
-    const repoName = getRepoName(state);
 
-    Tracker.get().initialize(
-      process.env.NEXT_PUBLIC_SM_UI_SEGMENT_KEY ||
-        "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
-      repoName,
-      tracking
-    );
+    Tracker.get().initialize(tracking);
 
     setSMStore({ store, persistor });
   }, [serverState]);

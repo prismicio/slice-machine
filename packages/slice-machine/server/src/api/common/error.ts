@@ -1,4 +1,4 @@
-import type { ApiError } from "@models/server/ApiResult";
+import type { ApiError } from "../../../../lib/models/server/ApiResult";
 
 export const onError = (
   message = "Unspecified error occurred.",

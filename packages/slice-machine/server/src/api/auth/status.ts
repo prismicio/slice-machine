@@ -1,4 +1,4 @@
-import { CheckAuthStatusResponse } from "@models/common/Auth";
+import { CheckAuthStatusResponse } from "../../../../lib/models/common/Auth";
 import { RequestWithEnv } from "../http/common";
 import { getAndSetUserProfile } from "../services/getAndSetUserProfile";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";

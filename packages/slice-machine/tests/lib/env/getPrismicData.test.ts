@@ -1,4 +1,4 @@
-import getPrismicData from "../../../server/src/api/services/getPrismicData";
+import getPrismicData from "../../../lib/env/getPrismicData";
 import { vol } from "memfs";
 import os from "os";
 import fs from "fs";

@@ -14,7 +14,7 @@ import { Slices } from "@slicemachine/core/build/models/Slice";
 import Header from "./components/Header";
 import { Size } from "./components/ScreenSizes";
 import IframeRenderer from "./components/IframeRenderer";
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import { useSelector } from "react-redux";
 import {
   getCurrentVersion,
