@@ -4,16 +4,16 @@ const path = require("path");
 const axios = require("axios");
 
 axios
-  .post("https://prismic.io/authentication/signin", {
-    email: "lorenzo.sintini@gmail.com",
-    password: "123456",
+  .post("https://wroom.io/authentication/signin", {
+    email: "cypress@prismic.io",
+    password: "AhK9yohhie9ahyohn3w",
   })
   .then((response) => {
     const cookies = response.headers["set-cookie"].join("; ");
     fs.promises.writeFile(
       path.join(os.homedir(), ".prismic"),
       JSON.stringify({
-        base: "https://prismic.io/",
+        base: "https://wroom.io/",
         cookies: cookies,
       })
     );
