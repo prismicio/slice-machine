@@ -12,6 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const fs = require("fs");
+const os = require("os");
+const path = require("path");
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -23,6 +25,10 @@ module.exports = (on, config) => {
       return fs.promises
         .rm(file, { recursive: true, force: true })
         .then(() => null);
+    },
+    log(message) {
+      console.log(message);
+      return null;
     },
   });
 };

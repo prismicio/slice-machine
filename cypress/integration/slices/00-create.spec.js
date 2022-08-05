@@ -3,51 +3,24 @@ import path from "path";
 describe("Create Slices", () => {
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
-  const lib = "slices--ecommerce"; // name of the first lib of the next project.
-  const pathToLib = path.join("e2e-projects", "next", "slices", "ecommerce");
-  const generatedPath = path.join(
-    "e2e-projects",
-    "next",
-    ".slicemachine",
-    "assets",
-    "slices",
-    "ecommerce"
-  ); // path to th library
-  const pathToLibraryState = path.join(
-    "e2e-projects",
-    "next",
-    ".slicemachine",
-    "libraries-state.json"
-  );
-
-  const pathToMock = (slice) =>
-    path.join(
-      "e2e-projects",
-      "next",
-      ".slicemachine",
-      "assets",
-      "slices",
-      "ecommerce",
-      slice,
-      "mocks.json"
-    );
+  const lib = "slices";
+  const path = "e2e-cypress-next-app/slices";
+  const generatedPath = "e2e-cypress-next-app/.slicemachine/assets/slices";
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", path.join(pathToLib, sliceName));
-    cy.task("rmrf", path.join(pathToLib, editedSliceName));
-    cy.task("rmrf", path.join(generatedPath, sliceName));
-    cy.task("rmrf", path.join(generatedPath, editedSliceName));
+    cy.exec("rm -r -f e2e-cypress-next-app/slices/*");
+    cy.exec("rm -r -f e2e-cypress-next-app/.slicemachine/*");
   });
 
   it("A user can create and rename a slice", () => {
     cy.setupSliceMachineUserContext();
     cy.visit(`/slices`);
-    cy.waitUntil(() => cy.get("[data-cy=create-slice]"));
+    cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
 
     // create slice
-    cy.get("[data-cy=create-slice]").click();
+    cy.get("[data-cy=empty-state-main-button]").click();
     cy.get("[data-cy=create-slice-modal]").should("be.visible");
 
     cy.get("input[data-cy=slice-name-input]").type(sliceName);

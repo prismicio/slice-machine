@@ -10,7 +10,7 @@ Thumbs.db
 e2e-projects/**/.next
 
 cypress/videos/**
-cypress/screeshots/**
+cypress/screenshots/**
 
 # IDE Specific
 nbproject
@@ -42,3 +42,5 @@ my-test-project
 .vercel
 
 .env
+
+e2e-cypress-next-app

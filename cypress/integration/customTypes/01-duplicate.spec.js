@@ -5,17 +5,20 @@ describe("Duplicate custom types", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", `e2e-projects/next/customtypes/${id}`);
+    cy.exec("rm -r -f e2e-cypress-next-app/customtypes/*");
+    cy.exec("rm -r -f e2e-cypress-next-app/.slicemachine/*");
     cy.setupSliceMachineUserContext();
     cy.visit("/");
     // loading spinner
-    cy.waitUntil(() => cy.get("[data-cy=create-ct]")).then(() => true);
-    cy.get("[data-cy=create-ct]").click();
+    cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]")).then(
+      () => true
+    );
+    cy.get("[data-cy=empty-state-main-button]").click();
     cy.get("[data-cy=create-ct-modal]").should("be.visible");
 
     cy.get("input[data-cy=ct-name-input]").type(name);
     cy.get("[data-cy=create-ct-modal]").submit();
-    cy.location("pathname", { timeout: 5000 }).should("eq", `/cts/${id}`);
+    cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
   });
 
   it("when using a label that is already in use it should warn the user", () => {
