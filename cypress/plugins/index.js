@@ -26,9 +26,15 @@ module.exports = (on, config) => {
         .rm(file, { recursive: true, force: true })
         .then(() => null);
     },
-    log(message) {
-      console.log(message);
-      return null;
+    clearDir(dir) {
+      if (fs.existsSync(dir)) {
+        return fs.promises
+          .rmdir(dir, { recursive: true })
+          .then(() => fs.promises.mkdir(dir))
+          .then(() => null);
+      } else {
+        return null;
+      }
     },
   });
 };

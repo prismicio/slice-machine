@@ -1,17 +1,16 @@
-import path from "path";
-
 describe("Create Slices", () => {
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
   const lib = "slices";
-  const path = "e2e-cypress-next-app/slices";
-  const generatedPath = "e2e-cypress-next-app/.slicemachine/assets/slices";
+  const pathToMock = `e2e-cypress-next-app/.slicemachine/assets/slices/${sliceName}/mocks.json`;
+  const pathToLibraryState =
+    "e2e-cypress-next-app/.slicemachine/libraries-state.json";
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.exec("rm -r -f e2e-cypress-next-app/slices/*");
-    cy.exec("rm -r -f e2e-cypress-next-app/.slicemachine/*");
+    cy.task("clearDir", "e2e-cypress-next-app/slices");
+    cy.task("clearDir", "e2e-cypress-next-app/.slicemachine");
   });
 
   it("A user can create and rename a slice", () => {
@@ -35,7 +34,7 @@ describe("Create Slices", () => {
       `/${lib}/${sliceName}/default`
     );
 
-    cy.readFile(pathToMock(sliceName), "utf-8")
+    cy.readFile(pathToMock, "utf-8")
       .then((mock) => {
         return cy
           .readFile(pathToLibraryState, "utf-8")
@@ -46,13 +45,12 @@ describe("Create Slices", () => {
       .then(({ mock, librariesState }) => {
         const want = mock[0];
         const got =
-          librariesState["slices/ecommerce"].components["test_slice"].mocks
-            .default;
+          librariesState["slices"].components["test_slice"].mocks.default;
         expect(got).to.deep.equal(want);
       });
 
     // fake push
-    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices/ecommerce", {
+    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices", {
       statusCode: 200,
       body: {},
     });

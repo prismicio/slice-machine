@@ -5,8 +5,8 @@ describe("Duplicate custom types", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.exec("rm -r -f e2e-cypress-next-app/customtypes/*");
-    cy.exec("rm -r -f e2e-cypress-next-app/.slicemachine/*");
+    cy.task("clearDir", "e2e-cypress-next-app/customtypes");
+    cy.task("clearDir", "e2e-cypress-next-app/.slicemachine");
     cy.setupSliceMachineUserContext();
     cy.visit("/");
     // loading spinner

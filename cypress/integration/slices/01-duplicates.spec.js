@@ -4,8 +4,8 @@ describe("Duplicate Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.exec("rm -r -f e2e-cypress-next-app/slices/*");
-    cy.exec("rm -r -f e2e-cypress-next-app/.slicemachine/*");
+    cy.task("clearDir", "e2e-cypress-next-app/slices");
+    cy.task("clearDir", "e2e-cypress-next-app/.slicemachine");
   });
 
   it("A user can not create two slices with the same name", () => {
