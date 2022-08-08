@@ -17,6 +17,7 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
+import { CustomTypeStatus } from "../selectedCustomType/types";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -105,6 +106,8 @@ export const availableCustomTypesReducer: Reducer<
       };
     }
     case getType(createCustomTypeCreator.success): {
+      action.payload.newCustomType.__status = CustomTypeStatus.New;
+
       const normalizedNewCustomType = normalizeFrontendCustomType(
         action.payload.newCustomType
       );

@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { SelectedCustomTypeStoreType } from "./types";
+import { CustomTypeStatus, SelectedCustomTypeStoreType } from "./types";
 import { getType } from "typesafe-actions";
 import {
   createTabCreator,
@@ -37,6 +37,7 @@ import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
 import { renameCustomTypeCreator } from "../availableCustomTypes";
+import { getCustomTypeStatus } from "../../../server/src/api/custom-types/getCustomTypeStatus";
 
 // Reducer
 export const selectedCustomTypeReducer: Reducer<
@@ -58,7 +59,14 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        initialModel: state.model,
+        model: {
+          ...state.model,
+          __status: getCustomTypeStatus(state.model, state.remoteModel),
+        },
+        initialModel: {
+          ...state.model,
+          __status: getCustomTypeStatus(state.model, state.remoteModel),
+        },
         initialMockConfig: state.mockConfig,
       };
     }
@@ -67,7 +75,14 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        initialModel: state.model,
+        model: {
+          ...state.model,
+          __status: CustomTypeStatus.Synced,
+        },
+        initialModel: {
+          ...state.model,
+          __status: CustomTypeStatus.Synced,
+        },
         remoteModel: state.model,
       };
     case getType(createTabCreator):
