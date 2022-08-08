@@ -3,7 +3,7 @@ import { Badge, Flex, Text } from "theme-ui";
 import { FrontEndCustomType } from "../../src/modules/availableCustomTypes/types";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
 
-const StatusEnumToDisplayNameAndTooltip = (status: CustomTypeStatus) => {
+const StatusEnumToDisplayNameAndTooltip = (status?: string) => {
   switch (status) {
     case CustomTypeStatus.New:
       return {
@@ -29,6 +29,12 @@ const StatusEnumToDisplayNameAndTooltip = (status: CustomTypeStatus) => {
         statusTooltip:
           "Data from the remote repository could not be fetched (unknown error).",
       };
+    default:
+      return {
+        statusDisplayName: "Unknown",
+        statusTooltip:
+          "Data from the remote repository could not be fetched (unknown error).",
+      };
   }
 };
 
@@ -40,16 +46,15 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
   customType,
 }) => {
   const { statusDisplayName, statusTooltip } =
-    StatusEnumToDisplayNameAndTooltip(CustomTypeStatus.New);
+    StatusEnumToDisplayNameAndTooltip(customType.local.__status);
 
   return (
     <>
       <Text data-for={`${customType.local.id}-tooltip`} data-tip>
-        <Badge mr="2" variant={CustomTypeStatus.New}>
+        <Badge mr="2" variant={customType.local.__status}>
           {statusDisplayName}
         </Badge>
       </Text>
-
       <ReactTooltip
         id={`${customType.local.id}-tooltip`}
         type="dark"
