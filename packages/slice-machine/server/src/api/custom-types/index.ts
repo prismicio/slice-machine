@@ -5,7 +5,8 @@ import {
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { ClientError } from "@slicemachine/client";
-import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
+import { getLocalCustomTypes } from "@lib/utils/customTypes";
+import { getCustomTypeStatus } from "./getCustomTypeStatus";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
@@ -30,9 +31,22 @@ export default async function handler(env: BackendEnvironment): Promise<{
   const { cwd } = env;
 
   const { remoteCustomTypes } = await fetchRemoteCustomTypes(env);
+  const localCustomTypes = getLocalCustomTypes(cwd);
 
+  const localCustomTypesWithStatus = localCustomTypes.map(
+    (customType: CustomTypeSM) => {
+      const remoteCustomType = remoteCustomTypes.find(
+        (rct) => rct.id == customType.id
+      );
+
+      return {
+        ...customType,
+        __status: getCustomTypeStatus(customType, remoteCustomType),
+      };
+    }
+  );
   return {
-    customTypes: getLocalCustomTypes(cwd),
+    customTypes: localCustomTypesWithStatus,
     remoteCustomTypes,
   };
 }
