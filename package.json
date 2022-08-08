@@ -31,8 +31,7 @@
     "husky": "^7.0.2",
     "lerna": "^3.22.1",
     "lint-staged": "^11.1.2",
-    "prettier": "^2.4.1",
-    "slice-machine-ui": "^0.4.2"
+    "prettier": "^2.4.1"
   },
   "dependencies": {
     "cypress": "^9.5.4",

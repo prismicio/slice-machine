@@ -1,10 +1,22 @@
+import path from "path";
+
 describe("Create Slices", () => {
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
   const lib = "slices";
-  const pathToMock = `e2e-cypress-next-app/.slicemachine/assets/slices/${sliceName}/mocks.json`;
-  const pathToLibraryState =
-    "e2e-cypress-next-app/.slicemachine/libraries-state.json";
+  const pathToMock = path.join(
+    "e2e-cypress-next-app",
+    ".slicemachine",
+    "assets",
+    "slices",
+    sliceName,
+    "mocks.json"
+  );
+  const pathToLibraryState = path.join(
+    "e2e-cypress-next-app",
+    ".slicemachine",
+    "libraries-state.json"
+  );
 
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
