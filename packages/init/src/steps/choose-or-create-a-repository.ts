@@ -130,7 +130,7 @@ export async function chooseOrCreateARepository(
   if (isPreSelectedValid) return preSelectedRepository;
 
   if (isE2e) {
-    const domainName = `CYPRESS-REPO-${uuidv4()}`;
+    const domainName = `cypress-repo-${uuidv4()}`;
     await createRepository(client, domainName, framework);
     return domainName;
   }
