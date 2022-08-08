@@ -30,12 +30,18 @@ export const NonClickableCardWrapper = ({ children }: { children: any }) => {
   return <div style={{ cursor: "not-allowed" }}>{children}</div>;
 };
 
+export const NoCardWrapper = ({ children }: { children: any }) => {
+  return <div>{children}</div>;
+};
+
 export enum WrapperType {
   clickable = "clickable",
   nonClickable = "nonClickable",
+  changesPage = "changesPage",
 }
 
 export const WrapperByType = {
   [WrapperType.clickable]: LinkCardWrapper,
   [WrapperType.nonClickable]: NonClickableCardWrapper,
+  [WrapperType.changesPage]: NoCardWrapper,
 };
