@@ -4,10 +4,13 @@ const path = require("path");
 const axios = require("axios");
 
 axios
-  .post("https://wroom.io/authentication/signin", {
-    email: process.env.EMAIL,
-    password: process.env.PASSWORD,
-  })
+  .post(
+    `https://${process.env.CYPRESS_URL || "prismic.io"}/authentication/signin`,
+    {
+      email: process.env.EMAIL,
+      password: process.env.PASSWORD,
+    }
+  )
   .then((response) => {
     const cookies = response.headers["set-cookie"].join("; ");
     fs.promises.writeFile(

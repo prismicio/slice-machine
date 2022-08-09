@@ -51,4 +51,4 @@ jobs:
         env:
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: npm i && npm run test:e2e
+        run: npm i && CYPRESS_URL="wroom.io" npm run test:e2e
