@@ -347,7 +347,16 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        model: { ...state.model, label: newName },
+        model: {
+          ...state.model,
+          label: newName,
+          __status: CustomTypeStatus.Modified,
+        },
+        initialModel: {
+          ...state.initialModel,
+          label: newName,
+          __status: CustomTypeStatus.Modified,
+        },
       };
     }
     default:

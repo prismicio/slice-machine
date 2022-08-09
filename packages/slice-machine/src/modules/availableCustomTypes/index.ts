@@ -118,10 +118,13 @@ export const availableCustomTypesReducer: Reducer<
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
-
       const newCustomType = {
         ...state[id],
-        local: { ...state[id].local, label: newName },
+        local: {
+          ...state[id].local,
+          label: newName,
+          __status: CustomTypeStatus.Modified,
+        },
       };
 
       return {
