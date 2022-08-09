@@ -13,7 +13,7 @@ import { ThemeUIStyleObject } from "@theme-ui/css";
 import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
-import { WrapperType, WrapperByType } from "./wrappers";
+import { WrapperType, WrapperByType, LinkCardWrapper } from "./wrappers";
 import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
 
 const StateBadgeText = {
@@ -114,6 +114,50 @@ const SliceThumbnail = ({
   );
 };
 
+const SliceDescription = ({
+  displayStatus,
+  CustomStatus,
+  slice,
+  wrapperType,
+}: {
+  displayStatus?: boolean;
+  CustomStatus?: React.FC<{ slice: ComponentUI }>;
+  slice: ComponentUI;
+  wrapperType: WrapperType;
+}) => {
+  const extraSx: ThemeUIStyleObject =
+    wrapperType === WrapperType.changesPage
+      ? {
+          justifyContent: "space-between",
+          flex: "1",
+          flexDirection: "row-reverse",
+        }
+      : {};
+
+  return (
+    <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
+      <Flex sx={{ alignItems: "center", ...extraSx }}>
+        {CustomStatus ? (
+          <CustomStatus slice={slice} />
+        ) : (
+          <Fragment>
+            {displayStatus && slice.__status ? (
+              <StatusBadge libStatus={slice.__status} />
+            ) : null}
+          </Fragment>
+        )}
+        <TextWithTooltip text={slice.model.name} as="h6" />
+      </Flex>
+      {wrapperType !== WrapperType.changesPage && (
+        <SliceVariations
+          variations={slice.model.variations}
+          hideVariations={false}
+        />
+      )}
+    </Flex>
+  );
+};
+
 export const SharedSlice = {
   render({
     bordered,
@@ -128,9 +172,7 @@ export const SharedSlice = {
   }: {
     bordered?: boolean;
     displayStatus?: boolean;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    CustomStatus?: any;
+    CustomStatus?: React.FC<{ slice: ComponentUI }>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Wrapper?: any /* ? */;
     slice: ComponentUI;
@@ -164,31 +206,23 @@ export const SharedSlice = {
             screenshotUrl={screenshotUrl}
             heightInPx={thumbnailHeightPx}
           />
-          <Flex
-            mt={3}
-            sx={{ alignItems: "center", justifyContent: "space-between" }}
-          >
-            <Flex
-              sx={{
-                alignItems: "center",
-              }}
-            >
-              {CustomStatus ? (
-                <CustomStatus slice={slice} />
-              ) : (
-                <Fragment>
-                  {displayStatus && slice.__status ? (
-                    <StatusBadge libStatus={slice.__status} />
-                  ) : null}
-                </Fragment>
-              )}
-              <TextWithTooltip text={slice.model.name} as="h6" />
-            </Flex>
-            <SliceVariations
-              variations={slice.model.variations}
-              hideVariations={false}
+          {wrapperType === WrapperType.changesPage ? (
+            <LinkCardWrapper link={link}>
+              <SliceDescription
+                slice={slice}
+                CustomStatus={CustomStatus}
+                displayStatus={displayStatus}
+                wrapperType={wrapperType}
+              />
+            </LinkCardWrapper>
+          ) : (
+            <SliceDescription
+              slice={slice}
+              CustomStatus={CustomStatus}
+              displayStatus={displayStatus}
+              wrapperType={wrapperType}
             />
-          </Flex>
+          )}
         </Themecard>
       </CardWrapper>
     );

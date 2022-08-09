@@ -2,12 +2,16 @@ import React from "react";
 import { Box, Button, Flex, Spinner, Text, useThemeUI } from "theme-ui";
 import Container from "components/Container";
 import Header from "components/Header";
-import { MdModeEdit } from "react-icons/md";
+import { MdModeEdit, MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { getLibraries, getRemoteSlices } from "../src/modules/slices";
+import Grid from "components/Grid";
+import { getUnsyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import SliceMachineIconButton from "../components/SliceMachineIconButton";
-import { TextWithGreyBackground } from "../components/Text/TextWithGreyBackground";
+import { ChangesSectionHeader } from "../components/ChangesSectionHeader";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { SharedSlice } from "@lib/models/ui/Slice";
+import { WrapperType } from "@lib/models/ui/Slice/wrappers";
 
 const PushChangesButton = ({
   onClick,
@@ -24,15 +28,21 @@ const PushChangesButton = ({
         minWidth: "120px",
       }}
     >
-      {loading ? <Spinner color="#FFF" size={14} /> : "Push Changes"}
+      {loading ? (
+        <Spinner color="#FFF" size={14} />
+      ) : (
+        <Flex sx={{ alignItems: "center" }}>
+          <MdLoop size={18} />
+          <span>Push Changes</span>
+        </Flex>
+      )}
     </Button>
   );
 };
 
 const changes: React.FunctionComponent = () => {
-  useSelector((store: SliceMachineStoreType) => ({
-    remoteSlices: getRemoteSlices(store),
-    libraries: getLibraries(store),
+  const { unsycnedSlices } = useSelector((store: SliceMachineStoreType) => ({
+    unsycnedSlices: getUnsyncedSlices(store),
   }));
   const { theme } = useThemeUI();
 
@@ -83,8 +93,22 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <TextWithGreyBackground text={"Custom Types X"} />
-        <TextWithGreyBackground text={"Slices X"} />
+        <ChangesSectionHeader text={"Custom Types"} amount={0} />
+        <ChangesSectionHeader text={"Slices"} amount={unsycnedSlices.length} />
+        <Grid
+          elems={unsycnedSlices}
+          defineElementKey={(slice: ComponentUI) => slice.model.name}
+          gridTemplateMinPx="290px"
+          renderElem={(slice: ComponentUI) => {
+            return SharedSlice.render({
+              displayStatus: true,
+              slice: slice,
+              thumbnailHeightPx: "177px",
+              wrapperType: WrapperType.changesPage,
+            });
+          }}
+          gridGap="24px 48px"
+        />
       </Box>
     </Container>
   );
