@@ -5,7 +5,7 @@ import {
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { ClientError } from "@slicemachine/client";
-import { getLocalCustomTypes } from "@lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 import { getCustomTypeStatus } from "./getCustomTypeStatus";
 
 const fetchRemoteCustomTypes = async (
