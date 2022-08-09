@@ -42,7 +42,7 @@ export const saveCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/SAVE.REQUEST",
   "CUSTOM_TYPE/SAVE.RESPONSE",
   "CUSTOM_TYPE/SAVE.FAILURE"
-)<undefined, { customTypeId: string }>();
+)<undefined, { customType: CustomTypeSM }>();
 
 export const pushCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/PUSH.REQUEST",
