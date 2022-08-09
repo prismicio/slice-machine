@@ -106,8 +106,6 @@ export const availableCustomTypesReducer: Reducer<
       };
     }
     case getType(createCustomTypeCreator.success): {
-      action.payload.newCustomType.__status = CustomTypeStatus.New;
-
       const normalizedNewCustomType = normalizeFrontendCustomType(
         action.payload.newCustomType
       );
