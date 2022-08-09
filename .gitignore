@@ -43,4 +43,4 @@ my-test-project
 
 .env
 
-e2e-cypress-next-app
+e2e-projects/cypress-next-app

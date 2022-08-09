@@ -4,8 +4,8 @@ describe("Custom Types specs", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("clearDir", "e2e-cypress-next-app/customtypes");
-    cy.task("clearDir", "e2e-cypress-next-app/.slicemachine");
+    cy.task("clearDir", "e2e-projects/cypress-next-app/customtypes");
+    cy.task("clearDir", "e2e-projects/cypress-next-app/.slicemachine");
   });
 
   it("A user can create and rename a custom type", () => {

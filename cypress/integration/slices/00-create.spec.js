@@ -5,7 +5,8 @@ describe("Create Slices", () => {
   const editedSliceName = "TestSlice2";
   const lib = "slices";
   const pathToMock = path.join(
-    "e2e-cypress-next-app",
+    "e2e-projects",
+    "cypress-next-app",
     ".slicemachine",
     "assets",
     "slices",
@@ -13,7 +14,8 @@ describe("Create Slices", () => {
     "mocks.json"
   );
   const pathToLibraryState = path.join(
-    "e2e-cypress-next-app",
+    "e2e-projects",
+    "cypress-next-app",
     ".slicemachine",
     "libraries-state.json"
   );
@@ -21,8 +23,8 @@ describe("Create Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("clearDir", "e2e-cypress-next-app/slices");
-    cy.task("clearDir", "e2e-cypress-next-app/.slicemachine");
+    cy.task("clearDir", "e2e-projects/cypress-next-app/slices");
+    cy.task("clearDir", "e2e-projects/cypress-next-app/.slicemachine");
   });
 
   it("A user can create and rename a slice", () => {
