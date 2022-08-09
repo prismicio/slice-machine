@@ -7,10 +7,11 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType
 import { ClientError } from "@slicemachine/client";
 import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 import { getCustomTypeStatus } from "./getCustomTypeStatus";
+import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
-): Promise<{ remoteCustomTypes: CustomTypeSM[] }> => {
+): Promise<{ remoteCustomTypes: CustomTypeSM[] | null }> => {
   return env.client
     .getCustomTypes()
     .then((customTypes: CustomType[]) => ({
@@ -20,7 +21,7 @@ const fetchRemoteCustomTypes = async (
     }))
     .catch((error: ClientError) => {
       console.warn(error.message);
-      return { remoteCustomTypes: [] };
+      return { remoteCustomTypes: null };
     });
 };
 
@@ -35,18 +36,25 @@ export default async function handler(env: BackendEnvironment): Promise<{
 
   const localCustomTypesWithStatus = localCustomTypes.map(
     (customType: CustomTypeSM) => {
-      const remoteCustomType = remoteCustomTypes.find(
-        (rct) => rct.id == customType.id
-      );
+      if (remoteCustomTypes) {
+        const remoteCustomType = remoteCustomTypes.find(
+          (rct) => rct.id == customType.id
+        );
 
-      return {
-        ...customType,
-        __status: getCustomTypeStatus(customType, remoteCustomType),
-      };
+        return {
+          ...customType,
+          __status: getCustomTypeStatus(customType, remoteCustomType),
+        };
+      } else {
+        return {
+          ...customType,
+          __status: CustomTypeStatus.Unknown,
+        };
+      }
     }
   );
   return {
     customTypes: localCustomTypesWithStatus,
-    remoteCustomTypes,
+    remoteCustomTypes: remoteCustomTypes || [],
   };
 }
