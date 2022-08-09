@@ -35,6 +35,7 @@ async function init() {
     process.argv,
     "repository"
   );
+  const isE2e = findArgument(process.argv, "e2e") === "true";
   const pushDocuments = !findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
@@ -61,7 +62,6 @@ async function init() {
   // verify package.json file exist
   validatePkg(cwd);
 
-  // login
   const user = await loginOrBypass(client);
 
   Tracker.get().identifyUser(user.shortId, user.intercomHash);
@@ -75,6 +75,7 @@ async function init() {
     client,
     cwd,
     frameworkResult.value,
+    isE2e,
     preSelectedRepository
   );
 
