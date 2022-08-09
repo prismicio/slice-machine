@@ -3,8 +3,8 @@ import { generateScreenshotAndRemoveCustom } from "./generate";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
-} from "@models/common/Screenshots";
-import { simulatorIsSupported } from "@lib/utils";
+} from "../../../../lib/models/common/Screenshots";
+import { simulatorIsSupported } from "../../../../lib/utils";
 import { Frameworks } from "@slicemachine/core/build/models";
 
 export function validateEnv(

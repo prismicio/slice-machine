@@ -3,7 +3,6 @@ import Form, { FormFields } from "./Form";
 
 import { MdTextFields } from "react-icons/md";
 
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { createValidationSchema } from "../../../../forms";
@@ -58,8 +57,6 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
       single: optionValues.join(","),
     },
   }),
-  handleMockConfig,
-  handleMockContent,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   Meta,

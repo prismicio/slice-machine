@@ -9,9 +9,7 @@ import { render, fireEvent, act } from "../test-utils";
 import CreateCustomTypeModal from "../../components/Forms/CreateCustomTypeModal";
 import { ModalKeysEnum } from "../../src/modules/modal/types";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
-import { AnalyticsBrowser } from "@segment/analytics-next";
-import Tracker from "../../src/tracker";
+import { rest, RestContext } from "msw";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 global.console = { ...global.console, error: jest.fn() };
@@ -21,6 +19,14 @@ const server = setupServer(
     return res(ctx.json({}));
   })
 );
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: any, res: any, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("/api/s", spy));
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -39,24 +45,14 @@ describe("CreateCustomTypeModal", () => {
     const fakeId = "testing_id";
     const fakeName = "testing-name";
     const fakeRepo = "foo";
-    const fakeSegmentKey = "fakeId";
 
-    const fakeTracker = jest.fn().mockImplementation(() => Promise.resolve());
-    const fakeAnalytics = jest
-      .spyOn(AnalyticsBrowser, "standalone")
-      .mockResolvedValue({
-        track: fakeTracker,
-      } as any);
-
-    // will have to assume tracker is initialized?
-    await Tracker.get().initialize(fakeSegmentKey, fakeRepo);
-
-    expect(fakeAnalytics).toHaveBeenCalled();
+    const fakeTracker = makeTrackerSpy();
+    interceptTracker(fakeTracker);
 
     const App = await render(<CreateCustomTypeModal />, {
       preloadedState: {
         environment: {
-          repo: "foo",
+          repo: fakeRepo,
         },
         availableCustomTypes: {},
         modal: { [ModalKeysEnum.CREATE_CUSTOM_TYPE]: true },
@@ -79,14 +75,13 @@ describe("CreateCustomTypeModal", () => {
       fireEvent.click(submitButton);
     });
 
-    expect(fakeTracker).toHaveBeenCalledWith(
-      "SliceMachine Custom Type Created",
-      {
+    expect(fakeTracker.mock.lastCall?.[0].body).toEqual({
+      name: "SliceMachine Custom Type Created",
+      props: {
         id: fakeId,
         name: fakeName,
         type: "repeatable",
       },
-      { context: { groupId: { Repository: fakeRepo } } }
-    );
+    });
   });
 });

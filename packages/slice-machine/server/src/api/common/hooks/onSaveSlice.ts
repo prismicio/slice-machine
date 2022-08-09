@@ -1,8 +1,8 @@
 import path from "path";
 import { Models } from "@slicemachine/core";
-import Files from "@lib/utils/files";
-import { findIndexFile } from "@lib/utils/lib";
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import Files from "../../../../../lib/utils/files";
+import { findIndexFile } from "../../../../../lib/utils/lib";
+import { BackendEnvironment } from "../../../../../lib/models/common/Environment";
 
 import * as LibrariesState from "../LibrariesState";
 import * as Libraries from "@slicemachine/core/build/libraries";

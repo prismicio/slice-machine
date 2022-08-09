@@ -1,11 +1,11 @@
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 import { ClientError } from "@slicemachine/client";
-import { getLocalCustomTypes } from "@lib/utils/customTypes";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment

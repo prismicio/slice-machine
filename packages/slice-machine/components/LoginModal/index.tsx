@@ -23,7 +23,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { getEnvironment } from "@src/modules/environment";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import Tracker from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import preferWroomBase from "../../lib/utils/preferWroomBase";
 import { ToasterType } from "@src/modules/toaster";
 
@@ -60,10 +60,7 @@ const LoginModal: React.FunctionComponent = () => {
       startLoadingLogin();
       await startAuth();
       window.open(loginRedirectUrl, "_blank");
-      const { shortId, intercomHash } = await startPolling<
-        CheckAuthStatusResponse,
-        ValidAuthStatus
-      >(
+      await startPolling<CheckAuthStatusResponse, ValidAuthStatus>(
         checkAuthStatus,
         (status: CheckAuthStatusResponse): status is ValidAuthStatus =>
           status.status === "ok" &&
@@ -73,7 +70,7 @@ const LoginModal: React.FunctionComponent = () => {
         60
       );
 
-      void Tracker.get().identifyUser(shortId, intercomHash);
+      void Tracker.get().identifyUser();
 
       openToaster("Logged in", ToasterType.SUCCESS);
       stopLoadingLogin();

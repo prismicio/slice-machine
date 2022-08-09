@@ -3,16 +3,18 @@ import { Label, Box, useThemeUI } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { useFormikContext } from "formik";
 
-import { initialValues, Patterns, DEFAULT_PATTERN_KEY } from ".";
-
 import { NumberOfBlocks, PatternCard } from "./components";
 
 import Tooltip from "components/Tooltip";
 import { Flex as FlexGrid, Col } from "components/Flex";
 
 import { MockConfigKey } from "../../../../../consts";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
+import { Patterns } from "@prismicio/mocks/lib/generators/widgets/nestable/RichText/RichTextMockConfig";
 
 const dataTip = `To generate mock content, we'll use the selected pattern.<br/>A pattern is an array of RichText options, repeated "block" times.`;
+
+const DEFAULT_PATTERN_KEY = "PARAGRAPH";
 
 const HandlePatternTypes = ({
   options,
@@ -23,10 +25,12 @@ const HandlePatternTypes = ({
 }) => {
   const { theme } = useThemeUI();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const PatternsWithStatus = Object.entries(Patterns).map(([key, pattern]) => ({
     patternKey: key,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     isAllowed: Patterns[key].test(options),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     pattern,
   }));
 
@@ -157,13 +161,17 @@ const Form = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const findValidPattern = (config) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const patternEntry = Object.entries(Patterns).find(([, pat]) =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     pat.test(config)
   );
   if (patternEntry) {
     return patternEntry[0];
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return DEFAULT_PATTERN_KEY;
 };
 
@@ -178,7 +186,7 @@ Form.onSave = (mockValue, values) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const patternObj = Patterns[patternType];
   if (!patternObj) {
-    return initialValues;
+    return DefaultConfig.RichText;
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
   const options = (values.config.single || values.config.multi).split(",");
@@ -190,6 +198,7 @@ Form.onSave = (mockValue, values) => {
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     ...mockValue,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     config: {
@@ -200,6 +209,6 @@ Form.onSave = (mockValue, values) => {
   };
 };
 
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.RichText;
 
 export const MockConfigForm = Form;

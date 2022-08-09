@@ -1,7 +1,9 @@
+import "@testing-library/jest-dom";
+import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import { SliceSM, SliceMock } from "@slicemachine/core/build/models";
+import { isRight } from "fp-ts/lib/Either";
 import MockSlice from "../../../lib/mock/Slice";
-import faker from "@faker-js/faker";
-
-global.console = { ...global.console, error: jest.fn() };
 
 jest.mock("lorem-ipsum", () => {
   return {
@@ -16,24 +18,22 @@ jest.mock("lorem-ipsum", () => {
 
 describe("MockSlice", () => {
   test("when creating a slice it should return the default mock", () => {
-    jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
-
     const wanted = [
       {
         variation: "default",
-        name: "Default",
         slice_type: "some_slice",
         items: [],
         primary: {
-          title: [{ type: "heading1", text: "Foo.", spans: [] }],
+          title: [{ type: "heading1", text: "RANDOM_VALUE", spans: [] }],
           description: [{ type: "paragraph", text: "Some text.", spans: [] }],
         },
+        version: "sktwi1xtmkfgx8626",
       },
     ];
 
-    const model = {
+    const model: SliceSM = {
       id: "some_slice",
-      type: "SharedSlice",
+      type: SlicesTypes.SharedSlice,
       name: "SomeSlice",
       description: "SomeSlice",
       variations: [
@@ -47,7 +47,7 @@ describe("MockSlice", () => {
             {
               key: "title",
               value: {
-                type: "StructuredText",
+                type: WidgetTypes.RichText,
                 config: {
                   single: "heading1",
                   label: "Title",
@@ -58,7 +58,7 @@ describe("MockSlice", () => {
             {
               key: "description",
               value: {
-                type: "StructuredText",
+                type: WidgetTypes.RichText,
                 config: {
                   single: "paragraph",
                   label: "Description",
@@ -75,34 +75,38 @@ describe("MockSlice", () => {
 
     const result = MockSlice(model, mockConfig);
 
+    // override the randomly generated value since we cannot mock it
+    // @ts-expect-error `result` is typed as unknown[]
+    result[0].primary.title[0].text = "RANDOM_VALUE";
+
     expect(result).toEqual(wanted);
+    expect(isRight(SliceMock.decode(result))).toBeTruthy();
+    // needs to be readable by core/mocks/models SliceMock
   });
 
   test("when updating a mock with config", () => {
-    jest.spyOn(faker.company, "bs").mockReturnValueOnce("Foo.");
-
     const wanted = [
       {
         variation: "default",
-        name: "Default",
         slice_type: "some_slice",
-        items: [],
+        items: [{}],
         primary: {
-          title: [{ type: "heading1", text: "Foo.", spans: [] }],
+          title: [{ type: "heading1", text: "RANDOM_VALUE", spans: [] }],
           description: [{ type: "paragraph", text: "Some text.", spans: [] }],
           image: {
             dimensions: { width: 900, height: 500 },
-            alt: "Placeholder image",
+            alt: null,
             copyright: null,
-            url: "https://images.unsplash.com/photo-1555169062-013468b47731?w=900&h=500&fit=crop",
+            url: "https://images.unsplash.com/photo-1555169062-013468b47731",
           },
         },
+        version: "sktwi1xtmkfgx8626",
       },
     ];
 
-    const model = {
+    const model: SliceSM = {
       id: "some_slice",
-      type: "SharedSlice",
+      type: SlicesTypes.SharedSlice,
       name: "SomeSlice",
       description: "SomeSlice",
       variations: [
@@ -116,7 +120,7 @@ describe("MockSlice", () => {
             {
               key: "title",
               value: {
-                type: "StructuredText",
+                type: WidgetTypes.RichText,
                 config: {
                   single: "heading1",
                   label: "Title",
@@ -127,7 +131,7 @@ describe("MockSlice", () => {
             {
               key: "description",
               value: {
-                type: "StructuredText",
+                type: WidgetTypes.RichText,
                 config: {
                   single: "paragraph",
                   label: "Description",
@@ -139,7 +143,7 @@ describe("MockSlice", () => {
               key: "image",
               value: {
                 config: { label: "image", constraint: {}, thumbnails: [] },
-                type: "Image",
+                type: WidgetTypes.Image,
               },
             },
           ],
@@ -161,6 +165,11 @@ describe("MockSlice", () => {
 
     const result = MockSlice(model, mockConfig);
 
+    // override the randomly generated value since we cannot mock it
+    // @ts-expect-error `result` is typed as unknown[]
+    result[0].primary.title[0].text = "RANDOM_VALUE";
+
     expect(result).toEqual(wanted);
+    expect(isRight(SliceMock.decode(result))).toBeTruthy();
   });
 });

@@ -1,54 +1,80 @@
-import { Models } from "@slicemachine/core";
-import * as Widgets from "./misc/widgets";
-import { handleFields } from "./misc/handlers";
-import { FieldsSM } from "@slicemachine/core/build/models/Fields";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
+import {
+  SharedSlice,
+  SlicesTypes,
+  Variation,
+} from "@prismicio/types-internal/lib/customtypes/widgets/slices";
+import {
+  SharedSliceMockConfig,
+  VariationMockConfig,
+  generateSliceMock,
+  renderSliceMock,
+} from "@prismicio/mocks";
+import { buildFieldsMockConfig } from "./LegacyMockConfig";
+import { Slices, SliceSM } from "@slicemachine/core/build/models/Slice";
 
-const createEmptyMock = (
-  sliceId: string,
-  variation: VariationSM
-): Models.VariationMock => ({
-  variation: variation.id,
-  name: variation.name,
-  slice_type: sliceId,
-  items: [],
-  primary: {},
-});
+function buildVariationMockConfig(
+  model: Variation,
+  legacyVariationMockConfig?: Partial<Record<string, Record<string, unknown>>>
+): VariationMockConfig {
+  const primaryFields =
+    model.primary &&
+    buildFieldsMockConfig(
+      model.primary,
+      legacyVariationMockConfig?.["primary"]
+    );
+  const itemFields =
+    model.items &&
+    buildFieldsMockConfig(model.items, legacyVariationMockConfig?.["items"]);
+  return {
+    nbItemsBlocks: 1,
+    primaryFields,
+    itemFields,
+  };
+}
+
+export function buildSliceMockConfig(
+  model: SharedSlice,
+  legacyMockConfig: Partial<
+    Record<string, Partial<Record<string, Partial<Record<string, unknown>>>>>
+  >
+): ReadonlyArray<SharedSliceMockConfig> {
+  const variationConfigs: Record<string, VariationMockConfig> =
+    model.variations.reduce((acc, variationModel) => {
+      const variationMockConfig = legacyMockConfig[variationModel.id];
+      return {
+        ...acc,
+        [variationModel.id]: buildVariationMockConfig(
+          variationModel,
+          variationMockConfig
+        ),
+      };
+    }, {});
+
+  return model.variations.map((v) => {
+    return {
+      variation: v.id,
+      variations: variationConfigs,
+    };
+  });
+}
 
 export default function MockSlice(
-  model: SliceSM,
-  mockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
-): Models.SliceMock {
-  const handler: (
-    fields?: FieldsSM,
-    mocks?: Record<string, unknown>
-  ) => Record<string, unknown> = handleFields(Widgets);
-
-  const variations = model.variations.map((variation) => {
-    const mock = createEmptyMock(model.id, variation);
-
-    const maybeMockConfigPrimary = mockConfig?.[variation.id]?.primary || {};
-    const maybeMockConfigItems = mockConfig?.[variation.id]?.items || {};
-
-    mock.primary = handler(variation.primary, maybeMockConfigPrimary);
-
-    const items: Models.VariationMock["items"] = [];
-
-    const repeat = variation.items;
-    if (!repeat || (repeat && repeat.length === 0)) {
+  smModel: SliceSM,
+  legacyMockConfig: Record<string, Record<string, Record<string, unknown>>> // not sure about this one.
+): unknown[] {
+  const model = Slices.fromSM(smModel);
+  const sliceMockConfig = buildSliceMockConfig(model, legacyMockConfig);
+  const sliceModel: SharedSlice = {
+    ...model,
+    variations: model.variations.map((v) => {
       return {
-        ...mock,
-        items,
-      };
-    }
-
-    for (let i = 0; i < Math.floor(Math.random() * 6) + 2; i++) {
-      items.push(handler(repeat, maybeMockConfigItems));
-    }
-
-    mock.items = items;
-    return mock;
-  });
-
-  return variations;
+        ...v,
+        imageUrl: "",
+      } as Variation;
+    }),
+    type: SlicesTypes.SharedSlice,
+  };
+  return sliceMockConfig.map((sc) =>
+    generateSliceMock(sliceModel, sc)(renderSliceMock)
+  );
 }

@@ -8,18 +8,7 @@ import LoginModal from "@components/LoginModal";
 import { FrontEndEnvironment } from "@lib/models/common/Environment";
 import { useSelector, useDispatch } from "react-redux";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
-
-jest.mock("@segment/analytics-next", () => {
-  const NativeTrackerMocks = {
-    track: jest.fn().mockImplementation(() => Promise.resolve()),
-    identify: jest.fn().mockImplementation(() => Promise.resolve()),
-    group: jest.fn().mockImplementation(() => Promise.resolve()),
-  };
-  return {
-    standalone: Promise.resolve(NativeTrackerMocks),
-  };
-});
+import { rest, RestContext } from "msw";
 
 const mockDispatch = jest.fn();
 jest.mock("react-beautiful-dnd", () => {});
@@ -44,8 +33,19 @@ const server = setupServer(
         userId: "foo",
       })
     );
+  }),
+  rest.post("/api/s", (_, res, ctx) => {
+    return res(ctx.json({}));
   })
 );
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: any, res: any, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("/api/s", spy));
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -74,6 +74,9 @@ describe("LoginModal", () => {
       isLoginLoading: true,
     }));
 
+    const trackerSpy = makeTrackerSpy();
+    interceptTracker(trackerSpy);
+
     const result = render(<App />);
 
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(
@@ -93,7 +96,6 @@ describe("LoginModal", () => {
       isOpen: true,
       isLoginLoading: true,
     }));
-
     const result = render(<App />);
 
     expect(result.getByText("Click here").closest("a")).toHaveAttribute(

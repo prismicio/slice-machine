@@ -3,8 +3,8 @@ import { Client } from "@slicemachine/client";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import { ApiError } from "@lib/models/server/ApiResult";
+import { BackendEnvironment } from "../../../../lib/models/common/Environment";
+import { ApiError } from "../../../../lib/models/server/ApiResult";
 import {
   Slices,
   SliceSM,

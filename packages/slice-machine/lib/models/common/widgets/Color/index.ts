@@ -1,6 +1,5 @@
 import { MdColorLens } from "react-icons/md";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockContent, handleMockConfig } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -27,8 +26,6 @@ const { TYPE_NAME, FormFields, schema } = createDefaultWidgetValues(
 );
 
 export const ColorWidget: Widget<Color, typeof schema> = {
-  handleMockContent,
-  handleMockConfig,
   create: (label: string) => ({
     type: WidgetTypes.Color,
     config: {

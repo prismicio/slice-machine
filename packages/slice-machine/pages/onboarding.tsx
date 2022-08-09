@@ -17,8 +17,9 @@ import { Video as CldVideo } from "cloudinary-react";
 
 import { BiChevronLeft } from "react-icons/bi";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import Tracker, { ContinueOnboardingType } from "@src/tracker";
+import Tracker from "@src/tracking/client";
 import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import { EventNames } from "@src/tracking/types";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -158,16 +159,22 @@ const StepIndicator = ({
   );
 };
 
-function idFromStep(step: number): ContinueOnboardingType {
+function idFromStep(
+  step: number
+):
+  | EventNames.OnboardingContinueIntro
+  | EventNames.OnboardingContinueScreen1
+  | EventNames.OnboardingContinueScreen2
+  | EventNames.OnboardingContinueScreen3 {
   switch (step) {
     case 0:
-      return ContinueOnboardingType.OnboardingContinueIntro;
+      return EventNames.OnboardingContinueIntro;
     case 1:
-      return ContinueOnboardingType.OnboardingContinueScreen1;
+      return EventNames.OnboardingContinueScreen1;
     case 2:
-      return ContinueOnboardingType.OnboardingContinueScreen2;
+      return EventNames.OnboardingContinueScreen2;
     default:
-      return ContinueOnboardingType.OnboardingContinueScreen3;
+      return EventNames.OnboardingContinueScreen3;
   }
 }
 
@@ -197,7 +204,7 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Tracker.get().trackOnboardingContinue(
-        ContinueOnboardingType.OnboardingContinueScreen3
+        EventNames.OnboardingContinueScreen3
       );
     };
   }, []);

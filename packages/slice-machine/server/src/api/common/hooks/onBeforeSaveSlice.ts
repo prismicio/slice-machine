@@ -1,6 +1,6 @@
-import { BackendEnvironment } from "@lib/models/common/Environment";
-import { GeneratedPaths } from "@lib/models/paths";
-import Files from "@lib/utils/files";
+import { BackendEnvironment } from "../../../../../lib/models/common/Environment";
+import { GeneratedPaths } from "../../../../../lib/models/paths";
+import Files from "../../../../../lib/utils/files";
 
 export default function onBeforeSaveSlice(
   { from, sliceName }: { from: string; sliceName: string },

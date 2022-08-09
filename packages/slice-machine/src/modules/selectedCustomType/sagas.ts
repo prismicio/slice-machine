@@ -5,11 +5,11 @@ import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { pushCustomTypeCreator, saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType, selectCurrentMockConfig } from "./index";
-import { pushCustomType, saveCustomType } from "../../../src/apiClient";
+import { pushCustomType, saveCustomType } from "../../apiClient";
 import axios from "axios";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
-import Tracker from "../../../src/tracker";
+import Tracker from "../../tracking/client";
 
 export function* saveCustomTypeSaga() {
   try {

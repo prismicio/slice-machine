@@ -13,6 +13,7 @@ import {
   ApisEndpoints,
   ProductionApisEndpoints,
   StageApisEndpoints,
+  DevApisEndpoints,
   AclCreateResult,
 } from "./models";
 
@@ -45,7 +46,7 @@ export class Client {
       this.apisEndpoints = StageApisEndpoints;
     else {
       // Dev
-      this.apisEndpoints = ProductionApisEndpoints;
+      this.apisEndpoints = DevApisEndpoints();
     }
   }
 

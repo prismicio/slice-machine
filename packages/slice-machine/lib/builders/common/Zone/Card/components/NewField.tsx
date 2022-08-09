@@ -11,7 +11,7 @@ import { slugify } from "@lib/utils/str";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
-import ErrorTooltip from "./ErrorTooltip";
+import { ErrorTooltip } from "./ErrorTooltip";
 import { InputType } from "@lib/forms/fields";
 import {
   getInputFieldStyles,
