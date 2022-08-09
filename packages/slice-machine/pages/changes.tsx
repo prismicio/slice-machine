@@ -8,7 +8,7 @@ import Grid from "components/Grid";
 import { getUnsyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import SliceMachineIconButton from "../components/SliceMachineIconButton";
-import { TextWithGreyBackground } from "../components/Text/TextWithGreyBackground";
+import { ChangesSectionHeader } from "../components/ChangesSectionHeader";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SharedSlice } from "@lib/models/ui/Slice";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
@@ -93,12 +93,8 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <Box sx={{ mb: "16px" }}>
-          <TextWithGreyBackground text={"Custom Types X"} />
-        </Box>
-        <Box sx={{ mb: "16px" }}>
-          <TextWithGreyBackground text={"Slices X"} />
-        </Box>
+        <ChangesSectionHeader text={"Custom Types"} amount={0} />
+        <ChangesSectionHeader text={"Slices"} amount={unsycnedSlices.length} />
         <Grid
           elems={unsycnedSlices}
           defineElementKey={(slice: ComponentUI) => slice.model.name}
