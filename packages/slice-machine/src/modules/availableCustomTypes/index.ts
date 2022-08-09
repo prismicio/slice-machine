@@ -18,6 +18,11 @@ import {
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
 import { CustomTypeStatus } from "../selectedCustomType/types";
+import {
+  pushCustomTypeCreator,
+  saveCustomTypeCreator,
+} from "../selectedCustomType/actions";
+import { saveCustomTypeSaga } from "../selectedCustomType/sagas";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -53,7 +58,9 @@ export const renameCustomTypeCreator = createAsyncAction(
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>;
+  | ActionType<typeof renameCustomTypeCreator>
+  | ActionType<typeof saveCustomTypeCreator>
+  | ActionType<typeof pushCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -115,6 +122,39 @@ export const availableCustomTypesReducer: Reducer<
         ...normalizedNewCustomType,
       };
     }
+
+    case getType(saveCustomTypeCreator.success): {
+      if (!state) return state;
+      const customTypeId = action.payload.customTypeId;
+
+      return {
+        ...state,
+        [customTypeId]: {
+          ...state[customTypeId],
+          local: {
+            ...state[customTypeId].local,
+            __status: CustomTypeStatus.Modified,
+          },
+        },
+      };
+    }
+
+    case getType(pushCustomTypeCreator.success): {
+      if (!state) return state;
+      const customTypeId = action.payload.customTypeId;
+
+      return {
+        ...state,
+        [customTypeId]: {
+          ...state[customTypeId],
+          local: {
+            ...state[customTypeId].local,
+            __status: CustomTypeStatus.Synced,
+          },
+        },
+      };
+    }
+
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
@@ -206,6 +246,10 @@ function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(renameCustomTypeCreator.request),
     withLoader(renameCustomTypeSaga, LoadingKeysEnum.RENAME_CUSTOM_TYPE)
+  );
+  yield takeLatest(
+    getType(saveCustomTypeCreator.request),
+    withLoader(saveCustomTypeSaga, LoadingKeysEnum.SAVE_CUSTOM_TYPE)
   );
 }
 
