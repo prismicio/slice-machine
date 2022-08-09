@@ -3,7 +3,7 @@ import { Badge, Flex, Text } from "theme-ui";
 import { FrontEndCustomType } from "../../src/modules/availableCustomTypes/types";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
 
-const StatusEnumToDisplayNameAndTooltip = (status?: string) => {
+const statusEnumToDisplayNameAndTooltip = (status?: string) => {
   switch (status) {
     case CustomTypeStatus.New:
       return {
@@ -46,7 +46,7 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
   customType,
 }) => {
   const { statusDisplayName, statusTooltip } =
-    StatusEnumToDisplayNameAndTooltip(customType.local.__status);
+    statusEnumToDisplayNameAndTooltip(customType.local.__status);
 
   return (
     <>

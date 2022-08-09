@@ -6,7 +6,7 @@ export const getCustomTypeStatus = (
   localCustomType: CustomTypeSM,
   remoteCustomType?: CustomTypeSM
 ): CustomTypeStatus => {
-  if (!localCustomType || !remoteCustomType) return CustomTypeStatus.New;
+  if (!remoteCustomType) return CustomTypeStatus.New;
 
   if (!equal(localCustomType, remoteCustomType)) {
     return CustomTypeStatus.Modified;
