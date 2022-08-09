@@ -4,7 +4,8 @@ import useWindowSize from "src/hooks/useWindowSize";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
-import { MdHorizontalSplit, MdSpaceDashboard } from "react-icons/md";
+import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
+import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
 
 export interface LinkProps {
   title: string;
@@ -13,6 +14,7 @@ export interface LinkProps {
   Icon: IconType;
   delimiter?: boolean;
   target?: "_blank";
+  RightElement?: React.ReactNode;
 }
 
 const links: LinkProps[] = [
@@ -31,6 +33,15 @@ const links: LinkProps[] = [
       return pathname.indexOf("/slices") === 0;
     },
     Icon: MdHorizontalSplit,
+  },
+  {
+    title: "Changes",
+    href: "/changes",
+    match(pathname: string) {
+      return pathname.indexOf("/changes") === 0;
+    },
+    Icon: MdLoop,
+    RightElement: <ChangesIndicator numberOfChanges={5} />,
   },
 ];
 

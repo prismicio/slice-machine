@@ -17,13 +17,15 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { StatusBadgeWithTooltip } from "../components/Badge/StatusBadgeWithTooltip";
 
 const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
   customTypes,
 }) => {
-  const firstColumnWidth = "35%";
-  const secondColumnWidth = "50%";
-  const thirdColumnWidth = "15%";
+  const firstColumnWidth = "33%";
+  const secondColumnWidth = "33%";
+  const thirdColumnWidth = "17%";
+  const fourthColumnWidth = "17%";
 
   return (
     <Box
@@ -42,6 +44,9 @@ const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
           </Box>
           <Box as={"th"} sx={{ width: thirdColumnWidth }}>
             Type
+          </Box>
+          <Box as={"th"} sx={{ width: fourthColumnWidth }}>
+            Status
           </Box>
         </tr>
       </thead>
@@ -63,6 +68,13 @@ const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
                 {customType.local.repeatable
                   ? "Repeatable Type"
                   : "Single Type"}
+              </Box>
+              <Box as={"td"} style={{ width: fourthColumnWidth }}>
+                <StatusBadgeWithTooltip
+                  customType={customType}
+                  data-for={`${customType.local.id}-tooltip`}
+                  data-tip
+                />
               </Box>
             </tr>
           </Link>
