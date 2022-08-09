@@ -16,6 +16,7 @@ export const CustomTypeSM = t.exact(
     }),
     t.partial({
       hash: t.string,
+      __status: t.string,
     }),
   ])
 );
