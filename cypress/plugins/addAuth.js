@@ -5,8 +5,8 @@ const axios = require("axios");
 
 axios
   .post("https://wroom.io/authentication/signin", {
-    email: "cypress@prismic.io",
-    password: "AhK9yohhie9ahyohn3w",
+    email: process.env.EMAIL,
+    password: process.env.PASSWORD,
   })
   .then((response) => {
     const cookies = response.headers["set-cookie"].join("; ");
