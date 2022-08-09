@@ -95,12 +95,15 @@ export const getRemoteSlices = (
 export const getUnsyncedSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<ComponentUI> => {
-  return store.slices.libraries.reduce((acc, lib) => {
-    const unsycnedComponents = lib.components.filter((component) =>
-      [LibStatus.Modified, LibStatus.NewSlice].includes(component.__status)
-    );
-    return [...acc, ...unsycnedComponents];
-  }, [] as ReadonlyArray<ComponentUI>);
+  return store.slices.libraries.reduce<ReadonlyArray<ComponentUI>>(
+    (acc, lib) => {
+      const unsycnedComponents = lib.components.filter((component) =>
+        [LibStatus.Modified, LibStatus.NewSlice].includes(component.__status)
+      );
+      return [...acc, ...unsycnedComponents];
+    },
+    []
+  );
 };
 
 // Reducer
