@@ -22,7 +22,7 @@ import {
   pushCustomTypeCreator,
   saveCustomTypeCreator,
 } from "../selectedCustomType/actions";
-import { saveCustomTypeSaga } from "../selectedCustomType/sagas";
+import { getCustomTypeStatus } from "server/src/api/custom-types/getCustomTypeStatus";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -127,13 +127,16 @@ export const availableCustomTypesReducer: Reducer<
       if (!state) return state;
       const localCustomType = action.payload.customType;
 
+      const remoteCustomType: CustomTypeSM | undefined =
+        state[localCustomType.id].remote;
+
       return {
         ...state,
         [localCustomType.id]: {
           ...state[localCustomType.id],
           local: {
             ...localCustomType,
-            __status: CustomTypeStatus.Modified,
+            __status: getCustomTypeStatus(localCustomType, remoteCustomType),
           },
         },
       };
@@ -158,12 +161,15 @@ export const availableCustomTypesReducer: Reducer<
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
+      const newLocalCustomType = { ...state[id].local, label: newName };
+
+      const remoteCustomType: CustomTypeSM | undefined = state[id].remote;
+
       const newCustomType = {
         ...state[id],
         local: {
-          ...state[id].local,
-          label: newName,
-          __status: CustomTypeStatus.Modified,
+          ...newLocalCustomType,
+          __status: getCustomTypeStatus(newLocalCustomType, remoteCustomType),
         },
       };
 
@@ -246,10 +252,6 @@ function* handleCustomTypeRequests() {
   yield takeLatest(
     getType(renameCustomTypeCreator.request),
     withLoader(renameCustomTypeSaga, LoadingKeysEnum.RENAME_CUSTOM_TYPE)
-  );
-  yield takeLatest(
-    getType(saveCustomTypeCreator.request),
-    withLoader(saveCustomTypeSaga, LoadingKeysEnum.SAVE_CUSTOM_TYPE)
   );
 }
 
