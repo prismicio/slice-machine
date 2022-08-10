@@ -12,6 +12,9 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 import fetch from "node-fetch";
+import dns from "dns";
+
+dns.setDefaultResultOrder("ipv4first");
 
 // fake comment used to trigger the CI.
 
