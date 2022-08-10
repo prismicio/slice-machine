@@ -1,4 +1,4 @@
-import { StatusBadgeWithTooltip } from "@components/Badge/StatusBadgeWithTooltip";
+import { StatusBadgeWithTooltip } from "../Badge/StatusBadgeWithTooltip";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import Link from "next/link";
 import React from "react";
@@ -38,7 +38,7 @@ export const CustomTypeTable: React.FC<{
       <tbody>
         {customTypes.map((customType) => (
           <Link passHref href={`/cts/${customType.id}`} key={customType.id}>
-            <tr key={customType.id}>
+            <tr tabIndex={0}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
                 <Text sx={{ fontWeight: 500 }}>{customType.label}</Text>
               </Box>
