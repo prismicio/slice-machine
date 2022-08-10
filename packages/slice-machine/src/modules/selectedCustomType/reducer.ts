@@ -37,7 +37,7 @@ import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
 import { renameCustomTypeCreator } from "../availableCustomTypes";
-import { getCustomTypeStatus } from "../../../server/src/api/custom-types/getCustomTypeStatus";
+import { getCustomTypeStatus } from "@src/utils/customType";
 
 // Reducer
 export const selectedCustomTypeReducer: Reducer<

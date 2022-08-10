@@ -22,7 +22,7 @@ import {
   pushCustomTypeCreator,
   saveCustomTypeCreator,
 } from "../selectedCustomType/actions";
-import { getCustomTypeStatus } from "server/src/api/custom-types/getCustomTypeStatus";
+import { getCustomTypeStatus } from "@src/utils/customType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
