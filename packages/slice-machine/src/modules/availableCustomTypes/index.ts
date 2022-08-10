@@ -93,6 +93,21 @@ export const selectCustomTypeById = (
 export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
   Object.values(store.availableCustomTypes).length;
 
+export const getUnSyncedCustomTypes = (
+  store: SliceMachineStoreType
+): ReadonlyArray<CustomTypeSM> => {
+  const unSyncedCustomTypes = Object.values(store.availableCustomTypes).reduce<
+    ReadonlyArray<CustomTypeSM>
+  >((acc, customType) => {
+    const statusIsUnSynced =
+      customType.local.__status === CustomTypeStatus.New ||
+      customType.local.__status === CustomTypeStatus.Modified;
+
+    return statusIsUnSynced ? [...acc, customType.local] : acc;
+  }, []);
+  return unSyncedCustomTypes;
+};
+
 // Reducer
 export const availableCustomTypesReducer: Reducer<
   AvailableCustomTypesStoreType | null,

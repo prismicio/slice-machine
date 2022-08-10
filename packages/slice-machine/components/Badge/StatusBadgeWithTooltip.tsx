@@ -1,6 +1,6 @@
 import ReactTooltip from "react-tooltip";
 import { Badge, Flex, Text } from "theme-ui";
-import { FrontEndCustomType } from "../../src/modules/availableCustomTypes/types";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
 
 const statusEnumToDisplayNameAndTooltip = (status?: string) => {
@@ -39,24 +39,24 @@ const statusEnumToDisplayNameAndTooltip = (status?: string) => {
 };
 
 interface StatusBadgeWithTooltipProps {
-  customType: FrontEndCustomType;
+  customType: CustomTypeSM;
 }
 
 export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
   customType,
 }) => {
   const { statusDisplayName, statusTooltip } =
-    statusEnumToDisplayNameAndTooltip(customType.local.__status);
+    statusEnumToDisplayNameAndTooltip(customType.__status);
 
   return (
     <>
-      <Text data-for={`${customType.local.id}-tooltip`} data-tip>
-        <Badge mr="2" variant={customType.local.__status}>
+      <Text data-for={`${customType.id}-tooltip`} data-tip>
+        <Badge mr="2" variant={customType.__status}>
           {statusDisplayName}
         </Badge>
       </Text>
       <ReactTooltip
-        id={`${customType.local.id}-tooltip`}
+        id={`${customType.id}-tooltip`}
         type="dark"
         multiline
         border

@@ -18,7 +18,6 @@ export const ChangesSectionHeader: React.FC<ChangesSectionHeaderProps> = ({
         backgroundColor: "#EEEEEE",
         borderRadius: 4,
         padding: "12px 16px",
-        mb: "16px",
       }}
     >
       <Text sx={{ fontWeight: "heading" }}>{text}</Text>
