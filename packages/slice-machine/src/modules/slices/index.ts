@@ -92,7 +92,7 @@ export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
-export const getUnsyncedSlices = (
+export const getUnSyncedSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<ComponentUI> => {
   return store.slices.libraries.reduce<ReadonlyArray<ComponentUI>>(

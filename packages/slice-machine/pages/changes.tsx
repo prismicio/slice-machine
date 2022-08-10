@@ -5,13 +5,15 @@ import Header from "components/Header";
 import { MdModeEdit, MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import Grid from "components/Grid";
-import { getUnsyncedSlices } from "../src/modules/slices";
+import { getUnSyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import SliceMachineIconButton from "../components/SliceMachineIconButton";
 import { ChangesSectionHeader } from "../components/ChangesSectionHeader";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SharedSlice } from "@lib/models/ui/Slice";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
+import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
+import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 
 const PushChangesButton = ({
   onClick,
@@ -41,9 +43,12 @@ const PushChangesButton = ({
 };
 
 const changes: React.FunctionComponent = () => {
-  const { unsycnedSlices } = useSelector((store: SliceMachineStoreType) => ({
-    unsycnedSlices: getUnsyncedSlices(store),
-  }));
+  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      unSyncedSlices: getUnSyncedSlices(store),
+      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
+    })
+  );
   const { theme } = useThemeUI();
 
   return (
@@ -93,10 +98,19 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <ChangesSectionHeader text={"Custom Types"} amount={0} />
-        <ChangesSectionHeader text={"Slices"} amount={unsycnedSlices.length} />
+        <ChangesSectionHeader
+          text={"Custom Types"}
+          amount={unSyncedCustomTypes.length}
+        />
+        <CustomTypeTable customTypes={unSyncedCustomTypes} />
+        <Box sx={{ mb: "16px" }}>
+          <ChangesSectionHeader
+            text={"Slices"}
+            amount={unSyncedSlices.length}
+          />
+        </Box>
         <Grid
-          elems={unsycnedSlices}
+          elems={unSyncedSlices}
           defineElementKey={(slice: ComponentUI) => slice.model.name}
           gridTemplateMinPx="290px"
           renderElem={(slice: ComponentUI) => {
