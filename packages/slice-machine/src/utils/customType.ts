@@ -1,5 +1,5 @@
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
+import { CustomTypeStatus } from "../modules/selectedCustomType/types";
 import equal from "fast-deep-equal";
 
 export const getCustomTypeStatus = (
