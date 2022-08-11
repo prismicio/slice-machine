@@ -48,7 +48,11 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   }
 
   if (
-    [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(customTypeStatus)
+    [
+      CustomTypeStatus.New,
+      CustomTypeStatus.Modified,
+      CustomTypeStatus.Unknown,
+    ].includes(customTypeStatus)
   ) {
     return (
       <Button
