@@ -6,6 +6,10 @@ import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
 import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getUnSyncedSlices } from "@src/modules/slices";
+import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 
 export interface LinkProps {
   title: string;
@@ -17,7 +21,7 @@ export interface LinkProps {
   RightElement?: React.ReactNode;
 }
 
-const links: LinkProps[] = [
+const getNavigationLinks = (numberOfChanges: number): LinkProps[] => [
   {
     title: "Custom Types",
     href: "/",
@@ -41,16 +45,31 @@ const links: LinkProps[] = [
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
-    RightElement: <ChangesIndicator numberOfChanges={5} />,
+    RightElement: (
+      <ChangesIndicator
+        numberOfChanges={numberOfChanges}
+        match={(pathname: string) => pathname.indexOf("/changes") === 0}
+      />
+    ),
   },
 ];
 
 const Navigation: React.FC = () => {
   const viewport = useWindowSize();
+
+  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      unSyncedSlices: getUnSyncedSlices(store),
+      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
+    })
+  );
+
+  const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
   return (viewport.width as number) < 640 ? (
-    <Mobile links={links} />
+    <Mobile links={getNavigationLinks(numberOfChanges)} />
   ) : (
-    <Desktop links={links} />
+    <Desktop links={getNavigationLinks(numberOfChanges)} />
   );
 };
 
