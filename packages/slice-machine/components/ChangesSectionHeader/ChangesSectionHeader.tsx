@@ -15,7 +15,7 @@ export const ChangesSectionHeader: React.FC<ChangesSectionHeaderProps> = ({
       sx={{
         alignItems: "center",
         mt: "37px",
-        backgroundColor: "#EEEEEE",
+        bg: "grey02",
         borderRadius: 4,
         padding: "12px 16px",
       }}

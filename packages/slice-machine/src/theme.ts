@@ -48,6 +48,7 @@ const AppTheme = (): Theme =>
       grey02: "#E6E6EA",
       grey04: "#9AA4AF",
       grey05: "#667587",
+      greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",
@@ -697,6 +698,13 @@ const AppTheme = (): Theme =>
             borderBottomRightRadius: "4px",
             borderTopRightRadius: "4px",
           },
+        },
+        "thead tr.transparent": {
+          bg: "transparent",
+          color: "greyTransparent",
+        },
+        "thead tr.small": {
+          fontSize: "12px",
         },
         "tbody tr": {
           cursor: "pointer",
