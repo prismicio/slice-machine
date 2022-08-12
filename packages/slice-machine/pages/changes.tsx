@@ -19,7 +19,7 @@ const changes: React.FunctionComponent = () => {
     })
   );
   const isOnline = useNetwork();
-  const [loading, setLoading] = useState(false); //todo: edit when making request to push
+  const [loading] = useState(false); //todo: ass a setLoading method and use it when pushing changes
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
   const renderPageContent = () => {
