@@ -1,8 +1,8 @@
 import React from "react";
-import { MdDone } from "react-icons/md";
 import { Flex, Text } from "theme-ui";
+import { IoCloudOfflineOutline } from "react-icons/io5";
 
-export const ChangesEmptyPage = () => {
+export const OfflinePage = () => {
   return (
     <Flex sx={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
       <Flex
@@ -12,7 +12,7 @@ export const ChangesEmptyPage = () => {
           transform: "translateY(-50%)",
         }}
       >
-        <MdDone size={48} />
+        <IoCloudOfflineOutline size={48} />
         <Text
           sx={{
             fontWeight: 600,
@@ -22,10 +22,10 @@ export const ChangesEmptyPage = () => {
             mt: "2px",
           }}
         >
-          Up to date
+          No internet connection
         </Text>
         <Text sx={{ fontSize: "13px", lineHeight: "24px" }}>
-          Your local project is in sync with your remote Prismic repository.
+          You need a stable internet connection to review and push changes
         </Text>
       </Flex>
     </Flex>

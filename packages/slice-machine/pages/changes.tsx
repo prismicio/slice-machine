@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Flex, Spinner, Text } from "theme-ui";
 import Container from "components/Container";
 import Header from "components/Header";
@@ -8,35 +8,8 @@ import { getUnSyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { ChangesItems } from "@components/ChangesItems";
-import { ChangesEmptyPage } from "@components/ChangesEmptyPage";
-
-const PushChangesButton = ({
-  onClick,
-  loading,
-  disabled,
-}: {
-  onClick: () => void;
-  loading: boolean;
-  disabled: boolean;
-}) => {
-  return (
-    <Button
-      onClick={onClick}
-      data-cy="push-changes"
-      disabled={disabled}
-      sx={{ minWidth: "120px" }}
-    >
-      {loading ? (
-        <Spinner color="#FFF" size={14} />
-      ) : (
-        <Flex sx={{ alignItems: "center" }}>
-          <MdLoop size={18} />
-          <span>Push Changes</span>
-        </Flex>
-      )}
-    </Button>
-  );
-};
+import { NoChangesPage, OfflinePage } from "@components/ChangesEmptyPage";
+import { useNetwork } from "@src/hooks/useNetwork";
 
 const changes: React.FunctionComponent = () => {
   const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
@@ -45,7 +18,24 @@ const changes: React.FunctionComponent = () => {
       unSyncedCustomTypes: getUnSyncedCustomTypes(store),
     })
   );
+  const isOnline = useNetwork();
+  const [loading, setLoading] = useState(false); //todo: edit when making request to push
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
+  const renderPageContent = () => {
+    if (!isOnline) {
+      return <OfflinePage />;
+    }
+    if (numberOfChanges === 0) {
+      return <NoChangesPage />;
+    }
+    return (
+      <ChangesItems
+        unSyncedSlices={unSyncedSlices}
+        unSyncedCustomTypes={unSyncedCustomTypes}
+      />
+    );
+  };
 
   return (
     <Container
@@ -64,23 +54,26 @@ const changes: React.FunctionComponent = () => {
       >
         <Header
           ActionButton={
-            <PushChangesButton
-              onClick={() => console.log("push changes")} //todo: add push changes feeture
-              loading={false}
-              disabled={numberOfChanges === 0}
-            />
+            <Button
+              onClick={() => console.log("push changes")} //todo: add push changes feature
+              data-cy="push-changes"
+              disabled={numberOfChanges === 0 || !isOnline}
+              sx={{ minWidth: "120px" }}
+            >
+              {loading ? (
+                <Spinner color="#FFF" size={14} />
+              ) : (
+                <Flex sx={{ alignItems: "center" }}>
+                  <MdLoop size={18} />
+                  <span>Push Changes</span>
+                </Flex>
+              )}
+            </Button>
           }
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        {numberOfChanges > 0 ? (
-          <ChangesItems
-            unSyncedSlices={unSyncedSlices}
-            unSyncedCustomTypes={unSyncedCustomTypes}
-          />
-        ) : (
-          <ChangesEmptyPage />
-        )}
+        {renderPageContent()}
       </Box>
     </Container>
   );
