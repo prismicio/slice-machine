@@ -8,14 +8,21 @@ import { getUnSyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
 import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { ChangesItems } from "@components/ChangesItems";
-import { NoChangesPage, OfflinePage } from "@components/ChangesEmptyPage";
+import {
+  AuthErrorPage,
+  NoChangesPage,
+  OfflinePage,
+} from "@components/ChangesEmptyPage";
 import { useNetwork } from "@src/hooks/useNetwork";
+import { getAuthStatus } from "@src/modules/environment";
+import { AuthStatus } from "@src/modules/userContext/types";
 
 const changes: React.FunctionComponent = () => {
-  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
+  const { unSyncedSlices, unSyncedCustomTypes, authStatus } = useSelector(
     (store: SliceMachineStoreType) => ({
       unSyncedSlices: getUnSyncedSlices(store),
       unSyncedCustomTypes: getUnSyncedCustomTypes(store),
+      authStatus: getAuthStatus(store),
     })
   );
   const isOnline = useNetwork();
@@ -25,6 +32,12 @@ const changes: React.FunctionComponent = () => {
   const renderPageContent = () => {
     if (!isOnline) {
       return <OfflinePage />;
+    }
+    if (
+      authStatus === AuthStatus.UNAUTHORIZED ||
+      authStatus === AuthStatus.FORBIDDEN
+    ) {
+      return <AuthErrorPage />;
     }
     if (numberOfChanges === 0) {
       return <NoChangesPage />;

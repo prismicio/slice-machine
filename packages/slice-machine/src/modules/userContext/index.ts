@@ -1,7 +1,12 @@
 import { Reducer } from "redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ActionType, createAction, getType } from "typesafe-actions";
-import type { UserContextStoreType } from "@src/modules/userContext/types";
+import {
+  AuthStatus,
+  UserContextStoreType,
+} from "@src/modules/userContext/types";
+import { refreshStateCreator } from "../environment";
+import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
 
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
@@ -13,6 +18,7 @@ const initialState: UserContextStoreType = {
     latestNonBreaking: null,
   },
   hasSeenTutorialsTooTip: false,
+  authStatus: AuthStatus.UNKNOWN,
 };
 
 // Actions Creators
@@ -38,6 +44,7 @@ type userContextActions = ActionType<
   | typeof skipReviewCreator
   | typeof updatesViewedCreator
   | typeof hasSeenTutorialsTooTipCreator
+  | typeof refreshStateCreator
 >;
 
 // Selectors
@@ -85,7 +92,32 @@ export const userContextReducer: Reducer<
         hasSeenTutorialsTooTip: true,
       };
     }
+    case getType(refreshStateCreator): {
+      return {
+        ...state,
+        authStatus: getAuthStatus(action.payload.clientError),
+      };
+    }
     default:
       return state;
+  }
+};
+
+const getAuthStatus = (
+  clientError: ErrorWithStatus | undefined
+): AuthStatus => {
+  switch (clientError?.status) {
+    case undefined: {
+      return AuthStatus.AUTHORIZED;
+    }
+    case 401: {
+      return AuthStatus.UNAUTHORIZED;
+    }
+    case 403: {
+      return AuthStatus.FORBIDDEN;
+    }
+    default: {
+      return AuthStatus.UNKNOWN;
+    }
   }
 };
