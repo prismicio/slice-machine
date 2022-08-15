@@ -110,10 +110,10 @@ const getAuthStatus = (
     case undefined: {
       return AuthStatus.AUTHORIZED;
     }
-    case 401: {
+    case 403: {
       return AuthStatus.UNAUTHORIZED;
     }
-    case 403: {
+    case 401: {
       return AuthStatus.FORBIDDEN;
     }
     default: {
