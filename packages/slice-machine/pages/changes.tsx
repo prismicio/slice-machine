@@ -70,7 +70,12 @@ const changes: React.FunctionComponent = () => {
             <Button
               onClick={() => console.log("push changes")} //todo: add push changes feature
               data-cy="push-changes"
-              disabled={numberOfChanges === 0 || !isOnline}
+              disabled={
+                numberOfChanges === 0 ||
+                !isOnline ||
+                authStatus === AuthStatus.UNAUTHORIZED ||
+                authStatus === AuthStatus.FORBIDDEN
+              }
               sx={{ minWidth: "120px" }}
             >
               {loading ? (
