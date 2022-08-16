@@ -180,12 +180,6 @@ const ImagePreviewWrapper = ({
   const [data, setData] = React.useState<{ imageLoading: boolean }>({
     imageLoading: false,
   });
-  if (
-    slice.model.name === "CategoryPreviewWithImageBackgrounds" ||
-    slice.model.name === "CategoryPreviewWithScrollingCards"
-  ) {
-    console.log(slice.model.name, data);
-  }
   return (
     <ImagePreview
       src={screenshotUrl}
@@ -240,30 +234,34 @@ export const SharedSlice = {
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
           {wrapperType === WrapperType.changesPage ? (
-            <ImagePreviewWrapper screenshotUrl={screenshotUrl} slice={slice} />
+            <>
+              <ImagePreviewWrapper
+                screenshotUrl={screenshotUrl}
+                slice={slice}
+              />
+              <LinkCardWrapper link={link}>
+                <SliceDescription
+                  slice={slice}
+                  CustomStatus={CustomStatus}
+                  displayStatus={displayStatus}
+                  wrapperType={wrapperType}
+                />
+              </LinkCardWrapper>
+            </>
           ) : (
-            <SliceThumbnail
-              withShadow={false}
-              screenshotUrl={screenshotUrl}
-              heightInPx={thumbnailHeightPx}
-            />
-          )}
-          {wrapperType === WrapperType.changesPage ? (
-            <LinkCardWrapper link={link}>
+            <>
+              <SliceThumbnail
+                withShadow={false}
+                screenshotUrl={screenshotUrl}
+                heightInPx={thumbnailHeightPx}
+              />
               <SliceDescription
                 slice={slice}
                 CustomStatus={CustomStatus}
                 displayStatus={displayStatus}
                 wrapperType={wrapperType}
               />
-            </LinkCardWrapper>
-          ) : (
-            <SliceDescription
-              slice={slice}
-              CustomStatus={CustomStatus}
-              displayStatus={displayStatus}
-              wrapperType={wrapperType}
-            />
+            </>
           )}
         </Themecard>
       </CardWrapper>
