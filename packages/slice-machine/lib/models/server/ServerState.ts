@@ -15,5 +15,5 @@ export default interface ServerState {
   customTypes: ReadonlyArray<CustomTypeSM>;
   remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
   remoteSlices: ReadonlyArray<SliceSM>;
-  clientError: ErrorWithStatus | undefined;
+  clientError?: ErrorWithStatus;
 }
