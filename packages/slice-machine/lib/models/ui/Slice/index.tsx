@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import {
   Theme,
   Text,
@@ -9,12 +9,17 @@ import {
   Badge,
 } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import { ImagePreview } from "../../../builders/SliceBuilder/SideBar/components/ImagePreview";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
 import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType, LinkCardWrapper } from "./wrappers";
 import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
+import { useSelector } from "react-redux";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -158,6 +163,33 @@ const SliceDescription = ({
   );
 };
 
+const ImagePreviewWrapper = ({
+  screenshotUrl,
+  slice,
+}: {
+  screenshotUrl?: string;
+  slice: ComponentUI;
+}) => {
+  const { generateSliceScreenshot } = useSliceMachineActions();
+  const { isSimulatorAvailableForFramework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+    })
+  );
+  const [data, setData] = React.useState<{ imageLoading: boolean }>({
+    imageLoading: false,
+  });
+  return (
+    <ImagePreview
+      src={screenshotUrl}
+      imageLoading={data.imageLoading}
+      onScreenshot={() => generateSliceScreenshot(slice, setData)}
+      preventScreenshot={!isSimulatorAvailableForFramework}
+    />
+  );
+};
+
 export const SharedSlice = {
   render({
     bordered,
@@ -201,27 +233,35 @@ export const SharedSlice = {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
-          <SliceThumbnail
-            withShadow={false}
-            screenshotUrl={screenshotUrl}
-            heightInPx={thumbnailHeightPx}
-          />
           {wrapperType === WrapperType.changesPage ? (
-            <LinkCardWrapper link={link}>
+            <>
+              <ImagePreviewWrapper
+                screenshotUrl={screenshotUrl}
+                slice={slice}
+              />
+              <LinkCardWrapper link={link}>
+                <SliceDescription
+                  slice={slice}
+                  CustomStatus={CustomStatus}
+                  displayStatus={displayStatus}
+                  wrapperType={wrapperType}
+                />
+              </LinkCardWrapper>
+            </>
+          ) : (
+            <>
+              <SliceThumbnail
+                withShadow={false}
+                screenshotUrl={screenshotUrl}
+                heightInPx={thumbnailHeightPx}
+              />
               <SliceDescription
                 slice={slice}
                 CustomStatus={CustomStatus}
                 displayStatus={displayStatus}
                 wrapperType={wrapperType}
               />
-            </LinkCardWrapper>
-          ) : (
-            <SliceDescription
-              slice={slice}
-              CustomStatus={CustomStatus}
-              displayStatus={displayStatus}
-              wrapperType={wrapperType}
-            />
+            </>
           )}
         </Themecard>
       </CardWrapper>

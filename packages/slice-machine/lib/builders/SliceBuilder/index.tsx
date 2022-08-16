@@ -105,7 +105,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   if (!variation || !sliceView) return null;
 
   const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(variation.id, component, setData);
+    generateSliceScreenshot(component, setData);
   };
 
   const onTakingSliceCustomScreenshot = (file: Blob) => {

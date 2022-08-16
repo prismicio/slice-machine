@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import Card from "@components/Card";
 
-import ImagePreview from "./components/ImagePreview";
+import { ImagePreview } from "./components/ImagePreview";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
