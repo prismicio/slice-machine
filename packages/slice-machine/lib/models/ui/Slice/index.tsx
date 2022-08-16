@@ -9,12 +9,15 @@ import {
   Badge,
 } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
+import { ImagePreview } from "../../../builders/SliceBuilder/SideBar/components/ImagePreview";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
 
 import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType, LinkCardWrapper } from "./wrappers";
 import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
+import { initialStateProps } from "../../../../components/ChangesItems/ChangesItems";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -169,6 +172,9 @@ export const SharedSlice = {
     thumbnailHeightPx = "280px",
     wrapperType = WrapperType.clickable,
     sx,
+    data,
+    setData,
+    preventScreenshot,
   }: {
     bordered?: boolean;
     displayStatus?: boolean;
@@ -180,7 +186,14 @@ export const SharedSlice = {
     thumbnailHeightPx?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
+    data?: initialStateProps;
+    setData?: (data: any) => void;
+    preventScreenshot?: boolean;
   }) {
+    const { generateSliceScreenshot } = useSliceMachineActions();
+    const onTakingSliceScreenshot = () => {
+      generateSliceScreenshot(slice, setData);
+    };
     const defaultVariation = ComponentUI.variation(slice);
     if (!defaultVariation) {
       return null;
@@ -201,11 +214,20 @@ export const SharedSlice = {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
-          <SliceThumbnail
-            withShadow={false}
-            screenshotUrl={screenshotUrl}
-            heightInPx={thumbnailHeightPx}
-          />
+          {wrapperType === WrapperType.changesPage ? (
+            <ImagePreview
+              src={screenshotUrl}
+              imageLoading={data.imageLoading}
+              onScreenshot={onTakingSliceScreenshot}
+              preventScreenshot={preventScreenshot}
+            />
+          ) : (
+            <SliceThumbnail
+              withShadow={false}
+              screenshotUrl={screenshotUrl}
+              heightInPx={thumbnailHeightPx}
+            />
+          )}
           {wrapperType === WrapperType.changesPage ? (
             <LinkCardWrapper link={link}>
               <SliceDescription

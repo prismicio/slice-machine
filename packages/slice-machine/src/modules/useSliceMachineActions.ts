@@ -370,13 +370,11 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    _variationId: string,
     component: ComponentUI,
     setData: (data: any) => void
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
-        _variationId,
         component,
         setData,
       })
