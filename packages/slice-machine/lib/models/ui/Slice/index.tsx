@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import {
   Theme,
   Text,
@@ -17,7 +17,9 @@ import { ComponentUI, LibStatus } from "../../common/ComponentUI";
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType, LinkCardWrapper } from "./wrappers";
 import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
-import { initialStateProps } from "../../../../components/ChangesItems/ChangesItems";
+import { useSelector } from "react-redux";
+import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
+import { SliceMachineStoreType } from "@src/redux/type";
 
 const StateBadgeText = {
   [LibStatus.Modified]: "Modified",
@@ -161,6 +163,39 @@ const SliceDescription = ({
   );
 };
 
+const ImagePreviewWrapper = ({
+  screenshotUrl,
+  slice,
+}: {
+  screenshotUrl?: string;
+  slice: ComponentUI;
+}) => {
+  const { generateSliceScreenshot } = useSliceMachineActions();
+  const { isSimulatorAvailableForFramework } = useSelector(
+    (state: SliceMachineStoreType) => ({
+      isSimulatorAvailableForFramework:
+        selectIsSimulatorAvailableForFramework(state),
+    })
+  );
+  const [data, setData] = React.useState<{ imageLoading: boolean }>({
+    imageLoading: false,
+  });
+  if (
+    slice.model.name === "CategoryPreviewWithImageBackgrounds" ||
+    slice.model.name === "CategoryPreviewWithScrollingCards"
+  ) {
+    console.log(slice.model.name, data);
+  }
+  return (
+    <ImagePreview
+      src={screenshotUrl}
+      imageLoading={data.imageLoading}
+      onScreenshot={() => generateSliceScreenshot(slice, setData)}
+      preventScreenshot={!isSimulatorAvailableForFramework}
+    />
+  );
+};
+
 export const SharedSlice = {
   render({
     bordered,
@@ -172,9 +207,6 @@ export const SharedSlice = {
     thumbnailHeightPx = "280px",
     wrapperType = WrapperType.clickable,
     sx,
-    data,
-    setData,
-    preventScreenshot,
   }: {
     bordered?: boolean;
     displayStatus?: boolean;
@@ -186,14 +218,7 @@ export const SharedSlice = {
     thumbnailHeightPx?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sx?: any;
-    data?: initialStateProps;
-    setData?: (data: any) => void;
-    preventScreenshot?: boolean;
   }) {
-    const { generateSliceScreenshot } = useSliceMachineActions();
-    const onTakingSliceScreenshot = () => {
-      generateSliceScreenshot(slice, setData);
-    };
     const defaultVariation = ComponentUI.variation(slice);
     if (!defaultVariation) {
       return null;
@@ -215,12 +240,7 @@ export const SharedSlice = {
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
           {wrapperType === WrapperType.changesPage ? (
-            <ImagePreview
-              src={screenshotUrl}
-              imageLoading={data.imageLoading}
-              onScreenshot={onTakingSliceScreenshot}
-              preventScreenshot={preventScreenshot}
-            />
+            <ImagePreviewWrapper screenshotUrl={screenshotUrl} slice={slice} />
           ) : (
             <SliceThumbnail
               withShadow={false}

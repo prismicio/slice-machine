@@ -5,6 +5,7 @@ import {
   put,
   SagaReturnType,
   select,
+  takeEvery,
 } from "redux-saga/effects";
 import axios from "axios";
 import { getType } from "typesafe-actions";
@@ -284,7 +285,7 @@ export function* renameSliceSaga({
 }
 
 function* watchGenerateSliceScreenshot() {
-  yield takeLatest(
+  yield takeEvery(
     getType(generateSliceScreenshotCreator.request),
     withLoader(
       generateSliceScreenshotSaga,
