@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Flex, Spinner, Text } from "theme-ui";
 import Container from "components/Container";
 import Header from "components/Header";
@@ -10,17 +10,25 @@ import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { ChangesItems } from "@components/ChangesItems";
 import { NoChangesPage, OfflinePage } from "@components/ChangesEmptyPage";
 import { useNetwork } from "@src/hooks/useNetwork";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const changes: React.FunctionComponent = () => {
-  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
+  const { pushChanges } = useSliceMachineActions();
+  const { unSyncedSlices, unSyncedCustomTypes, loading } = useSelector(
     (store: SliceMachineStoreType) => ({
       unSyncedSlices: getUnSyncedSlices(store),
       unSyncedCustomTypes: getUnSyncedCustomTypes(store),
+      loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
     })
   );
   const isOnline = useNetwork();
-  const [loading] = useState(false); //todo: ass a setLoading method and use it when pushing changes
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
+  const handlePush = () => {
+    pushChanges(unSyncedSlices, unSyncedCustomTypes);
+  };
 
   const renderPageContent = () => {
     if (!isOnline) {
@@ -38,24 +46,15 @@ const changes: React.FunctionComponent = () => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flex: 1,
-      }}
-    >
+    <Container sx={{ display: "flex", flex: 1 }}>
       <Box
         as={"main"}
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-        }}
+        sx={{ flex: 1, display: "flex", flexDirection: "column" }}
       >
         <Header
           ActionButton={
             <Button
-              onClick={() => console.log("push changes")} //todo: add push changes feature
+              onClick={handlePush}
               data-cy="push-changes"
               disabled={numberOfChanges === 0 || !isOnline}
               sx={{ minWidth: "120px" }}
