@@ -27,8 +27,7 @@
     "form-data": "^3.0.0",
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
-    "mime": "^2.5.2",
-    "uniqid": "^5.4.0"
+    "mime": "^2.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
