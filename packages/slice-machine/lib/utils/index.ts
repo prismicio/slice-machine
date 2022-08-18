@@ -50,8 +50,14 @@ export const compareVariations = (
   rhs: ReadonlyArray<VariationSM>
 ) => {
   return equal(
-    lhs.map((e) => ({ ...e, imageUrl: undefined })),
-    rhs.map((e) => ({ ...e, imageUrl: undefined }))
+    lhs.map((e) => ({
+      ...e,
+      imageUrl: e.imageUrl && new URL(e.imageUrl).pathname,
+    })),
+    rhs.map((e) => ({
+      ...e,
+      imageUrl: e.imageUrl && new URL(e.imageUrl).pathname,
+    }))
   );
 };
 export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
