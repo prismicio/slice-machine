@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getUnSyncedSlices } from "@src/modules/slices";
 import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
+import { useNetwork } from "@src/hooks/useNetwork";
 
 export interface LinkProps {
   title: string;
@@ -21,7 +22,10 @@ export interface LinkProps {
   RightElement?: React.ReactNode;
 }
 
-const getNavigationLinks = (numberOfChanges: number): LinkProps[] => [
+const getNavigationLinks = (
+  displayNumberOfChanges: boolean,
+  numberOfChanges: number
+): LinkProps[] => [
   {
     title: "Custom Types",
     href: "/",
@@ -45,17 +49,18 @@ const getNavigationLinks = (numberOfChanges: number): LinkProps[] => [
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
-    RightElement: (
+    RightElement: displayNumberOfChanges ? (
       <ChangesIndicator
         numberOfChanges={numberOfChanges}
         match={(pathname: string) => pathname.indexOf("/changes") === 0}
       />
-    ),
+    ) : null,
   },
 ];
 
 const Navigation: React.FC = () => {
   const viewport = useWindowSize();
+  const isOnline = useNetwork();
 
   const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -65,11 +70,16 @@ const Navigation: React.FC = () => {
   );
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+  const displayNumberOfChanges = numberOfChanges != 0 && isOnline;
 
   return (viewport.width as number) < 640 ? (
-    <Mobile links={getNavigationLinks(numberOfChanges)} />
+    <Mobile
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+    />
   ) : (
-    <Desktop links={getNavigationLinks(numberOfChanges)} />
+    <Desktop
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+    />
   );
 };
 
