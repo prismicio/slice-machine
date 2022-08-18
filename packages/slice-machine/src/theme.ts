@@ -196,7 +196,21 @@ const AppTheme = (): Theme =>
         px: 1,
         py: "1px",
       },
-      UNKNOWN: {
+      UNKNOWN_DEFAULT: {
+        fontWeight: "body",
+        color: "badge.unknown.color",
+        bg: "badge.unknown.bg",
+        px: 1,
+        py: "1px",
+      },
+      UNKNOWN_OFFLINE: {
+        fontWeight: "body",
+        color: "badge.unknown.color",
+        bg: "badge.unknown.bg",
+        px: 1,
+        py: "1px",
+      },
+      UNKNOWN_DISCONNECTED: {
         fontWeight: "body",
         color: "badge.unknown.color",
         bg: "badge.unknown.bg",

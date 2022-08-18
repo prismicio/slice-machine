@@ -2,6 +2,7 @@ import ReactTooltip from "react-tooltip";
 import { Badge, Flex, Text } from "theme-ui";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
+import { useNetwork } from "@src/hooks/useNetwork";
 
 const statusEnumToDisplayNameAndTooltip = (status?: string) => {
   switch (status) {
@@ -23,7 +24,19 @@ const statusEnumToDisplayNameAndTooltip = (status?: string) => {
         statusTooltip:
           "This Custom Type is in sync with the remote repository.",
       };
-    case CustomTypeStatus.Unknown:
+    case CustomTypeStatus.UnknownOffline:
+      return {
+        statusDisplayName: "Unknown",
+        statusTooltip:
+          "Data from the remote repository could not be fetched (no internet connection).",
+      };
+    case CustomTypeStatus.UnknownDisconnected:
+      return {
+        statusDisplayName: "Unknown",
+        statusTooltip:
+          "Data from the remote repository could not be fetched (not connected to Prismic).",
+      };
+    case CustomTypeStatus.UnknownDefault:
       return {
         statusDisplayName: "Unknown",
         statusTooltip:
@@ -45,6 +58,12 @@ interface StatusBadgeWithTooltipProps {
 export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
   customType,
 }) => {
+  const isOnline = useNetwork();
+
+  customType.__status = !isOnline
+    ? CustomTypeStatus.UnknownOffline
+    : customType.__status;
+
   const { statusDisplayName, statusTooltip } =
     statusEnumToDisplayNameAndTooltip(customType.__status);
 
