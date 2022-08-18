@@ -5,6 +5,7 @@ import {
   renameCustomTypeCreator,
   renameCustomTypeSaga,
 } from "@src/modules/availableCustomTypes";
+import { pushCustomTypeCreator } from "@src/modules/selectedCustomType";
 import { testSaga } from "redux-saga-test-plan";
 import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -18,6 +19,7 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -76,6 +78,71 @@ describe("[Available Custom types module]", () => {
         ...dummyCustomTypesState,
         [createdCustomType.id]: {
           local: createdCustomType,
+        },
+      });
+    });
+
+    it("should update the custom types state given CUSTOM_TYPES/PUSH.SUCCESS action", () => {
+      const newCustomType: CustomTypeSM = {
+        id: "id",
+        label: "lama",
+        repeatable: false,
+        status: true,
+        tabs: [
+          {
+            key: "Main",
+            value: [],
+          },
+        ],
+      };
+
+      const existingCustomType: CustomTypeSM = {
+        id: "id2",
+        label: "updatedLabel",
+        repeatable: false,
+        status: true,
+        tabs: [
+          {
+            key: "Main",
+            value: [],
+          },
+        ],
+      };
+
+      const state: AvailableCustomTypesStoreType = {
+        ...dummyCustomTypesState,
+        [newCustomType.id]: {
+          local: newCustomType, // simulating a new custom type created locally
+        },
+        [existingCustomType.id]: {
+          local: existingCustomType, // simulating modified custom type locally
+          remote: newCustomType,
+        },
+      };
+
+      const pushNewCustomType = pushCustomTypeCreator.success({
+        customTypeId: newCustomType.id,
+      });
+
+      const pushExistingCustomType = pushCustomTypeCreator.success({
+        customTypeId: existingCustomType.id,
+      });
+
+      expect(availableCustomTypesReducer(state, pushNewCustomType)).toEqual({
+        ...state,
+        [newCustomType.id]: {
+          local: { ...newCustomType, __status: CustomTypeStatus.Synced },
+          remote: newCustomType,
+        },
+      });
+
+      expect(
+        availableCustomTypesReducer(state, pushExistingCustomType)
+      ).toEqual({
+        ...state,
+        [existingCustomType.id]: {
+          local: { ...existingCustomType, __status: CustomTypeStatus.Synced },
+          remote: existingCustomType,
         },
       });
     });
