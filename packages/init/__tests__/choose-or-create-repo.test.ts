@@ -68,12 +68,7 @@ describe("choose-or-create-repo", () => {
     createRepositoryMock.mockImplementation(() => fakeRepository);
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      client,
-      fakeCwd,
-      framework,
-      false
-    );
+    const result = await chooseOrCreateARepository(client, fakeCwd, framework);
 
     expect(createRepositoryMock).toHaveBeenCalledWith(
       client,
@@ -109,12 +104,7 @@ describe("choose-or-create-repo", () => {
     );
     jest.spyOn(console, "log").mockImplementationOnce(() => undefined);
 
-    const result = await chooseOrCreateARepository(
-      client,
-      fakeCwd,
-      framework,
-      false
-    );
+    const result = await chooseOrCreateARepository(client, fakeCwd, framework);
 
     expect(createRepositoryMock).toHaveBeenCalledWith(
       client,
@@ -140,7 +130,6 @@ describe("choose-or-create-repo", () => {
       client,
       fakeCwd,
       framework,
-      false,
       fakeRepository
     );
 
@@ -169,7 +158,6 @@ describe("choose-or-create-repo", () => {
       client,
       fakeCwd,
       framework,
-      false,
       fakeRepository
     );
 
