@@ -78,7 +78,10 @@ export function resolvePathsToScreenshot({
 
   if (!screenshot) return screenshot;
 
+  const hash = Files.readFileAndCreateHashSync(screenshot.path);
+
   return {
     path: screenshot.path,
+    hash,
   };
 }
