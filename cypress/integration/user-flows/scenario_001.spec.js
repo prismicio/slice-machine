@@ -120,7 +120,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   it("Push custom type", () => {
     cy.setupSliceMachineUserContext();
     cy.visit(`/cts/${id}`);
-    cy.waitUntil(() => cy.get('[data-cy=ct-builder-primary-button"]'));
+    cy.waitUntil(() => cy.get("[data-cy=ct-builder-primary-button]"));
 
     cy.get("[data-cy=ct-builder-primary-button]").within(() => {
       cy.contains("Push to Prismic").should("be.visible");
