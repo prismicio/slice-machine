@@ -36,12 +36,6 @@ const statusEnumToDisplayNameAndTooltip = (status?: string) => {
         statusTooltip:
           "Data from the remote repository could not be fetched (not connected to Prismic).",
       };
-    case CustomTypeStatus.UnknownDefault:
-      return {
-        statusDisplayName: "Unknown",
-        statusTooltip:
-          "Data from the remote repository could not be fetched (unknown error).",
-      };
     default:
       return {
         statusDisplayName: "Unknown",

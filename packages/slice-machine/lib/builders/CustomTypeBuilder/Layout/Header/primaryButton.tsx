@@ -51,7 +51,6 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     [
       CustomTypeStatus.New,
       CustomTypeStatus.Modified,
-      CustomTypeStatus.UnknownDefault,
       CustomTypeStatus.UnknownOffline,
       CustomTypeStatus.UnknownDisconnected,
     ].includes(customTypeStatus)

@@ -8,7 +8,6 @@ export enum CustomTypeStatus {
   New = "NEW_CT",
   Modified = "MODIFIED",
   Synced = "SYNCED",
-  UnknownDefault = "UNKNOWN_DEFAULT",
   UnknownOffline = "UNKNOWN_OFFLINE",
   UnknownDisconnected = "UNKNOWN_DISCONNECTED",
 }
