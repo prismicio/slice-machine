@@ -30,6 +30,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         onClick={() => {
           saveCustomType();
         }}
+        data-cy="ct-builder-primary-button"
         children={
           <span>
             {isSavingCustomType ? (
@@ -61,6 +62,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             pushCustomType();
           }
         }}
+        data-cy="ct-builder-primary-button"
         children={
           <span>
             {isPushingCustomType ? (

@@ -1,7 +1,9 @@
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
-const axios = require("axios");
+import fs from "fs";
+import os from "os";
+import path from "path";
+import axios from "axios";
+
+// File called from the cypress setup in cypress-setup.sh
 
 axios
   .post(

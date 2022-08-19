@@ -5,7 +5,6 @@ import * as NodeUtils from "@slicemachine/core/build/node-utils";
 import { createRepository } from "../utils/create-repo";
 import { validateRepositoryName } from "../utils/validateRepositoryName";
 import { InitClient, logs } from "../utils";
-import { v4 as uuidv4 } from "uuid";
 
 export const CREATE_REPO = "$_CREATE_REPO"; // not a valid domain name
 
@@ -117,7 +116,6 @@ export async function chooseOrCreateARepository(
   client: InitClient,
   cwd: string,
   framework: Models.Frameworks,
-  isE2e: boolean,
   preSelectedRepository?: string
 ): Promise<string> {
   const repositories: Models.Repository[] = await client.listRepositories();
@@ -128,12 +126,6 @@ export async function chooseOrCreateARepository(
       (repository) => repository.domain === preSelectedRepository
     );
   if (isPreSelectedValid) return preSelectedRepository;
-
-  if (isE2e) {
-    const domainName = `cypress-repo-${uuidv4()}`;
-    await createRepository(client, domainName, framework);
-    return domainName;
-  }
 
   // No repository to display, ask for a new repository name to create it.
   if (repositories.length === 0) {
