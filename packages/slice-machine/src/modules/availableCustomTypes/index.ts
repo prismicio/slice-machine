@@ -145,13 +145,18 @@ export const availableCustomTypesReducer: Reducer<
       const remoteCustomType: CustomTypeSM | undefined =
         state[localCustomType.id].remote;
 
+      const isCustomTypeDisconnected =
+        localCustomType.__status === CustomTypeStatus.UnknownDisconnected;
+
       return {
         ...state,
         [localCustomType.id]: {
           ...state[localCustomType.id],
           local: {
             ...localCustomType,
-            __status: getCustomTypeStatus(localCustomType, remoteCustomType),
+            __status: isCustomTypeDisconnected
+              ? CustomTypeStatus.UnknownDisconnected
+              : getCustomTypeStatus(localCustomType, remoteCustomType),
           },
         },
       };
@@ -177,6 +182,8 @@ export const availableCustomTypesReducer: Reducer<
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
       const newLocalCustomType = { ...state[id].local, label: newName };
+      const isCustomTypeDisconnected =
+        newLocalCustomType.__status === CustomTypeStatus.UnknownDisconnected;
 
       const remoteCustomType: CustomTypeSM | undefined = state[id].remote;
 
@@ -184,7 +191,9 @@ export const availableCustomTypesReducer: Reducer<
         ...state[id],
         local: {
           ...newLocalCustomType,
-          __status: getCustomTypeStatus(newLocalCustomType, remoteCustomType),
+          __status: isCustomTypeDisconnected
+            ? CustomTypeStatus.UnknownDisconnected
+            : getCustomTypeStatus(newLocalCustomType, remoteCustomType),
         },
       };
 
