@@ -182,8 +182,6 @@ export const availableCustomTypesReducer: Reducer<
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
       const newLocalCustomType = { ...state[id].local, label: newName };
-      const isCustomTypeDisconnected =
-        newLocalCustomType.__status === CustomTypeStatus.UnknownDisconnected;
 
       const remoteCustomType: CustomTypeSM | undefined = state[id].remote;
 
@@ -191,9 +189,7 @@ export const availableCustomTypesReducer: Reducer<
         ...state[id],
         local: {
           ...newLocalCustomType,
-          __status: isCustomTypeDisconnected
-            ? CustomTypeStatus.UnknownDisconnected
-            : getCustomTypeStatus(newLocalCustomType, remoteCustomType),
+          __status: getCustomTypeStatus(newLocalCustomType, remoteCustomType),
         },
       };
 
