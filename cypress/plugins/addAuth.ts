@@ -3,6 +3,8 @@ import os from "os";
 import path from "path";
 import axios from "axios";
 
+// File called from the cypress setup in cypress-setup.sh
+
 axios
   .post(
     `https://${process.env.CYPRESS_URL || "prismic.io"}/authentication/signin`,

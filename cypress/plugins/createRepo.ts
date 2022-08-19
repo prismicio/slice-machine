@@ -3,6 +3,8 @@ import { ApplicationMode } from "../../packages/client/src/models/ApplicationMod
 import { PrismicSharedConfigManager } from "../../packages/core/src/prismic/SharedConfig";
 import { Frameworks } from "../../packages/core/src/models/Framework";
 
+// File called from the cypress setup in cypress-setup.sh
+
 const appMode =
   process.env.CYPRESS_URL === "wroom.io"
     ? ApplicationMode.STAGE
