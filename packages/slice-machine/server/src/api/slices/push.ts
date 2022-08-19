@@ -45,11 +45,10 @@ export async function pushSlice(
       variations,
     };
 
-    IO.Slice.writeSlice(modelPath, modelWithImageUrl);
-
     return createOrUpdate(slices, modelWithImageUrl, env.client)
       .then(() => {
         console.log("[slice/push] done!");
+        IO.Slice.writeSlice(modelPath, modelWithImageUrl);
         return {};
       })
       .catch((error: ClientError) => {
