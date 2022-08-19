@@ -70,7 +70,7 @@ const Navigation: React.FC = () => {
   );
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
-  const displayNumberOfChanges = numberOfChanges != 0 && isOnline;
+  const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;
 
   return (viewport.width as number) < 640 ? (
     <Mobile
