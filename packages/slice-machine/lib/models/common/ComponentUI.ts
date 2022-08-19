@@ -55,7 +55,7 @@ export enum LibStatus {
   NewSlice = "NEW_SLICE",
 }
 
-export interface ScreenshotUI extends Omit<Screenshot, "hash"> {
+export interface ScreenshotUI extends Screenshot {
   url: string;
 }
 

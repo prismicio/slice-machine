@@ -323,10 +323,7 @@ export const renameScreenshotPaths = (
   newName: string
 ): Record<string, Screenshot> => {
   return Object.entries(initialPaths).reduce((acc, [key, screenshot]) => {
-    acc[key] = {
-      ...acc[key],
-      path: screenshot.path.replace(prevName, newName),
-    };
+    acc[key] = { path: screenshot.path.replace(prevName, newName) };
     return acc;
   }, {} as Record<string, Screenshot>);
 };

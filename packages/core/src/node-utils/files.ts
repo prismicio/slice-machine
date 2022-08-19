@@ -172,11 +172,6 @@ async function readFileAndCreateHash(filePath: string): Promise<string> {
     .then((file) => createHash("md5").update(file).digest("hex"));
 }
 
-function readFileAndCreateHashSync(filePath: string): string {
-  const data = readString(filePath);
-  return createHash("md5").update(data).digest("hex");
-}
-
 export default {
   write,
   readBuffer,
@@ -197,5 +192,4 @@ export default {
   removeAll,
   flushDirectories,
   readFileAndCreateHash,
-  readFileAndCreateHashSync,
 };
