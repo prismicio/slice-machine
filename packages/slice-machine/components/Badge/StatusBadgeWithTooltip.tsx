@@ -54,22 +54,27 @@ export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
 }) => {
   const isOnline = useNetwork();
 
-  customType.__status = !isOnline
+  const updatedCustomTypeStatus = !isOnline
     ? CustomTypeStatus.UnknownOffline
     : customType.__status;
 
+  const updatedCustomType = {
+    ...customType,
+    __status: updatedCustomTypeStatus,
+  };
+
   const { statusDisplayName, statusTooltip } =
-    statusEnumToDisplayNameAndTooltip(customType.__status);
+    statusEnumToDisplayNameAndTooltip(updatedCustomType.__status);
 
   return (
     <>
-      <Text data-for={`${customType.id}-tooltip`} data-tip>
-        <Badge mr="2" variant={customType.__status}>
+      <Text data-for={`${updatedCustomType.id}-tooltip`} data-tip>
+        <Badge mr="2" variant={updatedCustomType.__status}>
           {statusDisplayName}
         </Badge>
       </Text>
       <ReactTooltip
-        id={`${customType.id}-tooltip`}
+        id={`${updatedCustomType.id}-tooltip`}
         type="dark"
         multiline
         border
