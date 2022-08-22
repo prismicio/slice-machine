@@ -123,45 +123,30 @@ const SliceDescription = ({
   displayStatus,
   CustomStatus,
   slice,
-  wrapperType,
 }: {
   displayStatus?: boolean;
   CustomStatus?: React.FC<{ slice: ComponentUI }>;
   slice: ComponentUI;
-  wrapperType: WrapperType;
-}) => {
-  const extraSx: ThemeUIStyleObject =
-    wrapperType === WrapperType.changesPage
-      ? {
-          justifyContent: "space-between",
-          flex: "1",
-          flexDirection: "row-reverse",
-        }
-      : {};
-
-  return (
-    <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
-      <Flex sx={{ alignItems: "center", ...extraSx }}>
-        {CustomStatus ? (
-          <CustomStatus slice={slice} />
-        ) : (
-          <Fragment>
-            {displayStatus && slice.__status ? (
-              <StatusBadge libStatus={slice.__status} />
-            ) : null}
-          </Fragment>
-        )}
-        <TextWithTooltip text={slice.model.name} as="h6" />
-      </Flex>
-      {wrapperType !== WrapperType.changesPage && (
-        <SliceVariations
-          variations={slice.model.variations}
-          hideVariations={false}
-        />
+}) => (
+  <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
+    <Flex sx={{ alignItems: "center" }}>
+      {CustomStatus ? (
+        <CustomStatus slice={slice} />
+      ) : (
+        <Fragment>
+          {displayStatus && slice.__status ? (
+            <StatusBadge libStatus={slice.__status} />
+          ) : null}
+        </Fragment>
       )}
+      <TextWithTooltip text={slice.model.name} as="h6" />
     </Flex>
-  );
-};
+    <SliceVariations
+      variations={slice.model.variations}
+      hideVariations={false}
+    />
+  </Flex>
+);
 
 const ImagePreviewWrapper = ({
   screenshotUrl,
@@ -244,7 +229,6 @@ export const SharedSlice = {
                   slice={slice}
                   CustomStatus={CustomStatus}
                   displayStatus={displayStatus}
-                  wrapperType={wrapperType}
                 />
               </LinkCardWrapper>
             </>
@@ -259,7 +243,6 @@ export const SharedSlice = {
                 slice={slice}
                 CustomStatus={CustomStatus}
                 displayStatus={displayStatus}
-                wrapperType={wrapperType}
               />
             </>
           )}
