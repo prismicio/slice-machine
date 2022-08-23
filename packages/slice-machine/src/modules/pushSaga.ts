@@ -1,6 +1,6 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { pushCustomType, pushSliceApiClient } from "@src/apiClient";
+import { pushCustomType, pushSliceApiClient } from "../../src/apiClient";
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "./loading";
@@ -8,11 +8,22 @@ import { LoadingKeysEnum } from "./loading/types";
 import { pushCustomTypeCreator } from "./selectedCustomType";
 import { pushSliceCreator } from "./selectedSlice/actions";
 import { openToasterCreator, ToasterType } from "./toaster";
+import { modalOpenCreator } from "./modal";
+import { ModalKeysEnum } from "./modal/types";
+import axios from "axios";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
 }>();
+
+function isAuthError(e: unknown): boolean {
+  return axios.isAxiosError(e) &&
+    e.response?.status &&
+    (e.response.status === 401 || e.response.status === 403)
+    ? true
+    : false;
+}
 
 function* pushSliceSaga(slice: ComponentUI) {
   try {
@@ -20,7 +31,11 @@ function* pushSliceSaga(slice: ComponentUI) {
     yield put(pushSliceCreator.success({ component: slice }));
     return undefined;
   } catch (e) {
-    return slice.model.id;
+    if (isAuthError(e)) {
+      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+    } else {
+      return slice.model.id;
+    }
   }
 }
 
@@ -30,6 +45,9 @@ function* pushCustomTypeSaga(customType: CustomTypeSM) {
     yield put(pushCustomTypeCreator.success({ customTypeId: customType.id }));
     return undefined;
   } catch (e) {
+    if (isAuthError(e)) {
+      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+    }
     return customType.id;
   }
 }
