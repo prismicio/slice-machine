@@ -11,10 +11,6 @@ export const ChangesIndicator: React.FC<ChangesIndicatorProps> = ({
   match,
 }) => {
   const router = useRouter();
-  if (numberOfChanges === 0) {
-    return null;
-  }
-
   const formattedNumber = numberOfChanges > 5 ? "5+" : numberOfChanges;
   const isNavItemSelected = match(router.asPath);
 

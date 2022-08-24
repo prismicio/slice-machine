@@ -160,15 +160,16 @@ export const availableCustomTypesReducer: Reducer<
     case getType(pushCustomTypeCreator.success): {
       if (!state) return state;
       const customTypeId = action.payload.customTypeId;
+      const localCustomType: CustomTypeSM = state[customTypeId].local;
 
       return {
         ...state,
         [customTypeId]: {
-          ...state[customTypeId],
           local: {
-            ...state[customTypeId].local,
+            ...localCustomType,
             __status: CustomTypeStatus.Synced,
           },
+          remote: localCustomType,
         },
       };
     }

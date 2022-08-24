@@ -35,7 +35,6 @@ async function init() {
     process.argv,
     "repository"
   );
-  const isE2e = findArgument(process.argv, "e2e") === "true";
   const pushDocuments = !findFlag(process.argv, "no-docs");
 
   Tracker.get().initialize(
@@ -75,7 +74,6 @@ async function init() {
     client,
     cwd,
     frameworkResult.value,
-    isE2e,
     preSelectedRepository
   );
 

@@ -28,6 +28,7 @@ const FieldZone = ({
   NewFieldC,
   renderHintBase,
   isRepeatable,
+  dataCy,
 }) => {
   const { framework } = useSelector((state) => ({
     framework: getFramework(state),
@@ -49,6 +50,8 @@ const FieldZone = ({
             {...provided.droppableProps}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             style={{ ...provided.droppableProps.style, padding: "4px 0" }}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            data-cy={dataCy}
           >
             {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
