@@ -145,13 +145,18 @@ export const availableCustomTypesReducer: Reducer<
       const remoteCustomType: CustomTypeSM | undefined =
         state[localCustomType.id].remote;
 
+      const isCustomTypeDisconnected =
+        localCustomType.__status === CustomTypeStatus.UnknownDisconnected;
+
       return {
         ...state,
         [localCustomType.id]: {
           ...state[localCustomType.id],
           local: {
             ...localCustomType,
-            __status: getCustomTypeStatus(localCustomType, remoteCustomType),
+            __status: isCustomTypeDisconnected
+              ? CustomTypeStatus.UnknownDisconnected
+              : getCustomTypeStatus(localCustomType, remoteCustomType),
           },
         },
       };

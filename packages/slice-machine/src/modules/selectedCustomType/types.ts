@@ -8,7 +8,8 @@ export enum CustomTypeStatus {
   New = "NEW_CT",
   Modified = "MODIFIED",
   Synced = "SYNCED",
-  Unknown = "UNKNOWN",
+  UnknownOffline = "UNKNOWN_OFFLINE",
+  UnknownDisconnected = "UNKNOWN_DISCONNECTED",
 }
 
 export type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;

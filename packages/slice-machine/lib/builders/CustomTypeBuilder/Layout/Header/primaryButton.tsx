@@ -48,13 +48,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     );
   }
 
-  if (
-    [
-      CustomTypeStatus.New,
-      CustomTypeStatus.Modified,
-      CustomTypeStatus.Unknown,
-    ].includes(customTypeStatus)
-  ) {
+  if (customTypeStatus !== CustomTypeStatus.Synced) {
     return (
       <Button
         onClick={() => {
