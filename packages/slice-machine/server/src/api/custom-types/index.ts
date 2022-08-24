@@ -48,7 +48,7 @@ export default async function handler(env: BackendEnvironment): Promise<{
       } else {
         return {
           ...customType,
-          __status: CustomTypeStatus.Unknown,
+          __status: CustomTypeStatus.UnknownDisconnected,
         };
       }
     }

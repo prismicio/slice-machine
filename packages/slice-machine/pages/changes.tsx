@@ -1,28 +1,34 @@
 import React from "react";
 import { Box, Button, Flex, Spinner, Text } from "theme-ui";
-import Container from "components/Container";
-import Header from "components/Header";
+import Container from "../components/Container";
+import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { getUnSyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
-import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
-import { ChangesItems } from "@components/ChangesItems";
-import { NoChangesPage, OfflinePage } from "@components/ChangesEmptyPage";
-import { useNetwork } from "@src/hooks/useNetwork";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { getUnSyncedCustomTypes } from "../src/modules/availableCustomTypes";
+import { ChangesItems } from "../components/ChangesItems";
+import {
+  AuthErrorPage,
+  NoChangesPage,
+  OfflinePage,
+} from "../components/ChangesEmptyPage";
+import { useNetwork } from "../src/hooks/useNetwork";
+import useSliceMachineActions from "../src/modules/useSliceMachineActions";
+import { isLoading } from "../src/modules/loading";
+import { LoadingKeysEnum } from "../src/modules/loading/types";
+import { getAuthStatus } from "../src/modules/environment";
+import { AuthStatus } from "../src/modules/userContext/types";
 
 const changes: React.FunctionComponent = () => {
   const { pushChanges } = useSliceMachineActions();
-  const { unSyncedSlices, unSyncedCustomTypes, loading } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { unSyncedSlices, unSyncedCustomTypes, loading, authStatus } =
+    useSelector((store: SliceMachineStoreType) => ({
       unSyncedSlices: getUnSyncedSlices(store),
       unSyncedCustomTypes: getUnSyncedCustomTypes(store),
       loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
-    })
-  );
+      authStatus: getAuthStatus(store),
+    }));
   const isOnline = useNetwork();
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -33,6 +39,12 @@ const changes: React.FunctionComponent = () => {
   const renderPageContent = () => {
     if (!isOnline) {
       return <OfflinePage />;
+    }
+    if (
+      authStatus === AuthStatus.UNAUTHORIZED ||
+      authStatus === AuthStatus.FORBIDDEN
+    ) {
+      return <AuthErrorPage />;
     }
     if (numberOfChanges === 0) {
       return <NoChangesPage />;
@@ -56,7 +68,12 @@ const changes: React.FunctionComponent = () => {
             <Button
               onClick={handlePush}
               data-cy="push-changes"
-              disabled={numberOfChanges === 0 || !isOnline}
+              disabled={
+                numberOfChanges === 0 ||
+                !isOnline ||
+                authStatus === AuthStatus.UNAUTHORIZED ||
+                authStatus === AuthStatus.FORBIDDEN
+              }
               sx={{ minWidth: "120px" }}
             >
               {loading ? (

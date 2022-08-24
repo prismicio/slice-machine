@@ -463,6 +463,7 @@ const useSliceMachineActions = () => {
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
         remoteSlices: serverState.remoteSlices,
+        clientError: serverState.clientError,
       })
     );
   };

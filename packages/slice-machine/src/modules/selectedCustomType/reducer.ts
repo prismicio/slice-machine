@@ -56,16 +56,22 @@ export const selectedCustomTypeReducer: Reducer<
       };
     case getType(saveCustomTypeCreator.success): {
       if (!state) return state;
+      const isCustomTypeDisconnected =
+        state.model.__status === CustomTypeStatus.UnknownDisconnected;
 
       return {
         ...state,
         model: {
           ...state.model,
-          __status: getCustomTypeStatus(state.model, state.remoteModel),
+          __status: isCustomTypeDisconnected
+            ? CustomTypeStatus.UnknownDisconnected
+            : getCustomTypeStatus(state.model, state.remoteModel),
         },
         initialModel: {
           ...state.model,
-          __status: getCustomTypeStatus(state.model, state.remoteModel),
+          __status: isCustomTypeDisconnected
+            ? CustomTypeStatus.UnknownDisconnected
+            : getCustomTypeStatus(state.model, state.remoteModel),
         },
         initialMockConfig: state.mockConfig,
       };

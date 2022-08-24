@@ -2,6 +2,7 @@ import ReactTooltip from "react-tooltip";
 import { Badge, Flex, Text } from "theme-ui";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { CustomTypeStatus } from "../../src/modules/selectedCustomType/types";
+import { useNetwork } from "@src/hooks/useNetwork";
 
 const statusEnumToDisplayNameAndTooltip = (status?: string) => {
   switch (status) {
@@ -23,11 +24,17 @@ const statusEnumToDisplayNameAndTooltip = (status?: string) => {
         statusTooltip:
           "This Custom Type is in sync with the remote repository.",
       };
-    case CustomTypeStatus.Unknown:
+    case CustomTypeStatus.UnknownOffline:
       return {
         statusDisplayName: "Unknown",
         statusTooltip:
-          "Data from the remote repository could not be fetched (unknown error).",
+          "Data from the remote repository could not be fetched (no internet connection).",
+      };
+    case CustomTypeStatus.UnknownDisconnected:
+      return {
+        statusDisplayName: "Unknown",
+        statusTooltip:
+          "Data from the remote repository could not be fetched (not connected to Prismic).",
       };
     default:
       return {
@@ -45,18 +52,29 @@ interface StatusBadgeWithTooltipProps {
 export const StatusBadgeWithTooltip: React.FC<StatusBadgeWithTooltipProps> = ({
   customType,
 }) => {
+  const isOnline = useNetwork();
+
+  const updatedCustomTypeStatus = !isOnline
+    ? CustomTypeStatus.UnknownOffline
+    : customType.__status;
+
+  const updatedCustomType = {
+    ...customType,
+    __status: updatedCustomTypeStatus,
+  };
+
   const { statusDisplayName, statusTooltip } =
-    statusEnumToDisplayNameAndTooltip(customType.__status);
+    statusEnumToDisplayNameAndTooltip(updatedCustomType.__status);
 
   return (
     <>
-      <Text data-for={`${customType.id}-tooltip`} data-tip>
-        <Badge mr="2" variant={customType.__status}>
+      <Text data-for={`${updatedCustomType.id}-tooltip`} data-tip>
+        <Badge mr="2" variant={updatedCustomType.__status}>
           {statusDisplayName}
         </Badge>
       </Text>
       <ReactTooltip
-        id={`${customType.id}-tooltip`}
+        id={`${updatedCustomType.id}-tooltip`}
         type="dark"
         multiline
         border
