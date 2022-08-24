@@ -1,4 +1,4 @@
-import { ComponentUI } from "../../lib/models/common/ComponentUI";
+import { ComponentUI, LibStatus } from "../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import {
   getState,
@@ -70,7 +70,9 @@ export function* changesPushSaga({
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slicesPushResults: Array<string | undefined | number> = yield all(
-    unSyncedSlices.map((slice) => call(pushSliceSaga, slice))
+    unSyncedSlices
+      .filter((slice) => slice.__status !== LibStatus.Synced)
+      .map((slice) => call(pushSliceSaga, slice))
   );
 
   const sliceAuthFailures = slicesPushResults.filter(isAuthErrorCode).length;
