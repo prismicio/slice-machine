@@ -1,7 +1,18 @@
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { pushCustomType, pushSliceApiClient } from "../../src/apiClient";
-import { all, call, fork, put, takeLatest } from "redux-saga/effects";
+import {
+  getState,
+  pushCustomType,
+  pushSliceApiClient,
+} from "../../src/apiClient";
+import {
+  all,
+  call,
+  fork,
+  put,
+  SagaReturnType,
+  takeLatest,
+} from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "./loading";
 import { LoadingKeysEnum } from "./loading/types";
@@ -11,19 +22,12 @@ import { openToasterCreator, ToasterType } from "./toaster";
 import { modalOpenCreator } from "./modal";
 import { ModalKeysEnum } from "./modal/types";
 import axios from "axios";
+import { refreshStateCreator } from "./environment";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
 }>();
-
-function isAuthError(e: unknown): boolean {
-  return axios.isAxiosError(e) &&
-    e.response?.status &&
-    (e.response.status === 401 || e.response.status === 403)
-    ? true
-    : false;
-}
 
 function* pushSliceSaga(slice: ComponentUI) {
   try {
@@ -31,11 +35,10 @@ function* pushSliceSaga(slice: ComponentUI) {
     yield put(pushSliceCreator.success({ component: slice }));
     return undefined;
   } catch (e) {
-    if (isAuthError(e)) {
-      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
-    } else {
-      return slice.model.id;
+    if (axios.isAxiosError(e) && e.response?.status) {
+      return e.response.status;
     }
+    return slice.model.id;
   }
 }
 
@@ -45,11 +48,19 @@ function* pushCustomTypeSaga(customType: CustomTypeSM) {
     yield put(pushCustomTypeCreator.success({ customTypeId: customType.id }));
     return undefined;
   } catch (e) {
-    if (isAuthError(e)) {
-      yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+    if (axios.isAxiosError(e) && e.response?.status) {
+      return e.response.status;
     }
     return customType.id;
   }
+}
+
+function isTruthyString(str: unknown): str is string {
+  return typeof str === typeof "" && Boolean(str);
+}
+
+function isAuthErrorCode(n: unknown): n is number {
+  return typeof n === typeof 0 && (n === 401 || n === 403);
 }
 
 export function* changesPushSaga({
@@ -58,12 +69,16 @@ export function* changesPushSaga({
   const { unSyncedSlices, unSyncedCustomTypes } = payload;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const slicesPushResults: Array<string> = yield all(
+  const slicesPushResults: Array<string | undefined | number> = yield all(
     unSyncedSlices.map((slice) => call(pushSliceSaga, slice))
   );
-  const slicesFailures = slicesPushResults.filter(Boolean).length;
 
-  if (slicesFailures > 0) {
+  const sliceAuthFailures = slicesPushResults.filter(isAuthErrorCode).length;
+  const slicesFailures = slicesPushResults.filter(isTruthyString).length;
+
+  if (sliceAuthFailures > 0) {
+    yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  } else if (slicesFailures > 0) {
     const errorMsg = `Failed to upload ${slicesFailures} slice${
       slicesFailures > 1 ? "s" : ""
     }`;
@@ -76,12 +91,18 @@ export function* changesPushSaga({
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const customTypePushResults: Array<string> = yield all(
+  const customTypePushResults: Array<string | undefined | number> = yield all(
     unSyncedCustomTypes.map((ct) => call(pushCustomTypeSaga, ct))
   );
-  const customTypeFailures = customTypePushResults.filter(Boolean).length;
 
-  if (customTypeFailures > 0) {
+  const customTypeAuthFailures =
+    customTypePushResults.filter(isAuthErrorCode).length;
+  const customTypeFailures =
+    customTypePushResults.filter(isTruthyString).length;
+
+  if (customTypeAuthFailures > 0) {
+    yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  } else if (customTypeFailures > 0) {
     const errorMsg = `Failed to upload ${customTypeFailures} custom type${
       customTypeFailures > 1 ? "s" : ""
     }`;
@@ -93,7 +114,13 @@ export function* changesPushSaga({
     );
   }
 
-  if (slicesFailures === 0 && customTypeFailures === 0) {
+  if (
+    sliceAuthFailures +
+      slicesFailures +
+      customTypeFailures +
+      customTypeAuthFailures ===
+    0
+  ) {
     yield put(
       openToasterCreator({
         message: "All slices and custom types have been pushed",
@@ -101,6 +128,12 @@ export function* changesPushSaga({
       })
     );
   }
+
+  const { data: serverState } = (yield call(getState)) as SagaReturnType<
+    typeof getState
+  >;
+  const { customTypes, ...rest } = serverState;
+  yield put(refreshStateCreator({ ...rest, localCustomTypes: customTypes }));
 }
 
 function* watchChangesPush() {
