@@ -8,7 +8,7 @@ export const SelectRepeatable: React.FC = () => {
   return (
     <Box mb={2}>
       <FlexCard selected={field.value} onClick={() => helpers.setValue(true)}>
-        <Radio checked={field.value} />
+        <Radio checked={field.value} data-cy="repeatable-type-radio-btn" />
         <Box
           sx={{
             marginLeft: 2,
@@ -21,7 +21,7 @@ export const SelectRepeatable: React.FC = () => {
         </Box>
       </FlexCard>
       <FlexCard selected={!field.value} onClick={() => helpers.setValue(false)}>
-        <Radio checked={!field.value} />
+        <Radio checked={!field.value} data-cy="single-type-radio-btn" />
         <Box
           sx={{
             marginLeft: 2,

@@ -16,11 +16,11 @@ interface ImagePreviewProps {
   src?: string;
   onScreenshot: () => void;
   imageLoading: boolean;
-  onHandleFile: (file: File) => void;
+  onHandleFile?: (file: File) => void;
   preventScreenshot: boolean;
 }
 
-const ImagePreview: React.FC<ImagePreviewProps> = ({
+export const ImagePreview: React.FC<ImagePreviewProps> = ({
   src,
   onScreenshot,
   imageLoading,
@@ -35,7 +35,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
 
   const handleFile = (file: File | undefined) => {
     if (inputFile?.current) {
-      file && onHandleFile(file);
+      file && onHandleFile && onHandleFile(file);
       inputFile.current.value = "";
     }
   };
@@ -93,13 +93,15 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
                   >
                     Take screenshot
                   </Button>
-                  <Label
-                    htmlFor="input-file"
-                    variant="buttons.primary"
-                    sx={{ p: 2, borderRadius: "4px" }}
-                  >
-                    Custom screenshot
-                  </Label>
+                  {onHandleFile && (
+                    <Label
+                      htmlFor="input-file"
+                      variant="buttons.primary"
+                      sx={{ p: 2, borderRadius: "4px" }}
+                    >
+                      Custom screenshot
+                    </Label>
+                  )}
                 </Flex>
               </Fragment>
             ) : (
@@ -125,5 +127,3 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     </div>
   );
 };
-
-export default ImagePreview;

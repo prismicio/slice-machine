@@ -17,6 +17,12 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
+import { CustomTypeStatus } from "../selectedCustomType/types";
+import {
+  pushCustomTypeCreator,
+  saveCustomTypeCreator,
+} from "../selectedCustomType/actions";
+import { getCustomTypeStatus } from "@src/utils/customType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -52,7 +58,9 @@ export const renameCustomTypeCreator = createAsyncAction(
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>;
+  | ActionType<typeof renameCustomTypeCreator>
+  | ActionType<typeof saveCustomTypeCreator>
+  | ActionType<typeof pushCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -85,6 +93,21 @@ export const selectCustomTypeById = (
 export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
   Object.values(store.availableCustomTypes).length;
 
+export const getUnSyncedCustomTypes = (
+  store: SliceMachineStoreType
+): ReadonlyArray<CustomTypeSM> => {
+  const unSyncedCustomTypes = Object.values(store.availableCustomTypes).reduce<
+    ReadonlyArray<CustomTypeSM>
+  >((acc, customType) => {
+    const statusIsUnSynced =
+      customType.local.__status === CustomTypeStatus.New ||
+      customType.local.__status === CustomTypeStatus.Modified;
+
+    return statusIsUnSynced ? [...acc, customType.local] : acc;
+  }, []);
+  return unSyncedCustomTypes;
+};
+
 // Reducer
 export const availableCustomTypesReducer: Reducer<
   AvailableCustomTypesStoreType | null,
@@ -114,13 +137,61 @@ export const availableCustomTypesReducer: Reducer<
         ...normalizedNewCustomType,
       };
     }
+
+    case getType(saveCustomTypeCreator.success): {
+      if (!state) return state;
+      const localCustomType = action.payload.customType;
+
+      const remoteCustomType: CustomTypeSM | undefined =
+        state[localCustomType.id].remote;
+
+      const isCustomTypeDisconnected =
+        localCustomType.__status === CustomTypeStatus.UnknownDisconnected;
+
+      return {
+        ...state,
+        [localCustomType.id]: {
+          ...state[localCustomType.id],
+          local: {
+            ...localCustomType,
+            __status: isCustomTypeDisconnected
+              ? CustomTypeStatus.UnknownDisconnected
+              : getCustomTypeStatus(localCustomType, remoteCustomType),
+          },
+        },
+      };
+    }
+
+    case getType(pushCustomTypeCreator.success): {
+      if (!state) return state;
+      const customTypeId = action.payload.customTypeId;
+      const localCustomType: CustomTypeSM = state[customTypeId].local;
+
+      return {
+        ...state,
+        [customTypeId]: {
+          local: {
+            ...localCustomType,
+            __status: CustomTypeStatus.Synced,
+          },
+          remote: localCustomType,
+        },
+      };
+    }
+
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
+      const newLocalCustomType = { ...state[id].local, label: newName };
+
+      const remoteCustomType: CustomTypeSM | undefined = state[id].remote;
 
       const newCustomType = {
         ...state[id],
-        local: { ...state[id].local, label: newName },
+        local: {
+          ...newLocalCustomType,
+          __status: getCustomTypeStatus(newLocalCustomType, remoteCustomType),
+        },
       };
 
       return {

@@ -41,6 +41,7 @@ export const selectIsCurrentCustomTypeHasPendingModifications = (
   store: SliceMachineStoreType
 ) => {
   if (!store.selectedCustomType) return false;
+
   return (
     !equal(
       store.selectedCustomType.initialModel,

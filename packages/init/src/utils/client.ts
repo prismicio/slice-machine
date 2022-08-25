@@ -2,6 +2,7 @@ import * as t from "io-ts";
 import { Models } from "@slicemachine/core";
 import { PrismicSharedConfigManager } from "@slicemachine/core/build/prismic";
 import { Client, getAndValidateResponse } from "@slicemachine/client";
+import { parse } from "@slicemachine/core/build/utils/cookie";
 
 export class InitClient extends Client {
   async listRepositories(): Promise<Models.Repository[]> {
@@ -31,6 +32,27 @@ export class InitClient extends Client {
       headers: {
         Cookie: PrismicSharedConfigManager.get().cookies,
         "User-Agent": "prismic-cli/sm", // special user agent just for this route.
+      },
+    }).then(() => domain);
+  }
+
+  async deleteRepository(
+    domain: string,
+    password: string,
+    cookies: string
+  ): Promise<string> {
+    const repositoryDirectUrl = new URL(this.apisEndpoints.Wroom);
+    repositoryDirectUrl.hostname = `${domain}.${repositoryDirectUrl.hostname}`;
+
+    const token = parse(cookies).X_XSRF;
+
+    return this._fetch({
+      method: "post",
+      url: `${repositoryDirectUrl.toString()}app/settings/delete?_=${token}`,
+      data: { confirm: domain, password },
+      headers: {
+        Cookie: cookies,
+        "User-Agent": "prismic-cli/0", // special user agent just for this route.
       },
     }).then(() => domain);
   }

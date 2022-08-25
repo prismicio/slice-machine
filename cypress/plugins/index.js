@@ -12,6 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const fs = require("fs");
+const os = require("os");
+const path = require("path");
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -23,6 +25,16 @@ module.exports = (on, config) => {
       return fs.promises
         .rm(file, { recursive: true, force: true })
         .then(() => null);
+    },
+    clearDir(dir) {
+      if (fs.existsSync(dir)) {
+        return fs.promises
+          .rmdir(dir, { recursive: true })
+          .then(() => fs.promises.mkdir(dir))
+          .then(() => null);
+      } else {
+        return null;
+      }
     },
   });
 };

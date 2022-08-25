@@ -49,10 +49,7 @@ export const compareVariations = (
   lhs: ReadonlyArray<VariationSM>,
   rhs: ReadonlyArray<VariationSM>
 ) => {
-  return equal(
-    lhs.map((e) => ({ ...e, imageUrl: undefined })),
-    rhs.map((e) => ({ ...e, imageUrl: undefined }))
-  );
+  return equal(lhs, rhs);
 };
 export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
   TYPE_NAME,

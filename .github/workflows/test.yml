@@ -48,4 +48,8 @@ jobs:
         working-directory: ./packages/slice-machine
         run: npm run build && npm run export-build
       - name: Running End to End tests
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          CYPRESS_URL: ${{ secrets.CYPRESS_URL }}
         run: npm i && npm run test:e2e

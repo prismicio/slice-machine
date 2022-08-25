@@ -76,6 +76,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
       >
         <Button
           onClick={onCreateNew}
+          data-cy="empty-state-main-button"
           sx={{
             display: "flex",
             justifyContent: "center",

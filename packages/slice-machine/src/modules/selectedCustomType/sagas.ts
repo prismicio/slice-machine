@@ -30,7 +30,7 @@ export function* saveCustomTypeSaga() {
       name: currentCustomType.label || currentCustomType.id,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
-    yield put(saveCustomTypeCreator.success());
+    yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
     yield put(
       openToasterCreator({
         message: "Model & mocks have been generated successfully!",
@@ -64,7 +64,9 @@ export function* pushCustomTypeSaga() {
       name: currentCustomType.label || currentCustomType.id,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
-    yield put(pushCustomTypeCreator.success());
+    yield put(
+      pushCustomTypeCreator.success({ customTypeId: currentCustomType.id })
+    );
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",

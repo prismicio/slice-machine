@@ -1,4 +1,8 @@
+import { describe, it, expect, jest } from "@jest/globals";
+import crypto from "crypto";
 import nock from "nock";
+import fs from "fs";
+import { Readable } from "stream";
 
 import { Client, ApplicationMode, ClientError } from "../src";
 import {
@@ -512,5 +516,71 @@ describe("Client - Calls", () => {
     return client.deleteScreenshotFolder("slice").catch((e: ClientError) => {
       expect(e.status).toBe(500);
     });
+  });
+
+  // Upload Screen Short
+  it("uploadScreenShot", async () => {
+    const str = "foo-bar-fake-image-data";
+    const sliceId = "my_slice";
+    const variationId = "default";
+
+    const client = new Client(
+      ApplicationMode.PROD,
+      repository,
+      authenticationToken
+    );
+
+    const readFileSpy = jest
+      .spyOn(fs.promises, "readFile")
+      .mockResolvedValue(str);
+    jest
+      .spyOn(fs, "statSync")
+      .mockReturnValue({ length: str.length } as unknown as fs.Stats);
+    jest.spyOn(fs, "createReadStream").mockImplementation(() => {
+      const stream = new Readable();
+      stream.push(str, "utf-8");
+      stream.push(null);
+      return stream as fs.ReadStream;
+    });
+
+    const hash = crypto.createHash("md5").update(str).digest("hex");
+    const fakeS3Url = "https://s3.amazonaws.com/prismic-io/";
+
+    const acl = {
+      ...aclCreateResultMock.values,
+      url: fakeS3Url,
+      imgixEndpoint: aclCreateResultMock.imgixEndpoint,
+    };
+
+    nock(fakeS3Url)
+      .post("/", (body) => {
+        if (!body) return false;
+        if (typeof body !== "string") return false;
+
+        const keyInForm = `form-data; name="key"[^]*${repository}/shared-slices/${sliceId}/${variationId}-${hash}/preview.png`;
+
+        const regexp = new RegExp(keyInForm, "gm");
+
+        expect(body).toEqual(expect.stringMatching(regexp));
+
+        const fileInfo = 'form-data; name="file"; filename="preview.png"';
+
+        expect(body).toContain(fileInfo);
+
+        return true;
+      })
+      .reply(204);
+
+    const result = await client.uploadScreenshot({
+      acl,
+      sliceId: sliceId,
+      variationId: variationId,
+      filePath: "/tmp/preview.png",
+    });
+    expect(result).toEqual(
+      `${aclCreateResultMock.imgixEndpoint}/${repository}/shared-slices/${sliceId}/${variationId}-${hash}/preview.png`
+    );
+    expect(readFileSpy).toHaveBeenCalled();
+    expect.assertions(4);
   });
 });

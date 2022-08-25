@@ -81,7 +81,6 @@ export const generateSliceScreenshotCreator = createAsyncAction(
   "SLICE/TAKE_SCREENSHOT.FAILURE"
 )<
   {
-    _variationId: string;
     component: ComponentUI;
     setData: (data: any) => void;
   },

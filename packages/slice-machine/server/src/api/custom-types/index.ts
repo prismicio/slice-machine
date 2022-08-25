@@ -1,18 +1,17 @@
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
-import Files from "../../../../lib/utils/files";
-import { CustomTypesPaths } from "../../../../lib/models/paths";
 import {
   CustomTypes,
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
-import * as IO from "../../../../lib/io";
 import { ClientError } from "@slicemachine/client";
 import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
+import { getCustomTypeStatus } from "../../../../src/utils/customType";
+import { CustomTypeStatus } from "../../../../src/modules/selectedCustomType/types";
 
 const fetchRemoteCustomTypes = async (
   env: BackendEnvironment
-): Promise<{ remoteCustomTypes: CustomTypeSM[] }> => {
+): Promise<{ remoteCustomTypes: CustomTypeSM[] | null }> => {
   return env.client
     .getCustomTypes()
     .then((customTypes: CustomType[]) => ({
@@ -22,17 +21,8 @@ const fetchRemoteCustomTypes = async (
     }))
     .catch((error: ClientError) => {
       console.warn(error.message);
-      return { remoteCustomTypes: [] };
+      return { remoteCustomTypes: null };
     });
-};
-
-const saveCustomType = (cts: ReadonlyArray<CustomTypeSM>, cwd: string) => {
-  for (const ct of cts) {
-    IO.CustomType.writeCustomType(
-      CustomTypesPaths(cwd).customType(ct.id).model(),
-      ct
-    );
-  }
 };
 
 export default async function handler(env: BackendEnvironment): Promise<{
@@ -41,17 +31,30 @@ export default async function handler(env: BackendEnvironment): Promise<{
 }> {
   const { cwd } = env;
 
-  const pathToCustomTypes = CustomTypesPaths(cwd).value();
-  const folderExists = Files.exists(pathToCustomTypes);
-
   const { remoteCustomTypes } = await fetchRemoteCustomTypes(env);
+  const localCustomTypes = getLocalCustomTypes(cwd);
 
-  if (!folderExists) {
-    saveCustomType(remoteCustomTypes, cwd);
-  }
+  const localCustomTypesWithStatus = localCustomTypes.map(
+    (customType: CustomTypeSM) => {
+      if (remoteCustomTypes) {
+        const remoteCustomType = remoteCustomTypes.find(
+          (rct) => rct.id == customType.id
+        );
 
+        return {
+          ...customType,
+          __status: getCustomTypeStatus(customType, remoteCustomType),
+        };
+      } else {
+        return {
+          ...customType,
+          __status: CustomTypeStatus.UnknownDisconnected,
+        };
+      }
+    }
+  );
   return {
-    customTypes: getLocalCustomTypes(cwd),
-    remoteCustomTypes,
+    customTypes: localCustomTypesWithStatus,
+    remoteCustomTypes: remoteCustomTypes || [],
   };
 }

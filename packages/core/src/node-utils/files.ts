@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { createHash } from "crypto";
 
 const ERROR_CODES = { ENOENT: "ENOENT" };
 const _format: BufferEncoding = "utf8";
@@ -165,6 +166,12 @@ function flushDirectories(directory: string, recursive = true): void {
   } catch (e) {}
 }
 
+async function readFileAndCreateHash(filePath: string): Promise<string> {
+  return fs.promises
+    .readFile(filePath, "utf-8")
+    .then((file) => createHash("md5").update(file).digest("hex"));
+}
+
 export default {
   write,
   readBuffer,
@@ -184,4 +191,5 @@ export default {
   remove,
   removeAll,
   flushDirectories,
+  readFileAndCreateHash,
 };
