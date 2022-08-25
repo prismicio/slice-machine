@@ -48,12 +48,16 @@ export default async function handler(req: RequestWithEnv): Promise<void> {
   const trackingEnabled =
     req.env.manifest.tracking === undefined || req.env.manifest.tracking;
   if (trackingEnabled) {
-    sendEvents(
-      data,
-      req.env.repo,
-      req.env.prismicData.shortId,
-      req.env.prismicData.intercomHash
-    );
+    try {
+      sendEvents(
+        data,
+        req.env.repo,
+        req.env.prismicData.shortId,
+        req.env.prismicData.intercomHash
+      );
+    } catch {
+      /* Should not be blocking */
+    }
   }
 
   return Promise.resolve();
