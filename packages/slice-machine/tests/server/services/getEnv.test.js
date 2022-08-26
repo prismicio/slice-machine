@@ -25,6 +25,12 @@ afterEach(() => {
 });
 
 describe("getEnv", () => {
+  const exitSpy = jest.spyOn(process, "exit"); // client may call process.exit(0) and the CI will exit thinking it's a sucess
+  const env = { ...process.env };
+  afterEach(() => {
+    process.env = env;
+  });
+
   test("it throws if no sm.json file is found", async () => {
     fs.use(Volume.fromJSON({}, TMP));
     await expect(getEnv(TMP)).rejects.toThrow();
@@ -270,6 +276,12 @@ describe("getEnv", () => {
   });
 
   test("it's application mode should be development", async () => {
+    process.env.authentication_server_endpoint = "foo";
+    process.env.customtypesapi_endpoint = "foo";
+    process.env.user_service_endpoint = "foo";
+    process.env.acl_provider_endpoint = "foo";
+
+    const exitSpy = jest.spyOn(process, "exit");
     fs.reset();
     fs.use(
       Volume.fromJSON(
@@ -286,6 +298,7 @@ describe("getEnv", () => {
 
     const { env } = await getEnv(TMP);
     expect(env.applicationMode).toEqual(ApplicationMode.DEV);
+    expect(exitSpy).not.toHaveBeenCalled();
   });
 
   test("it's application mode should be unknown and it should throw", async () => {
