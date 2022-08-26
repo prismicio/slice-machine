@@ -1,17 +1,7 @@
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import {
-  getState,
-  pushCustomType,
-  pushSliceApiClient,
-} from "../../src/apiClient";
-import {
-  call,
-  fork,
-  put,
-  SagaReturnType,
-  takeLatest,
-} from "redux-saga/effects";
+import { pushCustomType, pushSliceApiClient } from "../../src/apiClient";
+import { call, fork, put, takeLatest } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "./loading";
 import { LoadingKeysEnum } from "./loading/types";
@@ -20,7 +10,6 @@ import { pushSliceCreator } from "./selectedSlice/actions";
 import { openToasterCreator, ToasterType } from "./toaster";
 import { modalOpenCreator } from "./modal";
 import { ModalKeysEnum } from "./modal/types";
-import { refreshStateCreator } from "./environment";
 import axios from "axios";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
@@ -41,7 +30,7 @@ export function* changesPushSaga({
       if (
         axios.isAxiosError(e) &&
         e.response?.status &&
-        Math.floor(e.response.status / 100) === 4
+        e.response.status === 403
       ) {
         yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
       } else {
@@ -64,7 +53,7 @@ export function* changesPushSaga({
       if (
         axios.isAxiosError(e) &&
         e.response?.status &&
-        Math.floor(e.response.status / 100) === 4
+        e.response.status === 403
       ) {
         yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
       } else {
@@ -85,12 +74,6 @@ export function* changesPushSaga({
       type: ToasterType.SUCCESS,
     })
   );
-
-  const { data: serverState } = (yield call(getState)) as SagaReturnType<
-    typeof getState
-  >;
-  const { customTypes, ...rest } = serverState;
-  yield put(refreshStateCreator({ ...rest, localCustomTypes: customTypes }));
 }
 
 function* watchChangesPush() {
