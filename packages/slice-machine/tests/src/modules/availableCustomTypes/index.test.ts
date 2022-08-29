@@ -223,6 +223,7 @@ describe("[Available Custom types module]", () => {
       repeatable: false,
       status: true,
       tabs: [],
+      __status: CustomTypeStatus.Modified, // rename act as a save, so status will be set to modified
     };
 
     const existingCustomTypes: AvailableCustomTypesStoreType = {

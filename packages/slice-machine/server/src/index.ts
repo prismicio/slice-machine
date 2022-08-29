@@ -11,16 +11,12 @@ import bodyParser from "body-parser";
 import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
-import fetch from "node-fetch";
 
 // fake comment used to trigger the CI.
 
 declare let global: {
-  fetch: typeof fetch;
   appRoot: string;
 };
-
-global.fetch = fetch; // TODO: remove this bit it's still used in screen-shots
 global.appRoot = path.join(__dirname, "../../");
 
 import api from "./api";

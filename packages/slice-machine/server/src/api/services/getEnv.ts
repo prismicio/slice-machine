@@ -47,7 +47,7 @@ function extractRepo(apiEndpoint: Models.Manifest["apiEndpoint"]): string {
     console.error(
       "It seems your repository API endpoint in your SM.json is wrong. Please start machine again to get instructions on how to fix it."
     );
-    process.exit(0);
+    process.exit(1);
   }
 }
 

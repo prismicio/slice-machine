@@ -10,7 +10,7 @@ type PackageWithModuleAliases = JsonPackage & {
 };
 
 const isAPackageHasModuleAliases = (
-  jsonPackage: JsonPackage | PackageWithModuleAliases
+  jsonPackage: JsonPackage
 ): jsonPackage is PackageWithModuleAliases => {
   return (
     typeof jsonPackage === typeof {} &&
@@ -20,7 +20,7 @@ const isAPackageHasModuleAliases = (
 
 export function resolveAliases(cwd: string): void {
   const pkg = retrieveJsonPackage(cwd);
-  const pkgContent = pkg.content as PackageWithModuleAliases;
+  const pkgContent: JsonPackage | null = pkg.content;
   if (!pkgContent || !isAPackageHasModuleAliases(pkgContent)) {
     return;
   }
