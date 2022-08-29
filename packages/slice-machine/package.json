@@ -135,6 +135,7 @@
     "connected-next-router": "^4.1.0",
     "cross-env": "^7.0.3",
     "diff": "^5.0.0",
+    "esbuild": "^0.15.5",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
