@@ -3,7 +3,6 @@ import "@testing-library/jest-dom";
 import { ComponentUI, LibStatus } from "@lib/models/common/ComponentUI";
 import backendEnvironment from "../../../__mocks__/backendEnvironment";
 import allFieldComponent from "../../../__mocks__/componentModel";
-import allFieldSliceModel from "../../../__mocks__/sliceModel";
 
 describe("ComponentUI", () => {
   describe("build", () => {
@@ -18,7 +17,7 @@ describe("ComponentUI", () => {
     test("return SYNCED as status when the slice don't exist", async () => {
       const componentUI = ComponentUI.build(
         allFieldComponent,
-        [allFieldSliceModel],
+        [allFieldComponent.model],
         backendEnvironment
       );
       expect(componentUI.__status).toBe(LibStatus.Synced);
@@ -33,7 +32,7 @@ describe("ComponentUI", () => {
       };
       const componentUI = ComponentUI.build(
         modifiedAllFieldComponent,
-        [allFieldSliceModel],
+        [allFieldComponent.model],
         backendEnvironment
       );
       expect(componentUI.__status).toBe(LibStatus.Modified);
