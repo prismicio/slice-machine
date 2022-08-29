@@ -13,7 +13,10 @@ import {
   selectCurrentCustomType,
   selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import {
+  CustomTypeSM,
+  CustomTypes,
+} from "@slicemachine/core/build/models/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
@@ -74,7 +77,9 @@ describe("[Selected Custom type sagas]", () => {
       saga.next(customTypeModel).select(selectCurrentMockConfig);
       saga.next({}).call(saveCustomType, customTypeModel, {});
 
-      saga.next().put(saveCustomTypeCreator.success());
+      saga
+        .next()
+        .put(saveCustomTypeCreator.success({ customType: customTypeModel }));
       saga.next().put(
         openToasterCreator({
           message: "Model & mocks have been generated successfully!",
@@ -105,7 +110,11 @@ describe("[Selected Custom type sagas]", () => {
       saga.next().select(selectCurrentCustomType);
       saga.next(customTypeModel).call(pushCustomType, customTypeModel.id);
 
-      saga.next().put(pushCustomTypeCreator.success());
+      saga
+        .next()
+        .put(
+          pushCustomTypeCreator.success({ customTypeId: customTypeModel.id })
+        );
       saga.next().put(
         openToasterCreator({
           message: "Model was correctly saved to Prismic!",
