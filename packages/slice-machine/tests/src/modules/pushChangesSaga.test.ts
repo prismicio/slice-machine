@@ -3,19 +3,12 @@
  */
 
 import "@testing-library/jest-dom";
-import {
-  describe,
-  test,
-  beforeAll,
-  afterAll,
-  afterEach,
-  expect,
-} from "@jest/globals";
+import { describe, test, beforeAll, afterAll, afterEach } from "@jest/globals";
 import {
   changesPushSaga,
   changesPushCreator,
-} from "../../../src/modules/pushSaga";
-import { testSaga, expectSaga } from "redux-saga-test-plan";
+} from "../../../src/modules/pushChangesSaga";
+import { expectSaga } from "redux-saga-test-plan";
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { pushSliceCreator } from "../../../src/modules/selectedSlice/actions";
@@ -147,6 +140,12 @@ describe("[pashSaga module]", () => {
         })
       );
 
+      server.use(
+        rest.get("/api/custom-types/push", (_req, res, ctx) => {
+          return res(ctx.json({}));
+        })
+      );
+
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -157,12 +156,6 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice)
         .put(pushSliceCreator.success({ component: stubSlice }))
         .call(pushSliceApiClient, stubSlice)
-        .put(
-          openToasterCreator({
-            message: `Failed to upload slice: ${stubSlice.model.id}`,
-            type: ToasterType.ERROR,
-          })
-        )
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
@@ -170,6 +163,40 @@ describe("[pashSaga module]", () => {
             type: ToasterType.SUCCESS,
           })
         )
+        .run();
+    });
+
+    test("when one slice fails with a non 403 the others should be pushed", () => {
+      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
+        stubSlice,
+        stubSlice,
+        stubSlice,
+      ];
+      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+
+      server.use(
+        rest.get("/api/slices/push", (_req, res, ctx) => {
+          return res(ctx.json({}));
+        })
+      );
+
+      server.use(
+        rest.get("/api/slices/push", (_req, res, ctx) => {
+          return res.once(ctx.status(401));
+        })
+      );
+
+      const payload = changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+      });
+      const saga = expectSaga(changesPushSaga, payload);
+
+      return saga
+        .call(pushSliceApiClient, stubSlice)
+        .call(pushSliceApiClient, stubSlice)
+        .call(pushSliceApiClient, stubSlice)
+        .not.call(pushCustomType, stubCustomType)
         .run();
     });
   });

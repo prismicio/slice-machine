@@ -72,7 +72,7 @@ import {
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
-import { changesPushCreator } from "./pushSaga";
+import { changesPushCreator } from "./pushChangesSaga";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
