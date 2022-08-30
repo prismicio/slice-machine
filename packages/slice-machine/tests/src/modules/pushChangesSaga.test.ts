@@ -90,7 +90,7 @@ describe("[pashSaga module]", () => {
         )
         .run()
         .then(() => {
-          expect(handleError).not.toHaveBeenCalled();
+          expect(handleError).toHaveBeenCalledWith(null);
         });
     });
 

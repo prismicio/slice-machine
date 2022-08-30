@@ -448,7 +448,7 @@ const useSliceMachineActions = () => {
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
     unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
-    handleError: (e: PUSH_CHANGES_ERRORS) => void
+    handleError: (e: PUSH_CHANGES_ERRORS | null) => void
   ) =>
     dispatch(
       changesPushCreator({ unSyncedSlices, unSyncedCustomTypes, handleError })

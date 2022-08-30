@@ -15,7 +15,7 @@ import axios from "axios";
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
-  handleError: (e: PUSH_CHANGES_ERRORS) => void; // bit hacky but should work
+  handleError: (e: PUSH_CHANGES_ERRORS | null) => void; // bit hacky but should work
 }>();
 
 export enum PUSH_CHANGES_ERRORS {
@@ -80,6 +80,8 @@ export function* changesPushSaga({
   );
 
   if (stop) return handleError(stop);
+
+  handleError(null);
 
   yield put(
     openToasterCreator({
