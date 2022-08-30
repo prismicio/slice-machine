@@ -31,7 +31,7 @@ export function* changesPushSaga({
   let stop: PUSH_CHANGES_ERRORS | null = null; // bit hacky for now until I figure out task cancelation
 
   yield all(
-    unSyncedSlices.map(function* (slice): Generator {
+    unSyncedSlices.map(function* (slice) {
       try {
         // should we add pushSliceCreator.request ?
         yield call(pushSliceApiClient, slice);
