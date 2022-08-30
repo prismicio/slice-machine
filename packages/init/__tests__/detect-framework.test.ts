@@ -86,41 +86,4 @@ describe("detect-framework", () => {
     expect(stderr.output).toContain("package.json not found");
     expect(exitSpy).toHaveBeenCalled();
   });
-
-  test("Unsupported framework: gatsby", async () => {
-    jest.spyOn(fs, "lstatSync").mockReturnValueOnce({ dev: 1 } as fs.Stats);
-    jest.spyOn(fs, "readFileSync").mockReturnValueOnce(
-      JSON.stringify({
-        dependencies: {
-          [Models.Frameworks.gatsby]: "beta",
-          [Models.Frameworks.react]: "beta",
-        },
-      })
-    );
-
-    const exitSpy = jest
-      .spyOn(process, "exit")
-      .mockImplementationOnce(() => undefined as never);
-    const errorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    const logSpy = jest
-      .spyOn(console, "log")
-      .mockImplementation(() => undefined);
-
-    stderr.start();
-    await detectFramework(__dirname);
-    stderr.stop();
-
-    expect(exitSpy).toHaveBeenCalled();
-    expect(errorSpy).toHaveBeenCalledWith(
-      `${logs.error("Error!")} Gatsby is currently not supported`
-    );
-    expect(logSpy).toHaveBeenCalledWith(
-      `Please run ${logs.bold(
-        "npx @slicemachine/init"
-      )} in a Nuxt or Next.js project`
-    );
-  });
 });

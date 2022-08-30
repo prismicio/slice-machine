@@ -31,6 +31,7 @@ export const SupportedFrameworks: Frameworks[] = [
   Frameworks.nuxt,
   Frameworks.previousNuxt,
   Frameworks.next,
+  Frameworks.gatsby,
   Frameworks.vue,
   Frameworks.react,
   Frameworks.svelte,
