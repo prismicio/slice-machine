@@ -72,7 +72,7 @@ import {
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
-import { changesPushCreator } from "./pushSaga";
+import { changesPushCreator, PUSH_CHANGES_ERRORS } from "./pushChangesSaga";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -447,8 +447,12 @@ const useSliceMachineActions = () => {
 
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
-    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>
-  ) => dispatch(changesPushCreator({ unSyncedSlices, unSyncedCustomTypes }));
+    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
+    handleError: (e: PUSH_CHANGES_ERRORS) => void
+  ) =>
+    dispatch(
+      changesPushCreator({ unSyncedSlices, unSyncedCustomTypes, handleError })
+    );
 
   // Toaster store
   const openToaster = (message: string, type: ToasterType) =>

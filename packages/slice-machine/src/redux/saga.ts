@@ -6,7 +6,7 @@ import { watchSelectedCustomTypeSagas } from "@src/modules/selectedCustomType";
 import { selectedSliceSagas } from "@src/modules/selectedSlice/sagas";
 import { watchSliceSagas } from "@src/modules/slices";
 import { watchToasterSagas } from "@src/modules/toaster";
-import { watchChangesPushSagas } from "@src/modules/pushSaga";
+import { watchChangesPushSagas } from "@src/modules/pushChangesSaga";
 
 // Single entry point to start all Sagas at once
 export default function* rootSaga() {

@@ -3,19 +3,13 @@
  */
 
 import "@testing-library/jest-dom";
-import {
-  describe,
-  test,
-  beforeAll,
-  afterAll,
-  afterEach,
-  expect,
-} from "@jest/globals";
+import { describe, test, beforeAll, afterAll, afterEach } from "@jest/globals";
 import {
   changesPushSaga,
   changesPushCreator,
-} from "../../../src/modules/pushSaga";
-import { testSaga, expectSaga } from "redux-saga-test-plan";
+  PUSH_CHANGES_ERRORS,
+} from "../../../src/modules/pushChangesSaga";
+import { expectSaga } from "redux-saga-test-plan";
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { pushSliceCreator } from "../../../src/modules/selectedSlice/actions";
@@ -34,6 +28,20 @@ const stubSlice: ComponentUI = {
   from: "slices",
 } as ComponentUI;
 
+const stubSlice2 = {
+  ...stubSlice,
+  model: {
+    name: "AnotherSlice",
+  },
+} as ComponentUI;
+
+const stubSlice3 = {
+  ...stubSlice,
+  model: {
+    name: "SomeSlice",
+  },
+} as ComponentUI;
+
 const stubCustomType: CustomTypeSM = {
   id: "wooooo",
 } as CustomTypeSM;
@@ -48,6 +56,7 @@ describe("[pashSaga module]", () => {
     test("pushes slices and custom types", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const handleError = jest.fn();
 
       server.use(
         rest.get("/api/slices/push", (_req, res, ctx) => {
@@ -64,6 +73,7 @@ describe("[pashSaga module]", () => {
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
+        handleError,
       });
       const saga = expectSaga(changesPushSaga, payload);
 
@@ -78,15 +88,19 @@ describe("[pashSaga module]", () => {
             type: ToasterType.SUCCESS,
           })
         )
-        .run();
+        .run()
+        .then(() => {
+          expect(handleError).not.toHaveBeenCalled();
+        });
     });
 
     test("when there's an 403 error while pushing a slice it should stop and open the login model", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const handleError = jest.fn();
 
       server.use(
-        rest.get("/api/slices/push", (req, res, ctx) => {
+        rest.get("/api/slices/push", (_req, res, ctx) => {
           return res(ctx.status(403));
         })
       );
@@ -94,18 +108,24 @@ describe("[pashSaga module]", () => {
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
+        handleError,
       });
       const saga = expectSaga(changesPushSaga, payload);
 
       return saga
+        .call(pushSliceApiClient, stubSlice)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
         .not.call(pushCustomType, stubCustomType)
-        .run();
+        .run()
+        .then(() => {
+          expect(handleError).not.toHaveBeenCalled();
+        });
     });
 
-    test("when there's an error while pushing a custom type it should stop", () => {
+    test("when there's a 403 error while pushing a custom type it should stop", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const handleError = jest.fn();
 
       server.use(
         rest.get("/api/slices/push", (_req, res, ctx) => {
@@ -122,6 +142,7 @@ describe("[pashSaga module]", () => {
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
+        handleError,
       });
       const saga = expectSaga(changesPushSaga, payload);
 
@@ -129,12 +150,19 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice)
         .call(pushCustomType, stubCustomType.id)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
-        .run();
+        .run()
+        .then(() => {
+          expect(handleError).not.toHaveBeenCalled();
+        });
     });
 
-    test("when there a non 403 error it should open a toast and stop", () => {
-      const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice, stubSlice];
+    test("when pushing slices, if there a non 403 error it should not push custom-types", () => {
+      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
+        stubSlice,
+        stubSlice2,
+      ];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const handleError = jest.fn();
 
       server.use(
         rest.get("/api/slices/push", (_req, res, ctx) => {
@@ -147,22 +175,24 @@ describe("[pashSaga module]", () => {
         })
       );
 
+      server.use(
+        rest.get("/api/custom-types/push", (_req, res, ctx) => {
+          return res(ctx.json({}));
+        })
+      );
+
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
+        handleError,
       });
       const saga = expectSaga(changesPushSaga, payload);
 
       return saga
         .call(pushSliceApiClient, stubSlice)
         .put(pushSliceCreator.success({ component: stubSlice }))
-        .call(pushSliceApiClient, stubSlice)
-        .put(
-          openToasterCreator({
-            message: `Failed to upload slice: ${stubSlice.model.id}`,
-            type: ToasterType.ERROR,
-          })
-        )
+        .call(pushSliceApiClient, stubSlice2)
+        .put(pushSliceCreator.failure({ component: stubSlice2 }))
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
@@ -170,7 +200,49 @@ describe("[pashSaga module]", () => {
             type: ToasterType.SUCCESS,
           })
         )
-        .run();
+        .run()
+        .then(() => {
+          expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
+        });
+    });
+
+    test("when one slice fails with a non 403 the others should be pushed", () => {
+      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
+        stubSlice,
+        stubSlice2,
+        stubSlice3,
+      ];
+      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const handleError = jest.fn();
+
+      server.use(
+        rest.get("/api/slices/push", (_req, res, ctx) => {
+          return res(ctx.json({}));
+        })
+      );
+
+      server.use(
+        rest.get("/api/slices/push", (_req, res, ctx) => {
+          return res.once(ctx.status(401));
+        })
+      );
+
+      const payload = changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+        handleError,
+      });
+      const saga = expectSaga(changesPushSaga, payload);
+
+      return saga
+        .call(pushSliceApiClient, stubSlice)
+        .call(pushSliceApiClient, stubSlice2)
+        .call(pushSliceApiClient, stubSlice3)
+        .not.call(pushCustomType, stubCustomType)
+        .run()
+        .then(() => {
+          expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
+        });
     });
   });
 });

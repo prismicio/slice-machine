@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Flex, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -19,6 +19,7 @@ import { isLoading } from "../src/modules/loading";
 import { LoadingKeysEnum } from "../src/modules/loading/types";
 import { getAuthStatus } from "../src/modules/environment";
 import { AuthStatus } from "../src/modules/userContext/types";
+import { PUSH_CHANGES_ERRORS } from "@src/modules/pushChangesSaga";
 
 const changes: React.FunctionComponent = () => {
   const { pushChanges } = useSliceMachineActions();
@@ -32,8 +33,16 @@ const changes: React.FunctionComponent = () => {
   const isOnline = useNetwork();
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
+  const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
+
+  useEffect(() => {
+    // might not need this
+    if (error) setError(null);
+    return () => setError(null);
+  }, []);
+
   const handlePush = () => {
-    pushChanges(unSyncedSlices, unSyncedCustomTypes);
+    pushChanges(unSyncedSlices, unSyncedCustomTypes, setError);
   };
 
   const renderPageContent = () => {
