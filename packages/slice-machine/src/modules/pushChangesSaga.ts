@@ -44,7 +44,7 @@ export function* changesPushSaga({
         ) {
           yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
         } else {
-          yield put(pushSliceCreator.failure({ component: slice })); // to do update the status to errored.
+          yield put(pushSliceCreator.failure({ component: slice })); // TODO: update the status to errored.
         }
         yield cancel();
       }
@@ -70,7 +70,7 @@ export function* changesPushSaga({
         } else {
           yield put(
             pushCustomTypeCreator.failure({ customTypeId: customType.id })
-          );
+          ); // TODO: update the custom type status to errored
         }
         yield cancel();
       }

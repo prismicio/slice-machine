@@ -125,7 +125,7 @@ describe("[pashSaga module]", () => {
         .run();
     });
 
-    test("when there a non 403 error it should open a toast and stop", () => {
+    test("when pushing slices, if there a non 403 error it should not push custom-types", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice, stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
 
@@ -154,8 +154,9 @@ describe("[pashSaga module]", () => {
 
       return saga
         .call(pushSliceApiClient, stubSlice)
-        .put(pushSliceCreator.success({ component: stubSlice }))
+        .put(pushSliceCreator.failure({ component: stubSlice }))
         .call(pushSliceApiClient, stubSlice)
+        .put(pushSliceCreator.success({ component: stubSlice }))
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
