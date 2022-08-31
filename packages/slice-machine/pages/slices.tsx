@@ -20,6 +20,36 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { getLibraries, getRemoteSlices } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { SliceSM } from "@slicemachine/core/build/models";
+import { FrontEndModel } from "@lib/models/common/ModelStatus";
+import { useModelStatus } from "@src/hooks/useModelStatus";
+
+const getModelsStatuses = (
+  libraries: LibraryUI[],
+  remoteSlices: ReadonlyArray<SliceSM>
+) => {
+  const localSlices: SliceSM[] = libraries.reduce(
+    (acc: SliceSM[], lib: LibraryUI) => {
+      return [...acc, ...lib.components.map((c) => c.model)];
+    },
+    []
+  );
+
+  const frontendModels: FrontEndModel[] = localSlices.reduce(
+    (acc: FrontEndModel[], localSlice: SliceSM) => {
+      return [
+        ...acc,
+        {
+          local: localSlice,
+          remote: remoteSlices.find((slice) => slice.id === localSlice.id),
+        },
+      ];
+    },
+    []
+  );
+
+  return useModelStatus(frontendModels);
+};
 
 const CreateSliceButton = ({
   onClick,
@@ -61,8 +91,11 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryUI[] | undefined = libraries?.filter(
-    (l) => l.isLocal
+  const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
+
+  const { modelsStatuses, authStatus, isOnline } = getModelsStatuses(
+    localLibraries,
+    remoteSlices
   );
 
   const sliceCount = (libraries || []).reduce((count, lib) => {
@@ -183,8 +216,12 @@ const SlicesIndex: React.FunctionComponent = () => {
                         }
                         renderElem={(slice: ComponentUI) => {
                           return SharedSlice.render({
-                            displayStatus: true,
                             slice: slice,
+                            StatusOrCustom: {
+                              status: modelsStatuses.slices[slice.model.id],
+                              authStatus,
+                              isOnline,
+                            },
                           });
                         }}
                         gridGap="32px 16px"

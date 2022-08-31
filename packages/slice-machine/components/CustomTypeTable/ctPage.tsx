@@ -1,12 +1,15 @@
-import { StatusBadgeWithTooltip } from "../Badge/StatusBadgeWithTooltip";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { StatusBadge } from "../StatusBadge";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { useModelStatus } from "@src/hooks/useModelStatus";
 
 export const CustomTypeTable: React.FC<{
-  customTypes: CustomTypeSM[];
+  customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
+  const { modelsStatuses, authStatus, isOnline } = useModelStatus(customTypes);
+
   const firstColumnWidth = "33%";
   const secondColumnWidth = "33%";
   const thirdColumnWidth = "17%";
@@ -37,21 +40,31 @@ export const CustomTypeTable: React.FC<{
       </thead>
       <tbody>
         {customTypes.map((customType) => (
-          <Link passHref href={`/cts/${customType.id}`} key={customType.id}>
+          <Link
+            passHref
+            href={`/cts/${customType.local.id}`}
+            key={customType.local.id}
+          >
             <tr tabIndex={0}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
-                <Text sx={{ fontWeight: 500 }}>{customType.label}</Text>
+                <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
               </Box>
               <Box as={"td"} style={{ width: secondColumnWidth }}>
-                {customType.id}
+                {customType.local.id}
               </Box>
               <Box as={"td"} style={{ width: thirdColumnWidth }}>
-                {customType.repeatable ? "Repeatable Type" : "Single Type"}
+                {customType.local.repeatable
+                  ? "Repeatable Type"
+                  : "Single Type"}
               </Box>
               <Box as={"td"} style={{ width: fourthColumnWidth }}>
-                <StatusBadgeWithTooltip
-                  customType={customType}
-                  data-for={`${customType.id}-tooltip`}
+                <StatusBadge
+                  modelType="Custom Type"
+                  modelId={customType.local.id}
+                  status={modelsStatuses.customTypes[customType.local.id]}
+                  authStatus={authStatus}
+                  isOnline={isOnline}
+                  data-for={`${customType.local.id}-tooltip`}
                   data-tip
                 />
               </Box>

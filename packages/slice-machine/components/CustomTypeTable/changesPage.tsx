@@ -1,11 +1,11 @@
-import { StatusBadgeWithTooltip } from "../Badge/StatusBadgeWithTooltip";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { StatusBadge } from "../StatusBadge";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
 
 export const CustomTypeTable: React.FC<{
-  customTypes: ReadonlyArray<CustomTypeSM>;
+  customTypes: FrontEndCustomType[];
 }> = ({ customTypes }) => {
   const firstColumnWidth = "40%";
   const secondColumnWidth = "40%";
@@ -28,18 +28,22 @@ export const CustomTypeTable: React.FC<{
       </thead>
       <tbody>
         {customTypes.map((customType) => (
-          <Link passHref href={`/cts/${customType.id}`} key={customType.id}>
+          <Link
+            passHref
+            href={`/cts/${customType.local.id}`}
+            key={customType.local.id}
+          >
             <tr tabIndex={0}>
               <Box as={"td"} style={{ width: firstColumnWidth }}>
-                <Text sx={{ fontWeight: 500 }}>{customType.label}</Text>
+                <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
               </Box>
               <Box as={"td"} style={{ width: secondColumnWidth }}>
-                {customType.id}
+                {customType.local.id}
               </Box>
               <Box as={"td"} style={{ width: thirdColumnWidth }}>
-                <StatusBadgeWithTooltip
-                  customType={customType}
-                  data-for={`${customType.id}-tooltip`}
+                <StatusBadge
+                  models={customType}
+                  data-for={`${customType.local.id}-tooltip`}
                   data-tip
                 />
               </Box>

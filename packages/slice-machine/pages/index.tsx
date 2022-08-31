@@ -21,7 +21,7 @@ const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
   const { customTypes, isCreatingCustomType, customTypeCount } = useSelector(
     (store: SliceMachineStoreType) => ({
-      customTypes: selectAllCustomTypes(store).map((c) => c.local),
+      customTypes: selectAllCustomTypes(store),
       customTypeCount: selectCustomTypeCount(store),
       isCreatingCustomType: isLoading(
         store,
