@@ -35,13 +35,8 @@ const changes: React.FunctionComponent = () => {
 
   const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
 
-  useEffect(() => {
-    // might not need this
-    if (error) setError(null);
-    return () => setError(null);
-  }, []);
-
   const handlePush = () => {
+    if (error) setError(null);
     pushChanges(unSyncedSlices, unSyncedCustomTypes, setError);
   };
 
