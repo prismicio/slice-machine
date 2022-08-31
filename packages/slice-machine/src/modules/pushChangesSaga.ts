@@ -1,15 +1,7 @@
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { getState, pushCustomType, pushSliceApiClient } from "../apiClient";
-import {
-  all,
-  call,
-  cancel,
-  fork,
-  put,
-  SagaReturnType,
-  takeLatest,
-} from "redux-saga/effects";
+import { pushCustomType, pushSliceApiClient } from "../apiClient";
+import { all, call, cancel, fork, put, takeLatest } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "./loading";
 import { LoadingKeysEnum } from "./loading/types";
@@ -19,7 +11,6 @@ import { openToasterCreator, ToasterType } from "./toaster";
 import { modalOpenCreator } from "./modal";
 import { ModalKeysEnum } from "./modal/types";
 import axios from "axios";
-import { refreshStateCreator } from "./environment";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
@@ -98,13 +89,6 @@ export function* changesPushSaga({
       type: ToasterType.SUCCESS,
     })
   );
-
-  const { data: serverState } = (yield call(getState)) as SagaReturnType<
-    typeof getState
-  >;
-  const { customTypes: localCustomTypes, ...rest } = serverState;
-
-  yield put(refreshStateCreator({ ...rest, localCustomTypes }));
 }
 
 function* watchChangesPush() {

@@ -19,12 +19,7 @@ import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { modalOpenCreator } from "../../../src/modules/modal";
 import { ModalKeysEnum } from "../../../src/modules/modal/types";
-import {
-  getState,
-  pushCustomType,
-  pushSliceApiClient,
-} from "../../../src/apiClient";
-import { refreshStateCreator } from "@src/modules/environment";
+import { pushCustomType, pushSliceApiClient } from "../../../src/apiClient";
 
 const stubSlice: ComponentUI = {
   model: {
@@ -75,17 +70,6 @@ describe("[pashSaga module]", () => {
         })
       );
 
-      const serverState = { customTypes: unSyncedCustomTypes };
-      const expectedNextState = {
-        localCustomTypes: serverState.customTypes,
-      } as Parameters<typeof refreshStateCreator>[0];
-
-      server.use(
-        rest.get("/api/state", (_req, res, ctx) => {
-          return res(ctx.json(serverState));
-        })
-      );
-
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -104,8 +88,6 @@ describe("[pashSaga module]", () => {
             type: ToasterType.SUCCESS,
           })
         )
-        .call(getState)
-        .put(refreshStateCreator(expectedNextState))
         .run()
         .then(() => {
           expect(handleError).toHaveBeenCalledWith(null);
@@ -123,16 +105,6 @@ describe("[pashSaga module]", () => {
         })
       );
 
-      const serverState = { customTypes: unSyncedCustomTypes };
-      const expectedNextState = {
-        localCustomTypes: serverState.customTypes,
-      } as Parameters<typeof refreshStateCreator>[0];
-      server.use(
-        rest.get("/api/state", (_req, res, ctx) => {
-          return res(ctx.json(serverState));
-        })
-      );
-
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -144,8 +116,6 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
         .not.call(pushCustomType, stubCustomType)
-        .not.call(getState)
-        .not.put(refreshStateCreator(expectedNextState))
         .run()
         .then(() => {
           expect(handleError).not.toHaveBeenCalled();
@@ -169,17 +139,6 @@ describe("[pashSaga module]", () => {
         })
       );
 
-      const serverState = { customTypes: unSyncedCustomTypes };
-      const expectedNextState = {
-        localCustomTypes: serverState.customTypes,
-      } as Parameters<typeof refreshStateCreator>[0];
-
-      server.use(
-        rest.get("/api/state", (_req, res, ctx) => {
-          return res(ctx.json(serverState));
-        })
-      );
-
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -191,8 +150,6 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice)
         .call(pushCustomType, stubCustomType.id)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
-        .not.call(getState)
-        .not.put(refreshStateCreator(expectedNextState))
         .run()
         .then(() => {
           expect(handleError).not.toHaveBeenCalled();
@@ -224,17 +181,6 @@ describe("[pashSaga module]", () => {
         })
       );
 
-      const serverState = { customTypes: unSyncedCustomTypes };
-      const expectedNextState = {
-        localCustomTypes: serverState.customTypes,
-      } as Parameters<typeof refreshStateCreator>[0];
-
-      server.use(
-        rest.get("/api/state", (_req, res, ctx) => {
-          return res(ctx.json(serverState));
-        })
-      );
-
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -254,8 +200,6 @@ describe("[pashSaga module]", () => {
             type: ToasterType.SUCCESS,
           })
         )
-        .not.call(getState)
-        .not.put(refreshStateCreator(expectedNextState))
         .run()
         .then(() => {
           expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
@@ -283,17 +227,6 @@ describe("[pashSaga module]", () => {
         })
       );
 
-      const serverState = { customTypes: unSyncedCustomTypes };
-      const expectedNextState = {
-        localCustomTypes: serverState.customTypes,
-      } as Parameters<typeof refreshStateCreator>[0];
-
-      server.use(
-        rest.get("/api/state", (_req, res, ctx) => {
-          return res(ctx.json(serverState));
-        })
-      );
-
       const payload = changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
@@ -306,8 +239,6 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice2)
         .call(pushSliceApiClient, stubSlice3)
         .not.call(pushCustomType, stubCustomType)
-        .not.call(getState)
-        .not.put(refreshStateCreator(expectedNextState))
         .run()
         .then(() => {
           expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
