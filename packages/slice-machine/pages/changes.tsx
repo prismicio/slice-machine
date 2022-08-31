@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Flex, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
