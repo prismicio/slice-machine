@@ -12,9 +12,11 @@ import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 const Header: React.FC<{
   component: ComponentUI;
+  status: ModelStatus;
   isTouched: boolean | undefined;
   variation: VariationSM;
   onSave: () => void;
@@ -23,6 +25,7 @@ const Header: React.FC<{
   imageLoading?: boolean;
 }> = ({
   component,
+  status,
   isTouched,
   variation,
   onSave,
@@ -33,7 +36,8 @@ const Header: React.FC<{
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
 
-  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(component.__status) !== -1;
+  const unSynced =
+    [ModelStatus.New, ModelStatus.Modified].indexOf(status) !== -1;
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();

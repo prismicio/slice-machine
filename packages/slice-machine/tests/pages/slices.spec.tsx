@@ -147,7 +147,6 @@ describe("slices", () => {
               ],
             },
             screenshotUrls: {},
-            __status: "NEW_SLICE",
           },
         ],
       },

@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 
 import { createCustomType } from "@src/modules/availableCustomTypes/factory";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
 
 describe("[Custom types factory]", () => {
   describe("[createCustomType]", () => {
@@ -18,7 +17,6 @@ describe("[Custom types factory]", () => {
             value: [],
           },
         ],
-        __status: CustomTypeStatus.New,
       };
       expect(createCustomType("id", "lama", true)).toEqual(expectedCustomType);
     });
@@ -34,7 +32,6 @@ describe("[Custom types factory]", () => {
             value: [],
           },
         ],
-        __status: CustomTypeStatus.New,
       };
       expect(createCustomType("id", "lama", false)).toEqual(expectedCustomType);
     });

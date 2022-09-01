@@ -7,7 +7,6 @@ import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
 import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
-import { VariationSM } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -112,7 +111,6 @@ export const saveSliceCreator = createAsyncAction(
   },
   {
     component: ComponentUI;
-    remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
   }
 >();
 

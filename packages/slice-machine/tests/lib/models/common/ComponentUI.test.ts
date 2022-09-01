@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { ComponentUI, LibStatus } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import backendEnvironment from "../../../__mocks__/backendEnvironment";
 import allFieldComponent from "../../../__mocks__/componentModel";
 

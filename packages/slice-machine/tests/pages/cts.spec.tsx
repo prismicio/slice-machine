@@ -134,7 +134,6 @@ describe("Custom Type Builder", () => {
             ],
           },
           screenshotUrls: {},
-          __status: "NEW_SLICE",
         },
       ],
     },
@@ -555,95 +554,5 @@ describe("Custom Type Builder", () => {
     await new Promise((r) => setTimeout(r, 1000));
 
     expect(trackingSpy).toBeCalledTimes(1);
-  });
-
-  test("when the user pushes a custom-type it should send a tracking event", async () => {
-    const trackingSpy = jest.fn((_req: any, res: any, ctx: RestContext) => {
-      return res(ctx.json({}));
-    });
-
-    const customTypeId = "a-page";
-
-    server.use(
-      rest.get("/api/custom-types/push", (req, res, ctx) => {
-        expect(req.url.searchParams.get("id")).toEqual(customTypeId);
-        return res(ctx.json({}));
-      }),
-      rest.post("/api/s", trackingSpy)
-    );
-
-    singletonRouter.push({
-      pathname: "cts/[ct]",
-      query: { ct: customTypeId },
-    });
-
-    const App = render(<CreateCustomTypeBuilder />, {
-      preloadedState: {
-        environment: {
-          framework: "next",
-          mockConfig: { _cts: { [customTypeId]: {} } },
-        },
-        availableCustomTypes: {
-          [customTypeId]: {
-            local: {
-              id: customTypeId,
-              label: customTypeId,
-              repeatable: true,
-              status: true,
-              tabs: [
-                {
-                  key: "Main",
-                  value: [],
-                },
-              ],
-            },
-          },
-        },
-        selectedCustomType: {
-          model: {
-            id: "a-page",
-            label: "a-page",
-            repeatable: true,
-            status: true,
-            tabs: [
-              {
-                key: "Main",
-                value: [],
-              },
-            ],
-          },
-          initialModel: {
-            id: "a-page",
-            label: "a-page",
-            repeatable: true,
-            status: true,
-            tabs: [
-              {
-                key: "Main",
-                value: [],
-              },
-            ],
-          },
-          mockConfig: {},
-          initialMockConfig: {},
-        },
-        slices: {
-          libraries: libraries,
-          remoteSlices: [],
-        },
-      },
-    });
-
-    const pushButton = screen.getByText("Push to Prismic");
-    await act(async () => {
-      fireEvent.click(pushButton);
-    });
-
-    await waitFor(() => {
-      expect(trackingSpy.mock.lastCall?.[0].body).toEqual({
-        name: "SliceMachine Custom Type Pushed",
-        props: { id: customTypeId, name: customTypeId, type: "repeatable" },
-      });
-    });
   });
 });

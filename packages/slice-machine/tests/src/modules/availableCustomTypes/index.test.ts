@@ -19,7 +19,6 @@ import { modalCloseCreator } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
 
 const dummyCustomTypesState: AvailableCustomTypesStoreType = {};
 
@@ -131,7 +130,7 @@ describe("[Available Custom types module]", () => {
       expect(availableCustomTypesReducer(state, pushNewCustomType)).toEqual({
         ...state,
         [newCustomType.id]: {
-          local: { ...newCustomType, __status: CustomTypeStatus.Synced },
+          local: newCustomType,
           remote: newCustomType,
         },
       });
@@ -141,7 +140,7 @@ describe("[Available Custom types module]", () => {
       ).toEqual({
         ...state,
         [existingCustomType.id]: {
-          local: { ...existingCustomType, __status: CustomTypeStatus.Synced },
+          local: existingCustomType,
           remote: existingCustomType,
         },
       });
@@ -223,7 +222,6 @@ describe("[Available Custom types module]", () => {
       repeatable: false,
       status: true,
       tabs: [],
-      __status: CustomTypeStatus.Modified, // rename act as a save, so status will be set to modified
     };
 
     const existingCustomTypes: AvailableCustomTypesStoreType = {
