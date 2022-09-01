@@ -15,7 +15,7 @@ import axios from "axios";
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
-  handleError: (e: PUSH_CHANGES_ERRORS | null) => void; // bit hacky but should work
+  handleError: (e: PUSH_CHANGES_ERRORS | null) => void;
 }>();
 
 export enum PUSH_CHANGES_ERRORS {
@@ -28,12 +28,10 @@ export function* changesPushSaga({
 }: ReturnType<typeof changesPushCreator>): Generator {
   const { unSyncedSlices, unSyncedCustomTypes, handleError } = payload;
 
-  let stop: PUSH_CHANGES_ERRORS | null = null; // bit hacky for now until I figure out task cancelation
-
+  let stop: PUSH_CHANGES_ERRORS | null = null;
   yield all(
     unSyncedSlices.map(function* (slice) {
       try {
-        // should we add pushSliceCreator.request ?
         yield call(pushSliceApiClient, slice);
         yield put(pushSliceCreator.success({ component: slice }));
       } catch (e) {
