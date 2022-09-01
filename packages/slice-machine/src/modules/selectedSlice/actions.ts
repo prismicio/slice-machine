@@ -125,6 +125,9 @@ export const pushSliceCreator = createAsyncAction(
   },
   {
     component: ComponentUI;
+  },
+  {
+    component: ComponentUI;
   }
 >();
 
