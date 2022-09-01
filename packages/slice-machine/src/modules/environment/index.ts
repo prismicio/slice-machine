@@ -20,7 +20,7 @@ export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
   libraries: ReadonlyArray<LibraryUI>;
   remoteSlices: ReadonlyArray<SliceSM>;
-  clientError: ErrorWithStatus | undefined;
+  clientError?: ErrorWithStatus;
 }>();
 
 type EnvironmentActions = ActionType<typeof refreshStateCreator>;

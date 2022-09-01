@@ -4,7 +4,10 @@ import {
 } from "@slicemachine/core/build/models/CustomType/index";
 import { Client, ClientError } from "@slicemachine/client";
 
-import { ComponentUI } from "../../../../lib/models/common/ComponentUI";
+import {
+  ComponentUI,
+  LibStatus,
+} from "../../../../lib/models/common/ComponentUI";
 import { Tab } from "../../../../lib/models/common/CustomType/tab";
 import { CustomTypesPaths } from "../../../../lib/models/paths";
 import { ApiResult } from "../../../../lib/models/server/ApiResult";
@@ -98,16 +101,13 @@ export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
 
   const localSlices: { [x: string]: ComponentUI } = state.libraries
     .filter((e) => e.isLocal)
-    .reduceRight((acc, curr) => {
+    .reduceRight((libs, lib) => {
       return {
-        ...acc,
-        ...curr.components.reduce(
-          (acc, curr) => ({
-            ...acc,
-            [curr.model.id]: curr,
-          }),
-          {}
-        ),
+        ...libs,
+        ...lib.components.reduce((acc, curr) => {
+          if (curr.__status === LibStatus.Synced) return acc;
+          return { ...acc, [curr.model.id]: curr };
+        }, {}),
       };
     }, {});
 
