@@ -6,10 +6,6 @@ import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
 import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getUnSyncedSlices } from "@src/modules/slices";
-import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { useNetwork } from "@src/hooks/useNetwork";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 
