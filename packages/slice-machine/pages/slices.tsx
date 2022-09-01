@@ -17,39 +17,14 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import {
+  getFrontendSlices,
+  getLibraries,
+  getRemoteSlices,
+} from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SliceSM } from "@slicemachine/core/build/models";
-import { FrontEndModel } from "@lib/models/common/ModelStatus";
 import { useModelStatus } from "@src/hooks/useModelStatus";
-
-const getModelsStatuses = (
-  libraries: LibraryUI[],
-  remoteSlices: ReadonlyArray<SliceSM>
-) => {
-  const localSlices: SliceSM[] = libraries.reduce(
-    (acc: SliceSM[], lib: LibraryUI) => {
-      return [...acc, ...lib.components.map((c) => c.model)];
-    },
-    []
-  );
-
-  const frontendModels: FrontEndModel[] = localSlices.reduce(
-    (acc: FrontEndModel[], localSlice: SliceSM) => {
-      return [
-        ...acc,
-        {
-          local: localSlice,
-          remote: remoteSlices.find((slice) => slice.id === localSlice.id),
-        },
-      ];
-    },
-    []
-  );
-
-  return useModelStatus(frontendModels);
-};
 
 const CreateSliceButton = ({
   onClick,
@@ -73,13 +48,19 @@ const SlicesIndex: React.FunctionComponent = () => {
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
 
-  const { isCreateSliceModalOpen, isCreatingSlice, remoteSlices, libraries } =
-    useSelector((store: SliceMachineStoreType) => ({
-      isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
-      isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-      remoteSlices: getRemoteSlices(store),
-      libraries: getLibraries(store),
-    }));
+  const {
+    isCreateSliceModalOpen,
+    isCreatingSlice,
+    remoteSlices,
+    libraries,
+    frontendSlices,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
+    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    remoteSlices: getRemoteSlices(store),
+    libraries: getLibraries(store),
+    frontendSlices: getFrontendSlices(store),
+  }));
 
   const _onCreate = ({
     sliceName,
@@ -93,10 +74,8 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
-  const { modelsStatuses, authStatus, isOnline } = getModelsStatuses(
-    localLibraries,
-    remoteSlices
-  );
+  const { modelsStatuses, authStatus, isOnline } =
+    useModelStatus(frontendSlices);
 
   const sliceCount = (libraries || []).reduce((count, lib) => {
     if (!lib) {

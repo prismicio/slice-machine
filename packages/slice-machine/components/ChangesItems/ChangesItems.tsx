@@ -6,16 +6,20 @@ import Grid from "components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
 import { SharedSlice } from "@lib/models/ui/Slice";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 
-interface ChangesItemsProps {
-  unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
-  unSyncedSlices: ReadonlyArray<ComponentUI>;
+interface ChangesItemsProps extends ModelStatusInformation {
+  unSyncedCustomTypes: FrontEndCustomType[];
+  unSyncedSlices: ComponentUI[];
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
   unSyncedSlices,
+  modelsStatuses,
+  authStatus,
+  isOnline,
 }) => {
   return (
     <>
@@ -25,7 +29,12 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             text={"Custom Types"}
             amount={unSyncedCustomTypes.length}
           />
-          <CustomTypeTable customTypes={unSyncedCustomTypes} />
+          <CustomTypeTable
+            customTypes={unSyncedCustomTypes}
+            modelsStatuses={modelsStatuses}
+            authStatus={authStatus}
+            isOnline={isOnline}
+          />
         </>
       )}
       {unSyncedSlices.length > 0 && (
@@ -42,9 +51,13 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             gridTemplateMinPx="290px"
             renderElem={(slice: ComponentUI) => {
               return SharedSlice.render({
-                displayStatus: true,
                 slice: slice,
                 wrapperType: WrapperType.changesPage,
+                StatusOrCustom: {
+                  status: modelsStatuses.slices[slice.model.id],
+                  authStatus,
+                  isOnline,
+                },
               });
             }}
             gridGap="32px 16px"

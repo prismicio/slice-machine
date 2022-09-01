@@ -3,10 +3,18 @@ import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
 import Link from "next/link";
 import React from "react";
 import { Box, Text } from "theme-ui";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 
-export const CustomTypeTable: React.FC<{
+interface CustomTypeTableProps extends ModelStatusInformation {
   customTypes: FrontEndCustomType[];
-}> = ({ customTypes }) => {
+}
+
+export const CustomTypeTable: React.FC<CustomTypeTableProps> = ({
+  customTypes,
+  modelsStatuses,
+  authStatus,
+  isOnline,
+}) => {
   const firstColumnWidth = "40%";
   const secondColumnWidth = "40%";
   const thirdColumnWidth = "20%";
@@ -42,7 +50,11 @@ export const CustomTypeTable: React.FC<{
               </Box>
               <Box as={"td"} style={{ width: thirdColumnWidth }}>
                 <StatusBadge
-                  models={customType}
+                  modelType="Custom Type"
+                  modelId={customType.local.id}
+                  status={modelsStatuses.customTypes[customType.local.id]}
+                  authStatus={authStatus}
+                  isOnline={isOnline}
                   data-for={`${customType.local.id}-tooltip`}
                   data-tip
                 />

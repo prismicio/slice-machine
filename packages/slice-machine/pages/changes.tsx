@@ -3,29 +3,24 @@ import { Box, Button, Flex, Spinner, Text } from "theme-ui";
 import Container from "components/Container";
 import Header from "components/Header";
 import { MdLoop } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { getUnSyncedSlices } from "../src/modules/slices";
-import { SliceMachineStoreType } from "../src/redux/type";
-import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { ChangesItems } from "@components/ChangesItems";
 import {
   AuthErrorPage,
   NoChangesPage,
   OfflinePage,
 } from "@components/ChangesEmptyPage";
-import { useNetwork } from "@src/hooks/useNetwork";
-import { getAuthStatus } from "@src/modules/environment";
 import { AuthStatus } from "@src/modules/userContext/types";
+import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 
 const changes: React.FunctionComponent = () => {
-  const { unSyncedSlices, unSyncedCustomTypes, authStatus } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      unSyncedSlices: getUnSyncedSlices(store),
-      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
-      authStatus: getAuthStatus(store),
-    })
-  );
-  const isOnline = useNetwork();
+  const {
+    unSyncedSlices,
+    unSyncedCustomTypes,
+    modelsStatuses,
+    authStatus,
+    isOnline,
+  } = useUnSyncChanges();
+
   const [loading] = useState(false); //todo: ass a setLoading method and use it when pushing changes
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -46,6 +41,9 @@ const changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
+        modelsStatuses={modelsStatuses}
+        authStatus={authStatus}
+        isOnline={isOnline}
       />
     );
   };

@@ -9,19 +9,21 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { useNetwork } from "./useNetwork";
 
+export interface ModelStatusInformation {
+  modelsStatuses: ModelsStatuses;
+  authStatus: AuthStatus;
+  isOnline: boolean;
+}
+
 // Slices and Custom Types needs to be separated as Ids are not unique with each others.
-type ModelsStatuses = {
+export type ModelsStatuses = {
   slices: { [sliceId: string]: ModelStatus };
   customTypes: { [ctId: string]: ModelStatus };
 };
 
 export const useModelStatus = (
-  models: FrontEndModel[]
-): {
-  modelsStatuses: ModelsStatuses;
-  authStatus: AuthStatus;
-  isOnline: boolean;
-} => {
+  models: ReadonlyArray<FrontEndModel>
+): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
     authStatus: getAuthStatus(store),

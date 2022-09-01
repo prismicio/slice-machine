@@ -33,6 +33,7 @@ import {
   LibStatus,
 } from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
+import { FrontEndModel } from "@lib/models/common/ModelStatus";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -92,18 +93,25 @@ export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
-export const getUnSyncedSlices = (
+export const getFrontendSlices = (
   store: SliceMachineStoreType
-): ReadonlyArray<ComponentUI> => {
-  return store.slices.libraries.reduce<ReadonlyArray<ComponentUI>>(
-    (acc, lib) => {
-      const unsycnedComponents = lib.components.filter((component) =>
-        [LibStatus.Modified, LibStatus.NewSlice].includes(component.__status)
-      );
-      return [...acc, ...unsycnedComponents];
+): ReadonlyArray<FrontEndModel> => {
+  const localSlices: SliceSM[] = store.slices.libraries.reduce(
+    (acc: SliceSM[], lib: LibraryUI) => {
+      return [...acc, ...lib.components.map((c) => c.model)];
     },
     []
   );
+
+  return localSlices.reduce((acc: FrontEndModel[], localSlice: SliceSM) => {
+    return [
+      ...acc,
+      {
+        local: localSlice,
+        remote: getRemoteSlice(store, localSlice.id),
+      },
+    ];
+  }, []);
 };
 
 // Reducer
