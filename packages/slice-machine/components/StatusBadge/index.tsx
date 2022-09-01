@@ -78,7 +78,7 @@ function statusDisplayInformation(
     case ModelStatus.Synced:
       return {
         displayName: "Synced",
-        tooltipText: `This ${modelType} is in sync with the remote repository.,`,
+        tooltipText: `This ${modelType} is in sync with the remote repository.`,
       };
 
     case ModelStatus.Unknown:

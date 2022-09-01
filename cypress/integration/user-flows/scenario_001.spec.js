@@ -113,11 +113,13 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get("[data-cy=ct-builder-primary-button]").click();
 
     cy.get("[data-cy=ct-builder-primary-button]").within(() => {
-      cy.contains("Push to Prismic").should("be.visible");
+      cy.contains("Synced with your File System").should("be.visible");
     });
   });
 
-  it("Push custom type", () => {
+  /*   Sync changes page implemented.
+  
+    it("Push custom type", () => {
     cy.setupSliceMachineUserContext();
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get("[data-cy=ct-builder-primary-button]"));
@@ -131,5 +133,5 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get("[data-cy=ct-builder-primary-button]").within(() => {
       cy.contains("Synced with Prismic").should("be.visible");
     });
-  });
+  });*/
 });
