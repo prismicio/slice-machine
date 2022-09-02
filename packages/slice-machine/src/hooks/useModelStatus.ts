@@ -9,17 +9,15 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { useSelector } from "react-redux";
 import { useNetwork } from "./useNetwork";
 
+// Slices and Custom Types needs to be separated as Ids are not unique amongst each others.
 export interface ModelStatusInformation {
-  modelsStatuses: ModelsStatuses;
+  modelsStatuses: {
+    slices: { [sliceId: string]: ModelStatus };
+    customTypes: { [ctId: string]: ModelStatus };
+  };
   authStatus: AuthStatus;
   isOnline: boolean;
 }
-
-// Slices and Custom Types needs to be separated as Ids are not unique with each others.
-export type ModelsStatuses = {
-  slices: { [sliceId: string]: ModelStatus };
-  customTypes: { [ctId: string]: ModelStatus };
-};
 
 export const useModelStatus = (
   models: ReadonlyArray<FrontEndModel>
@@ -33,34 +31,35 @@ export const useModelStatus = (
     authStatus != AuthStatus.FORBIDDEN &&
     authStatus != AuthStatus.UNAUTHORIZED;
 
-  const modelsStatuses: ModelsStatuses = models.reduce(
-    (acc: ModelsStatuses, model: FrontEndModel) => {
-      const status: ModelStatus = computeModelStatus(
-        model,
-        userHasAccessToModels
-      );
-      const modelIsSlice = "variations" in model.local;
+  const modelsStatuses: ModelStatusInformation["modelsStatuses"] =
+    models.reduce(
+      (acc: ModelStatusInformation["modelsStatuses"], model: FrontEndModel) => {
+        const status: ModelStatus = computeModelStatus(
+          model,
+          userHasAccessToModels
+        );
+        const modelIsSlice = "variations" in model.local;
 
-      if (modelIsSlice) {
+        if (modelIsSlice) {
+          return {
+            slices: {
+              ...acc.slices,
+              [model.local.id]: status,
+            },
+            customTypes: acc.customTypes,
+          };
+        }
+
         return {
-          slices: {
-            ...acc.slices,
+          slices: acc.slices,
+          customTypes: {
+            ...acc.customTypes,
             [model.local.id]: status,
           },
-          customTypes: acc.customTypes,
         };
-      }
-
-      return {
-        slices: acc.slices,
-        customTypes: {
-          ...acc.customTypes,
-          [model.local.id]: status,
-        },
-      };
-    },
-    { slices: {}, customTypes: {} }
-  );
+      },
+      { slices: {}, customTypes: {} }
+    );
 
   return {
     modelsStatuses,

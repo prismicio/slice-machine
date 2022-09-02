@@ -14,7 +14,8 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.task("clearDir", path.join(appPath, ".slicemachine"));
   });
 
-  it("Complete onboarding steps", () => { e2
+  it("Complete onboarding steps", () => {
+    e2;
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
     cy.location("pathname", { timeout: 5000 }).should("eq", "/onboarding");
@@ -126,7 +127,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       cy.contains("1").should("be.visible");
     });
 
-    cy.get("[data-cy=push-changes]").should('be.enabled');
+    cy.get("[data-cy=push-changes]").should("be.enabled");
 
     cy.get("[data-cy=push-changes]").click();
 
@@ -134,6 +135,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       cy.contains("0").should("be.visible");
     });
 
-    cy.get("[data-cy=push-changes]").should('be.disabled');
+    cy.get("[data-cy=push-changes]").should("be.disabled");
   });
 });
