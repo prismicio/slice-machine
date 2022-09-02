@@ -12,8 +12,6 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 
-// fake comment used to trigger the CI.
-
 declare let global: {
   appRoot: string;
 };

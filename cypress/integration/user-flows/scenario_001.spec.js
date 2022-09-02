@@ -15,7 +15,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Complete onboarding steps", () => {
-    e2;
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
     cy.location("pathname", { timeout: 5000 }).should("eq", "/onboarding");
@@ -121,20 +120,25 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   it("Pushes changes", () => {
     cy.setupSliceMachineUserContext();
     cy.visit(`/changes`);
+
+    // first page load
     cy.waitUntil(() => cy.get("[data-cy=push-changes]"));
 
+    // number of changes should be one (1 new custom type)
     cy.get("[data-cy=changes-number]").within(() => {
       cy.contains("1").should("be.visible");
     });
 
+    // sync changes button should be enabled
     cy.get("[data-cy=push-changes]").should("be.enabled");
 
+    // click to push changes
     cy.get("[data-cy=push-changes]").click();
 
-    cy.get("[data-cy=changes-number]").within(() => {
-      cy.contains("0").should("be.visible");
-    });
+    // number of changes should now be 0 and not displayed
+    cy.get("[data-cy=changes-number]").should("not.exist");
 
+    // sync changes button should be disabled
     cy.get("[data-cy=push-changes]").should("be.disabled");
   });
 });
