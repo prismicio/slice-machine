@@ -37,7 +37,7 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
             target={link.target}
             onClick={onClick}
           >
-            <link.Icon size={24} />
+            <link.Icon size={24} style={link.IconStyle} />
             <Flex sx={{ flex: 1, justifyContent: "space-between" }}>
               <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
                 {link.title}

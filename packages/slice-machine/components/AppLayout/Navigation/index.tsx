@@ -8,12 +8,17 @@ import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
 import { useNetwork } from "@src/hooks/useNetwork";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 export interface LinkProps {
   title: string;
   href: string;
   match: (pathname: string) => boolean;
   Icon: IconType;
+  IconStyle?: React.CSSProperties;
   delimiter?: boolean;
   target?: "_blank";
   RightElement?: React.ReactNode;
@@ -21,7 +26,8 @@ export interface LinkProps {
 
 const getNavigationLinks = (
   displayNumberOfChanges: boolean,
-  numberOfChanges: number
+  numberOfChanges: number,
+  isPushingChanges: boolean
 ): LinkProps[] => [
   {
     title: "Custom Types",
@@ -46,6 +52,9 @@ const getNavigationLinks = (
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
+    IconStyle: isPushingChanges
+      ? { animation: "spin 1.5s infinite linear" }
+      : {},
     RightElement: displayNumberOfChanges ? (
       <ChangesIndicator
         numberOfChanges={numberOfChanges}
@@ -59,6 +68,10 @@ const Navigation: React.FC = () => {
   const viewport = useWindowSize();
   const isOnline = useNetwork();
 
+  const { isPushingChanges } = useSelector((store: SliceMachineStoreType) => ({
+    isPushingChanges: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
+  }));
+
   const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
@@ -66,11 +79,19 @@ const Navigation: React.FC = () => {
 
   return (viewport.width as number) < 640 ? (
     <Mobile
-      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+      links={getNavigationLinks(
+        displayNumberOfChanges,
+        numberOfChanges,
+        isPushingChanges
+      )}
     />
   ) : (
     <Desktop
-      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+      links={getNavigationLinks(
+        displayNumberOfChanges,
+        numberOfChanges,
+        isPushingChanges
+      )}
     />
   );
 };

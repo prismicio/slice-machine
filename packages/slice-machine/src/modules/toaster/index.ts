@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { toast, ToastOptions, UpdateOptions } from "react-toastify";
 import { createAction, getType } from "typesafe-actions";
 import { fork, takeLatest } from "redux-saga/effects";
 
@@ -7,12 +7,23 @@ export enum ToasterType {
   WARNING = "warning",
   ERROR = "error",
   INFO = "info",
+  LOADING = "loading",
 }
 
 // Action Creators
 export const openToasterCreator = createAction("TOASTER/OPEN")<{
   message: string;
   type: ToasterType;
+  options?: ToastOptions;
+}>();
+
+export const updateToasterCreator = createAction("TOASTER/UPDATE")<{
+  toasterId: string;
+  options: UpdateOptions;
+}>();
+
+export const closeToasterCreator = createAction("TOASTER/CLOSE")<{
+  toasterId: string;
 }>();
 
 // Sagas
@@ -21,18 +32,33 @@ export function* openToasterSaga(
 ) {
   switch (action.payload.type) {
     case ToasterType.SUCCESS:
-      toast.success(action.payload.message);
+      toast.success(action.payload.message, action.payload.options);
       break;
     case ToasterType.ERROR:
-      toast.error(action.payload.message);
+      toast.error(action.payload.message, action.payload.options);
       break;
     case ToasterType.INFO:
-      toast.info(action.payload.message);
+      toast.info(action.payload.message, action.payload.options);
       break;
     case ToasterType.WARNING:
-      toast.warning(action.payload.message);
+      toast.warning(action.payload.message, action.payload.options);
+      break;
+    case ToasterType.LOADING:
+      toast.loading(action.payload.message, action.payload.options);
       break;
   }
+}
+
+export function* updateToasterSaga(
+  action: ReturnType<typeof updateToasterCreator>
+) {
+  toast.update(action.payload.toasterId, action.payload.options);
+}
+
+export function* closeToasterSaga(
+  action: ReturnType<typeof updateToasterCreator>
+) {
+  toast.dismiss(action.payload.toasterId);
 }
 
 // Saga watchers
@@ -40,7 +66,17 @@ function* watchOpenToaster() {
   yield takeLatest(getType(openToasterCreator), openToasterSaga);
 }
 
+function* watchUpdateToaster() {
+  yield takeLatest(getType(updateToasterCreator), updateToasterSaga);
+}
+
+function* watchCloseToaster() {
+  yield takeLatest(getType(closeToasterCreator), closeToasterSaga);
+}
+
 // Saga Exports
 export function* watchToasterSagas() {
   yield fork(watchOpenToaster);
+  yield fork(watchUpdateToaster);
+  yield fork(watchCloseToaster);
 }

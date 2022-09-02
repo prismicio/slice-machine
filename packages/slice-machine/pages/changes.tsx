@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Flex, Spinner, Text } from "theme-ui";
+import { Box, Button, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
@@ -28,8 +28,8 @@ const changes: React.FunctionComponent = () => {
   } = useUnSyncChanges();
   const { pushChanges } = useSliceMachineActions();
 
-  const { loading } = useSelector((store: SliceMachineStoreType) => ({
-    loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
+  const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
+    isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
   }));
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
@@ -84,18 +84,22 @@ const changes: React.FunctionComponent = () => {
                 numberOfChanges === 0 ||
                 !isOnline ||
                 authStatus === AuthStatus.UNAUTHORIZED ||
-                authStatus === AuthStatus.FORBIDDEN
+                authStatus === AuthStatus.FORBIDDEN ||
+                isSyncing
               }
-              sx={{ minWidth: "120px" }}
+              sx={{
+                minWidth: "120px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
-              {loading ? (
+              {isSyncing ? (
                 <Spinner color="#FFF" size={14} />
               ) : (
-                <Flex sx={{ alignItems: "center" }}>
-                  <MdLoop size={18} />
-                  <span>Push Changes</span>
-                </Flex>
+                <MdLoop size={18} />
               )}
+              <span>Push Changes</span>
             </Button>
           }
           MainBreadcrumb={<Text ml={2}>Changes</Text>}

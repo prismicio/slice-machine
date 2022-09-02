@@ -14,6 +14,8 @@ import "react-tabs/style/react-tabs.css";
 import "rc-drawer/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
+import "src/css/loader.css";
+import "src/css/keyframes.css";
 import "src/css/modal.css";
 import "src/css/tabs.css";
 import "src/css/drawer.css";
