@@ -2,7 +2,7 @@ import React from 'react'
 import { PrismicRichText } from '@prismicio/react'
 
 /**
- * @typedef {import("./types").{{pascalId}}Slice} {{pascalId}}Slice
+ * @typedef {import("@prismicio/client").Content.{{pascalId}}Slice} {{pascalId}}Slice
  * @typedef {import("@prismicio/react").SliceComponentProps<{{pascalId}}Slice>} {{pascalId}}Props
  * @param { {{pascalId}}Props }
  */

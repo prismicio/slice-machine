@@ -1,6 +1,8 @@
 import path from "path";
 
 describe("Create Slices", () => {
+  const root = "e2e-projects/cypress-next-app";
+  const type = `${root}/prismicTypes.generated.ts`;
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
   const lib = "slices";
@@ -23,8 +25,9 @@ describe("Create Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("clearDir", "e2e-projects/cypress-next-app/slices");
-    cy.task("clearDir", "e2e-projects/cypress-next-app/.slicemachine");
+    cy.task("rm", type);
+    cy.task("clearDir", `${root}/slices`);
+    cy.task("clearDir", `${root}/.slicemachine`);
   });
 
   it("A user can create and rename a slice", () => {
@@ -47,7 +50,7 @@ describe("Create Slices", () => {
       "eq",
       `/${lib}/${sliceName}/default`
     );
-    cy.readFile(`${path}/${sliceName}/types.ts`).should("contains", sliceName);
+    cy.readFile(type).should("contains", sliceName);
 
     cy.readFile(pathToMock, "utf-8")
       .then((mock) => {
@@ -88,8 +91,6 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-builder-push-or-save-button"]').should(
       "not.be.disabled"
     );
-    cy.readFile(`${path}/${editedSliceName}/types.ts`).should(
-      "contains",
-      editedSliceName);
+    cy.readFile(type).should("contains", editedSliceName);
   });
 });

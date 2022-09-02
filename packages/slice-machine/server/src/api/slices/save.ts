@@ -16,6 +16,8 @@ import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
+import { getLocalSlices } from "../../../../lib/utils/slices";
 
 export async function handler(
   env: BackendEnvironment,
@@ -38,9 +40,6 @@ export async function handler(
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
   IO.Slice.writeSlice(modelPath, smModel);
-
-  const typesPath = CustomPaths(env.cwd).library(from).slice(sliceName).types();
-  IO.Slice.writeSliceTypes(typesPath, smModel);
 
   const hasCustomMocks = Files.exists(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -66,6 +65,12 @@ export async function handler(
 
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
+
+  IO.Types.upsert(
+    env.cwd,
+    getLocalCustomTypes(env.cwd),
+    getLocalSlices(env.cwd, env.manifest.libraries)
+  );
 
   console.log("[slice/save]: Slice was saved!");
 

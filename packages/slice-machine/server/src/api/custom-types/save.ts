@@ -11,6 +11,8 @@ import mock from "../../../../lib/mock/CustomType";
 import { CustomTypeMockConfig } from "../../../../lib/models/common/MockConfig";
 import { SaveCustomTypeBody } from "../../../../lib/models/common/CustomType";
 import * as IO from "../../../../lib/io";
+import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
+import { getLocalSlices } from "../../../../lib/utils/slices";
 
 export default async function handler(req: { body: SaveCustomTypeBody }) {
   const { env } = await getEnv();
@@ -30,9 +32,6 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
   const modelPath = CustomTypesPaths(env.cwd).customType(model.id).model();
   IO.CustomType.writeCustomType(modelPath, model);
 
-  const typesPath = CustomTypesPaths(env.cwd).customType(model.id).types();
-  IO.CustomType.writeCustomTypeTypes(typesPath, model);
-
   const mocked = await mock(
     model,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
@@ -40,5 +39,12 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
   );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   Files.write(mockPath, mocked as object);
+
+  IO.Types.upsert(
+    env.cwd,
+    getLocalCustomTypes(env.cwd),
+    getLocalSlices(env.cwd, env.manifest.libraries)
+  );
+
   return {};
 }

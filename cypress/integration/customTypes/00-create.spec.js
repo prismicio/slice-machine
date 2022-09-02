@@ -1,12 +1,14 @@
 describe("Custom Types specs", () => {
-  const path = "e2e-projects/next/customtypes";
+  const root = "e2e-projects/cypress-next-app";
+  const type = `${root}/prismicTypes.generated.ts`;
   const name = "My Test";
   const id = "my_test";
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("clearDir", "e2e-projects/cypress-next-app/customtypes");
-    cy.task("clearDir", "e2e-projects/cypress-next-app/.slicemachine");
+    cy.task("rm", type);
+    cy.task("clearDir", `${root}/customtypes`);
+    cy.task("clearDir", `${root}/.slicemachine`);
   });
 
   it("A user can create and rename a custom type", () => {
@@ -25,7 +27,7 @@ describe("Custom Types specs", () => {
     cy.get("input[data-cy=ct-name-input]").type(name);
     cy.get("[data-cy=create-ct-modal]").submit();
     cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
-    cy.readFile(`${path}/${id}/types.ts`).should("contains", name);
+    cy.readFile(type).should("contains", name);
 
     //edit custom type name
     cy.get('[data-cy="edit-custom-type"]').click();
@@ -39,9 +41,6 @@ describe("Custom Types specs", () => {
     cy.get('[data-cy="custom-type-secondary-breadcrumb"]').contains(
       `/ ${name} - Edited`
     );
-    cy.readFile(`${path}/${id}/types.ts`).should(
-      "contains",
-      `${name} - Edited`
-    );
+    cy.readFile(type).should("contains", `${name} - Edited`);
   });
 });
