@@ -27,6 +27,7 @@ export const ChangesIndicator: React.FC<ChangesIndicatorProps> = ({
         color: isNavItemSelected ? "purple" : "white",
         fontWeight: 600,
       }}
+      data-cy="changes-number"
     >
       {formattedNumber}
     </Flex>

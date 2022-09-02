@@ -14,7 +14,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.task("clearDir", path.join(appPath, ".slicemachine"));
   });
 
-  it("Complete onboarding steps", () => {
+  it("Complete onboarding steps", () => { e2
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
     cy.location("pathname", { timeout: 5000 }).should("eq", "/onboarding");
@@ -117,21 +117,23 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     });
   });
 
-  /*   Sync changes page implemented.
-  
-    it("Push custom type", () => {
+  it("Pushes changes", () => {
     cy.setupSliceMachineUserContext();
-    cy.visit(`/cts/${id}`);
-    cy.waitUntil(() => cy.get("[data-cy=ct-builder-primary-button]"));
+    cy.visit(`/changes`);
+    cy.waitUntil(() => cy.get("[data-cy=push-changes]"));
 
-    cy.get("[data-cy=ct-builder-primary-button]").within(() => {
-      cy.contains("Push to Prismic").should("be.visible");
+    cy.get("[data-cy=changes-number]").within(() => {
+      cy.contains("1").should("be.visible");
     });
 
-    cy.get("[data-cy=ct-builder-primary-button]").click();
+    cy.get("[data-cy=push-changes]").should('be.enabled');
 
-    cy.get("[data-cy=ct-builder-primary-button]").within(() => {
-      cy.contains("Synced with Prismic").should("be.visible");
+    cy.get("[data-cy=push-changes]").click();
+
+    cy.get("[data-cy=changes-number]").within(() => {
+      cy.contains("0").should("be.visible");
     });
-  });*/
+
+    cy.get("[data-cy=push-changes]").should('be.disabled');
+  });
 });
