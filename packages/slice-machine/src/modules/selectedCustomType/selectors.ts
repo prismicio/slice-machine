@@ -1,9 +1,6 @@
 import { SliceMachineStoreType } from "@src/redux/type";
 import equal from "fast-deep-equal";
-import {
-  PoolOfFields,
-  CustomTypeStatus,
-} from "@src/modules/selectedCustomType/types";
+import { PoolOfFields } from "@src/modules/selectedCustomType/types";
 import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import {
   CustomTypeSM,
@@ -52,19 +49,4 @@ export const selectIsCurrentCustomTypeHasPendingModifications = (
       store.selectedCustomType.mockConfig
     )
   );
-};
-
-export const selectCustomTypeStatus = (
-  store: SliceMachineStoreType
-): CustomTypeStatus => {
-  if (!store.selectedCustomType || !store.selectedCustomType.remoteModel)
-    return CustomTypeStatus.New;
-
-  if (
-    !equal(store.selectedCustomType.model, store.selectedCustomType.remoteModel)
-  ) {
-    return CustomTypeStatus.Modified;
-  }
-
-  return CustomTypeStatus.Synced;
 };

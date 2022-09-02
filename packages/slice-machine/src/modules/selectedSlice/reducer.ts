@@ -9,11 +9,9 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
   initSliceStoreCreator,
-  pushSliceCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
-  saveSliceCreator,
   SelectedSliceActions,
   updateSliceWidgetMockCreator,
 } from "./actions";
@@ -21,12 +19,7 @@ import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import {
-  ComponentUI,
-  LibStatus,
-  ScreenshotUI,
-} from "@lib/models/common/ComponentUI";
-import { compareVariations } from "@lib/utils";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { renamedComponentUI, renameSliceCreator } from "../slices";
 
@@ -153,7 +146,6 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         screenshotUrls: action.payload.screenshots,
-        __status: LibStatus.Modified,
       };
     }
     case getType(generateSliceCustomScreenshotCreator.success): {
@@ -180,29 +172,6 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         screenshotUrls: screenshots,
-        __status: LibStatus.Modified,
-      };
-    }
-    case getType(saveSliceCreator.success): {
-      if (!prevState) return prevState;
-      const { component, remoteSliceVariations } = action.payload;
-
-      const sameVariations = compareVariations(
-        component.model.variations,
-        remoteSliceVariations || []
-      );
-
-      return {
-        ...component,
-        __status: sameVariations ? LibStatus.Synced : LibStatus.Modified,
-      };
-    }
-    case getType(pushSliceCreator.success): {
-      if (!prevState) return prevState;
-
-      return {
-        ...prevState,
-        __status: LibStatus.Synced,
       };
     }
     case getType(copyVariationSliceCreator): {

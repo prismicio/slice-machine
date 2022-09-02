@@ -17,12 +17,10 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
-import { CustomTypeStatus } from "../selectedCustomType/types";
 import {
   pushCustomTypeCreator,
   saveCustomTypeCreator,
 } from "../selectedCustomType/actions";
-import { getCustomTypeStatus } from "@src/utils/customType";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -93,21 +91,6 @@ export const selectCustomTypeById = (
 export const selectCustomTypeCount = (store: SliceMachineStoreType): number =>
   Object.values(store.availableCustomTypes).length;
 
-export const getUnSyncedCustomTypes = (
-  store: SliceMachineStoreType
-): ReadonlyArray<CustomTypeSM> => {
-  const unSyncedCustomTypes = Object.values(store.availableCustomTypes).reduce<
-    ReadonlyArray<CustomTypeSM>
-  >((acc, customType) => {
-    const statusIsUnSynced =
-      customType.local.__status === CustomTypeStatus.New ||
-      customType.local.__status === CustomTypeStatus.Modified;
-
-    return statusIsUnSynced ? [...acc, customType.local] : acc;
-  }, []);
-  return unSyncedCustomTypes;
-};
-
 // Reducer
 export const availableCustomTypesReducer: Reducer<
   AvailableCustomTypesStoreType | null,
@@ -142,22 +125,11 @@ export const availableCustomTypesReducer: Reducer<
       if (!state) return state;
       const localCustomType = action.payload.customType;
 
-      const remoteCustomType: CustomTypeSM | undefined =
-        state[localCustomType.id].remote;
-
-      const isCustomTypeDisconnected =
-        localCustomType.__status === CustomTypeStatus.UnknownDisconnected;
-
       return {
         ...state,
         [localCustomType.id]: {
           ...state[localCustomType.id],
-          local: {
-            ...localCustomType,
-            __status: isCustomTypeDisconnected
-              ? CustomTypeStatus.UnknownDisconnected
-              : getCustomTypeStatus(localCustomType, remoteCustomType),
-          },
+          local: localCustomType,
         },
       };
     }
@@ -170,10 +142,7 @@ export const availableCustomTypesReducer: Reducer<
       return {
         ...state,
         [customTypeId]: {
-          local: {
-            ...localCustomType,
-            __status: CustomTypeStatus.Synced,
-          },
+          local: localCustomType,
           remote: localCustomType,
         },
       };
@@ -184,14 +153,9 @@ export const availableCustomTypesReducer: Reducer<
       const newName = action.payload.newCustomTypeName;
       const newLocalCustomType = { ...state[id].local, label: newName };
 
-      const remoteCustomType: CustomTypeSM | undefined = state[id].remote;
-
       const newCustomType = {
         ...state[id],
-        local: {
-          ...newLocalCustomType,
-          __status: getCustomTypeStatus(newLocalCustomType, remoteCustomType),
-        },
+        local: newLocalCustomType,
       };
 
       return {

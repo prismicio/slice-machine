@@ -8,8 +8,19 @@ import {
 } from "@lib/models/common/CustomType/sliceZone";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import React from "react";
 
-const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
+interface SlicesListProps extends ModelStatusInformation {
+  slices: ReadonlyArray<SliceZoneSlice>;
+}
+
+export const SlicesList: React.FC<SlicesListProps> = ({
+  slices,
+  modelsStatuses,
+  authStatus,
+  isOnline,
+}) => (
   <Grid
     elems={slices}
     defineElementKey={(slice: SliceZoneSlice) => {
@@ -28,12 +39,15 @@ const List = ({ slices }: { slices: ReadonlyArray<SliceZoneSlice> }) => (
         });
       }
       return SharedSlice.render({
-        bordered: true,
-        displayStatus: true,
         slice: slice.payload as ComponentUI,
+        bordered: true,
+        StatusOrCustom: {
+          status:
+            modelsStatuses.slices[(slice.payload as ComponentUI).model.id],
+          authStatus,
+          isOnline,
+        },
       });
     }}
   />
 );
-
-export default List;

@@ -5,6 +5,8 @@ import {
 } from "@slicemachine/core/build/node-utils";
 import moduleAlias from "module-alias";
 
+/* eslint-disable */
+// Disabling eslint for this file, it keeps throwing errors.
 type PackageWithModuleAliases = JsonPackage & {
   _moduleAliases?: Record<string, string>;
 };

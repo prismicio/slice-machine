@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { CustomTypeStatus, SelectedCustomTypeStoreType } from "./types";
+import { SelectedCustomTypeStoreType } from "./types";
 import { getType } from "typesafe-actions";
 import {
   createTabCreator,
@@ -37,7 +37,6 @@ import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { GroupSM } from "@slicemachine/core/build/models/Group";
 import { Group } from "@lib/models/common/CustomType/group";
 import { renameCustomTypeCreator } from "../availableCustomTypes";
-import { getCustomTypeStatus } from "@src/utils/customType";
 
 // Reducer
 export const selectedCustomTypeReducer: Reducer<
@@ -56,23 +55,10 @@ export const selectedCustomTypeReducer: Reducer<
       };
     case getType(saveCustomTypeCreator.success): {
       if (!state) return state;
-      const isCustomTypeDisconnected =
-        state.model.__status === CustomTypeStatus.UnknownDisconnected;
 
       return {
         ...state,
-        model: {
-          ...state.model,
-          __status: isCustomTypeDisconnected
-            ? CustomTypeStatus.UnknownDisconnected
-            : getCustomTypeStatus(state.model, state.remoteModel),
-        },
-        initialModel: {
-          ...state.model,
-          __status: isCustomTypeDisconnected
-            ? CustomTypeStatus.UnknownDisconnected
-            : getCustomTypeStatus(state.model, state.remoteModel),
-        },
+        initialModel: state.model,
         initialMockConfig: state.mockConfig,
       };
     }
@@ -81,14 +67,6 @@ export const selectedCustomTypeReducer: Reducer<
 
       return {
         ...state,
-        model: {
-          ...state.model,
-          __status: CustomTypeStatus.Synced,
-        },
-        initialModel: {
-          ...state.model,
-          __status: CustomTypeStatus.Synced,
-        },
         remoteModel: state.model,
       };
     case getType(createTabCreator):
@@ -356,12 +334,10 @@ export const selectedCustomTypeReducer: Reducer<
         model: {
           ...state.model,
           label: newName,
-          __status: CustomTypeStatus.Modified,
         },
         initialModel: {
           ...state.initialModel,
           label: newName,
-          __status: CustomTypeStatus.Modified,
         },
       };
     }

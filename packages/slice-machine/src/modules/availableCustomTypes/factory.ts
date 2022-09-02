@@ -1,5 +1,4 @@
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { CustomTypeStatus } from "../selectedCustomType/types";
 
 export const createCustomType = (
   id: string,
@@ -16,5 +15,4 @@ export const createCustomType = (
     },
   ],
   status: true,
-  __status: CustomTypeStatus.New,
 });

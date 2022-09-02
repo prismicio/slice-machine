@@ -27,12 +27,9 @@ import {
   pushSliceCreator,
   saveSliceCreator,
 } from "../selectedSlice/actions";
-import {
-  ComponentUI,
-  computeStatus,
-  LibStatus,
-} from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
+import { FrontEndModel } from "@lib/models/common/ModelStatus";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
@@ -92,18 +89,25 @@ export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
-export const getUnSyncedSlices = (
+export const getFrontendSlices = (
   store: SliceMachineStoreType
-): ReadonlyArray<ComponentUI> => {
-  return store.slices.libraries.reduce<ReadonlyArray<ComponentUI>>(
-    (acc, lib) => {
-      const unsycnedComponents = lib.components.filter((component) =>
-        [LibStatus.Modified, LibStatus.NewSlice].includes(component.__status)
-      );
-      return [...acc, ...unsycnedComponents];
+): ReadonlyArray<FrontEndModel> => {
+  const localSlices: SliceSM[] = store.slices.libraries.reduce(
+    (acc: SliceSM[], lib: LibraryUI) => {
+      return [...acc, ...lib.components.map((c) => c.model)];
     },
     []
   );
+
+  return localSlices.reduce((acc: FrontEndModel[], localSlice: SliceSM) => {
+    return [
+      ...acc,
+      {
+        local: localSlice,
+        remote: getRemoteSlice(store, localSlice.id),
+      },
+    ];
+  }, []);
 };
 
 // Reducer
@@ -144,7 +148,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(saveSliceCreator.success): {
       const newComponentUI = action.payload.component;
-      const __status = computeStatus(newComponentUI, state.remoteSlices);
 
       const newLibraries = state.libraries.map((library) => {
         if (library.name !== newComponentUI.from) return library;
@@ -153,7 +156,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((component) => {
             return component.model.id !== newComponentUI.model.id
               ? component
-              : { ...newComponentUI, __status };
+              : newComponentUI;
           }),
         };
       });
@@ -181,7 +184,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((component) => {
             return component.model.id !== newComponentUI.model.id
               ? component
-              : { ...newComponentUI, __status: LibStatus.Synced };
+              : newComponentUI;
           }),
         };
       });
@@ -202,7 +205,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((c) => {
             return component.model.id !== c.model.id
               ? c
-              : { ...c, screenshotUrls, __status: LibStatus.Modified };
+              : { ...c, screenshotUrls };
           }),
         };
       });
@@ -238,7 +241,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((c) => {
             return component.model.id !== c.model.id
               ? c
-              : { ...c, screenshotUrls, __status: LibStatus.Modified };
+              : { ...c, screenshotUrls };
           }),
         };
       });
@@ -313,7 +316,6 @@ export const renamedComponentUI = (
       model.name,
       newName
     ),
-    __status: LibStatus.Modified,
   };
 };
 

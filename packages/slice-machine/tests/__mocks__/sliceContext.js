@@ -183,7 +183,6 @@ export default {
     },
     migrated: false,
     screenshotUrls: {},
-    __status: "NEW_SLICE",
     variations: [
       {
         id: "default-slice",

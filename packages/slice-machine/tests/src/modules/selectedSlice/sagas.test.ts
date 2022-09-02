@@ -19,8 +19,6 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
-import { getRemoteSlice } from "@src/modules/slices";
-import { SliceSM } from "@slicemachine/core/build/models";
 
 const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 
@@ -40,16 +38,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga
         .next({ status: 200, data: {} })
-        .select(getRemoteSlice, dummySliceState.model.id);
-
-      const remoteSlice: SliceSM = { ...dummySliceState.model, variations: [] };
-
-      saga.next(remoteSlice).put(
-        saveSliceCreator.success({
-          component: dummySliceState,
-          remoteSliceVariations: remoteSlice.variations,
-        })
-      );
+        .put(saveSliceCreator.success({ component: dummySliceState }));
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({

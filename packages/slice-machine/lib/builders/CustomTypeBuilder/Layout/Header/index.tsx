@@ -7,20 +7,14 @@ import { MdModeEdit, MdSpaceDashboard } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
-import { PrimaryButton } from "./primaryButton";
+import { SaveButton } from "./SaveButton";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
-import { CustomTypeStatus } from "../../../../../src/modules/selectedCustomType/types";
 
 const CustomTypeHeader = () => {
-  const { currentCustomType, isPushingCustomType, isSavingCustomType } =
-    useSelector((store: SliceMachineStoreType) => ({
-      currentCustomType: selectCurrentCustomType(store),
-      isPushingCustomType: isLoading(store, LoadingKeysEnum.PUSH_CUSTOM_TYPE),
-      isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
-    }));
+  const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
+    currentCustomType: selectCurrentCustomType(store),
+  }));
   const { openRenameCustomTypeModal } = useSliceMachineActions();
   const { theme } = useThemeUI();
 
@@ -62,11 +56,7 @@ const CustomTypeHeader = () => {
                 marginRight: "8px",
               }}
             />
-            <PrimaryButton
-              isSavingCustomType={isSavingCustomType}
-              isPushingCustomType={isPushingCustomType}
-              customTypeStatus={currentCustomType.__status as CustomTypeStatus}
-            />
+            <SaveButton />
           </Flex>
         }
       />

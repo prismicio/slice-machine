@@ -6,11 +6,8 @@ import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
 import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { getUnSyncedSlices } from "@src/modules/slices";
-import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
 import { useNetwork } from "@src/hooks/useNetwork";
+import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 
 export interface LinkProps {
   title: string;
@@ -62,12 +59,7 @@ const Navigation: React.FC = () => {
   const viewport = useWindowSize();
   const isOnline = useNetwork();
 
-  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      unSyncedSlices: getUnSyncedSlices(store),
-      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
-    })
-  );
+  const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
   const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;

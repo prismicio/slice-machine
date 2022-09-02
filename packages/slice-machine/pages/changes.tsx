@@ -4,40 +4,45 @@ import Container from "../components/Container";
 import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { getUnSyncedSlices } from "../src/modules/slices";
 import { SliceMachineStoreType } from "../src/redux/type";
-import { getUnSyncedCustomTypes } from "../src/modules/availableCustomTypes";
-import { ChangesItems } from "../components/ChangesItems";
+import { ChangesItems } from "@components/ChangesItems";
 import {
   AuthErrorPage,
   NoChangesPage,
   OfflinePage,
-} from "../components/ChangesEmptyPage";
-import { useNetwork } from "../src/hooks/useNetwork";
-import useSliceMachineActions from "../src/modules/useSliceMachineActions";
-import { isLoading } from "../src/modules/loading";
-import { LoadingKeysEnum } from "../src/modules/loading/types";
-import { getAuthStatus } from "../src/modules/environment";
-import { AuthStatus } from "../src/modules/userContext/types";
+} from "@components/ChangesEmptyPage";
+import { AuthStatus } from "@src/modules/userContext/types";
+import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { PUSH_CHANGES_ERRORS } from "@src/modules/pushChangesSaga";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 const changes: React.FunctionComponent = () => {
+  const {
+    unSyncedSlices,
+    unSyncedCustomTypes,
+    modelsStatuses,
+    authStatus,
+    isOnline,
+  } = useUnSyncChanges();
   const { pushChanges } = useSliceMachineActions();
-  const { unSyncedSlices, unSyncedCustomTypes, loading, authStatus } =
-    useSelector((store: SliceMachineStoreType) => ({
-      unSyncedSlices: getUnSyncedSlices(store),
-      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
-      loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
-      authStatus: getAuthStatus(store),
-    }));
-  const isOnline = useNetwork();
+
+  const { loading } = useSelector((store: SliceMachineStoreType) => ({
+    loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
+  }));
+
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
   const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
 
   const handlePush = () => {
     if (error) setError(null);
-    pushChanges(unSyncedSlices, unSyncedCustomTypes, setError);
+    pushChanges(
+      unSyncedSlices,
+      unSyncedCustomTypes.map((customtype) => customtype.local),
+      setError
+    );
   };
 
   const renderPageContent = () => {
@@ -57,6 +62,9 @@ const changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
+        modelsStatuses={modelsStatuses}
+        authStatus={authStatus}
+        isOnline={isOnline}
       />
     );
   };

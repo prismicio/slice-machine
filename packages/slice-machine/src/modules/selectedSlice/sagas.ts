@@ -4,7 +4,6 @@ import {
   takeLatest,
   put,
   SagaReturnType,
-  select,
   takeEvery,
 } from "redux-saga/effects";
 import axios from "axios";
@@ -25,7 +24,7 @@ import {
   renameSlice,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { getRemoteSlice, renameSliceCreator } from "../slices";
+import { renameSliceCreator } from "../slices";
 import { modalCloseCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
@@ -172,17 +171,8 @@ export function* saveSliceSaga({
         response.data.warning ||
         "Models & mocks have been generated successfully!",
     });
-    const remoteSlice = (yield select(
-      getRemoteSlice,
-      component.model.id
-    )) as ReturnType<typeof getRemoteSlice>;
 
-    yield put(
-      saveSliceCreator.success({
-        component,
-        remoteSliceVariations: remoteSlice?.variations,
-      })
-    );
+    yield put(saveSliceCreator.success({ component }));
   } catch (e) {
     yield put(
       openToasterCreator({

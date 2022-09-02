@@ -12,8 +12,6 @@ import serveStatic from "serve-static";
 import formData from "express-form-data";
 import proxy from "express-http-proxy";
 
-// fake comment used to trigger the CI.
-
 declare let global: {
   appRoot: string;
 };
@@ -74,6 +72,10 @@ app.use("/slices", (_, res) => {
 
 app.use("/onboarding", (_, res) => {
   res.sendFile(path.join(out, "onboarding.html"));
+});
+
+app.use("/changes", (_, res) => {
+  res.sendFile(path.join(out, "changes.html"));
 });
 
 const PORT = process.env.PORT || "9999";
