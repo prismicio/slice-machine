@@ -76,6 +76,10 @@ app.use("/onboarding", (_, res) => {
   res.sendFile(path.join(out, "onboarding.html"));
 });
 
+app.use("/changes", (_, res) => {
+  res.sendFile(path.join(out, "changes.html"));
+});
+
 const PORT = process.env.PORT || "9999";
 
 app.use(
