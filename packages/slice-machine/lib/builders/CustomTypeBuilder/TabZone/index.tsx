@@ -28,7 +28,7 @@ import {
   TabField,
   TabFields,
 } from "@slicemachine/core/build/models/CustomType";
-import Tracker from "../../../../src/tracker";
+import Tracker from "../../../../src/tracking/client";
 
 interface TabZoneProps {
   tabId: string;
@@ -180,6 +180,7 @@ const TabZone: React.FC<TabZoneProps> = ({ tabId, fields, sliceZone }) => {
         renderHintBase={({ item }) => `data${transformKeyAccessor(item.key)}`}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         renderFieldAccessor={(key) => `data${transformKeyAccessor(key)}`}
+        dataCy="ct-static-zone"
       />
       <SliceZone
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

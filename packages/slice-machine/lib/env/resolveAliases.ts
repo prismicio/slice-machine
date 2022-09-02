@@ -6,11 +6,11 @@ import {
 import moduleAlias from "module-alias";
 
 type PackageWithModuleAliases = JsonPackage & {
-  _moduleAliases: Record<string, string>;
+  _moduleAliases?: Record<string, string>;
 };
 
 const isAPackageHasModuleAliases = (
-  jsonPackage: JsonPackage | PackageWithModuleAliases
+  jsonPackage: JsonPackage
 ): jsonPackage is PackageWithModuleAliases => {
   return (
     typeof jsonPackage === typeof {} &&
@@ -20,12 +20,13 @@ const isAPackageHasModuleAliases = (
 
 export function resolveAliases(cwd: string): void {
   const pkg = retrieveJsonPackage(cwd);
-  if (!pkg.content || !isAPackageHasModuleAliases(pkg.content)) {
+  const pkgContent: JsonPackage | null = pkg.content;
+  if (!pkgContent || !isAPackageHasModuleAliases(pkgContent)) {
     return;
   }
 
   const moduleAliases: [string, string][] = Object.entries(
-    pkg.content._moduleAliases
+    pkgContent._moduleAliases || {}
   );
 
   moduleAliases.forEach(([key, value]) => {

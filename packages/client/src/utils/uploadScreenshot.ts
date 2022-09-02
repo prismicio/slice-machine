@@ -4,20 +4,21 @@ import mime from "mime";
 import path from "path";
 import { UploadParameters } from "../models/UploadParameters";
 import { snakelize } from "./str";
-import uniqid from "uniqid";
+import { Files } from "@slicemachine/core/build/node-utils";
 
 function buildScreenshotKey(
   fileName: string,
   repository: string,
   sliceId: UploadParameters["sliceId"],
-  variationId: UploadParameters["variationId"]
+  variationId: UploadParameters["variationId"],
+  fileHash: string
 ): string {
   return `${repository}/shared-slices/${sliceId}/${snakelize(
     variationId
-  )}-${uniqid()}/${fileName}`;
+  )}-${fileHash}/${fileName}`;
 }
 
-export function uploadScreenshot({
+export async function uploadScreenshot({
   acl,
   repository,
   sliceId,
@@ -33,12 +34,15 @@ export function uploadScreenshot({
   });
 
   // building then adding the key
+  const fileHash = await Files.readFileAndCreateHash(filePath);
   const screenshotKey = buildScreenshotKey(
     fileName,
     repository,
     sliceId,
-    variationId
+    variationId,
+    fileHash
   );
+
   form.append("key", screenshotKey);
 
   // adding content type

@@ -4,7 +4,7 @@ import equal from "fast-deep-equal";
 import { Box, Label, Card, Input, Text } from "theme-ui";
 import { useFormikContext } from "formik";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import { MockConfigKey } from "@lib/consts";
 
@@ -146,6 +146,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.GeoPoint;
 
 export const MockConfigForm = Form;

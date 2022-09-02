@@ -26,10 +26,11 @@ import { RequestWithEnv, WithEnv } from "./http/common";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
-} from "@models/common/Screenshots";
-import { SliceBody } from "@models/common/Slice";
-import { SaveCustomTypeBody } from "@models/common/CustomType";
-import { isApiError } from "@models/server/ApiResult";
+} from "../../../lib/models/common/Screenshots";
+import { SliceBody } from "../../../lib/models/common/Slice";
+import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
+import { isApiError } from "../../../lib/models/server/ApiResult";
+import tracking from "./tracking";
 
 router.use(
   "/__preview",
@@ -297,12 +298,22 @@ router.post(
     const body = req.body;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const payload = postAuth(body);
+    const payload = postAuth(req.env.client.apisEndpoints.Wroom, body);
     if (payload.err) {
       console.error(body);
       return res.status(500).json(body);
     }
     return res.status(200).json({});
+  })
+);
+
+router.post(
+  "/s",
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises,
+  WithEnv(async (req, res): Promise<Express.Response> => {
+    return tracking(req)
+      .catch(() => null)
+      .then(() => res.json());
   })
 );
 

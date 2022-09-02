@@ -18,11 +18,7 @@
     "esModuleInterop": true,
     "inlineSourceMap": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@lib/*": ["../lib/*"],
-      "@models/*": ["../lib/models/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./**/*.ts", "./**/*.js"]
 }

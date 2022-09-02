@@ -1,6 +1,5 @@
 import { AiOutlineFieldNumber } from "react-icons/ai";
 import { createDefaultWidgetValues } from "../../../../utils";
-import { handleMockConfig, handleMockContent } from "./Mock";
 import { MockConfigForm } from "./Mock/Form";
 
 import { Widget } from "../Widget";
@@ -33,8 +32,6 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
     },
   }),
   MockConfigForm,
-  handleMockConfig,
-  handleMockContent,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
   TYPE_NAME: WidgetTypes.Number,

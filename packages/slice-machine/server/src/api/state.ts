@@ -4,9 +4,9 @@ import { Files, YarnLockPath } from "@slicemachine/core/build/node-utils";
 import {
   BackendEnvironment,
   FrontEndEnvironment,
-} from "@lib/models/common/Environment";
-import ServerError from "@lib/models/server/ServerError";
-import ServerState from "@lib/models/server/ServerState";
+} from "../../../lib/models/common/Environment";
+import ServerError from "../../../lib/models/server/ServerError";
+import ServerState from "../../../lib/models/server/ServerState";
 
 import fetchLibs from "./libraries";
 import fetchCustomTypes from "./custom-types/index";
@@ -27,6 +27,7 @@ export const getBackendState = async (
       .refreshAuthenticationToken()
       .then((newAuthenticationToken: string) => {
         PrismicSharedConfigManager.setAuthCookie(newAuthenticationToken);
+        env.client.updateAuthenticationToken(newAuthenticationToken);
 
         // set the user profile if it doesn't exist yet.
         if (!env.prismicData.shortId || !env.prismicData.intercomHash)
@@ -71,5 +72,6 @@ export default async function handler(
     libraries: serverState.libraries,
     remoteSlices: serverState.remoteSlices,
     env: frontEndEnv,
+    clientError: serverState.clientError,
   };
 }

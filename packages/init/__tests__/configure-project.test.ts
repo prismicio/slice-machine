@@ -134,7 +134,6 @@ describe("configure-project", () => {
 
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toHaveBeenCalledWith("./", {
-      _latest: "0.0.41",
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       libraries: ["@/slices"],
     });

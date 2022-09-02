@@ -1,6 +1,5 @@
 import { Flex, Box, Label, Radio, Input, Text } from "theme-ui";
-
-import { Patterns } from ".";
+import { Patterns } from "@prismicio/mocks/lib/generators/widgets/nestable/RichText/RichTextMockConfig";
 
 export const PatternCard = ({
   patternKey,

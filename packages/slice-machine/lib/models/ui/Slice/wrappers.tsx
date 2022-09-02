@@ -6,8 +6,7 @@ export const LinkCardWrapper = ({
   children,
 }: {
   link: { as: string } | undefined;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  children: any;
+  children: React.ReactNode;
 }) => {
   //TODO: make the redirection through "connected-next-router" so that the router location is synched with redux
   return (
@@ -25,17 +24,26 @@ export const LinkCardWrapper = ({
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const NonClickableCardWrapper = ({ children }: { children: any }) => {
+export const NonClickableCardWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return <div style={{ cursor: "not-allowed" }}>{children}</div>;
+};
+
+export const NoCardWrapper = ({ children }: { children: React.ReactNode }) => {
+  return <div>{children}</div>;
 };
 
 export enum WrapperType {
   clickable = "clickable",
   nonClickable = "nonClickable",
+  changesPage = "changesPage",
 }
 
 export const WrapperByType = {
   [WrapperType.clickable]: LinkCardWrapper,
   [WrapperType.nonClickable]: NonClickableCardWrapper,
+  [WrapperType.changesPage]: NoCardWrapper,
 };

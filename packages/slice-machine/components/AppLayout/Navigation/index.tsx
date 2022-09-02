@@ -4,7 +4,13 @@ import useWindowSize from "src/hooks/useWindowSize";
 import Desktop from "./Menu/Desktop";
 import Mobile from "./Menu/Mobile";
 import { IconType } from "react-icons/lib";
-import { MdHorizontalSplit, MdSpaceDashboard } from "react-icons/md";
+import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
+import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { getUnSyncedSlices } from "@src/modules/slices";
+import { getUnSyncedCustomTypes } from "@src/modules/availableCustomTypes";
+import { useNetwork } from "@src/hooks/useNetwork";
 
 export interface LinkProps {
   title: string;
@@ -13,9 +19,13 @@ export interface LinkProps {
   Icon: IconType;
   delimiter?: boolean;
   target?: "_blank";
+  RightElement?: React.ReactNode;
 }
 
-const links: LinkProps[] = [
+const getNavigationLinks = (
+  displayNumberOfChanges: boolean,
+  numberOfChanges: number
+): LinkProps[] => [
   {
     title: "Custom Types",
     href: "/",
@@ -32,14 +42,44 @@ const links: LinkProps[] = [
     },
     Icon: MdHorizontalSplit,
   },
+  {
+    title: "Changes",
+    href: "/changes",
+    match(pathname: string) {
+      return pathname.indexOf("/changes") === 0;
+    },
+    Icon: MdLoop,
+    RightElement: displayNumberOfChanges ? (
+      <ChangesIndicator
+        numberOfChanges={numberOfChanges}
+        match={(pathname: string) => pathname.indexOf("/changes") === 0}
+      />
+    ) : null,
+  },
 ];
 
 const Navigation: React.FC = () => {
   const viewport = useWindowSize();
+  const isOnline = useNetwork();
+
+  const { unSyncedSlices, unSyncedCustomTypes } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      unSyncedSlices: getUnSyncedSlices(store),
+      unSyncedCustomTypes: getUnSyncedCustomTypes(store),
+    })
+  );
+
+  const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+  const displayNumberOfChanges = numberOfChanges !== 0 && isOnline;
+
   return (viewport.width as number) < 640 ? (
-    <Mobile links={links} />
+    <Mobile
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+    />
   ) : (
-    <Desktop links={links} />
+    <Desktop
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
+    />
   );
 };
 

@@ -10,6 +10,8 @@ import { PackageChangelog } from "@lib/models/common/versions";
 import { PackageManager } from "@lib/models/common/PackageManager";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
+import ErrorWithStatus from "@lib/models/common/ErrorWithStatus";
+import { AuthStatus } from "../userContext/types";
 
 // Action Creators
 export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
@@ -18,6 +20,7 @@ export const refreshStateCreator = createAction("STATE/REFRESH.RESPONSE")<{
   remoteCustomTypes: ReadonlyArray<CustomTypeSM>;
   libraries: ReadonlyArray<LibraryUI>;
   remoteSlices: ReadonlyArray<SliceSM>;
+  clientError?: ErrorWithStatus;
 }>();
 
 type EnvironmentActions = ActionType<typeof refreshStateCreator>;
@@ -120,6 +123,10 @@ export const getLinkToStorybookDocs = (
     default:
       return "https://prismic.io/docs";
   }
+};
+
+export const getAuthStatus = (state: SliceMachineStoreType): AuthStatus => {
+  return state.userContext.authStatus;
 };
 
 // Reducer

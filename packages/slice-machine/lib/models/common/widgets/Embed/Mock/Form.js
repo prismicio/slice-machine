@@ -2,8 +2,7 @@ import EmbedContainer from "react-oembed-container";
 import { Box, Text, Input, Label } from "theme-ui";
 import { useFormikContext } from "formik";
 
-import { initialValues } from ".";
-
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 import { MockConfigKey } from "@lib/consts";
 import { useState } from "react";
 
@@ -134,6 +133,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Embed;
 
 export const MockConfigForm = Form;

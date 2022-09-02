@@ -18,7 +18,7 @@ import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
 import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
-import Tracker from "../../../src/tracker";
+import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import {
@@ -92,6 +92,20 @@ export const getRemoteSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<SliceSM> => store.slices.remoteSlices;
 
+export const getUnSyncedSlices = (
+  store: SliceMachineStoreType
+): ReadonlyArray<ComponentUI> => {
+  return store.slices.libraries.reduce<ReadonlyArray<ComponentUI>>(
+    (acc, lib) => {
+      const unsycnedComponents = lib.components.filter((component) =>
+        [LibStatus.Modified, LibStatus.NewSlice].includes(component.__status)
+      );
+      return [...acc, ...unsycnedComponents];
+    },
+    []
+  );
+};
+
 // Reducer
 export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
   state,
@@ -148,7 +162,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(pushSliceCreator.success): {
       const newComponentUI = action.payload.component;
-
       const newRemoteSlices = [...state.remoteSlices];
 
       const remoteSliceIndex = state.remoteSlices.findIndex(
@@ -173,7 +186,11 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
         };
       });
 
-      return { ...state, libraries: newLibraries };
+      return {
+        ...state,
+        libraries: newLibraries,
+        remoteSlices: newRemoteSlices,
+      };
     }
     case getType(generateSliceScreenshotCreator.success): {
       const { screenshots: screenshotUrls, component } = action.payload;
@@ -296,6 +313,7 @@ export const renamedComponentUI = (
       model.name,
       newName
     ),
+    __status: LibStatus.Modified,
   };
 };
 

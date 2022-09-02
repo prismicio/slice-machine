@@ -3,7 +3,7 @@ import { Box, Label, Text, useThemeUI, Input } from "theme-ui";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { useFormikContext } from "formik";
 
-import { initialValues } from ".";
+import { DefaultConfig } from "@lib/mock/LegacyMockConfig";
 
 import Tooltip from "components/Tooltip";
 import WindowPortal from "components/WindowPortal";
@@ -138,6 +138,6 @@ const Form = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-Form.initialValues = initialValues;
+Form.initialValues = DefaultConfig.Image;
 
 export const MockConfigForm = Form;

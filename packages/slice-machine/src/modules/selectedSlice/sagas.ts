@@ -5,6 +5,7 @@ import {
   put,
   SagaReturnType,
   select,
+  takeEvery,
 } from "redux-saga/effects";
 import axios from "axios";
 import { getType } from "typesafe-actions";
@@ -224,6 +225,7 @@ export function* pushSliceSaga({
       error: null,
       status: response.status,
     });
+
     yield put(pushSliceCreator.success({ component }));
     yield put(
       openToasterCreator({
@@ -283,7 +285,7 @@ export function* renameSliceSaga({
 }
 
 function* watchGenerateSliceScreenshot() {
-  yield takeLatest(
+  yield takeEvery(
     getType(generateSliceScreenshotCreator.request),
     withLoader(
       generateSliceScreenshotSaga,

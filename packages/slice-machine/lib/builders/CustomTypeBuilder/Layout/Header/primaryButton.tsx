@@ -2,26 +2,24 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { Button, Spinner } from "theme-ui";
 import { CustomTypeStatus } from "@src/modules/selectedCustomType/types";
-import {
-  selectCustomTypeStatus,
-  selectIsCurrentCustomTypeHasPendingModifications,
-} from "@src/modules/selectedCustomType";
+import { selectIsCurrentCustomTypeHasPendingModifications } from "@src/modules/selectedCustomType";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 interface PrimaryButtonProps {
   isSavingCustomType: boolean;
   isPushingCustomType: boolean;
+  customTypeStatus: CustomTypeStatus;
 }
 
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   isSavingCustomType,
   isPushingCustomType,
+  customTypeStatus,
 }) => {
-  const { hasPendingModifications, customTypeStatus } = useSelector(
+  const { hasPendingModifications } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasPendingModifications:
         selectIsCurrentCustomTypeHasPendingModifications(store),
-      customTypeStatus: selectCustomTypeStatus(store),
     })
   );
   const { saveCustomType, pushCustomType } = useSliceMachineActions();
@@ -32,6 +30,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         onClick={() => {
           saveCustomType();
         }}
+        data-cy="ct-builder-primary-button"
         children={
           <span>
             {isSavingCustomType ? (
@@ -49,9 +48,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     );
   }
 
-  if (
-    [CustomTypeStatus.New, CustomTypeStatus.Modified].includes(customTypeStatus)
-  ) {
+  if (customTypeStatus !== CustomTypeStatus.Synced) {
     return (
       <Button
         onClick={() => {
@@ -59,6 +56,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             pushCustomType();
           }
         }}
+        data-cy="ct-builder-primary-button"
         children={
           <span>
             {isPushingCustomType ? (

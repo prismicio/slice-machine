@@ -1,4 +1,7 @@
-import { SliceBody, SliceCreateResponse } from "@models/common/Slice";
+import {
+  SliceBody,
+  SliceCreateResponse,
+} from "../../../../../lib/models/common/Slice";
 
 declare let appRoot: string;
 
@@ -9,18 +12,20 @@ import { promisify } from "util";
 // @ts-ignore
 import cpy from "copy-template-dir";
 
-import { BackendEnvironment } from "@lib/models/common/Environment";
+import { BackendEnvironment } from "../../../../../lib/models/common/Environment";
 
-import { pascalize, snakelize } from "@lib/utils/str";
-import Files from "@lib/utils/files";
-import { DEFAULT_VARIATION_ID } from "@lib/consts";
-import * as IO from "../../io";
+import { snakelize, pascalize } from "../../../../../lib/utils/str";
+import Files from "../../../../../lib/utils/files";
+import {
+  DEFAULT_VARIATION_ID,
+  RESERVED_SLICE_NAME,
+} from "../../../../../lib/consts";
+import * as IO from "../../../../../lib/io";
 
 import save from "../save";
 
-import { paths, SliceTemplateConfig } from "@lib/models/paths";
-import { ApiResult } from "@lib/models/server/ApiResult";
-import { RESERVED_SLICE_NAME } from "@lib/consts";
+import { paths, SliceTemplateConfig } from "../../../../../lib/models/paths";
+import { ApiResult } from "../../../../../lib/models/server/ApiResult";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const copy = promisify(cpy);

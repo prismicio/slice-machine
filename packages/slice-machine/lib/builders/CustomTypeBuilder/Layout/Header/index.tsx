@@ -12,6 +12,7 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
 import { PrimaryButton } from "./primaryButton";
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
+import { CustomTypeStatus } from "../../../../../src/modules/selectedCustomType/types";
 
 const CustomTypeHeader = () => {
   const { currentCustomType, isPushingCustomType, isSavingCustomType } =
@@ -64,6 +65,7 @@ const CustomTypeHeader = () => {
             <PrimaryButton
               isSavingCustomType={isSavingCustomType}
               isPushingCustomType={isPushingCustomType}
+              customTypeStatus={currentCustomType.__status as CustomTypeStatus}
             />
           </Flex>
         }

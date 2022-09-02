@@ -1,6 +1,7 @@
+import axios from "axios";
 import path from "path";
 import puppeteer from "puppeteer";
-import Files from "@lib/utils/files";
+import Files from "../../../../lib/utils/files";
 
 interface PuppeteerHandleProps {
   screenshotUrl: string;
@@ -71,7 +72,7 @@ export const testUrl = async (
   screenshotUrl: string
 ): Promise<{ warning?: string }> => {
   try {
-    await fetch(screenshotUrl);
+    await axios.get(screenshotUrl);
   } catch (e) {
     return {
       warning: "Could not connect to Slice Renderer. Model was saved.",

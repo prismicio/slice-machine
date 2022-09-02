@@ -11,7 +11,7 @@ import { slugify } from "@lib/utils/str";
 import { AnyWidget } from "@lib/models/common/widgets/Widget";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
-import ErrorTooltip from "./ErrorTooltip";
+import { ErrorTooltip } from "./ErrorTooltip";
 import { InputType } from "@lib/forms/fields";
 import {
   getInputFieldStyles,
@@ -119,7 +119,7 @@ const NewField: React.FC<NewField> = ({
       initialValues={initialValues}
     >
       {({ errors, values, setValues, setFieldValue }) => (
-        <Form>
+        <Form data-cy="new-field-form">
           <Flex
             as="li"
             sx={{
@@ -179,6 +179,7 @@ const NewField: React.FC<NewField> = ({
                       : undefined
                   )}
                   aria-label="label-input"
+                  data-cy="new-field-name-input"
                 />
                 <ErrorTooltip error={errors.label} />
                 <Text
@@ -210,6 +211,7 @@ const NewField: React.FC<NewField> = ({
                       ? InputFieldStyles.ERROR
                       : undefined
                   )}
+                  data-cy="new-field-id-input"
                 />
                 <ErrorTooltip error={errors.id} />
               </Flex>

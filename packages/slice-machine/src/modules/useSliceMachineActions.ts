@@ -72,6 +72,7 @@ import {
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
+import { changesPushCreator, PUSH_CHANGES_ERRORS } from "./pushChangesSaga";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -370,13 +371,11 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    _variationId: string,
     component: ComponentUI,
     setData: (data: any) => void
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
-        _variationId,
         component,
         setData,
       })
@@ -446,6 +445,15 @@ const useSliceMachineActions = () => {
       })
     );
 
+  const pushChanges = (
+    unSyncedSlices: ReadonlyArray<ComponentUI>,
+    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
+    handleError: (e: PUSH_CHANGES_ERRORS | null) => void
+  ) =>
+    dispatch(
+      changesPushCreator({ unSyncedSlices, unSyncedCustomTypes, handleError })
+    );
+
   // Toaster store
   const openToaster = (message: string, type: ToasterType) =>
     dispatch(openToasterCreator({ message, type }));
@@ -459,6 +467,7 @@ const useSliceMachineActions = () => {
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
         remoteSlices: serverState.remoteSlices,
+        clientError: serverState.clientError,
       })
     );
   };
@@ -528,6 +537,7 @@ const useSliceMachineActions = () => {
     openRenameSliceModal,
     closeRenameSliceModal,
     openToaster,
+    pushChanges,
   };
 };
 

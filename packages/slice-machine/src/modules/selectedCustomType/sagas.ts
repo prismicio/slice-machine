@@ -5,11 +5,11 @@ import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
 import { pushCustomTypeCreator, saveCustomTypeCreator } from "./actions";
 import { selectCurrentCustomType, selectCurrentMockConfig } from "./index";
-import { pushCustomType, saveCustomType } from "../../../src/apiClient";
+import { pushCustomType, saveCustomType } from "../../apiClient";
 import axios from "axios";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
-import Tracker from "../../../src/tracker";
+import Tracker from "../../tracking/client";
 
 export function* saveCustomTypeSaga() {
   try {
@@ -30,7 +30,7 @@ export function* saveCustomTypeSaga() {
       name: currentCustomType.label || currentCustomType.id,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
-    yield put(saveCustomTypeCreator.success());
+    yield put(saveCustomTypeCreator.success({ customType: currentCustomType }));
     yield put(
       openToasterCreator({
         message: "Model & mocks have been generated successfully!",
@@ -64,7 +64,9 @@ export function* pushCustomTypeSaga() {
       name: currentCustomType.label || currentCustomType.id,
       type: currentCustomType.repeatable ? "repeatable" : "single",
     });
-    yield put(pushCustomTypeCreator.success());
+    yield put(
+      pushCustomTypeCreator.success({ customTypeId: currentCustomType.id })
+    );
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",
