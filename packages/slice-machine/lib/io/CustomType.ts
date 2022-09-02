@@ -14,8 +14,8 @@ export function writeCustomType(path: string, customType: CustomTypeSM) {
   Files.write(path, CustomTypes.fromSM(customType));
 }
 
-export function renameCustomType(modelPath: string, newCustomTypeName: string) {
-  const customType = readCustomType(modelPath);
+export function renameCustomType(path: string, newCustomTypeName: string) {
+  const customType = readCustomType(path);
   customType.label = newCustomTypeName;
-  writeCustomType(modelPath, customType);
+  writeCustomType(path, customType);
 }

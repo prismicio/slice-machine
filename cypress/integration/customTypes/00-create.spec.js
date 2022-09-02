@@ -6,7 +6,7 @@ describe("Custom Types specs", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rm", type);
+    cy.task("rmrf", type);
     cy.task("clearDir", `${root}/customtypes`);
     cy.task("clearDir", `${root}/.slicemachine`);
   });

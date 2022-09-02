@@ -25,7 +25,7 @@ describe("Create Slices", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rm", type);
+    cy.task("rmrf", type);
     cy.task("clearDir", `${root}/slices`);
     cy.task("clearDir", `${root}/.slicemachine`);
   });

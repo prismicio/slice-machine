@@ -11,8 +11,8 @@ export function writeSlice(path: string, slice: SliceSM) {
   Files.write(path, Slices.fromSM(slice));
 }
 
-export function renameSlice(modelPath: string, newSliceName: string) {
-  const slice = readSlice(modelPath);
+export function renameSlice(path: string, newSliceName: string) {
+  const slice = readSlice(path);
   slice.name = newSliceName;
-  writeSlice(modelPath, slice);
+  writeSlice(path, slice);
 }
