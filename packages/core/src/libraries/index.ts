@@ -50,7 +50,6 @@ export function handleLibraryPath(
       if (!componentInfo) {
         return acc;
       }
-      const { model } = componentInfo;
       return [
         ...acc,
         {
@@ -61,7 +60,7 @@ export function handleLibraryPath(
           extension: componentInfo.extension,
           screenshotPaths: componentInfo.screenshotPaths,
           mock: componentInfo.mock,
-          model,
+          model: componentInfo.model,
         },
       ];
     },
