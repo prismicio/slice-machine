@@ -94,7 +94,7 @@ function statusDisplayInformation(
         return {
           displayName: "Unknown",
           tooltipText:
-            "Data from the remote repository could not be fetched (no connected to Prismic).",
+            "Data from the remote repository could not be fetched (not connected to Prismic).",
         };
       }
 
