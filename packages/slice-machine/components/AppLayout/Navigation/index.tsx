@@ -8,10 +8,6 @@ import { MdHorizontalSplit, MdLoop, MdSpaceDashboard } from "react-icons/md";
 import { ChangesIndicator } from "./Menu/Navigation/ChangesIndicator";
 import { useNetwork } from "@src/hooks/useNetwork";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
-import { useSelector } from "react-redux";
-import { SliceMachineStoreType } from "@src/redux/type";
-import { isLoading } from "@src/modules/loading";
-import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 export interface LinkProps {
   title: string;
@@ -25,8 +21,7 @@ export interface LinkProps {
 
 const getNavigationLinks = (
   displayNumberOfChanges: boolean,
-  numberOfChanges: number,
-  isPushingChanges: boolean
+  numberOfChanges: number
 ): LinkProps[] => [
   {
     title: "Custom Types",
@@ -64,10 +59,6 @@ const Navigation: React.FC = () => {
   const viewport = useWindowSize();
   const isOnline = useNetwork();
 
-  const { isPushingChanges } = useSelector((store: SliceMachineStoreType) => ({
-    isPushingChanges: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
-  }));
-
   const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
@@ -75,19 +66,11 @@ const Navigation: React.FC = () => {
 
   return (viewport.width as number) < 640 ? (
     <Mobile
-      links={getNavigationLinks(
-        displayNumberOfChanges,
-        numberOfChanges,
-        isPushingChanges
-      )}
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
     />
   ) : (
     <Desktop
-      links={getNavigationLinks(
-        displayNumberOfChanges,
-        numberOfChanges,
-        isPushingChanges
-      )}
+      links={getNavigationLinks(displayNumberOfChanges, numberOfChanges)}
     />
   );
 };
