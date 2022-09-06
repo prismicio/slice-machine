@@ -6,8 +6,8 @@ import {
   updateToasterCreator,
 } from "../toaster";
 
-const PUSH_CHANGES_TOASTER_ID = "push-changes-toaster";
-const syncChangesToasterMessage = (
+export const PUSH_CHANGES_TOASTER_ID = "push-changes-toaster";
+export const syncChangesToasterMessage = (
   alreadySyncedChanges: number,
   totalNumberOfChanges: number
 ) =>
