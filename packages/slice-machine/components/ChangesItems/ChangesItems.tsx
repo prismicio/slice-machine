@@ -52,7 +52,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             renderElem={(slice: ComponentUI) => {
               return SharedSlice.render({
                 slice: slice,
-                wrapperType: WrapperType.changesPage,
+                wrapperType: WrapperType.clickable,
                 StatusOrCustom: {
                   status: modelsStatuses.slices[slice.model.id],
                   authStatus,
