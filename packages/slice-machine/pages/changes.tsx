@@ -34,13 +34,19 @@ const changes: React.FunctionComponent = () => {
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
+  const [changesPushed, setChangesPushed] = useState<string[]>([]);
   const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
 
   const handlePush = () => {
-    if (error) setError(null);
+    if (error) setError(null); // reset error
+    if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
     pushChanges(
       unSyncedSlices,
       unSyncedCustomTypes.map((customtype) => customtype.local),
+      (pushed: string | null) =>
+        pushed
+          ? setChangesPushed([...changesPushed, pushed])
+          : setChangesPushed([]),
       setError
     );
   };
@@ -62,6 +68,7 @@ const changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
+        changesPushed={changesPushed}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}

@@ -18,7 +18,6 @@ export interface LinkProps {
   href: string;
   match: (pathname: string) => boolean;
   Icon: IconType;
-  IconStyle?: React.CSSProperties;
   delimiter?: boolean;
   target?: "_blank";
   RightElement?: React.ReactNode;
@@ -52,9 +51,6 @@ const getNavigationLinks = (
       return pathname.indexOf("/changes") === 0;
     },
     Icon: MdLoop,
-    IconStyle: isPushingChanges
-      ? { animation: "spin 1.5s infinite linear" }
-      : {},
     RightElement: displayNumberOfChanges ? (
       <ChangesIndicator
         numberOfChanges={numberOfChanges}

@@ -1,7 +1,15 @@
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { pushCustomType, pushSliceApiClient } from "../../apiClient";
-import { all, call, cancel, fork, put, takeLatest } from "redux-saga/effects";
+import {
+  all,
+  call,
+  cancel,
+  delay,
+  fork,
+  put,
+  takeLatest,
+} from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { pushCustomTypeCreator } from "../selectedCustomType";
@@ -20,6 +28,7 @@ import { LoadingKeysEnum } from "../loading/types";
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
+  onChangesPushed: (pushed: string | null) => void;
   handleError: (e: PUSH_CHANGES_ERRORS | null) => void;
 }>();
 
@@ -31,7 +40,8 @@ export enum PUSH_CHANGES_ERRORS {
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator>): Generator {
-  const { unSyncedSlices, unSyncedCustomTypes, handleError } = payload;
+  const { unSyncedSlices, unSyncedCustomTypes, onChangesPushed, handleError } =
+    payload;
   const totalNumberOfChanges: number =
     unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -47,6 +57,12 @@ export function* changesPushSaga({
       try {
         // calling the API to push the Slice
         yield call(pushSliceApiClient, slice);
+
+        // trigger fade out animation
+        yield onChangesPushed(slice.model.id);
+
+        // wait for animation to finish
+        yield delay(300);
 
         // Updating the Redux stores
         yield put(pushSliceCreator.success({ component: slice }));

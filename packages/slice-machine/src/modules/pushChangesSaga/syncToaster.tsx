@@ -5,7 +5,6 @@ import {
   ToasterType,
   updateToasterCreator,
 } from "../toaster";
-import { PureLoader } from "@components/PureLoader";
 
 const PUSH_CHANGES_TOASTER_ID = "push-changes-toaster";
 const syncChangesToasterMessage = (
@@ -30,7 +29,6 @@ export function openSyncToaster(
       options: {
         autoClose: false,
         toastId: PUSH_CHANGES_TOASTER_ID,
-        icon: <PureLoader />,
       },
     })
   );

@@ -12,11 +12,13 @@ import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
   unSyncedSlices: ComponentUI[];
+  changesPushed: string[];
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
   unSyncedSlices,
+  changesPushed,
   modelsStatuses,
   authStatus,
   isOnline,
@@ -58,6 +60,9 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   authStatus,
                   isOnline,
                 },
+                sx: changesPushed.includes(slice.model.id)
+                  ? { animation: "fadeout .4s linear forwards" }
+                  : {},
               });
             }}
             gridGap="32px 16px"
