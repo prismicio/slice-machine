@@ -39,7 +39,7 @@ describe("[Toaster module]", () => {
       const saga = testSaga(openToasterSaga, openToasterAction);
       saga.next(false).isDone();
 
-      expect(toastSuccessMock).toHaveBeenCalledWith("message");
+      expect(toastSuccessMock).toHaveBeenCalledWith("message", undefined);
       expect(toastInfoMock).toHaveBeenCalledTimes(0);
       expect(toastErrorMock).toHaveBeenCalledTimes(0);
       expect(toastWarningMock).toHaveBeenCalledTimes(0);
@@ -56,7 +56,7 @@ describe("[Toaster module]", () => {
       const saga = testSaga(openToasterSaga, openToasterAction);
       saga.next(false).isDone();
 
-      expect(toastInfoMock).toHaveBeenCalledWith("message");
+      expect(toastInfoMock).toHaveBeenCalledWith("message", undefined);
       expect(toastSuccessMock).toHaveBeenCalledTimes(0);
       expect(toastErrorMock).toHaveBeenCalledTimes(0);
       expect(toastWarningMock).toHaveBeenCalledTimes(0);
@@ -73,7 +73,7 @@ describe("[Toaster module]", () => {
       const saga = testSaga(openToasterSaga, openToasterAction);
       saga.next(false).isDone();
 
-      expect(toastWarningMock).toHaveBeenCalledWith("message");
+      expect(toastWarningMock).toHaveBeenCalledWith("message", undefined);
       expect(toastSuccessMock).toHaveBeenCalledTimes(0);
       expect(toastErrorMock).toHaveBeenCalledTimes(0);
       expect(toastInfoMock).toHaveBeenCalledTimes(0);
@@ -90,7 +90,7 @@ describe("[Toaster module]", () => {
       const saga = testSaga(openToasterSaga, openToasterAction);
       saga.next(false).isDone();
 
-      expect(toastErrorMock).toHaveBeenCalledWith("message");
+      expect(toastErrorMock).toHaveBeenCalledWith("message", undefined);
       expect(toastSuccessMock).toHaveBeenCalledTimes(0);
       expect(toastWarningMock).toHaveBeenCalledTimes(0);
       expect(toastInfoMock).toHaveBeenCalledTimes(0);

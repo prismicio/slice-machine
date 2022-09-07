@@ -448,10 +448,16 @@ const useSliceMachineActions = () => {
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
     unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
+    onChangesPushed: (pushed: string | null) => void,
     handleError: (e: PUSH_CHANGES_ERRORS | null) => void
   ) =>
     dispatch(
-      changesPushCreator({ unSyncedSlices, unSyncedCustomTypes, handleError })
+      changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+        onChangesPushed,
+        handleError,
+      })
     );
 
   // Toaster store
