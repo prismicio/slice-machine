@@ -24,5 +24,5 @@ export const upsert = (
     },
   });
 
-  Files.write(path.join(cwd, "prismicTypes.generated.ts"), content);
+  Files.write(path.join(cwd, "prismic.d.ts"), content);
 };

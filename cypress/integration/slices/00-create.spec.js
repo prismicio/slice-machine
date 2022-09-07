@@ -2,7 +2,7 @@ import path from "path";
 
 describe("Create Slices", () => {
   const root = "e2e-projects/cypress-next-app";
-  const type = `${root}/prismicTypes.generated.ts`;
+  const type = `${root}/prismic.d.ts`;
   const sliceName = "TestSlice";
   const editedSliceName = "TestSlice2";
   const lib = "slices";
