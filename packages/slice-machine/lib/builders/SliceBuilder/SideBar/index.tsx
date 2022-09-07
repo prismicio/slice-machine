@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import Card from "@components/Card";
 
-import { ImagePreview } from "./components/ImagePreview";
+import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -21,7 +21,7 @@ import {
 import { createStorybookUrl } from "@src/utils/storybook";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 
-const MemoizedImagePreview = memo(ImagePreview);
+const MemoizedImagePreview = memo(ScreenshotPreview);
 
 type SideBarProps = {
   component: ComponentUI;
@@ -75,10 +75,12 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
             screenshotUrls[variation.id] &&
             screenshotUrls[variation.id].url
           }
-          imageLoading={imageLoading}
-          onScreenshot={onScreenshot}
-          onHandleFile={onHandleFile}
-          preventScreenshot={!isSimulatorAvailableForFramework}
+          screenshotProperties={{
+            isLoading: imageLoading,
+            isDisabled: !isSimulatorAvailableForFramework,
+            onScreenshot: onScreenshot,
+            onCustomScreenshot: onHandleFile,
+          }}
         />
       </Card>
       <Button
