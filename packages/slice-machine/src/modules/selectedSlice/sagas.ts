@@ -119,6 +119,7 @@ export function* generateSliceCustomScreenshotSaga({
       message: "New screenshot added!",
       imageLoading: false,
     });
+
     yield put(
       generateSliceCustomScreenshotCreator.success({
         variationId,
@@ -140,6 +141,8 @@ export function* saveSliceSaga({
   payload,
 }: ReturnType<typeof saveSliceCreator.request>) {
   const { component, setData } = payload;
+
+  console.log({ imageInSaga: component.model.variations[0].imageUrl });
   try {
     setData({
       loading: true,
@@ -216,7 +219,12 @@ export function* pushSliceSaga({
       status: response.status,
     });
 
-    yield put(pushSliceCreator.success({ component }));
+    yield put(
+      pushSliceCreator.success({
+        component,
+        updatedScreenshotsUrls: response.data as Record<string, string | null>,
+      })
+    );
     yield put(
       openToasterCreator({
         message: "Model was correctly saved to Prismic!",

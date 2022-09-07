@@ -130,7 +130,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   };
 
   const { modelsStatuses } = useModelStatus([
-    { local: component.model, remote: remoteSlice },
+    { local: component.model, remote: remoteSlice, component },
   ]);
 
   return (

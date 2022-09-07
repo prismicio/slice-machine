@@ -8,7 +8,7 @@ import {
   slicesReducer,
   createSliceSaga,
   createSliceCreator,
-  renameScreenshotPaths,
+  renameScreenshots,
   renameScreenshotUrls,
   renameModel,
 } from "@src/modules/slices";
@@ -89,24 +89,28 @@ describe("[Slices module]", () => {
 describe("[utils]", () => {
   const PREV_NAME = "SliceName";
   const NEW_NAME = "SliceRenamed";
-  it("test renameScreenshotPaths", () => {
+  it("test renameScreenshots", () => {
     const initialPaths: Record<string, Screenshot> = {
       "default-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/default-variation/preview.png`,
       },
       "other-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/other-variation/preview.png`,
       },
     };
     const expectedRenamedPaths: Record<string, Screenshot> = {
       "default-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/default-variation/preview.png`,
       },
       "other-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/other-variation/preview.png`,
       },
     };
-    expect(renameScreenshotPaths(initialPaths, PREV_NAME, NEW_NAME)).toEqual(
+    expect(renameScreenshots(initialPaths, PREV_NAME, NEW_NAME)).toEqual(
       expectedRenamedPaths
     );
   });
@@ -114,20 +118,24 @@ describe("[utils]", () => {
   it("test renameScreenshotUrls", () => {
     const initialUrls: Screenshots = {
       "default-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/default-variation/preview.png`,
         url: `http://localhost:9999/api/__preview?q=..%2F..%2Fe2e-projects%2Fnext%2F.slicemachine%2Fassets%2Fslices%2Fecommerce%2F${PREV_NAME}%2Fdefault-slice%2Fpreview.png&uniq=0.39230892472268586`,
       },
       "other-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/other-variation/preview.png`,
         url: `http://localhost:9999/api/__preview?q=..%2F..%2Fe2e-projects%2Fnext%2F.slicemachine%2Fassets%2Fslices%2Fecommerce%2F${PREV_NAME}%2Fdefault-slice%2Fpreview.png&uniq=0.39230892472268586`,
       },
     };
     const expectedRenamedUrls: Screenshots = {
       "default-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/default-variation/preview.png`,
         url: `http://localhost:9999/api/__preview?q=..%2F..%2Fe2e-projects%2Fnext%2F.slicemachine%2Fassets%2Fslices%2Fecommerce%2F${NEW_NAME}%2Fdefault-slice%2Fpreview.png&uniq=0.39230892472268586`,
       },
       "other-variation": {
+        hash: "xxx",
         path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/other-variation/preview.png`,
         url: `http://localhost:9999/api/__preview?q=..%2F..%2Fe2e-projects%2Fnext%2F.slicemachine%2Fassets%2Fslices%2Fecommerce%2F${NEW_NAME}%2Fdefault-slice%2Fpreview.png&uniq=0.39230892472268586`,
       },

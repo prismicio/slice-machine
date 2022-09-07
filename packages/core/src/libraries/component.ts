@@ -156,15 +156,15 @@ export function getComponentInfo(
   }
 
   const smModel = Slices.toSM(model);
-  const screenshotPaths = (smModel.variations || [])
+  const screenshots = (smModel.variations || [])
     .map((v: VariationSM) => {
-      const activeScreenshot = resolvePathsToScreenshot({
+      const variationScreenshot = resolvePathsToScreenshot({
         paths: assetsPaths,
         from,
         sliceName,
         variationId: v.id,
       });
-      return activeScreenshot && { [v.id]: activeScreenshot };
+      return variationScreenshot && { [v.id]: variationScreenshot };
     })
     .reduce(
       (
@@ -188,6 +188,6 @@ export function getComponentInfo(
     extension,
     model: smModel,
     mock: maybeMock?.value,
-    screenshotPaths,
+    screenshots,
   };
 }

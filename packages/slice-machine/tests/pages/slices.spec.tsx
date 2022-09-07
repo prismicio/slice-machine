@@ -79,7 +79,7 @@ describe("slices", () => {
             pathToSlice: "./slices",
             fileName: "index",
             extension: "js",
-            screenshotPaths: {},
+            screenshots: {},
             mock: [
               {
                 variation: "default",

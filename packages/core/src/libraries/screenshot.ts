@@ -74,11 +74,15 @@ export function resolvePathsToScreenshot({
     )
     .flat();
 
-  const screenshot = Files.readFirstOf<string>(possiblePaths)((v: string) => v);
+  const matchingPath = possiblePaths.find(Files.exists);
+  if (!matchingPath) {
+    return;
+  }
 
-  if (!screenshot) return screenshot;
+  const hash = Files.readFileAndCreateHashSync(matchingPath);
 
   return {
-    path: screenshot.path,
+    path: matchingPath,
+    hash,
   };
 }

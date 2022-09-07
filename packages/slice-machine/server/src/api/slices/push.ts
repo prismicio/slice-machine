@@ -16,7 +16,7 @@ export async function pushSlice(
   env: BackendEnvironment,
   slices: ReadonlyArray<SliceSM>,
   { sliceName, from }: { sliceName: string; from: string }
-): Promise<ApiResult> {
+): Promise<ApiResult<Record<string, string | null>>> {
   const modelPath = CustomPaths(env.cwd).library(from).slice(sliceName).model();
 
   try {
@@ -45,12 +45,10 @@ export async function pushSlice(
       variations,
     };
 
-    IO.Slice.writeSlice(modelPath, modelWithImageUrl);
-
     return createOrUpdate(slices, modelWithImageUrl, env.client)
       .then(() => {
         console.log("[slice/push] done!");
-        return {};
+        return screenshotUrlsByVariation;
       })
       .catch((error: ClientError) => {
         const message = `[slice/push] Slice ${modelWithImageUrl.name}: Unexpected error: ${error.message}`;
@@ -69,7 +67,7 @@ export async function pushSlice(
   }
 }
 
-const handler = async (query: SliceBody): Promise<ApiResult> => {
+const handler = async (query: SliceBody): ReturnType<typeof pushSlice> => {
   const { sliceName, from } = query;
   const { env } = await getEnv();
   const { slices, err } = await getSlices(env.client);

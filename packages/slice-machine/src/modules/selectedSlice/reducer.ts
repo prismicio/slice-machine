@@ -145,7 +145,7 @@ export const selectedSliceReducer: Reducer<
 
       return {
         ...prevState,
-        screenshotUrls: action.payload.screenshots,
+        screenshots: action.payload.screenshots,
       };
     }
     case getType(generateSliceCustomScreenshotCreator.success): {
@@ -160,10 +160,10 @@ export const selectedSliceReducer: Reducer<
               [variationId]: screenshot,
             };
           }
-          if (prevState.screenshotUrls?.[variation.id]) {
+          if (prevState.screenshots?.[variation.id]) {
             return {
               ...acc,
-              [variation.id]: prevState.screenshotUrls[variation.id],
+              [variation.id]: prevState.screenshots[variation.id],
             };
           }
           return acc;
@@ -171,7 +171,7 @@ export const selectedSliceReducer: Reducer<
 
       return {
         ...prevState,
-        screenshotUrls: screenshots,
+        screenshots: screenshots,
       };
     }
     case getType(copyVariationSliceCreator): {

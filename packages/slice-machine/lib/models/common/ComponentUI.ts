@@ -16,29 +16,33 @@ export const createScreenshotUrl = (
 
 export const createScreenshotUI = (
   baseUrl: string,
-  pathToScreenshot: string
+  screenshot: Screenshot
 ): ScreenshotUI => ({
-  path: pathToScreenshot,
-  url: createScreenshotUrl(baseUrl, pathToScreenshot),
+  path: screenshot.path,
+  hash: screenshot.hash,
+  url: createScreenshotUrl(baseUrl, screenshot.path),
 });
 
 export const buildScreenshotUrls = (
-  screenshotPaths:
+  screenshots:
     | {
         [variationId: string]: Screenshot;
       }
     | undefined,
   baseUrl: string
-) => {
-  if (!screenshotPaths) {
+): { [v: string]: ScreenshotUI } => {
+  if (!screenshots) {
     return {};
   }
-  return Object.entries(screenshotPaths).reduce(
+  return Object.entries(screenshots).reduce(
     (acc, [variationId, screenshot]) => {
       return screenshot.path
         ? {
             ...acc,
-            [variationId]: createScreenshotUI(baseUrl, screenshot.path),
+            [variationId]: {
+              ...screenshot,
+              ...createScreenshotUI(baseUrl, screenshot),
+            },
           }
         : acc;
     },
@@ -51,7 +55,7 @@ export interface ScreenshotUI extends Screenshot {
 }
 
 export interface ComponentUI extends Component {
-  screenshotUrls?: Record<VariationSM["id"], ScreenshotUI>;
+  screenshots: Record<VariationSM["id"], ScreenshotUI>;
   mockConfig: CustomTypeMockConfig;
 }
 
@@ -59,10 +63,7 @@ export const ComponentUI = {
   build(component: Component, env: BackendEnvironment): ComponentUI {
     return {
       ...component,
-      screenshotUrls: buildScreenshotUrls(
-        component.screenshotPaths,
-        env.baseUrl
-      ),
+      screenshots: buildScreenshotUrls(component.screenshots, env.baseUrl),
       mockConfig: SliceMockConfig.getSliceMockConfig(
         env.mockConfig,
         component.from,

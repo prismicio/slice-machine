@@ -58,7 +58,7 @@ export function handleLibraryPath(
           pathToSlice,
           fileName: componentInfo.fileName,
           extension: componentInfo.extension,
-          screenshotPaths: componentInfo.screenshotPaths,
+          screenshots: componentInfo.screenshots,
           mock: componentInfo.mock,
           model: componentInfo.model,
         },

@@ -27,7 +27,7 @@ export const getSelectedSliceDummyData = () => {
     fileName: "index",
     extension: "js",
     model: dummyModel,
-    screenshotPaths: {},
+    screenshots: {},
     mock: mocks as SliceMock,
     mockConfig: dummyMockConfig,
   };

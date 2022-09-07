@@ -17,7 +17,7 @@ import { SlicesStoreType } from "./types";
 import { refreshStateCreator } from "@src/modules/environment";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { LibraryUI } from "@models/common/LibraryUI";
-import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
@@ -27,7 +27,7 @@ import {
   pushSliceCreator,
   saveSliceCreator,
 } from "../selectedSlice/actions";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { Screenshots } from "@lib/models/common/Screenshots";
 import { FrontEndModel } from "@lib/models/common/ModelStatus";
 
@@ -92,19 +92,20 @@ export const getRemoteSlices = (
 export const getFrontendSlices = (
   store: SliceMachineStoreType
 ): ReadonlyArray<FrontEndModel> => {
-  const localSlices: SliceSM[] = store.slices.libraries.reduce(
-    (acc: SliceSM[], lib: LibraryUI) => {
-      return [...acc, ...lib.components.map((c) => c.model)];
+  const components: ComponentUI[] = store.slices.libraries.reduce(
+    (acc: ComponentUI[], lib: LibraryUI) => {
+      return [...acc, ...lib.components];
     },
     []
   );
 
-  return localSlices.reduce((acc: FrontEndModel[], localSlice: SliceSM) => {
+  return components.reduce((acc: FrontEndModel[], component: ComponentUI) => {
     return [
       ...acc,
       {
-        local: localSlice,
-        remote: getRemoteSlice(store, localSlice.id),
+        local: component.model,
+        remote: getRemoteSlice(store, component.model.id),
+        component,
       },
     ];
   }, []);
@@ -164,15 +165,33 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       return { ...state, libraries: newLibraries };
     }
     case getType(pushSliceCreator.success): {
-      const newComponentUI = action.payload.component;
+      const {
+        payload: { component: newComponentUI, updatedScreenshotsUrls },
+      } = action;
       const newRemoteSlices = [...state.remoteSlices];
 
       const remoteSliceIndex = state.remoteSlices.findIndex(
         ({ id }) => id === newComponentUI.model.id
       );
 
+      const mergeModelWithImageUrls = (
+        comp: ComponentUI,
+        screenshotUrls: Record<string, string | null>
+      ) => {
+        return {
+          ...comp.model,
+          variations: comp.model.variations.map((v) => ({
+            ...v,
+            imageUrl: screenshotUrls[v.id] || undefined,
+          })),
+        };
+      };
+
       if (remoteSliceIndex !== -1) {
-        newRemoteSlices[remoteSliceIndex] = newComponentUI.model;
+        newRemoteSlices[remoteSliceIndex] = mergeModelWithImageUrls(
+          newComponentUI,
+          updatedScreenshotsUrls
+        );
       } else {
         newRemoteSlices.push(newComponentUI.model);
       }
@@ -196,7 +215,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       };
     }
     case getType(generateSliceScreenshotCreator.success): {
-      const { screenshots: screenshotUrls, component } = action.payload;
+      const { screenshots, component } = action.payload;
 
       const newLibraries = state.libraries.map((library) => {
         if (library.name !== component.from) return library;
@@ -205,7 +224,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((c) => {
             return component.model.id !== c.model.id
               ? c
-              : { ...c, screenshotUrls };
+              : { ...c, screenshots };
           }),
         };
       });
@@ -215,7 +234,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     case getType(generateSliceCustomScreenshotCreator.success): {
       const { variationId, screenshot, component } = action.payload;
 
-      const screenshotUrls: Screenshots = component.model.variations.reduce(
+      const screenshots: Screenshots = component.model.variations.reduce(
         (acc, variation) => {
           if (variation.id === variationId) {
             return {
@@ -223,10 +242,10 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
               [variationId]: screenshot,
             };
           }
-          if (component.screenshotUrls?.[variation.id]) {
+          if (component.screenshots?.[variation.id]) {
             return {
               ...acc,
-              [variation.id]: component.screenshotUrls[variation.id],
+              [variation.id]: component.screenshots[variation.id],
             };
           }
           return acc;
@@ -241,7 +260,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
           components: library.components.map((c) => {
             return component.model.id !== c.model.id
               ? c
-              : { ...c, screenshotUrls };
+              : { ...c, screenshots };
           }),
         };
       });
@@ -302,47 +321,27 @@ export const renamedComponentUI = (
   initialComponent: ComponentUI,
   newName: string
 ): ComponentUI => {
-  const { model, screenshotPaths, screenshotUrls } = initialComponent;
+  const { model, screenshots } = initialComponent;
   return {
     ...initialComponent,
     model: renameModel(model, newName),
-    screenshotPaths: renameScreenshotPaths(
-      screenshotPaths,
-      model.name,
-      newName
-    ),
-    screenshotUrls: renameScreenshotUrls(
-      screenshotUrls || {},
-      model.name,
-      newName
-    ),
+    screenshots: renameScreenshots(screenshots, model.name, newName),
   };
 };
 
-export const renameScreenshotPaths = (
-  initialPaths: Record<string, Screenshot>,
+export const renameScreenshots = (
+  initialScreenshots: Record<string, ScreenshotUI>,
   prevName: string,
   newName: string
-): Record<string, Screenshot> => {
-  return Object.entries(initialPaths).reduce((acc, [key, screenshot]) => {
-    acc[key] = { path: screenshot.path.replace(prevName, newName) };
-    return acc;
-  }, {} as Record<string, Screenshot>);
-};
-
-export const renameScreenshotUrls = (
-  initialPaths: Screenshots | undefined,
-  prevName: string,
-  newName: string
-): Screenshots => {
-  if (!initialPaths) return {};
-  return Object.entries(initialPaths).reduce((acc, [key, screenshot]) => {
+): Record<string, ScreenshotUI> => {
+  return Object.entries(initialScreenshots).reduce((acc, [key, screenshot]) => {
     acc[key] = {
-      path: screenshot.path.replace(prevName, newName),
+      ...screenshot,
       url: screenshot.url.replace(prevName, newName),
+      path: screenshot.path.replace(prevName, newName),
     };
     return acc;
-  }, {} as Screenshots);
+  }, {} as Record<string, ScreenshotUI>);
 };
 
 export const renameModel = (

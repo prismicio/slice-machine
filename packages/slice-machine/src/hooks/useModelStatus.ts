@@ -1,5 +1,7 @@
 import {
-  computeModelStatus,
+  computeCustomTypeModelStatus,
+  computeSliceModelStatus,
+  FrontEndCtModel,
   FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
@@ -34,13 +36,11 @@ export const useModelStatus = (
   const modelsStatuses: ModelStatusInformation["modelsStatuses"] =
     models.reduce(
       (acc: ModelStatusInformation["modelsStatuses"], model: FrontEndModel) => {
-        const status: ModelStatus = computeModelStatus(
-          model,
-          userHasAccessToModels
-        );
-        const modelIsSlice = "variations" in model.local;
-
-        if (modelIsSlice) {
+        if ("variations" in model.local && "component" in model) {
+          const status: ModelStatus = computeSliceModelStatus(
+            model,
+            userHasAccessToModels
+          );
           return {
             slices: {
               ...acc.slices,
@@ -49,6 +49,11 @@ export const useModelStatus = (
             customTypes: acc.customTypes,
           };
         }
+
+        const status: ModelStatus = computeCustomTypeModelStatus(
+          model as FrontEndCtModel,
+          userHasAccessToModels
+        );
 
         return {
           slices: acc.slices,
