@@ -25,8 +25,6 @@ export const upload = async (
   variationId: string,
   filePath: string
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
-  console.log("[slice/push]: uploading variation preview");
-
   const aclOrErr: Acl | ApiError = await env.client
     .createAcl()
     .catch((error: ClientError) => {
@@ -47,7 +45,7 @@ export const upload = async (
     .then((assetUrl) => ({ s3ImageUrl: assetUrl }))
     .catch((error: ClientError) => {
       const msg =
-        "[slice/push] An error occurred while uploading files - please contact support";
+        "[slice/push] An error occurred while uploading screenshots - please contact support";
       console.error(msg);
       console.error(`Full error: ${error.message}`);
 
