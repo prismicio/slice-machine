@@ -29,6 +29,7 @@ import { rest } from "msw";
 import { modalOpenCreator } from "../../../src/modules/modal";
 import { ModalKeysEnum } from "../../../src/modules/modal/types";
 import { pushCustomType, pushSliceApiClient } from "../../../src/apiClient";
+import { ApiError } from "@src/models/ApiError";
 
 const stubSlice: ComponentUI = {
   model: {
@@ -129,7 +130,7 @@ describe("[pashSaga module]", () => {
         .run(sagaTimeout);
     });
 
-    test("when there's an 403 error while pushing a slice it should stop and open the login model", () => {
+    test("when there's a 403 error while pushing a slice it should stop and open the login model", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
       const onChangesPushed = jest.fn();
@@ -169,7 +170,7 @@ describe("[pashSaga module]", () => {
         });
     });
 
-    test("when there's a 403 error while pushing a custom type it should stop", () => {
+    test("when there's a 403 error while pushing a custom type it should stop", async () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [stubSlice];
       const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
       const onChangesPushed = jest.fn();
@@ -217,7 +218,7 @@ describe("[pashSaga module]", () => {
         });
     });
 
-    test("when pushing slices, if there a non 403 error it should not push custom-types", () => {
+    test("when pushing slices, if there an Invalid Model error it should not push custom-types and stop", () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [
         stubSlice,
         stubSlice2,
@@ -228,16 +229,12 @@ describe("[pashSaga module]", () => {
 
       server.use(
         rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res(ctx.status(401));
-        })
-      );
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res.once(ctx.json({}));
-        })
-      );
+          const sliceName = _req.url.searchParams.get("sliceName");
 
-      server.use(
+          // will fail for Slice one
+          if (sliceName === stubSlice.model.name) return res(ctx.status(400));
+          return res.once(ctx.json({}));
+        }),
         rest.get("/api/custom-types/push", (_req, res, ctx) => {
           return res(ctx.json({}));
         })
@@ -252,10 +249,24 @@ describe("[pashSaga module]", () => {
       const saga = expectSaga(changesPushSaga, payload);
 
       return saga
+        .put(
+          openToasterCreator({
+            message: syncChangesToasterMessage(0, 3),
+            type: ToasterType.LOADING,
+            options: {
+              autoClose: false,
+              toastId: PUSH_CHANGES_TOASTER_ID,
+            },
+          })
+        )
         .call(pushSliceApiClient, stubSlice)
-        .put(pushSliceCreator.success({ component: stubSlice }))
         .call(pushSliceApiClient, stubSlice2)
-        .put(pushSliceCreator.failure({ component: stubSlice2 }))
+        .put(
+          closeToasterCreator({
+            toasterId: PUSH_CHANGES_TOASTER_ID,
+          })
+        )
+        .put(pushSliceCreator.failure({ component: stubSlice })) // We can't expect a success only a failure as it cancels the saga
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
@@ -265,11 +276,76 @@ describe("[pashSaga module]", () => {
         )
         .run(sagaTimeout)
         .then(() => {
-          expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
+          expect(handleError).toHaveBeenCalledWith({
+            type: "slice",
+            error: ApiError.INVALID_MODEL,
+          });
         });
     });
 
-    test("when one slice fails with a non 403 the others should be pushed", () => {
+    test("when pushing slices, if there an unexpected error it should not push custom-types", () => {
+      const unSyncedSlices: ReadonlyArray<ComponentUI> = [
+        stubSlice,
+        stubSlice2,
+      ];
+      const unSyncedCustomTypes: ReadonlyArray<CustomTypeSM> = [stubCustomType];
+      const onChangesPushed = jest.fn();
+      const handleError = jest.fn();
+
+      server.use(
+        rest.get("/api/slices/push", (_req, res, ctx) => {
+          const sliceName = _req.url.searchParams.get("sliceName");
+
+          // will fail for Slice one
+          if (sliceName === stubSlice.model.name) return res(ctx.status(500));
+          return res(ctx.json({}));
+        }),
+        rest.get("/api/custom-types/push", (_req, res, ctx) => {
+          return res(ctx.json({}));
+        })
+      );
+
+      const payload = changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+        onChangesPushed,
+        handleError,
+      });
+      const saga = expectSaga(changesPushSaga, payload);
+
+      return saga
+        .put(
+          openToasterCreator({
+            message: syncChangesToasterMessage(0, 3),
+            type: ToasterType.LOADING,
+            options: {
+              autoClose: false,
+              toastId: PUSH_CHANGES_TOASTER_ID,
+            },
+          })
+        )
+        .call(pushSliceApiClient, stubSlice)
+        .call(pushSliceApiClient, stubSlice2)
+        .put(
+          closeToasterCreator({
+            toasterId: PUSH_CHANGES_TOASTER_ID,
+          })
+        )
+        .put(pushSliceCreator.failure({ component: stubSlice })) // We can't expect a success only a failure as it cancels the saga
+        .not.call(pushCustomType, stubCustomType.id)
+        .not.put(
+          openToasterCreator({
+            message: "All slices and custom types have been pushed",
+            type: ToasterType.SUCCESS,
+          })
+        )
+        .run(sagaTimeout)
+        .then(() => {
+          expect(handleError).not.toHaveBeenCalled();
+        });
+    });
+
+    test("when one slice fails with a non 403 the others should be pushed", async () => {
       const unSyncedSlices: ReadonlyArray<ComponentUI> = [
         stubSlice,
         stubSlice2,
@@ -281,13 +357,11 @@ describe("[pashSaga module]", () => {
 
       server.use(
         rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res(ctx.json({}));
-        })
-      );
+          const sliceName = _req.url.searchParams.get("sliceName");
 
-      server.use(
-        rest.get("/api/slices/push", (_req, res, ctx) => {
-          return res.once(ctx.status(401));
+          // will fail for Slice 2
+          if (sliceName === stubSlice2.model.name) return res(ctx.status(500));
+          return res(ctx.json({}));
         })
       );
 
@@ -306,7 +380,7 @@ describe("[pashSaga module]", () => {
         .not.call(pushCustomType, stubCustomType)
         .run(sagaTimeout)
         .then(() => {
-          expect(handleError).toHaveBeenCalledWith(PUSH_CHANGES_ERRORS.SLICES);
+          expect(handleError).not.toHaveBeenCalled();
         });
     });
   });

@@ -24,18 +24,15 @@ import {
   updateSyncToaster,
 } from "./syncToaster";
 import { LoadingKeysEnum } from "../loading/types";
+import { ApiError } from "@src/models/ApiError";
+import { SyncError } from "@src/models/SyncError";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
   onChangesPushed: (pushed: string | null) => void;
-  handleError: (e: PUSH_CHANGES_ERRORS | null) => void;
+  handleError: (e: SyncError | null) => void;
 }>();
-
-export enum PUSH_CHANGES_ERRORS {
-  SLICES = "SLICES",
-  CUSTOM_TYPES = "CUSTOM_TYPES",
-}
 
 export function* changesPushSaga({
   payload,
@@ -46,7 +43,7 @@ export function* changesPushSaga({
     unSyncedSlices.length + unSyncedCustomTypes.length;
 
   let alreadySyncedChanges = 0;
-  let stop: PUSH_CHANGES_ERRORS | null = null;
+  let stop: Parameters<typeof handleError>[0] = null;
 
   // Open the custom toaster
   yield openSyncToaster(alreadySyncedChanges, totalNumberOfChanges);
@@ -74,20 +71,36 @@ export function* changesPushSaga({
         // close the custom toaster
         yield closeSyncToaster();
 
-        if (
-          axios.isAxiosError(e) &&
-          e.response?.status &&
-          e.response.status === 403
-        ) {
-          // Opening the login modal
-          yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+        // Sending failure event
+        yield put(pushSliceCreator.failure({ component: slice }));
 
-          // Canceling the saga
-          yield cancel();
-        } else {
-          // Storing there was an issue to stop the saga before pushing Custom types
-          stop = PUSH_CHANGES_ERRORS.SLICES;
-          yield put(pushSliceCreator.failure({ component: slice }));
+        const errorStatus =
+          axios.isAxiosError(e) && e.response ? e.response.status : 500;
+
+        switch (errorStatus) {
+          case 400: {
+            stop = { type: "slice", error: ApiError.INVALID_MODEL };
+            break;
+          }
+
+          case 401:
+          case 403: {
+            // Opening the login modal
+            yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
+            // Canceling the saga
+            yield cancel();
+
+            break;
+          }
+
+          default: {
+            // Display error toaster
+            yield displayGeneralError();
+
+            // Cancel the saga as it's an unexpected error
+            yield cancel();
+          }
         }
       }
     })
@@ -115,22 +128,38 @@ export function* changesPushSaga({
         // close the custom toaster
         yield closeSyncToaster();
 
-        if (
-          axios.isAxiosError(e) &&
-          e.response?.status &&
-          e.response.status === 403
-        ) {
-          // Opening the login modal
-          yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+        // Sending failure event
+        yield put(
+          pushCustomTypeCreator.failure({ customTypeId: customType.id })
+        );
 
-          // Canceling the saga
-          yield cancel();
-        } else {
-          // Storing there was an issue to stop the saga before pushing Custom types
-          stop = PUSH_CHANGES_ERRORS.CUSTOM_TYPES;
-          yield put(
-            pushCustomTypeCreator.failure({ customTypeId: customType.id })
-          ); // TODO: update the custom type status to errored
+        const errorStatus =
+          axios.isAxiosError(e) && e.response ? e.response.status : 500;
+
+        switch (errorStatus) {
+          case 400: {
+            stop = { type: "custom type", error: ApiError.INVALID_MODEL };
+            break;
+          }
+
+          case 401:
+          case 403: {
+            // Opening the login modal
+            yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+
+            // Canceling the saga
+            yield cancel();
+
+            break;
+          }
+
+          default: {
+            // Display error toaster
+            yield displayGeneralError();
+
+            // Cancel the saga as it's an unexpected error
+            yield cancel();
+          }
         }
       }
     })
@@ -147,6 +176,16 @@ export function* changesPushSaga({
     openToasterCreator({
       message: "All slices and custom types have been pushed",
       type: ToasterType.SUCCESS,
+    })
+  );
+}
+
+function displayGeneralError() {
+  return put(
+    openToasterCreator({
+      message:
+        "An unexpected error happened while contacting the Prismic API, please try again or contact us.",
+      type: ToasterType.ERROR,
     })
   );
 }
