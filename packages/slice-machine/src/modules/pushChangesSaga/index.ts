@@ -72,30 +72,36 @@ export function* changesPushSaga({
         // close the custom toaster
         yield closeSyncToaster();
 
-        if (axios.isAxiosError(e) && e.response?.status) {
-          // Authentication issue
-          if (e.response.status === 403 || e.response.status === 401) {
+        // Sending failure event
+        yield put(pushSliceCreator.failure({ component: slice }));
+
+        const errorStatus =
+          axios.isAxiosError(e) && e.response ? e.response.status : 500;
+
+        switch (errorStatus) {
+          case 400: {
+            stop = { type: "slice", error: ApiError.INVALID_MODEL };
+            break;
+          }
+
+          case 401:
+          case 403: {
             // Opening the login modal
             yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
             // Canceling the saga
             yield cancel();
+
+            break;
           }
-          // Invalid model issue
-          else if (e.response.status === 400)
-            stop = { type: "slice", error: ApiError.INVALID_MODEL };
-          else {
+
+          default: {
             // Display error toaster
             yield displayGeneralError();
 
             // Cancel the saga as it's an unexpected error
             yield cancel();
           }
-        } else {
-          // Display error toaster
-          yield displayGeneralError();
-          // Cancel the saga as it's an unexpected error
-          yield cancel();
         }
       }
     })
@@ -123,31 +129,38 @@ export function* changesPushSaga({
         // close the custom toaster
         yield closeSyncToaster();
 
-        if (axios.isAxiosError(e) && e.response?.status) {
-          // Authentication issue
-          if (e.response.status === 403 || e.response.status === 401) {
+        // Sending failure event
+        yield put(
+          pushCustomTypeCreator.failure({ customTypeId: customType.id })
+        );
+
+        const errorStatus =
+          axios.isAxiosError(e) && e.response ? e.response.status : 500;
+
+        switch (errorStatus) {
+          case 400: {
+            stop = { type: "custom type", error: ApiError.INVALID_MODEL };
+            break;
+          }
+
+          case 401:
+          case 403: {
             // Opening the login modal
             yield put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
 
             // Canceling the saga
             yield cancel();
+
+            break;
           }
-          // Invalid model issue
-          else if (e.response.status === 400)
-            stop = { type: "custom type", error: ApiError.INVALID_MODEL };
-          else {
+
+          default: {
             // Display error toaster
             yield displayGeneralError();
 
             // Cancel the saga as it's an unexpected error
             yield cancel();
           }
-        } else {
-          // Display error toaster
-          yield displayGeneralError();
-
-          // Cancel the saga as it's an unexpected error
-          yield cancel();
         }
       }
     })
