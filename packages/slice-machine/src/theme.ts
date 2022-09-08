@@ -16,10 +16,6 @@ const AppTheme = (): Theme =>
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
       badge: {
-        published: {
-          bg: "#E9F6EE",
-          color: "#27AE60",
-        },
         new: {
           bg: "#C2EFC899",
           color: "#32A943",
@@ -168,21 +164,7 @@ const AppTheme = (): Theme =>
         px: 1,
         py: "1px",
       },
-      PUBLISHED: {
-        fontWeight: "body",
-        color: "badge.published.color",
-        bg: "badge.published.bg",
-        px: 1,
-        py: "1px",
-      },
-      NEW_CT: {
-        fontWeight: "body",
-        color: "badge.new.color",
-        bg: "badge.new.bg",
-        px: 1,
-        py: "1px",
-      },
-      NEW_SLICE: {
+      NEW: {
         fontWeight: "body",
         color: "badge.new.color",
         bg: "badge.new.bg",
