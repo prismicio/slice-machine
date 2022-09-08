@@ -5,25 +5,7 @@ import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/scr
 import { upload } from "./uploadScreenshotClient";
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import { ApiError } from "../../../../lib/models/server/ApiResult";
-import {
-  Slices,
-  SliceSM,
-  VariationSM,
-} from "@slicemachine/core/build/models/Slice";
-
-export const createOrUpdate = async (
-  slices: ReadonlyArray<SliceSM>,
-  model: SliceSM,
-  client: Client
-) => {
-  const prismicModel = Slices.fromSM(model);
-
-  if (slices.find((e) => e.id === model.id)) {
-    return client.updateSlice(prismicModel);
-  } else {
-    return client.insertSlice(prismicModel);
-  }
-};
+import { SliceSM, VariationSM } from "@slicemachine/core/build/models/Slice";
 
 export async function uploadScreenshots(
   env: BackendEnvironment,

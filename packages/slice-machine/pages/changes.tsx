@@ -15,8 +15,8 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { PUSH_CHANGES_ERRORS } from "@src/modules/pushChangesSaga";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SyncError } from "@src/models/SyncError";
 
 const changes: React.FunctionComponent = () => {
   const {
@@ -35,7 +35,7 @@ const changes: React.FunctionComponent = () => {
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
   const [changesPushed, setChangesPushed] = useState<string[]>([]);
-  const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
+  const [error, setError] = useState<SyncError | null>(null);
 
   const handlePush = () => {
     if (error) setError(null); // reset error
@@ -69,6 +69,7 @@ const changes: React.FunctionComponent = () => {
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
         changesPushed={changesPushed}
+        syncError={error}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}

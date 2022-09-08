@@ -27,7 +27,6 @@ import {
   ScreenshotRequest,
   ScreenshotResponse,
 } from "../../../lib/models/common/Screenshots";
-import { SliceBody } from "../../../lib/models/common/Slice";
 import { SaveCustomTypeBody } from "../../../lib/models/common/CustomType";
 import { isApiError } from "../../../lib/models/server/ApiResult";
 import tracking from "./tracking";
@@ -157,23 +156,18 @@ router.post(
 router.get(
   "/slices/push",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  async function (
-    req: express.Request<
-      Record<string, never>,
-      Record<string, never>,
-      unknown,
-      SliceBody
-    >,
+  WithEnv(async function (
+    req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await pushSlice(req.query);
+    const payload = await pushSlice(req);
 
     if (isApiError(payload)) {
       return res.status(payload.status).json(payload);
     }
 
     return res.status(200).json(payload);
-  }
+  })
 );
 
 router.put(

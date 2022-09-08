@@ -1,9 +1,7 @@
 import "@testing-library/jest-dom";
 
-import {
-  createOrUpdate,
-  uploadScreenshots,
-} from "../../../server/src/api/services/sliceService";
+import { uploadScreenshots } from "../../../server/src/api/services/sliceService";
+import { createOrUpdate } from "../../../server/src/api/slices/push";
 import { upload } from "../../../server/src/api/services/uploadScreenshotClient";
 
 import allFieldSliceObject from "../../__mocks__/sliceModel";
