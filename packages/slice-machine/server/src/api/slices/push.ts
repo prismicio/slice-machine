@@ -1,10 +1,8 @@
 import { getSlices } from ".";
 
-import { onError } from "../common/error";
 import { purge } from "../services/uploadScreenshotClient";
 import { CustomPaths } from "../../../../lib/models/paths";
 import { uploadScreenshots } from "../services/sliceService";
-import { ApiResult } from "../../../../lib/models/server/ApiResult";
 import { Slices, SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import * as IO from "../../../../lib/io";
 import { Client, ClientError } from "@slicemachine/client";
@@ -20,13 +18,17 @@ export const createOrUpdate = async (
   else return client.insertSlice(model);
 };
 
-const handler = async (req: RequestWithEnv): Promise<ApiResult> => {
+export const handler = async (
+  req: RequestWithEnv
+): Promise<{ statusCode: number }> => {
   const { sliceName, from } = req.query;
+  if (typeof sliceName != "string" || typeof from != "string")
+    return { statusCode: 418 }; // Should never happen
 
   // Path to the local model of the slice
   const modelPath = CustomPaths(req.env.cwd)
-    .library(from as string)
-    .slice(sliceName as string)
+    .library(from)
+    .slice(sliceName)
     .model();
 
   try {
@@ -38,14 +40,17 @@ const handler = async (req: RequestWithEnv): Promise<ApiResult> => {
 
     // fetching error to be returned immediatly
     if (FetchRemoteSlicesError) {
-      console.error("[slice/push] An error occurred while fetching slices.");
+      if (FetchRemoteSlicesError.status === 401)
+        console.error(
+          `[slice/push] Could not fetch remote slices, you don\'t have access to the repository \"${req.env.repo}\"`
+        );
 
-      const message =
-        FetchRemoteSlicesError.status === 403
-          ? "Could not fetch remote slices. Please log in to Prismic!"
-          : `You don\'t have access to the repository \"${req.env.repo}\"`;
+      if (![400, 401, 403].includes(FetchRemoteSlicesError.status))
+        console.error(
+          `[slice/push] Could not fetch remote slices. Unexpected error: ${FetchRemoteSlicesError.message}`
+        );
 
-      return onError(message, FetchRemoteSlicesError.status);
+      return { statusCode: FetchRemoteSlicesError.status };
     }
 
     // finding the remote model of the Slice we are pushing
@@ -53,19 +58,18 @@ const handler = async (req: RequestWithEnv): Promise<ApiResult> => {
 
     // removing existing screenshots that have been previously uploaded
     if (remoteSlice) {
-      console.log("\n[slice/push]: purging images folder");
       const { err: purgeError } = await purge(req.env, smModel.id);
-      if (purgeError) return purgeError;
+      if (purgeError) {
+        console.error(
+          `[slice/push]: Unexpected error while removing previously uploaded screenshots: ${purgeError.reason}`
+        );
+        return { statusCode: purgeError.status };
+      }
     }
 
     // Uploading screenshots for all variations of the slice
     const screenshotUrlsByVariation: Record<string, string | null> =
-      await uploadScreenshots(
-        req.env,
-        smModel,
-        sliceName as string,
-        from as string
-      );
+      await uploadScreenshots(req.env, smModel, sliceName, from);
 
     const modelWithScreenshots: SliceSM = {
       ...smModel,
@@ -80,29 +84,24 @@ const handler = async (req: RequestWithEnv): Promise<ApiResult> => {
       }),
     };
 
-    console.log("[slice/push]: pushing slice model to Prismic");
-
     // Pushing the slice
     return createOrUpdate(req.env.client, modelWithScreenshots, remoteSlice)
       .then(() => {
-        console.log("[slice/push] done!");
-        return {};
+        console.log(`[slice/push] Slice ${sliceName} pushed successfully !`);
+        return { statusCode: 200 };
       })
       .catch((error: ClientError) => {
-        const message = `[slice/push] Slice ${modelWithScreenshots.name}: Unexpected error: ${error.message}`;
-        console.log(message);
-
-        return onError(
-          `[slice/push] An unexpected error occurred while pushing the slice ${modelWithScreenshots.name}`,
-          error.status
+        console.error(
+          `[slice/push] Unexpected error while pushing the Slice ${sliceName}: ${error.message}`
         );
+        return { statusCode: error.status };
       });
   } catch (e) {
-    console.log(e);
-    return onError(
-      "[slice/push] An unexpected error occurred while pushing slice"
+    console.error(
+      `[slice/push] Unexpected error while pushing the Slice ${sliceName}: ${
+        e as string
+      }`
     );
+    return { statusCode: 500 };
   }
 };
-
-export default handler;

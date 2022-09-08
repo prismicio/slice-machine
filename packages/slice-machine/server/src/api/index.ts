@@ -6,7 +6,7 @@ const fs = require("fs");
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
 const mime = require("mime");
 
-import pushSlice from "./slices/push";
+import { handler as pushSlice } from "./slices/push";
 import saveSlice from "./slices/save";
 import { renameSlice } from "./slices/rename";
 import createSlice from "./slices/create/index";
@@ -17,7 +17,7 @@ import state from "./state";
 import checkSimulator from "./simulator";
 import saveCustomType from "./custom-types/save";
 import renameCustomType from "./custom-types/rename";
-import pushCustomType from "./custom-types/push";
+import { handler as pushCustomType } from "./custom-types/push";
 import startAuth from "./auth/start";
 import statusAuth from "./auth/status";
 import postAuth from "./auth/post";
@@ -160,13 +160,8 @@ router.get(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const payload = await pushSlice(req);
-
-    if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
-    }
-
-    return res.status(200).json(payload);
+    const { statusCode } = await pushSlice(req);
+    return res.sendStatus(statusCode);
   })
 );
 
@@ -220,19 +215,13 @@ router.patch(
 
 router.get(
   "/custom-types/push",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-misused-promises
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   WithEnv(async function (
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const payload = await pushCustomType(req);
-
-    if (isApiError(payload)) {
-      return res.status(payload.status).json(payload);
-    }
-
-    return res.status(200).json(payload);
+    const { statusCode } = await pushCustomType(req);
+    return res.sendStatus(statusCode);
   })
 );
 
