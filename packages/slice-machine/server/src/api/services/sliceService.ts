@@ -1,5 +1,4 @@
 import path from "path";
-import { Client } from "@slicemachine/client";
 import { resolvePathsToScreenshot } from "@slicemachine/core/build/libraries/screenshot";
 
 import { upload } from "./uploadScreenshotClient";
