@@ -90,7 +90,7 @@ const handler = async (req: RequestWithEnv): Promise<ApiResult> => {
       })
       .catch((error: ClientError) => {
         const message = `[slice/push] Slice ${modelWithScreenshots.name}: Unexpected error: ${error.message}`;
-        console.error(message);
+        console.log(message);
 
         return onError(
           `[slice/push] An unexpected error occurred while pushing the slice ${modelWithScreenshots.name}`,

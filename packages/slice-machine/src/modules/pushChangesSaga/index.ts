@@ -25,14 +25,13 @@ import {
 } from "./syncToaster";
 import { LoadingKeysEnum } from "../loading/types";
 import { ApiError } from "@src/models/ApiError";
+import { SyncError } from "@src/models/SyncError";
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
   onChangesPushed: (pushed: string | null) => void;
-  handleError: (
-    e: { type: "custom type" | "slice"; error: ApiError } | null
-  ) => void;
+  handleError: (e: SyncError | null) => void;
 }>();
 
 export function* changesPushSaga({
