@@ -1,7 +1,5 @@
 import {
-  computeCustomTypeModelStatus,
-  computeSliceModelStatus,
-  FrontEndCtModel,
+  computeModelStatus,
   FrontEndModel,
   ModelStatus,
 } from "@lib/models/common/ModelStatus";
@@ -22,7 +20,7 @@ export interface ModelStatusInformation {
 }
 
 export const useModelStatus = (
-  models: ReadonlyArray<FrontEndModel>
+  models: FrontEndModel[]
 ): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
@@ -36,11 +34,12 @@ export const useModelStatus = (
   const modelsStatuses: ModelStatusInformation["modelsStatuses"] =
     models.reduce(
       (acc: ModelStatusInformation["modelsStatuses"], model: FrontEndModel) => {
-        if ("variations" in model.local && "component" in model) {
-          const status: ModelStatus = computeSliceModelStatus(
-            model,
-            userHasAccessToModels
-          );
+        const status: ModelStatus = computeModelStatus(
+          model,
+          userHasAccessToModels
+        );
+
+        if ("localScreenshots" in model) {
           return {
             slices: {
               ...acc.slices,
@@ -49,11 +48,6 @@ export const useModelStatus = (
             customTypes: acc.customTypes,
           };
         }
-
-        const status: ModelStatus = computeCustomTypeModelStatus(
-          model as FrontEndCtModel,
-          userHasAccessToModels
-        );
 
         return {
           slices: acc.slices,

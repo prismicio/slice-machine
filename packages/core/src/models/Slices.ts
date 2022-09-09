@@ -13,12 +13,7 @@ export const SlicesSM = t.type({
   value: t.array(
     t.type({
       key: t.string,
-      value: t.intersection([
-        t.union([LegacySlice, CompositeSlice, SharedSliceRef]),
-        t.partial({
-          imageHash: t.string, // hash of the screenshot in the file system
-        }),
-      ]),
+      value: t.union([LegacySlice, CompositeSlice, SharedSliceRef]),
     })
   ),
 });

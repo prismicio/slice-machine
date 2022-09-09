@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Flex, Spinner, Text } from "theme-ui";
+import { Box, Button, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
@@ -15,8 +15,8 @@ import { AuthStatus } from "@src/modules/userContext/types";
 import { useUnSyncChanges } from "@src/hooks/useUnSyncChanges";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { PUSH_CHANGES_ERRORS } from "@src/modules/pushChangesSaga";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+import { SyncError } from "@src/models/SyncError";
 
 const changes: React.FunctionComponent = () => {
   const {
@@ -28,19 +28,25 @@ const changes: React.FunctionComponent = () => {
   } = useUnSyncChanges();
   const { pushChanges } = useSliceMachineActions();
 
-  const { loading } = useSelector((store: SliceMachineStoreType) => ({
-    loading: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
+  const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
+    isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
   }));
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  const [error, setError] = useState<PUSH_CHANGES_ERRORS | null>(null);
+  const [changesPushed, setChangesPushed] = useState<string[]>([]);
+  const [error, setError] = useState<SyncError | null>(null);
 
   const handlePush = () => {
-    if (error) setError(null);
+    if (error) setError(null); // reset error
+    if (changesPushed.length > 0) setChangesPushed([]); // reset changesPushed
     pushChanges(
       unSyncedSlices,
       unSyncedCustomTypes.map((customtype) => customtype.local),
+      (pushed: string | null) =>
+        pushed
+          ? setChangesPushed([...changesPushed, pushed])
+          : setChangesPushed([]),
       setError
     );
   };
@@ -62,6 +68,8 @@ const changes: React.FunctionComponent = () => {
       <ChangesItems
         unSyncedSlices={unSyncedSlices}
         unSyncedCustomTypes={unSyncedCustomTypes}
+        changesPushed={changesPushed}
+        syncError={error}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}
@@ -84,18 +92,22 @@ const changes: React.FunctionComponent = () => {
                 numberOfChanges === 0 ||
                 !isOnline ||
                 authStatus === AuthStatus.UNAUTHORIZED ||
-                authStatus === AuthStatus.FORBIDDEN
+                authStatus === AuthStatus.FORBIDDEN ||
+                isSyncing
               }
-              sx={{ minWidth: "120px" }}
+              sx={{
+                minWidth: "120px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
-              {loading ? (
+              {isSyncing ? (
                 <Spinner color="#FFF" size={14} />
               ) : (
-                <Flex sx={{ alignItems: "center" }}>
-                  <MdLoop size={18} />
-                  <span>Push Changes</span>
-                </Flex>
+                <MdLoop size={18} />
               )}
+              <span>Push Changes</span>
             </Button>
           }
           MainBreadcrumb={<Text ml={2}>Changes</Text>}

@@ -17,10 +17,8 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
-import {
-  pushCustomTypeCreator,
-  saveCustomTypeCreator,
-} from "../selectedCustomType/actions";
+import { saveCustomTypeCreator } from "../selectedCustomType/actions";
+import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(

@@ -6,7 +6,6 @@ import {
   SagaReturnType,
   takeEvery,
 } from "redux-saga/effects";
-import axios from "axios";
 import { getType } from "typesafe-actions";
 import { withLoader } from "../loading";
 import { LoadingKeysEnum } from "../loading/types";
@@ -14,13 +13,11 @@ import {
   generateSliceScreenshotCreator,
   generateSliceCustomScreenshotCreator,
   saveSliceCreator,
-  pushSliceCreator,
 } from "./actions";
 import {
   generateSliceScreenshotApiClient,
   generateSliceCustomScreenshotApiClient,
   saveSliceApiClient,
-  pushSliceApiClient,
   renameSlice,
 } from "@src/apiClient";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
@@ -67,8 +64,10 @@ export function* generateSliceScreenshotSaga({
     });
     yield put(
       generateSliceScreenshotCreator.success({
-        screenshots: response.data.screenshots,
-        component,
+        component: {
+          ...component,
+          screenshots: response.data.screenshots,
+        },
       })
     );
   } catch (e) {
@@ -122,9 +121,13 @@ export function* generateSliceCustomScreenshotSaga({
 
     yield put(
       generateSliceCustomScreenshotCreator.success({
-        variationId,
-        screenshot: response.data,
-        component,
+        component: {
+          ...component,
+          screenshots: {
+            ...component.screenshots,
+            [variationId]: response.data,
+          },
+        },
       })
     );
   } catch (e) {
@@ -186,74 +189,6 @@ export function* saveSliceSaga({
   }
 }
 
-export function* pushSliceSaga({
-  payload,
-}: ReturnType<typeof pushSliceCreator.request>) {
-  const { component, onPush } = payload;
-  try {
-    onPush({
-      imageLoading: true,
-      loading: true,
-      done: false,
-      error: null,
-      status: null,
-    });
-    const response = (yield call(
-      pushSliceApiClient,
-      component
-    )) as SagaReturnType<typeof pushSliceApiClient>;
-    if (response.status > 209) {
-      return onPush({
-        imageLoading: false,
-        loading: false,
-        done: true,
-        error: null,
-        status: response.status,
-      });
-    }
-    onPush({
-      imageLoading: false,
-      loading: false,
-      done: true,
-      error: null,
-      status: response.status,
-    });
-
-    yield put(
-      pushSliceCreator.success({
-        component,
-        updatedScreenshotsUrls: response.data as Record<string, string | null>,
-      })
-    );
-    yield put(
-      openToasterCreator({
-        message: "Model was correctly saved to Prismic!",
-        type: ToasterType.SUCCESS,
-      })
-    );
-  } catch (e) {
-    const status = axios.isAxiosError(e) ? e.response?.status || null : null;
-    onPush({
-      imageLoading: false,
-      loading: false,
-      done: true,
-      status: status,
-      error:
-        status === 403
-          ? "Authentication Error: User is not logged in"
-          : "Internal Error: Slice was not pushed",
-    });
-    if (status !== 403) {
-      yield put(
-        openToasterCreator({
-          message: "Internal Error: Slice was not pushed",
-          type: ToasterType.ERROR,
-        })
-      );
-    }
-  }
-}
-
 export function* renameSliceSaga({
   payload,
 }: ReturnType<typeof renameSliceCreator.request>) {
@@ -306,12 +241,6 @@ function* watchSaveSlice() {
     withLoader(saveSliceSaga, LoadingKeysEnum.SAVE_SLICE)
   );
 }
-function* watchPushSlice() {
-  yield takeLatest(
-    getType(pushSliceCreator.request),
-    withLoader(pushSliceSaga, LoadingKeysEnum.PUSH_SLICE)
-  );
-}
 function* watchRenameSlice() {
   yield takeLatest(
     getType(renameSliceCreator.request),
@@ -324,6 +253,5 @@ export function* selectedSliceSagas() {
   yield fork(watchGenerateSliceScreenshot);
   yield fork(watchGenerateSliceCustomScreenshot);
   yield fork(watchSaveSlice);
-  yield fork(watchPushSlice);
   yield fork(watchRenameSlice);
 }

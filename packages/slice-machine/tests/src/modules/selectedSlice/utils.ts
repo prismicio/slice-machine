@@ -20,7 +20,6 @@ export const getSelectedSliceDummyData = () => {
   };
 
   const dummySliceState: ComponentUI = {
-    screenshotUrls: {},
     from: "slices/libName",
     href: "slices--libName",
     pathToSlice: "./slices/libName",

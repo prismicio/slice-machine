@@ -1,25 +1,11 @@
 import React from "react";
-import {
-  Theme,
-  Text,
-  Card as Themecard,
-  Box,
-  Heading,
-  Flex,
-  Badge,
-} from "theme-ui";
+import { Theme, Text, Card as Themecard, Heading, Flex, Badge } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
-import { ImagePreview } from "../../../builders/SliceBuilder/SideBar/components/ImagePreview";
-import useSliceMachineActions from "src/modules/useSliceMachineActions";
-
 import { ComponentUI } from "../../common/ComponentUI";
-
 import { Link as LinkUtil } from "../Link";
-import { WrapperType, WrapperByType, LinkCardWrapper } from "./wrappers";
-import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
-import { useSelector } from "react-redux";
-import { selectIsSimulatorAvailableForFramework } from "@src/modules/environment";
-import { SliceMachineStoreType } from "@src/redux/type";
+import { WrapperType, WrapperByType } from "./wrappers";
+import { TextWithTooltip } from "@components/Tooltip/TextWithTooltip";
+import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
@@ -63,48 +49,6 @@ const SliceVariations = ({
   ) : null;
 };
 
-const SliceThumbnail = ({
-  heightInPx,
-  screenshotUrl,
-  withShadow = true,
-}: {
-  heightInPx: string;
-  screenshotUrl?: string;
-  withShadow: boolean;
-}) => {
-  return (
-    <Box
-      sx={{
-        backgroundColor: "headSection",
-        backgroundRepeat: "repeat",
-        backgroundSize: "15px",
-        backgroundImage: "url(/pattern.png)",
-        height: heightInPx,
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "6px",
-        border: (t) => `1px solid ${t.colors?.borders as string}`,
-        boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
-      }}
-    >
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          backgroundSize: "contain",
-          backgroundPosition: "50%",
-          backgroundRepeat: "no-repeat",
-          backgroundImage: screenshotUrl
-            ? "url(" + `${screenshotUrl}` + ")"
-            : "none",
-        }}
-      />
-    </Box>
-  );
-};
-
 const SliceDescription = ({
   slice,
   StatusOrCustom,
@@ -140,33 +84,6 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ImagePreviewWrapper = ({
-  screenshotUrl,
-  slice,
-}: {
-  screenshotUrl?: string;
-  slice: ComponentUI;
-}) => {
-  const { generateSliceScreenshot } = useSliceMachineActions();
-  const { isSimulatorAvailableForFramework } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      isSimulatorAvailableForFramework:
-        selectIsSimulatorAvailableForFramework(state),
-    })
-  );
-  const [data, setData] = React.useState<{ imageLoading: boolean }>({
-    imageLoading: false,
-  });
-  return (
-    <ImagePreview
-      src={screenshotUrl}
-      imageLoading={data.imageLoading}
-      onScreenshot={() => generateSliceScreenshot(slice, setData)}
-      preventScreenshot={!isSimulatorAvailableForFramework}
-    />
-  );
-};
-
 export const SharedSlice = {
   render({
     bordered,
@@ -174,7 +91,7 @@ export const SharedSlice = {
     Wrapper,
     StatusOrCustom,
 
-    thumbnailHeightPx = "280px",
+    thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
     sx,
   }: {
@@ -210,29 +127,13 @@ export const SharedSlice = {
           aria-pressed="false"
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
-          {wrapperType === WrapperType.changesPage ? (
-            <>
-              <ImagePreviewWrapper
-                screenshotUrl={screenshotUrl}
-                slice={slice}
-              />
-              <LinkCardWrapper link={link}>
-                <SliceDescription
-                  slice={slice}
-                  StatusOrCustom={StatusOrCustom}
-                />
-              </LinkCardWrapper>
-            </>
-          ) : (
-            <>
-              <SliceThumbnail
-                withShadow={false}
-                screenshotUrl={screenshotUrl}
-                heightInPx={thumbnailHeightPx}
-              />
-              <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
-            </>
-          )}
+          <ScreenshotPreview
+            src={screenshotUrl}
+            sx={{
+              height: thumbnailHeightPx,
+            }}
+          />
+          <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
         </Themecard>
       </CardWrapper>
     );
@@ -244,7 +145,7 @@ export const NonSharedSlice = {
     bordered,
     slice,
     displayStatus,
-    thumbnailHeightPx = "280px",
+    thumbnailHeightPx = "290px",
     wrapperType = WrapperType.nonClickable,
     sx,
   }: {
@@ -263,7 +164,7 @@ export const NonSharedSlice = {
       <Wrapper link={undefined}>
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <SliceThumbnail withShadow={false} heightInPx={thumbnailHeightPx} />
+          <ScreenshotPreview sx={{ height: thumbnailHeightPx }} />
           <Flex
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}

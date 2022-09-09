@@ -2,11 +2,9 @@ import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { Screenshots } from "@lib/models/common/Screenshots";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
-import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -19,7 +17,6 @@ export type SelectedSliceActions =
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof saveSliceCreator>
-  | ActionType<typeof pushSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>;
 
@@ -83,7 +80,7 @@ export const generateSliceScreenshotCreator = createAsyncAction(
     component: ComponentUI;
     setData: (data: any) => void;
   },
-  { screenshots: Screenshots; component: ComponentUI }
+  { component: ComponentUI }
 >();
 
 export const generateSliceCustomScreenshotCreator = createAsyncAction(
@@ -97,7 +94,7 @@ export const generateSliceCustomScreenshotCreator = createAsyncAction(
     setData: (data: any) => void;
     file: Blob;
   },
-  { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
+  { component: ComponentUI }
 >();
 
 export const saveSliceCreator = createAsyncAction(
@@ -108,24 +105,6 @@ export const saveSliceCreator = createAsyncAction(
   {
     component: ComponentUI;
     setData: (data: any) => void;
-  },
-  {
-    component: ComponentUI;
-  }
->();
-
-export const pushSliceCreator = createAsyncAction(
-  "SLICE/PUSH.REQUEST",
-  "SLICE/PUSH.RESPONSE",
-  "SLICE/PUSH.FAILURE"
-)<
-  {
-    component: ComponentUI;
-    onPush: (data: SliceBuilderState) => void;
-  },
-  {
-    component: ComponentUI;
-    updatedScreenshotsUrls: Record<string, string | null>;
   },
   {
     component: ComponentUI;

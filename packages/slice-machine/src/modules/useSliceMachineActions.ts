@@ -39,7 +39,6 @@ import {
   replaceSharedSliceCreator,
   createSliceZoneCreator,
   saveCustomTypeCreator,
-  pushCustomTypeCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
@@ -62,17 +61,21 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
   initSliceStoreCreator,
-  pushSliceCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
   saveSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+} from "./pushChangesSaga/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
-import { changesPushCreator, PUSH_CHANGES_ERRORS } from "./pushChangesSaga";
+import { changesPushCreator } from "./pushChangesSaga";
+import { SyncError } from "@src/models/SyncError";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -448,10 +451,16 @@ const useSliceMachineActions = () => {
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
     unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
-    handleError: (e: PUSH_CHANGES_ERRORS | null) => void
+    onChangesPushed: (pushed: string | null) => void,
+    handleError: (e: SyncError | null) => void
   ) =>
     dispatch(
-      changesPushCreator({ unSyncedSlices, unSyncedCustomTypes, handleError })
+      changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+        onChangesPushed,
+        handleError,
+      })
     );
 
   // Toaster store

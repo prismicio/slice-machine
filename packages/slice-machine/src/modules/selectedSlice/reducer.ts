@@ -19,7 +19,7 @@ import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { renamedComponentUI, renameSliceCreator } from "../slices";
 
@@ -140,38 +140,11 @@ export const selectedSliceReducer: Reducer<
         mockConfig: updatedConfig,
       };
     }
-    case getType(generateSliceScreenshotCreator.success): {
-      if (!prevState) return prevState;
-
-      return {
-        ...prevState,
-        screenshots: action.payload.screenshots,
-      };
-    }
+    case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
       if (!prevState) return prevState;
-      const { variationId, screenshot } = action.payload;
-
-      const screenshots: Record<string, ScreenshotUI> =
-        prevState.model.variations.reduce((acc, variation) => {
-          if (variation.id === variationId) {
-            return {
-              ...acc,
-              [variationId]: screenshot,
-            };
-          }
-          if (prevState.screenshots?.[variation.id]) {
-            return {
-              ...acc,
-              [variation.id]: prevState.screenshots[variation.id],
-            };
-          }
-          return acc;
-        }, {});
-
       return {
-        ...prevState,
-        screenshots: screenshots,
+        ...action.payload.component,
       };
     }
     case getType(copyVariationSliceCreator): {

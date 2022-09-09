@@ -14,7 +14,7 @@ export const ChangesSectionHeader: React.FC<ChangesSectionHeaderProps> = ({
     <Flex
       sx={{
         alignItems: "center",
-        mt: "37px",
+        mt: "40px",
         bg: "grey02",
         borderRadius: 4,
         padding: "12px 16px",
