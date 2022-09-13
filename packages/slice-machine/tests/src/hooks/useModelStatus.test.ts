@@ -25,7 +25,7 @@ describe("[useModelStatus hook]", () => {
       .mockImplementation(() => ({ authStatus: AuthStatus.AUTHORIZED }));
 
     const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel },
+      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
       { local: customTypeModel },
     ]);
 
@@ -46,7 +46,7 @@ describe("[useModelStatus hook]", () => {
       .mockImplementation(() => ({ authStatus: AuthStatus.AUTHORIZED }));
 
     const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel },
+      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
       { local: customTypeModel },
     ]);
 
@@ -67,7 +67,7 @@ describe("[useModelStatus hook]", () => {
       .mockImplementation(() => ({ authStatus: AuthStatus.UNAUTHORIZED }));
 
     const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel },
+      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
       { local: customTypeModel },
     ]);
 
@@ -88,7 +88,7 @@ describe("[useModelStatus hook]", () => {
       .mockImplementation(() => ({ authStatus: AuthStatus.FORBIDDEN }));
 
     const result = useModelStatus([
-      { local: sliceModel, remote: sliceModel },
+      { local: sliceModel, remote: sliceModel, localScreenshots: {} },
       { local: customTypeModel },
     ]);
 

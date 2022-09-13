@@ -76,7 +76,7 @@ describe("server.generateLibraryState", () => {
               fileName: "slice1/models.json",
               extension: "js",
             },
-            screenshots: {},
+            screenshotPaths: {},
           },
         },
       },

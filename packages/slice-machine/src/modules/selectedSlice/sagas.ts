@@ -145,7 +145,6 @@ export function* saveSliceSaga({
 }: ReturnType<typeof saveSliceCreator.request>) {
   const { component, setData } = payload;
 
-  console.log({ imageInSaga: component.model.variations[0].imageUrl });
   try {
     setData({
       loading: true,

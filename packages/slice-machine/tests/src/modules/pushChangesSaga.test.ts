@@ -7,7 +7,6 @@ import { describe, test, beforeAll, afterAll, afterEach } from "@jest/globals";
 import {
   changesPushSaga,
   changesPushCreator,
-  PUSH_CHANGES_ERRORS,
 } from "../../../src/modules/pushChangesSaga";
 import {
   PUSH_CHANGES_TOASTER_ID,
@@ -16,8 +15,11 @@ import {
 import { expectSaga } from "redux-saga-test-plan";
 import { ComponentUI } from "../../../lib/models/common/ComponentUI";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { pushSliceCreator } from "../../../src/modules/selectedSlice/actions";
-import { pushCustomTypeCreator } from "../../../src/modules/selectedCustomType";
+
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+} from "@src/modules/pushChangesSaga/actions";
 import {
   closeToasterCreator,
   openToasterCreator,
@@ -105,7 +107,12 @@ describe("[pashSaga module]", () => {
         )
         .call(pushSliceApiClient, stubSlice)
         .delay(300)
-        .put(pushSliceCreator.success({ component: stubSlice }))
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice,
+            updatedScreenshotsUrls: {},
+          })
+        )
         .put(
           updateToasterCreator({
             toasterId: PUSH_CHANGES_TOASTER_ID,
@@ -209,7 +216,12 @@ describe("[pashSaga module]", () => {
         )
         .call(pushSliceApiClient, stubSlice)
         .delay(300)
-        .put(pushSliceCreator.success({ component: stubSlice }))
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice,
+            updatedScreenshotsUrls: {},
+          })
+        )
         .call(pushCustomType, stubCustomType.id)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
         .run(sagaTimeout)

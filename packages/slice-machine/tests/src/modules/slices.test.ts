@@ -9,7 +9,6 @@ import {
   createSliceSaga,
   createSliceCreator,
   renameScreenshots,
-  renameScreenshotUrls,
   renameModel,
 } from "@src/modules/slices";
 import { testSaga } from "redux-saga-test-plan";
@@ -20,12 +19,23 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { SlicesStoreType } from "@src/modules/slices/types";
 import { LOCATION_CHANGE, push } from "connected-next-router";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
-import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 import { Screenshots } from "@lib/models/common/Screenshots";
+import { ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
 
 const dummySlicesState: SlicesStoreType = {
   libraries: [],
+  remoteSlices: [],
+};
+
+const DEFAULT_SLICE_PATH = "";
+const createScreenshotUI = (name: string, variation: string): ScreenshotUI => {
+  return {
+    path: `${DEFAULT_SLICE_PATH}/${name}/${variation}/preview.png`,
+    url: "xxx",
+    hash: "xxx",
+  };
 };
 
 describe("[Slices module]", () => {
@@ -90,25 +100,13 @@ describe("[utils]", () => {
   const PREV_NAME = "SliceName";
   const NEW_NAME = "SliceRenamed";
   it("test renameScreenshots", () => {
-    const initialPaths: Record<string, Screenshot> = {
-      "default-variation": {
-        hash: "xxx",
-        path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/default-variation/preview.png`,
-      },
-      "other-variation": {
-        hash: "xxx",
-        path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${PREV_NAME}/other-variation/preview.png`,
-      },
+    const initialPaths: Record<string, ScreenshotUI> = {
+      "default-variation": createScreenshotUI(PREV_NAME, "default-variation"),
+      "other-variation": createScreenshotUI(PREV_NAME, "other-variation"),
     };
-    const expectedRenamedPaths: Record<string, Screenshot> = {
-      "default-variation": {
-        hash: "xxx",
-        path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/default-variation/preview.png`,
-      },
-      "other-variation": {
-        hash: "xxx",
-        path: `../../e2e-projects/next/.slicemachine/assets/slices/ecommerce/${NEW_NAME}/other-variation/preview.png`,
-      },
+    const expectedRenamedPaths: Record<string, ScreenshotUI> = {
+      "default-variation": createScreenshotUI(NEW_NAME, "default-variation"),
+      "other-variation": createScreenshotUI(NEW_NAME, "other-variation"),
     };
     expect(renameScreenshots(initialPaths, PREV_NAME, NEW_NAME)).toEqual(
       expectedRenamedPaths
@@ -140,7 +138,7 @@ describe("[utils]", () => {
         url: `http://localhost:9999/api/__preview?q=..%2F..%2Fe2e-projects%2Fnext%2F.slicemachine%2Fassets%2Fslices%2Fecommerce%2F${NEW_NAME}%2Fdefault-slice%2Fpreview.png&uniq=0.39230892472268586`,
       },
     };
-    expect(renameScreenshotUrls(initialUrls, PREV_NAME, NEW_NAME)).toEqual(
+    expect(renameScreenshots(initialUrls, PREV_NAME, NEW_NAME)).toEqual(
       expectedRenamedUrls
     );
   });
