@@ -21,6 +21,8 @@ export enum EventNames {
 
   IdentifyUser = "IdentifyUser",
   GroupLibraries = "GroupLibraries",
+
+  ScreenshotTaken = "SliceMachine Screenshot Taken",
 }
 
 type BaseTrackingEvent = {
@@ -162,6 +164,13 @@ export interface CreateSlice extends BaseTrackingEvent {
   };
 }
 
+export interface ScreenshotTaken extends BaseTrackingEvent {
+  name: EventNames.ScreenshotTaken;
+  props: {
+    type: "custom" | "automatic";
+  };
+}
+
 export type TrackingEvents =
   | PageView
   | IdentifyUser
@@ -178,7 +187,8 @@ export type TrackingEvents =
   | CustomTypePushed
   | CreateSlice
   | SliceSimulatorOpen
-  | SliceSimulatorSetup;
+  | SliceSimulatorSetup
+  | ScreenshotTaken;
 
 export function isTrackingEvent(
   payload: TrackingEvents

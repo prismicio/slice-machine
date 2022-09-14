@@ -1,9 +1,18 @@
 import { testSaga } from "redux-saga-test-plan";
 import {
+  jest,
+  beforeAll,
+  afterAll,
+  afterEach,
+  it,
+  describe,
+  expect,
+} from "@jest/globals";
+import {
   pushSliceSaga,
   saveSliceSaga,
   generateSliceScreenshotSaga,
-} from "@src/modules/selectedSlice/sagas";
+} from "../../../../src/modules/selectedSlice/sagas";
 import { getSelectedSliceDummyData } from "./utils";
 import {
   generateSliceScreenshotCreator,
@@ -19,8 +28,30 @@ import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
+import { setupServer } from "msw/node";
+import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
+import { EventNames } from "../../../../src/tracking/types";
 
-const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
+const { dummySliceState } = getSelectedSliceDummyData();
+
+const server = setupServer();
+beforeAll(() =>
+  server.listen({
+    onUnhandledRequest: "warn",
+  })
+);
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+rest.post("/", (req, res) => {});
+
+const makeTrackerSpy = () =>
+  jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
+    return res(ctx.json({}));
+  });
+
+const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
+  server.use(rest.post("http://localhost/api/s", spy));
 
 describe("[Selected Slice sagas]", () => {
   describe("[saveSliceSaga]", () => {
@@ -123,12 +154,14 @@ describe("[Selected Slice sagas]", () => {
   });
 
   describe("[generateSliceScreenshotSaga]", () => {
-    it("should call the api and dispatch the success action", () => {
+    it("should call the api and dispatch the success action", async () => {
       const mockSetData = jest.fn();
+      const fakeTracker = makeTrackerSpy();
+      interceptTracker(fakeTracker);
+
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
-          _variationId: dummyModelVariationID,
           component: dummySliceState,
           setData: mockSetData,
         })
@@ -172,13 +205,21 @@ describe("[Selected Slice sagas]", () => {
         status: 200,
         warning: false,
       });
+
+      await new Promise(process.nextTick);
+
+      expect(fakeTracker).toHaveBeenCalled();
+      const result = await fakeTracker.mock.calls[0][0].json();
+      expect(result).toEqual({
+        name: EventNames.ScreenshotTaken,
+        props: { type: "automatic" },
+      });
     });
     it("should open a error toaster on internal error", () => {
       const mockSetData = jest.fn();
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
-          _variationId: dummyModelVariationID,
           component: dummySliceState,
           setData: mockSetData,
         })
