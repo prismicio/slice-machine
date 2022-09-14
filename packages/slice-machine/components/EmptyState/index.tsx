@@ -1,6 +1,8 @@
 import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
 import React from "react";
 import { Video } from "cloudinary-react";
+import Tracking from "../../src/tracking/client";
+import { Frameworks } from "@slicemachine/core/build/models";
 
 interface Props {
   title: string;
@@ -9,6 +11,8 @@ interface Props {
   isLoading: boolean;
   documentationComponent: React.ReactNode;
   videoPublicIdUrl: string;
+  framework: Frameworks;
+  version: string;
 }
 
 const EmptyState: React.FunctionComponent<Props> = ({
@@ -18,6 +22,8 @@ const EmptyState: React.FunctionComponent<Props> = ({
   isLoading,
   documentationComponent,
   videoPublicIdUrl,
+  framework,
+  version,
 }) => (
   <Flex sx={{ width: "80%", flexWrap: "wrap", justifyContent: "center" }}>
     <Flex
@@ -38,6 +44,13 @@ const EmptyState: React.FunctionComponent<Props> = ({
           objectFit: "contain",
         }}
         publicId={videoPublicIdUrl}
+        onClick={() => {
+          void Tracking.get().trackClickOnVideoTutorials(
+            framework,
+            version,
+            videoPublicIdUrl
+          );
+        }}
       />
     </Flex>
 

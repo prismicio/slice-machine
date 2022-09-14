@@ -16,19 +16,23 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
 import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
+import { getCurrentVersion, getFramework } from "@src/modules/environment";
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
-  const { customTypes, isCreatingCustomType, customTypeCount } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      customTypes: selectAllCustomTypes(store),
-      customTypeCount: selectCustomTypeCount(store),
-      isCreatingCustomType: isLoading(
-        store,
-        LoadingKeysEnum.CREATE_CUSTOM_TYPE
-      ),
-    })
-  );
+  const {
+    customTypes,
+    isCreatingCustomType,
+    customTypeCount,
+    framework,
+    version,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    customTypes: selectAllCustomTypes(store),
+    customTypeCount: selectCustomTypeCount(store),
+    isCreatingCustomType: isLoading(store, LoadingKeysEnum.CREATE_CUSTOM_TYPE),
+    framework: getFramework(store),
+    version: getCurrentVersion(store),
+  }));
 
   return (
     <Container sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -71,6 +75,8 @@ const CustomTypes: React.FunctionComponent = () => {
             isLoading={isCreatingCustomType}
             buttonText={"Create one"}
             videoPublicIdUrl="placeholders/What_are_Custom_Types_swrc44"
+            framework={framework}
+            version={version}
             documentationComponent={
               <>
                 Custom Types are models for your documents. They are the place
