@@ -1,14 +1,5 @@
 import { testSaga } from "redux-saga-test-plan";
 import {
-  jest,
-  beforeAll,
-  afterAll,
-  afterEach,
-  it,
-  describe,
-  expect,
-} from "@jest/globals";
-import {
   pushSliceSaga,
   saveSliceSaga,
   generateSliceScreenshotSaga,
