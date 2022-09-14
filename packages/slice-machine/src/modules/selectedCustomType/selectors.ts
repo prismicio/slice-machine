@@ -34,9 +34,7 @@ export const selectCurrentPoolOfFields = (
   );
 };
 
-export const selectIsCurrentCustomTypeHasPendingModifications = (
-  store: SliceMachineStoreType
-) => {
+export const isSelectedCustomTypeTouched = (store: SliceMachineStoreType) => {
   if (!store.selectedCustomType) return false;
 
   return (

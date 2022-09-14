@@ -79,10 +79,13 @@ export function resolvePathsToScreenshot({
     return;
   }
 
-  const hash = Files.readFileAndCreateHashSync(matchingPath);
-
-  return {
-    path: matchingPath,
-    hash,
-  };
+  try {
+    const hash = Files.readFileAndCreateHashSync(matchingPath);
+    return {
+      path: matchingPath,
+      hash,
+    };
+  } catch (_) {
+    return;
+  }
 }

@@ -11,16 +11,21 @@ export type FrontEndSliceModel = {
 export function compareSliceModels(
   models: Required<FrontEndSliceModel>
 ): ModelStatus {
-  const areModelsEquals = equal(
-    stripImageUrl(models.local),
-    stripImageUrl(models.remote)
-  );
   const areScreenshotsEqual = compareScreenshots(
     models.remote,
     models.localScreenshots
   );
+  if (!areScreenshotsEqual) {
+    return ModelStatus.Modified;
+  }
+  const areModelsEquals = equal(
+    stripImageUrl(models.local),
+    stripImageUrl(models.remote)
+  );
 
-  if (!areModelsEquals || !areScreenshotsEqual) return ModelStatus.Modified;
+  if (!areModelsEquals) {
+    return ModelStatus.Modified;
+  }
   return ModelStatus.Synced;
 }
 

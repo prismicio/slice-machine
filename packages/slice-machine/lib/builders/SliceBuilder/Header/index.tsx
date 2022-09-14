@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import SaveButton from "./SaveButton";
+import SaveButton from "@lib/builders/common/SaveButton";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
@@ -20,19 +20,9 @@ const Header: React.FC<{
   isTouched: boolean | undefined;
   variation: VariationSM;
   onSave: () => void;
-  onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
-}> = ({
-  component,
-  status,
-  isTouched,
-  variation,
-  onSave,
-  onPush,
-  isLoading,
-  imageLoading = false,
-}) => {
+}> = ({ component, status, isTouched, variation, onSave, isLoading }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
 
@@ -124,9 +114,9 @@ const Header: React.FC<{
               }}
             />
             <SaveButton
-              onClick={isTouched ? onSave : onPush}
-              loading={isLoading && !imageLoading}
-              disabled={isLoading || imageLoading || (!isTouched && !unSynced)}
+              isSaving={isLoading}
+              hasPendingModifications={!!isTouched}
+              onClick={onSave}
             >
               {isTouched
                 ? "Save model to filesystem"
