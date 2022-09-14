@@ -22,11 +22,14 @@ const VideoItem: React.FC<VideoItemProps> = ({
 }) => {
   const ref = React.createRef<HTMLParagraphElement>();
   const id = "video-tool-tip";
+  const videoUrl =
+    "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH";
 
   const handleClose = () => {
     void Tracker.get().trackClickOnVideoTutorials(
       framework,
-      sliceMachineVersion
+      sliceMachineVersion,
+      videoUrl
     );
     onClose();
   };
@@ -48,7 +51,7 @@ const VideoItem: React.FC<VideoItemProps> = ({
         link={{
           title: "Video tutorials",
           Icon: MdPlayCircleFilled,
-          href: "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
+          href: videoUrl,
           target: "_blank",
           match: () => false,
         }}
