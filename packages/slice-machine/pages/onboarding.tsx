@@ -235,13 +235,6 @@ function handleTracking(props: { step: number; maxSteps: number }): void {
 }
 
 export default function Onboarding(): JSX.Element {
-  const { currentVersion, framework } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      currentVersion: getCurrentVersion(store),
-      framework: getFramework(store),
-    })
-  );
-
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
     <BuildSlicesSlide />,
