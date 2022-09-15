@@ -1,9 +1,10 @@
 import { Button, Text, Heading, Flex, Spinner } from "theme-ui";
 import React from "react";
 import { Video } from "cloudinary-react";
+import { useSelector } from "react-redux";
 import Tracking from "../../src/tracking/client";
-import { Frameworks } from "@slicemachine/core/build/models";
-
+import { SliceMachineStoreType } from "../../src/redux/type";
+import { getFramework, getCurrentVersion } from "@src/modules/environment";
 interface Props {
   title: string;
   onCreateNew: () => void;
@@ -11,8 +12,6 @@ interface Props {
   isLoading: boolean;
   documentationComponent: React.ReactNode;
   videoPublicIdUrl: string;
-  framework: Frameworks;
-  version: string;
 }
 
 const EmptyState: React.FunctionComponent<Props> = ({
@@ -22,9 +21,14 @@ const EmptyState: React.FunctionComponent<Props> = ({
   isLoading,
   documentationComponent,
   videoPublicIdUrl,
-  framework,
-  version,
 }) => {
+  const { version, framework } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      version: getCurrentVersion(store),
+      framework: getFramework(store),
+    })
+  );
+
   return (
     <Flex sx={{ width: "80%", flexWrap: "wrap", justifyContent: "center" }}>
       <Flex

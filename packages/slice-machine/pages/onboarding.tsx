@@ -22,7 +22,6 @@ import Tracker from "../src/tracking/client";
 import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
 import { EventNames } from "../src/tracking/types";
 import { getCurrentVersion, getFramework } from "../src/modules/environment";
-import { Frameworks } from "@slicemachine/core/build/models";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
@@ -33,28 +32,34 @@ const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
 const Video: React.FC<{
   publicId: string;
-  framework: Frameworks;
-  version: string;
-}> = (props) => (
-  <CldVideo
-    cloudName="dmtf1daqp"
-    autoPlay
-    controls
-    loop
-    style={{
-      maxWidth: "100%",
-      height: "auto",
-    }}
-    onPlay={() => {
-      void Tracker.get().trackClickOnVideoTutorials(
-        props.framework,
-        props.version,
-        props.publicId
-      );
-    }}
-    publicId={props.publicId}
-  />
-);
+}> = ({ publicId }) => {
+  const { version, framework } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      version: getCurrentVersion(store),
+      framework: getFramework(store),
+    })
+  );
+  return (
+    <CldVideo
+      cloudName="dmtf1daqp"
+      autoPlay
+      controls
+      loop
+      style={{
+        maxWidth: "100%",
+        height: "auto",
+      }}
+      onPlay={() => {
+        void Tracker.get().trackClickOnVideoTutorials(
+          framework,
+          version,
+          publicId
+        );
+      }}
+      publicId={publicId}
+    />
+  );
+};
 
 const Header = (props: HeadingProps) => (
   <Heading
@@ -102,39 +107,32 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
     </>
   );
 };
-const BuildSlicesSlide: React.FC<{ version: string; framework: Frameworks }> = (
-  props
-) => (
+const BuildSlicesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video {...props} publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
+    <Video publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
   </>
 );
 
-const CreatePageTypesSlide: React.FC<{
-  version: string;
-  framework: Frameworks;
-}> = (props) => (
+const CreatePageTypesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video {...props} publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
+    <Video publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
   </>
 );
 
-const PushPagesSlide: React.FC<{ version: string; framework: Frameworks }> = (
-  props
-) => (
+const PushPagesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video {...props} publicId={VIDEO_ONBOARDING_PUSH_TO_PRISMIC} />
+    <Video publicId={VIDEO_ONBOARDING_PUSH_TO_PRISMIC} />
   </>
 );
 
@@ -246,9 +244,9 @@ export default function Onboarding(): JSX.Element {
 
   const STEPS = [
     <WelcomeSlide onClick={nextSlide} />,
-    <BuildSlicesSlide version={currentVersion} framework={framework} />,
-    <CreatePageTypesSlide version={currentVersion} framework={framework} />,
-    <PushPagesSlide version={currentVersion} framework={framework} />,
+    <BuildSlicesSlide />,
+    <CreatePageTypesSlide />,
+    <PushPagesSlide />,
   ];
 
   const { finishOnboarding } = useSliceMachineActions();

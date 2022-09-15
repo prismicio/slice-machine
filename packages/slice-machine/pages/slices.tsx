@@ -22,7 +22,6 @@ import {
   getLibraries,
   getRemoteSlices,
 } from "@src/modules/slices";
-import { getFramework, getCurrentVersion } from "@src/modules/environment";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
@@ -56,17 +55,12 @@ const SlicesIndex: React.FunctionComponent = () => {
     remoteSlices,
     libraries,
     frontendSlices,
-    framework,
-    version,
   } = useSelector((store: SliceMachineStoreType) => ({
     isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
     isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
     remoteSlices: getRemoteSlices(store),
     libraries: getLibraries(store),
     frontendSlices: getFrontendSlices(store),
-    framework: getFramework(store),
-    version: getCurrentVersion(store),
-    // framework and version
   }));
 
   const _onCreate = ({
@@ -145,8 +139,6 @@ const SlicesIndex: React.FunctionComponent = () => {
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}
                     videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
-                    framework={framework}
-                    version={version}
                     documentationComponent={
                       <>
                         Slices are sections of your website. Prismic documents
