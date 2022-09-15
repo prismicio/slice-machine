@@ -23,6 +23,11 @@ import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMach
 import { EventNames } from "../src/tracking/types";
 import { getCurrentVersion, getFramework } from "../src/modules/environment";
 import { Frameworks } from "@slicemachine/core/build/models";
+import {
+  VIDEO_ONBOARDING_BUILD_A_SLICE,
+  VIDEO_ONBOARDING_ADD_TO_PAGE,
+  VIDEO_ONBOARDING_PUSH_TO_PRISMIC,
+} from "../lib/consts";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
@@ -47,7 +52,7 @@ const Video: React.FC<{
         props.publicId
       );
     }}
-    {...props}
+    publicId={props.publicId}
   />
 );
 
@@ -104,7 +109,7 @@ const BuildSlicesSlide: React.FC<{ version: string; framework: Frameworks }> = (
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video {...props} publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video {...props} publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
   </>
 );
 
@@ -116,7 +121,7 @@ const CreatePageTypesSlide: React.FC<{
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video {...props} publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video {...props} publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
   </>
 );
 
@@ -129,7 +134,7 @@ const PushPagesSlide: React.FC<{ version: string; framework: Frameworks }> = (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video {...props} publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video {...props} publicId={VIDEO_ONBOARDING_PUSH_TO_PRISMIC} />
   </>
 );
 
