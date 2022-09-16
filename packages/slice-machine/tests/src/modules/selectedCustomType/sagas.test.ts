@@ -1,6 +1,4 @@
 import { testSaga } from "redux-saga-test-plan";
-import "@testing-library/jest-dom";
-
 import { pushCustomType, saveCustomType } from "@src/apiClient";
 import {
   pushCustomTypeSaga,
@@ -20,7 +18,7 @@ import {
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
-import { rest, RestContext } from "msw";
+import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
 
 const server = setupServer();
 beforeAll(() => server.listen());
@@ -28,12 +26,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 const makeTrackerSpy = () =>
-  jest.fn((_req: any, res: any, ctx: RestContext) => {
+  jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     return res(ctx.json({}));
   });
 
 const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
-  server.use(rest.post("/api/s", spy));
+  server.use(rest.post("http://localhost/api/s", spy));
 
 const customTypeModel: CustomTypeSM = {
   id: "about",
@@ -101,7 +99,7 @@ describe("[Selected Custom type sagas]", () => {
     });
   });
   describe("[pushCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", () => {
+    it("should call the api and dispatch the good actions on success", async () => {
       const fakeTracker = makeTrackerSpy();
       interceptTracker(fakeTracker); // warnings happen without this
 
@@ -123,8 +121,19 @@ describe("[Selected Custom type sagas]", () => {
       );
       saga.next().isDone();
 
-      // expect(fakeTracker).toHaveBeenCalled()
-      // expect(fakeTracker.mock.calls[0][0].body).toEqual({})
+      await new Promise(process.nextTick);
+
+      expect(fakeTracker).toHaveBeenCalled();
+      const body = await fakeTracker.mock.calls[0][0].json();
+
+      expect(body).toEqual({
+        name: "SliceMachine Custom Type Pushed",
+        props: {
+          id: "about",
+          name: "My Cool About Page",
+          type: "single",
+        },
+      });
     });
     it("should open a error toaster on internal error", () => {
       const saga = testSaga(saveCustomTypeSaga).next();
