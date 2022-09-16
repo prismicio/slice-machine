@@ -22,6 +22,6 @@ axios
     );
   })
   .catch((e) => {
-    console.error("[AUTH]: ", e.message)
-    console.error(e)
+    console.error("[AUTH]: ", e.message);
+    console.error(e);
   });
