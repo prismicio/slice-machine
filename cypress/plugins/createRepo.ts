@@ -36,6 +36,7 @@ const deleteAndCreate = async () => {
       console.warn(
         `could not delete repo: ${DOMAIN_NAME} in ${appMode}. ${e.status}: ${e.message}`
       );
+      console.error(e)
     });
 
   await client.createRepository(DOMAIN_NAME, Frameworks.next).catch((e) => {
@@ -43,6 +44,7 @@ const deleteAndCreate = async () => {
       `could not create repo: ${DOMAIN_NAME} in ${appMode}: ${e.status}: ${e.message}`
     );
     console.error(e.message);
+    console.error(e)
     process.exit(1);
   });
 

@@ -16,7 +16,7 @@ axios
     fs.promises.writeFile(
       path.join(os.homedir(), ".prismic"),
       JSON.stringify({
-        base: `https://${CYPRESS_URL}/`,
+        base: `https://${CYPRESS_URL}`,
         cookies: cookies,
       })
     );
