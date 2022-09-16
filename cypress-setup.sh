@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -x
+set -x
 if [[ -z "$EMAIL" || -z "$PASSWORD" ]]; then
   echo "[ERROR] Please set EMAIL evnotiment variable"
   echo 'EMAIL="email@example.com" PASSWORD="guest" RESPOSITORY="repo-name" npm run test:e2e:dev'

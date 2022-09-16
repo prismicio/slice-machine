@@ -4,8 +4,6 @@ import { PrismicSharedConfigManager } from "../../packages/core/src/prismic/Shar
 import { Frameworks } from "../../packages/core/src/models/Framework";
 
 // File called from the cypress setup in cypress-setup.sh
-
-console.log(process.argv);
 const [
   ,
   ,
