@@ -4,16 +4,13 @@ import path from "path";
 import axios from "axios";
 
 // File called from the cypress setup in cypress-setup.sh
-const [,,EMAIL, PASSWORD, CYPRESS_URL = "prismic.io"] = process.argv
+const [, , EMAIL, PASSWORD, CYPRESS_URL = "prismic.io"] = process.argv;
 
 axios
-  .post(
-    `https://${CYPRESS_URL}/authentication/signin`,
-    {
-      email: EMAIL,
-      password: PASSWORD,
-    }
-  )
+  .post(`https://${CYPRESS_URL}/authentication/signin`, {
+    email: EMAIL,
+    password: PASSWORD,
+  })
   .then((response) => {
     const cookies = response.headers["set-cookie"].join("; ");
     fs.promises.writeFile(
