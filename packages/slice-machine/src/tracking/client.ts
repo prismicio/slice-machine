@@ -110,13 +110,15 @@ export class SMTracker {
 
   async trackClickOnVideoTutorials(
     framework: Frameworks,
-    version: string
+    version: string,
+    video: string
   ): Promise<void> {
     const payload: OpenVideoTutorials = {
       name: EventNames.OpenVideoTutorials,
       props: {
         framework,
         slicemachineVersion: version,
+        video,
       },
     };
     await this.#trackEvent(payload);

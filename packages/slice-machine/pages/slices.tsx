@@ -25,6 +25,7 @@ import {
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
 import { useModelStatus } from "@src/hooks/useModelStatus";
+import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 
 const CreateSliceButton = ({
   onClick,
@@ -137,7 +138,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     onCreateNew={openCreateSliceModal}
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}
-                    videoPublicIdUrl="placeholders/What_are_Slices_mrvome"
+                    videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                     documentationComponent={
                       <>
                         Slices are sections of your website. Prismic documents

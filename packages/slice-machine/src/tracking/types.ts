@@ -62,6 +62,7 @@ export interface OpenVideoTutorials extends BaseTrackingEvent {
   props: {
     framework: Frameworks;
     slicemachineVersion: string; // why is this one different ?
+    video: string;
   };
 }
 
