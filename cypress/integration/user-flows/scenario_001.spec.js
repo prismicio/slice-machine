@@ -106,13 +106,13 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       cy.contains("data.rich_text_id").should("be.visible");
     });
 
-    cy.get("[data-cy=ct-builder-primary-button]").within(() => {
+    cy.get("[data-cy=builder-save-button]").within(() => {
       cy.contains("Save to File System").should("be.visible");
     });
 
-    cy.get("[data-cy=ct-builder-primary-button]").click();
+    cy.get("[data-cy=builder-save-button]").click();
 
-    cy.get("[data-cy=ct-builder-primary-button]").within(() => {
+    cy.get("[data-cy=builder-save-button]").within(() => {
       cy.contains("Synced with your File System").should("be.visible");
     });
   });
