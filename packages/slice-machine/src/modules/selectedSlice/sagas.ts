@@ -25,6 +25,7 @@ import { renameSliceCreator } from "../slices";
 import { modalCloseCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
 import { push } from "connected-next-router";
+import Tracker from "../../tracking/client";
 
 export function* generateSliceScreenshotSaga({
   payload,
@@ -43,6 +44,7 @@ export function* generateSliceScreenshotSaga({
       component.model.name,
       component.from
     )) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
+
     if (response.status > 209) {
       return setData({
         loading: false,
@@ -53,6 +55,9 @@ export function* generateSliceScreenshotSaga({
         imageLoading: false,
       });
     }
+
+    void Tracker.get().trackScreenshotTaken({ type: "automatic" });
+
     setData({
       loading: false,
       done: true,
@@ -110,6 +115,7 @@ export function* generateSliceCustomScreenshotSaga({
         error: "Internal Error: Custom screenshot not saved",
       });
     }
+    void Tracker.get().trackScreenshotTaken({ type: "custom" });
     setData({
       loading: false,
       done: true,

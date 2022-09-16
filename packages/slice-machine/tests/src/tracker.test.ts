@@ -187,13 +187,14 @@ describe("SMTracker", () => {
     const trackerSpy = makeTrackerSpy();
     interceptTracker(trackerSpy);
 
-    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0");
+    await smTracker.trackClickOnVideoTutorials(Frameworks.next, "0.2.0", "foo");
     expect(trackerSpy).toHaveBeenCalled();
     expect(trackerSpy.mock.calls[0][0].body).toEqual({
       name: "SliceMachine Open Video Tutorials",
       props: {
         framework: Frameworks.next,
         slicemachineVersion: "0.2.0",
+        video: "foo",
       },
     });
   });

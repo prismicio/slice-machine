@@ -16,6 +16,7 @@ import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
 import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
+import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
@@ -70,7 +71,7 @@ const CustomTypes: React.FunctionComponent = () => {
             onCreateNew={openCreateCustomTypeModal}
             isLoading={isCreatingCustomType}
             buttonText={"Create one"}
-            videoPublicIdUrl="placeholders/What_are_Custom_Types_swrc44"
+            videoPublicIdUrl={VIDEO_WHAT_ARE_CUSTOM_TYPES}
             documentationComponent={
               <>
                 Custom Types are models for your documents. They are the place

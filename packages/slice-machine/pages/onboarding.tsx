@@ -14,28 +14,52 @@ import {
 } from "theme-ui";
 import router from "next/router";
 import { Video as CldVideo } from "cloudinary-react";
-
+import { useSelector } from "react-redux";
+import { SliceMachineStoreType } from "../src/redux/type";
 import { BiChevronLeft } from "react-icons/bi";
-import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import Tracker from "@src/tracking/client";
-import SliceMachineLogo from "@components/AppLayout/Navigation/Icons/SliceMachineLogo";
-import { EventNames } from "@src/tracking/types";
+import useSliceMachineActions from "../src/modules/useSliceMachineActions";
+import Tracker from "../src/tracking/client";
+import SliceMachineLogo from "../components/AppLayout/Navigation/Icons/SliceMachineLogo";
+import { EventNames } from "../src/tracking/types";
+import { getCurrentVersion, getFramework } from "../src/modules/environment";
+import {
+  VIDEO_ONBOARDING_BUILD_A_SLICE,
+  VIDEO_ONBOARDING_ADD_TO_PAGE,
+  VIDEO_ONBOARDING_PUSH_TO_PRISMIC,
+} from "../lib/consts";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
 
-const Video = (props: VideoProps) => (
-  <CldVideo
-    cloudName="dmtf1daqp"
-    autoPlay
-    controls
-    loop
-    style={{
-      maxWidth: "100%",
-      height: "auto",
-    }}
-    {...props}
-  />
-);
+const Video: React.FC<{
+  publicId: string;
+}> = ({ publicId }) => {
+  const { version, framework } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      version: getCurrentVersion(store),
+      framework: getFramework(store),
+    })
+  );
+  return (
+    <CldVideo
+      cloudName="dmtf1daqp"
+      autoPlay
+      controls
+      loop
+      style={{
+        maxWidth: "100%",
+        height: "auto",
+      }}
+      onPlay={() => {
+        void Tracker.get().trackClickOnVideoTutorials(
+          framework,
+          version,
+          publicId
+        );
+      }}
+      publicId={publicId}
+    />
+  );
+};
 
 const Header = (props: HeadingProps) => (
   <Heading
@@ -83,32 +107,32 @@ const WelcomeSlide = ({ onClick }: { onClick: () => void }) => {
     </>
   );
 };
-const BuildSlicesSlide = () => (
+const BuildSlicesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/horizontal_split.svg" />
     <Header>Build Slices</Header>
     <SubHeader>The building blocks used to create your website</SubHeader>
-    <Video publicId="SMONBOARDING/BUILD_SLICE" />
+    <Video publicId={VIDEO_ONBOARDING_BUILD_A_SLICE} />
   </>
 );
 
-const CreatePageTypesSlide = () => (
+const CreatePageTypesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/insert_page_break.svg" />
     <Header>Create Page Types</Header>
     <SubHeader>Group your Slices as page builders</SubHeader>
-    <Video publicId="SMONBOARDING/ADD_TO_PAGE" />
+    <Video publicId={VIDEO_ONBOARDING_ADD_TO_PAGE} />
   </>
 );
 
-const PushPagesSlide = () => (
+const PushPagesSlide: React.FC = () => (
   <>
     <Image sx={imageSx} src="/send.svg" />
     <Header>Push your pages to Prismic</Header>
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId="SMONBOARDING/PUSH_TO_PRISMIC" />
+    <Video publicId={VIDEO_ONBOARDING_PUSH_TO_PRISMIC} />
   </>
 );
 

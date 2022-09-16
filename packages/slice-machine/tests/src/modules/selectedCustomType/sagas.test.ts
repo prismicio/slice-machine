@@ -13,7 +13,7 @@ import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
-import { rest, RestContext } from "msw";
+import { rest, RestContext, RestRequest, ResponseComposition } from "msw";
 
 const server = setupServer();
 beforeAll(() => server.listen());
@@ -21,12 +21,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 const makeTrackerSpy = () =>
-  jest.fn((_req: any, res: any, ctx: RestContext) => {
+  jest.fn((_req: RestRequest, res: ResponseComposition, ctx: RestContext) => {
     return res(ctx.json({}));
   });
 
 const interceptTracker = (spy: ReturnType<typeof makeTrackerSpy>) =>
-  server.use(rest.post("/api/s", spy));
+  server.use(rest.post("http://localhost/api/s", spy));
 
 const customTypeModel: CustomTypeSM = {
   id: "about",

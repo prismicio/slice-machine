@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.4.3-alpha.25",
+  "version": "0.4.3-alpha.26",
   "private": false,
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
@@ -149,7 +149,7 @@
     "marked": "^4.0.12",
     "memfs": "^3.2.2",
     "mock-fs": "^5.1.2",
-    "msw": "^0.39.2",
+    "msw": "^0.47.2",
     "next": "^11.1.4",
     "next-compose-plugins": "^2.2.1",
     "next-plugin-custom-babel-config": "^1.0.4",
