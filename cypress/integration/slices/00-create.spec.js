@@ -64,8 +64,8 @@ describe("Create Slices", () => {
       });
 
     // remove widget
-    cy.get("#menu-button--menu").last().click()
-    cy.contains("Delete field").click()
+    cy.get("#menu-button--menu").last().click();
+    cy.contains("Delete field").click();
     cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
     // edit slice name
@@ -82,6 +82,5 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
-
   });
 });
