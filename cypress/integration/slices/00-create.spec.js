@@ -63,12 +63,10 @@ describe("Create Slices", () => {
         expect(got).to.deep.equal(want);
       });
 
-    // fake push
-    cy.intercept("/api/slices/push?sliceName=TestSlice&from=slices", {
-      statusCode: 200,
-      body: {},
-    });
-    cy.get('[data-cy="slice-builder-push-or-save-button"]').click();
+    // remove widget
+    cy.get("#menu-button--menu").last().click()
+    cy.contains("Delete field").click()
+    cy.get('[data-cy="builder-save-button"]').should("not.be.disabled");
 
     // edit slice name
     cy.get('[data-cy="edit-slice-name"]').click();
@@ -85,8 +83,5 @@ describe("Create Slices", () => {
       `/ ${editedSliceName} / Default`
     );
 
-    cy.get('[data-cy="slice-builder-push-or-save-button"]').should(
-      "not.be.disabled"
-    );
   });
 });
