@@ -33,11 +33,11 @@ const deleteAndCreate = async () => {
       PrismicSharedConfigManager.get().cookies
     )
     .catch((e) => {
-      console.warn(`could not delete repo: ${DOMAIN_NAME}. ${e.status}: ${e.message}`)
+      console.warn(`could not delete repo: ${DOMAIN_NAME} in ${appMode}. ${e.status}: ${e.message}`)
     });
 
   await client.createRepository(DOMAIN_NAME, Frameworks.next).catch((e) => {
-    console.warn(`could not create repo: ${DOMAIN_NAME}: ${e.status}: ${e.message}`)
+    console.warn(`could not create repo: ${DOMAIN_NAME} in ${appMode}: ${e.status}: ${e.message}`)
     console.error(e.message);
     process.exit(1);
   });
