@@ -95,6 +95,16 @@ describe("[Selected Slice sagas]", () => {
       const fakeTracker = makeTrackerSpy();
       interceptTracker(fakeTracker);
 
+      const screenshotResponse = {
+        screenshots: {
+          dummyModelVariationID: {
+            path: "testScreenshotPath",
+            url: "testScreenshotUrl",
+            hash: "xxx",
+          },
+        },
+      };
+
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
