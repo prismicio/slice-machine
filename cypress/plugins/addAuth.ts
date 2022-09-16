@@ -21,4 +21,7 @@ axios
       })
     );
   })
-  .catch((e) => console.log(e));
+  .catch((e) => {
+    console.error("[AUTH]: ", e.message)
+    console.error(e)
+  });

@@ -21,7 +21,7 @@ fi
 rm -rf e2e-projects/cypress-next-app \
 && npx --yes create-next-app e2e-projects/cypress-next-app \
 && npx --yes ts-node ./cypress/plugins/addAuth.ts ${EMAIL} ${PASSWORD} ${CYPRESS_URL} \
-&& npx --yes ts-node ./cypress/plugins/createRepo.ts "${_PRISMIC_REPO}" "${PASSWORD}" ${CYPRESS_URL}  \
+&& npx --yes ts-node ./cypress/plugins/createRepo.ts "${_PRISMIC_REPO}" "${PASSWORD}" "${CYPRESS_URL}"  \
 && cd e2e-projects/cypress-next-app \
 && node ../../packages/init/build/index.js --mode stage --repository "${_PRISMIC_REPO}" \
 && npm i \
