@@ -93,17 +93,4 @@ describe("[Selected Custom type sagas]", () => {
       saga.next().isDone();
     });
   });
-  describe("[pushCustomTypeSaga]", () => {
-    it("should open a error toaster on internal error", () => {
-      const saga = testSaga(saveCustomTypeSaga).next();
-
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          message: "Internal Error: Custom type not saved",
-          type: ToasterType.ERROR,
-        })
-      );
-      saga.next().isDone();
-    });
-  });
 });
