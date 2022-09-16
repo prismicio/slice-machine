@@ -6,10 +6,10 @@ if [[ -z "$EMAIL" || -z "$PASSWORD" ]]; then
   echo $EMAIL $PASSWORD
   exit 1
 fi 
-
+_DATE=$(date +'%y%m%d%H%M%S')
 _PRISMIC_REPO=""
 if [[ -z "$REPOSITORY" ]]; then 
-  _PRISMIC_REPO="repository-cypress"
+  _PRISMIC_REPO="repository-cypress$_DATE"
 else 
   _PRISMIC_REPO=$REPOSITORY
 fi
