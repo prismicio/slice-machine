@@ -5,12 +5,19 @@ import { Frameworks } from "../../packages/core/src/models/Framework";
 
 // File called from the cypress setup in cypress-setup.sh
 
-const appMode =
-  process.env.CYPRESS_URL === "wroom.io"
-    ? ApplicationMode.STAGE
-    : process.env.CYPRESS_URL === "wroom.dev"
-    ? ApplicationMode.DEV
-    : ApplicationMode.PROD;
+console.log(process.argv)
+const [
+  ,,
+  DOMAIN_NAME = "repository-cypress",
+  PASSWORD = process.env.PASSWORD || "",
+  CYPRESS_URL = process.env.CYPRESS_URL
+] = process.argv
+
+const appMode = CYPRESS_URL === "wroom.io"
+  ? ApplicationMode.STAGE
+  : CYPRESS_URL === "wroom.test"
+  ? ApplicationMode.DEV
+  : ApplicationMode.PROD;
 
 const client = new InitClient(
   appMode,
@@ -18,18 +25,20 @@ const client = new InitClient(
   PrismicSharedConfigManager.getAuth()
 );
 
-const DOMAIN_NAME = "repository-cypress";
 
 const deleteAndCreate = async () => {
   await client
     .deleteRepository(
       DOMAIN_NAME,
-      process.env.PASSWORD || "",
+      PASSWORD,
       PrismicSharedConfigManager.get().cookies
     )
     .catch(() => {});
 
-  await client.createRepository(DOMAIN_NAME, Frameworks.next);
+  await client.createRepository(DOMAIN_NAME, Frameworks.next).catch(e => {
+    console.error(e.message)
+    process.exit(1)
+  });
 
   return;
 };
