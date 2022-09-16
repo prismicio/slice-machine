@@ -266,7 +266,8 @@ describe("[pashSaga module]", () => {
             toasterId: PUSH_CHANGES_TOASTER_ID,
           })
         )
-        .put(pushSliceCreator.failure({ component: stubSlice })) // We can't expect a success only a failure as it cancels the saga
+        .put(pushSliceCreator.failure({ component: stubSlice }))
+        .put(pushSliceCreator.success({ component: stubSlice2 }))
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
