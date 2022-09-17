@@ -180,8 +180,8 @@ FormFields.thumbnails = {
             }
             if (
               (!value.width && !value.height) ||
-              typeof value.width !== "number" ||
-              typeof value.height !== "number"
+              (typeof value.width !== "number" &&
+                typeof value.height !== "number")
             ) {
               return false;
             }
