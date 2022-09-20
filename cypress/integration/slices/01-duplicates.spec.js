@@ -9,7 +9,12 @@ describe("Duplicate Slices", () => {
   });
 
   it("A user can not create two slices with the same name", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
 
     // create first slice
     cy.visit(`/slices`);

@@ -28,7 +28,12 @@ describe("Create Slices", () => {
   });
 
   it("A user can create and rename a slice", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
     cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
 

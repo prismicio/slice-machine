@@ -7,7 +7,12 @@ describe("Duplicate custom types", () => {
     cy.cleanSliceMachineUserContext();
     cy.task("clearDir", "e2e-projects/cypress-next-app/customtypes");
     cy.task("clearDir", "e2e-projects/cypress-next-app/.slicemachine");
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
     cy.visit("/");
     // loading spinner
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]")).then(

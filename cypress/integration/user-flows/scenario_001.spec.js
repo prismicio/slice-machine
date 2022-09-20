@@ -15,6 +15,12 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Complete onboarding steps", () => {
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: false,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: false
+    });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
     cy.location("pathname", { timeout: 5000 }).should("eq", "/onboarding");
@@ -33,7 +39,12 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Create a first repeatable CT", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
 
@@ -51,7 +62,12 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
   });
 
   it("Adding fields to repeatable CT & saving", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get('[data-testid="empty-zone-add-new-field"]'));
 
@@ -106,19 +122,22 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       cy.contains("data.rich_text_id").should("be.visible");
     });
 
-    cy.get("[data-cy=builder-save-button]").within(() => {
-      cy.contains("Save to File System").should("be.visible");
-    });
+    cy.get("[data-cy=builder-save-button]").should("not.be.disabled");
 
     cy.get("[data-cy=builder-save-button]").click();
 
-    cy.get("[data-cy=builder-save-button]").within(() => {
-      cy.contains("Synced with your File System").should("be.visible");
-    });
+    cy.wait(1000);
+
+    cy.get("[data-cy=builder-save-button]").should("be.disabled");
   });
 
   it("Pushes changes", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
     cy.visit(`/changes`);
 
     // first page load

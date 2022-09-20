@@ -30,11 +30,7 @@ const SaveButton: React.FC<{
           sx={{ position: "relative", top: "5px", left: "3px" }}
         />
       ) : null}
-      <>
-        {hasPendingModifications
-          ? "Save to File System"
-          : "Synced with File System"}
-      </>
+      <>Save to File System</>
     </>
   </Button>
 );

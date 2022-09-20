@@ -22,12 +22,9 @@ const Header: React.FC<{
   onSave: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
-}> = ({ component, status, isTouched, variation, onSave, isLoading }) => {
+}> = ({ component, isTouched, variation, onSave, isLoading }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
-
-  const unSynced =
-    [ModelStatus.New, ModelStatus.Modified].indexOf(status) !== -1;
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
@@ -117,13 +114,7 @@ const Header: React.FC<{
               isSaving={isLoading}
               hasPendingModifications={!!isTouched}
               onClick={onSave}
-            >
-              {isTouched
-                ? "Save model to filesystem"
-                : unSynced
-                ? "Push Slice to Prismic"
-                : "Your Slice is up to date!"}
-            </SaveButton>
+            />
           </Flex>
           <VariationModal
             isOpen={showVariationModal}

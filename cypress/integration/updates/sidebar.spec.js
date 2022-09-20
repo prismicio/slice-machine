@@ -16,7 +16,12 @@ describe("update notification", () => {
 
   it("updates available and user has not seen the notification", () => {
     cy.clearLocalStorageSnapshot();
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true
+    });
 
     cy.intercept("/api/state", (req) => {
       req.continue((res) => {
@@ -58,9 +63,14 @@ describe("update notification", () => {
 
   it("updates available and user has seen the notification", () => {
     cy.clearLocalStorageSnapshot();
-    cy.setupSliceMachineUserContext(true, true, {
-      latest: "1000.0.0",
-      latestNonBreaking: "1.2.3",
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {
+        latest: "1000.0.0",
+        latestNonBreaking: "1.2.3",
+      },
+      hasSeenTutorialsTooTip: true
     });
 
     cy.intercept("/api/state", (req) => {
@@ -82,9 +92,14 @@ describe("update notification", () => {
 
   it("user has seen the updates but an even newer on is available", () => {
     cy.clearLocalStorageSnapshot();
-    cy.setupSliceMachineUserContext(true, true, {
-      latest: "999.0.0",
-      latestNonBreaking: "1.2.3",
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {
+        latest: "999.0.0",
+        latestNonBreaking: "1.2.3",
+      },
+      hasSeenTutorialsTooTip: true
     });
 
     cy.intercept("/api/state", (req) => {
