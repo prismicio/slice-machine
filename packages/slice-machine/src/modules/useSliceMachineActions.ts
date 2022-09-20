@@ -74,6 +74,7 @@ import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
 import { SyncError } from "@src/models/SyncError";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -449,6 +450,7 @@ const useSliceMachineActions = () => {
   const pushChanges = (
     unSyncedSlices: ReadonlyArray<ComponentUI>,
     unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
+    modelStatuses: ModelStatusInformation["modelsStatuses"],
     onChangesPushed: (pushed: string | null) => void,
     handleError: (e: SyncError | null) => void
   ) =>
@@ -456,6 +458,7 @@ const useSliceMachineActions = () => {
       changesPushCreator({
         unSyncedSlices,
         unSyncedCustomTypes,
+        modelStatuses,
         onChangesPushed,
         handleError,
       })
