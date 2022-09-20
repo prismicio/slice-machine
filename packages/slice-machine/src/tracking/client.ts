@@ -21,6 +21,7 @@ import {
   CustomTypePushed,
   CreateSlice,
   ScreenshotTaken,
+  ChangesPushed,
 } from "./types";
 
 export class SMTracker {
@@ -284,6 +285,15 @@ export class SMTracker {
       name: EventNames.ScreenshotTaken,
       props: data,
     };
+    return this.#trackEvent(payload);
+  }
+
+  async trackChangesPushed(data: ChangesPushed["props"]): Promise<void> {
+    const payload: ChangesPushed = {
+      name: EventNames.ChangesPushed,
+      props: data,
+    };
+
     return this.#trackEvent(payload);
   }
 }

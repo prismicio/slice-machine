@@ -25,10 +25,19 @@ import {
 import { LoadingKeysEnum } from "../loading/types";
 import { ApiError } from "@src/models/ApiError";
 import { SyncError } from "@src/models/SyncError";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
+import Tracker from "@src/tracking/client";
+
+const startTimer =
+  (startTime = Date.now()) =>
+  (endTime = Date.now()) =>
+    endTime - startTime;
 
 export const changesPushCreator = createAction("PUSH_CHANGES")<{
   unSyncedSlices: ReadonlyArray<ComponentUI>;
   unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>;
+  modelStatuses: ModelStatusInformation["modelsStatuses"];
   onChangesPushed: (pushed: string | null) => void;
   handleError: (e: SyncError | null) => void;
 }>();
@@ -36,13 +45,39 @@ export const changesPushCreator = createAction("PUSH_CHANGES")<{
 export function* changesPushSaga({
   payload,
 }: ReturnType<typeof changesPushCreator>): Generator {
-  const { unSyncedSlices, unSyncedCustomTypes, onChangesPushed, handleError } =
-    payload;
+  const {
+    unSyncedSlices,
+    unSyncedCustomTypes,
+    modelStatuses,
+    onChangesPushed,
+    handleError,
+  } = payload;
   const totalNumberOfChanges: number =
     unSyncedSlices.length + unSyncedCustomTypes.length;
 
   let alreadySyncedChanges = 0;
   let stop: Parameters<typeof handleError>[0] = null;
+  let slicesCreated = 0;
+  let slicesModified = 0;
+  const slicesDeleted = 0;
+  let customTypesCreated = 0;
+  let customTypesModified = 0;
+  const customTypesDeleted = 0;
+  let errors = 0;
+  const endTimer = startTimer();
+
+  const sendTracking = () =>
+    Tracker.get().trackChangesPushed({
+      customTypesCreated,
+      customTypesModified,
+      customTypesDeleted,
+      slicesCreated,
+      slicesModified,
+      slicesDeleted,
+      errors,
+      total: totalNumberOfChanges,
+      duration: endTimer(),
+    });
 
   // Open the custom toaster
   yield openSyncToaster(alreadySyncedChanges, totalNumberOfChanges);
@@ -61,6 +96,15 @@ export function* changesPushSaga({
 
         // wait for animation to finish
         yield delay(300);
+
+        // update counters
+        const status = modelStatuses.slices[slice.model.id];
+        if (status === ModelStatus.New) {
+          slicesCreated += 1;
+        }
+        if (status === ModelStatus.Modified) {
+          slicesModified += 1;
+        }
 
         // Updating the Redux stores
         yield put(
@@ -85,6 +129,7 @@ export function* changesPushSaga({
 
         switch (errorStatus) {
           case 400: {
+            errors += 1;
             stop = { type: "slice", error: ApiError.INVALID_MODEL };
             break;
           }
@@ -113,7 +158,10 @@ export function* changesPushSaga({
   );
 
   // Stop the saga if there was an error
-  if (stop) return handleError(stop);
+  if (stop) {
+    void sendTracking();
+    return handleError(stop);
+  }
 
   // Pushing Custom Types
   yield all(
@@ -121,6 +169,15 @@ export function* changesPushSaga({
       try {
         // calling the API to push the Custom type
         yield call(pushCustomType, customType.id);
+
+        // update counters
+        const status = modelStatuses.customTypes[customType.id];
+        if (status === ModelStatus.New) {
+          customTypesCreated += 1;
+        }
+        if (status === ModelStatus.Modified) {
+          customTypesModified += 1;
+        }
 
         // Updating the Redux stores
         yield put(
@@ -144,6 +201,7 @@ export function* changesPushSaga({
 
         switch (errorStatus) {
           case 400: {
+            errors += 1;
             stop = { type: "custom type", error: ApiError.INVALID_MODEL };
             break;
           }
@@ -170,6 +228,9 @@ export function* changesPushSaga({
       }
     })
   );
+
+  // send tracking
+  void sendTracking();
 
   // Stop the saga if there was an error
   if (stop) return handleError(stop);

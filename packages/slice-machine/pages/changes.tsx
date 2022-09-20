@@ -43,6 +43,7 @@ const changes: React.FunctionComponent = () => {
     pushChanges(
       unSyncedSlices,
       unSyncedCustomTypes.map((customtype) => customtype.local),
+      modelsStatuses,
       (pushed: string | null) =>
         pushed
           ? setChangesPushed([...changesPushed, pushed])

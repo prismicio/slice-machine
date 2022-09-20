@@ -23,6 +23,7 @@ export enum EventNames {
   GroupLibraries = "GroupLibraries",
 
   ScreenshotTaken = "SliceMachine Screenshot Taken",
+  ChangesPushed = "SliceMachine Changes Pushed",
 }
 
 type BaseTrackingEvent = {
@@ -172,6 +173,21 @@ export interface ScreenshotTaken extends BaseTrackingEvent {
   };
 }
 
+export interface ChangesPushed extends BaseTrackingEvent {
+  name: EventNames.ChangesPushed;
+  props: {
+    customTypesCreated: number;
+    customTypesModified: number;
+    customTypesDeleted: number;
+    slicesCreated: number;
+    slicesModified: number;
+    slicesDeleted: number;
+    total: number;
+    duration: number;
+    errors: number;
+  };
+}
+
 export type TrackingEvents =
   | PageView
   | IdentifyUser
@@ -189,7 +205,8 @@ export type TrackingEvents =
   | CreateSlice
   | SliceSimulatorOpen
   | SliceSimulatorSetup
-  | ScreenshotTaken;
+  | ScreenshotTaken
+  | ChangesPushed;
 
 export function isTrackingEvent(
   payload: TrackingEvents
