@@ -11,7 +11,7 @@ describe("Duplicate custom types", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit("/");
     // loading spinner

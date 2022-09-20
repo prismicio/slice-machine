@@ -19,7 +19,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       hasSendAReview: true,
       isOnboarded: false,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: false
+      hasSeenTutorialsTooTip: false,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=get-started]"));
@@ -43,7 +43,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit("/");
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
@@ -66,7 +66,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit(`/cts/${id}`);
     cy.waitUntil(() => cy.get('[data-testid="empty-zone-add-new-field"]'));
@@ -136,7 +136,7 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit(`/changes`);
 

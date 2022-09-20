@@ -23,7 +23,7 @@ describe("changelog.warningBreakingChanges", () => {
         latest: "1000.0.0",
         latestNonBreaking: "1.2.3",
       },
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {
@@ -52,9 +52,8 @@ describe("changelog.warningBreakingChanges", () => {
         latest: "1000.0.0",
         latestNonBreaking: "1.2.3",
       },
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
-    
 
     cy.intercept("/api/state", (req) => {
       req.continue((res) => {

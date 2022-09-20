@@ -13,7 +13,7 @@ describe("Duplicate Slices", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     // create first slice

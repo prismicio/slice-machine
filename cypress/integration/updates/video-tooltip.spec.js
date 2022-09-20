@@ -5,7 +5,7 @@ describe("video tooltip", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: false
+      hasSeenTutorialsTooTip: false,
     });
 
     cy.visit("/");
@@ -33,7 +33,7 @@ describe("video tooltip", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     // There is a 5s timeout for displaying the tooltip
@@ -48,7 +48,7 @@ describe("video tooltip", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: false
+      hasSeenTutorialsTooTip: false,
     });
 
     cy.visit("/");
@@ -78,7 +78,7 @@ describe("video tooltip", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: false
+      hasSeenTutorialsTooTip: false,
     });
 
     cy.visit("/");

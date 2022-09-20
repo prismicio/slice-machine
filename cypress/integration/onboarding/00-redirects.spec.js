@@ -15,7 +15,7 @@ describe("onboarding redirects and local storage", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit("/");
     cy.location("pathname", { timeout: 5000 }).should("eq", "/");

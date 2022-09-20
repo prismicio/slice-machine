@@ -20,7 +20,7 @@ describe("update notification", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {
@@ -70,7 +70,7 @@ describe("update notification", () => {
         latest: "1000.0.0",
         latestNonBreaking: "1.2.3",
       },
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {
@@ -99,7 +99,7 @@ describe("update notification", () => {
         latest: "999.0.0",
         latestNonBreaking: "1.2.3",
       },
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {

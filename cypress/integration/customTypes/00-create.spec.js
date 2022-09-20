@@ -13,7 +13,7 @@ describe("Custom Types specs", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit("/");
 

@@ -32,7 +32,7 @@ describe("Create Slices", () => {
       hasSendAReview: true,
       isOnboarded: true,
       updatesViewed: {},
-      hasSeenTutorialsTooTip: true
+      hasSeenTutorialsTooTip: true,
     });
     cy.visit(`/slices`);
     cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]"));
