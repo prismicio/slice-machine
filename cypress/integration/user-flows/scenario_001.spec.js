@@ -129,7 +129,6 @@ describe("I am a new SM user (with Next) who wants to create a Custom Type with 
     cy.get("[data-cy=builder-save-button-spinner]").should("be.visible");
 
     cy.get("[data-cy=builder-save-button-icon]").should("be.visible");
-
   });
 
   it("Pushes changes", () => {
