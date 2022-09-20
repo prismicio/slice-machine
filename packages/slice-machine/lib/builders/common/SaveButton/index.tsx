@@ -1,6 +1,8 @@
 import React from "react";
 import { Spinner, Button } from "theme-ui";
 
+import { AiFillSave } from "react-icons/ai";
+
 const SaveButton: React.FC<{
   onClick: React.MouseEventHandler;
   isSaving: boolean;
@@ -24,12 +26,17 @@ const SaveButton: React.FC<{
     <>
       {isSaving ? (
         <Spinner
+          data-cy="builder-save-button-spinner"
           color="#F7F7F7"
           size={20}
           mr={2}
-          sx={{ position: "relative", top: "5px", left: "3px" }}
         />
-      ) : null}
+      ) : (
+        <AiFillSave
+          data-cy="builder-save-button-icon"
+          style={{ marginRight: "8px", fontSize: "18px" }}
+        />
+      )}
       <>Save to File System</>
     </>
   </Button>
