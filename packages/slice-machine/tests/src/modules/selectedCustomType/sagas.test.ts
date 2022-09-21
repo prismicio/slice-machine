@@ -1,20 +1,15 @@
 import { testSaga } from "redux-saga-test-plan";
-import { pushCustomType, saveCustomType } from "@src/apiClient";
-import {
-  pushCustomTypeSaga,
-  saveCustomTypeSaga,
-} from "@src/modules/selectedCustomType/sagas";
+import "@testing-library/jest-dom";
+
+import { saveCustomType } from "@src/apiClient";
+import { saveCustomTypeSaga } from "@src/modules/selectedCustomType/sagas";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import {
-  pushCustomTypeCreator,
   saveCustomTypeCreator,
   selectCurrentCustomType,
   selectCurrentMockConfig,
 } from "@src/modules/selectedCustomType";
-import {
-  CustomTypeSM,
-  CustomTypes,
-} from "@slicemachine/core/build/models/CustomType";
+import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { setupServer } from "msw/node";
@@ -85,55 +80,6 @@ describe("[Selected Custom type sagas]", () => {
         })
       );
       saga.next().isDone();
-    });
-    it("should open a error toaster on internal error", () => {
-      const saga = testSaga(saveCustomTypeSaga).next();
-
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          message: "Internal Error: Custom type not saved",
-          type: ToasterType.ERROR,
-        })
-      );
-      saga.next().isDone();
-    });
-  });
-  describe("[pushCustomTypeSaga]", () => {
-    it("should call the api and dispatch the good actions on success", async () => {
-      const fakeTracker = makeTrackerSpy();
-      interceptTracker(fakeTracker); // warnings happen without this
-
-      const saga = testSaga(pushCustomTypeSaga);
-
-      saga.next().select(selectCurrentCustomType);
-      saga.next(customTypeModel).call(pushCustomType, customTypeModel.id);
-
-      saga
-        .next()
-        .put(
-          pushCustomTypeCreator.success({ customTypeId: customTypeModel.id })
-        );
-      saga.next().put(
-        openToasterCreator({
-          message: "Model was correctly saved to Prismic!",
-          type: ToasterType.SUCCESS,
-        })
-      );
-      saga.next().isDone();
-
-      await new Promise(process.nextTick);
-
-      expect(fakeTracker).toHaveBeenCalled();
-      const body = await fakeTracker.mock.calls[0][0].json();
-
-      expect(body).toEqual({
-        name: "SliceMachine Custom Type Pushed",
-        props: {
-          id: "about",
-          name: "My Cool About Page",
-          type: "single",
-        },
-      });
     });
     it("should open a error toaster on internal error", () => {
       const saga = testSaga(saveCustomTypeSaga).next();

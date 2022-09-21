@@ -8,6 +8,9 @@ import {
 import { getOrElseW } from "fp-ts/lib/Either";
 import { FieldsSM } from "./Fields";
 
+const IMAGE_PLACEHOLDER_URL =
+  "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format";
+
 export enum WidgetsArea {
   Primary = "primary",
   Items = "items",
@@ -81,6 +84,10 @@ export const Variations = {
     })(
       VariationSM.decode({
         ...variation,
+        imageUrl:
+          variation.imageUrl === IMAGE_PLACEHOLDER_URL
+            ? undefined
+            : variation.imageUrl,
         primary: Object.entries(variation.primary || {}).map(
           ([key, value]) => ({
             key,

@@ -6,7 +6,7 @@ export interface ComponentInfo {
   fileName: string | null;
   extension: string | null;
   model: SliceSM;
-  screenshotPaths: {
+  screenshots: {
     [variationId: string]: Screenshot;
   };
   mock?: SliceMock;
@@ -14,11 +14,11 @@ export interface ComponentInfo {
 
 export const ComponentInfo = {
   hasPreviewsMissing(info: ComponentInfo): boolean {
-    const { screenshotPaths, model } = info;
-    if (!screenshotPaths) return true;
+    const { screenshots, model } = info;
+    if (!screenshots) return true;
     return model.variations
       .map((v) => v.id)
-      .some((variationId) => !screenshotPaths[variationId]);
+      .some((variationId) => !screenshots[variationId]);
   },
 };
 
@@ -30,6 +30,7 @@ export interface Component extends ComponentInfo {
 
 export interface Screenshot {
   path: string;
+  hash: string;
 }
 export interface Library<C extends Component> {
   name: string;

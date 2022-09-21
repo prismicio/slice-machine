@@ -1,18 +1,15 @@
 import { testSaga } from "redux-saga-test-plan";
 import {
-  pushSliceSaga,
   saveSliceSaga,
   generateSliceScreenshotSaga,
 } from "../../../../src/modules/selectedSlice/sagas";
 import { getSelectedSliceDummyData } from "./utils";
 import {
   generateSliceScreenshotCreator,
-  pushSliceCreator,
   saveSliceCreator,
 } from "../../../../src/modules/selectedSlice/actions";
 import {
   generateSliceScreenshotApiClient,
-  pushSliceApiClient,
   saveSliceApiClient,
 } from "../../../../src/apiClient";
 import {
@@ -91,64 +88,22 @@ describe("[Selected Slice sagas]", () => {
       saga.next().isDone();
     });
   });
-  describe("[pushSliceSaga]", () => {
-    it("should call the api and dispatch the success action", () => {
-      const mockOnPush = jest.fn();
-      const saga = testSaga(
-        pushSliceSaga,
-        pushSliceCreator.request({
-          component: dummySliceState,
-          onPush: mockOnPush,
-        })
-      );
-
-      saga.next().call(pushSliceApiClient, dummySliceState);
-
-      saga
-        .next({ status: 200, data: {} })
-        .put(pushSliceCreator.success({ component: dummySliceState }));
-
-      saga.next().put(
-        openToasterCreator({
-          message: "Model was correctly saved to Prismic!",
-          type: ToasterType.SUCCESS,
-        })
-      );
-
-      saga.next().isDone();
-      expect(mockOnPush).toHaveBeenCalledWith({
-        done: true,
-        error: null,
-        imageLoading: false,
-        loading: false,
-        status: 200,
-      });
-    });
-    it("should open a error toaster on internal error", () => {
-      const mockOnPush = jest.fn();
-      const saga = testSaga(
-        pushSliceSaga,
-        pushSliceCreator.request({
-          component: dummySliceState,
-          onPush: mockOnPush,
-        })
-      ).next();
-
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          message: "Internal Error: Slice was not pushed",
-          type: ToasterType.ERROR,
-        })
-      );
-      saga.next().isDone();
-    });
-  });
 
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", async () => {
       const mockSetData = jest.fn();
       const fakeTracker = makeTrackerSpy();
       interceptTracker(fakeTracker);
+
+      const screenshotResponse = {
+        screenshots: {
+          dummyModelVariationID: {
+            path: "testScreenshotPath",
+            url: "testScreenshotUrl",
+            hash: "xxx",
+          },
+        },
+      };
 
       const saga = testSaga(
         generateSliceScreenshotSaga,
@@ -165,14 +120,7 @@ describe("[Selected Slice sagas]", () => {
           dummySliceState.model.name,
           dummySliceState.from
         );
-      const response = {
-        screenshots: {
-          dummyModelVariationID: {
-            path: "testScreenshotPath",
-            url: "testScreenshotUrl",
-          },
-        },
-      };
+      const response = screenshotResponse;
 
       saga
         .next({
@@ -181,8 +129,10 @@ describe("[Selected Slice sagas]", () => {
         })
         .put(
           generateSliceScreenshotCreator.success({
-            screenshots: response.screenshots,
-            component: dummySliceState,
+            component: {
+              ...dummySliceState,
+              screenshots: screenshotResponse.screenshots,
+            },
           })
         );
 

@@ -5,7 +5,7 @@ import {
   renameCustomTypeCreator,
   renameCustomTypeSaga,
 } from "@src/modules/availableCustomTypes";
-import { pushCustomTypeCreator } from "@src/modules/selectedCustomType";
+import { pushCustomTypeCreator } from "@src/modules/pushChangesSaga/actions";
 import { testSaga } from "redux-saga-test-plan";
 import { AvailableCustomTypesStoreType } from "@src/modules/availableCustomTypes/types";
 import { refreshStateCreator } from "@src/modules/environment";
@@ -42,6 +42,7 @@ describe("[Available Custom types module]", () => {
         remoteCustomTypes: dummyServerState.remoteCustomTypes,
         localCustomTypes: dummyServerState.customTypes,
         libraries: dummyServerState.libraries,
+        remoteSlices: dummyServerState.remoteCustomTypes,
       });
 
       expect(

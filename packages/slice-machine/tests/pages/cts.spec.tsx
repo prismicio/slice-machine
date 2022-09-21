@@ -66,7 +66,7 @@ describe("Custom Type Builder", () => {
           pathToSlice: "./slices",
           fileName: "index",
           extension: "js",
-          screenshotPaths: {},
+          screenshots: {},
           mock: [
             {
               variation: "default",

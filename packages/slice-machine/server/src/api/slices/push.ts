@@ -20,7 +20,10 @@ export const createOrUpdate = async (
 
 export const handler = async (
   req: RequestWithEnv
-): Promise<{ statusCode: number }> => {
+): Promise<{
+  statusCode: number;
+  screenshots?: Record<string, string | null>;
+}> => {
   const { sliceName, from } = req.query;
   if (typeof sliceName != "string" || typeof from != "string")
     return { statusCode: 418 }; // Should never happen
@@ -88,7 +91,7 @@ export const handler = async (
     return createOrUpdate(req.env.client, modelWithScreenshots, remoteSlice)
       .then(() => {
         console.log(`[slice/push] Slice ${sliceName} pushed successfully !`);
-        return { statusCode: 200 };
+        return { statusCode: 200, screenshots: screenshotUrlsByVariation };
       })
       .catch((error: ClientError) => {
         console.error(

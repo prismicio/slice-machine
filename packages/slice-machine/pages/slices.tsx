@@ -75,6 +75,7 @@ const SlicesIndex: React.FunctionComponent = () => {
 
   const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const { modelsStatuses, authStatus, isOnline } =
     useModelStatus(frontendSlices);
 
@@ -196,7 +197,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                         }
                         renderElem={(slice: ComponentUI) => {
                           return SharedSlice.render({
-                            slice: slice,
+                            slice,
                             StatusOrCustom: {
                               status: modelsStatuses.slices[slice.model.id],
                               authStatus,

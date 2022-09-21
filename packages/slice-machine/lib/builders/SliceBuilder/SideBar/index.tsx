@@ -39,7 +39,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
   onScreenshot,
   onHandleFile,
 }) => {
-  const { screenshotUrls } = component;
+  const { screenshots } = component;
 
   const { checkSimulatorSetup } = useSliceMachineActions();
 
@@ -70,11 +70,7 @@ const SideBar: React.FunctionComponent<SideBarProps> = ({
     >
       <Card bg="headSection" bodySx={{ p: 0 }} footerSx={{ p: 0 }}>
         <MemoizedImagePreview
-          src={
-            screenshotUrls &&
-            screenshotUrls[variation.id] &&
-            screenshotUrls[variation.id].url
-          }
+          src={screenshots[variation.id]?.url}
           screenshotProperties={{
             isLoading: imageLoading,
             isDisabled: !isSimulatorAvailableForFramework,

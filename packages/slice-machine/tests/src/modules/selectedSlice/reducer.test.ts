@@ -4,8 +4,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
   replaceSliceWidgetCreator,
@@ -135,7 +133,7 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.mockConfig["default-slice"].primary).toEqual({
+      expect(newState?.mockConfig["default-slice"]?.primary).toEqual({
         section_title: { content: "NewContent" },
       });
     });
@@ -150,41 +148,8 @@ describe("[Selected Slice module]", () => {
         })
       );
 
-      expect(newState?.mockConfig["default-slice"].primary).toEqual({
+      expect(newState?.mockConfig["default-slice"]?.primary).toEqual({
         section_title: undefined,
-      });
-    });
-    it("should update the selected slice state given SLICE/GENERATE_SCREENSHOT action", () => {
-      const screenshots = {
-        [dummyModelVariationID]: {
-          path: "screenshotPath",
-          url: "screenshotUrl",
-        },
-      };
-
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        generateSliceScreenshotCreator.success({
-          screenshots: screenshots,
-          component: dummySliceState,
-        })
-      );
-
-      expect(newState?.screenshotUrls).toEqual(screenshots);
-    });
-    it("should update the selected slice state given SLICE/GENERATE_CUSTOM_SCREENSHOT action", () => {
-      const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        generateSliceCustomScreenshotCreator.success({
-          variationId: dummyModelVariationID,
-          screenshot: { path: "screenshotPath", url: "screenshotUrl" },
-          component: dummySliceState,
-        })
-      );
-
-      expect(newState?.screenshotUrls).toEqual({
-        [dummyModelVariationID]: screenshotUI,
       });
     });
     it("should update the selected slice state given SLICE/COPY_VARIATION action", () => {

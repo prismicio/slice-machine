@@ -160,8 +160,8 @@ router.get(
     req: RequestWithEnv,
     res: express.Response
   ): Promise<Express.Response> {
-    const { statusCode } = await pushSlice(req);
-    return res.sendStatus(statusCode);
+    const { statusCode, screenshots } = await pushSlice(req);
+    return res.status(statusCode).json(screenshots);
   })
 );
 

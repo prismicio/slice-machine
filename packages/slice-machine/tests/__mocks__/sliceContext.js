@@ -179,7 +179,7 @@ export default {
           },
         },
       ],
-      screenshotPaths: {},
+      screenshots: {},
     },
     migrated: false,
     screenshotUrls: {},

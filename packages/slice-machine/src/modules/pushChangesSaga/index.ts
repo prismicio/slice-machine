@@ -12,8 +12,7 @@ import {
 } from "redux-saga/effects";
 import { createAction, getType } from "typesafe-actions";
 import { withLoader } from "../loading";
-import { pushCustomTypeCreator } from "../selectedCustomType";
-import { pushSliceCreator } from "../selectedSlice/actions";
+import { pushCustomTypeCreator, pushSliceCreator } from "./actions";
 import { openToasterCreator, ToasterType } from "../toaster";
 import { modalOpenCreator } from "../modal";
 import { ModalKeysEnum } from "../modal/types";
@@ -85,10 +84,12 @@ export function* changesPushSaga({
 
   // Pushing Slices
   yield all(
-    unSyncedSlices.map(function* (slice) {
+    unSyncedSlices.map(function* (
+      slice
+    ): Generator<unknown, void, Record<string, string | null>> {
       try {
         // calling the API to push the Slice
-        yield call(pushSliceApiClient, slice);
+        const updatedScreenshots = yield call(pushSliceApiClient, slice);
 
         // trigger fade out animation
         yield onChangesPushed(slice.model.id);
@@ -106,7 +107,12 @@ export function* changesPushSaga({
         }
 
         // Updating the Redux stores
-        yield put(pushSliceCreator.success({ component: slice }));
+        yield put(
+          pushSliceCreator.success({
+            component: slice,
+            updatedScreenshotsUrls: updatedScreenshots,
+          })
+        );
 
         // updating the custom toaster
         alreadySyncedChanges++;

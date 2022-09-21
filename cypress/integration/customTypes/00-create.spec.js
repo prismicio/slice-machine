@@ -9,7 +9,12 @@ describe("Custom Types specs", () => {
   });
 
   it("A user can create and rename a custom type", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true,
+    });
     cy.visit("/");
 
     // loading spinner

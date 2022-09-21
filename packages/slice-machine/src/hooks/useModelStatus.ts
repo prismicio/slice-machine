@@ -20,7 +20,7 @@ export interface ModelStatusInformation {
 }
 
 export const useModelStatus = (
-  models: ReadonlyArray<FrontEndModel>
+  models: FrontEndModel[]
 ): ModelStatusInformation => {
   const isOnline = useNetwork();
   const { authStatus } = useSelector((store: SliceMachineStoreType) => ({
@@ -38,9 +38,8 @@ export const useModelStatus = (
           model,
           userHasAccessToModels
         );
-        const modelIsSlice = "variations" in model.local;
 
-        if (modelIsSlice) {
+        if ("localScreenshots" in model) {
           return {
             slices: {
               ...acc.slices,

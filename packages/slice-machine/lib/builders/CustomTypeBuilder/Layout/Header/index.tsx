@@ -2,14 +2,20 @@ import React from "react";
 import { Box, Flex, Text, useThemeUI } from "theme-ui";
 
 import Header from "@components/Header";
+import SaveButton from "@components/SaveButton";
+
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { MdModeEdit, MdSpaceDashboard } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentCustomType } from "@src/modules/selectedCustomType";
 import SliceMachineIconButton from "@components/SliceMachineIconButton";
-import { SaveButton } from "./SaveButton";
+
 import { RenameCustomTypeModal } from "@components/Forms/RenameCustomTypeModal";
+import { isSelectedCustomTypeTouched } from "@src/modules/selectedCustomType";
+
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 const CustomTypeHeader = () => {
   const { currentCustomType } = useSelector((store: SliceMachineStoreType) => ({
@@ -17,6 +23,14 @@ const CustomTypeHeader = () => {
   }));
   const { openRenameCustomTypeModal } = useSliceMachineActions();
   const { theme } = useThemeUI();
+
+  const { hasPendingModifications, isSavingCustomType } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      hasPendingModifications: isSelectedCustomTypeTouched(store),
+      isSavingCustomType: isLoading(store, LoadingKeysEnum.SAVE_CUSTOM_TYPE),
+    })
+  );
+  const { saveCustomType } = useSliceMachineActions();
 
   if (!currentCustomType) return null;
 
@@ -56,7 +70,13 @@ const CustomTypeHeader = () => {
                 marginRight: "8px",
               }}
             />
-            <SaveButton />
+            <SaveButton
+              isSaving={isSavingCustomType}
+              hasPendingModifications={hasPendingModifications}
+              onClick={() => {
+                !isSavingCustomType && saveCustomType();
+              }}
+            />
           </Flex>
         }
       />

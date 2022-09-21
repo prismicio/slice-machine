@@ -39,7 +39,6 @@ import {
   replaceSharedSliceCreator,
   createSliceZoneCreator,
   saveCustomTypeCreator,
-  pushCustomTypeCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
@@ -62,13 +61,16 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
   initSliceStoreCreator,
-  pushSliceCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
   saveSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+} from "./pushChangesSaga/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";

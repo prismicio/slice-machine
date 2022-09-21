@@ -53,11 +53,9 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   variation,
 }) => {
   const {
-    openLoginModal,
     openToaster,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
-    pushSlice,
     saveSlice,
     checkSimulatorSetup,
   } = useSliceMachineActions();
@@ -116,21 +114,16 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
     generateSliceCustomScreenshot(variation.id, component, setData, file);
   };
 
-  const onPushSlice = () => {
-    pushSlice(component, (data: SliceBuilderState) => {
-      setData(data);
-      if (data.error && data.status === 403) {
-        openLoginModal();
-      }
-    });
-  };
-
   const onSaveSlice = () => {
     saveSlice(component, setData);
   };
 
   const { modelsStatuses } = useModelStatus([
-    { local: component.model, remote: remoteSlice },
+    {
+      local: component.model,
+      remote: remoteSlice,
+      localScreenshots: component.screenshots,
+    },
   ]);
 
   return (
@@ -140,7 +133,6 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
         status={modelsStatuses.slices[component.model.id]}
         isTouched={isTouched}
         variation={variation}
-        onPush={onPushSlice}
         onSave={onSaveSlice}
         isLoading={data.loading}
         imageLoading={data.imageLoading}

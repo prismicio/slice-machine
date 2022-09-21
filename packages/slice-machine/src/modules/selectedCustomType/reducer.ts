@@ -21,7 +21,6 @@ import {
   reorderFieldIntoGroupCreator,
   replaceFieldIntoGroupCreator,
   saveCustomTypeCreator,
-  pushCustomTypeCreator,
   updateGroupFieldMockConfigCreator,
   deleteGroupFieldMockConfigCreator,
 } from "./actions";
@@ -62,13 +61,6 @@ export const selectedCustomTypeReducer: Reducer<
         initialMockConfig: state.mockConfig,
       };
     }
-    case getType(pushCustomTypeCreator.success):
-      if (!state) return state;
-
-      return {
-        ...state,
-        remoteModel: state.model,
-      };
     case getType(createTabCreator):
       if (!state) return state;
       const { tabId } = action.payload;

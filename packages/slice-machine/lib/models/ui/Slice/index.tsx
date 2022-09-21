@@ -118,7 +118,7 @@ export const SharedSlice = {
 
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
+    const screenshotUrl = slice?.screenshots?.[variationId]?.url;
 
     return (
       <CardWrapper link={link} slice={slice}>
