@@ -283,14 +283,6 @@ describe("[pashSaga module]", () => {
             },
           })
         )
-        .call(pushSliceApiClient, stubSlice)
-        .delay(300)
-        .put(
-          pushSliceCreator.success({
-            component: stubSlice,
-            updatedScreenshotsUrls: {},
-          })
-        )
         .call(pushCustomType, stubCustomType.id)
         .put(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }))
         .run(sagaTimeout)
@@ -372,8 +364,18 @@ describe("[pashSaga module]", () => {
           })
         )
         .put(pushSliceCreator.failure({ component: stubSlice }))
-        .put(pushSliceCreator.success({ component: stubSlice2 }))
-        .put(pushSliceCreator.success({ component: stubSlice3 }))
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice2,
+            updatedScreenshotsUrls: {},
+          })
+        )
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice3,
+            updatedScreenshotsUrls: {},
+          })
+        )
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
           openToasterCreator({
@@ -457,7 +459,12 @@ describe("[pashSaga module]", () => {
           })
         )
         .put(pushSliceCreator.failure({ component: stubSlice })) // We can't expect a success only a failure as it cancels the saga // or can we?
-        .not.put(pushSliceCreator.success({ component: stubSlice2 }))
+        .not.put(
+          pushSliceCreator.success({
+            component: stubSlice2,
+            updatedScreenshotsUrls: {},
+          })
+        )
         .not.put(pushSliceCreator.failure({ component: stubSlice2 }))
         .not.call(pushCustomType, stubCustomType.id)
         .not.put(
@@ -528,8 +535,18 @@ describe("[pashSaga module]", () => {
         .call(pushSliceApiClient, stubSlice2)
         .call(pushSliceApiClient, stubSlice3)
         .put(pushSliceCreator.failure({ component: stubSlice }))
-        .put(pushSliceCreator.success({ component: stubSlice2 }))
-        .put(pushSliceCreator.success({ component: stubSlice3 }))
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice2,
+            updatedScreenshotsUrls: {},
+          })
+        )
+        .put(
+          pushSliceCreator.success({
+            component: stubSlice3,
+            updatedScreenshotsUrls: {},
+          })
+        )
         .not.call(pushCustomType, stubCustomType)
         .run(sagaTimeout)
         .then(() => {
