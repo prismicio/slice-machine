@@ -25,8 +25,7 @@
     "fp-ts": "^2.11.5",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^2.0.1",
-    "io-ts-types": "^0.5.16",
-    "ora": "^6.1.2"
+    "io-ts-types": "^0.5.16"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

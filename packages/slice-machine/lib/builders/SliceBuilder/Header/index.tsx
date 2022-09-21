@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import SaveButton from "@lib/builders/common/SaveButton";
+import SaveButton from "@components/SaveButton";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";

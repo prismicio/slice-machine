@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex, Text, useThemeUI } from "theme-ui";
 
 import Header from "@components/Header";
-import SaveButton from "@lib/builders/common/SaveButton";
+import SaveButton from "@components/SaveButton";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { MdModeEdit, MdSpaceDashboard } from "react-icons/md";
