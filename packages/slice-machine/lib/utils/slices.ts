@@ -7,33 +7,29 @@ import Files from "./files";
 import { CustomPaths } from "../models/paths";
 import * as IO from "../io";
 
+// Loads all Slice models from all libraries.
 export function getLocalSlices(
   cwd: string,
   libraries: string[] = []
 ): SliceSM[] {
-  const slices: SliceSM[] = [];
-  for (const library of libraries) {
+  return libraries.flatMap((library) => {
     const pathToSlices = CustomPaths(cwd)
       .library(getFormattedLibIdentifier(library).from)
       .value();
 
     const folderExists = Files.exists(pathToSlices);
-    if (!folderExists) continue;
+    if (!folderExists) return [];
 
-    const matches = glob.sync(`${pathToSlices}/**/model.json`);
+    const modelFilePaths = glob.sync(`${pathToSlices}/**/model.json`);
 
-    slices.push(
-      ...matches.reduce((acc: Array<SliceSM>, p: string) => {
+    return modelFilePaths
+      .map((modelFilePath) => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const smModel = IO.Slice.readSlice(p);
-          return [...acc, smModel];
-        } catch (e) {
-          return acc;
+          return IO.Slice.readSlice(modelFilePath);
+        } catch {
+          return undefined;
         }
-      }, [])
-    );
-  }
-
-  return slices;
+      })
+      .filter((model): model is NonNullable<typeof model> => Boolean(model));
+  });
 }
