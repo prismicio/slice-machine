@@ -25,7 +25,7 @@ import { getCurrentVersion, getFramework } from "../src/modules/environment";
 import {
   VIDEO_ONBOARDING_BUILD_A_SLICE,
   VIDEO_ONBOARDING_ADD_TO_PAGE,
-  VIDEO_ONBOARDING_PUSH_TO_PRISMIC,
+  VIDEO_ONBOARDING_PUSH_CHANGES,
 } from "../lib/consts";
 
 const imageSx = { width: "64px", height: "64px", marginBottom: "16px" };
@@ -132,7 +132,7 @@ const PushPagesSlide: React.FC = () => (
     <SubHeader>
       Give your content writers the freedom to build whatever they need
     </SubHeader>
-    <Video publicId={VIDEO_ONBOARDING_PUSH_TO_PRISMIC} />
+    <Video publicId={VIDEO_ONBOARDING_PUSH_CHANGES} />
   </>
 );
 
