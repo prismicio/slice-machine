@@ -1,6 +1,6 @@
 describe("Custom Types specs", () => {
   const root = "e2e-projects/cypress-next-app";
-  const type = `${root}/prismic.d.ts`;
+  const type = `${root}/prismicio.d.ts`;
   const name = "My Test";
   const id = "my_test";
   beforeEach(() => {

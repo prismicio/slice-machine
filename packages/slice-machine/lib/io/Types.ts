@@ -29,5 +29,5 @@ export const upsert = (
 
   const fileContents = `${NON_EDITABLE_FILE_HEADER}\n\n${types}`;
 
-  Files.write(path.join(cwd, "prismic.d.ts"), fileContents);
+  Files.write(path.join(cwd, "prismicio.d.ts"), fileContents);
 };
