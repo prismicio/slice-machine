@@ -88,9 +88,5 @@ describe("Create Slices", () => {
     cy.get('[data-cy="slice-and-variation-name-header"]').contains(
       `/ ${editedSliceName} / Default`
     );
-    cy.get('[data-cy="slice-builder-push-or-save-button"]').should(
-      "not.be.disabled"
-    );
-    cy.readFile(type).should("contains", editedSliceName);
   });
 });
