@@ -6,6 +6,7 @@ import { watchSelectedCustomTypeSagas } from "@src/modules/selectedCustomType";
 import { selectedSliceSagas } from "@src/modules/selectedSlice/sagas";
 import { watchSliceSagas } from "@src/modules/slices";
 import { watchToasterSagas } from "@src/modules/toaster";
+import { screenshotsSagas } from "@src/modules/screenshots/sagas";
 
 // Single entry point to start all Sagas at once
 export default function* rootSaga() {
@@ -14,5 +15,6 @@ export default function* rootSaga() {
   yield fork(watchSliceSagas);
   yield fork(watchToasterSagas);
   yield fork(watchSelectedCustomTypeSagas);
+  yield fork(screenshotsSagas);
   yield fork(selectedSliceSagas);
 }

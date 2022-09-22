@@ -6,8 +6,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   pushSliceCreator,
   removeSliceWidgetCreator,
@@ -21,11 +19,7 @@ import { SelectedSliceStoreType } from "./types";
 import * as Widgets from "../../../lib/models/common/widgets";
 import { Variation } from "@lib/models/common/Variation";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import {
-  ComponentUI,
-  LibStatus,
-  ScreenshotUI,
-} from "@lib/models/common/ComponentUI";
+import { ComponentUI, LibStatus } from "@lib/models/common/ComponentUI";
 import { compareVariations } from "@lib/utils";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { renamedComponentUI, renameSliceCreator } from "../slices";
@@ -147,42 +141,42 @@ export const selectedSliceReducer: Reducer<
         mockConfig: updatedConfig,
       };
     }
-    case getType(generateSliceScreenshotCreator.success): {
-      if (!prevState) return prevState;
+    // case getType(generateSliceScreenshotCreator.success): {
+    //   if (!prevState) return prevState;
 
-      return {
-        ...prevState,
-        screenshotUrls: action.payload.screenshots,
-        __status: LibStatus.Modified,
-      };
-    }
-    case getType(generateSliceCustomScreenshotCreator.success): {
-      if (!prevState) return prevState;
-      const { variationId, screenshot } = action.payload;
+    //   return {
+    //     ...prevState,
+    //     screenshotUrls: action.payload.screenshots,
+    //     __status: LibStatus.Modified,
+    //   };
+    // }
+    // case getType(generateSliceCustomScreenshotCreator.success): {
+    //   if (!prevState) return prevState;
+    //   const { variationId, screenshot } = action.payload;
 
-      const screenshots: Record<string, ScreenshotUI> =
-        prevState.model.variations.reduce((acc, variation) => {
-          if (variation.id === variationId) {
-            return {
-              ...acc,
-              [variationId]: screenshot,
-            };
-          }
-          if (prevState.screenshotUrls?.[variation.id]) {
-            return {
-              ...acc,
-              [variation.id]: prevState.screenshotUrls[variation.id],
-            };
-          }
-          return acc;
-        }, {});
+    //   const screenshots: Record<string, ScreenshotUI> =
+    //     prevState.model.variations.reduce((acc, variation) => {
+    //       if (variation.id === variationId) {
+    //         return {
+    //           ...acc,
+    //           [variationId]: screenshot,
+    //         };
+    //       }
+    //       if (prevState.screenshotUrls?.[variation.id]) {
+    //         return {
+    //           ...acc,
+    //           [variation.id]: prevState.screenshotUrls[variation.id],
+    //         };
+    //       }
+    //       return acc;
+    //     }, {});
 
-      return {
-        ...prevState,
-        screenshotUrls: screenshots,
-        __status: LibStatus.Modified,
-      };
-    }
+    //   return {
+    //     ...prevState,
+    //     screenshotUrls: screenshots,
+    //     __status: LibStatus.Modified,
+    //   };
+    // }
     case getType(saveSliceCreator.success): {
       if (!prevState) return prevState;
       const { component, remoteSliceVariations } = action.payload;

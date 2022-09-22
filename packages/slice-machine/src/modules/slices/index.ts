@@ -21,12 +21,11 @@ import { Screenshot, SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
+import { pushSliceCreator, saveSliceCreator } from "../selectedSlice/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
-  pushSliceCreator,
-  saveSliceCreator,
-} from "../selectedSlice/actions";
+} from "../screenshots/actions";
 import {
   ComponentUI,
   computeStatus,

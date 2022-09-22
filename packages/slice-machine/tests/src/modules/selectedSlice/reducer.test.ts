@@ -5,8 +5,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   pushSliceCreator,
   removeSliceWidgetCreator,
@@ -162,41 +160,41 @@ describe("[Selected Slice module]", () => {
       });
       expect(newState?.__status).toBe(LibStatus.NewSlice);
     });
-    it("should update the selected slice state given SLICE/GENERATE_SCREENSHOT action", () => {
-      const screenshots = {
-        [dummyModelVariationID]: {
-          path: "screenshotPath",
-          url: "screenshotUrl",
-        },
-      };
+    // it("should update the selected slice state given SLICE/GENERATE_SCREENSHOT action", () => {
+    //   const screenshots = {
+    //     [dummyModelVariationID]: {
+    //       path: "screenshotPath",
+    //       url: "screenshotUrl",
+    //     },
+    //   };
 
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        generateSliceScreenshotCreator.success({
-          screenshots: screenshots,
-          component: dummySliceState,
-        })
-      );
+    //   const newState = selectedSliceReducer(
+    //     dummySliceState,
+    //     generateSliceScreenshotCreator.success({
+    //       screenshots: screenshots,
+    //       component: dummySliceState,
+    //     })
+    //   );
 
-      expect(newState?.screenshotUrls).toEqual(screenshots);
-      expect(newState?.__status).toBe(LibStatus.Modified);
-    });
-    it("should update the selected slice state given SLICE/GENERATE_CUSTOM_SCREENSHOT action", () => {
-      const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
-      const newState = selectedSliceReducer(
-        dummySliceState,
-        generateSliceCustomScreenshotCreator.success({
-          variationId: dummyModelVariationID,
-          screenshot: { path: "screenshotPath", url: "screenshotUrl" },
-          component: dummySliceState,
-        })
-      );
+    //   expect(newState?.screenshotUrls).toEqual(screenshots);
+    //   expect(newState?.__status).toBe(LibStatus.Modified);
+    // });
+    // it("should update the selected slice state given SLICE/GENERATE_CUSTOM_SCREENSHOT action", () => {
+    //   const screenshotUI = { path: "screenshotPath", url: "screenshotUrl" };
+    //   const newState = selectedSliceReducer(
+    //     dummySliceState,
+    //     generateSliceCustomScreenshotCreator.success({
+    //       variationId: dummyModelVariationID,
+    //       screenshot: { path: "screenshotPath", url: "screenshotUrl" },
+    //       component: dummySliceState,
+    //     })
+    //   );
 
-      expect(newState?.screenshotUrls).toEqual({
-        [dummyModelVariationID]: screenshotUI,
-      });
-      expect(newState?.__status).toBe(LibStatus.Modified);
-    });
+    //   expect(newState?.screenshotUrls).toEqual({
+    //     [dummyModelVariationID]: screenshotUI,
+    //   });
+    //   expect(newState?.__status).toBe(LibStatus.Modified);
+    // });
     it("should update the selected slice state given SLICE/SAVE action when variations are the same", () => {
       const newStateToSave = { ...dummySliceState, mockConfig: {} };
       const newState = selectedSliceReducer(

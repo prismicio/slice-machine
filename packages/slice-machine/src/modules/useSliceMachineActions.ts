@@ -59,8 +59,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   pushSliceCreator,
   removeSliceWidgetCreator,
@@ -69,6 +67,10 @@ import {
   saveSliceCreator,
   updateSliceWidgetMockCreator,
 } from "./selectedSlice/actions";
+import {
+  generateSliceCustomScreenshotCreator,
+  generateSliceScreenshotCreator,
+} from "./screenshots/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
@@ -370,13 +372,13 @@ const useSliceMachineActions = () => {
   };
 
   const generateSliceScreenshot = (
-    _variationId: string,
+    variationId: string,
     component: ComponentUI,
     setData: (data: any) => void
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
-        _variationId,
+        variationId,
         component,
         setData,
       })
