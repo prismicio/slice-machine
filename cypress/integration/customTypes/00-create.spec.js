@@ -1,5 +1,7 @@
 describe("Custom Types specs", () => {
   const root = "e2e-projects/cypress-next-app";
+  const packageJson = `${root}/package.json`;
+  const manifest = `${root}/sm.json`;
   const type = `${root}/prismicio.d.ts`;
   const name = "My Test";
   const id = "my_test";
@@ -42,5 +44,43 @@ describe("Custom Types specs", () => {
       `/ ${name} - Edited`
     );
     cy.readFile(type).should("contains", `${name} - Edited`);
+  });
+
+  it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", async () => {
+    // Stub manifest.
+    const manifestContents = await cy.readFile(manifest);
+    cy.writeFile(
+      manifestContents,
+      JSON.stringify({ ...manifestContents, generateTypes: true })
+    );
+
+    // Stub package.json.
+    const packageJsonContents = await cy.readFile(packageJson);
+    cy.writeFile(
+      packageJson,
+      JSON.stringify({
+        ...packageJsonContents,
+        dependencies: {
+          ...packageJsonContents.dependencies,
+          "@prismicio/types": "latest",
+        },
+      })
+    );
+
+    cy.setupSliceMachineUserContext();
+    cy.visit("/");
+
+    // loading spinner
+    cy.waitUntil(() => cy.get("[data-cy=empty-state-main-button]")).then(
+      () => true
+    );
+
+    //create custom type
+    cy.get("[data-cy=empty-state-main-button]").click();
+    cy.get("[data-cy=create-ct-modal]").should("be.visible");
+
+    cy.get("input[data-cy=ct-name-input]").type(name);
+    cy.get("[data-cy=create-ct-modal]").submit();
+    cy.readFile(type).should("contains", name);
   });
 });
