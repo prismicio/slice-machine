@@ -4,7 +4,7 @@
   "private": false,
   "main": "./build/index.js",
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "types": "./build/index.d.ts",
   "license": "MIT",

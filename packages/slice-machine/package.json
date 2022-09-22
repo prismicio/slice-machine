@@ -9,7 +9,7 @@
     "@models": "build/lib/models"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "dev": "concurrently \"next dev\" \"npm run dev --prefix ../../e2e-projects/next\"",
