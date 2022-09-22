@@ -141,12 +141,12 @@ const WidgetForm = (props) => {
         ))}
         {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          errors[accessors[isMulti ? 1 : 0]] ? (
+          errors.config?.[isMulti ? "multi" : "single"] ? (
             <Box sx={{ position: "absolute" }}>
               <Text as="span" variant="text.labelError" pl={0}>
                 {
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  errors[accessors[isMulti ? 1 : 0]]
+                  errors.config[isMulti ? "multi" : "single"]
                 }
               </Text>
             </Box>
