@@ -148,7 +148,7 @@ const CreateCustomTypeModal: React.FC = () => {
         title: "Create a new custom type",
       }}
     >
-      {({ errors, setValues, setFieldValue, values }) => (
+      {({ errors, setValues, setFieldValue, values, touched }) => (
         <Box>
           <SelectRepeatable />
           <InputBox
@@ -156,7 +156,7 @@ const CreateCustomTypeModal: React.FC = () => {
             label="Custom Type Name"
             dataCy="ct-name-input"
             placeholder="A display name for the Custom type"
-            error={errors.label}
+            error={touched.label ? errors.label : undefined}
             onChange={(e) => handleLabelChange(e, values, setValues)}
           />
           <InputBox
@@ -164,7 +164,7 @@ const CreateCustomTypeModal: React.FC = () => {
             dataCy="ct-id-input"
             label="Custom Type ID"
             placeholder="ID to query the Custom Type in the API (e.g. 'BlogPost')"
-            error={errors.id}
+            error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />
         </Box>
