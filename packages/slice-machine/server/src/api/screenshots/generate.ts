@@ -21,53 +21,26 @@ export interface ScreenshotResults {
   failure: FailedScreenshot[];
 }
 
-export async function generateScreenshotAndRemoveCustom(
-  env: BackendEnvironment,
-  libraryName: string,
-  sliceName: string
-): Promise<ScreenshotResults> {
-  const { screenshots, failure } = await generateScreenshot(
-    env,
-    libraryName,
-    sliceName
-  );
-
-  // Remove custom screenshot of success
-  Object.keys(screenshots).forEach((variationId) =>
-    removeCustomScreenshot(env, libraryName, sliceName, variationId)
-  );
-
-  return {
-    screenshots: screenshots,
-    failure: failure,
-  };
-}
-
 export async function generateScreenshot(
   env: BackendEnvironment,
   libraryName: string,
-  sliceName: string
+  sliceName: string,
+  variationId: string
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
     NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
   );
 
-  const variationIds: VariationSM["id"][] = slice.variations.map((v) => v.id);
-
-  const promises: Promise<ScreenshotUI>[] = variationIds.map(
+  const promises: Promise<ScreenshotUI>[] = [variationId].map(
     (id: VariationSM["id"]) => generateForVariation(env, libraryName, slice, id)
   );
 
   const results = await Promise.allSettled(promises);
 
   return results.reduce(
-    (
-      acc: ScreenshotResults,
-      result: PromiseSettledResult<ScreenshotUI>,
-      index: number
-    ) => {
-      const key = variationIds[index];
+    (acc: ScreenshotResults, result: PromiseSettledResult<ScreenshotUI>) => {
+      const key = variationId;
 
       const screenshots =
         result.status === "fulfilled"

@@ -6,6 +6,7 @@ export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
 export interface ScreenshotRequest {
   libraryName: string;
   sliceName: string;
+  variationId: string;
 }
 
 export interface ScreenshotResponse {

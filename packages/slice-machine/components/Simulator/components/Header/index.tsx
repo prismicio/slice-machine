@@ -7,12 +7,29 @@ import * as Links from "@lib/builders/SliceBuilder/links";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import { useState } from "react";
+import SaveButton from "@lib/builders/SliceBuilder/Header/SaveButton";
 
 type PropTypes = {
   Model: ComponentUI;
-  variation: Models.VariationSM | undefined;
+  variation: Models.VariationSM;
   handleScreenSizeChange: (screen: { size: Size }) => void;
   size: Size;
+};
+
+type ScreenShotSyncState = {
+  imageLoading: boolean;
+  done: boolean;
+  error: null | string;
+  status: number | null;
+};
+
+export const initialState: ScreenShotSyncState = {
+  imageLoading: false,
+  done: false,
+  error: null,
+  status: null,
 };
 
 const redirect = (
@@ -39,6 +56,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
   handleScreenSizeChange,
   size,
 }) => {
+  const { generateSliceScreenshot } = useSliceMachineActions();
+  const [data, setData] = useState<ScreenShotSyncState>(initialState);
+  const onTakingSliceScreenshot = () => {
+    generateSliceScreenshot(variation?.id, Model, setData);
+  };
+
   return (
     <Box
       sx={{
@@ -71,6 +94,20 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <ScreenSizes size={size} onClick={handleScreenSizeChange} />
+      </Flex>
+      <Flex
+        sx={{
+          alignItems: "flex-end",
+          flexDirection: "column",
+        }}
+      >
+        <SaveButton
+          onClick={onTakingSliceScreenshot}
+          loading={data.imageLoading}
+          disabled={data.imageLoading}
+        >
+          Take a screenshot
+        </SaveButton>
       </Flex>
     </Box>
   );

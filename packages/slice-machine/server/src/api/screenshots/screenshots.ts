@@ -1,5 +1,5 @@
 import getEnv from "../services/getEnv";
-import { generateScreenshotAndRemoveCustom } from "./generate";
+import { generateScreenshot } from "./generate";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
@@ -35,6 +35,7 @@ export function validateEnv(
 export default async function handler({
   libraryName,
   sliceName,
+  variationId,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 
@@ -47,10 +48,11 @@ export default async function handler({
   }
 
   try {
-    const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
+    const { screenshots, failure } = await generateScreenshot(
       env,
       libraryName,
-      sliceName
+      sliceName,
+      variationId
     );
 
     if (failure.length > 0) {
