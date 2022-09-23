@@ -138,42 +138,6 @@ export const selectedSliceReducer: Reducer<
         mockConfig: updatedConfig,
       };
     }
-    // case getType(generateSliceScreenshotCreator.success): {
-    //   if (!prevState) return prevState;
-
-    //   return {
-    //     ...prevState,
-    //     screenshotUrls: action.payload.screenshots,
-    //     __status: LibStatus.Modified,
-    //   };
-    // }
-    // case getType(generateSliceCustomScreenshotCreator.success): {
-    //   if (!prevState) return prevState;
-    //   const { variationId, screenshot } = action.payload;
-
-    //   const screenshots: Record<string, ScreenshotUI> =
-    //     prevState.model.variations.reduce((acc, variation) => {
-    //       if (variation.id === variationId) {
-    //         return {
-    //           ...acc,
-    //           [variationId]: screenshot,
-    //         };
-    //       }
-    //       if (prevState.screenshotUrls?.[variation.id]) {
-    //         return {
-    //           ...acc,
-    //           [variation.id]: prevState.screenshotUrls[variation.id],
-    //         };
-    //       }
-    //       return acc;
-    //     }, {});
-
-    //   return {
-    //     ...prevState,
-    //     screenshotUrls: screenshots,
-    //     __status: LibStatus.Modified,
-    //   };
-    //
     case getType(copyVariationSliceCreator): {
       if (!prevState) return prevState;
       const { key, name, copied } = action.payload;

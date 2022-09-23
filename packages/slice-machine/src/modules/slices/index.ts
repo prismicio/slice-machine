@@ -28,6 +28,7 @@ import {
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
 
 // Action Creators
 export const createSliceCreator = createAsyncAction(
