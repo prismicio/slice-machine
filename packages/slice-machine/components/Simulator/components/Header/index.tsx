@@ -8,8 +8,15 @@ import * as Links from "@lib/builders/SliceBuilder/links";
 import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ScreenshotButton from "@components/ScreenshotButton";
+import IframeRenderer from "../IframeRenderer";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { useSelector } from "react-redux";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
+import { selectSimulatorUrl } from "@src/modules/environment";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 type PropTypes = {
   Model: ComponentUI;
@@ -56,11 +63,41 @@ const Header: React.FunctionComponent<PropTypes> = ({
   handleScreenSizeChange,
   size,
 }) => {
-  const { generateSliceScreenshot } = useSliceMachineActions();
+  const { generateSliceScreenshot, checkSimulatorSetup } =
+    useSliceMachineActions();
   const [data, setData] = useState<ScreenShotSyncState>(initialState);
+
+  const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
+    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
+  }));
+
   const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(variation?.id, Model, setData);
+    checkSimulatorSetup(true, () =>
+      generateSliceScreenshot(variation.id, Model, setData)
+    );
   };
+
+  const { isWaitingForIframeCheck, simulatorUrl } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      simulatorUrl: selectSimulatorUrl(store),
+      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
+    })
+  );
+
+  const sliceView = useMemo(
+    () =>
+      Model && variation
+        ? [
+            {
+              sliceID: Model.model.id,
+              variationID: variation.id,
+            },
+          ]
+        : null,
+    [Model.model.id, variation?.id]
+  );
+
+  if (!sliceView) return null;
 
   return (
     <Box
@@ -103,11 +140,17 @@ const Header: React.FunctionComponent<PropTypes> = ({
       >
         <ScreenshotButton
           onClick={onTakingSliceScreenshot}
-          isLoading={data.imageLoading}
-          isDisabled={data.imageLoading}
-        >
-          Take a screenshot
-        </ScreenshotButton>
+          isLoading={data.imageLoading || isCheckingSetup}
+          isDisabled={data.imageLoading || isCheckingSetup}
+        />
+        {isWaitingForIframeCheck && (
+          <IframeRenderer
+            dryRun
+            size={Size.FULL}
+            simulatorUrl={simulatorUrl}
+            sliceView={sliceView}
+          />
+        )}
       </Flex>
     </Box>
   );
