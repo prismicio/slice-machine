@@ -185,14 +185,15 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
 
       const updatedRemoteSlices = remoteSlice
         ? state.remoteSlices.map((remoteSlice) => {
+            // modified
             if (remoteSlice.id !== component.model.id) return remoteSlice;
-            return updateScreenshots(remoteSlice);
+            return updateScreenshots(component.model);
           })
-        : [...state.remoteSlices, updateScreenshots(component.model)];
+        : [...state.remoteSlices, updateScreenshots(component.model)]; // new
 
       return {
         ...state,
-        remoteSlices: [...updatedRemoteSlices],
+        remoteSlices: updatedRemoteSlices,
       };
     }
     case getType(generateSliceScreenshotCreator.success):
