@@ -27,7 +27,7 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "../screenshots/actions";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
 
 // Action Creators
