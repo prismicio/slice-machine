@@ -1,5 +1,5 @@
 import getEnv from "../services/getEnv";
-import { generateScreenshot } from "./generate";
+import { generateScreenshotAndRemoveCustom } from "./generate";
 import {
   ScreenshotRequest,
   ScreenshotResponse,
@@ -48,7 +48,7 @@ export default async function handler({
   }
 
   try {
-    const { screenshots, failure } = await generateScreenshot(
+    const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
       env,
       libraryName,
       sliceName,

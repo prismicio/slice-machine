@@ -23,6 +23,27 @@ export interface ScreenshotResults {
   failure: FailedScreenshot[];
 }
 
+export async function generateScreenshotAndRemoveCustom(
+  env: BackendEnvironment,
+  libraryName: string,
+  sliceName: string,
+  variationId: string
+): Promise<ScreenshotResults> {
+  const { screenshots, failure } = await generateScreenshot(
+    env,
+    libraryName,
+    sliceName,
+    variationId
+  );
+
+  removeCustomScreenshot(env, libraryName, sliceName, variationId);
+
+  return {
+    screenshots: screenshots,
+    failure: failure,
+  };
+}
+
 export async function generateScreenshot(
   env: BackendEnvironment,
   libraryName: string,

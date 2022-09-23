@@ -9,7 +9,7 @@ import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
 import { useState } from "react";
-import SaveButton from "@lib/builders/SliceBuilder/Header/SaveButton";
+import ScreenshotButton from "@components/ScreenshotButton";
 
 type PropTypes = {
   Model: ComponentUI;
@@ -101,13 +101,13 @@ const Header: React.FunctionComponent<PropTypes> = ({
           flexDirection: "column",
         }}
       >
-        <SaveButton
+        <ScreenshotButton
           onClick={onTakingSliceScreenshot}
-          loading={data.imageLoading}
-          disabled={data.imageLoading}
+          isLoading={data.imageLoading}
+          isDisabled={data.imageLoading}
         >
           Take a screenshot
-        </SaveButton>
+        </ScreenshotButton>
       </Flex>
     </Box>
   );
