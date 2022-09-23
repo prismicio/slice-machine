@@ -1,5 +1,13 @@
-import React, { Fragment, memo, useRef, useState } from "react";
-import { Button, Flex, Image, Label, Spinner, Text } from "theme-ui";
+import React, { memo, useRef, useState } from "react";
+import {
+  Button,
+  Flex,
+  Image,
+  Label,
+  Spinner,
+  Text,
+  ThemeUIStyleObject,
+} from "theme-ui";
 import { acceptedImagesTypes } from "@lib/consts";
 import { MdInfoOutline } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -7,70 +15,77 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 
-const DefaultImage: React.FC<{ src: string | undefined }> = ({ src }) => (
+const MemoedImage = memo<{ src: string | undefined }>(({ src }) => (
   <Image src={src} alt="Preview image" />
-);
-const MemoedImage = memo(DefaultImage);
+));
 
-interface ImagePreviewProps {
+interface ScreenshotPreviewProps {
   src?: string;
-  onScreenshot: () => void;
-  imageLoading: boolean;
-  onHandleFile: (file: File) => void;
-  preventScreenshot: boolean;
+  screenshotProperties?: {
+    isLoading: boolean;
+    isDisabled: boolean;
+    onScreenshot?: () => void;
+    onCustomScreenshot?: (file: File) => void;
+  };
+  sx?: ThemeUIStyleObject;
 }
 
-const ImagePreview: React.FC<ImagePreviewProps> = ({
+export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
   src,
-  onScreenshot,
-  imageLoading,
-  onHandleFile,
-  preventScreenshot,
+  screenshotProperties,
+  sx = { height: "290px" },
 }) => {
-  const inputFile = useRef<HTMLInputElement>(null);
+  // states
+  const [display, setDisplay] = useState(false);
   const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
     isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
   }));
-  const [display, setDisplay] = useState(false);
+
+  // input ref
+  const inputFile = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File | undefined) => {
     if (inputFile?.current) {
-      file && onHandleFile(file);
+      file &&
+        screenshotProperties?.onCustomScreenshot &&
+        screenshotProperties?.onCustomScreenshot(file);
       inputFile.current.value = "";
     }
   };
 
   return (
     <div>
-      <input
-        id="input-file"
-        type="file"
-        ref={inputFile}
-        style={{ display: "none" }}
-        accept={acceptedImagesTypes.map((type) => `image/${type}`).join(",")}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleFile(e.target.files?.[0])
-        }
-      />
+      {screenshotProperties && (
+        <input
+          id="input-file"
+          type="file"
+          ref={inputFile}
+          style={{ display: "none" }}
+          accept={acceptedImagesTypes.map((type) => `image/${type}`).join(",")}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleFile(e.target.files?.[0])
+          }
+        />
+      )}
       <Flex
         sx={{
           position: "relative",
           alignItems: "center",
           justifyContent: "center",
-          height: "290px",
           overflow: "hidden",
           backgroundImage: "url(/pattern.png)",
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
           backgroundSize: "20px",
-          border: "1px solid #C9D0D8",
+          border: (t) => `1px solid ${t.colors?.borders as string}`,
           boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
           borderRadius: "4px",
+          ...sx,
         }}
         onMouseEnter={() => setDisplay(true)}
         onMouseLeave={() => setDisplay(false)}
       >
-        {display || imageLoading || isCheckingSetup ? (
+        {display && screenshotProperties && (
           <Flex
             sx={{
               width: "100%",
@@ -82,17 +97,23 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               zIndex: "0",
             }}
           >
-            {display ? (
-              <Fragment>
-                <Flex sx={{ flexDirection: "column" }}>
+            {screenshotProperties.isLoading || isCheckingSetup ? (
+              <Spinner />
+            ) : (
+              <Flex sx={{ flexDirection: "column" }}>
+                {screenshotProperties.onScreenshot && (
                   <Button
                     sx={{ mb: 3 }}
-                    onClick={onScreenshot}
-                    disabled={preventScreenshot}
-                    variant={preventScreenshot ? "disabled" : "primary"}
+                    onClick={screenshotProperties.onScreenshot}
+                    disabled={screenshotProperties.isDisabled}
+                    variant={
+                      screenshotProperties.isDisabled ? "disabled" : "primary"
+                    }
                   >
                     Take screenshot
                   </Button>
+                )}
+                {screenshotProperties.onCustomScreenshot && (
                   <Label
                     htmlFor="input-file"
                     variant="buttons.primary"
@@ -100,13 +121,11 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
                   >
                     Custom screenshot
                   </Label>
-                </Flex>
-              </Fragment>
-            ) : (
-              <Spinner />
+                )}
+              </Flex>
             )}
           </Flex>
-        ) : null}
+        )}
         {src ? (
           <MemoedImage src={src} />
         ) : (
@@ -125,5 +144,3 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     </div>
   );
 };
-
-export default ImagePreview;

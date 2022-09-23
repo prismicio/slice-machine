@@ -29,6 +29,7 @@ const Zone = ({
   getFieldMockConfig /* access mock configuration of given apiId */,
   renderHintBase /* render base (eg. path to slice) content for hints */,
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
+  dataCy,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -95,6 +96,7 @@ const Zone = ({
                 ml={2}
                 variant="buttons.darkSmall"
                 onClick={() => enterSelectMode()}
+                data-cy="add-new-field"
               >
                 <FaPlus
                   style={{
@@ -142,6 +144,8 @@ const Zone = ({
         onDragEnd={onDragEnd}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         onDeleteItem={onDeleteItem}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        dataCy={dataCy}
         NewFieldC={() =>
           newFieldData && (
             <NewField

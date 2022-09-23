@@ -9,6 +9,8 @@ import {
 } from "../../../../lib/models/common/ComponentUI";
 import { Screenshots } from "../../../../lib/models/common/Screenshots";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
+import { hash } from "@slicemachine/core/build/utils/str";
+
 import * as IO from "../../../../lib/io";
 
 type FailedScreenshot = {
@@ -87,7 +89,10 @@ async function generateForVariation(
     screenshotUrl,
     pathToFile,
   });
-  return createScreenshotUI(env.baseUrl, pathToFile);
+  return createScreenshotUI(env.baseUrl, {
+    path: pathToFile,
+    hash: hash(Files.readString(pathToFile)),
+  });
 }
 
 export function removeCustomScreenshot(

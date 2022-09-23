@@ -1,6 +1,5 @@
-import Link from "next/link";
 import React, { Fragment } from "react";
-import { Flex, Box, Button, Link as ThemeLink, Spinner, Text } from "theme-ui";
+import { Flex, Button, Link as ThemeLink, Spinner, Text } from "theme-ui";
 
 import Container from "components/Container";
 import CreateCustomTypeModal from "components/Forms/CreateCustomTypeModal";
@@ -16,61 +15,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
 import { MdSpaceDashboard } from "react-icons/md";
-import { FrontEndCustomType } from "@src/modules/availableCustomTypes/types";
-
-const CustomTypeTable: React.FC<{ customTypes: FrontEndCustomType[] }> = ({
-  customTypes,
-}) => {
-  const firstColumnWidth = "35%";
-  const secondColumnWidth = "50%";
-  const thirdColumnWidth = "15%";
-
-  return (
-    <Box
-      as={"table"}
-      sx={{
-        mt: "36px",
-      }}
-    >
-      <thead>
-        <tr>
-          <Box as={"th"} sx={{ width: firstColumnWidth }}>
-            Name
-          </Box>
-          <Box as={"th"} sx={{ width: secondColumnWidth }}>
-            API ID
-          </Box>
-          <Box as={"th"} sx={{ width: thirdColumnWidth }}>
-            Type
-          </Box>
-        </tr>
-      </thead>
-      <tbody>
-        {customTypes.map((customType) => (
-          <Link
-            passHref
-            href={`/cts/${customType.local.id}`}
-            key={customType.local.id}
-          >
-            <tr key={customType.local.id}>
-              <Box as={"td"} style={{ width: firstColumnWidth }}>
-                <Text sx={{ fontWeight: 500 }}>{customType.local.label}</Text>
-              </Box>
-              <Box as={"td"} style={{ width: secondColumnWidth }}>
-                {customType.local.id}
-              </Box>
-              <Box as={"td"} style={{ width: thirdColumnWidth }}>
-                {customType.local.repeatable
-                  ? "Repeatable Type"
-                  : "Single Type"}
-              </Box>
-            </tr>
-          </Link>
-        ))}
-      </tbody>
-    </Box>
-  );
-};
+import { CustomTypeTable } from "@components/CustomTypeTable/ctPage";
+import { VIDEO_WHAT_ARE_CUSTOM_TYPES } from "../lib/consts";
 
 const CustomTypes: React.FunctionComponent = () => {
   const { openCreateCustomTypeModal } = useSliceMachineActions();
@@ -125,7 +71,7 @@ const CustomTypes: React.FunctionComponent = () => {
             onCreateNew={openCreateCustomTypeModal}
             isLoading={isCreatingCustomType}
             buttonText={"Create one"}
-            videoPublicIdUrl="placeholders/What_are_Custom_Types_swrc44"
+            videoPublicIdUrl={VIDEO_WHAT_ARE_CUSTOM_TYPES}
             documentationComponent={
               <>
                 Custom Types are models for your documents. They are the place

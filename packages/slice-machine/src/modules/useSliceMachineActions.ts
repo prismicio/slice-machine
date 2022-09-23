@@ -39,7 +39,6 @@ import {
   replaceSharedSliceCreator,
   createSliceZoneCreator,
   saveCustomTypeCreator,
-  pushCustomTypeCreator,
   addFieldIntoGroupCreator,
   deleteFieldIntoGroupCreator,
   reorderFieldIntoGroupCreator,
@@ -60,7 +59,6 @@ import {
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
   initSliceStoreCreator,
-  pushSliceCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
   replaceSliceWidgetCreator,
@@ -71,9 +69,16 @@ import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
 } from "./screenshots/actions";
+import {
+  pushCustomTypeCreator,
+  pushSliceCreator,
+} from "./pushChangesSaga/actions";
 import { Models } from "@slicemachine/core";
 import { ComponentUI } from "../../lib/models/common/ComponentUI";
 import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
+import { changesPushCreator } from "./pushChangesSaga";
+import { SyncError } from "@src/models/SyncError";
+import { ModelStatusInformation } from "@src/hooks/useModelStatus";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -448,6 +453,23 @@ const useSliceMachineActions = () => {
       })
     );
 
+  const pushChanges = (
+    unSyncedSlices: ReadonlyArray<ComponentUI>,
+    unSyncedCustomTypes: ReadonlyArray<CustomTypeSM>,
+    modelStatuses: ModelStatusInformation["modelsStatuses"],
+    onChangesPushed: (pushed: string | null) => void,
+    handleError: (e: SyncError | null) => void
+  ) =>
+    dispatch(
+      changesPushCreator({
+        unSyncedSlices,
+        unSyncedCustomTypes,
+        modelStatuses,
+        onChangesPushed,
+        handleError,
+      })
+    );
+
   // Toaster store
   const openToaster = (message: string, type: ToasterType) =>
     dispatch(openToasterCreator({ message, type }));
@@ -461,6 +483,7 @@ const useSliceMachineActions = () => {
         localCustomTypes: serverState.customTypes,
         libraries: serverState.libraries,
         remoteSlices: serverState.remoteSlices,
+        clientError: serverState.clientError,
       })
     );
   };
@@ -530,6 +553,7 @@ const useSliceMachineActions = () => {
     openRenameSliceModal,
     closeRenameSliceModal,
     openToaster,
+    pushChanges,
   };
 };
 

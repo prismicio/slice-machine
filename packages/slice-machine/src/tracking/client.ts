@@ -20,6 +20,8 @@ import {
   CustomTypeSaved,
   CustomTypePushed,
   CreateSlice,
+  ScreenshotTaken,
+  ChangesPushed,
 } from "./types";
 
 export class SMTracker {
@@ -110,13 +112,15 @@ export class SMTracker {
 
   async trackClickOnVideoTutorials(
     framework: Frameworks,
-    version: string
+    version: string,
+    video: string
   ): Promise<void> {
     const payload: OpenVideoTutorials = {
       name: EventNames.OpenVideoTutorials,
       props: {
         framework,
         slicemachineVersion: version,
+        video,
       },
     };
     await this.#trackEvent(payload);
@@ -273,6 +277,23 @@ export class SMTracker {
       name: EventNames.SliceCreated,
       props: data,
     };
+    return this.#trackEvent(payload);
+  }
+
+  async trackScreenshotTaken(data: ScreenshotTaken["props"]): Promise<void> {
+    const payload: ScreenshotTaken = {
+      name: EventNames.ScreenshotTaken,
+      props: data,
+    };
+    return this.#trackEvent(payload);
+  }
+
+  async trackChangesPushed(data: ChangesPushed["props"]): Promise<void> {
+    const payload: ChangesPushed = {
+      name: EventNames.ChangesPushed,
+      props: data,
+    };
+
     return this.#trackEvent(payload);
   }
 }

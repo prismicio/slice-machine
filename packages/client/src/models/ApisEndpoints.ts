@@ -42,7 +42,7 @@ export const DevApisEndpoints = (): ApisEndpoints => {
       - Acl Provider API: ${aclApi ? "👍" : "⛔️"}
     `);
     // Stopping slice machine
-    process.exit(0);
+    process.exit(1);
   }
 
   return {

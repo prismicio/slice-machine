@@ -5,35 +5,26 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import SaveButton from "./SaveButton";
+import SaveButton from "@components/SaveButton";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
 
 const Header: React.FC<{
   component: ComponentUI;
+  status: ModelStatus;
   isTouched: boolean | undefined;
   variation: VariationSM;
   onSave: () => void;
-  onPush: () => void;
   isLoading: boolean;
   imageLoading?: boolean;
-}> = ({
-  component,
-  isTouched,
-  variation,
-  onSave,
-  onPush,
-  isLoading,
-  imageLoading = false,
-}) => {
+}> = ({ component, isTouched, variation, onSave, isLoading }) => {
   const router = useRouter();
   const [showVariationModal, setShowVariationModal] = useState(false);
-
-  const unSynced = ["MODIFIED", "NEW_SLICE"].indexOf(component.__status) !== -1;
 
   const { openRenameSliceModal, copyVariationSlice } = useSliceMachineActions();
   const { theme } = useThemeUI();
@@ -120,16 +111,10 @@ const Header: React.FC<{
               }}
             />
             <SaveButton
-              onClick={isTouched ? onSave : onPush}
-              loading={isLoading && !imageLoading}
-              disabled={isLoading || imageLoading || (!isTouched && !unSynced)}
-            >
-              {isTouched
-                ? "Save model to filesystem"
-                : unSynced
-                ? "Push Slice to Prismic"
-                : "Your Slice is up to date!"}
-            </SaveButton>
+              isSaving={isLoading}
+              hasPendingModifications={!!isTouched}
+              onClick={onSave}
+            />
           </Flex>
           <VariationModal
             isOpen={showVariationModal}

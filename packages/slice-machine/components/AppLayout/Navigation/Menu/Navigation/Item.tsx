@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Box, Link as ThemeLink } from "theme-ui";
+import { Box, Flex, Link as ThemeLink } from "theme-ui";
 import type { LinkProps } from "../../";
 
 export interface ItemProps {
@@ -38,9 +38,12 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(
             onClick={onClick}
           >
             <link.Icon size={24} />
-            <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
-              {link.title}
-            </Box>
+            <Flex sx={{ flex: 1, justifyContent: "space-between" }}>
+              <Box as="span" sx={{ ml: 2, fontWeight: 400 }}>
+                {link.title}
+              </Box>
+              {link.RightElement}
+            </Flex>
           </ThemeLink>
         </Link>
       </Box>

@@ -14,18 +14,23 @@ const AppTheme = (): Theme =>
       backgroundClear: "#FFF",
       primary: "#6E52FF",
       purpleLight: "#F6F1FC",
+      purpleLight01: "#6548FF1A",
       badge: {
-        published: {
-          bg: "#E9F6EE",
-          color: "#27AE60",
-        },
         new: {
-          bg: "#F6F1FC",
-          color: "#AC7EE9",
+          bg: "#C2EFC899",
+          color: "#32A943",
         },
         modified: {
           bg: "#FDF4EC",
           color: "#F2994A",
+        },
+        synced: {
+          bg: "#EFECFF",
+          color: "#5B3DF5",
+        },
+        unknown: {
+          bg: "#F3F5F7",
+          color: "#9AA4AF",
         },
       },
       codeBlockBorder: "#545454",
@@ -39,6 +44,7 @@ const AppTheme = (): Theme =>
       grey02: "#E6E6EA",
       grey04: "#9AA4AF",
       grey05: "#667587",
+      greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#C9D0D8",
       deep: "#0E2150",
       deep1: "#A0ADE7",
@@ -151,14 +157,14 @@ const AppTheme = (): Theme =>
       },
     },
     badges: {
-      PUBLISHED: {
+      SYNCED: {
         fontWeight: "body",
-        color: "badge.published.color",
-        bg: "badge.published.bg",
+        color: "badge.synced.color",
+        bg: "badge.synced.bg",
         px: 1,
         py: "1px",
       },
-      NEW_SLICE: {
+      NEW: {
         fontWeight: "body",
         color: "badge.new.color",
         bg: "badge.new.bg",
@@ -169,6 +175,13 @@ const AppTheme = (): Theme =>
         fontWeight: "body",
         color: "badge.modified.color",
         bg: "badge.modified.bg",
+        px: 1,
+        py: "1px",
+      },
+      UNKNOWN: {
+        fontWeight: "body",
+        color: "badge.unknown.color",
+        bg: "badge.unknown.bg",
         px: 1,
         py: "1px",
       },
@@ -667,6 +680,13 @@ const AppTheme = (): Theme =>
             borderBottomRightRadius: "4px",
             borderTopRightRadius: "4px",
           },
+        },
+        "thead tr.transparent": {
+          bg: "transparent",
+          color: "greyTransparent",
+        },
+        "thead tr.small": {
+          fontSize: "12px",
         },
         "tbody tr": {
           cursor: "pointer",

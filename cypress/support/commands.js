@@ -3,12 +3,12 @@ import "cypress-wait-until";
 
 Cypress.Commands.add(
   "setupSliceMachineUserContext",
-  (
-    hasSendAReview = true,
-    isOnboarded = true,
-    updatesViewed = {},
-    hasSeenTutorialsTooTip = false
-  ) => {
+  ({
+    hasSendAReview, // boolean
+    isOnboarded, // boolean
+    updatesViewed, // object
+    hasSeenTutorialsTooTip, // boolean
+  }) => {
     return cy.setLocalStorage(
       "persist:root",
       JSON.stringify({

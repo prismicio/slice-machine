@@ -1,30 +1,22 @@
 import { BackendEnvironment } from "../../../../lib/models/common/Environment";
 import { ApiError, isApiError } from "../../../../lib/models/server/ApiResult";
 import { onError } from "../common/error";
-import { SliceSM } from "@slicemachine/core/build/models";
 import { Acl, ClientError } from "@slicemachine/client";
 
 export const purge = async (
   env: BackendEnvironment,
-  slices: ReadonlyArray<SliceSM>,
   sliceId: string
 ): Promise<{ err?: ApiError }> => {
-  if (slices.find((e) => e.id === sliceId)) {
-    console.log("\n[slice/push]: purging images folder");
+  return env.client
+    .deleteScreenshotFolder(sliceId)
+    .then(() => ({}))
+    .catch(() => {
+      const msg =
+        "[slice/push] An error occurred while purging slice folder - please contact support";
+      console.error(msg);
 
-    return env.client
-      .deleteScreenshotFolder(sliceId)
-      .then(() => ({}))
-      .catch(() => {
-        const msg =
-          "[slice/push] An error occurred while purging slice folder - please contact support";
-        console.error(msg);
-
-        return { err: onError(msg) };
-      });
-  }
-
-  return {};
+      return { err: onError(msg) };
+    });
 };
 
 export const upload = async (
@@ -33,8 +25,6 @@ export const upload = async (
   variationId: string,
   filePath: string
 ): Promise<{ s3ImageUrl?: string; err?: ApiError }> => {
-  console.log("[slice/push]: uploading variation preview");
-
   const aclOrErr: Acl | ApiError = await env.client
     .createAcl()
     .catch((error: ClientError) => {
@@ -55,7 +45,7 @@ export const upload = async (
     .then((assetUrl) => ({ s3ImageUrl: assetUrl }))
     .catch((error: ClientError) => {
       const msg =
-        "[slice/push] An error occurred while uploading files - please contact support";
+        "[slice/push] An error occurred while uploading screenshots - please contact support";
       console.error(msg);
       console.error(`Full error: ${error.message}`);
 

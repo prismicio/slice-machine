@@ -17,6 +17,8 @@ import {
   normalizeFrontendCustomType,
   normalizeFrontendCustomTypes,
 } from "@src/normalizers/customType";
+import { saveCustomTypeCreator } from "../selectedCustomType/actions";
+import { pushCustomTypeCreator } from "../pushChangesSaga/actions";
 
 // Action Creators
 export const createCustomTypeCreator = createAsyncAction(
@@ -52,7 +54,9 @@ export const renameCustomTypeCreator = createAsyncAction(
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof createCustomTypeCreator>
-  | ActionType<typeof renameCustomTypeCreator>;
+  | ActionType<typeof renameCustomTypeCreator>
+  | ActionType<typeof saveCustomTypeCreator>
+  | ActionType<typeof pushCustomTypeCreator>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -114,13 +118,42 @@ export const availableCustomTypesReducer: Reducer<
         ...normalizedNewCustomType,
       };
     }
+
+    case getType(saveCustomTypeCreator.success): {
+      if (!state) return state;
+      const localCustomType = action.payload.customType;
+
+      return {
+        ...state,
+        [localCustomType.id]: {
+          ...state[localCustomType.id],
+          local: localCustomType,
+        },
+      };
+    }
+
+    case getType(pushCustomTypeCreator.success): {
+      if (!state) return state;
+      const customTypeId = action.payload.customTypeId;
+      const localCustomType: CustomTypeSM = state[customTypeId].local;
+
+      return {
+        ...state,
+        [customTypeId]: {
+          local: localCustomType,
+          remote: localCustomType,
+        },
+      };
+    }
+
     case getType(renameCustomTypeCreator.success): {
       const id = action.payload.customTypeId;
       const newName = action.payload.newCustomTypeName;
+      const newLocalCustomType = { ...state[id].local, label: newName };
 
       const newCustomType = {
         ...state[id],
-        local: { ...state[id].local, label: newName },
+        local: newLocalCustomType,
       };
 
       return {

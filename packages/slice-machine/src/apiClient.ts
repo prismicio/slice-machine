@@ -125,11 +125,13 @@ export const saveSliceApiClient = (
 
 export const pushSliceApiClient = (
   component: ComponentUI
-): Promise<AxiosResponse> => {
-  return axios.get(
-    `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
-    defaultAxiosConfig
-  );
+): Promise<Record<string, string | null>> => {
+  return axios
+    .get<Record<string, string | null>>(
+      `/api/slices/push?sliceName=${component.model.name}&from=${component.from}`,
+      defaultAxiosConfig
+    )
+    .then((response) => response.data);
 };
 
 /** Auth Routes **/

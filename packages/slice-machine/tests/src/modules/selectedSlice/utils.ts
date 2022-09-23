@@ -2,7 +2,7 @@ import jsonModel from "./__mockData__/model.json";
 import mocks from "./__mockData__/mocks.json";
 import { SliceMock, Slices } from "@slicemachine/core/build/models";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
-import { ComponentUI, LibStatus } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 
 export const getSelectedSliceDummyData = () => {
   const dummyModel = Slices.toSM(jsonModel as unknown as SharedSlice);
@@ -20,15 +20,13 @@ export const getSelectedSliceDummyData = () => {
   };
 
   const dummySliceState: ComponentUI = {
-    __status: LibStatus.NewSlice,
-    screenshotUrls: {},
     from: "slices/libName",
     href: "slices--libName",
     pathToSlice: "./slices/libName",
     fileName: "index",
     extension: "js",
     model: dummyModel,
-    screenshotPaths: {},
+    screenshots: {},
     mock: mocks as SliceMock,
     mockConfig: dummyMockConfig,
   };

@@ -1,20 +1,12 @@
 import { testSaga } from "redux-saga-test-plan";
-import { pushSliceSaga, saveSliceSaga } from "@src/modules/selectedSlice/sagas";
+import { saveSliceSaga } from "../../../../src/modules/selectedSlice/sagas";
 import { getSelectedSliceDummyData } from "./utils";
-import {
-  pushSliceCreator,
-  saveSliceCreator,
-} from "../../../../src/modules/selectedSlice/actions";
-import {
-  pushSliceApiClient,
-  saveSliceApiClient,
-} from "../../../../src/apiClient";
+import { saveSliceCreator } from "../../../../src/modules/selectedSlice/actions";
+import { saveSliceApiClient } from "../../../../src/apiClient";
 import {
   openToasterCreator,
   ToasterType,
 } from "../../../../src/modules/toaster";
-import { getRemoteSlice } from "@src/modules/slices";
-import { SliceSM } from "@slicemachine/core/build/models";
 
 const { dummySliceState } = getSelectedSliceDummyData();
 
@@ -34,16 +26,7 @@ describe("[Selected Slice sagas]", () => {
 
       saga
         .next({ status: 200, data: {} })
-        .select(getRemoteSlice, dummySliceState.model.id);
-
-      const remoteSlice: SliceSM = { ...dummySliceState.model, variations: [] };
-
-      saga.next(remoteSlice).put(
-        saveSliceCreator.success({
-          component: dummySliceState,
-          remoteSliceVariations: remoteSlice.variations,
-        })
-      );
+        .put(saveSliceCreator.success({ component: dummySliceState }));
 
       saga.next().isDone();
       expect(mockSetData).toHaveBeenCalledWith({
@@ -68,58 +51,6 @@ describe("[Selected Slice sagas]", () => {
       saga.throw(new Error()).put(
         openToasterCreator({
           message: "Internal Error: Models & mocks not generated",
-          type: ToasterType.ERROR,
-        })
-      );
-      saga.next().isDone();
-    });
-  });
-  describe("[pushSliceSaga]", () => {
-    it("should call the api and dispatch the success action", () => {
-      const mockOnPush = jest.fn();
-      const saga = testSaga(
-        pushSliceSaga,
-        pushSliceCreator.request({
-          component: dummySliceState,
-          onPush: mockOnPush,
-        })
-      );
-
-      saga.next().call(pushSliceApiClient, dummySliceState);
-
-      saga
-        .next({ status: 200, data: {} })
-        .put(pushSliceCreator.success({ component: dummySliceState }));
-
-      saga.next().put(
-        openToasterCreator({
-          message: "Model was correctly saved to Prismic!",
-          type: ToasterType.SUCCESS,
-        })
-      );
-
-      saga.next().isDone();
-      expect(mockOnPush).toHaveBeenCalledWith({
-        done: true,
-        error: null,
-        imageLoading: false,
-        loading: false,
-        status: 200,
-      });
-    });
-    it("should open a error toaster on internal error", () => {
-      const mockOnPush = jest.fn();
-      const saga = testSaga(
-        pushSliceSaga,
-        pushSliceCreator.request({
-          component: dummySliceState,
-          onPush: mockOnPush,
-        })
-      ).next();
-
-      saga.throw(new Error()).put(
-        openToasterCreator({
-          message: "Internal Error: Slice was not pushed",
           type: ToasterType.ERROR,
         })
       );

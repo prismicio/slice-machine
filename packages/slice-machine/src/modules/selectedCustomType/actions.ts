@@ -10,7 +10,6 @@ import { renameCustomTypeCreator } from "../availableCustomTypes";
 export type SelectedCustomTypeActions =
   | ActionType<typeof initCustomTypeStoreCreator>
   | ActionType<typeof saveCustomTypeCreator>
-  | ActionType<typeof pushCustomTypeCreator>
   | ActionType<typeof updateFieldMockConfigCreator>
   | ActionType<typeof deleteFieldMockConfigCreator>
   | ActionType<typeof updateGroupFieldMockConfigCreator>
@@ -42,13 +41,7 @@ export const saveCustomTypeCreator = createAsyncAction(
   "CUSTOM_TYPE/SAVE.REQUEST",
   "CUSTOM_TYPE/SAVE.RESPONSE",
   "CUSTOM_TYPE/SAVE.FAILURE"
-)<undefined, undefined>();
-
-export const pushCustomTypeCreator = createAsyncAction(
-  "CUSTOM_TYPE/PUSH.REQUEST",
-  "CUSTOM_TYPE/PUSH.RESPONSE",
-  "CUSTOM_TYPE/PUSH.FAILURE"
-)<undefined, undefined>();
+)<undefined, { customType: CustomTypeSM }>();
 
 // Mock config actions
 export const updateFieldMockConfigCreator = createAction(

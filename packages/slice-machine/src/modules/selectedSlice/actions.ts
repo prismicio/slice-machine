@@ -5,8 +5,6 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
-import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
-import { VariationSM } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -17,7 +15,6 @@ export type SelectedSliceActions =
   | ActionType<typeof updateSliceWidgetMockCreator>
   | ActionType<typeof deleteSliceWidgetMockCreator>
   | ActionType<typeof saveSliceCreator>
-  | ActionType<typeof pushSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>;
 
@@ -80,21 +77,6 @@ export const saveSliceCreator = createAsyncAction(
   {
     component: ComponentUI;
     setData: (data: any) => void;
-  },
-  {
-    component: ComponentUI;
-    remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
-  }
->();
-
-export const pushSliceCreator = createAsyncAction(
-  "SLICE/PUSH.REQUEST",
-  "SLICE/PUSH.RESPONSE",
-  "SLICE/PUSH.FAILURE"
-)<
-  {
-    component: ComponentUI;
-    onPush: (data: SliceBuilderState) => void;
   },
   {
     component: ComponentUI;

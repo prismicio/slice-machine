@@ -1,39 +1,16 @@
-import { Fragment } from "react";
-import {
-  Theme,
-  Text,
-  Card as Themecard,
-  Box,
-  Heading,
-  Flex,
-  Badge,
-} from "theme-ui";
+import React from "react";
+import { Theme, Text, Card as Themecard, Heading, Flex, Badge } from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
-
-import { ComponentUI, LibStatus } from "../../common/ComponentUI";
-
+import { ComponentUI } from "../../common/ComponentUI";
 import { Link as LinkUtil } from "../Link";
 import { WrapperType, WrapperByType } from "./wrappers";
-import { TextWithTooltip } from "../../../../components/Tooltip/TextWithTooltip";
+import { TextWithTooltip } from "@components/Tooltip/TextWithTooltip";
+import { ScreenshotPreview } from "@components/ScreenshotPreview";
+import { StatusBadge } from "@components/StatusBadge";
+import { ModelStatus } from "@lib/models/common/ModelStatus";
+import { AuthStatus } from "@src/modules/userContext/types";
 
-const StateBadgeText = {
-  [LibStatus.Modified]: "Modified",
-  [LibStatus.Synced]: "Synced",
-  [LibStatus.Invalid]: "Contains errors",
-  [LibStatus.NewSlice]: "New",
-};
-
-const StatusBadge = ({ libStatus }: { libStatus: LibStatus }) => {
-  const status = StateBadgeText[libStatus];
-
-  return (
-    <Badge mr="2" variant={libStatus}>
-      {status}
-    </Badge>
-  );
-};
-
-const borderedSx = (sx: ThemeUIStyleObject) => ({
+const borderedSx = (sx: ThemeUIStyleObject = {}) => ({
   border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
@@ -46,7 +23,7 @@ const borderedSx = (sx: ThemeUIStyleObject) => ({
   },
 });
 
-const defaultSx = (sx: ThemeUIStyleObject) => ({
+const defaultSx = (sx: ThemeUIStyleObject = {}) => ({
   bg: "transparent",
   border: "none",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
@@ -72,72 +49,65 @@ const SliceVariations = ({
   ) : null;
 };
 
-const SliceThumbnail = ({
-  heightInPx,
-  screenshotUrl,
-  withShadow = true,
+const SliceDescription = ({
+  slice,
+  StatusOrCustom,
 }: {
-  heightInPx: string;
-  screenshotUrl?: string;
-  withShadow: boolean;
-}) => {
-  return (
-    <Box
-      sx={{
-        backgroundColor: "headSection",
-        backgroundRepeat: "repeat",
-        backgroundSize: "15px",
-        backgroundImage: "url(/pattern.png)",
-        height: heightInPx,
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "6px",
-        border: (t) => `1px solid ${t.colors?.borders as string}`,
-        boxShadow: withShadow ? "0px 8px 14px rgba(0, 0, 0, 0.1)" : "none",
-      }}
-    >
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          backgroundSize: "contain",
-          backgroundPosition: "50%",
-          backgroundRepeat: "no-repeat",
-          backgroundImage: screenshotUrl
-            ? "url(" + `${screenshotUrl}` + ")"
-            : "none",
-        }}
-      />
-    </Box>
-  );
-};
+  slice: ComponentUI;
+  StatusOrCustom:
+    | {
+        status: ModelStatus;
+        authStatus: AuthStatus;
+        isOnline: boolean;
+      }
+    | React.FC<{ slice: ComponentUI }>;
+}) => (
+  <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
+    <Flex sx={{ alignItems: "center" }}>
+      {"status" in StatusOrCustom ? (
+        <StatusBadge
+          modelType="Slice"
+          modelId={slice.model.id}
+          status={StatusOrCustom.status}
+          authStatus={StatusOrCustom.authStatus}
+          isOnline={StatusOrCustom.isOnline}
+        />
+      ) : (
+        <StatusOrCustom slice={slice} />
+      )}
+      <TextWithTooltip text={slice.model.name} as="h6" />
+    </Flex>
+    <SliceVariations
+      variations={slice.model.variations}
+      hideVariations={false}
+    />
+  </Flex>
+);
 
 export const SharedSlice = {
   render({
     bordered,
     slice,
-    displayStatus,
     Wrapper,
-    CustomStatus,
+    StatusOrCustom,
 
-    thumbnailHeightPx = "280px",
+    thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
     sx,
   }: {
-    bordered?: boolean;
-    displayStatus?: boolean;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    CustomStatus?: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Wrapper?: any /* ? */;
     slice: ComponentUI;
+    bordered?: boolean;
+    StatusOrCustom:
+      | {
+          status: ModelStatus;
+          authStatus: AuthStatus;
+          isOnline: boolean;
+        }
+      | React.FC<{ slice: ComponentUI }>;
+    Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sx?: any;
+    sx?: ThemeUIStyleObject;
   }) {
     const defaultVariation = ComponentUI.variation(slice);
     if (!defaultVariation) {
@@ -146,49 +116,24 @@ export const SharedSlice = {
     const variationId = defaultVariation.id;
     const link = LinkUtil.variation(slice.href, slice.model.name, variationId);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const CardWrapper = Wrapper || WrapperByType[wrapperType];
 
-    const screenshotUrl = slice?.screenshotUrls?.[variationId]?.url;
+    const screenshotUrl = slice?.screenshots?.[variationId]?.url;
 
     return (
       <CardWrapper link={link} slice={slice}>
         <Themecard
           role="button"
           aria-pressed="false"
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
-          <SliceThumbnail
-            withShadow={false}
-            screenshotUrl={screenshotUrl}
-            heightInPx={thumbnailHeightPx}
+          <ScreenshotPreview
+            src={screenshotUrl}
+            sx={{
+              height: thumbnailHeightPx,
+            }}
           />
-          <Flex
-            mt={3}
-            sx={{ alignItems: "center", justifyContent: "space-between" }}
-          >
-            <Flex
-              sx={{
-                alignItems: "center",
-              }}
-            >
-              {CustomStatus ? (
-                <CustomStatus slice={slice} />
-              ) : (
-                <Fragment>
-                  {displayStatus && slice.__status ? (
-                    <StatusBadge libStatus={slice.__status} />
-                  ) : null}
-                </Fragment>
-              )}
-              <TextWithTooltip text={slice.model.name} as="h6" />
-            </Flex>
-            <SliceVariations
-              variations={slice.model.variations}
-              hideVariations={false}
-            />
-          </Flex>
+          <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
         </Themecard>
       </CardWrapper>
     );
@@ -200,7 +145,7 @@ export const NonSharedSlice = {
     bordered,
     slice,
     displayStatus,
-    thumbnailHeightPx = "280px",
+    thumbnailHeightPx = "290px",
     wrapperType = WrapperType.nonClickable,
     sx,
   }: {
@@ -219,7 +164,7 @@ export const NonSharedSlice = {
       <Wrapper link={undefined}>
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument */}
         <Themecard sx={bordered ? borderedSx(sx) : defaultSx(sx)}>
-          <SliceThumbnail withShadow={false} heightInPx={thumbnailHeightPx} />
+          <ScreenshotPreview sx={{ height: thumbnailHeightPx }} />
           <Flex
             mt={3}
             sx={{ alignItems: "center", justifyContent: "space-between" }}
