@@ -1,11 +1,17 @@
 import fs from "fs";
-import { jest } from "@jest/globals";
+import { describe, test } from "@jest/globals";
 import {} from "../../../lib/io/Types";
 
-test.skip("writes types if `@prismicio/types` is installed and `generateTypes` is missing", () => {});
+describe("upsert", () => {
+  describe("`@prismicio/types` is installed", () => {
+    test("writes types if `generateTypes` is missing", () => {});
 
-test.skip("writes types if `@prismicio/types` is installed and `generateTypes` is `true`", () => {});
+    test("writes types if `generateTypes` is `true`", () => {});
+  });
 
-test.skip("does not write types if `@prismicio/types` is not installed and `generateTypes` is missing", () => {});
+  describe("`@prismicio/types` is not installed", () => {
+    test("does not write types if `@prismicio/types` is not installed and `generateTypes` is missing", () => {});
 
-test.skip("does not write types if `@prismicio/types` is installed and `generateTypes` is `false`", () => {});
+    test("does not write types if `@prismicio/types` is installed and `generateTypes` is `false`", () => {});
+  });
+});
