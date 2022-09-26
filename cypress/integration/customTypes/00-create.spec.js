@@ -81,6 +81,7 @@ describe("Custom Types specs", () => {
 
     cy.get("input[data-cy=ct-name-input]").type(name);
     cy.get("[data-cy=create-ct-modal]").submit();
+    cy.location("pathname", { timeout: 15000 }).should("eq", `/cts/${id}`);
     cy.readFile(type).should("contains", name);
   });
 });
