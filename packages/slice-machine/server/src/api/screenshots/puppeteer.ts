@@ -6,6 +6,7 @@ import Files from "../../../../lib/utils/files";
 interface PuppeteerHandleProps {
   screenshotUrl: string;
   pathToFile: string;
+  screenWidth: number;
 }
 
 let puppeteerBrowserPromise: Promise<puppeteer.Browser> | null = null;
@@ -14,14 +15,14 @@ export default {
   handleScreenshot: async ({
     screenshotUrl,
     pathToFile,
+    screenWidth,
   }: PuppeteerHandleProps): Promise<void> => {
     const { warning } = await testUrl(screenshotUrl);
     if (warning) throw new Error(warning);
 
-    if (!puppeteerBrowserPromise)
-      puppeteerBrowserPromise = puppeteer.launch({
-        args: [`--window-size=1200,800`],
-      });
+    puppeteerBrowserPromise = puppeteer.launch({
+      defaultViewport: { width: screenWidth, height: 800 },
+    });
     const puppeteerBrowser = await puppeteerBrowserPromise;
 
     return generateScreenshot(

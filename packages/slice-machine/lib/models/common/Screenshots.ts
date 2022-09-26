@@ -7,6 +7,7 @@ export interface ScreenshotRequest {
   libraryName: string;
   sliceName: string;
   variationId: string;
+  screenWidth: string;
 }
 
 export interface ScreenshotResponse {

@@ -57,6 +57,17 @@ const redirect = (
   void router.push(params.href, params.as, params.options);
 };
 
+const deviceToWidth = (device: Size) => {
+  switch (device) {
+    case Size.FULL:
+      return 1200;
+    case Size.TABLET:
+      return 600;
+    case Size.PHONE:
+      return 340;
+  }
+};
+
 const Header: React.FunctionComponent<PropTypes> = ({
   Model,
   variation,
@@ -73,7 +84,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
 
   const onTakingSliceScreenshot = () => {
     checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(variation.id, Model, setData)
+      generateSliceScreenshot(variation.id, Model, setData, deviceToWidth(size))
     );
   };
 

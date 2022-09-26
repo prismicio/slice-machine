@@ -15,6 +15,7 @@ export const generateSliceScreenshotCreator = createAsyncAction(
     variationId: string;
     component: ComponentUI;
     setData: (data: any) => void;
+    screenWidth: number;
   },
   { screenshots: Screenshots; component: ComponentUI }
 >();

@@ -27,13 +27,15 @@ export async function generateScreenshotAndRemoveCustom(
   env: BackendEnvironment,
   libraryName: string,
   sliceName: string,
-  variationId: string
+  variationId: string,
+  screenWidth: number
 ): Promise<ScreenshotResults> {
   const { screenshots, failure } = await generateScreenshot(
     env,
     libraryName,
     sliceName,
-    variationId
+    variationId,
+    screenWidth
   );
 
   removeCustomScreenshot(env, libraryName, sliceName, variationId);
@@ -48,7 +50,8 @@ export async function generateScreenshot(
   env: BackendEnvironment,
   libraryName: string,
   sliceName: string,
-  variationId: string
+  variationId: string,
+  screenWidth: number
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
@@ -56,7 +59,8 @@ export async function generateScreenshot(
   );
 
   const promises: Promise<ScreenshotUI>[] = [variationId].map(
-    (id: VariationSM["id"]) => generateForVariation(env, libraryName, slice, id)
+    (id: VariationSM["id"]) =>
+      generateForVariation(env, libraryName, slice, id, screenWidth)
   );
 
   const results = await Promise.allSettled(promises);
@@ -91,7 +95,8 @@ async function generateForVariation(
   env: BackendEnvironment,
   libraryName: string,
   slice: SliceSM,
-  variationId: string
+  variationId: string,
+  screenWidth: number
 ): Promise<ScreenshotUI> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -109,6 +114,7 @@ async function generateForVariation(
   await Puppeteer.handleScreenshot({
     screenshotUrl,
     pathToFile,
+    screenWidth,
   });
   return createScreenshotUI(env.baseUrl, {
     path: pathToFile,
