@@ -50,7 +50,7 @@ describe("Custom Types specs", () => {
     // Stub manifest.
     const manifestContents = await cy.readFile(manifest);
     cy.writeFile(
-      manifestContents,
+      manifest,
       JSON.stringify({ ...manifestContents, generateTypes: true })
     );
 
