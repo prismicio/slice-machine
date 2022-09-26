@@ -135,6 +135,7 @@ describe("configure-project", () => {
     expect(retrieveManifestMock).toBeCalled();
     expect(createManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
+      generateTypes: true,
       libraries: ["@/slices"],
     });
     expect(patchManifestMock).not.toBeCalled();
@@ -165,6 +166,7 @@ describe("configure-project", () => {
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       framework: "react",
+      generateTypes: true,
       libraries: ["@/slices"],
     });
 
@@ -194,6 +196,7 @@ describe("configure-project", () => {
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       framework: "react",
+      generateTypes: true,
       libraries: ["@/slices", "@/material/slices"],
     });
 
@@ -332,6 +335,7 @@ describe("configure-project", () => {
     expect(patchManifestMock).toHaveBeenCalledWith("./", {
       apiEndpoint: "https://testing-repo.prismic.io/api/v2",
       framework: "react",
+      generateTypes: true,
       libraries: ["./slices2"],
     });
   });
