@@ -8,7 +8,6 @@ describe("Custom Types specs", () => {
   beforeEach(() => {
     cy.clearLocalStorageSnapshot();
     cy.cleanSliceMachineUserContext();
-    cy.task("rmrf", type);
     cy.task("clearDir", `${root}/customtypes`);
     cy.task("clearDir", `${root}/.slicemachine`);
   });
@@ -46,26 +45,28 @@ describe("Custom Types specs", () => {
     cy.readFile(type).should("contains", `${name} - Edited`);
   });
 
-  it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", async () => {
+  it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", () => {
     // Stub manifest.
-    const manifestContents = await cy.readFile(manifest);
-    cy.writeFile(
-      manifest,
-      JSON.stringify({ ...manifestContents, generateTypes: true })
-    );
+    cy.readFile(manifest).then((manifestContents) => {
+      cy.writeFile(
+        manifest,
+        { ...manifestContents, generateTypes: true }
+      );
+    });
 
     // Stub package.json.
-    const packageJsonContents = await cy.readFile(packageJson);
-    cy.writeFile(
-      packageJson,
-      JSON.stringify({
-        ...packageJsonContents,
-        dependencies: {
-          ...packageJsonContents.dependencies,
-          "@prismicio/types": "latest",
-        },
-      })
-    );
+    cy.readFile(packageJson).then((packageJsonContents) => {
+      cy.writeFile(
+        packageJson,
+        {
+          ...packageJsonContents,
+          dependencies: {
+            ...packageJsonContents.dependencies,
+            "@prismicio/types": "latest",
+          },
+        }
+      );
+    });
 
     cy.setupSliceMachineUserContext();
     cy.visit("/");
