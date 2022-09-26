@@ -48,24 +48,18 @@ describe("Custom Types specs", () => {
   it("generates types if `generateTypes` is `true` and `@prismicio/types` is installed", () => {
     // Stub manifest.
     cy.readFile(manifest).then((manifestContents) => {
-      cy.writeFile(
-        manifest,
-        { ...manifestContents, generateTypes: true }
-      );
+      cy.writeFile(manifest, { ...manifestContents, generateTypes: true });
     });
 
     // Stub package.json.
     cy.readFile(packageJson).then((packageJsonContents) => {
-      cy.writeFile(
-        packageJson,
-        {
-          ...packageJsonContents,
-          dependencies: {
-            ...packageJsonContents.dependencies,
-            "@prismicio/types": "latest",
-          },
-        }
-      );
+      cy.writeFile(packageJson, {
+        ...packageJsonContents,
+        dependencies: {
+          ...packageJsonContents.dependencies,
+          "@prismicio/types": "latest",
+        },
+      });
     });
 
     cy.setupSliceMachineUserContext();
