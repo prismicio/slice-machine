@@ -1,6 +1,6 @@
 import path from "path";
 import { generateTypes } from "prismic-ts-codegen";
-import { PRISMIC_TYPES } from "@slicemachine/core/src/consts";
+import { PRISMIC_TYPES } from "@slicemachine/core/build/consts";
 import {
   retrieveManifest,
   retrieveJsonPackage,
