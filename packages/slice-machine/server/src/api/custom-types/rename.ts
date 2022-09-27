@@ -14,7 +14,7 @@ export default async function handler(req: RequestWithEnv) {
 
   IO.CustomType.renameCustomType(modelPath, newCustomTypeName);
 
-  IO.Types.upsert(state.env.cwd);
+  IO.Types.upsert(state.env);
 
   return {};
 }
