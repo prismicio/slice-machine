@@ -144,7 +144,7 @@ export const SharedSlice = {
           isOnline: boolean;
         }
       | React.FC<{ slice: ComponentUI }>;
-    missingScreenshots: number;
+    missingScreenshots?: number;
     Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
