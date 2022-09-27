@@ -380,7 +380,7 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     setData: (data: any) => void,
-    screenWidth: number
+    screenWidth = 1200
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
