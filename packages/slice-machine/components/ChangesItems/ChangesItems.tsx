@@ -60,9 +60,13 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             defineElementKey={(slice: ComponentUI) => slice.model.name}
             gridTemplateMinPx="290px"
             renderElem={(slice: ComponentUI) => {
+              const missingScreenshots =
+                slice.model.variations.length -
+                Object.entries(slice.screenshots).length;
               return SharedSlice.render({
                 slice: slice,
                 wrapperType: WrapperType.clickable,
+                missingScreenshots,
                 StatusOrCustom: {
                   status: modelsStatuses.slices[slice.model.id],
                   authStatus,

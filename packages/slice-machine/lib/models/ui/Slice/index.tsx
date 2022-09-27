@@ -1,5 +1,13 @@
 import React from "react";
-import { Theme, Text, Card as Themecard, Heading, Flex, Badge } from "theme-ui";
+import {
+  Theme,
+  Text,
+  Card as Themecard,
+  Heading,
+  Flex,
+  Badge,
+  Box,
+} from "theme-ui";
 import { ThemeUIStyleObject } from "@theme-ui/css";
 import { ComponentUI } from "../../common/ComponentUI";
 import { Link as LinkUtil } from "../Link";
@@ -10,11 +18,14 @@ import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
 
+import { RiErrorWarningLine } from "react-icons/ri";
+
 const borderedSx = (sx: ThemeUIStyleObject = {}) => ({
   border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
   p: 3,
+  position: "relative",
   ...sx,
   "&:hover": {
     transition: "all 200ms ease-out",
@@ -26,9 +37,37 @@ const borderedSx = (sx: ThemeUIStyleObject = {}) => ({
 const defaultSx = (sx: ThemeUIStyleObject = {}) => ({
   bg: "transparent",
   border: "none",
+  position: "relative",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
   ...sx,
 });
+
+const renderMissingScreenshots = (missing: number, variations: number) => (
+  <Box
+    sx={{
+      position: "absolute",
+      top: "0",
+      zIndex: "1",
+      width: "100%",
+      p: 2,
+      bg: "changesWarning.background",
+      color: "changesWarning.color",
+      fontSize: 2,
+      fontWeight: "600",
+      textAlign: "center",
+    }}
+  >
+    <RiErrorWarningLine
+      style={{
+        position: "relative",
+        top: "4px",
+        fontSize: "20px",
+      }}
+    />{" "}
+    {missing}/{variations} screnshot{variations - missing > 1 ? "s" : ""}{" "}
+    missing
+  </Box>
+);
 
 const SliceVariations = ({
   hideVariations,
@@ -90,6 +129,7 @@ export const SharedSlice = {
     slice,
     Wrapper,
     StatusOrCustom,
+    missingScreenshots,
 
     thumbnailHeightPx = "290px",
     wrapperType = WrapperType.clickable,
@@ -104,6 +144,7 @@ export const SharedSlice = {
           isOnline: boolean;
         }
       | React.FC<{ slice: ComponentUI }>;
+    missingScreenshots: number;
     Wrapper?: React.FC<{ link?: { as: string }; slice: ComponentUI }>;
     wrapperType?: WrapperType;
     thumbnailHeightPx?: string;
@@ -127,6 +168,12 @@ export const SharedSlice = {
           aria-pressed="false"
           sx={bordered ? borderedSx(sx) : defaultSx(sx)}
         >
+          {missingScreenshots
+            ? renderMissingScreenshots(
+                missingScreenshots,
+                slice.model.variations.length
+              )
+            : null}
           <ScreenshotPreview
             src={screenshotUrl}
             sx={{

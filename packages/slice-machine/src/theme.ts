@@ -15,6 +15,10 @@ const AppTheme = (): Theme =>
       primary: "#6E52FF",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      changesWarning: {
+        background: "#FFECC7",
+        color: "#5C0C17",
+      },
       badge: {
         new: {
           bg: "#C2EFC899",
