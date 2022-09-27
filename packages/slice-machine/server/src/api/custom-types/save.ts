@@ -38,7 +38,7 @@ export default async function handler(req: { body: SaveCustomTypeBody }) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   Files.write(mockPath, mocked as object);
 
-  IO.Types.upsert(env.cwd);
+  IO.Types.upsert(env);
 
   return {};
 }
