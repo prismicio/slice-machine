@@ -16,8 +16,6 @@ import onSaveSlice from "../common/hooks/onSaveSlice";
 import onBeforeSaveSlice from "../common/hooks/onBeforeSaveSlice";
 import { SliceSaveBody } from "../../../../lib/models/common/Slice";
 import * as IO from "../../../../lib/io";
-import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
-import { getLocalSlices } from "../../../../lib/utils/slices";
 
 export async function handler(
   env: BackendEnvironment,
@@ -66,11 +64,7 @@ export async function handler(
   console.log("[slice/save]: Generating stories");
   Storybook.generateStories(appRoot, env.framework, env.cwd, from, sliceName);
 
-  IO.Types.upsert(
-    env.cwd,
-    getLocalCustomTypes(env.cwd),
-    getLocalSlices(env.cwd, env.manifest.libraries)
-  );
+  IO.Types.upsert(env);
 
   console.log("[slice/save]: Slice was saved!");
 

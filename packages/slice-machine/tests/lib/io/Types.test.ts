@@ -4,23 +4,18 @@ import { generateTypes } from "prismic-ts-codegen";
 
 import { Manifest } from "@slicemachine/core/build/models";
 import * as nodeUtils from "@slicemachine/core/build/node-utils/";
-import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType/index";
-import { SliceSM } from "@slicemachine/core/build/models/Slice";
-
+import { BackendEnvironment } from "@lib/models/common/Environment";
 import { upsert } from "../../../lib/io/Types";
 import Files from "../../../lib/utils/files";
+import { getLocalCustomTypes } from "../../../lib/utils/customTypes";
+import { getLocalSlices } from "../../../lib/utils/slices";
 
 // Constants
-const CWD = "/usr/test";
-const CUSTOM_TYPE_MODELS: CustomTypeSM[] = [];
-const SHARE_SLICE_MODELS: SliceSM[] = [];
 const MOCKED = "__MOCKED__";
 
+// Mocked files
 jest.mock("prismic-ts-codegen", () => {
   return { generateTypes: jest.fn(() => MOCKED) };
-});
-jest.mock("../../../lib/utils/files", () => {
-  return { write: jest.fn(() => undefined) };
 });
 // See: https://github.com/aelbore/esbuild-jest/issues/26
 jest.mock("@slicemachine/core/build/node-utils/", () => {
@@ -29,14 +24,25 @@ jest.mock("@slicemachine/core/build/node-utils/", () => {
     ...jest.requireActual("@slicemachine/core/build/node-utils/"),
   };
 });
+jest.mock("../../../lib/utils/customTypes", () => {
+  return { getLocalCustomTypes: jest.fn(() => []) };
+});
+jest.mock("../../../lib/utils/slices", () => {
+  return { getLocalSlices: jest.fn(() => []) };
+});
+jest.mock("../../../lib/utils/files", () => {
+  return { write: jest.fn(() => undefined) };
+});
 
 describe("upsert", () => {
   // Mock utilities
-  const mockRetrieveManifest = (content?: Partial<Manifest>) => {
-    jest.spyOn(nodeUtils, "retrieveManifest").mockImplementationOnce(() => ({
-      exists: true,
-      content: { apiEndpoint: "https://example.cdn.prismic.io", ...content },
-    }));
+  const mockBackendEnvironmentManifest = (
+    manifest?: Partial<Manifest>
+  ): BackendEnvironment => {
+    return {
+      cwd: "/usr/test",
+      manifest: { apiEndpoint: "https://example.cdn.prismic.io", ...manifest },
+    } as BackendEnvironment;
   };
   const mockRetrieveJsonPackage = (
     content?: Partial<nodeUtils.JsonPackage>
@@ -60,10 +66,10 @@ describe("upsert", () => {
     });
 
     test("writes types if `generateTypes` is missing", () => {
-      mockRetrieveManifest();
+      upsert(mockBackendEnvironmentManifest());
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).toHaveBeenCalledTimes(1);
+      expect(getLocalSlices).toHaveBeenCalledTimes(1);
       expect(generateTypes).toHaveBeenCalledTimes(1);
       expect(Files.write).toHaveBeenNthCalledWith(
         1,
@@ -73,10 +79,10 @@ describe("upsert", () => {
     });
 
     test("writes types if `generateTypes` is `true`", () => {
-      mockRetrieveManifest({ generateTypes: true });
+      upsert(mockBackendEnvironmentManifest({ generateTypes: true }));
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).toHaveBeenCalledTimes(1);
+      expect(getLocalSlices).toHaveBeenCalledTimes(1);
       expect(generateTypes).toHaveBeenCalledTimes(1);
       expect(Files.write).toHaveBeenNthCalledWith(
         1,
@@ -86,10 +92,10 @@ describe("upsert", () => {
     });
 
     test("doesn't write types if `generateTypes` is `false`", () => {
-      mockRetrieveManifest({ generateTypes: false });
+      upsert(mockBackendEnvironmentManifest({ generateTypes: false }));
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).not.toHaveBeenCalled();
+      expect(getLocalSlices).not.toHaveBeenCalled();
       expect(generateTypes).not.toHaveBeenCalled();
       expect(Files.write).not.toHaveBeenCalled();
     });
@@ -102,28 +108,28 @@ describe("upsert", () => {
     });
 
     test("does not write types if `@prismicio/types` is not installed and `generateTypes` is missing", () => {
-      mockRetrieveManifest();
+      upsert(mockBackendEnvironmentManifest());
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).not.toHaveBeenCalled();
+      expect(getLocalSlices).not.toHaveBeenCalled();
       expect(generateTypes).not.toHaveBeenCalled();
       expect(Files.write).not.toHaveBeenCalled();
     });
 
     test("does not write types if `@prismicio/types` is not installed and `generateTypes` is `true`", () => {
-      mockRetrieveManifest({ generateTypes: true });
+      upsert(mockBackendEnvironmentManifest({ generateTypes: true }));
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).not.toHaveBeenCalled();
+      expect(getLocalSlices).not.toHaveBeenCalled();
       expect(generateTypes).not.toHaveBeenCalled();
       expect(Files.write).not.toHaveBeenCalled();
     });
 
     test("does not write types if `@prismicio/types` is installed and `generateTypes` is `false`", () => {
-      mockRetrieveManifest({ generateTypes: false });
+      upsert(mockBackendEnvironmentManifest({ generateTypes: false }));
 
-      upsert(CWD, CUSTOM_TYPE_MODELS, SHARE_SLICE_MODELS);
-
+      expect(getLocalCustomTypes).not.toHaveBeenCalled();
+      expect(getLocalSlices).not.toHaveBeenCalled();
       expect(generateTypes).not.toHaveBeenCalled();
       expect(Files.write).not.toHaveBeenCalled();
     });

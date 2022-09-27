@@ -7,8 +7,6 @@ import {
 import * as IO from "../../../../lib/io";
 import fs from "fs";
 import onSaveSlice from "../common/hooks/onSaveSlice";
-import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
-import { getLocalSlices } from "../../../../lib/utils/slices";
 
 interface RenameSliceBody {
   sliceId: string;
@@ -77,11 +75,7 @@ export async function renameSlice(req: {
     `${GeneratedPaths(env.cwd).library(libName).value()}/${newSliceName}`
   );
 
-  IO.Types.upsert(
-    env.cwd,
-    getLocalCustomTypes(env.cwd),
-    getLocalSlices(env.cwd, env.manifest.libraries)
-  );
+  IO.Types.upsert(env);
 
   await onSaveSlice(env);
 

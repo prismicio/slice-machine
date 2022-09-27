@@ -3,8 +3,6 @@ import * as IO from "../../../../lib/io";
 import { getBackendState } from "../state";
 import { RequestWithEnv } from "../http/common";
 import { RenameCustomTypeBody } from "../../../../lib/models/common/CustomType";
-import { getLocalCustomTypes } from "../../../../lib/utils/customTypes";
-import { getLocalSlices } from "../../../../lib/utils/slices";
 
 export default async function handler(req: RequestWithEnv) {
   const state = await getBackendState(req.errors, req.env);
@@ -16,11 +14,7 @@ export default async function handler(req: RequestWithEnv) {
 
   IO.CustomType.renameCustomType(modelPath, newCustomTypeName);
 
-  IO.Types.upsert(
-    state.env.cwd,
-    getLocalCustomTypes(state.env.cwd),
-    getLocalSlices(state.env.cwd, state.env.manifest.libraries)
-  );
+  IO.Types.upsert(state.env.cwd);
 
   return {};
 }
