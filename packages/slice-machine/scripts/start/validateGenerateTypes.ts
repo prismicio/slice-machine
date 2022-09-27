@@ -1,3 +1,4 @@
+import { PRISMIC_TYPES } from "@slicemachine/core/build/consts";
 import {
   retrieveManifest,
   retrieveJsonPackage,
@@ -16,7 +17,7 @@ export const validateGenerateTypes = ({ cwd }: ValidateGenerateTypesParams) => {
     ...packageJson.content?.dependencies,
     ...packageJson.content?.devDependencies,
   };
-  const hasTypesPackage = "@prismicio/types" in allDependencies;
+  const hasTypesPackage = PRISMIC_TYPES in allDependencies;
 
   if (manifest.content && "generateTypes" in manifest.content) {
     // `generateTypes` is in manifest
