@@ -31,7 +31,6 @@ export async function configureProject(
         : ["@/slices"];
 
     const manifestUpdated: Models.Manifest = {
-      generateTypes: true,
       ...(manifestAlreadyExistWithContent ? manifest.content : {}),
       apiEndpoint: Prismic.Endpoints.buildRepositoryEndpoint(
         client.apisEndpoints.Wroom,
