@@ -18,6 +18,8 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+
 const changes: React.FunctionComponent = () => {
   const {
     unSyncedSlices,
@@ -34,6 +36,7 @@ const changes: React.FunctionComponent = () => {
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
+  const [screenshotChangesIsOpen, setScreenshotChangesIsOpen] = useState(true);
   const [changesPushed, setChangesPushed] = useState<string[]>([]);
   const [error, setError] = useState<SyncError | null>(null);
 
@@ -80,6 +83,11 @@ const changes: React.FunctionComponent = () => {
 
   return (
     <Container sx={{ display: "flex", flex: 1 }}>
+      <ScreenshotChangesModal
+        slices={unSyncedSlices}
+        isOpen={screenshotChangesIsOpen}
+        onClose={() => setScreenshotChangesIsOpen(false)}
+      />
       <Box
         as={"main"}
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
