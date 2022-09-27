@@ -1,12 +1,10 @@
 import * as yup from "yup";
-import equal from "fast-deep-equal";
 
 import { Widget } from "../models/common/widgets/Widget";
 import { Frameworks } from "@slicemachine/core/build/models/Framework";
 
 import { DefaultFields } from "../forms/defaults";
 import { createInitialValues, createValidationSchema } from "../forms";
-import { VariationSM } from "@slicemachine/core/build/models";
 import { WidgetTypes } from "@prismicio/types-internal/lib/customtypes/widgets";
 
 export const removeProp = (obj: { [x: string]: unknown }, prop: string) => {
@@ -45,15 +43,6 @@ export const ensureWidgetTypeExistence = (
   return false;
 };
 
-export const compareVariations = (
-  lhs: ReadonlyArray<VariationSM>,
-  rhs: ReadonlyArray<VariationSM>
-) => {
-  return equal(
-    lhs.map((e) => ({ ...e, imageUrl: undefined })),
-    rhs.map((e) => ({ ...e, imageUrl: undefined }))
-  );
-};
 export const createDefaultWidgetValues = (TYPE_NAME: WidgetTypes) => ({
   TYPE_NAME,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

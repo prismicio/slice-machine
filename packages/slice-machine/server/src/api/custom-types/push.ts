@@ -3,140 +3,87 @@ import {
   CustomTypeSM,
 } from "@slicemachine/core/build/models/CustomType/index";
 import { Client, ClientError } from "@slicemachine/client";
-
-import { ComponentUI } from "../../../../lib/models/common/ComponentUI";
-import { Tab } from "../../../../lib/models/common/CustomType/tab";
 import { CustomTypesPaths } from "../../../../lib/models/paths";
-import { ApiResult } from "../../../../lib/models/server/ApiResult";
-
-import { getBackendState } from "../state";
-import { pushSlice } from "../slices/push";
-import { onError } from "../common/error";
 import { RequestWithEnv } from "../http/common";
 import * as IO from "../../../../lib/io";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes/CustomType";
 
 const createOrUpdate = (
   client: Client,
-  smModel: CustomTypeSM,
-  remoteCustomType: CustomTypeSM | undefined
+  localCustomType: CustomTypeSM,
+  remoteCustomType: CustomType | undefined
 ) => {
-  const model = CustomTypes.fromSM(smModel);
+  const model = CustomTypes.fromSM(localCustomType);
   if (remoteCustomType) return client.updateCustomType(model);
   return client.insertCustomType(model);
 };
 
-export default async function handler(req: RequestWithEnv): Promise<ApiResult> {
+export async function handler(
+  req: RequestWithEnv
+): Promise<{ statusCode: number }> {
   const { id } = req.query;
+  if (typeof id != "string") return { statusCode: 418 }; // Should never happen
 
-  const state = await getBackendState(req.errors, req.env);
+  // Path to the local model of the custom type
+  const modelPath = CustomTypesPaths(req.env.cwd).customType(id).model();
 
-  if (!state.libraries) {
-    const code = 400;
-    const message = `Error ${code}: Slice libraries needs to be define in your sm.json file.`;
-
-    return {
-      err: new Error(message),
-      reason: message,
-      status: code,
-    };
-  }
-
-  if (state.clientError) {
-    const isAnAuthenticationError =
-      state.clientError && state.clientError.status === 403;
-    const errorExplanation = isAnAuthenticationError
-      ? "Please log in to Prismic!"
-      : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `You don\'t have access to the repo \"${state.env.repo}\"`;
-
-    const errorCode = state.clientError ? state.clientError.status : 403;
-    const message = `Error ${errorCode}: Could not fetch remote custom types. ${errorExplanation}`;
-
-    return {
-      err: new Error(message),
-      reason: message,
-      status: errorCode,
-    };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const modelPath = CustomTypesPaths(state.env.cwd)
-    .customType(id as string)
-    .model();
-
-  let model: CustomTypeSM;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-    model = IO.CustomType.readCustomType(modelPath);
+    const model: CustomTypeSM = IO.CustomType.readCustomType(modelPath);
+
+    // fetching custom types
+    const { remoteCustomTypes, error } = await req.env.client
+      .getCustomTypes()
+      .then((customTypes) => ({ remoteCustomTypes: customTypes, error: null }))
+      .catch((error: ClientError) => {
+        if (error.status === 401)
+          console.error(
+            `[custom-types/push] Could not fetch custom types, you don\'t have access to the repository \"${req.env.repo}\"`
+          );
+
+        if (![400, 401, 403].includes(error.status))
+          console.error(
+            `[custom-types/push] Could not fetch custom types. Unexpected error: ${error.message}`
+          );
+
+        return { remoteCustomTypes: [], error };
+      });
+
+    // fetching error to be returned immediatly
+    if (error) return { statusCode: error.status };
+
+    // The remote version of the custom type
+    const remoteCustomType = remoteCustomTypes.find(
+      (customType) => customType.id === id
+    );
+
+    // Verifying the repeatable property is not updated
+    if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
+      console.error(
+        `[custom-types/push] The custom type ${id} couldn't be pushed, the property "repeatable" in local Model differs from remote source`
+      );
+      return { statusCode: 400 };
+    }
+
+    // Pushing the custom types
+    return createOrUpdate(req.env.client, model, remoteCustomType)
+      .then(() => {
+        console.log(
+          `[custom-types/push] Custom Type ${id} pushed successfully!`
+        );
+        return { statusCode: 200 };
+      })
+      .catch((error: ClientError) => {
+        console.error(
+          `[custom-types/push] Unexpected error while pushing the Custom Type ${id}: ${error.message}`
+        );
+        return { statusCode: error.status };
+      });
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const msg = `[custom-types/push] Model ${id} is invalid.`;
-    console.error(msg);
-    return onError(msg);
+    console.error(
+      `[custom-types/push] Unexpected error while pushing the Custom Type ${id}: ${
+        e as string
+      }`
+    );
+    return { statusCode: 500 };
   }
-
-  const remoteCustomType = state.remoteCustomTypes.find(
-    (e: { id: string }) => e.id === id
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (remoteCustomType && remoteCustomType.repeatable !== model.repeatable) {
-    const msg = `[custom-types/push] Model not pushed: property "repeatable" in local Model differs from remote source`;
-    console.error(msg);
-    return onError(msg);
-  }
-
-  const sliceKeysToPush: string[] = [];
-  for (const [, tab] of Object.entries(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    model.tabs
-  )) {
-    const { sliceZone } = Tab.organiseFields(tab);
-    if (sliceZone?.value) {
-      sliceKeysToPush.push(...new Set(sliceZone.value.map((e) => e.key)));
-    }
-  }
-
-  const localSlices: { [x: string]: ComponentUI } = state.libraries
-    .filter((e) => e.isLocal)
-    .reduceRight((acc, curr) => {
-      return {
-        ...acc,
-        ...curr.components.reduce(
-          (acc, curr) => ({
-            ...acc,
-            [curr.model.id]: curr,
-          }),
-          {}
-        ),
-      };
-    }, {});
-
-  for await (const sliceKey of sliceKeysToPush) {
-    const slice = localSlices[sliceKey];
-    if (slice) {
-      try {
-        console.log("[custom-types/push] Pushing slice", sliceKey);
-        await pushSlice(state.env, state.remoteSlices, {
-          sliceName: slice.model.name,
-          from: slice.from,
-        });
-      } catch (e) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        console.error(`[custom-types/push] Full error: ${e}`);
-      }
-    }
-  }
-
-  console.log("[custom-types/push] Pushing Custom Type...");
-
-  return createOrUpdate(state.env.client, model, remoteCustomType)
-    .then(() => {
-      console.log(`[custom-types/push] Custom Type ${model.id} was pushed!`);
-      return {};
-    })
-    .catch((error: ClientError) => {
-      const msg = `[custom-types/push] Unexpected error: ${error.message}`;
-      console.error(msg);
-      return onError(msg, error.status);
-    });
 }

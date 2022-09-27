@@ -11,11 +11,11 @@ import { writeError } from "../../utils/logs";
 async function updateVariationWithScreenshot(
   client: InitClient,
   acl: Acl,
-  screenshotPaths: ComponentInfo["screenshotPaths"],
+  screenshots: ComponentInfo["screenshots"],
   sliceId: SliceSM["id"],
   variation: VariationSM
 ): Promise<VariationSM> {
-  const screenshot = screenshotPaths[variation.id];
+  const screenshot = screenshots[variation.id];
   if (!screenshot || !screenshot.path) return Promise.resolve(variation);
 
   return client
@@ -47,14 +47,14 @@ export async function updateSlicesWithScreenshots(
 ): Promise<Array<SliceSM>> {
   return Promise.all(
     components.map(async (component) => {
-      const { screenshotPaths, model } = component;
+      const { screenshots, model } = component;
 
       const variationsUpdated: VariationSM[] = await Promise.all(
         model.variations.map(async (variation) =>
           updateVariationWithScreenshot(
             client,
             acl,
-            screenshotPaths,
+            screenshots,
             model.id,
             variation
           )

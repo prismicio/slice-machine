@@ -5,7 +5,7 @@ import ZoneHeader from "../../common/Zone/components/ZoneHeader";
 
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
-import SlicesList from "./List";
+import { SlicesList } from "./List";
 import EmptyState from "./EmptyState";
 import { SlicesSM } from "@slicemachine/core/build/models/Slices";
 import { SlicesTypes } from "@prismicio/types-internal/lib/customtypes/widgets/slices";
@@ -15,9 +15,10 @@ import {
 } from "@lib/models/common/CustomType/sliceZone";
 import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
-import { getLibraries } from "@src/modules/slices";
+import { getFrontendSlices, getLibraries } from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { useModelStatus } from "@src/hooks/useModelStatus";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -89,9 +90,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   onCreateSliceZone,
 }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
-  const { libraries } = useSelector((state: SliceMachineStoreType) => ({
-    libraries: getLibraries(state),
-  }));
+  const { libraries, frontendSlices } = useSelector(
+    (store: SliceMachineStoreType) => ({
+      libraries: getLibraries(store),
+      frontendSlices: getFrontendSlices(store),
+    })
+  );
+
+  const { modelsStatuses, authStatus, isOnline } =
+    useModelStatus(frontendSlices);
 
   const { availableSlices, slicesInSliceZone, notFound } = sliceZone
     ? mapAvailableAndSharedSlices(sliceZone, libraries)
@@ -143,7 +150,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       {!slicesInSliceZone.length ? (
         <EmptyState onAddNewSlice={onAddNewSlice} />
       ) : (
-        <SlicesList slices={slicesInSliceZone} />
+        <SlicesList
+          slices={slicesInSliceZone}
+          modelsStatuses={modelsStatuses}
+          authStatus={authStatus}
+          isOnline={isOnline}
+        />
       )}
       <UpdateSliceZoneModal
         isOpen={formIsOpen}

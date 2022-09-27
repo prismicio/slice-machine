@@ -85,10 +85,10 @@ export function formatComponent(
       fileName: slice.fileName,
       extension: slice.extension,
     },
-    screenshotPaths: !slice.screenshotPaths
+    screenshotPaths: !slice.screenshots
       ? {}
       : Object.entries(
-          slice.screenshotPaths
+          slice.screenshots
         ).reduce<Models.LibrariesState.ComponentScreenshots>(
           (acc, [variationId, screenshot]) => {
             return {

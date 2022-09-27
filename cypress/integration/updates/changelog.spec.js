@@ -16,9 +16,14 @@ describe("changelog.warningBreakingChanges", () => {
 
   it("shows warning if the selected release note has a breaking changes title.", () => {
     cy.clearLocalStorageSnapshot();
-    cy.setupSliceMachineUserContext(true, true, {
-      latest: "1000.0.0",
-      latestNonBreaking: "1.2.3",
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {
+        latest: "1000.0.0",
+        latestNonBreaking: "1.2.3",
+      },
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {
@@ -40,9 +45,14 @@ describe("changelog.warningBreakingChanges", () => {
 
   it("should not display the warning if the selected release note does not have a breaking changes title.", () => {
     cy.clearLocalStorageSnapshot();
-    cy.setupSliceMachineUserContext(true, true, {
-      latest: "1000.0.0",
-      latestNonBreaking: "1.2.3",
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {
+        latest: "1000.0.0",
+        latestNonBreaking: "1.2.3",
+      },
+      hasSeenTutorialsTooTip: true,
     });
 
     cy.intercept("/api/state", (req) => {

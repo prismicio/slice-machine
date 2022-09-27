@@ -61,7 +61,6 @@ async function init() {
   // verify package.json file exist
   validatePkg(cwd);
 
-  // login
   const user = await loginOrBypass(client);
 
   Tracker.get().identifyUser(user.shortId, user.intercomHash);

@@ -17,9 +17,15 @@ import { isModalOpen } from "@src/modules/modal";
 import { ModalKeysEnum } from "@src/modules/modal/types";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
-import { getLibraries, getRemoteSlices } from "@src/modules/slices";
+import {
+  getFrontendSlices,
+  getLibraries,
+  getRemoteSlices,
+} from "@src/modules/slices";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
+import { useModelStatus } from "@src/hooks/useModelStatus";
+import { VIDEO_WHAT_ARE_SLICES } from "../lib/consts";
 
 const CreateSliceButton = ({
   onClick,
@@ -43,13 +49,19 @@ const SlicesIndex: React.FunctionComponent = () => {
   const { openCreateSliceModal, closeCreateSliceModal, createSlice } =
     useSliceMachineActions();
 
-  const { isCreateSliceModalOpen, isCreatingSlice, remoteSlices, libraries } =
-    useSelector((store: SliceMachineStoreType) => ({
-      isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
-      isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
-      remoteSlices: getRemoteSlices(store),
-      libraries: getLibraries(store),
-    }));
+  const {
+    isCreateSliceModalOpen,
+    isCreatingSlice,
+    remoteSlices,
+    libraries,
+    frontendSlices,
+  } = useSelector((store: SliceMachineStoreType) => ({
+    isCreateSliceModalOpen: isModalOpen(store, ModalKeysEnum.CREATE_SLICE),
+    isCreatingSlice: isLoading(store, LoadingKeysEnum.CREATE_SLICE),
+    remoteSlices: getRemoteSlices(store),
+    libraries: getLibraries(store),
+    frontendSlices: getFrontendSlices(store),
+  }));
 
   const _onCreate = ({
     sliceName,
@@ -61,9 +73,11 @@ const SlicesIndex: React.FunctionComponent = () => {
     createSlice(sliceName, from);
   };
 
-  const localLibraries: LibraryUI[] | undefined = libraries?.filter(
-    (l) => l.isLocal
-  );
+  const localLibraries: LibraryUI[] = libraries.filter((l) => l.isLocal);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const { modelsStatuses, authStatus, isOnline } =
+    useModelStatus(frontendSlices);
 
   const sliceCount = (libraries || []).reduce((count, lib) => {
     if (!lib) {
@@ -125,7 +139,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     onCreateNew={openCreateSliceModal}
                     isLoading={isCreatingSlice}
                     buttonText={"Create one"}
-                    videoPublicIdUrl="placeholders/What_are_Slices_mrvome"
+                    videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                     documentationComponent={
                       <>
                         Slices are sections of your website. Prismic documents
@@ -183,8 +197,12 @@ const SlicesIndex: React.FunctionComponent = () => {
                         }
                         renderElem={(slice: ComponentUI) => {
                           return SharedSlice.render({
-                            displayStatus: true,
-                            slice: slice,
+                            slice,
+                            StatusOrCustom: {
+                              status: modelsStatuses.slices[slice.model.id],
+                              authStatus,
+                              isOnline,
+                            },
                           });
                         }}
                         gridGap="32px 16px"

@@ -11,7 +11,12 @@ describe("onboarding redirects and local storage", () => {
   });
 
   it("when is-onboarded is in local storage it should not redirect", () => {
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true,
+    });
     cy.visit("/");
     cy.location("pathname", { timeout: 5000 }).should("eq", "/");
   });

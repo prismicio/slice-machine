@@ -15,7 +15,7 @@ export const MockLibraryInfo: (
       pathToSlice: "/slice1",
       fileName: "slice1/models.json",
       extension: "js",
-      screenshotPaths: {},
+      screenshots: {},
       model: {
         id: "sliceId",
         type: SlicesTypes.SharedSlice,

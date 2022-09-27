@@ -59,15 +59,18 @@ export const withLoader = (saga: any, loadingKey: LoadingKeysEnum): Saga<any> =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function* (...args: any[]) {
     yield put(startLoadingActionCreator({ loadingKey }));
-    yield call(
-      saga,
-      args[0],
-      args[1],
-      args[2],
-      args[3],
-      args[4],
-      args[5],
-      args[6]
-    );
-    yield put(stopLoadingActionCreator({ loadingKey }));
+    try {
+      yield call(
+        saga,
+        args[0],
+        args[1],
+        args[2],
+        args[3],
+        args[4],
+        args[5],
+        args[6]
+      );
+    } finally {
+      yield put(stopLoadingActionCreator({ loadingKey }));
+    }
   };

@@ -59,6 +59,9 @@ describe("slices", () => {
   test("When user creates a slice it should send a tracking event", async () => {
     const environment = {
       framework: "next",
+      changelog: {
+        currentVersion: "0.0.1",
+      },
       mockConfig: { _cts: {} },
     };
 
@@ -79,7 +82,7 @@ describe("slices", () => {
             pathToSlice: "./slices",
             fileName: "index",
             extension: "js",
-            screenshotPaths: {},
+            screenshots: {},
             mock: [
               {
                 variation: "default",
@@ -147,7 +150,6 @@ describe("slices", () => {
               ],
             },
             screenshotUrls: {},
-            __status: "NEW_SLICE",
           },
         ],
       },

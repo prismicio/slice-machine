@@ -278,8 +278,9 @@ const allFieldComponent = {
         },
       },
     ],
-    screenshotPaths: {
+    screenshots: {
       "default-slice": {
+        hash: "xxx",
         path: "tests/project/slices/AllFields/default-slice/preview.jpeg",
       },
     },
