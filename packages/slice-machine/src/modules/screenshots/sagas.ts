@@ -30,13 +30,12 @@ export function* generateSliceScreenshotSaga({
       status: null,
       imageLoading: true,
     });
-    const response = (yield call(
-      generateSliceScreenshotApiClient,
-      component.model.name,
-      component.from,
-      variationId,
-      screenWidth
-    )) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
+    const response = (yield call(generateSliceScreenshotApiClient, {
+      libraryName: component.from,
+      sliceName: component.model.name,
+      variationId: variationId,
+      screenWidth: screenWidth,
+    })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
     if (response.status > 209) {
       return setData({
         loading: false,

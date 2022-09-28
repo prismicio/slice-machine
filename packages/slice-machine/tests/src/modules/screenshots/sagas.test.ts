@@ -14,7 +14,7 @@ describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
       const mockSetData = jest.fn();
-      const screenWidth = 200;
+      const screenWidth = "200";
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
@@ -25,15 +25,12 @@ describe("[Selected Slice sagas]", () => {
         })
       );
 
-      saga
-        .next()
-        .call(
-          generateSliceScreenshotApiClient,
-          dummySliceState.model.name,
-          dummySliceState.from,
-          dummyModelVariationID,
-          screenWidth
-        );
+      saga.next().call(generateSliceScreenshotApiClient, {
+        sliceName: dummySliceState.model.name,
+        libraryName: dummySliceState.from,
+        variationId: dummyModelVariationID,
+        screenWidth,
+      });
       const response = {
         screenshots: {
           dummyModelVariationID: {
@@ -68,7 +65,7 @@ describe("[Selected Slice sagas]", () => {
     });
     it("should open a error toaster on internal error", () => {
       const mockSetData = jest.fn();
-      const screenWidth = 200;
+      const screenWidth = "200";
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({

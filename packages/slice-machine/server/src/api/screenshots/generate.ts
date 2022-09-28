@@ -28,7 +28,7 @@ export async function generateScreenshotAndRemoveCustom(
   libraryName: string,
   sliceName: string,
   variationId: string,
-  screenWidth: number
+  screenWidth: string
 ): Promise<ScreenshotResults> {
   const { screenshots, failure } = await generateScreenshot(
     env,
@@ -51,7 +51,7 @@ export async function generateScreenshot(
   libraryName: string,
   sliceName: string,
   variationId: string,
-  screenWidth: number
+  screenWidth: string
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
@@ -96,7 +96,7 @@ async function generateForVariation(
   libraryName: string,
   slice: SliceSM,
   variationId: string,
-  screenWidth: number
+  screenWidth: string
 ): Promise<ScreenshotUI> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

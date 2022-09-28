@@ -54,7 +54,7 @@ export default async function handler({
       libraryName,
       sliceName,
       variationId,
-      Number(screenWidth)
+      screenWidth
     );
 
     if (failure.length > 0) {
