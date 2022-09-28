@@ -13,7 +13,7 @@ import { Flex, Heading, Close, Box, Text } from "theme-ui";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { useState } from "react";
 
-const VariationIcon = ({ isValid }: { isValid?: boolean }) => (
+const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
     sx={{
       p: 2,

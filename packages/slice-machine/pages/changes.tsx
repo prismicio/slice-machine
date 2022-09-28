@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -39,6 +39,11 @@ const changes: React.FunctionComponent = () => {
 
   const [changesPushed, setChangesPushed] = useState<string[]>([]);
   const [error, setError] = useState<SyncError | null>(null);
+  useEffect(() => {
+    return () => {
+      closeScreenshotsModal();
+    };
+  }, []);
 
   const handlePush = () => {
     if (error) setError(null); // reset error

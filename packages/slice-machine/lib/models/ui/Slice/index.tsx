@@ -18,29 +18,27 @@ import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
 
-const borderedSx = (sx: ThemeUIStyleObject = {}) =>
-  ({
-    border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
-    bg: "transparent",
-    transition: "all 200ms ease-in",
-    p: 3,
-    position: "relative",
-    ...sx,
-    "&:hover": {
-      transition: "all 200ms ease-out",
-      bg: "sidebar",
-      border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
-    },
-  } as ThemeUICSSObject);
+const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
+  border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
+  bg: "transparent",
+  transition: "all 200ms ease-in",
+  p: 3,
+  position: "relative",
+  ...sx,
+  "&:hover": {
+    transition: "all 200ms ease-out",
+    bg: "sidebar",
+    border: (t: Theme) => `1px solid ${t.colors?.sidebar as string}`,
+  },
+});
 
-const defaultSx = (sx: ThemeUIStyleObject = {}) =>
-  ({
-    bg: "transparent",
-    border: "none",
-    position: "relative",
-    transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
-    ...sx,
-  } as ThemeUICSSObject);
+const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
+  bg: "transparent",
+  border: "none",
+  position: "relative",
+  transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
+  ...sx,
+});
 
 const SliceVariations = ({
   hideVariations,
