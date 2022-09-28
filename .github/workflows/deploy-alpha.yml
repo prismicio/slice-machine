@@ -40,5 +40,4 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
-          npm run bump:alpha
           npm run publish:alpha
