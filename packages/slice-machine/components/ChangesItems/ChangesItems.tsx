@@ -1,7 +1,9 @@
+import React, { ReactNode } from "react";
+import { Box, Button, Flex, Text } from "theme-ui";
+
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
-import React, { ReactNode } from "react";
-import { Box } from "theme-ui";
+
 import Grid from "components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { WrapperType } from "@lib/models/ui/Slice/wrappers";
@@ -17,6 +19,7 @@ interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedSlices: ComponentUI[];
   changesPushed: string[];
   syncError: SyncError | null;
+  onOpenModal: () => void;
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
@@ -27,6 +30,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   modelsStatuses,
   authStatus,
   isOnline,
+  onOpenModal,
 }) => {
   const { customTypeError, slicesError } = getSyncErrors(syncError);
   return (
@@ -49,10 +53,26 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
       {unSyncedSlices.length > 0 && (
         <>
           <Box sx={{ mb: "8px" }}>
-            <ChangesSectionHeader
-              text={"Slices"}
-              amount={unSyncedSlices.length}
-            />
+            <Flex
+              sx={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                mt: "40px",
+                bg: "grey02",
+                borderRadius: 4,
+                padding: "12px 16px",
+              }}
+            >
+              <Box>
+                <Text sx={{ fontWeight: "heading" }}>Slices</Text>
+                <Text sx={{ ml: "8px", color: "#4E4E55" }}>
+                  {unSyncedSlices.length}
+                </Text>
+              </Box>
+              <Box>
+                <Button onClick={onOpenModal}>Manage screenshots</Button>
+              </Box>
+            </Flex>
           </Box>
           {slicesError}
           <Grid

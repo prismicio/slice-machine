@@ -36,7 +36,7 @@ const changes: React.FunctionComponent = () => {
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  const [screenshotChangesIsOpen, setScreenshotChangesIsOpen] = useState(true);
+  const [screenshotChangesIsOpen, setScreenshotChangesIsOpen] = useState(false);
   const [changesPushed, setChangesPushed] = useState<string[]>([]);
   const [error, setError] = useState<SyncError | null>(null);
 
@@ -55,7 +55,7 @@ const changes: React.FunctionComponent = () => {
     );
   };
 
-  const renderPageContent = () => {
+  const PageContent = ({ onOpenModal }: { onOpenModal: () => void }) => {
     if (!isOnline) {
       return <OfflinePage />;
     }
@@ -74,6 +74,7 @@ const changes: React.FunctionComponent = () => {
         unSyncedCustomTypes={unSyncedCustomTypes}
         changesPushed={changesPushed}
         syncError={error}
+        onOpenModal={onOpenModal}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}
@@ -83,11 +84,13 @@ const changes: React.FunctionComponent = () => {
 
   return (
     <Container sx={{ display: "flex", flex: 1 }}>
-      <ScreenshotChangesModal
-        slices={unSyncedSlices}
-        isOpen={screenshotChangesIsOpen}
-        onClose={() => setScreenshotChangesIsOpen(false)}
-      />
+      {unSyncedSlices.length ? (
+        <ScreenshotChangesModal
+          slices={unSyncedSlices}
+          isOpen={screenshotChangesIsOpen}
+          onClose={() => setScreenshotChangesIsOpen(false)}
+        />
+      ) : null}
       <Box
         as={"main"}
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
@@ -122,7 +125,7 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        {renderPageContent()}
+        <PageContent onOpenModal={() => setScreenshotChangesIsOpen(true)} />
       </Box>
     </Container>
   );
