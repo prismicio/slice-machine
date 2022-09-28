@@ -7,7 +7,7 @@ on:
     workflows: [test]
     types: [completed]
     branches:
-      - v[0-9]+.[0-9]+.[0-9]+
+      - "dev**"
 
 jobs:
   deployment:
