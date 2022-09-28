@@ -24,8 +24,8 @@
     "::release": "manypkg check && npm run build && lerna publish && npm run run changeset",
     "bump:interactive": "lerna version prerelease --preid alpha --no-push --exact --no-private",
     "bump:alpha": "lerna version prerelease --preid alpha --no-changelog --exact --yes --no-private",
+    "publish:alpha": "lerna publish --canary prerelease --dist-tag alpha --preid $npm_config_preid --exact --no-changelog --no-verify-access --no-private --yes",
     "bump:production": "lerna version --conventional-graduate --exact --no-private",
-    "publish:alpha": "lerna publish from-package --dist-tag alpha --yes --no-verify-access",
     "publish:production": "PUBLIC_SM_UI_SEGMENT_KEY=cGjidifKefYb6EPaGaqpt8rQXkv5TD6P PUBLIC_SM_INIT_SEGMENT_KEY=ED3O1FVsa8DteNyRmAuDyMcPoftJ6VdP lerna publish from-package"
   },
   "devDependencies": {
