@@ -60,11 +60,11 @@ const redirect = (
 const deviceToWidth = (device: Size) => {
   switch (device) {
     case Size.FULL:
-      return 1200;
+      return "1200";
     case Size.TABLET:
-      return 600;
+      return "600";
     case Size.PHONE:
-      return 340;
+      return "340";
   }
 };
 
