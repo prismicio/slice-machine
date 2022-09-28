@@ -72,5 +72,6 @@ export default async function handler(
     libraries: serverState.libraries,
     remoteSlices: serverState.remoteSlices,
     env: frontEndEnv,
+    clientError: serverState.clientError,
   };
 }

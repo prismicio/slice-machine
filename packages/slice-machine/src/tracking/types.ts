@@ -21,6 +21,9 @@ export enum EventNames {
 
   IdentifyUser = "IdentifyUser",
   GroupLibraries = "GroupLibraries",
+
+  ScreenshotTaken = "SliceMachine Screenshot Taken",
+  ChangesPushed = "SliceMachine Changes Pushed",
 }
 
 type BaseTrackingEvent = {
@@ -62,6 +65,7 @@ export interface OpenVideoTutorials extends BaseTrackingEvent {
   props: {
     framework: Frameworks;
     slicemachineVersion: string; // why is this one different ?
+    video: string;
   };
 }
 
@@ -162,6 +166,28 @@ export interface CreateSlice extends BaseTrackingEvent {
   };
 }
 
+export interface ScreenshotTaken extends BaseTrackingEvent {
+  name: EventNames.ScreenshotTaken;
+  props: {
+    type: "custom" | "automatic";
+  };
+}
+
+export interface ChangesPushed extends BaseTrackingEvent {
+  name: EventNames.ChangesPushed;
+  props: {
+    customTypesCreated: number;
+    customTypesModified: number;
+    customTypesDeleted: number;
+    slicesCreated: number;
+    slicesModified: number;
+    slicesDeleted: number;
+    total: number;
+    duration: number;
+    errors: number;
+  };
+}
+
 export type TrackingEvents =
   | PageView
   | IdentifyUser
@@ -178,7 +204,9 @@ export type TrackingEvents =
   | CustomTypePushed
   | CreateSlice
   | SliceSimulatorOpen
-  | SliceSimulatorSetup;
+  | SliceSimulatorSetup
+  | ScreenshotTaken
+  | ChangesPushed;
 
 export function isTrackingEvent(
   payload: TrackingEvents

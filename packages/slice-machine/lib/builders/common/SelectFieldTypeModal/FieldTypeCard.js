@@ -19,6 +19,8 @@ const FieldTypeCard = ({ title, description, icon: WidgetIcon, onSelect }) => {
         },
       }}
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      data-cy={title}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       onClick={onSelect}
     >
       <WidgetIcon

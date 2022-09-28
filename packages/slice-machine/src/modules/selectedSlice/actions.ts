@@ -2,12 +2,9 @@ import { ActionType, createAction, createAsyncAction } from "typesafe-actions";
 import { Models } from "@slicemachine/core";
 import { NestableWidget } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { SliceMockConfig } from "@lib/models/common/MockConfig";
-import { Screenshots } from "@lib/models/common/Screenshots";
-import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
+import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { renameSliceCreator } from "../slices";
 import { SelectedSliceStoreType } from "./types";
-import { SliceBuilderState } from "../../../lib/builders/SliceBuilder";
-import { VariationSM } from "@slicemachine/core/build/models";
 
 export type SelectedSliceActions =
   | ActionType<typeof initSliceStoreCreator>
@@ -20,7 +17,6 @@ export type SelectedSliceActions =
   | ActionType<typeof generateSliceScreenshotCreator>
   | ActionType<typeof generateSliceCustomScreenshotCreator>
   | ActionType<typeof saveSliceCreator>
-  | ActionType<typeof pushSliceCreator>
   | ActionType<typeof copyVariationSliceCreator>
   | ActionType<typeof renameSliceCreator>;
 
@@ -81,11 +77,10 @@ export const generateSliceScreenshotCreator = createAsyncAction(
   "SLICE/TAKE_SCREENSHOT.FAILURE"
 )<
   {
-    _variationId: string;
     component: ComponentUI;
     setData: (data: any) => void;
   },
-  { screenshots: Screenshots; component: ComponentUI }
+  { component: ComponentUI }
 >();
 
 export const generateSliceCustomScreenshotCreator = createAsyncAction(
@@ -99,7 +94,7 @@ export const generateSliceCustomScreenshotCreator = createAsyncAction(
     setData: (data: any) => void;
     file: Blob;
   },
-  { variationId: string; screenshot: ScreenshotUI; component: ComponentUI }
+  { component: ComponentUI }
 >();
 
 export const saveSliceCreator = createAsyncAction(
@@ -110,21 +105,6 @@ export const saveSliceCreator = createAsyncAction(
   {
     component: ComponentUI;
     setData: (data: any) => void;
-  },
-  {
-    component: ComponentUI;
-    remoteSliceVariations: ReadonlyArray<VariationSM> | undefined;
-  }
->();
-
-export const pushSliceCreator = createAsyncAction(
-  "SLICE/PUSH.REQUEST",
-  "SLICE/PUSH.RESPONSE",
-  "SLICE/PUSH.FAILURE"
-)<
-  {
-    component: ComponentUI;
-    onPush: (data: SliceBuilderState) => void;
   },
   {
     component: ComponentUI;

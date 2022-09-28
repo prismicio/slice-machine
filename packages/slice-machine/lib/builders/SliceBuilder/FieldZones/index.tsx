@@ -160,6 +160,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.primary${transformKeyAccessor(key)}`
         }
+        dataCy="slice-non-repeatable-zone"
       />
       <Box mt={4} />
       <Zone
@@ -184,6 +185,7 @@ const FieldZones: React.FunctionComponent<FieldZonesProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           `slice.items[i]${transformKeyAccessor(key)}`
         }
+        dataCy="slice-repeatable-zone"
       />
     </>
   );

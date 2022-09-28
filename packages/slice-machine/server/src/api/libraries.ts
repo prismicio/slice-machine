@@ -40,7 +40,7 @@ export default async function handler(
 
     const withFlags = libraries.map((lib) =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      LibraryUI.build(lib, remoteSlices, env)
+      LibraryUI.build(lib, env)
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return {

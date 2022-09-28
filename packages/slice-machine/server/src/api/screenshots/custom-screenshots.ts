@@ -14,6 +14,7 @@ import {
   TmpFile,
   CustomScreenshotRequest,
 } from "../../../../lib/models/common/Screenshots";
+import { hash } from "@slicemachine/core/build/utils/str";
 
 export default async function handler(
   file: TmpFile,
@@ -40,5 +41,8 @@ export default async function handler(
 
   Files.copy(file.path, pathToScreenshot, { recursive: true });
 
-  return createScreenshotUI(env.baseUrl, pathToScreenshot);
+  return createScreenshotUI(env.baseUrl, {
+    path: pathToScreenshot,
+    hash: hash(Files.readString(file.path)),
+  });
 }

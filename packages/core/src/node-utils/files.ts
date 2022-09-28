@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+import { hash } from "../utils/str";
+
 const ERROR_CODES = { ENOENT: "ENOENT" };
 const _format: BufferEncoding = "utf8";
 
@@ -165,6 +167,14 @@ function flushDirectories(directory: string, recursive = true): void {
   } catch (e) {}
 }
 
+async function readFileAndCreateHash(filePath: string): Promise<string> {
+  return fs.promises.readFile(filePath, "utf-8").then((file) => hash(file));
+}
+
+function readFileAndCreateHashSync(filePath: string): string {
+  return hash(fs.readFileSync(filePath, "utf-8"));
+}
+
 export default {
   write,
   readBuffer,
@@ -184,4 +194,6 @@ export default {
   remove,
   removeAll,
   flushDirectories,
+  readFileAndCreateHash,
+  readFileAndCreateHashSync,
 };

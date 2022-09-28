@@ -1,3 +1,10 @@
+export enum AuthStatus {
+  AUTHORIZED = "authorized",
+  UNAUTHORIZED = "unauthorized",
+  FORBIDDEN = "forbidden",
+  UNKNOWN = "unknown",
+}
+
 export type UserContextStoreType = {
   hasSendAReview: boolean;
   isOnboarded: boolean;
@@ -6,4 +13,5 @@ export type UserContextStoreType = {
     latestNonBreaking: string | null;
   };
   hasSeenTutorialsTooTip: boolean;
+  authStatus: AuthStatus;
 };

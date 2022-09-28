@@ -1,10 +1,8 @@
 import {
-  SliceSM,
   VariationSM,
   Screenshot,
   Component,
 } from "@slicemachine/core/build/models";
-import { compareVariations } from "../../utils";
 import { BackendEnvironment } from "./Environment";
 import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 
@@ -18,29 +16,33 @@ export const createScreenshotUrl = (
 
 export const createScreenshotUI = (
   baseUrl: string,
-  pathToScreenshot: string
+  screenshot: Screenshot
 ): ScreenshotUI => ({
-  path: pathToScreenshot,
-  url: createScreenshotUrl(baseUrl, pathToScreenshot),
+  path: screenshot.path,
+  hash: screenshot.hash,
+  url: createScreenshotUrl(baseUrl, screenshot.path),
 });
 
 export const buildScreenshotUrls = (
-  screenshotPaths:
+  screenshots:
     | {
         [variationId: string]: Screenshot;
       }
     | undefined,
   baseUrl: string
-) => {
-  if (!screenshotPaths) {
+): { [v: string]: ScreenshotUI } => {
+  if (!screenshots) {
     return {};
   }
-  return Object.entries(screenshotPaths).reduce(
+  return Object.entries(screenshots).reduce(
     (acc, [variationId, screenshot]) => {
       return screenshot.path
         ? {
             ...acc,
-            [variationId]: createScreenshotUI(baseUrl, screenshot.path),
+            [variationId]: {
+              ...screenshot,
+              ...createScreenshotUI(baseUrl, screenshot),
+            },
           }
         : acc;
     },
@@ -48,36 +50,20 @@ export const buildScreenshotUrls = (
   );
 };
 
-export enum LibStatus {
-  Modified = "MODIFIED",
-  Synced = "SYNCED",
-  Invalid = "INVALID",
-  NewSlice = "NEW_SLICE",
-}
-
 export interface ScreenshotUI extends Screenshot {
   url: string;
 }
 
 export interface ComponentUI extends Component {
-  __status: LibStatus;
-  screenshotUrls?: Record<VariationSM["id"], ScreenshotUI>;
+  screenshots: Record<VariationSM["id"], ScreenshotUI>;
   mockConfig: CustomTypeMockConfig;
 }
 
 export const ComponentUI = {
-  build(
-    component: Component,
-    remoteSlices: ReadonlyArray<SliceSM>,
-    env: BackendEnvironment
-  ): ComponentUI {
+  build(component: Component, env: BackendEnvironment): ComponentUI {
     return {
       ...component,
-      screenshotUrls: buildScreenshotUrls(
-        component.screenshotPaths,
-        env.baseUrl
-      ),
-      __status: computeStatus(component, remoteSlices),
+      screenshots: buildScreenshotUrls(component.screenshots, env.baseUrl),
       mockConfig: SliceMockConfig.getSliceMockConfig(
         env.mockConfig,
         component.from,
@@ -110,21 +96,3 @@ export const ComponentUI = {
     };
   },
 };
-
-export function computeStatus(
-  component: Component,
-  remoteSlices: ReadonlyArray<SliceSM>
-): LibStatus {
-  const slice = remoteSlices.find((s) => component.model.id === s.id);
-  if (!slice) return LibStatus.NewSlice;
-
-  const sameVersion = compareVariations(
-    component.model.variations,
-    slice.variations
-  );
-
-  const sameName = component.model.name === slice.name;
-
-  if (sameVersion && sameName) return LibStatus.Synced;
-  else return LibStatus.Modified;
-}

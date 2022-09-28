@@ -1,4 +1,3 @@
-import { SliceSM } from "@slicemachine/core/build/models";
 import type {
   LibraryMeta,
   Library,
@@ -39,14 +38,8 @@ export interface LibraryUI extends Library<ComponentUI> {
 }
 
 export const LibraryUI = {
-  build(
-    lib: Library<Component>,
-    remoteSlices: ReadonlyArray<SliceSM>,
-    env: BackendEnvironment
-  ): LibraryUI {
-    const components = lib.components.map((c) =>
-      ComponentUI.build(c, remoteSlices, env)
-    );
+  build(lib: Library<Component>, env: BackendEnvironment): LibraryUI {
+    const components = lib.components.map((c) => ComponentUI.build(c, env));
     const meta = LibraryUIMeta.build(lib.isLocal, lib.meta);
 
     return {

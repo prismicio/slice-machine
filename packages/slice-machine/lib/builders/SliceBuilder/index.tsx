@@ -24,6 +24,8 @@ import {
 } from "@src/modules/selectedSlice/selectors";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import { getRemoteSlice } from "@src/modules/slices";
+import { useModelStatus } from "@src/hooks/useModelStatus";
 
 export type SliceBuilderState = {
   imageLoading: boolean;
@@ -51,25 +53,23 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   variation,
 }) => {
   const {
-    openLoginModal,
     openToaster,
     generateSliceScreenshot,
     generateSliceCustomScreenshot,
-    pushSlice,
     saveSlice,
     checkSimulatorSetup,
   } = useSliceMachineActions();
-  const { simulatorUrl, isWaitingForIframeCheck, isTouched } = useSelector(
-    (state: SliceMachineStoreType) => ({
-      simulatorUrl: selectSimulatorUrl(state),
-      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(state),
+  const { simulatorUrl, isWaitingForIframeCheck, isTouched, remoteSlice } =
+    useSelector((store: SliceMachineStoreType) => ({
+      simulatorUrl: selectSimulatorUrl(store),
+      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
       isTouched: isSelectedSliceTouched(
-        state,
+        store,
         component.from,
         component.model.id
       ),
-    })
-  );
+      remoteSlice: getRemoteSlice(store, component.model.id),
+    }));
 
   // We need to move this state to somewhere global to update the UI if any action from anywhere save or update to the filesystem I'd guess
   const [data, setData] = useState<SliceBuilderState>(initialState);
@@ -105,35 +105,34 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   if (!variation || !sliceView) return null;
 
   const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(variation.id, component, setData);
-  };
-
-  const onTakingSliceCustomScreenshot = (file: Blob) => {
     checkSimulatorSetup(true, () =>
-      generateSliceCustomScreenshot(variation.id, component, setData, file)
+      generateSliceScreenshot(component, setData)
     );
   };
 
-  const onPushSlice = () => {
-    pushSlice(component, (data: SliceBuilderState) => {
-      setData(data);
-      if (data.error && data.status === 403) {
-        openLoginModal();
-      }
-    });
+  const onTakingSliceCustomScreenshot = (file: Blob) => {
+    generateSliceCustomScreenshot(variation.id, component, setData, file);
   };
 
   const onSaveSlice = () => {
     saveSlice(component, setData);
   };
 
+  const { modelsStatuses } = useModelStatus([
+    {
+      local: component.model,
+      remote: remoteSlice,
+      localScreenshots: component.screenshots,
+    },
+  ]);
+
   return (
     <Box sx={{ flex: 1 }}>
       <Header
         component={component}
+        status={modelsStatuses.slices[component.model.id]}
         isTouched={isTouched}
         variation={variation}
-        onPush={onPushSlice}
         onSave={onSaveSlice}
         isLoading={data.loading}
         imageLoading={data.imageLoading}
