@@ -236,8 +236,9 @@ const AppTheme = (): Theme =>
         },
         "&:disabled": {
           bg: lighten("primary", 0.2),
+          cursor: "default",
         },
-        "&:active": {
+        "&:active:not(:disabled)": {
           boxShadow:
             "0px 1px 0px rgba(0, 0, 0, 0.1), inset 0px -1px 0px rgba(0, 0, 0, 0.1)",
           bg: darken("primary", 0.05),
