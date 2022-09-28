@@ -3,6 +3,11 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
+import { useSelector } from "react-redux";
+import { isModalOpen } from "@src/modules/modal";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { ModalKeysEnum } from "@src/modules/modal/types";
+
 import { Flex, Heading, Close, Box, Text } from "theme-ui";
 
 import { ComponentUI } from "@lib/models/common/ComponentUI";
@@ -95,15 +100,16 @@ const VariationsList = ({
 
 const ScreenshotChangesModal = ({
   slices,
-  isOpen,
   defaultSelectedSliceVariation = [],
   onClose,
 }: {
   slices: ComponentUI[];
-  isOpen: boolean;
   defaultSelectedSliceVariation?: [string, string] | [];
   onClose: () => void;
 }) => {
+  const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
+    isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
+  }));
   const [defaultSelectedSliceID, defaultSelectedSliceVariationID] =
     defaultSelectedSliceVariation;
 

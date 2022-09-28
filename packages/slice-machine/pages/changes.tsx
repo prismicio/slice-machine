@@ -28,7 +28,8 @@ const changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
-  const { pushChanges } = useSliceMachineActions();
+  const { pushChanges, openScreenshotsModal, closeScreenshotsModal } =
+    useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
     isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
@@ -36,7 +37,6 @@ const changes: React.FunctionComponent = () => {
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  const [screenshotChangesIsOpen, setScreenshotChangesIsOpen] = useState(false);
   const [changesPushed, setChangesPushed] = useState<string[]>([]);
   const [error, setError] = useState<SyncError | null>(null);
 
@@ -87,8 +87,7 @@ const changes: React.FunctionComponent = () => {
       {unSyncedSlices.length ? (
         <ScreenshotChangesModal
           slices={unSyncedSlices}
-          isOpen={screenshotChangesIsOpen}
-          onClose={() => setScreenshotChangesIsOpen(false)}
+          onClose={closeScreenshotsModal}
         />
       ) : null}
       <Box
@@ -125,7 +124,7 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <PageContent onOpenModal={() => setScreenshotChangesIsOpen(true)} />
+        <PageContent onOpenModal={openScreenshotsModal} />
       </Box>
     </Container>
   );
