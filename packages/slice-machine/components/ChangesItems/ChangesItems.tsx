@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import { Box, Button, Flex, Text } from "theme-ui";
+import { Box, Button, Text } from "theme-ui";
+import { AiFillCamera } from "react-icons/ai";
 
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
@@ -37,10 +38,14 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
     <>
       {unSyncedCustomTypes.length > 0 && (
         <>
-          <ChangesSectionHeader
-            text={"Custom Types"}
-            amount={unSyncedCustomTypes.length}
-          />
+          <ChangesSectionHeader>
+            <Box>
+              <Text variant="heading">Custom Types</Text>
+              <Text variant="grey" sx={{ ml: "8px" }}>
+                {unSyncedCustomTypes.length}
+              </Text>
+            </Box>
+          </ChangesSectionHeader>
           {customTypeError}
           <CustomTypeTable
             customTypes={unSyncedCustomTypes}
@@ -53,26 +58,28 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
       {unSyncedSlices.length > 0 && (
         <>
           <Box sx={{ mb: "8px" }}>
-            <Flex
-              sx={{
-                alignItems: "center",
-                justifyContent: "space-between",
-                mt: "40px",
-                bg: "grey02",
-                borderRadius: 4,
-                padding: "12px 16px",
-              }}
-            >
+            <ChangesSectionHeader>
               <Box>
-                <Text sx={{ fontWeight: "heading" }}>Slices</Text>
-                <Text sx={{ ml: "8px", color: "#4E4E55" }}>
+                <Text variant="heading">Slices</Text>
+                <Text variant="grey" sx={{ ml: "8px" }}>
                   {unSyncedSlices.length}
                 </Text>
               </Box>
               <Box>
-                <Button onClick={onOpenModal}>Manage screenshots</Button>
+                <Button variant="darkSmall" onClick={onOpenModal}>
+                  <AiFillCamera
+                    style={{
+                      color: "#FFF",
+                      fontSize: "15px",
+                      position: "relative",
+                      top: "3px",
+                      marginRight: "4px",
+                    }}
+                  />{" "}
+                  Update all screenshots
+                </Button>
               </Box>
-            </Flex>
+            </ChangesSectionHeader>
           </Box>
           {slicesError}
           <Grid

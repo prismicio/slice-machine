@@ -161,6 +161,12 @@ const AppTheme = (): Theme =>
         bg: "grey01",
         p: "2px",
       },
+      heading: {
+        fontWeight: "500",
+      },
+      grey: {
+        color: "#4E4E55",
+      },
     },
     badges: {
       SYNCED: {
