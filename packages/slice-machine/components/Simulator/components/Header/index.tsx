@@ -25,20 +25,6 @@ type PropTypes = {
   size: Size;
 };
 
-type ScreenShotSyncState = {
-  imageLoading: boolean;
-  done: boolean;
-  error: null | string;
-  status: number | null;
-};
-
-export const initialState: ScreenShotSyncState = {
-  imageLoading: false,
-  done: false,
-  error: null,
-  status: null,
-};
-
 const redirect = (
   model: ComponentUI,
   variation: { id: string } | undefined,
@@ -63,26 +49,21 @@ const Header: React.FunctionComponent<PropTypes> = ({
   handleScreenSizeChange,
   size,
 }) => {
-  const { generateSliceScreenshot, checkSimulatorSetup } =
-    useSliceMachineActions();
-  const [data, setData] = useState<ScreenShotSyncState>(initialState);
-
-  const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
-    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-  }));
+  const { generateSliceScreenshot } = useSliceMachineActions();
 
   const onTakingSliceScreenshot = () => {
-    checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(variation.id, Model, setData)
-    );
+    generateSliceScreenshot(variation.id, Model);
   };
 
-  const { isWaitingForIframeCheck, simulatorUrl } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =
+    useSelector((store: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(store),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
-    })
-  );
+      isSavingScreenshot: isLoading(
+        store,
+        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
+      ),
+    }));
 
   const sliceView = useMemo(
     () =>
@@ -140,8 +121,8 @@ const Header: React.FunctionComponent<PropTypes> = ({
       >
         <ScreenshotButton
           onClick={onTakingSliceScreenshot}
-          isLoading={data.imageLoading || isCheckingSetup}
-          isDisabled={data.imageLoading || isCheckingSetup}
+          isLoading={isSavingScreenshot}
+          isDisabled={isSavingScreenshot}
         />
         {isWaitingForIframeCheck && (
           <IframeRenderer
