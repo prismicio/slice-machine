@@ -13,13 +13,11 @@ const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
-      const mockSetData = jest.fn();
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
-          setData: mockSetData,
         })
       );
 
@@ -53,24 +51,13 @@ describe("[Selected Slice sagas]", () => {
         );
 
       saga.next().isDone();
-      expect(mockSetData).toHaveBeenCalledWith({
-        done: true,
-        error: null,
-        loading: false,
-        imageLoading: false,
-        message: "Screenshots were saved to FileSystem",
-        status: 200,
-        warning: false,
-      });
     });
     it("should open a error toaster on internal error", () => {
-      const mockSetData = jest.fn();
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
-          setData: mockSetData,
         })
       ).next();
 
