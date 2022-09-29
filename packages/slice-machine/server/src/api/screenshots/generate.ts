@@ -7,20 +7,14 @@ import {
   createScreenshotUI,
   ScreenshotUI,
 } from "../../../../lib/models/common/ComponentUI";
-import { Screenshots } from "../../../../lib/models/common/Screenshots";
-import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
+import { SliceSM } from "@slicemachine/core/build/models";
 import { hash } from "@slicemachine/core/build/utils/str";
 
 import * as IO from "../../../../lib/io";
 
-type FailedScreenshot = {
-  variationId: VariationSM["id"];
-  error: Error;
-};
-
 export interface ScreenshotResults {
-  screenshots: Screenshots;
-  failure: FailedScreenshot[];
+  screenshots: ScreenshotUI[];
+  failure: Error[];
 }
 
 export async function generateScreenshotAndRemoveCustom(
@@ -29,62 +23,30 @@ export async function generateScreenshotAndRemoveCustom(
   sliceName: string,
   variationId: string
 ): Promise<ScreenshotResults> {
-  const { screenshots, failure } = await generateScreenshot(
-    env,
-    libraryName,
-    sliceName,
-    variationId
-  );
-
-  removeCustomScreenshot(env, libraryName, sliceName, variationId);
-
-  return {
-    screenshots: screenshots,
-    failure: failure,
-  };
-}
-
-export async function generateScreenshot(
-  env: BackendEnvironment,
-  libraryName: string,
-  sliceName: string,
-  variationId: string
-): Promise<ScreenshotResults> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
     NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
   );
 
-  const promises: Promise<ScreenshotUI>[] = [variationId].map(
-    (id: VariationSM["id"]) => generateForVariation(env, libraryName, slice, id)
-  );
+  try {
+    const result = await generateForVariation(
+      env,
+      libraryName,
+      slice,
+      variationId
+    );
 
-  const results = await Promise.allSettled(promises);
+    removeCustomScreenshot(env, libraryName, sliceName, variationId);
 
-  return results.reduce(
-    (acc: ScreenshotResults, result: PromiseSettledResult<ScreenshotUI>) => {
-      const key = variationId;
-
-      const screenshots =
-        result.status === "fulfilled"
-          ? {
-              ...acc.screenshots,
-              [key]: result.value,
-            }
-          : acc.screenshots;
-
-      const failure =
-        result.status === "rejected"
-          ? [
-              ...acc.failure,
-              { error: result.reason as Error, variationId: key },
-            ]
-          : acc.failure;
-
-      return { screenshots, failure };
-    },
-    { screenshots: {}, failure: [] } as ScreenshotResults
-  );
+    return {
+      screenshots: [result],
+      failure: [],
+    };
+  } catch (err) {
+    return {
+      screenshots: [],
+      failure: [err as Error],
+    };
+  }
 }
 
 async function generateForVariation(

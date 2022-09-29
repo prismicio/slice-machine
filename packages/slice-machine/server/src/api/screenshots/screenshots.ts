@@ -17,7 +17,7 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshots: {},
+      screenshots: [],
     };
   }
   if (!simulatorUrl) {
@@ -27,7 +27,7 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshots: {},
+      screenshots: [],
     };
   }
 }
@@ -56,11 +56,7 @@ export default async function handler({
     );
 
     if (failure.length > 0) {
-      const message:
-        | string
-        | null = `Could not generate screenshots for variations: ${failure
-        .map((f) => f.variationId)
-        .join(" | ")}`;
+      const message = `Could not generate screenshot for variation ${variationId}`;
 
       /* We display an error if no screenshot has been taken */
       const isError = Object.keys(screenshots).length === 0;
@@ -85,7 +81,7 @@ export default async function handler({
       err: new Error(crashMessage),
       reason: crashMessage,
       warning: null,
-      screenshots: {},
+      screenshots: [],
     };
   }
 }
