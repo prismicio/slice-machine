@@ -1,12 +1,13 @@
 import axios from "axios";
 import path from "path";
 import puppeteer from "puppeteer";
+import { ScreenDimensions } from "../../../../lib/models/common/Screenshots";
 import Files from "../../../../lib/utils/files";
 
 interface PuppeteerHandleProps {
   screenshotUrl: string;
   pathToFile: string;
-  screenWidth: string;
+  screenDimensions: ScreenDimensions;
 }
 
 let puppeteerBrowserPromise: Promise<puppeteer.Browser> | null = null;
@@ -15,7 +16,7 @@ export default {
   handleScreenshot: async ({
     screenshotUrl,
     pathToFile,
-    screenWidth,
+    screenDimensions,
   }: PuppeteerHandleProps): Promise<void> => {
     const { warning } = await testUrl(screenshotUrl);
     if (warning) throw new Error(warning);
@@ -31,7 +32,7 @@ export default {
       puppeteerBrowser,
       screenshotUrl,
       pathToFile,
-      screenWidth
+      screenDimensions
     ).catch(() => {
       throw new Error(
         `Unable to generate screenshot for this page: ${screenshotUrl}`
@@ -44,13 +45,16 @@ const generateScreenshot = async (
   browser: puppeteer.Browser,
   screenshotUrl: string,
   pathToFile: string,
-  screenWidth: string
+  screenDimensions: ScreenDimensions
 ): Promise<void> => {
   // Create an incognito context to isolate screenshots.
   const context = await browser.createIncognitoBrowserContext();
   // Create a new page in the context.
   const page = await context.newPage();
-  await page.setViewport({ width: Number(screenWidth), height: 600 });
+  await page.setViewport({
+    width: Number(screenDimensions.width),
+    height: Number(screenDimensions.height),
+  });
 
   try {
     Files.mkdir(path.dirname(pathToFile), { recursive: true });

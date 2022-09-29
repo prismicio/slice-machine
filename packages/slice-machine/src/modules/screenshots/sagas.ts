@@ -21,7 +21,7 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 export function* generateSliceScreenshotSaga({
   payload,
 }: ReturnType<typeof generateSliceScreenshotCreator.request>) {
-  const { component, variationId, setData, screenWidth } = payload;
+  const { component, variationId, setData, screenDimensions } = payload;
   try {
     setData({
       loading: true,
@@ -34,7 +34,7 @@ export function* generateSliceScreenshotSaga({
       libraryName: component.from,
       sliceName: component.model.name,
       variationId: variationId,
-      screenWidth: screenWidth,
+      screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
     if (response.status > 209) {
       return setData({

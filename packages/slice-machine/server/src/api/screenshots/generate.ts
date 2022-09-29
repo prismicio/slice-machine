@@ -7,7 +7,10 @@ import {
   createScreenshotUI,
   ScreenshotUI,
 } from "../../../../lib/models/common/ComponentUI";
-import { Screenshots } from "../../../../lib/models/common/Screenshots";
+import {
+  ScreenDimensions,
+  Screenshots,
+} from "../../../../lib/models/common/Screenshots";
 import { SliceSM, VariationSM } from "@slicemachine/core/build/models";
 import { hash } from "@slicemachine/core/build/utils/str";
 
@@ -28,14 +31,14 @@ export async function generateScreenshotAndRemoveCustom(
   libraryName: string,
   sliceName: string,
   variationId: string,
-  screenWidth: string
+  screenDimensions: ScreenDimensions
 ): Promise<ScreenshotResults> {
   const { screenshots, failure } = await generateScreenshot(
     env,
     libraryName,
     sliceName,
     variationId,
-    screenWidth
+    screenDimensions
   );
 
   removeCustomScreenshot(env, libraryName, sliceName, variationId);
@@ -51,7 +54,7 @@ export async function generateScreenshot(
   libraryName: string,
   sliceName: string,
   variationId: string,
-  screenWidth: string
+  screenDimensions: ScreenDimensions
 ): Promise<ScreenshotResults> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const slice = IO.Slice.readSlice(
@@ -60,7 +63,7 @@ export async function generateScreenshot(
 
   const promises: Promise<ScreenshotUI>[] = [variationId].map(
     (id: VariationSM["id"]) =>
-      generateForVariation(env, libraryName, slice, id, screenWidth)
+      generateForVariation(env, libraryName, slice, id, screenDimensions)
   );
 
   const results = await Promise.allSettled(promises);
@@ -96,7 +99,7 @@ async function generateForVariation(
   libraryName: string,
   slice: SliceSM,
   variationId: string,
-  screenWidth: string
+  screenDimensions: ScreenDimensions
 ): Promise<ScreenshotUI> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -114,7 +117,7 @@ async function generateForVariation(
   await Puppeteer.handleScreenshot({
     screenshotUrl,
     pathToFile,
-    screenWidth,
+    screenDimensions,
   });
   return createScreenshotUI(env.baseUrl, {
     path: pathToFile,

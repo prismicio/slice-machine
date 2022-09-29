@@ -71,21 +71,19 @@ router.get(
   })
 );
 
-router.get(
+router.post(
   "/screenshot",
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   async function (
     req: express.Request<
       Record<string, never>,
       ScreenshotResponse,
-      Record<string, never>,
-      ScreenshotRequest
+      ScreenshotRequest,
+      Record<string, never>
     >,
     res: express.Response
   ): Promise<Express.Response> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const payload = await screenshot(req.query);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-member-access
+    const payload = await screenshot(req.body);
     if (payload.err) {
       return res.status(400).json(payload);
     }

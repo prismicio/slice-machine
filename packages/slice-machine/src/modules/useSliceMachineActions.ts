@@ -79,6 +79,7 @@ import { SliceBuilderState } from "../../lib/builders/SliceBuilder";
 import { changesPushCreator } from "./pushChangesSaga";
 import { SyncError } from "@src/models/SyncError";
 import { ModelStatusInformation } from "@src/hooks/useModelStatus";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -380,14 +381,14 @@ const useSliceMachineActions = () => {
     variationId: string,
     component: ComponentUI,
     setData: (data: any) => void,
-    screenWidth = "1200"
+    screenDimensions: ScreenDimensions
   ) => {
     dispatch(
       generateSliceScreenshotCreator.request({
         variationId,
         component,
         setData,
-        screenWidth,
+        screenDimensions,
       })
     );
   };

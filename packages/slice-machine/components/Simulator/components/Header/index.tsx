@@ -57,14 +57,14 @@ const redirect = (
   void router.push(params.href, params.as, params.options);
 };
 
-const deviceToWidth = (device: Size) => {
+const deviceToDimensions = (device: Size) => {
   switch (device) {
     case Size.FULL:
-      return "1200";
+      return { width: "1200", height: "600" };
     case Size.TABLET:
-      return "600";
+      return { width: "600", height: "600" };
     case Size.PHONE:
-      return "340";
+      return { width: "340", height: "600" };
   }
 };
 
@@ -84,7 +84,12 @@ const Header: React.FunctionComponent<PropTypes> = ({
 
   const onTakingSliceScreenshot = () => {
     checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(variation.id, Model, setData, deviceToWidth(size))
+      generateSliceScreenshot(
+        variation.id,
+        Model,
+        setData,
+        deviceToDimensions(size)
+      )
     );
   };
 

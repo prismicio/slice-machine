@@ -36,7 +36,7 @@ export default async function handler({
   libraryName,
   sliceName,
   variationId,
-  screenWidth,
+  screenDimensions,
 }: ScreenshotRequest): Promise<ScreenshotResponse> {
   const { env } = await getEnv();
 
@@ -54,7 +54,7 @@ export default async function handler({
       libraryName,
       sliceName,
       variationId,
-      screenWidth
+      screenDimensions
     );
 
     if (failure.length > 0) {

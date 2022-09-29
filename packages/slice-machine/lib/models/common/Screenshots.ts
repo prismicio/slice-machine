@@ -3,11 +3,15 @@ import { VariationSM } from "@slicemachine/core/build/models";
 
 export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
 
+export interface ScreenDimensions {
+  width: string;
+  height: string;
+}
 export interface ScreenshotRequest {
   libraryName: string;
   sliceName: string;
   variationId: string;
-  screenWidth: string;
+  screenDimensions: ScreenDimensions;
 }
 
 export interface ScreenshotResponse {
