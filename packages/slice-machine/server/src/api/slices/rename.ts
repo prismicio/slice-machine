@@ -75,6 +75,8 @@ export async function renameSlice(req: {
     `${GeneratedPaths(env.cwd).library(libName).value()}/${newSliceName}`
   );
 
+  IO.Types.upsert(env);
+
   await onSaveSlice(env);
 
   return desiredSlice;

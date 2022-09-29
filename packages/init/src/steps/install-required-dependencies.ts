@@ -13,6 +13,7 @@ const {
   SLICE_SIMULATOR_REACT,
   SLICE_SIMULATOR_VUE,
   PRISMIC_HELPERS,
+  PRISMIC_TYPES,
 } = CONSTS;
 
 function depsForFramework(framework: Models.Frameworks): string {
@@ -42,7 +43,7 @@ async function addAndInstallDeps(
   const installDependencyCommand = useYarn ? "yarn add" : "npm install --save";
 
   const { stderr } = await execCommand(
-    `${installDevDependencyCommand} ${SM_PACKAGE_NAME}`
+    `${installDevDependencyCommand} ${SM_PACKAGE_NAME} ${PRISMIC_TYPES}`
   );
 
   const deps = depsForFramework(framework);
