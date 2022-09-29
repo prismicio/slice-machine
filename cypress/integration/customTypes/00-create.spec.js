@@ -67,7 +67,12 @@ describe("Custom Types specs", () => {
       });
     });
 
-    cy.setupSliceMachineUserContext();
+    cy.setupSliceMachineUserContext({
+      hasSendAReview: true,
+      isOnboarded: true,
+      updatesViewed: {},
+      hasSeenTutorialsTooTip: true,
+    });
     cy.visit("/");
 
     // loading spinner
