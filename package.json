@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "engines": {
-    "node": ">=14"
+    "node": ">=12"
   },
   "scripts": {
     "cypress-setup": "./cypress-setup.sh",
