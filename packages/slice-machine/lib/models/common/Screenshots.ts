@@ -10,7 +10,7 @@ export interface ScreenshotResponse {
   err: Error | null;
   reason: string | null;
   warning?: string | null;
-  screenshots: ScreenshotUI[];
+  screenshot: ScreenshotUI | null;
 }
 
 export type TmpFile = File & { path: string };

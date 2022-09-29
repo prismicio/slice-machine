@@ -10,14 +10,14 @@ import { Frameworks } from "@slicemachine/core/build/models";
 export function validateEnv(
   framework: Frameworks,
   simulatorUrl: string | undefined
-) {
+): ScreenshotResponse | undefined {
   if (!simulatorIsSupported(framework)) {
     const reason = "Could not generate preview: framework is not supported";
 
     return {
       err: new Error(reason),
       reason,
-      screenshots: [],
+      screenshot: null,
     };
   }
   if (!simulatorUrl) {
@@ -27,7 +27,7 @@ export function validateEnv(
     return {
       err: new Error(reason),
       reason,
-      screenshots: [],
+      screenshot: null,
     };
   }
 }
@@ -48,31 +48,31 @@ export default async function handler({
   }
 
   try {
-    const { screenshots, failure } = await generateScreenshotAndRemoveCustom(
+    const { screenshot, failure } = await generateScreenshotAndRemoveCustom(
       env,
       libraryName,
       sliceName,
       variationId
     );
 
-    if (failure.length > 0) {
+    if (failure) {
       const message = `Could not generate screenshot for variation ${variationId}`;
 
       /* We display an error if no screenshot has been taken */
-      const isError = Object.keys(screenshots).length === 0;
+      const isError = Boolean(screenshot);
 
       return {
         err: isError ? new Error(message) : null,
         reason: isError ? message : null,
         warning: isError ? null : message,
-        screenshots,
+        screenshot,
       };
     }
 
     return {
       err: null,
       reason: null,
-      screenshots,
+      screenshot,
     };
   } catch (e) {
     const crashMessage =
@@ -81,7 +81,7 @@ export default async function handler({
       err: new Error(crashMessage),
       reason: crashMessage,
       warning: null,
-      screenshots: [],
+      screenshot: null,
     };
   }
 }

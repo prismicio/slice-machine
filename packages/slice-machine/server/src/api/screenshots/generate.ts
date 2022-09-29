@@ -13,8 +13,8 @@ import { hash } from "@slicemachine/core/build/utils/str";
 import * as IO from "../../../../lib/io";
 
 export interface ScreenshotResults {
-  screenshots: ScreenshotUI[];
-  failure: Error[];
+  screenshot: ScreenshotUI | null;
+  failure: Error | null;
 }
 
 export async function generateScreenshotAndRemoveCustom(
@@ -38,13 +38,13 @@ export async function generateScreenshotAndRemoveCustom(
     removeCustomScreenshot(env, libraryName, sliceName, variationId);
 
     return {
-      screenshots: [result],
-      failure: [],
+      screenshot: result,
+      failure: null,
     };
   } catch (err) {
     return {
-      screenshots: [],
-      failure: [err as Error],
+      screenshot: null,
+      failure: err as Error,
     };
   }
 }

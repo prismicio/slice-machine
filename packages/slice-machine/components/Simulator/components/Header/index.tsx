@@ -8,7 +8,7 @@ import * as Links from "@lib/builders/SliceBuilder/links";
 import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import ScreenshotButton from "@components/ScreenshotButton";
 import IframeRenderer from "../IframeRenderer";
 import { SliceMachineStoreType } from "@src/redux/type";
