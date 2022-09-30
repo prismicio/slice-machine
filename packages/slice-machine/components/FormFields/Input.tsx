@@ -1,5 +1,6 @@
 import { InputType } from "@lib/forms/fields";
 import { Field, FieldInputProps, FieldMetaProps } from "formik";
+import React from "react";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
 export enum InputFieldStyles {
@@ -51,14 +52,17 @@ export const getInputFieldStyles = (type?: InputFieldStyles) => {
 };
 
 interface FormFieldInputProps {
-  sx: ThemeUIStyleObject;
-  field: FieldInputProps<string>;
-  meta: FieldMetaProps<string>;
-  formField: InputType;
+  sx?: ThemeUIStyleObject;
+  // field: FieldInputProps<string> & {readOnly?: boolean, type?: "string" | "number"};
+  // field: FieldAttributes<React.InputHTMLAttributes<HTMLInputElement>>;
+  field: FieldInputProps<string> | FieldInputProps<number>;
+  meta: FieldMetaProps<string> | FieldMetaProps<number>;
+  formField: Partial<InputType>;
   fieldName: string;
-  fields: Record<string, unknown>;
+  fields?: Record<string, unknown>;
   initialValues?: Record<string, string>;
   isDisabled?: boolean;
+  variant?: string;
 }
 
 export const FormFieldInput = ({
