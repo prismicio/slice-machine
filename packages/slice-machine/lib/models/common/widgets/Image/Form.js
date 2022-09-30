@@ -175,17 +175,11 @@ FormFields.thumbnails = {
           name: "Thumbnails",
           message: "Must set name and width or height at minimum",
           test: function (value) {
-            if (!value.name) {
-              return false;
-            }
-            if (
-              (!value.width && !value.height) ||
-              (typeof value.width !== "number" &&
-                typeof value.height !== "number")
-            ) {
-              return false;
-            }
-            return true;
+            return (
+              value.name &&
+              (typeof value.width === "number" ||
+                typeof value.height === "number")
+            );
           },
         })
       ),
