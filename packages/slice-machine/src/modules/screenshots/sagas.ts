@@ -21,43 +21,18 @@ import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 export function* generateSliceScreenshotSaga({
   payload,
 }: ReturnType<typeof generateSliceScreenshotCreator.request>) {
-  const { component, variationId, setData, screenDimensions } = payload;
+  const { component, variationId, screenDimensions } = payload;
   try {
-    setData({
-      loading: true,
-      done: false,
-      error: null,
-      status: null,
-      imageLoading: true,
-    });
     const response = (yield call(generateSliceScreenshotApiClient, {
       libraryName: component.from,
       sliceName: component.model.name,
       variationId: variationId,
       screenDimensions,
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
-    if (response.status > 209) {
-      return setData({
-        loading: false,
-        done: true,
-        error: response.data.err,
-        status: response.status,
-        message: response.data.reason,
-        imageLoading: false,
-      });
-    }
-    setData({
-      loading: false,
-      done: true,
-      error: null,
-      warning: !!response.data.warning,
-      status: response.status,
-      message: response.data.warning || "Screenshots were saved to FileSystem",
-      imageLoading: false,
-    });
+
     yield put(
       generateSliceScreenshotCreator.success({
-        screenshots: response.data.screenshots,
+        screenshot: response.data.screenshot,
         component,
       })
     );

@@ -8,7 +8,7 @@ import * as Links from "@lib/builders/SliceBuilder/links";
 import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "src/modules/useSliceMachineActions";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import ScreenshotButton from "@components/ScreenshotButton";
 import IframeRenderer from "../IframeRenderer";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -24,20 +24,6 @@ type PropTypes = {
   variation: Models.VariationSM;
   handleScreenSizeChange: (screen: { size: Size }) => void;
   size: Size;
-};
-
-type ScreenShotSyncState = {
-  imageLoading: boolean;
-  done: boolean;
-  error: null | string;
-  status: number | null;
-};
-
-export const initialState: ScreenShotSyncState = {
-  imageLoading: false,
-  done: false,
-  error: null,
-  status: null,
 };
 
 const redirect = (
@@ -75,31 +61,21 @@ const Header: React.FunctionComponent<PropTypes> = ({
   handleScreenSizeChange,
   size,
 }) => {
-  const { generateSliceScreenshot, checkSimulatorSetup } =
-    useSliceMachineActions();
-  const [data, setData] = useState<ScreenShotSyncState>(initialState);
-
-  const { isCheckingSetup } = useSelector((state: SliceMachineStoreType) => ({
-    isCheckingSetup: isLoading(state, LoadingKeysEnum.CHECK_SIMULATOR),
-  }));
+  const { generateSliceScreenshot } = useSliceMachineActions();
 
   const onTakingSliceScreenshot = () => {
-    checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(
-        variation.id,
-        Model,
-        setData,
-        deviceToDimensions(size)
-      )
-    );
+    generateSliceScreenshot(variation.id, Model, deviceToDimensions(size));
   };
 
-  const { isWaitingForIframeCheck, simulatorUrl } = useSelector(
-    (store: SliceMachineStoreType) => ({
+  const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =
+    useSelector((store: SliceMachineStoreType) => ({
       simulatorUrl: selectSimulatorUrl(store),
       isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
-    })
-  );
+      isSavingScreenshot: isLoading(
+        store,
+        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
+      ),
+    }));
 
   const sliceView = useMemo(
     () =>
@@ -157,8 +133,8 @@ const Header: React.FunctionComponent<PropTypes> = ({
       >
         <ScreenshotButton
           onClick={onTakingSliceScreenshot}
-          isLoading={data.imageLoading || isCheckingSetup}
-          isDisabled={data.imageLoading || isCheckingSetup}
+          isLoading={isSavingScreenshot}
+          isDisabled={isSavingScreenshot}
         />
         {isWaitingForIframeCheck && (
           <IframeRenderer

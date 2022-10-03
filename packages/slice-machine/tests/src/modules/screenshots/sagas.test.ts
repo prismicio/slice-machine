@@ -13,14 +13,12 @@ const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
-      const mockSetData = jest.fn();
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
-          setData: mockSetData,
           screenDimensions,
         })
       );
@@ -32,11 +30,10 @@ describe("[Selected Slice sagas]", () => {
         screenDimensions,
       });
       const response = {
-        screenshots: {
-          dummyModelVariationID: {
-            path: "testScreenshotPath",
-            url: "testScreenshotUrl",
-          },
+        screenshot: {
+          path: "testScreenshotPath",
+          hash: "testScreenshotHash",
+          url: "testScreenshotUrl",
         },
       };
 
@@ -47,31 +44,20 @@ describe("[Selected Slice sagas]", () => {
         })
         .put(
           generateSliceScreenshotCreator.success({
-            screenshots: response.screenshots,
+            screenshot: response.screenshot,
             component: dummySliceState,
           })
         );
 
       saga.next().isDone();
-      expect(mockSetData).toHaveBeenCalledWith({
-        done: true,
-        error: null,
-        loading: false,
-        imageLoading: false,
-        message: "Screenshots were saved to FileSystem",
-        status: 200,
-        warning: false,
-      });
     });
     it("should open a error toaster on internal error", () => {
-      const mockSetData = jest.fn();
       const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
-          setData: mockSetData,
           screenDimensions,
         })
       ).next();
