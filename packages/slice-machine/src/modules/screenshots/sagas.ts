@@ -31,7 +31,7 @@ export function* generateSliceScreenshotSaga({
     )) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
     yield put(
       generateSliceScreenshotCreator.success({
-        screenshots: response.data.screenshots,
+        screenshot: response.data.screenshot,
         component,
       })
     );

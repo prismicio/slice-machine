@@ -30,11 +30,10 @@ describe("[Selected Slice sagas]", () => {
           dummyModelVariationID
         );
       const response = {
-        screenshots: {
-          dummyModelVariationID: {
-            path: "testScreenshotPath",
-            url: "testScreenshotUrl",
-          },
+        screenshot: {
+          path: "testScreenshotPath",
+          hash: "testScreenshotHash",
+          url: "testScreenshotUrl",
         },
       };
 
@@ -45,7 +44,7 @@ describe("[Selected Slice sagas]", () => {
         })
         .put(
           generateSliceScreenshotCreator.success({
-            screenshots: response.screenshots,
+            screenshot: response.screenshot,
             component: dummySliceState,
           })
         );
