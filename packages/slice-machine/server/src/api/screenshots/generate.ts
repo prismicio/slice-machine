@@ -7,6 +7,7 @@ import {
   createScreenshotUI,
   ScreenshotUI,
 } from "../../../../lib/models/common/ComponentUI";
+import { ScreenDimensions } from "../../../../lib/models/common/Screenshots";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { hash } from "@slicemachine/core/build/utils/str";
 
@@ -21,7 +22,8 @@ export async function generateScreenshotAndRemoveCustom(
   env: BackendEnvironment,
   libraryName: string,
   sliceName: string,
-  variationId: string
+  variationId: string,
+  screenDimensions: ScreenDimensions
 ): Promise<ScreenshotResults> {
   const slice = IO.Slice.readSlice(
     NodeUtils.CustomPaths(env.cwd).library(libraryName).slice(sliceName).model()
@@ -32,7 +34,8 @@ export async function generateScreenshotAndRemoveCustom(
       env,
       libraryName,
       slice,
-      variationId
+      variationId,
+      screenDimensions
     );
 
     removeCustomScreenshot(env, libraryName, sliceName, variationId);
@@ -53,7 +56,8 @@ async function generateForVariation(
   env: BackendEnvironment,
   libraryName: string,
   slice: SliceSM,
-  variationId: string
+  variationId: string,
+  screenDimensions: ScreenDimensions
 ): Promise<ScreenshotUI> {
   const screenshotUrl = `${
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -71,6 +75,7 @@ async function generateForVariation(
   await Puppeteer.handleScreenshot({
     screenshotUrl,
     pathToFile,
+    screenDimensions,
   });
   return createScreenshotUI(env.baseUrl, {
     path: pathToFile,

@@ -13,22 +13,22 @@ const { dummySliceState, dummyModelVariationID } = getSelectedSliceDummyData();
 describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
+      const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
+          screenDimensions,
         })
       );
 
-      saga
-        .next()
-        .call(
-          generateSliceScreenshotApiClient,
-          dummySliceState.model.name,
-          dummySliceState.from,
-          dummyModelVariationID
-        );
+      saga.next().call(generateSliceScreenshotApiClient, {
+        sliceName: dummySliceState.model.name,
+        libraryName: dummySliceState.from,
+        variationId: dummyModelVariationID,
+        screenDimensions,
+      });
       const response = {
         screenshot: {
           path: "testScreenshotPath",
@@ -52,11 +52,13 @@ describe("[Selected Slice sagas]", () => {
       saga.next().isDone();
     });
     it("should open a error toaster on internal error", () => {
+      const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
           variationId: dummyModelVariationID,
           component: dummySliceState,
+          screenDimensions,
         })
       ).next();
 

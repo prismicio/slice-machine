@@ -17,6 +17,7 @@ import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
 import { selectSimulatorUrl } from "@src/modules/environment";
 import { isLoading } from "@src/modules/loading";
 import { LoadingKeysEnum } from "@src/modules/loading/types";
+import { ScreenDimensions } from "@lib/models/common/Screenshots";
 
 type PropTypes = {
   Model: ComponentUI;
@@ -43,6 +44,17 @@ const redirect = (
   void router.push(params.href, params.as, params.options);
 };
 
+const deviceToDimensions = (device: Size): ScreenDimensions => {
+  switch (device) {
+    case Size.FULL:
+      return { width: 1200, height: 600 };
+    case Size.TABLET:
+      return { width: 600, height: 600 };
+    case Size.PHONE:
+      return { width: 340, height: 600 };
+  }
+};
+
 const Header: React.FunctionComponent<PropTypes> = ({
   Model,
   variation,
@@ -52,7 +64,7 @@ const Header: React.FunctionComponent<PropTypes> = ({
   const { generateSliceScreenshot } = useSliceMachineActions();
 
   const onTakingSliceScreenshot = () => {
-    generateSliceScreenshot(variation.id, Model);
+    generateSliceScreenshot(variation.id, Model, deviceToDimensions(size));
   };
 
   const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =

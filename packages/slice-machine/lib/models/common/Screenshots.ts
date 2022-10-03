@@ -1,9 +1,14 @@
 import { ScreenshotUI } from "./ComponentUI";
 
+export interface ScreenDimensions {
+  width: number;
+  height: number;
+}
 export interface ScreenshotRequest {
   libraryName: string;
   sliceName: string;
   variationId: string;
+  screenDimensions: ScreenDimensions;
 }
 
 export interface ScreenshotResponse {
