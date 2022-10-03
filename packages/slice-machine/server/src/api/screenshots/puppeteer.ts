@@ -71,7 +71,6 @@ const generateScreenshot = async (
     if (element) {
       await element.screenshot({
         path: pathToFile,
-        captureBeyondViewport: false,
         clip: {
           width: screenDimensions.width,
           height: screenDimensions.height,
