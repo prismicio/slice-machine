@@ -7,10 +7,20 @@ import * as Links from "@lib/builders/SliceBuilder/links";
 
 import ScreenSizes, { Size } from "../ScreenSizes";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
+import useSliceMachineActions from "src/modules/useSliceMachineActions";
+import { useMemo } from "react";
+import ScreenshotButton from "@components/ScreenshotButton";
+import IframeRenderer from "../IframeRenderer";
+import { SliceMachineStoreType } from "@src/redux/type";
+import { useSelector } from "react-redux";
+import { selectIsWaitingForIFrameCheck } from "@src/modules/simulator";
+import { selectSimulatorUrl } from "@src/modules/environment";
+import { isLoading } from "@src/modules/loading";
+import { LoadingKeysEnum } from "@src/modules/loading/types";
 
 type PropTypes = {
   Model: ComponentUI;
-  variation: Models.VariationSM | undefined;
+  variation: Models.VariationSM;
   handleScreenSizeChange: (screen: { size: Size }) => void;
   size: Size;
 };
@@ -39,6 +49,37 @@ const Header: React.FunctionComponent<PropTypes> = ({
   handleScreenSizeChange,
   size,
 }) => {
+  const { generateSliceScreenshot } = useSliceMachineActions();
+
+  const onTakingSliceScreenshot = () => {
+    generateSliceScreenshot(variation.id, Model);
+  };
+
+  const { isWaitingForIframeCheck, simulatorUrl, isSavingScreenshot } =
+    useSelector((store: SliceMachineStoreType) => ({
+      simulatorUrl: selectSimulatorUrl(store),
+      isWaitingForIframeCheck: selectIsWaitingForIFrameCheck(store),
+      isSavingScreenshot: isLoading(
+        store,
+        LoadingKeysEnum.GENERATE_SLICE_SCREENSHOT
+      ),
+    }));
+
+  const sliceView = useMemo(
+    () =>
+      Model && variation
+        ? [
+            {
+              sliceID: Model.model.id,
+              variationID: variation.id,
+            },
+          ]
+        : null,
+    [Model.model.id, variation?.id]
+  );
+
+  if (!sliceView) return null;
+
   return (
     <Box
       sx={{
@@ -71,6 +112,26 @@ const Header: React.FunctionComponent<PropTypes> = ({
         }}
       >
         <ScreenSizes size={size} onClick={handleScreenSizeChange} />
+      </Flex>
+      <Flex
+        sx={{
+          alignItems: "flex-end",
+          flexDirection: "column",
+        }}
+      >
+        <ScreenshotButton
+          onClick={onTakingSliceScreenshot}
+          isLoading={isSavingScreenshot}
+          isDisabled={isSavingScreenshot}
+        />
+        {isWaitingForIframeCheck && (
+          <IframeRenderer
+            dryRun
+            size={Size.FULL}
+            simulatorUrl={simulatorUrl}
+            sliceView={sliceView}
+          />
+        )}
       </Flex>
     </Box>
   );

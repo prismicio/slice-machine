@@ -95,10 +95,11 @@ export const renameSlice = (
 
 export const generateSliceScreenshotApiClient = (
   sliceName: string,
-  libraryName: string
+  libraryName: string,
+  variationId: string
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
   return axios.get(
-    `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
+    `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}&variationId=${variationId}`,
     defaultAxiosConfig
   );
 };

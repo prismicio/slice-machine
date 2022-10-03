@@ -6,8 +6,6 @@ import {
   addSliceWidgetCreator,
   copyVariationSliceCreator,
   deleteSliceWidgetMockCreator,
-  generateSliceCustomScreenshotCreator,
-  generateSliceScreenshotCreator,
   initSliceStoreCreator,
   removeSliceWidgetCreator,
   reorderSliceWidgetCreator,
@@ -138,13 +136,6 @@ export const selectedSliceReducer: Reducer<
       return {
         ...prevState,
         mockConfig: updatedConfig,
-      };
-    }
-    case getType(generateSliceScreenshotCreator.success):
-    case getType(generateSliceCustomScreenshotCreator.success): {
-      if (!prevState) return prevState;
-      return {
-        ...action.payload.component,
       };
     }
     case getType(copyVariationSliceCreator): {
