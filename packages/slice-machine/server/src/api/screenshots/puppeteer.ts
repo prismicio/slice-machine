@@ -69,9 +69,15 @@ const generateScreenshot = async (
     await page.waitForSelector("#root", { timeout: 10000 });
     const element = await page.$("#root");
     if (element) {
-      await page.screenshot({
+      await element.screenshot({
         path: pathToFile,
         captureBeyondViewport: false,
+        clip: {
+          width: screenDimensions.width,
+          height: screenDimensions.height,
+          x: 0,
+          y: 0,
+        },
       });
     }
 
