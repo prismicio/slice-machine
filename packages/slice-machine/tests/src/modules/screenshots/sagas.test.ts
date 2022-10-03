@@ -14,7 +14,7 @@ describe("[Selected Slice sagas]", () => {
   describe("[generateSliceScreenshotSaga]", () => {
     it("should call the api and dispatch the success action", () => {
       const mockSetData = jest.fn();
-      const screenDimensions = { width: "1200", height: "600" };
+      const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({
@@ -65,7 +65,7 @@ describe("[Selected Slice sagas]", () => {
     });
     it("should open a error toaster on internal error", () => {
       const mockSetData = jest.fn();
-      const screenDimensions = { width: "1200", height: "600" };
+      const screenDimensions = { width: 1200, height: 600 };
       const saga = testSaga(
         generateSliceScreenshotSaga,
         generateSliceScreenshotCreator.request({

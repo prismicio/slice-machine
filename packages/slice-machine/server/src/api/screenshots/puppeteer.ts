@@ -52,8 +52,8 @@ const generateScreenshot = async (
   // Create a new page in the context.
   const page = await context.newPage();
   await page.setViewport({
-    width: Number(screenDimensions.width),
-    height: Number(screenDimensions.height),
+    width: screenDimensions.width,
+    height: screenDimensions.height,
   });
 
   try {

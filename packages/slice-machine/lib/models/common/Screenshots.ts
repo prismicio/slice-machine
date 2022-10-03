@@ -4,8 +4,8 @@ import { VariationSM } from "@slicemachine/core/build/models";
 export type Screenshots = Record<VariationSM["id"], ScreenshotUI>;
 
 export interface ScreenDimensions {
-  width: string;
-  height: string;
+  width: number;
+  height: number;
 }
 export interface ScreenshotRequest {
   libraryName: string;
