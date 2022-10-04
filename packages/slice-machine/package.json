@@ -92,6 +92,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@babel/core": "^7",
     "@prismicio/slice-simulator-com": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",
