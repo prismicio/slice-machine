@@ -53,8 +53,6 @@ export const getInputFieldStyles = (type?: InputFieldStyles) => {
 
 interface FormFieldInputProps {
   sx?: ThemeUIStyleObject;
-  // field: FieldInputProps<string> & {readOnly?: boolean, type?: "string" | "number"};
-  // field: FieldAttributes<React.InputHTMLAttributes<HTMLInputElement>>;
   field: FieldInputProps<string> | FieldInputProps<number>;
   meta: FieldMetaProps<string> | FieldMetaProps<number>;
   formField: Partial<InputType>;

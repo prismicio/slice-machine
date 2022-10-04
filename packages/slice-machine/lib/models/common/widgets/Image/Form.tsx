@@ -15,6 +15,7 @@ import {
   AddThumbnailButton,
   ConstraintForm,
 } from "./components";
+import { TabFields } from "@slicemachine/core/build/models/CustomType";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -81,19 +82,22 @@ type FieldValues = {
   id: string;
   config: {
     label: string;
-    constraint: string;
+    constraint: {
+      width?: number;
+      height?: number;
+    };
     thumbnails: Array<Thumbnail>;
   };
   mockConfig: Record<string, unknown>;
 };
 
 type FormProps = {
-  // actually some king of formik props
+  // actually some of formik props are passed down to
   values: FieldValues;
   initialValues: FieldValues;
   errors: Partial<FieldValues["config"]>;
   touched: Partial<FieldValues["config"]>;
-  fields: Record<string, unknown>; // TODO: this is shared in a lot of widgets
+  fields: TabFields;
 };
 
 const Form: React.FC<FormProps> = (props) => {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Fragment } from "react";
 import { BsImage, BsFillPlusSquareFill } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
@@ -94,9 +93,13 @@ export const ConstraintForm: React.FC<{
     (key: string, fn = (v: string): number | string => v) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       helpers.setTouched(true);
-      const cast = fn(e.target.value) as number;
+      const cast = fn(e.target.value);
       const value =
-        e.target.type === "number" ? (isNaN(cast) ? null : cast) : cast;
+        e.target.type === "number"
+          ? typeof cast === "number" && isNaN(cast)
+            ? null
+            : cast
+          : cast;
       helpers.setValue({ ...field.value, [key]: value });
     };
 
@@ -106,15 +109,23 @@ export const ConstraintForm: React.FC<{
         fieldName={`${prefix}.name`}
         meta={{
           ...meta,
-          // @ts-ignore:next-line
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:disable
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           error: meta.error && meta.error?.name,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }}
         formField={{ label: `Name${requiredChar}`, placeholder: "main" }}
         field={
           prefix === "config.constraint"
-            ? // @ts-ignore:next-line
+            ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore:disable
               { value: "main", readOnly: true }
-            : { value: field.value.name, onChange: createSetField("name") }
+            : // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              { value: field.value.name, onChange: createSetField("name") }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }
         variant={prefix === "config.constraint" ? "disabled" : "primary"}
         sx={{ mb: 3 }}
@@ -123,15 +134,23 @@ export const ConstraintForm: React.FC<{
         fieldName={`${prefix}.width`}
         meta={{
           ...meta,
-          // @ts-ignore:next-line
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:disable
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           error: meta.error && meta.error.width,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }}
         formField={{ label: `Width (px)${requiredChar}`, placeholder: " " }}
         field={{
-          // @ts-ignore:next-line
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:disable
           type: "number",
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           value: field.value.width,
           onChange: createSetField("width", parseInt),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }}
         sx={{ mb: 3 }}
       />
@@ -139,15 +158,23 @@ export const ConstraintForm: React.FC<{
         fieldName={`${prefix}.height`}
         meta={{
           ...meta,
-          // @ts-ignore:next-line
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:disable
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           error: meta.error && meta.error.height,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }}
         formField={{ label: `Height (px)${requiredChar}`, placeholder: " " }}
         field={{
-          // @ts-ignore:next-line
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:disable
           type: "number",
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           value: field.value.height,
           onChange: createSetField("height", parseInt),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore:enable
         }}
       />
     </Fragment>
