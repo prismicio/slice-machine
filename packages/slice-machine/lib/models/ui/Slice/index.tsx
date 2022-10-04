@@ -17,9 +17,10 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
+import { Button } from "theme-ui";
+import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
-  border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
   p: 3,
@@ -34,7 +35,6 @@ const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
-  border: "none",
   position: "relative",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
   ...sx,
@@ -59,6 +59,35 @@ const SliceVariations = ({
   ) : null;
 };
 
+const SliceScreenshotUpdate: React.FC<{
+  slice: ComponentUI;
+}> = ({ slice }) => (
+  <Flex
+    mt={1}
+    sx={{
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: 3,
+      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+    }}
+  >
+    <Button onClick={() => ({})} variant="buttons.secondary">
+      <Text>
+        <AiOutlineCamera
+          size={16}
+          style={{
+            marginRight: "8px",
+            position: "relative",
+            top: "2px",
+            color: "greyIcon",
+          }}
+        />
+      </Text>{" "}
+      <Text>Update screenshot</Text>
+    </Button>
+  </Flex>
+);
+
 const SliceDescription = ({
   slice,
   StatusOrCustom,
@@ -72,25 +101,52 @@ const SliceDescription = ({
       }
     | React.FC<{ slice: ComponentUI }>;
 }) => (
-  <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
-    <Flex sx={{ alignItems: "center" }}>
-      {"status" in StatusOrCustom ? (
-        <StatusBadge
-          modelType="Slice"
-          modelId={slice.model.id}
-          status={StatusOrCustom.status}
-          authStatus={StatusOrCustom.authStatus}
-          isOnline={StatusOrCustom.isOnline}
-        />
-      ) : (
-        <StatusOrCustom slice={slice} />
-      )}
+  <Flex
+    sx={{
+      flexDirection: "column",
+      padding: 3,
+    }}
+  >
+    <Flex>
       <TextWithTooltip text={slice.model.name} as="h6" />
     </Flex>
-    <SliceVariations
-      variations={slice.model.variations}
-      hideVariations={false}
-    />
+    <Flex sx={{ alignItems: "baseline;", justifyContent: "space-between;" }}>
+      <SliceVariations
+        variations={slice.model.variations}
+        hideVariations={false}
+      />
+      <Flex sx={{ alignItems: "center" }}>
+        {"status" in StatusOrCustom ? (
+          <StatusBadge
+            modelType="Slice"
+            modelId={slice.model.id}
+            status={StatusOrCustom.status}
+            authStatus={StatusOrCustom.authStatus}
+            isOnline={StatusOrCustom.isOnline}
+          />
+        ) : (
+          <StatusOrCustom slice={slice} />
+        )}
+      </Flex>
+    </Flex>
+  </Flex>
+);
+
+const ScreenshotMissingBanner = () => (
+  <Flex
+    sx={{
+      position: "absolute",
+      borderRadius: "4px 4px 0 0",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 2,
+      bg: "missingScreenshotBanner.bg",
+      color: "missingScreenshotBanner.color",
+      width: "100%",
+    }}
+  >
+    <AiOutlineExclamationCircle style={{ marginRight: "8px" }} /> 1/2
+    screenshots missing
   </Flex>
 );
 
@@ -135,15 +191,30 @@ export const SharedSlice = {
         <Themecard
           role="button"
           aria-pressed="false"
-          sx={bordered ? borderedSx(sx) : defaultSx(sx)}
+          sx={{
+            border: (t) => `1px solid ${t.colors?.borders as string}`,
+            boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
+            borderRadius: "6px",
+            ...(bordered ? borderedSx(sx) : defaultSx(sx)),
+          }}
         >
-          <ScreenshotPreview
-            src={screenshotUrl}
-            sx={{
-              height: thumbnailHeightPx,
-            }}
-          />
-          <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
+          <Flex sx={{ position: "relative", flexDirection: "column" }}>
+            <ScreenshotPreview
+              src={screenshotUrl}
+              sx={{
+                height: thumbnailHeightPx,
+              }}
+            />
+            <ScreenshotMissingBanner />
+            <Flex
+              sx={{
+                flexDirection: "column",
+              }}
+            >
+              <SliceScreenshotUpdate slice={slice} />
+              <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
+            </Flex>
+          </Flex>
         </Themecard>
       </CardWrapper>
     );

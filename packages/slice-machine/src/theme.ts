@@ -19,18 +19,23 @@ const AppTheme = (): Theme =>
         background: "#FFECC7",
         color: "#5C0C17",
       },
+      greyIcon: "#6F6E77",
+      missingScreenshotBanner: {
+        color: "#5C0C17",
+        bg: "#FFECC7",
+      },
       badge: {
         new: {
-          bg: "#C2EFC899",
-          color: "#32A943",
+          bg: "#DBEDDB",
+          color: "#05644D",
         },
         modified: {
-          bg: "#FDF4EC",
-          color: "#F2994A",
+          bg: "#FFECC7",
+          color: "#5C0C17",
         },
         synced: {
-          bg: "#EFECFF",
-          color: "#5B3DF5",
+          bg: "#F1EEFE",
+          color: "#5842C3",
         },
         unknown: {
           bg: "#F3F5F7",
