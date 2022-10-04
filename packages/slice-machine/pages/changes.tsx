@@ -18,8 +18,6 @@ import { LoadingKeysEnum } from "@src/modules/loading/types";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { SyncError } from "@src/models/SyncError";
 
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
-
 const changes: React.FunctionComponent = () => {
   const {
     unSyncedSlices,
@@ -28,22 +26,22 @@ const changes: React.FunctionComponent = () => {
     authStatus,
     isOnline,
   } = useUnSyncChanges();
-  const { pushChanges, openScreenshotsModal, closeScreenshotsModal } =
-    useSliceMachineActions();
+  const { pushChanges, closeScreenshotsModal } = useSliceMachineActions();
 
   const { isSyncing } = useSelector((store: SliceMachineStoreType) => ({
     isSyncing: isLoading(store, LoadingKeysEnum.CHANGES_PUSH),
   }));
 
-  const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
-
-  const [changesPushed, setChangesPushed] = useState<string[]>([]);
-  const [error, setError] = useState<SyncError | null>(null);
   useEffect(() => {
     return () => {
       closeScreenshotsModal();
     };
   }, []);
+
+  const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
+
+  const [changesPushed, setChangesPushed] = useState<string[]>([]);
+  const [error, setError] = useState<SyncError | null>(null);
 
   const handlePush = () => {
     if (error) setError(null); // reset error
@@ -60,7 +58,7 @@ const changes: React.FunctionComponent = () => {
     );
   };
 
-  const PageContent = ({ onOpenModal }: { onOpenModal: () => void }) => {
+  const PageContent = () => {
     if (!isOnline) {
       return <OfflinePage />;
     }
@@ -79,7 +77,6 @@ const changes: React.FunctionComponent = () => {
         unSyncedCustomTypes={unSyncedCustomTypes}
         changesPushed={changesPushed}
         syncError={error}
-        onOpenModal={onOpenModal}
         modelsStatuses={modelsStatuses}
         authStatus={authStatus}
         isOnline={isOnline}
@@ -89,12 +86,6 @@ const changes: React.FunctionComponent = () => {
 
   return (
     <Container sx={{ display: "flex", flex: 1 }}>
-      {unSyncedSlices.length ? (
-        <ScreenshotChangesModal
-          slices={unSyncedSlices}
-          onClose={closeScreenshotsModal}
-        />
-      ) : null}
       <Box
         as={"main"}
         sx={{ flex: 1, display: "flex", flexDirection: "column" }}
@@ -129,7 +120,7 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <PageContent onOpenModal={openScreenshotsModal} />
+        <PageContent />
       </Box>
     </Container>
   );

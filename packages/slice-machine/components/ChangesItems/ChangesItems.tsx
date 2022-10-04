@@ -2,6 +2,8 @@ import React, { ReactNode } from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera } from "react-icons/ai";
 
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
 import { ChangesSectionHeader } from "@components/ChangesSectionHeader";
 import { CustomTypeTable } from "@components/CustomTypeTable/changesPage";
 
@@ -15,12 +17,13 @@ import { SyncError } from "@src/models/SyncError";
 import { ApiError } from "@src/models/ApiError";
 import { ErrorBanner } from "./ErrorBanner";
 
+import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
   unSyncedSlices: ComponentUI[];
   changesPushed: string[];
   syncError: SyncError | null;
-  onOpenModal: () => void;
 }
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
@@ -31,9 +34,11 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   modelsStatuses,
   authStatus,
   isOnline,
-  onOpenModal,
 }) => {
+  const { openScreenshotsModal } = useSliceMachineActions();
+
   const { customTypeError, slicesError } = getSyncErrors(syncError);
+
   return (
     <>
       {unSyncedCustomTypes.length > 0 && (
@@ -66,7 +71,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 </Text>
               </Box>
               <Box>
-                <Button variant="darkSmall" onClick={onOpenModal}>
+                <Button variant="darkSmall" onClick={openScreenshotsModal}>
                   <AiFillCamera
                     style={{
                       color: "#FFF",
@@ -102,6 +107,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             }}
             gridGap="32px 16px"
           />
+          <ScreenshotChangesModal slices={unSyncedSlices} />
         </>
       )}
     </>

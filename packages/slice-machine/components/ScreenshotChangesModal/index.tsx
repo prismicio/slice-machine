@@ -1,17 +1,20 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Flex, Heading, Close, Box, Text } from "theme-ui";
+
 import Card from "@components/Card";
 import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
-import { useSelector } from "react-redux";
 import { isModalOpen } from "@src/modules/modal";
+
 import { SliceMachineStoreType } from "@src/redux/type";
 import { ModalKeysEnum } from "@src/modules/modal/types";
-
-import { Flex, Heading, Close, Box, Text } from "theme-ui";
-
 import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { useState } from "react";
+import useSliceMachineActions from "@src/modules/useSliceMachineActions";
+
+type SliceVariationSelector = { sliceID: string; variationID: string };
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
@@ -33,12 +36,12 @@ const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
 const VariationsList = ({
   slice,
   onSelectVariation,
-  selectedSliceVariation,
+  variationSelector,
 }: {
   slice: ComponentUI;
   isSelected?: boolean;
-  selectedSliceVariation: [string, string];
-  onSelectVariation: (sliceID: string, variationID: string) => void;
+  variationSelector: SliceVariationSelector;
+  onSelectVariation: (s: SliceVariationSelector) => void;
 }) => (
   <>
     <Heading
@@ -60,9 +63,9 @@ const VariationsList = ({
         }}
       >
         {slice.model.variations.map((variation) => {
+          const { sliceID, variationID } = variationSelector;
           const isSelectedVariation =
-            selectedSliceVariation[0] === slice.model.id &&
-            selectedSliceVariation[1] === variation.id;
+            sliceID === slice.model.id && variationID === variation.id;
           return (
             <Box
               as="li"
@@ -80,7 +83,12 @@ const VariationsList = ({
                   bg: "#EDECEE",
                 },
               }}
-              onClick={() => onSelectVariation(slice.model.id, variation.id)}
+              onClick={() =>
+                onSelectVariation({
+                  sliceID: slice.model.id,
+                  variationID: variation.id,
+                })
+              }
             >
               <Flex
                 sx={{
@@ -100,36 +108,30 @@ const VariationsList = ({
 
 const ScreenshotChangesModal = ({
   slices,
-  defaultSelectedSliceVariation = [],
-  onClose,
+  defaultVariationSelector,
 }: {
   slices: ComponentUI[];
-  defaultSelectedSliceVariation?: [string, string] | [];
-  onClose: () => void;
+  defaultVariationSelector?: SliceVariationSelector | undefined;
 }) => {
+  const { closeScreenshotsModal } = useSliceMachineActions();
+
   const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
     isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
   }));
-  const [defaultSelectedSliceID, defaultSelectedSliceVariationID] =
-    defaultSelectedSliceVariation;
 
-  const [selectedSliceVariation, setSelectedSliceVariation] = useState<
-    [string, string]
-  >(
-    slices.some(
-      (s) =>
-        s.model.id === defaultSelectedSliceID &&
-        s.model.variations.some((v) => v.id === defaultSelectedSliceVariationID)
-    )
-      ? (defaultSelectedSliceVariation as [string, string])
-      : [slices[0].model.id, slices[0].model.variations[0].id]
-  );
+  const [variationSelector, setVariationSelector] =
+    useState<SliceVariationSelector>(
+      defaultVariationSelector || {
+        sliceID: slices[0].model.id,
+        variationID: slices[0].model.variations[0].id,
+      }
+    );
 
   return (
     <SliceMachineModal
       isOpen={isOpen}
       shouldCloseOnOverlayClick
-      onRequestClose={() => onClose()}
+      onRequestClose={() => closeScreenshotsModal()}
     >
       <Card
         radius={"0px"}
@@ -149,7 +151,7 @@ const ScreenshotChangesModal = ({
             }}
           >
             <Heading sx={{ fontSize: "20px" }}>Slice screenshots</Heading>
-            <Close type="button" onClick={() => onClose()} />
+            <Close type="button" onClick={() => closeScreenshotsModal()} />
           </Flex>
         )}
         Footer={null}
@@ -174,12 +176,10 @@ const ScreenshotChangesModal = ({
           >
             {slices.map((slice) => (
               <VariationsList
-                key={slice.model.id}
-                selectedSliceVariation={selectedSliceVariation}
                 slice={slice}
-                onSelectVariation={(sliceID, variationID) =>
-                  setSelectedSliceVariation([sliceID, variationID])
-                }
+                key={slice.model.id}
+                variationSelector={variationSelector}
+                onSelectVariation={setVariationSelector}
               />
             ))}
           </Box>
@@ -192,9 +192,9 @@ const ScreenshotChangesModal = ({
               minWidth: 320,
             }}
           >
-            SliceID: {selectedSliceVariation[0]}
+            SliceID: {variationSelector.sliceID}
             <br />
-            VariationID: {selectedSliceVariation[1]}
+            VariationID: {variationSelector.variationID}
           </Box>
         </Box>
       </Card>
