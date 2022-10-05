@@ -15,6 +15,10 @@ const AppTheme = (): Theme =>
       primary: "#6E52FF",
       purpleLight: "#F6F1FC",
       purpleLight01: "#6548FF1A",
+      changesWarning: {
+        background: "#FFECC7",
+        color: "#5C0C17",
+      },
       badge: {
         new: {
           bg: "#C2EFC899",
@@ -44,6 +48,7 @@ const AppTheme = (): Theme =>
       grey02: "#E6E6EA",
       grey04: "#9AA4AF",
       grey05: "#667587",
+      grey07: "#F9F8F9",
       greyTransparent: "rgba(37, 37, 45, 0.4)",
       borders: "#C9D0D8",
       deep: "#0E2150",
@@ -55,6 +60,7 @@ const AppTheme = (): Theme =>
       success: "#3AB97A",
       headSection: "#fff",
       warning: "#E67E22",
+      warning02: "#ED811C",
       sidebar: "#F1F1F4",
       link: "#5163BA",
       choggleBox: "#5163BA",
@@ -154,6 +160,12 @@ const AppTheme = (): Theme =>
         color: "textClear",
         bg: "grey01",
         p: "2px",
+      },
+      heading: {
+        fontWeight: "500",
+      },
+      grey: {
+        color: "#4E4E55",
       },
     },
     badges: {

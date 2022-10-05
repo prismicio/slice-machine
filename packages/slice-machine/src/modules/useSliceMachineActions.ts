@@ -106,6 +106,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const openLoginModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
+  const closeScreenshotsModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
+  const openScreenshotsModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
   const closeCreateSliceModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>
@@ -498,6 +502,8 @@ const useSliceMachineActions = () => {
     openSetupDrawer,
     refreshState,
     finishOnboarding,
+    closeScreenshotsModal,
+    openScreenshotsModal,
     openLoginModal,
     closeLoginModal,
     startLoadingLogin,
