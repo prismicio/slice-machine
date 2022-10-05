@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Flex, Heading, Close, Box, Text } from "theme-ui";
 
@@ -14,7 +14,7 @@ import { ModalKeysEnum } from "@src/modules/modal/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
-type SliceVariationSelector = { sliceID: string; variationID: string };
+export type SliceVariationSelector = { sliceID: string; variationID: string };
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
@@ -68,6 +68,7 @@ const VariationsList = ({
             sliceID === slice.model.id && variationID === variation.id;
           return (
             <Box
+              key={`${slice.model.id}-${variation.id}`}
               as="li"
               sx={{
                 listStyle: "none",
@@ -106,6 +107,15 @@ const VariationsList = ({
   </>
 );
 
+const variationSetter = (
+  defaultVariationSelector: SliceVariationSelector | undefined,
+  slices: ComponentUI[]
+) =>
+  defaultVariationSelector || {
+    sliceID: slices[0].model.id,
+    variationID: slices[0].model.variations[0].id,
+  };
+
 const ScreenshotChangesModal = ({
   slices,
   defaultVariationSelector,
@@ -121,11 +131,12 @@ const ScreenshotChangesModal = ({
 
   const [variationSelector, setVariationSelector] =
     useState<SliceVariationSelector>(
-      defaultVariationSelector || {
-        sliceID: slices[0].model.id,
-        variationID: slices[0].model.variations[0].id,
-      }
+      variationSetter(defaultVariationSelector, slices)
     );
+
+  useEffect(() => {
+    setVariationSelector(variationSetter(defaultVariationSelector, slices));
+  }, [defaultVariationSelector, isOpen]);
 
   return (
     <SliceMachineModal
@@ -146,8 +157,7 @@ const ScreenshotChangesModal = ({
               justifyContent: "space-between",
               borderTopLeftRadius: radius,
               borderTopRightRadius: radius,
-              borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`
-              borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+              borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
             }}
           >
             <Heading sx={{ fontSize: "20px" }}>Slice screenshots</Heading>
@@ -174,10 +184,10 @@ const ScreenshotChangesModal = ({
               flexBasis: "sidebar",
             }}
           >
-            {slices.map((slice) => (
+            {slices.map((slice, i) => (
               <VariationsList
                 slice={slice}
-                key={slice.model.id}
+                key={`${slice.model.id}-${i}`}
                 variationSelector={variationSelector}
                 onSelectVariation={setVariationSelector}
               />

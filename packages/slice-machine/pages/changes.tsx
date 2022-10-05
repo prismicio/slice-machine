@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Spinner, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
@@ -58,7 +58,7 @@ const changes: React.FunctionComponent = () => {
     );
   };
 
-  const PageContent = () => {
+  const PageContent = useMemo(() => {
     if (!isOnline) {
       return <OfflinePage />;
     }
@@ -82,7 +82,16 @@ const changes: React.FunctionComponent = () => {
         isOnline={isOnline}
       />
     );
-  };
+  }, [
+    isOnline,
+    authStatus,
+    numberOfChanges,
+    unSyncedSlices,
+    unSyncedCustomTypes,
+    changesPushed,
+    error,
+    modelsStatuses,
+  ]);
 
   return (
     <Container sx={{ display: "flex", flex: 1 }}>
@@ -120,7 +129,7 @@ const changes: React.FunctionComponent = () => {
           MainBreadcrumb={<Text ml={2}>Changes</Text>}
           breadrumbHref="/changes"
         />
-        <PageContent />
+        {PageContent}
       </Box>
     </Container>
   );

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera } from "react-icons/ai";
 
@@ -17,7 +17,9 @@ import { SyncError } from "@src/models/SyncError";
 import { ApiError } from "@src/models/ApiError";
 import { ErrorBanner } from "./ErrorBanner";
 
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
+import ScreenshotChangesModal, {
+  SliceVariationSelector,
+} from "@components/ScreenshotChangesModal";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
@@ -25,6 +27,11 @@ interface ChangesItemsProps extends ModelStatusInformation {
   changesPushed: string[];
   syncError: SyncError | null;
 }
+
+type ModalPayload = {
+  slices: ComponentUI[];
+  defaultVariationSelector?: SliceVariationSelector;
+};
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
@@ -38,6 +45,15 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   const { openScreenshotsModal } = useSliceMachineActions();
 
   const { customTypeError, slicesError } = getSyncErrors(syncError);
+
+  const [modalPayload, setModalPayload] = useState<ModalPayload>({
+    slices: unSyncedSlices,
+  });
+
+  const onOpenModal = (payload: ModalPayload) => {
+    setModalPayload(payload);
+    openScreenshotsModal();
+  };
 
   return (
     <>
@@ -71,7 +87,17 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 </Text>
               </Box>
               <Box>
-                <Button variant="darkSmall" onClick={openScreenshotsModal}>
+                <Button
+                  variant="darkSmall"
+                  sx={{ mr: 2 }}
+                  onClick={() => onOpenModal({ slices: [unSyncedSlices[0]] })}
+                >
+                  w/ first slice (example)
+                </Button>
+                <Button
+                  variant="darkSmall"
+                  onClick={() => onOpenModal({ slices: unSyncedSlices })}
+                >
                   <AiFillCamera
                     style={{
                       color: "#FFF",
@@ -107,7 +133,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             }}
             gridGap="32px 16px"
           />
-          <ScreenshotChangesModal slices={unSyncedSlices} />
+          <ScreenshotChangesModal {...modalPayload} />
         </>
       )}
     </>
