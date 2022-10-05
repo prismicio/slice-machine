@@ -7,14 +7,16 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
-import { isModalOpen } from "@src/modules/modal";
+import { getModalPayload, isModalOpen } from "@src/modules/modal";
 
 import { SliceMachineStoreType } from "@src/redux/type";
-import { ModalKeysEnum } from "@src/modules/modal/types";
+import {
+  ModalKeysEnum,
+  SliceVariationSelector,
+} from "@src/modules/modal/types";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-
-export type SliceVariationSelector = { sliceID: string; variationID: string };
+import { getLibraries } from "@src/modules/slices";
 
 const VariationIcon: React.FC<{ isValid?: boolean }> = ({ isValid }) => (
   <Flex
@@ -110,34 +112,52 @@ const VariationsList = ({
 const variationSetter = (
   defaultVariationSelector: SliceVariationSelector | undefined,
   slices: ComponentUI[]
-) =>
-  defaultVariationSelector || {
-    sliceID: slices[0].model.id,
-    variationID: slices[0].model.variations[0].id,
-  };
+) => {
+  return defaultVariationSelector
+    ? defaultVariationSelector
+    : slices.length > 0
+    ? {
+        sliceID: slices[0].model.id,
+        variationID: slices[0].model.variations[0].id,
+      }
+    : { sliceID: "This should", variationID: "never be seen :)" };
+};
 
-const ScreenshotChangesModal = ({
-  slices,
-  defaultVariationSelector,
-}: {
-  slices: ComponentUI[];
-  defaultVariationSelector?: SliceVariationSelector;
-}) => {
+export const ScreenshotModal = () => {
   const { closeScreenshotsModal } = useSliceMachineActions();
 
-  const { isOpen } = useSelector((store: SliceMachineStoreType) => ({
-    isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
-  }));
+  const { isOpen, slices, defaultVariationSelected } = useSelector(
+    (store: SliceMachineStoreType) => {
+      const modalPayload = getModalPayload(store, ModalKeysEnum.SCREENSHOTS);
+      const slices: ComponentUI[] = getLibraries(store).reduce(
+        (acc: ComponentUI[], lib) => {
+          return [...acc, ...lib.components];
+        },
+        []
+      );
+
+      const slicesToDisplay = slices.filter((slice) =>
+        modalPayload.sliceIds.includes(slice.model.id)
+      );
+
+      return {
+        isOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOTS),
+        defaultVariationSelected: modalPayload.defaultVariationSelected,
+        slices: slicesToDisplay,
+      };
+    }
+  );
 
   const [variationSelector, setVariationSelector] =
     useState<SliceVariationSelector>(
-      variationSetter(defaultVariationSelector, slices)
+      variationSetter(defaultVariationSelected, slices)
     );
 
   useEffect(() => {
-    setVariationSelector(variationSetter(defaultVariationSelector, slices));
-  }, [defaultVariationSelector, isOpen]);
+    setVariationSelector(variationSetter(defaultVariationSelected, slices));
+  }, [defaultVariationSelected, isOpen]);
 
+  if (slices.length <= 0) return null; // nothing to display
   return (
     <SliceMachineModal
       isOpen={isOpen}
@@ -211,5 +231,3 @@ const ScreenshotChangesModal = ({
     </SliceMachineModal>
   );
 };
-
-export default ScreenshotChangesModal;

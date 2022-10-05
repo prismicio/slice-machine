@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Box, Button, Text } from "theme-ui";
 import { AiFillCamera } from "react-icons/ai";
 
@@ -17,21 +17,12 @@ import { SyncError } from "@src/models/SyncError";
 import { ApiError } from "@src/models/ApiError";
 import { ErrorBanner } from "./ErrorBanner";
 
-import ScreenshotChangesModal, {
-  SliceVariationSelector,
-} from "@components/ScreenshotChangesModal";
-
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
   unSyncedSlices: ComponentUI[];
   changesPushed: string[];
   syncError: SyncError | null;
 }
-
-type ModalPayload = {
-  sliceFn: (s: ComponentUI[]) => ComponentUI[];
-  defaultVariationSelector?: SliceVariationSelector;
-};
 
 export const ChangesItems: React.FC<ChangesItemsProps> = ({
   unSyncedCustomTypes,
@@ -43,22 +34,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   isOnline,
 }) => {
   const { openScreenshotsModal } = useSliceMachineActions();
-
   const { customTypeError, slicesError } = getSyncErrors(syncError);
-
-  const [modalPayload, setModalPayload] = useState<{
-    sliceFn: (s: ComponentUI[]) => ComponentUI[];
-    defaultVariationSelector?: SliceVariationSelector;
-  }>({
-    sliceFn: (s: ComponentUI[]) => s,
-  });
-
-  const onOpenModal = (payload: ModalPayload) => {
-    setModalPayload(payload);
-    openScreenshotsModal();
-  };
-
-  const { sliceFn, defaultVariationSelector } = modalPayload;
 
   return (
     <>
@@ -96,14 +72,20 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   variant="darkSmall"
                   sx={{ mr: 2 }}
                   onClick={() =>
-                    onOpenModal({ sliceFn: (s: ComponentUI[]) => [s[0]] })
+                    openScreenshotsModal({
+                      sliceIds: [unSyncedSlices[0].model.id],
+                    })
                   }
                 >
                   w/ first slice (example)
                 </Button>
                 <Button
                   variant="darkSmall"
-                  onClick={() => onOpenModal({ sliceFn: (s) => s })}
+                  onClick={() =>
+                    openScreenshotsModal({
+                      sliceIds: unSyncedSlices.map((slice) => slice.model.id),
+                    })
+                  }
                 >
                   <AiFillCamera
                     style={{
@@ -139,10 +121,6 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   : {},
               });
             }}
-          />
-          <ScreenshotChangesModal
-            slices={sliceFn(unSyncedSlices)}
-            defaultVariationSelector={defaultVariationSelector}
           />
         </>
       )}

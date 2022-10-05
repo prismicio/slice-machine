@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { LoadingKeysEnum } from "./loading/types";
-import { ModalKeysEnum } from "./modal/types";
+import { ModalKeysEnum, ScreenshotModalState } from "./modal/types";
 import { modalCloseCreator, modalOpenCreator } from "./modal";
 import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
 import {
@@ -105,8 +105,10 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.LOGIN }));
   const closeScreenshotsModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
-  const openScreenshotsModal = () =>
-    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS }));
+  const openScreenshotsModal = (payload: ScreenshotModalState["payload"]) =>
+    dispatch(
+      modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOTS, payload })
+    );
   const closeCreateSliceModal = () =>
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.CREATE_SLICE }));
   const openCreateSliceModal = () =>

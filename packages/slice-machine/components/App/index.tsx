@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { SliceMachineStoreType } from "@src/redux/type";
 import { getLibraries } from "@src/modules/slices";
 import useSMTracker from "@src/hooks/useSMTracker";
+import { ScreenshotModal } from "@components/ScreenshotModal";
 
 const SliceMachineApp: React.FunctionComponent = ({ children }) => {
   const { libraries } = useSelector((state: SliceMachineStoreType) => ({
@@ -32,6 +33,7 @@ const SliceMachineApp: React.FunctionComponent = ({ children }) => {
         </SliceHandler>
       </AppLayout>
       <LoginModal />
+      <ScreenshotModal />
       <ReviewModal />
       <ToastContainer />
     </>
