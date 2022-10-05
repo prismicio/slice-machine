@@ -9,7 +9,10 @@ import { CustomTypeMockConfig } from "@models/common/MockConfig";
 import { SliceBody } from "@models/common/Slice";
 import ServerState from "@models/server/ServerState";
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
-import { ScreenshotResponse } from "../lib/models/common/Screenshots";
+import {
+  ScreenshotRequest,
+  ScreenshotResponse,
+} from "../lib/models/common/Screenshots";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 
 const defaultAxiosConfig = {
@@ -94,13 +97,9 @@ export const renameSlice = (
 };
 
 export const generateSliceScreenshotApiClient = (
-  sliceName: string,
-  libraryName: string
+  params: ScreenshotRequest
 ): Promise<AxiosResponse<ScreenshotResponse>> => {
-  return axios.get(
-    `/api/screenshot?sliceName=${sliceName}&libraryName=${libraryName}`,
-    defaultAxiosConfig
-  );
+  return axios.post("/api/screenshot", params, defaultAxiosConfig);
 };
 
 export const generateSliceCustomScreenshotApiClient = (

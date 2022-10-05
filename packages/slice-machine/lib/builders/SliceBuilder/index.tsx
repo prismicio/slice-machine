@@ -106,7 +106,10 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
 
   const onTakingSliceScreenshot = () => {
     checkSimulatorSetup(true, () =>
-      generateSliceScreenshot(component, setData)
+      generateSliceScreenshot(variation.id, component, {
+        width: 1200,
+        height: 600,
+      })
     );
   };
 

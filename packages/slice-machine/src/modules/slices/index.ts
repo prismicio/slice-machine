@@ -21,12 +21,12 @@ import { SliceSM } from "@slicemachine/core/build/models";
 import Tracker from "../../tracking/client";
 import { openToasterCreator, ToasterType } from "@src/modules/toaster";
 import { LOCATION_CHANGE, push } from "connected-next-router";
+import { saveSliceCreator } from "../selectedSlice/actions";
+import { pushSliceCreator } from "../pushChangesSaga/actions";
 import {
   generateSliceCustomScreenshotCreator,
   generateSliceScreenshotCreator,
-  saveSliceCreator,
-} from "../selectedSlice/actions";
-import { pushSliceCreator } from "../pushChangesSaga/actions";
+} from "../screenshots/actions";
 import { ComponentUI, ScreenshotUI } from "@lib/models/common/ComponentUI";
 import { FrontEndSliceModel } from "@lib/models/common/ModelStatus/compareSliceModels";
 
