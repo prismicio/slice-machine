@@ -29,7 +29,7 @@ interface ChangesItemsProps extends ModelStatusInformation {
 }
 
 type ModalPayload = {
-  slices: ComponentUI[];
+  sliceFn: (s: ComponentUI[]) => ComponentUI[];
   defaultVariationSelector?: SliceVariationSelector;
 };
 
@@ -46,14 +46,19 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
 
   const { customTypeError, slicesError } = getSyncErrors(syncError);
 
-  const [modalPayload, setModalPayload] = useState<ModalPayload>({
-    slices: unSyncedSlices,
+  const [modalPayload, setModalPayload] = useState<{
+    sliceFn: (s: ComponentUI[]) => ComponentUI[];
+    defaultVariationSelector?: SliceVariationSelector;
+  }>({
+    sliceFn: (s: ComponentUI[]) => s,
   });
 
   const onOpenModal = (payload: ModalPayload) => {
     setModalPayload(payload);
     openScreenshotsModal();
   };
+
+  const { sliceFn, defaultVariationSelector } = modalPayload;
 
   return (
     <>
@@ -90,13 +95,15 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 <Button
                   variant="darkSmall"
                   sx={{ mr: 2 }}
-                  onClick={() => onOpenModal({ slices: [unSyncedSlices[0]] })}
+                  onClick={() =>
+                    onOpenModal({ sliceFn: (s: ComponentUI[]) => [s[0]] })
+                  }
                 >
                   w/ first slice (example)
                 </Button>
                 <Button
                   variant="darkSmall"
-                  onClick={() => onOpenModal({ slices: unSyncedSlices })}
+                  onClick={() => onOpenModal({ sliceFn: (s) => s })}
                 >
                   <AiFillCamera
                     style={{
@@ -114,9 +121,10 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
           </Box>
           {slicesError}
           <Grid
+            gridGap="32px 16px"
             elems={unSyncedSlices}
-            defineElementKey={(slice: ComponentUI) => slice.model.name}
             gridTemplateMinPx="290px"
+            defineElementKey={(slice: ComponentUI) => slice.model.name}
             renderElem={(slice: ComponentUI) => {
               return SharedSlice.render({
                 slice: slice,
@@ -131,9 +139,11 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                   : {},
               });
             }}
-            gridGap="32px 16px"
           />
-          <ScreenshotChangesModal {...modalPayload} />
+          <ScreenshotChangesModal
+            slices={sliceFn(unSyncedSlices)}
+            defaultVariationSelector={defaultVariationSelector}
+          />
         </>
       )}
     </>

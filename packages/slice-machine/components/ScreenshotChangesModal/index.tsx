@@ -121,7 +121,7 @@ const ScreenshotChangesModal = ({
   defaultVariationSelector,
 }: {
   slices: ComponentUI[];
-  defaultVariationSelector?: SliceVariationSelector | undefined;
+  defaultVariationSelector?: SliceVariationSelector;
 }) => {
   const { closeScreenshotsModal } = useSliceMachineActions();
 
