@@ -1,6 +1,7 @@
 import { toast, ToastOptions, UpdateOptions } from "react-toastify";
 import { createAction, getType } from "typesafe-actions";
 import { fork, takeLatest } from "redux-saga/effects";
+import ScreenshotToaster from "@components/ScreenshotToaster";
 
 export enum ToasterType {
   SUCCESS = "success",
@@ -8,6 +9,7 @@ export enum ToasterType {
   ERROR = "error",
   INFO = "info",
   LOADING = "loading",
+  SCREENSHOT_CAPTURED = "screenshot_captured",
 }
 
 // Action Creators
@@ -45,6 +47,11 @@ export function* openToasterSaga(
       break;
     case ToasterType.LOADING:
       toast.loading(action.payload.message, action.payload.options);
+      break;
+    case ToasterType.SCREENSHOT_CAPTURED:
+      toast(
+        ScreenshotToaster({ data: { screenshotUrl: action.payload.message } })
+      );
       break;
   }
 }

@@ -31,6 +31,13 @@ export function* generateSliceScreenshotSaga({
     })) as SagaReturnType<typeof generateSliceScreenshotApiClient>;
 
     yield put(
+      openToasterCreator({
+        message: response.data.screenshot?.url as string,
+        type: ToasterType.SCREENSHOT_CAPTURED,
+      })
+    );
+
+    yield put(
       generateSliceScreenshotCreator.success({
         screenshot: response.data.screenshot,
         component,
