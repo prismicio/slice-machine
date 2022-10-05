@@ -305,6 +305,19 @@ const AppTheme = (): Theme =>
         fontSize: "12px",
         fontWeight: "body",
       },
+      secondarySmall: {
+        background: "#FFFFFF",
+        border: "1px solid #DCDBDD",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        borderRadius: "6px",
+        color: "#1A1523",
+        fontSize: "12px",
+        lineHeight: "16px",
+        pl: 2,
+        pr: 2,
+        pb: "6px",
+        pt: "6px",
+      },
 
       darkSmall: {
         borderRadius: "4px",

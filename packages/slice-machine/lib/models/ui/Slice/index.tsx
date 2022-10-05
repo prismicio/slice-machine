@@ -61,7 +61,7 @@ const SliceVariations = ({
 
 const SliceScreenshotUpdate: React.FC<{
   slice: ComponentUI;
-}> = ({ slice }) => (
+}> = () => (
   <Flex
     mt={1}
     sx={{
@@ -71,15 +71,14 @@ const SliceScreenshotUpdate: React.FC<{
       borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
     }}
   >
-    <Button onClick={() => ({})} variant="buttons.secondary">
-      <Text>
+    <Button onClick={() => ({})} variant="buttons.secondarySmall">
+      <Text sx={{ color: "greyIcon" }}>
         <AiOutlineCamera
           size={16}
           style={{
             marginRight: "8px",
             position: "relative",
             top: "2px",
-            color: "greyIcon",
           }}
         />
       </Text>{" "}
