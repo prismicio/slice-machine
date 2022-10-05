@@ -1,5 +1,10 @@
 import { InputType } from "@lib/forms/fields";
-import { Field, FieldInputProps, FieldMetaProps } from "formik";
+import {
+  Field,
+  FieldInputProps,
+  FieldMetaProps,
+  GenericFieldHTMLAttributes,
+} from "formik";
 import React from "react";
 import { Box, Label, Input, Text, ThemeUIStyleObject } from "theme-ui";
 
@@ -54,6 +59,7 @@ export const getInputFieldStyles = (type?: InputFieldStyles) => {
 interface FormFieldInputProps {
   sx?: ThemeUIStyleObject;
   field: FieldInputProps<string> | FieldInputProps<number>;
+  fieldProps: GenericFieldHTMLAttributes;
   meta: FieldMetaProps<string> | FieldMetaProps<number>;
   formField: Partial<InputType>;
   fieldName: string;
@@ -72,6 +78,7 @@ export const FormFieldInput = ({
   fields,
   initialValues,
   isDisabled,
+  fieldProps,
 }: FormFieldInputProps) => {
   const style = meta.error
     ? InputFieldStyles.ERROR
@@ -104,6 +111,7 @@ export const FormFieldInput = ({
                 }),
             }
           : null)}
+        {...fieldProps}
         {...field}
         as={Input}
         sx={getInputFieldStyles(style)}

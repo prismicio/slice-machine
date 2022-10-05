@@ -117,12 +117,15 @@ export const ConstraintForm: React.FC<{
           // @ts-ignore:enable
         }}
         formField={{ label: `Name${requiredChar}`, placeholder: "main" }}
+        fieldProps={{
+          readOnly: prefix === "config.constraint",
+        }}
         field={
           prefix === "config.constraint"
-            ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            ? { value: "main" }
+            : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore:disable
-              { value: "main", readOnly: true }
-            : // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
               { value: field.value.name, onChange: createSetField("name") }
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore:enable
@@ -142,10 +145,12 @@ export const ConstraintForm: React.FC<{
           // @ts-ignore:enable
         }}
         formField={{ label: `Width (px)${requiredChar}`, placeholder: " " }}
+        fieldProps={{
+          type: "number",
+        }}
         field={{
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore:disable
-          type: "number",
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           value: field.value.width,
           onChange: createSetField("width", parseInt),
@@ -166,10 +171,12 @@ export const ConstraintForm: React.FC<{
           // @ts-ignore:enable
         }}
         formField={{ label: `Height (px)${requiredChar}`, placeholder: " " }}
+        fieldProps={{
+          type: "number",
+        }}
         field={{
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore:disable
-          type: "number",
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           value: field.value.height,
           onChange: createSetField("height", parseInt),
