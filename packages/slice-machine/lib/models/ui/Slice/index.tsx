@@ -139,8 +139,21 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ScreenshotMissingBanner = ({ visible }: { visible?: boolean }) =>
-  visible ? (
+const ScreenshotMissingBanner = ({
+  visible,
+  slice,
+}: {
+  visible?: boolean;
+  slice: ComponentUI;
+}) => {
+  const missingScreenshots =
+    slice.model.variations.length - Object.entries(slice.screenshots).length;
+
+  if (!visible || !missingScreenshots) {
+    return null;
+  }
+
+  return (
     <Flex
       sx={{
         position: "absolute",
@@ -153,10 +166,11 @@ const ScreenshotMissingBanner = ({ visible }: { visible?: boolean }) =>
         width: "100%",
       }}
     >
-      <AiOutlineExclamationCircle style={{ marginRight: "8px" }} /> 1/2
-      screenshots missing
+      <AiOutlineExclamationCircle style={{ marginRight: "8px" }} />{" "}
+      {missingScreenshots} / {slice.model.variations.length} screenshots missing
     </Flex>
-  ) : null;
+  );
+};
 
 export const SharedSlice = {
   render({
@@ -215,7 +229,7 @@ export const SharedSlice = {
                 height: thumbnailHeightPx,
               }}
             />
-            <ScreenshotMissingBanner visible={showActions} />
+            <ScreenshotMissingBanner slice={slice} visible={showActions} />
             <Flex
               sx={{
                 flexDirection: "column",
