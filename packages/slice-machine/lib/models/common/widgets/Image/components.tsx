@@ -149,12 +149,9 @@ const TexField: React.FC<{
       fieldName={fieldName}
       meta={meta}
       formField={{ label, placeholder }}
-      fieldProps={{
-        readOnly: prefix === "config.constraint",
-      }}
       field={
         prefix === "config.constraint"
-          ? { value: "main" }
+          ? { value: "main", readOnly: true }
           : { value: field.value, onChange: onChangeSetField }
       }
       variant={prefix === "config.constraint" ? "disabled" : "primary"}
