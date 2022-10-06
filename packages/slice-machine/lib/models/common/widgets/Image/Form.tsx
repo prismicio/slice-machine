@@ -37,11 +37,11 @@ const FormFields = {
             name: "Thumbnails",
             message: "Must set name and width or height at minimum",
             test: function (value) {
-              return (
-                value.name &&
-                (typeof value.width === "number" ||
-                  typeof value.height === "number")
-              );
+              const hasWidth = typeof value.width === "number" && value.width;
+              const hasHeight =
+                typeof value.height === "number" && value.height;
+              const hasWidthOrHeight = hasWidth || hasHeight;
+              return value.name && hasWidthOrHeight;
             },
           })
         ),
