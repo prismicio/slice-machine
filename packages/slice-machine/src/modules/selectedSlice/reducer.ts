@@ -20,6 +20,7 @@ import { SliceMockConfig } from "@lib/models/common/MockConfig";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SliceSM } from "@slicemachine/core/build/models";
 import { renamedComponentUI, renameSliceCreator } from "../slices";
+import { refreshStateCreator } from "../environment";
 
 // Reducer
 export const selectedSliceReducer: Reducer<
@@ -31,6 +32,21 @@ export const selectedSliceReducer: Reducer<
       if (!action.payload) return null;
       return action.payload;
     }
+    case getType(refreshStateCreator):
+      if (prevState === null || !action.payload.libraries) return prevState;
+
+      const updatedSlice = action.payload.libraries
+        .find((l) => l.name === prevState.from)
+        ?.components.find((c) => c.model.id === prevState.model.id);
+
+      if (updatedSlice === undefined) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        screenshots: updatedSlice.screenshots,
+      };
     case getType(addSliceWidgetCreator): {
       if (!prevState) return prevState;
       const { variationId, widgetsArea, key, value } = action.payload;
