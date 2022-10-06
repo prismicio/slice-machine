@@ -122,6 +122,10 @@ const useSliceMachineActions = () => {
     dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
   const openRenameCustomTypeModal = () =>
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.RENAME_CUSTOM_TYPE }));
+  const openScreenshotModal = () =>
+    dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT }));
+  const closeScreenshotModal = () =>
+    dispatch(modalCloseCreator({ modalKey: ModalKeysEnum.SCREENSHOT }));
 
   // Loading module
   const startLoadingReview = () =>
@@ -549,6 +553,8 @@ const useSliceMachineActions = () => {
     openCreateCustomTypeModal,
     openRenameCustomTypeModal,
     closeRenameCustomTypeModal,
+    openScreenshotModal,
+    closeScreenshotModal,
     openCreateSliceModal,
     closeCreateSliceModal,
     openRenameSliceModal,

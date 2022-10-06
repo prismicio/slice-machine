@@ -43,11 +43,20 @@ describe("[Selected Slice sagas]", () => {
           data: response,
         })
         .put(
-          generateSliceScreenshotCreator.success({
-            screenshot: response.screenshot,
-            component: dummySliceState,
+          openToasterCreator({
+            url: "testScreenshotUrl",
+            name: "screenshot name",
+            type: "screenshot_captured",
           })
         );
+
+      saga.next().put(
+        generateSliceScreenshotCreator.success({
+          screenshot: response.screenshot,
+          component: dummySliceState,
+          variationId: dummyModelVariationID,
+        })
+      );
 
       saga.next().isDone();
     });

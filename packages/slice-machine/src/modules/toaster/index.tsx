@@ -9,15 +9,23 @@ export enum ToasterType {
   ERROR = "error",
   INFO = "info",
   LOADING = "loading",
-  SCREENSHOT_CAPTURED = "screenshot_captured",
 }
 
+type ScreenshotCapturedToast = {
+  type: "screenshot_captured";
+  url: string;
+  name: string;
+};
+
 // Action Creators
-export const openToasterCreator = createAction("TOASTER/OPEN")<{
-  message: string;
-  type: ToasterType;
-  options?: ToastOptions;
-}>();
+export const openToasterCreator = createAction("TOASTER/OPEN")<
+  | {
+      message: string;
+      type: ToasterType;
+      options?: ToastOptions;
+    }
+  | ScreenshotCapturedToast
+>();
 
 export const updateToasterCreator = createAction("TOASTER/UPDATE")<{
   toasterId: string;
@@ -48,9 +56,12 @@ export function* openToasterSaga(
     case ToasterType.LOADING:
       toast.loading(action.payload.message, action.payload.options);
       break;
-    case ToasterType.SCREENSHOT_CAPTURED:
+    case "screenshot_captured":
       toast(
-        ScreenshotToaster({ data: { screenshotUrl: action.payload.message } })
+        <ScreenshotToaster
+          url={action.payload.url}
+          name={action.payload.name}
+        />
       );
       break;
   }
