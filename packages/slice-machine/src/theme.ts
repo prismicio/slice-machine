@@ -317,8 +317,15 @@ const AppTheme = (): Theme =>
         pr: 2,
         pb: "6px",
         pt: "6px",
+        cursor: "pointer",
+        "&:hover": {
+          background: "#F4F2F4",
+        },
+        "&:active": {
+          background: "#F4F2F4",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
       },
-
       darkSmall: {
         borderRadius: "4px",
         color: "white",
