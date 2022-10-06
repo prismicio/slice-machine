@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { BsImage, BsFillPlusSquareFill } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
-import { Text, Badge, Flex } from "theme-ui";
+import { Text, Badge, Flex, ThemeUIStyleObject } from "theme-ui";
 import SliceMachineIconButton, {
   SliceMachineIconButtonProps,
 } from "@components/SliceMachineIconButton";
@@ -87,7 +87,7 @@ export const ConstraintForm: React.FC<{
     return null;
   }
   const requiredChar = required ? "*" : "";
-  const [field, meta, helpers] = useField(prefix);
+  const [field, _meta, helpers] = useField(prefix);
 
   const createSetField =
     (key: string, fn = (v: string): number | string => v) =>
@@ -105,85 +105,86 @@ export const ConstraintForm: React.FC<{
 
   return (
     <Fragment>
-      <FormFieldInput
-        fieldName={`${prefix}.name`}
-        meta={{
-          ...meta,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:disable
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          error: meta.error && meta.error?.name,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }}
-        formField={{ label: `Name${requiredChar}`, placeholder: "main" }}
-        fieldProps={{
-          readOnly: prefix === "config.constraint",
-        }}
-        field={
-          prefix === "config.constraint"
-            ? { value: "main" }
-            : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore:disable
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-              { value: field.value.name, onChange: createSetField("name") }
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }
-        variant={prefix === "config.constraint" ? "disabled" : "primary"}
+      <TexField
+        prefix={prefix}
+        name="name"
+        label="Name${requiredChar}"
+        placeholder="main"
+        onChangeSetField={createSetField("name")}
         sx={{ mb: 3 }}
       />
-      <FormFieldInput
-        fieldName={`${prefix}.width`}
-        meta={{
-          ...meta,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:disable
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          error: meta.error && meta.error.width,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }}
-        formField={{ label: `Width (px)${requiredChar}`, placeholder: " " }}
-        fieldProps={{
-          type: "number",
-        }}
-        field={{
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:disable
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          value: field.value.width,
-          onChange: createSetField("width", parseInt),
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }}
+      <NumberField
+        prefix={prefix}
+        name="width"
+        onChangeSetField={createSetField("width", parseInt)}
+        label={`Width (px)${requiredChar}`}
+        placeholder=" "
         sx={{ mb: 3 }}
       />
-      <FormFieldInput
-        fieldName={`${prefix}.height`}
-        meta={{
-          ...meta,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:disable
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          error: meta.error && meta.error.height,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }}
-        formField={{ label: `Height (px)${requiredChar}`, placeholder: " " }}
-        fieldProps={{
-          type: "number",
-        }}
-        field={{
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:disable
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          value: field.value.height,
-          onChange: createSetField("height", parseInt),
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore:enable
-        }}
+      <NumberField
+        prefix={prefix}
+        name="height"
+        onChangeSetField={createSetField("height", parseInt)}
+        label={`Height (px)${requiredChar}`}
+        placeholder=" "
       />
     </Fragment>
+  );
+};
+
+const TexField: React.FC<{
+  prefix: string;
+  name: string;
+  label: string;
+  placeholder: string;
+  onChangeSetField: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sx?: ThemeUIStyleObject;
+}> = ({ prefix, name, label, placeholder, onChangeSetField, ...props }) => {
+  const fieldName = `${prefix}.${name}`;
+
+  const [field, meta] = useField<string>(fieldName);
+  return (
+    <FormFieldInput
+      {...props}
+      fieldName={fieldName}
+      meta={meta}
+      formField={{ label, placeholder }}
+      fieldProps={{
+        readOnly: prefix === "config.constraint",
+      }}
+      field={
+        prefix === "config.constraint"
+          ? { value: "main" }
+          : { value: field.value, onChange: onChangeSetField }
+      }
+      variant={prefix === "config.constraint" ? "disabled" : "primary"}
+    />
+  );
+};
+
+const NumberField: React.FC<{
+  prefix: string;
+  name: string;
+  label: string;
+  placeholder: string;
+  onChangeSetField: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sx?: ThemeUIStyleObject;
+}> = ({ prefix, name, label, placeholder, onChangeSetField, ...props }) => {
+  const fieldName = `${prefix}.${name}`;
+
+  const [field, meta] = useField<number>(fieldName);
+
+  return (
+    <FormFieldInput
+      {...props}
+      fieldName={fieldName}
+      meta={meta}
+      formField={{ label, placeholder }}
+      field={{
+        type: "number",
+        value: field.value || "",
+        onChange: onChangeSetField,
+      }}
+    />
   );
 };
