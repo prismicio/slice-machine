@@ -4,7 +4,6 @@ import { Container, Flex, Image, Text } from "theme-ui";
 
 type ScreenshotToasterProps = {
   url: string;
-  name: string;
 };
 
 const ScreenshotToaster: FC<ScreenshotToasterProps> = ({ url }) => {

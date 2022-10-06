@@ -14,7 +14,6 @@ export enum ToasterType {
 type ScreenshotCapturedToast = {
   type: "screenshot_captured";
   url: string;
-  name: string;
 };
 
 // Action Creators
@@ -57,12 +56,7 @@ export function* openToasterSaga(
       toast.loading(action.payload.message, action.payload.options);
       break;
     case "screenshot_captured":
-      toast(
-        <ScreenshotToaster
-          url={action.payload.url}
-          name={action.payload.name}
-        />
-      );
+      toast(<ScreenshotToaster url={action.payload.url} />);
       break;
   }
 }

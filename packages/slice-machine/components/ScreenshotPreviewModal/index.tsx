@@ -12,13 +12,16 @@ type ScreenshotModalProps = {
   screenshotUrl: string;
 };
 
-const ScreenshotModal: React.FunctionComponent<ScreenshotModalProps> = ({
+const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
   sliceName,
   screenshotUrl,
 }) => {
   const { isScreenshotModalOpen } = useSelector(
     (store: SliceMachineStoreType) => ({
-      isScreenshotModalOpen: isModalOpen(store, ModalKeysEnum.SCREENSHOT),
+      isScreenshotModalOpen: isModalOpen(
+        store,
+        ModalKeysEnum.SCREENSHOT_PREVIEW
+      ),
     })
   );
 
@@ -29,7 +32,7 @@ const ScreenshotModal: React.FunctionComponent<ScreenshotModalProps> = ({
       isOpen={isScreenshotModalOpen}
       shouldCloseOnOverlayClick={true}
       contentLabel={"Screenshot Preview"}
-      portalClassName={"ScreenshotModal"}
+      portalClassName={"ScreenshotPreviewModal"}
     >
       <Card
         radius={"0px"}
@@ -106,4 +109,4 @@ const ScreenshotModal: React.FunctionComponent<ScreenshotModalProps> = ({
   );
 };
 
-export default ScreenshotModal;
+export default ScreenshotPreviewModal;

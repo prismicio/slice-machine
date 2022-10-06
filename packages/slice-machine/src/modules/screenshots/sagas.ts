@@ -33,7 +33,6 @@ export function* generateSliceScreenshotSaga({
     yield put(
       openToasterCreator({
         url: response.data.screenshot?.url as string,
-        name: "screenshot name",
         type: "screenshot_captured",
       })
     );

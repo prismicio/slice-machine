@@ -15,7 +15,7 @@ import {
 import { SliceMachineStoreType } from "@src/redux/type";
 import { selectCurrentSlice } from "@src/modules/selectedSlice/selectors";
 import Router from "next/router";
-import ScreenshotModal from "@components/ScreenshotModal";
+import ScreenshotPreviewModal from "@components/ScreenshotPreviewModal";
 
 export type SliceView = SliceViewItem[];
 export type SliceViewItem = Readonly<{ sliceID: string; variationID: string }>;
@@ -78,7 +78,7 @@ export default function Simulator() {
         simulatorUrl={simulatorUrl}
         sliceView={sliceView}
       />
-      <ScreenshotModal
+      <ScreenshotPreviewModal
         sliceName={Router.router?.query.sliceName as string}
         screenshotUrl={component.screenshots[variation.id].url}
       />
