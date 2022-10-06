@@ -203,6 +203,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                               authStatus,
                               isOnline,
                             },
+                            showActions: true,
                           });
                         }}
                         gridGap="32px 16px"

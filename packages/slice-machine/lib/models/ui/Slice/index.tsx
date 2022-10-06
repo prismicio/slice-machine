@@ -61,31 +61,33 @@ const SliceVariations = ({
 
 const SliceScreenshotUpdate: React.FC<{
   slice: ComponentUI;
-}> = () => (
-  <Flex
-    mt={1}
-    sx={{
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: 3,
-      borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
-    }}
-  >
-    <Button onClick={() => ({})} variant="buttons.secondarySmall">
-      <Text sx={{ color: "greyIcon" }}>
-        <AiOutlineCamera
-          size={16}
-          style={{
-            marginRight: "8px",
-            position: "relative",
-            top: "2px",
-          }}
-        />
-      </Text>{" "}
-      <Text>Update screenshot</Text>
-    </Button>
-  </Flex>
-);
+  visible?: boolean;
+}> = ({ visible }) =>
+  visible ? (
+    <Flex
+      mt={1}
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 3,
+        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+      }}
+    >
+      <Button onClick={() => ({})} variant="buttons.secondarySmall">
+        <Text sx={{ color: "greyIcon" }}>
+          <AiOutlineCamera
+            size={16}
+            style={{
+              marginRight: "8px",
+              position: "relative",
+              top: "3px",
+            }}
+          />
+        </Text>
+        <Text sx={{ lineHeight: "24px" }}>Update screenshot</Text>
+      </Button>
+    </Flex>
+  ) : null;
 
 const SliceDescription = ({
   slice,
@@ -109,7 +111,13 @@ const SliceDescription = ({
     <Flex>
       <TextWithTooltip text={slice.model.name} as="h6" />
     </Flex>
-    <Flex sx={{ alignItems: "baseline;", justifyContent: "space-between;" }}>
+    <Flex
+      sx={{
+        alignItems: "baseline;",
+        justifyContent: "space-between;",
+        mt: "5px",
+      }}
+    >
       <SliceVariations
         variations={slice.model.variations}
         hideVariations={false}
@@ -131,26 +139,28 @@ const SliceDescription = ({
   </Flex>
 );
 
-const ScreenshotMissingBanner = () => (
-  <Flex
-    sx={{
-      position: "absolute",
-      borderRadius: "4px 4px 0 0",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 2,
-      bg: "missingScreenshotBanner.bg",
-      color: "missingScreenshotBanner.color",
-      width: "100%",
-    }}
-  >
-    <AiOutlineExclamationCircle style={{ marginRight: "8px" }} /> 1/2
-    screenshots missing
-  </Flex>
-);
+const ScreenshotMissingBanner = ({ visible }: { visible?: boolean }) =>
+  visible ? (
+    <Flex
+      sx={{
+        position: "absolute",
+        borderRadius: "4px 4px 0 0",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 2,
+        bg: "missingScreenshotBanner.bg",
+        color: "missingScreenshotBanner.color",
+        width: "100%",
+      }}
+    >
+      <AiOutlineExclamationCircle style={{ marginRight: "8px" }} /> 1/2
+      screenshots missing
+    </Flex>
+  ) : null;
 
 export const SharedSlice = {
   render({
+    showActions,
     bordered,
     slice,
     Wrapper,
@@ -160,6 +170,7 @@ export const SharedSlice = {
     wrapperType = WrapperType.clickable,
     sx,
   }: {
+    showActions?: boolean;
     slice: ComponentUI;
     bordered?: boolean;
     StatusOrCustom:
@@ -194,7 +205,7 @@ export const SharedSlice = {
             border: (t) => `1px solid ${t.colors?.borders as string}`,
             boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
             borderRadius: "6px",
-            ...(bordered ? borderedSx(sx) : defaultSx(sx)),
+            ...defaultSx(sx),
           }}
         >
           <Flex sx={{ position: "relative", flexDirection: "column" }}>
@@ -204,13 +215,13 @@ export const SharedSlice = {
                 height: thumbnailHeightPx,
               }}
             />
-            <ScreenshotMissingBanner />
+            <ScreenshotMissingBanner visible={showActions} />
             <Flex
               sx={{
                 flexDirection: "column",
               }}
             >
-              <SliceScreenshotUpdate slice={slice} />
+              <SliceScreenshotUpdate slice={slice} visible={showActions} />
               <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
             </Flex>
           </Flex>
