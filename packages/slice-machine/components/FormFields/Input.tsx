@@ -72,7 +72,6 @@ export const FormFieldInput = ({
   fields,
   initialValues,
   isDisabled,
-  fieldProps,
 }: FormFieldInputProps) => {
   const style = meta.error
     ? InputFieldStyles.ERROR
@@ -105,7 +104,6 @@ export const FormFieldInput = ({
                 }),
             }
           : null)}
-        {...fieldProps}
         {...field}
         as={Input}
         sx={getInputFieldStyles(style)}
