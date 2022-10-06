@@ -20,7 +20,6 @@ const UpdateSliceZoneModalList: React.FC<{
         defineElementKey={(slice: ComponentUI) => slice.model.name}
         renderElem={(slice: ComponentUI) => {
           return SharedSlice.render({
-            bordered: true,
             thumbnailHeightPx: "220px",
             slice: slice,
             Wrapper: ({ slice, children }) => {

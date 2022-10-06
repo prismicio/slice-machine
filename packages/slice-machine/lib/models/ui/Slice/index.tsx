@@ -175,7 +175,6 @@ const ScreenshotMissingBanner = ({
 export const SharedSlice = {
   render({
     showActions,
-    bordered,
     slice,
     Wrapper,
     StatusOrCustom,
@@ -186,7 +185,6 @@ export const SharedSlice = {
   }: {
     showActions?: boolean;
     slice: ComponentUI;
-    bordered?: boolean;
     StatusOrCustom:
       | {
           status: ModelStatus;
