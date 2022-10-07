@@ -7,12 +7,12 @@ type ScreenshotToasterProps = {
 };
 
 const ScreenshotToaster: FC<ScreenshotToasterProps> = ({ url }) => {
-  const { openScreenshotModal } = useSliceMachineActions();
+  const { openScreenshotPreviewModal } = useSliceMachineActions();
 
   return (
     <Flex
       sx={{ height: 75, backgroundColor: "rgba(37, 37, 45, 0.9)" }}
-      onClick={openScreenshotModal}
+      onClick={openScreenshotPreviewModal}
     >
       <Container
         sx={{

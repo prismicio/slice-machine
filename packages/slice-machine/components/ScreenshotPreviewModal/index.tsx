@@ -25,7 +25,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
     })
   );
 
-  const { closeScreenshotModal } = useSliceMachineActions();
+  const { closeScreenshotPreviewModal } = useSliceMachineActions();
 
   return (
     <SliceMachineModal
@@ -60,7 +60,10 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
             <Heading sx={{ fontSize: "14px" }}>
               Screenshot Preview for {sliceName}
             </Heading>
-            <Close type="button" onClick={() => closeScreenshotModal()} />
+            <Close
+              type="button"
+              onClick={() => closeScreenshotPreviewModal()}
+            />
           </Flex>
         )}
         Footer={() => (
@@ -78,7 +81,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
               sx={{
                 fontWeight: 600,
               }}
-              onClick={() => closeScreenshotModal()}
+              onClick={() => closeScreenshotPreviewModal()}
             >
               Close
             </Button>
