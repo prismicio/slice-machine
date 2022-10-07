@@ -19,18 +19,23 @@ const AppTheme = (): Theme =>
         background: "#FFECC7",
         color: "#5C0C17",
       },
+      greyIcon: "#6F6E77",
+      missingScreenshotBanner: {
+        color: "#5C0C17",
+        bg: "#FFECC7",
+      },
       badge: {
         new: {
-          bg: "#C2EFC899",
-          color: "#32A943",
+          bg: "#DBEDDB",
+          color: "#05644D",
         },
         modified: {
-          bg: "#FDF4EC",
-          color: "#F2994A",
+          bg: "#FFECC7",
+          color: "#5C0C17",
         },
         synced: {
-          bg: "#EFECFF",
-          color: "#5B3DF5",
+          bg: "#F1EEFE",
+          color: "#5842C3",
         },
         unknown: {
           bg: "#F3F5F7",
@@ -300,7 +305,27 @@ const AppTheme = (): Theme =>
         fontSize: "12px",
         fontWeight: "body",
       },
-
+      secondarySmall: {
+        background: "#FFFFFF",
+        border: "1px solid #DCDBDD",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        borderRadius: "6px",
+        color: "#1A1523",
+        fontSize: "12px",
+        lineHeight: "16px",
+        pl: 2,
+        pr: 2,
+        pb: "6px",
+        pt: "6px",
+        cursor: "pointer",
+        "&:hover": {
+          background: "#F4F2F4",
+        },
+        "&:active": {
+          background: "#F4F2F4",
+          boxShadow: "inset 0px 2px 0px rgba(0, 0, 0, 0.08)",
+        },
+      },
       darkSmall: {
         borderRadius: "4px",
         color: "white",

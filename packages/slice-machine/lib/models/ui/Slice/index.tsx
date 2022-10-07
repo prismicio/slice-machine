@@ -17,9 +17,10 @@ import { ScreenshotPreview } from "@components/ScreenshotPreview";
 import { StatusBadge } from "@components/StatusBadge";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
+import { Button } from "theme-ui";
+import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
-  border: (t: Theme) => `1px solid ${t.colors?.border as string}`,
   bg: "transparent",
   transition: "all 200ms ease-in",
   p: 3,
@@ -34,7 +35,6 @@ const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
 
 const defaultSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
-  border: "none",
   position: "relative",
   transition: "all 100ms cubic-bezier(0.215,0.60,0.355,1)",
   ...sx,
@@ -59,6 +59,36 @@ const SliceVariations = ({
   ) : null;
 };
 
+const SliceScreenshotUpdate: React.FC<{
+  slice: ComponentUI;
+  visible?: boolean;
+}> = ({ visible }) =>
+  visible ? (
+    <Flex
+      mt={1}
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 3,
+        borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+      }}
+    >
+      <Button onClick={() => ({})} variant="buttons.secondarySmall">
+        <Text sx={{ color: "greyIcon" }}>
+          <AiOutlineCamera
+            size={16}
+            style={{
+              marginRight: "8px",
+              position: "relative",
+              top: "3px",
+            }}
+          />
+        </Text>
+        <Text sx={{ lineHeight: "24px" }}>Update screenshot</Text>
+      </Button>
+    </Flex>
+  ) : null;
+
 const SliceDescription = ({
   slice,
   StatusOrCustom,
@@ -72,31 +102,79 @@ const SliceDescription = ({
       }
     | React.FC<{ slice: ComponentUI }>;
 }) => (
-  <Flex mt={3} sx={{ alignItems: "center", justifyContent: "space-between" }}>
-    <Flex sx={{ alignItems: "center" }}>
-      {"status" in StatusOrCustom ? (
-        <StatusBadge
-          modelType="Slice"
-          modelId={slice.model.id}
-          status={StatusOrCustom.status}
-          authStatus={StatusOrCustom.authStatus}
-          isOnline={StatusOrCustom.isOnline}
-        />
-      ) : (
-        <StatusOrCustom slice={slice} />
-      )}
+  <Flex
+    sx={{
+      flexDirection: "column",
+      padding: 3,
+    }}
+  >
+    <Flex>
       <TextWithTooltip text={slice.model.name} as="h6" />
     </Flex>
-    <SliceVariations
-      variations={slice.model.variations}
-      hideVariations={false}
-    />
+    <Flex
+      sx={{
+        alignItems: "baseline;",
+        justifyContent: "space-between;",
+        mt: "5px",
+      }}
+    >
+      <SliceVariations
+        variations={slice.model.variations}
+        hideVariations={false}
+      />
+      <Flex sx={{ alignItems: "center" }}>
+        {"status" in StatusOrCustom ? (
+          <StatusBadge
+            modelType="Slice"
+            modelId={slice.model.id}
+            status={StatusOrCustom.status}
+            authStatus={StatusOrCustom.authStatus}
+            isOnline={StatusOrCustom.isOnline}
+          />
+        ) : (
+          <StatusOrCustom slice={slice} />
+        )}
+      </Flex>
+    </Flex>
   </Flex>
 );
 
+const ScreenshotMissingBanner = ({
+  visible,
+  slice,
+}: {
+  visible?: boolean;
+  slice: ComponentUI;
+}) => {
+  const missingScreenshots =
+    slice.model.variations.length - Object.entries(slice.screenshots).length;
+
+  if (!visible || !missingScreenshots) {
+    return null;
+  }
+
+  return (
+    <Flex
+      sx={{
+        position: "absolute",
+        borderRadius: "4px 4px 0 0",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 2,
+        bg: "missingScreenshotBanner.bg",
+        color: "missingScreenshotBanner.color",
+        width: "100%",
+      }}
+    >
+      <AiOutlineExclamationCircle style={{ marginRight: "8px" }} />{" "}
+      {missingScreenshots} / {slice.model.variations.length} screenshots missing
+    </Flex>
+  );
+};
+
 export const SharedSlice = {
   render({
-    bordered,
+    showActions,
     slice,
     Wrapper,
     StatusOrCustom,
@@ -105,8 +183,8 @@ export const SharedSlice = {
     wrapperType = WrapperType.clickable,
     sx,
   }: {
+    showActions?: boolean;
     slice: ComponentUI;
-    bordered?: boolean;
     StatusOrCustom:
       | {
           status: ModelStatus;
@@ -135,15 +213,30 @@ export const SharedSlice = {
         <Themecard
           role="button"
           aria-pressed="false"
-          sx={bordered ? borderedSx(sx) : defaultSx(sx)}
+          sx={{
+            border: (t) => `1px solid ${t.colors?.borders as string}`,
+            boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
+            borderRadius: "6px",
+            ...defaultSx(sx),
+          }}
         >
-          <ScreenshotPreview
-            src={screenshotUrl}
-            sx={{
-              height: thumbnailHeightPx,
-            }}
-          />
-          <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
+          <Flex sx={{ position: "relative", flexDirection: "column" }}>
+            <ScreenshotPreview
+              src={screenshotUrl}
+              sx={{
+                height: thumbnailHeightPx,
+              }}
+            />
+            <ScreenshotMissingBanner slice={slice} visible={showActions} />
+            <Flex
+              sx={{
+                flexDirection: "column",
+              }}
+            >
+              <SliceScreenshotUpdate slice={slice} visible={showActions} />
+              <SliceDescription slice={slice} StatusOrCustom={StatusOrCustom} />
+            </Flex>
+          </Flex>
         </Themecard>
       </CardWrapper>
     );

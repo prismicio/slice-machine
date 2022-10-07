@@ -127,6 +127,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
             defineElementKey={(slice: ComponentUI) => slice.model.name}
             renderElem={(slice: ComponentUI) => {
               return SharedSlice.render({
+                showActions: true,
                 slice: slice,
                 wrapperType: WrapperType.clickable,
                 StatusOrCustom: {

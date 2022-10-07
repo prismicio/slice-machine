@@ -77,9 +77,8 @@ export const ScreenshotPreview: React.FC<ScreenshotPreviewProps> = ({
           backgroundColor: "headSection",
           backgroundRepeat: "repeat",
           backgroundSize: "20px",
-          border: (t) => `1px solid ${t.colors?.borders as string}`,
-          boxShadow: "0px 8px 14px rgba(0, 0, 0, 0.1)",
-          borderRadius: "4px",
+          borderBottom: (t) => `1px solid ${t.colors?.borders as string}`,
+          borderRadius: "4px 4px 0 0",
           ...sx,
         }}
         onMouseEnter={() => setDisplay(true)}
