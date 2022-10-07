@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "0.5.1-dev.9",
+  "version": "0.5.1-dev.14",
   "private": false,
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
