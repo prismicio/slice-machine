@@ -68,11 +68,14 @@
     "glob": "^7.1.6",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^2.0.1",
+    "io-ts-types": "^0.5.16",
     "lodash": "^4.17.21",
     "lorem-ipsum": "^2.0.3",
     "mime": "^2.5.2",
     "module-alias": "^2.2.2",
+    "monocle-ts": "^2.0.0",
     "neverthrow": "^4.2.1",
+    "newtype-ts": "^0.3.2",
     "npm-registry-fetch": "^12.0.1",
     "npmlog": "^5.0.0",
     "oembed-parser": "^1.4.5",
@@ -92,6 +95,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@babel/core": "^7",
     "@prismicio/slice-simulator-com": "^0.3.0",
     "@reach/menu-button": "^0.16.2",
     "@svgr/webpack": "^5.4.0",
