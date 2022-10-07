@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Spinner, Text } from "theme-ui";
+import { Box, Text } from "theme-ui";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import { MdLoop } from "react-icons/md";
