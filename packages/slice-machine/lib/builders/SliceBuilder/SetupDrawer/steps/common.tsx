@@ -7,7 +7,7 @@ import SuccessSection from "../components/SuccessSection";
 import CodeBlock from "../components/CodeBlockWithCopy";
 import WarningSection from "../components/WarningSection";
 
-import Button from "@components/Button";
+import { Button } from "@components/Button";
 
 import { SetupStatus } from "@src/modules/simulator/types";
 
@@ -191,14 +191,13 @@ export const CheckSetup =
             <SuccessSection />
           ) : (
             <Button
+              label="Check configuration"
               sx={{
-                minWidth: 155,
+                maxWidth: 149,
               }}
-              isLoading={isCheckingSetup}
+              isLoading={true}
               onClick={() => checkSimulatorSetup(false)}
-            >
-              Check configuration
-            </Button>
+            />
           )}
         </Flex>
       </StepSection>
