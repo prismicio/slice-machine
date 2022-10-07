@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { Box, Button, Text } from "theme-ui";
-import { AiFillCamera } from "react-icons/ai";
+import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
 
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
@@ -20,6 +20,7 @@ import { ErrorBanner } from "./ErrorBanner";
 import ScreenshotChangesModal, {
   SliceVariationSelector,
 } from "@components/ScreenshotChangesModal";
+import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 
 interface ChangesItemsProps extends ModelStatusInformation {
   unSyncedCustomTypes: FrontEndCustomType[];
@@ -92,6 +93,29 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 </Text>
               </Box>
               <Box>
+                {unSyncedSlices.some(
+                  (slice) => countMissingScreenshots(slice) > 0
+                ) && (
+                  <Text
+                    sx={{
+                      mr: 2,
+                      color: "warning02",
+                      fontSize: "12px",
+                      lineHeight: "16px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    <AiOutlineExclamationCircle
+                      size={16}
+                      style={{
+                        marginRight: "4px",
+                        position: "relative",
+                        top: "3px",
+                      }}
+                    />
+                    Missing Screenshots
+                  </Text>
+                )}
                 <Button
                   variant="darkSmall"
                   sx={{ mr: 2 }}

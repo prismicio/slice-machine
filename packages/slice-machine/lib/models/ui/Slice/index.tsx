@@ -19,6 +19,7 @@ import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { AuthStatus } from "@src/modules/userContext/types";
 import { Button } from "theme-ui";
 import { AiOutlineCamera, AiOutlineExclamationCircle } from "react-icons/ai";
+import { countMissingScreenshots } from "@src/utils/screenshots/missing";
 
 const borderedSx = (sx: ThemeUIStyleObject = {}): ThemeUICSSObject => ({
   bg: "transparent",
@@ -146,8 +147,7 @@ const ScreenshotMissingBanner = ({
   visible?: boolean;
   slice: ComponentUI;
 }) => {
-  const missingScreenshots =
-    slice.model.variations.length - Object.entries(slice.screenshots).length;
+  const missingScreenshots = countMissingScreenshots(slice);
 
   if (!visible || !missingScreenshots) {
     return null;
@@ -164,6 +164,8 @@ const ScreenshotMissingBanner = ({
         bg: "missingScreenshotBanner.bg",
         color: "missingScreenshotBanner.color",
         width: "100%",
+        fontSize: "12px",
+        lineHeight: "16px",
       }}
     >
       <AiOutlineExclamationCircle style={{ marginRight: "8px" }} />{" "}
