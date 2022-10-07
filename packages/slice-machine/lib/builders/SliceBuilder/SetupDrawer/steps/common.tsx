@@ -195,7 +195,7 @@ export const CheckSetup =
               sx={{
                 maxWidth: 149,
               }}
-              isLoading={true}
+              isLoading={isCheckingSetup}
               onClick={() => checkSimulatorSetup(false)}
             />
           )}
