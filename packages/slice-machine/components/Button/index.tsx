@@ -8,6 +8,7 @@ export type ButtonProps = {
   label: string;
   Icon?: IconType;
   type?: "submit" | "reset" | "button";
+  form?: string;
   isLoading?: boolean;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -27,6 +28,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
   label,
   Icon,
   type,
+  form,
   isLoading = false,
   disabled = false,
   onClick,
@@ -44,6 +46,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       ...(isLoading ? { cursor: "wait !important" } : {}), // without important, the hover effect has priority
     }}
     type={type}
+    form={form}
     disabled={disabled}
     onClick={!isLoading ? onClick : undefined}
     variant={variant}
