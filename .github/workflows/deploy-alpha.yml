@@ -40,4 +40,5 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git checkout .
-          npm run publish:alpha --preid="${{ github.event.workflow_run.head_branch }}"
+          npm run bump:alpha --preid="${{ github.event.workflow_run.head_branch }}"
+          npm run publish:alpha
