@@ -49,7 +49,7 @@ export default async function handler({
   }
 
   try {
-    const { screenshot, failure } = await generateScreenshotAndRemoveCustom(
+    const { screenshot } = await generateScreenshotAndRemoveCustom(
       env,
       libraryName,
       sliceName,
@@ -57,16 +57,13 @@ export default async function handler({
       screenDimensions
     );
 
-    if (failure) {
+    // We display an error if no screenshot has been taken
+    if (!screenshot) {
       const message = `Could not generate screenshot for variation ${variationId}`;
-
-      /* We display an error if no screenshot has been taken */
-      const isError = Boolean(screenshot);
-
       return {
-        err: isError ? new Error(message) : null,
-        reason: isError ? message : null,
-        warning: isError ? null : message,
+        err: new Error(message),
+        reason: message,
+        warning: null,
         screenshot,
       };
     }
