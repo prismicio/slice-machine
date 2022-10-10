@@ -56,7 +56,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       <>
         <Spinner
           size={16}
-          color="#F7F7F7"
+          color="grey01"
           data-cy={cyIdBuilder(rest["data-cy"], "spinner")}
         />
         {Icon && label}
