@@ -198,10 +198,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
     }
     case getType(generateSliceScreenshotCreator.success):
     case getType(generateSliceCustomScreenshotCreator.success): {
-      /* ??? */
       const { component, screenshot, variationId } = action.payload;
-
-      console.log({ screenshot });
 
       const newLibraries = state.libraries.map((library) => {
         if (library.name !== component.from) return library;
