@@ -13,8 +13,7 @@ const getIconAccordingToasterType = ({
   type,
 }: {
   type: TypeOptions;
-}): JSX.Element | boolean => {
-  console.log(type);
+}): JSX.Element | null => {
   switch (type) {
     case toast.TYPE.INFO:
       return <MdError />;
@@ -25,7 +24,7 @@ const getIconAccordingToasterType = ({
     case toast.TYPE.WARNING:
       return <MdWarning />;
     default:
-      return false;
+      return null;
   }
 };
 

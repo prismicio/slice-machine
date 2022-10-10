@@ -480,8 +480,10 @@ const useSliceMachineActions = () => {
     );
 
   // Toaster store
-  const openToaster = (message: string, type: ToasterType) =>
-    dispatch(openToasterCreator({ message, type }));
+  const openToaster = (
+    message: string,
+    type: Exclude<ToasterType, ToasterType.SCREENSHOT_CAPTURED>
+  ) => dispatch(openToasterCreator({ message, type }));
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {

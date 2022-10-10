@@ -45,7 +45,7 @@ describe("[Selected Slice sagas]", () => {
         .put(
           openToasterCreator({
             url: "testScreenshotUrl",
-            type: "screenshot_captured",
+            type: ToasterType.SCREENSHOT_CAPTURED,
           })
         );
 

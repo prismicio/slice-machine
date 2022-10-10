@@ -12,6 +12,7 @@ type ScreenshotModalProps = {
   screenshotUrl: string;
 };
 
+// For displaying the screenshot preview in the slice simulator after the user has taken a screenshot
 const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
   sliceName,
   screenshotUrl,
