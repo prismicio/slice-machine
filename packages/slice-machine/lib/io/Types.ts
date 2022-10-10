@@ -41,7 +41,7 @@ const generateAndWriteTypes = (env: BackendEnvironment) => {
   );
 };
 
-function getFromPackage(
+export function getFromPackage(
   key: string,
   packageJson: JsonPackage | null
 ): Record<string, string> {

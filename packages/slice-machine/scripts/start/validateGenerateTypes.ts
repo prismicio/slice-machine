@@ -4,6 +4,7 @@ import {
   retrieveJsonPackage,
 } from "@slicemachine/core/build/node-utils";
 import { logger } from "../../lib/utils/logger";
+import { getFromPackage } from "../../lib/io/Types";
 
 type ValidateGenerateTypesParams = {
   cwd: string;
@@ -13,9 +14,14 @@ export const validateGenerateTypes = ({ cwd }: ValidateGenerateTypesParams) => {
   const manifest = retrieveManifest(cwd);
 
   const packageJson = retrieveJsonPackage(cwd);
+  const dependencies = getFromPackage("dependencies", packageJson.content);
+  const devDependencies = getFromPackage(
+    "devDependencies",
+    packageJson.content
+  );
   const allDependencies = {
-    ...packageJson.content?.dependencies,
-    ...packageJson.content?.devDependencies,
+    ...dependencies,
+    ...devDependencies,
   };
   const hasTypesPackage = PRISMIC_TYPES in allDependencies;
 
