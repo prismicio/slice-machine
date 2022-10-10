@@ -32,7 +32,7 @@ export function* generateSliceScreenshotSaga({
 
     // If screenshot is null, then no screenshots were taken
     if (!response.data.screenshot) {
-      throw Error();
+      throw Error("No screenshot saved");
     }
 
     yield put(
