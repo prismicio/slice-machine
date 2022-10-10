@@ -398,14 +398,12 @@ const useSliceMachineActions = () => {
   const generateSliceCustomScreenshot = (
     variationId: string,
     component: ComponentUI,
-    setData: (data: any) => void,
     file: Blob
   ) => {
     dispatch(
       generateSliceCustomScreenshotCreator.request({
         variationId,
         component,
-        setData,
         file,
       })
     );

@@ -8,11 +8,12 @@ import { CustomTypeMockConfig, SliceMockConfig } from "./MockConfig";
 
 export const createScreenshotUrl = (
   baseUrl: string,
-  pathToScreenshot: string
+  pathToScreenshot: string,
+  hash: string
 ): string =>
   `${baseUrl}/api/__preview?q=${encodeURIComponent(
     pathToScreenshot
-  )}&uniq=${Math.random()}`;
+  )}&uniq=${hash}`;
 
 export const createScreenshotUI = (
   baseUrl: string,
@@ -20,7 +21,7 @@ export const createScreenshotUI = (
 ): ScreenshotUI => ({
   path: screenshot.path,
   hash: screenshot.hash,
-  url: createScreenshotUrl(baseUrl, screenshot.path),
+  url: createScreenshotUrl(baseUrl, screenshot.path, screenshot.hash),
 });
 
 export const buildScreenshotUrls = (

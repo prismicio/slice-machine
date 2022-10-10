@@ -7,6 +7,8 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import SliceMachineModal from "@components/SliceMachineModal";
 
+import Views from "./Views";
+
 import { isModalOpen } from "@src/modules/modal";
 
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -39,7 +41,6 @@ const VariationsList = ({
   variationSelector,
 }: {
   slice: ComponentUI;
-  isSelected?: boolean;
   variationSelector: SliceVariationSelector;
   onSelectVariation: (s: SliceVariationSelector) => void;
 }) => (
@@ -200,11 +201,17 @@ const ScreenshotChangesModal = ({
               flexGrow: 99999,
               flexBasis: 0,
               minWidth: 320,
+              maxHeight: "90%",
             }}
           >
-            SliceID: {variationSelector.sliceID}
-            <br />
-            VariationID: {variationSelector.variationID}
+            <Views
+              variationID={variationSelector.variationID}
+              slice={
+                slices.find(
+                  (s) => s.model.id === variationSelector.sliceID
+                ) as ComponentUI
+              }
+            />
           </Box>
         </Box>
       </Card>

@@ -441,6 +441,17 @@ const AppTheme = (): Theme =>
         justifyContent: "center",
         borderRadius: "50%",
       },
+      white: {
+        bg: "#FFF",
+        color: "#1A1523",
+        border: "1px solid #DCDBDD",
+        boxShadow: "0px 1px 0px rgba(0, 0, 0, 0.04)",
+        borderRadius: "6px",
+        fontWeight: "600",
+        fontSize: 1,
+        px: 3,
+        cursor: "pointer",
+      },
     },
     success: {
       done: {
