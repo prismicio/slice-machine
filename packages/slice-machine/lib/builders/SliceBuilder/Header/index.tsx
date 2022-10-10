@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Links from "../links";
 import VariationPopover from "./VariationsPopover";
-import SaveButton from "@components/SaveButton";
 import { MdHorizontalSplit, MdModeEdit } from "react-icons/md";
 import SliceMachineIconButton from "../../../../components/SliceMachineIconButton";
 import { RenameSliceModal } from "../../../../components/Forms/RenameSliceModal/RenameSliceModal";
@@ -13,6 +12,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { VariationSM } from "@slicemachine/core/build/models";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { ModelStatus } from "@lib/models/common/ModelStatus";
+import { Button } from "@components/Button";
+import { AiFillSave } from "react-icons/ai";
 
 const Header: React.FC<{
   component: ComponentUI;
@@ -110,10 +111,13 @@ const Header: React.FC<{
                 marginRight: "8px",
               }}
             />
-            <SaveButton
-              isSaving={isLoading}
-              hasPendingModifications={!!isTouched}
+            <Button
+              label="Save to File System"
+              isLoading={isLoading}
+              disabled={!isTouched || isLoading}
               onClick={onSave}
+              Icon={AiFillSave}
+              data-cy="builder-save-button"
             />
           </Flex>
           <VariationModal
