@@ -114,7 +114,7 @@ const SliceBuilder: React.FC<SliceBuilderProps> = ({
   };
 
   const onTakingSliceCustomScreenshot = (file: Blob) => {
-    generateSliceCustomScreenshot(variation.id, component, setData, file);
+    generateSliceCustomScreenshot(variation.id, component, file);
   };
 
   const onSaveSlice = () => {
