@@ -1,33 +1,33 @@
 import { CONSTS } from "@slicemachine/core";
 import * as NodeUtils from "@slicemachine/core/build/node-utils";
-import { has } from "fp-ts/lib/Record";
 import { logs } from "../utils";
 
 const defaultSliceMachineVersion = "0.0.41";
 
-function isRecord(o: unknown): o is Record<string, string> {
-  return typeof o === "object" && o !== null && !Array.isArray(o);
-}
-
 const getTheSliceMachineVersionInstalled = (
-  packageJson: null | NodeUtils.JsonPackage
+  packageJson: NodeUtils.FileContent<NodeUtils.JsonPackage>
 ) => {
-  if (packageJson === null) return defaultSliceMachineVersion;
+  const sliceMachinePackageInstalled = Object.entries(
+    packageJson.content?.devDependencies || {}
+  ).find((devDependency) => {
+    if (devDependency[0] === CONSTS.SM_PACKAGE_NAME) {
+      return devDependency;
+    }
+  });
 
-  if (
-    packageJson &&
-    isRecord(packageJson) &&
-    "devDependencies" in packageJson &&
-    isRecord(packageJson.devDependencies) &&
-    has(CONSTS.SM_PACKAGE_NAME, packageJson.devDependencies)
-  ) {
-    const maybeVersion = extractVersionNumberFromSemver(
-      packageJson.devDependencies[CONSTS.SM_PACKAGE_NAME]
-    );
-    return maybeVersion || defaultSliceMachineVersion;
+  if (!sliceMachinePackageInstalled) {
+    return defaultSliceMachineVersion;
   }
 
-  return defaultSliceMachineVersion;
+  const extractedVersion = extractVersionNumberFromSemver(
+    sliceMachinePackageInstalled[1]
+  );
+
+  if (!extractedVersion) {
+    return defaultSliceMachineVersion;
+  }
+
+  return extractedVersion;
 };
 
 const extractVersionNumberFromSemver = (semver: string) => {
@@ -49,9 +49,8 @@ export function setVersion(cwd: string): void {
     }
 
     const packageJson = NodeUtils.retrieveJsonPackage(cwd);
-    const sliceMachineVersionInstalled = getTheSliceMachineVersionInstalled(
-      packageJson.content
-    );
+    const sliceMachineVersionInstalled =
+      getTheSliceMachineVersionInstalled(packageJson);
 
     NodeUtils.patchManifest(cwd, { _latest: sliceMachineVersionInstalled });
   } catch {
