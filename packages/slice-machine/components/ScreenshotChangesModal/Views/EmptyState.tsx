@@ -9,19 +9,28 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 
 import useCustomScreenshot from "../useCustomScreenshot";
 
-const UploadIcon = () => (
+const sharedFlexSx = {
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100%",
+  width: "100%",
+};
+
+const UploadIcon = ({ isActive }: { isActive: boolean }) => (
   <Flex
     sx={{
       p: 1,
       borderRadius: "50%",
-      bg: "#F1EEFE",
+      bg: isActive ? "#F1EEFE" : "#EDECEE",
       alignItems: "center",
       justifyContent: "center",
       width: "48px",
       height: "48px",
     }}
   >
-    <AiOutlineCloudUpload style={{ color: "#6E56CF", fontSize: "34px" }} />
+    <AiOutlineCloudUpload
+      style={{ color: isActive ? "#6E56CF" : "#6F6E77", fontSize: "34px" }}
+    />
   </Flex>
 );
 
@@ -58,38 +67,49 @@ const EmptyState = ({
 
   return (
     <Flex
-      as="form"
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        height: "90%",
-        width: "100%",
+        p: 3,
+        ...sharedFlexSx,
         bg: "secondary",
-        border: isDragActive ? "1px solid red" : "initial",
+        borderRadius: "6px",
       }}
-      onDragEnter={createHandleDrag(true)}
-      onDragLeave={createHandleDrag(false)}
-      onDragOver={createHandleDrag(true)}
-      onSubmit={(e) => e.preventDefault()}
-      onDrop={handleDrop}
     >
       <Flex
+        as="form"
         sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
+          ...sharedFlexSx,
+          borderRadius: "4px",
+          border: isDragActive ? "1px dashed #6E56CF" : "1px dashed #DCDBDD",
         }}
+        onDragEnter={createHandleDrag(true)}
+        onDragLeave={createHandleDrag(false)}
+        onDragOver={createHandleDrag(true)}
+        onSubmit={(e) => e.preventDefault()}
+        onDrop={handleDrop}
       >
-        {isLoadingScreenshot ? (
-          <Spinner sx={{ mb: 2 }} />
-        ) : (
-          <>
-            <UploadIcon />
-            <Text sx={{ my: 2 }}>Drop file to upload or ...</Text>
-          </>
-        )}
-        <Renderer />
-        <Text sx={{ color: "greyIcon", mt: 1 }}>Maximum file size: 128Mb</Text>
+        <Flex
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          {isLoadingScreenshot ? (
+            <>
+              <Spinner />
+              <Text sx={{ my: 2 }}>Uploading file ...</Text>
+            </>
+          ) : (
+            <>
+              <UploadIcon isActive={isDragActive} />
+              <Text sx={{ my: 2 }}>Drop file to upload or ...</Text>
+              <Renderer />
+              <Text sx={{ color: "greyIcon", mt: 1 }}>
+                Maximum file size: 128Mb
+              </Text>
+            </>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   );
