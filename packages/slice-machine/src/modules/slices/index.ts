@@ -216,7 +216,6 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
                         }
                       : null),
                   } as Record<string, ScreenshotUI>,
-                  },
                 }
               : c
           ),

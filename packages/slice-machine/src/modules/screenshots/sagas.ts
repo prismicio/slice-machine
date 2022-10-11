@@ -47,7 +47,6 @@ export function* generateSliceScreenshotSaga({
         variationId,
         screenshot: response.data.screenshot,
         component,
-        variationId,
       })
     );
   } catch (e) {
